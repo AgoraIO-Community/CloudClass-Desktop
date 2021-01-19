@@ -1,0 +1,11 @@
+node_modules
+.env
+.DS_Store
+*.sh
+*.sh~
+release
+build
+dist
+package-lock.json
+.env
+package-lock.json
