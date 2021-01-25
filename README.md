@@ -1,5 +1,6 @@
 > *其他语言版本：[简体中文](README.zh.md)*
 
+# This branch is still in development stage, PR is not accepted at this stage.
 ## CloudClass Desktop
 
 ## Install  

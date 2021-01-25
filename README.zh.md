@@ -1,5 +1,7 @@
 > *Read this in another language: [English](README.md)*
 
+> *提示：这个分支处于开发阶段，暂不接受外部开发者的PR
+
 ## 云课堂Electron App  
 ## Install  
 ```bash
