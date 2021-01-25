@@ -1,0 +1,41 @@
+
+.cover {
+  max-width: 350px;
+  min-width: 350px;
+  background: #F5F7F8;
+  border-radius:8px 0px 0px 8px;
+  position: relative;
+
+  .build-version {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .cover-placeholder-web {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .cover-en {
+    display: block;
+    background-repeat: no-repeat;
+    height: 500px;
+    width: 350px;
+    background-size: contain;
+    position: absolute;
+    background-image: url("../assets/cover-us.png");
+  }
+
+  .cover-cn {
+    display: block;
+    background-repeat: no-repeat;
+    height: 500px;
+    width: 350px;
+    background-size: contain;
+    position: absolute;
+    background-image: url("../assets/cover-cn.png");
+  }
+}

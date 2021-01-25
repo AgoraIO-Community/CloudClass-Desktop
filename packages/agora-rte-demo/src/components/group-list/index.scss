@@ -1,0 +1,18 @@
+.group-list {
+  position: absolute;
+  top: 55px;
+  overflow-y: auto;
+  min-width: 280px;
+  max-width: 280px;
+  height: calc(90% - .5rem);
+
+  .item {
+    display: flex;
+    margin: 0 1rem;
+    justify-content: space-between;
+  }
+  
+  .count {
+    color: #44A2FC;
+  }
+}
