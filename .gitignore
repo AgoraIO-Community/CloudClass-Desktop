@@ -19,3 +19,4 @@ lib
 es
 lib
 .DS_Store
+env.local
