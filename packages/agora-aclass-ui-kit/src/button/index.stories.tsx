@@ -1,6 +1,5 @@
 import React from 'react'
-import { action } from '@storybook/addon-actions'
-import {AButton} from '.'
+import {Button} from '.'
 
 export default {
   title: '按钮',
@@ -8,12 +7,12 @@ export default {
 
 export const ConfirmButton: React.FC<void> = () => {
   return (
-    <AButton color="primary" text="Yes"></AButton>
+    <Button color="primary" text="Yes"></Button>
   )
 }
 
 export const CancelButton: React.FC<void> = () => {
   return (
-    <AButton color="secondary" text="No"></AButton>
+    <Button color="secondary" text="No"></Button>
   )
 }

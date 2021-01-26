@@ -1,13 +1,18 @@
+import React, { ReactChild, ReactElement, useCallback } from 'react'
 import { Box, IconButton } from '@material-ui/core'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import React, { ReactChild, useCallback } from 'react'
+import { CustomButton } from 'src/button'
 import { CustomizeTheme } from 'src/theme'
 import MuteCam from './assets/mute-camera.png'
 import MuteMic from './assets/mute-mic.png'
 import UnMuteCam from './assets/unmute-camera.png'
 import UnMuteMic from './assets/unmute-mic.png'
+import TeacherIcon from './assets/teacher.png'
+import StudentIcon from './assets/student.png'
+import TrophyIcon  from './assets/trophy.png'
+import { TextEllipsis } from 'src/typography'
 
-const useVideoFrameStyles = makeStyles((theme: Theme) => 
+const useStyles = makeStyles((theme: Theme) => 
   createStyles({
     avBtn: {
       display: 'flex',
@@ -27,18 +32,49 @@ const useVideoFrameStyles = makeStyles((theme: Theme) =>
       position: 'relative',
     },
     minimalBtn: {
+      padding: 0,
       position: 'absolute',
       top: '3px',
       right: '3px',
-      justifyContent: 'space-between',
-      alignItems: 'center'
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 12,
+      minWidth: 12,
+      height: 12,
+      borderRadius: 3,
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.26)'
+      },
+      '&:active': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+      },
     },
-    nickNameTypography: {
-      paddingLeft: 5,
-      paddingRight: 5,
+    minimalStyle: {
+      background: '#ffffff',
+      border: '1px solid #ffffff',
+      position: 'absolute',
+      width: 7,
+    },
+    minimalIcon: {
+      color: '#ffffff',
+      position: 'absolute',
+      top: -10,
+      left: -3,
+    },
+    trophyNum: {
+      paddingLeft: 3,
+      paddingRight: 3,
+      position: 'absolute',
+      top: 3,
+    },
+    idCard: {
+      paddingLeft: 3,
+      paddingRight: 3,
       position: 'absolute',
       bottom: 3,
-      left: 3,
+    },
+    ellipticBox: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -47,44 +83,58 @@ const useVideoFrameStyles = makeStyles((theme: Theme) =>
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
       borderRadius: 15,
       fontSize: 10,
+      paddingLeft: 4,
+      paddingRight: 4,
       color: '#ffffff'
+    },
+    teacherIcon: {
+      background: `url(${TeacherIcon}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+      height: 14,
+      width: 13,
+      margin: '0 2px'
+    },
+    studentIcon: {
+      background: `url(${StudentIcon}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+      height: 14,
+      width: 13,
+      margin: '0 2px'
+    },
+    UnMuteCameIcon: {
+      background: `url(${UnMuteCam}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
+    UnMuteMicIcon: {
+      background: `url(${UnMuteMic}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
+    MuteCameIcon: {
+      background: `url(${MuteCam}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
+    MuteMicIcon: {
+      background: `url(${MuteMic}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
+    btnRoot: {
+      padding: 0,
+      '&:hover': {
+      }
     },
   })
 )
 
-type MediaButtonProps = {
+interface MediaButtonProps {
   muted: boolean,
   onClick: VideoItemOnClick
 }
-
-const useMediaStyles = makeStyles(() => createStyles({
-  root: {
-    padding: 0,
-    '&:hover': {
-      // backgroundColor: 'inherit'
-    }
-  },
-  UnMuteCameIcon: {
-    background: `url(${UnMuteCam}) no-repeat`,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain'
-  },
-  UnMuteMicIcon: {
-    background: `url(${UnMuteMic}) no-repeat`,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain'
-  },
-  MuteCameIcon: {
-    background: `url(${MuteCam}) no-repeat`,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain'
-  },
-  MuteMicIcon: {
-    background: `url(${MuteMic}) no-repeat`,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain'
-  }
-}))
 
 const IconItem = (props: any) => (
   <Box width="18px" height="18px" className={props.className} component="div">
@@ -98,7 +148,7 @@ const BaseIconButton = (props: any) => (
 
 const VideoIconButton = (props: MediaButtonProps) => {
 
-  const classes = useMediaStyles()
+  const classes = useStyles()
 
   const className = props.muted ? classes.MuteCameIcon : classes.UnMuteCameIcon
 
@@ -112,7 +162,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
   }, [props.onClick, props.muted])
 
   return (
-    <BaseIconButton className={classes.root} onClick={onClick}>
+    <BaseIconButton className={classes.btnRoot} onClick={onClick}>
       <IconItem className={className} />
     </BaseIconButton>
   )
@@ -120,7 +170,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
 
 const AudioIconButton = (props: MediaButtonProps) => {
 
-  const classes = useMediaStyles()
+  const classes = useStyles()
   const className = props.muted ? classes.MuteMicIcon : classes.UnMuteMicIcon
 
   const onClick = useCallback(() => {
@@ -133,9 +183,83 @@ const AudioIconButton = (props: MediaButtonProps) => {
   }, [props.onClick, props.muted])
 
   return (
-    <BaseIconButton className={classes.root} onClick={onClick}>
+    <BaseIconButton className={classes.btnRoot} onClick={onClick}>
       <IconItem className={className} />
     </BaseIconButton>
+  )
+}
+
+interface EllipticBoxProps {
+  children: ReactElement | null
+}
+
+const EllipticBox = (props: EllipticBoxProps) => {
+  const classes = useStyles()
+  return (
+    <Box component="div" className={classes.ellipticBox}>
+      {props.children ? props.children : null}
+    </Box>
+  )
+}
+
+interface TrophyBoxProps {
+  iconUrl: string,
+  number: number
+}
+
+const TrophyBox = (props: TrophyBoxProps) => {
+  return (
+    <EllipticBox>
+      <>
+        <div style={{
+          background: `url(${props.iconUrl}) no-repeat`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          width: 18,
+          height: 18,
+          // marginLeft: 5,
+          marginRight: 5,
+        }}></div>
+        <TextEllipsis
+          maxWidth={25}
+          style={{
+            color: '#FFD919',
+            fontSize: 8.3,
+          }}
+        >
+          x{props.number}
+        </TextEllipsis>
+      </>
+    </EllipticBox>
+  )
+}
+
+interface ParticipantIdentityCardProps {
+  nickname: string,
+  role: string
+}
+
+const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
+  const classes = useStyles()
+
+  let defaultRoleClassKey = classes.studentIcon
+
+  const roles = {
+    'teacher': classes.teacherIcon,
+    'student': classes.studentIcon
+  }
+
+  const roleKey = roles[props.role] || defaultRoleClassKey
+
+  return (
+    <Box component="div" className={classes.idCard}>
+      <EllipticBox>
+        <>
+          <div className={roleKey}></div>
+          <div>{props.nickname}</div>
+        </>
+      </EllipticBox>
+    </Box>
   )
 }
 
@@ -147,7 +271,7 @@ export type VideoItem = {
   uid?: number,
 }
 
-export type VideoFrameProps = {
+export interface VideoFrameProps {
   uid: number,
   nickname: string,
   minimal: boolean,
@@ -161,20 +285,36 @@ export type VideoFrameProps = {
 }
 
 const VideoFrame = (props: VideoFrameProps) => {
-  const classes = useVideoFrameStyles()
+  const classes = useStyles()
 
   const onClick = useCallback((evt: VideoItem) => 
     props.onClick({...evt, uid: props.uid})
   , [props.uid])
+
+  const onClickMinimize = useCallback(() => {
+    onClick({
+      sourceType: 'minimal',
+      uid: props.uid
+    })
+  }, [props.uid, onClick])
   
   return (
     <Box component="div" className={classes.root}>
-      <Box component="div" className={classes.minimalBtn}>
-
+      <Box
+        className={classes.trophyNum}
+        component="div">
+        <TrophyBox iconUrl={TrophyIcon} number={5} />
       </Box>
-      <Box component="div" className={classes.nickNameTypography}>
-        {props.nickname ? props.nickname : ''}
-      </Box>
+      <CustomButton
+        component="div"
+        className={classes.minimalBtn}
+        onClick={onClickMinimize}>
+        <hr className={classes.minimalStyle}/>
+      </CustomButton>
+      <ParticipantIdentityCard
+        nickname={props.nickname}
+        role={props.role}
+      />
       <Box className={classes.avBtn} component="div">
         <VideoIconButton muted={props.videoState} onClick={onClick} />
         <AudioIconButton muted={props.audioState} onClick={onClick}/>
@@ -183,7 +323,7 @@ const VideoFrame = (props: VideoFrameProps) => {
   )
 }
 
-interface VideoProps extends VideoFrameProps {
+export interface VideoProps extends VideoFrameProps {
   className: string
 }
 
