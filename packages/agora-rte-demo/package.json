@@ -207,6 +207,7 @@
   },
   "dependencies": {
     "adm-zip": "0.4.14",
+    "agora-aclass-ui-kit": "0.0.1",
     "agora-electron-sdk": "education290",
     "agora-rte-sdk": "^1.0.0",
     "bowser": "1.9.4",

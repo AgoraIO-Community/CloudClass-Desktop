@@ -16,11 +16,15 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "declaration": true,
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": false,
+    "emitDeclarationOnly": true,
   },
   "include": ["src/**/*", ".storybook/**/*"],
   "exclude": [

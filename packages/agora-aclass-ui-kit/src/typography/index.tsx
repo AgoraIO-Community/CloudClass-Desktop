@@ -1,11 +1,12 @@
 import { Box } from '@material-ui/core'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React from 'react'
-import { CustomizeTheme } from 'src/theme'
+import { CustomizeTheme } from '../theme'
 
 export interface TextEllipsisProps {
   maxWidth: React.ReactText,
-  children: React.Element,
-  style?: React.CSSProperties 
+  children: React.ReactElement,
+  style?: CSSProperties
 }
 
 export const TextEllipsis = (props: TextEllipsisProps) => {

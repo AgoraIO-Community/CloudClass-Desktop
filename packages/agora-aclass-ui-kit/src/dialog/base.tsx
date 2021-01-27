@@ -1,6 +1,7 @@
 import React, { ReactEventHandler } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle} from '@material-ui/core'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { Button } from '../button'
 import { withStyles } from '@material-ui/core/styles'
 import { noop } from 'src/declare'
@@ -68,12 +69,16 @@ type DialogProps = {
   confirmText?: string,
   cancelText?: string,
   onConfirm?: ReactEventHandler<any>,
-  onCancel?: ReactEventHandler<any>
+  onCancel?: ReactEventHandler<any>,
+  backdropStyle?: CSSProperties
 }
 
 const useDialogStyles = makeStyles((theme: Theme) => {
   const styles = createStyles({
     backDrop: {
+      // '&:first-child': {
+      //   background: 'inherit',
+      // },
       background: 'transparent',
     },
     dialogPaper: {
@@ -115,6 +120,10 @@ const useDialogStyles = makeStyles((theme: Theme) => {
       justifyContent: 'center',
       height: '36px',
     },
+    // dialogBorder: {
+    //   borderRadius: theme.palette.frame.borderRadius,
+    //   border: theme.palette.frame.border
+    // }
   })
   return styles
 })
@@ -141,6 +150,9 @@ const BaseDialog = (props: DialogProps) => {
       BackdropProps={{
         classes: {
           root: classes.backDrop
+        },
+        style: {
+          ...props.backdropStyle
         }
       }}
       PaperProps={{
@@ -180,16 +192,18 @@ export const Dialog = (props: DialogProps) => (
 )
 
 interface PromptDialogProps {
-  text?: string,
+  title: string,
+  contentText?: string,
   visible: boolean,
-  headerText: string,
   confirmText?: string,
+  cancelText?: string,
   onConfirm?: ReactEventHandler<any>,
-  onCancel?: ReactEventHandler<any>
+  onClose?: ReactEventHandler<any>,
+  id?: number
 }
 
 interface DialogHeaderProps {
-  headerText: string,
+  title: string,
   onClose: ReactEventHandler<any>
 }
 
@@ -221,7 +235,7 @@ const MDialogHeader = (props: DialogHeaderProps) => {
   
   return (
     <MDialogTitle disableTypography className={classes.root}>
-      <div>{props.headerText}</div>
+      <div>{props.title}</div>
       <IconButton aria-label="close" classes={{root: classes.closeButton}} onClick={onClose}>
         <CloseIcon fontSize={"small"} />
       </IconButton>
@@ -230,12 +244,11 @@ const MDialogHeader = (props: DialogHeaderProps) => {
 }
 
 const BasePromptDialog = (props: PromptDialogProps) => {
-
   const classes = useDialogStyles()
 
   const onConfirm = props.onConfirm ? props.onConfirm : noop
 
-  const onClose = props.onCancel ? props.onCancel : noop
+  const onClose = props.onClose ? props.onClose: noop
 
   return (
     <MDialog
@@ -244,6 +257,11 @@ const BasePromptDialog = (props: PromptDialogProps) => {
           root: classes.backDrop
         }
       }}
+      // PaperComponent={
+      //   <Paper>
+      //     paper
+      //   </Paper>
+      // }
       PaperProps={{
         style: {
           boxShadow: "none"
@@ -256,15 +274,15 @@ const BasePromptDialog = (props: PromptDialogProps) => {
       onClose={onClose}
     >
       <MDialogHeader
-        headerText={props.headerText}
+        title={props.title}
         onClose={onClose}
       />
       <MDialogContent
         classes={{root: classes.dialogRoot}}
       >
-        {props.text ?
+        {props.contentText ?
           <MDialogContentText classes={{root: classes.dialogTextTypography}}>
-            {props.text}
+            {props.contentText}
           </MDialogContentText>
         : null}
         <DialogButtons classes={{root: classes.dialogButtonGroup}}>
@@ -280,3 +298,20 @@ export const PromptDialog = (props: PromptDialogProps) => (
     <BasePromptDialog {...props} />
   </CustomizeTheme>
 )
+
+export interface ChatDialogProps {
+  title: string,
+  children?: React.ReactElement
+}
+
+export const ChatDialog = (props: ChatDialogProps) => {
+
+  const classes = useDialogStyles()
+
+  return (
+    <Box></Box>
+    // <Box className={classes.dialogBorder}>
+    //   {props.children ? props.children : null}
+    // </Box>
+  )
+}

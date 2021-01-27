@@ -1,10 +1,10 @@
-import { confirmDialog } from './container'
+import { ConfirmConfig, confirmDialog } from './api'
 
 export {PromptDialog, Dialog} from './base'
 
 export const dialogManager = {
-  add: (args: any) => {
-    confirmDialog(args)
+  add: (args: ConfirmConfig) => {
+    return confirmDialog(args)
   },
   remove: () => {
 

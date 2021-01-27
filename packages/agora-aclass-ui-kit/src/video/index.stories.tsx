@@ -27,6 +27,7 @@ export const TeacherVideo = () => {
       minimal={true}
       resizable={false}
       trophyNumber={0}
+      visibleTrophy={false}
       role={"teacher"}
       videoState={video}
       audioState={audio}
@@ -58,6 +59,7 @@ export const StudentVideo = () => {
       nickname="Nancy"
       minimal={true}
       resizable={false}
+      visibleTrophy={true}
       trophyNumber={10}
       role={"student"}
       videoState={video}

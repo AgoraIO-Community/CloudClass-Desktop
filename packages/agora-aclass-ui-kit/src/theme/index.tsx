@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {ReactChild} from 'react'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import { ReactChild } from 'react'
+import {Dialog} from '@material-ui/core'
 
 const theme = createMuiTheme({
   palette: {
@@ -9,7 +9,11 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#A7A7A7',
-    }
+    },
+    // frame: {
+    //   borderRadius: '7px',
+    //   border: '5px solid #75C0FF',
+    // }
   },
   typography: {
     fontFamily: [

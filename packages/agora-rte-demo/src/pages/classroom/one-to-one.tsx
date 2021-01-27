@@ -6,6 +6,10 @@ import { ScreenSharing } from '@/components/screen-sharing';
 import { useRoomStore, useSceneStore } from '@/hooks';
 import { observer } from 'mobx-react';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+// import { dialogManager } from 'agora-aclass-ui-kit';
+
+//@ts-ignore
+// window.dialogManager = dialogManager
 
 export const OneToOne = observer(() => {
 

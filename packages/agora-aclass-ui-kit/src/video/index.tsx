@@ -1,8 +1,8 @@
-import React, { ReactChild, ReactElement, useCallback } from 'react'
+import React, { Fragment, ReactEventHandler, useCallback } from 'react'
 import { Box, IconButton } from '@material-ui/core'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { CustomButton } from 'src/button'
-import { CustomizeTheme } from 'src/theme'
+import { CustomButton } from '../button'
+import { CustomizeTheme } from '../theme'
 import MuteCam from './assets/mute-camera.png'
 import MuteMic from './assets/mute-mic.png'
 import UnMuteCam from './assets/unmute-camera.png'
@@ -10,7 +10,7 @@ import UnMuteMic from './assets/unmute-mic.png'
 import TeacherIcon from './assets/teacher.png'
 import StudentIcon from './assets/student.png'
 import TrophyIcon  from './assets/trophy.png'
-import { TextEllipsis } from 'src/typography'
+import { TextEllipsis } from '../typography'
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -190,7 +190,7 @@ const AudioIconButton = (props: MediaButtonProps) => {
 }
 
 interface EllipticBoxProps {
-  children: ReactElement | null
+  children: React.ReactElement,
 }
 
 const EllipticBox = (props: EllipticBoxProps) => {
@@ -204,33 +204,42 @@ const EllipticBox = (props: EllipticBoxProps) => {
 
 interface TrophyBoxProps {
   iconUrl: string,
-  number: number
+  number: number,
+  onClick: ReactEventHandler<any>
 }
 
 const TrophyBox = (props: TrophyBoxProps) => {
+
   return (
-    <EllipticBox>
-      <>
-        <div style={{
-          background: `url(${props.iconUrl}) no-repeat`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          width: 18,
-          height: 18,
-          // marginLeft: 5,
-          marginRight: 5,
-        }}></div>
-        <TextEllipsis
-          maxWidth={25}
-          style={{
-            color: '#FFD919',
-            fontSize: 8.3,
-          }}
-        >
-          x{props.number}
-        </TextEllipsis>
-      </>
-    </EllipticBox>
+      <EllipticBox>
+        <>
+        <CustomButton component="div" style={{
+            background: `url(${props.iconUrl}) no-repeat`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            minWidth: 18,
+            minHeight: 18,
+            '&:hover': {
+              opacity: 0.1
+            },
+            '&:active': {
+              opacity: 0.9
+            },
+            marginRight: 5,
+          }} onClick={props.onClick} />
+          <TextEllipsis
+            maxWidth={25}
+            style={{
+              color: '#FFD919',
+              fontSize: 8.3,
+            }}
+          >
+            <Fragment>
+            x{props.number}
+            </Fragment>
+          </TextEllipsis>
+        </>
+      </EllipticBox>
   )
 }
 
@@ -275,12 +284,13 @@ export interface VideoFrameProps {
   uid: number,
   nickname: string,
   minimal: boolean,
+  visibleTrophy: boolean,
   resizable: boolean,
   videoState: boolean,
   audioState: boolean,
   trophyNumber: number,
   role: string,
-  children: ReactChild | null,
+  children: React.ReactElement,
   onClick: VideoItemOnClick,
 }
 
@@ -297,14 +307,21 @@ const VideoFrame = (props: VideoFrameProps) => {
       uid: props.uid
     })
   }, [props.uid, onClick])
+
+  const onClickTrophy = useCallback(() => {
+    onClick({
+      sourceType: 'trophy',
+      uid: props.uid
+    })
+  }, [props.uid, onClick])
   
   return (
     <Box component="div" className={classes.root}>
-      <Box
+      {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
-        <TrophyBox iconUrl={TrophyIcon} number={5} />
-      </Box>
+        <TrophyBox iconUrl={TrophyIcon} number={5} onClick={onClickTrophy}/>
+      </Box> : null}
       <CustomButton
         component="div"
         className={classes.minimalBtn}
@@ -319,6 +336,7 @@ const VideoFrame = (props: VideoFrameProps) => {
         <VideoIconButton muted={props.videoState} onClick={onClick} />
         <AudioIconButton muted={props.audioState} onClick={onClick}/>
       </Box>
+      {props.children}
     </Box>
   )
 }
@@ -333,7 +351,7 @@ export const Video = ({children, ...props}: VideoProps) => {
       <VideoFrame
         {...props}
       >
-        {children ? children : null}
+        {children}
       </VideoFrame>
     </CustomizeTheme>
   )

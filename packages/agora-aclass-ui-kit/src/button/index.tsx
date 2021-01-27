@@ -1,8 +1,9 @@
-import React, { ReactChild, ReactEventHandler } from 'react'
+import React, { ReactEventHandler } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import MButton from '@material-ui/core/Button'
-import { CustomizeTheme } from 'src/theme'
-import { noop } from 'src/declare'
+import { Button as MButton} from '@material-ui/core'
+import { CustomizeTheme } from '../theme'
+import { noop } from '../declare'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 const useButtonStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +49,7 @@ export interface ButtonProps {
   text: string,
   color?: "primary" | "secondary",
   onClick?: ReactEventHandler<any>,
+  style?: CSSProperties
 }
 
 export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
@@ -59,7 +61,7 @@ export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
 
   return (
     <CustomizeTheme>
-      <MButton onClick={onClick} classes={{root: classKey, label: classes.label}} variant="contained" color={props.color} disableElevation disableRipple>
+      <MButton {...props} onClick={onClick} classes={{root: classKey, label: classes.label}} variant="contained" color={props.color} disableElevation disableRipple>
         {props.text}
       </MButton>
     </CustomizeTheme>
@@ -68,19 +70,22 @@ export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
 export interface CustomButtonProps {
   className?: string,
   onClick?: ReactEventHandler<any>,
-  children?: ReactChild,
-  component: React.ElementType
+  children?: React.ReactElement,
+  component: React.ElementType,
+  style?: CSSProperties
 }
 
 export const CustomButton = (props: CustomButtonProps) => {
   return (
     <CustomizeTheme>
       <MButton
+        {...props}
         disableElevation
         disableRipple
         component={props.component}
         className={props.className}
-        onClick={props.onClick}>
+        onClick={props.onClick}
+      >
         {props.children ? props.children : ''}
       </MButton>
     </CustomizeTheme>

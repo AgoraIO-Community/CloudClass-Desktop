@@ -19,8 +19,8 @@
     "url": "git+https://github.com/agoraio-community/CloudClass-Desktop.git"
   },
   "scripts": {
-    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build": "run-p build:*",
+    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build:types": "tsc --outDir lib --module commonjs",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },

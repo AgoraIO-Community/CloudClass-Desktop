@@ -5,14 +5,24 @@ export default {
   title: '按钮',
 }
 
-export const ConfirmButton: React.FC<void> = () => {
+export const ConfirmButton = (props: any) => {
   return (
-    <Button color="primary" text="Yes"></Button>
+    <Button color={props.color} text={props.text}></Button>
   )
 }
 
-export const CancelButton: React.FC<void> = () => {
+ConfirmButton.args = {
+  color: 'primary',
+  text: 'Yes'
+}
+
+export const CancelButton = (props: any) => {
   return (
-    <Button color="secondary" text="No"></Button>
+    <Button color={props.color} text={props.text}></Button>
   )
+}
+
+CancelButton.args = {
+  color: 'secondary',
+  text: 'No'
 }

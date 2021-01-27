@@ -1,14 +1,20 @@
 {
   "name": "agora-aclass-ui-kit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "> TODO: description",
   "author": "matrixbirds <yooobuntu@gmail.com>",
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop/tree/master/packages/agora-aclass-ui-kit#readme",
   "license": "ISC",
-  "main": "lib/agora-aclass-ui-kit.js",
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
+  },
+  "resolutions": {
+    "@material-ui/core": "4.11.3",
+    "@material-ui/icons": "4.11.2",
+    "@material-ui/lab": "4.0.0-alpha.57"
   },
   "files": [
     "lib"
@@ -18,6 +24,9 @@
     "url": "git+https://github.com/agoraio-community/CloudClass-Desktop.git"
   },
   "scripts": {
+    "build": "run-p build:*",
+    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "build:types": "tsc --outDir types --module commonjs",
     "test": "echo \"Error: run tests from root\" && exit 1",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -26,26 +35,46 @@
     "url": "https://github.com/agoraio-community/CloudClass-Desktop/issues"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.1.15",
-    "@storybook/addon-essentials": "^6.1.15",
-    "@storybook/addon-links": "^6.1.15",
-    "@storybook/node-logger": "^6.1.15",
-    "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/react": "^6.1.15",
+    "@babel/core": "7.12.10",
+    "@babel/plugin-proposal-class-properties": "7.12.1",
+    "@babel/plugin-proposal-decorators": "7.12.1",
+    "@babel/plugin-transform-runtime": "7.12.10",
+    "@babel/preset-env": "7.12.11",
+    "@babel/preset-react": "7.12.10",
+    "@babel/preset-typescript": "7.12.7",
+    "@babel/runtime": "7.12.5",
+    "@storybook/addon-actions": "6.1.15",
+    "@storybook/addon-controls": "6.1.15",
+    "@storybook/addon-essentials": "6.1.15",
+    "@storybook/addon-links": "6.1.15",
+    "@storybook/node-logger": "6.1.15",
+    "@storybook/preset-create-react-app": "3.1.5",
+    "@storybook/react": "6.1.15",
+    "@types/lodash": "4.14.168",
+    "@types/node": "14.14.22",
     "@types/react": "16.9.9",
     "@types/react-beautiful-dnd": "13.0.0",
     "@types/react-color": "3.0.1",
     "@types/react-dom": "16.9.2",
-    "react-docgen-typescript": "^1.20.5",
-    "typescript": "^4.1.3"
+    "babel-loader": "8.2.2",
+    "babel-plugin-transform-imports": "2.0.0",
+    "cross-env": "6.0.3",
+    "hard-source-webpack-plugin": "0.13.1",
+    "react": "16.13.1",
+    "react-docgen-typescript": "1.20.5",
+    "react-dom": "16.13.1",
+    "react-scripts": "4.0.1",
+    "thread-loader": "3.0.1",
+    "typescript": "3.8.3",
+    "webpack": "4.46.0",
+    "webpack-bundle-analyzer": "4.3.0",
+    "webpack-cli": "4.3.1",
+    "npm-run-all": "4.1.5"
   },
   "dependencies": {
-    "react-scripts": "^4.0.1",
-    "@material-ui/core": "4.9.9",
-    "@material-ui/icons": "4.9.1",
-    "@material-ui/lab": "4.0.0-alpha.56",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
+    "@material-ui/core": "4.11.3",
+    "@material-ui/icons": "4.11.2",
+    "@material-ui/lab": "4.0.0-alpha.57",
     "react-beautiful-dnd": "13.0.0",
     "react-color": "2.17.3"
   }
