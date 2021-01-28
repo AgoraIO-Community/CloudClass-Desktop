@@ -21,3 +21,5 @@ export const ChatBoard = (props: ChatBoardProps) => {
     // <div></div>
   )
 }
+
+export { Bubble } from './bubble'

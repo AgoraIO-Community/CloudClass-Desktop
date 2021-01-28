@@ -3,8 +3,8 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React from 'react'
 import { themeConfig } from '../theme'
 
-interface BoardProps {
-  children: any,
+export interface BoardProps {
+  children?: any,
   style?: CSSProperties
 }
 
@@ -14,10 +14,11 @@ export const Board = ({children, style}: BoardProps) => {
       ...themeConfig.dialog.border,
       ...style
     }}>
-      {children}
+      {children ? children : null}
     </Box>
   )
 }
 
-export { ControlBar } from './control-bar'
-export { ToolBar } from './tool-bar'
+
+export { ControlMenu } from './control'
+export { Tool } from './tool'

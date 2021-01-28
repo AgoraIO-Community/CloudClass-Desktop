@@ -313,3 +313,16 @@ export const ChatDialog = (props: ChatDialogProps) => {
     // </Box>
   )
 }
+
+// export interface DeviceDialog {
+//   title: string
+//   children?: React.ReactElement
+// }
+
+// export const DeviceDialog = (props: DeviceDialog) => {
+//   return (
+//     <BaseDialog>
+
+//     </BaseDialog>
+//   )
+// }

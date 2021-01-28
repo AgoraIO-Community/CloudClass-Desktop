@@ -2,7 +2,6 @@ import React from 'react'
 import { action } from '@storybook/addon-actions';
 import {dialogManager, Dialog , PromptDialog} from '.';
 import { Button } from '../button';
-import { ChatDialog } from './base';
 
 export default {
   title: '对话框',
@@ -93,10 +92,4 @@ QuitRoomDialogB.args = {
   text: "课程还未结束，是否确定退出教室？",
   confirmText: "退出教室",
   cancelText: "在想一下",
-}
-
-export const ChatDialogExample = () => {
-  return (
-    <ChatDialog title="233" />
-  )
 }
