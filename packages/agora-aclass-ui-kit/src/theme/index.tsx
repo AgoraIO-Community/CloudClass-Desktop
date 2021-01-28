@@ -34,6 +34,24 @@ const theme = createMuiTheme({
 
 type ThemeProps = Required<{children: ReactChild}>
 
+
+export const themeConfig = {
+  dialog: {
+    border: {
+      border: '5px solid #75C0FF',
+      borderColor: '#75C0FF',
+      borderRadius: '7px',
+    }
+  },
+  box: {
+    border: {
+      border: '5px solid #75C0FF',
+      borderColor: '#75C0FF',
+      borderRadius: '5px',
+    }
+  }
+}
+
 export const CustomizeTheme = (props: ThemeProps) => {
   return (
     <ThemeProvider theme={theme}>

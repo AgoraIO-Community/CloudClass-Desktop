@@ -4,11 +4,11 @@ import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { Button } from '../button'
 import { withStyles } from '@material-ui/core/styles'
-import { noop } from 'src/declare'
+import { noop } from '../declare'
 import CloseIcon from '@material-ui/icons/Close';
 import AclassLion from './assets/aclass-lion.png'
 import IconButton from '@material-ui/core/IconButton'
-import { CustomizeTheme } from 'src/theme'
+import { CustomizeTheme, themeConfig } from '../theme'
 
 const useLogoStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,17 +83,15 @@ const useDialogStyles = makeStyles((theme: Theme) => {
     },
     dialogPaper: {
       fontFamily: theme.typography.fontFamily,
-      borderRadius: '7px',
-      border: '5px solid #75C0FF',
       width: '202px',
       height: '130px',
+      ...themeConfig.dialog.border
     },
     promptPaper: {
       fontFamily: theme.typography.fontFamily,
-      borderRadius: '7px',
-      border: '5px solid #75C0FF',
       width: '167.5px',
       height: '102.5px',
+      ...themeConfig.dialog.border
     },
     dialogRoot: {
       fontFamily: theme.typography.fontFamily,
