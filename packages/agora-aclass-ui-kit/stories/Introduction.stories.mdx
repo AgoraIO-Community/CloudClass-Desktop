@@ -109,3 +109,40 @@ import { Meta } from '@storybook/addon-docs/blocks';
 # Welcome to Storybook
 
 声网教育场景化UIKit
+
+## 入门  
+```bash
+# 创建UI组件目录
+mkdir -p src/kit
+
+# 创建stories
+touch kit/index.stories.tsx
+
+
+# 编辑stories
+code src/kit/index.stories.tsx
+```
+
+## stories样板代码  
+```typescript
+import React from 'react'
+import {Kit} from '.'
+
+export default {
+  title: 'Kit',
+}
+
+export const 你的组件 = () => {
+
+}
+```
+
+
+## theme  
+* 主题、及全局配置放这里  
+
+## button  
+* 基础按钮样式
+
+## typography  
+* 字体铸排
