@@ -65,16 +65,18 @@ export class MediaStore {
     })
     return signalStatus
   }
-  private remoteMaxPacketLoss(audioStats: any, videoStats: any) {
+  private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
     const mixSignalStatus: any[] = []
-    Object.keys(audioStats).forEach(item => {
-      const { packetLossRate: videoLossRate, receiveDelay: videoReceiveDelay } = videoStats[item]
-      const { packetLossRate: audioLossRate, receiveDelay: audioReceiveDelay } = audioStats[item]
+    Array.from(new Set([...Object.keys(audioStats), ...Object.keys(videoStats)])).forEach(item => {
+      const videoStatsItem = videoStats[item] || {}
+      const audioStatsItem = audioStats[item] || {}
+      const { packetLossRate: videoLossRate, receiveDelay: videoReceiveDelay } = videoStatsItem
+      const { packetLossRate: audioLossRate, receiveDelay: audioReceiveDelay } = audioStatsItem
       const packetLossRate = Math.max(videoLossRate || 0, audioLossRate || 0);
       const receiveDelay = Math.max(videoReceiveDelay || 0, audioReceiveDelay || 0);
       mixSignalStatus.push({
-        ...audioStats[item],
-        ...videoStats[item],
+        audioStats: { ...audioStatsItem },
+        videoStats: { ...videoStatsItem },
         uid: item,
         packetLossRate,
         receiveDelay,
@@ -134,8 +136,7 @@ export class MediaStore {
       this.updateNetworkQuality(qualityStr || defaultQuality)
       const { remotePacketLoss: { audioStats, videoStats } } = evt;
       const mixSignalStatus = this.remoteMaxPacketLoss(audioStats, videoStats);
-      this.signalStatus = this.userSignalStatus(mixSignalStatus)
-      this.updateSignalStatusWithRemoteUser(this.signalStatus )
+      this.updateSignalStatusWithRemoteUser(this.userSignalStatus(mixSignalStatus))
     })
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))

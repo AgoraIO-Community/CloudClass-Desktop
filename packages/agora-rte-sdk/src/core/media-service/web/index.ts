@@ -169,7 +169,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
               EduLogger.info("subscribeVideo, user", user)
               // await this.subscribeVideo(user)
               await this.client.subscribe(user, 'video')
-              // const data = this.client.getRemoteVideoStats()
               this.fire('user-published', {
                 user,
                 mediaType,
@@ -247,7 +246,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       if (user.uid !== this.localScreenUid) {
         if (mediaType === 'audio') {
           await client.subscribe(user, 'audio')
-          // const data = this.client.getRemoteAudioStats()
           // this.fire('user-published', {
           //   user,
           //   mediaType,
@@ -260,7 +258,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
         if (mediaType === 'video') {
           await client.subscribe(user, 'video')
-          // const data = this.client.getRemoteVideoStats()
           this.fire('user-published', {
             user,
             mediaType,
@@ -493,7 +490,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   async subscribeAudio(user: any): Promise<any> {
     await this.client.subscribe(user, 'audio');
-    // const data = this.client.getRemoteAudioStats()
     this.updateAudioList(user.uid, 'subscribe')
     // this.fire('user-published', {user})
   }
@@ -507,7 +503,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   private async subscribeVideo(user: any): Promise<any> {
     EduLogger.info("subscribe user", user)
     await this.client.subscribe(user, 'video')
-    // const data = this.client.getRemoteVideoStats()
     // this.fire('user-published', {user})
   }
 
