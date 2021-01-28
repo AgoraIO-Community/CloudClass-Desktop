@@ -292,7 +292,8 @@ export class UIStore {
 
   @computed
   get showPagination (): boolean {
-    if (this.appStore.roomStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+    const { userRole } = this.appStore.roomStore.roomInfo
+    if (userRole === EduRoleTypeEnum.teacher || userRole === EduRoleTypeEnum.assistant) {
       return true
     }
     return false
@@ -306,7 +307,7 @@ export class UIStore {
   @computed
   get showScaler(): boolean {
     const userRole = this.appStore.roomStore.roomInfo.userRole
-    if (userRole === EduRoleTypeEnum.teacher) {
+    if (userRole === EduRoleTypeEnum.teacher|| userRole === EduRoleTypeEnum.assistant) {
       return true
     }
     return false
@@ -315,7 +316,7 @@ export class UIStore {
   @computed
   get showFooterMenu(): boolean {
     const userRole = this.appStore.roomStore.roomInfo.userRole
-    if (userRole === EduRoleTypeEnum.teacher) {
+    if (userRole === EduRoleTypeEnum.teacher || userRole === EduRoleTypeEnum.assistant) {
       return true
     }
     const roomType = this.appStore.roomStore.roomInfo.roomType
@@ -338,7 +339,7 @@ export class UIStore {
   @computed
   get showTools(): boolean {
     const userRole = this.appStore.roomStore.roomInfo.userRole
-    if (userRole === EduRoleTypeEnum.teacher) {
+    if (userRole === EduRoleTypeEnum.teacher || userRole === EduRoleTypeEnum.assistant) {
       return true
     }
     return false

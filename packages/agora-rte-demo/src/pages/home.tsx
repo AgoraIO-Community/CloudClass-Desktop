@@ -40,13 +40,15 @@ const roleName = [
   '',
   'teacher',
   'student',
-  'assistant'
+  'assistant',
+  'invisible'
 ]
 
 const roles = {
   'teacher': EduRoleTypeEnum.teacher,
   'student': EduRoleTypeEnum.student,
   'assistant': EduRoleTypeEnum.assistant,
+  'invisible': EduRoleTypeEnum.invisible
 }
 
 const getRoleType = (role: EduRoleTypeEnum): string => roleName[role] || ""
@@ -128,7 +130,6 @@ export const HomePage = observer(() => {
       setLoading(true)
       let {userUuid, rtmToken} = await homeApi.login(uid)
       setLoading(false)
-
       appStore.setRoomInfo({
         rtmUid: userUuid,
         rtmToken: rtmToken,
@@ -140,11 +141,7 @@ export const HomePage = observer(() => {
         roomUuid: `${roomUuid}`,
       })
       const path = roomTypes[session.roomType].path
-      if (userRole === EduRoleTypeEnum.assistant) {
-        history.push(`/breakout-class/assistant/courses`)
-      } else {
-        history.push(`/classroom/${path}`)
-      }
+      history.push(`/classroom/${path}`)
     } catch (err) {
       BizLogger.warn(JSON.stringify(err))
       setLoading(false)
@@ -265,6 +262,7 @@ export const HomePage = observer(() => {
                 onChange={(evt: any) => {
                   setSessionInfo({
                     ...session,
+                    role: '',
                     roomType: evt.target.value
                   });
                 }}

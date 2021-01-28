@@ -955,7 +955,7 @@ export class SceneStore extends SimpleInterval {
    * @param userUuid string
    */
   canControl(userUuid: string): boolean {
-    return this.roomInfo.userRole === EduRoleTypeEnum.teacher || this.userUuid === userUuid
+    return this.roomInfo.userRole !== EduRoleTypeEnum.student || this.userUuid === userUuid
   }
 
   async closeStream(userUuid: string, isLocal: boolean) {

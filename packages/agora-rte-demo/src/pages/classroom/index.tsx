@@ -52,7 +52,8 @@ const RoomController = observer(({children}: any) => {
   const history = useHistory()
 
   useEffect(() => {
-    if (!appStore.userRole) {
+    // 观众时userRole为0,这里只能做非空判断
+    if (appStore.userRole < 0) {
       uiStore.unblock()
       history.push('/')
       return

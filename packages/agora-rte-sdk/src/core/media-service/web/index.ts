@@ -4,6 +4,7 @@ import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import {GenericErrorWrapper} from '../../utils/generic-error';
+import {isEmpty} from 'lodash';
 
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
@@ -168,6 +169,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
               EduLogger.info("subscribeVideo, user", user)
               // await this.subscribeVideo(user)
               await this.client.subscribe(user, 'video')
+              // const data = this.client.getRemoteVideoStats()
               this.fire('user-published', {
                 user,
                 mediaType,
@@ -245,6 +247,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       if (user.uid !== this.localScreenUid) {
         if (mediaType === 'audio') {
           await client.subscribe(user, 'audio')
+          // const data = this.client.getRemoteAudioStats()
           // this.fire('user-published', {
           //   user,
           //   mediaType,
@@ -257,6 +260,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
         if (mediaType === 'video') {
           await client.subscribe(user, 'video')
+          // const data = this.client.getRemoteVideoStats()
           this.fire('user-published', {
             user,
             mediaType,
@@ -300,10 +304,16 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
     })
     client.on('network-quality', (evt: any) => {
+      const audioStats = this.client.getRemoteAudioStats()
+      const videoStats =this.client.getRemoteVideoStats()
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
-        channel: channelName
+        channel: channelName,
+        remotePacketLoss:{
+          audioStats,
+          videoStats
+        }
       })
     })
     this.addInterval(() => {
@@ -483,6 +493,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   async subscribeAudio(user: any): Promise<any> {
     await this.client.subscribe(user, 'audio');
+    // const data = this.client.getRemoteAudioStats()
     this.updateAudioList(user.uid, 'subscribe')
     // this.fire('user-published', {user})
   }
@@ -496,6 +507,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   private async subscribeVideo(user: any): Promise<any> {
     EduLogger.info("subscribe user", user)
     await this.client.subscribe(user, 'video')
+    // const data = this.client.getRemoteVideoStats()
     // this.fire('user-published', {user})
   }
 

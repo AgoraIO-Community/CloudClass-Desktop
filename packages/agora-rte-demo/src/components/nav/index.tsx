@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { networkQualities as networkQualityIcon } from '@/stores/app/room'
 import { EduManager } from 'agora-rte-sdk';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { SignalStatus } from './signalStatus';
 
 interface NavProps {
   delay: string
@@ -69,7 +70,7 @@ const StartClassButton = (props: any) => {
 }
 
 const BreakoutUploadButton = observer(() => {
-  
+
   const uiStore = useUIStore()
   const breakoutRoomStore = useBreakoutRoomStore()
 
@@ -132,7 +133,7 @@ const BasicUploadButton = observer(() => {
       <span>
         <CustomIcon className={lock ? "icon-loading" : "icon-upload"}
           onClick={async (evt: any) => {
-          await handleUpload()
+            await handleUpload()
           }}>
         </CustomIcon>
       </span>
@@ -172,38 +173,41 @@ export const Nav = observer((props: any) => {
       <div className={`nav-container ${isElectron ? 'draggable' : ''}`}>
         <div className="class-title">
           <span className="room-name">{roomName}</span>
-          {role === EduRoleTypeEnum.teacher ?
+          {role !== EduRoleTypeEnum.student ?
             <StartClassButton isBreakout={isBreakout} /> : null}
         </div>
         <div className="network-state">
-          <div>
-            {
-              !isCourses ?
-                <div className="nav-information">
-                  <span>
-                    {uiStore.isWeb ? <span className="net-field">{t('nav.delay')}<span className="net-field-value">{delay}</span></span> : null}
-                  </span>
-                  {/* <span className="net-field">Packet Loss Rate: <span className="net-field-value">{lossPacket}</span></span> */}
-                  <span className="net-field net-field-container">
-                    {t('nav.network')}
-                    <span className={`net-field-value ${networkQualityIcon[network]}`} style={{ marginLeft: '.2rem' }}>
+          {role !== EduRoleTypeEnum.assistant ?
+            <div>
+              {
+                !isCourses ?
+                  <div className="nav-information">
+                    <span>
+                      {uiStore.isWeb ? <span className="net-field">{t('nav.delay')}<span className="net-field-value">{delay}</span></span> : null}
                     </span>
-                  </span>
-                  <span className="net-field net-field-container">
-                    curSeqId
+                    {/* <span className="net-field">Packet Loss Rate: <span className="net-field-value">{lossPacket}</span></span> */}
+                    <span className="net-field net-field-container">
+                      {t('nav.network')}
+                      <span className={`net-field-value ${networkQualityIcon[network]}`} style={{ marginLeft: '.2rem' }}>
+                      </span>
+                    </span>
+                    <span className="net-field net-field-container">
+                      curSeqId
                     <span className={`net-field-value`} style={{ marginLeft: '.2rem' }}>
-                      {uiStore.curSeqId}
+                        {uiStore.curSeqId}
+                      </span>
                     </span>
-                  </span>
-                  <span className="net-field net-field-container">
-                    lastSeqId
+                    <span className="net-field net-field-container">
+                      lastSeqId
                     <span className={`net-field-value`} style={{ marginLeft: '.2rem' }}>
-                      {uiStore.lastSeqId}
+                        {uiStore.lastSeqId}
+                      </span>
                     </span>
-                  </span>
-                  {uiStore.isElectron ? <span className="net-field">{t('nav.cpu')}<span className="net-field-value">{cpu}%</span></span> : null}
-                </div> : null}
-          </div>
+                    {uiStore.isElectron ? <span className="net-field">{t('nav.cpu')}<span className="net-field-value">{cpu}%</span></span> : null}
+                  </div> : null}
+            </div> : <div>
+            <SignalStatus/>
+            </div>}
         </div>
         <div className="menu">
           <>

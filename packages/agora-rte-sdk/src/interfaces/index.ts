@@ -73,11 +73,13 @@ export enum EduPeerMessageCmdType {
 
 /**
  * 教育SDK角色枚举
+ * invisible = 0,为观众
  * teacher = 1，为老师
  * student = 2，为学生
  * assistant = 3，为助教
  */
 export enum EduRoleTypeEnum {
+  invisible = 0,
   teacher = 1,
   student = 2,
   assistant = 3,

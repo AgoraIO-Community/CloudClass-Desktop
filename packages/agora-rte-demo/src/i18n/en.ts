@@ -212,6 +212,7 @@ const en = {
     'teacher': 'teacher',
     'student': 'student',
     'assistant': 'tas',
+    'invisible': 'audience',
     'cover_class': 'cover-en',
     'room_name': 'Room Name',
     'nickname': 'Your Name',
