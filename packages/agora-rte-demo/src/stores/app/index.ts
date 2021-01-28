@@ -152,7 +152,7 @@ export class AppStore {
         roomUuid: "",
         roomType: 0,
         userName: "",
-        userRole: -1,
+        userRole: EduRoleTypeEnum.none,
         userUuid: "",
         rtmUid: "",
         rtmToken: "",
@@ -331,7 +331,7 @@ export class AppStore {
         roomName: '',
         roomType: 0,
         userName: '',
-        userRole: -1,
+        userRole:EduRoleTypeEnum.none,
         userUuid: '',
         roomUuid: '',
         ...this.params.roomInfoParams
