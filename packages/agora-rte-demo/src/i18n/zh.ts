@@ -209,6 +209,7 @@ const zhCN: any = {
     'entry-home': '进入教室',
     'teacher': '老师',
     'student': '学生',
+    'invisible': '观众',
     'assistant': '助教',
     'cover_class': 'cover-cn',
     'room_name': '房间名',

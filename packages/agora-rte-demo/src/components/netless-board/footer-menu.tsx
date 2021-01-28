@@ -139,7 +139,7 @@ const BreakoutClassSceneFooterMenu = observer(() => {
   }
 
   return (
-    roomStore.roomInfo.userRole === EduRoleTypeEnum.teacher ?
+    roomStore.roomInfo.userRole !== EduRoleTypeEnum.student  ?
     <>
     <div className="pagination">
     {!roomStore.sharing ?

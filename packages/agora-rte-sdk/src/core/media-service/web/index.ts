@@ -4,6 +4,7 @@ import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import {GenericErrorWrapper} from '../../utils/generic-error';
+import {isEmpty} from 'lodash';
 
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
@@ -300,10 +301,16 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
     })
     client.on('network-quality', (evt: any) => {
+      const audioStats = this.client.getRemoteAudioStats()
+      const videoStats =this.client.getRemoteVideoStats()
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
-        channel: channelName
+        channel: channelName,
+        remotePacketLoss:{
+          audioStats,
+          videoStats
+        }
       })
     })
     this.addInterval(() => {

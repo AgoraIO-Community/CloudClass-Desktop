@@ -35,13 +35,14 @@ export const StudentChatBoard = observer(() => {
   }
 
   const userRole = breakoutRoomStore.roomInfo.userRole
+  const isTeacher=userRole === EduRoleTypeEnum.teacher|| userRole === EduRoleTypeEnum.assistant
 
   const boardStore = useBoardStore()
   const { grantUsers } = boardStore
 
   const handleClick = async (evt: any, id: string, type: string) => {
     const isLocal = (userUuid: string) => breakoutRoomStore.roomInfo.userUuid === userUuid
-    if (breakoutRoomStore.roomInfo.userRole === EduRoleTypeEnum.teacher || isLocal(id)) {
+    if ( isTeacher || isLocal(id)) {
       const target = studentStreams.find((it: EduMediaStream) => it.userUuid === id)
       switch (type) {
         case 'audio': {

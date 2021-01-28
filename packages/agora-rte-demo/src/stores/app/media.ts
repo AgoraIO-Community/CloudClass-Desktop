@@ -1,5 +1,5 @@
 import { AppStore } from '@/stores/app';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed } from 'mobx';
 import { LocalUserRenderer } from 'agora-rte-sdk';
@@ -17,7 +17,7 @@ const networkQualityLevel = [
   'down',
 ]
 
-const networkQualities: {[key: string]: string} = {
+const networkQualities: { [key: string]: string } = {
   'excellent': 'network-good',
   'good': 'network-good',
   'poor': 'network-normal',
@@ -34,6 +34,9 @@ export class MediaStore {
   @observable
   remoteUsersRenderer: any[] = []
 
+  @observable
+  signalStatus: any[] = []
+
   get mediaService() {
     return this.appStore.mediaService
   }
@@ -45,7 +48,42 @@ export class MediaStore {
   get delay(): string {
     return `${this._delay}`
   }
-
+  @action
+  updateSignalStatusWithRemoteUser(mixSignalStatus: any[]) {
+    this.signalStatus = mixSignalStatus
+  }
+  private userSignalStatus(mixSignalStatus: any[]) {
+    const signalStatus: any[] = []
+    this.appStore.sceneStore.streamList.forEach((user) => {
+      const { streamUuid: uid } = user;
+      const target = mixSignalStatus.find(x => x.uid === uid)
+      signalStatus.push({
+        ...user,
+        ...user.userInfo,
+        ...target,
+      })
+    })
+    return signalStatus
+  }
+  private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
+    const mixSignalStatus: any[] = []
+    Array.from(new Set([...Object.keys(audioStats), ...Object.keys(videoStats)])).forEach(item => {
+      const videoStatsItem = videoStats[item] || {}
+      const audioStatsItem = audioStats[item] || {}
+      const { packetLossRate: videoLossRate, receiveDelay: videoReceiveDelay } = videoStatsItem
+      const { packetLossRate: audioLossRate, receiveDelay: audioReceiveDelay } = audioStatsItem
+      const packetLossRate = Math.max(videoLossRate || 0, audioLossRate || 0);
+      const receiveDelay = Math.max(videoReceiveDelay || 0, audioReceiveDelay || 0);
+      mixSignalStatus.push({
+        audioStats: { ...audioStatsItem },
+        videoStats: { ...videoStatsItem },
+        uid: item,
+        packetLossRate,
+        receiveDelay,
+      })
+    })
+    return mixSignalStatus;
+  }
   private appStore: AppStore;
 
   constructor(appStore: any) {
@@ -56,12 +94,12 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
-      await this.appStore.deviceStore.init({audio: true})
+      await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
-      await this.appStore.deviceStore.init({video: true})
+      await this.appStore.deviceStore.init({ video: true })
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
@@ -96,7 +134,9 @@ export class MediaStore {
       //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
       // }
       this.updateNetworkQuality(qualityStr || defaultQuality)
-      // BizLogger.info('network-quality', evt, qualityStr)
+      const { remotePacketLoss: { audioStats, videoStats } } = evt;
+      const mixSignalStatus = this.remoteMaxPacketLoss(audioStats, videoStats);
+      this.updateSignalStatusWithRemoteUser(this.userSignalStatus(mixSignalStatus))
     })
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
@@ -111,7 +151,7 @@ export class MediaStore {
     this.networkQuality = v
   }
 
-  reset () {
+  reset() {
     this.remoteUsersRenderer = []
     this.networkQuality = 'unknown'
     this.autoplay = false

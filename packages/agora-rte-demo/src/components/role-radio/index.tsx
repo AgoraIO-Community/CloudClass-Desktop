@@ -33,14 +33,25 @@ export const RoleRadio: React.FC<any> = (props) => {
         labelPlacement="end"
       />
       {
-        props.type === 3 ?
+        props.type === 3 || props.type === 0?
         <FormControlLabel
           className={"custom-radio align-middle"}
           value="assistant"
           control={<Radio className={"custom-radio"} color="primary" />}
           label={t("home.assistant")}
           labelPlacement="end"
-      /> : null
+      /> 
+      : null
+      }{
+        props.type === 0 ?
+
+          <FormControlLabel
+            className={"custom-radio align-right"}
+            value="invisible"
+            control={<Radio className={"custom-radio"} color="primary" />}
+            label={t("home.invisible")}
+            labelPlacement="end"
+          /> : null
       }
       <FormControlLabel
         className={"custom-radio align-right"}
