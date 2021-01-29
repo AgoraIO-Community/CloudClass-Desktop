@@ -1,5 +1,5 @@
 import React from 'react'
-import { ControlBaseProps } from './declare'
+import { ControlBaseProps } from '../declare'
 import { ControlButton } from './button'
 
 export interface ControlScreenProps extends ControlBaseProps {

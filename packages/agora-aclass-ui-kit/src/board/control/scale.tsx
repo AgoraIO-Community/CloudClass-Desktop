@@ -1,6 +1,6 @@
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import React from 'react'
-import { ControlBaseProps } from './declare'
+import { ControlBaseProps } from '../declare'
 import { ControlButton } from './button'
 import { TextEllipsis } from '../../typography'
 
@@ -12,11 +12,12 @@ export interface ControlScaleProps extends ControlBaseProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%',
-    height: '100%',
+    // width: '100%',
+    // height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1
   }
 }))
 
