@@ -1,88 +1,80 @@
 import React from 'react'
-import { Box } from '@material-ui/core'
-import { makeStyles, Theme } from '@material-ui/core'
-import { INavigation } from './interface'
+import { Navigation } from './index'
+import { INavigation,INavigationItem } from './interface'
+import { SignalBar } from '../signalBar'
+import { StartView, ActionButtons ,ExitButton} from './control'
+
+type IStatusBar =INavigationItem[]
+const onRefresh = () => {
+  console.log('click onRefresh')
+ }
+const onCustomerService = () => { 
+  console.log('click onCustomerService')
+}
+const onEquipmentDetection = () => { 
+  console.log('click onEquipmentDetection')
+}
+const onExitRoom=()=>{
+  console.log('click onExitRoom')
+}
+const buttonArr = [
+  { name: 'refresh', clickEvent: onRefresh },
+  { name: 'customerService', clickEvent: onCustomerService },
+  { name: 'equipmentDetection', clickEvent: onEquipmentDetection },
+]
+
+const statusBar :IStatusBar= [{
+  isComponent: false,
+  componentKey: "classID",
+  text: 'ClassID：1273827829'
+},
+{
+  isComponent: true,
+  componentKey:"classStartTime",
+  renderItem:() => { return <StartView text='start in 10‘11"'/>}
+},
+{
+  isComponent: true,
+  componentKey:"signalBar",
+  renderItem: () => { return <SignalBar level={2}  width="18px" foregroundColor={'#ffffff'}/>}
+}]
+const actionBar:IStatusBar = [{
+  isComponent: true,
+  componentKey:"actionBar",
+  renderItem: () => { return <ActionButtons buttonArr={buttonArr}/>}
+},
+{
+  isComponent: true,
+  componentKey:"exitButton",
+  renderItem:() => { return <ExitButton text='Exit' onClick={onExitRoom}/>}
+}]
+
 
 export default {
-  title: '导航栏', argTypes: {
+  title: '导航栏',
+  argTypes: {
     background: { control: 'color' },
     color: { control: 'color' },
     minHeight: { control: 'number' },
   }
 }
-export const Navigation = (props: INavigation) => {
-  const { minHeight: height = 42, background = '#1D35AD', color = "#fff" } = props
-  const useStyles = makeStyles((theme: Theme) => ({
-    navigation: {
-      width: '100%',
-      height,
-      background,
-      color,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '4px 20px',
-      boxSizing: 'border-box'
-    },
-    container: {
-      display: 'flex',
-      flexWrap: 'nowrap'
-    },
-    region: {
-      marginRight: 49,
-      '&:last-child': {
-        marginRight: 0,
-      }
-    }
-  }))
-  const classes = useStyles()
-  return (
-    < Box className={classes.navigation}>
-      <div className={classes.container} style={props.leftContainerStyle}>
-        {
-          props.leftContainer.map((item, index) => {
-            return <div key={`leftContainer_${item.componentKey}`} className={classes.region}>
-              {item.isComponent ? item.renderItem() :
-                <>
-                  {item.icon ?? null}
-                  {item.text}
-                </>
-              }</div>
-          })
-        }
-      </div>
-      <div className={classes.container} style={props.rightContainerStyle}>
-        {
-          props.leftContainer.map((item, index) => {
-            return <div key={`leftContainer_${item.componentKey}`} className={classes.region}>
-              {item.isComponent ? item.renderItem() :
-                <>
-                  {item.icon ?? null}
-                  {item.text}
-                </>
-              }</div>
-          })
-        }
-      </div>
+export const EducationNavigation = (props: INavigation) => {
 
-    </Box>
+  const { leftContainer, background, rightContainer, rightContainerStyle, minHeight } = props
+  return (
+    <Navigation
+      background={background}
+      leftContainer={leftContainer}
+      rightContainer={rightContainer}
+      rightContainerStyle={rightContainerStyle}
+      minHeight={minHeight}
+    />
+
   )
 }
 
-Navigation.args = {
+EducationNavigation.args = {
   background: '#1D35AD',
-  leftContainerStyle: {
-  },
-  leftContainer: [{
-    isComponent: true,
-    componentKey: 'test',
-    renderItem: () => {
-      return <div>8888</div>
-    }
-  }, {
-    isComponent: false,
-    componentKey: 'test1',
-    name: 'kkkk:',
-    text: '课程ID：15555'
-  }]
+  rightContainer: actionBar,
+  leftContainer: statusBar,
 }
