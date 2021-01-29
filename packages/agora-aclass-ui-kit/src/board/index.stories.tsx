@@ -41,7 +41,28 @@ export const EducationBoard = (props: any) => {
           isFullScreen={props.isFullScreen}
           onClick={onClickPaginator}
         />
-        <Tool onClick={onClickTool} />
+        <Tool
+          headerTitle={props.toolbarName}
+          style={{
+            top: props.toolY,
+            left: props.toolX,
+          }}
+          items={
+            [
+              'mouse',
+              'pencil',
+              'text',
+              'rectangle',
+              'elliptic',
+              'eraser',
+              'palette',
+              'new-page',
+              'move',
+              'upload',
+              'clear'
+            ]
+          }
+         onClick={onClickTool} />
       </Board>
     </Box>
   )
@@ -54,10 +75,13 @@ EducationBoard.args = {
   totalPage: 100,
   showScale: true,
   scale: 100,
+  toolY: 5,
+  toolX: 5,
   controlY: 10,
   controlX: 10,
   showControlScreen: true,
   isFullScreen: true,
-  width: 360,
-  height: 240
+  width: 640,
+  height: 480,
+  toolbarName: 'Tools'
 }
