@@ -1,14 +1,14 @@
 import { Box } from '@material-ui/core'
 import React from 'react'
 import { ControlButton, ControlButtonIcon } from './button'
-import { ControlBaseClickEvent } from './declare'
+import { ItemBaseClickEvent } from '../declare'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { TextEllipsis } from '../../typography'
 
 export interface PaginatorProps {
-  onClick: ControlBaseClickEvent,
+  onClick: ItemBaseClickEvent,
   prevIcon?: ControlButtonIcon,
   nextIcon?: ControlButtonIcon,
   currentPage: number,
@@ -26,7 +26,7 @@ export const Paginator = (props: PaginatorProps) => {
   const nextIcon = props.nextIcon ?? 'forward'
 
   return (
-    <React.Fragment>
+    <Box flex={1} display="flex" justifyContent="space-between" flexDirection="row">
       <ControlButton icon={prevIcon} onClick={onClickPrev} />
       <Box>
         <TextEllipsis maxWidth={50}>
@@ -44,6 +44,6 @@ export const Paginator = (props: PaginatorProps) => {
         </TextEllipsis>
       </Box>
       <ControlButton icon={nextIcon} onClick={onClickNext} />
-    </React.Fragment>
+    </Box>
   )
 }

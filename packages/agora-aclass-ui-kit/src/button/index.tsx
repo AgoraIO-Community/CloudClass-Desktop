@@ -91,3 +91,17 @@ export const CustomButton = (props: CustomButtonProps) => {
     </CustomizeTheme>
   )
 }
+
+export interface CustomizeIconBtnProps {
+  icon: string,
+  style?: React.CSSProperties
+}
+
+export const CustomizeIconBtn = (props: CustomizeIconBtnProps) => (
+  <div style={{
+    ...props.style,
+    background: `url(${props.icon}) no-repeat`,
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+  }}></div>
+)

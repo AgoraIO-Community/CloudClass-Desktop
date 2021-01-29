@@ -1,7 +1,5 @@
-import { Box, ButtonBase, SvgIcon } from '@material-ui/core'
 import React from 'react'
-import { CustomButton } from '../../button'
-import { ControlBaseProps } from './declare'
+import { ControlBaseProps } from '../declare'
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
 import NavigateNextIcon from '@material-ui/icons/NavigateNext'
 import ZoomInIcon from '@material-ui/icons/ZoomIn'
@@ -9,9 +7,15 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut'
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
 import IconButton from '@material-ui/core/IconButton'
+import PencilPng from '../assets/pencil.png'
+import { CustomizeIconBtn } from '../../button'
 
 export type ControlButtonIcon = string
 
+const btnStyle = {
+  width: 18,
+  height: 18,
+}
 export interface ControlButtonProps extends ControlBaseProps{
   icon: ControlButtonIcon
 }
@@ -23,17 +27,19 @@ const buttonsMap = {
   'zoomOut': ZoomOutIcon,
   'fullscreen': FullscreenIcon,
   'fullscreenExit': FullscreenExitIcon,
+  'pencil': CustomizeIconBtn.bind({}, {icon: PencilPng, style: btnStyle})
 }
 
 export const ControlButton = ({icon, onClick}: ControlButtonProps) => {
-  const RealButton = buttonsMap[icon]
+  const ControlIconButton = buttonsMap[icon]
   return (
-    <IconButton style={{
+    <IconButton component="div" style={{
       width: 18,
       height: 18,
+      padding: 0,
       color: '#ffffff',
     }} disableRipple onClick={onClick}>
-      <RealButton />
+      <ControlIconButton />
     </IconButton>
   )
   

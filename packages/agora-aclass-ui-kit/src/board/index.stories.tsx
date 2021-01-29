@@ -10,8 +10,13 @@ export default {
 export const EducationBoard = (props: any) => {
 
   const onClickPaginator = (type: string) => {
-    action(`click paginator ${type}`)
+    action('paginator')
     console.log(`click paginator ${type}`)
+  }
+
+  const onClickTool = (type: string) => {
+    action('tool')
+    console.log(`click tool ${type}`)
   }
   
   return (
@@ -36,7 +41,7 @@ export const EducationBoard = (props: any) => {
           isFullScreen={props.isFullScreen}
           onClick={onClickPaginator}
         />
-        <Tool />
+        <Tool onClick={onClickTool} />
       </Board>
     </Box>
   )
@@ -53,6 +58,6 @@ EducationBoard.args = {
   controlX: 10,
   showControlScreen: true,
   isFullScreen: true,
-  width: '480px',
-  height: '240px'
+  width: 360,
+  height: 240
 }
