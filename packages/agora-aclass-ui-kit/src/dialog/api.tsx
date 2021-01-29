@@ -38,8 +38,8 @@ export const confirmDialog = (config: ConfirmConfig) => {
   let currentConfig: any = {...config, close, visible: true }
 
   const destroy = (...args: any[]) => {
-    const unmountResult = ReactDOM.unmountComponentAtNode(div);
-    if (unmountResult && div.parentNode) {
+    ReactDOM.unmountComponentAtNode(div);
+    if (div.parentNode) {
       div.parentNode.removeChild(div);
     }
     if (config.onClose) {

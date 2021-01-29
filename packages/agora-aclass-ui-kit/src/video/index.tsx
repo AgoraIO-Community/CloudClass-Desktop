@@ -290,7 +290,7 @@ export interface VideoFrameProps {
   audioState: boolean,
   trophyNumber: number,
   role: string,
-  children: React.ReactElement,
+  children: any,
   onClick: VideoItemOnClick,
 }
 

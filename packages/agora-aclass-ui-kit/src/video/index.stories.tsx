@@ -33,7 +33,7 @@ export const TeacherVideo = () => {
       audioState={audio}
       onClick={handleClick}
     >
-      <div>media</div>
+      {/* <div>media</div> */}
     </Video>
   )
 }
@@ -66,7 +66,7 @@ export const StudentVideo = () => {
       audioState={audio}
       onClick={handleClick}
     >
-      <div>media</div>
+      {/* <div>media</div> */}
     </Video>
   )
 }

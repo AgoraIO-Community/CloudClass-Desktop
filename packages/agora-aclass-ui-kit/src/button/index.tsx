@@ -69,7 +69,7 @@ export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
 }
 export interface CustomButtonProps {
   className?: string,
-  onClick?: ReactEventHandler<any>,
+  onClick?: (args: any) => any,
   children?: React.ReactElement,
   component: React.ElementType,
   style?: CSSProperties
