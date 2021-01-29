@@ -1,5 +1,5 @@
 import { AppStore } from '@/stores/app';
-import { debounce, isEmpty } from 'lodash';
+import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed } from 'mobx';
 import { LocalUserRenderer } from 'agora-rte-sdk';
@@ -67,7 +67,7 @@ export class MediaStore {
   }
   private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
     const mixSignalStatus: any[] = []
-    Array.from(new Set([...Object.keys(audioStats), ...Object.keys(videoStats)])).forEach(item => {
+    uniq([...Object.keys(audioStats), ...Object.keys(videoStats)]).forEach(item => {
       const videoStatsItem = videoStats[item] || {}
       const audioStatsItem = audioStats[item] || {}
       const { packetLossRate: videoLossRate, receiveDelay: videoReceiveDelay } = videoStatsItem
