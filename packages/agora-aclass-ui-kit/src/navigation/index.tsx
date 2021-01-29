@@ -1,7 +1,68 @@
 import React from 'react'
+import { Box } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core'
+import { INavigation } from './interface'
 
-export const Navigation = () => {
+export const Navigation = (props: INavigation) => {
+  const { minHeight: height = 42, background = '#1D35AD', color = "#fff" } = props
+  const useStyles = makeStyles((theme: Theme) => ({
+    navigation: {
+      width: '100%',
+      height,
+      fontSize:'14px',
+      minHeight:42,
+      background,
+      color,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '4px 20px',
+      boxSizing: 'border-box'
+    },
+    container: {
+      display: 'flex',
+      flexWrap: 'nowrap'
+    },
+    region: {
+      marginRight: 49,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '&:last-child': {
+        marginRight: 0,
+      }
+    }
+  }))
+  const classes = useStyles()
   return (
-    <div></div>
+    < Box className={classes.navigation}>
+      <div className={classes.container} style={props.leftContainerStyle}>
+        {
+          props.leftContainer?.map((item, index) => {
+            return <div key={`leftContainer_${item.componentKey}`} className={classes.region}>
+              {item.isComponent ? item.renderItem && item.renderItem() :
+                <>
+                  {item.icon ?? null}
+                  {item.text}
+                </>
+              }</div>
+          })
+        }
+      </div>
+      <div className={classes.container} style={props.rightContainerStyle}>
+        {
+          props.rightContainer?.map((item, index) => {
+            return <div key={`rightContainer_${item.componentKey}`} className={classes.region}>
+              {item.isComponent ?  item.renderItem && item.renderItem() :
+                <>
+                  {item.icon ?? null}
+                  {item.text}
+                </>
+              }</div>
+          })
+        }
+      </div>
+
+    </Box>
   )
 }

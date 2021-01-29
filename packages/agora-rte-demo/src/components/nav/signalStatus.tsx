@@ -4,7 +4,7 @@ import { useMediaStore } from '@/hooks'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
 
 
-export const SignalStatus = observer((props: any) => {
+export  const SignalStatus = observer((props: any) => {
   const mediaStore = useMediaStore()
   const userList = mediaStore.signalStatus;
   return (

@@ -79,6 +79,7 @@ export enum EduPeerMessageCmdType {
  * assistant = 3，为助教
  */
 export enum EduRoleTypeEnum {
+  none = -1,
   invisible = 0,
   teacher = 1,
   student = 2,
