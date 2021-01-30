@@ -1,5 +1,9 @@
-import { Box, createStyles, makeStyles } from '@material-ui/core'
-import React from 'react'
+import { makeStyles } from '@material-ui/core'
+import React, { ReactEventHandler, useRef } from 'react'
+import ConvertPPTPng from '../assets/convert_ppt.png'
+import ImagePng from '../assets/image.png'
+import MediaPng from '../assets/media.png'
+import StaticPPTPng from '../assets/static_ppt.png'
 
 export interface IUploadItem {
   itemName: string,
@@ -7,32 +11,50 @@ export interface IUploadItem {
 }
 
 export interface UploadProps {
-  handleUploadFile: (files: File[], type: string) => Promise<any>,
-  items: IUploadItem[]
+  handleUploadFile: (evt: React.SyntheticEvent<HTMLInputElement, Event>, type: string) => Promise<any>,
+  // items: IUploadItem[]
 }
 
 const useStyles = makeStyles(() => ({
   uploadBox: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   uploadHeader: {
     fontWeight: 400,
-    color: '#212324'
+    color: '#212324',
+    display: 'flex',
+    flexDirection: 'column',
   },
   uploadTitle: {
-    display: 'flex',
+    color: '#162D79',
+    fontSize: '16px',
   },
-  uploadContent: {
-    display: 'flex',
+  uploadDesc: {
+    color: '#A9AEC5',
+    fontSize: '14px',
   },
   uploadItemBox: {
-    display: 'inline-block',
+    margin: 2,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     boxSizing: 'border-box',
-    margin: 0,
-    padding: 0,
+    border: '2px solid #162D79',
+    borderRadius: '6px',
+    background: '#ffffff',
+    '&:hover': {
+      border: '2px solid #D7AA1E'
+      // backgroundColor: 'rgba(33, 35, 36, 0.3)',
+    },
+    // '&:active': {
+    //   backgroundColor: 'rgba(33, 35, 36, 0.1)',
+    // }
+  },
+  inputUploader: {
+    display: 'none',
   }
 }))
 
@@ -40,36 +62,86 @@ export const FileUploader = (props: UploadProps) => {
 
   const classes = useStyles()
 
-  const handleUpload = () => {
-
+  const uploadImage = async (evt: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    await props.handleUploadFile(evt, 'image')
   }
+
+  const uploadStaticPPT = async (evt: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    await props.handleUploadFile(evt, 'static_ppt')
+  }
+
+  const uploadDynamicPPT = async (evt: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    await props.handleUploadFile(evt, 'dynamic_ppt')
+  }
+
+  const uploadMediaFile = async (evt: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    await props.handleUploadFile(evt, 'file')
+  }
+
 
   return (
     <div className={classes.uploadBox}>
-      <UploadItem type="png" handleUpload={handleUpload}>
-      </UploadItem>
-      <UploadItem type="ppt" handleUpload={handleUpload}>
-      </UploadItem>
-      <UploadItem type="dynamic" handleUpload={handleUpload}>
-      </UploadItem>
-      <UploadItem type="media" handleUpload={handleUpload}>
-      </UploadItem>
+      <UploadItem
+        title="image"
+        description={"jpg,png,gif"}
+        icon={ImagePng}
+        handleUpload={uploadImage}
+        accept="image/*,.bmp,.jpg,.png,.gif"
+      />
+      <UploadItem
+        title="ppt"
+        description={"ppt"}
+        icon={StaticPPTPng}
+        handleUpload={uploadStaticPPT}
+        accept=".pptx"
+      />
+      <UploadItem
+        title="dynamic"
+        description={"dynamic"}
+        icon={ConvertPPTPng}
+        handleUpload={uploadDynamicPPT}
+        accept=".pptx"
+      />
+      <UploadItem
+        title="media"
+        description={"media"}
+        icon={MediaPng}
+        handleUpload={uploadMediaFile}
+        accept=".mp4,.mp3"
+      />
     </div>
   )
 }
 
-const UploadItem = (props: any) => {
+export interface UploadItemProps {
+  title: string,
+  description: string,
+  icon: string,
+  handleUpload: ReactEventHandler<HTMLInputElement>,
+  accept: string,
+}
+
+const UploadItem: React.FC<UploadItemProps> = (props) => {
+
+  const fileRef = useRef<any>(null)
+
   const classes = useStyles()
+
+  const onChange = (evt: React.SyntheticEvent<HTMLInputElement, Event>) => {
+    props.handleUpload(evt)
+    if (fileRef.current) {
+      fileRef.current.value = ''
+    }
+  }
+
   return (
     <div className={classes.uploadItemBox}>
+      <img style={{width: 24, height: 24, margin: '0 13px'}} src={props.icon} />
       <div className={classes.uploadHeader}>
-        <div className={classes.uploadTitle}>{props.header}</div>
-        <div style={{
-          position: 'absolute',
-          background: `url(${props.icon})`
-        }}></div>
+        <div className={classes.uploadTitle}>{props.title}</div>
+        <div className={classes.uploadDesc}>{props.description}</div>
       </div>
-      <div className={classes.uploadContent}>{props.content}</div>
+      <input ref={fileRef} type="file" accept={props.accept} className={classes.inputUploader} onChange={onChange} />
     </div>
   )
 }

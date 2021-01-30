@@ -1,14 +1,60 @@
 import { Box } from '@material-ui/core'
 import React, { useState } from 'react'
 import { action } from '@storybook/addon-actions';
-import {Board, ControlMenu, Tool, FileUploader} from '.'
-import { CustomizeSlider, StrokeSlider } from './panel/slider';
+import {Board, ControlMenu, PanelBackground, Tool, FileUploader} from '.'
+import { CustomizeSlider } from './panel/slider';
 import { ColorPalette } from './panel/palette';
 import { IToolItem } from './tool';
 
 export default {
   title: '白板'
 }
+
+
+export const ColorPopover = () => {
+  const [currentColor, setCurrentColor] = useState<string>('')
+
+  const onClick = (color: string) => {
+    setCurrentColor(color)
+    console.log('color ', color)
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <ColorPalette
+        currentColor={currentColor}
+        onClick={onClick}
+      />
+    </PanelBackground>
+  )
+}
+
+export const StrokePopover = () => {
+
+  const [currentColor, setCurrentColor] = useState<string>('')
+
+  const onClick = (color: string) => {
+    setCurrentColor(color)
+    console.log('color ', color)
+  }
+
+  const onChange = (newValue: number) => {
+    console.log('newValue', newValue)
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <>
+        <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
+        <ColorPalette
+          currentColor={currentColor}
+          onClick={onClick}
+        />
+      </>
+    </PanelBackground>
+  )
+}
+
 
 const toolItems: IToolItem[] = [
   {
@@ -53,10 +99,31 @@ const toolItems: IToolItem[] = [
     toolTip: true,
   },
   {
+    itemName: 'upload',
+    toolTip: true,
+    popoverType: 'upload',
+  },
+  {
     itemName: 'clear',
     toolTip: true,
   }
 ]
+
+export const UploadFilePopover = (props: any) => {
+
+  const handleUploadFile = async (evt: React.SyntheticEvent<HTMLInputElement>, type: string) => {
+    if (evt.currentTarget.files) {
+      const file = evt.currentTarget.files[0]
+      console.log("file ", file, " type ", type)
+    }
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <FileUploader handleUploadFile={handleUploadFile}/>
+    </PanelBackground>
+  )
+}
 
 export const EducationBoard = (props: any) => {
 
@@ -93,9 +160,9 @@ export const EducationBoard = (props: any) => {
           onClick={onClickPaginator}
         />
         <Tool
-          strokeComponent={props.strokePopover}
-          colorComponent={props.colorPopover}
-          uploadComponent={props.uploadPopover}
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
           headerTitle={props.toolbarName}
           style={{
             top: props.toolY,
@@ -108,52 +175,6 @@ export const EducationBoard = (props: any) => {
       </Board>
     </Box>
   )
-}
-
-export const ColorPopover = () => {
-  const [currentColor, setCurrentColor] = useState<string>('')
-
-  const onClick = (color: string) => {
-    setCurrentColor(color)
-    console.log('color ', color)
-  }
-
-  return (
-    <ColorPalette
-      currentColor={currentColor}
-      onClick={onClick}
-    />
-  )
-}
-
-export const StrokePopover = () => {
-  const [color, setColor] = useState<string>()
-
-  const onChange = (newValue: number) => {
-    console.log('newValue', newValue)
-  }
-
-  return (
-    <div>
-      <StrokeSlider onChange={onChange}></StrokeSlider>
-    </div>
-  )
-}
-
-export const UploadPopover = () => {
-  const [upload, setUpload] = useState<boolean>(false)
-
-  return (
-    <div>
-
-    </div>
-  )
-}
-
-EducationBoard.defaultProps = {
-  colorPopover: ColorPopover,
-  uploadPopover: UploadPopover,
-  strokePopover: StrokePopover
 }
 
 EducationBoard.args = {

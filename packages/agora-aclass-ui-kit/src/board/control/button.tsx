@@ -20,7 +20,8 @@ import Clear from '../assets/clear.png'
 import Upload from '../assets/upload.png'
 import { CustomizeIconBtn } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
-import { Popover, Tooltip, Typography } from '@material-ui/core'
+import { makeStyles, Popover, Tooltip, Typography } from '@material-ui/core'
+import {AClassTheme} from '../../theme'
 
 export type ControlButtonIcon = string
 
@@ -129,6 +130,27 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
   )
 }
 
+const usePopoverStyles = makeStyles({
+  paper: {
+      overflowX: "unset",
+      overflowY: "unset",
+      "&::before": {
+          content: '""',
+          position: "absolute",
+          marginRight: "-0.71em",
+          bottom: 0,
+          right: 0,
+          width: 10,
+          height: 10,
+          background: AClassTheme.backgroundColor,
+          // backgroundColor: theme.palette.background.paper,
+          // boxShadow: theme.shadows[1],
+          transform: "translate(-50%, 50%) rotate(135deg)",
+          clipPath: "polygon(-5px -5px, calc(100% + 5px) -5px, calc(100% + 5px) calc(100% + 5px))",
+      },
+  },
+})
+
 export const ToolButton = (
   {
     active,
@@ -157,6 +179,8 @@ export const ToolButton = (
   const open = Boolean(anchorEl);
 
   const activeStyle = active && activeStyles ? activeStyles : {}
+
+  // const classes = usePopoverStyles()
 
   return (
     <React.Fragment>
@@ -189,12 +213,21 @@ export const ToolButton = (
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom',
+          vertical: 'center',
           horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'center',
           horizontal: 'left',
+        }}
+        PaperProps={{
+          // classes: {root: classes.paper},
+          style: {
+            borderRadius: 12,
+            marginLeft: 15,
+          },
+          square: true,
+          elevation: 0
         }}
       >
         {popoverComponent}

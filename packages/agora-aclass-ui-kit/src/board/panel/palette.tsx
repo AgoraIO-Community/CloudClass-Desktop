@@ -30,13 +30,9 @@ export interface ColorPaletteProps {
 const useStyles = makeStyles(() => ({
   colorBox: {
     display: 'flex',
-    width: 150,
+    // width: 150,
     flexWrap: 'wrap',
     boxSizing: 'border-box',
-    backgroundColor: '#E9BE36',
-    border: '2px solid #B98D00',
-    borderRadius: 12,
-    background: AClassTheme.backgroundColor,
     '& > div': {
       padding: 1,
       margin: 5,

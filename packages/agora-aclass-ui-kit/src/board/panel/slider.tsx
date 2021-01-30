@@ -1,6 +1,6 @@
-import { Slider, withStyles, createStyles, Box, Grid } from '@material-ui/core'
-import React, { useState } from 'react'
-import {AClassTheme} from '../../theme'
+import { Slider, withStyles, Box } from '@material-ui/core'
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import React from 'react'
 
 const ASlider = withStyles({
   root: {
@@ -8,12 +8,12 @@ const ASlider = withStyles({
     height: 3,
   },
   thumb: {
-    height: 24,
-    width: 24,
+    height: 12,
+    width: 12,
     backgroundColor: '#000000',
     border: '2px solid currentColor',
-    marginTop: -8,
-    marginLeft: -12,
+    marginTop: -2,
+    // marginLeft: -12,
     '&:focus, &:hover, &$active': {
       boxShadow: 'inherit',
     },
@@ -50,15 +50,19 @@ export const StrokeSlider = (props: any) => {
 
 export interface CustomizeSliderProps {
   value: number,
+  minWidth?: number,
+  style?: CSSProperties,
   onChange: (newValue: number) => any
 }
 
 export const CustomizeSlider: React.FC<CustomizeSliderProps> = (props) => {
   return (
-    <StrokeSlider valueLabelDisplay="auto" defaultValue={20} onChange={props.onChange} />
+    <Box style={props.style} minWidth={props.minWidth}>
+      <StrokeSlider valueLabelDisplay="auto" defaultValue={20} onChange={props.onChange} />
+    </Box>
   )
 }
 
 CustomizeSlider.defaultProps = {
-  value: 20
+  value: 20,
 }

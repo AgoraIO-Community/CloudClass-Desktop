@@ -54,7 +54,6 @@ const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
 export const Tool: React.FC<ToolProps> = (props) => {
 
   const classes = useStyles()
-
   const [activeItem, setActiveItem] = React.useState<string>(props.activeItem || '')
 
   return (
