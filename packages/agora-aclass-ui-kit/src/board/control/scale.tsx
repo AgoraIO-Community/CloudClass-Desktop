@@ -32,13 +32,13 @@ export const ControlScale = (props: ControlScaleProps) => {
 
   return (
     <Box className={classes.root}>
-      <ControlButton icon={zoomInIcon} onClick={onClickMin} />
+      <ControlButton toolTip={true} icon={zoomInIcon} onClick={onClickMin} />
       <TextEllipsis maxWidth={50}>
         <React.Fragment>
           {props.scale}%
         </React.Fragment>
       </TextEllipsis>
-      <ControlButton icon={zoomOutIcon} onClick={onClickPlus} />
+      <ControlButton toolTip={true} icon={zoomOutIcon} onClick={onClickPlus} />
     </Box>
   )
 }

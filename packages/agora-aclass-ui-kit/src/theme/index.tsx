@@ -34,6 +34,9 @@ const theme = createMuiTheme({
 
 type ThemeProps = Required<{children: ReactChild}>
 
+export const AClassTheme = {
+  backgroundColor: 'repeating-linear-gradient(135deg, #e9be36 0px, #b98d01 2px, #e9be36 2px, rgb(243 203 77) 5px)',
+}
 
 export const themeConfig = {
   dialog: {

@@ -5,7 +5,7 @@ import { themeConfig } from '../theme'
 
 export interface BoardProps {
   children?: any,
-  style?: CSSProperties
+  style?: CSSProperties,
 }
 
 export const Board = ({children, style}: BoardProps) => {
@@ -22,3 +22,4 @@ export const Board = ({children, style}: BoardProps) => {
 
 export { ControlMenu } from './control'
 export { Tool } from './tool'
+export * from './panel'

@@ -20,6 +20,7 @@ import Clear from '../assets/clear.png'
 import Upload from '../assets/upload.png'
 import { CustomizeIconBtn } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import { Popover, Tooltip, Typography } from '@material-ui/core'
 
 export type ControlButtonIcon = string
 
@@ -29,8 +30,34 @@ const defaultStyle = {
 }
 export interface ControlButtonProps extends ControlBaseProps{
   icon: ControlButtonIcon,
-  iconStyle?: CSSProperties
+  iconStyle?: CSSProperties,
+  popoverComponent?: React.ReactElement,
+  toolTip?: boolean,
+  active?: boolean,
+  activeStyles?: CSSProperties,
 }
+
+const i18n = {
+  'back': 'back',
+  'forward': 'forward',
+  'zoomIn': 'zoomIn',
+  'zoomOut': 'zoomOut',
+  'fullscreen': 'fullscreen',
+  'fullscreenExit': 'fullscreenExit',
+
+  'pencil': 'pencil',
+  'text': 'text',
+  'mouse': 'mouse',
+  'eraser': 'eraser',
+  'rectangle': 'rectangle',
+  'elliptic': 'elliptic',
+  'palette': 'palette',
+  'new-page': 'new-page',
+  'move': 'move',
+  'upload': 'upload',
+  'clear': 'clear',
+}
+
 
 const buttonsMap = {
   'back': NavigateBeforeIcon,
@@ -53,17 +80,126 @@ const buttonsMap = {
   'clear': (props: any) => <CustomizeIconBtn icon={Clear} style={{...defaultStyle, ...props.style}} />,
 }
 
-export const ControlButton = ({icon, style, iconStyle, onClick}: ControlButtonProps) => {
+export const ControlButton: React.FC<ControlButtonProps> = ({
+  active,
+  activeStyles,
+  toolTip,
+  icon,
+  style, 
+  iconStyle,
+  onClick,
+}) => {
   const ControlIconButton = buttonsMap[icon]
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: any) => {
+    onClick(icon)
+  };
+
+  const activeStyle = active && activeStyles ? activeStyles : {}
+
   return (
-    <IconButton component="div" style={{
-      width: 18,
-      height: 18,
-      padding: 0,
-      color: '#ffffff',
-      ...style
-    }} disableRipple onClick={onClick}>
-      <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
-    </IconButton>
+    <React.Fragment>
+      {toolTip ? 
+        <Tooltip placement="top" title={i18n[icon]}>
+        <IconButton component="div" style={{
+          width: 18,
+          height: 18,
+          padding: 0,
+          color: '#ffffff',
+          ...activeStyle,
+          ...style
+        }} disableRipple onClick={handleClick}>
+          <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
+        </IconButton> 
+        </Tooltip> :
+        <IconButton component="div" style={{
+          width: 18,
+          height: 18,
+          padding: 0,
+          color: '#ffffff',
+          ...activeStyle,
+          ...style
+        }} disableRipple onClick={handleClick}>
+          <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
+        </IconButton> 
+      }
+    </React.Fragment>
+  )
+}
+
+export const ToolButton = (
+  {
+    active,
+    activeStyles,
+    toolTip,
+    icon,
+    style, 
+    iconStyle,
+    onClick,
+    popoverComponent
+  }: ControlButtonProps) => {
+  const ControlIconButton = buttonsMap[icon]
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: any) => {
+    popoverComponent && setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget)
+    onClick(icon)
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const activeStyle = active && activeStyles ? activeStyles : {}
+
+  return (
+    <React.Fragment>
+      {toolTip ? 
+         <Tooltip placement="right" title={i18n[icon]}>
+          <IconButton component="div" style={{
+            width: 18,
+            height: 18,
+            padding: 0,
+            color: '#ffffff',
+            ...activeStyle,
+            ...style
+          }} disableRipple onClick={handleClick}>
+            <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
+          </IconButton> 
+         </Tooltip> :
+         <IconButton component="div" style={{
+            width: 18,
+            height: 18,
+            padding: 0,
+            color: '#ffffff',
+            ...activeStyle,
+            ...style
+          }} disableRipple onClick={handleClick}>
+            <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
+         </IconButton> 
+        }
+      {popoverComponent ? <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'left',
+        }}
+      >
+        {popoverComponent}
+      </Popover>
+      : null}
+    </React.Fragment>
   )
 }

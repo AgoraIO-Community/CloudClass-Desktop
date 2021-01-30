@@ -10,6 +10,6 @@ export const ControlScreen = (props: ControlScreenProps) => {
 
   const icon = props.isFullScreen === true ? 'fullscreen': 'fullscreenExit'
   return (
-    <ControlButton icon={icon} onClick={props.onClick}></ControlButton>
+    <ControlButton icon={icon} toolTip={true} onClick={props.onClick}></ControlButton>
   )
 }

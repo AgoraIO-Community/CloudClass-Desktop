@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles, Theme } from '@material-ui/core'
+import { rgbaToHexColor } from '../utils'
 
 enum SignalRoleTypeEnum {
   None = 0,
@@ -11,24 +12,6 @@ interface ISignalBar {
   foregroundColor?: string,
   width?: string,
   level: SignalRoleTypeEnum
-}
-
-const rgbaToHexColor = (color:string) => {
-  const reg = /^(rgb|RGB|RGBA|rgba)/;
-  if (reg.test(color)) {
-    let strHex = "#";
-    const colorArr = color.replace(/(?:\(|\)|rgba|RGBA|RGB|rgb)*/g, "").split(",");
-    for (let i = 0; i < colorArr.length - 1; i++) {
-      let hex = Number(colorArr[i]).toString(16);
-      if (hex === "0") {
-        hex += hex;
-      }
-      strHex += hex;
-    }
-    return strHex;
-  } else {
-    return color;
-  }
 }
 
 export const SignalBar = (props: ISignalBar) => {

@@ -1,14 +1,30 @@
 import React from 'react'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
-import { ControlButton } from '../control/button'
+import { ToolButton } from '../control/button'
 import { ItemBaseClickEvent } from '../declare'
-import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import { makeStyles, Theme, Typography } from '@material-ui/core'
+
+type PopoverComponentType = 'stroke' | 'color' | 'upload'
+export interface IToolItem {
+  itemName: string,
+  iconUrl?: string,
+  toolTip?: boolean,
+  btnStyle?: CSSProperties,
+  iconStyle?: CSSProperties,
+  onClick?: (evt: any) => any,
+  popoverType?: PopoverComponentType,
+  onChange?: (evt: any) => any
+}
 
 export interface ToolProps {
   headerTitle: string,
+  activeItem?: string,
   onClick: ItemBaseClickEvent,
   style?: CSSProperties,
-  items: string[]
+  items: IToolItem[],
+  strokeComponent?: React.ReactElement,
+  colorComponent?: React.ReactElement,
+  uploadComponent?: React.ReactElement,
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,7 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 46,
     justifyContent: 'center',
     alignItems: 'center',
-    // padding: 5,
     border: '2px solid #B98D00',
     borderRadius: 10,
     '&::after': {
@@ -30,9 +45,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
+const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
+  if (type === 'color') return props.colorComponent
+  if (type === 'stroke') return props.strokeComponent
+  if (type === 'upload') return props.uploadComponent
+}
+
 export const Tool: React.FC<ToolProps> = (props) => {
 
   const classes = useStyles()
+
+  const [activeItem, setActiveItem] = React.useState<string>(props.activeItem || '')
 
   return (
     <div style={
@@ -50,8 +73,13 @@ export const Tool: React.FC<ToolProps> = (props) => {
       }}>
         {props.headerTitle}
       </Typography>
-      {props.items.map((item: string, index: number) => (
-        <ControlButton key={index}
+      {props.items.map(({toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
+        <ToolButton key={index}
+          active={activeItem === itemName}
+          activeStyles={{
+            backgroundColor: '#D7AA1E'
+          }}
+          toolTip={toolTip}
           style={{
             width: 38,
             height: 38,
@@ -64,22 +92,32 @@ export const Tool: React.FC<ToolProps> = (props) => {
             },
             '&:active': {
               borderRadius: 0
-            }
+            },
+            ...btnStyle
           }}
           iconStyle={{
-            width: item !== 'clear' ? 32 : 25,
-            height: item !== 'clear' ? 32 : 25,
+            width: itemName !== 'clear' ? 32 : 25,
+            height: itemName !== 'clear' ? 32 : 25,
             borderRadius: 0,
             '&:hover': {
               borderRadius: 0
             },
             '&:active': {
               borderRadius: 0
-            }
+            },
+            ...iconStyle
           }}
-          icon={item}
-          onClick={props.onClick.bind({}, item)}/>
+          icon={iconUrl ? iconUrl : itemName}
+          popoverComponent={getPopoverComponent(props, popoverType)}
+          onClick={() => {
+            props.onClick(itemName)
+            setActiveItem(itemName)
+          }}/>
       ))}
     </div>
   )
+}
+
+Tool.defaultProps = {
+  activeItem: 'mouse'
 }
