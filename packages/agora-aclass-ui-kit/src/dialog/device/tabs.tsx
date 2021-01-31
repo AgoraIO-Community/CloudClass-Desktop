@@ -8,7 +8,7 @@ import Mic from '../assets/mic.png'
 import Speaker from '../assets/speaker.png'
 import { CustomizeTheme } from '../../theme'
 
-const DeviceBtn = styled((props: any) => <ButtonBase {...props} />)({
+const DeviceBtn = styled((props: any) => <ButtonBase disableRipple {...props} />)({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -108,7 +108,7 @@ const AClassDeviceTab = withStyles((theme: Theme) =>
   const classes = useDeviceIdonStyles()
   return(
     <CustomizeTheme>
-      <DeviceBtn component="div" disableRipple>
+      <DeviceBtn component="div">
         <div style={{...classes[`${props.type}`]}}></div>
         <div style={{marginTop: 5}}>{props.text}</div>
       </DeviceBtn>
