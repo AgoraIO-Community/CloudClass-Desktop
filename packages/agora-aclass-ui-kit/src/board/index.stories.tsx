@@ -39,7 +39,6 @@ export const StrokePopover = () => {
   }
 
   const onChange = (newValue: number) => {
-    console.log('newValue', newValue)
   }
 
   return (

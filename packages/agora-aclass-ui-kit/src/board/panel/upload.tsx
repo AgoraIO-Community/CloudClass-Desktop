@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React, { ReactEventHandler, useRef } from 'react'
 import ConvertPPTPng from '../assets/convert_ppt.png'
 import ImagePng from '../assets/image.png'
@@ -45,6 +46,7 @@ const useStyles = makeStyles(() => ({
     border: '2px solid #162D79',
     borderRadius: '6px',
     background: '#ffffff',
+    position: 'relative',
     '&:hover': {
       border: '2px solid #D7AA1E'
       // backgroundColor: 'rgba(33, 35, 36, 0.3)',
@@ -54,7 +56,11 @@ const useStyles = makeStyles(() => ({
     // }
   },
   inputUploader: {
-    display: 'none',
+    opacity: 0.0,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    cursor: 'pointer'
   }
 }))
 
@@ -113,6 +119,17 @@ export const FileUploader = (props: UploadProps) => {
   )
 }
 
+export interface UploaderProps extends React.ClassAttributes<HTMLInputElement>, React.InputHTMLAttributes<HTMLInputElement> {
+  style?: CSSProperties,
+  accept: string,
+}
+
+const Uploader: React.FC<UploaderProps> = (props) => {
+  return (
+    <input ref={props.ref} type="file" accept={props.accept} className={props.className} onChange={props.onChange} />
+  )
+}
+
 export interface UploadItemProps {
   title: string,
   description: string,
@@ -141,7 +158,7 @@ const UploadItem: React.FC<UploadItemProps> = (props) => {
         <div className={classes.uploadTitle}>{props.title}</div>
         <div className={classes.uploadDesc}>{props.description}</div>
       </div>
-      <input ref={fileRef} type="file" accept={props.accept} className={classes.inputUploader} onChange={onChange} />
+      <Uploader ref={fileRef} type="file" accept={props.accept} className={classes.inputUploader} onChange={onChange} />
     </div>
   )
 }

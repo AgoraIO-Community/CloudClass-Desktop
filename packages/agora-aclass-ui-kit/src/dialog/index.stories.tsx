@@ -1,6 +1,6 @@
 import React from 'react'
 import { action } from '@storybook/addon-actions';
-import {dialogManager, Dialog , PromptDialog} from '.';
+import {dialogManager, Dialog , PromptDialog, DeviceManager, DeviceTest} from '.';
 import { Button } from '../button';
 
 export default {
@@ -92,4 +92,16 @@ QuitRoomDialogB.args = {
   text: "课程还未结束，是否确定退出教室？",
   confirmText: "退出教室",
   cancelText: "在想一下",
+}
+
+export const AClassDeviceManager = () => {
+  return (
+    <DeviceManager />
+  )
+}
+
+export const AClassDeviceTest = () => {
+  return (
+    <DeviceTest />
+  )
 }
