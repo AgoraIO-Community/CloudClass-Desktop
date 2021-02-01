@@ -13,7 +13,6 @@ const routes: string[] = [
   "breakoutClassCourses",
   "breakoutClassRoom",
   "replayPage",
-  'invisibleJoinRoom',
   "home"
 ]
 
