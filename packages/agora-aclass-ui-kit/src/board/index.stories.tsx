@@ -137,11 +137,11 @@ export const EducationBoard = (props: any) => {
   }
   
   return (
-    <Box>
       <Board style={{
         width: props.width,
         height: props.height,
-        position: 'relative'
+        position: 'relative',
+        boxSizing: 'border-box'
       }}>
         <ControlMenu
           style={{
@@ -172,7 +172,6 @@ export const EducationBoard = (props: any) => {
           }
          onClick={onClickTool} />
       </Board>
-    </Box>
   )
 }
 

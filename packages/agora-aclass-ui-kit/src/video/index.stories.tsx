@@ -32,6 +32,10 @@ export const TeacherVideo = () => {
       videoState={video}
       audioState={audio}
       onClick={handleClick}
+      style={{
+        width: '100%',   
+        height: '100%',
+      }}
     >
       {/* <div>media</div> */}
     </Video>
@@ -65,6 +69,10 @@ export const StudentVideo = () => {
       videoState={video}
       audioState={audio}
       onClick={handleClick}
+      style={{
+        width: '100%',   
+        height: '100%',
+      }}
     >
       {/* <div>media</div> */}
     </Video>
