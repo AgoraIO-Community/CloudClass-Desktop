@@ -1,4 +1,4 @@
-import { Box, ButtonBase, createStyles, styled, Tab, Tabs, Theme, withStyles } from '@material-ui/core'
+import { Box, ButtonBase, createStyles, makeStyles, styled, Tab, Tabs, Theme, withStyles } from '@material-ui/core'
 import React from 'react'
 import MicActivated from '../assets/mic-activated.png'
 import CamActivated from '../assets/cam-activated.png'
@@ -8,29 +8,22 @@ import Mic from '../assets/mic.png'
 import Speaker from '../assets/speaker.png'
 import { CustomizeTheme } from '../../theme'
 
-const DeviceBtn = styled((props: any) => <ButtonBase disableRipple {...props} />)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  background: '#DEF4FF',
-  cursor: 'pointer',
-  border: '1px solid #75C0FF',
-  color: '#75C0FF',
-  fontSize: 14,
-  width: 86,
-  height: 66,
-  borderRadius: '10px 0px 0px 10px',
-  marginBottom: 10,
-})
-
-const AClassDeviceTabs = styled('div')({
-  display: 'flex',
-  flexDirection: 'column'
-})
-
-
-const useDeviceIdonStyles = () => ({
+const useStyles = makeStyles(() => createStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: '#DEF4FF',
+    cursor: 'pointer',
+    border: '1px solid #75C0FF',
+    color: '#75C0FF',
+    fontSize: 14,
+    width: 86,
+    height: 66,
+    borderRadius: '10px 0px 0px 10px',
+    marginBottom: 10,
+  },
   camera: {
     background: `url(${Cam}) no-repeat`,
     backgroundPosition: 'center',
@@ -76,6 +69,12 @@ const useDeviceIdonStyles = () => ({
     justifyContent: 'center',
     alignItems: 'center',
   }
+}))
+
+const AClassDeviceTabs = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  paddingTop: '59px',
 })
 
 const AClassDeviceTab = withStyles((theme: Theme) =>
@@ -98,20 +97,19 @@ const AClassDeviceTab = withStyles((theme: Theme) =>
       '&$selected': {
         color: '#FFFFFF',
       },
-      // '&:focus': {
-      //   color: '#40a9ff',
-      // },
     },
   }),
 )((props: any) => {
 
-  const classes = useDeviceIdonStyles()
+  const classes = useStyles()
   return(
     <CustomizeTheme>
-      <DeviceBtn component="div">
-        <div style={{...classes[`${props.type}`]}}></div>
+      <ButtonBase component="div" classes={{root: classes.root}} onClick={() => {
+        props.onClick(props.type)
+      }}>
+        <div className={classes[`${props.type}`]}></div>
         <div style={{marginTop: 5}}>{props.text}</div>
-      </DeviceBtn>
+      </ButtonBase>
     </CustomizeTheme>
   )
 });
