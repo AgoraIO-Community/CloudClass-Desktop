@@ -1,4 +1,4 @@
 export * from './manager'
-// export * from './paper'
+export * from './audio-player'
 export * from './pretest'
 export * from './tabs'
