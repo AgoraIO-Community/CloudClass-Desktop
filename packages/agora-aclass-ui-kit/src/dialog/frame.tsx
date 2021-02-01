@@ -6,7 +6,8 @@ import {TextEllipsis} from '../typography'
 
 type CloseButtonProps = {
   onClick?: () => any,
-  className?: any
+  className?: any,
+  style?: React.CSSProperties,
 }
 
 export interface DialogFramePaperProps {
@@ -16,13 +17,15 @@ export interface DialogFramePaperProps {
   closeable?: boolean,
   onClose?: () => any,
   style?: React.CSSProperties,
-  className?: any
+  className?: any,
+  headerStyle?: React.CSSProperties,
+  closeBtnStyle?: React.CSSProperties,
 }
 
 
 const CloseButton: React.FC<CloseButtonProps> = (props) => {
   return (
-    <IconButton aria-label="close" className={props.className} onClick={props.onClick}>
+    <IconButton aria-label="close" className={props.className} onClick={props.onClick} style={props.style}>
       <CloseIcon style={{fontSize: "18px"}} />
     </IconButton>
   )
@@ -71,7 +74,7 @@ export const DialogFramePaper: React.FC<DialogFramePaperProps> = (props) => {
   return (
     <Paper style={{...props.style}} className={props.className} classes={{root: classes.root}} elevation={0} square={true}>
       {props.showHeader ? 
-        <div className={classes.header}>
+        <div className={classes.header} style={props.headerStyle}>
           <TextEllipsis maxWidth={'100%'}>
             <>
               {props.title}
@@ -81,7 +84,7 @@ export const DialogFramePaper: React.FC<DialogFramePaperProps> = (props) => {
         </div>
       : null}
       {props.closeable ? 
-        <CloseButton className={classes.closeButton} onClick={props.onClose} /> : null}
+        <CloseButton className={classes.closeButton} onClick={props.onClose} style={props.closeBtnStyle}/> : null}
       {props.children ? props.children : null}
     </Paper>
   )

@@ -36,7 +36,7 @@ export interface DeviceTestProps {
   cameraList?: IDeviceItem[],
   microphoneList?: IDeviceItem[],
   onChangeCamera: (evt: any) => any,
-  onChangeMicrophone: (evt: any) => any
+  onChangeMicrophone: (evt: any) => any,
 }
 
 export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
@@ -46,6 +46,7 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
   const [value, setValue] = React.useState<number>(0)
 
   const onChange = (newValue: number) => {
+    console.log('newValue ', newValue)
     setValue(newValue)
   }
 
@@ -63,24 +64,13 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
   return (
     <div style={{display: "flex", flexDirection: "row", width: 786, height: 660}}>
       <DeviceTabs value={value} onChange={onChange}/>
-      {/* <DeviceDialogPaper>
-        <div style={{width: 700, height: 660, display: 'flex', flexDirection: 'column'}}>
-          <DeviceItem
-            label={'摄像头选项'}
-            value={0}
-            onChange={onCameraChange}
-            items={cameraList}
-          />
-        </div>
-        <div style={{width: 700, height: 660, display: 'flex', flexDirection: 'column'}}>
-          <DeviceItem
-            label={'麦克风选项'}
-            value={0}
-            onChange={onChangeMicrophone}
-            items={microphoneList}
-          />
-        </div>
-      </DeviceDialogPaper> */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1
+      }}>
+
+      </div>
     </div>
   )
 }

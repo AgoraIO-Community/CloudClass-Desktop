@@ -7,6 +7,12 @@ export enum VolumeLevelEnum {
   Level2 = 2,
   Level3 = 3,
 }
+
+export enum VolumeDirectionEnum {
+  Top = 'to top',
+  Right = 'to right'
+}
+
 export interface IVolume {
   foregroundColor?: string,
   backgroundColor?: string,
@@ -14,11 +20,12 @@ export interface IVolume {
   width?: string,
   height?: string,
   currentVolume: VolumeLevelEnum,
-  direction?: 'to top' | 'to right',
+  direction?: VolumeDirectionEnum,
 }
+
 export const Volume = (props: IVolume) => {
   const { foregroundColor = '#598bdd', width = '10px', height = '2px', backgroundColor = "#aba8a8", maxLength = 4, currentVolume = VolumeLevelEnum.Level1, direction = 'to top' } = props || {}
-  const isToRight = direction === 'to right';
+  const isToRight = direction === VolumeDirectionEnum.Right;
   const useStyles = makeStyles((theme: Theme) => ({
     content: {
       display: 'flex',

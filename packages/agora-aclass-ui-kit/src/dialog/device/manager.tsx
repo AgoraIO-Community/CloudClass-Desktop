@@ -58,6 +58,8 @@ interface DeviceDialogProps {
   id?: number,
   paperStyle?: React.CSSProperties,
   dialogContentStyle?: React.CSSProperties,
+  dialogHeaderStyle?: React.CSSProperties,
+  closeBtnStyle?: React.CSSProperties,
 }
 
 const DeviceDialog: React.FC<DeviceDialogProps> = (props) => {
@@ -73,7 +75,7 @@ const DeviceDialog: React.FC<DeviceDialogProps> = (props) => {
         }
       }}
       PaperComponent={(paperProps: any) => {
-        return <DialogFramePaper {...paperProps} closeable={true} onClose={onClose} showHeader={true} title={props.title} />
+        return <DialogFramePaper {...paperProps} closeBtnStyle={props.closeBtnStyle} headerStyle={props.dialogHeaderStyle} closeable={true} onClose={onClose} showHeader={true} title={props.title} />
       }}
       PaperProps={{
         style: {

@@ -21,6 +21,8 @@ export const EducationVolume = (props: IVolume) => {
 }
 EducationVolume.args = {
   currentVolume: 0,
+  width: 10,
+  height: 100,
   direction: 'to right',
   maxLength: 4,
 }

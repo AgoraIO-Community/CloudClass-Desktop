@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { action } from '@storybook/addon-actions'
-import {dialogManager, Dialog , PromptDialog, DeviceTest, DeviceManagerDialog, AudioPlayer} from '.'
+import {dialogManager, Dialog , PromptDialog, DeviceTest, DeviceManagerDialog, AudioPlayer, AudioVolume} from '.'
 import { Button } from '../button'
 import {VolumeSlider} from '../board'
-import { createStyles, InputLabel, makeStyles, MenuItem, Select, Theme, withStyles } from '@material-ui/core'
+import { InputLabel, makeStyles, MenuItem, Select, styled, Theme, withStyles } from '@material-ui/core'
 import VideoDetectPng from './assets/camera-detect.png'
+import SpeakerPng from './assets/speaker.png'
+import MicPng from './assets/mic.png'
+import { VolumeDirectionEnum } from '../volume'
 
 
 export default {
@@ -109,7 +112,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
   },
   select: {
     borderRadius: '20px',
@@ -130,7 +132,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 147,
     backgroundSize: 56,
     width: 260,
-    marginBottom: 16,
     borderRadius: 10,
     backgroundColor: '#FFFFFF'
   }
@@ -155,12 +156,16 @@ const AClassSelect = withStyles((theme: Theme) => ({
     margin: 0,
     padding: 0,
     minWidth: '100%',
-    paddingLeft: '21px',
+    justifyContent: 'center',
     display: 'flex',
     alignItems: 'center',
     height: 30,
   },
 }))(Select);
+
+const RowItem = styled('div')({
+  marginBottom: 19,
+})
 
 const DeviceItem: React.FC<DeviceItemProps> = (props) => {
   const classes = useStyles()
@@ -273,31 +278,66 @@ export const DeviceManager = (props: any) => {
       visible={true}
       title="设置"
       onClose={handleClose}
+      dialogHeaderStyle={{
+        minHeight: 40,
+      }}
       paperStyle={{
-        height: 480,
+        height: 600,
         padding: 20,
         paddingTop: 0,
+        borderRadius: 30,
       }}
       dialogContentStyle={{
         borderRadius: 30,
         display: 'flex',
         flexDirection: 'column',
         background: '#DEF4FF',
-        padding: 36
+        padding: 25
+      }}
+      closeBtnStyle={{
+        top: 18,
+        right: 18,
+        color: 'white'
       }}
     >
       <div className={classes.container}>
-        <DeviceItem name="摄像头选项：" value={camValue} onChange={handleCameraChange} list={cameraList} id="camera" />
-        <div className={classes.cameraDetect}>
-          <div style={{flex: 1}}></div>
-          <div className={classes.placeholder}></div>
-        </div>
-        <DeviceItem name="麦克风选项：" value={micValue} onChange={handleMicChange} list={micList} id="microphone" />
-        <VolumeSlider value={20} onChange={(val: number) => {
-          console.log("slider ", val)
-        }} />
-        <DeviceItem name="扬声器选项: " value={speakerValue} onChange={handleSpeakerChange} list={speakerList} id="speaker" />
-        <AudioPlayerTest {...props.audioPlayerProps} />
+        <RowItem>
+          <DeviceItem name="摄像头选项：" value={camValue} onChange={handleCameraChange} list={cameraList} id="camera" />
+        </RowItem>
+        <RowItem>
+          <div className={classes.cameraDetect}>
+            <div style={{flex: 1}}></div>
+            <div className={classes.placeholder}></div>
+          </div>
+        </RowItem>
+        <RowItem>
+          <DeviceItem name="麦克风选项：" value={micValue} onChange={handleMicChange} list={micList} id="microphone" />
+        </RowItem>
+        <RowItem>
+          <SpeakerDeviceVolume 
+            currentVolume={10}
+            width={'10px'}
+            direction={VolumeDirectionEnum.Right}
+          />
+        </RowItem>
+        <RowItem>
+          <DeviceItem name="扬声器选项: " value={speakerValue} onChange={handleSpeakerChange} list={speakerList} id="speaker" />
+        </RowItem>
+        <RowItem>
+          <VolumeSlider value={20} onChange={(val: number) => {
+            console.log("slider ", val)
+          }} />
+        </RowItem>
+        <RowItem>
+          <AudioPlayerTest {...props.audioPlayerProps} />
+        </RowItem>
+        <RowItem>
+          <SpeakerDeviceVolume 
+            currentVolume={10}
+            width={'10px'}
+            direction={VolumeDirectionEnum.Right}
+          />
+        </RowItem>
       </div>
     </DeviceManagerDialog>
   )
@@ -313,7 +353,89 @@ DeviceManager.args = {
   }
 }
 
-export const AClassDeviceTest = () => {
+export const AClassDeviceTest: React.FC<any> = (props) => {
+
+  
+  const classes = useStyles()
+
+  const handleClose = () => {
+    console.log('handle close')
+  }
+
+  const cameraList: DeviceList[] = [
+    {
+      deviceId: 'unknown',
+      label: '禁用',
+    },
+    {
+      deviceId: '1',
+      label: '设备1'
+    },
+    {
+      deviceId: '2',
+      label: '设备2'
+    },
+    {
+      deviceId: '3',
+      label: '设备3'
+    },
+  ]
+
+  const [camValue, setCamValue] = useState<string>('unknown')
+
+  const handleCameraChange = (evt: any) => {
+    setCamValue(evt.target.value)
+  }
+
+  const micList: DeviceList[] = [
+    {
+      deviceId: 'unknown',
+      label: '禁用',
+    },
+    {
+      deviceId: '11',
+      label: '设备1'
+    },
+    {
+      deviceId: '22',
+      label: '设备2'
+    },
+    {
+      deviceId: '33',
+      label: '设备3'
+    },
+  ]
+
+  const speakerList: DeviceList[] = [
+    {
+      deviceId: 'unknown',
+      label: '禁用',
+    },
+    {
+      deviceId: '11',
+      label: '设备1'
+    },
+    {
+      deviceId: '22',
+      label: '设备2'
+    },
+    {
+      deviceId: '33',
+      label: '设备3'
+    },
+  ]
+
+  const [micValue, setMicValue] = useState<string>('unknown')
+
+  const handleMicChange = (evt: any) => {
+    setMicValue(evt.target.value)
+  }
+
+  const [speakerValue, setSpeakerValue] = useState<string>('unknown')
+
+  const handleSpeakerChange = (evt: any) => {
+    setSpeakerValue(evt.target.value)
+  }
 
   const onChangeCamera = (newValue: number) => {
 
@@ -324,11 +446,85 @@ export const AClassDeviceTest = () => {
   }
 
   return (
-    <DeviceTest
-      onChangeCamera={onChangeCamera} 
-      onChangeMicrophone={onChangeMicrophone}
-    />
+    <DeviceManagerDialog
+      visible={true}
+      title="设置"
+      onClose={handleClose}
+      paperStyle={{
+        height: 600,
+        padding: 20,
+        paddingTop: 0,
+        borderRadius: 30,
+      }}
+      dialogContentStyle={{
+        borderRadius: 30,
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#DEF4FF',
+        padding: 25
+      }}
+      closeBtnStyle={{
+        top: 18,
+        right: 18,
+        color: 'white'
+      }}
+    >
+      <div className={classes.container}>
+        <RowItem>
+          <DeviceItem name="摄像头选项：" value={camValue} onChange={handleCameraChange} list={cameraList} id="camera" />
+        </RowItem>
+        <RowItem>
+          <div className={classes.cameraDetect}>
+            <div style={{flex: 1}}></div>
+            <div className={classes.placeholder}></div>
+          </div>
+        </RowItem>
+        <RowItem>
+          <DeviceItem name="麦克风选项：" value={micValue} onChange={handleMicChange} list={micList} id="microphone" />
+        </RowItem>
+        <RowItem>
+          <SpeakerDeviceVolume 
+            currentVolume={10}
+            width={'10px'}
+            direction={VolumeDirectionEnum.Right}
+          />
+        </RowItem>
+        <RowItem>
+          <DeviceItem name="扬声器选项: " value={speakerValue} onChange={handleSpeakerChange} list={speakerList} id="speaker" />
+        </RowItem>
+        <RowItem>
+          <VolumeSlider value={20} onChange={(val: number) => {
+            console.log("slider ", val)
+          }} />
+        </RowItem>
+        <RowItem>
+          <AudioPlayerTest {...props.audioPlayerProps} />
+        </RowItem>
+        <RowItem>
+          <SpeakerDeviceVolume 
+            currentVolume={10}
+            width={'10px'}
+            direction={VolumeDirectionEnum.Right}
+          />
+        </RowItem>
+      </div>
+    </DeviceManagerDialog>
+    // <DeviceTest
+    //   onChangeCamera={onChangeCamera} 
+    //   onChangeMicrophone={onChangeMicrophone}
+    // />
   )
+}
+
+//@ts-ignore
+AClassDeviceTest.args = {
+  audioPlayerProps: {
+    style: {
+      width: 100
+    },
+    audioSource: 'https://webdemo.agora.io/music.mp3',
+    playText: '音频播放'
+  }
 }
 
 export const Frame = () => {
@@ -358,4 +554,34 @@ AudioPlayerTest.args = {
   },
   audioSource: 'https://webdemo.agora.io/test_audio.mp3',
   playText: '音频播放'
+}
+
+export const MicrophoneVolume = (props: any) => {
+  return (
+    <div style={{height: '50px'}}>
+      <AudioVolume iconPath={MicPng} height={'25px'} {...props} />
+    </div>
+  )
+}
+
+MicrophoneVolume.args = {
+  currentVolume: 10,
+  width: '10px',
+  // height: '10px',
+  direction: VolumeDirectionEnum.Right
+}
+
+export const SpeakerDeviceVolume = (props: any) => {
+  return (
+    <div style={{height: '50px'}}>
+      <AudioVolume iconPath={SpeakerPng} height={'25px'} {...props} />
+    </div>
+  )
+}
+
+SpeakerDeviceVolume.args = {
+  currentVolume: 10,
+  width: '10px',
+  // height: '10px',
+  direction: VolumeDirectionEnum.Right
 }
