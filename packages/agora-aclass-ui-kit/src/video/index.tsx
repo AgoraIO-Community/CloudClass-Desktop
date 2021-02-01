@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '7px',
       display: 'flex',
       position: 'relative',
+      boxSizing: 'border-box',
     },
     minimalBtn: {
       padding: 0,
@@ -292,6 +293,7 @@ export interface VideoFrameProps {
   role: string,
   children: any,
   onClick: VideoItemOnClick,
+  style?: any,
 }
 
 const VideoFrame = (props: VideoFrameProps) => {
@@ -316,7 +318,7 @@ const VideoFrame = (props: VideoFrameProps) => {
   }, [props.uid, onClick])
   
   return (
-    <Box component="div" className={classes.root}>
+    <div className={classes.root} style={props.style}>
       {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
@@ -337,7 +339,7 @@ const VideoFrame = (props: VideoFrameProps) => {
         <AudioIconButton muted={props.audioState} onClick={onClick}/>
       </Box>
       {props.children}
-    </Box>
+    </div>
   )
 }
 

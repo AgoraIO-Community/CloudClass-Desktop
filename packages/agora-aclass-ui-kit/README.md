@@ -1,7 +1,7 @@
 # `agora-aclass-ui-kit`
 
 > TODO: description
-
+npm run storybook
 ## Usage
 
 ```
