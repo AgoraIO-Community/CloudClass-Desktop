@@ -13,6 +13,7 @@ import { ReplayPage } from './replay';
 import { BreakoutClassroom } from './breakout-class/breakout-class';
 import { AssistantCoursesPage } from './breakout-class/assistant-courses-page';
 import { HomePage } from './home';
+import {Invisible} from './invisible'
 
 export type AppRouteComponent = {
   path: string
@@ -59,6 +60,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'breakoutClassAssistantRoom': {
     path: '/breakout-class/assistant/courses/:course_name',
     component: () => <BreakoutClassroom />
+  },
+  'invisibleJoinRoom': {
+    path: '/invisible/courses',
+    component: () => <Invisible />
   },
   'home': {
     path: '/',
