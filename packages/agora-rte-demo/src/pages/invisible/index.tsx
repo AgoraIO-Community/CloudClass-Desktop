@@ -4,30 +4,6 @@ import { useRoomStore, useAppStore } from '@/hooks';
 import { homeApi } from '@/services/home-api';
 import { UIStore } from '@/stores/app';
 import { observer } from 'mobx-react';
-const parse = (query: string) => {
-  let querystring = query;
-  if (querystring.indexOf('?') > -1) {
-    querystring = querystring.split('?')[1]
-  }
-  const list = querystring.split('&');
-  const ret = {};
-
-  list.forEach(function (item) {
-    const slices = item.split('=');
-    const key = slices[0];
-    const val = slices[1];
-    if (ret[key]) {
-      ret[key] = Array.isArray(ret[key]) ? ret[key] : [ret[key]];
-      ret[key].push(val);
-    } else {
-      ret[key] = val;
-    }
-  });
-
-  return ret;
-};
-
-
 
 export const Invisible = observer((props: any) => {
   const appStore = useAppStore();
@@ -35,8 +11,12 @@ export const Invisible = observer((props: any) => {
   const roomTypes = UIStore.roomTypes
   const { search } = useLocation()
   const setRoomInfo = async () => {
-    const params: any = parse(search)
-    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience' } = params
+    const params: any = new URLSearchParams(search)
+    const userUuid = params.get('userUuid');
+    const userRole = params.get('userRole') || 0;
+    const roomType = params.get('roomType') || 0;
+    const roomUuid = params.get('roomUuid');
+    const roomName = params.get('roomName')||'audience';
     const uid = `audience${userRole}`
     const { rtmToken } = await homeApi.login(uid)
     appStore.setRoomInfo({
