@@ -1,7 +1,7 @@
-import { Box, InputLabel, MenuItem, Select } from '@material-ui/core'
+import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import React from 'react'
 import { DeviceTabs } from '.'
-import {DeviceDialogPaper} from './paper'
+// import {DeviceDialogPaper} from './paper'
 
 const useStyles = () => ({
 
@@ -33,8 +33,8 @@ const DeviceItem: React.FC<DeviceItemProps> = (props) => {
 
 
 export interface DeviceTestProps {
-  cameraList: IDeviceItem[],
-  microphoneList: IDeviceItem[],
+  cameraList?: IDeviceItem[],
+  microphoneList?: IDeviceItem[],
   onChangeCamera: (evt: any) => any,
   onChangeMicrophone: (evt: any) => any
 }
@@ -63,13 +63,13 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
   return (
     <div style={{display: "flex", flexDirection: "row", width: 786, height: 660}}>
       <DeviceTabs value={value} onChange={onChange}/>
-      <DeviceDialogPaper>
+      {/* <DeviceDialogPaper>
         <div style={{width: 700, height: 660, display: 'flex', flexDirection: 'column'}}>
           <DeviceItem
             label={'摄像头选项'}
             value={0}
             onChange={onCameraChange}
-            items={[]}
+            items={cameraList}
           />
         </div>
         <div style={{width: 700, height: 660, display: 'flex', flexDirection: 'column'}}>
@@ -77,21 +77,19 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
             label={'麦克风选项'}
             value={0}
             onChange={onChangeMicrophone}
-            items={[]}
+            items={microphoneList}
           />
         </div>
-        {/* <div style={{width: 700, height: 660, display: 'flex', flexDirection: 'column'}}>
-          <DeviceItem
-            label={'扬声器选项'}
-            value={0}
-          />
-        </div> */}
-      </DeviceDialogPaper>
+      </DeviceDialogPaper> */}
     </div>
   )
 }
 
 DeviceTest.defaultProps = {
-  cameraList: [],
-  microphoneList: []
+  cameraList: [{
+    name: 'unknown'
+  }],
+  microphoneList: [{
+    name: 'unknown'
+  }]
 }

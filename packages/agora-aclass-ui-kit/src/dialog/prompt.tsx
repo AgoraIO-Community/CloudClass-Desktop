@@ -1,9 +1,22 @@
-import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle, createStyles, Dialog, makeStyles, Theme} from '@material-ui/core'
 import React, { ReactEventHandler } from 'react'
-import { CustomizeTheme, themeConfig } from '../../theme'
-import { noop } from '../../declare'
-import { DialogFramePaper } from '../frame'
-import { Button } from '../../button'
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle} from '@material-ui/core'
+import { Button } from '../button'
+import { noop } from '../declare'
+import { CustomizeTheme, themeConfig } from '../theme'
+import { DialogFramePaper } from './frame'
+import { DialogButtons } from './base'
+
+export interface PromptDialogProps {
+  title: string,
+  contentText?: string,
+  visible: boolean,
+  confirmText?: string,
+  cancelText?: string,
+  onConfirm?: ReactEventHandler<any>,
+  onClose?: ReactEventHandler<any>,
+  id?: number
+}
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = createStyles({
@@ -50,26 +63,18 @@ const useStyles = makeStyles((theme: Theme) => {
   return styles
 })
 
-interface DeviceDialogProps {
-  title: string,
-  visible: boolean,
-  children?: React.ReactElement,
-  onClose?: ReactEventHandler<any>,
-  id?: number,
-  paperStyle?: React.CSSProperties,
-  dialogContentStyle?: React.CSSProperties,
-}
-
-const DeviceDialog: React.FC<DeviceDialogProps> = (props) => {
-
+const BasePromptDialog: React.FC<PromptDialogProps> = (props) => {
   const classes = useStyles()
+
+  const onConfirm = props.onConfirm ? props.onConfirm : noop
+
   const onClose = props.onClose ? props.onClose: noop
 
   return (
     <MDialog
       BackdropProps={{
-        style: {
-          background: 'transparent',
+        classes: {
+          root: classes.backDrop
         }
       }}
       PaperComponent={(paperProps: any) => {
@@ -77,9 +82,8 @@ const DeviceDialog: React.FC<DeviceDialogProps> = (props) => {
       }}
       PaperProps={{
         style: {
-          // width: '202px',
-          // height: '130px',
-          ...props.paperStyle
+          width: '202px',
+          height: '130px',
         },
       }}
       // classes={{paper: classes.promptPaper}}
@@ -89,21 +93,23 @@ const DeviceDialog: React.FC<DeviceDialogProps> = (props) => {
       onClose={onClose}
     >
       <MDialogContent
-        style={{...props.dialogContentStyle}}
         classes={{root: classes.dialogContent}}
       >
-        {props.children ? props.children : null}
+        {props.contentText ?
+          <MDialogContentText classes={{root: classes.dialogTextTypography}}>
+            {props.contentText}
+          </MDialogContentText>
+        : null}
+        <DialogButtons classes={{root: classes.dialogButtonGroup}}>
+          {props.confirmText ? <Button color="primary" onClick={onConfirm} text={props.confirmText}></Button> : null}
+        </DialogButtons>
       </MDialogContent>
     </MDialog>
   )
 }
 
-export interface DeviceManagerDialogProps extends DeviceDialogProps {}
-
-export const DeviceManagerDialog: React.FC<DeviceManagerDialogProps> = (props) => {
-  return (
-    <CustomizeTheme>
-      <DeviceDialog {...props} />
-    </CustomizeTheme>
-  )
-}
+export const PromptDialog = (props: PromptDialogProps) => (
+  <CustomizeTheme>
+    <BasePromptDialog {...props} />
+  </CustomizeTheme>
+)
