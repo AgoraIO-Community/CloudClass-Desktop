@@ -1,10 +1,127 @@
 import { Box } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { action } from '@storybook/addon-actions';
-import {Board, ControlMenu, Tool} from '.'
+import {Board, ControlMenu, PanelBackground, Tool, FileUploader} from '.'
+import { CustomizeSlider } from './panel/slider';
+import { ColorPalette } from './panel/palette';
+import { IToolItem } from './tool';
 
 export default {
   title: '白板'
+}
+
+
+export const ColorPopover = () => {
+  const [currentColor, setCurrentColor] = useState<string>('')
+
+  const onClick = (color: string) => {
+    setCurrentColor(color)
+    console.log('color ', color)
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <ColorPalette
+        currentColor={currentColor}
+        onClick={onClick}
+      />
+    </PanelBackground>
+  )
+}
+
+export const StrokePopover = () => {
+
+  const [currentColor, setCurrentColor] = useState<string>('')
+
+  const onClick = (color: string) => {
+    setCurrentColor(color)
+    console.log('color ', color)
+  }
+
+  const onChange = (newValue: number) => {
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <>
+        <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
+        <ColorPalette
+          currentColor={currentColor}
+          onClick={onClick}
+        />
+      </>
+    </PanelBackground>
+  )
+}
+
+
+const toolItems: IToolItem[] = [
+  {
+    itemName: 'mouse',
+    toolTip: true,
+  },
+  {
+    itemName: 'pencil',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'text',
+    toolTip: true,
+    popoverType: 'color',
+  },
+  {
+    itemName: 'rectangle',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'elliptic',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'eraser',
+    toolTip: true,
+  },
+  {
+    itemName: 'palette',
+    toolTip: true,
+    popoverType: 'color',
+  },
+  {
+    itemName: 'new-page',
+    toolTip: true,
+  },
+  {
+    itemName: 'move',
+    toolTip: true,
+  },
+  {
+    itemName: 'upload',
+    toolTip: true,
+    popoverType: 'upload',
+  },
+  {
+    itemName: 'clear',
+    toolTip: true,
+  }
+]
+
+export const UploadFilePopover = (props: any) => {
+
+  const handleUploadFile = async (evt: React.SyntheticEvent<HTMLInputElement>, type: string) => {
+    if (evt.currentTarget.files) {
+      const file = evt.currentTarget.files[0]
+      console.log("file ", file, " type ", type)
+    }
+  }
+
+  return (
+    <PanelBackground style={{width: 150}}>
+      <FileUploader handleUploadFile={handleUploadFile}/>
+    </PanelBackground>
+  )
 }
 
 export const EducationBoard = (props: any) => {
@@ -42,32 +159,22 @@ export const EducationBoard = (props: any) => {
           onClick={onClickPaginator}
         />
         <Tool
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
           headerTitle={props.toolbarName}
           style={{
             top: props.toolY,
             left: props.toolX,
           }}
           items={
-            [
-              'mouse',
-              'pencil',
-              'text',
-              'rectangle',
-              'elliptic',
-              'eraser',
-              'palette',
-              'new-page',
-              'move',
-              'upload',
-              'clear'
-            ]
+            toolItems
           }
          onClick={onClickTool} />
       </Board>
     </Box>
   )
 }
-
 
 EducationBoard.args = {
   showPaginator: true,
@@ -83,5 +190,5 @@ EducationBoard.args = {
   isFullScreen: true,
   width: 640,
   height: 480,
-  toolbarName: 'Tools'
+  toolbarName: 'Tools',
 }
