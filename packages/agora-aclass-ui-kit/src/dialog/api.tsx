@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { PromptDialog } from './prompt'
+import { PromptDialog } from './base'
 
 export interface ConfirmConfig {
   title: string,
