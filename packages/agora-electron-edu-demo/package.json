@@ -9,7 +9,9 @@
   "electronWebpack": {
     "main": {
       "sourceDirectory": "src/main",
-      "extraEntries": ["@/preload.js"]
+      "extraEntries": [
+        "@/preload.js"
+      ]
     },
     "renderer": {
       "sourceDirectory": "src/renderer",
@@ -53,11 +55,11 @@
   "license": "ISC",
   "dependencies": {
     "adm-zip": "0.5.1",
+    "agora-classroom-sdk": "^1.0.0",
     "agora-electron-sdk": "education290",
     "electron": "7.1.14"
   },
   "devDependencies": {
-    "agora-edu-sdk": "file:./lib/agora-edu-sdk",
     "cross-env": "7.0.3",
     "electron-builder": "21.2.0",
     "electron-webpack": "latest",

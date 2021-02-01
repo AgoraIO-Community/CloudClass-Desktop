@@ -1,4 +1,4 @@
-import {AgoraEduSDK} from 'agora-edu-sdk'
+import {AgoraEduSDK} from 'agora-classroom-sdk'
 
 AgoraEduSDK.config({
   appId: "",

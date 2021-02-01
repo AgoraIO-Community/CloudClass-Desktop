@@ -3,14 +3,13 @@
 # Agora Electron Edu Demo QuickStart  
 
 ## Project Structure
-  * agora-edu-sdk: [lib/agora-edu-sdk](./lib/agora-edu-sdk/index.js)
   * mac permission plist file path: [entitlements](./entitlements)  
   * core project source code: [src](./src)
 ### integrate code 
 [src/renderer/index.js](./src/renderer/index.js)
 ### code snippet  
 ```javascript
-import {AgoraEduSDK} from 'agora-edu-sdk'
+import {AgoraEduSDK} from 'agora-classroom-sdk'
 
 AgoraEduSDK.config({
   // Your Agora AppID

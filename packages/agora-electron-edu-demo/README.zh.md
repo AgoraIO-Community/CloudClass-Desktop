@@ -3,7 +3,6 @@
 # Agora Electron Edu Demo QuickStart  
 
 ## 目录结构
-  * 教育sdk路径：[lib/agora-edu-sdk](./lib/agora-edu-sdk/index.js)
   * electron mac授权文件路径: [entitlements](./entitlements)  
   * 项目代码路径: [src](./src)
 
@@ -11,7 +10,7 @@
 [src/renderer/index.js](./src/renderer/index.js)
 ### 主要集成逻辑    
 ```javascript
-import {AgoraEduSDK} from 'agora-edu-sdk'
+import {AgoraEduSDK} from 'agora-classroom-sdk'
 
 AgoraEduSDK.config({
   // 你的声网appID
