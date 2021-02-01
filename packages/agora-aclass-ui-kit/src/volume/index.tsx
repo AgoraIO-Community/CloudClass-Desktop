@@ -22,12 +22,12 @@ export const Volume = (props: IVolume) => {
   const useStyles = makeStyles((theme: Theme) => ({
     content: {
       display: 'flex',
-      flexDirection: isToRight ? 'row':'column-reverse' ,
+      flexDirection: isToRight ? 'row' : 'column-reverse',
     },
     default: {
-      minWidth:'1px',
+      minWidth: '1px',
       width,
-      minHeight:'1px',
+      minHeight: '1px',
       height,
       borderRadius: '3px',
       marginTop: isToRight ? '0px' : '3px',

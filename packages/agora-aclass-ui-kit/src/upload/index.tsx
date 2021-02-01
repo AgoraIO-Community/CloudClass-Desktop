@@ -73,8 +73,8 @@ export const UploadFile = (props: IProps) => {
       setUploadProgress(percent)
       onProgress && onProgress(percent, file.name)
     },
-    beforeUpload(file:RcFile){
-      beforeUpload&&beforeUpload(file)
+    beforeUpload(file: RcFile) {
+      beforeUpload && beforeUpload(file)
       return true;
     },
     customRequest({

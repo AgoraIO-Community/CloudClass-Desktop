@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
-import {UploadFile} from './index'
+import { UploadFile } from './index'
 // import axios from 'axios'
 
 export default {
@@ -14,7 +14,7 @@ export default {
 
 export const EducationUpload = (props) => {
   return (
-    <UploadFile {...props}/>
+    <UploadFile {...props} />
   )
 }
 
@@ -31,24 +31,24 @@ EducationUpload.args = {
     'x-agora-token': '00647b7535dcb9a4bb4aa592115266eae98IADsG4/VdRo714cxZi4Y/P4QpHsW4ec0HQUGxbRx5ErMAlAMYq0AAAAAIgB2UmECaecYYAQAAQD/////AgD/////AwD/////BAD/////',
     'x-agora-uid': 'cd58c1152afa2f56ae1da440ebd3e503',
   },
- 
-  progressComponents:()=>{
-    return <CircularProgress/>
+
+  progressComponents: () => {
+    return <CircularProgress />
   },
-  onStart:(event)=>{
-    console.log('onStart',event)
+  onStart: (event) => {
+    console.log('onStart', event)
   },
-  beforeUpload:(event)=>{
-    console.log('beforeUpload',event);
+  beforeUpload: (event) => {
+    console.log('beforeUpload', event);
   },
-  onProgress:(event)=>{
-    console.log('onProgress',event);
+  onProgress: (event) => {
+    console.log('onProgress', event);
   },
-  onSuccess:(event)=>{
-    console.log('event',event);
+  onSuccess: (event) => {
+    console.log('event', event);
   },
-  onError:(error)=>{
-    console.log('error',error)
+  onError: (error) => {
+    console.log('error', error)
   },
   customRequest: ({
     action,

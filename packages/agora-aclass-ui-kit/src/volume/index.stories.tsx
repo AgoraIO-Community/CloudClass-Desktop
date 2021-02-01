@@ -9,7 +9,7 @@ export default {
     width: { control: 'number' },
     height: { control: 'number' },
     currentVolume: { control: VolumeLevelEnum },
-    maxLength:{control: 'number'}
+    maxLength: { control: 'number' }
   }
 }
 
@@ -21,6 +21,6 @@ export const EducationVolume = (props: IVolume) => {
 }
 EducationVolume.args = {
   currentVolume: 0,
-  direction:'to right',
-  maxLength:4,
+  direction: 'to right',
+  maxLength: 4,
 }
