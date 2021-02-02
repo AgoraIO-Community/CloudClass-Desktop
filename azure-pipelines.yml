@@ -1,0 +1,7 @@
+jobs:
+  - template: cicd/templates/cloudclass-mac.yml
+    parameters:
+      displayName: 'CloudClass-Mac'
+  - template: cicd/templates/cloudclass-win.yml
+    parameters:
+      displayName: 'CloudClass-Win'
