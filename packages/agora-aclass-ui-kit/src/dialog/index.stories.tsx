@@ -480,10 +480,6 @@ export interface DeviceTestProps {
   onChangeMicrophone: (evt: any) => any,
 }
 
-const MarginBottom = () => (
-  <div></div>
-)
-
 export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
 
   const classes = useStyles()
