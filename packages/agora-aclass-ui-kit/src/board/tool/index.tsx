@@ -3,7 +3,6 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { ToolButton } from '../control/button'
 import { ItemBaseClickEvent } from '../declare'
 import { makeStyles, Theme, Typography } from '@material-ui/core'
-import { AnyCnameRecord } from 'dns'
 
 type PopoverComponentType = 'stroke' | 'color' | 'upload'
 export interface IToolItem {
