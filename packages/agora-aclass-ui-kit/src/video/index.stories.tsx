@@ -5,7 +5,7 @@ export default {
   title: '视频'
 }
 
-export const TeacherVideo = () => {
+export const TeacherVideo = (props: any) => {
 
   const [video, setVideo] = useState<boolean>(false)
   const [audio, setAudio] = useState<boolean>(false)
@@ -33,8 +33,8 @@ export const TeacherVideo = () => {
       audioState={audio}
       onClick={handleClick}
       style={{
-        width: '100%',   
-        height: '100%',
+        width: props.width,
+        height: props.height,
       }}
     >
       {/* <div>media</div> */}
@@ -42,7 +42,13 @@ export const TeacherVideo = () => {
   )
 }
 
-export const StudentVideo = () => {
+TeacherVideo.args = {
+  width: '200px',
+  height: '150px',
+}
+
+
+export const StudentVideo = (props: any) => {
 
   const [video, setVideo] = useState<boolean>(false)
   const [audio, setAudio] = useState<boolean>(false)
@@ -70,11 +76,16 @@ export const StudentVideo = () => {
       audioState={audio}
       onClick={handleClick}
       style={{
-        width: '100%',   
-        height: '100%',
+        width: props.width,
+        height: props.height,
       }}
     >
       {/* <div>media</div> */}
     </Video>
   )
+}
+
+StudentVideo.args = {
+  width: '200px',
+  height: '150px',
 }

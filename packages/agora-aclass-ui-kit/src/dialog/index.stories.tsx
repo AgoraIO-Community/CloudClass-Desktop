@@ -480,6 +480,10 @@ export interface DeviceTestProps {
   onChangeMicrophone: (evt: any) => any,
 }
 
+const MarginBottom = () => (
+  <div></div>
+)
+
 export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
 
   const classes = useStyles()
@@ -639,7 +643,7 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="摄像头选项：" value={cameraId} onChange={handleCameraChange} list={cameraList} id="camera" />
-                <div style={{marginBottom: 19}}></div>
+                <RowItem></RowItem>
                 <div className={classes.cameraDetect}>
                   <div style={{flex: 1}}></div>
                   <div className={classes.placeholder}></div>
@@ -657,7 +661,12 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="麦克风选项：" value={microphoneId} onChange={handleMicrophoneChange} list={microphoneList} id="microphone" />
-                <div style={{marginBottom: 19}}></div>
+                <RowItem />
+                <SpeakerDeviceVolume 
+                  currentVolume={10}
+                  width={'5px'}
+                  direction={VolumeDirectionEnum.Right}
+                />
               </RowItem>
               <RowItem>
                 <div className={classes.btnBox}>
@@ -671,6 +680,10 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="扬声器选项：" value={microphoneId} onChange={handleSpeakerChange} list={speakerList} id="speaker" />
+                <RowItem />
+                <VolumeSlider value={20} onChange={(val: number) => {
+                  console.log("slider ", val)
+                }} />
               </RowItem>
               <RowItem>
                 <div className={classes.btnBox}>

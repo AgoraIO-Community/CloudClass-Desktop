@@ -30,7 +30,7 @@ export const WindowTeacherVideo = () => {
         setHeight(h)
       }}
     >
-      <TeacherVideo></TeacherVideo>
+      <TeacherVideo width={'100%'} height={'100%'}></TeacherVideo>
     </WindowMode>
   )
 }
@@ -58,7 +58,7 @@ export const WindowStudentVideo = () => {
         setHeight(h)
       }}
     >
-      <StudentVideo></StudentVideo>
+      <StudentVideo width={'100%'} height={'100%'}></StudentVideo>
     </WindowMode>
   )
 }
