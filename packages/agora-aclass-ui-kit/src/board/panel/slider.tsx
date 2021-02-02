@@ -1,5 +1,6 @@
 import { Slider, Box } from '@material-ui/core'
-import { CSSProperties, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React from 'react'
 
 const ASlider = withStyles({
