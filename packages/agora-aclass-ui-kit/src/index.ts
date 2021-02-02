@@ -1,3 +1,7 @@
 export * from './button/index'
 export * from './video'
 export * from './dialog'
+export * from './navigation'
+export * from './signalBar'
+export * from './upload'
+export * from './window-mode'

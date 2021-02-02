@@ -3,6 +3,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { ToolButton } from '../control/button'
 import { ItemBaseClickEvent } from '../declare'
 import { makeStyles, Theme, Typography } from '@material-ui/core'
+import { AnyCnameRecord } from 'dns'
 
 type PopoverComponentType = 'stroke' | 'color' | 'upload'
 export interface IToolItem {
@@ -49,6 +50,7 @@ const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
   if (type === 'color') return props.colorComponent
   if (type === 'stroke') return props.strokeComponent
   if (type === 'upload') return props.uploadComponent
+  return
 }
 
 export const Tool: React.FC<ToolProps> = (props) => {

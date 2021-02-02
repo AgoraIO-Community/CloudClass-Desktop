@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
 export enum VolumeLevelEnum {
   None = 0,

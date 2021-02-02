@@ -53,12 +53,6 @@ export const Dialogs = () => {
   )
 }
 
-// const usePromptDialogs = makeStyles((theme: Theme) => createStyles({
-//   root: {
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)'
-//   }
-// }))
-
 export const PromptDialogView = PromptTemplate.bind({})
 PromptDialogView.args = {
   visible: true,
