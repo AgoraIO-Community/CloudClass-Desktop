@@ -1,4 +1,4 @@
-import { Box, ButtonBase, createStyles, makeStyles, styled, Tab, Tabs, Theme, withStyles } from '@material-ui/core'
+import { ButtonBase, createStyles, makeStyles, styled, Theme, withStyles } from '@material-ui/core'
 import React from 'react'
 import MicActivated from '../assets/mic-activated.png'
 import CamActivated from '../assets/cam-activated.png'
@@ -32,6 +32,10 @@ const useStyles = makeStyles(() => createStyles({
     height: 24,
     '&:hover': {
       background: `url(${CamActivated}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+      width: 24,
+      height: 24,
     },
     '&:active': {
 
@@ -45,6 +49,10 @@ const useStyles = makeStyles(() => createStyles({
     height: 24,
     '&:hover': {
       background: `url(${MicActivated}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+      width: 24,
+      height: 24,
     },
     '&:active': {
 
@@ -58,6 +66,10 @@ const useStyles = makeStyles(() => createStyles({
     height: 24,
     '&:hover': {
       background: `url(${SpeakerActivated}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+      width: 24,
+      height: 24,
     },
     '&:active': {
 
