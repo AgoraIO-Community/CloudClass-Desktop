@@ -1,4 +1,5 @@
-import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle, createStyles, Dialog, makeStyles, Theme} from '@material-ui/core'
+import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle, Dialog, Theme} from '@material-ui/core'
+import {createStyles, makeStyles} from '@material-ui/core/styles'
 import React, { ReactEventHandler } from 'react'
 import { CustomizeTheme, themeConfig } from '../../theme'
 import { noop } from '../../declare'

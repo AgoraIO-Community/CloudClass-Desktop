@@ -1,7 +1,7 @@
 import React, { ReactEventHandler, useRef, useState } from 'react'
 import VideoPlayIcon from '../assets/play.png'
 import VideoPauseIcon from '../assets/pause.png'
-import { createStyles, makeStyles } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 export interface AudioPlayerProps {
   playText: string,

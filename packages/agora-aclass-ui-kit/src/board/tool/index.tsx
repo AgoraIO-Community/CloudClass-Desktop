@@ -49,6 +49,7 @@ const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
   if (type === 'color') return props.colorComponent
   if (type === 'stroke') return props.strokeComponent
   if (type === 'upload') return props.uploadComponent
+  return
 }
 
 export const Tool: React.FC<ToolProps> = (props) => {

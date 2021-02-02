@@ -1,4 +1,5 @@
-import { makeStyles, createStyles, Paper, Theme, ButtonBase, IconButton } from '@material-ui/core'
+import { Paper, Theme, ButtonBase, IconButton } from '@material-ui/core'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import React, {ReactEventHandler} from 'react'
 import CloseIcon from '@material-ui/icons/Close'
 import {noop} from '../declare'

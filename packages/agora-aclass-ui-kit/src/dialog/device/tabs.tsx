@@ -1,5 +1,6 @@
-import { ButtonBase, createStyles, makeStyles, styled, Theme, withStyles } from '@material-ui/core'
+import { ButtonBase, Theme } from '@material-ui/core'
 import React from 'react'
+import { withStyles, styled, createStyles, makeStyles} from '@material-ui/core/styles'
 import MicActivated from '../assets/mic-activated.png'
 import CamActivated from '../assets/cam-activated.png'
 import SpeakerActivated from '../assets/speaker-activated.png'
