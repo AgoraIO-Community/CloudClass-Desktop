@@ -11,11 +11,12 @@ enum SignalRoleTypeEnum {
 interface ISignalBar {
   foregroundColor?: string,
   width?: string,
+  height?: string,
   level: SignalRoleTypeEnum
 }
 
 export const SignalBar = (props: ISignalBar) => {
-  const { foregroundColor = '#598bdd', width = '3em' } = props || {}
+  const { foregroundColor = '#598bdd', width = '3em', height } = props || {}
   const temp = ` ${rgbaToHexColor(foregroundColor)}40 `
   const empty = ` ${rgbaToHexColor(foregroundColor)}00 `
   const { level } = props
@@ -24,7 +25,8 @@ export const SignalBar = (props: ISignalBar) => {
       display: 'block',
       position: 'relative',
       width,
-      margin: '1px auto',
+      height,
+      // margin: '1px auto',
       clear: 'both',
       '&:before': {
         content: "''",

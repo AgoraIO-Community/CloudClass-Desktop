@@ -1,6 +1,6 @@
 import React, { ReactEventHandler } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { Button as MButton} from '@material-ui/core'
+import { Button as MButton } from '@material-ui/core'
 import { CustomizeTheme } from '../theme'
 import { noop } from '../declare'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
@@ -52,7 +52,7 @@ export interface ButtonProps {
   style?: CSSProperties
 }
 
-export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
+export const Button = (props: ButtonProps = { text: '', color: 'primary' }) => {
   const classes = useButtonStyles()
 
   const classKey = props.color === "primary" ? classes.primary : classes.secondary
@@ -61,7 +61,7 @@ export const Button = (props: ButtonProps = {text: '', color: 'primary'}) => {
 
   return (
     <CustomizeTheme>
-      <MButton {...props} onClick={onClick} classes={{root: classKey, label: classes.label}} variant="contained" color={props.color} disableElevation disableRipple>
+      <MButton {...props} onClick={onClick} classes={{ root: classKey, label: classes.label }} variant="contained" color={props.color} disableElevation disableRipple>
         {props.text}
       </MButton>
     </CustomizeTheme>
@@ -94,14 +94,17 @@ export const CustomButton = (props: CustomButtonProps) => {
 
 export interface CustomizeIconBtnProps {
   icon: string,
-  style?: React.CSSProperties
+  style?: React.CSSProperties,
+  onClick?: (args?: any) => any
 }
 
 export const CustomizeIconBtn = (props: CustomizeIconBtnProps) => (
-  <div style={{
-    ...props.style,
-    background: `url(${props.icon}) no-repeat`,
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-  }}></div>
+  <div
+    onClick={props.onClick}
+    style={{
+      ...props.style,
+      background: `url(${props.icon}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain',
+    }}></div>
 )

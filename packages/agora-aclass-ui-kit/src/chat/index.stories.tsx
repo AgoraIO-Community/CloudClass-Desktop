@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Bubble, ChatBoard } from '.'
 import { makeStyles, Theme } from '@material-ui/core'
 
@@ -44,25 +44,76 @@ ChatBubble.args = {
   userName: "matrixbirds"
 }
 
+const messages = [{
+  sendTime: '14:22',
+  isSender: true,
+  chatText: "你好么, 我是可可爱爱的橙子",
+  userName: "可爱的柠檬",
+  status:'loading',
+}, {
+  sendTime: '14:23',
+  isSender: false,
+  chatText: "还行吧～我是可可爱爱的柚子",
+  userName: "英俊潇洒的柚子",
 
+}, {
+  sendTime: '14:23',
+  isSender: true,
+  chatText: "橙子的味道太棒了111",
+  userName: "可可爱爱的柠檬",
+  status:'fail',
+  onClickTranslate:()=>{
+    console.log(1111)
+  },
+  onClickFailButton:(props)=>{
+    console.log(props)
+  }
+}, {
+  sendTime: '14:23',
+  isSender: false,
+  chatText: "但柠檬的味道很一般",
+  userName: "可可爱爱的柠檬"
+}]
+const historyMessage = [{
+  sendTime: '14:22',
+  isSender: true,
+  chatText: "aaaa",
+  userName: "可爱的柠檬",
+  canTranslate:true,
+  translateText:'111111'
+}, {
+  sendTime: '14:23',
+  isSender: false,
+  chatText: "最后3条",
+  userName: "英俊潇洒的柚子",
+  canTranslate:true,
+  translateText:'2222'
+}, {
+  sendTime: '14:23',
+  isSender: true,
+  chatText: "最后第二条",
+  userName: "柠檬", 
+  canTranslate:true,
+  translateText:'111111'
+}, {
+  sendTime: '14:23',
+  isSender: false,
+  chatText: "最后一条信息",
+  userName: "柠檬"
+}]
 export const Demo = (props: any) => {
-  const { panelBackColor = "#DEF4FF", panelBorderColor = '#75C0FF', chatRecord, borderWidth = 15, maxHeight } = props
-  const useStyles = makeStyles((theme: Theme) => ({
-    chatContent: {
-      background: panelBackColor,
-      borderColor: panelBorderColor,
-      borderStyle: 'solid',
-      overflowY: 'scroll',
-      maxHeight,
-      borderRadius: '10px',
-      borderWidth: '0px',
-      boxShadow: `0px 0px 0px ${borderWidth}px ${panelBorderColor}`,
-      padding: '10px',
-    },
-  }))
-  const classes = useStyles()
+  const { messages } = props
+  const [newMessage, setMessages] = useState(messages)
+  const onPullFresh = () => {
+    setMessages(historyMessage.concat(newMessage))
+  }
+  useEffect(() => {
+    if (newMessage.length < 0) {
+      return
+    }
+  }, [newMessage])
   return (
-    <ChatBoard {...props} />
+    <ChatBoard {...props} messages={newMessage} onPullFresh={onPullFresh} />
   )
 }
 
@@ -70,28 +121,10 @@ Demo.args = {
   panelBackColor: '#DEF4FF',
   panelBorderColor: '#75C0FF',
   borderWidth: 10,
-  maxHeight: '100px',
-  messages: [{
-    sendTime: '14:22',
-    isSender: true,
-    chatText: "你好么, 我是可可爱爱的橙子",
-    userName: "可爱的柠檬",
-  }, {
-    sendTime: '14:23',
-    isSender: false,
-    chatText: "还行吧～我是可可爱爱的柚子",
-    userName: "英俊潇洒的柚子"
-  }, {
-    sendTime: '14:23',
-    isSender: true,
-    chatText: "橙子的味道太棒了",
-    userName: "可可爱爱的柠檬"
-  }, {
-    sendTime: '14:23',
-    isSender: false,
-    chatText: "但柠檬的味道很一般",
-    userName: "可可爱爱的柠檬"
-  }]
+  maxHeight: '200px',
+  messages,
+  onPullFresh: () => {
+  },
 }
 
 export default {
@@ -105,11 +138,7 @@ export default {
       control: 'color'
     },
     backgroundColor: {
-      // control: {
       control: 'color'
-      // type: 'select',
-      // options: [1, 2, 3, 3]
-      // }
     }
   }
 }

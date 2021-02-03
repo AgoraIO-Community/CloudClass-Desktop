@@ -3,6 +3,9 @@ import IconButton from '@material-ui/core/IconButton'
 import customerService from '../assets/customerService.png'
 import equipmentDetection from '../assets/equipmentDetection.png'
 import refresh from '../assets/refresh.png'
+import userNetwork from '../assets/userNetwork.png'
+import triangleUp from '../assets/triangleUp.png'
+import triangleDown from '../assets/triangleDown.png'
 import { CustomizeIconBtn, Button } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
@@ -28,6 +31,9 @@ const buttonsMap = {
   'customerService': (props: any) => <CustomizeIconBtn icon={customerService} style={{ ...defaultStyle, ...props.style }} />,
   'equipmentDetection': (props: any) => <CustomizeIconBtn icon={equipmentDetection} style={{ ...defaultStyle, ...props.style }} />,
   'refresh': (props: any) => <CustomizeIconBtn icon={refresh} style={{ ...defaultStyle, ...props.style }} />,
+  'userNetwork': (props: any) => <CustomizeIconBtn icon={userNetwork} style={{ ...defaultStyle, ...props.style }} />,
+  'triangleUp': (props: any) => <CustomizeIconBtn icon={triangleUp} style={{ ...defaultStyle, ...props.style }} />,
+  'triangleDown': (props: any) => <CustomizeIconBtn icon={triangleDown} style={{ ...defaultStyle, ...props.style }} />,
 
 }
 

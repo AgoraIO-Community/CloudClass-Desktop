@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50%',
     display: 'inline-block',
     marginRight: '10px',
-    boxSizing:'border-box'
+    boxSizing: 'border-box'
   }
 }))
 
@@ -44,3 +44,4 @@ export const ActionButtons = (props: IActionButtons) => {
 export const ExitButton = (props: { text: string, onClick: () => any }) => {
   return <DefaultButton {...props} />
 }
+export { LongMenu as Assistant } from './assistant'
