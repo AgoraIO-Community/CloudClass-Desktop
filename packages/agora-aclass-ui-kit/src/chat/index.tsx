@@ -159,9 +159,6 @@ export const ChatBoard = (props: ChatBoardProps) => {
     setInputMessages(value);
     onInputText && onInputText(event);
   }
-  const handleClickFailButton = (item: ChatMessage) => {
-    console.log(item)
-  }
   useEffect(() => {
     chatRef?.current.scrollTo(0, chatRef?.current.scrollHeight - currentHeight)
   }, [messages])
