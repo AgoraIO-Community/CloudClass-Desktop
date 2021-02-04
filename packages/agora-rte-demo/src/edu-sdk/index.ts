@@ -61,6 +61,7 @@ const sdkConfig: SDKConfig = {
 }
 
 export type LanguageEnum = "" | "en" | "zh"
+export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar" 
 
 export type LaunchOption = {
   userUuid: string
@@ -74,6 +75,7 @@ export type LaunchOption = {
   // rtmUid: string
   rtmToken: string
   language: LanguageEnum
+  translateLanguage: TranslateEnum 
 }
 
 export type ReplayOption = {
@@ -223,6 +225,7 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
         },
         language: option.language,
+        translateLanguage: option.translateLanguage,
         roomInfoParams: {
           roomUuid: option.roomUuid,
           userUuid: option.userUuid,
