@@ -3,11 +3,9 @@ import { BoardLoading } from './loading';
 import { Tools } from './tools';
 import { FooterMenu } from './footer-menu';
 import { FolderMenu } from './folder-menu';
-// import 'white-web-sdk/style/index.css';
 import { observer } from 'mobx-react';
 import { useBoardStore, useExtensionStore } from '@/hooks';
 import { UploadNotice } from './upload/upload-notice';
-import './netless-whiteboard.scss';
 
 export const Board = observer(() => {
 

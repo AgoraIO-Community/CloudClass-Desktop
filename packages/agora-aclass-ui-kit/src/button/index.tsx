@@ -108,3 +108,5 @@ export const CustomizeIconBtn = (props: CustomizeIconBtnProps) => (
       backgroundSize: 'contain',
     }}></div>
 )
+
+export type ControlButtonIcon = string

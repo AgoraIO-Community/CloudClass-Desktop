@@ -2,13 +2,13 @@ import React from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { rgbaToHexColor } from '../utils'
 
-enum SignalRoleTypeEnum {
+export enum SignalRoleTypeEnum {
   None = 0,
   Level1 = 1,
   Level2 = 2,
   Level3 = 3,
 }
-interface ISignalBar {
+export interface ISignalBar {
   foregroundColor?: string,
   width?: string,
   height?: string,

@@ -90,4 +90,4 @@ export const useReplayPlayerStore = (): PlayerStore => {
 export const useReplayUIStore = (): ReplayUIStore => {
   const context = useContext<replayAppContext>(MobXProviderContext)
   return context.store.uiStore
- }
+}

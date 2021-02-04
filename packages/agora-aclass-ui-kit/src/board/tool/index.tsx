@@ -2,7 +2,8 @@ import React from 'react'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { ToolButton } from '../control/button'
 import { ItemBaseClickEvent } from '../declare'
-import { makeStyles, Theme, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
 type PopoverComponentType = 'stroke' | 'color' | 'upload'
 export interface IToolItem {

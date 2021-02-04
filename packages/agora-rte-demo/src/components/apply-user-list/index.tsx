@@ -4,7 +4,6 @@ import { observer } from 'mobx-react'
 import {CustomIcon} from '@/components/icon'
 import { Card, ClickAwayListener, List, ListItem } from '@material-ui/core';
 import {Check, Close} from '@material-ui/icons';
-import './index.scss';
 import { t } from '@/i18n';
 
 const MAX_LENGTH = 4

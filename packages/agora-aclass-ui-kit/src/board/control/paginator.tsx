@@ -1,6 +1,7 @@
 import { Box } from '@material-ui/core'
 import React from 'react'
-import { ControlButton, ControlButtonIcon } from './button'
+import { ControlButton } from './button'
+import { ControlButtonIcon } from '../../button'
 import { ItemBaseClickEvent } from '../declare'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'

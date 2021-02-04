@@ -22,3 +22,5 @@ lib
 env.local
 .eslintcache
 lerna-debug.log
+./packages/agora-log-sdk
+packages/agora-log-sdk

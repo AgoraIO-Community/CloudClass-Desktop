@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {CustomButton} from '../custom-button';
 import {Dialog, DialogContent, DialogContentText} from '@material-ui/core';
 
-import './dialog.scss';
 import { t } from '@/i18n';
 import { observer } from 'mobx-react';
 import { useRoomStore, useUIStore, useBreakoutRoomStore, useMiddleRoomStore, useSceneStore, useExtensionStore, useAppStore } from '@/hooks';

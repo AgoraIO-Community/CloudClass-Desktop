@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextEllipsis } from '../typography'
-import { makeStyles, Theme } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { WithIconButton } from "./control/button";
 import translate from "./assets/translate.png";
 import fail from "./assets/fail.png";

@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import './student-list.scss';
 import {CustomIcon} from '@/components/icon';
 import { observer } from 'mobx-react';
 import { BizLogger } from '@/utils/biz-logger';

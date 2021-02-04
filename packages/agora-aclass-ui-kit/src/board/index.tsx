@@ -20,6 +20,24 @@ export const Board = ({children, style}: BoardProps) => {
 }
 
 
-export { ControlMenu } from './control'
-export { Tool } from './tool'
-export * from './panel'
+export * from './control'
+export {
+  Tool,
+  IToolItem
+} from './tool'
+export {
+  PanelBackground,
+  ColorConfig,
+  ColorPaletteProps,
+  ColorPalette,
+  StrokeSlider,
+  CustomizeSliderProps,
+  CustomizeSlider,
+  VolumeSliderProps,
+  VolumeSlider,
+  IUploadItem,
+  UploadProps,
+  FileUploader,
+  UploaderProps,
+  UploadItemProps
+} from './panel'

@@ -26,12 +26,18 @@
     "noEmitOnError": false,
     "emitDeclarationOnly": true,
   },
-  "include": ["src/**/*", ".storybook/**/*"],
+  "include": [
+    "src/",
+    "src/**/*",
+    "src/**/**/*",
+    ".storybook/**/*"
+  ],
   "exclude": [
     "node_modules",
     "build",
     "scripts",
     ".storybook",
+    "**/*.stories.tsx",
     "src/internal",
     "src/**/*.test.tsx",
     "src/**/*.stories.tsx"

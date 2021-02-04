@@ -18,7 +18,6 @@ import { EduManager } from 'agora-rte-sdk';
 import {isElectron} from '@/utils/platform';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import {observer} from 'mobx-react';
-import './home.scss';
 import { homeApi } from '@/services/home-api';
 import { BizLogger } from '@/utils/biz-logger';
 
@@ -141,7 +140,7 @@ export const HomePage = observer(() => {
         roomUuid: `${roomUuid}`,
       })
       const path = roomTypes[session.roomType].path
-      history.push(`/classroom/${path}`)
+      history.push(`${path}`)
     } catch (err) {
       BizLogger.warn(JSON.stringify(err))
       setLoading(false)

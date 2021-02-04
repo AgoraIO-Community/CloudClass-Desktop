@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core'
 import React, { useEffect, useRef, useState } from 'react'
-import { makeStyles, Theme } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Bubble } from './bubble'
 import { WithIconButton } from './control/button'
 import forbiddenSpeech from './assets/forbiddenSpeech.png'
@@ -27,7 +27,7 @@ export interface ChatBoardProps {
   panelBackColor?: string,
   panelBorderColor?: string,
   borderWidth?: number,
-  maxHeight?: number,
+  maxHeight?: number | string,
   title: string | React.ReactNode,
   onPullFresh?: () => any,
   placeholder?: string,
@@ -127,7 +127,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
     },
     sendContent: {
       display: 'flex',
-      flexDirection: 'row-reverse'
+      flexDirection: 'row-reverse',
+      position: 'relative'
     },
     TelegramIcon: {
       color: '#fff',

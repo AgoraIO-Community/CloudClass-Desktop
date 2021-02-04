@@ -9,7 +9,6 @@ import { Loading } from '@/components/loading';
 import { observer } from 'mobx-react';
 import { t } from '@/i18n';
 
-import './room.scss';
 import { BizLogger } from '@/utils/biz-logger';
 import { SmallClass } from './small-class';
 import { OneToOne } from './one-to-one';

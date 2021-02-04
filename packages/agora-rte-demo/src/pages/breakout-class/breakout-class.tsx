@@ -15,7 +15,6 @@ import { observer } from 'mobx-react';
 import { t } from '@/i18n';
 import { BreakoutRoomBoard } from './components/breakout-chat-board';
 
-import './breakout-class.scss';
 import { BizLogger } from '@/utils/biz-logger';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 

@@ -1,4 +1,5 @@
-import { Box, makeStyles, Theme } from '@material-ui/core'
+import { Box } from '@material-ui/core'
+import {  makeStyles, Theme } from '@material-ui/core/styles'
 import React from 'react'
 import { ControlBaseProps } from '../declare'
 import { ControlButton } from './button'

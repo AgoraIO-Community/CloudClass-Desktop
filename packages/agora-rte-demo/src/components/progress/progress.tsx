@@ -1,5 +1,4 @@
 import React from 'react';
-import './progress.scss';
 import { CircularProgress } from '@material-ui/core';
 
 type ProgressProps = {

@@ -66,3 +66,5 @@ export const Navigation = (props: INavigation) => {
     </Box>
   )
 }
+
+export * from './control'

@@ -34,7 +34,6 @@ const useStyles = makeStyles(() => createStyles({
     backgroundSize: 'contain',
     borderRadius: '15px',
     marginRight: '6px',
-    cursor: 'pointer',
   },
   pause: {
     width: '20px',
@@ -44,7 +43,6 @@ const useStyles = makeStyles(() => createStyles({
     backgroundSize: 'contain',
     borderRadius: '15px',
     marginRight: '6px',
-    cursor: 'pointer',
   }
 }))
 

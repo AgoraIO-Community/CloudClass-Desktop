@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React, { ReactEventHandler, useRef } from 'react'
 import ConvertPPTPng from '../assets/convert_ppt.png'

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import './toast.scss';
 import { observer } from 'mobx-react';
 import { useReplayUIStore, useUIStore } from '@/hooks';
 import { BizLogger } from '@/utils/biz-logger';

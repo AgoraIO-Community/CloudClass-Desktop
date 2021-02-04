@@ -227,6 +227,7 @@ const en = {
     '1v1': 'One to One Classroom',
     'mini_class': 'Small Classroom',
     'large_class': 'Lecture Hall',
+    'aClass_class': 'Acacdocos',
     'middle_class': 'Medium Classroom',
     'super_mini_class': 'Super Small Classroom',
     'missing_room_name': 'missing room name',

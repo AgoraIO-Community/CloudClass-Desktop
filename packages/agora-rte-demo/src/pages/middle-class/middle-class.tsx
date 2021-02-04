@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {VideoPlayer} from '@/components/video-player';
 import { ControlItem } from '@/components/control-item';
-import './middle-class.scss';
 import { NetlessBoard } from '@/components/netless-board';
 import { ScreenSharing } from '@/components/screen-sharing';
 import { observer } from 'mobx-react';

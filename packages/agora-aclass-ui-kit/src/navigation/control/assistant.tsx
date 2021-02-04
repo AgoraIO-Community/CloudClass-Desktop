@@ -1,9 +1,6 @@
 import React from 'react';
-// import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles, Theme } from '@material-ui/core'
-import { ControlButton } from './button'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { NavigationControlButton } from './button'
 import { SignalBar } from '../../signalBar'
 interface IProps {
   userSignalStatus?: ISignalStatus[]
@@ -87,9 +84,9 @@ export const LongMenu = (props: IProps) => {
     <div>
       <div className={classes.assistant}>
         <div onClick={handleClick} className={classes.userNetwork}>
-          <ControlButton icon="userNetwork" iconStyle={{ width: 20, height: 16 }} />
+          <NavigationControlButton icon="userNetwork" iconStyle={{ width: 20, height: 16 }} />
           <span>用户实时网络</span>
-          <ControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 20, height: 16 }} />
+          <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 20, height: 16 }} />
         </div>
       </div>
       <ul className={classes.userNetworkList}>

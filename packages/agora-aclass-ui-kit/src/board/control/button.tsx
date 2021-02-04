@@ -18,12 +18,11 @@ import NewPage from '../assets/new-page.png'
 import Move from '../assets/move.png'
 import Clear from '../assets/clear.png'
 import Upload from '../assets/upload.png'
-import { CustomizeIconBtn } from '../../button'
+import { ControlButtonIcon, CustomizeIconBtn } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
-import { makeStyles, Popover, Tooltip, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
+import { Popover, Tooltip, Typography } from '@material-ui/core'
 import {AClassTheme} from '../../theme'
-
-export type ControlButtonIcon = string
 
 const defaultStyle = {
   width: 18,

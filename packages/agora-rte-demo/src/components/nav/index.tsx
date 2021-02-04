@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CustomIcon } from '@/components/icon';
-import './nav.scss';
 import { CustomButton } from '@/components/custom-button';
 import * as moment from 'moment';
 import { isElectron, platform } from '@/utils/platform';

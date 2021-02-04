@@ -6,10 +6,8 @@ import refresh from '../assets/refresh.png'
 import userNetwork from '../assets/userNetwork.png'
 import triangleUp from '../assets/triangleUp.png'
 import triangleDown from '../assets/triangleDown.png'
-import { CustomizeIconBtn, Button } from '../../button'
+import { CustomizeIconBtn, Button, ControlButtonIcon } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
-
-export type ControlButtonIcon = string
 
 const defaultStyle = {
   width: 36,
@@ -37,7 +35,7 @@ const buttonsMap = {
 
 }
 
-export const ControlButton = ({ icon, iconStyle, onClick }: IControlButtonProps) => {
+export const NavigationControlButton = ({ icon, iconStyle, onClick }: IControlButtonProps) => {
   const ControlIconButton = icon && buttonsMap[icon]
   return (
     <IconButton disableRipple component="div" style={{

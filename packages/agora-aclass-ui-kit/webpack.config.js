@@ -1,23 +1,28 @@
-const threadLoader = require("thread-loader");
-const webpack = require("webpack");
-const TerserPlugin = require('terser-webpack-plugin');
+const threadLoader = require("thread-loader")
+const webpack = require("webpack")
+const TerserPlugin = require('terser-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const path = require("path");
 
 module.exports = {
   entry: {
-    ['main.js']: "./src/index.ts",
+    ['index']: "./src/index.ts",
   },
   mode: "production",
-  externals: /^(react|react-dom|react-router-dom)$/,
+  // externals: /^(react|react-dom|react-router-dom)$/,
+  externals: {
+    'react': 'react',
+    'react-dom': 'react-dom'
+  },
   output: {
-    publicPath: '',
+    // publicPath: '',
     // filename: '[name].js',
     filename: 'index.js',
-    libraryTarget: "commonjs",
+    libraryTarget: "umd",
+    // library: "agora-aclass-ui-kit",
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
@@ -92,6 +97,7 @@ module.exports = {
     ]
 },
   plugins: [
+    new BundleAnalyzerPlugin(),
     new HardSourceWebpackPlugin({
       root: process.cwd(),
       directories: [],

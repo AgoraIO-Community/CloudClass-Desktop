@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CustomIcon } from "../icon"
-import './index.scss'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { useMiddleRoomStore, useSceneStore } from '@/hooks'
 import { RendererPlayer } from '../media-player'

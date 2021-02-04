@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import {VideoPlayer} from '@/components/video-player';
-import './video-marquee.scss';
 import { observer } from 'mobx-react';
 
 const showScrollbar = (domId: string) => {

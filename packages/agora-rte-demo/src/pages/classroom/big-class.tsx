@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {VideoPlayer} from '@/components/video-player';
 import { ControlItem } from '@/components/control-item';
-import './big-class.scss';
 import {ChatBoard} from '@/components/chat/board';
 import { NetlessBoard } from '@/components/netless-board';
 import { ScreenSharing } from '@/components/screen-sharing';

@@ -8,12 +8,12 @@ import {
 import {
   MiddleRoomPage
 } from './middle-class';
-import '../icons.scss';
 import { ReplayPage } from './replay';
 import { BreakoutClassroom } from './breakout-class/breakout-class';
 import { AssistantCoursesPage } from './breakout-class/assistant-courses-page';
 import { HomePage } from './home';
 import {Invisible} from './invisible'
+import { AcadsocOneToOne } from './acadsoc';
 
 export type AppRouteComponent = {
   path: string
@@ -64,6 +64,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'invisibleJoinRoom': {
     path: '/invisible/courses',
     component: () => <Invisible />
+  },
+  'aClass': {
+    path: '/acadsoc/one-to-one',
+    component: () => <AcadsocOneToOne />
   },
   'home': {
     path: '/',

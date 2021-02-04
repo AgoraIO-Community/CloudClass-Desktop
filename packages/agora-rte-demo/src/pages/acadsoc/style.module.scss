@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: url('./assets/bg.png') no-repeat;
+  background-size: cover;
+}
+
+.flexBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.leftContainer {
+  display: flex;
+  flex: 1;
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+}

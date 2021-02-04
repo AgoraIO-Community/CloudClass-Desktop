@@ -2,7 +2,6 @@ import React from 'react';
 import {VideoPage} from './video';
 import {AudioPage} from './audio';
 import {SpeakerPage} from './speaker';
-import './index.scss';
 import { TestReportPage } from './test-report';
 import { observer } from 'mobx-react';
 import { useUIStore, useDeviceStore } from '@/hooks';

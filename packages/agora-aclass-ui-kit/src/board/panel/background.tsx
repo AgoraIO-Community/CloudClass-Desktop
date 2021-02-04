@@ -1,4 +1,4 @@
-import { styled } from '@material-ui/core'
+import { styled } from '@material-ui/core/styles'
 import { AClassTheme } from '../../theme'
 
 export const PanelBackground = styled('div')({

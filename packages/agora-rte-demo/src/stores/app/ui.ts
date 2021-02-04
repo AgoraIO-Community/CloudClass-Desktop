@@ -21,17 +21,17 @@ export class UIStore {
 
   static roomTypes: RoomTypesList[] = [
     {
-      path: 'one-to-one',
+      path: '/classroom/one-to-one',
       text: 'home.1v1',
       value: 0,
     },
     {
-      path: 'small-class',
+      path: '/classroom/small-class',
       text: 'home.mini_class',
       value: 1,
     },
     {
-      path: 'big-class',
+      path: '/classroom/big-class',
       text: 'home.large_class',
       value: 2,
     },
@@ -45,6 +45,11 @@ export class UIStore {
     //   text: 'home.middle_class',
     //   value: 4,
     // },
+    {
+      path: '/acadsoc/one-to-one',
+      text: 'home.aClass_class',
+      value: 0
+    }
   ]
 
   static languages: any[] = [

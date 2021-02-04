@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { t } from '@/i18n';
-import './index.scss';
 import * as moment from 'moment';
 import { observer } from 'mobx-react';
 import { NavController } from '@/components/nav';

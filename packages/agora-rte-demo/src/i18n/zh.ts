@@ -225,6 +225,7 @@ const zhCN: any = {
     '1v1': '一对一',
     'mini_class': '小班课',
     'large_class': '大班课',
+    'aClass_class': '阿卡索1v1',
     'middle_class': '中班课',
     'super_mini_class': '超级小班课',
     'missing_room_name': '缺少房间名',

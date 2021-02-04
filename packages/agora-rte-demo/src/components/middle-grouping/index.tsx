@@ -1,5 +1,4 @@
 import { Button } from '@material-ui/core';
-import './middle-grouping.scss';
 import { CustomButton } from '@/components/custom-button';
 import React, { Component, useState, useCallback, EventHandler, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';

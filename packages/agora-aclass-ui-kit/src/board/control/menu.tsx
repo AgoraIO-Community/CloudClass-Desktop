@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React from 'react'
 import { CustomizeTheme } from '../../theme'

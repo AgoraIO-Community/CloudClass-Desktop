@@ -2,7 +2,6 @@ import React from 'react';
 import { Theme, RadioGroup, Radio, FormControlLabel, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import './role-radio.scss';
 import { t } from '../../i18n';
 
 const useStyles = makeStyles ((theme: Theme) => ({

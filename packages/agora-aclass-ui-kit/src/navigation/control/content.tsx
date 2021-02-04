@@ -1,6 +1,6 @@
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core'
-import { ControlButton, DefaultButton } from './button'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { NavigationControlButton, DefaultButton } from './button'
 
 const useStyles = makeStyles((theme: Theme) => ({
   starIcon: {
@@ -36,7 +36,7 @@ export const ActionButtons = (props: IActionButtons) => {
   return (
     <>
       {props.buttonArr.map((item: IActionItem) => {
-        return <ControlButton icon={item.name} key={item.name} onClick={item.clickEvent} />
+        return <NavigationControlButton icon={item.name} key={item.name} onClick={item.clickEvent} />
       })}
     </>)
 }

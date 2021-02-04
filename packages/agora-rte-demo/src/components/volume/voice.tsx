@@ -2,8 +2,6 @@ import React from 'react';
 import {CustomIcon} from '@/components/icon';
 import {makeStyles} from '@material-ui/core/styles';
 
-import './index.scss';
-
 const useStyles = makeStyles({
   root: {
     display: 'flex',

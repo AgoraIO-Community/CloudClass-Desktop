@@ -1,5 +1,5 @@
 import 'promise-polyfill/src/polyfill'
-import '@/index.scss'
+// import '@/index.scss'
 import { RenderLiveRoom } from "@/monolithic/live-room"
 import { RenderReplayRoom } from "@/monolithic/replay-room"
 import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"

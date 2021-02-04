@@ -3,8 +3,6 @@ import {CustomIcon} from '@/components/icon';
 import { makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
-import './index.scss';
-
 const useStyles = makeStyles({
   root: {
     display: 'flex',

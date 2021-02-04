@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import './native-shared-window.scss';
 import {CustomButton} from '@/components/custom-button';
 import { useBreakoutRoomStore, useSceneStore } from '@/hooks'
 import { observer } from 'mobx-react';

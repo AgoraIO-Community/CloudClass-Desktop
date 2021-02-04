@@ -1,7 +1,7 @@
-import { ButtonBase, makeStyles } from '@material-ui/core'
+import { ButtonBase} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import React from 'react'
-import { AClassTheme } from '../../theme'
 import { rgbaToHexColor } from '../../utils'
 
 const colorMap: Record<string, string> = {
