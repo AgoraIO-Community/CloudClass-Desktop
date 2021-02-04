@@ -15,7 +15,7 @@ import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { DeviceStore } from './device';
 import { UIStore } from './ui';
-import { LanguageEnum } from '@/edu-sdk';
+import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
 import { BoardStore } from './board';
 import { RoomStore } from './room';
 import { RecordingStore } from './recording';
@@ -68,6 +68,7 @@ export type AppStoreInitParams = {
   roomInfoParams?: RoomInfoParams
   config: AppStoreConfigParams
   language: LanguageEnum
+  translateLanguage: TranslateEnum
   listener?: ListenerCallback
   pretest?: boolean
   mainPath?: string
@@ -337,6 +338,7 @@ export class AppStore {
         ...this.params.roomInfoParams
       },
       language: this.params.language,
+      translateLanguage: this.params.translateLanguage,
       config: {
         agoraAppId: this.params.config.agoraAppId,
         agoraNetlessAppId: this.params.config.agoraNetlessAppId,

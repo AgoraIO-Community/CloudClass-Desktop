@@ -1,4 +1,5 @@
 import { ApiBase, ApiBaseInitializerParams } from "./base";
+import { HttpClient } from "@/modules/utils/http-client";
 
 type ConfigResult = {
   customerId: string,
@@ -114,6 +115,24 @@ export class EduSDKApi extends ApiBase {
       method: 'PUT',
       data: {
         muteChat: params.muteChat
+      }
+    })
+    return res.data
+  }
+
+  async translateChat(params: {
+    appId: string,
+    content: string,
+    from?: string,
+    to?: string,
+  }) {
+    const res = await this.fetch({
+      url: `/edu/acadsoc/apps/${params.appId}/v1/translation`,
+      method: 'POST',
+      data: {
+        content: params.content,
+        from: params.from ? params.from : 'auto',
+        to: params.to ? params.to : 'auto',
       }
     })
     return res.data

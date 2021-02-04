@@ -140,6 +140,7 @@ const en = {
     'failed_to_enable_screen_sharing': 'Failed to enable screen sharing',
     'failed_to_enable_screen_sharing_permission_denied': 'Open screen capture failed！Please grant permission for screen capture!',
     'failed_to_send_chat': 'Failed to send chat',
+    'failed_to_translate_chat': 'Failed to translate chat',
     'failed_to_join_rtc_please_refresh_and_try_again': 'Failed to join rtc, please refresh and try again',
     'leave_rtc_channel': 'Leave rtc channel',
     'failed_to_leave_rtc': 'Failed to leave rtc',
