@@ -1,4 +1,6 @@
 const { app, BrowserWindow } = require('electron');
+const { format: formatUrl} = require('url')
+
 const path = require('path');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 

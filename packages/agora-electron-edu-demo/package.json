@@ -57,14 +57,14 @@
     "adm-zip": "0.5.1",
     "agora-classroom-sdk": "^1.0.0",
     "agora-electron-sdk": "education290",
-    "electron": "7.1.14"
+    "source-map-support": "0.5.9"
   },
   "devDependencies": {
+    "electron": "7.1.14",
     "cross-env": "7.0.3",
     "electron-builder": "21.2.0",
     "electron-webpack": "latest",
     "html-loader": "1.0.0-alpha.0",
-    "source-map-support": "0.5.9",
     "webpack": "4.39.2"
   }
 }
