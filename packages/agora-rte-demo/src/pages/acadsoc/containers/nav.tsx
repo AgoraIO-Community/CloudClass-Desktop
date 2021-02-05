@@ -1,5 +1,8 @@
 import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton} from 'agora-aclass-ui-kit'
 import React from 'react'
+import { dialogManager } from 'agora-aclass-ui-kit'
+import { useAcadsocRoomStore } from '@/hooks'
+import { useHistory } from 'react-router-dom'
 
 export const Nav = () => {
   return (
@@ -28,9 +31,7 @@ const onCustomerService = () => {
 const onEquipmentDetection = () => {
   console.log('click onEquipmentDetection')
 }
-const onExitRoom = () => {
-  console.log('click onExitRoom')
-}
+
 const buttonArr = [
   { name: 'refresh', clickEvent: onRefresh },
   { name: 'customerService', clickEvent: onCustomerService },
@@ -67,5 +68,29 @@ const actionBar: IStatusBar = [{
 {
   isComponent: true,
   componentKey: "exitButton",
-  renderItem: () => { return <ExitButton text='Exit' onClick={onExitRoom} /> }
+  renderItem: () => { 
+
+    const history = useHistory()
+    const acadsocRoomStore = useAcadsocRoomStore()
+
+    const onExitRoom = () => {
+      const dialog = dialogManager.add({
+        title: `确定退出教室吗？`,
+        contentText: '结束教室',
+        confirmText: '确定',
+        visible: true,
+        cancelText: '取消',
+        onConfirm: async () => {
+          await acadsocRoomStore.leave()
+          history.replace('/')
+          dialog.destroy()
+        },
+        onClose: () => {
+          dialog.destroy()
+        }
+      })
+    }
+
+    return <ExitButton text='Exit' onClick={onExitRoom} /> 
+  }
 }]

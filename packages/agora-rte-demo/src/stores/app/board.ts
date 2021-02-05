@@ -398,6 +398,9 @@ export class BoardStore {
         this.online = false
       }
     })
+    this.boardClient.on('onMemberStateChanged', (state: any) => {
+      console.log('state' , state)
+    })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
       if (state.zoomScale) {
         runInAction(() => {
@@ -537,6 +540,15 @@ export class BoardStore {
           currentApplianceName: "selector" as any,
         })
         break;
+    }
+  }
+
+  @action
+  changeStroke(value: any) {
+    if (this.room) {
+      this.room.setMemberState({
+        strokeWidth: value,
+      })
     }
   }
 

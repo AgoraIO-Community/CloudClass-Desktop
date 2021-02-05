@@ -1,24 +1,16 @@
+import { dialogManager } from 'agora-aclass-ui-kit';
 import {
   EduLogger,
-  EduClassroomManager,
   PeerInviteEnum,
-  LocalUserRenderer,
   UserRenderer,
   EduAudioSourceType,
   EduTextMessage,
   EduSceneType,
   EduRoleTypeEnum,
-  AgoraWebRtcWrapper,
-  AgoraElectronRTCWrapper,
-  StartScreenShareParams,
-  PrepareScreenShareParams,
   GenericErrorWrapper,
-  RemoteUserRenderer,
   EduUser,
   EduStream,
   EduVideoSourceType,
-  // RoomProperties,
-  // EduClassroomStateEnum
 } from 'agora-rte-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import uuidv4 from 'uuid/v4';
@@ -32,7 +24,6 @@ import { ChatMessage } from '@/utils/types';
 import { t } from '@/i18n';
 import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
-import { SceneStore } from './scene';
 import { get } from 'lodash';
 
 export enum EduClassroomStateEnum {
@@ -64,7 +55,7 @@ export type EduMediaStream = {
   showControls: boolean
 }
 
-export class RoomStore extends SimpleInterval {
+export class AcadsocRoomStore extends SimpleInterval {
 
   static resolutions: any[] = [
     {
@@ -117,9 +108,6 @@ export class RoomStore extends SimpleInterval {
 
   @action
   reset() {
-    // this.appStore.mediaStore.resetRoomState()
-    // this.appStore.resetTime()
-    // this.appStore.resetRoomInfo()
     this.appStore.resetStates()
     this.sceneStore.reset()
     this.roomChatMessages = []
@@ -245,10 +233,23 @@ export class RoomStore extends SimpleInterval {
         } catch (err) {
           EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
         }
-        this.appStore.uiStore.showDialog({
-          type: 'classSessionEnded',
-          message: t('class_ended'),
+        const dialog = dialogManager.add({
+          title: `课程已结束`,
+          contentText: '离开教室',
+          confirmText: '确定',
+          visible: true,
+          cancelText: '取消',
+          onConfirm: async () => {
+            dialog.destroy()
+          },
+          onClose: () => {
+            dialog.destroy()
+          }
         })
+        // this.appStore.uiStore.showDialog({
+        //   type: 'classSessionEnded',
+        //   message: t('class_ended'),
+        // })
         this.appStore.uiStore.stopLoading()
         return
       }

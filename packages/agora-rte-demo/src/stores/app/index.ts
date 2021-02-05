@@ -36,6 +36,7 @@ import { AgoraEduEvent } from '@/edu-sdk';
 import { get, isEmpty } from 'lodash';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
+import { AcadsocRoomStore } from './acadsoc-room';
 
 type RoomInfoParams = {
   roomName: string
@@ -107,7 +108,7 @@ export class AppStore {
   replayStore!: ReplayStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
-  // stores
+  acadsocStore!: AcadsocRoomStore;
 
   eduManager!: EduManager;
 
@@ -303,6 +304,7 @@ export class AppStore {
       this.uiStore.setLanguage(language)
     }
 
+    this.acadsocStore = new AcadsocRoomStore(this)
     this.boardStore = new BoardStore(this)
     this.recordingStore = new RecordingStore(this)
     this.roomStore = new RoomStore(this)
@@ -642,7 +644,7 @@ export class AppStore {
     await this.releaseRoom()
   }
 }
-
+export * from './acadsoc-room';
 export { UIStore } from './ui';
 export { BoardStore } from './board';
 export { RoomStore } from './room';

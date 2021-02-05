@@ -12,10 +12,10 @@ export const TeacherVideo = (props: any) => {
 
   const handleClick = useCallback((target: VideoItem) => {
     if (target.sourceType === 'video') {
-      setVideo(!target.muted)
+      setVideo(!target.enabled)
     }
     if (target.sourceType === 'audio') {
-      setAudio(!target.muted)
+      setAudio(!target.enabled)
     }
   }, [setVideo, setAudio])
 
@@ -55,10 +55,10 @@ export const StudentVideo = (props: any) => {
 
   const handleClick = useCallback((target: VideoItem) => {
     if (target.sourceType === 'video') {
-      setVideo(!target.muted)
+      setVideo(!target.enabled)
     }
     if (target.sourceType === 'audio') {
-      setAudio(!target.muted)
+      setAudio(!target.enabled)
     }
   }, [setVideo, setAudio])
 
@@ -67,7 +67,7 @@ export const StudentVideo = (props: any) => {
       className=""
       uid={1}
       nickname="Nancy"
-      minimal={true}
+      minimal={props.minimal}
       resizable={false}
       visibleTrophy={true}
       trophyNumber={10}
@@ -79,6 +79,7 @@ export const StudentVideo = (props: any) => {
         width: props.width,
         height: props.height,
       }}
+      disableButton={props.disableButton}
     >
       {/* <div>media</div> */}
     </Video>
@@ -88,4 +89,6 @@ export const StudentVideo = (props: any) => {
 StudentVideo.args = {
   width: '200px',
   height: '150px',
+  minimal: true,
+  disableButton: false,
 }

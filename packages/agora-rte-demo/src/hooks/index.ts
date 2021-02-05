@@ -13,7 +13,8 @@ import {
   UIStore,
   BreakoutRoomStore,
   ReplayStore,
-  RecordingStore
+  RecordingStore,
+  AcadsocRoomStore
  } from '@/stores/app';
 import { PlayerStore } from '@/stores/replay-app/player';
 import { ReplayUIStore } from '@/stores/replay-app/ui';
@@ -90,4 +91,9 @@ export const useReplayPlayerStore = (): PlayerStore => {
 export const useReplayUIStore = (): ReplayUIStore => {
   const context = useContext<replayAppContext>(MobXProviderContext)
   return context.store.uiStore
+}
+
+export const useAcadsocRoomStore = (): AcadsocRoomStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.acadsocStore
 }

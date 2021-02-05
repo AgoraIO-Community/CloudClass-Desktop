@@ -886,7 +886,19 @@ export class SceneStore extends SimpleInterval {
         showControls: this.canControl(this.appStore.userUuid)
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
-    return streamList
+    if (streamList.length) {
+      return streamList  
+    }
+    return [{
+      local: false,
+      account: 'student',
+      userUuid: '',
+      streamUuid: '',
+      video: false,
+      audio: false,
+      renderer: undefined,
+      showControls: false
+    }]
   }
 
   @action

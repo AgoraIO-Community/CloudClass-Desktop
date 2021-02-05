@@ -7,7 +7,6 @@ import { Provider } from 'mobx-react';
 import { Route, HashRouter, Switch, Redirect } from 'react-router-dom';
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
-import { LanguageEnum } from '@/edu-sdk';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string

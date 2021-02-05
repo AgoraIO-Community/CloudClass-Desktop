@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 44,
       position: 'absolute',
       right: 4,
-      bottom: 3
+      bottom: 3,
+      zIndex: 3
     },
     root: {
       width: '199px',
@@ -50,30 +51,35 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:active': {
         backgroundColor: 'rgba(0, 0, 0, 0.4)'
       },
+      zIndex: 3
     },
     minimalStyle: {
       background: '#ffffff',
       border: '1px solid #ffffff',
       position: 'absolute',
       width: 7,
+      zIndex: 3,
     },
     minimalIcon: {
       color: '#ffffff',
       position: 'absolute',
       top: -10,
       left: -3,
+      zIndex: 3,
     },
     trophyNum: {
       paddingLeft: 3,
       paddingRight: 3,
       position: 'absolute',
       top: 3,
+      zIndex: 3,
     },
     idCard: {
       paddingLeft: 3,
       paddingRight: 3,
       position: 'absolute',
       bottom: 3,
+      zIndex: 3,
     },
     ellipticBox: {
       display: 'flex',
@@ -86,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 10,
       paddingLeft: 4,
       paddingRight: 4,
-      color: '#ffffff'
+      color: '#ffffff',
     },
     teacherIcon: {
       background: `url(${TeacherIcon}) no-repeat`,
@@ -133,8 +139,9 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface MediaButtonProps {
-  muted: boolean,
-  onClick: VideoItemOnClick
+  enabled: boolean,
+  onClick: VideoItemOnClick,
+  disable?: boolean
 }
 
 const IconItem = (props: any) => (
@@ -151,19 +158,19 @@ const VideoIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
 
-  const className = props.muted ? classes.MuteCameIcon : classes.UnMuteCameIcon
+  const className = props.enabled ? classes.UnMuteCameIcon : classes.MuteCameIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
       props.onClick({
         sourceType: 'video',
-        muted: props.muted
+        enabled: props.enabled
       })
     }
-  }, [props.onClick, props.muted])
+  }, [props.onClick, props.enabled])
 
   return (
-    <BaseIconButton className={classes.btnRoot} onClick={onClick}>
+    <BaseIconButton disabled={props.disable} className={classes.btnRoot} onClick={onClick}>
       <IconItem className={className} />
     </BaseIconButton>
   )
@@ -172,19 +179,19 @@ const VideoIconButton = (props: MediaButtonProps) => {
 const AudioIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
-  const className = props.muted ? classes.MuteMicIcon : classes.UnMuteMicIcon
+  const className = props.enabled ? classes.UnMuteMicIcon : classes.MuteMicIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
       props.onClick({
         sourceType: 'audio',
-        muted: props.muted
+        enabled: props.enabled
       })
     }
-  }, [props.onClick, props.muted])
+  }, [props.onClick, props.enabled])
 
   return (
-    <BaseIconButton className={classes.btnRoot} onClick={onClick}>
+    <BaseIconButton disabled={props.disable} className={classes.btnRoot} onClick={onClick}>
       <IconItem className={className} />
     </BaseIconButton>
   )
@@ -206,7 +213,8 @@ const EllipticBox = (props: EllipticBoxProps) => {
 interface TrophyBoxProps {
   iconUrl: string,
   number: number,
-  onClick: ReactEventHandler<any>
+  onClick: ReactEventHandler<any>,
+  disable?: boolean
 }
 
 const TrophyBox = (props: TrophyBoxProps) => {
@@ -214,7 +222,7 @@ const TrophyBox = (props: TrophyBoxProps) => {
   return (
       <EllipticBox>
         <>
-        <CustomButton component="div" style={{
+        <CustomButton disableButton={props.disable} component="div" style={{
             background: `url(${props.iconUrl}) no-repeat`,
             backgroundSize: 'contain',
             backgroundPosition: 'center',
@@ -277,7 +285,7 @@ export type VideoItemOnClick = (target: VideoItem) => any
 
 export type VideoItem = {
   sourceType: string,
-  muted?: boolean,
+  enabled?: boolean,
   uid?: number,
 }
 
@@ -294,6 +302,7 @@ export interface VideoFrameProps {
   children: any,
   onClick: VideoItemOnClick,
   style?: any,
+  disableButton?: boolean,
 }
 
 const VideoFrame = (props: VideoFrameProps) => {
@@ -322,21 +331,21 @@ const VideoFrame = (props: VideoFrameProps) => {
       {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
-        <TrophyBox iconUrl={TrophyIcon} number={5} onClick={onClickTrophy}/>
+        <TrophyBox disable={props.disableButton} iconUrl={TrophyIcon} number={5} onClick={onClickTrophy}/>
       </Box> : null}
-      <CustomButton
+      {props.minimal && <CustomButton
         component="div"
         className={classes.minimalBtn}
         onClick={onClickMinimize}>
         <hr className={classes.minimalStyle}/>
-      </CustomButton>
+      </CustomButton>}
       <ParticipantIdentityCard
         nickname={props.nickname}
         role={props.role}
       />
       <Box className={classes.avBtn} component="div">
-        <VideoIconButton muted={props.videoState} onClick={onClick} />
-        <AudioIconButton muted={props.audioState} onClick={onClick}/>
+        <VideoIconButton disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
+        <AudioIconButton disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
       </Box>
       {props.children}
     </div>

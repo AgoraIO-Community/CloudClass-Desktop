@@ -72,7 +72,8 @@ export interface CustomButtonProps {
   onClick?: (args: any) => any,
   children?: React.ReactElement,
   component: React.ElementType,
-  style?: CSSProperties
+  style?: CSSProperties,
+  disableButton?: boolean
 }
 
 export const CustomButton = (props: CustomButtonProps) => {
@@ -85,6 +86,7 @@ export const CustomButton = (props: CustomButtonProps) => {
         component={props.component}
         className={props.className}
         onClick={props.onClick}
+        disabled={props.disableButton}
       >
         {props.children ? props.children : ''}
       </MButton>
