@@ -97,7 +97,7 @@ module.exports = {
     ]
 },
   plugins: [
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new HardSourceWebpackPlugin({
       root: process.cwd(),
       directories: [],
