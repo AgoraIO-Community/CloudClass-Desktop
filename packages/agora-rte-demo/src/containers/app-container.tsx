@@ -91,7 +91,8 @@ export const GenAppContainer = ({globalId, resetRoomInfo, ...config}: GenAppCont
     config: config.appConfig,
     roomInfoParams: config.roomConfig,
     language: "",
-    resetRoomInfo
+    resetRoomInfo,
+    translateLanguage: "auto"
   })
   // if (forwardWire) {
   //   forwardWire.delegate = appStore
