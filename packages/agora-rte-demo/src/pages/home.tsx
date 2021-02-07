@@ -20,6 +20,7 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import {observer} from 'mobx-react';
 import { homeApi } from '@/services/home-api';
 import { BizLogger } from '@/utils/biz-logger';
+// import {CloudDiskUpload} from '@/components/upload'
 
 const useStyles = makeStyles ((theme: Theme) => ({
   formControl: {
@@ -149,6 +150,7 @@ export const HomePage = observer(() => {
 
   return (
     <div className={`flex-container home-cover-web`}>
+      {/* <CloudDiskUpload /> */}
       {loading ? <Loading /> : null}
       {uiStore.isElectron ? null : 
       <div className="web-menu">

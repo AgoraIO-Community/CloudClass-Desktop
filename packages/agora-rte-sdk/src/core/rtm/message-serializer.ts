@@ -49,7 +49,7 @@ export class MessageSerializer {
       fromUser: this.getFromUser(data),
       type: get(data, 'type'),
       message: get(data, 'message'),
-      timestamp: get(data, 'ts'),
+      timestamp: get(data, 'ts') || get(data,'sendTime'),
     }
   }
   

@@ -101,6 +101,8 @@
    ```
    npm run dev
    ```
+    如果在运行中出现hooks的报错，删除packages/agora-aclass-ui-kit/node_modules/react即可
+    mac电脑直接运行 `npm run removeCache`
 3. 发布 Web demo。发布前需要修改 `package.json` 中的 "homepage": "你的域名/地址"。例如，`https://solutions.agora.io/education/web` 需修改为 `"homepage": "https://solutions.agora.io/education/web"` 
 
    ```

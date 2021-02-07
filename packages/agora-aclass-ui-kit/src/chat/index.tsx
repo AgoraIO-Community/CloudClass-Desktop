@@ -28,7 +28,7 @@ export interface ChatBoardProps {
   panelBorderColor?: string,
   borderWidth?: number,
   maxHeight?: number | string,
-  title: string | React.ReactNode,
+  minHeight?: number | string,
   onPullFresh?: () => any,
   placeholder?: string,
   toolView?: string | React.ReactNode,
@@ -36,7 +36,7 @@ export interface ChatBoardProps {
   onInputText?: (args?: any) => any,
   sendView?: string | React.ReactNode,
   titleView?: string | React.ReactNode,
-  onClickSendButton?: () => any,
+  onClickSendButton?: (message?:string) => any,
   onClickBannedButton?: () => any
 }
 
@@ -56,9 +56,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
     sendView,
     onClickSendButton,
     onClickBannedButton,
-    titleView
+    titleView,
+    minHeight
   } = props
-  const bottomDistance = borderWidth + 6
+  const bottomDistance = borderWidth
   const useStyles = makeStyles((theme: Theme) => ({
     chatContent: {
       background: panelBackColor,
@@ -66,6 +67,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderStyle: 'solid',
       overflowY: 'scroll',
       maxHeight,
+      minHeight: minHeight || '200px',
       borderWidth: '0px',
       padding: '10px',
       borderRadius: '10px 10px 0 0 ',
@@ -98,14 +100,15 @@ export const ChatBoard = (props: ChatBoardProps) => {
       flexDirection: 'row-reverse'
     },
     input: {
-      // position:''
+      position:'relative',
+      background:"#fff",
+      borderRadius: '0 0 10px 10px',
+      padding: '10px 10px 36px',
     },
     chatTextArea: {
       resize: 'none',
       width: '100%',
       border: 'none',
-      borderRadius: '0 0 10px 10px',
-      padding: "10px",
       boxSizing: 'border-box'
     },
     toolButton: {
@@ -123,12 +126,13 @@ export const ChatBoard = (props: ChatBoardProps) => {
       justifyContent: 'center',
       height: '26px',
       position: 'absolute',
-      bottom: bottomDistance
+      bottom: bottomDistance,
+      alignItems: 'center',
+      right: '6px'
     },
     sendContent: {
       display: 'flex',
       flexDirection: 'row-reverse',
-      position: 'relative'
     },
     TelegramIcon: {
       color: '#fff',
@@ -138,6 +142,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   }))
   const classes = useStyles()
   const [inputMessages, setInputMessages] = useState('')
+  const [isSendButton,setIsSendButton] = useState(false)
   const chatRef = useRef<any>()
   const ToolButton = (props: { onClickBannedButton: any }) => {
     return (
@@ -161,14 +166,20 @@ export const ChatBoard = (props: ChatBoardProps) => {
     onInputText && onInputText(event);
   }
   useEffect(() => {
-    chatRef?.current.scrollTo(0, chatRef?.current.scrollHeight - currentHeight)
+    const position = isSendButton ? chatRef?.current.scrollHeight : chatRef?.current.scrollHeight - currentHeight
+    chatRef?.current.scrollTo(0, position)
   }, [messages])
+  const handlerSendButton=()=>{
+    setIsSendButton(true)
+    onClickSendButton && onClickSendButton(inputMessages)
+    setInputMessages("")
+  }
   return (
     <Box className={classes.chat}>
       {titleView || <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />chat</div>}
       <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div>
-          {messages.map((item, index) => {
+          {messages?.map((item, index) => {
             return <Bubble
               {...item}
               content={item.chatText}
@@ -178,7 +189,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
               bubbleStyle={{ backgroundColor: '#CBCDFF', color: '#fff' }}
               key={`${item.userName}_${index}`}
               onClickTranslate={item.onClickTranslate}
-              onClickFailButton={item.onClickFailButton ? item.onClickFailButton: () => {console.log(111) }}
+              onClickFailButton={item.onClickFailButton ? item.onClickFailButton : () => { console.log(111) }}
               translateText={item.translateText}
               status={item.status || 'success'}
             />
@@ -194,7 +205,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
           placeholder={props.placeholder || 'Press enter to send a message'}
           name="chatTextArea" id="chatTextArea" cols={30} rows={4} />
         <div className={classes.sendContent}>
-          {sendView || <div onClick={onClickSendButton} className={classes.sendButton}><TelegramIcon className={classes.TelegramIcon} />send</div>}
+
+          {sendView || <div onClick={handlerSendButton} className={classes.sendButton}><TelegramIcon className={classes.TelegramIcon} />send</div>}
         </div>
       </div>
     </Box>
