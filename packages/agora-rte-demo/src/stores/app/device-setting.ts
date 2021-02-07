@@ -2,8 +2,7 @@ import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
 import { observable, computed, action, runInAction } from 'mobx';
 
-export class DeviceStore {
-
+export class DeviceSettingStore {
   static resolutions: any[] = [
     {
       name: '480p',
@@ -175,10 +174,28 @@ export class DeviceStore {
   }
 
   @observable
-  cameraList: any[] = []
+  _cameraList: any[] = []
+
+  @computed
+  get cameraList(): any[] {
+    return this._cameraList
+      .concat([{
+        deviceId: 'unknown',
+        label: '禁用',
+      }])
+  }
 
   @observable
-  microphoneList: any[] = []
+  _microphoneList: any[] = []
+
+  @computed
+  get microphoneList(): any[] {
+    return this._microphoneList
+      .concat([{
+        deviceId: 'unknown',
+        label: '禁用',
+      }])
+  }
 
   @observable
   speakerList: any[] = []
@@ -187,14 +204,14 @@ export class DeviceStore {
     if (option.video) {
       this.mediaService.getCameras().then((list: any[]) => {
         runInAction(() => {
-          this.cameraList = list
+          this._cameraList = list
         })
       })
     }
     if (option.audio) {
       this.mediaService.getMicrophones().then((list: any[]) => {
         runInAction(() => {
-          this.microphoneList = list
+          this._microphoneList = list
         })
       })
     }

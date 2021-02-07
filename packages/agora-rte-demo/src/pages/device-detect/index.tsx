@@ -5,7 +5,6 @@ import {SpeakerPage} from './speaker';
 import { TestReportPage } from './test-report';
 import { observer } from 'mobx-react';
 import { useUIStore, useDeviceStore } from '@/hooks';
-import { Tooltip } from '@material-ui/core';
 import {CustomIcon} from '@/components/icon';
 import { t } from '@/i18n';
 import {useHistory, useLocation} from 'react-router-dom';

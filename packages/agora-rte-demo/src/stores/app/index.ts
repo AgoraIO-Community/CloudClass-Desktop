@@ -23,6 +23,7 @@ import { ReplayStore } from './replay';
 import { BreakoutRoomStore } from './breakout-room';
 import { MiddleRoomStore } from './middle-room';
 import { ExtensionStore } from './extension'
+import { PretestStore } from './pretest'
 // import { get, isEmpty } from 'lodash';
 import { GlobalStorage } from '@/utils/custom-storage';
 import { autorun, toJS, observable, action, computed, runInAction } from 'mobx';
@@ -37,6 +38,7 @@ import { get, isEmpty } from 'lodash';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
 import { AcadsocRoomStore } from './acadsoc-room';
+import { DeviceSettingStore } from './device-setting';
 
 type RoomInfoParams = {
   roomName: string
@@ -109,6 +111,8 @@ export class AppStore {
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
   acadsocStore!: AcadsocRoomStore;
+  pretestStore!: PretestStore;
+  deviceSettingStore!: DeviceSettingStore;
 
   eduManager!: EduManager;
 
@@ -304,6 +308,8 @@ export class AppStore {
       this.uiStore.setLanguage(language)
     }
 
+    this.pretestStore = new PretestStore(this)
+    this.deviceSettingStore = new DeviceSettingStore(this)
     this.acadsocStore = new AcadsocRoomStore(this)
     this.boardStore = new BoardStore(this)
     this.recordingStore = new RecordingStore(this)
@@ -654,3 +660,5 @@ export { MiddleRoomStore } from './middle-room';
 export { ExtensionStore } from './extension';
 export { ReplayStore } from './replay';
 export { RecordingStore } from './recording';
+export {DeviceSettingStore} from './device-setting';
+export {PretestStore} from './pretest';

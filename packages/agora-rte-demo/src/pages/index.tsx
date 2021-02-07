@@ -14,6 +14,8 @@ import { AssistantCoursesPage } from './breakout-class/assistant-courses-page';
 import { HomePage } from './home';
 import {Invisible} from './invisible'
 import { AcadsocOneToOne } from './acadsoc';
+import { Pretest } from './acadsoc/containers/pretest';
+import { Setting } from './acadsoc/containers/setting';
 
 export type AppRouteComponent = {
   path: string
@@ -24,6 +26,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'setting': {
     path: '/setting',
     component: () => <DeviceDetectPage />
+    // component: () => <Setting />
   },
   '1v1': {
     path: '/classroom/one-to-one',
@@ -68,6 +71,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'aClass': {
     path: '/acadsoc/one-to-one',
     component: () => <AcadsocOneToOne />
+  },
+  'pretest': {
+    path: '/pretest',
+    component: () => <Pretest />
   },
   'home': {
     path: '/',

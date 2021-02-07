@@ -864,4 +864,23 @@ export class AcadsocRoomStore extends SimpleInterval {
     })
   }
 
+  @computed
+  get signalLevel(): number {
+    if (this.appStore.mediaStore.networkQuality === 'excellent') {
+      return 3
+    }
+
+    const qualities = ['poor', 'bad']
+    if (qualities.includes(this.appStore.mediaStore.networkQuality)) {
+      return 2
+    }
+
+    const level1Qualities = ['very bad','down']
+    if (level1Qualities.includes(this.appStore.mediaStore.networkQuality)) {
+      return 1
+    }
+
+    return 0
+  }
+
 }

@@ -11,6 +11,7 @@ import TeacherIcon from './assets/teacher.png'
 import StudentIcon from './assets/student.png'
 import TrophyIcon  from './assets/trophy.png'
 import { TextEllipsis } from '../typography'
+import {PlaceHolderView, PlaceHolderRole, PlaceHolderType} from './placeholder'
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
       border: '1px solid #ffffff',
       position: 'absolute',
       width: 7,
-      zIndex: 3,
+      zIndex: 4,
     },
     minimalIcon: {
       color: '#ffffff',
@@ -298,11 +299,14 @@ export interface VideoFrameProps {
   videoState: boolean,
   audioState: boolean,
   trophyNumber: number,
-  role: string,
+  role: PlaceHolderRole,
   children: any,
   onClick: VideoItemOnClick,
   style?: any,
   disableButton?: boolean,
+  placeHolderType: PlaceHolderType,
+  placeholderStyle?: React.CSSProperties,
+  placeHolderText?: string
 }
 
 const VideoFrame = (props: VideoFrameProps) => {
@@ -328,17 +332,12 @@ const VideoFrame = (props: VideoFrameProps) => {
   
   return (
     <div className={classes.root} style={props.style}>
+      <PlaceHolderView role={props.role} type={props.placeHolderType} text={props.placeHolderText} style={props.placeholderStyle} />
       {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
         <TrophyBox disable={props.disableButton} iconUrl={TrophyIcon} number={5} onClick={onClickTrophy}/>
       </Box> : null}
-      {props.minimal && <CustomButton
-        component="div"
-        className={classes.minimalBtn}
-        onClick={onClickMinimize}>
-        <hr className={classes.minimalStyle}/>
-      </CustomButton>}
       <ParticipantIdentityCard
         nickname={props.nickname}
         role={props.role}
@@ -347,6 +346,12 @@ const VideoFrame = (props: VideoFrameProps) => {
         <VideoIconButton disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
         <AudioIconButton disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
       </Box>
+      {props.minimal && <CustomButton
+        component="div"
+        className={classes.minimalBtn}
+        onClick={onClickMinimize}>
+        <hr className={classes.minimalStyle}/>
+      </CustomButton>}
       {props.children}
     </div>
   )
@@ -366,4 +371,17 @@ export const Video = ({children, ...props}: VideoProps) => {
       </VideoFrame>
     </CustomizeTheme>
   )
+}
+
+Video.defaultProps = {
+  placeholderStyle: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 3,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#DEF4FF'
+  }
 }

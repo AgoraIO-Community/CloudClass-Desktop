@@ -14,7 +14,9 @@ import {
   BreakoutRoomStore,
   ReplayStore,
   RecordingStore,
-  AcadsocRoomStore
+  AcadsocRoomStore,
+  PretestStore,
+  DeviceSettingStore
  } from '@/stores/app';
 import { PlayerStore } from '@/stores/replay-app/player';
 import { ReplayUIStore } from '@/stores/replay-app/ui';
@@ -96,4 +98,14 @@ export const useReplayUIStore = (): ReplayUIStore => {
 export const useAcadsocRoomStore = (): AcadsocRoomStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.acadsocStore
+}
+
+export const usePretestStore = (): PretestStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.pretestStore
+}
+
+export const useDeviceSettingStore = (): DeviceSettingStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.deviceSettingStore
 }

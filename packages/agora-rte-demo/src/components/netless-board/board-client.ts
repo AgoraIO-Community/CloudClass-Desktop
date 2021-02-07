@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode } from 'white-web-sdk';
+import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState } from 'white-web-sdk';
 import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
@@ -53,7 +53,7 @@ export class BoardClient extends EventEmitter {
       onPhaseChanged: phase => {
         this.emit('onPhaseChanged', phase);
       },
-      onRoomStateChanged: state => {
+      onRoomStateChanged: (state: Partial<RoomState>) => {
         this.emit('onRoomStateChanged', state)
       },
       onDisconnectWithError: error => {

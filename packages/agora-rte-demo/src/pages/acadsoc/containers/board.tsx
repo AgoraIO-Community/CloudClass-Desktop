@@ -59,13 +59,11 @@ export const ColorPopover = observer(() => {
 
   const boardStore = useBoardStore()
 
-  const [currentColor, setCurrentColor] = useState<string>('')
+  const {currentColor} = boardStore
 
   const onClick = useCallback((color: string) => {
     if (boardStore.boardClient) {
-      // TODO: need transform '#ffffff' to {r, g, b}
-      // boardStore.changeColor(color as any)
-      setCurrentColor(color)
+      boardStore.changeHexColor(color)
     }
   }, [boardStore.boardClient])
 
@@ -99,18 +97,11 @@ export const StrokePopover = observer(() => {
 
   const boardStore = useBoardStore()
 
-  const [currentColor, setCurrentColor] = useState<string>('')
+  const {currentColor} = boardStore
 
   const onClick = useCallback((color: string) => {
     if (boardStore.boardClient) {
-      // TODO: need transform '#ffffff' to {r, g, b}
-      const colorSlice = color.split('#')[1].split('')
-      const r = `${colorSlice[0]}${colorSlice[1]}`
-      const g = `${colorSlice[2]}${colorSlice[3]}`
-      const b = `${colorSlice[4]}${colorSlice[5]}`
-      
-      // boardStore.changeColor({rgb: {r, g, b}})
-      setCurrentColor(color)
+      boardStore.changeHexColor(color)
     }
   }, [boardStore.boardClient])
 

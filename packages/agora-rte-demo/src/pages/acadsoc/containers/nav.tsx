@@ -1,8 +1,9 @@
 import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton} from 'agora-aclass-ui-kit'
 import React from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
+import { observer } from 'mobx-react'
 
 export const Nav = () => {
   return (
@@ -23,7 +24,7 @@ const userSignalStatus = [{
 }]
 
 const onRefresh = () => {
-  console.log('click onRefresh')
+  window.location.reload()
 }
 const onCustomerService = () => {
   console.log('click onCustomerService')
@@ -39,6 +40,14 @@ const buttonArr = [
 ]
 
 type IStatusBar = INavigationItem[]
+
+const SignalBarContainer = observer(() => {
+  const roomStore = useAcadsocRoomStore()
+
+  return (
+    <SignalBar level={roomStore.signalLevel} width="18px" foregroundColor={'#ffffff'} />
+  )
+})
 
 const statusBar: IStatusBar = [{
   isComponent: false,
@@ -58,7 +67,7 @@ const statusBar: IStatusBar = [{
 {
   isComponent: true,
   componentKey: "signalBar",
-  renderItem: () => { return <SignalBar level={2} width="18px" foregroundColor={'#ffffff'} /> }
+  renderItem: () => { return <SignalBarContainer /> }
 }]
 const actionBar: IStatusBar = [{
   isComponent: true,

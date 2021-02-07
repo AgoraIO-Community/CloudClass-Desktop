@@ -2,8 +2,7 @@ import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
 import { observable, computed, action, runInAction } from 'mobx';
 
-export class DeviceStore {
-
+export class PretestStore {
   static resolutions: any[] = [
     {
       name: '480p',
@@ -85,7 +84,7 @@ export class DeviceStore {
 
   @computed
   get cameraId(): string {
-    const defaultValue = ''
+    const defaultValue = 'unknown'
     const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel)
     if (this.cameraList[idx]) {
       return this.cameraList[idx].deviceId
@@ -95,7 +94,7 @@ export class DeviceStore {
 
   @computed
   get microphoneId(): string {
-    const defaultValue = ''
+    const defaultValue = 'unknown'
     const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel)
     if (this.microphoneList[idx]) {
       return this.microphoneList[idx].deviceId
@@ -175,10 +174,28 @@ export class DeviceStore {
   }
 
   @observable
-  cameraList: any[] = []
+  _cameraList: any[] = []
+
+  @computed
+  get cameraList(): any[] {
+    return this._cameraList
+      .concat([{
+        deviceId: 'unknown',
+        label: '禁用',
+      }])
+  }
 
   @observable
-  microphoneList: any[] = []
+  _microphoneList: any[] = []
+
+  @computed
+  get microphoneList(): any[] {
+    return this._microphoneList
+      .concat([{
+        deviceId: 'unknown',
+        label: '禁用',
+      }])
+  }
 
   @observable
   speakerList: any[] = []
@@ -187,14 +204,14 @@ export class DeviceStore {
     if (option.video) {
       this.mediaService.getCameras().then((list: any[]) => {
         runInAction(() => {
-          this.cameraList = list
+          this._cameraList = list
         })
       })
     }
     if (option.audio) {
       this.mediaService.getMicrophones().then((list: any[]) => {
         runInAction(() => {
-          this.microphoneList = list
+          this._microphoneList = list
         })
       })
     }
@@ -234,11 +251,22 @@ export class DeviceStore {
 
   @action
   async changeTestCamera(deviceId: string) {
-    await this.mediaService.changeTestCamera(deviceId)
-    this._cameraRenderer = this.mediaService.cameraTestRenderer
-    this.cameraLabel = this.mediaService.getTestCameraLabel()
-    this._cameraId = this.cameraId
-    this.appStore.deviceInfo.cameraName = this.cameraLabel
+    if (deviceId === 'unknown') {
+      await this.mediaService.closeTestCamera()
+      this._cameraRenderer = undefined
+      this._cameraId = deviceId
+      this.cameraLabel = ''
+    } else {
+      if (this.cameraRenderer) {
+        await this.mediaService.changeTestCamera(deviceId)
+      } else {
+        await this.mediaService.openTestCamera({deviceId})
+      }
+      this._cameraRenderer = this.mediaService.cameraTestRenderer
+      this.cameraLabel = this.mediaService.getTestCameraLabel()
+      this._cameraId = this.cameraId
+      this.appStore.deviceInfo.cameraName = this.cameraLabel
+    }
   }
 
   @action
@@ -272,15 +300,23 @@ export class DeviceStore {
 
   @action
   async changeTestMicrophone(deviceId: string) {
-    await this.mediaService.changeTestMicrophone(deviceId)
-    // this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    // this._microphoneId = deviceId
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTrack
+    if (deviceId === 'unknown') {
+      await this.mediaService.closeTestMicrophone()
+      if (this.isWeb) {
+        this._microphoneTrack = undefined
+      }
+      this._microphoneId = deviceId
+      this.microphoneLabel = deviceId
+    } else {
+      await this.mediaService.changeTestMicrophone(deviceId)
+      if (this.isWeb) {
+        this._microphoneTrack = this.web.microphoneTrack
+      }
+      this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
+      this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+      this._microphoneId = this.microphoneId
     }
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this.appStore.deviceInfo.microphoneName = this.microphoneLabel
-    this._microphoneId = this.microphoneId
+
   }
 
   @action
