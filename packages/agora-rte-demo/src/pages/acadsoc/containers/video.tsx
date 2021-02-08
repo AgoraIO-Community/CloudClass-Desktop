@@ -64,7 +64,7 @@ export const TeacherVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '320px',
-        height: '225px'
+        maxHeight: '225px',
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
@@ -117,7 +117,7 @@ export const StudentVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '320px',
-        height: '225px'
+        maxHeight: '225px'
       }}
       disableButton={!isLocal}
       placeHolderType={userStream.placeHolderType}

@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       position: 'relative',
       boxSizing: 'border-box',
+      flex:1
     },
     minimalBtn: {
       padding: 0,

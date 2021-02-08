@@ -8,6 +8,7 @@ export interface ChatMessage {
   role: number
   fromRoomUuid?: string
   fromRoomName?: string
+  status?: 'fail' | 'success'
 }
 export enum ClassState {
   CLOSED = 0,
