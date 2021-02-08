@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import {useAsync,useAsyncFn} from 'react-use';
 import { TextEllipsis } from '../typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { WithIconButton } from "./control/button";
@@ -13,7 +14,7 @@ export interface BubbleProps {
   content: string,
   canTranslate: boolean,
   isSender: boolean,
-  onClickTranslate: (evt: any) => any,
+  onClickTranslate: (evt?: any) => any,
   bubbleStyle?: React.CSSProperties,
   translateText?: string,
   status: 'loading' | 'fail' | 'success',
@@ -27,7 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 12,
     display: 'flex',
     flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
+    marginTop: '10px',
+    // justifyContent: 'space-between',
     width: 99,
   },
   senderContent: {
@@ -38,10 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
     lineHeight: '20px',
-    color: '#333',
+    backgroundColor: "#CBCCFF",
+    color: '#2D3E6D',
     boxSizing: 'border-box',
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
+    // flexDirection: 'row-reverse',
+    // justifyContent: 'space-between',
+    flexDirection: 'column',
     borderRadius: 8,
     borderTopRightRadius: 0,
   },
@@ -50,22 +54,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#666',
     fontSize: 12,
     display: 'flex',
-    justifyContent: 'space-between',
+    marginTop: '10px',
+    // justifyContent: 'space-between',
     width: 99,
   },
   content: {
     display: 'flex',
     maxWidth: 260,
     padding: '9px 10px',
-    border: '1px solid #dbe2e5',
+    // border: '1px solid #dbe2e5',
     borderRadius: 8,
     borderTopLeftRadius: 0,
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '2em',
-    color: '#333',
+    lineHeight: '20px',
+    color: '#2D3E6D',
+    background: '#AADCF6',
     boxSizing: 'border-box',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    flexDirection: 'column'
   },
   chatMessage: {
     display: 'flex',
@@ -76,16 +83,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   translateText: {
     borderTop: '1px solid #0000001a',
-    lineHeight: '2em'
+    lineHeight: '2em',
+    marginTop: '3px'
   },
 }))
 
 
 export const Bubble = (props: BubbleProps) => {
-  const { bubbleStyle, isSender, time, content, userName, canTranslate, onClickTranslate, translateText, status, onClickFailButton } = props;
-
+  const { bubbleStyle, isSender, time, content, userName, canTranslate, onClickTranslate, status, onClickFailButton } = props;
+  const [isShowTranslateText,setIsShowTranslateText]=useState(false)
+  const [translateText,setTranslateText]=useState('')
   const classes = useStyles()
+  const [state, fetch] = useAsyncFn(async () => {
+    const response = await onClickTranslate(props);
+    setIsShowTranslateText(true)
+    setTranslateText(response.text)
+    return response
+  });
 
+  
+ 
   return (
     <div style={{
       display: 'flex',
@@ -93,12 +110,12 @@ export const Bubble = (props: BubbleProps) => {
       alignItems: isSender ? 'flex-end' : 'flex-start'
     }}>
       <div className={isSender ? classes.senderHeader : classes.header}>
-        <TextEllipsis maxWidth="27">
+        <TextEllipsis maxWidth="27" style={{ color: '#415889', margin: '0 3px' }}>
           <React.Fragment>
             {userName}
           </React.Fragment>
         </TextEllipsis>
-        <TextEllipsis maxWidth="19">
+        <TextEllipsis maxWidth="19" style={{ color: '#B8C9DE' }}>
           <React.Fragment>
             {time}
           </React.Fragment>
@@ -106,17 +123,14 @@ export const Bubble = (props: BubbleProps) => {
       </div>
       <div className={classes.chatMessage} style={isSender ? { flexDirection: 'row' } : { flexDirection: 'row-reverse' }}>
         <div className={classes.status}>
-          {canTranslate ? <WithIconButton onClick={onClickTranslate} icon={translate} style={{ alignItems: 'flex-start', marginBottom: '10px' }} /> : null}
+          {canTranslate ? <WithIconButton onClick={()=>fetch()} icon={translate} style={{ alignItems: 'flex-start', marginBottom: '10px' }} /> : null}
           {status === 'loading' && <Loading />}
-          {status === 'fail' && <WithIconButton onClick={()=>onClickFailButton(props)} icon={fail} iconStyle={{ width: '18px', height: '18px' }} />}
+          {status === 'fail' && <WithIconButton onClick={() => onClickFailButton(props)} icon={fail} iconStyle={{ width: '18px', height: '18px' }} />}
         </div>
         <div style={{ ...bubbleStyle }} className={isSender ? classes.senderContent : classes.content}>
-          <TextEllipsis maxWidth="162">
-            <React.Fragment>
-              {content}
-              {translateText ? <div className={classes.translateText}>{translateText}</div> : null}
-            </React.Fragment>
-          </TextEllipsis>
+          <div>{content}</div>
+          {isShowTranslateText ? <div className={classes.translateText}>{translateText}</div> : null}
+          {state.loading?<div className={classes.translateText}>loading</div> : null}
         </div>
       </div>
     </div>
