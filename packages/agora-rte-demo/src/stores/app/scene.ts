@@ -3,7 +3,7 @@ import { Mutex } from './../../utils/mutex';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType } from 'agora-rte-sdk';
+import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction } from 'mobx';
@@ -756,12 +756,75 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  getLocalPlaceHolderProps() {
+    const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
+
+    const roleKey = meIsTeacher ? 'teacher' : 'student'
+
+    if (!this.cameraEduStream) {
+      return {
+        placeHolderType: 'noEnter',
+        text: t(`placeholder.${roleKey}_noEnter`)
+      }
+    }
+
+    if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.noCamera')
+      }
+    }
+
+    if (this.cameraEduStream && this.cameraRenderer && this.cameraRenderer.videoTrack) {
+      return {
+        placeHolderType: 'none',
+        text: ''
+      }
+    }
+
+    return {
+      placeHolderType: 'noEnter',
+      text: t(`placeholder.${roleKey}_noEnter`)
+    }
+
+  }
+
+  getRemotePlaceHolderProps(userUuid: string, userRole: string) {
+    const stream = this.getStreamBy(userUuid)
+
+    if (!stream) {
+      const roleKey = userRole === 'teacher' ? 'teacher' : 'student'
+      return {
+        placeHolderType: 'noEnter',
+        text: t(`placeholder.${roleKey}_noEnter`)
+      }
+    }
+
+    const remoteUserRenderer = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer
+
+    if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.noCamera')
+      }
+    }
+
+    return {
+      placeHolderType: 'none',
+      text: ''
+    }
+  }
+
   @computed
   get teacherStream(): EduMediaStream {
+
     // 当本地是老师时
     const localUser = this.localUser
     if (localUser && localUser.userRole === EduRoleTypeEnum.teacher
       && this.cameraEduStream) {
+
+      const {placeHolderType, text} = this.getLocalPlaceHolderProps()
+
       return {
         local: true,
         userUuid: this.appStore.userUuid,
@@ -770,14 +833,17 @@ export class SceneStore extends SimpleInterval {
         video: this.cameraEduStream.hasVideo,
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
-        showControls: this.canControl(this.appStore.userUuid)
-      }
+        showControls: this.canControl(this.appStore.userUuid),
+        placeHolderType: placeHolderType,
+        placeHolderText: text,
+      } as any
     }
 
     // 当远端是老师时
     const teacherStream = this.streamList.find((it: EduStream) => it.userInfo.role as string === 'host' && it.userInfo.userUuid === this.teacherUuid && it.videoSourceType !== EduVideoSourceType.screen) as EduStream
     if (teacherStream) {
       const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
+      const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
       return {
         local: false,
         account: user.userName,
@@ -786,10 +852,11 @@ export class SceneStore extends SimpleInterval {
         video: teacherStream.hasVideo,
         audio: teacherStream.hasAudio,
         renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
-        showControls: this.canControl(user.userUuid)
-      }
+        showControls: this.canControl(user.userUuid),
+        placeHolderType: props.placeHolderType,
+        placeHolderText: props.text,
+      } as any
     }
-
     return {
       account: 'teacher',
       streamUuid: '',
@@ -798,8 +865,10 @@ export class SceneStore extends SimpleInterval {
       video: false,
       audio: false,
       renderer: undefined,
-      showControls: false
-    }
+      showControls: false,
+      placeHolderType: 'noEnter',
+      placeHolderText: t('placeholder.teacher_Left')
+    } as any
   }
 
   private getUserBy(userUuid: string): EduUser {
@@ -856,6 +925,7 @@ export class SceneStore extends SimpleInterval {
       (acc: EduMediaStream[], stream: EduStream) => {
         const user = this.userList.find((user: EduUser) => (user.userUuid === stream.userInfo.userUuid && ['broadcaster', 'audience'].includes(user.role)))
         if (!user || this.isLocalStream(stream)) return acc;
+        const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
         acc.push({
           local: false,
           account: user.userName,
@@ -864,8 +934,10 @@ export class SceneStore extends SimpleInterval {
           video: stream.hasVideo,
           audio: stream.hasAudio,
           renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer,
-          showControls: this.canControl(user.userUuid)
-        })
+          showControls: this.canControl(user.userUuid),
+          placeHolderType: props.placeHolderType,
+          placeHolderText: props.text,
+        } as any)
         return acc;
       }
     , [])
@@ -883,7 +955,8 @@ export class SceneStore extends SimpleInterval {
         video: this.cameraEduStream.hasVideo,
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
-        showControls: this.canControl(this.appStore.userUuid)
+        showControls: this.canControl(this.appStore.userUuid),
+        placeHolderType: this.getLocalPlaceHolderProps(),
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -897,8 +970,10 @@ export class SceneStore extends SimpleInterval {
       video: false,
       audio: false,
       renderer: undefined,
-      showControls: false
-    }]
+      showControls: false,
+      placeHolderType: 'noEnter',
+      placeHolderText: t('placeholder.student_Left')
+    } as any]
   }
 
   @action

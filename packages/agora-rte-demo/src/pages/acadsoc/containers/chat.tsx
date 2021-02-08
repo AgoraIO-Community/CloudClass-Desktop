@@ -1,79 +1,71 @@
 import { noop } from 'lodash'
 import { observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
-import {ChatBoard, ChatMessage} from 'agora-aclass-ui-kit'
-
-const messages: ChatMessage[] = [{
-  id: `${Date.now()}`,
-  sendTime: '14:22',
-  isSender: true,
-  chatText: "aaaa",
-  userName: "可爱的柠檬",
-  onClickTranslate: () => {
-
-  },
-  showTranslate: false,
-  translateText: '111111',
-  status: 'loading',
-}, {
-  id: `${Date.now()}`,
-  sendTime: '14:23',
-  isSender: false,
-  chatText: "最后3条",
-  userName: "英俊潇洒的柚子",
-  onClickTranslate: () => {
-
-  },
-  showTranslate: true,
-  translateText:'2222',
-  status: 'loading',
-}]
-const historyMessage: ChatMessage[] = [{
-  id: `${Date.now()}`,
-  sendTime: '14:22',
-  isSender: true,
-  chatText: "aaaa",
-  userName: "可爱的柠檬",
-  showTranslate: false,
-  translateText: '111111',
-  status: 'loading',
-  onClickTranslate: () => {
-
-  },
-}, {
-  id: `${Date.now()}`,
-  sendTime: '14:23',
-  isSender: false,
-  chatText: "最后3条",
-  userName: "英俊潇洒的柚子",
-  translateText:'2222',
-  showTranslate: false,
-  status: 'loading',
-  onClickTranslate: () => {
-
-  },
-}]
+import { ChatBoard, ChatMessageList,ChatMessage} from 'agora-aclass-ui-kit'
+import { useAcadsocRoomStore, useAppStore, useUIStore } from '@/hooks'
 
 export const ChatView = observer(() => {
-  // const { messages } = props
-  const [newMessage, setMessages] = useState(messages)
+  const [nextId, setNextID] = useState('')
+  const acadsocStore = useAcadsocRoomStore()
+  console.log('acadsocStore',acadsocStore)
+  const [newMessage, setMessages] = useState<ChatMessageList>([])
+  const [isFetchHistory, setIsFetchHistory] = useState(true)
+  const transformationMessage = () => {
+    const { roomChatMessages } = acadsocStore
+    const message: ChatMessageList = roomChatMessages.map((messageItem) => {      
+      const sendTime =new Date(messageItem.ts) 
+      return {
+        id: messageItem.id,
+        userName: messageItem?.fromRoomName ||  messageItem.account,
+        sendTime: `${sendTime.getHours()}:${sendTime.getMinutes()}`,
+        showTranslate: true,
+        chatText: messageItem.text,
+        isSender: messageItem.sender || false,
+        status: 'success',
+        onClickTranslate: onClickTranslate
+      }
+    })
+    return message
+  }
+  const onClickTranslate=()=>{}
+  const fetchMessage = async () => {
+    setIsFetchHistory(false)
+    const res = nextId !== 'last' && await acadsocStore.getHistoryChatMessage({ nextId, sort: 1 })
+    setNextID(res.nextId || 'last')
+  }
+
   const onPullFresh = () => {
-    setMessages(historyMessage.concat(newMessage))
+    fetchMessage()
+  }
+  const sendMessage=async (message: any)=>{
+    const current = new Date()
+    const chatMessage: ChatMessageList = [{
+      "userName": acadsocStore.roomInfo.userName,
+      "id": current.getTime().toString(),
+      sendTime: `${current.getHours()}:${current.getMinutes()}`,
+      showTranslate: true,
+      chatText: message,
+      isSender: true,
+      status: 'loading',
+      onClickTranslate: onClickTranslate
+    }]
+    setMessages(newMessage.concat(chatMessage))
+    const data  =  await acadsocStore.sendMessage(message)
+    console.log(data);
   }
   useEffect(() => {
-    if (newMessage.length < 0) {
-      return
-    }
-  }, [newMessage])
+    isFetchHistory && fetchMessage()
+    setMessages(transformationMessage())
+  }, [acadsocStore.roomChatMessages.length])
   return (
     <ChatBoard
-      title="聊天室"
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
       onPullFresh={onPullFresh}
+      onClickSendButton={sendMessage}
     />
   )
 })

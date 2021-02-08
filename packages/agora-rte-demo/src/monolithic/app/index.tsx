@@ -10,6 +10,7 @@ const routes: string[] = [
   "bigClass",
   "middleClass",
   "aClass",
+  "pretest",
   "breakoutClassAssistantRoom",
   "breakoutClassCourses",
   "breakoutClassRoom",

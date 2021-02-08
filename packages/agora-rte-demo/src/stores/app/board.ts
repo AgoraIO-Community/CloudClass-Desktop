@@ -567,11 +567,42 @@ export class BoardStore {
         b: b1
       }
     }
-    // this.strokeColor = {
-    //   r,
-    //   g,
-    //   b
-    // }
+  }
+
+  rgbToHexColor(r: number, g: number, b: number): string {
+    const computeToHex = (c: number): string => {
+      const hex = c.toString(16)
+      return hex.length == 1 ? `0${hex}` : hex;
+    }
+
+    return `#${computeToHex(r)}${computeToHex(g)}${computeToHex(b)}`
+  }
+
+  @action
+  changeHexColor(colorHex: string) {
+    const r = parseInt(colorHex.slice(1, 3), 16);
+    const g = parseInt(colorHex.slice(3, 5), 16);
+    const b = parseInt(colorHex.slice(5, 7), 16);
+    if (this.room) {
+      this.room.setMemberState({
+        strokeColor: [r, g, b]
+      })
+      const [r1, g1, b1] = this.room.state.memberState.strokeColor
+      this.strokeColor = {
+        r: r1,
+        g: g1,
+        b: b1
+      }
+    }
+  }
+
+  @computed
+  get currentColor(): string {
+    if (this.room) {
+      const {r, g, b} = this.strokeColor
+      return this.rgbToHexColor(r, g, b)
+    }
+    return this.rgbToHexColor(255, 255, 255)
   }
 
   @action

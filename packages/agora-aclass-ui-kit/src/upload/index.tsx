@@ -57,7 +57,7 @@ export const UploadFile = (props: IProps) => {
   const uploaderProps = {
     multiple: false,
     onStart(file: { name: any; }) {
-      onStart && onStart()
+      onStart && onStart(file)
       setFiles([file])
     },
     onSuccess(res: any, file: { name: any; }) {
@@ -121,7 +121,7 @@ export const UploadFile = (props: IProps) => {
       </Upload>
       {showUploadList ? <>
         {files.map((item: any) => {
-          return <div key={item.uid}>{item.name}
+          return <div key={item.uid}>
             {progressComponents ? progressComponents() :
               <>
                 <BorderLinearProgress variant="determinate" value={uploadProgress} />
