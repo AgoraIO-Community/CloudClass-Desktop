@@ -41,7 +41,7 @@ export const EduWhiteBoard = observer(() => {
       currentPage={boardStore.currentPage}
       totalPage={boardStore.totalPage}
       showScale={true}
-      scale={100}
+      scale={Math.ceil(boardStore.scale * 100)}
       toolY={20}
       toolX={5}
       controlY={10}
