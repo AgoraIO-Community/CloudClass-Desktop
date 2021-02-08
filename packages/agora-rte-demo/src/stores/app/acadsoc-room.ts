@@ -151,9 +151,43 @@ export class AcadsocRoomStore extends SimpleInterval {
         text: message,
         account: this.roomInfo.userName,
         sender: true,
+        fromRoomName:this.roomInfo.userName,
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
+      const error = new GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+    }
+  }
+
+
+  @action
+  async getHistoryChatMessage(data: {
+    nextId: string,
+    sort: number
+  }) {
+    try {
+      const historyMessage = await eduSDKApi.getHistoryChatMessage({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        data
+      })
+      historyMessage.list.map((item:any)=>{
+        this.addChatMessage({
+          text:item.message,
+          ts:item.sendTime,
+          id:item.sequences,
+          fromRoomUuid:item.fromUser.userUuid,
+          userName:item.fromUser.userName,
+          role:item.fromUser.role,
+          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+          account:item.fromUser.userUuid
+        })
+        
+      })
+      return historyMessage
+    } catch (err) {
+      // this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
       const error = new GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
