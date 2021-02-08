@@ -114,6 +114,12 @@ export class AcadsocRoomStore extends SimpleInterval {
     teachers: {},
   }
 
+  @observable
+  showTranslate: boolean = false
+
+  @observable
+  translateText?: string = ''
+
   roomApi!: RoomApi;
 
   appStore!: AppStore;
