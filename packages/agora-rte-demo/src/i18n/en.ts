@@ -7,6 +7,9 @@ const en = {
     "hands_up": "CoVideo",
     "hands_up_timeout": "Hand up end, time over max wait seconds",
   },
+  'setting': {
+    'title': 'Setting'
+  },
   "invitation": {
     "accept_success": "Accept Success",
     "accept_failed": "Accept Failed",

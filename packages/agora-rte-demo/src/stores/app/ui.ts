@@ -135,6 +135,7 @@ export class UIStore {
     this.menuVisible = false
     this.action = ''
     this.nextLocation = null
+    this.aclassVisible = false
   }
 
   appStore!: AppStore
@@ -379,6 +380,20 @@ export class UIStore {
       this.cancel()
       this.cancel = undefined
     }
+  }
+
+  @observable
+  aclassVisible: boolean = false
+
+  showMediaSetting() {
+    // this.appStore.pretestStore.init({video: true, audio: true})
+    this.aclassVisible = true
+  }
+
+  hideMediaSetting() {
+    // this.appStore.pretestStore.closeTestCamera()
+    // this.appStore.pretestStore.closeTestMicrophone()
+    this.aclassVisible = false
   }
 
 }

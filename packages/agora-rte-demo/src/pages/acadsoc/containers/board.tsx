@@ -36,8 +36,8 @@ export const EduWhiteBoard = observer(() => {
   return (
     <EducationBoard
       showPaginator={true}
-      currentPage={1}
-      totalPage={100}
+      currentPage={boardStore.currentPage}
+      totalPage={boardStore.totalPage}
       showScale={true}
       scale={100}
       toolY={20}
@@ -182,6 +182,11 @@ export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
 
   const onClickPaginator = (type: string) => {
+    if (['prev', 'next'].includes(type)) {
+      boardStore.changeFooterMenu(`${type}_page`)
+    } else {
+
+    }
     console.log(`click paginator ${type}`)
   }
 
@@ -225,7 +230,8 @@ export const EducationBoard = observer((props: any) => {
         width: props.width,
         height: props.height,
         position: 'relative',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        background: 'white'
       }}>
         <ControlMenu
           style={{
@@ -252,6 +258,7 @@ export const EducationBoard = observer((props: any) => {
             top: props.toolY,
             left: props.toolX,
             zIndex: 10,
+            position: 'absolute'
           }}
           items={
             toolItems

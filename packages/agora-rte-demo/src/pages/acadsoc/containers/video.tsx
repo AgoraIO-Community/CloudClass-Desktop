@@ -63,8 +63,8 @@ export const TeacherVideo = observer(() => {
       audioState={userStream.audio}
       onClick={handleClick}
       style={{
-        width: '320px',
-        maxHeight: '225px',
+        width: '268px',
+        height: '194px'
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
@@ -116,8 +116,8 @@ export const StudentVideo = observer(() => {
       audioState={userStream.audio}
       onClick={handleClick}
       style={{
-        width: '320px',
-        maxHeight: '225px'
+        width: '268px',
+        height: '194px'
       }}
       disableButton={!isLocal}
       placeHolderType={userStream.placeHolderType}
