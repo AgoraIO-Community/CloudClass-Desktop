@@ -40,6 +40,13 @@ export const AcadsocOneToOne = observer(() => {
         <div className={styles.rightContainer}>
           <TeacherVideo />
           <StudentVideo />
+          {/* <button onClick={() => {
+            acadsocStore.sendReward('acds', 2)
+          }}>奖励</button>
+          <button onClick={async () => {
+            let content = await acadsocStore.getTranslationContent('你好呀 世界')
+            console.log('-----', content)
+          }}>翻译</button> */}
           <ChatView />
         </div>
       </div>

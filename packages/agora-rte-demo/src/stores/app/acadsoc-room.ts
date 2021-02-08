@@ -30,6 +30,15 @@ export enum EduClassroomStateEnum {
   end = 2
 }
 
+type AcadsocRoomProperties = {
+  students: Record<string, any>,
+  teachers: Record<string, any>,
+}
+
+export enum acadsocRoomPropertiesChangeCause {
+  studentRewardStateChanged = 402, // 单个人的奖励发生
+}
+
 const delay = 2000
 
 const ms = 500
@@ -92,6 +101,18 @@ export class AcadsocRoomStore extends SimpleInterval {
   
   @observable
   notice?: any = undefined
+
+  @observable
+  rewards: Array<{
+    userUuid: string,
+    changeReward: number,
+  }>= []
+
+  @observable
+  roomProperties: AcadsocRoomProperties = {
+    students: {},
+    teachers: {},
+  }
 
   roomApi!: RoomApi;
 
@@ -162,8 +183,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   @action 
   async getTranslationContent(content: string) {
     try {
-      await eduSDKApi.translateChat({
-        appId: this.eduManager.config.appId,
+      return await eduSDKApi.translateChat({
         content: content,
         from: 'auto',
         to: this.appStore.params.translateLanguage,
@@ -173,6 +193,18 @@ export class AcadsocRoomStore extends SimpleInterval {
       const error = new GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
+  }
+
+  // 奖杯
+  @action
+  async sendReward(userUuid: string, reward: number) {
+    return await eduSDKApi.sendRewards({
+      roomUuid: this.roomInfo.roomUuid,
+      rewards: [{
+        userUuid: userUuid,
+        changeReward: reward,
+      }]
+    })
   }
 
   @computed
@@ -556,6 +588,24 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
+          // acadsoc
+        //   {
+        //     "action": 1,
+        //     "changeProperties":{
+        //          "students.userUuid1.reward" : 10, //奖励变化后总值
+        //          "students.userUuid2.reward" : 20 //奖励变化后总值
+        //      },
+        //      "cause":{
+        //          "cmd": 1101,
+        //          "data":{                //本次变化值
+        //              "userUuid1" : 2,   
+        //              "userUuid2" : 4
+        //          }
+        //      }
+        //  }
+          this.roomProperties = classroom.roomProperties
+          const students = get(classroom, 'roomProperties.students')
+          console.log('------', students)
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
