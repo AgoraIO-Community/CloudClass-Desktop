@@ -135,6 +135,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @action
   async sendMessage(message: any) {
+    const ts = +Date.now();
     try {
       await eduSDKApi.sendChat({
         roomUuid: this.roomInfo.roomUuid,
@@ -145,22 +146,38 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       // await this.roomManager?.userService.sendRoomChatMessage(message)
-      this.addChatMessage({
+      return {
         id: this.userUuid,
-        ts: +Date.now(),
+        ts,
         text: message,
         account: this.roomInfo.userName,
         sender: true,
-        fromRoomName:this.roomInfo.userName,
-      })
+        fromRoomName: this.roomInfo.userName,
+      }
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
       const error = new GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
+      return{
+        id: this.userUuid,
+        ts,
+        text: message,
+        account: this.roomInfo.userName,
+        sender: true,
+        fromRoomName: this.roomInfo.userName,
+        status:'fail'
+      }
     }
   }
-
-
+  
+  @action setMessageList(messageList:ChatMessage[]){
+    this.roomChatMessages = messageList
+  }
+  @action resendMessage=async(messageList: ChatMessage[], message:string) =>{
+    const resendMessageItem = await this.sendMessage(message)
+    messageList.push((resendMessageItem as ChatMessage))
+    this.roomChatMessages = messageList
+  }
   @action
   async getHistoryChatMessage(data: {
     nextId: string,

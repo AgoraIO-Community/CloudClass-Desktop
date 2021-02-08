@@ -1,28 +1,45 @@
-import { noop } from 'lodash'
 import { observer } from 'mobx-react'
 import React, { useEffect, useState } from 'react'
-import { ChatBoard, ChatMessageList,ChatMessage} from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useAppStore, useUIStore } from '@/hooks'
+import { ChatBoard, ChatMessageList} from 'agora-aclass-ui-kit'
+import { ChatMessage } from '@/utils/types';
+import { useAcadsocRoomStore } from '@/hooks'
 
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
   const acadsocStore = useAcadsocRoomStore()
-  console.log('acadsocStore',acadsocStore)
+  const [storeMessageList,setStoreMessageList]=useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
-  const transformationMessage = () => {
+  
+  const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
-    const message: ChatMessageList = roomChatMessages.map((messageItem) => {      
+    const retryIndex = roomChatMessages.findIndex((item) => item.ts === message.messagesId)
+    roomChatMessages.splice(retryIndex, 1)
+    const chatMessage: ChatMessageList = [{
+      ...message,
+      status: 'loading',
+    }]
+    const list = transformationMessage(roomChatMessages)
+    setMessages(list.concat(chatMessage))
+    await acadsocStore.resendMessage(roomChatMessages, message.chatText)
+  }
+  const transformationMessage = (messageList?:ChatMessage[]) => {
+    const { roomChatMessages } = acadsocStore
+    setStoreMessageList(roomChatMessages)
+    const list = messageList || roomChatMessages
+    const message: ChatMessageList = list.map((messageItem) => {      
       const sendTime =new Date(messageItem.ts) 
       return {
         id: messageItem.id,
+        messagesId: messageItem.ts,
         userName: messageItem?.fromRoomName ||  messageItem.account,
         sendTime: `${sendTime.getHours()}:${sendTime.getMinutes()}`,
         showTranslate: true,
         chatText: messageItem.text,
         isSender: messageItem.sender || false,
-        status: 'success',
-        onClickTranslate: onClickTranslate
+        status: messageItem.status || 'success',
+        onClickTranslate: onClickTranslate,
+        onClickFailButton:resendMessage
       }
     })
     return message
@@ -40,8 +57,9 @@ export const ChatView = observer(() => {
   const sendMessage=async (message: any)=>{
     const current = new Date()
     const chatMessage: ChatMessageList = [{
-      "userName": acadsocStore.roomInfo.userName,
-      "id": current.getTime().toString(),
+      userName: acadsocStore.roomInfo.userName,
+      messagesId: +Date.now(),
+      id: current.getTime().toString(),
       sendTime: `${current.getHours()}:${current.getMinutes()}`,
       showTranslate: true,
       chatText: message,
@@ -50,8 +68,9 @@ export const ChatView = observer(() => {
       onClickTranslate: onClickTranslate
     }]
     setMessages(newMessage.concat(chatMessage))
-    const data  =  await acadsocStore.sendMessage(message)
-    console.log(data);
+    const data = await acadsocStore.sendMessage(message)
+    acadsocStore.addChatMessage(data)
+
   }
   useEffect(() => {
     isFetchHistory && fetchMessage()

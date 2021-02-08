@@ -11,6 +11,7 @@ export type ChatMessage = {
   id: string,
   userName: string,
   sendTime: string,
+  messagesId:number|string,
   showTranslate: boolean,
   chatText: string,
   isSender: boolean,
@@ -36,8 +37,9 @@ export interface ChatBoardProps {
   onInputText?: (args?: any) => any,
   sendView?: string | React.ReactNode,
   titleView?: string | React.ReactNode,
-  onClickSendButton?: (message?:string) => any,
-  onClickBannedButton?: () => any
+  onClickSendButton?: (message?: string) => any,
+  onClickBannedButton?: () => any,
+  onClickMinimize?: () => any
 }
 
 
@@ -57,7 +59,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
     onClickSendButton,
     onClickBannedButton,
     titleView,
-    minHeight
+    minHeight,
+    onClickMinimize = () => {}
   } = props
   const bottomDistance = borderWidth
   const useStyles = makeStyles((theme: Theme) => ({
@@ -66,7 +69,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderColor: panelBorderColor,
       borderStyle: 'solid',
       overflowY: 'scroll',
-      maxHeight,
+      flex: 1,
+      maxHeight: minHeight ||'200px',
       minHeight: minHeight || '200px',
       borderWidth: '0px',
       padding: '10px',
@@ -86,6 +90,9 @@ export const ChatBoard = (props: ChatBoardProps) => {
     },
     chat: {
       borderRadius: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
       //boxShadow: `0px 0px 0px ${borderWidth}px ${panelBorderColor}`,
       background: panelBorderColor,
       borderWidth: '0px 10px 10px',
@@ -100,8 +107,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
       flexDirection: 'row-reverse'
     },
     input: {
-      position:'relative',
-      background:"#fff",
+      position: 'relative',
+      background: "#fff",
       borderRadius: '0 0 10px 10px',
       padding: '10px 10px 36px',
     },
@@ -138,11 +145,31 @@ export const ChatBoard = (props: ChatBoardProps) => {
       color: '#fff',
       marginRight: '5px',
       width: '16px'
+    },
+    minimize:{
+      width:'24px',
+      height:'24px',
+      background:'#fff3',
+      borderRadius:'6px',
+      display:'flex',
+      justifyContent:'center',
+      alignItems: 'center',
+    },
+    strip: {
+      width: '16px',
+      height: '3px',
+      background: '#FFFFFF',
+      borderRadius: '2px',
+    },
+    titleView:{
+      display:'flex',
+      flexDirection:'row',
+      alignItems: 'center'
     }
   }))
   const classes = useStyles()
   const [inputMessages, setInputMessages] = useState('')
-  const [isSendButton,setIsSendButton] = useState(false)
+  const [isSendButton, setIsSendButton] = useState(false)
   const chatRef = useRef<any>()
   const ToolButton = (props: { onClickBannedButton: any }) => {
     return (
@@ -169,14 +196,18 @@ export const ChatBoard = (props: ChatBoardProps) => {
     const position = isSendButton ? chatRef?.current.scrollHeight : chatRef?.current.scrollHeight - currentHeight
     chatRef?.current.scrollTo(0, position)
   }, [messages])
-  const handlerSendButton=()=>{
+  const handlerSendButton = () => {
     setIsSendButton(true)
     onClickSendButton && onClickSendButton(inputMessages)
     setInputMessages("")
   }
   return (
     <Box className={classes.chat}>
-      {titleView || <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />chat</div>}
+      {titleView ||
+        <div className={classes.titleView}>
+          <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />chat</div>
+          <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip}/></div>
+        </div>}
       <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div>
           {messages?.map((item, index) => {
