@@ -24,3 +24,63 @@
   max-width: 320px;
   flex: 1;
 }
+
+// icon_trophy
+.trophy {
+  width: 138px;
+  height: 160px;
+  background:url(./assets/icon_trophy.png) no-repeat center center;
+}
+/*礼物动画*/
+.giftAnimationContainer .giftAnimation{
+    position: absolute;
+    left: calc(50% - 160px);
+    top: 50%;
+    width: 138px;
+    height: 160px;
+    transform: translate(-50% , -50%) scale(1);
+    background:url(./assets/icon_trophy.png) no-repeat center center;
+    background-size: 100% 100%;
+    z-index: 500;
+}
+.giftAnimationContainer .giftAnimation.giftAnimationBig{
+    animation:giftAnimationBig 1s linear 1 forwards;
+    -webkit-animation:giftAnimationBig 1s linear 1 forwards;
+}
+.giftAnimationContainer .giftAnimation.scalc{
+    transform:translate(-50% , -50%)  scale(3.01875);
+}
+.giftAnimationContainer .giftAnimation.giftAnimationSmall{
+    animation:giftAnimationSmall 0.5s linear 1 forwards;
+    -webkit-animation:giftAnimationSmall 0.5s linear 1 forwards;
+}
+
+
+@keyframes giftAnimationBig{
+    0%{
+        transform:translate(-50% , -50%)  scale(1);
+        margin-top: 0rem;
+    }
+    60%{
+        transform:translate(-50% , -50%)  scale(3.01875);
+        margin-top: 0rem;
+    }
+    80%{
+        transform:translate(-50% , -50%)  scale(3.01875);
+        margin-top: -0.4rem;
+    }
+    100%{
+        transform:translate(-50% , -50%)  scale(3.01875);
+        margin-top: 0rem;
+    }
+
+}
+
+@keyframes giftAnimationSmall{
+    0%{
+        transform:translate(-50% , -50%)  scale(3.01875);
+    }
+    100%{
+        transform:translate(-50% , -50%)  scale(0.15);
+    }
+}

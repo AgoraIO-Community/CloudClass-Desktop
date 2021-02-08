@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import styles from './style.module.scss'
 import { StudentVideo, TeacherVideo } from './containers/video'
@@ -9,6 +9,7 @@ import { useAcadsocRoomStore, useAppStore, useUIStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { Loading } from '@/components/loading'
 import { AutoplayToast } from '@/components/autoplay-toast'
+import {Trophy} from './containers/trophy/trophy'
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -26,6 +27,8 @@ export const AcadsocOneToOne = observer(() => {
     acadsocStore.join()
   }, [])
 
+  const [showTrophy, setShowTrophy] = useState(false)
+
   return (
     <div className={styles.container}>
       <>
@@ -42,11 +45,20 @@ export const AcadsocOneToOne = observer(() => {
           <StudentVideo />
           {/* <button onClick={() => {
             acadsocStore.sendReward('acds', 2)
+            setShowTrophy(true)
+            setTimeout(() => {
+              setShowTrophy(false)
+            }, 2000)
           }}>奖励</button>
           <button onClick={async () => {
             let content = await acadsocStore.getTranslationContent('你好呀 世界')
             console.log('-----', content)
           }}>翻译</button> */}
+          {
+            showTrophy ? 
+            <Trophy></Trophy>
+            : null
+          }
           <ChatView />
         </div>
       </div>
