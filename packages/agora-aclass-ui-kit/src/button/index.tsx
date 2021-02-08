@@ -76,17 +76,17 @@ export interface CustomButtonProps {
   disableButton?: boolean
 }
 
-export const CustomButton = (props: CustomButtonProps) => {
+export const CustomButton = ({disableButton, component, className, ...props}: CustomButtonProps) => {
   return (
     <CustomizeTheme>
       <MButton
         {...props}
         disableElevation
         disableRipple
-        component={props.component}
-        className={props.className}
+        component={component}
+        className={className}
         onClick={props.onClick}
-        disabled={props.disableButton}
+        disabled={disableButton}
       >
         {props.children ? props.children : ''}
       </MButton>

@@ -790,6 +790,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
+    console.log(`getRemotePlaceHolderProps# userUuid: ${userUuid}, userRole: ${userRole}`)
     const stream = this.getStreamBy(userUuid)
 
     if (!stream) {
@@ -947,6 +948,7 @@ export class SceneStore extends SimpleInterval {
     const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole)
 
     if (this.cameraEduStream && isStudent) {
+      const props = this.getLocalPlaceHolderProps()
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -956,7 +958,9 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         showControls: this.canControl(this.appStore.userUuid),
-        placeHolderType: this.getLocalPlaceHolderProps(),
+        placeHolderType: props.placeHolderType,
+        placeHolderText: props.text,
+        // placeHolderType: props.placeHolderType,
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {

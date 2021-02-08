@@ -3,7 +3,7 @@ import { withStyles, Theme, makeStyles } from '@material-ui/core/styles'
 import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import VideoDetectPng from '../assets/camera-detect.png'
 export type DeviceList = {
-  label: string
+  label: string,
   deviceId: string
 }
 

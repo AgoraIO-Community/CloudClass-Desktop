@@ -288,11 +288,11 @@ export type VideoItemOnClick = (target: VideoItem) => any
 export type VideoItem = {
   sourceType: string,
   enabled?: boolean,
-  uid?: number,
+  uid?: any,
 }
 
 export interface VideoFrameProps {
-  uid: number,
+  uid: any,
   nickname: string,
   minimal: boolean,
   visibleTrophy: boolean,
