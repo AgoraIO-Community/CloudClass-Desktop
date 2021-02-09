@@ -203,12 +203,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
   
-  @action setMessageList(messageList:ChatMessage[]){
-    this.roomChatMessages = messageList
-  }
-  @action resendMessage=async(messageList: ChatMessage[], message:string) =>{
-    const resendMessageItem = await this.sendMessage(message)
-    messageList.push((resendMessageItem as ChatMessage))
+  @action setMessageList(messageList: ChatMessage[]) {
     this.roomChatMessages = messageList
   }
   @action
@@ -223,7 +218,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         data
       })
       historyMessage.list.map((item:any)=>{
-        this.addChatMessage({
+        this.roomChatMessages.unshift({
           text:item.message,
           ts:item.sendTime,
           id:item.sequences,
@@ -232,7 +227,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           role:item.fromUser.role,
           sender: item.fromUser.userUuid === this.roomInfo.userUuid,
           account:item.fromUser.userUuid
-        })
+        } as ChatMessage)
         
       })
       return historyMessage
@@ -249,7 +244,8 @@ export class AcadsocRoomStore extends SimpleInterval {
       return await eduSDKApi.translateChat({
         content: content,
         from: 'auto',
-        to: this.appStore.params.translateLanguage,
+        to: 'auto',
+        // this.appStore.params.translateLanguage
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
