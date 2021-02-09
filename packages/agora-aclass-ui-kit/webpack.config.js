@@ -13,10 +13,10 @@ module.exports = {
   },
   mode: "production",
   // externals: /^(react|react-dom|react-router-dom)$/,
-  externals: {
-    'react': 'react',
-    'react-dom': 'react-dom'
-  },
+  // externals: {
+  //   'react': 'react',
+  //   'react-dom': 'react-dom'
+  // },
   output: {
     // publicPath: '',
     // filename: '[name].js',

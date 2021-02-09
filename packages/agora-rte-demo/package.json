@@ -2,7 +2,7 @@
   "name": "agora-rte-demo",
   "version": "6.2.0",
   "private": true,
-  "homepage": "/aclass",
+  "homepage": ".",
   "main": "./src/index.tsx",
   "babel": {
     "presets": [
@@ -14,10 +14,8 @@
     ]
   },
   "agora_electron": {
-    "platform": "win32",
     "electron_version": "7.1.2",
-    "prebuilt": true,
-    "arch": "ia32"
+    "prebuilt": true
   },
   "dmg": {
     "compression": "store",
@@ -184,11 +182,9 @@
     "promise-polyfill": "8.2.0",
     "purify-css": "1.2.5",
     "purifycss-webpack": "0.7.0",
-    "react": "16.13.1",
     "react-app-rewired": "2.1.4",
     "react-beautiful-dnd": "13.0.0",
     "react-color": "2.17.3",
-    "react-dom": "16.13.1",
     "react-draggable": "4.2.0",
     "react-gtm-module": "2.0.8",
     "react-router-dom": "5.1.2",
@@ -213,6 +209,8 @@
     "zlib": "1.0.5"
   },
   "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "adm-zip": "0.4.14",
     "agora-aclass-ui-kit": "0.0.1",
     "agora-electron-sdk": "education290",

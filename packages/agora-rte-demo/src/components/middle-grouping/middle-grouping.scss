@@ -75,7 +75,7 @@
       position: absolute;
       top: 27px;
       right: 46px;
-      background-image: url('./assets/icon-reduce.png');
+      background-image: url('~@/components/middle-grouping/assets/icon-reduce.png');
     }
     .icon-close {
       width: 20px;
@@ -83,7 +83,7 @@
       position: absolute;
       top: 27px;
       right: 20px;
-      background-image: url('./assets/icon-close.png');
+      background-image: url('~@/components/middle-grouping/assets/icon-close.png');
     }
     .btn-save {
       width: 98px;
@@ -146,7 +146,7 @@
             width: 28px;
             height: 28px;
             margin-top: -5px;
-            background-image: url('./assets/icon-head.png');
+            background-image: url('~@/components/middle-grouping/assets/icon-head.png');
           }
           .stu-name {
             height: 22px;
@@ -230,13 +230,13 @@
       margin: 17px auto auto 28px;
       width: 20px;
       height: 20px;
-      background-image: url('./assets/icon-spread.png');
+      background-image: url('~@/components/middle-grouping/assets/icon-spread.png');
     }
     .close-group-card {
       margin: 17px 15px auto auto;
       width: 20px;
       height: 20px;
-      background-image: url('./assets/icon-close-spread.png');
+      background-image: url('~@/components/middle-grouping/assets/icon-close-spread.png');
     }
   }
 }
@@ -287,7 +287,7 @@
         height: 28px;
         margin: 5px;
         margin-top: 10px;
-        background-image: url('./assets/icon-micr.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-micr.png');
       }
       .microphone-forbidden{
         // pointer-events: none;
@@ -298,14 +298,14 @@
         height: 28px;
         margin: 5px;
         margin-top: 10px;
-        background-image: url('./assets/icon-micr-close.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-micr-close.png');
       }
       .platform {
         width: 28px;
         height: 28px;
         margin: 5px;
         margin-top: 10px;
-        background-image: url('./assets/icon-platform.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-platform.png');
       }
       .platform-forbidden {
         cursor: not-allowed !important; 
@@ -315,7 +315,7 @@
         height: 28px;
         margin: 5px;
         margin-top: 10px;
-        background-image: url('./assets/icon-star.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-star.png');
       }
     }
   }
@@ -334,7 +334,7 @@
       .stu-head {
         width: 28px;
         height: 28px; 
-        background-image: url('./assets/icon-head.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-head.png');
       }
       .stu-head-offline {
         width: 28px;
@@ -345,7 +345,7 @@
         -o-filter: grayscale(100%);  
         filter: grayscale(100%);  
         filter: gray; 
-        background-image: url('./assets/icon-head.png');
+        background-image: url('~@/components/middle-grouping/assets/icon-head.png');
       }
       .stu-name {
         font-size: 12px;
@@ -360,7 +360,7 @@
         .stu-star {
           width: 14px;
           height: 14px;
-          background-image: url('./assets/icon-star-light.png');
+          background-image: url('~@/components/middle-grouping/assets/icon-star-light.png');
         }
         .star-num {
           font-size: 13px;

@@ -148,7 +148,7 @@ body {
     content: ' ';
     width: 87px;
     height: 87px;
-    background: url('./assets/icon-video-placeholder.png') no-repeat;
+    background: url('~@/pages/device-detect/assets/icon-video-placeholder.png') no-repeat;
     background-size: contain;
     position: absolute;
   }
@@ -219,63 +219,63 @@ body {
 .camera-icon {
   width: 70px;
   height: 70px;
-  background: url('./assets/icon-camera-small.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-camera-small.png') no-repeat;
   background-size: contain;
 }
 
 .microphone-icon {
   width: 70px;
   height: 70px;
-  background: url('./assets/icon-microphone-small.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-microphone-small.png') no-repeat;
   background-size: contain;
 }
 
 .speaker-icon {
   width: 70px;
   height: 70px;
-  background: url('./assets/icon-speaker-small.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-speaker-small.png') no-repeat;
   background-size: contain;
 }
 
 .camera-icon-large {
   width: 135px;
   height: 135px;
-  background: url('./assets/icon-camera-large.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-camera-large.png') no-repeat;
   background-size: contain;
 }
 
 .microphone-icon-large {
   width: 135px;
   height: 135px;
-  background: url('./assets/icon-microphone-large.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-microphone-large.png') no-repeat;
   background-size: contain;
 }
 
 .microphone-icon-large-error {
   width: 135px;
   height: 135px;
-  background: url('./assets/icon-microphone-large-error.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-microphone-large-error.png') no-repeat;
   background-size: contain;
 }
 
 .camera-icon-test {
   width: 38px;
   height: 38px;
-  background: url('./assets/icon-small-camera.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-small-camera.png') no-repeat;
   background-size: contain;
 }
 
 .microphone-icon-test {
   width: 38px;
   height: 38px;
-  background: url('./assets/icon-small-microphone.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-small-microphone.png') no-repeat;
   background-size: contain;
 }
 
 .speaker-icon-test {
   width: 38px;
   height: 38px;
-  background: url('./assets/icon-small-speaker.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-small-speaker.png') no-repeat;
   background-size: contain;
 }
 
@@ -283,7 +283,7 @@ body {
   width: 14px;
   height: 14px;
   margin: 5px 8px 0 17px;
-  background: url('./assets/icon-caution.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-caution.png') no-repeat;
   background-size: contain;
 }
 
@@ -291,21 +291,21 @@ body {
   width: 14px;
   height: 14px;
   margin: 5px 8px 0 17px;
-  background: url('./assets/icon-success.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-success.png') no-repeat;
   background-size: contain;
 }
 
 // .video-placeholder-icon {
 //   width: 87px;
 //   height: 87px;
-//   background: url('./assets/icon-video-placeholder.png') no-repeat;
+//   background: url('~@/pages/device-detect/assets/icon-video-placeholder.png') no-repeat;
 //   background-size: contain;
 // }
 
 .speaker-icon-large {
   width: 135px;
   height: 135px;
-  background: url('./assets/icon-speaker-large.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon-speaker-large.png') no-repeat;
   background-size: contain;
 }
 
@@ -313,7 +313,7 @@ body {
   cursor: pointer;
   width: 50px;
   height: 50px;
-  background: url('./assets/icon_play.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon_play.png') no-repeat;
   background-size: contain;
 }
 
@@ -321,7 +321,7 @@ body {
   cursor: pointer;
   width: 50px;
   height: 50px;
-  background: url('./assets/icon_pause.png') no-repeat;
+  background: url('~@/pages/device-detect/assets/icon_pause.png') no-repeat;
   background-size: contain;
 }
 

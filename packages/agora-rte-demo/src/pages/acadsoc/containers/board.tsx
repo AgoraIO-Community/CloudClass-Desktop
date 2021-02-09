@@ -16,16 +16,16 @@ import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
 
-export const BoardView = observer(() => {
-  const {ready} = useBoardStore()
-
+export const BoardView = () => {
   return (
-    ready ? <EduWhiteBoard /> : <Progress title={t("whiteboard.loading")}></Progress>
+    <EduWhiteBoard />
   )
-})
+}
 
 export const EduWhiteBoard = observer(() => {
   const boardStore = useBoardStore()
+  const ready = boardStore.ready
+  const isLoading = boardStore.isLoading
   const boardRef = useRef<HTMLDivElement | null>(null)
   const mountToDOM = useCallback((dom: any) => {
     if (dom) {
@@ -51,9 +51,14 @@ export const EduWhiteBoard = observer(() => {
       width={'100%'}
       toolbarName={'Tools'}
     >
-      <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div>
+      {
+        isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
+      }
+      {
+        ready ? 
+        <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
+      }
     </EducationBoard>
-    // <Board style={{flex: '1'}} />
   )
 })
 

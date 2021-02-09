@@ -5,7 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const glob = require('glob-all');
 
 const config = require('dotenv').config().parsed
 
@@ -16,13 +15,14 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    edu_sdk: "./src/edu-sdk/index.ts",
+    edu_sdk: "./src/edu-sdk.ts",
   },
   mode: "production",
   output: {
     publicPath: '',
     filename: '[name].bundle.js',
     libraryTarget: "umd",
+    library: "AgoraEduSDK",
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {

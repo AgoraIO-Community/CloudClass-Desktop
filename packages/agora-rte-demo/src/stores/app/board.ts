@@ -1279,4 +1279,13 @@ export class BoardStore {
       return
     }
   }
+
+  @computed
+  get isLoading() {
+    if (!this.ready) {
+      return 'preparing'
+    }
+    // if (this.)
+    return ''
+  }
 }

@@ -3,13 +3,18 @@
   "private": true,
   "devDependencies": {
     "lerna": "3.22.1",
-    "npm-run-all": "4.1.5"
+    "npm-run-all": "4.1.5",
+    "typescript": "^4.1.3"
   },
   "description": "[English](README.zh.md)*",
   "version": "1.0.0",
   "dependencies": {},
   "scripts": {
     "dev": "run-s build:sdk build:ui-kit run:demo",
+    "pack": "run-s build:sdk build:ui-kit build:classroom:sdk",
+    "pack:electron:mac": "lerna exec --scope=agora-rte-demo npm run pack:mac",
+    "pack:electron:win": "lerna exec --scope=agora-rte-demo npm run pack:win",
+    "build:classroom:sdk": "lerna exec --scope=agora-rte-demo npm run pack:npm",
     "build:sdk": "lerna exec --scope=agora-rte-sdk npm run build",
     "build:ui-kit": "lerna exec --scope=agora-aclass-ui-kit npm run build",
     "run:demo": "lerna exec --scope=agora-rte-demo npm run dev",

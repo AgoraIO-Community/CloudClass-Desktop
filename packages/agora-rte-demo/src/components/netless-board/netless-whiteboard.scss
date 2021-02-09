@@ -71,7 +71,7 @@
           background-position: center;
           background-repeat: no-repeat;
           background-size: 18px;
-          background-image: url('./assets/icon-resource-menu-close.png');
+          background-image: url('~@/components/netless-board/assets/icon-resource-menu-close.png');
         }
       }
     }
@@ -111,7 +111,7 @@
             background-repeat: no-repeat;
           }
           .ppt-cover {
-            background-image: url('./assets/icon-ppt@2x.png');
+            background-image: url('~@/components/netless-board/assets/icon-ppt@2x.png');
           }
   
           .title {
@@ -122,7 +122,7 @@
           }
   
           .doc-cover {
-            background-image: url('./assets/icon-home@2x.png');
+            background-image: url('~@/components/netless-board/assets/icon-home@2x.png');
           }
   
           &.active{
@@ -177,7 +177,7 @@
       content: ' ';
       box-sizing: border-box;
       background-size: 20px;
-      background-image: url('./assets/icon-lock-board.png');
+      background-image: url('~@/components/netless-board/assets/icon-lock-board.png');
     }
   
     // .zoom-controls {
@@ -212,7 +212,7 @@
     //       background-position: center;
     //       background-repeat: no-repeat;
     //       background-size: 32px;
-    //       background-image: url('./assets/icon-open-folder@2x.png');
+    //       background-image: url('~@/components/netless-board/assets/icon-open-folder@2x.png');
     //     }
     //   }
     //   .zoom-hold {
@@ -356,7 +356,7 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: 32px;
-      background-image: url('./assets/icon-open-folder@2x.png');
+      background-image: url('~@/components/netless-board/assets/icon-open-folder@2x.png');
     }
   }
   .zoom-hold {
@@ -452,7 +452,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-first@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-first@2x.png');
   }
   .prev_page::after {
     width: 100%;
@@ -461,7 +461,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-prev@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-prev@2x.png');
   }
   .next_page::after {
     width: 100%;
@@ -470,7 +470,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-next@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-next@2x.png');
   }
   .last_page::after {
     width: 100%;
@@ -479,7 +479,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-end@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-end@2x.png');
   }
   .recording::after {
     width: 100%;
@@ -488,7 +488,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-record@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-record@2x.png');
   }
   .control-btn.control-quit_screen_sharing {
     cursor: pointer;
@@ -515,7 +515,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-share-white@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-share-white@2x.png');
   }
   .stop_recording::after {
     width: 100%;
@@ -524,7 +524,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-stop@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-stop@2x.png');
   }
   .screen_sharing::after {
     width: 100%;
@@ -533,7 +533,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     content: ' ';
-    background-image: url('./assets/icon-share@2x.png');
+    background-image: url('~@/components/netless-board/assets/icon-share@2x.png');
   }
 }
 
@@ -581,7 +581,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6@2x.png');
     }
 
     .pencil::after {
@@ -591,7 +591,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6-Copy@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6-Copy@2x.png');
     }
 
     .rectangle::after {
@@ -601,7 +601,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/tool-square@2x.png');
+      background-image: url('~@/components/netless-board/assets/tool-square@2x.png');
     }
 
     .ellipse::after {
@@ -611,7 +611,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/tool-circle@2x.png');
+      background-image: url('~@/components/netless-board/assets/tool-circle@2x.png');
     }
 
     .text::after {
@@ -621,7 +621,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6-Copy-6@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6-Copy-6@2x.png');
     }
 
     .eraser::after {
@@ -631,7 +631,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6-Copy-7@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6-Copy-7@2x.png');
     }
 
     .color_picker::after {
@@ -641,7 +641,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6-Copy-8@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6-Copy-8@2x.png');
     }
 
     .folder::after {
@@ -651,7 +651,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/whiteboard_file.png');
+      background-image: url('~@/components/netless-board/assets/whiteboard_file.png');
     }
 
     .add::after {
@@ -661,7 +661,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/Rectangle-6-Copy-9@2x.png');
+      background-image: url('~@/components/netless-board/assets/Rectangle-6-Copy-9@2x.png');
     }
 
     .upload::after {
@@ -671,7 +671,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/icon-upload-file@2x.png');
+      background-image: url('~@/components/netless-board/assets/icon-upload-file@2x.png');
     }
 
     .hand_tool::after {
@@ -681,7 +681,7 @@
       background-repeat: no-repeat;
       content: ' ';
       background-size: 20px;
-      background-image: url('./assets/icon-move.png');
+      background-image: url('~@/components/netless-board/assets/icon-move.png');
     }
 
     .extension_tool::after {
@@ -691,7 +691,7 @@
       background-repeat: no-repeat;
       content: ' ';
       background-size: contain;
-      background-image: url('./assets/icon-extension.png');
+      background-image: url('~@/components/netless-board/assets/icon-extension.png');
     }
 
     .lock_board::after {
@@ -701,7 +701,7 @@
       background-repeat: no-repeat;
       content: ' ';
       background-size: 20px;
-      background-image: url('./assets/icon-lock-board.png');
+      background-image: url('~@/components/netless-board/assets/icon-lock-board.png');
     }
 
     .folder::after {
@@ -711,7 +711,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('./assets/icon-folder@2x.png');
+      background-image: url('~@/components/netless-board/assets/icon-folder@2x.png');
     }
   }
   .upload-btn {
@@ -772,7 +772,7 @@
       background-size: 40px;
       width: 40px;
       margin: 20px;
-      background-image: url('./assets/media-upload-pic@2x.png');
+      background-image: url('~@/components/netless-board/assets/media-upload-pic@2x.png');
     }
 
     .upload-static-resource {
@@ -781,7 +781,7 @@
       background-size: 40px;
       width: 40px;
       margin: 20px;
-      background-image: url('./assets/media-covert-pic.png');
+      background-image: url('~@/components/netless-board/assets/media-covert-pic.png');
     }
 
     .upload-dynamic-resource {
@@ -790,7 +790,7 @@
       background-size: 40px;
       width: 40px;
       margin: 20px;
-      background-image: url('./assets/media-covert-dynamic.png');
+      background-image: url('~@/components/netless-board/assets/media-covert-dynamic.png');
     }
 
     input[type=file] {

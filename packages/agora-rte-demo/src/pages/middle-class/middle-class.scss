@@ -133,7 +133,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('../../assets/icon-hand@2x.png');
+      background-image: url('~@/assets/icon-hand@2x.png');
     }
     &.hands_up_end::after {
       width: 100%;
@@ -143,7 +143,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';
-      background-image: url('../../assets/icon-hand-disable.png');
+      background-image: url('~@/assets/icon-hand-disable.png');
     }
   }
 }

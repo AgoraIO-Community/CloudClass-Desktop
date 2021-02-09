@@ -27,7 +27,7 @@
 
   .play-cover {
     background-color:rgba(0,0,0,0.4);
-    background-image: url('./assets/icon-play@2x.png');
+    background-image: url('~@/assets/icon-play@2x.png');
     background-size: 64px;
     background-repeat: no-repeat;
     background-position: center;
@@ -60,7 +60,7 @@
       -webkit-tap-highlight-color: transparent;
       z-index: 99;
       .play-btn {
-        background-image: url('./assets/icon-play-big@2x.png');
+        background-image: url('~@/assets/icon-play-big@2x.png');
         background-size: 64px;
         background-repeat: no-repeat;
         background-position: center;
@@ -88,7 +88,7 @@
         background-repeat: no-repeat;
         top: 0;
         left: 0;
-        background-image: url("./assets/logo-agora@2x.png");
+        background-image: url("~@/assets/logo-agora@2x.png");
       }
       .video-menu {
         position: relative;
@@ -119,12 +119,12 @@
             background-position: center;
             background-repeat: no-repeat;
             box-sizing: border-box;
-            background-image: url('./assets/icon-play@2x.png');
+            background-image: url('~@/assets/icon-play@2x.png');
           }
           .paused {
             background-size: 24px;
             background-repeat: no-repeat;
-            background-image: url('./assets/icon-pause@2x.png');
+            background-image: url('~@/assets/icon-pause@2x.png');
           }
         }
 
@@ -145,7 +145,7 @@
       }
 
       .icon-paused {
-        background-image: url('./assets/icon-pause@2x.png');
+        background-image: url('~@/assets/icon-pause@2x.png');
       }
     }
   }
@@ -155,7 +155,7 @@
       height: 280px;
       width: 280px;
       background-color: #DBE2E5;
-      background-image: url("./assets/pic-teacher.png");
+      background-image: url("~@/assets/pic-teacher.png");
       background-position: center;
       background-size: 155.34px;
       background-repeat: no-repeat;
@@ -173,7 +173,7 @@
       width: 64px;
       height: 64px;
       background-repeat: no-repeat;
-      background-image: url("./assets/icon-play@2x.png");
+      background-image: url("~@/assets/icon-play@2x.png");
     }
 
     .chat-holder {
@@ -189,7 +189,7 @@
         background-position: center;
         background-repeat: no-repeat;
         content: ' ';
-        background-image: url("./assets/pic-message@2x.png");
+        background-image: url("~@/assets/pic-message@2x.png");
         display: block;
         position: absolute;
         top: 25%;
