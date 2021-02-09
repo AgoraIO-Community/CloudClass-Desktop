@@ -11,7 +11,7 @@ export type ChatMessage = {
   id: string,
   userName: string,
   sendTime: string,
-  messagesId:number|string,
+  messagesId: number | string,
   showTranslate: boolean,
   chatText: string,
   isSender: boolean,
@@ -60,7 +60,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     onClickBannedButton,
     titleView,
     minHeight,
-    onClickMinimize = () => {}
+    onClickMinimize = () => { }
   } = props
   const bottomDistance = borderWidth
   const useStyles = makeStyles((theme: Theme) => ({
@@ -70,7 +70,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderStyle: 'solid',
       overflowY: 'scroll',
       flex: 1,
-      maxHeight: minHeight ||'200px',
+      maxHeight: minHeight || '200px',
       minHeight: minHeight || '200px',
       borderWidth: '0px',
       padding: '10px',
@@ -120,9 +120,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
     },
     toolButton: {
       display: 'flex',
-      color: '#fff',
+      color: '#4992CF',
       flexWrap: 'nowrap',
       alignItems: 'center',
+      marginRight:'14px'
     },
     sendButton: {
       cursor: 'pointer',
@@ -147,13 +148,13 @@ export const ChatBoard = (props: ChatBoardProps) => {
       marginRight: '5px',
       width: '16px'
     },
-    minimize:{
-      width:'24px',
-      height:'24px',
-      background:'#fff3',
-      borderRadius:'6px',
-      display:'flex',
-      justifyContent:'center',
+    minimize: {
+      width: '24px',
+      height: '24px',
+      background: '#fff3',
+      borderRadius: '6px',
+      display: 'flex',
+      justifyContent: 'center',
       alignItems: 'center',
     },
     strip: {
@@ -162,9 +163,9 @@ export const ChatBoard = (props: ChatBoardProps) => {
       background: '#FFFFFF',
       borderRadius: '2px',
     },
-    titleView:{
-      display:'flex',
-      flexDirection:'row',
+    titleView: {
+      display: 'flex',
+      flexDirection: 'row',
       alignItems: 'center'
     }
   }))
@@ -207,7 +208,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       {titleView ||
         <div className={classes.titleView}>
           <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />chat</div>
-          <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip}/></div>
+          <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
         </div>}
       <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div>
@@ -218,10 +219,9 @@ export const ChatBoard = (props: ChatBoardProps) => {
               time={item.sendTime}
               isSender={item.isSender}
               canTranslate={item.showTranslate || true}
-              bubbleStyle={{ backgroundColor: '#CBCDFF', color: '#fff' }}
               key={`${item.userName}_${index}`}
               onClickTranslate={item.onClickTranslate}
-              onClickFailButton={item.onClickFailButton ? item.onClickFailButton : () => { console.log(111) }}
+              onClickFailButton={item.onClickFailButton ?item.onClickFailButton : () => {}}
               translateText={item.translateText}
               status={item.status || 'success'}
             />
