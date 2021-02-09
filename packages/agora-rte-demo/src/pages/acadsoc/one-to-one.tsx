@@ -42,10 +42,6 @@ export const AcadsocOneToOne = observer(() => {
         <div className={styles.rightContainer}>
           <TeacherVideo />
           <StudentVideo />
-          <button onClick={async () => {
-            let content = await acadsocStore.getTranslationContent('你好呀 世界')
-            console.log('-----', content)
-          }}>翻译</button>
           {
             acadsocStore.showTrophyAnimation ? 
             <Trophy></Trophy>

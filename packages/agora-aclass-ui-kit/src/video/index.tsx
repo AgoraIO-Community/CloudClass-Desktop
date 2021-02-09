@@ -299,6 +299,7 @@ export interface VideoFrameProps {
   resizable: boolean,
   videoState: boolean,
   audioState: boolean,
+  disableTrophy: boolean,
   trophyNumber: number,
   role: PlaceHolderRole,
   children: any,
@@ -337,7 +338,7 @@ const VideoFrame = (props: VideoFrameProps) => {
       {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
-        <TrophyBox disable={props.disableButton} iconUrl={TrophyIcon} number={props.trophyNumber} onClick={onClickTrophy}/>
+        <TrophyBox disable={props.disableTrophy} iconUrl={TrophyIcon} number={props.trophyNumber} onClick={onClickTrophy}/>
       </Box> : null}
       <ParticipantIdentityCard
         nickname={props.nickname}

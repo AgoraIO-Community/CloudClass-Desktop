@@ -53,6 +53,7 @@ export const TeacherVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      disableTrophy={false}
       trophyNumber={0}
       visibleTrophy={false}
       role={"teacher"}
@@ -100,8 +101,7 @@ export const StudentVideo = observer(() => {
       }
     }
     if (type.sourceType === 'trophy') {
-      acadsocStore.sendReward(uid, 1)
-      acadsocStore.trophyNumber = acadsocStore.trophyNumber + 1
+      await acadsocStore.sendReward(uid, 1)
       acadsocStore.showTrophyAnimation = true
     }
   }, [userStream.video, userStream.audio, isLocal])
@@ -115,6 +115,7 @@ export const StudentVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={acadsocStore.trophyNumber}
       visibleTrophy={true}
       role={"student"}

@@ -83,7 +83,6 @@ export const ChatView = observer(() => {
     setMessages(newMessage.concat(chatMessage))
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
-
   }
   useEffect(() => {
     isFetchHistory && fetchMessage()

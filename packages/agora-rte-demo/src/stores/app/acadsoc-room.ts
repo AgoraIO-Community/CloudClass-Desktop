@@ -118,6 +118,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   showTranslate: boolean = false
 
   @observable
+  disableTrophy: boolean = false
+
+  @observable
   translateText?: string = ''
 
   @observable
@@ -257,13 +260,19 @@ export class AcadsocRoomStore extends SimpleInterval {
   // 奖杯
   @action
   async sendReward(userUuid: string, reward: number) {
-    return await eduSDKApi.sendRewards({
-      roomUuid: this.roomInfo.roomUuid,
-      rewards: [{
-        userUuid: userUuid,
-        changeReward: reward,
-      }]
-    })
+    try {
+      return await eduSDKApi.sendRewards({
+        roomUuid: this.roomInfo.roomUuid,
+        rewards: [{
+          userUuid: userUuid,
+          changeReward: reward,
+        }]
+      })
+    } catch (err) {
+      this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
+      const error = new GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+    }
   }
 
   @computed
@@ -648,23 +657,12 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
-        //   {
-        //     "action": 1,
-        //     "changeProperties":{
-        //          "students.userUuid1.reward" : 10, //奖励变化后总值
-        //          "students.userUuid2.reward" : 20 //奖励变化后总值
-        //      },
-        //      "cause":{
-        //          "cmd": 1101,
-        //          "data":{                //本次变化值
-        //              "userUuid1" : 2,   
-        //              "userUuid2" : 4
-        //          }
-        //      }
-        //  }
-          this.roomProperties = classroom.roomProperties
+          // this.roomProperties = classroom.roomProperties
+          if(this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
+            this.disableTrophy = true
+          }
           const students = get(classroom, 'roomProperties.students')
-          console.log('------', students)
+          this.trophyNumber = students && students[this.roomInfo.userUuid].reward
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {

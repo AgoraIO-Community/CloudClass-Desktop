@@ -15,8 +15,8 @@ export const Trophy = observer(() => {
     setTimeout(() => {
       if(audioRef.current) {
         audioRef.current.pause()
-        acadsocStore.showTrophyAnimation = false
         audioRef.current.currentTime = 0
+        acadsocStore.showTrophyAnimation = false
       }
     }, 1500)
   }, [audioRef.current])
