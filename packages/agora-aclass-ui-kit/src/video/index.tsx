@@ -337,7 +337,7 @@ const VideoFrame = (props: VideoFrameProps) => {
       {props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
-        <TrophyBox disable={props.disableButton} iconUrl={TrophyIcon} number={5} onClick={onClickTrophy}/>
+        <TrophyBox disable={props.disableButton} iconUrl={TrophyIcon} number={props.trophyNumber} onClick={onClickTrophy}/>
       </Box> : null}
       <ParticipantIdentityCard
         nickname={props.nickname}

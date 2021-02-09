@@ -120,6 +120,12 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   translateText?: string = ''
 
+  @observable
+  showTrophyAnimation: boolean = false
+
+  @observable
+  trophyNumber: number = 0
+
   roomApi!: RoomApi;
 
   appStore!: AppStore;

@@ -42,13 +42,14 @@ export const ChatView = observer(() => {
         onClickFailButton:resendMessage
       }
     })
+    console.log('*****message', message)
     return message
   }
   const onClickTranslate = async (content: string) => {
     let translateContent = await acadsocStore.getTranslationContent(content)
-    // acadsocStore.translateText = translateContent
-    // acadsocStore.showTranslate = true
-    return translateContent
+    acadsocStore.translateText = translateContent
+    acadsocStore.showTranslate = true
+    // return translateContent
   }
   const fetchMessage = async () => {
     setIsFetchHistory(false)

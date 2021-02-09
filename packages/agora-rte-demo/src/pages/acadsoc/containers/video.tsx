@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
 import {Video} from 'agora-aclass-ui-kit'
-import {useSceneStore} from '@/hooks'
+import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 
@@ -74,6 +74,7 @@ export const TeacherVideo = observer(() => {
 
 export const StudentVideo = observer(() => {
   const sceneStore = useSceneStore()
+  const acadsocStore = useAcadsocRoomStore()
 
   const userStream = sceneStore.studentStreams[0] as VideoMediaStream
   const roomInfo = sceneStore.roomInfo
@@ -98,6 +99,11 @@ export const StudentVideo = observer(() => {
         await sceneStore.unmuteAudio(uid, isLocal)
       }
     }
+    if (type.sourceType === 'trophy') {
+      acadsocStore.sendReward(uid, 1)
+      acadsocStore.trophyNumber = acadsocStore.trophyNumber + 1
+      acadsocStore.showTrophyAnimation = true
+    }
   }, [userStream.video, userStream.audio, isLocal])
 
   const renderer = userStream.renderer
@@ -109,7 +115,7 @@ export const StudentVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
-      trophyNumber={10}
+      trophyNumber={acadsocStore.trophyNumber}
       visibleTrophy={true}
       role={"student"}
       videoState={userStream.video}

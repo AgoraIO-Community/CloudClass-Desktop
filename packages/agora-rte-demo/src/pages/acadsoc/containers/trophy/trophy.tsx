@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef} from 'react'
 import { observer } from 'mobx-react'
+import {useAcadsocRoomStore} from '@/hooks'
 import './trophy.scss';
 
-export const Trophy = observer((hiddenTrophy: any) => {
+export const Trophy = observer(() => {
+
+  const acadsocStore = useAcadsocRoomStore()
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -12,7 +15,7 @@ export const Trophy = observer((hiddenTrophy: any) => {
     setTimeout(() => {
       if(audioRef.current) {
         audioRef.current.pause()
-        hiddenTrophy()
+        acadsocStore.showTrophyAnimation = false
         audioRef.current.currentTime = 0
       }
     }, 1500)

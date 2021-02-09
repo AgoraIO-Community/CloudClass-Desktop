@@ -28,8 +28,6 @@ export const AcadsocOneToOne = observer(() => {
     acadsocStore.join()
   }, [])
 
-  const [showTrophy, setShowTrophy] = useState(false)
-
   return (
     <div className={styles.container}>
       <>
@@ -44,19 +42,12 @@ export const AcadsocOneToOne = observer(() => {
         <div className={styles.rightContainer}>
           <TeacherVideo />
           <StudentVideo />
-          {/* <button onClick={() => {
-            acadsocStore.sendReward('acds', 2)
-            setShowTrophy(true)
-            setTimeout(() => {
-              setShowTrophy(false)
-            }, 2000)
-          }}>奖励</button>
           <button onClick={async () => {
             let content = await acadsocStore.getTranslationContent('你好呀 世界')
             console.log('-----', content)
-          }}>翻译</button> */}
+          }}>翻译</button>
           {
-            showTrophy ? 
+            acadsocStore.showTrophyAnimation ? 
             <Trophy></Trophy>
             : null
           }
