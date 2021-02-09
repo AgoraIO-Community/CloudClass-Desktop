@@ -24,3 +24,5 @@ env.local
 lerna-debug.log
 ./packages/agora-log-sdk
 packages/agora-log-sdk
+*.zip
+*.install.md
