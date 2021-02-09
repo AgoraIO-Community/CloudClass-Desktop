@@ -179,10 +179,10 @@ export class PretestStore {
   @computed
   get cameraList(): any[] {
     return this._cameraList
-      .concat([{
-        deviceId: 'unknown',
-        label: '禁用',
-      }])
+      // .concat([{
+      //   deviceId: 'unknown',
+      //   label: '禁用',
+      // }])
   }
 
   @observable
@@ -191,10 +191,10 @@ export class PretestStore {
   @computed
   get microphoneList(): any[] {
     return this._microphoneList
-      .concat([{
-        deviceId: 'unknown',
-        label: '禁用',
-      }])
+      // .concat([{
+      //   deviceId: 'unknown',
+      //   label: '禁用',
+      // }])
   }
 
   @observable
@@ -251,6 +251,10 @@ export class PretestStore {
 
   @action
   async changeTestCamera(deviceId: string) {
+    if (this.mediaService.isElectron) {
+      await this.changeElectronTestCamera(deviceId)
+      return
+    }
     if (deviceId === 'unknown') {
       await this.mediaService.closeTestCamera()
       this._cameraRenderer = undefined
@@ -300,6 +304,10 @@ export class PretestStore {
 
   @action
   async changeTestMicrophone(deviceId: string) {
+    if (this.mediaService.isElectron) {
+      await this.changeElectronTestMicrophone(deviceId)
+      return
+    }
     if (deviceId === 'unknown') {
       await this.mediaService.closeTestMicrophone()
       if (this.isWeb) {
@@ -316,8 +324,129 @@ export class PretestStore {
       this.appStore.deviceInfo.microphoneName = this.microphoneLabel
       this._microphoneId = this.microphoneId
     }
-
   }
+
+  @action
+  async changeElectronTestCamera(deviceId: string) {
+    if (this.mediaService.isElectron) {
+      await this.mediaService.changeCamera(deviceId)
+      this._cameraRenderer = this.mediaService.cameraRenderer
+      this.cameraLabel = this.mediaService.getTestCameraLabel()
+      this._cameraId = this.cameraId
+      this.appStore.deviceInfo.cameraName = this.cameraLabel
+    }
+  }
+
+  @action
+  async changeElectronTestMicrophone(deviceId: string) {
+    if (this.mediaService.isElectron) {
+      await this.mediaService.changeMicrophone(deviceId)
+      this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
+      this._microphoneId = this.microphoneId
+      this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+    }
+  }
+
+  @action
+  async changeElectronTestSpeaker(deviceId: string) {
+    console.log('device id', deviceId)
+  }
+
+
+  /// live room camera operator
+  @action
+  async openCamera() {
+    const deviceId = this._cameraId
+    await this.mediaService.openCamera({deviceId})
+    this._cameraRenderer = this.mediaService.cameraRenderer
+    this.cameraLabel = this.mediaService.getCameraLabel()
+    this._cameraId = this.cameraId
+    this.appStore.deviceInfo.cameraName = this.cameraLabel
+  }
+
+  @action
+  closeCamera() {
+    this.mediaService.closeCamera()
+    this.resetCameraTrack()
+  }
+
+  @action
+  async changeCamera(deviceId: string) {
+    if (deviceId === 'unknown') {
+      await this.mediaService.closeCamera()
+      this._cameraRenderer = undefined
+      this._cameraId = deviceId
+      this.cameraLabel = ''
+    } else {
+      if (this.cameraRenderer) {
+        await this.mediaService.changeCamera(deviceId)
+      } else {
+        await this.mediaService.openCamera({deviceId})
+      }
+      this._cameraRenderer = this.mediaService.cameraRenderer
+      this.cameraLabel = this.mediaService.getCameraLabel()
+      this._cameraId = this.cameraId
+      this.appStore.deviceInfo.cameraName = this.cameraLabel
+    }
+  }
+
+  @action
+  async openMicrophone() {
+    const deviceId = this._microphoneId
+    await this.mediaService.openMicrophone({deviceId})
+    if (this.isWeb) {
+      this._microphoneTrack = this.web.microphoneTrack
+    }
+    this.microphoneLabel = this.mediaService.getMicrophoneLabel()
+    this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+    this._microphoneId = this.microphoneId
+    this.mediaService.on('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
+      runInAction(() => {
+        if (this.isElectron) {
+          this.totalVolume = Number((totalVolume / 255).toFixed(3))
+        } else {
+          this.totalVolume = totalVolume;
+        }
+      })
+    })
+  }
+
+  @action
+  closeMicrophone() {
+    this.mediaService.closeTestMicrophone()
+    this.resetMicrophoneTrack()
+    this.mediaService.off('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
+    })
+  }
+
+  @action
+  async changeTestSpeaker(deviceId: string) {
+    if (this.mediaService.isElectron) {
+      await this.changeElectronTestSpeaker(deviceId)
+      return
+    }
+  }
+
+  @action
+  async changeMicrophone(deviceId: string) {
+    if (deviceId === 'unknown') {
+      await this.mediaService.closeMicrophone()
+      if (this.isWeb) {
+        this._microphoneTrack = undefined
+      }
+      this._microphoneId = deviceId
+      this.microphoneLabel = deviceId
+    } else {
+      await this.mediaService.changeMicrophone(deviceId)
+      if (this.isWeb) {
+        this._microphoneTrack = this.web.microphoneTrack
+      }
+      this.microphoneLabel = this.mediaService.getMicrophoneLabel()
+      this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+      this._microphoneId = this.microphoneId
+    }
+  }
+  /// live room camera operator
 
   @action
   async changeTestResolution(resolution: any) {

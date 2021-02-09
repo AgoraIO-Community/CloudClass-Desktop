@@ -1266,4 +1266,17 @@ export class BoardStore {
   hideExtension() {
     this.showExtension = false
   }
+
+  @action
+  zoomBoard(type: string) {
+    // 白板全屏
+    if (type === 'fullscreen') {
+      return
+    }
+
+    // 白板退出全屏
+    if (type === 'exitFullscreen') {
+      return
+    }
+  }
 }

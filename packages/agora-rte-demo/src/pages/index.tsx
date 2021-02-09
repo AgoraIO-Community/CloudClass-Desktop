@@ -25,8 +25,8 @@ export type AppRouteComponent = {
 export const routesMap: Record<string, AppRouteComponent> = {
   'setting': {
     path: '/setting',
-    component: () => <DeviceDetectPage />
-    // component: () => <Setting />
+    // component: () => <DeviceDetectPage />
+    component: () => <Setting />
   },
   '1v1': {
     path: '/classroom/one-to-one',

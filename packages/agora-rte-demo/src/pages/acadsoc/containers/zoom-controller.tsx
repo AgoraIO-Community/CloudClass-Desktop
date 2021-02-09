@@ -1,17 +1,16 @@
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
-import { t } from '@/i18n';
-import { BoardClient } from './board-client';
+import { ControlMenu, ControlMenuProps } from 'agora-aclass-ui-kit';
 
-export type ScaleControllerProps = {
-    lockBoard: boolean
-    zoomScale: number
-    zoomChange: (scale: number) => void
-    onClick: () => void
-    onClickBoardLock: () => void
+export interface ZoomControllerProps extends ControlMenuProps {
+  lockBoard?: boolean,
+  zoomScale: number,
+  zoomChange: (scale: number) => void,
+  changeFooterMenu: (type: string) => void,
+  onFullScreen: () => any,
+  onExitFullScreen: () => any,
 }
 
-export default class ScaleController extends React.Component<ScaleControllerProps, {}> {
+export class ZoomController extends React.Component<ZoomControllerProps, {}> {
 
     private static readonly syncDuration: number = 200;
 
@@ -44,7 +43,7 @@ export default class ScaleController extends React.Component<ScaleControllerProp
     private tempRuleIndex?: number;
     private syncRuleIndexTimer: any = null;
 
-    public constructor(props: ScaleControllerProps) {
+    public constructor(props: ZoomControllerProps) {
         super(props);
     }
 
@@ -57,11 +56,11 @@ export default class ScaleController extends React.Component<ScaleControllerProp
             this.syncRuleIndexTimer = null;
             this.tempRuleIndex = undefined;
 
-        }, ScaleController.syncDuration);
+        }, ZoomController.syncDuration);
     }
 
     private static readRuleIndexByScale(scale: number): number {
-        const { dividingRule } = ScaleController;
+        const { dividingRule } = ZoomController;
 
         if (scale < dividingRule[0]) {
             return 0;
@@ -82,7 +81,7 @@ export default class ScaleController extends React.Component<ScaleControllerProp
     }
 
     private moveTo100(): void {
-        this.tempRuleIndex = ScaleController.readRuleIndexByScale(1);
+        this.tempRuleIndex = ZoomController.readRuleIndexByScale(1);
         this.delaySyncRuleIndex();
         this.props.zoomChange(1);
     }
@@ -91,17 +90,17 @@ export default class ScaleController extends React.Component<ScaleControllerProp
     private moveRuleIndex(deltaIndex: number): void {
 
         if (this.tempRuleIndex === undefined) {
-            this.tempRuleIndex = ScaleController.readRuleIndexByScale(this.props.zoomScale);
+            this.tempRuleIndex = ZoomController.readRuleIndexByScale(this.props.zoomScale);
         }
         this.tempRuleIndex += deltaIndex;
 
-        if (this.tempRuleIndex > ScaleController.dividingRule.length - 1) {
-            this.tempRuleIndex = ScaleController.dividingRule.length - 1;
+        if (this.tempRuleIndex > ZoomController.dividingRule.length - 1) {
+            this.tempRuleIndex = ZoomController.dividingRule.length - 1;
 
         } else if (this.tempRuleIndex < 0) {
             this.tempRuleIndex = 0;
         }
-        const targetScale = ScaleController.dividingRule[this.tempRuleIndex];
+        const targetScale = ZoomController.dividingRule[this.tempRuleIndex];
 
         this.delaySyncRuleIndex();
         this.props.zoomChange(targetScale);
@@ -109,21 +108,31 @@ export default class ScaleController extends React.Component<ScaleControllerProp
 
     public render(): React.ReactNode {
         return (
-            <div className="tools-container">
-                <Tooltip title={t("zoom_control.folder")} placement="top">
-                    <div className="zoom-icon" onClick={() => this.props.onClick()}>
-                    </div>
-                </Tooltip>
-                <div className="zoom-hold"></div>
-                <div className="zoom-size">{Math.ceil(this.props.zoomScale * 100)} %</div>
-                <div className="zoom-items">
-                    <div className="item zoom-in" onClick={() => this.moveRuleIndex(-1)}>-</div>
-                    <div className="item zoom-out" onClick={() => this.moveRuleIndex(+1)}>+</div>
-                </div>
-                <Tooltip title={!this.props.lockBoard ? t("zoom_control.lock_board") : t("zoom_control.unlock_board")} placement="top">
-                    <div className="lock-board" onClick={() => this.props.onClickBoardLock()}></div>
-                </Tooltip>
-            </div>
+          <ControlMenu
+            style={{
+              ...this.props.style
+            }}
+            showPaginator={this.props.showPaginator}
+            currentPage={this.props.currentPage}
+            totalPage={this.props.totalPage}
+            showScale={this.props.showScale}
+            scale={this.props.scale}
+            showControlScreen={this.props.showControlScreen}
+            isFullScreen={this.props.isFullScreen}
+            onClick={(type: string) => {
+              if ('min' === type) {
+                this.moveRuleIndex(-1)
+                return
+              }
+              if ('plus' === type) {
+                this.moveRuleIndex(+1)
+                return
+              }
+              if (['prev', 'next'].includes(type)) {
+                this.props.changeFooterMenu(`${type}_page`)
+              }
+            }}
+          />
         );
     }
 }

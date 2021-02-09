@@ -125,6 +125,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       alignItems: 'center',
     },
     sendButton: {
+      cursor: 'pointer',
       background: sendButtonBackColor,
       borderRadius: '13px',
       color: '#fff',

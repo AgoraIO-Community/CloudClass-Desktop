@@ -5,6 +5,7 @@ import {Board, ControlMenu, PanelBackground, Tool, FileUploader} from '.'
 import { CustomizeSlider } from './panel/slider';
 import { ColorPalette } from './panel/palette';
 import { IToolItem } from './tool';
+import bgSvg from './assets/rectangle.svg';
 
 export default {
   title: '白板'
@@ -42,7 +43,11 @@ export const StrokePopover = () => {
   }
 
   return (
-    <PanelBackground style={{width: 150}}>
+    <PanelBackground style={{
+      width: 150,
+      background: `url(${bgSvg}) no-repeat`,
+      backgroundPosition: 'center'
+    }}>
       <>
         <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
         <ColorPalette

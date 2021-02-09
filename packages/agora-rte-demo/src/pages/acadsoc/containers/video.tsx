@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import {Video} from 'agora-aclass-ui-kit'
 import {useSceneStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
-import { UserRenderer } from 'agora-rte-sdk'
+import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 
 export interface VideoMediaStream {
   streamUuid: string,
@@ -21,15 +21,13 @@ export interface VideoMediaStream {
 export const TeacherVideo = observer(() => {
   const sceneStore = useSceneStore()
 
-  const userStream = sceneStore.teacherStream as VideoMediaStream
-
-  console.log(" ## user stream teacher ", userStream)
-  
+  const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
+  const roomInfo = sceneStore.roomInfo
+  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
-    console.log(" user stream teacher ", JSON.stringify(userStream))
     if (type.sourceType === 'video') {
       if (type.enabled) {
         await sceneStore.muteVideo(uid, isLocal)
@@ -51,20 +49,20 @@ export const TeacherVideo = observer(() => {
   return (
     <Video
       className={""}
-      uid={+userStream.streamUuid}
+      uid={`${userStream.userUuid}`}
       nickname={userStream.account}
       minimal={true}
       resizable={false}
       trophyNumber={0}
       visibleTrophy={false}
       role={"teacher"}
-      disableButton={!isLocal}
+      disableButton={Boolean(disableButton)}
       videoState={userStream.video}
       audioState={userStream.audio}
       onClick={handleClick}
       style={{
-        width: '320px',
-        maxHeight: '225px',
+        width: '268px',
+        height: '194px'
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
@@ -78,12 +76,14 @@ export const StudentVideo = observer(() => {
   const sceneStore = useSceneStore()
 
   const userStream = sceneStore.studentStreams[0] as VideoMediaStream
+  const roomInfo = sceneStore.roomInfo
   
   const isLocal = userStream.local
 
+  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
-    console.log(" user stream student ", JSON.stringify(userStream))
     if (type.sourceType === 'video') {
       if (type.enabled) {
         await sceneStore.muteVideo(uid, isLocal)
@@ -104,22 +104,22 @@ export const StudentVideo = observer(() => {
 
   return (
     <Video
+      uid={`${userStream.userUuid}`}
       className={""}
-      uid={+userStream.streamUuid}
       nickname={userStream.account}
       minimal={true}
       resizable={false}
-      trophyNumber={0}
-      visibleTrophy={false}
+      trophyNumber={10}
+      visibleTrophy={true}
       role={"student"}
       videoState={userStream.video}
       audioState={userStream.audio}
       onClick={handleClick}
       style={{
-        width: '320px',
-        maxHeight: '225px'
+        width: '268px',
+        height: '194px'
       }}
-      disableButton={!isLocal}
+      disableButton={Boolean(disableButton)}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >

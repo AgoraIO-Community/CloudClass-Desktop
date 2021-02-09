@@ -7,6 +7,9 @@ const zhCN: any = {
     "hands_up": "举手",
     "hands_up_timeout": "举手已超时",
   },
+  'setting': {
+    'title': '设置'
+  },
   "invitation": {
     "accept_success": "接受举手成功",
     "accept_failed": "接受举手失败",

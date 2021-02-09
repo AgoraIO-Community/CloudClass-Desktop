@@ -13,6 +13,8 @@ import {
 import {t} from '@/i18n'
 import { useBoardStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
+import { ZoomController } from './zoom-controller'
+import { noop } from 'lodash'
 
 export const BoardView = observer(() => {
   const {ready} = useBoardStore()
@@ -36,10 +38,10 @@ export const EduWhiteBoard = observer(() => {
   return (
     <EducationBoard
       showPaginator={true}
-      currentPage={1}
-      totalPage={100}
+      currentPage={boardStore.currentPage}
+      totalPage={boardStore.totalPage}
       showScale={true}
-      scale={100}
+      scale={Math.ceil(boardStore.scale * 100)}
       toolY={20}
       toolX={5}
       controlY={10}
@@ -68,7 +70,7 @@ export const ColorPopover = observer(() => {
   }, [boardStore.boardClient])
 
   return (
-    <PanelBackground style={{width: 150}}>
+    <PanelBackground>
       <ColorPalette
         currentColor={currentColor}
         onClick={onClick}
@@ -87,7 +89,7 @@ export const UploadFilePopover = (props: any) => {
   }
 
   return (
-    <PanelBackground style={{width: 150}}>
+    <PanelBackground>
       <FileUploader handleUploadFile={handleUploadFile}/>
     </PanelBackground>
   )
@@ -112,7 +114,7 @@ export const StrokePopover = observer(() => {
   }, [boardStore.boardClient])
 
   return (
-    <PanelBackground style={{width: 150}}>
+    <PanelBackground>
       <>
         <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
         <ColorPalette
@@ -178,12 +180,7 @@ const toolItems: IToolItem[] = [
 ]
 
 export const EducationBoard = observer((props: any) => {
-
   const boardStore = useBoardStore()
-
-  const onClickPaginator = (type: string) => {
-    console.log(`click paginator ${type}`)
-  }
 
   const onClickTool = useCallback((type: string) => {
     if (!boardStore.boardClient) {
@@ -221,43 +218,59 @@ export const EducationBoard = observer((props: any) => {
   }, [boardStore.boardClient])
   
   return (
-      <Board style={{
-        width: props.width,
-        height: props.height,
-        position: 'relative',
-        boxSizing: 'border-box'
-      }}>
-        <ControlMenu
-          style={{
-            position: 'absolute',
-            bottom: props.controlY,
-            right: props.controlX,
-            zIndex: 10,
-          }}
-          showPaginator={props.showPaginator}
-          currentPage={props.currentPage}
-          totalPage={props.totalPage}
-          showScale={props.showScale}
-          scale={props.scale}
-          showControlScreen={props.showControlScreen}
-          isFullScreen={props.isFullScreen}
-          onClick={onClickPaginator}
-        />
-        <Tool
-          strokeComponent={<StrokePopover />}
-          colorComponent={<ColorPopover />}
-          uploadComponent={<UploadFilePopover />}
-          headerTitle={props.toolbarName}
-          style={{
-            top: props.toolY,
-            left: props.toolX,
-            zIndex: 10,
-          }}
-          items={
-            toolItems
-          }
-         onClick={onClickTool} />
-         {props.children ? props.children : null}
-      </Board>
+    <Board style={{
+      width: props.width,
+      height: props.height,
+      position: 'relative',
+      boxSizing: 'border-box',
+      background: 'white'
+    }}>
+      <ZoomController
+        style={{
+          position: 'absolute',
+          bottom: props.controlY,
+          right: props.controlX,
+          zIndex: 10,
+        }}
+        showPaginator={props.showPaginator}
+        currentPage={props.currentPage}
+        totalPage={props.totalPage}
+        showScale={props.showScale}
+        scale={props.scale}
+        showControlScreen={props.showControlScreen}
+        isFullScreen={props.isFullScreen}
+        onClick={noop}
+        zoomScale={boardStore.scale}
+        zoomChange={(scale: number) => {
+          console.log(" zoomChange scale ", scale)
+          boardStore.updateScale(scale)
+        }}
+        changeFooterMenu={(type: string) => {
+          boardStore.changeFooterMenu(type)
+        }}
+        onFullScreen={() => {
+          boardStore.zoomBoard('fullscreen')
+        }}
+        onExitFullScreen={() => {
+          boardStore.zoomBoard('exitFullscreen')
+        }}
+      />
+      <Tool
+        strokeComponent={<StrokePopover />}
+        colorComponent={<ColorPopover />}
+        uploadComponent={<UploadFilePopover />}
+        headerTitle={props.toolbarName}
+        style={{
+          top: props.toolY,
+          left: props.toolX,
+          zIndex: 10,
+          position: 'absolute'
+        }}
+        items={
+          toolItems
+        }
+        onClick={onClickTool} />
+        {props.children ? props.children : null}
+    </Board>
   )
 })

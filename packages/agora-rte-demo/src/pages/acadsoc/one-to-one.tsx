@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom'
 import { Loading } from '@/components/loading'
 import { AutoplayToast } from '@/components/autoplay-toast'
 import {Trophy} from './containers/trophy/trophy'
+import { Setting } from '@/pages/acadsoc/containers/setting';
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -62,6 +63,7 @@ export const AcadsocOneToOne = observer(() => {
           <ChatView />
         </div>
       </div>
+      <Setting />
     </div>
   )
 })

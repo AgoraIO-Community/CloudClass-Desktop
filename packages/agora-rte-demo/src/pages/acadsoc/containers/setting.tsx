@@ -1,13 +1,14 @@
-// import classes from '*.module.css'
 import { Select, InputLabel, MenuItem } from '@material-ui/core'
 import { makeStyles, Theme, withStyles } from '@material-ui/core/styles'
-import { AudioPlayer, AudioVolume, DeviceManagerDialog, RowItem, VolumeDirectionEnum, VolumeSlider } from 'agora-aclass-ui-kit'
+import { AudioPlayer, AudioVolume, DeviceManagerDialog, DevicePicker, RowItem, VolumeDirectionEnum, VolumeSlider } from 'agora-aclass-ui-kit'
 import VideoDetectPng from '../assets/camera-detect.png'
 import SpeakerPng from '../assets/speaker.png'
 import MicPng from '../assets/mic.png'
 import { observer } from 'mobx-react'
-import React, { useEffect } from 'react'
-import { useDeviceStore, usePretestStore } from '@/hooks'
+import React, { useEffect, useState } from 'react'
+import { useDeviceStore, usePretestStore, useUIStore } from '@/hooks'
+import { RendererPlayer } from '@/components/media-player'
+import { t } from '@/i18n'
 
 export type DeviceList = {
   deviceId: string,
@@ -35,8 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    // paddingLeft: 20,
-    // paddingRight: 20,
     borderRadius: 30,
     background: '#DEF4FF',
     padding: 25,
@@ -65,7 +64,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   select: {
     borderRadius: '20px',
     border: '1px solid #002591',
-    minWidth: 260,
+    minWidth: 310,
+    maxWidth: 310,
     '& .MuiInputBase-root': {
       display: 'flex'
     }
@@ -82,7 +82,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundSize: 56,
     width: 260,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    top: 0
   },
   dialogHeader: {
     display: 'flex',
@@ -129,83 +131,59 @@ const AClassSelect = withStyles((theme: Theme) => ({
   }
 }))(Select);
 
-const DevicePicker: React.FC<DeviceItemProps> = (props) => {
-  const classes = useStyles()
-  return (
-    <div className={classes.item}>
-      <InputLabel style={{color: '#002591', fontSize: '16px', marginRight: '13px'}} id={props.id}>{props.name}</InputLabel>
-      <div className={classes.select}>
-        <AClassSelect
-          defaultValue={props.defaultValue}
-          disableUnderline
-          variant="standard"
-          labelId={props.id}
-          id={props.id}
-          value={props.value}
-          onChange={props.onChange}
-          style={{
-            paddingRight: 0,
-          }}
-          inputProps={{
-            style: {}
-          }}
-        >
-          {props.list.map((item: any, idx: number) => (
-            <MenuItem key={idx} value={item.deviceId}>{item.label}</MenuItem>
-          ))}
-        </AClassSelect>
-      </div>
-    </div>
-  )
-}
-
 export const Setting = observer(() => {
 
   const classes = useStyles()
 
   const pretestStore = usePretestStore()
 
+  const uiStore = useUIStore()
+
   useEffect(() => {
-    pretestStore.init({video: true, audio: true})
-  }, [])
+    if (uiStore.aclassVisible) {
+      pretestStore.init({video: true, audio: true})
+      pretestStore.openTestCamera()
+      pretestStore.openTestMicrophone()
+    }
+    return () => {
+      pretestStore.closeTestCamera()
+      pretestStore.closeTestMicrophone()
+    }
+  }, [uiStore.aclassVisible])
 
-  const handleCameraChange = (evt: any) => {
-    console.log('ev ', evt.target.value)
+  const handleCameraChange = async (evt: any) => {
+    await pretestStore.changeTestCamera(evt.target.value)
   }
 
-  const handleMicrophoneChange = () => {
-
+  const handleMicrophoneChange = async (evt: any) => {
+    await pretestStore.changeTestMicrophone(evt.target.value)
   }
 
-  const handleSpeakerChange = () => {
-
+  const handleSpeakerChange = async (evt: any) => {
+    await pretestStore.changeTestSpeaker(evt.target.value)
   }
 
   const handleClose = () => {
-
+    uiStore.hideMediaSetting()
   }
 
   return (
     <DeviceManagerDialog
-      visible={true}
-      title="设置"
+      visible={uiStore.aclassVisible}
+      title={t("setting.title")}
       onClose={handleClose}
       dialogHeaderStyle={{
         minHeight: 40,
       }}
       paperStyle={{
         height: 600,
+        width: 480,
         padding: 20,
         paddingTop: 0,
         borderRadius: 30,
       }}
       dialogContentStyle={{
         background: 'transparent',
-        // borderRadius: 30,
-        // display: 'flex',
-        // flexDirection: 'column',
-        // background: '#DEF4FF',
-        // padding: 25
       }}
       closeBtnStyle={{
         top: 18,
@@ -215,26 +193,68 @@ export const Setting = observer(() => {
     >
       <div className={classes.container}>
         <RowItem>
-          <DevicePicker name="摄像头选项：" value={pretestStore.cameraId} onChange={handleCameraChange} list={pretestStore.cameraList} id="camera" />
+          <DevicePicker
+            name="摄像头选项："
+            value={pretestStore.cameraId}
+            onChange={handleCameraChange}
+            list={pretestStore.cameraList}
+            id="camera"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
         </RowItem>
         <RowItem>
           <div className={classes.cameraDetect}>
             <div style={{flex: 1}}></div>
-            <div className={classes.placeholder}></div>
+            <RendererPlayer
+              key={pretestStore.cameraId}
+              style={{
+                width: '310px',
+                height: '147px',
+                position: 'relative',
+              }}
+              id="test-preview"
+              track={pretestStore.cameraRenderer}
+              preview={true}
+            >
+              <div className={classes.placeholder}></div>
+            </RendererPlayer>
           </div>
         </RowItem>
         <RowItem>
-          <DevicePicker name="麦克风选项：" value={pretestStore.microphoneId} onChange={handleMicrophoneChange} list={pretestStore.microphoneList} id="microphone" />
+          <DevicePicker
+            name="麦克风选项："
+            value={pretestStore.microphoneId}
+            onChange={handleMicrophoneChange}
+            list={pretestStore.microphoneList}
+            id="microphone"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
         </RowItem>
         <RowItem>
           <SpeakerDeviceVolume 
             currentVolume={10}
-            width={'10px'}
+            width={'8px'}
             direction={VolumeDirectionEnum.Right}
           />
         </RowItem>
         <RowItem>
-          <DevicePicker name="扬声器选项: " value={pretestStore.speakerId} onChange={handleSpeakerChange} list={pretestStore.speakerList} id="speaker" />
+          <DevicePicker
+            name="扬声器选项: "
+            value={pretestStore.speakerId}
+            onChange={handleSpeakerChange}
+            list={pretestStore.speakerList}
+            id="speaker"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
         </RowItem>
         <RowItem>
           <VolumeSlider value={20} onChange={(val: number) => {
@@ -242,19 +262,9 @@ export const Setting = observer(() => {
           }} />
         </RowItem>
         <RowItem>
-          <AudioPlayer
-            onClick={() => {}}
-            style={{
-              width: 100
-            }}
-            audioSource={'https://webdemo.agora.io/test_audio.mp3'}
-            playText={'音频播放'}
-           />
-        </RowItem>
-        <RowItem>
           <SpeakerDeviceVolume 
             currentVolume={10}
-            width={'10px'}
+            width={'8px'}
             direction={VolumeDirectionEnum.Right}
           />
         </RowItem>
