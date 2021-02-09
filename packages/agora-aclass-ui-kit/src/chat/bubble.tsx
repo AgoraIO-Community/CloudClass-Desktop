@@ -4,6 +4,7 @@ import { TextEllipsis } from '../typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { WithIconButton } from "./control/button";
 import translate from "./assets/translate.png";
+import canTranslateIcon from "./assets/canTranslate.png";
 import fail from "./assets/fail.png";
 import { Loading } from "../loading";
 
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #dbe2e5',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '20px',
+    lineHeight: '28px',
     backgroundColor: "#CBCCFF",
     color: '#2D3E6D',
     boxSizing: 'border-box',
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTopLeftRadius: 0,
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '20px',
+    lineHeight: '28px',
     color: '#2D3E6D',
     background: '#AADCF6',
     boxSizing: 'border-box',
@@ -91,18 +92,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const Bubble = (props: BubbleProps) => {
   const { bubbleStyle, isSender, time, content, userName, canTranslate, onClickTranslate, status, onClickFailButton } = props;
-  const [isShowTranslateText,setIsShowTranslateText]=useState(false)
-  const [translateText,setTranslateText]=useState('')
+  const [isShowTranslateText, setIsShowTranslateText] = useState(false)
+  const [translateText, setTranslateText] = useState('')
+  const [bubbleCanTrans, setBubbleCanTrans] = useState(true)
   const classes = useStyles()
-  const [state, fetch] = useAsyncFn(async () => {
-    const response = await onClickTranslate(props);
+  const [state, fetch] = useAsyncFn(async (data) => {
+    const response = await onClickTranslate(data);
     setIsShowTranslateText(true)
     setTranslateText(response.text)
+    setBubbleCanTrans(false)
     return response
   });
-
-  
- 
   return (
     <div style={{
       display: 'flex',
@@ -123,14 +123,15 @@ export const Bubble = (props: BubbleProps) => {
       </div>
       <div className={classes.chatMessage} style={isSender ? { flexDirection: 'row' } : { flexDirection: 'row-reverse' }}>
         <div className={classes.status}>
-          {canTranslate ? <WithIconButton onClick={()=>fetch()} icon={translate} style={{ alignItems: 'flex-start', marginBottom: '10px' }} /> : null}
+          {/* {canTranslate && bubbleCanTrans ? */}
+          <WithIconButton onClick={() => canTranslate && bubbleCanTrans && fetch({ ...props })} icon={canTranslate && bubbleCanTrans ? canTranslateIcon : translate} style={{ alignItems: 'flex-start', marginBottom: '5px' }} />
           {status === 'loading' && <Loading />}
           {status === 'fail' && <WithIconButton onClick={() => onClickFailButton(props)} icon={fail} iconStyle={{ width: '18px', height: '18px' }} />}
         </div>
         <div style={{ ...bubbleStyle }} className={isSender ? classes.senderContent : classes.content}>
           <div>{content}</div>
           {isShowTranslateText ? <div className={classes.translateText}>{translateText}</div> : null}
-          {state.loading?<div className={classes.translateText}>loading</div> : null}
+          {state.loading ? <div className={classes.translateText}><Loading />翻译中</div> : state.error ? <div className={classes.translateText}>翻译失败</div> : null}
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ export const SignalBar = (props: ISignalBar) => {
         display: 'block',
         backgroundPosition: 'bottom center',
         backgroundRepeat: 'repeat-x',
-        backgroundSize: '100% 33.33%, 100% 66.66%, 100% 100%',
+        backgroundSize: '100% 33%, 100% 66%, 100% 100%',
         top: '10%',
         left: 0,
         width: '100%',
@@ -63,7 +63,7 @@ export const SignalBar = (props: ISignalBar) => {
     },
     "Level3": {
       '&:after': {
-        backgroundSize: '100% 33.33%, 100% 66.66%, 100% 100%',
+        backgroundSize: '100% 33%, 100% 66%, 100% 100%',
         backgroundImage: `linear-gradient(to right,${foregroundColor},${foregroundColor} 20%,${empty} 20%,${empty} 100%),linear-gradient(to right,${empty} 0%,${empty} 40%,${foregroundColor} 40%,${foregroundColor} 60%,${empty} 60%,${empty} 100%),linear-gradient(to right,${empty} 0%,${empty} 80%,${foregroundColor} 80%,${foregroundColor} 100%)`
       }
     }
