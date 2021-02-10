@@ -89,7 +89,6 @@
     "react-dom": "16.13.1"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "install_electron": "node ./scripts/postinstall.js",
     "electron": "cross-env REACT_APP_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run electron:web\" \"wait-on http://localhost:3000 && npm run electron:client\"",
     "electron:client": "cross-env electron ./app/",
