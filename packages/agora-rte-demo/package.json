@@ -162,7 +162,7 @@
     "deep-diff": "1.0.2",
     "devtron": "1.4.0",
     "dexie": "3.0.2",
-    "electron": "^7.1.14",
+    "electron": "7.1.14",
     "electron-builder": "22.5.1",
     "eruda": "^2.2.1",
     "eslint-plugin-react": "7.20.0",
