@@ -20,13 +20,14 @@ export const AcadsocOneToOne = observer(() => {
   const boardStore = useBoardStore()
 
   useEffect(() => {
-    // if (appStore.userRole < 0) {
-    //   uiStore.unblock()
-    //   history.push('/')
-    //   return
-    // }
-    // acadsocStore.join()
-    acadsocStore.joinRoom()
+    if (appStore.userRole < 0) {
+      uiStore.unblock()
+      history.push('/')
+      return
+    }
+    acadsocStore.join()
+    // TODO: only for ui debug
+    // acadsocStore.joinRoom()
   }, [])
 
   return (

@@ -43,7 +43,7 @@ const getComparator = function(order: Order, orderBy: any) {
     : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-const stableSort = function(array: [], comparator: (a: any, b: any) => number) {
+const stableSort = function(array: any[], comparator: (a: any, b: any) => number) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -366,7 +366,7 @@ export default function DiskTables() {
         <TableBody>
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row, index) => {
+            .map((row: any, index: number) => {
               const isItemSelected = isSelected(row.name);
               const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -411,6 +411,7 @@ export default function DiskTables() {
               onOpenToast={open}
               onClose={handleCloseAlert}
               message={toastMessage}
+              //@ts-ignore
               toastType={type}
               key={'top-center'}
             />

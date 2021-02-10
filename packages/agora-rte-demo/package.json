@@ -166,6 +166,8 @@
     "electron-builder": "22.5.1",
     "eruda": "^2.2.1",
     "eslint-plugin-react": "7.20.0",
+    "extract-zip": "2.0.1",
+    "fs-extra": "9.1.0",
     "glob-all": "3.2.1",
     "hard-source-webpack-plugin": "0.13.1",
     "immutable": "4.0.0-rc.12",
@@ -176,6 +178,7 @@
     "mobx": "5.15.4",
     "mobx-react": "6.3.1",
     "moment": "2.24.0",
+    "node-downloader-helper": "^1.0.17",
     "node-sass": "^4.12.0",
     "progress-bar-webpack-plugin": "2.1.0",
     "promise-polyfill": "8.2.0",
@@ -205,10 +208,7 @@
     "webpack-cli": "4.3.1",
     "white-web-sdk": "2.11.11",
     "worker-loader": "2.0.0",
-    "zlib": "1.0.5",
-    "extract-zip": "2.0.1",
-    "fs-extra": "9.1.0",
-    "node-downloader-helper": "1.0.17"
+    "zlib": "1.0.5"
   },
   "dependencies": {
     "react": "16.13.1",

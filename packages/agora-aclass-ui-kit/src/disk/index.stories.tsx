@@ -23,6 +23,7 @@ export const NetworkDisk = () => {
 
   return (
     <DiskManagerDialog
+      fullWidth={false}
       visible={true}
       onClose={handleClose}
       dialogHeaderStyle={{
@@ -54,8 +55,7 @@ export const NetworkDisk = () => {
         right: 18,
         color: 'white'
       }}
-    >
-    </DiskManagerDialog>
+    />
   )
 }
 
