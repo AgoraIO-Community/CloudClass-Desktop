@@ -26,3 +26,4 @@ lerna-debug.log
 packages/agora-log-sdk
 *.zip
 *.install.md
+*.json.lerna_backup

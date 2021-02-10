@@ -130,6 +130,16 @@ export class ZoomController extends React.Component<ZoomControllerProps, {}> {
               }
               if (['prev', 'next'].includes(type)) {
                 this.props.changeFooterMenu(`${type}_page`)
+                return
+              }
+              if (type === 'fullscreen') {
+                this.props.onFullScreen()
+                return
+              }
+
+              if (type === 'fullscreenExit') {
+                this.props.onExitFullScreen()
+                return
               }
             }}
           />

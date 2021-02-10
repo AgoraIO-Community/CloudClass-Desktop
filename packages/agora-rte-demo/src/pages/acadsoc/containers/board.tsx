@@ -47,13 +47,13 @@ export const EduWhiteBoard = observer(() => {
       controlY={10}
       controlX={10}
       showControlScreen={true}
-      isFullScreen={true}
+      isFullScreen={!boardStore.isFullScreen}
       width={'100%'}
       toolbarName={'Tools'}
     >
-      {
+      {/* {
         isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
-      }
+      } */}
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
@@ -257,7 +257,7 @@ export const EducationBoard = observer((props: any) => {
           boardStore.zoomBoard('fullscreen')
         }}
         onExitFullScreen={() => {
-          boardStore.zoomBoard('exitFullscreen')
+          boardStore.zoomBoard('fullscreenExit')
         }}
       />
       <Tool

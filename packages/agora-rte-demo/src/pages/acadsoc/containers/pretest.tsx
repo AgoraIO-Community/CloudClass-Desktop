@@ -133,7 +133,119 @@ const AClassSelect = withStyles((theme: Theme) => ({
   }
 }))(Select);
 
-export const Pretest = observer(() => {
+export const PretestNative = observer(() => {
+
+  const classes = useStyles()
+
+  const [tabValue, setTabValue] = useState<string>('camera')
+
+  const pretestStore = usePretestStore()
+
+  useEffect(() => {
+    if (tabValue === 'camera') {
+      pretestStore.init({video: true})
+    }
+
+    if (tabValue === 'microphone') {
+      pretestStore.init({audio: true})
+    }
+  }, [tabValue])
+
+
+  const handleClickTab = (type: string) => {
+    setTabValue(type)
+  }
+
+  const handleCameraChange = async (evt: any) => {
+    await pretestStore.changeTestCamera(evt.target.value)
+  }
+
+  const handleMicrophoneChange = async (evt: any) => {
+    await pretestStore.changeTestMicrophone(evt.target.value)
+  }
+
+  const handleSpeakerChange = (evt: any) => {
+    // pretestStore
+  }
+
+  const onClose = () => {
+    console.log("close")
+  }
+
+  return (
+    <div style={{
+      display: "flex", 
+      // flexDirection: "row", 
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    }}>
+      <div style={{
+        display: "flex"
+      }}>
+        <DeviceTabs value={tabValue} onClick={handleClickTab}/>
+        <DialogFramePaper showHeader={true} title="设备检测"
+          style={{
+            height: 500,
+            borderRadius: 15,
+            padding: '0 20px 20px 20px',
+          }}
+          headerStyle={{
+            height: 40
+          }}
+          closeable
+          onClose={onClose}>
+          <div className={classes.settingContainer}>
+            {tabValue === 'camera' && 
+              <React.Fragment>
+                <RowItem>
+                  <DevicePicker name="摄像头选项：" value={pretestStore.cameraId} onChange={handleCameraChange} list={pretestStore.cameraList} id="camera" />
+                </RowItem>
+                <RowItem>
+                  <div className={classes.btnBox}>
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='secondary' text={"不可以"} />
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='primary' text={"可以"} />
+                  </div>
+                </RowItem>
+              </React.Fragment>
+            }
+            {tabValue === 'microphone' && 
+              <React.Fragment>
+                <RowItem>
+                  <DevicePicker name="麦克风选项：" value={pretestStore.microphoneId} onChange={handleMicrophoneChange} list={pretestStore.microphoneList} id="microphone" />
+                  <RowItem />
+                </RowItem>
+                <RowItem>
+                  <div className={classes.btnBox}>
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='secondary' text={"不可以"} />
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='primary' text={"可以"} />
+                  </div>
+                </RowItem>
+              </React.Fragment>
+            }
+            {tabValue === 'speaker' && 
+              <React.Fragment>
+                <RowItem>
+                  <DevicePicker name="扬声器选项：" value={pretestStore.speakerId} onChange={handleSpeakerChange} list={pretestStore.speakerList} id="speaker" />
+                </RowItem>
+                <RowItem>
+                  <div className={classes.btnBox}>
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='secondary' text={"不可以"} />
+                    <Button style={{borderRadius: 30, width: 120, height: 35}} color='primary' text={"可以"} />
+                  </div>
+                </RowItem>
+              </React.Fragment>
+            }
+          </div>
+        </DialogFramePaper>
+      </div>
+    </div>
+  )
+})
+
+
+
+export const PretestWeb = observer(() => {
 
   const classes = useStyles()
 
@@ -280,5 +392,16 @@ export const Pretest = observer(() => {
         </DialogFramePaper>
       </div>
     </div>
+  )
+})
+
+export const Pretest = observer(() => {
+
+  const isNative = false
+
+  return (
+    isNative ? 
+    <PretestNative /> :
+    <PretestWeb />
   )
 })

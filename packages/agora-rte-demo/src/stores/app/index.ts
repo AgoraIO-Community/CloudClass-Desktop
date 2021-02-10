@@ -32,8 +32,7 @@ import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
 import { platform } from '@/utils/platform';
 import { SceneStore } from './scene';
-import { AgoraEduSDK, ListenerCallback } from '@/edu-sdk/declare';
-import { AgoraEduEvent } from '@/edu-sdk';
+import { ListenerCallback, AgoraEduEvent } from '@/edu-sdk/declare';
 import { get, isEmpty } from 'lodash';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
@@ -77,6 +76,7 @@ export type AppStoreInitParams = {
   mainPath?: string
   roomPath?: string
   resetRoomInfo: boolean
+  unmountDom?: CallableFunction
 }
 
 export type RoomInfo = {
@@ -628,24 +628,31 @@ export class AppStore {
     this.removeScreenShareWindow()
   }
 
+  unmountDom() {
+    if (this.params.unmountDom) {
+      this.params.unmountDom()
+    }
+  }
+
   @action
   async releaseRoom() {
     try {
       await this.roomStore.leave()
-      this.resetStates()
+      this.unmountDom()
       if (this.params && this.params.listener) {
         this.params.listener(AgoraEduEvent.destroyed)
       }
+      this.resetStates()
     } catch (err) {
+      this.unmountDom()
+      if (this.params && this.params.listener) {
+        this.params.listener(AgoraEduEvent.destroyed)
+      }
       this.resetStates()
       const exception = new GenericErrorWrapper(err)
-      if (this.params && this.params.listener) {
-        this.params.listener(AgoraEduEvent.destroyed)
-      }
       throw exception
     }
   }
-
   async destroy() {
     await this.releaseRoom()
   }

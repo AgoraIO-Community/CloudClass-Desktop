@@ -180,6 +180,9 @@ export class BoardStore {
 
   menuTitle: string = '课件目录'
 
+  @observable
+  isFullScreen: boolean = false
+
   @action
   changeScenePath(path: string) {
     this.activeScenePath = path
@@ -1147,6 +1150,7 @@ export class BoardStore {
 
   @action
   reset () {
+    this.isFullScreen = false
     this.folder = ''
     this.scenes = []
     this.currentPage = 0
@@ -1269,13 +1273,16 @@ export class BoardStore {
 
   @action
   zoomBoard(type: string) {
+    console.log('zoomBoard ', type)
     // 白板全屏
     if (type === 'fullscreen') {
+      this.isFullScreen = true
       return
     }
 
     // 白板退出全屏
-    if (type === 'exitFullscreen') {
+    if (type === 'fullscreenExit') {
+      this.isFullScreen = false
       return
     }
   }

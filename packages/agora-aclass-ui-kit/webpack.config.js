@@ -12,11 +12,20 @@ module.exports = {
     ['index']: "./src/index.ts",
   },
   mode: "production",
-  // externals: /^(react|react-dom|react-router-dom)$/,
-  // externals: {
-  //   'react': 'react',
-  //   'react-dom': 'react-dom'
-  // },
+  externals: {
+    'react': {
+      commonjs: 'react',
+      amd: 'react',
+      umd: 'react',
+      root: 'react',
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+      umd: 'react-dom',
+      root: 'react-dom',
+    }
+  },
   output: {
     // publicPath: '',
     // filename: '[name].js',

@@ -7,7 +7,7 @@ import * as serviceWorker from '@/serviceWorker';
 import TagManager from 'react-gtm-module';
 import {isElectron} from '@/utils/platform';
 import { EduManager } from 'agora-rte-sdk';
-import {AgoraEduSDK} from '@/edu-sdk';
+import {AgoraEduSDK} from './edu-sdk';
 import { eduSDKApi } from './services/edu-sdk-api';
 import { GlobalStorage } from '@/utils/custom-storage';
 //@ts-ignore

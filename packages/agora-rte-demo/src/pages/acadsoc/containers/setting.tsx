@@ -131,8 +131,7 @@ const AClassSelect = withStyles((theme: Theme) => ({
   }
 }))(Select);
 
-export const Setting = observer(() => {
-
+export const SettingWeb = observer(() => {
   const classes = useStyles()
 
   const pretestStore = usePretestStore()
@@ -261,14 +260,127 @@ export const Setting = observer(() => {
             console.log("slider ", val)
           }} />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <SpeakerDeviceVolume 
             currentVolume={10}
             width={'8px'}
             direction={VolumeDirectionEnum.Right}
           />
+        </RowItem> */}
+      </div>
+    </DeviceManagerDialog>
+  )
+})
+
+export const SettingNative = observer(() => {
+  const classes = useStyles()
+
+  const pretestStore = usePretestStore()
+
+  const uiStore = useUIStore()
+
+  useEffect(() => {
+    if (uiStore.aclassVisible) {
+      pretestStore.init({video: true, audio: true})
+    }
+  }, [uiStore.aclassVisible])
+
+  const handleCameraChange = async (evt: any) => {
+    await pretestStore.changeTestCamera(evt.target.value)
+  }
+
+  const handleMicrophoneChange = async (evt: any) => {
+    await pretestStore.changeTestMicrophone(evt.target.value)
+  }
+
+  const handleSpeakerChange = async (evt: any) => {
+    await pretestStore.changeTestSpeaker(evt.target.value)
+  }
+
+  const handleClose = () => {
+    uiStore.hideMediaSetting()
+  }
+
+  return (
+    <DeviceManagerDialog
+      visible={uiStore.aclassVisible}
+      title={t("setting.title")}
+      onClose={handleClose}
+      dialogHeaderStyle={{
+        minHeight: 40,
+      }}
+      paperStyle={{
+        height: 600,
+        width: 480,
+        padding: 20,
+        paddingTop: 0,
+        borderRadius: 30,
+      }}
+      dialogContentStyle={{
+        background: 'transparent',
+      }}
+      closeBtnStyle={{
+        top: 18,
+        right: 18,
+        color: 'white'
+      }}
+    >
+      <div className={classes.container}>
+        <RowItem>
+          <DevicePicker
+            name="摄像头选项："
+            value={pretestStore.cameraId}
+            onChange={handleCameraChange}
+            list={pretestStore.cameraList}
+            id="camera"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
+        </RowItem>
+        <RowItem>
+          <DevicePicker
+            name="麦克风选项："
+            value={pretestStore.microphoneId}
+            onChange={handleMicrophoneChange}
+            list={pretestStore.microphoneList}
+            id="microphone"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
+        </RowItem>
+        <RowItem>
+          <DevicePicker
+            name="扬声器选项: "
+            value={pretestStore.speakerId}
+            onChange={handleSpeakerChange}
+            list={pretestStore.speakerList}
+            id="speaker"
+            selectStyle={{
+              minWidth: 310,
+              maxWidth: 310,
+            }}
+          />
+        </RowItem>
+        <RowItem>
+          <VolumeSlider value={20} onChange={(val: number) => {
+            console.log("slider ", val)
+          }} />
         </RowItem>
       </div>
     </DeviceManagerDialog>
+  )
+})
+
+
+export const Setting = observer(() => {
+  const isNative = false
+  return (
+    isNative ? 
+    <SettingNative /> :
+    <SettingWeb />
   )
 })

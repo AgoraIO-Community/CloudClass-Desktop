@@ -62,7 +62,7 @@ export const TeacherVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '268px',
-        height: '194px'
+        minHeight: '194px'
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
@@ -80,7 +80,7 @@ export const StudentVideo = observer(() => {
   
   const isLocal = userStream.local
 
-  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -117,7 +117,7 @@ export const StudentVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '268px',
-        height: '194px'
+        minHeight: '194px'
       }}
       disableButton={Boolean(disableButton)}
       placeHolderType={userStream.placeHolderType}

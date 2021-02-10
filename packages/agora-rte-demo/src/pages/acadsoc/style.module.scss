@@ -13,7 +13,7 @@
   flex: 1;
 }
 
-.leftContainer {
+.mainContainer {
   display: flex;
   flex: 1;
   margin: 10px;
@@ -24,6 +24,24 @@
   flex-direction: column;
   max-width: 268px;
   flex: 1;
-  margin: 10px;
-  margin-left: 0px;
+  margin-left: 10px;
+}
+
+.fullScreen {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  position: relative;
+  .mainContainer {
+    position: absolute;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .rightContainer {
+    position: absolute;
+    margin: 10px;
+    height: 90%;
+    right: 0;
+  }
 }

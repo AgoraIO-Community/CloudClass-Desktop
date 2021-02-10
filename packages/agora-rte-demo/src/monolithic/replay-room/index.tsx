@@ -8,8 +8,9 @@ import { Provider } from 'mobx-react'
 import { HashRouter } from 'react-router-dom'
 import ThemeContainer from '@/containers/theme-container'
 import { RoomComponentConfigProps, RoomConfigProps } from '@/edu-sdk/declare'
+import { ReplayAppStore } from '@/stores/replay-app'
 
-export const ReplayRoom = ({store,...props}: RoomConfigProps) => {
+export const ReplayRoom = ({store,...props}: RoomConfigProps<ReplayAppStore>) => {
   window["replay"] = store
 
   return (
@@ -24,7 +25,7 @@ export const ReplayRoom = ({store,...props}: RoomConfigProps) => {
   )
 }
 
-export const RenderReplayRoom = ({dom, store, ...props}: RoomComponentConfigProps, delegate: DelegateType) => (
+export const RenderReplayRoom = ({dom, store, ...props}: RoomComponentConfigProps<ReplayAppStore>, delegate: DelegateType) => (
   render(
     <ReplayRoom {...props} store={store} />,
     dom

@@ -254,6 +254,10 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
 
+  joinRoom() {
+    
+  }
+
   @action
   async join() {
     try {
