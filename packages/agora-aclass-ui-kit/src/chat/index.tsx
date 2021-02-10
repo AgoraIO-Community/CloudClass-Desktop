@@ -123,7 +123,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
       color: '#4992CF',
       flexWrap: 'nowrap',
       alignItems: 'center',
-      marginRight:'14px'
+      marginRight:'14px',
+      cursor:'pointer',
     },
     sendButton: {
       cursor: 'pointer',
@@ -137,7 +138,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
       position: 'absolute',
       bottom: bottomDistance,
       alignItems: 'center',
-      right: '6px'
+      right: '6px',
+      '&::after': {
+        background: 'rgba(185,141,0,.4)'
+      }
     },
     sendContent: {
       display: 'flex',

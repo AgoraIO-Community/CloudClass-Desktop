@@ -10,6 +10,7 @@ export const ChatView = observer(() => {
   const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
+  const [sendButtonBackColor, setSendButtonBackColor] = useState('#e9be3685')
 
   const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
@@ -61,6 +62,7 @@ export const ChatView = observer(() => {
     fetchMessage()
   }
   const sendMessage = async (message: any) => {
+    if (!message.trim()) return
     const current = new Date()
     const chatMessage: ChatMessageList = [{
       userName: acadsocStore.roomInfo.userName,
@@ -78,6 +80,13 @@ export const ChatView = observer(() => {
     acadsocStore.addChatMessage(data)
 
   }
+  const onInputText = (event: any) => {
+    const { value } = event.target;
+    if (!!value.trim()) setSendButtonBackColor('#E9BE36')
+    else {
+      setSendButtonBackColor('#e9be3685')
+    }
+  }
   useEffect(() => {
     isFetchHistory && fetchMessage()
     setMessages(transformationMessage())
@@ -91,6 +100,8 @@ export const ChatView = observer(() => {
       messages={newMessage}
       onPullFresh={onPullFresh}
       onClickSendButton={sendMessage}
+      onInputText={onInputText}
+      sendButtonBackColor={sendButtonBackColor}
     />
   )
 })

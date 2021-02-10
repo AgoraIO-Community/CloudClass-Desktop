@@ -98,15 +98,19 @@ export interface CustomizeIconBtnProps {
   onClick?: (args?: any) => any
 }
 
-export const CustomizeIconBtn = (props: CustomizeIconBtnProps) => (
-  <div
-    onClick={props.onClick}
-    style={{
-      ...props.style,
+export const CustomizeIconBtn = (props: CustomizeIconBtnProps) => {
+  const styles = makeStyles({
+    back: {
       background: `url(${props.icon}) no-repeat`,
       backgroundPosition: 'center',
       backgroundSize: 'contain',
-    }}></div>
-)
+    }
+  })
+  const className = styles()
+  return (<div
+    onClick={props.onClick}
+    className={className.back}
+    style={{ ...props.style }} />)
+}
 
 export type ControlButtonIcon = string
