@@ -203,9 +203,12 @@
     "wait-on": "^3.3.0",
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-cli": "4.3.1",
-    "white-web-sdk": "2.11.9",
+    "white-web-sdk": "2.11.11",
     "worker-loader": "2.0.0",
-    "zlib": "1.0.5"
+    "zlib": "1.0.5",
+    "extract-zip": "2.0.1",
+    "fs-extra": "9.1.0",
+    "node-downloader-helper": "1.0.17"
   },
   "dependencies": {
     "react": "16.13.1",

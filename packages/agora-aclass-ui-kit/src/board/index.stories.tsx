@@ -110,7 +110,11 @@ const toolItems: IToolItem[] = [
   {
     itemName: 'clear',
     toolTip: true,
-  }
+  },
+  {
+    itemName: 'disk',
+    toolTip: true,
+  },
 ]
 
 export const UploadFilePopover = (props: any) => {
@@ -140,7 +144,7 @@ export const EducationBoard = (props: any) => {
     action('tool')
     console.log(`click tool ${type}`)
   }
-  
+
   return (
       <Board style={{
         width: props.width,
@@ -193,6 +197,6 @@ EducationBoard.args = {
   showControlScreen: true,
   isFullScreen: true,
   width: 640,
-  height: 480,
+  height: 525,
   toolbarName: 'Tools',
 }
