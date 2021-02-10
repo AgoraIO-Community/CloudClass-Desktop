@@ -55,7 +55,7 @@
   "license": "ISC",
   "dependencies": {
     "adm-zip": "0.5.1",
-    "agora-classroom-sdk": "^1.0.0",
+    "agora-classroom-sdk": "latest",
     "agora-electron-sdk": "education290",
     "source-map-support": "0.5.9"
   },
