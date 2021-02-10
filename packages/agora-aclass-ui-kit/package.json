@@ -29,7 +29,7 @@
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:types": "tsc --outDir types --module commonjs",
     "test": "echo \"Error: run tests from root\" && exit 1",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6010",
     "build-storybook": "build-storybook"
   },
   "bugs": {

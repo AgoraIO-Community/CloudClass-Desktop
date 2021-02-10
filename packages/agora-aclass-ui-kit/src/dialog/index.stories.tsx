@@ -22,7 +22,7 @@ let uid = 0
 const arrays = []
 
 export const Dialogs = () => {
-  // const 
+  // const
   const onClick = () => {
     action('click button')
     ++uid
@@ -45,7 +45,7 @@ export const Dialogs = () => {
   }
 
   const onRemove = () => {
-    
+
   }
   return (
     <Button color="primary" text="click me" style={{position: 'fixed', zIndex: 9999}} onClick={onClick}></Button>
@@ -94,6 +94,13 @@ QuitRoomDialogB.args = {
   cancelText: "在想一下",
 }
 
+export const DeleteFileDialog = DialogTemplate.bind({})
+DeleteFileDialog.args = {
+  visible: true,
+  text: "确认删除文件吗？",
+  confirmText: "确定",
+  cancelText: "取消",
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -366,7 +373,7 @@ export const DeviceManager = (props: any) => {
           <DevicePicker name="麦克风选项：" value={micValue} onChange={handleMicChange} list={micList} id="microphone" />
         </RowItem>
         <RowItem>
-          <SpeakerDeviceVolume 
+          <SpeakerDeviceVolume
             currentVolume={10}
             width={'10px'}
             direction={VolumeDirectionEnum.Right}
@@ -384,7 +391,7 @@ export const DeviceManager = (props: any) => {
           <AudioPlayerTest {...props.audioPlayerProps} />
         </RowItem>
         <RowItem>
-          <SpeakerDeviceVolume 
+          <SpeakerDeviceVolume
             currentVolume={10}
             width={'10px'}
             direction={VolumeDirectionEnum.Right}
@@ -477,7 +484,7 @@ export interface DeviceTestProps {
 export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
 
   const classes = useStyles()
-  
+
   const onClick = (evt: any) => {
     console.log('newValue ')
   }
@@ -545,7 +552,7 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
     cameraId: 'unknown',
     speakerId: 'unknown',
     tabValue: 'camera',
-  } 
+  }
 
   const [state, dispatch] = useReducer((prevState: any, action: any) => {
     console.log('action. type', action)
@@ -629,7 +636,7 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
         closeable
         onClose={onClose}>
         <div className={classes.settingContainer}>
-          {tabValue === 'camera' && 
+          {tabValue === 'camera' &&
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="摄像头选项：" value={cameraId} onChange={handleCameraChange} list={cameraList} id="camera" />
@@ -647,12 +654,12 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
               </RowItem>
             </React.Fragment>
           }
-          {tabValue === 'microphone' && 
+          {tabValue === 'microphone' &&
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="麦克风选项：" value={microphoneId} onChange={handleMicrophoneChange} list={microphoneList} id="microphone" />
                 <RowItem />
-                <SpeakerDeviceVolume 
+                <SpeakerDeviceVolume
                   currentVolume={10}
                   width={'5px'}
                   direction={VolumeDirectionEnum.Right}
@@ -666,7 +673,7 @@ export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
               </RowItem>
             </React.Fragment>
           }
-          {tabValue === 'speaker' && 
+          {tabValue === 'speaker' &&
             <React.Fragment>
               <RowItem>
                 <DevicePicker name="扬声器选项：" value={microphoneId} onChange={handleSpeakerChange} list={speakerList} id="speaker" />

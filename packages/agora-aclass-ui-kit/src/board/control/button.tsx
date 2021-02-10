@@ -18,6 +18,7 @@ import NewPage from '../assets/new-page.png'
 import Move from '../assets/move.png'
 import Clear from '../assets/clear.png'
 import Upload from '../assets/upload.png'
+import Disk from '../assets/disk.png'
 import { ControlButtonIcon, CustomizeIconBtn } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { makeStyles } from '@material-ui/styles'
@@ -56,6 +57,7 @@ const i18n = {
   'move': 'move',
   'upload': 'upload',
   'clear': 'clear',
+  'disk': 'disk'
 }
 
 
@@ -78,6 +80,7 @@ const buttonsMap = {
   'move': (props: any) => <CustomizeIconBtn icon={Move} style={{...defaultStyle, ...props.style}} />,
   'upload': (props: any) => <CustomizeIconBtn icon={Upload} style={{...defaultStyle, ...props.style}} />,
   'clear': (props: any) => <CustomizeIconBtn icon={Clear} style={{...defaultStyle, ...props.style}} />,
+  'disk': (props: any) => <CustomizeIconBtn icon={Disk} style={{...defaultStyle, ...props.style}} />,
 }
 
 export const ControlButton: React.FC<ControlButtonProps> = ({
@@ -85,7 +88,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
   activeStyles,
   toolTip,
   icon,
-  style, 
+  style,
   iconStyle,
   onClick,
 }) => {
@@ -101,7 +104,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
 
   return (
     <React.Fragment>
-      {toolTip ? 
+      {toolTip ?
         <Tooltip placement="top" title={i18n[icon]}>
         <IconButton component="div" style={{
           width: 18,
@@ -112,7 +115,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
           ...style
         }} disableRipple onClick={handleClick}>
           <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
-        </IconButton> 
+        </IconButton>
         </Tooltip> :
         <IconButton component="div" style={{
           width: 18,
@@ -123,7 +126,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
           ...style
         }} disableRipple onClick={handleClick}>
           <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
-        </IconButton> 
+        </IconButton>
       }
     </React.Fragment>
   )
@@ -156,7 +159,7 @@ export const ToolButton = (
     activeStyles,
     toolTip,
     icon,
-    style, 
+    style,
     iconStyle,
     onClick,
     popoverComponent
@@ -183,7 +186,7 @@ export const ToolButton = (
 
   return (
     <React.Fragment>
-      {toolTip ? 
+      {toolTip ?
          <Tooltip placement="right" title={i18n[icon]}>
           <IconButton component="div" style={{
             width: 18,
@@ -194,7 +197,7 @@ export const ToolButton = (
             ...style
           }} disableRipple onClick={handleClick}>
             <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
-          </IconButton> 
+          </IconButton>
          </Tooltip> :
          <IconButton component="div" style={{
             width: 18,
@@ -205,7 +208,7 @@ export const ToolButton = (
             ...style
           }} disableRipple onClick={handleClick}>
             <ControlIconButton style={{...defaultStyle, ...iconStyle}} />
-         </IconButton> 
+         </IconButton>
         }
       {popoverComponent ? <Popover
         open={open}
