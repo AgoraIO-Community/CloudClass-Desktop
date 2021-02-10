@@ -143,6 +143,9 @@ const roomTypes = {
   },
   [EduRoomTypeEnum.RoomBigClass]: {
     path: '/classroom/big-class'
+  },
+  [EduRoomTypeEnum.RoomAcadosc]: {
+    path: '/acadsoc/one-to-one'
   }
 }
 

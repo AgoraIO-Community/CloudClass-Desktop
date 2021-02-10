@@ -39,5 +39,7 @@ export {
   UploadProps,
   FileUploader,
   UploaderProps,
-  UploadItemProps
+  UploadItemProps,
+  StrokeSize,
+  StrokeSizeListProps,
 } from './panel'

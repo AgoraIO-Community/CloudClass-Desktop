@@ -48,7 +48,7 @@ export class UIStore {
     {
       path: '/acadsoc/one-to-one',
       text: 'home.aClass_class',
-      value: 0
+      value: 4
     }
   ]
 

@@ -22,7 +22,7 @@ module.exports = {
     publicPath: '',
     filename: '[name].bundle.js',
     libraryTarget: "umd",
-    library: "AgoraEduSDK",
+    // library: "AgoraEduSDK",
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
