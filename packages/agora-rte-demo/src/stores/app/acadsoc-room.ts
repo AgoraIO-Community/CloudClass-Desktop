@@ -30,13 +30,27 @@ export enum EduClassroomStateEnum {
   end = 2
 }
 
+type ProcessType = {
+  reward: number,
+}
+
 type AcadsocRoomProperties = {
-  students: Record<string, any>,
-  teachers: Record<string, any>,
+  board: {
+    info: {
+      boardAppId: string,
+      boardId: string,
+      boardToken: string,
+    }
+  },
+  record: {
+    state: number,
+    roomType: number,
+  },
+  students: Record<string, ProcessType>,
 }
 
 export enum acadsocRoomPropertiesChangeCause {
-  studentRewardStateChanged = 402, // 单个人的奖励发生
+  studentRewardStateChanged = 1101, // 单个人的奖励发生
 }
 
 const delay = 2000
@@ -102,17 +116,26 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   notice?: any = undefined
 
-  @observable
-  rewards: Array<{
-    userUuid: string,
-    changeReward: number,
-  }>= []
+  
 
   @observable
   roomProperties: AcadsocRoomProperties = {
+    board: {
+      info: {
+        boardAppId: '',
+        boardId: '',
+        boardToken: '',
+      }
+    },
+    record: {
+      state: 0,
+      roomType: 0,
+    },
     students: {},
-    teachers: {},
   }
+
+  @observable
+  sutdentsReward: Record<string, number> = {}
 
   @observable
   showTranslate: boolean = false
@@ -608,7 +631,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         })
       })
       // 教室更新
-      roomManager.on('classroom-property-updated', async (classroom: any) => {
+      roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
           const classState = get(classroom, 'roomStatus.courseState')
@@ -657,12 +680,9 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
-          // this.roomProperties = classroom.roomProperties
-          if(this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
-            this.disableTrophy = true
-          }
-          const students = get(classroom, 'roomProperties.students')
-          this.trophyNumber = students && students[this.roomInfo.userUuid].reward
+          this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
+          this.sutdentsReward = get(classroom, 'roomProperties.students', {})
+          this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
@@ -799,6 +819,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       // throw new GenericEerr
       throw new GenericErrorWrapper(err)
     }
+  }
+
+  @action
+  getRewardByUid(uid: string): number {
+    return get(this.sutdentsReward, `${uid}.reward`, 0)
   }
 
   @action

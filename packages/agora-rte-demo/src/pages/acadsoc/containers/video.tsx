@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import {Video} from 'agora-aclass-ui-kit'
 import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
@@ -20,6 +20,7 @@ export interface VideoMediaStream {
 
 export const TeacherVideo = observer(() => {
   const sceneStore = useSceneStore()
+  const acadsocStore = useAcadsocRoomStore()
 
   const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
@@ -53,7 +54,7 @@ export const TeacherVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
-      disableTrophy={false}
+      disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={0}
       visibleTrophy={false}
       role={"teacher"}
@@ -102,11 +103,15 @@ export const StudentVideo = observer(() => {
     }
     if (type.sourceType === 'trophy') {
       await acadsocStore.sendReward(uid, 1)
-      acadsocStore.showTrophyAnimation = true
+      // acadsocStore.showTrophyAnimation = true
     }
   }, [userStream.video, userStream.audio, isLocal])
 
   const renderer = userStream.renderer
+  
+  const trophyNumber = useMemo(() => {
+    return acadsocStore.getRewardByUid(userStream.userUuid)
+  }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.sutdentsReward])
 
   return (
     <Video
@@ -116,7 +121,7 @@ export const StudentVideo = observer(() => {
       minimal={true}
       resizable={false}
       disableTrophy={acadsocStore.disableTrophy}
-      trophyNumber={acadsocStore.trophyNumber}
+      trophyNumber={trophyNumber}
       visibleTrophy={true}
       role={"student"}
       videoState={userStream.video}
