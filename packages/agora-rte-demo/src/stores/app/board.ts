@@ -509,6 +509,11 @@ static toolItems: IToolItem[] = [
         avatar: ""
       }
     })
+    this.strokeColor = {
+      r: 252,
+      g: 58,
+      b: 63
+    }
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()

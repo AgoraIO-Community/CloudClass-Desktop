@@ -154,6 +154,7 @@ const useFontStyles = makeStyles((theme: Theme) => ({
     borderRadius: '5px',
     padding: '2px 7px',
     margin: '2px',
+    cursor: 'pointer',
     width: '32px',
   },
   normal: {
@@ -161,6 +162,7 @@ const useFontStyles = makeStyles((theme: Theme) => ({
     borderRadius: '5px',
     padding: '2px 7px',
     margin: '2px',
+    cursor: 'pointer',
     width: '32px',
   }
 }));
