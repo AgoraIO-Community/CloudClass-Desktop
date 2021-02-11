@@ -527,7 +527,18 @@ static toolItems: IToolItem[] = [
     this.resizeCallback = resizeCallback
     window.addEventListener('resize', this.resizeCallback)
     this.updateSceneItems()
+
+    const isFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1) {
+
+    }
+
   }
+
+  isFirstLogin() : boolean {
+    const teacherFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1)
+    return false
+  }
+
 
   @action
   async leave() {
@@ -1499,5 +1510,9 @@ static toolItems: IToolItem[] = [
     }
     // if (this.)
     return ''
+  }
+
+  toggleAClassLockBoard() {
+
   }
 }

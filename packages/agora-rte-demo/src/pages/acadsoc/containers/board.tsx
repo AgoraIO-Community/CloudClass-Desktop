@@ -360,35 +360,34 @@ export const EducationBoard = observer((props: any) => {
       case 'rectangle':
       case 'eraser': {
         boardStore.setTool(type)
-        boardStore.currentActiveToolItem = type
         break;
       }
       case 'palette':  {
         boardStore.setTool('color_picker')
-        boardStore.currentActiveToolItem = type
         break;
       }
       case 'mouse': {
         boardStore.setTool('selector')
-        boardStore.currentActiveToolItem = type
         break;
       }
       case 'elliptic': {
         boardStore.setTool('ellipse')
-        boardStore.currentActiveToolItem = type
         break;
       }
       case 'new-page': {
         boardStore.setTool('add')
-        boardStore.currentActiveToolItem = type
         break;
       }
       case 'move': {
         boardStore.setTool('hand_tool')
-        boardStore.currentActiveToolItem = type
+        break;
+      }
+      case 'clear': {
+        boardStore.toggleAClassLockBoard()
         break;
       }
     }
+    boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
   
   return (
