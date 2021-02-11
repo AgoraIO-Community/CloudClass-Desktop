@@ -143,6 +143,7 @@ const zhCN: any = {
     'failed_to_enable_screen_sharing_permission_denied': '开启屏幕共享失败！请先授权屏幕共享权限！',
     'failed_to_send_chat': '发送聊天失败',
     'failed_to_translate_chat': '翻译聊天失败',
+    'failed_to_send_reward': '发送奖励失败',
     'failed_to_join_rtc_please_refresh_and_try_again': '加入rtc失败，请刷新重试',
     'leave_rtc_channel': '离开rtc频道',
     'failed_to_leave_rtc': '离开rtc失败',

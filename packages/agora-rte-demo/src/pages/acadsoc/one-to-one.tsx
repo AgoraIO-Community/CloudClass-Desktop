@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import styles from './style.module.scss'
 import { StudentVideo, TeacherVideo } from './containers/video'
@@ -9,6 +9,7 @@ import { useAcadsocRoomStore, useAppStore, useUIStore, useBoardStore } from '@/h
 import { useHistory } from 'react-router-dom'
 import { Loading } from '@/components/loading'
 import { AutoplayToast } from '@/components/autoplay-toast'
+import {Trophy} from './containers/trophy/trophy'
 import { Setting } from '@/pages/acadsoc/containers/setting';
 
 export const AcadsocOneToOne = observer(() => {
@@ -45,6 +46,11 @@ export const AcadsocOneToOne = observer(() => {
             <div style={{marginBottom: '10px'}}></div>
             <StudentVideo />
             <div style={{marginBottom: '10px'}}></div>
+            {
+              acadsocStore.showTrophyAnimation ? 
+              <Trophy></Trophy>
+              : null
+            }
             <ChatView />
           </div>
         </div>

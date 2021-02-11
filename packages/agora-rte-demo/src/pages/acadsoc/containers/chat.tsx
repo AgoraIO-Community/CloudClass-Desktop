@@ -46,10 +46,17 @@ export const ChatView = observer(() => {
     })
     return message
   }
-  const onClickTranslate = async (message:IChatViewMessage) => { 
-   return {
-      text: '我是翻译',
-      success: true
+  const onClickTranslate = async (message: IChatViewMessage) => {
+    let isSuccess:boolean = false
+    let translateContent:any = ''
+    try {
+      translateContent = await acadsocStore.getTranslationContent(message.chatText)
+    } catch (err) {
+      isSuccess = false
+    }
+    return {
+      text: translateContent.translation,
+      success: isSuccess
     }
   }
   const fetchMessage = async () => {
@@ -78,7 +85,6 @@ export const ChatView = observer(() => {
     setMessages(newMessage.concat(chatMessage))
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
-
   }
   const onInputText = (event: any) => {
     const { value } = event.target;

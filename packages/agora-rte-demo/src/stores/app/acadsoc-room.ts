@@ -30,6 +30,29 @@ export enum EduClassroomStateEnum {
   end = 2
 }
 
+type ProcessType = {
+  reward: number,
+}
+
+type AcadsocRoomProperties = {
+  board: {
+    info: {
+      boardAppId: string,
+      boardId: string,
+      boardToken: string,
+    }
+  },
+  record: {
+    state: number,
+    roomType: number,
+  },
+  students: Record<string, ProcessType>,
+}
+
+export enum acadsocRoomPropertiesChangeCause {
+  studentRewardStateChanged = 1101, // 单个人的奖励发生
+}
+
 const delay = 2000
 
 const ms = 500
@@ -92,6 +115,42 @@ export class AcadsocRoomStore extends SimpleInterval {
   
   @observable
   notice?: any = undefined
+
+  
+
+  @observable
+  roomProperties: AcadsocRoomProperties = {
+    board: {
+      info: {
+        boardAppId: '',
+        boardId: '',
+        boardToken: '',
+      }
+    },
+    record: {
+      state: 0,
+      roomType: 0,
+    },
+    students: {},
+  }
+
+  @observable
+  sutdentsReward: Record<string, number> = {}
+
+  @observable
+  showTranslate: boolean = false
+
+  @observable
+  disableTrophy: boolean = false
+
+  @observable
+  translateText?: string = ''
+
+  @observable
+  showTrophyAnimation: boolean = false
+
+  @observable
+  trophyNumber: number = 0
 
   roomApi!: RoomApi;
 
@@ -208,14 +267,32 @@ export class AcadsocRoomStore extends SimpleInterval {
   @action 
   async getTranslationContent(content: string) {
     try {
-      await eduSDKApi.translateChat({
-        appId: this.eduManager.config.appId,
+      return await eduSDKApi.translateChat({
         content: content,
         from: 'auto',
-        to: this.appStore.params.translateLanguage,
+        to: 'auto',
+        // this.appStore.params.translateLanguage
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
+      const error = new GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+    }
+  }
+
+  // 奖杯
+  @action
+  async sendReward(userUuid: string, reward: number) {
+    try {
+      return await eduSDKApi.sendRewards({
+        roomUuid: this.roomInfo.roomUuid,
+        rewards: [{
+          userUuid: userUuid,
+          changeReward: reward,
+        }]
+      })
+    } catch (err) {
+      this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
       const error = new GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -558,7 +635,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         })
       })
       // 教室更新
-      roomManager.on('classroom-property-updated', async (classroom: any) => {
+      roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
           const classState = get(classroom, 'roomStatus.courseState')
@@ -606,6 +683,10 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
+          // acadsoc
+          this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
+          this.sutdentsReward = get(classroom, 'roomProperties.students', {})
+          this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
@@ -742,6 +823,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       // throw new GenericEerr
       throw new GenericErrorWrapper(err)
     }
+  }
+
+  @action
+  getRewardByUid(uid: string): number {
+    return get(this.sutdentsReward, `${uid}.reward`, 0)
   }
 
   @action
