@@ -128,6 +128,7 @@
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@netless/combine-player": "1.1.4",
+    "@netless/cursor-tool": "0.0.5",
     "@netless/react-seek-slider": "1.0.4",
     "@netless/white-audio-plugin": "1.2.16",
     "@netless/white-video-plugin": "1.2.15",

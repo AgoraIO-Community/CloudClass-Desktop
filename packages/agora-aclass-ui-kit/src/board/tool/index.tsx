@@ -5,7 +5,7 @@ import { ItemBaseClickEvent } from '../declare'
 import { Typography } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
-type PopoverComponentType = 'stroke' | 'color' | 'upload'
+type PopoverComponentType = 'stroke' | 'color' | 'upload' | 'font' | 'drawer'
 export interface IToolItem {
   itemName: string,
   iconUrl?: string,
@@ -26,6 +26,8 @@ export interface ToolProps {
   strokeComponent?: React.ReactElement,
   colorComponent?: React.ReactElement,
   uploadComponent?: React.ReactElement,
+  fontComponent?: React.ReactElement,
+  drawerComponent?: React.ReactElement,
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,8 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
   if (type === 'color') return props.colorComponent
+  if (type === 'font') return props.fontComponent
   if (type === 'stroke') return props.strokeComponent
   if (type === 'upload') return props.uploadComponent
+  if (type === 'drawer') return props.drawerComponent
   return
 }
 

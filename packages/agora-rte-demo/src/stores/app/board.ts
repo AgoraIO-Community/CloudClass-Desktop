@@ -12,13 +12,25 @@ import uuidv4 from 'uuid/v4';
 import { t } from '@/i18n';
 import { EduUser, EduRoleTypeEnum } from 'agora-rte-sdk';
 import { EnumBoardState } from '@/modules/services/board-api';
-import { CustomMenuItemType } from 'agora-aclass-ui-kit';
+import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
+import {CursorTool} from '@netless/cursor-tool'
 
 export enum BoardPencilSize {
   thin = 4,
   small = 8,
   normal = 12,
   large = 18
+}
+
+export enum BoardFrontSizeType {
+  size12 = '12',
+  size14 = '14',
+  size18 = '18',
+  size24 = '24',
+  size26 = '26',
+  size36 = '36',
+  size48 = '48',
+  size72 = '72',
 }
 
 export const resolveFileInfo = (file: any) => {
@@ -64,6 +76,59 @@ enum FollowState {
 }
 
 export class BoardStore {
+
+static toolItems: IToolItem[] = [
+  {
+    itemName: 'mouse',
+    toolTip: true,
+  },
+  {
+    itemName: 'pencil',
+    toolTip: true,
+    popoverType: 'drawer',
+  },
+  {
+    itemName: 'text',
+    toolTip: true,
+    popoverType: 'font',
+  },
+  {
+    itemName: 'rectangle',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'elliptic',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'eraser',
+    toolTip: true,
+  },
+  {
+    itemName: 'palette',
+    toolTip: true,
+    popoverType: 'color',
+  },
+  {
+    itemName: 'new-page',
+    toolTip: true,
+  },
+  {
+    itemName: 'move',
+    toolTip: true,
+  },
+  {
+    itemName: 'upload',
+    toolTip: true,
+    popoverType: 'upload',
+  },
+  {
+    itemName: 'clear',
+    toolTip: true,
+  },
+]
 
   static items: any = [
     {
@@ -410,10 +475,18 @@ export class BoardStore {
       }
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
-      this.currentStroke = this.getCurrentStroke(state.memberState)
-      this.currentArrow = this.getCurrentArrow(state.memberState)
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      if (state.broadcastState?.broadcasterId === undefined) {
+        if (this.room) {
+          this.room.scalePptToFit()
+        }
+      }
+      if (state.memberState) {
+        this.currentStroke = this.getCurrentStroke(state.memberState)
+        this.currentArrow = this.getCurrentArrow(state.memberState)
+        this.currentFontSize = this.getCurrentFontSize(state.memberState)
+      }
       if (state.zoomScale) {
         runInAction(() => {
           this.scale = state.zoomScale
@@ -427,7 +500,15 @@ export class BoardStore {
       }
     })
     BizLogger.info("[breakout board] join", data)
-    await this.boardClient.join(data)
+    const cursorAdapter = new CursorTool(); //新版鼠标追踪
+    await this.boardClient.join({
+      ...data,
+      cursorAdapter,
+      userPayload: {
+        userId: this.appStore.roomStore.roomInfo.userUuid,
+        avatar: ""
+      }
+    })
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -614,6 +695,14 @@ export class BoardStore {
     }
   }
 
+
+  @observable
+  currentActiveToolItem: string = 'mouse' 
+  // @computed
+  // getCurrentActiveToolItem(state: ): string {
+  //   return BoardStore.toolItems[0].itemName
+  // }
+
   @computed
   get currentColor(): string {
     if (this.room) {
@@ -652,6 +741,50 @@ export class BoardStore {
     }
     return mapping[memberState.currentApplianceName]
     // return CustomMenuItemType.Mark
+  }
+
+  @observable
+  currentFontSize: BoardFrontSizeType = BoardFrontSizeType.size12
+
+  changeFontSize(size: BoardFrontSizeType) {
+    const defaultSize = 12
+    const mapping = {
+      [BoardFrontSizeType.size12]: 12,
+      [BoardFrontSizeType.size14]: 14,
+      [BoardFrontSizeType.size18]: 18,
+      [BoardFrontSizeType.size24]: 24,
+      [BoardFrontSizeType.size26]: 26,
+      [BoardFrontSizeType.size36]: 36,
+      [BoardFrontSizeType.size48]: 48,
+      [BoardFrontSizeType.size72]: 72,
+    }
+    if (this.room) {
+      const value = mapping[size] || defaultSize
+      this.room.setMemberState({
+        textSize: value
+      })
+    }
+  }
+
+  getCurrentFontSize(memberState: MemberState): BoardFrontSizeType {
+    const fontSize = memberState.textSize
+    const mapping = {
+      [12]: BoardFrontSizeType.size12,
+      [14]: BoardFrontSizeType.size14,
+      [18]: BoardFrontSizeType.size18,
+      [24]: BoardFrontSizeType.size24,
+      [26]: BoardFrontSizeType.size26,
+      [36]: BoardFrontSizeType.size36,
+      [48]: BoardFrontSizeType.size48,
+      [72]: BoardFrontSizeType.size72,
+    }
+
+    const value = mapping[fontSize]
+    if (value) {
+      return value
+    }
+
+    return BoardFrontSizeType.size12
   }
 
   @action
@@ -1244,6 +1377,10 @@ export class BoardStore {
       g: 0,
       b: 0
     }
+
+    this.currentStroke = CustomMenuItemType.Normal
+    this.currentArrow = CustomMenuItemType.Mark
+    this.currentFontSize = BoardFrontSizeType.size12
   }
 
   roomIsWritable(room: Room): boolean {

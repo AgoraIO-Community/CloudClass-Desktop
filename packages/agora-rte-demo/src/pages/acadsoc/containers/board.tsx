@@ -5,7 +5,6 @@ import {
   Board,
   ColorPalette,
   CustomizeSlider,
-  IToolItem,
   ControlMenu,
   Tool,
   FileUploader,
@@ -17,6 +16,8 @@ import { useBoardStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
 
 const StrokeListPanel = observer(() => {
 
@@ -55,8 +56,6 @@ const ArrowListPanel = observer(() => {
   const boardStore = useBoardStore()
 
   const currentArrow = boardStore.currentArrow
-
-  const [active, setActive] = useState<any>(CustomMenuItemType.Pen);
 
   return (
     <div style={{
@@ -131,6 +130,113 @@ export const EduWhiteBoard = observer(() => {
   )
 })
 
+export interface FontSizeListProps {
+  itemList: BoardFrontSizeType[],
+  active: BoardFrontSizeType,
+  handleClick: (type: BoardFrontSizeType) => any
+}
+
+const useFontStyles = makeStyles((theme: Theme) => ({
+  root: {
+    fontSize: '14px',
+    fontFamily: 'SourceHanSansCN-Regular',
+    display: 'flex',
+    // justifyContent: 'flex-start',
+    alignItems: 'center',
+    background: 'white',
+    borderRadius: '6px',
+    flexWrap: 'wrap',
+  },
+  active: {
+    color: 'white',
+    backgroundColor: '#002591',
+    border: '1px solid #002591',
+    borderRadius: '5px',
+    padding: '2px 7px',
+    margin: '2px',
+    width: '32px',
+  },
+  normal: {
+    border: '1px solid #002591',
+    borderRadius: '5px',
+    padding: '2px 7px',
+    margin: '2px',
+    width: '32px',
+  }
+}));
+
+const FontSizeListView: React.FC<FontSizeListProps> = (props) => {
+
+  const fontClasses = useFontStyles()
+
+  return (
+    <div className={fontClasses.root}>
+      {props.itemList.map((item: BoardFrontSizeType, idx: number) => (
+        <span key={`${item}${idx}`}
+          className={item === props.active ? fontClasses.active : fontClasses.normal}
+          onClick={() => {
+            props.handleClick(item)
+          }}>
+          {item}px
+        </span>
+      ))}
+    </div>
+  )
+}
+
+export const FontSizeList = observer(() => {
+
+  const boardStore = useBoardStore()
+  const {currentFontSize} = boardStore
+
+  return (
+    <FontSizeListView
+      itemList={[
+        BoardFrontSizeType.size12,
+        BoardFrontSizeType.size14,
+        BoardFrontSizeType.size18,
+        BoardFrontSizeType.size24,
+        BoardFrontSizeType.size26,
+        BoardFrontSizeType.size36,
+        BoardFrontSizeType.size48,
+        BoardFrontSizeType.size72,
+      ]}
+      active={currentFontSize}
+      handleClick={(type: BoardFrontSizeType) => {
+        boardStore.changeFontSize(type)
+      }}
+    />
+  )
+})
+
+
+export const FontPopover = observer(() => {
+
+  const boardStore = useBoardStore()
+
+  const {currentColor} = boardStore
+
+  const onClick = useCallback((color: string) => {
+    if (boardStore.boardClient) {
+      boardStore.changeHexColor(color)
+    }
+  }, [boardStore.boardClient])
+
+  return (
+    <PanelBackground style={{
+      width: 210,
+      padding: '5px',
+    }}>
+      <ColorPalette
+        currentColor={currentColor}
+        onClick={onClick}
+      />
+      <h2 style={{textAlign: 'center', color: 'white', fontSize: '14px'}}>字体大小</h2>
+      <FontSizeList />
+    </PanelBackground>
+  )
+})
+
 export const ColorPopover = observer(() => {
 
   const boardStore = useBoardStore()
@@ -145,7 +251,7 @@ export const ColorPopover = observer(() => {
 
   return (
     <PanelBackground style={{
-      width: 225,
+      width: 210,
       padding: '5px',
     }}>
       <ColorPalette
@@ -172,7 +278,7 @@ export const UploadFilePopover = (props: any) => {
   )
 }
 
-export const StrokePopover = observer(() => {
+export const DrawerPopover = observer(() => {
 
   const boardStore = useBoardStore()
 
@@ -184,15 +290,9 @@ export const StrokePopover = observer(() => {
     }
   }, [boardStore.boardClient])
 
-  // const onChange = useCallback((newValue: number) => {
-  //   if (boardStore.boardClient) {
-  //     boardStore.changeStroke(newValue)
-  //   }
-  // }, [boardStore.boardClient])
-
   return (
     <PanelBackground style={{
-      width: 225,
+      width: 210,
       padding: '5px',
     }}>
       <>
@@ -214,61 +314,39 @@ export const StrokePopover = observer(() => {
   )
 })
 
-const toolItems: IToolItem[] = [
-  {
-    itemName: 'mouse',
-    toolTip: true,
-  },
-  {
-    itemName: 'pencil',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'text',
-    toolTip: true,
-    popoverType: 'color',
-  },
-  {
-    itemName: 'rectangle',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'elliptic',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'eraser',
-    toolTip: true,
-  },
-  {
-    itemName: 'palette',
-    toolTip: true,
-    popoverType: 'color',
-  },
-  {
-    itemName: 'new-page',
-    toolTip: true,
-  },
-  {
-    itemName: 'move',
-    toolTip: true,
-  },
-  {
-    itemName: 'upload',
-    toolTip: true,
-    popoverType: 'upload',
-  },
-  {
-    itemName: 'clear',
-    toolTip: true,
-  }
-]
+export const StrokePopover = observer(() => {
+
+  const boardStore = useBoardStore()
+
+  const {currentColor} = boardStore
+
+  const onClick = useCallback((color: string) => {
+    if (boardStore.boardClient) {
+      boardStore.changeHexColor(color)
+    }
+  }, [boardStore.boardClient])
+
+  return (
+    <PanelBackground style={{
+      width: 210,
+      padding: '5px',
+    }}>
+      <>
+        <StrokeListPanel />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <ColorPalette
+          currentColor={currentColor}
+          onClick={onClick}
+        />
+      </>
+    </PanelBackground>
+  )
+})
 
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
+
+  const currentActiveToolItem = boardStore.currentActiveToolItem
 
   const onClickTool = useCallback((type: string) => {
     if (!boardStore.boardClient) {
@@ -280,26 +358,32 @@ export const EducationBoard = observer((props: any) => {
       case 'rectangle':
       case 'eraser': {
         boardStore.setTool(type)
+        boardStore.currentActiveToolItem = type
         break;
       }
       case 'palette':  {
         boardStore.setTool('color_picker')
+        boardStore.currentActiveToolItem = type
         break;
       }
       case 'mouse': {
         boardStore.setTool('selector')
+        boardStore.currentActiveToolItem = type
         break;
       }
       case 'elliptic': {
         boardStore.setTool('ellipse')
+        boardStore.currentActiveToolItem = type
         break;
       }
       case 'new-page': {
         boardStore.setTool('add')
+        boardStore.currentActiveToolItem = type
         break;
       }
       case 'move': {
         boardStore.setTool('hand_tool')
+        boardStore.currentActiveToolItem = type
         break;
       }
     }
@@ -344,9 +428,12 @@ export const EducationBoard = observer((props: any) => {
         }}
       />
       <Tool
+        activeItem={currentActiveToolItem}
+        drawerComponent={<DrawerPopover />}
         strokeComponent={<StrokePopover />}
         colorComponent={<ColorPopover />}
         uploadComponent={<UploadFilePopover />}
+        fontComponent={<FontPopover />}
         headerTitle={props.toolbarName}
         style={{
           top: props.toolY,
@@ -355,7 +442,7 @@ export const EducationBoard = observer((props: any) => {
           position: 'absolute'
         }}
         items={
-          toolItems
+          BoardStore.toolItems
         }
         onClick={onClickTool} />
         {props.children ? props.children : null}

@@ -81,7 +81,7 @@ const toolItems: IToolItem[] = [
   {
     itemName: 'text',
     toolTip: true,
-    popoverType: 'color',
+    popoverType: 'font',
   },
   {
     itemName: 'rectangle',
