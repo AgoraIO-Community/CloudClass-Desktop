@@ -40,6 +40,8 @@ export {
   FileUploader,
   UploaderProps,
   UploadItemProps,
-  StrokeSize,
-  StrokeSizeListProps,
+  CustomMenuItemBaseButtonProps,
+  CustomMenuList,
+  CustomMenuItemType,
+  CustomMenuListProps,
 } from './panel'

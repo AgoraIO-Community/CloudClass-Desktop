@@ -5,17 +5,20 @@ import React from 'react'
 import { rgbaToHexColor } from '../../utils'
 
 const colorMap: Record<string, string> = {
-  'red': rgbaToHexColor('rgb(252, 58, 63, 1.0)'),
-  'orange': rgbaToHexColor('rgb(253, 131, 67, 1.0)'),
-  'yellow': rgbaToHexColor('rgb(255, 218, 86, 1.0)'),
-  'green1': rgbaToHexColor('rgb(159, 223, 118, 1.0)'),
-  'green2': rgbaToHexColor('rgb(96, 232, 198, 1.0)'),
   'blue1': rgbaToHexColor('rgb(87, 178, 252, 1.0)'),
-  'blue2': rgbaToHexColor('rgb(68, 134, 246, 1.0)'),
-  // 'grape1': '',
-  // 'grape2': '',
+  'yellow': rgbaToHexColor('rgb(255, 218, 86, 1.0)'),
+  'red': rgbaToHexColor('rgb(252, 58, 63, 1.0)'),
+  'green1': rgbaToHexColor('rgb(159, 223, 118, 1.0)'),
   'black': '#000000',
   'white': rgbaToHexColor('rgb(255, 255, 255, 0)'),
+
+  // 'orange': rgbaToHexColor('rgb(253, 131, 67, 1.0)'),
+  // 'green2': rgbaToHexColor('rgb(96, 232, 198, 1.0)'),
+  // 'blue2': rgbaToHexColor('rgb(68, 134, 246, 1.0)'),
+  // 'grape1': '',
+  // 'grape2': '',
+
+
 }
 
 export const ColorConfig: string[] = Object.keys(colorMap).map((key: string) => colorMap[key])
@@ -31,11 +34,14 @@ const useStyles = makeStyles(() => ({
   colorBox: {
     display: 'flex',
     // width: 150,
+    borderRadius: '5px',
     flexWrap: 'wrap',
     boxSizing: 'border-box',
+    background: 'white',
+    // marginLeft: '-5px',
     '& > div': {
       padding: 1,
-      margin: 5,
+      margin: 3,
       borderRadius: '50%',
       borderStyle: 'solid',
       borderWidth: 1,
@@ -58,7 +64,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = (props) => {
         <ButtonBase
           disableRipple
           component="span"
-          style={{backgroundColor: `${color}`, borderRadius: '50%', height: 32, width: 32, border: '1px solid #e4dede'}}
+          style={{backgroundColor: `${color}`, borderRadius: '50%', height: 25, width: 25, border: '1px solid #e4dede', boxSizing: 'border-box'}}
           onClick={() => props.onClick(color)}
         >
         </ButtonBase>

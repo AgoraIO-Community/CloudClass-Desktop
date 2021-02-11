@@ -4,16 +4,8 @@ import { dialogManager } from 'agora-aclass-ui-kit'
 import { useAcadsocRoomStore, useSceneStore, useUIStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
-
-export const Nav = () => {
-  return (
-    <Navigation
-      background={'transparent'}
-      leftContainer={statusBar}
-      rightContainer={actionBar}
-    />
-  ) 
-}
+import { get } from 'lodash'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 const userSignalStatus = [{
   userName: '1111',
@@ -22,6 +14,59 @@ const userSignalStatus = [{
   delay: 100,
   packagesLost: 11
 }]
+
+const StartViewBox = observer(() => {
+  const startTime: string = 'start in 10‘11"';
+  return (
+    <StartView text={startTime} />
+  )
+})
+
+const AssistantMenu = observer(() => {
+  return (
+    <Assistant userSignalStatus={userSignalStatus} />
+  ) 
+})
+
+export const Nav = observer(() => {
+
+  const acadsocRoomStore = useAcadsocRoomStore()
+
+  const userRole = get(acadsocRoomStore, 'roomInfo.userRole', 1)
+
+  const statusBar = [
+    {
+      isComponent: false,
+      componentKey: "classID",
+      text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
+    },
+    {
+      isComponent: true,
+      componentKey: "assistant",
+      renderItem: () => { return <AssistantMenu /> }
+    },
+    {
+      isComponent: true,
+      componentKey: "classStartTime",
+      renderItem: () => { return <StartViewBox /> }
+    },
+    {
+      isComponent: true,
+      componentKey: "signalBar",
+      renderItem: () => { return <SignalBarContainer /> }
+    }
+  ]
+
+  const statusBarList = statusBar.filter((it: any) => userRole !== EduRoleTypeEnum.assistant ? it.componentKey !== 'assistant' : true)
+
+  return (
+    <Navigation
+      background={'transparent'}
+      leftContainer={statusBarList}
+      rightContainer={actionBar}
+    />
+  ) 
+})
 
 const onRefresh = () => {
   window.location.reload()
@@ -42,27 +87,6 @@ const SignalBarContainer = observer(() => {
     <SignalBar level={roomStore.signalLevel} width="18px" foregroundColor={'#ffffff'} />
   )
 })
-
-const statusBar: IStatusBar = [{
-  isComponent: false,
-  componentKey: "classID",
-  text: 'ClassID：1273827829'
-},
-// {
-//   isComponent: true,
-//   componentKey: "assistant",
-//   renderItem: () => { return <Assistant userSignalStatus={userSignalStatus} /> }
-// },
-{
-  isComponent: true,
-  componentKey: "classStartTime",
-  renderItem: () => { return <StartView text='start in 10‘11"' /> }
-},
-{
-  isComponent: true,
-  componentKey: "signalBar",
-  renderItem: () => { return <SignalBarContainer /> }
-}]
 
 const ActionBarContainer = observer(() => {
   const uiStore = useUIStore() 

@@ -5,7 +5,8 @@ import {Board, ControlMenu, PanelBackground, Tool, FileUploader} from '.'
 import { CustomizeSlider } from './panel/slider';
 import { ColorPalette } from './panel/palette';
 import { IToolItem } from './tool';
-import bgSvg from './assets/rectangle.svg';
+import { AClassTheme } from '../theme';
+import { CustomMenuItemType, CustomMenuList } from './panel';
 
 export default {
   title: '白板'
@@ -21,7 +22,11 @@ export const ColorPopover = () => {
   }
 
   return (
-    <PanelBackground style={{width: 150}}>
+    <PanelBackground style={{
+      width: 225,
+      padding: '5px',
+      backgroundPosition: 'center'
+    }}>
       <ColorPalette
         currentColor={currentColor}
         onClick={onClick}
@@ -44,16 +49,19 @@ export const StrokePopover = () => {
 
   return (
     <PanelBackground style={{
-      width: 150,
-      background: `url(${bgSvg}) no-repeat`,
+      width: 225,
+      padding: '5px',
       backgroundPosition: 'center'
     }}>
       <>
-        <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
+        <StrokeListPanel />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
         <ColorPalette
           currentColor={currentColor}
           onClick={onClick}
         />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <ArrowListPanel />
       </>
     </PanelBackground>
   )
@@ -199,4 +207,66 @@ EducationBoard.args = {
   width: 640,
   height: 525,
   toolbarName: 'Tools',
+}
+
+const StrokeListPanel = () => {
+
+  const [active, setActive] = useState<any>(CustomMenuItemType.Thin);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      color: '#fff',
+      fontSize: '12px',
+    }}>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <CustomMenuList
+        itemList={[
+          CustomMenuItemType.Thin,
+          CustomMenuItemType.Small,
+          CustomMenuItemType.Normal,
+          CustomMenuItemType.Large,
+        ]}
+        active={
+          active
+        }
+        onClick={(type: any) => {
+          setActive(type)
+        }}
+      />
+    </div>
+  )
+}
+
+const ArrowListPanel = () => {
+
+  const [active, setActive] = useState<any>(CustomMenuItemType.Pen);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      color: '#fff',
+      fontSize: '12px',
+    }}>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <CustomMenuList
+        itemList={[
+          CustomMenuItemType.Pen,
+          CustomMenuItemType.Arrow,
+          CustomMenuItemType.Mark,
+          CustomMenuItemType.Laser,
+        ]}
+        active={
+          active
+        }
+        onClick={(type: any) => {
+          setActive(type)
+        }}
+      />
+    </div>
+  )
 }

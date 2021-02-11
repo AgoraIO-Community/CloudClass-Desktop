@@ -9,12 +9,81 @@ import {
   ControlMenu,
   Tool,
   FileUploader,
+  CustomMenuItemType,
+  CustomMenuList,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { useBoardStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
+
+const StrokeListPanel = observer(() => {
+
+  const boardStore = useBoardStore()
+  const currentStroke = boardStore.currentStroke
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      color: '#fff',
+      fontSize: '12px',
+    }}>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <CustomMenuList
+        itemList={[
+          CustomMenuItemType.Thin,
+          CustomMenuItemType.Small,
+          CustomMenuItemType.Normal,
+          CustomMenuItemType.Large,
+        ]}
+        active={
+          currentStroke
+        }
+        onClick={(type: any) => {
+          boardStore.changeStroke(type)
+        }}
+      />
+    </div>
+  )
+})
+
+const ArrowListPanel = observer(() => {
+
+  const boardStore = useBoardStore()
+
+  const currentArrow = boardStore.currentArrow
+
+  const [active, setActive] = useState<any>(CustomMenuItemType.Pen);
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      color: '#fff',
+      fontSize: '12px',
+    }}>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <CustomMenuList
+        itemList={[
+          CustomMenuItemType.Pen,
+          CustomMenuItemType.Arrow,
+          CustomMenuItemType.Mark,
+          CustomMenuItemType.Laser,
+        ]}
+        active={
+          currentArrow
+        }
+        onClick={(type: any) => {
+          boardStore.changeArrow(type)
+        }}
+      />
+    </div>
+  )
+})
 
 export const BoardView = () => {
   return (
@@ -75,7 +144,10 @@ export const ColorPopover = observer(() => {
   }, [boardStore.boardClient])
 
   return (
-    <PanelBackground>
+    <PanelBackground style={{
+      width: 225,
+      padding: '5px',
+    }}>
       <ColorPalette
         currentColor={currentColor}
         onClick={onClick}
@@ -112,20 +184,31 @@ export const StrokePopover = observer(() => {
     }
   }, [boardStore.boardClient])
 
-  const onChange = useCallback((newValue: number) => {
-    if (boardStore.boardClient) {
-      boardStore.changeStroke(newValue)
-    }
-  }, [boardStore.boardClient])
+  // const onChange = useCallback((newValue: number) => {
+  //   if (boardStore.boardClient) {
+  //     boardStore.changeStroke(newValue)
+  //   }
+  // }, [boardStore.boardClient])
 
   return (
-    <PanelBackground>
+    <PanelBackground style={{
+      width: 225,
+      padding: '5px',
+    }}>
       <>
-        <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
+        <StrokeListPanel />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
         <ColorPalette
           currentColor={currentColor}
           onClick={onClick}
         />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <ArrowListPanel />
+        {/* <CustomizeSlider value={20} minWidth={100} style={{padding: '0 10px'}} onChange={onChange}/>
+        <ColorPalette
+          currentColor={currentColor}
+          onClick={onClick}
+        /> */}
       </>
     </PanelBackground>
   )

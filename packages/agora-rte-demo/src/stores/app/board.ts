@@ -2,7 +2,7 @@ import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
 import { PPTProgressPhase } from '@/utils/upload-manager'
-import { Room, PPTKind, ViewMode } from 'white-web-sdk'
+import { Room, PPTKind, ViewMode, ApplianceNames, MemberState } from 'white-web-sdk'
 import { BoardClient } from '@/components/netless-board/board-client';
 import { get, isEmpty, omit } from 'lodash';
 import { OSSConfig } from '@/utils/helper';
@@ -12,6 +12,14 @@ import uuidv4 from 'uuid/v4';
 import { t } from '@/i18n';
 import { EduUser, EduRoleTypeEnum } from 'agora-rte-sdk';
 import { EnumBoardState } from '@/modules/services/board-api';
+import { CustomMenuItemType } from 'agora-aclass-ui-kit';
+
+export enum BoardPencilSize {
+  thin = 4,
+  small = 8,
+  normal = 12,
+  large = 18
+}
 
 export const resolveFileInfo = (file: any) => {
   const fileName = encodeURI(file.name);
@@ -402,7 +410,8 @@ export class BoardStore {
       }
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
-      console.log('state' , state)
+      this.currentStroke = this.getCurrentStroke(state.memberState)
+      this.currentArrow = this.getCurrentArrow(state.memberState)
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
       if (state.zoomScale) {
@@ -547,10 +556,16 @@ export class BoardStore {
   }
 
   @action
-  changeStroke(value: any) {
+  changeStroke(value: CustomMenuItemType) {
     if (this.room) {
+      const mapping = {
+        [CustomMenuItemType.Thin]: 4,
+        [CustomMenuItemType.Small]: 8,
+        [CustomMenuItemType.Normal]: 12,
+        [CustomMenuItemType.Large]: 18,
+      }
       this.room.setMemberState({
-        strokeWidth: value,
+        strokeWidth: mapping[value],
       })
     }
   }
@@ -606,6 +621,37 @@ export class BoardStore {
       return this.rgbToHexColor(r, g, b)
     }
     return this.rgbToHexColor(255, 255, 255)
+  }
+
+  @observable
+  currentStroke: CustomMenuItemType = CustomMenuItemType.Normal;
+
+  getCurrentStroke(memberState: MemberState): CustomMenuItemType {
+    const mapping = {
+      [4]: CustomMenuItemType.Thin,
+      [8]: CustomMenuItemType.Small,
+      [12]: CustomMenuItemType.Normal,
+      [18]: CustomMenuItemType.Large,
+    }
+    const value = mapping[memberState.strokeWidth]
+    if (value) {
+      return value
+    }
+    return CustomMenuItemType.Normal
+  }
+
+  @observable
+  currentArrow: CustomMenuItemType = CustomMenuItemType.Arrow;
+
+  getCurrentArrow(memberState: MemberState): CustomMenuItemType {
+    const mapping = {
+      [ApplianceNames.arrow]: CustomMenuItemType.Arrow,
+      [ApplianceNames.laserPointer]: CustomMenuItemType.Laser,
+      [ApplianceNames.pencil]: CustomMenuItemType.Mark,
+      [ApplianceNames.straight]: CustomMenuItemType.Pen,
+    }
+    return mapping[memberState.currentApplianceName]
+    // return CustomMenuItemType.Mark
   }
 
   @action
@@ -685,6 +731,23 @@ export class BoardStore {
     if (this.converting) return 'converting';
     if (this.loading) return 'loading';
     return '';
+  }
+
+
+  @action
+  changeArrow(type: CustomMenuItemType) {
+    if (this.room) {
+      const mapping = {
+        [CustomMenuItemType.Arrow]: ApplianceNames.arrow,
+        [CustomMenuItemType.Mark]: ApplianceNames.pencil,
+        [CustomMenuItemType.Laser]: ApplianceNames.laserPointer,
+        [CustomMenuItemType.Pen]: ApplianceNames.straight,
+      }
+      const value = mapping[type]
+      this.room.setMemberState({
+        currentApplianceName: value
+      })
+    }
   }
 
   changePage(idx: number, force?: boolean) {
