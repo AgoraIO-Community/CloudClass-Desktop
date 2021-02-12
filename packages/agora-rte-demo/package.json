@@ -105,6 +105,7 @@
     "pack:mac": "npm run electron:build && electron-builder --mac",
     "pack:win": "npm run electron:build && electron-builder --win",
     "pack:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "setup:mirror": "node ./scripts/mirror.js",
     "doc": "typedoc --o"
   },
   "eslintConfig": {
