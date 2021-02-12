@@ -3,6 +3,7 @@ import { Box } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { INavigation } from './interface'
 
+// TODO: 生产环境下会有异常样式
 export const Navigation = (props: INavigation) => {
   const { minHeight: height = 42, background = '#1D35AD', color = "#fff" } = props
   const useStyles = makeStyles((theme: Theme) => ({
