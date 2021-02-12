@@ -1,4 +1,4 @@
-import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton} from 'agora-aclass-ui-kit'
+import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
 import { useAcadsocRoomStore, useSceneStore, useUIStore } from '@/hooks'
@@ -25,7 +25,7 @@ const StartViewBox = observer(() => {
 const AssistantMenu = observer(() => {
   return (
     <Assistant userSignalStatus={userSignalStatus} />
-  ) 
+  )
 })
 
 export const Nav = observer(() => {
@@ -33,17 +33,21 @@ export const Nav = observer(() => {
   const acadsocRoomStore = useAcadsocRoomStore()
 
   const userRole = get(acadsocRoomStore, 'roomInfo.userRole', 1)
+  const assistantView = {
+    isComponent: true,
+    componentKey: "assistant",
+    renderItem: () => { return <AssistantMenu /> }
+  }
+  const classMessageView = {
+    isComponent: false,
+    componentKey: "classID",
+    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
+  }
 
+  const leftView = userRole === EduRoleTypeEnum.assistant ? assistantView : classMessageView
   const statusBar = [
     {
-      isComponent: false,
-      componentKey: "classID",
-      text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
-    },
-    {
-      isComponent: true,
-      componentKey: "assistant",
-      renderItem: () => { return <AssistantMenu /> }
+      ...leftView
     },
     {
       isComponent: true,
@@ -65,7 +69,7 @@ export const Nav = observer(() => {
       leftContainer={statusBarList}
       rightContainer={actionBar}
     />
-  ) 
+  )
 })
 
 const onRefresh = () => {
@@ -89,7 +93,7 @@ const SignalBarContainer = observer(() => {
 })
 
 const ActionBarContainer = observer(() => {
-  const uiStore = useUIStore() 
+  const uiStore = useUIStore()
 
   const handleSetting = useCallback(() => {
     if (uiStore.aclassVisible) {
@@ -102,7 +106,7 @@ const ActionBarContainer = observer(() => {
   const buttonArr = [
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService', clickEvent: onCustomerService },
-    { name: 'equipmentDetection', clickEvent: handleSetting},
+    { name: 'equipmentDetection', clickEvent: handleSetting },
   ]
 
   return (
@@ -120,7 +124,7 @@ const actionBar: IStatusBar = [{
 {
   isComponent: true,
   componentKey: "exitButton",
-  renderItem: () => { 
+  renderItem: () => {
 
     const history = useHistory()
     const acadsocRoomStore = useAcadsocRoomStore()
@@ -143,6 +147,6 @@ const actionBar: IStatusBar = [{
       })
     }
 
-    return <ExitButton text='Exit' onClick={onExitRoom} /> 
+    return <ExitButton text='Exit' onClick={onExitRoom} />
   }
 }]

@@ -213,14 +213,15 @@
     "zlib": "1.0.5"
   },
   "dependencies": {
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
     "adm-zip": "0.4.14",
     "agora-aclass-ui-kit": "0.0.1",
     "agora-electron-sdk": "education290",
     "agora-rte-sdk": "^1.0.0",
     "bowser": "1.9.4",
+    "react": "16.13.1",
     "react-beautiful-dnd": "13.0.0",
-    "sass": "^1.32.6"
+    "react-dom": "16.13.1",
+    "sass": "^1.32.6",
+    "sass-loader": "^11.0.1"
   }
 }

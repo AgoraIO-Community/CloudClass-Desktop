@@ -86,7 +86,7 @@ export const LongMenu = (props: IProps) => {
         <div onClick={handleClick} className={classes.userNetwork}>
           <NavigationControlButton icon="userNetwork" iconStyle={{ width: 20, height: 16 }} />
           <span>用户实时网络</span>
-          <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 20, height: 16 }} />
+          <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 10, height: 7, margin: 0 }} />
         </div>
       </div>
       <ul className={classes.userNetworkList}>

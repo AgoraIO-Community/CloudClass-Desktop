@@ -17,7 +17,7 @@ export const Navigation = (props: INavigation) => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '4px 20px',
+      padding: '13px 20px 0px',
       boxSizing: 'border-box'
     },
     container: {
