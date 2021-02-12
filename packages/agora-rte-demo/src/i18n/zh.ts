@@ -2,6 +2,33 @@ const BUILD_VERSION = REACT_APP_BUILD_VERSION;
 const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
+  "aclass": {
+    "device": {
+      "videoDetectTitle": "摄像头检测",
+      "audioDetectTitle": "麦克风检测",
+      "speakerDetectTitle": "扬声器检测",
+      "camera": "摄像头选项：",
+      "mic": "麦克风选项：",
+      "speaker": "扬声器选项：",
+      "yes": "可以",
+      "no": "不可以",
+      "repeat": "重新检测",
+      "enter": "进入教室",
+      "changed": "音视频设备发生了变化",
+      "video_failed": "视频设备被占用，或被拔出导致不可用，请检查设备",
+      "audio_failed": "音频设备被占用，或被拔出导致不可用，请检查设备",
+      "report_result_failed": "设备检测失败",
+      "report_result_success": "设备检测成功",
+      "videoDetectText": "能否看到自己的摄像头画面？",
+      "audioDetectText": "对着麦克风说话，是否能听到音量变化？",
+      "speakerDetectText": "请点击播放按钮，是否能听到声音呢？",
+      "cameraTestFailed": "摄像头不可用",
+      "microphoneTestFailed": "麦克风不可用",
+      "speakerTestFailed": "扬声器不可用",
+      "cancel": "取消",
+      "reload": "刷新",
+    }
+  },
   "extension": {
     "grouping": "分组",
     "hands_up": "举手",

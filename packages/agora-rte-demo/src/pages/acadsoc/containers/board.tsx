@@ -398,6 +398,7 @@ export const EducationBoard = observer((props: any) => {
       boxSizing: 'border-box',
       background: 'white'
     }}>
+      {boardStore.aClassHasPermission ? 
       <ZoomController
         style={{
           position: 'absolute',
@@ -427,7 +428,8 @@ export const EducationBoard = observer((props: any) => {
         onExitFullScreen={() => {
           boardStore.zoomBoard('fullscreenExit')
         }}
-      />
+      /> : null}
+      {boardStore.aClassHasPermission ? 
       <Tool
         activeItem={currentActiveToolItem}
         drawerComponent={<DrawerPopover />}
@@ -445,7 +447,8 @@ export const EducationBoard = observer((props: any) => {
         items={
           BoardStore.toolItems
         }
-        onClick={onClickTool} />
+        onClick={onClickTool}
+      /> : null}
         {props.children ? props.children : null}
     </Board>
   )

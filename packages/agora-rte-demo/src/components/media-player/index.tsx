@@ -8,7 +8,8 @@ interface RendererPlayerProps {
   className?: string
   fitMode?: boolean
   style?: React.CSSProperties
-  children?: any
+  children?: any,
+  placeholderComponent?: React.ReactElement
 }
 
 export const RendererPlayer = (props: RendererPlayerProps) => {
@@ -26,6 +27,7 @@ export const RendererPlayer = (props: RendererPlayerProps) => {
   return (
     <div style={props.style} key={props.track && props.track.videoTrack ? props.track.videoTrack.getTrackId() : ''} id={props.id ? props.id : ''} className={props.className} ref={ref}>
       {props.children ? props.children : null}
+      {props.placeholderComponent ? props.placeholderComponent : null}
     </div>
   )
 }

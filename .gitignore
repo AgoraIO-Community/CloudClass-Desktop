@@ -26,3 +26,4 @@ packages/agora-log-sdk
 *.install.md
 *.json.lerna_backup
 packages/agora-log-module/
+packages/agora-rte-demo/aclass/

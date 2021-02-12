@@ -1,0 +1,31 @@
+.videoRenderer {
+  width: 268px;
+  min-height: 194px;
+}
+
+.cameraPlaceholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgb(222, 244, 255);
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  // border-radius: 13px;
+  .camIcon {
+    background: url('../assets/no-camera.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 15px;
+  }
+  .text {
+    color: rgb(0, 37, 145);
+    font-size: 16px;
+  }
+}

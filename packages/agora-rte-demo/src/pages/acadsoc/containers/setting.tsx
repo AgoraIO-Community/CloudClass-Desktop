@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { useDeviceStore, usePretestStore, useUIStore } from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { t } from '@/i18n'
+import { CameraPreview } from './pretest/component'
+import styles from './setting/style.module.scss'
 
 export type DeviceList = {
   deviceId: string,
@@ -175,7 +177,7 @@ export const SettingWeb = observer(() => {
         minHeight: 40,
       }}
       paperStyle={{
-        height: 600,
+        height: 'auto',
         width: 480,
         padding: 20,
         paddingTop: 0,
@@ -207,7 +209,15 @@ export const SettingWeb = observer(() => {
         <RowItem>
           <div className={classes.cameraDetect}>
             <div style={{flex: 1}}></div>
-            <RendererPlayer
+            <div className={styles.positionSettingPreview}>
+              <CameraPreview 
+                key={pretestStore.cameraId}
+                id={'settingCamera'}
+                previewPlaceText="请保持微笑哦~"
+                renderer={pretestStore.cameraRenderer}
+              />
+            </div>
+            {/* <RendererPlayer
               key={pretestStore.cameraId}
               style={{
                 width: '310px',
@@ -219,7 +229,7 @@ export const SettingWeb = observer(() => {
               preview={true}
             >
               <div className={classes.placeholder}></div>
-            </RendererPlayer>
+            </RendererPlayer> */}
           </div>
         </RowItem>
         <RowItem>
@@ -255,11 +265,11 @@ export const SettingWeb = observer(() => {
             }}
           />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <VolumeSlider value={20} onChange={(val: number) => {
             console.log("slider ", val)
           }} />
-        </RowItem>
+        </RowItem> */}
         {/* <RowItem>
           <SpeakerDeviceVolume 
             currentVolume={10}
@@ -310,7 +320,7 @@ export const SettingNative = observer(() => {
         minHeight: 40,
       }}
       paperStyle={{
-        height: 600,
+        height: 'auto',
         width: 480,
         padding: 20,
         paddingTop: 0,
@@ -328,7 +338,7 @@ export const SettingNative = observer(() => {
       <div className={classes.container}>
         <RowItem>
           <DevicePicker
-            name="摄像头选项："
+            name={t("aclass.device.camera")}
             value={pretestStore.cameraId}
             onChange={handleCameraChange}
             list={pretestStore.cameraList}
@@ -341,7 +351,7 @@ export const SettingNative = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="麦克风选项："
+            name={t("aclass.device.mic")}
             value={pretestStore.microphoneId}
             onChange={handleMicrophoneChange}
             list={pretestStore.microphoneList}
@@ -354,7 +364,7 @@ export const SettingNative = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="扬声器选项: "
+            name={t("aclass.device.speaker")}
             value={pretestStore.speakerId}
             onChange={handleSpeakerChange}
             list={pretestStore.speakerList}
@@ -377,10 +387,13 @@ export const SettingNative = observer(() => {
 
 
 export const Setting = observer(() => {
-  const isNative = false
+  const uiStore = useUIStore()
+  const isNative = uiStore.isElectron
   return (
     isNative ? 
     <SettingNative /> :
     <SettingWeb />
   )
 })
+
+// export const Setting = observer(() =>)

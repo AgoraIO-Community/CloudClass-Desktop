@@ -39,14 +39,26 @@ export class PretestStore {
     this.activeDeviceItem = type
   }
 
-  @observable
-  cameraTestResult: string = 'default'
-  
-  @observable
-  microphoneTestResult: string = 'default'
+  @computed
+  get deviceTestSuccess(): boolean {
+    if (
+      this.cameraTestResult !== 'error' &&
+      this.microphoneTestResult !== 'error' &&
+      this.speakerTestResult !== 'error'
+    ) {
+      return true
+    }
+    return false
+  }
 
   @observable
-  speakerTestResult: string = 'default'
+  cameraTestResult: string = 'error'
+  
+  @observable
+  microphoneTestResult: string = 'error'
+
+  @observable
+  speakerTestResult: string = 'error'
 
   @action
   setCameraTestResult(v: string) {
@@ -104,7 +116,7 @@ export class PretestStore {
 
   @computed
   get speakerId(): string {
-    return ''
+    return 'web_default'
   }
 
   @observable
@@ -198,7 +210,19 @@ export class PretestStore {
   }
 
   @observable
-  speakerList: any[] = []
+  _speakerList: any[] = []
+  
+  @computed
+  get speakerList(): any[] {
+    // if (this.appStore.uiStore.isElectron) {
+    //   return this._speakerList
+    // }
+    return [{
+      label: 'browser default',
+      deviceId: 'web_default'
+    }]
+    // return this._speakerList
+  }
 
   init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
     if (option.video) {

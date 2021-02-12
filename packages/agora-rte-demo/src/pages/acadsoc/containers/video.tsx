@@ -4,7 +4,7 @@ import {Video} from 'agora-aclass-ui-kit'
 import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
-
+import styles from './video.module.scss'
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -17,6 +17,15 @@ export interface VideoMediaStream {
   placeHolderType: any,
   placeHolderText: string
 }
+
+const VideoPlaceholder = () => (
+  <div className={styles.cameraPlaceholder}>
+  <div className={styles.camIcon}></div>
+    <div className={styles.text}>
+      no camera
+    </div>
+  </div>
+)
 
 export const TeacherVideo = observer(() => {
   const sceneStore = useSceneStore()
@@ -69,7 +78,7 @@ export const TeacherVideo = observer(() => {
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className="rtc-video" /> : null}
+      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
     </Video>
   )
 })
@@ -135,7 +144,7 @@ export const StudentVideo = observer(() => {
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className="rtc-video" /> : null}
+      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
     </Video>
   )
 })

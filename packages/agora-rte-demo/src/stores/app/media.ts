@@ -4,6 +4,7 @@ import { t } from '@/i18n';
 import { observable, action, computed } from 'mobx';
 import { LocalUserRenderer } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
+import { dialogManager } from 'agora-aclass-ui-kit';
 
 const delay = 2000
 
@@ -94,10 +95,38 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
+      const dialog = dialogManager.add({
+        title: t('aclass.device.audio_failed'),
+        contentText: t('aclass.device.audio_failed'),
+        confirmText: t('aclass.device.reload'),
+        visible: true,
+        cancelText: t('aclass.device.cancel'),
+        onConfirm: () => {
+          dialog.destroy()
+          window.location.reload()
+        },
+        onClose: () => {
+          dialog.destroy()
+        }
+      })
       await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
+      const dialog = dialogManager.add({
+        title: t('aclass.device.video_failed'),
+        contentText: t('aclass.device.video_failed'),
+        confirmText: t('aclass.device.reload'),
+        visible: true,
+        cancelText: t('aclass.device.cancel'),
+        onConfirm: () => {
+          dialog.destroy()
+          window.location.reload()
+        },
+        onClose: () => {
+          dialog.destroy()
+        }
+      })
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
       await this.appStore.deviceStore.init({ video: true })
     }, delay))
