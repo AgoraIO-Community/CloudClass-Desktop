@@ -528,15 +528,16 @@ static toolItems: IToolItem[] = [
     window.addEventListener('resize', this.resizeCallback)
     this.updateSceneItems()
 
-    const isFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1) {
-
-    }
+    const isFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1)
 
   }
 
-  isFirstLogin() : boolean {
+  isFirstLogin(): boolean {
     const teacherFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1)
-    return false
+    if (teacherFirstLogin === -1) {
+      return false
+    }
+    return teacherFirstLogin
   }
 
 
