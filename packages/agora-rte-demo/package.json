@@ -2,7 +2,7 @@
   "name": "agora-rte-demo",
   "version": "6.2.0",
   "private": true,
-  "homepage": "/aclass",
+  "homepage": ".",
   "main": "./src/index.tsx",
   "babel": {
     "presets": [
@@ -105,7 +105,6 @@
     "pack:mac": "npm run electron:build && electron-builder --mac",
     "pack:win": "npm run electron:build && electron-builder --win",
     "pack:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
-    "setup:mirror": "node ./scripts/mirror.js",
     "doc": "typedoc --o"
   },
   "eslintConfig": {
@@ -125,9 +124,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "7.7.5",
-    "@material-ui/core": "4.9.9",
-    "@material-ui/icons": "4.9.1",
-    "@material-ui/lab": "4.0.0-alpha.56",
+    "@material-ui/core": "4.11.3",
+    "@material-ui/icons": "4.11.2",
+    "@material-ui/lab": "4.0.0-alpha.57",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.5",
     "@netless/react-seek-slider": "1.0.4",
@@ -182,8 +181,8 @@
     "moment": "2.24.0",
     "node-downloader-helper": "1.0.17",
     "node-sass": "4.12.0",
-    "sass-loader": "7.2.0",
     "progress-bar-webpack-plugin": "2.1.0",
+    "sass-loader": "7.2.0",
     "promise-polyfill": "8.2.0",
     "purify-css": "1.2.5",
     "purifycss-webpack": "0.7.0",

@@ -5,13 +5,19 @@ import ReactDOM from 'react-dom';
 import { App } from '@/monolithic/app';
 import * as serviceWorker from '@/serviceWorker';
 import TagManager from 'react-gtm-module';
-import {isElectron} from '@/utils/platform';
+import { isElectron } from '@/utils/platform';
 import { EduManager } from 'agora-rte-sdk';
-import {AgoraEduSDK} from './edu-sdk';
+import { AgoraEduSDK } from './edu-sdk';
 import { eduSDKApi } from './services/edu-sdk-api';
 import { GlobalStorage } from '@/utils/custom-storage';
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
+
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'eduClass',
+});
+
 
 // NOTE: 改方法仅在开发环境生效，所以在开发环境禁止。
 if (process.env.NODE_ENV === "development") {
@@ -48,18 +54,20 @@ eduSDKApi.updateConfig({
 // roomConfig: RoomParameters
 
 ReactDOM.render(
-  <App
-    appConfig={{
-      agoraAppId: `${REACT_APP_AGORA_APP_ID}`,
-      agoraNetlessAppId: `${REACT_APP_NETLESS_APP_ID}`,
-      // agoraRestFullToken: window.btoa(`${REACT_APP_AGORA_CUSTOMER_ID}:${REACT_APP_AGORA_CUSTOMER_CERTIFICATE}`),
-      sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-      enableLog: true,
-      rtmToken: '',
-      rtmUid: '',
-    }}
+  <StylesProvider generateClassName={generateClassName}>
+    <App
+      appConfig={{
+        agoraAppId: `${REACT_APP_AGORA_APP_ID}`,
+        agoraNetlessAppId: `${REACT_APP_NETLESS_APP_ID}`,
+        // agoraRestFullToken: window.btoa(`${REACT_APP_AGORA_CUSTOMER_ID}:${REACT_APP_AGORA_CUSTOMER_CERTIFICATE}`),
+        sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+        enableLog: true,
+        rtmToken: '',
+        rtmUid: '',
+      }}
     // basename={"/education_web"}
-  />,
+    />
+  </StylesProvider>,
   document.getElementById('root')
 );
 

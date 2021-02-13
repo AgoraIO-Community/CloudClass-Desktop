@@ -35,42 +35,13 @@ interface DeviceItemProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+  settingBox: {
     display: 'flex',
     flexDirection: 'column',
     borderRadius: 30,
     background: '#DEF4FF',
     padding: 25,
     flex: 1,
-  },
-  settingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: 30,
-    background: '#DEF4FF',
-    padding: 25,
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  btnBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  select: {
-    borderRadius: '20px',
-    border: '1px solid #002591',
-    minWidth: 310,
-    maxWidth: 310,
-    '& .MuiInputBase-root': {
-      display: 'flex'
-    }
   },
   cameraDetect: {
     display: 'flex',
@@ -88,11 +59,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0
   },
-  dialogHeader: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  // dialogHeader: {
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // },
   dialogContent: {
     display: 'flex',
     // justifyContent: 'center',
@@ -192,7 +163,7 @@ export const SettingWeb = observer(() => {
         color: 'white'
       }}
     >
-      <div className={classes.container}>
+      <div className={classes.settingBox}>
         <RowItem>
           <DevicePicker
             name="摄像头选项："
@@ -335,7 +306,7 @@ export const SettingNative = observer(() => {
         color: 'white'
       }}
     >
-      <div className={classes.container}>
+      <div className={classes.settingBox}>
         <RowItem>
           <DevicePicker
             name={t("aclass.device.camera")}
