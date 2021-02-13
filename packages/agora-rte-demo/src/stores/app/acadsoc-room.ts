@@ -192,6 +192,15 @@ export class AcadsocRoomStore extends SimpleInterval {
     return this.sceneStore.userUuid
   }
 
+  @computed
+  get isTeacher(): boolean {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      return true
+    }
+    return false 
+  }
+
+
   @action
   async sendMessage(message: any) {
     const ts = +Date.now();

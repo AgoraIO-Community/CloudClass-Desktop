@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useMemo } from 'react'
-import {Video} from 'agora-aclass-ui-kit'
+import {Video, Volume} from 'agora-aclass-ui-kit'
 import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
@@ -63,6 +63,8 @@ export const TeacherVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      showBoardIcon={false}
+      disableBoard={true}
       disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={0}
       visibleTrophy={false}
@@ -79,6 +81,9 @@ export const TeacherVideo = observer(() => {
       placeHolderText={userStream.placeHolderText}
     >
       { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+      <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 9999}}>
+        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={1} maxLength={5} width={'18px'} height={'5px'} />
+      </div>
     </Video>
   )
 })
@@ -86,11 +91,14 @@ export const TeacherVideo = observer(() => {
 export const StudentVideo = observer(() => {
   const sceneStore = useSceneStore()
   const acadsocStore = useAcadsocRoomStore()
+  const boardStore = useBoardStore()
 
   const userStream = sceneStore.studentStreams[0] as VideoMediaStream
   const roomInfo = sceneStore.roomInfo
   
   const isLocal = userStream.local
+
+  const isTeacher = acadsocStore.isTeacher
 
   const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
 
@@ -114,7 +122,10 @@ export const StudentVideo = observer(() => {
       await acadsocStore.sendReward(uid, 1)
       // acadsocStore.showTrophyAnimation = true
     }
-  }, [userStream.video, userStream.audio, isLocal])
+    if (type.sourceType === 'board') {
+      boardStore.toggleAClassLockBoard()
+    }
+  }, [userStream.video, userStream.audio, isLocal, boardStore])
 
   const renderer = userStream.renderer
   
@@ -129,10 +140,13 @@ export const StudentVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      showBoardIcon={true}
+      disableBoard={isTeacher ? true : false}
       disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={trophyNumber}
       visibleTrophy={true}
       role={"student"}
+      boardState={boardStore.lockBoard ? false : true}
       videoState={userStream.video}
       audioState={userStream.audio}
       onClick={handleClick}
@@ -145,6 +159,9 @@ export const StudentVideo = observer(() => {
       placeHolderText={userStream.placeHolderText}
     >
       { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
+      <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={1} maxLength={5} width={'18px'} height={'5px'} />
+      </div>
     </Video>
   )
 })
