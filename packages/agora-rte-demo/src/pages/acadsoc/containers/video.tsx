@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useMemo } from 'react'
 import {Video, Volume} from 'agora-aclass-ui-kit'
-import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
+import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
