@@ -1,59 +1,27 @@
-import {Dialog as MDialog, DialogContent as MDialogContent, DialogContentText as MDialogContentText, DialogActions, Box, Typography, DialogTitle as MDialogTitle, Dialog, Theme} from '@material-ui/core'
-import { Tabs as MTabs, Tab as MTab } from '@material-ui/core'
+import {
+  Dialog as MDialog,
+  DialogContent as MDialogContent,
+  DialogContentText as MDialogContentText,
+  DialogActions,
+  Box,
+  Typography,
+  DialogTitle as MDialogTitle,
+  Dialog,
+  Theme,
+  Paper,
+  TableContainer,
+} from '@material-ui/core'
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles'
 import React, { ReactEventHandler } from 'react'
 import { CustomizeTheme, themeConfig } from '../../theme'
 import { noop } from '../../declare'
+
+import { DiskTabs, DiskTab } from "./tabs";
 import { DiskFramePaper } from '../dialog/frame'
-import DiskTables from '../table/list'
 
-interface DiskTabsProps {
-  value: number;
-  onChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
-}
-
-const DiskTabs = withStyles({
-  indicator: {
-    display: "flex",
-    justifyContent: "center",
-    backgroundColor: "transparent",
-    marginTop: '-2.2rem',
-    marginRight: '-1.1rem',
-    "& > span": {
-      maxWidth: 80,
-      width: "100%",
-      backgroundColor: "#74BFFF"
-    }
-  }
-})((props: DiskTabsProps) => (
-  <MTabs {...props} TabIndicatorProps={{ children: <span /> }} />
-));
-
-interface DiskTabProps {
-  label: string;
-}
-
-const DiskTab = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      textTransform: "none",
-      color: "#fff",
-      fontWeight: 400,
-      fontSize: "16px",
-      marginRight: '-40px',
-      "&:focus": {
-        opacity: 1,
-      },
-      "&:hover": {
-        opacity: 1,
-      },
-      "&:active": {
-        color: 0.6,
-      },
-    }
-  })
-)((props: DiskTabProps) => <MTab disableRipple {...props} />);
-
+import PrivateDiskTables from '../table/private-disk-table'
+import PublicDiskTables from '../table/public-disk-table'
+import DownloadDiskTables from "../table/download-disk-table";
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = createStyles({
@@ -124,9 +92,10 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
 
   const classes = useStyles()
   const onClose = props.onClose ? props.onClose: noop
-  const [value, setValue] = React.useState(0)
+  const [activeValue, setActiveValue] = React.useState(0)
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue)
+    setActiveValue(newValue)
+    console.log('>>>>>>>newValue', newValue)
   };
 
   const DiskPaper = (paperProps: any) => {
@@ -139,21 +108,6 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         onClose={onClose}
         showHeader={true}
         title={props.title} />
-    )
-  }
-
-  const DiskTabsComponent = () => {
-    return (
-      <div style={{ marginTop: '-2.2rem' }}>
-        <DiskTabs
-          value={value}
-          onChange={handleChange}
-          aira-label="disk tabs"
-        >
-          <DiskTab label="公共资源" />
-          <DiskTab label="我的云盘" />
-        </DiskTabs>
-      </div>
     )
   }
 
@@ -183,8 +137,56 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         open={props.visible}
         onClose={onClose}
       >
-        { DiskTabsComponent() }
-        <DiskTables></DiskTables>
+        {/*  active Id  tables */}
+        {/*<tabs value={activeId} />*/}
+        {/*<activeId === xxx && (渲染不同 table 组件)>*/}
+        <div style={{ marginTop: '-2.2rem' }}>
+          <DiskTabs
+            value={activeValue}
+            onChange={handleChange}
+            aira-label="disk tabs"
+          >
+            <DiskTab id="disk-tab-public" label="公共资源" />
+            <DiskTab id="disk-tab-private" label="我的云盘" />
+            <DiskTab id="disk-tab-ware" label="下载课件" />
+          </DiskTabs>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}>
+          <Paper style={{
+            width: '770px',
+            borderRadius: '10px',
+            marginBottom: '16px',
+          }}>
+            <TableContainer style={{
+              height: '480px',
+              width: '730px',
+              borderRadius: '20px',
+              padding: '20px'
+            }}>
+              {
+                activeValue === 0 && (
+                  <PublicDiskTables tabValue={activeValue}></PublicDiskTables>
+                )
+              }
+
+              {
+                activeValue === 1 && (
+                  <PrivateDiskTables tabValue={activeValue}></PrivateDiskTables>
+                )
+              }
+              {
+                activeValue === 2 && (
+                  <DownloadDiskTables tabValue={activeValue}></DownloadDiskTables>
+                )
+              }
+            </TableContainer>
+          </Paper>
+        </div>
       </MDialog>
     )
   }
@@ -196,8 +198,8 @@ export interface DiskManagerDialogProps extends NetworkDiskDialogProps {}
 
 export const DiskManagerDialog: React.FC<DiskManagerDialogProps> = (props) => {
   return (
-    // <CustomizeTheme>
+    <CustomizeTheme>
       <NetworkDiskDialog {...props} />
-    // </CustomizeTheme>
+    </CustomizeTheme>
   )
 }

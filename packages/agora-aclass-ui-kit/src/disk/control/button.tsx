@@ -34,7 +34,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
       color: '#5471FE',
       backgroundColor: '#ffffff',
       border: '1px solid #5471FE',
-      marginLeft: '20px',
+      // marginLeft: '20px',
       textTransform: 'none',
       '&:hover': {
         color: '#7C91F8',
@@ -83,13 +83,14 @@ const useButtonStyles = makeStyles((theme: Theme) =>
       },
     },
     label: {
-      fontSize: '16px',
+      fontSize: '14px',
       lineHeight: '9px',
     }
   }),
 )
 
 export interface ButtonProps {
+  id?: string,
   text: string,
   color: "primary" | "secondary",
   onClick?: ReactEventHandler<any>,

@@ -2,6 +2,7 @@ import React from 'react'
 import { DiskButton } from './control/button'
 import { DiskManagerDialog } from './dialog/manager'
 import { Loading } from './control/loading'
+import TableEmpty from "./dialog/table-empty";
 
 export default {
   title: '网盘'
@@ -63,35 +64,35 @@ NetworkDisk.args = {
 
 }
 
-export const UploadButton = (props: any) => {
+export const PrimaryButton = (props: any) => {
   return (
     <DiskButton onClick={props.onClick} color={props.color} text={props.text}></DiskButton>
   )
 }
 
-UploadButton.args = {
+PrimaryButton.args = {
   color: 'primary',
   text: '上传',
 }
 
-export const DeleteButton = (props: any) => {
+export const SecondaryButton = (props: any) => {
   return (
     <DiskButton onClick={props.onClick} color={props.color} text={props.text}></DiskButton>
   )
 }
 
-DeleteButton.args = {
+SecondaryButton.args = {
   color: 'secondary',
   text: '删除',
 }
 
-export const ReloadButton = (props: any) => {
+export const DangerButton = (props: any) => {
   return (
     <DiskButton onClick={props.onClick} color={props.color} text={props.text}></DiskButton>
   )
 }
 
-ReloadButton.args = {
+DangerButton.args = {
   color: 'danger',
   text: '重新加载',
 }
@@ -110,5 +111,11 @@ DisabledButton.args = {
 export const DiskLoading = (props: any) => {
   return (
     <Loading />
+  )
+}
+
+export const Empty = () => {
+  return (
+    <TableEmpty />
   )
 }

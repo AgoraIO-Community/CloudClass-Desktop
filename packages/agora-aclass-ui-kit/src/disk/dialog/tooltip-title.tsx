@@ -67,7 +67,7 @@ export const FileSupportTitle = () => {
   ]
 
   return (
-    <Box className={classes.container}>
+    <Box id="disk-icon-file" className={classes.container}>
       <div className={classes.title}>教室内支持的文件格式</div>
       {
         fileSupportList.map((item, index) => {

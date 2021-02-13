@@ -1,22 +1,28 @@
 import React from 'react';
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, CheckboxProps, InputAdornment, makeStyles, createStyles, withStyles, Theme, TextField } from "@material-ui/core";
+import { IconButton, Table, TableBody, TableRow, InputAdornment, makeStyles, createStyles, Theme, TextField } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { UploadButton, DeleteButton } from '../index.stories'
+import { DiskCheckbox } from "../control/checkbox";
+import { DiskTableCellHead, DiskTableCell } from "../dialog/table-cell";
+import { EnhancedTableHead } from "../control/enhanced-table-head";
 import DiskToast from '../control/toast'
+import TableEmpty from "../dialog/table-empty";
+import { DiskButton } from "../control/button";
+
 import IconRefresh from '../assets/icon-refresh.png'
 
-interface Data {
-  calories: string;
+export interface Data {
+  calories: any;
   fat: number;
   name: string;
 }
 
-const createData = function (name: string, calories: string, fat: number): Data {
+export const createData = function (name: string, calories: any, fat: number): Data {
   return { name, calories, fat, };
 }
 
-const rows = [
+// mock data
+export const rows: any[] = [
   createData('Cupcake', '1.3 M', 3.7),
   createData('Donut', '1.4 M', 25.0),
   createData('Eclair', '2.7 M', 16.0),
@@ -25,7 +31,7 @@ const rows = [
   createData('Honeycomb', '408 M', 3.2),
 ];
 
-function descendingComparator(a: any, b: any, orderBy: any) {
+export const descendingComparator = function(a: any, b: any, orderBy: any) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -35,15 +41,15 @@ function descendingComparator(a: any, b: any, orderBy: any) {
   return 0;
 }
 
-type Order = 'asc' | 'desc';
+export type Order = 'asc' | 'desc';
 
-const getComparator = function(order: Order, orderBy: any) {
+export const getComparator = function(order: Order, orderBy: any) {
   return order === 'desc'
     ? (a: any, b: any) => descendingComparator(a, b, orderBy)
     : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-const stableSort = function(array: any[], comparator: (a: any, b: any) => number) {
+export const stableSort = function(array: any[], comparator: (a: any, b: any) => number) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -53,114 +59,8 @@ const stableSort = function(array: any[], comparator: (a: any, b: any) => number
   return stabilizedThis.map((el) => el[0]);
 }
 
-// check box styles
-const DiskCheckbox = withStyles({
-  root: {
-    color: '#B4BADA',
-  },
-  checked: {
-    color: '#5471FE',
-  },
-  indeterminate: {
-    color: '#5471FE',
-  },
-})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
-
-const DiskTableCellHead = withStyles(() =>
+export const useDiskTableStyles = makeStyles((theme: Theme) =>
   createStyles({
-    head: {
-      backgroundColor: '#F8F8FB',
-      color: '#273D75',
-    },
-    body: {
-      color: '#273D75',
-    },
-  }),
-)(TableCell);
-
-const DiskTableCell = withStyles(() =>
-  createStyles({
-    head: {
-      color: '#fff',
-    },
-    body: {
-      color: '#273D75',
-    }
-  }),
-)(TableCell);
-
-interface EnhancedTableProps {
-  classes: ReturnType<typeof useStyles>;
-  numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: any) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
-const EnhancedTableHead = (props: EnhancedTableProps) => {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: any) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow style={{ color: '#273D75' }}>
-        <DiskTableCellHead padding="checkbox">
-          <DiskCheckbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </DiskTableCellHead>
-        <DiskTableCellHead style={{ paddingLeft: 0 }} id="name" key="name" scope="row">文件名</DiskTableCellHead>
-        <DiskTableCellHead id="calories" key="calories" align="right">大小</DiskTableCellHead>
-        <DiskTableCellHead id="fat" key="fat" align="right">修改时间</DiskTableCellHead>
-      </TableRow>
-    </TableHead>
-  );
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignContent: 'center',
-      width: '100%',
-    },
-    paper: {
-      width: '770px',
-      borderRadius: '10px',
-      marginBottom: theme.spacing(2),
-    },
-    titleBox: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingBottom: '20px'
-    },
-    titleButton: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    secondButton: {
-      marginLeft: '20px',
-    },
-    titleImg: {
-      marginLeft: '20px',
-      '&:hover': {
-        opacity: 0.6,
-        cursor: 'pointer',
-      }
-    },
-    titleSearch: {
-
-    },
     container: {
       height: '480px',
       width: '730px',
@@ -181,10 +81,17 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
+    downloadLabel: {
+      color: '#273D75',
+      marginRight: '12px',
+    },
+    downloadText: {
+      color: '#5471FE',
+    },
   }),
 );
 
-const useInputStyles = makeStyles((theme: Theme) =>
+export const useSearchStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: '2px 4px',
@@ -193,6 +100,24 @@ const useInputStyles = makeStyles((theme: Theme) =>
       width: '200px',
       height: '34px',
       border: 'none',
+    },
+    titleBox: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingBottom: '20px'
+    },
+    titleButton: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    titleImg: {
+      marginLeft: '20px',
+      '&:hover': {
+        opacity: 0.6,
+        cursor: 'pointer',
+      }
     },
     input: {
       marginLeft: theme.spacing(1),
@@ -212,13 +137,15 @@ const useInputStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function DiskTables() {
-  const classes = useStyles()
+export interface DiskTablesProps {
+  tabValue: number,
+}
+
+const PrivateDiskTables = (props: DiskTablesProps) => {
+  const classes = useDiskTableStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
   const [selected, setSelected] = React.useState<string[]>([])
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [openToast, setOpenToast] = React.useState({
     open: false,
     toastMessage: '',
@@ -226,13 +153,6 @@ export default function DiskTables() {
   })
 
   const { open, toastMessage, type } = openToast
-
-
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: any) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -265,9 +185,9 @@ export default function DiskTables() {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  const classInput = useInputStyles()
+  const classSearch = useSearchStyles()
 
   const [searchContent, setSearchContent] = React.useState('')
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,31 +222,32 @@ export default function DiskTables() {
     })
   }
 
-  const DiskSearch = () => {
+  const DiskSearch = (props: any) => {
     return (
-      <div className={classes.titleBox}>
-        <div className={classes.titleButton}>
-          <UploadButton onClick={handleUpload} color={'primary'} text={'上传'} />
-          <DeleteButton onClick={handleDelete} color={'secondary'} text={'删除'} />
-          <img onClick={handleRefresh} src={IconRefresh} className={classes.titleImg} />
+      <div className={classSearch.titleBox}>
+        <div className={classSearch.titleButton}>
+          <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} />
+          <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
+          <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} />
         </div>
-        <div className={classes.titleSearch}>
+        <div>
           <TextField
-            className={classInput.input}
+            id="disk-input-search"
+            className={classSearch.input}
             onChange={handleChange}
             placeholder={'搜索'}
             variant='outlined'
             value={searchContent}
             InputProps={{
               classes: {
-                root: classInput.root,
+                root: classSearch.root,
               },
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleClearInput} className={classInput.iconButton}>
+                  <IconButton onClick={handleClearInput} className={classSearch.iconButton}>
                     <CancelIcon />
                   </IconButton>
-                  <IconButton type="submit" className={classInput.iconButton} aria-label="search">
+                  <IconButton type="submit" className={classSearch.iconButton} aria-label="search">
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>
@@ -346,7 +267,7 @@ export default function DiskTables() {
     })
   }
 
-  const DiskTable = () => {
+  const DiskTable = (props: DiskTablesProps) => {
     return (
       <Table
         className={classes.table}
@@ -355,12 +276,11 @@ export default function DiskTables() {
         aria-label="enhanced table"
       >
         <EnhancedTableHead
-          classes={classes}
           numSelected={selected.length}
-          order={order}
-          orderBy={orderBy}
+          // order={order}
+          // orderBy={orderBy}
           onSelectAllClick={handleSelectAllClick}
-          onRequestSort={handleRequestSort}
+          // onRequestSort={handleRequestSort}
           rowCount={rows.length}
         />
         <TableBody>
@@ -368,7 +288,7 @@ export default function DiskTables() {
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row: any, index: number) => {
               const isItemSelected = isSelected(row.name);
-              const labelId = `enhanced-table-checkbox-${index}`;
+              const labelId = `private-table-checkbox-${index}`;
 
               return (
                 <TableRow
@@ -392,11 +312,6 @@ export default function DiskTables() {
                 </TableRow>
               );
             })}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
         </TableBody>
       </Table>
     )
@@ -404,23 +319,21 @@ export default function DiskTables() {
 
   const render = () => {
     return (
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <TableContainer className={classes.container}>
-            <DiskToast
-              onOpenToast={open}
-              onClose={handleCloseAlert}
-              message={toastMessage}
-              //@ts-ignore
-              toastType={type}
-              key={'top-center'}
-            />
-            { DiskSearch() }
-            { DiskTable() }
-          </TableContainer>
-        </Paper>
-      </div>
+      <>
+        <DiskToast
+          onOpenToast={open}
+          onClose={handleCloseAlert}
+          message={toastMessage}
+          //@ts-ignore
+          toastType={type}
+          key={'top-center'}
+        />
+        <DiskSearch tabValue={props.tabValue} />
+        { rows.length && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
+      </>
     )
   }
   return render()
 }
+
+export default PrivateDiskTables
