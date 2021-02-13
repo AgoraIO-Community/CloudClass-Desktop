@@ -5,12 +5,12 @@ import { SignalBar } from '../../signalBar'
 interface IProps {
   userSignalStatus?: ISignalStatus[]
 }
-interface ISignalStatus {
+export interface ISignalStatus {
   userName: string,
   userUid: string,
   signalLevel: number,
-  delay: number,
-  packagesLost: number
+  delay: number | string,
+  packagesLost: number | string
 
 }
 const ITEM_HEIGHT = 48;
@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #75C0FF',
     width: '290px',
     listStyleType: "none",
-    padding: '20px'
+    padding: '20px',
+    zIndex: 11,
   },
   userNetworkItem: {
     color: '#333',
@@ -61,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const LongMenu = (props: IProps) => {
 
   const { userSignalStatus = [] } = props
-  console.log(userSignalStatus);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [iconUp, setIconUp] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -89,7 +89,7 @@ export const LongMenu = (props: IProps) => {
           <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 10, height: 7, margin: 0 }} />
         </div>
       </div>
-      <ul className={classes.userNetworkList}>
+      {iconUp ? <ul className={classes.userNetworkList}>
         {userSignalStatus.length && userSignalStatus.map((option) => (
           <li className={classes.userNetworkItem} key={option.userUid} >
             <SignalBar level={option.signalLevel} width='20px' height='16px' foregroundColor={colorMap[option.signalLevel]} />
@@ -108,7 +108,7 @@ export const LongMenu = (props: IProps) => {
           </li>
         ))}
 
-      </ul>
+      </ul> : null}
 
     </div>
   );

@@ -1,7 +1,7 @@
 import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useSceneStore, useUIStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore, useUIStore,useMediaStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
@@ -23,8 +23,29 @@ const StartViewBox = observer(() => {
 })
 
 const AssistantMenu = observer(() => {
+  const signalLevel = (packetLossRate: number) => {
+    if (packetLossRate > 30) return 1
+    if (packetLossRate > 20) return 2
+    if (packetLossRate > 10) return 3
+    return 3
+  }
+  const mediaStore = useMediaStore()
+  const acadsocRoomStore = useAcadsocRoomStore()
+  const userList = mediaStore.signalStatus;
+  const remoteUsers = userList.filter((item)=>item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
+    const receiveDelay = parseInt(item.receiveDelay, 10) ?? '-';
+    const packagesLost =parseInt(item.packetLossRate,10) ?? '-'
+      return {
+        userName: item.userName,
+        userUid: item.userUuid,
+        signalLevel: signalLevel(packagesLost) ,
+        delay: receiveDelay ? receiveDelay : '-',
+        packagesLost: packagesLost ? packagesLost : '-'
+      }
+  })
+  // const userSignalStatus:ISignalStatus[] = remoteUsers.length ? remoteUsers : null;
   return (
-    <Assistant userSignalStatus={userSignalStatus} />
+    <Assistant userSignalStatus={remoteUsers} />
   )
 })
 
