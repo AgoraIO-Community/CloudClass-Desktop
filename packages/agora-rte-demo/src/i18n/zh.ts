@@ -3,6 +3,23 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "exit": "退出",
+    "class_end": "课程已结束",
+    "leave_room": "离开教室",
+    "confirm": {
+      "exit": "确定退出教室吗？",
+      "endClass": "结束教室",
+      "yes": "确定",
+      "no": "取消"
+    },
+    "board": {
+      "size": "大小",
+      "stroke": "画笔",
+    },
+    "chat": {
+      "banned": "禁言",
+      "placeholder": "已禁止发聊天消息",
+    },
     "device": {
       "videoDetectTitle": "摄像头检测",
       "audioDetectTitle": "麦克风检测",

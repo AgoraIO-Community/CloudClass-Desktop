@@ -1,10 +1,13 @@
-import { ConfirmConfig, confirmDialog } from './api'
+import { ConfirmConfig, confirmDialog, removeAllDialog, showBaseDialog } from './api'
 
 export const dialogManager = {
-  add: (args: ConfirmConfig) => {
+  confirm: (args: ConfirmConfig) => {
     return confirmDialog(args)
   },
-  remove: () => {
-
+  show: (args: ConfirmConfig) => {
+    return showBaseDialog(args)
+  },
+  removeAll: () => {
+    return removeAllDialog()
   }
 }

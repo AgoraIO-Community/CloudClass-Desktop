@@ -15,7 +15,8 @@ export interface VideoMediaStream {
   video: boolean,
   showControls: boolean,
   placeHolderType: any,
-  placeHolderText: string
+  placeHolderText: string,
+  volumeLevel: number
 }
 
 const VideoPlaceholder = () => (
@@ -75,15 +76,17 @@ export const TeacherVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '268px',
-        minHeight: '194px'
+        minHeight: '194px',
+        maxHeight: '194px',
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
       { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-      <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 9999}}>
-        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={1} maxLength={5} width={'18px'} height={'5px'} />
-      </div>
+      { userStream.audio ? 
+        <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+        </div> : null }
     </Video>
   )
 })
@@ -141,7 +144,7 @@ export const StudentVideo = observer(() => {
       minimal={true}
       resizable={false}
       showBoardIcon={true}
-      disableBoard={isTeacher ? true : false}
+      disableBoard={isTeacher ? false : true}
       disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={trophyNumber}
       visibleTrophy={true}
@@ -152,16 +155,18 @@ export const StudentVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '268px',
-        minHeight: '194px'
+        minHeight: '194px',
+        maxHeight: '194px',
       }}
       disableButton={Boolean(disableButton)}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
       { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
+      { userStream.audio ? 
       <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
-        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={1} maxLength={5} width={'18px'} height={'5px'} />
-      </div>
+        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+      </div> : null }
     </Video>
   )
 })

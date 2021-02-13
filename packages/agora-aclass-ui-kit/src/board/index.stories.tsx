@@ -252,7 +252,7 @@ const ArrowListPanel = () => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Pen</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Pen,

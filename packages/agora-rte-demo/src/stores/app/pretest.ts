@@ -151,8 +151,10 @@ export class PretestStore {
     return this._cameraRenderer;
   }
 
-  @observable
-  totalVolume: number = 0;
+  @computed
+  get totalVolume(): number {
+    return this.appStore.mediaStore.totalVolume
+  }
 
   appStore: AppStore;
 
@@ -173,7 +175,6 @@ export class PretestStore {
   @action
   reset() {
     this.resolutionIdx = 0
-    this.totalVolume = 0
     this.cameraLabel = ''
     this.microphoneLabel = ''
     this.web.reset()
@@ -307,23 +308,12 @@ export class PretestStore {
     this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
     this.appStore.deviceInfo.microphoneName = this.microphoneLabel
     this._microphoneId = this.microphoneId
-    this.mediaService.on('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
-      runInAction(() => {
-        if (this.isElectron) {
-          this.totalVolume = Number((totalVolume / 255).toFixed(3))
-        } else {
-          this.totalVolume = totalVolume;
-        }
-      })
-    })
   }
 
   @action
   closeTestMicrophone() {
     this.mediaService.closeTestMicrophone()
     this.resetMicrophoneTrack()
-    this.mediaService.off('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
-    })
   }
 
   @action
@@ -424,23 +414,12 @@ export class PretestStore {
     this.microphoneLabel = this.mediaService.getMicrophoneLabel()
     this.appStore.deviceInfo.microphoneName = this.microphoneLabel
     this._microphoneId = this.microphoneId
-    this.mediaService.on('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
-      runInAction(() => {
-        if (this.isElectron) {
-          this.totalVolume = Number((totalVolume / 255).toFixed(3))
-        } else {
-          this.totalVolume = totalVolume;
-        }
-      })
-    })
   }
 
   @action
   closeMicrophone() {
     this.mediaService.closeTestMicrophone()
     this.resetMicrophoneTrack()
-    this.mediaService.off('volume-indication', ({speakers, speakerNumber, totalVolume}: any) => {
-    })
   }
 
   @action

@@ -3,6 +3,23 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "exit": "Exit",
+    "class_end": "Class is ended",
+    "leave_room": "Leave room",
+    "confirm": {
+      "exit": "Are you sure exit room? ",
+      "endClass": "Quit Classroom",
+      "yes": "confirm",
+      "no": "cancel"
+    },
+    "board": {
+      "size": "Size",
+      "stroke": "Stroke",
+    },
+    "chat": {
+      "banned": "banned",
+      "placeholder": "block send message",
+    },
     "device": {
       "videoDetectTitle": "camera test",
       "audioDetectTitle": "microphone test",

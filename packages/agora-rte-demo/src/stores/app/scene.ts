@@ -75,8 +75,10 @@ export class SceneStore extends SimpleInterval {
   @observable
   _screenVideoRenderer?: LocalUserRenderer = undefined;
 
-  @observable
-  totalVolume: number = 0;
+  @computed
+  get totalVolume(): number {
+    return this.appStore.mediaStore.totalVolume
+  }
 
   @observable
   currentWindowId: string = ''
@@ -170,7 +172,6 @@ export class SceneStore extends SimpleInterval {
     this._microphoneTrack = undefined;
     this._cameraRenderer = undefined;
     this._screenVideoRenderer = undefined;
-    this.totalVolume = 0
     this.currentWindowId = ''
     this.customScreenShareWindowVisible = false
     this.customScreenShareItems = []
@@ -816,6 +817,18 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+
+  getFixAudioVolume(streamUuid: number): number {
+    const volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
+    if (volume === 0) return 0
+
+    if (this.appStore.uiStore.isElectron) {
+      return (volume / 255)
+    } else {
+      return (volume / 5)
+    }
+  }
+
   @computed
   get teacherStream(): EduMediaStream {
 
@@ -826,6 +839,7 @@ export class SceneStore extends SimpleInterval {
 
       const {placeHolderType, text} = this.getLocalPlaceHolderProps()
 
+      const volumeLevel = this.getFixAudioVolume(+this.cameraEduStream.streamUuid)
       return {
         local: true,
         userUuid: this.appStore.userUuid,
@@ -835,6 +849,7 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         showControls: this.canControl(this.appStore.userUuid),
+        volumeLevel: volumeLevel ? volumeLevel : 0,
         placeHolderType: placeHolderType,
         placeHolderText: text,
       } as any
@@ -845,6 +860,7 @@ export class SceneStore extends SimpleInterval {
     if (teacherStream) {
       const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
       const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
+      const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
       return {
         local: false,
         account: user.userName,
@@ -856,6 +872,7 @@ export class SceneStore extends SimpleInterval {
         showControls: this.canControl(user.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
+        volumeLevel: volumeLevel ? volumeLevel : 0,
       } as any
     }
     return {
@@ -868,7 +885,8 @@ export class SceneStore extends SimpleInterval {
       renderer: undefined,
       showControls: false,
       placeHolderType: 'noEnter',
-      placeHolderText: t('placeholder.teacher_Left')
+      placeHolderText: t('placeholder.teacher_Left'),
+      volumeLevel: 0,
     } as any
   }
 
@@ -927,6 +945,7 @@ export class SceneStore extends SimpleInterval {
         const user = this.userList.find((user: EduUser) => (user.userUuid === stream.userInfo.userUuid && ['broadcaster', 'audience'].includes(user.role)))
         if (!user || this.isLocalStream(stream)) return acc;
         const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
+        const volumeLevel = this.getFixAudioVolume(+stream.streamUuid)
         acc.push({
           local: false,
           account: user.userName,
@@ -938,6 +957,7 @@ export class SceneStore extends SimpleInterval {
           showControls: this.canControl(user.userUuid),
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
+          volumeLevel: volumeLevel ? volumeLevel : 0,
         } as any)
         return acc;
       }
@@ -949,6 +969,7 @@ export class SceneStore extends SimpleInterval {
 
     if (this.cameraEduStream && isStudent) {
       const props = this.getLocalPlaceHolderProps()
+      const volumeLevel = this.getFixAudioVolume(+this.cameraEduStream.streamUuid)
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -960,7 +981,7 @@ export class SceneStore extends SimpleInterval {
         showControls: this.canControl(this.appStore.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
-        // placeHolderType: props.placeHolderType,
+        volumeLevel: volumeLevel ? volumeLevel : 0,
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -976,7 +997,8 @@ export class SceneStore extends SimpleInterval {
       renderer: undefined,
       showControls: false,
       placeHolderType: 'noEnter',
-      placeHolderText: t('placeholder.student_Left')
+      placeHolderText: t('placeholder.student_Left'),
+      volumeLevel: 0
     } as any]
   }
 

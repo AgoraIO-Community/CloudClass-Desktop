@@ -142,36 +142,6 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = (props) => {
   )
 }
 
-export const MediaDetect: React.FC<any> = (props) => {
-  return (
-    <DeviceSelect
-      name="摄像头选项："
-      value={0}
-      onChange={() => {
-
-      }}
-      list={[
-        {
-          deviceId: 'unknown',
-          label: '禁用',
-        },
-        {
-          deviceId: '1',
-          label: '设备1'
-        },
-        {
-          deviceId: '2',
-          label: '设备2'
-        },
-        {
-          deviceId: '3',
-          label: '设备3'
-        },
-      ]}
-    />
-  )
-}
-
 export interface CameraPreviewProps {
   renderer?: any
   previewPlaceText: string

@@ -160,8 +160,10 @@ export class BreakoutRoomStore extends SimpleInterval {
     return this._cameraRenderer;
   }
 
-  @observable
-  totalVolume: number = 0;
+  @computed
+  get totalVolume(): number {
+    return this.appStore.mediaStore.totalVolume
+  }
 
   @computed
   get screenVideoRenderer(): LocalUserRenderer | undefined {
@@ -258,7 +260,6 @@ export class BreakoutRoomStore extends SimpleInterval {
     // this.remoteUsersRenderer = []
     this.recording = false
     this.resolutionIdx = 0
-    this.totalVolume = 0
     this.cameraLabel = ''
     this.microphoneLabel = ''
     this.mediaService.reset()
@@ -1942,7 +1943,6 @@ export class BreakoutRoomStore extends SimpleInterval {
     this.appStore.mediaStore.resetRoomState()
     this.recording = false
     this.resolutionIdx = 0
-    this.totalVolume = 0
     this.cameraLabel = ''
     this.microphoneLabel = ''
     this.mediaService.reset()

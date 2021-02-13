@@ -23,6 +23,7 @@ export type ChatMessage = {
 
 export type ChatMessageList = ChatMessage[]
 export interface ChatBoardProps {
+  bannedText: string,
   messages: ChatMessageList,
   historyMessage?: ChatMessageList,
   panelBackColor?: string,
@@ -49,6 +50,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     panelBackColor = "#DEF4FF",
     panelBorderColor = '#75C0FF',
     messages,
+    bannedText,
     borderWidth = 15,
     maxHeight,
     onPullFresh,
@@ -64,6 +66,13 @@ export const ChatBoard = (props: ChatBoardProps) => {
   } = props
   const bottomDistance = borderWidth
   const useStyles = makeStyles((theme: Theme) => ({
+    chatScroll: {
+      position: 'absolute',
+      top: 0,
+      right: '8px',
+      height: '100%',
+      width: '100%'
+    },
     chatContent: {
       background: panelBackColor,
       borderColor: panelBorderColor,
@@ -71,11 +80,12 @@ export const ChatBoard = (props: ChatBoardProps) => {
       overflowY: 'scroll',
       flex: 1,
       maxHeight: minHeight || '200px',
-      minHeight: minHeight || '200px',
+      minHeight: minHeight || '50px',
       borderWidth: '0px',
       padding: '10px',
       borderRadius: '10px 10px 0 0 ',
       boxShadow: `0px 0px 0px 1px ${panelBorderColor}`,
+      position: 'relative',
     },
     title: {
       color: '#fff',
@@ -110,14 +120,15 @@ export const ChatBoard = (props: ChatBoardProps) => {
       position: 'relative',
       background: "#fff",
       borderRadius: '0 0 10px 10px',
-      padding: '10px 10px 36px',
+      padding: '10px 10px',
     },
     chatTextArea: {
       resize: 'none',
-      width: '100%',
+      width: '90%',
       border: 'none',
       boxSizing: 'border-box',
       outline:'none',
+      minHeight: '21px',
     },
     toolButton: {
       display: 'flex',
@@ -178,13 +189,13 @@ export const ChatBoard = (props: ChatBoardProps) => {
   const [inputMessages, setInputMessages] = useState('')
   const [isSendButton, setIsSendButton] = useState(false)
   const chatRef = useRef<any>()
-  const ToolButton = (props: { onClickBannedButton: any }) => {
+  const ToolButton = (props: { onClickBannedButton: any, bannedText: string }) => {
     return (
       <div className={classes.toolButton} onClick={props.onClickBannedButton}>
         <WithIconButton
           iconStyle={{ width: '20px', height: '20px', marginRight: '5px' }}
           icon={forbiddenSpeech} />
-          banned
+          {props.bannedText}
       </div>)
   }
   const scrollEvent = (event: any) => {
@@ -216,7 +227,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
           <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
         </div>}
       <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
-        <div>
+        <div className={classes.chatScroll}>
           {messages?.map((item, index) => {
             return <Bubble
               {...item}
@@ -233,7 +244,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
           })}
         </div>
       </div>
-      <div className={classes.chatTool}>{toolView || <ToolButton onClickBannedButton={onClickBannedButton} />}</div>
+      <div className={classes.chatTool}>{toolView || <ToolButton onClickBannedButton={onClickBannedButton} bannedText={bannedText} />}</div>
       <div className={classes.input}>
         <textarea
           onChange={(e) => { handleChangeText(e) }}
@@ -242,7 +253,6 @@ export const ChatBoard = (props: ChatBoardProps) => {
           placeholder={props.placeholder || 'Press enter to send a message'}
           name="chatTextArea" id="chatTextArea" cols={30} rows={4} />
         <div className={classes.sendContent}>
-
           {sendView || <div onClick={handlerSendButton} className={classes.sendButton}><TelegramIcon className={classes.TelegramIcon} />send</div>}
         </div>
       </div>

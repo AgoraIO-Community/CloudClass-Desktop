@@ -6,6 +6,9 @@ import { LocalUserRenderer } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 
+//@ts-ignore
+window.dialogManager = dialogManager
+
 const delay = 2000
 
 const networkQualityLevel = [
@@ -95,36 +98,36 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
-      const dialog = dialogManager.add({
+      dialogManager.show({
         title: t('aclass.device.audio_failed'),
-        contentText: t('aclass.device.audio_failed'),
+        text: t('aclass.device.audio_failed'),
+        showConfirm: true,
+        showCancel: true,
         confirmText: t('aclass.device.reload'),
         visible: true,
         cancelText: t('aclass.device.cancel'),
         onConfirm: () => {
-          dialog.destroy()
-          window.location.reload()
+          // window.location.reload()
         },
-        onClose: () => {
-          dialog.destroy()
+        onCancel: () => {
         }
       })
       await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
-      const dialog = dialogManager.add({
+      dialogManager.show({
         title: t('aclass.device.video_failed'),
-        contentText: t('aclass.device.video_failed'),
+        text: t('aclass.device.video_failed'),
+        showConfirm: true,
+        showCancel: true,
         confirmText: t('aclass.device.reload'),
         visible: true,
         cancelText: t('aclass.device.cancel'),
         onConfirm: () => {
-          dialog.destroy()
           window.location.reload()
         },
-        onClose: () => {
-          dialog.destroy()
+        onCancel: () => {
         }
       })
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
@@ -170,7 +173,28 @@ export class MediaStore {
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
     })
+    this.mediaService.on('local-audio-volume', (evt: any) => {
+      const {totalVolume} = evt
+      if (this.appStore.uiStore.isElectron) {
+        this.totalVolume = Number((totalVolume / 255).toFixed(3))
+      } else {
+        this.totalVolume = totalVolume;
+      }
+    })
+    this.mediaService.on('volume-indication', (evt: any) => {
+      const {speakers, speakerNumber, totalVolume} = evt
+      
+      speakers.forEach((speaker: any) => {
+        this.speakers.set(speaker.uid, speaker.volume)
+      })
+    })
   }
+
+  @observable
+  totalVolume: number = 0
+  
+  @observable
+  speakers = new Map<number, number>()
 
   @observable
   networkQuality: string = 'unknown'
@@ -184,6 +208,8 @@ export class MediaStore {
     this.remoteUsersRenderer = []
     this.networkQuality = 'unknown'
     this.autoplay = false
+    this.totalVolume = 0
+    this.speakers.clear()
   }
 
   @observable

@@ -3,7 +3,7 @@ import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
-import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption } from './interfaces';
+import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume } from './interfaces';
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
@@ -68,8 +68,11 @@ export class MediaService extends EventEmitter implements IMediaService {
       EduLogger.info("[media-service] connection-state-change ", curState)
       this.fire('connection-state-change', {curState})
     })
-    this.sdkWrapper.on('volume-indication', ({totalVolume}: any) => {
-      this.fire('volume-indication', {totalVolume})
+    this.sdkWrapper.on('volume-indication', (evt: any) => {
+      this.fire('volume-indication', evt)
+    })
+    this.sdkWrapper.on('local-audio-volume', (evt: any) => {
+      this.fire('local-audio-volume', evt)
     })
     this.sdkWrapper.on('exception', (err: any) => {
       this.fire('exception', err)
@@ -112,6 +115,11 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.sdkWrapper.on('rtcStats', (evt: any) => {
       this.fire('rtcStats', evt)
     })
+    // this.sdkWrapper.on('volume-indication', (volumes: MediaVolume[]) => {
+    //   this.fire('volume-indication', {
+    //     volumes
+    //   })
+    // })
     this.cameraRenderer = undefined
     this.screenRenderer = undefined
     this.remoteUsersRenderer = []
@@ -128,7 +136,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   private fire(...params: any[]) {
     const [message, ...args] = params
-    if (!['volume-indication', 'watch-rtt', 'network-quality'].includes(message)) {
+    if (!['local-audio-volume', 'volume-indication', 'watch-rtt', 'network-quality'].includes(message)) {
       EduLogger.info(args[0], args)
     }
     this.emit(message, ...args)

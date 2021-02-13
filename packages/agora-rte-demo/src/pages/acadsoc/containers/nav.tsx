@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { t } from '@/i18n'
 
 const userSignalStatus = [{
   userName: '1111',
@@ -151,23 +152,21 @@ const actionBar: IStatusBar = [{
     const acadsocRoomStore = useAcadsocRoomStore()
 
     const onExitRoom = () => {
-      const dialog = dialogManager.add({
-        title: `确定退出教室吗？`,
-        contentText: '结束教室',
-        confirmText: '确定',
+      dialogManager.show({
+        title: t(`aclass.confirm.exit`),
+        text: t(`aclass.confirm.endClass`),
+        confirmText: t(`aclass.confirm.yes`),
         visible: true,
-        cancelText: '取消',
+        cancelText: t(`aclass.confirm.no`),
         onConfirm: async () => {
           await acadsocRoomStore.leave()
           history.replace('/')
-          dialog.destroy()
         },
-        onClose: () => {
-          dialog.destroy()
+        onCancel: () => {
         }
       })
     }
 
-    return <ExitButton text='Exit' onClick={onExitRoom} />
+    return <ExitButton text={t("aclass.exit")} onClick={onExitRoom} />
   }
 }]

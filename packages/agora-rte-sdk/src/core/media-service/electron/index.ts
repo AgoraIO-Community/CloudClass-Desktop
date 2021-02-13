@@ -260,6 +260,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.fire('exception', err)
     })
     this.client.on('groupAudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
+      this.fire('local-audio-volume', {
+        totalVolume
+      })
       this.fire('volume-indication', {
         speakers, speakerNumber, totalVolume
       })

@@ -51,17 +51,17 @@ export class EduManager extends EventEmitter {
   ) {
     super()
     this.config = config
-    const buildOption = {
+    const buildOption: any = {
       platform: this.config.platform,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId
-    } as any
+    }
     if (buildOption.platform === 'electron') {
+      buildOption.agoraSdk = this.config.agoraRtc
       buildOption.electronLogPath = {
         logPath: window.logPath,
         videoSourceLogPath: window.videoSourceLogPath,
-        agoraSdk: this.config.agoraRtc,
       }
     }
     this._mediaService = new MediaService(buildOption)

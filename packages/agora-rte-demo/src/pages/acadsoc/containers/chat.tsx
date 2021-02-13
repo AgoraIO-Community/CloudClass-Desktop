@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import { ChatMessage } from '@/utils/types';
 import { useAcadsocRoomStore } from '@/hooks'
+import { t } from '@/i18n';
 
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
@@ -99,6 +100,7 @@ export const ChatView = observer(() => {
   }, [acadsocStore.roomChatMessages.length])
   return (
     <ChatBoard
+      bannedText={t("aclass.chat.banned")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
       borderWidth={10}

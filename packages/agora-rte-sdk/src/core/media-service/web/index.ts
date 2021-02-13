@@ -1,4 +1,4 @@
-import { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
+import { IAgoraRTCRemoteUser, UID } from 'agora-rtc-sdk-ng';
 import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
@@ -6,6 +6,10 @@ import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption
 import {GenericErrorWrapper} from '../../utils/generic-error';
 import {isEmpty} from 'lodash';
 
+export type AgoraWebVolumeResult = {
+  level: number,
+  uid: UID
+}
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   _client?: IAgoraRTCClient;
@@ -138,6 +142,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.emit(eventName, ...args)
   }
 
+  // TODO: not in used, need to refactor
   init () {
     this._client = this.agoraWebSdk.createClient(this.clientConfig)
     this.client.on('user-joined', (user) => {
@@ -320,6 +325,25 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         channel: channelName
       })
     }, `watch-rtt-${channelName}`, null, 300)
+    client.on('volume-indicator', (result: AgoraWebVolumeResult[]) => {
+      let totalVolume = 0
+      const speakers = result.map((result: AgoraWebVolumeResult) => {
+        totalVolume += result.level
+        return {
+          uid: result.uid,
+          volume: result.level,
+        }
+      })
+      const speakerNumber = speakers.length
+      
+      this.fire('volume-indication', {
+        channel: channelName,
+        speakers,
+        speakerNumber,
+        totalVolume
+      })
+    })
+    client.enableAudioVolumeIndicator()
     return client
   }
 
@@ -708,6 +732,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
   }
 
+  enableAudioVolumeIndicator() {
+    this.client.enableAudioVolumeIndicator()
+    EduLogger.info(" enableAudioVolumeIndicator ")
+  }
+
   async changeMicrophone(deviceId: string): Promise<any> {
     if (this.microphoneTrack) {
       await this.microphoneTrack.setDevice(deviceId)
@@ -965,7 +994,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       this.addInterval((track: ILocalAudioTrack) => {
         if (track) {
           const totalVolume = track.getVolumeLevel()
-          this.fire('volume-indication', {totalVolume})
+          this.fire('local-audio-volume', {totalVolume})
         }
       }, 'test-volume', this.microphoneTestTrack, 300)
     }

@@ -369,23 +369,19 @@ export class AcadsocRoomStore extends SimpleInterval {
         } catch (err) {
           EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
         }
-        const dialog = dialogManager.add({
-          title: `课程已结束`,
-          contentText: '离开教室',
-          confirmText: '确定',
+        dialogManager.show({
+          title: t(`aclass.class_end`),
+          text: t(`aclass.leave_room`),
+          showConfirm: true,
+          showCancel: true,
+          confirmText: t('aclass.confirm.yes'),
           visible: true,
-          cancelText: '取消',
-          onConfirm: async () => {
-            dialog.destroy()
+          cancelText: t('aclass.confirm.no'),
+          onConfirm: () => {
           },
-          onClose: () => {
-            dialog.destroy()
+          onCancel: () => {
           }
         })
-        // this.appStore.uiStore.showDialog({
-        //   type: 'classSessionEnded',
-        //   message: t('class_ended'),
-        // })
         this.appStore.uiStore.stopLoading()
         return
       }
