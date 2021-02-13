@@ -18,6 +18,7 @@ import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
+import { CourseWareMenuContainer } from './course-ware-menu'
 
 const StrokeListPanel = observer(() => {
 
@@ -117,6 +118,7 @@ export const EduWhiteBoard = observer(() => {
       showControlScreen={true}
       isFullScreen={!boardStore.isFullScreen}
       width={'100%'}
+      height={'100%'}
       toolbarName={'Tools'}
     >
       {/* {
@@ -345,8 +347,24 @@ export const StrokePopover = observer(() => {
   )
 })
 
+const useEduBoardStyles = makeStyles((theme: Theme) => ({
+  boardBoxContainer: {
+    position: 'relative',
+    height: '100%',
+    width: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+  }
+}));
+
+
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
+
+  const showCourseMenuItem = boardStore.isTeacher()
+
+  const classes = useEduBoardStyles()
 
   const currentActiveToolItem = boardStore.currentActiveToolItem
 
@@ -391,65 +409,68 @@ export const EducationBoard = observer((props: any) => {
   }, [boardStore.boardClient])
   
   return (
-    <Board style={{
-      width: props.width,
-      height: props.height,
-      position: 'relative',
-      boxSizing: 'border-box',
-      background: 'white'
-    }}>
-      {boardStore.aClassHasPermission ? 
-      <ZoomController
-        style={{
-          position: 'absolute',
-          bottom: props.controlY,
-          right: props.controlX,
-          zIndex: 10,
-        }}
-        showPaginator={props.showPaginator}
-        currentPage={props.currentPage}
-        totalPage={props.totalPage}
-        showScale={props.showScale}
-        scale={props.scale}
-        showControlScreen={props.showControlScreen}
-        isFullScreen={props.isFullScreen}
-        onClick={noop}
-        zoomScale={boardStore.scale}
-        zoomChange={(scale: number) => {
-          console.log(" zoomChange scale ", scale)
-          boardStore.updateScale(scale)
-        }}
-        changeFooterMenu={(type: string) => {
-          boardStore.changeFooterMenu(type)
-        }}
-        onFullScreen={() => {
-          boardStore.zoomBoard('fullscreen')
-        }}
-        onExitFullScreen={() => {
-          boardStore.zoomBoard('fullscreenExit')
-        }}
-      /> : null}
-      {boardStore.aClassHasPermission ? 
-      <Tool
-        activeItem={currentActiveToolItem}
-        drawerComponent={<DrawerPopover />}
-        strokeComponent={<StrokePopover />}
-        colorComponent={<ColorPopover />}
-        uploadComponent={<UploadFilePopover />}
-        fontComponent={<FontPopover />}
-        headerTitle={props.toolbarName}
-        style={{
-          top: props.toolY,
-          left: props.toolX,
-          zIndex: 10,
-          position: 'absolute'
-        }}
-        items={
-          BoardStore.toolItems
-        }
-        onClick={onClickTool}
-      /> : null}
-        {props.children ? props.children : null}
-    </Board>
+    <div className={classes.boardBoxContainer}>
+      {showCourseMenuItem ? <CourseWareMenuContainer /> : null}
+      <Board style={{
+        width: props.width,
+        height: props.height,
+        position: 'relative',
+        boxSizing: 'border-box',
+        background: 'white'
+      }}>
+        {boardStore.aClassHasPermission ? 
+        <ZoomController
+          style={{
+            position: 'absolute',
+            bottom: props.controlY,
+            right: props.controlX,
+            zIndex: 10,
+          }}
+          showPaginator={props.showPaginator}
+          currentPage={props.currentPage}
+          totalPage={props.totalPage}
+          showScale={props.showScale}
+          scale={props.scale}
+          showControlScreen={props.showControlScreen}
+          isFullScreen={props.isFullScreen}
+          onClick={noop}
+          zoomScale={boardStore.scale}
+          zoomChange={(scale: number) => {
+            console.log(" zoomChange scale ", scale)
+            boardStore.updateScale(scale)
+          }}
+          changeFooterMenu={(type: string) => {
+            boardStore.changeFooterMenu(type)
+          }}
+          onFullScreen={() => {
+            boardStore.zoomBoard('fullscreen')
+          }}
+          onExitFullScreen={() => {
+            boardStore.zoomBoard('fullscreenExit')
+          }}
+        /> : null}
+        {boardStore.aClassHasPermission ? 
+        <Tool
+          activeItem={currentActiveToolItem}
+          drawerComponent={<DrawerPopover />}
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
+          fontComponent={<FontPopover />}
+          headerTitle={props.toolbarName}
+          style={{
+            top: props.toolY,
+            left: props.toolX,
+            zIndex: 10,
+            position: 'absolute'
+          }}
+          items={
+            BoardStore.toolItems
+          }
+          onClick={onClickTool}
+        /> : null}
+          {props.children ? props.children : null}
+      </Board>
+    </div>
   )
 })
