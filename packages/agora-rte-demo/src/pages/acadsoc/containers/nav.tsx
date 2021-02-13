@@ -1,4 +1,4 @@
-import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton } from 'agora-aclass-ui-kit'
+import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus} from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
 import { useAcadsocRoomStore, useSceneStore, useUIStore,useMediaStore } from '@/hooks'
@@ -32,7 +32,7 @@ const AssistantMenu = observer(() => {
   const mediaStore = useMediaStore()
   const acadsocRoomStore = useAcadsocRoomStore()
   const userList = mediaStore.signalStatus;
-  const remoteUsers = userList.filter((item)=>item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
+  const remoteUsers:ISignalStatus[]= userList.filter((item)=>item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
     const receiveDelay = parseInt(item.receiveDelay, 10) ?? '-';
     const packagesLost =parseInt(item.packetLossRate,10) ?? '-'
       return {
