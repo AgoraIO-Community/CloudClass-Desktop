@@ -34,7 +34,7 @@ export interface DiskFramePaperProps {
 
 const CloseButton: React.FC<CloseButtonProps> = (props) => {
   return (
-    <IconButton disableRipple  aria-label="close" className={props.className} onClick={props.onClick} style={props.style}>
+    <IconButton id="disk-icon-close" disableRipple  aria-label="close" className={props.className} onClick={props.onClick} style={props.style}>
       <CloseIcon style={{width: "34px", height: "34px"}} />
     </IconButton>
   )
