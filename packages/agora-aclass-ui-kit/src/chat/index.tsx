@@ -116,7 +116,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
       resize: 'none',
       width: '100%',
       border: 'none',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      outline:'none',
     },
     toolButton: {
       display: 'flex',
