@@ -54,6 +54,8 @@ export class EduSDKApi extends ApiBase {
     roomType: number,
     userUuid: string,
     role: number,
+    startTime?: number,
+    duration?: number,
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}`,
@@ -61,10 +63,12 @@ export class EduSDKApi extends ApiBase {
       data: {
         roomName: params.roomName,
         roomType: params.roomType,
-        role: params.role
+        role: params.role,
+        startTime: params.startTime,
+        duration: params.duration,
       }
     })
-
+    res.data.ts = res.ts
     return res.data
   }
 

@@ -220,6 +220,8 @@ const zhCN: any = {
     'failed_to_initiate_a_raise_of_hand_application': '发起举手申请失败',
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
+    'time_interval_between_start': `距离上课开始还有: {reason} 分钟`,
+    'time_interval_between_end': `距离教室关闭还有: {reason} 分钟`,
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -261,6 +263,10 @@ const zhCN: any = {
     'class_end': '课程结束',
     'class_start': '课程开始',
     'back': '返回',
+    'class_time_text': '距离上课还有：',
+    'start_in': '开始上课了：',
+    'minutes': '分',
+    'seconds': '秒',
   },
   'home': {
     'entry-home': '进入教室',
