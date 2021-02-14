@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
+import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
 import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { t } from '@/i18n';
@@ -13,7 +14,8 @@ export const ChatView = observer(() => {
   const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
-  const [sendButtonBackColor, setSendButtonBackColor] = useState('#e9be3685')
+  const [isDisableSendButton, setDisableSendButton] = useState(false)
+  // const [isDisableSendButton, setDisableSendButton] = useState(false)
 
   const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
@@ -37,7 +39,7 @@ export const ChatView = observer(() => {
         id: messageItem.id,
         messagesId: messageItem.ts,
         userName: messageItem?.fromRoomName || messageItem.account,
-        sendTime: `${sendTime.getHours()}:${sendTime.getMinutes()}`,
+        sendTime: dayjs(messageItem.ts).format('HH:mm'),
         showTranslate: true,
         chatText: messageItem.text,
         translateText: '翻译占位' + messageItem.text,
@@ -50,8 +52,8 @@ export const ChatView = observer(() => {
     return message
   }
   const onClickTranslate = async (message: IChatViewMessage) => {
-    let isSuccess:boolean = false
-    let translateContent:any = ''
+    let isSuccess: boolean = false
+    let translateContent: any = ''
     try {
       translateContent = await acadsocStore.getTranslationContent(message.chatText)
     } catch (err) {
@@ -78,7 +80,7 @@ export const ChatView = observer(() => {
       userName: acadsocStore.roomInfo.userName,
       messagesId: +Date.now(),
       id: current.getTime().toString(),
-      sendTime: `${current.getHours()}:${current.getMinutes()}`,
+      sendTime: dayjs().format('HH:mm'),
       showTranslate: true,
       chatText: message,
       isSender: true,
@@ -89,13 +91,11 @@ export const ChatView = observer(() => {
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
   }
-  const onInputText = (event: any) => {
-    const { value } = event.target;
-    if (!!value.trim()) setSendButtonBackColor('#E9BE36')
-    else {
-      setSendButtonBackColor('#e9be3685')
-    }
-  }
+  // const onInputText = (event: any) => {
+  //   if (isDisableSendButton) return
+  //   const { value } = event.target;
+  //   // if (!!value.trim()) 
+  // }
   const onClickBannedButton = useCallback(async () => {
     if (acadsocStore.appStore.roomInfo.userRole
         === EduRoleTypeEnum.teacher) {
@@ -104,6 +104,7 @@ export const ChatView = observer(() => {
       } else {
         await sceneStore.unmuteChat()
       }
+      setDisableSendButton(sceneStore.mutedChat)
     }
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
   useEffect(() => {
@@ -112,7 +113,7 @@ export const ChatView = observer(() => {
   }, [acadsocStore.roomChatMessages.length])
   return (
     <ChatBoard
-      bannedText={sceneStore.mutedChat ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
+      bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
       borderWidth={10}
@@ -121,8 +122,13 @@ export const ChatView = observer(() => {
       onPullFresh={onPullFresh}
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
-      onInputText={onInputText}
-      sendButtonBackColor={sendButtonBackColor}
+      // onInputText={onInputText}
+      placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
+      titleText={t('aclass.chat.title')}
+      sendButtonText={t('aclass.chat.send')}
+      isDisableSendButton={isDisableSendButton}
+      loadingText={t('aclass.chat.loading')}
+      failText={t('aclass.chat.fail')}
     />
   )
 })
