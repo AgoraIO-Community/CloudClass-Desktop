@@ -28,6 +28,7 @@ export interface ToolProps {
   uploadComponent?: React.ReactElement,
   fontComponent?: React.ReactElement,
   drawerComponent?: React.ReactElement,
+  diskComponent?: React.ReactElement,
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

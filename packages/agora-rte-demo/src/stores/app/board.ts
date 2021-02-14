@@ -128,6 +128,10 @@ static toolItems: IToolItem[] = [
     itemName: 'clear',
     toolTip: true,
   },
+  {
+    itemName: 'disk',
+    toolTip: true,
+  },
 ]
 
   static items: any = [

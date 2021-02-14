@@ -3,7 +3,7 @@ import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
 import { DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
 
 import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/table-cell";
-import { DiskButton } from "../control/button";
+import { DiskButton } from "../control/disk-button";
 import { DiskAllProgress, DiskSingleProgress } from "../control/progress";
 import TableEmpty from "../dialog/table-empty";
 
