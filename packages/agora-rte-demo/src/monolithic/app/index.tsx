@@ -2,6 +2,11 @@ import { GenAppContainer } from '@/containers/app-container'
 import { RoomParameters } from '@/edu-sdk/declare'
 import { AppStoreConfigParams } from '@/stores/app'
 import React from 'react'
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
+
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'eduClass',
+})
 
 const routes: string[] = [
   "setting",
@@ -20,8 +25,8 @@ const routes: string[] = [
 ]
 
 type AppType = {
-  appConfig: AppStoreConfigParams
-  roomConfig?: RoomParameters
+  appConfig: AppStoreConfigParams,
+  roomConfig?: RoomParameters,
   basename?: string
 }
 
@@ -34,8 +39,10 @@ export const App = (props: AppType) => {
     resetRoomInfo: true
   })
   return (
-    <AppContainer
-      routes={routes}
-    />
+    <StylesProvider generateClassName={generateClassName}>
+      <AppContainer
+        routes={routes}
+      />
+    </StylesProvider>
   )
 }
