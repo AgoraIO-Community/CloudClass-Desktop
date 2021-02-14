@@ -106,6 +106,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   microphoneList: any[] = []
 
   _subClient: Record<string, any>;
+  _remoteVideoStats: Record<number, any>;
+  _remoteAudioStats: Record<number, any>;
 
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)
@@ -125,6 +127,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.appId = options.appId
     this.subscribedList = []
     this._subClient = {}
+    this._remoteVideoStats = {}
+    this._remoteAudioStats = {}
     //@ts-ignore
     this.client = options.AgoraRtcEngine
     let ret = this.client.initialize(this.appId)
@@ -310,7 +314,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
-        uplinkNetworkQuality: args[2]
+        uplinkNetworkQuality: args[2],
+        remotePacketLoss:{
+          audioStats: this._remoteAudioStats,
+          videoStats: this._remoteVideoStats
+        }
       })
     })
     this.client.on('remoteVideoStateChanged', (uid: number, state: number, reason: any) => {
@@ -401,6 +409,20 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('rtcStats', (evt: any) => {
       this.fire('rtcStats', evt)
+    })
+    this.client.on('remoteVideoStats', (evt: any) => {
+      // record the data but do not fire it, these will be together fired by network quality callback
+      this._remoteVideoStats[evt.uid] = {
+        videoLossRate: evt.packetLossRate,
+        videoReceiveDelay: evt.delay
+      }
+    })
+    this.client.on('remoteAudioStats', (evt: any) => {
+      // record the data but do not fire it, these will be together fired by network quality callback
+      this._remoteAudioStats[evt.uid] = {
+        audioLossRate: evt.audioLossRate,
+        audioReceiveDelay: evt.networkTransportDelay
+      }
     })
   }
   
