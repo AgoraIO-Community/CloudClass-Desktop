@@ -74,6 +74,8 @@ export type LaunchOption = {
   rtmToken: string
   language: LanguageEnum
   translateLanguage: TranslateEnum 
+  startTime: number,
+  duration: number,
 }
 
 export type ReplayOption = {
@@ -227,6 +229,8 @@ export class AgoraEduSDK {
         },
         language: option.language,
         translateLanguage: option.translateLanguage,
+        startTime: option.startTime,
+        duration: option.duration,
         roomInfoParams: {
           roomUuid: option.roomUuid,
           userUuid: option.userUuid,

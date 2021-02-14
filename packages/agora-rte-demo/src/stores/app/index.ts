@@ -71,6 +71,8 @@ export type AppStoreInitParams = {
   config: AppStoreConfigParams
   language: LanguageEnum
   translateLanguage: TranslateEnum
+  startTime?: number
+  duration?: number
   listener?: ListenerCallback
   pretest?: boolean
   mainPath?: string
@@ -347,6 +349,8 @@ export class AppStore {
       },
       language: this.params.language,
       translateLanguage: this.params.translateLanguage,
+      startTime: this.params.startTime,
+      duration: this.params.duration,
       config: {
         agoraAppId: this.params.config.agoraAppId,
         agoraNetlessAppId: this.params.config.agoraNetlessAppId,

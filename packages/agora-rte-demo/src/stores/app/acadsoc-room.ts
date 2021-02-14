@@ -27,7 +27,15 @@ import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
 
 export enum EduClassroomStateEnum {
-  end = 2
+  beforeStart = 0,
+  start = 1,
+  end = 2,
+}
+
+export enum EduClassroomCountdownEnum {
+  first = 5,
+  second = 3,
+  third = 1,
 }
 
 type ProcessType = {
@@ -116,7 +124,23 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   notice?: any = undefined
 
-  
+  @observable
+  classState: number = 0
+
+  @observable
+  timeShift: number = 0
+
+  @observable
+  startTime: number = 0   // 课程开始时间
+
+  @observable
+  duration: number = 0   // 课程持续时间
+
+  @observable
+  timeToStart: number = 0   // 距离开始还剩时间
+
+  @observable
+  startedTime: number = 0   // 已经开始了多长时间
 
   @observable
   roomProperties: AcadsocRoomProperties = {
@@ -135,7 +159,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   }
 
   @observable
-  sutdentsReward: Record<string, number> = {}
+  studentsReward: Record<string, number> = {}
 
   @observable
   showTranslate: boolean = false
@@ -145,6 +169,24 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   translateText?: string = ''
+
+  @observable
+  minutes: number = 0
+
+  @observable
+  seconds: number = 0
+
+  @observable
+  classTime: number = 0
+
+  @observable
+  classTimeText: string = ''
+
+  @observable
+  timer: any = null
+
+  @observable
+  additionalState: number = 0
 
   @observable
   showTrophyAnimation: boolean = false
@@ -176,6 +218,10 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.roomJoined = false
     this.time = 0
     this.notice = undefined
+    this.minutes = 0
+    this.seconds = 0
+    this.timeToStart = 0
+    this.startedTime = 0
   }
 
   @action
@@ -307,9 +353,79 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
 
+  @action
+  showTimerToast(time: number) {
+    if(this.sceneStore.classState === EduClassroomStateEnum.beforeStart) {
+      this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: time}))
+    }
+    if(this.sceneStore.classState === EduClassroomStateEnum.start) {
+      this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: time}))
+    }
+  }
+
+  @action
+  getTimer(time: number, step: number) {
+    this.timer && clearTimeout(this.timer)
+    this.timer = setInterval(() => {
+      if(this.minutes === parseInt(String(this.duration / 60)) && this.seconds === (this.duration % 60) && step === 1) {
+        clearTimeout(this.timer)
+        return
+      } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
+        this.seconds = 0
+        clearTimeout(this.timer)
+        return
+      } else {
+        time += step
+        this.seconds += step
+      }
+      // 正在上课 正计时
+      if(step === 1 && time >= 59) {
+        this.minutes += step
+        if([1, 3, 5].includes(this.minutes)) {
+          this.showTimerToast(this.minutes)
+        }
+        this.seconds = 0 
+        this.getTimer(-1, step)
+      }
+      // 倒计时
+      if(step === -1 && time <= 0) {
+        this.minutes += step
+        if([1, 3, 5].includes(this.minutes)) {
+          this.showTimerToast(this.minutes)
+        }
+        this.seconds = 59
+        this.getTimer(60, step)
+      }
+    }, 1000)
+  }
+
   @computed
   get roomInfo() {
     return this.appStore.roomInfo
+  }
+
+  @action
+  timeCalibration(time: number) {
+    // 误差小于一秒 忽略
+    if((this.timeShift / 1000) < 1) {
+      return 0
+    } else {
+      return time - new Date().getTime()
+    }
+  }
+
+  // ms 转分秒 首次获取时间
+  @action
+  msToMinutes(time: number) {
+    this.minutes = parseInt(String(time / (60 * 1000)))
+    this.seconds = parseInt(String((time % (60 * 1000)) / 1000))
+  }
+
+  @computed
+  get shiftClassTime(): string {
+    let minutes = this.minutes < 10? '0'+this.minutes : this.minutes
+    let seconds = this.seconds < 10? '0'+this.seconds : this.seconds
+    return minutes + t('nav.minutes') + seconds + t('nav.seconds')
   }
 
   @computed
@@ -355,14 +471,39 @@ export class AcadsocRoomStore extends SimpleInterval {
         rtmUid: this.appStore.params.config.rtmUid,
       })
       const roomUuid = this.roomInfo.roomUuid
+      // TODO: this.appStore.params.startTime
+      const startTime = new Date().getTime() + 120000
+      // TODO: this.appStore.params.duration
+      const duration = 180
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,
         roomType: +this.roomInfo.roomType as number,
         userUuid: this.roomInfo.userUuid,
         role: this.roomInfo.userRole,
+        startTime: startTime,  // 单位：毫秒
+        duration: duration,    // 秒
       })
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
+      this.additionalState = checkInResult.state
+      this.timeShift = this.timeCalibration(checkInResult.ts)
+      this.startTime = checkInResult.startTime
+      this.duration = checkInResult.duration
+      // 课程开始之前
+      if(checkInResult.state === EduClassroomStateEnum.beforeStart) {
+        this.classTimeText = t('nav.class_time_text')
+        this.timeToStart = this.startTime - new Date().getTime() + this.timeShift
+        this.msToMinutes(this.timeToStart)
+        this.getTimer(this.seconds, -1)
+      }
+      // 正在上课
+      if(checkInResult.state === EduClassroomStateEnum.start) {
+        this.classTimeText = t('nav.start_in')
+        this.startedTime = new Date().getTime() - this.startTime + this.timeShift
+        this.msToMinutes(this.startedTime)
+        this.getTimer(this.seconds, 1)
+      }
+      // 课程结束
       if (checkInResult.state === EduClassroomStateEnum.end) {
         try {
           await this.appStore.releaseRoom()
@@ -690,8 +831,21 @@ export class AcadsocRoomStore extends SimpleInterval {
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
           this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
-          this.sutdentsReward = get(classroom, 'roomProperties.students', {})
+          this.studentsReward = get(classroom, 'roomProperties.students', {})
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
+          if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
+            clearTimeout(this.timer)
+          }
+          if(this.sceneStore.classState === 1 && this.additionalState === 0) {
+            clearTimeout(this.timer)
+            this.classTimeText = t('nav.start_in')
+            this.msToMinutes(0)
+            this.getTimer(this.seconds, 1)
+          }
+          if(this.sceneStore.classState === 2) {
+            console.log('提示：课程已结束')
+            clearTimeout(this.timer)
+          }
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
@@ -832,7 +986,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @action
   getRewardByUid(uid: string): number {
-    return get(this.sutdentsReward, `${uid}.reward`, 0)
+    return get(this.studentsReward, `${uid}.reward`, 0)
   }
 
   @action
