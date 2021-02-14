@@ -422,7 +422,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   }
 
   @computed
-  get shfitClassTime(): string {
+  get shiftClassTime(): string {
     let minutes = this.minutes < 10? '0'+this.minutes : this.minutes
     let seconds = this.seconds < 10? '0'+this.seconds : this.seconds
     return minutes + t('nav.minutes') + seconds + t('nav.seconds')
