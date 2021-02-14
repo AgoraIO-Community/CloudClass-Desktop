@@ -1,4 +1,5 @@
-import { InputLabel, MenuItem, Select, Theme, withStyles } from '@material-ui/core'
+import { InputLabel, MenuItem, Select } from '@material-ui/core'
+import { Theme, withStyles } from '@material-ui/core/styles'
 import { DevicePicker, Volume, VolumeDirectionEnum } from 'agora-aclass-ui-kit'
 import React, { useCallback, useRef } from 'react'
 import styles from './style.module.scss'

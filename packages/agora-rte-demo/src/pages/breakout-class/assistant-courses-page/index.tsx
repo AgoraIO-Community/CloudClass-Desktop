@@ -6,7 +6,8 @@ import { NavController } from '@/components/nav';
 import { useParams, useHistory } from 'react-router-dom';
 import { Loading } from '@/components/loading';
 import { AutoplayToast } from '@/components/autoplay-toast';
-import { makeStyles, Theme, createStyles, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core';
+import { makeStyles, styled, Theme, withStyles, createStyles } from '@material-ui/core/styles'
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core';
 import { useUIStore, useBreakoutRoomStore } from '@/hooks';
 import { BizLogger } from '@/utils/biz-logger';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';

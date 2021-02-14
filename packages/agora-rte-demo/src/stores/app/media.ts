@@ -6,9 +6,6 @@ import { LocalUserRenderer } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 
-//@ts-ignore
-window.dialogManager = dialogManager
-
 const delay = 2000
 
 const networkQualityLevel = [

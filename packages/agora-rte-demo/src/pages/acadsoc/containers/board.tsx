@@ -35,7 +35,7 @@ const StrokeListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Thin,
@@ -68,7 +68,7 @@ const ArrowListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Pen,
