@@ -2,7 +2,7 @@ import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
 import { PPTProgressPhase } from '@/utils/upload-manager'
-import { Room, PPTKind, ViewMode, ApplianceNames, MemberState } from 'white-web-sdk'
+import { Room, PPTKind, ViewMode, ApplianceNames, MemberState, AnimationMode } from 'white-web-sdk'
 import { BoardClient } from '@/components/netless-board/board-client';
 import { get, isEmpty, omit } from 'lodash';
 import { OSSConfig } from '@/utils/helper';
@@ -10,15 +10,27 @@ import { BizLogger } from '@/utils/biz-logger';
 import OSS from 'ali-oss';
 import uuidv4 from 'uuid/v4';
 import { t } from '@/i18n';
-import { EduUser, EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduUser, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { EnumBoardState } from '@/modules/services/board-api';
-import { CustomMenuItemType } from 'agora-aclass-ui-kit';
+import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
+import {CursorTool} from '@netless/cursor-tool'
 
 export enum BoardPencilSize {
   thin = 4,
   small = 8,
   normal = 12,
   large = 18
+}
+
+export enum BoardFrontSizeType {
+  size12 = '12',
+  size14 = '14',
+  size18 = '18',
+  size24 = '24',
+  size26 = '26',
+  size36 = '36',
+  size48 = '48',
+  size72 = '72',
 }
 
 export const resolveFileInfo = (file: any) => {
@@ -64,6 +76,59 @@ enum FollowState {
 }
 
 export class BoardStore {
+
+static toolItems: IToolItem[] = [
+  {
+    itemName: 'mouse',
+    toolTip: true,
+  },
+  {
+    itemName: 'pencil',
+    toolTip: true,
+    popoverType: 'drawer',
+  },
+  {
+    itemName: 'text',
+    toolTip: true,
+    popoverType: 'font',
+  },
+  {
+    itemName: 'rectangle',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'elliptic',
+    toolTip: true,
+    popoverType: 'stroke',
+  },
+  {
+    itemName: 'eraser',
+    toolTip: true,
+  },
+  {
+    itemName: 'palette',
+    toolTip: true,
+    popoverType: 'color',
+  },
+  {
+    itemName: 'new-page',
+    toolTip: true,
+  },
+  {
+    itemName: 'move',
+    toolTip: true,
+  },
+  {
+    itemName: 'upload',
+    toolTip: true,
+    popoverType: 'upload',
+  },
+  {
+    itemName: 'clear',
+    toolTip: true,
+  },
+]
 
   static items: any = [
     {
@@ -351,6 +416,69 @@ export class BoardStore {
       this.ready = true
   }
 
+  // TODO: aclass board init
+  @action
+  async aClassInit(info: {
+    boardId: string,
+    boardToken: string
+  }) {
+    await this.aClassJoin({
+      uuid: info.boardId,
+      roomToken: info.boardToken,
+      role: this.userRole,
+      isWritable: true,
+      disableDeviceInputs: true,
+      disableCameraTransform: true,
+      disableAutoResize: false
+    })
+    // 默认只有老师不用禁止跟随
+    if (this.userRole !== EduRoleTypeEnum.teacher) {
+      this.room.disableCameraTransform = true
+    } else {
+      this.room.setViewMode(ViewMode.Broadcaster)
+      this.room.disableCameraTransform = false
+    }
+
+    if (this.online && this.room) {
+      await this.room.setWritable(true)
+      if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+        this.room.disableDeviceInputs = false
+      }
+      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+        this.room.disableDeviceInputs = true
+      }
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+        if (this.lockBoard) {
+          this.room.disableDeviceInputs = true
+        } else {
+          this.room.disableDeviceInputs = false
+        }
+      }
+    }
+
+    this.ready = true
+    this.pptAutoFullScreen()
+  }
+
+  pptAutoFullScreen() {
+    if (this.room && this.online) {
+      const room = this.room
+      const scene = room.state.sceneState.scenes[room.state.sceneState.index];
+      if (scene && scene.ppt) {
+        const width = scene.ppt.width;
+        const height = scene.ppt.height;
+        room.moveCameraToContain({
+          originX: -width / 2,
+          originY: -height / 2,
+          width: width,
+          height: height,
+          animationMode: AnimationMode.Immediately,
+        });
+      }
+      this.scale = this.room.state.zoomScale
+    }
+  }
+
   @action
   setFollow(v: number) {
     this.follow = v
@@ -399,8 +527,21 @@ export class BoardStore {
     this.grantUsers = args
   }
 
+
+  getCurrentLock(state: any) {
+    const follow = get(state, 'globalState.follow', false)
+    const granted = get(state, 'globalState.granted', true)
+    if (follow === true && granted === false) {
+      return true
+    }
+    if (follow === false && granted === true) {
+      return false
+    }
+  }
+  
+
   @action
-  async join(params: any) {
+  async aClassJoin(params: any) {
     const {role, ...data} = params
     const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
@@ -410,10 +551,30 @@ export class BoardStore {
       }
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
-      this.currentStroke = this.getCurrentStroke(state.memberState)
-      this.currentArrow = this.getCurrentArrow(state.memberState)
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      if (state.globalState) {
+        // 判断锁定白板
+        this.lockBoard = this.getCurrentLock(state) as any
+        if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+          if (this.lockBoard) {
+            this.room.disableDeviceInputs = true
+          } else {
+            this.room.disableDeviceInputs = false
+          }
+        }
+        // if (this.lockBoard) {}
+      }
+      if (state.broadcastState?.broadcasterId === undefined) {
+        if (this.room) {
+          this.room.scalePptToFit()
+        }
+      }
+      if (state.memberState) {
+        this.currentStroke = this.getCurrentStroke(state.memberState)
+        this.currentArrow = this.getCurrentArrow(state.memberState)
+        this.currentFontSize = this.getCurrentFontSize(state.memberState)
+      }
       if (state.zoomScale) {
         runInAction(() => {
           this.scale = state.zoomScale
@@ -422,12 +583,25 @@ export class BoardStore {
       if (state.sceneState || state.globalState) {
         this.updateSceneItems()
       }
-      if (state.globalState) {
-        this.updateBoardState()
-      }
+      // if (state.globalState) {
+      //   this.updateBoardState()
+      // }
     })
     BizLogger.info("[breakout board] join", data)
-    await this.boardClient.join(data)
+    const cursorAdapter = new CursorTool(); //新版鼠标追踪
+    await this.boardClient.join({
+      ...data,
+      cursorAdapter,
+      userPayload: {
+        userId: this.appStore.roomStore.roomInfo.userUuid,
+        avatar: ""
+      }
+    })
+    this.strokeColor = {
+      r: 252,
+      g: 58,
+      b: 63
+    }
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -441,7 +615,138 @@ export class BoardStore {
     this.resizeCallback = resizeCallback
     window.addEventListener('resize', this.resizeCallback)
     this.updateSceneItems()
+
+    // 老师判断第一次登陆
+    if (this.isTeacher()) {
+      if (this.isFirstLogin()) {
+        EduLogger.info("first login board")
+        this.teacherFirstJoin()
+      }
+    } else {
+      EduLogger.info("detect whiteboard already setup")
+    }
+    this.lockBoard = this.getCurrentLock(this.room.state) as any
   }
+
+  isTeacher(): boolean {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      return true
+    }
+    return false
+  }
+
+  @action
+  async join(params: any) {
+    const {role, ...data} = params
+    const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
+    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
+    this.boardClient.on('onPhaseChanged', (state: any) => {
+      if (state === 'disconnected') {
+        this.online = false
+      }
+    })
+    this.boardClient.on('onMemberStateChanged', (state: any) => {
+    })
+    this.boardClient.on('onRoomStateChanged', (state: any) => {
+      if (state.broadcastState?.broadcasterId === undefined) {
+        if (this.room) {
+          this.room.scalePptToFit()
+        }
+      }
+      if (state.memberState) {
+        this.currentStroke = this.getCurrentStroke(state.memberState)
+        this.currentArrow = this.getCurrentArrow(state.memberState)
+        this.currentFontSize = this.getCurrentFontSize(state.memberState)
+      }
+      if (state.zoomScale) {
+        runInAction(() => {
+          this.scale = state.zoomScale
+        })
+      }
+      if (state.sceneState || state.globalState) {
+        this.updateSceneItems()
+      }
+      if (state.globalState) {
+        this.updateBoardState()
+      }
+    })
+    BizLogger.info("[breakout board] join", data)
+    const cursorAdapter = new CursorTool(); //新版鼠标追踪
+    await this.boardClient.join({
+      ...data,
+      cursorAdapter,
+      userPayload: {
+        userId: this.appStore.roomStore.roomInfo.userUuid,
+        avatar: ""
+      }
+    })
+    this.strokeColor = {
+      r: 252,
+      g: 58,
+      b: 63
+    }
+    BizLogger.info("[breakout board] after join", data)
+    this.online = true
+    // this.updateSceneItems()
+    this.room.bindHtmlElement(null)
+    const resizeCallback = () => {
+      if (this.online && this.room && this.room.isWritable) {
+        this.room.moveCamera({centerX: 0, centerY: 0});
+        this.room.refreshViewSize();
+      }
+    }
+    this.resizeCallback = resizeCallback
+    window.addEventListener('resize', this.resizeCallback)
+    this.updateSceneItems()
+
+    // 老师判断第一次登陆
+    if (this.isFirstLogin()) {
+      EduLogger.info("first login board")
+      this.teacherFirstJoin()
+    } else {
+      EduLogger.info("detect whiteboard already setup")
+    }
+    this.lockBoard = this.getCurrentLock(this.room.state) as any
+    if (this.appStore.userRole === EduRoleTypeEnum.student) {
+      this.room.disableDeviceInputs = this.lockBoard
+    }
+  }
+
+  // lock阿卡索的白板
+  lockAClassBoard() {
+    this.room.setGlobalState({
+      follow: true,
+      granted: false,
+    })
+  }
+
+  // unlock阿卡索的白板
+  unlockAClassBoard() {
+    this.room.setGlobalState({
+      follow: false,
+      granted: false,
+    })
+  }
+
+  teacherFirstJoin() {
+    this.enroll()
+    this.lockAClassBoard()
+  }
+
+  enroll() {
+    this.room.setGlobalState({
+      teacherFirstLogin: true
+    })  
+  }
+
+  isFirstLogin(): boolean {
+    const teacherFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1)
+    if (teacherFirstLogin === -1) {
+      return true
+    }
+    return teacherFirstLogin
+  }
+
 
   @action
   async leave() {
@@ -614,6 +919,14 @@ export class BoardStore {
     }
   }
 
+
+  @observable
+  currentActiveToolItem: string = 'mouse' 
+  // @computed
+  // getCurrentActiveToolItem(state: ): string {
+  //   return BoardStore.toolItems[0].itemName
+  // }
+
   @computed
   get currentColor(): string {
     if (this.room) {
@@ -652,6 +965,50 @@ export class BoardStore {
     }
     return mapping[memberState.currentApplianceName]
     // return CustomMenuItemType.Mark
+  }
+
+  @observable
+  currentFontSize: BoardFrontSizeType = BoardFrontSizeType.size12
+
+  changeFontSize(size: BoardFrontSizeType) {
+    const defaultSize = 12
+    const mapping = {
+      [BoardFrontSizeType.size12]: 12,
+      [BoardFrontSizeType.size14]: 14,
+      [BoardFrontSizeType.size18]: 18,
+      [BoardFrontSizeType.size24]: 24,
+      [BoardFrontSizeType.size26]: 26,
+      [BoardFrontSizeType.size36]: 36,
+      [BoardFrontSizeType.size48]: 48,
+      [BoardFrontSizeType.size72]: 72,
+    }
+    if (this.room) {
+      const value = mapping[size] || defaultSize
+      this.room.setMemberState({
+        textSize: value
+      })
+    }
+  }
+
+  getCurrentFontSize(memberState: MemberState): BoardFrontSizeType {
+    const fontSize = memberState.textSize
+    const mapping = {
+      [12]: BoardFrontSizeType.size12,
+      [14]: BoardFrontSizeType.size14,
+      [18]: BoardFrontSizeType.size18,
+      [24]: BoardFrontSizeType.size24,
+      [26]: BoardFrontSizeType.size26,
+      [36]: BoardFrontSizeType.size36,
+      [48]: BoardFrontSizeType.size48,
+      [72]: BoardFrontSizeType.size72,
+    }
+
+    const value = mapping[fontSize]
+    if (value) {
+      return value
+    }
+
+    return BoardFrontSizeType.size12
   }
 
   @action
@@ -1215,6 +1572,7 @@ export class BoardStore {
   reset () {
     this.isFullScreen = false
     this.folder = ''
+    this.lockBoard = true
     this.scenes = []
     this.currentPage = 0
     this.totalPage = 0
@@ -1244,6 +1602,10 @@ export class BoardStore {
       g: 0,
       b: 0
     }
+
+    this.currentStroke = CustomMenuItemType.Normal
+    this.currentArrow = CustomMenuItemType.Mark
+    this.currentFontSize = BoardFrontSizeType.size12
   }
 
   roomIsWritable(room: Room): boolean {
@@ -1283,6 +1645,25 @@ export class BoardStore {
   get boardService() {
     return this.appStore.boardService
   }
+
+  @observable
+  lockBoard: boolean = true
+
+  @computed
+  get aClassHasPermission(): boolean {
+    if (this.userRole === EduRoleTypeEnum.invisible) {
+      return false
+    }
+    // 老师默认可以操作白板
+    if (this.userRole === EduRoleTypeEnum.teacher || this.userRole === EduRoleTypeEnum.assistant) {
+      return true
+    }
+    if (this.lockBoard) {
+      return false
+    }
+    return true
+  }
+
 
   @computed
   get hasPermission(): boolean {
@@ -1357,5 +1738,13 @@ export class BoardStore {
     }
     // if (this.)
     return ''
+  }
+
+  toggleAClassLockBoard() {
+    if (this.lockBoard) {
+      this.unlockAClassBoard()
+    } else {
+      this.lockAClassBoard()
+    }
   }
 }

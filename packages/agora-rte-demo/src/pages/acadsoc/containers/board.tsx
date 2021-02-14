@@ -5,7 +5,6 @@ import {
   Board,
   ColorPalette,
   CustomizeSlider,
-  IToolItem,
   ControlMenu,
   Tool,
   FileUploader,
@@ -17,6 +16,9 @@ import { useBoardStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
+import { CourseWareMenuContainer } from './course-ware-menu'
 
 const StrokeListPanel = observer(() => {
 
@@ -31,7 +33,7 @@ const StrokeListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Thin,
@@ -56,8 +58,6 @@ const ArrowListPanel = observer(() => {
 
   const currentArrow = boardStore.currentArrow
 
-  const [active, setActive] = useState<any>(CustomMenuItemType.Pen);
-
   return (
     <div style={{
       display: 'flex',
@@ -66,7 +66,7 @@ const ArrowListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>Size</span>
+      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Pen,
@@ -118,6 +118,7 @@ export const EduWhiteBoard = observer(() => {
       showControlScreen={true}
       isFullScreen={!boardStore.isFullScreen}
       width={'100%'}
+      height={'100%'}
       toolbarName={'Tools'}
     >
       {/* {
@@ -128,6 +129,115 @@ export const EduWhiteBoard = observer(() => {
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
       }
     </EducationBoard>
+  )
+})
+
+export interface FontSizeListProps {
+  itemList: BoardFrontSizeType[],
+  active: BoardFrontSizeType,
+  handleClick: (type: BoardFrontSizeType) => any
+}
+
+const useFontStyles = makeStyles((theme: Theme) => ({
+  root: {
+    fontSize: '14px',
+    fontFamily: 'SourceHanSansCN-Regular',
+    display: 'flex',
+    // justifyContent: 'flex-start',
+    alignItems: 'center',
+    background: 'white',
+    borderRadius: '6px',
+    flexWrap: 'wrap',
+  },
+  active: {
+    color: 'white',
+    backgroundColor: '#002591',
+    border: '1px solid #002591',
+    borderRadius: '5px',
+    padding: '2px 7px',
+    margin: '2px',
+    cursor: 'pointer',
+    width: '32px',
+  },
+  normal: {
+    border: '1px solid #002591',
+    borderRadius: '5px',
+    padding: '2px 7px',
+    margin: '2px',
+    cursor: 'pointer',
+    width: '32px',
+  }
+}));
+
+const FontSizeListView: React.FC<FontSizeListProps> = (props) => {
+
+  const fontClasses = useFontStyles()
+
+  return (
+    <div className={fontClasses.root}>
+      {props.itemList.map((item: BoardFrontSizeType, idx: number) => (
+        <span key={`${item}${idx}`}
+          className={item === props.active ? fontClasses.active : fontClasses.normal}
+          onClick={() => {
+            props.handleClick(item)
+          }}>
+          {item}px
+        </span>
+      ))}
+    </div>
+  )
+}
+
+export const FontSizeList = observer(() => {
+
+  const boardStore = useBoardStore()
+  const {currentFontSize} = boardStore
+
+  return (
+    <FontSizeListView
+      itemList={[
+        BoardFrontSizeType.size12,
+        BoardFrontSizeType.size14,
+        BoardFrontSizeType.size18,
+        BoardFrontSizeType.size24,
+        BoardFrontSizeType.size26,
+        BoardFrontSizeType.size36,
+        BoardFrontSizeType.size48,
+        BoardFrontSizeType.size72,
+      ]}
+      active={currentFontSize}
+      handleClick={(type: BoardFrontSizeType) => {
+        boardStore.changeFontSize(type)
+      }}
+    />
+  )
+})
+
+
+export const FontPopover = observer(() => {
+
+  const boardStore = useBoardStore()
+
+  const {currentColor} = boardStore
+
+  const onClick = useCallback((color: string) => {
+    if (boardStore.boardClient) {
+      boardStore.changeHexColor(color)
+    }
+  }, [boardStore.boardClient])
+
+  return (
+    <PanelBackground style={{
+      width: 210,
+      padding: '5px',
+    }}>
+      <ColorPalette
+        currentColor={currentColor}
+        onClick={onClick}
+      />
+      <h2 style={{textAlign: 'center', color: 'white', fontSize: '14px'}}>字体大小</h2>
+      <FontSizeList />
+    </PanelBackground>
   )
 })
 
@@ -145,7 +255,7 @@ export const ColorPopover = observer(() => {
 
   return (
     <PanelBackground style={{
-      width: 225,
+      width: 210,
       padding: '5px',
     }}>
       <ColorPalette
@@ -172,7 +282,7 @@ export const UploadFilePopover = (props: any) => {
   )
 }
 
-export const StrokePopover = observer(() => {
+export const DrawerPopover = observer(() => {
 
   const boardStore = useBoardStore()
 
@@ -184,15 +294,9 @@ export const StrokePopover = observer(() => {
     }
   }, [boardStore.boardClient])
 
-  // const onChange = useCallback((newValue: number) => {
-  //   if (boardStore.boardClient) {
-  //     boardStore.changeStroke(newValue)
-  //   }
-  // }, [boardStore.boardClient])
-
   return (
     <PanelBackground style={{
-      width: 225,
+      width: 210,
       padding: '5px',
     }}>
       <>
@@ -214,61 +318,55 @@ export const StrokePopover = observer(() => {
   )
 })
 
-const toolItems: IToolItem[] = [
-  {
-    itemName: 'mouse',
-    toolTip: true,
-  },
-  {
-    itemName: 'pencil',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'text',
-    toolTip: true,
-    popoverType: 'color',
-  },
-  {
-    itemName: 'rectangle',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'elliptic',
-    toolTip: true,
-    popoverType: 'stroke',
-  },
-  {
-    itemName: 'eraser',
-    toolTip: true,
-  },
-  {
-    itemName: 'palette',
-    toolTip: true,
-    popoverType: 'color',
-  },
-  {
-    itemName: 'new-page',
-    toolTip: true,
-  },
-  {
-    itemName: 'move',
-    toolTip: true,
-  },
-  {
-    itemName: 'upload',
-    toolTip: true,
-    popoverType: 'upload',
-  },
-  {
-    itemName: 'clear',
-    toolTip: true,
+export const StrokePopover = observer(() => {
+
+  const boardStore = useBoardStore()
+
+  const {currentColor} = boardStore
+
+  const onClick = useCallback((color: string) => {
+    if (boardStore.boardClient) {
+      boardStore.changeHexColor(color)
+    }
+  }, [boardStore.boardClient])
+
+  return (
+    <PanelBackground style={{
+      width: 210,
+      padding: '5px',
+    }}>
+      <>
+        <StrokeListPanel />
+        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <ColorPalette
+          currentColor={currentColor}
+          onClick={onClick}
+        />
+      </>
+    </PanelBackground>
+  )
+})
+
+const useEduBoardStyles = makeStyles((theme: Theme) => ({
+  boardBoxContainer: {
+    position: 'relative',
+    height: '100%',
+    width: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
   }
-]
+}));
+
 
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
+
+  const showCourseMenuItem = boardStore.isTeacher()
+
+  const classes = useEduBoardStyles()
+
+  const currentActiveToolItem = boardStore.currentActiveToolItem
 
   const onClickTool = useCallback((type: string) => {
     if (!boardStore.boardClient) {
@@ -302,63 +400,77 @@ export const EducationBoard = observer((props: any) => {
         boardStore.setTool('hand_tool')
         break;
       }
+      case 'clear': {
+        boardStore.toggleAClassLockBoard()
+        break;
+      }
     }
+    boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
   
   return (
-    <Board style={{
-      width: props.width,
-      height: props.height,
-      position: 'relative',
-      boxSizing: 'border-box',
-      background: 'white'
-    }}>
-      <ZoomController
-        style={{
-          position: 'absolute',
-          bottom: props.controlY,
-          right: props.controlX,
-          zIndex: 10,
-        }}
-        showPaginator={props.showPaginator}
-        currentPage={props.currentPage}
-        totalPage={props.totalPage}
-        showScale={props.showScale}
-        scale={props.scale}
-        showControlScreen={props.showControlScreen}
-        isFullScreen={props.isFullScreen}
-        onClick={noop}
-        zoomScale={boardStore.scale}
-        zoomChange={(scale: number) => {
-          console.log(" zoomChange scale ", scale)
-          boardStore.updateScale(scale)
-        }}
-        changeFooterMenu={(type: string) => {
-          boardStore.changeFooterMenu(type)
-        }}
-        onFullScreen={() => {
-          boardStore.zoomBoard('fullscreen')
-        }}
-        onExitFullScreen={() => {
-          boardStore.zoomBoard('fullscreenExit')
-        }}
-      />
-      <Tool
-        strokeComponent={<StrokePopover />}
-        colorComponent={<ColorPopover />}
-        uploadComponent={<UploadFilePopover />}
-        headerTitle={props.toolbarName}
-        style={{
-          top: props.toolY,
-          left: props.toolX,
-          zIndex: 10,
-          position: 'absolute'
-        }}
-        items={
-          toolItems
-        }
-        onClick={onClickTool} />
-        {props.children ? props.children : null}
-    </Board>
+    <div className={classes.boardBoxContainer}>
+      {showCourseMenuItem ? <CourseWareMenuContainer /> : null}
+      <Board style={{
+        width: props.width,
+        height: props.height,
+        position: 'relative',
+        boxSizing: 'border-box',
+        background: 'white'
+      }}>
+        {boardStore.aClassHasPermission ? 
+        <ZoomController
+          style={{
+            position: 'absolute',
+            bottom: props.controlY,
+            right: props.controlX,
+            zIndex: 10,
+          }}
+          showPaginator={props.showPaginator}
+          currentPage={props.currentPage}
+          totalPage={props.totalPage}
+          showScale={props.showScale}
+          scale={props.scale}
+          showControlScreen={props.showControlScreen}
+          isFullScreen={props.isFullScreen}
+          onClick={noop}
+          zoomScale={boardStore.scale}
+          zoomChange={(scale: number) => {
+            console.log(" zoomChange scale ", scale)
+            boardStore.updateScale(scale)
+          }}
+          changeFooterMenu={(type: string) => {
+            boardStore.changeFooterMenu(type)
+          }}
+          onFullScreen={() => {
+            boardStore.zoomBoard('fullscreen')
+          }}
+          onExitFullScreen={() => {
+            boardStore.zoomBoard('fullscreenExit')
+          }}
+        /> : null}
+        {boardStore.aClassHasPermission ? 
+        <Tool
+          activeItem={currentActiveToolItem}
+          drawerComponent={<DrawerPopover />}
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
+          fontComponent={<FontPopover />}
+          headerTitle={props.toolbarName}
+          style={{
+            top: props.toolY,
+            left: props.toolX,
+            zIndex: 10,
+            position: 'absolute'
+          }}
+          items={
+            BoardStore.toolItems
+          }
+          onClick={onClickTool}
+        /> : null}
+          {props.children ? props.children : null}
+      </Board>
+    </div>
   )
 })

@@ -10,13 +10,15 @@ import { CustomizeTheme, themeConfig } from '../theme'
 import { Button } from '../button'
 import { DialogFramePaper } from './frame'
 import {noop} from '../declare'
+import { isPromise } from '../utils'
 
 const useLogoStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
       justifyContent: 'center',
-      height: '54px',
+      height: '51px',
+      width: '47px',
       marginTop: '5px',
       background: `url(${AclassLion}) no-repeat`,
       backgroundPosition: 'center',
@@ -64,13 +66,18 @@ const CloseButton = (props: CloseButtonProps) => {
   )
 }
 
+type PromiseEventHandler = (evt: any) => Promise<any>
+
 export interface DialogProps {
   text?: string,
   visible: boolean,
+  showConfirm?: boolean,
+  showCancel?: boolean,
   confirmText?: string,
   cancelText?: string,
-  onConfirm?: ReactEventHandler<any>,
-  onCancel?: ReactEventHandler<any>,
+  onConfirm?: any,
+  onCancel?: any,
+  close?: CallableFunction,
   backdropStyle?: CSSProperties,
 }
 
@@ -85,7 +92,7 @@ const useDialogStyles = makeStyles((theme: Theme) => {
     dialogPaper: {
       fontFamily: theme.typography.fontFamily,
       width: '202px',
-      height: '130px',
+      // height: '130px',
       ...themeConfig.dialog.border
     },
     promptPaper: {
@@ -99,6 +106,13 @@ const useDialogStyles = makeStyles((theme: Theme) => {
       fontFamily: theme.typography.fontFamily,
       position: 'relative',
       padding: '0px',
+      display: 'flex',
+      flex: 1,
+      minWidth: '200px',
+      maxWidth: '200px',
+      minHeight: '130px',
+      alignItems: 'center',
+      flexDirection: 'column',
       '&:first-child': {
         padding: '0px'
       }
@@ -106,7 +120,9 @@ const useDialogStyles = makeStyles((theme: Theme) => {
     dialogButtonGroup: {
       fontFamily: theme.typography.fontFamily,
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: '8px',
     },
     dialogTextTypography: {
       fontFamily: theme.typography.fontFamily,
@@ -139,11 +155,47 @@ const BaseDialog: React.FC<DialogProps> = (props) => {
 
   const classes = useDialogStyles()
 
-  const onConfirm = props.onConfirm ? props.onConfirm : noop
+  const onConfirm = props.onConfirm ? 
+    (evt: any) => {
+      if (props.onConfirm) {
+        const res = props.onConfirm(evt)
+        if (isPromise(res)) {
+          res.then(() => {
+            props.close && props.close()
+          })
+        } else {
+          props.close && props.close()
+        }
+      }
+    } : noop
 
-  const onCancel = props.onCancel ? props.onCancel : noop
+  const onCancel = props.onCancel ?
+    (evt: any) => {
+      if (props.onCancel) {
+        const res = props.onCancel(evt)
+        if (isPromise(res)) {
+          res.then(() => {
+            props.close && props.close()
+          })
+        } else {
+          props.close && props.close()
+        }
+      }
+    } : noop
 
-  const onClose = props.onCancel ? props.onCancel : noop
+    const onClose = props.onCancel ?
+    (evt: any) => {
+      if (props.onCancel) {
+        const res = props.onCancel(evt)
+        if (isPromise(res)) {
+          res.then(() => {
+            props.close && props.close()
+          })
+        } else {
+          props.close && props.close()
+        }
+      }
+    } : noop
 
   return (
     <MDialog
@@ -180,16 +232,21 @@ const BaseDialog: React.FC<DialogProps> = (props) => {
           </MDialogContentText>
         : null}
         <DialogButtons classes={{root: classes.dialogButtonGroup}}>
-          {props.confirmText ? <Button color="primary" onClick={onConfirm} text={props.confirmText}></Button> : null}
-          {props.cancelText ? <Button color="secondary" onClick={onCancel} text={props.cancelText}></Button> : null}
+          {props.showConfirm ? <Button color="primary" onClick={onConfirm} text={`${props.confirmText}`}></Button> : null}
+          {props.showCancel ? <Button color="secondary" onClick={onCancel} text={`${props.cancelText}`}></Button> : null}
         </DialogButtons>
       </MDialogContent>
     </MDialog>
   )
 }
 
-export const Dialog = (props: DialogProps) => (
+export const Dialog: React.FC<DialogProps> = (props) => (
   <CustomizeTheme>
     <BaseDialog {...props} />
   </CustomizeTheme>
 )
+
+Dialog.defaultProps = {
+  showCancel: true,
+  showConfirm: true,
+}

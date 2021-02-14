@@ -6,16 +6,18 @@ import { noop } from '../declare'
 import { CustomizeTheme, themeConfig } from '../theme'
 import { DialogFramePaper } from './frame'
 import { DialogButtons } from './base'
+import { isPromise } from '../utils'
 
 export interface PromptDialogProps {
   title: string,
-  contentText?: string,
+  text?: string,
   visible: boolean,
   confirmText?: string,
   cancelText?: string,
-  onConfirm?: ReactEventHandler<any>,
-  onClose?: ReactEventHandler<any>,
-  id?: number
+  onConfirm?: any,
+  onClose?: any,
+  id?: number,
+  close?: CallableFunction
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -38,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => {
       fontFamily: theme.typography.fontFamily,
       position: 'relative',
       padding: '0px',
+      display: 'flex',
+      justifyContent: 'center',
+      // alignItems: 'center',
       '&:first-child': {
         padding: '0px'
       }
@@ -45,19 +50,24 @@ const useStyles = makeStyles((theme: Theme) => {
     dialogButtonGroup: {
       fontFamily: theme.typography.fontFamily,
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: '15px',
     },
     dialogTextTypography: {
       fontFamily: theme.typography.fontFamily,
       color: '#002591',
-      textAlign: 'center',
-      fontSize: '8px',
-      marginTop: '6px',
-      marginBottom: '4px',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '36px',
+      fontSize: '8px',
+      marginTop: '20px',
+      // textAlign: 'center',
+      // fontSize: '8px',
+      // marginTop: '6px',
+      // marginBottom: '4px',
+      // display: 'flex',
+      // alignItems: 'center',
+      // justifyContent: 'center',
+      // height: '59px',
     },
   })
   return styles
@@ -66,9 +76,33 @@ const useStyles = makeStyles((theme: Theme) => {
 const BasePromptDialog: React.FC<PromptDialogProps> = (props) => {
   const classes = useStyles()
 
-  const onConfirm = props.onConfirm ? props.onConfirm : noop
+  const onConfirm = props.onConfirm ? 
+    (evt: any) => {
+      if (props.onConfirm) {
+        const res = props.onConfirm(evt)
+        if (isPromise(res)) {
+          res.then(() => {
+            props.close && props.close()
+          })
+        } else {
+          props.close && props.close()
+        }
+      }
+    } : noop
 
-  const onClose = props.onClose ? props.onClose: noop
+  const onClose = props.onClose ?
+    (evt: any) => {
+      if (props.onClose) {
+        const res = props.onClose(evt)
+        if (isPromise(res)) {
+          res.then(() => {
+            props.close && props.close()
+          })
+        } else {
+          props.close && props.close()
+        }
+      }
+    } : noop
 
   return (
     <MDialog
@@ -95,9 +129,9 @@ const BasePromptDialog: React.FC<PromptDialogProps> = (props) => {
       <MDialogContent
         classes={{root: classes.dialogContent}}
       >
-        {props.contentText ?
+        {props.text ?
           <MDialogContentText classes={{root: classes.dialogTextTypography}}>
-            {props.contentText}
+            {props.text}
           </MDialogContentText>
         : null}
         <DialogButtons classes={{root: classes.dialogButtonGroup}}>

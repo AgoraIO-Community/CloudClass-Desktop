@@ -1,0 +1,368 @@
+.pretestContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  .leftMenu {
+    // padding-top: 58px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -30px;
+  }
+
+  .rightFrame {
+    width: 520px;
+    height: 414px;
+    border-radius: 15px;
+    // padding: 0px 20px 20px;
+    color: #ffffff;
+    display: flex;
+    padding: 15px;
+    position: relative;
+    background: #75C0FF;
+    box-shadow: none;
+    border-color: #75C0FF;
+    // border-radius: 7px;
+    flex-direction: column;
+  }
+}
+
+.buttonItem {
+  color: #75C0FF;
+  width: 86px;
+  border: 1px solid #75C0FF;
+  height: 66px;
+  display: flex;
+  font-size: 14px;
+  background: #DEF4FF;
+  align-items: center;
+  border-radius: 10px 0px 0px 10px;
+  margin-bottom: 10px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.buttonItemActive {
+  color: #75C0FF;
+  width: 86px;
+  border: 1px solid #75C0FF;
+  // cursor: pointer;
+  height: 66px;
+  display: flex;
+  font-size: 14px;
+  background: #DEF4FF;
+  align-items: center;
+  border-radius: 10px 0px 0px 10px;
+  margin-bottom: 10px;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+.font {
+  color: #75C0FF;
+}
+
+.icon {
+  background: #DEF4FF;
+  .audio {
+    background: url('./assets/mic.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    // border: 1px solid #75C0FF;
+    width: 24px;
+    height: 24px;
+  }
+  .video {
+    background: url('./assets/cam.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    // border: 1px solid #75C0FF;
+    width: 24px;
+    height: 24px;
+  }
+  .speaker {
+    background: url('./assets/speaker.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    // border: 1px solid #75C0FF;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.detectText {
+  position: absolute;
+  top: -25px;
+  color: #002591;
+  font-size: 16px;
+}
+
+.iconVolume {
+  background: url('./assets/mic.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
+}
+
+.iconPlay {
+  background: url('./assets/play.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.detectPosition {
+  position: absolute;
+  top: 73px;
+  left: 115px;
+}
+
+.positionSpeaker {
+  position: absolute;
+  top: 121px;
+  left: 215px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.positionVolume {
+  position: absolute;
+  top: 121px;
+  left: 154px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.rendererPlaceholder {
+  position: relative;
+  width: 240px;
+  height: 135px;
+  border-radius: 12.5px;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 13px;
+  .camIcon {
+    background: url('../../assets/camera-detect.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 43px;
+    height: 49px;
+    margin-bottom: 15px;
+  }
+  .text {
+    color: #DAE9F0;
+    font-size: 14px;
+  }
+}
+
+.btnGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  justify-content: center;
+  .no {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #A4A4A4;
+    border-radius: 22px;
+    width: 139px;
+    height: 39px;
+    line-height: 39px;
+    margin: 10px;
+    cursor: pointer;
+    .icon {
+      background: url('./assets/not.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .yes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #DFB635;
+    border-radius: 22px;
+    width: 139px;
+    height: 39px;
+    line-height: 39px;
+    margin: 10px;
+    cursor: pointer;
+    .icon {
+      background: url('./assets/confirm.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+
+.selectItem {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  // align-items: center;
+  .select {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    border-radius: 20px;
+    border: 1px solid #002591;
+    & .MuiInputBase-root {
+      display: flex;
+    }
+  }
+}
+
+.textReport {
+  display: flex;
+  flex-direction: column;
+  color: #002591;
+  .resultHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 10px;
+    .smile {
+      background: url('./assets/smile.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+    .bad {
+      background: url('./assets/bad.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: 46px;
+      height: 46px;
+      margin-right: 10px;
+    }
+    .text {
+      font-size: 16px;
+      line-height: 46px;
+    }
+  }
+  .resultContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.foreground {
+  background-color: #DEF4FF;
+  border: 1px solid #DEF4FF;
+  border-radius: 7px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.detectVideo {
+  background: url('./assets/report-cam.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.detectAudio {
+  background: url('./assets/report-mic.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.detectSpeaker {
+  background: url('./assets/report-speaker.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.resultItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px;
+}
+
+.detectFail {
+  background: url('./assets/not-work.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.result {
+
+}
+
+.resultFailText {
+
+}

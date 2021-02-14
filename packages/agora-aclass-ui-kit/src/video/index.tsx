@@ -10,6 +10,8 @@ import UnMuteMic from './assets/unmute-mic.png'
 import TeacherIcon from './assets/teacher.png'
 import StudentIcon from './assets/student.png'
 import TrophyIcon  from './assets/trophy.png'
+import DrawIcon  from './assets/draw.png'
+import DisableDrawIcon  from './assets/disable-draw.png'
 import { TextEllipsis } from '../typography'
 import {PlaceHolderView, PlaceHolderRole, PlaceHolderType} from './placeholder'
 
@@ -17,9 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avBtn: {
       display: 'flex',
-      justifyContent: 'space-between',
+      // justifyContent: 'space-between',
       alignItems: 'center',
-      width: 44,
+      // width: 44,
       position: 'absolute',
       right: 4,
       bottom: 3,
@@ -117,6 +119,11 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       backgroundSize: 'contain'
     },
+    UnMuteBoardIcon: {
+      background: `url(${DrawIcon}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
     UnMuteMicIcon: {
       background: `url(${UnMuteMic}) no-repeat`,
       backgroundPosition: 'center',
@@ -132,8 +139,14 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       backgroundSize: 'contain'
     },
+    MuteBoardIcon: {
+      background: `url(${DisableDrawIcon}) no-repeat`,
+      backgroundPosition: 'center',
+      backgroundSize: 'contain'
+    },
     btnRoot: {
       padding: 0,
+      marginLeft: 8,
       '&:hover': {
       }
     },
@@ -155,6 +168,28 @@ const BaseIconButton = (props: any) => (
   <IconButton disableRipple disableFocusRipple edge={false} {...props}>
   </IconButton>
 )
+
+const BoardIconButton = (props: MediaButtonProps) => {
+
+  const classes = useStyles()
+
+  const className = props.enabled ? classes.UnMuteBoardIcon : classes.MuteBoardIcon
+
+  const onClick = useCallback(() => {
+    if (props.onClick) {
+      props.onClick({
+        sourceType: 'board',
+        enabled: props.enabled
+      })
+    }
+  }, [props.onClick, props.enabled])
+
+  return (
+    <BaseIconButton disabled={props.disable} className={classes.btnRoot} onClick={onClick}>
+      <IconItem className={className} />
+    </BaseIconButton>
+  )
+}
 
 const VideoIconButton = (props: MediaButtonProps) => {
 
@@ -299,7 +334,10 @@ export interface VideoFrameProps {
   resizable: boolean,
   videoState: boolean,
   audioState: boolean,
+  boardState?: boolean,
   disableTrophy: boolean,
+  showBoardIcon?: boolean,
+  disableBoard: boolean,
   trophyNumber: number,
   role: PlaceHolderRole,
   children: any,
@@ -311,7 +349,7 @@ export interface VideoFrameProps {
   placeHolderText?: string
 }
 
-const VideoFrame = (props: VideoFrameProps) => {
+const VideoFrame: React.FC<VideoFrameProps> = (props) => {
   const classes = useStyles()
 
   const onClick = useCallback((evt: VideoItem) => 
@@ -345,6 +383,11 @@ const VideoFrame = (props: VideoFrameProps) => {
         role={props.role}
       />
       <Box className={classes.avBtn} component="div">
+        {
+          props.showBoardIcon ?
+            <BoardIconButton disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
+            null
+        }
         <VideoIconButton disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
         <AudioIconButton disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
       </Box>

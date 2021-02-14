@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState } from 'white-web-sdk';
+import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState, ApplianceNames } from 'white-web-sdk';
 import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
@@ -74,6 +74,11 @@ export class BoardClient extends EventEmitter {
       onPPTLoadProgress: (uuid: string, progress: number) => {
         this.emit('onPPTLoadProgress', {uuid, progress})
       },
+    })
+    this.room.setMemberState({
+      strokeColor: [252, 58, 63],
+      currentApplianceName: ApplianceNames.selector,
+      textSize: 24,
     })
     BizLogger.info('[breakout board] board client join')
     this.disconnected = false

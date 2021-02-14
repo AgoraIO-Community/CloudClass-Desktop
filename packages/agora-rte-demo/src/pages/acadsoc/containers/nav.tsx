@@ -1,11 +1,12 @@
-import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton} from 'agora-aclass-ui-kit'
+import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus} from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useSceneStore, useUIStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore, useUIStore,useMediaStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { t } from '@/i18n'
 
 const userSignalStatus = [{
   userName: '1111',
@@ -24,9 +25,30 @@ const StartViewBox = observer(() => {
 })
 
 const AssistantMenu = observer(() => {
+  const signalLevel = (packetLossRate: number) => {
+    if (packetLossRate > 30) return 1
+    if (packetLossRate > 20) return 2
+    if (packetLossRate > 10) return 3
+    return 3
+  }
+  const mediaStore = useMediaStore()
+  const acadsocRoomStore = useAcadsocRoomStore()
+  const userList = mediaStore.signalStatus;
+  const remoteUsers:ISignalStatus[]= userList.filter((item)=>item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
+    const receiveDelay = parseInt(item.receiveDelay, 10) ?? '-';
+    const packagesLost =parseInt(item.packetLossRate,10) ?? '-'
+      return {
+        userName: item.userName,
+        userUid: item.userUuid,
+        signalLevel: signalLevel(packagesLost) ,
+        delay: receiveDelay ? receiveDelay : '-',
+        packagesLost: packagesLost ? packagesLost : '-'
+      }
+  })
+  // const userSignalStatus:ISignalStatus[] = remoteUsers.length ? remoteUsers : null;
   return (
-    <Assistant userSignalStatus={userSignalStatus} />
-  ) 
+    <Assistant userSignalStatus={remoteUsers} />
+  )
 })
 
 export const Nav = observer(() => {
@@ -34,17 +56,21 @@ export const Nav = observer(() => {
   const acadsocRoomStore = useAcadsocRoomStore()
 
   const userRole = get(acadsocRoomStore, 'roomInfo.userRole', 1)
+  const assistantView = {
+    isComponent: true,
+    componentKey: "assistant",
+    renderItem: () => { return <AssistantMenu /> }
+  }
+  const classMessageView = {
+    isComponent: false,
+    componentKey: "classID",
+    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
+  }
 
+  const leftView = userRole === EduRoleTypeEnum.assistant ? assistantView : classMessageView
   const statusBar = [
     {
-      isComponent: false,
-      componentKey: "classID",
-      text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
-    },
-    {
-      isComponent: true,
-      componentKey: "assistant",
-      renderItem: () => { return <AssistantMenu /> }
+      ...leftView
     },
     {
       isComponent: true,
@@ -66,7 +92,7 @@ export const Nav = observer(() => {
       leftContainer={statusBarList}
       rightContainer={actionBar}
     />
-  ) 
+  )
 })
 
 const onRefresh = () => {
@@ -90,7 +116,7 @@ const SignalBarContainer = observer(() => {
 })
 
 const ActionBarContainer = observer(() => {
-  const uiStore = useUIStore() 
+  const uiStore = useUIStore()
 
   const handleSetting = useCallback(() => {
     if (uiStore.aclassVisible) {
@@ -103,7 +129,7 @@ const ActionBarContainer = observer(() => {
   const buttonArr = [
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService', clickEvent: onCustomerService },
-    { name: 'equipmentDetection', clickEvent: handleSetting},
+    { name: 'equipmentDetection', clickEvent: handleSetting },
   ]
 
   return (
@@ -121,29 +147,27 @@ const actionBar: IStatusBar = [{
 {
   isComponent: true,
   componentKey: "exitButton",
-  renderItem: () => { 
+  renderItem: () => {
 
     const history = useHistory()
     const acadsocRoomStore = useAcadsocRoomStore()
 
     const onExitRoom = () => {
-      const dialog = dialogManager.add({
-        title: `确定退出教室吗？`,
-        contentText: '结束教室',
-        confirmText: '确定',
+      dialogManager.show({
+        title: t(`aclass.confirm.exit`),
+        text: t(`aclass.confirm.endClass`),
+        confirmText: t(`aclass.confirm.yes`),
         visible: true,
-        cancelText: '取消',
+        cancelText: t(`aclass.confirm.no`),
         onConfirm: async () => {
           await acadsocRoomStore.leave()
           history.replace('/')
-          dialog.destroy()
         },
-        onClose: () => {
-          dialog.destroy()
+        onCancel: () => {
         }
       })
     }
 
-    return <ExitButton text='Exit' onClick={onExitRoom} /> 
+    return <ExitButton text={t("aclass.exit")} onClick={onExitRoom} />
   }
 }]

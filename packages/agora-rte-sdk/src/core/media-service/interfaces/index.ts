@@ -478,3 +478,8 @@ declare class MediaService {
    */
   on(event: 'audio-autoplay-failed', listener: (evt: any) => void): this
 }
+
+export type MediaVolume = {
+  uid: number,
+  volume: number,
+}

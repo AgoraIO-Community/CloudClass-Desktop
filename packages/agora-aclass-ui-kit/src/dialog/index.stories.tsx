@@ -24,11 +24,10 @@ const arrays = []
 export const Dialogs = () => {
   // const
   const onClick = () => {
-    action('click button')
     ++uid
-    let manager = dialogManager.add({
+    dialogManager.confirm({
       title: `test_${uid}`,
-      contentText: 'test',
+      text: 'test',
       confirmText: 'ok',
       visible: true,
       cancelText: 'cancel',
@@ -37,19 +36,42 @@ export const Dialogs = () => {
       },
       onClose: () => {
         action('click close')
-        manager.destroy()
       }
     })
-
-    arrays.push(manager)
   }
 
-  const onRemove = () => {
-
+  const addDialog = () => {
+    dialogManager.show({
+      // title: `test_${uid}`,
+      text: 'test',
+      showCancel: true,
+      showConfirm: true,
+      confirmText: 'ok',
+      visible: true,
+      cancelText: 'cancel',
+      onConfirm: async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 2500)
+        })
+        console.log("done")
+        // action('click confirm')
+      },
+      onCancel: () => {
+        action('click close')
+      }
+    })
   }
+
+  const removeAllDialogs = () => {
+    dialogManager.removeAll()
+  }  
   return (
-    <Button color="primary" text="click me" style={{position: 'fixed', zIndex: 9999}} onClick={onClick}></Button>
-    // <Button color="primary" text="delete " style={{position: 'fixed', zIndex: 9999}} onClick={onClick}></Button>
+    <>
+      <Button color="primary" text="click me" style={{position: 'fixed', zIndex: 9999}} onClick={onClick}></Button>
+      <div style={{marginBottom: '25px'}}></div> 
+      <Button color="primary" text="base " style={{position: 'fixed', zIndex: 9999, top: 20}} onClick={addDialog}></Button>
+      <Button color="primary" text="remove " style={{position: 'fixed', zIndex: 9999, top: 90}} onClick={removeAllDialogs}></Button>
+    </>
   )
 }
 
@@ -57,7 +79,7 @@ export const PromptDialogView = PromptTemplate.bind({})
 PromptDialogView.args = {
   visible: true,
   confirmText: '确定',
-  contentText: '课程已结束',
+  text: '课程已结束',
   title: '提示信息'
 }
 

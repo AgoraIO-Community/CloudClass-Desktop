@@ -2,6 +2,48 @@ const BUILD_VERSION = REACT_APP_BUILD_VERSION;
 const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
+  "aclass": {
+    "exit": "Exit",
+    "class_end": "Class is ended",
+    "leave_room": "Leave room",
+    "confirm": {
+      "exit": "Are you sure exit room? ",
+      "endClass": "Quit Classroom",
+      "yes": "confirm",
+      "no": "cancel"
+    },
+    "board": {
+      "size": "Size",
+      "stroke": "Stroke",
+    },
+    "chat": {
+      "banned": "banned",
+      "placeholder": "block send message",
+    },
+    "device": {
+      "videoDetectTitle": "camera test",
+      "audioDetectTitle": "microphone test",
+      "speakerDetectTitle": "speaker test",
+      "camera": "Camera：",
+      "mic": "Microphone：",
+      "speaker": "Speaker：",
+      "yes": "Yes",
+      "no": "No",
+      "repeat": "Re Detect",
+      "enter": "Enter ClassRoom",
+      "changed": "media device changed",
+      "video_failed": "The camera device is occupied or pulled out, which makes it unavailable. Please check the device",
+      "audio_failed": "The microphone device is occupied or pulled out, which makes it unavailable. Please check the device",
+      "report_result_failed": "media device not work",
+      "report_result_success": "media device detect success",
+      "videoDetectText": "Can you see your camera preview?",
+      "audioDetectText": "When speaking into the microphone, can you hear the sound and see the volume indicator",
+      "speakerDetectText": "Click play button, can you heard the sound ?",
+      "cameraTestFailed": "Camera not work",
+      "microphoneTestFailed": "Microphone not work",
+      "speakerTestFailed": "Speaker not work",
+    }
+  },
   "extension": {
     "grouping": "Group",
     "hands_up": "CoVideo",

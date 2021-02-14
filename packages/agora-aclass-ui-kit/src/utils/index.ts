@@ -31,3 +31,7 @@ export const rgbaToHexColor = (color:string) => {
     return color;
   }
 }
+
+export function isPromise(p: any) {
+  return p && Object.prototype.toString.call(p) === "[object Promise]";
+}

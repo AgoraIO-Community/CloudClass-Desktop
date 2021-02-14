@@ -113,7 +113,7 @@ export const Demo = (props: any) => {
     }
   }, [newMessage])
   return (
-    <ChatBoard {...props} messages={newMessage} onPullFresh={onPullFresh} />
+    <ChatBoard bannedText={"banned"} {...props} messages={newMessage} onPullFresh={onPullFresh} />
   )
 }
 

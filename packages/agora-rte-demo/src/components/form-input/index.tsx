@@ -62,8 +62,7 @@ export const FormInput = (props: any) => {
         inputProps={{
           maxLength: 20
         }}
-        onChange={onChange}>
-      </Input>
+        onChange={onChange}/>
       {props.requiredText ? <Typography className={classes.required}>{props.requiredText}</Typography> : null}
     </>
   );

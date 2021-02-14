@@ -1,10 +1,10 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useMemo } from 'react'
-import {Video} from 'agora-aclass-ui-kit'
-import {useSceneStore, useAcadsocRoomStore} from '@/hooks'
+import {Video, Volume} from 'agora-aclass-ui-kit'
+import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
-
+import styles from './video.module.scss'
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -15,8 +15,18 @@ export interface VideoMediaStream {
   video: boolean,
   showControls: boolean,
   placeHolderType: any,
-  placeHolderText: string
+  placeHolderText: string,
+  volumeLevel: number
 }
+
+const VideoPlaceholder = () => (
+  <div className={styles.cameraPlaceholder}>
+  <div className={styles.camIcon}></div>
+    <div className={styles.text}>
+      no camera
+    </div>
+  </div>
+)
 
 export const TeacherVideo = observer(() => {
   const sceneStore = useSceneStore()
@@ -54,6 +64,8 @@ export const TeacherVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      showBoardIcon={false}
+      disableBoard={true}
       disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={0}
       visibleTrophy={false}
@@ -64,12 +76,17 @@ export const TeacherVideo = observer(() => {
       onClick={handleClick}
       style={{
         width: '268px',
-        minHeight: '194px'
+        minHeight: '194px',
+        maxHeight: '194px',
       }}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className="rtc-video" /> : null}
+      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+      { userStream.audio ? 
+        <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+        </div> : null }
     </Video>
   )
 })
@@ -77,11 +94,14 @@ export const TeacherVideo = observer(() => {
 export const StudentVideo = observer(() => {
   const sceneStore = useSceneStore()
   const acadsocStore = useAcadsocRoomStore()
+  const boardStore = useBoardStore()
 
   const userStream = sceneStore.studentStreams[0] as VideoMediaStream
   const roomInfo = sceneStore.roomInfo
   
   const isLocal = userStream.local
+
+  const isTeacher = acadsocStore.isTeacher
 
   const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
 
@@ -105,7 +125,10 @@ export const StudentVideo = observer(() => {
       await acadsocStore.sendReward(uid, 1)
       // acadsocStore.showTrophyAnimation = true
     }
-  }, [userStream.video, userStream.audio, isLocal])
+    if (type.sourceType === 'board') {
+      boardStore.toggleAClassLockBoard()
+    }
+  }, [userStream.video, userStream.audio, isLocal, boardStore])
 
   const renderer = userStream.renderer
   
@@ -120,22 +143,30 @@ export const StudentVideo = observer(() => {
       nickname={userStream.account}
       minimal={true}
       resizable={false}
+      showBoardIcon={true}
+      disableBoard={isTeacher ? false : true}
       disableTrophy={acadsocStore.disableTrophy}
       trophyNumber={trophyNumber}
       visibleTrophy={true}
       role={"student"}
+      boardState={boardStore.lockBoard ? false : true}
       videoState={userStream.video}
       audioState={userStream.audio}
       onClick={handleClick}
       style={{
         width: '268px',
-        minHeight: '194px'
+        minHeight: '194px',
+        maxHeight: '194px',
       }}
       disableButton={Boolean(disableButton)}
       placeHolderType={userStream.placeHolderType}
       placeHolderText={userStream.placeHolderText}
     >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className="rtc-video" /> : null}
+      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
+      { userStream.audio ? 
+      <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+      </div> : null }
     </Video>
   )
 })

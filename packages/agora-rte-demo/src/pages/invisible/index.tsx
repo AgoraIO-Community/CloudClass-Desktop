@@ -29,8 +29,8 @@ export const Invisible = observer((props: any) => {
       userUuid: `${userUuid}`,
       roomUuid: `${roomUuid}`,
     })
-    const path = roomTypes[roomType].path
-    history.push(`/classroom/${path}`)
+    const path = roomType ? roomTypes[roomType].path : '/acadsoc/one-to-one'
+    history.push(`${path}`)
   }
   useEffect(() => {
     setRoomInfo()

@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react'
 import { useDeviceStore, usePretestStore, useUIStore } from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { t } from '@/i18n'
+import { CameraPreview } from './pretest/component'
+import styles from './setting/style.module.scss'
+import { useLocation } from 'react-router-dom'
 
 export type DeviceList = {
   deviceId: string,
@@ -33,42 +36,13 @@ interface DeviceItemProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
+  settingBox: {
     display: 'flex',
     flexDirection: 'column',
     borderRadius: 30,
     background: '#DEF4FF',
     padding: 25,
     flex: 1,
-  },
-  settingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: 30,
-    background: '#DEF4FF',
-    padding: 25,
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  btnBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  select: {
-    borderRadius: '20px',
-    border: '1px solid #002591',
-    minWidth: 310,
-    maxWidth: 310,
-    '& .MuiInputBase-root': {
-      display: 'flex'
-    }
   },
   cameraDetect: {
     display: 'flex',
@@ -86,11 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0
   },
-  dialogHeader: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  // dialogHeader: {
+  //   display: 'flex',
+  //   justifyContent: 'center',
+  //   alignItems: 'center'
+  // },
   dialogContent: {
     display: 'flex',
     // justifyContent: 'center',
@@ -131,15 +105,33 @@ const AClassSelect = withStyles((theme: Theme) => ({
   }
 }))(Select);
 
+const VolumeController = observer(() => {
+  const pretestStore = usePretestStore()
+
+  return (
+    <SpeakerDeviceVolume 
+      currentVolume={pretestStore.totalVolume * 100 % 52}
+      width={'8px'}
+      direction={VolumeDirectionEnum.Right}
+    />
+  )
+})
+
 export const SettingWeb = observer(() => {
   const classes = useStyles()
+
+  const location = useLocation()
 
   const pretestStore = usePretestStore()
 
   const uiStore = useUIStore()
 
+  const visible = location.pathname === '/setting' ? true : uiStore.aclassVisible
+
+
   useEffect(() => {
-    if (uiStore.aclassVisible) {
+    console.log("setting #### ", visible)
+    if (visible) {
       pretestStore.init({video: true, audio: true})
       pretestStore.openTestCamera()
       pretestStore.openTestMicrophone()
@@ -148,7 +140,7 @@ export const SettingWeb = observer(() => {
       pretestStore.closeTestCamera()
       pretestStore.closeTestMicrophone()
     }
-  }, [uiStore.aclassVisible])
+  }, [visible])
 
   const handleCameraChange = async (evt: any) => {
     await pretestStore.changeTestCamera(evt.target.value)
@@ -168,14 +160,14 @@ export const SettingWeb = observer(() => {
 
   return (
     <DeviceManagerDialog
-      visible={uiStore.aclassVisible}
+      visible={visible}
       title={t("setting.title")}
       onClose={handleClose}
       dialogHeaderStyle={{
         minHeight: 40,
       }}
       paperStyle={{
-        height: 600,
+        height: 'auto',
         width: 480,
         padding: 20,
         paddingTop: 0,
@@ -190,7 +182,7 @@ export const SettingWeb = observer(() => {
         color: 'white'
       }}
     >
-      <div className={classes.container}>
+      <div className={classes.settingBox}>
         <RowItem>
           <DevicePicker
             name="摄像头选项："
@@ -207,19 +199,14 @@ export const SettingWeb = observer(() => {
         <RowItem>
           <div className={classes.cameraDetect}>
             <div style={{flex: 1}}></div>
-            <RendererPlayer
-              key={pretestStore.cameraId}
-              style={{
-                width: '310px',
-                height: '147px',
-                position: 'relative',
-              }}
-              id="test-preview"
-              track={pretestStore.cameraRenderer}
-              preview={true}
-            >
-              <div className={classes.placeholder}></div>
-            </RendererPlayer>
+            <div className={styles.positionSettingPreview}>
+              <CameraPreview 
+                key={pretestStore.cameraId}
+                id={'settingCamera'}
+                previewPlaceText="请保持微笑哦~"
+                renderer={pretestStore.cameraRenderer}
+              />
+            </div>
           </div>
         </RowItem>
         <RowItem>
@@ -236,11 +223,12 @@ export const SettingWeb = observer(() => {
           />
         </RowItem>
         <RowItem>
-          <SpeakerDeviceVolume 
-            currentVolume={10}
+          <VolumeController />
+          {/* <SpeakerDeviceVolume 
+            currentVolume={pretestStore.totalVolume * 100 % 52}
             width={'8px'}
             direction={VolumeDirectionEnum.Right}
-          />
+          /> */}
         </RowItem>
         <RowItem>
           <DevicePicker
@@ -255,11 +243,11 @@ export const SettingWeb = observer(() => {
             }}
           />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <VolumeSlider value={20} onChange={(val: number) => {
             console.log("slider ", val)
           }} />
-        </RowItem>
+        </RowItem> */}
         {/* <RowItem>
           <SpeakerDeviceVolume 
             currentVolume={10}
@@ -279,11 +267,13 @@ export const SettingNative = observer(() => {
 
   const uiStore = useUIStore()
 
+  const visible = location.pathname === '/setting' ? true : uiStore.aclassVisible
+
   useEffect(() => {
-    if (uiStore.aclassVisible) {
+    if (visible) {
       pretestStore.init({video: true, audio: true})
     }
-  }, [uiStore.aclassVisible])
+  }, [visible])
 
   const handleCameraChange = async (evt: any) => {
     await pretestStore.changeTestCamera(evt.target.value)
@@ -303,14 +293,14 @@ export const SettingNative = observer(() => {
 
   return (
     <DeviceManagerDialog
-      visible={uiStore.aclassVisible}
+      visible={visible}
       title={t("setting.title")}
       onClose={handleClose}
       dialogHeaderStyle={{
         minHeight: 40,
       }}
       paperStyle={{
-        height: 600,
+        height: 'auto',
         width: 480,
         padding: 20,
         paddingTop: 0,
@@ -325,10 +315,10 @@ export const SettingNative = observer(() => {
         color: 'white'
       }}
     >
-      <div className={classes.container}>
+      <div className={classes.settingBox}>
         <RowItem>
           <DevicePicker
-            name="摄像头选项："
+            name={t("aclass.device.camera")}
             value={pretestStore.cameraId}
             onChange={handleCameraChange}
             list={pretestStore.cameraList}
@@ -341,7 +331,7 @@ export const SettingNative = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="麦克风选项："
+            name={t("aclass.device.mic")}
             value={pretestStore.microphoneId}
             onChange={handleMicrophoneChange}
             list={pretestStore.microphoneList}
@@ -354,7 +344,7 @@ export const SettingNative = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="扬声器选项: "
+            name={t("aclass.device.speaker")}
             value={pretestStore.speakerId}
             onChange={handleSpeakerChange}
             list={pretestStore.speakerList}
@@ -377,10 +367,13 @@ export const SettingNative = observer(() => {
 
 
 export const Setting = observer(() => {
-  const isNative = false
+  const uiStore = useUIStore()
+  const isNative = uiStore.isElectron
   return (
     isNative ? 
     <SettingNative /> :
     <SettingWeb />
   )
 })
+
+// export const Setting = observer(() =>)
