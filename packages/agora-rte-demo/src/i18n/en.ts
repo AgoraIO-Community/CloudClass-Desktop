@@ -185,6 +185,8 @@ const en = {
     'failed_to_initiate_a_raise_of_hand_application': 'Failed to initiate a raise of hand application',
     'failed_to_end_the_call': 'Failed to end the call',
     'failed_to_join_board': 'Failed to join board',
+    'time_interval_between_start': `There are only "{reason}" mins classroom will be started`,
+    'time_interval_between_end': `There are only "{reason}" mins classroom will be closed`,
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {
@@ -219,6 +221,10 @@ const en = {
     'class_end': 'Class end',
     'class_start': 'Class start',
     'back': 'Back',
+    'class_time_text': 'The classroom will be started: ',
+    'start_in': 'Start in',
+    'minutes': 'min',
+    'seconds': 's',
   },
   'home': {
     'entry-home': 'Join Classroom',

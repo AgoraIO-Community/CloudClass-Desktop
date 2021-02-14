@@ -111,7 +111,7 @@ export const StudentVideo = observer(() => {
   
   const trophyNumber = useMemo(() => {
     return acadsocStore.getRewardByUid(userStream.userUuid)
-  }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.sutdentsReward])
+  }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
     <Video

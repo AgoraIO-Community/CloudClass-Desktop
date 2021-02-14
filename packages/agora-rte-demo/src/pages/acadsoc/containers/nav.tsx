@@ -16,7 +16,8 @@ const userSignalStatus = [{
 }]
 
 const StartViewBox = observer(() => {
-  const startTime: string = 'start in 10‘11"';
+  const acadsocStore = useAcadsocRoomStore()
+  const startTime: string = acadsocStore.classTimeText + acadsocStore.shfitClassTime
   return (
     <StartView text={startTime} />
   )
