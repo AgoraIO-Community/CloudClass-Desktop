@@ -89,7 +89,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-export interface ButtonProps {
+export interface DiskButtonProps {
   id?: string,
   text: string,
   color: "primary" | "secondary",
@@ -98,7 +98,7 @@ export interface ButtonProps {
   disabled?: boolean,
 }
 
-export const DiskButton = (props: ButtonProps = { text: '', color: 'primary' }) => {
+export const DiskButton = (props: DiskButtonProps = { text: '', color: 'primary' }) => {
   const classes = useButtonStyles()
   const classKey = classes[props.color]
   const onClick = props.onClick ? props.onClick : noop

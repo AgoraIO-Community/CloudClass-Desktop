@@ -10,6 +10,7 @@ import {
   FileUploader,
   CustomMenuItemType,
   CustomMenuList,
+  DiskManagerDialog,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { useBoardStore } from '@/hooks'
@@ -19,6 +20,7 @@ import { noop } from 'lodash'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
 import { CourseWareMenuContainer } from './course-ware-menu'
+import { NetworkDisk } from './disk'
 
 const StrokeListPanel = observer(() => {
 
@@ -362,6 +364,8 @@ const useEduBoardStyles = makeStyles((theme: Theme) => ({
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
 
+  const [openDisk, setOpenDisk] = React.useState(false);
+
   const showCourseMenuItem = boardStore.isTeacher()
 
   const classes = useEduBoardStyles()
@@ -402,6 +406,10 @@ export const EducationBoard = observer((props: any) => {
       }
       case 'clear': {
         boardStore.toggleAClassLockBoard()
+        break;
+      }
+      case 'disk': {
+        setOpenDisk(true)
         break;
       }
     }
@@ -449,6 +457,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.zoomBoard('fullscreenExit')
           }}
         /> : null}
+        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={openDisk} setOpenDisk={setOpenDisk} /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

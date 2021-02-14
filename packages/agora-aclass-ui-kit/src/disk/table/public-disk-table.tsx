@@ -161,7 +161,34 @@ const PublicDiskTables = (props: DiskTablesProps) => {
   const render = () => {
     return (
       <>
-        <DiskSearch tabValue={props.tabValue}/>
+        <div className={classSearch.titleBox}>
+          <div className={classSearch.titleButton}>
+          </div>
+          <div>
+            <TextField
+              className={classSearch.input}
+              onChange={handleChange}
+              placeholder={'搜索'}
+              variant='outlined'
+              value={searchContent}
+              InputProps={{
+                classes: {
+                  root: classSearch.root,
+                },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClearInput} className={classSearch.iconButton}>
+                      <CancelIcon />
+                    </IconButton>
+                    <IconButton type="submit" className={classSearch.iconButton} aria-label="search">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              size="small" />
+          </div>
+        </div>
         { rows.length && <DiskTable tabValue={props.tabValue}/> || <TableEmpty /> }
       </>
     );

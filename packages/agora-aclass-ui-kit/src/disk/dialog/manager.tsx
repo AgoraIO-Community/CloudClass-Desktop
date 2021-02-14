@@ -198,8 +198,8 @@ export interface DiskManagerDialogProps extends NetworkDiskDialogProps {}
 
 export const DiskManagerDialog: React.FC<DiskManagerDialogProps> = (props) => {
   return (
-    <CustomizeTheme>
+    // <CustomizeTheme>
       <NetworkDiskDialog {...props} />
-    </CustomizeTheme>
+    // </CustomizeTheme>
   )
 }

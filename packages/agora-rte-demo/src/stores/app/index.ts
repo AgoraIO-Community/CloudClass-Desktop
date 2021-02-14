@@ -24,6 +24,7 @@ import { BreakoutRoomStore } from './breakout-room';
 import { MiddleRoomStore } from './middle-room';
 import { ExtensionStore } from './extension'
 import { PretestStore } from './pretest'
+import { DiskStore } from './disk'
 // import { get, isEmpty } from 'lodash';
 import { GlobalStorage } from '@/utils/custom-storage';
 import { autorun, toJS, observable, action, computed, runInAction } from 'mobx';
@@ -115,6 +116,7 @@ export class AppStore {
   acadsocStore!: AcadsocRoomStore;
   pretestStore!: PretestStore;
   deviceSettingStore!: DeviceSettingStore;
+  diskStore!: DiskStore;
 
   eduManager!: EduManager;
 
@@ -322,6 +324,7 @@ export class AppStore {
     this.replayStore = new ReplayStore(this)
     this.breakoutRoomStore = new BreakoutRoomStore(this)
     this.extensionStore = new ExtensionStore(this)
+    this.diskStore = new DiskStore(this)
     this._screenVideoRenderer = undefined
   }
 
@@ -673,3 +676,4 @@ export { ReplayStore } from './replay';
 export { RecordingStore } from './recording';
 export {DeviceSettingStore} from './device-setting';
 export {PretestStore} from './pretest';
+export {DiskStore} from './disk';

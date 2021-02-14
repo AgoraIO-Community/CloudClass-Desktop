@@ -1,6 +1,7 @@
 import React, {ReactEventHandler} from 'react';
 import { noop } from '../../declare'
-import { Snackbar,  SnackbarOrigin, SnackbarContent, makeStyles, createStyles } from '@material-ui/core'
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import { Snackbar,  SnackbarOrigin, SnackbarContent, } from '@material-ui/core'
 import IconSuccess from '../assets/icon-success.png'
 import IconFail from '../assets/icon-fail.png'
 

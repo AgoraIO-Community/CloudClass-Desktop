@@ -7,6 +7,7 @@ import { ColorPalette } from './panel/palette';
 import { IToolItem } from './tool';
 import { AClassTheme } from '../theme';
 import { CustomMenuItemType, CustomMenuList } from './panel';
+import { DiskManagerDialog } from '../disk/dialog/manager'
 
 export default {
   title: '白板'
@@ -142,6 +143,60 @@ export const UploadFilePopover = (props: any) => {
 }
 
 export const EducationBoard = (props: any) => {
+  const [openDisk, setOpenDisk] = React.useState(false);
+
+  const NetworkDisk = () => {  
+    const handleClose = () => {
+      console.log('close network disk', openDisk)
+      setOpenDisk(false)
+    }
+  
+    const onReload = () => {
+      console.log('reload network disk')
+    }
+  
+    const onUpload = () => {
+      console.log('upload file')
+    }
+  
+    return (
+      <DiskManagerDialog
+        fullWidth={false}
+        visible={openDisk}
+        onClose={handleClose}
+        dialogHeaderStyle={{
+          minHeight: 40,
+        }}
+        paperStyle={{
+          minWidth: 800,
+          minHeight: 587,
+          // padding: 20,
+          // paddingTop: 0,
+          borderRadius: 20,
+          overflowY: 'hidden',
+        }}
+        dialogContentStyle={{
+          background: 'transparent',
+          borderRadius: 20,
+          // display: 'flex',
+          // flexDirection: 'column',
+          // background: '#DEF4FF',
+          // padding: 25
+        }}
+        questionBtnStyle={{
+          top: 16,
+          right: 80,
+          color: 'white'
+        }}
+        closeBtnStyle={{
+          top: 16,
+          right: 18,
+          color: 'white'
+        }}
+      />
+    )
+  }
+  
 
   const onClickPaginator = (type: string) => {
     action('paginator')
@@ -149,6 +204,11 @@ export const EducationBoard = (props: any) => {
   }
 
   const onClickTool = (type: string) => {
+    // disk can't be a popover
+    if (type === 'disk') {
+      setOpenDisk(true)
+      console.log('open disk', openDisk)
+    }
     action('tool')
     console.log(`click tool ${type}`)
   }
@@ -175,6 +235,7 @@ export const EducationBoard = (props: any) => {
           isFullScreen={props.isFullScreen}
           onClick={onClickPaginator}
         />
+        <NetworkDisk />
         <Tool
           strokeComponent={<StrokePopover />}
           colorComponent={<ColorPopover />}

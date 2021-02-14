@@ -1,5 +1,5 @@
 import React from 'react'
-import { DiskButton } from './control/button'
+import { DiskButton } from './control/disk-button'
 import { DiskManagerDialog } from './dialog/manager'
 import { Loading } from './control/loading'
 import TableEmpty from "./dialog/table-empty";
@@ -10,8 +10,10 @@ export default {
 
 export const NetworkDisk = () => {
 
+  const [open, setOpen] = React.useState(false);
+
   const handleClose = () => {
-    console.log('close network disk')
+    console.log('close network disk', open)
   }
 
   const onReload = () => {
