@@ -63,6 +63,7 @@ export class EduManager extends EventEmitter {
         logPath: window.logPath,
         videoSourceLogPath: window.videoSourceLogPath,
       }
+      buildOption.agoraSdk = this.config.agoraRtc
     }
     this._mediaService = new MediaService(buildOption)
     if (EduManager._debug) {
