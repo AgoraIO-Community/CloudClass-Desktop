@@ -2,5 +2,7 @@
   "packages": [
     "packages/*"
   ],
+  "hoist": true,
+  "nohoist":["agora-electron-sdk"],
   "version": "0.0.0"
 }
