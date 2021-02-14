@@ -40,7 +40,12 @@ export interface ChatBoardProps {
   titleView?: string | React.ReactNode,
   onClickSendButton?: (message?: string) => any,
   onClickBannedButton?: () => any,
-  onClickMinimize?: () => any
+  onClickMinimize?: () => any,
+  failText?:string,
+  sendButtonText?:string,
+  loadingText?:string,
+  titleText?:string,
+  isDisableSendButton:boolean
 }
 
 
@@ -62,6 +67,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
     onClickBannedButton,
     titleView,
     minHeight,
+    titleText,
+    sendButtonText,
+    loadingText,
+    failText,
     onClickMinimize = () => { }
   } = props
   const bottomDistance = borderWidth
@@ -69,9 +78,12 @@ export const ChatBoard = (props: ChatBoardProps) => {
     chatScroll: {
       position: 'absolute',
       top: 0,
-      right: '8px',
+      right: '0px',
+      left:'0px',
       height: '100%',
-      width: '100%'
+      width: '100%',
+      padding:'5px',
+      boxSizing:'border-box'
     },
     chatContent: {
       background: panelBackColor,
@@ -124,7 +136,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     },
     chatTextArea: {
       resize: 'none',
-      width: '90%',
+      width: '100%',
       border: 'none',
       boxSizing: 'border-box',
       outline:'none',
@@ -137,6 +149,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       alignItems: 'center',
       marginRight:'14px',
       cursor:'pointer',
+      fontSize:'14px'
     },
     sendButton: {
       cursor: 'pointer',
@@ -148,15 +161,21 @@ export const ChatBoard = (props: ChatBoardProps) => {
       justifyContent: 'center',
       height: '26px',
       position: 'absolute',
-      bottom: bottomDistance,
+      bottom: '3px',
       alignItems: 'center',
       right: '6px',
+      fontSize:'14px',
       '&::after': {
         background: 'rgba(185,141,0,.4)'
       }
     },
+    disableSendButton: {
+      background: '#e9be3685'
+    },
     sendContent: {
       display: 'flex',
+      height:'26px',
+      width: '100%',
       flexDirection: 'row-reverse',
     },
     TelegramIcon: {
@@ -207,8 +226,13 @@ export const ChatBoard = (props: ChatBoardProps) => {
   }
   const handleChangeText = (event: any) => {
     const { value } = event.target;
-    setInputMessages(value);
+    setInputMessages(value.trim());
     onInputText && onInputText(event);
+  }
+  const handleKeyDown=(event:any)=>{
+    if(event.keyCode===13){
+      handlerSendButton()
+    }
   }
   useEffect(() => {
     const position = isSendButton ? chatRef?.current.scrollHeight : chatRef?.current.scrollHeight - currentHeight
@@ -216,14 +240,14 @@ export const ChatBoard = (props: ChatBoardProps) => {
   }, [messages])
   const handlerSendButton = () => {
     setIsSendButton(true)
-    onClickSendButton && onClickSendButton(inputMessages)
+    onClickSendButton && onClickSendButton(inputMessages.trim())
     setInputMessages("")
   }
   return (
     <Box className={classes.chat}>
       {titleView ||
         <div className={classes.titleView}>
-          <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />chat</div>
+          <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />{props.titleText || 'chat'}</div>
           <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
         </div>}
       <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
@@ -240,6 +264,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
               onClickFailButton={item.onClickFailButton ?item.onClickFailButton : () => {}}
               translateText={item.translateText}
               status={item.status || 'success'}
+              loadingText ={loadingText}
+              failText={failText}
             />
           })}
         </div>
@@ -247,13 +273,14 @@ export const ChatBoard = (props: ChatBoardProps) => {
       <div className={classes.chatTool}>{toolView || <ToolButton onClickBannedButton={onClickBannedButton} bannedText={bannedText} />}</div>
       <div className={classes.input}>
         <textarea
-          onChange={(e) => { handleChangeText(e) }}
+          onKeyDown={(e) => { handleKeyDown(e) }}
+          onChange={(e) => { !props.isDisableSendButton && handleChangeText(e) }}
           className={classes.chatTextArea}
           value={inputMessages}
           placeholder={props.placeholder || 'Press enter to send a message'}
           name="chatTextArea" id="chatTextArea" cols={30} rows={4} />
         <div className={classes.sendContent}>
-          {sendView || <div onClick={handlerSendButton} className={classes.sendButton}><TelegramIcon className={classes.TelegramIcon} />send</div>}
+          {sendView || <div onClick={handlerSendButton} className={`${classes.sendButton} ${props.isDisableSendButton ? classes.disableSendButton :null}`}><TelegramIcon className={classes.TelegramIcon} />{sendButtonText}</div>}
         </div>
       </div>
     </Box>

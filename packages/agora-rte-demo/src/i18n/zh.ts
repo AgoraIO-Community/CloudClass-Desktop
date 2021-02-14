@@ -18,7 +18,13 @@ const zhCN: any = {
     },
     "chat": {
       "banned": "禁言",
-      "placeholder": "已禁止发聊天消息",
+      "unblock":"聊天",
+      "disablePlaceholder": "已禁止发聊天消息",
+      "placeholder":"说点什么",
+      "send":"发送",
+      "title":"聊天",
+      "loading":'翻译中',
+      "fail":'翻译失败'
     },
     "device": {
       "videoDetectTitle": "摄像头检测",

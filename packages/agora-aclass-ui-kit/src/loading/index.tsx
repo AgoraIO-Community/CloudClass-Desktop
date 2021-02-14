@@ -7,6 +7,7 @@ export const Loading = (props: any) => {
     box: {
       width,
       height: height || width,
+      marginRight:'8px'
     },
     load: {
       display: 'block',
