@@ -787,9 +787,18 @@ export class AcadsocRoomStore extends SimpleInterval {
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
             await this.appStore.releaseRoom()
-            this.appStore.uiStore.showDialog({
-              type: 'classSessionEnded',
-              message: t('class_ended'),
+            dialogManager.confirm({
+              title: t(`aclass.class_end`),
+              text: t(`aclass.leave_room`),
+              showConfirm: true,
+              showCancel: true,
+              confirmText: t('aclass.confirm.yes'),
+              visible: true,
+              cancelText: t('aclass.confirm.no'),
+              onConfirm: () => {
+              },
+              onClose: () => {
+              }
             })
             return
           }
@@ -1152,10 +1161,19 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       state: 2
     })
-    this.appStore.releaseRoom()
-    this.appStore.uiStore.showDialog({
-      type: 'classSessionEnded',
-      message: t('class_ended'),
+    await this.appStore.releaseRoom()
+    dialogManager.confirm({
+      title: t(`aclass.class_end`),
+      text: t(`aclass.leave_room`),
+      showConfirm: true,
+      showCancel: true,
+      confirmText: t('aclass.confirm.yes'),
+      visible: true,
+      cancelText: t('aclass.confirm.no'),
+      onConfirm: () => {
+      },
+      onClose: () => {
+      }
     })
   }
 
