@@ -79,7 +79,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderStyle: 'solid',
       overflowY: 'scroll',
       flex: 1,
-      maxHeight: minHeight || '200px',
+      // maxHeight: maxHeight || '200px',
       minHeight: minHeight || '50px',
       borderWidth: '0px',
       padding: '10px',

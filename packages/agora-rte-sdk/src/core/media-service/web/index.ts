@@ -307,7 +307,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     })
     client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
-      const videoStats =this.client.getRemoteVideoStats()
+      const videoStats = this.client.getRemoteVideoStats()
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,

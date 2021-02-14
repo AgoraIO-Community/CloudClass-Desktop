@@ -791,7 +791,6 @@ export class SceneStore extends SimpleInterval {
   }
 
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
-    console.log(`getRemotePlaceHolderProps# userUuid: ${userUuid}, userRole: ${userRole}`)
     const stream = this.getStreamBy(userUuid)
 
     if (!stream) {

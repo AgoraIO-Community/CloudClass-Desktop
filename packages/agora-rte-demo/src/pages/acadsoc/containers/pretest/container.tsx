@@ -2,8 +2,9 @@ import styles from './style.module.scss'
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {observer} from 'mobx-react'
 import { PretestHeader, VideoDetect, AudioDetect, SpeakerDetect, TestReport, PretestButton } from './component'
-import { usePretestStore } from '@/hooks'
+import { useAppStore, usePretestStore } from '@/hooks'
 import { t } from '@/i18n'
+import { useHistory, useLocation } from 'react-router-dom'
 
 export interface PretestComponentProps {
   onClickMenu?: (type: string) => any,
@@ -13,6 +14,12 @@ export interface PretestComponentProps {
 }
 
 export const PretestWebComponent: React.FC<PretestComponentProps> = observer((props) => {
+
+  const history = useHistory()
+
+  const appStore = useAppStore()
+
+  const location = useLocation()
 
   const [tab, setTabValue] = useState<string>('video')
 
@@ -125,6 +132,13 @@ export const PretestWebComponent: React.FC<PretestComponentProps> = observer((pr
 
   const reportNo = useCallback(async () => {
     if (!lock.current) {
+      if (appStore.params?.roomPath) {
+        history.push(appStore.params?.roomPath)
+        return
+      }
+      if (location.pathname === '/pretest') {
+        history.push('/')
+      }
     }
   }, [lock.current])
 

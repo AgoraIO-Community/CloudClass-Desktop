@@ -1,13 +1,15 @@
 import { observer } from 'mobx-react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import { ChatMessage } from '@/utils/types';
-import { useAcadsocRoomStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { t } from '@/i18n';
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
   const acadsocStore = useAcadsocRoomStore()
+  const sceneStore = useSceneStore()
   const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
@@ -94,19 +96,30 @@ export const ChatView = observer(() => {
       setSendButtonBackColor('#e9be3685')
     }
   }
+  const onClickBannedButton = useCallback(async () => {
+    if (acadsocStore.appStore.roomInfo.userRole
+        === EduRoleTypeEnum.teacher) {
+      if (!sceneStore.mutedChat) {
+        await sceneStore.muteChat()
+      } else {
+        await sceneStore.unmuteChat()
+      }
+    }
+  }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
   useEffect(() => {
     isFetchHistory && fetchMessage()
     setMessages(transformationMessage())
   }, [acadsocStore.roomChatMessages.length])
   return (
     <ChatBoard
-      bannedText={t("aclass.chat.banned")}
+      bannedText={sceneStore.mutedChat ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
       onPullFresh={onPullFresh}
+      onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
       onInputText={onInputText}
       sendButtonBackColor={sendButtonBackColor}
