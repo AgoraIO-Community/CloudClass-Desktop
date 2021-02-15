@@ -240,6 +240,8 @@ export class AppStore {
 
       //@ts-ignore
       if (window.agoraBridge) {
+        const cefClient = new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId)
+        console.log("#### cef initialize", cefClient)
         //@ts-ignore
         this.eduManager = new EduManager({
           appId: config.agoraAppId,
@@ -249,7 +251,8 @@ export class AppStore {
           logLevel: '' as any,
           logDirectoryPath: '',
           // @ts-ignore
-          cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
+          cefClient,
+          // cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
           //@ts-ignore
           agoraRtc: AgoraCEF.AgoraRtcEngine,
           // agoraRtc: window,

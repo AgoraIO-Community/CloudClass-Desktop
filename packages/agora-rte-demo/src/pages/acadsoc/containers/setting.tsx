@@ -130,7 +130,6 @@ export const SettingWeb = observer(() => {
 
 
   useEffect(() => {
-    console.log("setting #### ", visible)
     if (visible) {
       pretestStore.init({video: true, audio: true})
       pretestStore.openTestCamera()

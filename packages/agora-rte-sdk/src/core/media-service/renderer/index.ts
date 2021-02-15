@@ -73,6 +73,9 @@ export abstract class UserRenderer implements IMediaRenderer {
 }
 
 export class LocalUserRenderer extends UserRenderer {
+
+  private el: HTMLCanvasElement | undefined;
+
   constructor(config: UserRendererInit) {
     super(config)
     this.local = true
@@ -88,9 +91,43 @@ export class LocalUserRenderer extends UserRenderer {
     if (this.isElectron) {
       // @ts-ignore
       if (this.sourceType === 'default') {
-        this.electron.client.setupLocalVideo(dom)
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 0);
+        // TODO: cef
+        // remove canvas
+        if (this.electron._cefClient) {
+          // Promise.resolve((async () => {
+            const oldEl = dom.getElementsByTagName('canvas') as any
+            if (oldEl) {
+              const items = [...oldEl]
+              items.forEach((item: any) => {
+                item.innerHTML = ''
+              })
+            }
+
+            this.el = document.createElement('canvas')
+            this.el.style.position = 'absolute'
+            this.el.style.height = '100%'
+            this.el.style.width = '100%'
+            this.el.style.objectFit = 'cover'
+            this.el.style.transform = 'rotateY(180deg)'
+            // this.el.style.visibility = 'visible'
+            // this.el.style.visibility = 'visible'
+            // Object.assign(this.el.style, {
+            //   width: '100%',
+            //   height: '100%',
+            //   visibility: 'visible',
+            //   display: 'flex',
+            //   ['objectFit']: 'cover',
+            //   'transform': 'rotateY(180deg)',
+            // })
+            dom.appendChild(this.el)
+            this.electron.client.setupLocalVideo(this.el)
+            //@ts-ignore
+            this.electron.client.setLocalRenderMode(3);
+        } else {
+          this.electron.client.setupLocalVideo(dom)
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 0);
+        }
       } else {
         this.electron.client.setupLocalVideoSource(dom)
         //@ts-ignore
@@ -111,6 +148,10 @@ export class LocalUserRenderer extends UserRenderer {
     }
     if (this.isElectron && this.sourceType === 'default') {
       this.electron.client.stopPreview()
+      if (this.el) {
+        this.el.parentNode?.removeChild(this.el)
+        this.el = undefined
+      }
       if (isPreview) {
         this.electron.client.setClientRole(2)
       }
@@ -125,6 +166,9 @@ export class LocalUserRenderer extends UserRenderer {
 }
 
 export class RemoteUserRenderer extends UserRenderer {
+
+  private el: HTMLCanvasElement | undefined
+
   constructor(config: UserRendererInit) {
     super(config)
     this.local = false
@@ -140,14 +184,37 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
-      // this.electron.client.subscribe(+this.uid, dom,)
-      this.electron.client.setupRemoteVideo(+this.uid, dom, this.channel)
-      if (!fit) {
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 0, this.channel);
+      if (this.electron._cefClient) {
+        // remove canvas
+        // Promise.resolve((async () => {
+          const oldEl = dom.getElementsByTagName('canvas') as any
+          if (oldEl) {
+            const items = [...oldEl]
+            items.forEach((item: any) => {
+              item.innerHTML = ''
+            })
+          }
+          this.el = document.createElement('canvas')
+          //@ts-ignore
+          this.el.style.position = 'absolute'
+          this.el.style.height = '100%'
+          this.el.style.width = '100%'
+          this.el.style.objectFit = 'cover'
+          this.el.style.transform = 'rotateY(180deg)'
+          dom.appendChild(this.el)
+          //@ts-ignore
+          this.electron.client.setupRemoteVideo(this.el, +this.el)
+
       } else {
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+        // this.electron.client.subscribe(+this.uid, dom,)
+        this.electron.client.setupRemoteVideo(+this.uid, dom, this.channel)
+        if (!fit) {
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 0, this.channel);
+        } else {
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+        }
       }
     }
     this._playing = true
@@ -160,8 +227,14 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
-      //@ts-ignore
-      this.electron.client.destroyRender(+this.uid, null)
+      if (this.el) {
+        this.el.parentNode?.removeChild(this.el)
+        this.el = undefined
+      }
+      if (this.electron.client.hasOwnProperty('destroyRender')) {
+        //@ts-ignore
+        this.electron.client.destroyRender(+this.uid, null)
+      }
     }
     this._playing = false
   }
