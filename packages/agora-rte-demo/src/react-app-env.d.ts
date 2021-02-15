@@ -21,6 +21,7 @@ declare const REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: string;
 interface CustomGlobalUtils {
   platform: string
   isElectron: boolean
+  agoraBridge: boolean
   store: AppStore
   ipc: {
     send: CallableFunction,

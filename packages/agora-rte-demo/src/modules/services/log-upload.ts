@@ -9,7 +9,7 @@ import { GenericErrorWrapper } from "agora-rte-sdk";
 
 const UA = new UAParser();
 const parser = UA.getResult()
-const platform: string = window.isElectron ? 'Electron' : 'Web'
+const platform: string = window.isElectron || window.agoraBridge ? 'Electron' : 'Web'
 
 window.platform = platform
 
