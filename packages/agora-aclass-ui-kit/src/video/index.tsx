@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flex:1
     },
     minimalBtn: {
+      fontSize: 0,
       padding: 0,
       position: 'absolute',
       top: '3px',

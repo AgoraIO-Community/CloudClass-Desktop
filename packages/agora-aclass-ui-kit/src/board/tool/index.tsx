@@ -68,7 +68,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
       {...props.style}
     } className={classes.toolBox}>
       <Typography component="div" style={{
-        fontSize: 8,
+        fontSize: 12,
         color: 'white',
         textShadow: '0 0 3px #775c09, 0 0 3px #e2a910',
         width: 32,
@@ -76,6 +76,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
         lineHeight: '32px',
         userSelect: 'none',
         margin: 6,
+        fontFamily: 'SourceHanSansCN-Regular'
       }}>
         {props.headerTitle}
       </Typography>

@@ -6,6 +6,7 @@ import styles from './style.module.scss'
 import CustomIconArrow from './assets/rectangle.png'
 import { RendererPlayer } from '@/components/media-player'
 import { SpeakerDeviceVolume } from '../pretest'
+import { t } from '@/i18n'
 
 interface PretestButtonProps {
   text: string
@@ -197,7 +198,7 @@ export const VideoDetect: React.FC<PretestVideoDetectProps> = (props) => {
       <div className={styles.detectPosition}>
         <CameraPreview
           id={'camera'}
-          previewPlaceText="请保持微笑哦~"
+          previewPlaceText={t('aclass.device.keep')}
           renderer={props.renderer}
         />
       </div>

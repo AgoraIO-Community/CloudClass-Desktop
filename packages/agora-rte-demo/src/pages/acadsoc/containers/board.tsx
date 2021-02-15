@@ -433,6 +433,8 @@ export const EducationBoard = observer((props: any) => {
             bottom: props.controlY,
             right: props.controlX,
             zIndex: 10,
+            fontSize: '18px',
+            lineHeight: '20px',
           }}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}

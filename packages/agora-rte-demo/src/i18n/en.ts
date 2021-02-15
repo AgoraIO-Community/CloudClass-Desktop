@@ -27,6 +27,7 @@ const en = {
       "fail":'Translation failure'
     },
     "device": {
+      "keep": "Please Keep Smile, :D",
       "videoDetectTitle": "camera test",
       "audioDetectTitle": "microphone test",
       "speakerDetectTitle": "speaker test",

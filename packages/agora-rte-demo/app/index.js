@@ -51,7 +51,7 @@ async function createWindow() {
     mainWindow = new BrowserWindow({
       frame: true,
       width: 1035,
-      height: 700,
+      height: 720,
       center: true,
       // resizable: false,
       // show: true,

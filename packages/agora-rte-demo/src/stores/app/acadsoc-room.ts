@@ -25,12 +25,7 @@ import { t } from '@/i18n';
 import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
-
-export enum EduClassroomStateEnum {
-  beforeStart = 0,
-  start = 1,
-  end = 2,
-}
+import {EduClassroomStateEnum} from '@/stores/app/scene';
 
 export enum EduClassroomCountdownEnum {
   first = 5,
@@ -474,7 +469,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // TODO: this.appStore.params.startTime
       const startTime = new Date().getTime() + 120000
       // TODO: this.appStore.params.duration
-      const duration = 180
+      const duration = 18000
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,

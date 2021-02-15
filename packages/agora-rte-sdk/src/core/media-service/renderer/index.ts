@@ -160,6 +160,7 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
+      this.electron.client.destroyRender(+this.uid, null)
     }
     this._playing = false
   }

@@ -39,7 +39,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
     },
     label: {
       color: '#ffffff',
-      fontSize: '8px',
+      fontSize: '14px',
       lineHeight: '9px',
     }
   }),

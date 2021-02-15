@@ -1,5 +1,8 @@
 .videoRenderer {
   width: 268px;
+  div:nth-child(2) {
+    position: relative;
+  }
 }
 
 .cameraPlaceholder {

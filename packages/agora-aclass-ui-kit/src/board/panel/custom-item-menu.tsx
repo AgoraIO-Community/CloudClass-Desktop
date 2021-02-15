@@ -79,8 +79,10 @@ const CustomMenuItemBaseButton: React.FC<CustomMenuItemBaseButtonProps> = ({icon
         backgroundImage: `url(${icon})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: '50%',
-        width: '100%',
-        height: '100%'
+        // width: '100%',
+        // height: '100%',
+        width: '32px',
+        height: '32px'
       }} />
     </ButtonBase>
   )

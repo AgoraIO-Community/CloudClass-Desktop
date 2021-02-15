@@ -27,6 +27,7 @@ const zhCN: any = {
       "fail":'翻译失败'
     },
     "device": {
+      "keep": "请保持微笑哦~",
       "videoDetectTitle": "摄像头检测",
       "audioDetectTitle": "麦克风检测",
       "speakerDetectTitle": "扬声器检测",
