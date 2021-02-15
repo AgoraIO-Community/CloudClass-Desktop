@@ -182,6 +182,7 @@
     "moment": "2.24.0",
     "node-downloader-helper": "1.0.17",
     "node-sass": "4.12.0",
+    "optimize-css-assets-webpack-plugin": "5.0.4",
     "progress-bar-webpack-plugin": "2.1.0",
     "promise-polyfill": "8.2.0",
     "purify-css": "1.2.5",

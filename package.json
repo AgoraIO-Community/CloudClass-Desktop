@@ -1,6 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "dayjs": "1.10.4",
     "lerna": "3.22.1",
@@ -11,9 +14,10 @@
   "version": "1.0.0",
   "dependencies": {},
   "scripts": {
+    "bootstrap": "lerna bootstrap --use-workspaces",
     "dev": "run-s build:sdk build:ui-kit run:demo",
     "dev:electron": "run-s build:dev:sdk build:ui-kit run:demo:electron",
-    "pack": "run-s build:sdk build:ui-kit build:classroom:sdk",
+    "pack:sdk": "run-s build:sdk build:ui-kit build:classroom:sdk",
     "pack:electron:mac": "lerna exec --scope=agora-rte-demo npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-rte-demo npm run pack:win",
     "build:classroom:sdk": "lerna exec --scope=agora-rte-demo npm run pack:npm",
