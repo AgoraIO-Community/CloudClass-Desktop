@@ -32,6 +32,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
       this.sdkWrapper = new AgoraElectronRTCWrapper({
+        cefClient: rtcProvider.cefClient,
         logPath: electronLogPath.logPath,
         videoSourceLogPath: electronLogPath.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,

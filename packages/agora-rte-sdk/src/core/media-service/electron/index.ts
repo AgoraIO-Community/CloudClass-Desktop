@@ -108,6 +108,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   _subClient: Record<string, any>;
   _remoteVideoStats: Record<number, any>;
   _remoteAudioStats: Record<number, any>;
+  _cefClient: any;
 
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)
@@ -115,6 +116,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   constructor(options: ElectronWrapperInitOption) {
     super();
+    this._cefClient = options.cefClient
     this.logPath = options.logPath
     this.videoSourceLogPath = options.videoSourceLogPath
     EduLogger.info(`[electron-log], logPath: ${this.logPath}, videoSourceLogPath: ${this.videoSourceLogPath}, appId: ${options.appId}`)
@@ -131,7 +133,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this._remoteAudioStats = {}
     //@ts-ignore
     this.client = options.AgoraRtcEngine
-    let ret = this.client.initialize(this.appId)
+    let ret = -1
+    if (this._cefClient) {
+      ret = this.client.initialize(this._cefClient)
+    } else {
+      ret = this.client.initialize(this.appId)
+    }
     if (ret < 0) {
       throw new GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,

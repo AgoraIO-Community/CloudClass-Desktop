@@ -5647,6 +5647,9 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+"agora-cef-sdk@file:./packages/agora-rte-demo/lib/agora-cef-sdk":
+  version "3.1.1"
+
 agora-electron-sdk@education290:
   version "2.9.0-rc.107-build.1165"
   resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-2.9.0-rc.107-build.1165.tgz#700157b41332d0bc7568c3bff975c229c469cd85"

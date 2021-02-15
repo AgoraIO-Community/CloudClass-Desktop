@@ -11,6 +11,7 @@ import {
   EduRoleTypeEnum,
   EduUserService,
 } from 'agora-rte-sdk'
+import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { DeviceStore } from './device';
@@ -234,20 +235,40 @@ export class AppStore {
     //@ts-ignore
     // window.rtcEngine.on('error', (evt) => {
     //   console.log('electron ', evt)
-    // })
-
+    // }
     if (platform === 'electron') {
-      this.eduManager = new EduManager({
-        appId: config.agoraAppId,
-        rtmUid: config.rtmUid,
-        rtmToken: config.rtmToken,
-        platform: 'electron',
-        logLevel: '' as any,
-        logDirectoryPath: '',
-        // @ts-ignore
-        agoraRtc: window.rtcEngine,
-        sdkDomain: config.sdkDomain,
-      })
+
+      //@ts-ignore
+      if (window.agoraBridge) {
+        //@ts-ignore
+        this.eduManager = new EduManager({
+          appId: config.agoraAppId,
+          rtmUid: config.rtmUid,
+          rtmToken: config.rtmToken,
+          platform: 'electron',
+          logLevel: '' as any,
+          logDirectoryPath: '',
+          // @ts-ignore
+          cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
+          //@ts-ignore
+          agoraRtc: AgoraCEF.AgoraRtcEngine,
+          // agoraRtc: window,
+          sdkDomain: config.sdkDomain,
+        })
+      } else {
+        this.eduManager = new EduManager({
+          appId: config.agoraAppId,
+          rtmUid: config.rtmUid,
+          rtmToken: config.rtmToken,
+          platform: 'electron',
+          logLevel: '' as any,
+          logDirectoryPath: '',
+          // @ts-ignore
+          agoraRtc: window.rtcEngine,
+          // agoraRtc: window,
+          sdkDomain: config.sdkDomain,
+        })
+      }
     } else {
       this.eduManager = new EduManager({
         appId: config.agoraAppId,

@@ -2,7 +2,7 @@
   "name": "agora-rte-demo",
   "version": "6.2.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "/aclass",
   "main": "./src/index.tsx",
   "babel": {
     "presets": [
@@ -218,6 +218,7 @@
     "adm-zip": "0.4.14",
     "agora-aclass-ui-kit": "0.0.1",
     "agora-electron-sdk": "education290",
+    "agora-cef-sdk": "file:./lib/agora-cef-sdk",
     "agora-rte-sdk": "1.0.0",
     "bowser": "1.9.4",
     "postcss": "^8.2.6",
