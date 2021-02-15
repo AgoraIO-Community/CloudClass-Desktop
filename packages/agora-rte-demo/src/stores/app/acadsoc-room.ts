@@ -57,6 +57,15 @@ type AcadsocRoomProperties = {
   students: Record<string, ProcessType>,
 }
 
+type MinimizeType = Array<{
+  id: string,
+  type: string,
+  content: string,
+  isHidden: boolean,
+  animation: string,
+  zIndex: number,
+}>
+
 export enum acadsocRoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
 }
@@ -104,6 +113,22 @@ export class AcadsocRoomStore extends SimpleInterval {
   ]
 
   @observable
+  roomProperties: AcadsocRoomProperties = {
+    board: {
+      info: {
+        boardAppId: '',
+        boardId: '',
+        boardToken: '',
+      }
+    },
+    record: {
+      state: 0,
+      roomType: 0,
+    },
+    students: {},
+  }
+
+  @observable
   roomChatMessages: ChatMessage[] = []
 
   @observable
@@ -143,22 +168,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   startedTime: number = 0   // 已经开始了多长时间
 
   @observable
-  roomProperties: AcadsocRoomProperties = {
-    board: {
-      info: {
-        boardAppId: '',
-        boardId: '',
-        boardToken: '',
-      }
-    },
-    record: {
-      state: 0,
-      roomType: 0,
-    },
-    students: {},
-  }
-
-  @observable
   studentsReward: Record<string, number> = {}
 
   @observable
@@ -193,6 +202,37 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   trophyNumber: number = 0
+
+  @observable
+  unwind: MinimizeType = []  // 最小化
+
+  @observable
+  minimizeView: MinimizeType = [
+    {
+      id: 'teacher'+Math.ceil(Math.random()*10),
+      type: 'teacher',
+      content: 'Nancy',
+      isHidden: false,
+      animation: '',
+      zIndex: 0,
+    },
+    {
+      id: 'student'+Math.ceil(Math.random()*10),
+      type: 'student',
+      content: 'Sue',
+      isHidden: false,
+      animation: '',
+      zIndex: 0,
+    },
+    {
+      id: 'chat'+Math.ceil(Math.random()*10),
+      type: 'chat',
+      content: 'Chat',
+      isHidden: false,
+      animation: '',
+      zIndex: 0,
+    },
+  ]
 
   roomApi!: RoomApi;
 
@@ -474,7 +514,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // TODO: this.appStore.params.startTime
       const startTime = new Date().getTime() + 120000
       // TODO: this.appStore.params.duration
-      const duration = 180
+      const duration = 1800
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,

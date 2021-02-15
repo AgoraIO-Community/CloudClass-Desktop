@@ -217,6 +217,7 @@
     "agora-aclass-ui-kit": "0.0.1",
     "agora-electron-sdk": "education290",
     "agora-rte-sdk": "1.0.0",
+    "animate.css": "^4.1.1",
     "bowser": "1.9.4",
     "react": "16.13.1",
     "react-beautiful-dnd": "13.0.0",

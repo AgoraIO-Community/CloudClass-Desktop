@@ -53,41 +53,52 @@ export const TeacherVideo = observer(() => {
         await sceneStore.unmuteAudio(uid, isLocal)
       }
     }
+    if (type.sourceType === 'minimal') {
+      let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
+      t.animationMinimize = ''
+      t.animation = 'animate__animated animate__backOutDown'
+      setTimeout(() => {
+        t.isHidden = true
+        acadsocStore.unwind.push(t)
+      }, 1000)
+    }
   }, [userStream.video, userStream.audio, isLocal])
 
   const renderer = userStream.renderer
 
   return (
-    <Video
-      className={""}
-      uid={`${userStream.userUuid}`}
-      nickname={userStream.account}
-      minimal={true}
-      resizable={false}
-      showBoardIcon={false}
-      disableBoard={true}
-      disableTrophy={acadsocStore.disableTrophy}
-      trophyNumber={0}
-      visibleTrophy={false}
-      role={"teacher"}
-      disableButton={Boolean(disableButton)}
-      videoState={userStream.video}
-      audioState={userStream.audio}
-      onClick={handleClick}
-      style={{
-        width: '268px',
-        minHeight: '194px',
-        maxHeight: '194px',
-      }}
-      placeHolderType={userStream.placeHolderType}
-      placeHolderText={userStream.placeHolderText}
-    >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-      { userStream.audio ? 
-        <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
-          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
-        </div> : null }
-    </Video>
+    <div style={{marginBottom: '10px'}}>
+      <Video
+        className={""}
+        uid={`${userStream.userUuid}`}
+        nickname={userStream.account}
+        minimal={true}
+        resizable={false}
+        showBoardIcon={false}
+        disableBoard={true}
+        disableTrophy={acadsocStore.disableTrophy}
+        trophyNumber={0}
+        visibleTrophy={false}
+        role={"teacher"}
+        disableButton={Boolean(disableButton)}
+        videoState={userStream.video}
+        audioState={userStream.audio}
+        onClick={handleClick}
+        style={{
+          width: '268px',
+          minHeight: '194px',
+          maxHeight: '194px',
+        }}
+        placeHolderType={userStream.placeHolderType}
+        placeHolderText={userStream.placeHolderText}
+      >
+        { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+        { userStream.audio ? 
+          <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+            <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+          </div> : null }
+      </Video>
+    </div>
   )
 })
 
@@ -128,6 +139,15 @@ export const StudentVideo = observer(() => {
     if (type.sourceType === 'board') {
       boardStore.toggleAClassLockBoard()
     }
+    if (type.sourceType === 'minimal') {
+      let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
+      t.animationMinimize = ''
+      t.animation = 'animate__animated animate__backOutDown'
+      setTimeout(() => {
+        t.isHidden = true
+        acadsocStore.unwind.push(t)
+      }, 1000)
+    }
   }, [userStream.video, userStream.audio, isLocal, boardStore])
 
   const renderer = userStream.renderer
@@ -137,36 +157,38 @@ export const StudentVideo = observer(() => {
   }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
-    <Video
-      uid={`${userStream.userUuid}`}
-      className={""}
-      nickname={userStream.account}
-      minimal={true}
-      resizable={false}
-      showBoardIcon={true}
-      disableBoard={isTeacher ? false : true}
-      disableTrophy={acadsocStore.disableTrophy}
-      trophyNumber={trophyNumber}
-      visibleTrophy={true}
-      role={"student"}
-      boardState={boardStore.lockBoard ? false : true}
-      videoState={userStream.video}
-      audioState={userStream.audio}
-      onClick={handleClick}
-      style={{
-        width: '268px',
-        minHeight: '194px',
-        maxHeight: '194px',
-      }}
-      disableButton={Boolean(disableButton)}
-      placeHolderType={userStream.placeHolderType}
-      placeHolderText={userStream.placeHolderText}
-    >
-      { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
-      { userStream.audio ? 
-      <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
-        <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
-      </div> : null }
-    </Video>
+    <div style={{marginBottom: '10px'}}>
+      <Video
+        uid={`${userStream.userUuid}`}
+        className={""}
+        nickname={userStream.account}
+        minimal={true}
+        resizable={false}
+        showBoardIcon={true}
+        disableBoard={isTeacher ? false : true}
+        disableTrophy={acadsocStore.disableTrophy}
+        trophyNumber={trophyNumber}
+        visibleTrophy={true}
+        role={"student"}
+        boardState={boardStore.lockBoard ? false : true}
+        videoState={userStream.video}
+        audioState={userStream.audio}
+        onClick={handleClick}
+        style={{
+          width: '268px',
+          minHeight: '194px',
+          maxHeight: '194px',
+        }}
+        disableButton={Boolean(disableButton)}
+        placeHolderType={userStream.placeHolderType}
+        placeHolderText={userStream.placeHolderText}
+      >
+        { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
+        { userStream.audio ? 
+        <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
+          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+        </div> : null }
+      </Video>
+    </div>
   )
 })

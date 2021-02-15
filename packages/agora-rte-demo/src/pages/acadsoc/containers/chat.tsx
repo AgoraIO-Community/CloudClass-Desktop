@@ -50,7 +50,7 @@ export const ChatView = observer(() => {
     return message
   }
   const onClickTranslate = async (message: IChatViewMessage) => {
-    let isSuccess:boolean = false
+    let isSuccess:boolean = true
     let translateContent:any = ''
     try {
       translateContent = await acadsocStore.getTranslationContent(message.chatText)
@@ -96,6 +96,17 @@ export const ChatView = observer(() => {
       setSendButtonBackColor('#e9be3685')
     }
   }
+
+  const chatMinimize = () => {
+    let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
+    t.animationMinimize = ''
+    t.animation = 'animate__animated animate__backOutDown'
+    setTimeout(() => {
+      t.isHidden = true
+      acadsocStore.unwind.push(t)
+    }, 1000)
+  }
+
   const onClickBannedButton = useCallback(async () => {
     if (acadsocStore.appStore.roomInfo.userRole
         === EduRoleTypeEnum.teacher) {
@@ -123,6 +134,7 @@ export const ChatView = observer(() => {
       onClickSendButton={sendMessage}
       onInputText={onInputText}
       sendButtonBackColor={sendButtonBackColor}
+      onClickMinimize={chatMinimize}
     />
   )
 })

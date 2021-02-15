@@ -11,6 +11,8 @@ import { Loading } from '@/components/loading'
 import { AutoplayToast } from '@/components/autoplay-toast'
 import {Trophy} from './containers/trophy/trophy'
 import { Setting } from '@/pages/acadsoc/containers/setting';
+import { MinimizeTeacher, MinimizeStudent, MinimizeChat} from './containers/minimize/minimize'
+import 'animate.css'
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -26,9 +28,9 @@ export const AcadsocOneToOne = observer(() => {
       history.push('/')
       return
     }
-    acadsocStore.join()
+    // acadsocStore.join()
     // TODO: only for ui debug
-    // acadsocStore.joinRoom()
+    acadsocStore.joinRoom()
   }, [])
 
   return (
@@ -42,16 +44,50 @@ export const AcadsocOneToOne = observer(() => {
         <div className={styles.mainContainer}>
           <BoardView />
           <div className={styles.rightContainer}>
-            <TeacherVideo />
-            <div style={{marginBottom: '10px'}}></div>
-            <StudentVideo />
-            <div style={{marginBottom: '10px'}}></div>
             {
               acadsocStore.showTrophyAnimation ? 
               <Trophy></Trophy>
               : null
             }
-            <ChatView />
+            {
+              acadsocStore.minimizeView.filter(e => !e.isHidden).map((e:any) => (
+                e.type === 'teacher' ?
+                <div className={e.animation} key={e.id}>
+                  <TeacherVideo />
+                </div>
+                :e.type === 'student' ?
+                <div className={e.animation} key={e.id}>
+                  <StudentVideo />
+                </div>
+                :e.type === 'chat' ?
+                <div className={e.animation} key={e.id}>
+                  <ChatView />
+                </div>
+                : null
+              ))
+            }
+            {
+              acadsocStore.unwind.length !== 0 ?
+              <div className={styles.minimizeContainer}>
+                {
+                  acadsocStore.unwind.map((e:any) => (
+                    e.type === 'teacher' ?
+                    <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeTeacher></MinimizeTeacher> 
+                    </div>
+                    :e.type === 'student' ?
+                    <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeStudent></MinimizeStudent>
+                    </div>
+                    :e.type === 'chat' ?
+                    <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeChat unread={3}></MinimizeChat>
+                    </div>
+                    : null
+                  ))
+                }
+              </div> : null  
+            }
           </div>
         </div>
       </div>
