@@ -133,9 +133,9 @@ module.exports = override(
     REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN)
   })),
-  addWebpackPlugin(
-    new SimpleProgressWebpackPlugin()
-  ),
+  // addWebpackPlugin(
+  //   new SimpleProgressWebpackPlugin()
+  // ),
   // addWebpackPlugin(
   //   new PurifyCSS({
   //     paths: glob.sync([
