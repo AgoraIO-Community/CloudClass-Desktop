@@ -28,3 +28,4 @@ packages/agora-log-sdk
 packages/agora-log-module/
 packages/agora-rte-demo/aclass/
 package-lock.json
+packages/agora-rte-demo/vendor/dev.git/

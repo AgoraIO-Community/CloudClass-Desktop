@@ -195,7 +195,6 @@ export class RemoteUserRenderer extends UserRenderer {
             })
           }
           this.el = document.createElement('canvas')
-          //@ts-ignore
           this.el.style.position = 'absolute'
           this.el.style.height = '100%'
           this.el.style.width = '100%'
@@ -203,7 +202,7 @@ export class RemoteUserRenderer extends UserRenderer {
           this.el.style.transform = 'rotateY(180deg)'
           dom.appendChild(this.el)
           //@ts-ignore
-          this.electron.client.setupRemoteVideo(this.el, +this.el)
+          this.electron.client.setupRemoteVideo(this.el, +this.uid)
 
       } else {
         // this.electron.client.subscribe(+this.uid, dom,)

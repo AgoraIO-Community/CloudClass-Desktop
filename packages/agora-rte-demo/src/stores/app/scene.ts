@@ -887,12 +887,13 @@ export class SceneStore extends SimpleInterval {
       } else {
         volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
       }
-      volume = +(volume / 255).toFixed(2)
+      volume = +(volume / 255).toFixed(2) * 5
     } else {
       volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
+      volume = volume / 5
     }
 
-    return (volume / 5)
+    return volume
   }
 
   @computed
