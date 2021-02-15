@@ -141,8 +141,11 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
 export interface DiskTablesProps {
   tabValue: number,
 }
+interface PrivateDiskTablesProps extends DiskTablesProps {
+  privateList?: any,
+}
 
-const PrivateDiskTables = (props: DiskTablesProps) => {
+const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
   const classes = useDiskTableStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
@@ -153,11 +156,13 @@ const PrivateDiskTables = (props: DiskTablesProps) => {
     type: '',
   })
 
+  const rows = props.privateList
+
   const { open, toastMessage, type } = openToast
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n: any) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -361,7 +366,7 @@ const PrivateDiskTables = (props: DiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows.length && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
+        { rows && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
       </>
     )
   }

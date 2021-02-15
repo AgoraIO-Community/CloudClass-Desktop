@@ -9,16 +9,11 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import SearchIcon from "@material-ui/icons/Search";
 import TableEmpty from "../dialog/table-empty";
 
-const rows: any[] = [
-  // createData('Cupcake', '1.3 M', 3.7),
-  // createData('Donut', '1.4 M', 25.0),
-  // createData('Eclair', '2.7 M', 16.0),
-  // createData('Frozen yoghurt', '159 M', 6.0),
-  // createData('Gingerbread', '356 M', 16.0),
-  // createData('Honeycomb', '408 M', 3.2),
-];
+interface PublicDiskTablesProps extends DiskTablesProps {
+  publicList?: any,
+}
 
-const PublicDiskTables = (props: DiskTablesProps) => {
+const PublicDiskTables = (props: PublicDiskTablesProps) => {
   const classes = useDiskTableStyles()
   const classSearch = useSearchStyles()
 
@@ -30,6 +25,8 @@ const PublicDiskTables = (props: DiskTablesProps) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [page, setPage] = React.useState(0)
   const [searchContent, setSearchContent] = React.useState('')
+
+  const rows = props.publicList
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log('handle change input', event.target.value)
@@ -97,16 +94,15 @@ const PublicDiskTables = (props: DiskTablesProps) => {
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = rows.map((n: any) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const DiskTable = (props: DiskTablesProps) => {
     return (
@@ -116,14 +112,14 @@ const PublicDiskTables = (props: DiskTablesProps) => {
         size={'medium'}
         aria-label="enhanced table"
       >
-        <EnhancedTableHead
+        {/* <EnhancedTableHead
           numSelected={selected.length}
           // order={order}
           // orderBy={orderBy}
           onSelectAllClick={handleSelectAllClick}
           // onRequestSort={handleRequestSort}
           rowCount={rows.length}
-        />
+        /> */}
         <TableBody>
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -158,12 +154,13 @@ const PublicDiskTables = (props: DiskTablesProps) => {
     )
   }
 
+  console.log('>>>>>>>>rows', typeof rows, rows)
+
   const render = () => {
     return (
       <>
         <div className={classSearch.titleBox}>
-          <div className={classSearch.titleButton}>
-          </div>
+          <div className={classSearch.titleButton}></div>
           <div>
             <TextField
               className={classSearch.input}
@@ -189,7 +186,7 @@ const PublicDiskTables = (props: DiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows.length && <DiskTable tabValue={props.tabValue}/> || <TableEmpty /> }
+        { rows && <DiskTable tabValue={props.tabValue}/> || <TableEmpty /> }
       </>
     );
   };

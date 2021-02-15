@@ -86,6 +86,10 @@ interface NetworkDiskDialogProps {
   dialogHeaderStyle?: React.CSSProperties,
   closeBtnStyle?: React.CSSProperties,
   questionBtnStyle?: React.CSSProperties,
+  // list data
+  publicList?: any,
+  privateList?: any,
+  downloadList?: any,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -170,18 +174,18 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             }}>
               {
                 activeValue === 0 && (
-                  <PublicDiskTables tabValue={activeValue}></PublicDiskTables>
+                  <PublicDiskTables tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
                 )
               }
 
               {
                 activeValue === 1 && (
-                  <PrivateDiskTables tabValue={activeValue}></PrivateDiskTables>
+                  <PrivateDiskTables tabValue={activeValue} privateList={props.privateList}></PrivateDiskTables>
                 )
               }
               {
                 activeValue === 2 && (
-                  <DownloadDiskTables tabValue={activeValue}></DownloadDiskTables>
+                  <DownloadDiskTables tabValue={activeValue} downloadList={props.downloadList}></DownloadDiskTables>
                 )
               }
             </TableContainer>
