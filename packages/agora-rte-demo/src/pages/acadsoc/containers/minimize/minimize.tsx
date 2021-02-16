@@ -21,6 +21,9 @@ export const MinimizeTeacher = observer(() => {
     t.isHidden = false
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
+    if(acadsocStore.unwind.length === 0) {
+      acadsocStore.isBespread = true
+    }
   }
 
   return (
@@ -54,6 +57,9 @@ export const MinimizeStudent = observer(() => {
     t.isHidden = false
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
+    if(acadsocStore.unwind.length === 0) {
+      acadsocStore.isBespread = true
+    }
   }
 
   return (
@@ -92,6 +98,9 @@ export const MinimizeChat = observer((props: ChatProps) => {
     acadsocStore.resetUnreadMessageCount()
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
+    if(acadsocStore.unwind.length === 0) {
+      acadsocStore.isBespread = true
+    }
   }
 
   return (
@@ -99,9 +108,13 @@ export const MinimizeChat = observer((props: ChatProps) => {
       <div className={styles.teacherContainer}>
         <div className={styles.mainIcon}></div>
           <span className={styles.name}>{acadsocStore.minimizeView[2].content}</span>
-        <div className={styles.unreadContainer}>
-          <span className={styles.count}>{props.unread}</span>
-        </div>
+        {
+          acadsocStore.unreadMessageCount > 0 ?
+          <div className={styles.unreadContainer}>
+            <span className={styles.count}>{props.unread}</span>
+          </div>
+          : null
+        }
         <div className={styles.packupBackground} onClick={() => {
           debounce(bindUnwind('chat'), 500)
         }}>

@@ -131,6 +131,7 @@ export const ChatView = observer(() => {
       bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
+      isBespread={acadsocStore.isBespread ? 1 : 0.8}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
