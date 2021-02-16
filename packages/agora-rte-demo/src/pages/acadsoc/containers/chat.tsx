@@ -6,6 +6,7 @@ import { ChatMessage } from '@/utils/types';
 import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { debounce } from '@/utils/utils';
 
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
@@ -100,12 +101,14 @@ export const ChatView = observer(() => {
 
   const chatMinimize = () => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
-    t.animationMinimize = ''
-    t.animation = 'animate__animated animate__backOutDown'
-    setTimeout(() => {
-      t.isHidden = true
-      acadsocStore.unwind.push(t)
-    }, 1000)
+    // t.animationMinimize = ''
+    // t.animation = 'animate__animated animate__backOutDown'
+    // setTimeout(() => {
+    //   t.isHidden = true
+    //   acadsocStore.unwind.push(t)
+    // }, 1000)
+    t.isHidden = true
+    acadsocStore.unwind.push(t)
   }
 
   const onClickBannedButton = useCallback(async () => {
@@ -134,7 +137,7 @@ export const ChatView = observer(() => {
       onPullFresh={onPullFresh}
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
-      onClickMinimize={chatMinimize}
+      onClickMinimize={debounce(chatMinimize, 500)}
       // onInputText={onInputText}
       placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}

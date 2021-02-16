@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import 'animate.css'
 import styles from './style.module.scss'
 import { useAcadsocRoomStore } from '@/hooks'
+import { debounce } from '@/utils/utils';
 
 export const MinimizeTeacher = observer(() => {
 
@@ -10,13 +11,16 @@ export const MinimizeTeacher = observer(() => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    t.animation = ''
-    t.animationMinimize = 'animate__animated animate__backOutUp'
-    setTimeout(() => {
-      t.isHidden = false
-      let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-      acadsocStore.unwind.splice(i, 1)
-    }, 1000)
+    // t.animation = ''
+    // t.animationMinimize = 'animate__animated animate__backOutUp'
+    // setTimeout(() => {
+    //   t.isHidden = false
+    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    //   acadsocStore.unwind.splice(i, 1)
+    // }, 1000)
+    t.isHidden = false
+    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    acadsocStore.unwind.splice(i, 1)
   }
 
   return (
@@ -25,7 +29,7 @@ export const MinimizeTeacher = observer(() => {
         <div className={styles.mainIcon}></div>
         <span className={styles.name}>{acadsocStore.minimizeView[0].content}</span>
         <div className={styles.packupBackground} onClick={() => {
-          bindUnwind('teacher')
+          debounce(bindUnwind('teacher'), 500)
         }}>
           <div className={styles.packupIcon}></div>
         </div>
@@ -40,13 +44,16 @@ export const MinimizeStudent = observer(() => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    t.animation = ''
-    t.animationMinimize = 'animate__animated animate__backOutUp'
-    setTimeout(() => {
-      t.isHidden = false
-      let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-      acadsocStore.unwind.splice(i, 1)
-    }, 1000)
+    // t.animation = ''
+    // t.animationMinimize = 'animate__animated animate__backOutUp'
+    // setTimeout(() => {
+    //   t.isHidden = false
+    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    //   acadsocStore.unwind.splice(i, 1)
+    // }, 1000)
+    t.isHidden = false
+    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    acadsocStore.unwind.splice(i, 1)
   }
 
   return (
@@ -55,7 +62,7 @@ export const MinimizeStudent = observer(() => {
         <div className={styles.mainIcon}></div>
         <span className={styles.name}>{acadsocStore.minimizeView[1].content}</span>
         <div className={styles.packupBackground} onClick={() => {
-          bindUnwind('student')
+          debounce(bindUnwind('student'), 500)
         }}>
           <div className={styles.packupIcon}></div>
         </div>
@@ -74,13 +81,16 @@ export const MinimizeChat = observer((props: ChatProps) => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    t.animation = ''
-    t.animationMinimize = 'animate__animated animate__backOutUp'
-    setTimeout(() => {
-      t.isHidden = false
-      let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-      acadsocStore.unwind.splice(i, 1)
-    }, 1000)
+    // t.animation = ''
+    // t.animationMinimize = 'animate__animated animate__backOutUp'
+    // setTimeout(() => {
+    //   t.isHidden = false
+    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    //   acadsocStore.unwind.splice(i, 1)
+    // }, 1000)
+    t.isHidden = false
+    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
+    acadsocStore.unwind.splice(i, 1)
   }
 
   return (
@@ -92,7 +102,7 @@ export const MinimizeChat = observer((props: ChatProps) => {
           <span className={styles.count}>{props.unread}</span>
         </div>
         <div className={styles.packupBackground} onClick={() => {
-          bindUnwind('chat')
+          debounce(bindUnwind('chat'), 500)
         }}>
           <div className={styles.packupIcon}></div>
         </div>

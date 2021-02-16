@@ -28,9 +28,9 @@ export const AcadsocOneToOne = observer(() => {
       history.push('/')
       return
     }
-    // acadsocStore.join()
+    acadsocStore.join()
     // TODO: only for ui debug
-    acadsocStore.joinRoom()
+    // acadsocStore.joinRoom()
   }, [])
 
   return (
@@ -52,17 +52,17 @@ export const AcadsocOneToOne = observer(() => {
             {
               acadsocStore.minimizeView.filter(e => !e.isHidden).map((e:any) => (
                 e.type === 'teacher' ?
-                <div className={e.animation} key={e.id}>
-                  <TeacherVideo />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <TeacherVideo key={e.id}/>
+                // </div>
                 :e.type === 'student' ?
-                <div className={e.animation} key={e.id}>
-                  <StudentVideo />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <StudentVideo key={e.id}/>
+                // </div>
                 :e.type === 'chat' ?
-                <div className={e.animation} key={e.id}>
-                  <ChatView />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <ChatView key={e.id}/>
+                // </div>
                 : null
               ))
             }
@@ -72,17 +72,17 @@ export const AcadsocOneToOne = observer(() => {
                 {
                   acadsocStore.unwind.map((e:any) => (
                     e.type === 'teacher' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeTeacher></MinimizeTeacher> 
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeTeacher key={e.id}></MinimizeTeacher> 
+                    // </div>
                     :e.type === 'student' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeStudent></MinimizeStudent>
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeStudent key={e.id}></MinimizeStudent>
+                    // </div>
                     :e.type === 'chat' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeChat unread={3}></MinimizeChat>
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeChat key={e.id} unread={3}></MinimizeChat>
+                    // </div>
                     : null
                   ))
                 }
