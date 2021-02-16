@@ -44,29 +44,6 @@ export interface ControlButtonProps extends ControlBaseProps{
   fullScreenText?: string,
 }
 
-const i18n = {
-  // 'back': 'back',
-  // 'forward': 'forward',
-  // 'zoomIn': 'zoomIn',
-  // 'zoomOut': 'zoomOut',
-  // 'fullscreen': 'fullscreen',
-  // 'fullscreenExit': 'fullscreenExit',
-
-  // 'pencil': 'pencil',
-  // 'text': 'text',
-  // 'mouse': 'mouse',
-  // 'eraser': 'eraser',
-  // 'rectangle': 'rectangle',
-  // 'elliptic': 'elliptic',
-  // 'palette': 'palette',
-  // 'new-page': 'new-page',
-  // 'move': 'move',
-  // 'upload': 'upload',
-  // 'clear': 'clear',
-  // 'disk': 'disk'
-}
-
-
 const buttonsMap = {
   'back': NavigateBeforeIcon,
   'forward': NavigateNextIcon,
