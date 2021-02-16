@@ -10,6 +10,7 @@ import {
   FileUploader,
   CustomMenuItemType,
   CustomMenuList,
+  DiskManagerDialog,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { useBoardStore } from '@/hooks'
@@ -19,6 +20,7 @@ import { noop } from 'lodash'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
 import { CourseWareMenuContainer } from './course-ware-menu'
+import { NetworkDisk } from './disk'
 
 const StrokeListPanel = observer(() => {
 
@@ -33,7 +35,7 @@ const StrokeListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Thin,
@@ -66,7 +68,7 @@ const ArrowListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{lineHeight: '30px', width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Pen,
@@ -362,6 +364,8 @@ const useEduBoardStyles = makeStyles((theme: Theme) => ({
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
 
+  const [openDisk, setOpenDisk] = React.useState(false);
+
   const showCourseMenuItem = boardStore.isTeacher()
 
   const classes = useEduBoardStyles()
@@ -404,6 +408,10 @@ export const EducationBoard = observer((props: any) => {
         boardStore.toggleAClassLockBoard()
         break;
       }
+      case 'disk': {
+        setOpenDisk(true)
+        break;
+      }
     }
     boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
@@ -425,6 +433,8 @@ export const EducationBoard = observer((props: any) => {
             bottom: props.controlY,
             right: props.controlX,
             zIndex: 10,
+            fontSize: '18px',
+            lineHeight: '20px',
           }}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
@@ -449,6 +459,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.zoomBoard('fullscreenExit')
           }}
         /> : null}
+        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={openDisk} setOpenDisk={setOpenDisk} /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

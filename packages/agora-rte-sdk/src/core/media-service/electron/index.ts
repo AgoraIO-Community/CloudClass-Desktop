@@ -106,6 +106,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   microphoneList: any[] = []
 
   _subClient: Record<string, any>;
+  _remoteVideoStats: Record<number, any>;
+  _remoteAudioStats: Record<number, any>;
+  _cefClient: any;
 
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)
@@ -113,6 +116,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   constructor(options: ElectronWrapperInitOption) {
     super();
+    this._cefClient = options.cefClient
     this.logPath = options.logPath
     this.videoSourceLogPath = options.videoSourceLogPath
     EduLogger.info(`[electron-log], logPath: ${this.logPath}, videoSourceLogPath: ${this.videoSourceLogPath}, appId: ${options.appId}`)
@@ -125,9 +129,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.appId = options.appId
     this.subscribedList = []
     this._subClient = {}
+    this._remoteVideoStats = {}
+    this._remoteAudioStats = {}
     //@ts-ignore
     this.client = options.AgoraRtcEngine
-    let ret = this.client.initialize(this.appId)
+    let ret = -1
+    if (this._cefClient) {
+      ret = this.client.initialize(this._cefClient)
+    } else {
+      ret = this.client.initialize(this.appId)
+    }
     if (ret < 0) {
       throw new GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,
@@ -267,6 +278,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         speakers, speakerNumber, totalVolume
       })
     })
+    this.client.on('AudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
+      this.fire('local-audio-volume', {
+        totalVolume
+      })
+      this.fire('volume-indication', {
+        speakers, speakerNumber, totalVolume
+      })
+    })
     // this.client.on('audio-device-changed', (deviceId: string, deviceType: number, deviceState: number) => {
     //   this.fire('audio-device-changed', {
     //     deviceId,
@@ -310,7 +329,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
-        uplinkNetworkQuality: args[2]
+        uplinkNetworkQuality: args[2],
+        remotePacketLoss:{
+          audioStats: this._remoteAudioStats,
+          videoStats: this._remoteVideoStats
+        }
       })
     })
     this.client.on('remoteVideoStateChanged', (uid: number, state: number, reason: any) => {
@@ -400,6 +423,146 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('rtcStats', (evt: any) => {
+      this.fire('rtcStats', evt)
+    })
+    this.client.on('remoteVideoStats', (evt: any) => {
+      // record the data but do not fire it, these will be together fired by network quality callback
+      this._remoteVideoStats[evt.uid] = {
+        videoLossRate: evt.packetLossRate,
+        videoReceiveDelay: evt.delay
+      }
+    })
+    this.client.on('remoteAudioStats', (evt: any) => {
+      // record the data but do not fire it, these will be together fired by network quality callback
+      this._remoteAudioStats[evt.uid] = {
+        audioLossRate: evt.audioLossRate,
+        audioReceiveDelay: evt.networkTransportDelay
+      }
+    })
+
+    // TODO: CEF event handlers
+    this.client.on('UserJoined', (uid: number, elapsed: number) => {
+      console.log("userjoined", uid)
+      this.fire('user-published', {
+        user: {
+          uid,
+        }
+      })
+    })
+    //or event removeStream
+    this.client.on('UserOffline', (uid: number, elapsed: number) => {
+      console.log("removestream", uid)
+      this.fire('user-unpublished', {
+        user: {
+          uid
+        },
+      })
+    })
+    this.client.on('ConnectionStateChanged', (state: any, reason: any) => {
+      this.fire('connection-state-change', {
+        curState: state,
+        reason
+      })
+    })
+    this.client.on('NetworkQuality', (...args: any[]) => {
+      console.log("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      this.fire('network-quality', {
+        downlinkNetworkQuality: args[1],
+        uplinkNetworkQuality: args[2],
+        remotePacketLoss:{
+          audioStats: this._remoteAudioStats,
+          videoStats: this._remoteVideoStats
+        }
+      })
+    })
+    this.client.on('RemoteVideoStateChanged', (uid: number, state: number, reason: any) => {
+      console.log('remoteVideoStateChanged ', reason, uid)
+      if (reason === 5) {
+        this.fire('user-unpublished', {
+          user: {
+            uid,
+          },
+          mediaType: 'video',
+        })
+      }
+
+      if (reason === 6) {
+        this.fire('user-published', {
+          user: {
+            uid,
+          },
+          mediaType: 'video',
+        })
+      }
+    })
+    this.client.on('RemoteAudioStateChanged', (uid: number, state: number, reason: any) => {
+      console.log('remoteAudioStateChanged ', reason, uid)
+
+      // remote user disable audio
+      if (reason === 5) {
+        this.fire('user-unpublished', {
+          user: {
+            uid,
+          },
+          mediaType: 'audio',
+        })
+      }
+
+      if (reason === 6) {
+        console.log('user-published audio', uid)
+        // this.fire('user-published', {
+        //   user: {
+        //     uid,
+        //   },
+        //   mediaType: 'audio',
+        // })
+      }
+      // this.fire('user-info-updated', {
+      //   uid,
+      //   msg: reason,
+      //   type: 'audio',
+      //   state
+      // })
+    })
+    this.client.on('JoinChannelSuccess', (channel: string, uid: number) => {
+      console.log('joinedchannel', uid)
+    })
+    this.client.on('LocalVideoStateChanged', (state: number, error: number) => {
+      this.fire('user-info-updated', {
+        uid: this.localUid,
+        state,
+        type: 'video',
+        msg: error
+      })
+    })
+    this.client.on('LocalAudioStateChanged', (state: number, error: number) => {
+      this.fire('user-info-updated', {
+        uid: this.localUid,
+        state,
+        type: 'audio',
+        msg: error
+      })
+    })
+    this.client.on('TokenPrivilegeWillExpire', () => {
+      this.fire('token-privilege-will-expire')
+    })
+    this.client.on('tokenPrivilegeDidExpire', () => {
+      this.fire('token-privilege-did-expire')
+    })
+    this.client.on('LocalPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
+      this.fire('stream-fallback', {
+        uid: this.localUid,
+        isFallbackOrRecover
+      })
+    })
+    this.client.on('RemoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
+      this.fire('stream-fallback', {
+        uid,
+        isFallbackOrRecover
+      })
+    })
+    this.client.on('RtcStats', (evt: any) => {
       this.fire('rtcStats', evt)
     })
   }
@@ -586,7 +749,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
 
   async getMicrophones (): Promise<any[]> {
-    const list = this.client.getAudioRecordingDevices();
+    let list: any[] = []
+    if (this._cefClient) {
+      //@ts-ignore
+      list = this.client.audioDeviceManager.enumerateRecordingDevices();
+    } else {
+      list = this.client.getAudioRecordingDevices();
+    }
     const genList: any[] = list.map((it: any) => ({
       deviceId: it.deviceid,
       label: it.devicename,
@@ -597,7 +766,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   }
 
   async getCameras(): Promise<any[]> {
-    const list = this.client.getVideoDevices()
+    let list: any = []
+    if (this._cefClient) {
+      //@ts-ignore
+      list = this.client.videoDeviceManager.getVideoDevices()
+    } else {
+      list = this.client.getVideoDevices()
+    }
+    // const list = this.client.getVideoDevices()
     const genList: any[] = list.map((it: any) => ({
       deviceId: it.deviceid,
       label: it.devicename,
@@ -655,7 +831,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           code: ret
         }
       }
-      this.client.stopAudioRecordingDeviceTest()
+      if (this._cefClient) {
+        //@ts-ignore
+        this.client.audioDeviceManager.stopRecordingDeviceTest()
+      } else {
+        this.client.stopAudioRecordingDeviceTest()
+      }
       if (this.joined) {
         ret = this.client.muteLocalAudioStream(true)
         this.audioMuted = true
@@ -825,7 +1006,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       throw 'electron not support openTestMicrophone'
     }
     await this.openMicrophone(option)
-    this.client.startAudioRecordingDeviceTest(300)
+    //TODO: cef api
+    if (this._cefClient) {
+      //@ts-ignore
+      this.client.audioDeviceManager.startRecordingDeviceTest(300)
+    } else {
+      this.client.startAudioRecordingDeviceTest(300)
+    }
   }
   
   async changeTestResolution(config: any): Promise<any> {

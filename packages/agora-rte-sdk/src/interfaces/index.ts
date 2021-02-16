@@ -163,6 +163,7 @@ export enum LogLevel {
 
 export interface EduConfiguration {
   appId: string;
+  cefClient?: any;
   // agoraRestToken: string
   platform: 'web' | 'electron';
   agoraRtc?: any;

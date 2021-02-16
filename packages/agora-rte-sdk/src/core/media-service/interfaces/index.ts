@@ -39,6 +39,7 @@ export declare interface ElectronWrapperInitOption {
   videoSourceLogPath: string
   AgoraRtcEngine: any
   appId: string
+  cefClient: any
 }
 
 /**
@@ -146,6 +147,7 @@ export declare interface IAgoraRTCModule {
 }
 
 export declare interface RTCProviderInitParams {
+  cefClient: any
   agoraSdk: any
   platform: string
   codec: string

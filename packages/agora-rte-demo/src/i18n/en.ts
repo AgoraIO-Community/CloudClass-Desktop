@@ -18,9 +18,16 @@ const en = {
     },
     "chat": {
       "banned": "banned",
-      "placeholder": "block send message",
+      "unblock":"chat",
+      "send":"Send",
+      "disablePlaceholder": "Chat messages have been banned",
+      "placeholder":"block send message",
+      "title":"Chat",
+      "loading":'loading',
+      "fail":'Translation failure'
     },
     "device": {
+      "keep": "Please Keep Smile, :D",
       "videoDetectTitle": "camera test",
       "audioDetectTitle": "microphone test",
       "speakerDetectTitle": "speaker test",

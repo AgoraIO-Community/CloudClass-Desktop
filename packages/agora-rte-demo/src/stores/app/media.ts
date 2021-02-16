@@ -6,9 +6,6 @@ import { LocalUserRenderer } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 
-//@ts-ignore
-window.dialogManager = dialogManager
-
 const delay = 2000
 
 const networkQualityLevel = [
@@ -60,7 +57,7 @@ export class MediaStore {
     const signalStatus: any[] = []
     this.appStore.sceneStore.streamList.forEach((user) => {
       const { streamUuid: uid } = user;
-      const target = mixSignalStatus.find(x => x.uid === uid)
+      const target = mixSignalStatus.find(x => x.uid === +uid)
       signalStatus.push({
         ...user,
         ...user.userInfo,
@@ -81,7 +78,7 @@ export class MediaStore {
       mixSignalStatus.push({
         audioStats: { ...audioStatsItem },
         videoStats: { ...videoStatsItem },
-        uid: item,
+        uid: +item,
         packetLossRate,
         receiveDelay,
       })
@@ -185,7 +182,7 @@ export class MediaStore {
       const {speakers, speakerNumber, totalVolume} = evt
       
       speakers.forEach((speaker: any) => {
-        this.speakers.set(speaker.uid, speaker.volume)
+        this.speakers.set(+speaker.uid, speaker.volume)
       })
     })
   }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { IconButton, Table, TableBody, TableRow, InputAdornment, makeStyles, createStyles, Theme, TextField } from "@material-ui/core";
+import { IconButton, Table, TableBody, TableRow, InputAdornment, Theme, TextField } from "@material-ui/core";
+import { makeStyles, createStyles, withStyles } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { DiskCheckbox } from "../control/checkbox";
@@ -7,7 +8,7 @@ import { DiskTableCellHead, DiskTableCell } from "../dialog/table-cell";
 import { EnhancedTableHead } from "../control/enhanced-table-head";
 import DiskToast from '../control/toast'
 import TableEmpty from "../dialog/table-empty";
-import { DiskButton } from "../control/button";
+import { DiskButton } from "../control/disk-button";
 
 import IconRefresh from '../assets/icon-refresh.png'
 
@@ -140,8 +141,11 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
 export interface DiskTablesProps {
   tabValue: number,
 }
+interface PrivateDiskTablesProps extends DiskTablesProps {
+  privateList?: any,
+}
 
-const PrivateDiskTables = (props: DiskTablesProps) => {
+const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
   const classes = useDiskTableStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
@@ -152,11 +156,13 @@ const PrivateDiskTables = (props: DiskTablesProps) => {
     type: '',
   })
 
+  const rows = props.privateList
+
   const { open, toastMessage, type } = openToast
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n: any) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -328,8 +334,39 @@ const PrivateDiskTables = (props: DiskTablesProps) => {
           toastType={type}
           key={'top-center'}
         />
-        <DiskSearch tabValue={props.tabValue} />
-        { rows.length && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
+        <div className={classSearch.titleBox}>
+          <div className={classSearch.titleButton}>
+            <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} />
+            <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
+            <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} />
+          </div>
+          <div>
+            <TextField
+              id="disk-input-search"
+              className={classSearch.input}
+              onChange={handleChange}
+              placeholder={'搜索'}
+              variant='outlined'
+              value={searchContent}
+              InputProps={{
+                classes: {
+                  root: classSearch.root,
+                },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClearInput} className={classSearch.iconButton}>
+                      <CancelIcon />
+                    </IconButton>
+                    <IconButton type="submit" className={classSearch.iconButton} aria-label="search">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              size="small" />
+          </div>
+        </div>
+        { rows && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
       </>
     )
   }

@@ -128,6 +128,10 @@ static toolItems: IToolItem[] = [
     itemName: 'clear',
     toolTip: true,
   },
+  {
+    itemName: 'disk',
+    toolTip: true,
+  },
 ]
 
   static items: any = [
@@ -594,9 +598,11 @@ static toolItems: IToolItem[] = [
       cursorAdapter,
       userPayload: {
         userId: this.appStore.roomStore.roomInfo.userUuid,
-        avatar: ""
+        avatar: "",
+        cursorName: this.appStore.roomStore.roomInfo.userName,
       }
     })
+    cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
       r: 252,
       g: 58,

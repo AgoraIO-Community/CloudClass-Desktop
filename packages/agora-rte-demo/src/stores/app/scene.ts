@@ -16,6 +16,12 @@ const delay = 2000
 
 const ms = 500
 
+export enum EduClassroomStateEnum {
+  beforeStart = 0,
+  start = 1,
+  end = 2,
+}
+
 export enum ClassStateEnum {
   started = 1
 }
@@ -757,35 +763,79 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @computed
+  get defaultTeacherPlaceholder(): any {
+    if (this.classState === EduClassroomStateEnum.beforeStart) {
+      return {
+        placeHolderType: 'noEnter',
+        text: t(`placeholder.teacher_Left`)
+      }
+    }
+    return {
+      placeHolderType: 'noEnter',
+      text: t(`placeholder.teacher_noEnter`)
+    }
+  }
+
+  @computed
+  get defaultStudentPlaceholder(): any {
+    if (this.classState === EduClassroomStateEnum.beforeStart) {
+      return {
+        placeHolderType: 'noEnter',
+        text: t(`placeholder.student_Left`)
+      }
+    }
+    return {
+      placeHolderType: 'noEnter',
+      text: t(`placeholder.student_noEnter`)
+    }
+  }
+
   getLocalPlaceHolderProps() {
     const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
 
-    const roleKey = meIsTeacher ? 'teacher' : 'student'
-
     if (!this.cameraEduStream) {
-      return {
-        placeHolderType: 'noEnter',
-        text: t(`placeholder.${roleKey}_noEnter`)
+      // placeholder
+      if (meIsTeacher) {
+        return this.defaultTeacherPlaceholder
+      } else {
+        return this.defaultStudentPlaceholder
       }
     }
 
-    if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) {
-      return {
-        placeHolderType: 'noCamera',
-        text: t('placeholder.noCamera')
+    if (this.appStore.isElectron) {
+      if (!this.cameraRenderer) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
+      }
+      if (this.cameraEduStream && this.cameraRenderer) {
+        return {
+          placeHolderType: 'none',
+          text: ''
+        }
+      }
+    } else {
+      if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
+      }
+      if (this.cameraEduStream && this.cameraRenderer && this.cameraRenderer.videoTrack) {
+        return {
+          placeHolderType: 'none',
+          text: ''
+        }
       }
     }
 
-    if (this.cameraEduStream && this.cameraRenderer && this.cameraRenderer.videoTrack) {
-      return {
-        placeHolderType: 'none',
-        text: ''
-      }
-    }
-
-    return {
-      placeHolderType: 'noEnter',
-      text: t(`placeholder.${roleKey}_noEnter`)
+    // placeholder
+    if (meIsTeacher) {
+      return this.defaultTeacherPlaceholder
+    } else {
+      return this.defaultStudentPlaceholder
     }
 
   }
@@ -794,19 +844,29 @@ export class SceneStore extends SimpleInterval {
     const stream = this.getStreamBy(userUuid)
 
     if (!stream) {
-      const roleKey = userRole === 'teacher' ? 'teacher' : 'student'
-      return {
-        placeHolderType: 'noEnter',
-        text: t(`placeholder.${roleKey}_noEnter`)
+      const currentIsTeacher = userRole === 'teacher' ? 'teacher' : 'student'
+      if (currentIsTeacher) {
+        return this.defaultTeacherPlaceholder
+      } else {
+        return this.defaultStudentPlaceholder
       }
     }
 
     const remoteUserRenderer = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer
 
-    if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack) {
-      return {
-        placeHolderType: 'noCamera',
-        text: t('placeholder.noCamera')
+    if (this.appStore.isElectron) {
+      if (!remoteUserRenderer) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
+      }
+    } else {
+      if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
       }
     }
 
@@ -818,14 +878,22 @@ export class SceneStore extends SimpleInterval {
 
 
   getFixAudioVolume(streamUuid: number): number {
-    const volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
-    if (volume === 0) return 0
-
-    if (this.appStore.uiStore.isElectron) {
-      return (volume / 255)
+    let volume = 0
+    if (this.appStore.isElectron) {
+      const isLocal = get(this, 'cameraEduStream.streamUuid', -1) === streamUuid
+      if (isLocal) {
+        //@ts-ignore
+        volume = this.appStore.mediaStore.speakers.get(0)
+      } else {
+        volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
+      }
+      volume = +(volume / 255).toFixed(2) * 5
     } else {
-      return (volume / 5)
+      volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
+      volume = volume / 5
     }
+
+    return volume
   }
 
   @computed

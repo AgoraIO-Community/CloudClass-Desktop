@@ -4,7 +4,7 @@ import { Toast } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
 import { AppStore, AppStoreConfigParams } from '@/stores/app';
 import { Provider } from 'mobx-react';
-import { Route, HashRouter, Switch, Redirect } from 'react-router-dom';
+import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'react-router-dom';
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
 export interface RouteContainerProps {
@@ -51,11 +51,11 @@ export const RoomContainer = (props: AppContainerProps) => {
   return (
     <Provider store={props.store}>
       <ThemeContainer>
-        <HashRouter basename={props.basename}>
+        <Router>
           <Toast />
           <ConfirmDialog />
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
-        </HashRouter>
+        </Router>
       </ThemeContainer>
     </Provider>
   )

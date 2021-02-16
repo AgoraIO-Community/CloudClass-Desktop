@@ -130,7 +130,6 @@ export const SettingWeb = observer(() => {
 
 
   useEffect(() => {
-    console.log("setting #### ", visible)
     if (visible) {
       pretestStore.init({video: true, audio: true})
       pretestStore.openTestCamera()
@@ -185,7 +184,7 @@ export const SettingWeb = observer(() => {
       <div className={classes.settingBox}>
         <RowItem>
           <DevicePicker
-            name="摄像头选项："
+            name={t("aclass.device.camera")}
             value={pretestStore.cameraId}
             onChange={handleCameraChange}
             list={pretestStore.cameraList}
@@ -203,7 +202,7 @@ export const SettingWeb = observer(() => {
               <CameraPreview 
                 key={pretestStore.cameraId}
                 id={'settingCamera'}
-                previewPlaceText="请保持微笑哦~"
+                previewPlaceText={t('aclass.device.keep')}
                 renderer={pretestStore.cameraRenderer}
               />
             </div>
@@ -211,7 +210,7 @@ export const SettingWeb = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="麦克风选项："
+            name={t("aclass.device.mic")}
             value={pretestStore.microphoneId}
             onChange={handleMicrophoneChange}
             list={pretestStore.microphoneList}
@@ -232,7 +231,7 @@ export const SettingWeb = observer(() => {
         </RowItem>
         <RowItem>
           <DevicePicker
-            name="扬声器选项: "
+            name={t("aclass.device.speaker")}
             value={pretestStore.speakerId}
             onChange={handleSpeakerChange}
             list={pretestStore.speakerList}

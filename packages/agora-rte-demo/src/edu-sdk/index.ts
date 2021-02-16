@@ -1,3 +1,5 @@
+import '@/index.scss'
+import 'promise-polyfill/src/polyfill'
 import { RenderLiveRoom } from "@/monolithic/live-room"
 import { RenderReplayRoom } from "@/monolithic/replay-room"
 import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
@@ -151,7 +153,7 @@ const roomTypes = {
   }
 }
 
-const devicePath = '/setting'
+const devicePath = '/pretest'
 export class AgoraEduSDK {
 
   static get version(): string {
@@ -207,7 +209,7 @@ export class AgoraEduSDK {
       console.log("main Path", mainPath, " room Path", roomPath)
 
       if (option.pretest) {
-        mainPath = '/setting'
+        mainPath = '/pretest'
       }
 
       const store = new AppStore({

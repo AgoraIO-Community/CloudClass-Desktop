@@ -32,6 +32,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
       this.sdkWrapper = new AgoraElectronRTCWrapper({
+        cefClient: rtcProvider.cefClient,
         logPath: electronLogPath.logPath,
         videoSourceLogPath: electronLogPath.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,
@@ -150,6 +151,39 @@ export class MediaService extends EventEmitter implements IMediaService {
     return this.sdkWrapper instanceof AgoraElectronRTCWrapper
   }
 
+  private getNativeCurrentVideoDevice() {
+    if (this.electron._cefClient) {
+      //@ts-ignore
+      return this.electron.client.videoDeviceManager.getDevice()
+    }
+    return this.electron.client.getCurrentVideoDevice()
+  }
+
+  private getNativeVideoDevices() {
+    //@ts-ignore
+    if (this.electron._cefClient) {
+      //@ts-ignore
+      return this.electron.client.videoDeviceManager.enumerateVideoDevices()
+    }
+    return this.electron.client.getVideoDevices()
+  }
+
+  private getNativeCurrentAudioDevice() {
+    if (this.electron._cefClient) {
+      //@ts-ignore
+      return this.electron.client.audioDeviceManager.getRecordingDevice()
+    }
+    return this.electron.client.getCurrentAudioRecordingDevice()
+  }
+
+  private getNativeAudioDevices() {
+    if (this.electron._cefClient) {
+      //@ts-ignore
+      return this.electron.client.audioDeviceManager.enumerateRecordingDevices()
+    }
+    return this.electron.client.getAudioRecordingDevices()
+  }
+
   getTestCameraLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
@@ -158,8 +192,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
     }
     if (this.isElectron) {
-      const deviceId = this.electron.client.getCurrentVideoDevice()
-      const videoDeviceList = this.electron.client.getVideoDevices()
+      const deviceId = this.getNativeCurrentVideoDevice()
+      const videoDeviceList = this.getNativeVideoDevices()
       const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId)
       if (videoDevice) {
         return videoDevice.devicename
@@ -176,8 +210,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
     }
     if (this.isElectron) {
-      const deviceId = this.electron.client.getCurrentAudioRecordingDevice()
-      const audioDeviceList = this.electron.client.getAudioRecordingDevices()
+      const deviceId = this.getNativeCurrentAudioDevice()
+      const audioDeviceList = this.getNativeAudioDevices()
       const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId)
       if (audioDevice) {
         return audioDevice.devicename
@@ -194,8 +228,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
     }
     if (this.isElectron) {
-      const deviceId = this.electron.client.getCurrentVideoDevice()
-      const videoDeviceList = this.electron.client.getVideoDevices()
+      const deviceId = this.getNativeCurrentVideoDevice()
+      const videoDeviceList = this.getNativeVideoDevices()
       const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId)
       if (videoDevice) {
         return videoDevice.devicename
@@ -223,8 +257,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
     }
     if (this.isElectron) {
-      const deviceId = this.electron.client.getCurrentAudioRecordingDevice()
-      const audioDeviceList = this.electron.client.getAudioRecordingDevices()
+      const deviceId = this.getNativeCurrentAudioDevice()
+      const audioDeviceList = this.getNativeAudioDevices()
       const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId)
       if (audioDevice) {
         return audioDevice.devicename

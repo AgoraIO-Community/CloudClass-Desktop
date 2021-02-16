@@ -34,10 +34,7 @@ import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { SceneStore } from './scene';
 import { get } from 'lodash';
-
-export enum EduClassroomStateEnum {
-  end = 2
-}
+import {EduClassroomStateEnum} from '@/stores/app/scene';
 
 const delay = 2000
 

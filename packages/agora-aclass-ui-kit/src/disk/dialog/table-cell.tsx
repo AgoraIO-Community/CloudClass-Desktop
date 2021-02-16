@@ -1,5 +1,6 @@
 import React from 'react';
-import {createStyles, TableCell, withStyles} from "@material-ui/core";
+import { TableCell } from "@material-ui/core";
+import { createStyles, withStyles } from '@material-ui/core/styles'
 
 export const DiskTableCellHead = withStyles(() =>
   createStyles({

@@ -3,24 +3,15 @@ import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
 import { DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
 
 import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/table-cell";
-import { DiskButton } from "../control/button";
+import { DiskButton } from "../control/disk-button";
 import { DiskAllProgress, DiskSingleProgress } from "../control/progress";
 import TableEmpty from "../dialog/table-empty";
 
-const rows: any[] = [
-  {name: 'Gabumon', calories: 10, fat: 123},
-  {name: 'sora', calories: 20, fat: 123},
-  {name: 'sokaa', calories: 30, fat: 123},
-  {name: 'kiyomi', calories: 40, fat: 123},
-  {name: 'Agumon', calories: 50, fat: 123},
-  {name: '22', calories: 60, fat: 123},
-  {name: '33', calories: 70, fat: 123},
-  {name: '太一', calories: 80, fat: 123},
-  {name: '哆啦A梦', calories: 90, fat: 123},
-  {name: '大和', calories: 100, fat: 123},
-];
+interface DownloadDiskTablesProps extends DiskTablesProps {
+  downloadList?: any,
+}
 
-const DownloadDiskTables = (props: DiskTablesProps) => {
+const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
 
   const DownloadTableHead = (props: any) => {
     return (
@@ -35,6 +26,8 @@ const DownloadDiskTables = (props: DiskTablesProps) => {
   }
 
   const classes = useDiskTableStyles()
+
+  const rows = props.downloadList
 
   const DiskTable = (props: DiskTablesProps) => {
     return (
@@ -101,7 +94,7 @@ const DownloadDiskTables = (props: DiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows.length && <DiskTable tabValue={props.tabValue}/> ||
+        { rows && <DiskTable tabValue={props.tabValue}/> ||
             <div style={{ paddingTop: 54 }}>
               <TableEmpty />
             </div>}

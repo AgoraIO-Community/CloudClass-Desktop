@@ -15,7 +15,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    edu_sdk: "./src/edu-sdk.ts",
+    edu_sdk: "./src/edu-sdk/index.ts",
   },
   mode: "production",
   output: {
@@ -43,6 +43,32 @@ module.exports = {
                 "@babel/preset-react",
                 "@babel/preset-typescript"
               ],
+              plugins: [
+                [
+                  // "babel-plugin-transform-imports",
+                  "transform-imports",
+                  {
+                    '@material-ui/core': {
+                      // Use "transform: '@material-ui/core/${member}'," if your bundler does not support ES modules
+                      'transform': '@material-ui/core/esm/${member}',
+                      'preventFullImport': false,
+                      // 'preventFullImport': false
+                    },
+                    '@material-ui/icons': {
+                      // Use "transform: '@material-ui/icons/${member}'," if your bundler does not support ES modules
+                      'transform': '@material-ui/icons/esm/${member}',
+                      'preventFullImport': false,
+                      // 'preventFullImport': false
+                    },
+                    '@material-ui/lab': {
+                      // Use "transform: '@material-ui/lab/${member}'," if your bundler does not support ES modules
+                      'transform': '@material-ui/lab/esm/${member}',
+                      'preventFullImport': false,
+                      // 'preventFullImport': false
+                    }
+                  }
+                ],
+              ]
             }
           }, 
           {
@@ -54,51 +80,52 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        exclude: /\.(module.scss|module.css)$/i,
         test: /\.(scss|css)$/i,
         use: [
-          // process.env.NODE_ENV === 'production' ? {
-          //   loader: MiniCssExtractPlugin.loader,
-          //   options: { publicPath: '' },
-          // } : {
-          //   loader: 'style-loader',
-          //   options: {
-          //     // cacheDirectory: false,
-          //   }
-          // },
           {
             loader: 'style-loader',
           },
           {
             loader: 'css-loader',
-            // options: {}
           },
           {
             loader: 'sass-loader',
-            // options: {}
           },
           {
             loader: 'thread-loader',
           }
         ]
-        // use: ["style-loader", "css-loader", "sass-loader", "thread-loader"],
-        // loader: 'style-loader!css-loader!sass-loader'
-        // use: [
-        //   "style-loader",
-        //   "css-loader",
-        //   "sass-loader"
-        // ],
+      },
+      {
+        test: /\.(module.scss|module.css)$/i,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[hash:base64:6]',
+            }
+          },
+          {
+            loader: 'sass-loader',
+          },
+          {
+            loader: 'thread-loader',
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         // exclude: /node_modules/,
         loader: "url-loader",
-        // options: {
-          // limit: 2*1024,
-          // name: '[name].[hash:7].[ext]'
-          // name: 'agora',
-          // name: argv.paths.image,
-          // limit: 2 * 1024,
-        // },
+        options: {
+          esModule: false,
+          // limit: 1024
+        }
       },
     ],
   },

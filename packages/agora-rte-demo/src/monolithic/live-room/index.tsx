@@ -4,6 +4,11 @@ import { RoomComponentConfigProps, RoomConfigProps } from '@/edu-sdk/declare'
 import { AppStore } from '@/stores/app'
 import React from 'react'
 import {render} from 'react-dom'
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
+
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'eduClass',
+})
 
 const routes: string[] = [
   "setting",
@@ -16,11 +21,13 @@ const routes: string[] = [
 
 export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
   return (
-    <RoomContainer
-      mainPath={store.params.mainPath}
-      routes={routes}
-      store={store}
-    />
+    <StylesProvider generateClassName={generateClassName}>
+      <RoomContainer
+        mainPath={store.params.mainPath}
+        routes={routes}
+        store={store}
+      />
+    </StylesProvider>
   )
 }
 

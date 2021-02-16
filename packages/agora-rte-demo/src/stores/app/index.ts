@@ -11,6 +11,7 @@ import {
   EduRoleTypeEnum,
   EduUserService,
 } from 'agora-rte-sdk'
+import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { DeviceStore } from './device';
@@ -24,6 +25,7 @@ import { BreakoutRoomStore } from './breakout-room';
 import { MiddleRoomStore } from './middle-room';
 import { ExtensionStore } from './extension'
 import { PretestStore } from './pretest'
+import { DiskStore } from './disk'
 // import { get, isEmpty } from 'lodash';
 import { GlobalStorage } from '@/utils/custom-storage';
 import { autorun, toJS, observable, action, computed, runInAction } from 'mobx';
@@ -115,6 +117,7 @@ export class AppStore {
   acadsocStore!: AcadsocRoomStore;
   pretestStore!: PretestStore;
   deviceSettingStore!: DeviceSettingStore;
+  diskStore!: DiskStore;
 
   eduManager!: EduManager;
 
@@ -232,20 +235,43 @@ export class AppStore {
     //@ts-ignore
     // window.rtcEngine.on('error', (evt) => {
     //   console.log('electron ', evt)
-    // })
-
+    // }
     if (platform === 'electron') {
-      this.eduManager = new EduManager({
-        appId: config.agoraAppId,
-        rtmUid: config.rtmUid,
-        rtmToken: config.rtmToken,
-        platform: 'electron',
-        logLevel: '' as any,
-        logDirectoryPath: '',
-        // @ts-ignore
-        agoraRtc: window.rtcEngine,
-        sdkDomain: config.sdkDomain,
-      })
+
+      //@ts-ignore
+      if (window.agoraBridge) {
+        const cefClient = new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId)
+        console.log("#### cef initialize", cefClient)
+        //@ts-ignore
+        this.eduManager = new EduManager({
+          appId: config.agoraAppId,
+          rtmUid: config.rtmUid,
+          rtmToken: config.rtmToken,
+          platform: 'electron',
+          logLevel: '' as any,
+          logDirectoryPath: '',
+          // @ts-ignore
+          cefClient,
+          // cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
+          //@ts-ignore
+          agoraRtc: AgoraCEF.AgoraRtcEngine,
+          // agoraRtc: window,
+          sdkDomain: config.sdkDomain,
+        })
+      } else {
+        this.eduManager = new EduManager({
+          appId: config.agoraAppId,
+          rtmUid: config.rtmUid,
+          rtmToken: config.rtmToken,
+          platform: 'electron',
+          logLevel: '' as any,
+          logDirectoryPath: '',
+          // @ts-ignore
+          agoraRtc: window.rtcEngine,
+          // agoraRtc: window,
+          sdkDomain: config.sdkDomain,
+        })
+      }
     } else {
       this.eduManager = new EduManager({
         appId: config.agoraAppId,
@@ -322,6 +348,7 @@ export class AppStore {
     this.replayStore = new ReplayStore(this)
     this.breakoutRoomStore = new BreakoutRoomStore(this)
     this.extensionStore = new ExtensionStore(this)
+    this.diskStore = new DiskStore(this)
     this._screenVideoRenderer = undefined
   }
 
@@ -673,3 +700,4 @@ export { ReplayStore } from './replay';
 export { RecordingStore } from './recording';
 export {DeviceSettingStore} from './device-setting';
 export {PretestStore} from './pretest';
+export {DiskStore} from './disk';

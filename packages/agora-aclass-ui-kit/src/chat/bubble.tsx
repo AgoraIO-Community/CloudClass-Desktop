@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import {useAsync,useAsyncFn} from 'react-use';
+import { useAsync, useAsyncFn } from 'react-use';
 import { TextEllipsis } from '../typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { WithIconButton } from "./control/button";
@@ -18,6 +18,8 @@ export interface BubbleProps {
   onClickTranslate: (evt?: any) => any,
   bubbleStyle?: React.CSSProperties,
   translateText?: string,
+  loadingText?: string,
+  failText?: string,
   status: 'loading' | 'fail' | 'success',
   onClickFailButton: (evt: any) => any,
 }
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   senderContent: {
     display: 'flex',
-    maxWidth: 260,
+    maxWidth: 200,
     padding: '9px 10px',
     border: '1px solid #dbe2e5',
     whiteSpace: 'pre-wrap',
@@ -83,15 +85,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 6px'
   },
   translateText: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderTop: '1px solid #0000001a',
     lineHeight: '2em',
     marginTop: '3px'
   },
+  loading: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTop: '1px solid #0000001a',
+    lineHeight: '2em',
+    marginTop: '3px'
+  },
+  bubbleContent: {
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+  }
 }))
 
 
 export const Bubble = (props: BubbleProps) => {
-  const { bubbleStyle, isSender, time, content, userName, canTranslate, onClickTranslate, status, onClickFailButton } = props;
+  const { bubbleStyle, isSender, time, content, userName, canTranslate, onClickTranslate, status, onClickFailButton, loadingText, failText } = props;
   const [isShowTranslateText, setIsShowTranslateText] = useState(false)
   const [translateText, setTranslateText] = useState('')
   const [bubbleCanTrans, setBubbleCanTrans] = useState(true)
@@ -107,7 +124,7 @@ export const Bubble = (props: BubbleProps) => {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      alignItems: isSender ? 'flex-end' : 'flex-start'
+      alignItems: isSender ? 'flex-end' : 'flex-start',
     }}>
       <div className={isSender ? classes.senderHeader : classes.header}>
         <TextEllipsis maxWidth="27" style={{ color: '#415889', margin: '0 3px' }}>
@@ -128,10 +145,10 @@ export const Bubble = (props: BubbleProps) => {
           {status === 'loading' && <Loading />}
           {status === 'fail' && <WithIconButton onClick={() => onClickFailButton(props)} icon={fail} iconStyle={{ width: '18px', height: '18px' }} />}
         </div>
-        <div style={{ ...bubbleStyle }} className={isSender ? classes.senderContent : classes.content}>
-          <div>{content}</div>
+        <div style={{ ...bubbleStyle }} className={`${isSender ? classes.senderContent : classes.content} ${classes.bubbleContent}`}>
+          <>{content}</>
           {isShowTranslateText ? <div className={classes.translateText}>{translateText}</div> : null}
-          {state.loading ? <div className={classes.translateText}><Loading />翻译中</div> : state.error ? <div className={classes.translateText}>翻译失败</div> : null}
+          {state.loading ? <div className={classes.translateText}><Loading />{loadingText}</div> : state.error ? <div className={classes.translateText}>{failText}</div> : null}
         </div>
       </div>
     </div>

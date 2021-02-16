@@ -5,6 +5,7 @@ import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
+import { t } from '@/i18n'
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -23,7 +24,7 @@ const VideoPlaceholder = () => (
   <div className={styles.cameraPlaceholder}>
   <div className={styles.camIcon}></div>
     <div className={styles.text}>
-      no camera
+      {t('placeholder.noCamera')}
     </div>
   </div>
 )
@@ -88,11 +89,13 @@ export const TeacherVideo = observer(() => {
           width: '268px',
           minHeight: '194px',
           maxHeight: '194px',
+          overflow: 'hidden',
         }}
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >
-        { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+        { !!userStream.video === false ? <VideoPlaceholder /> : null}
         { userStream.audio ? 
           <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
             <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
@@ -178,12 +181,14 @@ export const StudentVideo = observer(() => {
           width: '268px',
           minHeight: '194px',
           maxHeight: '194px',
+          overflow: 'hidden',
         }}
         disableButton={Boolean(disableButton)}
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >
-        { userStream.renderer && userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={renderer} id={userStream.streamUuid} className={styles.videoRenderer} placeholderComponent={<VideoPlaceholder />} /> : null}
+        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
+        { !!userStream.video === false ? <VideoPlaceholder /> : null}
         { userStream.audio ? 
         <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
           <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />

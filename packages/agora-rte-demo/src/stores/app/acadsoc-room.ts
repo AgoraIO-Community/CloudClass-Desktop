@@ -25,6 +25,7 @@ import { t } from '@/i18n';
 import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
+import {EduClassroomStateEnum} from '@/stores/app/scene';
 
 export enum EduClassroomStateEnum {
   beforeStart = 0,
@@ -514,7 +515,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // TODO: this.appStore.params.startTime
       const startTime = new Date().getTime() + 120000
       // TODO: this.appStore.params.duration
-      const duration = 1800
+      const duration = 18000
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,
@@ -827,9 +828,18 @@ export class AcadsocRoomStore extends SimpleInterval {
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
             await this.appStore.releaseRoom()
-            this.appStore.uiStore.showDialog({
-              type: 'classSessionEnded',
-              message: t('class_ended'),
+            dialogManager.confirm({
+              title: t(`aclass.class_end`),
+              text: t(`aclass.leave_room`),
+              showConfirm: true,
+              showCancel: true,
+              confirmText: t('aclass.confirm.yes'),
+              visible: true,
+              cancelText: t('aclass.confirm.no'),
+              onConfirm: () => {
+              },
+              onClose: () => {
+              }
             })
             return
           }
@@ -1192,10 +1202,19 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       state: 2
     })
-    this.appStore.releaseRoom()
-    this.appStore.uiStore.showDialog({
-      type: 'classSessionEnded',
-      message: t('class_ended'),
+    await this.appStore.releaseRoom()
+    dialogManager.confirm({
+      title: t(`aclass.class_end`),
+      text: t(`aclass.leave_room`),
+      showConfirm: true,
+      showCancel: true,
+      confirmText: t('aclass.confirm.yes'),
+      visible: true,
+      cancelText: t('aclass.confirm.no'),
+      onConfirm: () => {
+      },
+      onClose: () => {
+      }
     })
   }
 

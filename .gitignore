@@ -27,4 +27,5 @@ packages/agora-log-sdk
 *.json.lerna_backup
 packages/agora-log-module/
 packages/agora-rte-demo/aclass/
-
+package-lock.json
+packages/agora-rte-demo/vendor/dev.git/

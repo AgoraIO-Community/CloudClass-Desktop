@@ -5,7 +5,7 @@ import { Toast, ToastContainer } from '@/components/toast'
 import React from 'react'
 import {render} from 'react-dom'
 import { Provider } from 'mobx-react'
-import { HashRouter } from 'react-router-dom'
+import { MemoryRouter as Router } from 'react-router-dom'
 import ThemeContainer from '@/containers/theme-container'
 import { RoomComponentConfigProps, RoomConfigProps } from '@/edu-sdk/declare'
 import { ReplayAppStore } from '@/stores/replay-app'
@@ -16,10 +16,10 @@ export const ReplayRoom = ({store,...props}: RoomConfigProps<ReplayAppStore>) =>
   return (
     <Provider store={store}>
       <ThemeContainer>
-        <HashRouter>
+        <Router>
           {/* <ConfirmDialog /> */}
           <PlayerPage />
-        </HashRouter>
+        </Router>
       </ThemeContainer>
     </Provider>
   )

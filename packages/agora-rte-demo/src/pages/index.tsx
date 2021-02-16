@@ -30,7 +30,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   },
   '1v1': {
     path: '/classroom/one-to-one',
-    component: () => <OneToOneRoomPage />
+    component: () => <AcadsocOneToOne />
   },
   'smallClass': {
     path: '/classroom/small-class',
