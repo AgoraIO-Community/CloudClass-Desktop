@@ -65,7 +65,18 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.register();
+
+// public/worker.js 
+if (navigator.serviceWorker && navigator.serviceWorker.register) {
+  navigator.serviceWorker.register('worker.js').then(function(registration) {
+    console.log("registration finish")
+  }).catch(function(error) {
+    console.log('An error happened during installing the service worker:');
+    console.log(error.message);
+  });
+}
+
 
 
 // console.log("mountAgoraEduApp")

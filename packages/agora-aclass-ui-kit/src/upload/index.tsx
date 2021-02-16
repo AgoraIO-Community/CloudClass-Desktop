@@ -31,7 +31,7 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
 interface IProps {
   showUploadList?: boolean;
   uploadButton: () => React.ReactNode;
-  progressComponents: () => React.ReactNode;
+  progressComponents?: () => React.ReactNode;
   onStart?: (file?: any) => any;
   beforeUpload?: (file?: any) => any;
   onProgress?: (percent: any, file?: any) => any;
@@ -77,28 +77,8 @@ export const UploadFile = (props: IProps) => {
       beforeUpload && beforeUpload(file)
       return true;
     },
-    customRequest({
-      action,
-      data,
-      file,
-      filename,
-      headers,
-      onError,
-      onProgress,
-      onSuccess,
-      withCredentials,
-    }: any) {
-      sendRequest && sendRequest({
-        action,
-        data,
-        file,
-        filename,
-        headers,
-        onError,
-        onProgress,
-        onSuccess,
-        withCredentials,
-      });
+    customRequest({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials,}: any) {
+      sendRequest && sendRequest({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials,});
       return {
         abort() {
           setFiles([]),
