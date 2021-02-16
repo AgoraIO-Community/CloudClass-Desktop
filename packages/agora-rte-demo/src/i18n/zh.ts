@@ -124,6 +124,7 @@ const zhCN: any = {
     'unlock_board': '取消白板跟随'
   },
   'tool': {
+    'toolBarname': '工具',
     'selector': '鼠标选择器',
     'pencil': '画笔',
     'rectangle': '矩形',
@@ -134,7 +135,9 @@ const zhCN: any = {
     'add': '新增一页',
     'upload': '上传',
     'hand_tool': '手抓工具',
-    'extension_tool': '扩展'
+    'extension_tool': '扩展',
+    'clear': '清除',
+    'disk': '云盘',
   },
   'error': {
     'not_found': '页面找不到',

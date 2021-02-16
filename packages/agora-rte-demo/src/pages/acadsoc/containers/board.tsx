@@ -121,7 +121,7 @@ export const EduWhiteBoard = observer(() => {
       isFullScreen={!boardStore.isFullScreen}
       width={'100%'}
       height={'100%'}
-      toolbarName={'Tools'}
+      toolbarName={t('tool.toolBarname')}
     >
       {/* {
         isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null

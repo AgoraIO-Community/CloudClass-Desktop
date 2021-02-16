@@ -73,56 +73,68 @@ const toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,
+    iconTooltipText: 'mouse',
   },
   {
     itemName: 'pencil',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'pencil',
   },
   {
     itemName: 'text',
     toolTip: true,
     popoverType: 'font',
+    iconTooltipText: 'text',
   },
   {
     itemName: 'rectangle',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'mouse',
   },
   {
     itemName: 'elliptic',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'elliptic',
   },
   {
     itemName: 'eraser',
     toolTip: true,
+    iconTooltipText: 'eraser',
   },
   {
     itemName: 'palette',
     toolTip: true,
     popoverType: 'color',
+    iconTooltipText: 'palette',
   },
   {
     itemName: 'new-page',
     toolTip: true,
+    iconTooltipText: 'new-page',
   },
   {
     itemName: 'move',
     toolTip: true,
+    iconTooltipText: 'move',
   },
   {
     itemName: 'upload',
     toolTip: true,
     popoverType: 'upload',
+    iconTooltipText: 'upload',
   },
   {
     itemName: 'clear',
     toolTip: true,
+    iconTooltipText: 'clear',
   },
   {
     itemName: 'disk',
     toolTip: true,
+    iconTooltipText: 'disk',
   },
 ]
 

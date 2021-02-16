@@ -81,56 +81,68 @@ static toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,
+    iconTooltipText: t('tool.selector'),
   },
   {
     itemName: 'pencil',
     toolTip: true,
     popoverType: 'drawer',
+    iconTooltipText: t('tool.pencil'),
   },
   {
     itemName: 'text',
     toolTip: true,
     popoverType: 'font',
+    iconTooltipText: t('tool.text'),
   },
   {
     itemName: 'rectangle',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: t('tool.rectangle'),
   },
   {
     itemName: 'elliptic',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: t('tool.ellipse'),
   },
   {
     itemName: 'eraser',
     toolTip: true,
+    iconTooltipText: t('tool.eraser'),
   },
   {
     itemName: 'palette',
     toolTip: true,
     popoverType: 'color',
+    iconTooltipText: t('tool.color_picker'),
   },
   {
     itemName: 'new-page',
     toolTip: true,
+    iconTooltipText: t('tool.add'),
   },
   {
     itemName: 'move',
     toolTip: true,
+    iconTooltipText: t('tool.hand_tool'),
   },
   {
     itemName: 'upload',
     toolTip: true,
     popoverType: 'upload',
+    iconTooltipText: t('tool.upload'),
   },
   {
     itemName: 'clear',
     toolTip: true,
+    iconTooltipText: t('tool.clear'),
   },
   {
     itemName: 'disk',
     toolTip: true,
+    iconTooltipText: t('tool.disk'),
   },
 ]
 

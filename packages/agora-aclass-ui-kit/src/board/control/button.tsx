@@ -36,6 +36,7 @@ export interface ControlButtonProps extends ControlBaseProps{
   toolTip?: boolean,
   active?: boolean,
   activeStyles?: CSSProperties,
+  iconTooltipText?: string,
 }
 
 const i18n = {
@@ -46,18 +47,18 @@ const i18n = {
   'fullscreen': 'fullscreen',
   'fullscreenExit': 'fullscreenExit',
 
-  'pencil': 'pencil',
-  'text': 'text',
-  'mouse': 'mouse',
-  'eraser': 'eraser',
-  'rectangle': 'rectangle',
-  'elliptic': 'elliptic',
-  'palette': 'palette',
-  'new-page': 'new-page',
-  'move': 'move',
-  'upload': 'upload',
-  'clear': 'clear',
-  'disk': 'disk'
+  // 'pencil': 'pencil',
+  // 'text': 'text',
+  // 'mouse': 'mouse',
+  // 'eraser': 'eraser',
+  // 'rectangle': 'rectangle',
+  // 'elliptic': 'elliptic',
+  // 'palette': 'palette',
+  // 'new-page': 'new-page',
+  // 'move': 'move',
+  // 'upload': 'upload',
+  // 'clear': 'clear',
+  // 'disk': 'disk'
 }
 
 
@@ -162,6 +163,7 @@ export const ToolButton = (
     style,
     iconStyle,
     onClick,
+    iconTooltipText,
     popoverComponent
   }: ControlButtonProps) => {
   const ControlIconButton = buttonsMap[icon]
@@ -187,7 +189,7 @@ export const ToolButton = (
   return (
     <React.Fragment>
       {toolTip ?
-         <Tooltip placement="right" title={i18n[icon]}>
+         <Tooltip placement="right" title={iconTooltipText ? iconTooltipText : ''}>
           <IconButton component="div" style={{
             width: 18,
             height: 18,

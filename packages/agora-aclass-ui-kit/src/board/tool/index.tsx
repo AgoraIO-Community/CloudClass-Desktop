@@ -8,6 +8,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 type PopoverComponentType = 'stroke' | 'color' | 'upload' | 'font' | 'drawer'
 export interface IToolItem {
   itemName: string,
+  iconTooltipText?: string,
   iconUrl?: string,
   toolTip?: boolean,
   btnStyle?: CSSProperties,
@@ -68,7 +69,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
       {...props.style}
     } className={classes.toolBox}>
       <Typography component="div" style={{
-        fontSize: 12,
+        fontSize: 14,
         color: 'white',
         textShadow: '0 0 3px #775c09, 0 0 3px #e2a910',
         width: 32,
@@ -80,7 +81,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
       }}>
         {props.headerTitle}
       </Typography>
-      {props.items.map(({toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
+      {props.items.map(({iconTooltipText, toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
         <ToolButton key={index}
           active={activeItem === itemName}
           activeStyles={{
@@ -114,6 +115,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
             },
             ...iconStyle
           }}
+          iconTooltipText={iconTooltipText}
           icon={iconUrl ? iconUrl : itemName}
           popoverComponent={getPopoverComponent(props, popoverType)}
           onClick={() => {

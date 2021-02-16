@@ -25,7 +25,7 @@ const NetworkDisk = observer((props: any) => {
       <UploadFile
         customRequest={uploadRequest}
         showUploadList={false}
-        uploadButton={() => <DiskButton id="disk-button-upload" onClick={onUpload} color={'primary'} text={'上传'} />}
+        uploadButton={() => <DiskButton id="disk-button-upload" color={'primary'} text={'上传'} />}
       />
     )
   }

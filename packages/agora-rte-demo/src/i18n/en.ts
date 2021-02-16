@@ -131,6 +131,7 @@ const en = {
     'unlock_board': 'Reset Whiteboard Follow'
   },
   'tool': {
+    'toolBarname': 'Tools',
     'selector': 'mouse selector',
     'pencil': 'penceil',
     'rectangle': 'rectangle',
@@ -141,7 +142,9 @@ const en = {
     'add': 'add new page',
     'upload': 'upload ',
     'hand_tool': 'hand selector',
-    'extension_tool': 'extension tool'
+    'extension_tool': 'extension tool',
+    'clear': 'clear',
+    'disk': 'disk',
   },
   'error': {
     'not_found': 'Page Not Found',
