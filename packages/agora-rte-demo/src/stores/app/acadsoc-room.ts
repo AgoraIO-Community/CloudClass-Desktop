@@ -27,12 +27,6 @@ import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
 import {EduClassroomStateEnum} from '@/stores/app/scene';
 
-export enum EduClassroomStateEnum {
-  beforeStart = 0,
-  start = 1,
-  end = 2,
-}
-
 export enum EduClassroomCountdownEnum {
   first = 5,
   second = 3,
