@@ -13,7 +13,7 @@ import {
   DiskManagerDialog,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
-import { useBoardStore } from '@/hooks'
+import { useBoardStore,useAppStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
@@ -21,6 +21,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
 import { CourseWareMenuContainer } from './course-ware-menu'
 import { NetworkDisk } from './disk'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 const StrokeListPanel = observer(() => {
 
@@ -420,6 +421,14 @@ export const EducationBoard = observer((props: any) => {
     }
     boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
+  const appStore = useAppStore()
+  const isStudent = appStore.roomInfo.userRole === EduRoleTypeEnum.student
+  const getStudentBoardItems = () => {
+    const removeItem = ['new-page', 'clear']
+    const studentBoardItems = BoardStore.toolItems.filter((item) => !removeItem.includes(item.itemName))
+    return studentBoardItems
+  }
+
   
   return (
     <div className={classes.boardBoxContainer}>
@@ -486,7 +495,7 @@ export const EducationBoard = observer((props: any) => {
             position: 'absolute'
           }}
           items={
-            BoardStore.toolItems
+            isStudent ? getStudentBoardItems():BoardStore.toolItems
           }
           onClick={onClickTool}
         /> : null}
