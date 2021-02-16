@@ -20,7 +20,7 @@ const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
   const startTime: string = acadsocStore.classTimeText + acadsocStore.shiftClassTime
   return (
-    <StartView text={startTime} />
+    <StartView text={startTime} isEnd={acadsocStore.isRed}/>
   )
 })
 

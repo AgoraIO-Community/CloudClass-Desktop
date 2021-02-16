@@ -29,7 +29,7 @@ export interface ChatBoardProps {
   historyMessage?: ChatMessageList,
   panelBackColor?: string,
   panelBorderColor?: string,
-  isBespread?: number,
+  isBespread?: boolean,
   borderWidth?: number,
   maxHeight?: number | string,
   minHeight?: number | string,
@@ -57,7 +57,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   const {
     panelBackColor = "#DEF4FF",
     panelBorderColor = '#75C0FF',
-    isBespread = props.isBespread,
+    isBespread,
     messages,
     bannedText,
     borderWidth = 15,
@@ -79,6 +79,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     onClickMinimize = () => { }
   } = props
   const bottomDistance = borderWidth
+  const flexNumber = isBespread ? 1:0.8
   const useStyles = makeStyles((theme: Theme) => ({
     chatScroll: {
       position: 'absolute',
@@ -119,7 +120,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderRadius: '10px',
       display: 'flex',
       flexDirection: 'column',
-      flex: isBespread,
+      flex: `${flexNumber}`,
       //boxShadow: `0px 0px 0px ${borderWidth}px ${panelBorderColor}`,
       background: panelBorderColor,
       borderWidth: '0px 10px 10px',

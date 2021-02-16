@@ -248,8 +248,10 @@ const en = {
     'failed_to_initiate_a_raise_of_hand_application': 'Failed to initiate a raise of hand application',
     'failed_to_end_the_call': 'Failed to end the call',
     'failed_to_join_board': 'Failed to join board',
-    'time_interval_between_start': `There are only "{reason}" mins classroom will be started`,
-    'time_interval_between_end': `There are only "{reason}" mins classroom will be closed`,
+    'time_interval_between_start': `There are only {reason} mins classroom will be started`,
+    'time_interval_between_end': `The class will be over in {reason} minutes`,
+    'class_is_end': `Class is over. The classroom will close in {reason} minutes`,
+    'time_interval_between_close': `The classroom will close in {reason} minutes`,
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {
