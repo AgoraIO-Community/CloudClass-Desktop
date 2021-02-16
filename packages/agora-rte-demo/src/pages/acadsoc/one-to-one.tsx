@@ -81,7 +81,7 @@ export const AcadsocOneToOne = observer(() => {
                     // </div>
                     :e.type === 'chat' ?
                     // <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeChat key={e.id} unread={3}></MinimizeChat>
+                      <MinimizeChat key={e.id} unread={acadsocStore.unreadMessageCount>99?'99+':acadsocStore.unreadMessageCount}></MinimizeChat>
                     // </div>
                     : null
                   ))

@@ -6,6 +6,12 @@ const zhCN: any = {
     "exit": "退出",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
+    "assistant":{
+      "noRemoteUser":"无实时网络信息，当前无用户在线",
+      "delay":"网络延时",
+      "lossRate":"丢包率",
+      "title":"用户实时网络",
+    },
     "confirm": {
       "exit": "确定退出教室吗？",
       "endClass": "结束教室",

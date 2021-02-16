@@ -231,7 +231,7 @@ export class UIStore {
 
   @action
   showDialog (dialog: DialogMessage) {
-    this.addDialog(dialog)
+   this.addDialog(dialog)
   }
 
   @action

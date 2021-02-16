@@ -95,12 +95,13 @@
   .unreadContainer {
     width: 26px;
     height: 26px;
-    border-radius: 14px;
+    border-radius: 12px;
     margin: 7px;
     background-color: #F04C35;
+    text-align: center;
     .count {
       color: white;
-      font-size: 20px;
+      font-size: 14px;
       line-height: 26px;
       margin: 6px;
     }

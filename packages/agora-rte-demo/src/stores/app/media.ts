@@ -2,11 +2,12 @@ import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed } from 'mobx';
-import { LocalUserRenderer } from 'agora-rte-sdk';
+import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 
 const delay = 2000
+
 
 const networkQualityLevel = [
   'unknown',
@@ -29,6 +30,7 @@ const networkQualities: { [key: string]: string } = {
 }
 
 export class MediaStore {
+
   @observable
   autoplay: boolean = false;
 
@@ -49,6 +51,7 @@ export class MediaStore {
   get delay(): string {
     return `${this._delay}`
   }
+
   @action
   updateSignalStatusWithRemoteUser(mixSignalStatus: any[]) {
     this.signalStatus = mixSignalStatus
@@ -66,6 +69,7 @@ export class MediaStore {
     })
     return signalStatus
   }
+
   private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
     const mixSignalStatus: any[] = []
     uniq([...Object.keys(audioStats), ...Object.keys(videoStats)]).forEach(item => {
@@ -94,8 +98,8 @@ export class MediaStore {
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
-      this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
-      dialogManager.show({
+      appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
+      appStore.isNotInvisible && dialogManager.show({
         title: t('aclass.device.audio_failed'),
         text: t('aclass.device.audio_failed'),
         showConfirm: true,
@@ -113,7 +117,7 @@ export class MediaStore {
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
-      dialogManager.show({
+      appStore.isNotInvisible &&  dialogManager.show({
         title: t('aclass.device.video_failed'),
         text: t('aclass.device.video_failed'),
         showConfirm: true,

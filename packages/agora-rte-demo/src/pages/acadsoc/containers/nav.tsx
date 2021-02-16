@@ -1,7 +1,7 @@
 import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useSceneStore, useUIStore, useMediaStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
@@ -46,7 +46,13 @@ const AssistantMenu = observer(() => {
     }
   })
   return (
-    <Assistant userSignalStatus={remoteUsers} />
+    <Assistant 
+    userSignalStatus={remoteUsers} 
+    title={t('aclass.assistant.title')}
+    noUserText={t('aclass.assistant.noRemoteUser')} 
+    delayText={t('aclass.assistant.delay')}
+    lossRate={t('aclass.assistant.lossRate')}
+    />
   )
 })
 
@@ -66,11 +72,8 @@ export const Nav = observer(() => {
     text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
   }
 
-  const leftView = userRole === EduRoleTypeEnum.assistant ? assistantView : classMessageView
   const statusBar = [
-    {
-      ...leftView
-    },
+    {...classMessageView},
     {
       isComponent: true,
       componentKey: "classStartTime",
@@ -82,6 +85,7 @@ export const Nav = observer(() => {
       renderItem: () => { return <SignalBarContainer /> }
     }
   ]
+  userRole === EduRoleTypeEnum.assistant && statusBar.unshift(assistantView)
 
   const statusBarList = statusBar.filter((it: any) => userRole !== EduRoleTypeEnum.assistant ? it.componentKey !== 'assistant' : true)
 
@@ -150,9 +154,10 @@ const actionBar: IStatusBar = [{
 
     const history = useHistory()
     const acadsocRoomStore = useAcadsocRoomStore()
+    const appStore =useAppStore()
 
     const onExitRoom = () => {
-      dialogManager.show({
+     dialogManager.show({
         title: t(`aclass.confirm.exit`),
         text: t(`aclass.confirm.endClass`),
         confirmText: t(`aclass.confirm.yes`),

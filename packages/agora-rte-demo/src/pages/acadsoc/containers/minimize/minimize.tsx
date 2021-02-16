@@ -72,7 +72,7 @@ export const MinimizeStudent = observer(() => {
 })
 
 export interface ChatProps {
-  unread: number
+  unread: number | string
 }
 
 export const MinimizeChat = observer((props: ChatProps) => {
@@ -89,6 +89,7 @@ export const MinimizeChat = observer((props: ChatProps) => {
     //   acadsocStore.unwind.splice(i, 1)
     // }, 1000)
     t.isHidden = false
+    acadsocStore.resetUnreadMessageCount()
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
   }
