@@ -12,6 +12,10 @@ const NetworkDisk = observer((props: any) => {
     console.log('reload network disk')
   }
 
+  const uploadRequest = ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
+
+  }
+
   const onUpload = () => {
     console.log('upload file')
   }
@@ -19,6 +23,7 @@ const NetworkDisk = observer((props: any) => {
   const uploadComponent = () => {
     return (
       <UploadFile
+        customRequest={uploadRequest}
         showUploadList={false}
         uploadButton={() => <DiskButton id="disk-button-upload" onClick={onUpload} color={'primary'} text={'上传'} />}
       />
