@@ -157,6 +157,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   duration: number = 0   // 课程持续时间
 
   @observable
+  closeDelay: number = 0  // 教室延长关闭时间
+
+  @observable
   timeToStart: number = 0   // 距离开始还剩时间
 
   @observable
@@ -203,6 +206,9 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   isBespread: boolean = true  // 是否铺满
+
+  @observable
+  isRed: boolean = false  // 是否变红
 
   @observable
   minimizeView: MinimizeType = [
@@ -260,6 +266,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.seconds = 0
     this.timeToStart = 0
     this.startedTime = 0
+    clearTimeout(this.timer)
   }
 
   @action
@@ -404,8 +411,22 @@ export class AcadsocRoomStore extends SimpleInterval {
   @action
   getTimer(time: number, step: number) {
     this.timer && clearTimeout(this.timer)
-    this.timer = setInterval(() => {
-      if(this.minutes === parseInt(String(this.duration / 60)) && this.seconds === (this.duration % 60) && step === 1) {
+    this.timer = setInterval(async() => {
+      if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
+        await this.appStore.releaseRoom()
+        this.appStore.isNotInvisible && dialogManager.confirm({
+          title: t(`aclass.class_end`),
+          text: t(`aclass.leave_room`),
+          showConfirm: true,
+          showCancel: true,
+          confirmText: t('aclass.confirm.yes'),
+          visible: true,
+          cancelText: t('aclass.confirm.no'),
+          onConfirm: () => {
+          },
+          onClose: () => {
+          }
+        })
         clearTimeout(this.timer)
         return
       } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
@@ -419,8 +440,22 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 正在上课 正计时
       if(step === 1 && time >= 59) {
         this.minutes += step
-        if([1, 3, 5].includes(this.minutes)) {
-          this.showTimerToast(this.minutes)
+        // 课程未结束
+        let classIsStart:number = this.secondsToMinutes(this.duration).minutes
+        if(this.minutes === (classIsStart - 5)) {
+          this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: 5}))
+        }
+        if(this.minutes === (classIsStart - 1)) {
+          this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: 1}))
+        }
+        // 课程结束
+        if(this.minutes === classIsStart) {
+          this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.secondsToMinutes(this.closeDelay).minutes}))
+        }
+        // 课程结束 教室未关闭提示
+        let classIsEnd:number = this.secondsToMinutes(this.duration + this.closeDelay).minutes
+        if(this.minutes === (classIsEnd - 1)) {
+          this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: 1}))
         }
         this.seconds = 0 
         this.getTimer(-1, step)
@@ -429,7 +464,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       if(step === -1 && time <= 0) {
         this.minutes += step
         if([1, 3, 5].includes(this.minutes)) {
-          this.showTimerToast(this.minutes)
+          this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: this.minutes}))
         }
         this.seconds = 59
         this.getTimer(60, step)
@@ -458,8 +493,23 @@ export class AcadsocRoomStore extends SimpleInterval {
   // ms 转分秒 首次获取时间
   @action
   msToMinutes(time: number) {
-    this.minutes = parseInt(String(time / (60 * 1000)))
-    this.seconds = parseInt(String((time % (60 * 1000)) / 1000))
+    return {
+      minutes: parseInt(String(time / (60 * 1000))),
+      seconds: parseInt(String((time % (60 * 1000)) / 1000))
+    }
+  }
+
+  @action
+  secondsToMinutes(time: number) {
+    return {
+      minutes: parseInt(String(time / 60)),
+      seconds: parseInt(String(time % 60))
+    }
+  }  
+
+  @action
+  getStartedTime() {
+    this.startedTime = new Date().getTime() - this.startTime + this.timeShift
   }
 
   @computed
@@ -513,9 +563,9 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
       const roomUuid = this.roomInfo.roomUuid
       // TODO: this.appStore.params.startTime
-      const startTime = new Date().getTime() + 120000
+      const startTime = new Date().getTime() + 1*60*1000
       // TODO: this.appStore.params.duration
-      const duration = 18000
+      const duration = 60
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,
@@ -531,18 +581,21 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.timeShift = this.timeCalibration(checkInResult.ts)
       this.startTime = checkInResult.startTime
       this.duration = checkInResult.duration
+      this.closeDelay = checkInResult.closeDelay
       // 课程开始之前
       if(checkInResult.state === EduClassroomStateEnum.beforeStart) {
         this.classTimeText = t('nav.class_time_text')
         this.timeToStart = this.startTime - new Date().getTime() + this.timeShift
-        this.msToMinutes(this.timeToStart)
+        this.minutes = this.msToMinutes(this.timeToStart).minutes
+        this.seconds = this.msToMinutes(this.timeToStart).seconds
         this.getTimer(this.seconds, -1)
       }
       // 正在上课
       if(checkInResult.state === EduClassroomStateEnum.start) {
         this.classTimeText = t('nav.start_in')
-        this.startedTime = new Date().getTime() - this.startTime + this.timeShift
-        this.msToMinutes(this.startedTime)
+        this.getStartedTime()  // 获取初始进入教室时间值
+        this.minutes = this.msToMinutes(this.startedTime).minutes
+        this.seconds = this.msToMinutes(this.startedTime).seconds
         this.getTimer(this.seconds, 1)
       }
       // 课程结束
@@ -828,21 +881,21 @@ export class AcadsocRoomStore extends SimpleInterval {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
-            await this.appStore.releaseRoom()
-           this.appStore.isNotInvisible && dialogManager.confirm({
-              title: t(`aclass.class_end`),
-              text: t(`aclass.leave_room`),
-              showConfirm: true,
-              showCancel: true,
-              confirmText: t('aclass.confirm.yes'),
-              visible: true,
-              cancelText: t('aclass.confirm.no'),
-              onConfirm: () => {
-              },
-              onClose: () => {
-              }
-            })
-            return
+            // await this.appStore.releaseRoom()
+            // this.appStore.isNotInvisible && dialogManager.confirm({
+            //   title: t(`aclass.class_end`),
+            //   text: t(`aclass.leave_room`),
+            //   showConfirm: true,
+            //   showCancel: true,
+            //   confirmText: t('aclass.confirm.yes'),
+            //   visible: true,
+            //   cancelText: t('aclass.confirm.no'),
+            //   onConfirm: () => {
+            //   },
+            //   onClose: () => {
+            //   }
+            // })
+            // return
           }
         
           const record = get(classroom, 'roomProperties.record')
@@ -890,12 +943,14 @@ export class AcadsocRoomStore extends SimpleInterval {
           if(this.sceneStore.classState === 1 && this.additionalState === 0) {
             clearTimeout(this.timer)
             this.classTimeText = t('nav.start_in')
-            this.msToMinutes(0)
+            // 上课后 初始化计时
+            this.minutes = 0
+            this.seconds = 0
             this.getTimer(this.seconds, 1)
           }
           if(this.sceneStore.classState === 2) {
             console.log('提示：课程已结束')
-            clearTimeout(this.timer)
+            this.isRed = true
           }
         })
       })

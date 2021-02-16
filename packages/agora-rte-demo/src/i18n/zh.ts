@@ -234,7 +234,9 @@ const zhCN: any = {
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
     'time_interval_between_start': `距离上课开始还有: {reason} 分钟`,
-    'time_interval_between_end': `距离教室关闭还有: {reason} 分钟`,
+    'time_interval_between_end': `课程还有 {reason} 分钟结束`,
+    'class_is_end': `下课咯，教室还有 {reason} 分钟关闭`,
+    'time_interval_between_close': `教室关闭还有 {reason} 分钟`,
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
