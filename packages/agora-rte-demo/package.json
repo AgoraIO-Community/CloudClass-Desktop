@@ -220,6 +220,7 @@
     "agora-electron-sdk": "education290",
     "agora-cef-sdk": "file:./vendor/agora-cef-sdk",
     "agora-rte-sdk": "1.0.0",
+    "animate.css": "^4.1.1",
     "bowser": "1.9.4",
     "postcss": "^8.2.6",
     "react": "16.13.1",
