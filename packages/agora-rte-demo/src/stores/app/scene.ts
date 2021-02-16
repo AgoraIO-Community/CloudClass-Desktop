@@ -878,22 +878,15 @@ export class SceneStore extends SimpleInterval {
 
 
   getFixAudioVolume(streamUuid: number): number {
-    let volume = 0
-    if (this.appStore.isElectron) {
-      const isLocal = get(this, 'cameraEduStream.streamUuid', -1) === streamUuid
-      if (isLocal) {
-        //@ts-ignore
-        volume = this.appStore.mediaStore.speakers.get(0)
-      } else {
-        volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
-      }
-      volume = +(volume / 255).toFixed(2) * 5
-    } else {
-      volume = this.appStore.mediaStore.speakers.get(streamUuid) || 0
-      volume = volume / 5
+    const isLocal = get(this, 'cameraEduStream.streamUuid', -1) === streamUuid
+    if (isLocal) {
+      return this.localVolume
     }
-
-    return volume
+    const level = this.appStore.mediaStore.speakers[streamUuid] || 0
+    if (this.appStore.isElectron) {
+      return this.fixNativeVolume(level)
+    }
+    return this.fixWebVolume(level)
   }
 
   @computed
@@ -905,8 +898,6 @@ export class SceneStore extends SimpleInterval {
       && this.cameraEduStream) {
 
       const {placeHolderType, text} = this.getLocalPlaceHolderProps()
-
-      const volumeLevel = this.getFixAudioVolume(+this.cameraEduStream.streamUuid)
       return {
         local: true,
         userUuid: this.appStore.userUuid,
@@ -916,7 +907,7 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         showControls: this.canControl(this.appStore.userUuid),
-        volumeLevel: volumeLevel ? volumeLevel : 0,
+        volumeLevel: this.localVolume,
         placeHolderType: placeHolderType,
         placeHolderText: text,
       } as any
@@ -939,7 +930,7 @@ export class SceneStore extends SimpleInterval {
         showControls: this.canControl(user.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
-        volumeLevel: volumeLevel ? volumeLevel : 0,
+        volumeLevel: volumeLevel,
       } as any
     }
     return {
@@ -1005,6 +996,31 @@ export class SceneStore extends SimpleInterval {
     return this.appStore.userUuid === stream.userInfo.userUuid
   }
 
+  fixNativeVolume(volume: number) {
+    return Math.max(0, Math.ceil((volume / 200) * 4))
+  }
+
+  fixWebVolume(volume: number) {
+    const result = Math.min(Math.ceil(volume * 5), 4)
+    return Math.max(0, result)
+  }
+
+  @computed
+  get localVolume(): number {
+    let volume = 0
+    // TODO: native adapter
+    if (this.appStore.isElectron) {
+      // native sdk默认0是本地音量
+      volume = this.appStore.mediaStore.speakers[0] || 0
+      return this.fixNativeVolume(volume)
+    }
+    if (this.appStore.isWeb && this.cameraEduStream.streamUuid) {
+      volume = this.appStore.mediaStore.speakers[+this.cameraEduStream.streamUuid] || 0
+      return this.fixWebVolume(volume)
+    }
+    return volume
+  }
+
   @computed
   get studentStreams(): EduMediaStream[] {
     let streamList = this.streamList.reduce(
@@ -1024,7 +1040,7 @@ export class SceneStore extends SimpleInterval {
           showControls: this.canControl(user.userUuid),
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
-          volumeLevel: volumeLevel ? volumeLevel : 0,
+          volumeLevel: volumeLevel,
         } as any)
         return acc;
       }
@@ -1036,7 +1052,6 @@ export class SceneStore extends SimpleInterval {
 
     if (this.cameraEduStream && isStudent) {
       const props = this.getLocalPlaceHolderProps()
-      const volumeLevel = this.getFixAudioVolume(+this.cameraEduStream.streamUuid)
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -1048,7 +1063,7 @@ export class SceneStore extends SimpleInterval {
         showControls: this.canControl(this.appStore.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
-        volumeLevel: volumeLevel ? volumeLevel : 0,
+        volumeLevel: this.localVolume,
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
