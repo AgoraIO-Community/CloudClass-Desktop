@@ -109,6 +109,7 @@ export const ChatView = observer(() => {
     // }, 1000)
     t.isHidden = true
     acadsocStore.unwind.push(t)
+    acadsocStore.isBespread = false
   }
 
   const onClickBannedButton = useCallback(async () => {
@@ -131,7 +132,7 @@ export const ChatView = observer(() => {
       bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
-      isBespread={acadsocStore.isBespread ? 1 : 0.8}
+      isBespread={acadsocStore.isBespread}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}

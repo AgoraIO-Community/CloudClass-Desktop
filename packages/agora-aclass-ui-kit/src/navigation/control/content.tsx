@@ -12,15 +12,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline-block',
     marginRight: '10px',
     boxSizing: 'border-box'
+  },
+  timeText: {
+    color: 'red',
   }
 }))
 
-export const StartView = (props: { text: string }) => {
-  const { text } = props;
+export const StartView = (props: { text: string, isEnd: any}) => {
+  const { text, isEnd } = props;
   const styles = useStyles()
   return <>
     <span className={styles.starIcon}></span>
-    {text}
+    { isEnd ?
+      <span className={styles.timeText}>{text}</span>
+      :
+      <span>{text}</span>
+    }
   </>
 }
 interface IActionItem {
