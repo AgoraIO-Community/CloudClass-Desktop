@@ -114,7 +114,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       borderRadius: '10px',
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
+      flex: 0.8,
       //boxShadow: `0px 0px 0px ${borderWidth}px ${panelBorderColor}`,
       background: panelBorderColor,
       borderWidth: '0px 10px 10px',

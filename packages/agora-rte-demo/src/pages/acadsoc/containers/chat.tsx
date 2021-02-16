@@ -52,8 +52,8 @@ export const ChatView = observer(() => {
     return message
   }
   const onClickTranslate = async (message: IChatViewMessage) => {
-    let isSuccess: boolean = false
-    let translateContent: any = ''
+    let isSuccess:boolean = true
+    let translateContent:any = ''
     try {
       translateContent = await acadsocStore.getTranslationContent(message.chatText)
     } catch (err) {
@@ -91,11 +91,23 @@ export const ChatView = observer(() => {
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
   }
+  
   // const onInputText = (event: any) => {
   //   if (isDisableSendButton) return
   //   const { value } = event.target;
   //   // if (!!value.trim()) 
   // }
+
+  const chatMinimize = () => {
+    let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
+    t.animationMinimize = ''
+    t.animation = 'animate__animated animate__backOutDown'
+    setTimeout(() => {
+      t.isHidden = true
+      acadsocStore.unwind.push(t)
+    }, 1000)
+  }
+
   const onClickBannedButton = useCallback(async () => {
     if (acadsocStore.appStore.roomInfo.userRole
         === EduRoleTypeEnum.teacher) {
@@ -122,6 +134,7 @@ export const ChatView = observer(() => {
       onPullFresh={onPullFresh}
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
+      onClickMinimize={chatMinimize}
       // onInputText={onInputText}
       placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}

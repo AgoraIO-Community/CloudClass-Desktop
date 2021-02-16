@@ -1,0 +1,123 @@
+.teacherContainer {
+  display: flex;
+  width: 220px;
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid #428ed7;
+  background-color: #71B9F7;
+  margin-bottom: 10px;
+  .mainIcon {
+    width: 16px;
+    height: 18px;
+    margin: 10px 5px 10px 15px;
+    background-image: url('../../assets/teacher-icon.png');
+  }
+  .name {
+    font-size: 18px;
+    margin: 5px;
+    color: white;
+    line-height: 29px;
+  }
+  .packupBackground {
+    float: right;
+    width: 28px;
+    height: 28px;
+    margin: 5px 10px 5px auto;
+    background-color: #9CCEFA;
+    border-radius: 8px;
+    cursor: pointer;
+    .packupIcon {
+      margin: 6px;
+      width: 16px;
+      height: 16px;
+      background-image: url('../../assets/pack-up.png');
+    }
+  }
+}
+
+.studentContainer {
+  display: flex;
+  width: 220px;
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid #428ed7;
+  background-color: #71B9F7;
+  margin-bottom: 10px;
+  .mainIcon {
+    width: 16px;
+    height: 18px;
+    margin: 10px 5px 10px 15px;
+    background-image: url('../../assets/icon-student-head.png');
+  }
+  .name {
+    font-size: 18px;
+    margin: 5px;
+    color: white;
+    line-height: 29px;
+  }
+  .packupBackground {
+    float: right;
+    width: 28px;
+    height: 28px;
+    margin: 5px 10px 5px auto;
+    background-color: #9CCEFA;
+    border-radius: 8px;
+    cursor: pointer;
+    .packupIcon {
+      margin: 6px;
+      width: 16px;
+      height: 16px;
+      background-image: url('../../assets/pack-up.png');
+    }
+  }
+}
+
+.chatContainer {
+  display: flex;
+  width: 220px;
+  height: 38px;
+  border-radius: 14px;
+  border: 1px solid #428ed7;
+  background-color: #71B9F7;
+  margin-bottom: 10px;
+  .mainIcon {
+    width: 20px;
+    height: 20px;
+    margin: 10px 5px 10px 15px;
+    background-image: url('../../assets/icon-chat.png');
+  }
+  .name {
+    font-size: 18px;
+    margin: 5px;
+    color: white;
+    line-height: 29px;
+  }
+  .unreadContainer {
+    width: 26px;
+    height: 26px;
+    border-radius: 14px;
+    margin: 7px;
+    background-color: #F04C35;
+    .count {
+      color: white;
+      font-size: 20px;
+      line-height: 26px;
+      margin: 6px;
+    }
+  }
+  .packupBackground {
+    float: right;
+    width: 28px;
+    height: 28px;
+    margin: 5px 10px 5px auto;
+    background-color: #9CCEFA;
+    border-radius: 8px;
+    cursor: pointer;
+    .packupIcon {
+      margin: 6px;
+      width: 16px;
+      height: 16px;
+      background-image: url('../../assets/pack-up.png');
+    }
+  }
+}

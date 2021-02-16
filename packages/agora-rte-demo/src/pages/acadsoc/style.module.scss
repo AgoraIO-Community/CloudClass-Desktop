@@ -22,9 +22,10 @@
 .rightContainer {
   display: flex;
   flex-direction: column;
-  max-width: 268px;
+  min-width: 268px;
   flex: 1;
   margin-left: 10px;
+  position: relative;
 }
 
 .fullScreen {
@@ -44,4 +45,17 @@
     height: 90%;
     right: 0;
   }
+}
+
+.minimizeContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}  
+
+.zIndex {
+  z-index: -9999;
 }
