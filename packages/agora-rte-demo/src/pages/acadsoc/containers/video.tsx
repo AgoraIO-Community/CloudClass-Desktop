@@ -65,6 +65,7 @@ export const TeacherVideo = observer(() => {
       // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
+      acadsocStore.isBespread = false
     }
   }, [userStream.video, userStream.audio, isLocal])
 
@@ -155,6 +156,7 @@ export const StudentVideo = observer(() => {
       // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
+      acadsocStore.isBespread = false
     }
   }, [userStream.video, userStream.audio, isLocal, boardStore])
 
