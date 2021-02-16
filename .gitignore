@@ -31,3 +31,4 @@ package-lock.json
 packages/agora-rte-demo/vendor/dev.git/
 .ts.back.txt
 *.ts.back.txt
+*.sh

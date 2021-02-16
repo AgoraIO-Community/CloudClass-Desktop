@@ -2,7 +2,7 @@
   "name": "agora-rte-demo",
   "version": "6.2.0",
   "private": true,
-  "homepage": "/aclass_test",
+  "homepage": ".",
   "main": "./src/index.tsx",
   "babel": {
     "presets": [
