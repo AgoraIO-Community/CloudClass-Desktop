@@ -16,8 +16,9 @@ var fetchOrigin = ""
 self.onfetch = function(event) {
   const request = event.request
   const url = new URL(request.url)
-  console.log("service worker url", url)
-  console.log("service worker inject")
+  // console.log("service worker url", url)
+  // console.log("service worker inject")
+  // todo if url.origin === user option scope, then go on
   event.respondWith(openCache().then(function(cache) {
     return cache.match(event.request).then(function(response) {
       if (response) {

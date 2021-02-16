@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
 import { UploadFile } from './index'
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   title: '上传',
