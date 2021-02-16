@@ -6,6 +6,7 @@ import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
 import { t } from '@/i18n'
+import { debounce } from '@/utils/utils';
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -56,12 +57,14 @@ export const TeacherVideo = observer(() => {
     }
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
-      t.animationMinimize = ''
-      t.animation = 'animate__animated animate__backOutDown'
-      setTimeout(() => {
-        t.isHidden = true
-        acadsocStore.unwind.push(t)
-      }, 1000)
+      // t.animationMinimize = ''
+      // t.animation = 'animate__animated animate__backOutDown'
+      // setTimeout(() => {
+      //   t.isHidden = true
+      //   acadsocStore.unwind.push(t)
+      // }, 1000)
+      t.isHidden = true
+      acadsocStore.unwind.push(t)
     }
   }, [userStream.video, userStream.audio, isLocal])
 
@@ -84,7 +87,7 @@ export const TeacherVideo = observer(() => {
         disableButton={Boolean(disableButton)}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={handleClick}
+        onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
           minHeight: '194px',
@@ -144,12 +147,14 @@ export const StudentVideo = observer(() => {
     }
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
-      t.animationMinimize = ''
-      t.animation = 'animate__animated animate__backOutDown'
-      setTimeout(() => {
-        t.isHidden = true
-        acadsocStore.unwind.push(t)
-      }, 1000)
+      // t.animationMinimize = ''
+      // t.animation = 'animate__animated animate__backOutDown'
+      // setTimeout(() => {
+      //   t.isHidden = true
+      //   acadsocStore.unwind.push(t)
+      // }, 1000)
+      t.isHidden = true
+      acadsocStore.unwind.push(t)
     }
   }, [userStream.video, userStream.audio, isLocal, boardStore])
 
@@ -176,7 +181,7 @@ export const StudentVideo = observer(() => {
         boardState={boardStore.lockBoard ? false : true}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={handleClick}
+        onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
           minHeight: '194px',
