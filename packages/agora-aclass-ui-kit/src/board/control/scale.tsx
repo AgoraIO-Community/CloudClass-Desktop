@@ -33,8 +33,6 @@ export const ControlScale = (props: ControlScaleProps) => {
 
   const { zoomInText, zoomOutText } = props
 
-  console.log('zoom text in scale tsx', zoomInText, zoomOutText)
-
   const classes = useStyles()
 
   return (
