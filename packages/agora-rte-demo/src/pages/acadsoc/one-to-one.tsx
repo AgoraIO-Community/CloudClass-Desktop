@@ -52,17 +52,17 @@ export const AcadsocOneToOne = observer(() => {
             {
               acadsocStore.minimizeView.filter(e => !e.isHidden).map((e:any) => (
                 e.type === 'teacher' ?
-                <div className={e.animation} key={e.id}>
-                  <TeacherVideo />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <TeacherVideo key={e.id}/>
+                // </div>
                 :e.type === 'student' ?
-                <div className={e.animation} key={e.id}>
-                  <StudentVideo />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <StudentVideo key={e.id}/>
+                // </div>
                 :e.type === 'chat' ?
-                <div className={e.animation} key={e.id}>
-                  <ChatView />
-                </div>
+                // <div className={e.animation} key={e.id}>
+                  <ChatView key={e.id}/>
+                // </div>
                 : null
               ))
             }
@@ -72,17 +72,17 @@ export const AcadsocOneToOne = observer(() => {
                 {
                   acadsocStore.unwind.map((e:any) => (
                     e.type === 'teacher' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeTeacher></MinimizeTeacher> 
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeTeacher key={e.id}></MinimizeTeacher> 
+                    // </div>
                     :e.type === 'student' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeStudent></MinimizeStudent>
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeStudent key={e.id}></MinimizeStudent>
+                    // </div>
                     :e.type === 'chat' ?
-                    <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeChat unread={acadsocStore.unreadMessageCount>99?'99+':acadsocStore.unreadMessageCount}></MinimizeChat>
-                    </div>
+                    // <div className={e.animationMinimize} key={e.id}>
+                      <MinimizeChat key={e.id} unread={acadsocStore.unreadMessageCount>99?'99+':acadsocStore.unreadMessageCount}></MinimizeChat>
+                    // </div>
                     : null
                   ))
                 }
