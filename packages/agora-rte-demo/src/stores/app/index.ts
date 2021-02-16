@@ -174,6 +174,10 @@ export class AppStore {
   @observable
   roomInfo!: RoomInfo
   
+  get isNotInvisible() {
+    return this.roomInfo.userRole !== EduRoleTypeEnum.invisible
+  }
+
   @observable
   params!: AppStoreInitParams
 

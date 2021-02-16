@@ -6,6 +6,7 @@ import { WithIconButton } from './control/button'
 import forbiddenSpeech from './assets/forbiddenSpeech.png'
 import chat from './assets/chat.png'
 import TelegramIcon from '@material-ui/icons/Telegram';
+import { debounce } from "lodash";
 
 export type ChatMessage = {
   id: string,
@@ -229,19 +230,20 @@ export const ChatBoard = (props: ChatBoardProps) => {
     setInputMessages(value.trim());
     onInputText && onInputText(event);
   }
-  const handleKeyDown=(event:any)=>{
-    if(event.keyCode===13){
-      handlerSendButton()
-    }
-  }
   useEffect(() => {
     const position = isSendButton ? chatRef?.current.scrollHeight : chatRef?.current.scrollHeight - currentHeight
     chatRef?.current.scrollTo(0, position)
   }, [messages])
   const handlerSendButton = () => {
     setIsSendButton(true)
-    onClickSendButton && onClickSendButton(inputMessages.trim())
+    const message =inputMessages.trim()
+    onClickSendButton && debounce(onClickSendButton, 1500)(message);
     setInputMessages("")
+  }
+  const handleKeyDown = (event: any) => {
+    if (event.keyCode === 13) {
+      handlerSendButton()
+    }
   }
   return (
     <Box className={classes.chat}>

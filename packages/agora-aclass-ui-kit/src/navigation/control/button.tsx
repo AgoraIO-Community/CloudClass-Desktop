@@ -16,6 +16,7 @@ const defaultStyle = {
 export interface IControlButtonProps {
   icon?: ControlButtonIcon,
   iconStyle?: CSSProperties,
+  styles?: CSSProperties,
   onClick?: () => any
 }
 
@@ -35,7 +36,7 @@ const buttonsMap = {
 
 }
 
-export const NavigationControlButton = ({ icon, iconStyle, onClick }: IControlButtonProps) => {
+export const NavigationControlButton = ({ icon, iconStyle, onClick,styles }: IControlButtonProps) => {
   const ControlIconButton = icon && buttonsMap[icon]
   return (
     <IconButton disableRipple component="div" style={{
@@ -44,6 +45,7 @@ export const NavigationControlButton = ({ icon, iconStyle, onClick }: IControlBu
       padding: 0,
       color: '#ffffff',
       marginLeft: 20,
+      ...styles
     }} onClick={onClick}
     >
       <ControlIconButton style={{ ...defaultStyle, ...iconStyle }} />

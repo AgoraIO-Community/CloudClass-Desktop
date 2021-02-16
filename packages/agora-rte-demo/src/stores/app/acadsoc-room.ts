@@ -438,7 +438,10 @@ export class AcadsocRoomStore extends SimpleInterval {
   get roomInfo() {
     return this.appStore.roomInfo
   }
-
+  @action 
+  resetUnreadMessageCount(){
+    this.unreadMessageCount = 0
+  }
   @action
   timeCalibration(time: number) {
     // 误差小于一秒 忽略
@@ -545,7 +548,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         } catch (err) {
           EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
         }
-        dialogManager.show({
+        this.appStore.isNotInvisible && dialogManager.show({
           title: t(`aclass.class_end`),
           text: t(`aclass.leave_room`),
           showConfirm: true,
@@ -822,7 +825,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
             await this.appStore.releaseRoom()
-            dialogManager.confirm({
+           this.appStore.isNotInvisible && dialogManager.confirm({
               title: t(`aclass.class_end`),
               text: t(`aclass.leave_room`),
               showConfirm: true,
@@ -902,6 +905,11 @@ export class AcadsocRoomStore extends SimpleInterval {
           account: message.fromUser.userName,
           sender: false
         })
+         const minimizeView = this.minimizeView.find((item) => item.type === 'chat' )
+        if (minimizeView?.isHidden) { this.unreadMessageCount = this.unreadMessageCount + 1 }
+        else {
+          this.unreadMessageCount = 0
+        }
         BizLogger.info('room-chat-message', evt)
       })
   
