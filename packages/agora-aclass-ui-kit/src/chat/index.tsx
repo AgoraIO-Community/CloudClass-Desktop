@@ -47,7 +47,8 @@ export interface ChatBoardProps {
   sendButtonText?:string,
   loadingText?:string,
   titleText?:string,
-  isDisableSendButton:boolean
+  isDisableSendButton:boolean,
+  toolButtonStyle?:React.CSSProperties
 }
 
 
@@ -74,6 +75,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     sendButtonText,
     loadingText,
     failText,
+    toolButtonStyle,
     onClickMinimize = () => { }
   } = props
   const bottomDistance = borderWidth
@@ -213,7 +215,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   const chatRef = useRef<any>()
   const ToolButton = (props: { onClickBannedButton: any, bannedText: string }) => {
     return (
-      <div className={classes.toolButton} onClick={props.onClickBannedButton}>
+      <div className={classes.toolButton} onClick={props.onClickBannedButton} style={{...toolButtonStyle}}>
         <WithIconButton
           iconStyle={{ width: '20px', height: '20px', marginRight: '5px' }}
           icon={forbiddenSpeech} />
