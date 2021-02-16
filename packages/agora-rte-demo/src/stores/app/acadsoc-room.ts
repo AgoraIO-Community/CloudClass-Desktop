@@ -202,6 +202,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   unwind: MinimizeType = []  // 最小化
 
   @observable
+  isBespread: boolean = true  // 是否铺满
+
+  @observable
   minimizeView: MinimizeType = [
     {
       id: 'teacher'+Math.ceil(Math.random()*10),
@@ -522,6 +525,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         startTime: startTime,  // 单位：毫秒
         duration: duration,    // 秒
       })
+      console.log('***** checkInResult', checkInResult)
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.additionalState = checkInResult.state
       this.timeShift = this.timeCalibration(checkInResult.ts)
