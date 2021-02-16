@@ -272,18 +272,18 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('groupAudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
       this.fire('local-audio-volume', {
-        totalVolume
+        totalVolume: +totalVolume
       })
       this.fire('volume-indication', {
-        speakers, speakerNumber, totalVolume
+        speakers, speakerNumber: +speakerNumber, totalVolume: +totalVolume
       })
     })
     this.client.on('AudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
       this.fire('local-audio-volume', {
-        totalVolume
+        totalVolume: +totalVolume
       })
       this.fire('volume-indication', {
-        speakers, speakerNumber, totalVolume
+        speakers, speakerNumber: +speakerNumber, totalVolume: +totalVolume
       })
     })
     // this.client.on('audio-device-changed', (deviceId: string, deviceType: number, deviceState: number) => {
@@ -735,12 +735,18 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   async changeCamera(deviceId: string): Promise<any> {
     try {
-      let ret = this.client.setVideoDevice(deviceId)
+      let ret = -1
+      if (this._cefClient) {
+        //@ts-ignore
+        ret = this.client.videoDeviceManager.setDevice(deviceId)
+      } else {
+        ret = this.client.setVideoDevice(deviceId)
+      }
       if (ret < 0) {
-        throw {
+        throw new GenericErrorWrapper({
           message: 'changeCamera failure',
           code: ret
-        }
+        });
       }
     } catch (err) {
       throw new GenericErrorWrapper(err);
@@ -753,6 +759,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (this._cefClient) {
       //@ts-ignore
       list = this.client.audioDeviceManager.enumerateRecordingDevices();
+      list = list.map((it: any) => ({
+        deviceid: it.deviceId,
+        label: it.deviceName,
+        kind: 'audioinput'
+      }))
     } else {
       list = this.client.getAudioRecordingDevices();
     }
@@ -769,7 +780,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     let list: any = []
     if (this._cefClient) {
       //@ts-ignore
-      list = this.client.videoDeviceManager.getVideoDevices()
+      list = this.client.videoDeviceManager.enumerateVideoDevices()
+      list = list.map((it: any) => ({
+        deviceid: it.deviceId,
+        label: it.deviceName,
+        kind: 'videoinput'
+      }))
     } else {
       list = this.client.getVideoDevices()
     }
@@ -848,7 +864,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   async changeMicrophone(deviceId: string): Promise<any> {
     try {
-      let ret = this.client.setAudioRecordingDevice(deviceId)
+      let ret = -1
+      if (this._cefClient) {
+        //@ts-ignore
+        ret = this.client.audioDeviceManager.setRecordingDevice(deviceId)
+      } else {
+        ret = this.client.setAudioRecordingDevice(deviceId)
+      }
       if (ret < 0) {
         throw {
           message: 'setAudioRecordingDevice failure',

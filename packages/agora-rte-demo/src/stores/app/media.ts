@@ -186,7 +186,8 @@ export class MediaStore {
       const {speakers, speakerNumber, totalVolume} = evt
       
       speakers.forEach((speaker: any) => {
-        this.speakers.set(+speaker.uid, speaker.volume)
+        this.speakers[+speaker.uid] = + speaker.volume
+        // this.speakers.set(+speaker.uid, +speaker.volume)
       })
     })
   }
@@ -195,7 +196,7 @@ export class MediaStore {
   totalVolume: number = 0
   
   @observable
-  speakers = new Map<number, number>()
+  speakers: Record<number, number> = {}
 
   @observable
   networkQuality: string = 'unknown'
@@ -210,7 +211,7 @@ export class MediaStore {
     this.networkQuality = 'unknown'
     this.autoplay = false
     this.totalVolume = 0
-    this.speakers.clear()
+    this.speakers = {}
   }
 
   @observable

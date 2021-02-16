@@ -163,7 +163,13 @@ export class MediaService extends EventEmitter implements IMediaService {
     //@ts-ignore
     if (this.electron._cefClient) {
       //@ts-ignore
-      return this.electron.client.videoDeviceManager.enumerateVideoDevices()
+      let list = this.electron.client.videoDeviceManager.enumerateVideoDevices()
+      list = list.map((it: any) => ({
+        deviceid: it.deviceId,
+        label: it.deviceName,
+        kind: 'videoinput'
+      }))
+      return list
     }
     return this.electron.client.getVideoDevices()
   }
@@ -179,7 +185,13 @@ export class MediaService extends EventEmitter implements IMediaService {
   private getNativeAudioDevices() {
     if (this.electron._cefClient) {
       //@ts-ignore
-      return this.electron.client.audioDeviceManager.enumerateRecordingDevices()
+      let list = this.electron.client.audioDeviceManager.enumerateRecordingDevices()
+      list = list.map((it: any) => ({
+        deviceid: it.deviceId,
+        label: it.deviceName,
+        kind: 'audioinput'
+      }))
+      return list
     }
     return this.electron.client.getAudioRecordingDevices()
   }
