@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "board_name": "Board",
     "exit": "Exit",
     "class_end": "Class is ended",
     "leave_room": "Leave room",

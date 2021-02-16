@@ -1,4 +1,4 @@
-import { isBoolean, isEmpty, isString, isFunction, isNumber } from 'lodash';
+import { isBoolean, isEmpty, isString, isFunction, isNumber, isArray } from 'lodash';
 import { AgoraEduSDKConfigParams } from "./declare"
 import { ReplayOption, LaunchOption } from "./index"
 
@@ -110,6 +110,10 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 
   if (isEmpty(option.userUuid)) {
     throw new AgoraSDKError('userUuid parameter cannot be empty')
+  }
+
+  if (!isArray(option.courseWareList)) {
+    throw new AgoraSDKError('courseWareList parameter should be valid array')
   }
 
   // if (option.userUuid && option.userUuid.length > 89) {

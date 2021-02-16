@@ -12,9 +12,9 @@ type ResourceMenuProps = {
 
 export const MenuButton = (props: any) => {
   return (
-    <div className={styles.menuButton}>
+    <div className={`${styles.menuButton} ${props.className}`}>
       <div onClick={props.onClick}>{props.name}</div>
-      {props.showClose ? <div onClick={props.onClose} style={{width: '100%', height: '100%', position: 'absolute', right: '2px'}}>
+      {props.showClose ? <div onClick={props.onClose} style={{ height: '100%', position: 'absolute', right: '2px'}}>
         <CloseIcon style={{fontSize: '14px'}}></CloseIcon>
       </div> : null}
     </div>
@@ -36,10 +36,10 @@ export const CourseWareMenu: React.FC<ResourceMenuProps> = (
             showClose={key === 0 ? false : true}
             className={`${styles.courseMenuItem} ${active === key ? styles.active : ''}`}
             onClick={() => {
-              onClick(it.file.name, it.currentPage, 'open')
+              onClick(it.resourceName, it.currentPage, 'open')
             }}
             onClose={() => {
-              onClick(it.file.name, it.currentPage, 'close')
+              onClick(it.resourceName, it.currentPage, 'close')
             }}
           >
           </MenuButton>

@@ -3092,6 +3092,11 @@
   resolved "https://registry.yarnpkg.com/@netless/cursor-tool/-/cursor-tool-0.0.5.tgz#7ca47501cb656b3e623ade37462bf2d38450f6f2"
   integrity sha512-Nmf9ksGzFbrkuG9dlod8V7ODbQgfM8LYrkT7azM3Jiid/X/GuWQSBO/tI6b44hJXTFH1tQCJ487jcYC1myvCaQ==
 
+"@netless/fetch-progress@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npm.taobao.org/@netless/fetch-progress/download/@netless/fetch-progress-0.0.1.tgz#e4cc415b92f5acc610b6dd533947e40af39915ec"
+  integrity sha1-5MxBW5L1rMYQtt1TOUfkCvOZFew=
+
 "@netless/react-seek-slider@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
@@ -3106,6 +3111,11 @@
   version "1.2.15"
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.15.tgz#99bbfeb058e898faec636f477a0c609f789746cb"
   integrity sha512-nuuuRfqP+u2zhQYzxUXBtZTf0ywyQ3GrUtkf2Eas27A/A8wcXoodnwnRE+KddeMGsMQt6T3uYDhqT/K9Wb2XDA==
+
+"@netless/zip@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.npm.taobao.org/@netless/zip/download/@netless/zip-0.0.6.tgz#b4c82110b16ba718f27a61988fd77240426de216"
+  integrity sha1-tMghELFrpxjyemGYj9dyQEJt4hY=
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -15166,7 +15176,7 @@ jszip@3.4.0:
     readable-stream "~2.3.6"
     set-immediate-shim "~1.0.1"
 
-jszip@^3.2.2:
+jszip@3.6.0, jszip@^3.2.2:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.6.0.tgz#839b72812e3f97819cc13ac4134ffced95dd6af9"
   integrity sha512-jgnQoG9LKnWO3mnVNBnfhkh0QknICd1FGSrXcgrl67zioyJ4wgx25o9ZqwNtrROSflGBCGYnJfjrIyRIby1OoQ==

@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "board_name": "白板",
     "exit": "退出",
     "class_end": "课程已结束",
     "leave_room": "离开教室",

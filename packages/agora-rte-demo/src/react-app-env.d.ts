@@ -118,3 +118,10 @@ declare module "worker-loader!*" {
 // }
 
 declare module '*.scss';
+
+declare module "@netless/zip" {
+  const content: any;
+  export = content;
+}
+
+declare var zip: any;

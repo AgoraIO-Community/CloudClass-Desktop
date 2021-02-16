@@ -4,6 +4,17 @@ import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
 import { BizLogger } from '@/utils/biz-logger';
+
+export interface SceneFile {
+  name: string
+  type: string
+}
+
+export type SceneOption = {
+  name?: string
+  type?: string
+  currentScene: boolean
+}
 export class BoardClient extends EventEmitter {
   client!: WhiteWebSdk;
   plugins?: Plugins<Object>;

@@ -129,9 +129,9 @@ export const EduWhiteBoard = observer(() => {
       zoomOutText={t('tool.zoomOut')}
       fullScreenText={t('tool.fullScreen')}
     >
-      {/* {
+      {
         isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
-      } */}
+      }
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null

@@ -1,21 +1,32 @@
 import { observer } from 'mobx-react'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { CourseWareMenu } from './menu-button'
+import {useBoardStore} from '@/hooks'
+
 export const CourseWareMenuContainer = observer(() => {
+  const boardStore = useBoardStore()
+
+  const handleClick = useCallback((resourceName: string, currentPage: number) => {
+    boardStore.changeSceneItem(
+      resourceName,
+      currentPage,
+    )
+    boardStore.pptAutoFullScreen()
+  }, [boardStore])
+
   return (
     <CourseWareMenu
-      active={0}
-      items={[{
-        file: {
-          name: '白板',
-        },
-        currentPage: 0,
-        totalPage: 1,
-        path: '/'
-      }]}
-      onClick={() => {
+      active={boardStore.activeIndex}
+      items={boardStore.resourcesList}
+      onClick={(name: string, currentPage: number, type: string) => {
+        if (type === 'open') {
+          handleClick(name, currentPage)
+          console.log('ware menu open', name, ' currentPage ', currentPage)
+        }
 
-        console.log('ware menu')
+        if (type === 'close') {
+          console.log('ware menu close', name, ' currentPage ', currentPage)
+        }
       }}
     />
   )

@@ -1,4 +1,5 @@
 import fetchProgress from "fetch-progress"
+import "@netless/zip";
 const contentTypesByExtension = {
     "css": "text/css",
     "js": "application/javascript",
@@ -79,17 +80,16 @@ export class AgoraCaches {
         if (res.status !== 200) {
             throw new Error(`download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`);
         }
-        // const buffer = await res.arrayBuffer();
-        // const zipReader = await this.getZipReader(buffer);
-        // return await this.cacheContents(buffer);
-        // return buffer
+        const buffer = await res.arrayBuffer();
+        const zipReader = await this.getZipReader(buffer);
+        return await this.cacheContents(zipReader);
     }
 
-    // private getZipReader = (data: any): Promise<any> => {
-    //     return new Promise((fulfill, reject) => {
-    //         zip.createReader(new zip.ArrayBufferReader(data), fulfill, reject);
-    //     });
-    // }
+    private getZipReader = (data: any): Promise<any> => {
+        return new Promise((fulfill, reject) => {
+            zip.createReader(new zip.ArrayBufferReader(data), fulfill, reject);
+        });
+    }
 
     private getContentType = (filename: any): string => {
         const tokens = filename.split(".");
@@ -102,27 +102,27 @@ export class AgoraCaches {
         return `https://${resourcesHost}/dynamicConvert/${filename}`;
     }
 
-    // private cacheEntry = (entry: any): Promise<void> => {
-    //     if (entry.directory) {
-    //         return Promise.resolve();
-    //     }
-    //     return new Promise((fulfill, reject) => {
-    //         entry.getData(new zip.BlobWriter(), (data: any) => {
-    //             return agoraCaches.openCache("agora").then((cache) => {
-    //                 const location = this.getLocation(entry.filename);
-    //                 const response = new Response(data, {
-    //                     headers: {
-    //                         "Content-Type": this.getContentType(entry.filename)
-    //                     }
-    //                 });
-    //                 if (entry.filename === "index.html") {
-    //                     cache.put(this.getLocation(), response.clone());
-    //                 }
-    //                 return cache.put(location, response);
-    //             }).then(fulfill, reject);
-    //         });
-    //     });
-    // }
+    private cacheEntry = (entry: any): Promise<void> => {
+        if (entry.directory) {
+            return Promise.resolve();
+        }
+        return new Promise((fulfill, reject) => {
+            entry.getData(new zip.BlobWriter(), (data: any) => {
+                return agoraCaches.openCache("agora").then((cache) => {
+                    const location = this.getLocation(entry.filename);
+                    const response = new Response(data, {
+                        headers: {
+                            "Content-Type": this.getContentType(entry.filename)
+                        }
+                    });
+                    if (entry.filename === "index.html") {
+                        cache.put(this.getLocation(), response.clone());
+                    }
+                    return cache.put(location, response);
+                }).then(fulfill, reject);
+            });
+        });
+    }
 
     public availableSpace = async (): Promise<number> => {
         if (navigator.storage && navigator.storage.estimate) {
@@ -137,14 +137,14 @@ export class AgoraCaches {
         }
     }
 
-    // private cacheContents = (reader: any): Promise<void> => {
-    //     return new Promise((fulfill, reject) => {
-    //         reader.getEntries((entries: any) => {
-    //             console.log('Installing', entries.length, 'files from zip');
-    //             Promise.all(entries.map(this.cacheEntry)).then(fulfill as any, reject);
-    //         });
-    //     });
-    // }
+    private cacheContents = (reader: any): Promise<void> => {
+        return new Promise((fulfill, reject) => {
+            reader.getEntries((entries: any) => {
+                console.log('Installing', entries.length, 'files from zip');
+                Promise.all(entries.map(this.cacheEntry)).then(fulfill as any, reject);
+            });
+        });
+    }
 }
 
 export const agoraCaches = new AgoraCaches();

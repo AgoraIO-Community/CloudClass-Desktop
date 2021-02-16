@@ -761,7 +761,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       list = this.client.audioDeviceManager.enumerateRecordingDevices();
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
-        label: it.deviceName,
+        devicename: it.deviceName,
         kind: 'audioinput'
       }))
     } else {
@@ -783,7 +783,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       list = this.client.videoDeviceManager.enumerateVideoDevices()
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
-        label: it.deviceName,
+        devicename: it.deviceName,
         kind: 'videoinput'
       }))
     } else {

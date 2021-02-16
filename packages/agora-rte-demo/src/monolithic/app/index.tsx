@@ -1,7 +1,7 @@
 import { GenAppContainer } from '@/containers/app-container'
 import { RoomParameters } from '@/edu-sdk/declare'
 import { AppStoreConfigParams } from '@/stores/app'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
 
 const generateClassName = createGenerateClassName({
@@ -36,8 +36,9 @@ export const App = (props: AppType) => {
     roomConfig: props.roomConfig,
     globalId: "demo",
     basename: props.basename,
-    resetRoomInfo: true
+    resetRoomInfo: true,
   })
+
   return (
     <StylesProvider generateClassName={generateClassName}>
       <AppContainer
