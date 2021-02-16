@@ -142,7 +142,7 @@ const zhCN: any = {
     'next': '前进',
     'zoomIn': '放大',
     'zoomOut': '缩小',
-    'fullScreen': '进入全屏',
+    'fullScreen': '全屏',
   },
   'error': {
     'not_found': '页面找不到',
