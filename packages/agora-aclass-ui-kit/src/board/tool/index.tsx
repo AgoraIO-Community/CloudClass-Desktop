@@ -69,10 +69,10 @@ export const Tool: React.FC<ToolProps> = (props) => {
       {...props.style}
     } className={classes.toolBox}>
       <Typography component="div" style={{
-        fontSize: 14,
+        fontSize: 12,
         color: 'white',
         textShadow: '0 0 3px #775c09, 0 0 3px #e2a910',
-        width: 32,
+        // width: 32,
         height: 32,
         lineHeight: '32px',
         userSelect: 'none',
