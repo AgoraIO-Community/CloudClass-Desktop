@@ -8,6 +8,8 @@ import { TextEllipsis } from '../../typography'
 export interface ControlScaleProps extends ControlBaseProps {
   zoomInIcon?: string,
   zoomOutIcon?: string,
+  zoomInText?: string,
+  zoomOutText?: string,
   scale: number,
 }
 
@@ -29,17 +31,21 @@ export const ControlScale = (props: ControlScaleProps) => {
   const zoomInIcon = props.zoomInIcon ?? 'zoomIn'
   const zoomOutIcon = props.zoomOutIcon ?? 'zoomOut'
 
+  const { zoomInText, zoomOutText } = props
+
+  console.log('zoom text in scale tsx', zoomInText, zoomOutText)
+
   const classes = useStyles()
 
   return (
     <Box className={classes.root}>
-      <ControlButton toolTip={true} icon={zoomInIcon} onClick={onClickMin} />
+      <ControlButton toolTip={true} zoomInText={zoomInText} icon={zoomInIcon} onClick={onClickMin} />
       <TextEllipsis maxWidth={50}>
         <React.Fragment>
           {props.scale}%
         </React.Fragment>
       </TextEllipsis>
-      <ControlButton toolTip={true} icon={zoomOutIcon} onClick={onClickPlus} />
+      <ControlButton toolTip={true} zoomOutText={zoomOutText} icon={zoomOutIcon} onClick={onClickPlus} />
     </Box>
   )
 }

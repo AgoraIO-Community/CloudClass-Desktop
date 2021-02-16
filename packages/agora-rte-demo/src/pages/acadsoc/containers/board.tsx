@@ -122,6 +122,11 @@ export const EduWhiteBoard = observer(() => {
       width={'100%'}
       height={'100%'}
       toolbarName={t('tool.toolBarname')}
+      prevText={t('tool.prev')}
+      nextText={t('tool.next')}
+      zoomInText={t('tool.zoomIn')}
+      zoomOutText={t('tool.zoomOut')}
+      fullScreenText={t('tool.fullScreen')}
     >
       {/* {
         isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
@@ -436,6 +441,11 @@ export const EducationBoard = observer((props: any) => {
             fontSize: '18px',
             lineHeight: '20px',
           }}
+          prevText={props.prevText}
+          nextText={props.nextText}
+          zoomInText={props.zoomInText}
+          zoomOutText={props.zoomOutText}
+          fullScreenText={props.fullScreenText}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
           totalPage={props.totalPage}

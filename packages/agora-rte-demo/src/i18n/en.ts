@@ -145,6 +145,11 @@ const en = {
     'extension_tool': 'extension tool',
     'clear': 'clear',
     'disk': 'disk',
+    'prev': 'back',
+    'next': 'forward',
+    'zoomIn': 'zoom in',
+    'zoomOut': 'zoom out',
+    'fullScreen': 'full screen',
   },
   'error': {
     'not_found': 'Page Not Found',

@@ -238,6 +238,11 @@ export const EducationBoard = (props: any) => {
             bottom: props.controlY,
             right: props.controlX,
           }}
+          prevText={props.prevText}
+          nextText={props.nextText}
+          zoomInText={props.zoomInText}
+          zoomOutText={props.zoomOutText}
+          fullScreenText={props.fullScreenText}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
           totalPage={props.totalPage}
@@ -280,6 +285,11 @@ EducationBoard.args = {
   width: 640,
   height: 525,
   toolbarName: 'Tools',
+  zoomInText: 'zoomIn ui-kit',
+  zoomOutText: 'zoomOut ui-kit',
+  prevText: 'prevText ui-kit',
+  nextText: 'prevText ui-kit',
+  fullScreenText: 'fullScreenText ui-kit'
 }
 
 const StrokeListPanel = () => {

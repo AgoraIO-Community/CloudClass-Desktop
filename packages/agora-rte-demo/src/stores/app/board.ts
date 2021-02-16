@@ -1730,6 +1730,9 @@ static toolItems: IToolItem[] = [
     this.showExtension = false
   }
 
+  @observable
+  sss = '123'
+
   @action
   zoomBoard(type: string) {
     console.log('zoomBoard ', type)

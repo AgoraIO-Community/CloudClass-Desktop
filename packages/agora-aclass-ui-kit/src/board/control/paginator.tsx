@@ -15,6 +15,8 @@ export interface PaginatorProps {
   currentPage: number,
   totalPage: number,
   style?: CSSProperties,
+  prevText?: string,
+  nextText?: string,
 }
 
 export const Paginator = (props: PaginatorProps) => {
@@ -26,9 +28,11 @@ export const Paginator = (props: PaginatorProps) => {
   const prevIcon = props.prevIcon ?? 'back'
   const nextIcon = props.nextIcon ?? 'forward'
 
+  const { prevText, nextText } = props
+
   return (
     <Box flex={1} display="flex" justifyContent="space-between" flexDirection="row">
-      <ControlButton toolTip={true} icon={prevIcon} onClick={onClickPrev} />
+      <ControlButton toolTip={true} prevText={prevText} icon={prevIcon} onClick={onClickPrev} />
       <Box>
         <TextEllipsis maxWidth={50}>
           <React.Fragment>
@@ -44,7 +48,7 @@ export const Paginator = (props: PaginatorProps) => {
           </React.Fragment>
         </TextEllipsis>
       </Box>
-      <ControlButton toolTip={true} icon={nextIcon} onClick={onClickNext} />
+      <ControlButton toolTip={true} nextText={nextText} icon={nextIcon} onClick={onClickNext} />
     </Box>
   )
 }

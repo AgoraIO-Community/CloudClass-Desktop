@@ -107,11 +107,18 @@ export class ZoomController extends React.Component<ZoomControllerProps, {}> {
     }
 
     public render(): React.ReactNode {
+        console.log('>>>>>>>>>>>zoom controller fullScreenText', this.props)
+
         return (
           <ControlMenu
             style={{
               ...this.props.style
             }}
+            prevText={this.props.prevText}
+            nextText={this.props.nextText}
+            zoomInText={this.props.zoomInText}
+            zoomOutText={this.props.zoomOutText}
+            fullScreenText={this.props.fullScreenText}
             showPaginator={this.props.showPaginator}
             currentPage={this.props.currentPage}
             totalPage={this.props.totalPage}

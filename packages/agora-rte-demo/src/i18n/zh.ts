@@ -138,6 +138,11 @@ const zhCN: any = {
     'extension_tool': '扩展',
     'clear': '清除',
     'disk': '云盘',
+    'prev': '后退',
+    'next': '前进',
+    'zoomIn': '放大',
+    'zoomOut': '缩小',
+    'fullScreen': '进入全屏',
   },
   'error': {
     'not_found': '页面找不到',

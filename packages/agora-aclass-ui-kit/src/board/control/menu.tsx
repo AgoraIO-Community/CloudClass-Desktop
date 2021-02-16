@@ -15,7 +15,12 @@ export interface ControlMenuProps extends ControlBaseProps {
   scale?: number,
   showControlScreen: boolean,
   isFullScreen: boolean,
-  style?: CSSProperties
+  style?: CSSProperties,
+  zoomInText?: string,
+  zoomOutText?: string,
+  prevText?: string,
+  nextText?: string,
+  fullScreenText?: string,
 }
 
 
@@ -64,6 +69,11 @@ export const ControlMenu = (propArgs: ControlMenuProps) => {
     scale,
     isFullScreen,
     onClick,
+    zoomInText,
+    zoomOutText,
+    prevText,
+    nextText,
+    fullScreenText,
     ...props
   } = propArgs
 
@@ -77,17 +87,22 @@ export const ControlMenu = (propArgs: ControlMenuProps) => {
       <div style={{...props.style, color: '#ffffff', fontSize: 8}} className={classes.root}>
         <div className={classes.tools}>
           {showPaginator ? <Paginator
+            prevText={prevText}
+            nextText={nextText}
             currentPage={currentPageNum}
             totalPage={totalPageNum}
             onClick={onClick}
           /> : null}
           {showScale ?
             <ControlScale
+              zoomInText={zoomInText}
+              zoomOutText={zoomOutText}
               onClick={onClick}
               scale={scale || 100}
             /> : null}
           {showControlScreen ?
             <ControlScreen
+              fullScreenText={fullScreenText}
               isFullScreen={isFullScreen}
               onClick={onClick}
             /> : null}
