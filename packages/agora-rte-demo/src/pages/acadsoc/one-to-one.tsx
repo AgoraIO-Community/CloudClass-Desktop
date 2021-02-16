@@ -28,9 +28,9 @@ export const AcadsocOneToOne = observer(() => {
       history.push('/')
       return
     }
-    // acadsocStore.join()
+    acadsocStore.join()
     // TODO: only for ui debug
-    acadsocStore.joinRoom()
+    // acadsocStore.joinRoom()
   }, [])
 
   return (
@@ -81,7 +81,7 @@ export const AcadsocOneToOne = observer(() => {
                     </div>
                     :e.type === 'chat' ?
                     <div className={e.animationMinimize} key={e.id}>
-                      <MinimizeChat unread={3}></MinimizeChat>
+                      <MinimizeChat unread={acadsocStore.unreadMessageCount>99?'99+':acadsocStore.unreadMessageCount}></MinimizeChat>
                     </div>
                     : null
                   ))

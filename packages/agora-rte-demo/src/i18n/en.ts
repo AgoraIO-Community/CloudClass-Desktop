@@ -6,6 +6,12 @@ const en = {
     "exit": "Exit",
     "class_end": "Class is ended",
     "leave_room": "Leave room",
+    "assistant":{
+      "noRemoteUser":"No real-time network information, currently no users online",
+      "delay":"Network Delay",
+      "lossRate":"Packet loss rate",
+      "title":"User real time network"
+    },
     "confirm": {
       "exit": "Are you sure exit room? ",
       "endClass": "Quit Classroom",
