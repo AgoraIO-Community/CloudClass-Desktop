@@ -42,8 +42,7 @@ export const RoleRadio: React.FC<any> = (props) => {
       /> 
       : null
       }{
-        props.type === 0 ?
-
+        props.type === 0 || props.type === 3?
           <FormControlLabel
             className={"custom-radio align-right"}
             value="invisible"

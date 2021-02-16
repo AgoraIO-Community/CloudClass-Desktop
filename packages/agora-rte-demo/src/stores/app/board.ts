@@ -1657,11 +1657,8 @@ static toolItems: IToolItem[] = [
 
   @computed
   get aClassHasPermission(): boolean {
-    if (this.userRole === EduRoleTypeEnum.invisible) {
-      return false
-    }
     // 老师默认可以操作白板
-    if (this.userRole === EduRoleTypeEnum.teacher || this.userRole === EduRoleTypeEnum.assistant) {
+    if (this.userRole === EduRoleTypeEnum.teacher || this.userRole === EduRoleTypeEnum.assistant || this.userRole === EduRoleTypeEnum.invisible) {
       return true
     }
     if (this.lockBoard) {
