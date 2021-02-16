@@ -157,7 +157,7 @@ const actionBar: IStatusBar = [{
     const appStore =useAppStore()
 
     const onExitRoom = () => {
-     dialogManager.show({
+      appStore.isNotInvisible && dialogManager.show({
         title: t(`aclass.confirm.exit`),
         text: t(`aclass.confirm.endClass`),
         confirmText: t(`aclass.confirm.yes`),
