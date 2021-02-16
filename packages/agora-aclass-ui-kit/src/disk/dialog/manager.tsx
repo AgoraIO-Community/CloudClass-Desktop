@@ -23,6 +23,7 @@ import PrivateDiskTables from '../table/private-disk-table'
 import PublicDiskTables from '../table/public-disk-table'
 import DownloadDiskTables from "../table/download-disk-table";
 
+
 const useStyles = makeStyles((theme: Theme) => {
   const styles = createStyles({
     root: {
@@ -90,6 +91,8 @@ interface NetworkDiskDialogProps {
   publicList?: any,
   privateList?: any,
   downloadList?: any,
+  // upload
+  uploadComponent?: React.ReactNode,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -113,6 +116,10 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         showHeader={true}
         title={props.title} />
     )
+  }
+
+  const onUpload = () => {
+    console.log('onupload')
   }
 
   const render = () => {
@@ -180,7 +187,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
 
               {
                 activeValue === 1 && (
-                  <PrivateDiskTables tabValue={activeValue} privateList={props.privateList}></PrivateDiskTables>
+                  <PrivateDiskTables tabValue={activeValue} uploadComponent={props.uploadComponent} privateList={props.privateList}></PrivateDiskTables>
                 )
               }
               {

@@ -9,7 +9,6 @@ import { EnhancedTableHead } from "../control/enhanced-table-head";
 import DiskToast from '../control/toast'
 import TableEmpty from "../dialog/table-empty";
 import { DiskButton } from "../control/disk-button";
-
 import IconRefresh from '../assets/icon-refresh.png'
 
 export interface Data {
@@ -143,6 +142,7 @@ export interface DiskTablesProps {
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
+  uploadComponent?: React.ReactNode,
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
@@ -212,11 +212,11 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
   const handleUpload = () => {
     console.log('>>>>>upload')
-    setOpenToast({
-      open: true,
-      toastMessage: '文件上传成功！',
-      type: 'success',
-    })
+    // setOpenToast({
+    //   open: true,
+    //   toastMessage: '文件上传成功！',
+    //   type: 'success',
+    // })
   }
 
   const handleDelete = () => {
@@ -226,43 +226,6 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
       toastMessage: '删除文件失败！',
       type: 'error',
     })
-  }
-
-  const DiskSearch = (props: any) => {
-    return (
-      <div className={classSearch.titleBox}>
-        <div className={classSearch.titleButton}>
-          <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} />
-          <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
-          <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} />
-        </div>
-        <div>
-          <TextField
-            id="disk-input-search"
-            className={classSearch.input}
-            onChange={handleChange}
-            placeholder={'搜索'}
-            variant='outlined'
-            value={searchContent}
-            InputProps={{
-              classes: {
-                root: classSearch.root,
-              },
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClearInput} className={classSearch.iconButton}>
-                    <CancelIcon />
-                  </IconButton>
-                  <IconButton type="submit" className={classSearch.iconButton} aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            size="small" />
-        </div>
-      </div>
-    )
   }
 
   const handleCloseAlert = () => {
@@ -336,7 +299,8 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         />
         <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
-            <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} />
+            { props.uploadComponent }
+            {/* <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} /> */}
             <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
             <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} />
           </div>
