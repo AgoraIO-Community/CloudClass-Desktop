@@ -208,7 +208,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   isBespread: boolean = true  // 是否铺满
 
   @observable
-  isRed: boolean = false  // 是否铺满
+  isRed: boolean = false  // 是否变红
 
   @observable
   minimizeView: MinimizeType = [
@@ -630,7 +630,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = new GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
+        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
       })
       this.appStore.uiStore.stopLoading()
 
@@ -865,7 +865,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   BizLogger.error(`published failed:${error}`)
                   throw error
                 }
-                this.appStore.uiStore.addToast(t('toast.publish_rtc_success'))
+                this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.publish_rtc_success'))
               }
             }
           } catch (err) {
@@ -1048,7 +1048,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
           userInfo: {} as EduUser
         })
-        this.appStore.uiStore.addToast(t('toast.publish_business_flow_successfully'))
+        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.publish_business_flow_successfully'))
         this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
         try {
           // await this.sceneStore.prepareCamera()
@@ -1068,7 +1068,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           }
         } catch (err) {
-          this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
+          this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
           const error = new GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }

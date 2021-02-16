@@ -3,6 +3,7 @@ import { DiskButton } from './control/disk-button'
 import { DiskManagerDialog } from './dialog/manager'
 import { Loading } from './control/loading'
 import TableEmpty from "./dialog/table-empty";
+import { UploadFile } from '../upload/index'
 
 export default {
   title: '网盘'
@@ -22,6 +23,15 @@ export const NetworkDisk = () => {
 
   const onUpload = () => {
     console.log('upload file')
+  }
+
+  const uploadComponent = () => {
+    return (
+      <UploadFile 
+        showUploadList={false}
+        uploadButton={() => <DiskButton id="disk-button-upload" onClick={onUpload} color={'primary'} text={'上传'} />}
+      />
+    )
   }
 
   return (
@@ -58,6 +68,7 @@ export const NetworkDisk = () => {
         right: 18,
         color: 'white'
       }}
+      uploadComponent={uploadComponent()}
     />
   )
 }

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
-import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore,useAppStore } from '@/hooks'
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
@@ -127,6 +127,7 @@ export const ChatView = observer(() => {
     isFetchHistory && fetchMessage()
     setMessages(transformationMessage())
   }, [acadsocStore.roomChatMessages.length])
+  const appStore=useAppStore()
   return (
     <ChatBoard
       bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
@@ -147,6 +148,7 @@ export const ChatView = observer(() => {
       isDisableSendButton={isDisableSendButton}
       loadingText={t('aclass.chat.loading')}
       failText={t('aclass.chat.fail')}
+      toolButtonStyle={appStore.roomInfo.userRole ===EduRoleTypeEnum.student ?{opacity:0.3,cursor:'not-allowed'}:{}}
     />
   )
 })

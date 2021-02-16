@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useRef, useState } from 'react'
-import { DiskManagerDialog } from 'agora-aclass-ui-kit'
+import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
 
 const NetworkDisk = observer((props: any) => {
   const handleClose = () => {
@@ -12,8 +12,22 @@ const NetworkDisk = observer((props: any) => {
     console.log('reload network disk')
   }
 
+  const uploadRequest = ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
+
+  }
+
   const onUpload = () => {
     console.log('upload file')
+  }
+
+  const uploadComponent = () => {
+    return (
+      <UploadFile
+        customRequest={uploadRequest}
+        showUploadList={false}
+        uploadButton={() => <DiskButton id="disk-button-upload" onClick={onUpload} color={'primary'} text={'上传'} />}
+      />
+    )
   }
 
   return (
@@ -50,6 +64,7 @@ const NetworkDisk = observer((props: any) => {
         right: 18,
         color: 'white'
       }}
+      uploadComponent={uploadComponent()}
     />
   )
 })
