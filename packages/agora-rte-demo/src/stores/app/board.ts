@@ -2053,4 +2053,22 @@ static toolItems: IToolItem[] = [
       this.lockAClassBoard()
     }
   }
+
+  async handleUpload(payload: any) {
+    try {
+      await this.appStore.uploadService.handleUpload({
+        ...payload,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+}
+
+export type HandleUploadType = {
+  file: File,
+  resourceName: string,
+  onProgress: (evt: any) => any,
 }

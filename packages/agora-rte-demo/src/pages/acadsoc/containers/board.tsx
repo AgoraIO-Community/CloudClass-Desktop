@@ -445,7 +445,7 @@ export const EducationBoard = observer((props: any) => {
           style={{
             position: 'absolute',
             bottom: props.controlY,
-            right: props.controlX,
+            left: props.controlX,
             zIndex: 10,
             fontSize: '18px',
             lineHeight: '20px',

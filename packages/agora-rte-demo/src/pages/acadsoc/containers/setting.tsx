@@ -43,6 +43,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: '#DEF4FF',
     padding: 25,
     flex: 1,
+    '& .MuiInputBase-root': {
+      fontSize: '14px',
+    },
+    '& .MuiSelect-root': {
+      paddingLeft: '10px !important',
+      color: '#002591',
+      justifyContent: 'flex-start'
+    }
   },
   cameraDetect: {
     display: 'flex',
@@ -98,6 +106,8 @@ const AClassSelect = withStyles((theme: Theme) => ({
     '&.MuiSelect-select': {
       padding: 0,
       backgroundColor: 'transparent',
+      paddingRight: '10px',
+      justifyContent: 'flex-start',
       '&:focus': {
         backgroundColor: 'transparent'
       }
@@ -176,9 +186,16 @@ export const SettingWeb = observer(() => {
         background: 'transparent',
       }}
       closeBtnStyle={{
-        top: 18,
+        top: 13,
         right: 18,
-        color: 'white'
+        color: 'white',
+        //@ts-ignore
+        '& .MuiIconButton-label': {
+          fontSize: '25px'
+        }
+        // ['& .MuiSvgIcon-root']: {
+        //   fontSize: '25px'
+        // }
       }}
     >
       <div className={classes.settingBox}>
@@ -192,6 +209,7 @@ export const SettingWeb = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>
@@ -218,6 +236,7 @@ export const SettingWeb = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>
@@ -239,6 +258,7 @@ export const SettingWeb = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>
@@ -325,6 +345,7 @@ export const SettingNative = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>
@@ -338,6 +359,7 @@ export const SettingNative = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>
@@ -351,6 +373,7 @@ export const SettingNative = observer(() => {
             selectStyle={{
               minWidth: 310,
               maxWidth: 310,
+              background: 'white',
             }}
           />
         </RowItem>

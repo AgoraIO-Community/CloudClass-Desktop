@@ -199,8 +199,9 @@ const AClassSelect = withStyles((theme: Theme) => ({
     margin: 0,
     padding: 0,
     minWidth: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     display: 'flex',
+    paddingLeft: '10px !important',
     alignItems: 'center',
     height: 30,
     '&$selected': { // <-- mixing the two classes

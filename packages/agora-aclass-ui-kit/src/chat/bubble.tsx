@@ -42,15 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #dbe2e5',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '28px',
+    lineHeight: '12px',
     backgroundColor: "#CBCCFF",
     color: '#2D3E6D',
     boxSizing: 'border-box',
-    // flexDirection: 'row-reverse',
-    // justifyContent: 'space-between',
     flexDirection: 'column',
     borderRadius: 8,
-    borderTopRightRadius: 0,
   },
   header: {
     marginBottom: 3,
@@ -65,16 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     maxWidth: 260,
     padding: '9px 10px',
-    // border: '1px solid #dbe2e5',
     borderRadius: 8,
-    borderTopLeftRadius: 0,
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '28px',
+    lineHeight: '12px',
     color: '#2D3E6D',
     background: '#AADCF6',
     boxSizing: 'border-box',
-    // justifyContent: 'space-between',
     flexDirection: 'column'
   },
   chatMessage: {
@@ -89,7 +83,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderTop: '1px solid #0000001a',
-    lineHeight: '2em',
+    lineHeight: '12px',
+    paddingTop: '4px',
     marginTop: '3px'
   },
   loading: {
@@ -97,7 +92,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderTop: '1px solid #0000001a',
-    lineHeight: '2em',
+    paddingTop: '4px',
+    lineHeight: '12px',
     marginTop: '3px'
   },
   bubbleContent: {

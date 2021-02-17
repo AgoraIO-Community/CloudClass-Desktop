@@ -26,6 +26,7 @@ import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
 import {EduClassroomStateEnum} from '@/stores/app/scene';
+import { UploadService } from '@/services/upload-service';
 
 export enum EduClassroomCountdownEnum {
   first = 5,
@@ -990,6 +991,17 @@ export class AcadsocRoomStore extends SimpleInterval {
         })
       }
       this.sceneStore._roomManager = roomManager;
+
+      this.appStore._uploadService = new UploadService({
+        // prefix: '',
+        sdkDomain: this.appStore.params.config.sdkDomain,
+        appId: this.appStore.params.config.agoraAppId,
+        rtmToken: this.appStore.params.config.rtmToken,
+        rtmUid: this.appStore.params.config.rtmUid,
+        // roomUuid: roomManager.roomUuid,
+        // userToken: roomManager.userToken,
+      })
+
       this.appStore._boardService = new EduBoardService({
         prefix: '',
         sdkDomain: this.appStore.params.config.sdkDomain,
