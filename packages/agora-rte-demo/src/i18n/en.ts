@@ -291,6 +291,9 @@ const en = {
     'start_in': 'Start in',
     'minutes': 'min',
     'seconds': 's',
+    'signal_good': 'Good',
+    'signal_weak': 'Weak',
+    'signal_bad': 'Bad',
   },
   'home': {
     'entry-home': 'Join Classroom',

@@ -14,19 +14,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxSizing: 'border-box'
   },
   timeText: {
-    color: 'red',
+    // letterSpacing: '2px',
+    width: '200px'
   }
 }))
 
-export const StartView = (props: { text: string, isEnd: any}) => {
+export const StartView = (props: { text: any, isEnd: any}) => {
   const { text, isEnd } = props;
   const styles = useStyles()
   return <>
     <span className={styles.starIcon}></span>
     { isEnd ?
-      <span className={styles.timeText}>{text}</span>
+      <span className={styles.timeText} style={{color: 'red',}}>{text}</span>
       :
-      <span>{text}</span>
+      <span className={styles.timeText}>{text}</span>
     }
   </>
 }

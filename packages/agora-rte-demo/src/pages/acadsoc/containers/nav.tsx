@@ -1,11 +1,13 @@
-import { INavigationItem, Navigation, SignalBar, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
+import { INavigationItem, Navigation, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
 import { useAcadsocRoomStore, useSceneStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
+import { SignalBar } from './signal/signal'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
 
 const userSignalStatus = [{
@@ -114,7 +116,7 @@ const SignalBarContainer = observer(() => {
   const roomStore = useAcadsocRoomStore()
 
   return (
-    <SignalBar level={roomStore.signalLevel} width="18px" foregroundColor={'#ffffff'} />
+    <SignalBar level={roomStore.signalLevel}></SignalBar>
   )
 })
 
@@ -172,6 +174,17 @@ const actionBar: IStatusBar = [{
       })
     }
 
-    return <ExitButton text={t("aclass.exit")} onClick={onExitRoom} />
+    return <Button style={{
+      width: '100px',
+      height: '28px',
+      padding: 0,
+      minWidth: '60px',
+      fontWeight: 400,
+      borderRadius: '14px',
+      border: '2px solid white',
+      textTransform: 'none',
+      backgroundColor: '#E0B536',
+      color: '#fff',
+    }} onClick={onExitRoom}>{t("aclass.exit")}</Button>
   }
 }]
