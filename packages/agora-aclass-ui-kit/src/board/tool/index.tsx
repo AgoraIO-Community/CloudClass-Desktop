@@ -4,6 +4,7 @@ import { ToolButton } from '../control/button'
 import { ItemBaseClickEvent } from '../declare'
 import { Typography } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import ToolbarIcon from '../assets/Tools.png'
 
 type PopoverComponentType = 'stroke' | 'color' | 'upload' | 'font' | 'drawer'
 export interface IToolItem {
@@ -73,13 +74,15 @@ export const Tool: React.FC<ToolProps> = (props) => {
         color: 'white',
         textShadow: '0 0 3px #775c09, 0 0 3px #e2a910',
         // width: 32,
+        width: "100%",
+        background: `url(${ToolbarIcon}) no-repeat`,
+        backgroundPosition: "center",
         height: 32,
         lineHeight: '32px',
         userSelect: 'none',
         margin: 6,
         fontFamily: 'SourceHanSansCN-Regular'
       }}>
-        {props.headerTitle}
       </Typography>
       {props.items.map(({iconTooltipText, toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
         <ToolButton key={index}
@@ -104,8 +107,8 @@ export const Tool: React.FC<ToolProps> = (props) => {
             ...btnStyle
           }}
           iconStyle={{
-            width: itemName !== 'clear' ? 32 : 25,
-            height: itemName !== 'clear' ? 32 : 25,
+            width: 38,
+            height: 38,
             borderRadius: 0,
             '&:hover': {
               borderRadius: 0

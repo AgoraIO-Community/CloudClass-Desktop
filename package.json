@@ -22,6 +22,7 @@
     "release:demo": "run-s build:sdk build:ui-kit build:demo",
     "dev": "run-s build:sdk build:ui-kit run:demo",
     "dev:electron": "run-s build:dev:sdk build:ui-kit run:demo:electron",
+    "dev:ui-kit": "lerna exec --scope=agora-aclass-ui-kit yarn storybook",
     "pack:sdk": "run-s build:sdk build:ui-kit build:classroom:sdk",
     "pack:electron:mac": "lerna exec --scope=agora-rte-demo npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-rte-demo npm run pack:win",
