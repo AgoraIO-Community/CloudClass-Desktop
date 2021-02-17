@@ -4,7 +4,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 const zhCN: any = {
   "aclass": {
     "board_name": "白板",
-    "exit": "退出",
+    "exit": "离开教室",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
     "assistant":{
@@ -289,7 +289,7 @@ const zhCN: any = {
     'class_start': '课程开始',
     'back': '返回',
     'class_time_text': '距离上课还有：',
-    'start_in': '开始上课了：',
+    'start_in': '已开始上课：',
     'minutes': '分',
     'seconds': '秒',
     'signal_good': '优',
