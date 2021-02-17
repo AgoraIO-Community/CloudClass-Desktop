@@ -122,11 +122,16 @@ export const EduWhiteBoard = observer(() => {
       isFullScreen={!boardStore.isFullScreen}
       width={'100%'}
       height={'100%'}
-      toolbarName={'Tools'}
+      toolbarName={t('tool.toolBarname')}
+      prevText={t('tool.prev')}
+      nextText={t('tool.next')}
+      zoomInText={t('tool.zoomIn')}
+      zoomOutText={t('tool.zoomOut')}
+      fullScreenText={t('tool.fullScreen')}
     >
-      {/* {
+      {
         isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
-      } */}
+      }
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
@@ -445,6 +450,11 @@ export const EducationBoard = observer((props: any) => {
             fontSize: '18px',
             lineHeight: '20px',
           }}
+          prevText={props.prevText}
+          nextText={props.nextText}
+          zoomInText={props.zoomInText}
+          zoomOutText={props.zoomOutText}
+          fullScreenText={props.fullScreenText}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
           totalPage={props.totalPage}

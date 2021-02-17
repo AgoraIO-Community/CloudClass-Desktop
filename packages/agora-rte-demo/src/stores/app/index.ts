@@ -1,3 +1,4 @@
+import { CourseWareList } from './../../edu-sdk/index';
 
 import {
   GenericErrorWrapper,
@@ -58,6 +59,7 @@ export type AppStoreConfigParams = {
   sdkDomain: string
   rtmUid: string
   rtmToken: string
+  courseWareList: CourseWareList
   oss?: {
     region: string
     bucketName: string
@@ -383,6 +385,7 @@ export class AppStore {
       startTime: this.params.startTime,
       duration: this.params.duration,
       config: {
+        courseWareList: this.params.config.courseWareList,
         agoraAppId: this.params.config.agoraAppId,
         agoraNetlessAppId: this.params.config.agoraNetlessAppId,
         // agoraRestFullToken: this.params.config.agoraRestFullToken,

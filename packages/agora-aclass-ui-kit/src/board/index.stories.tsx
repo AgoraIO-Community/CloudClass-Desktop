@@ -73,56 +73,68 @@ const toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,
+    iconTooltipText: 'mouse',
   },
   {
     itemName: 'pencil',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'pencil',
   },
   {
     itemName: 'text',
     toolTip: true,
     popoverType: 'font',
+    iconTooltipText: 'text',
   },
   {
     itemName: 'rectangle',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'mouse',
   },
   {
     itemName: 'elliptic',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: 'elliptic',
   },
   {
     itemName: 'eraser',
     toolTip: true,
+    iconTooltipText: 'eraser',
   },
   {
     itemName: 'palette',
     toolTip: true,
     popoverType: 'color',
+    iconTooltipText: 'palette',
   },
   {
     itemName: 'new-page',
     toolTip: true,
+    iconTooltipText: 'new-page',
   },
   {
     itemName: 'move',
     toolTip: true,
+    iconTooltipText: 'move',
   },
   {
     itemName: 'upload',
     toolTip: true,
     popoverType: 'upload',
+    iconTooltipText: 'upload',
   },
   {
     itemName: 'clear',
     toolTip: true,
+    iconTooltipText: 'clear',
   },
   {
     itemName: 'disk',
     toolTip: true,
+    iconTooltipText: 'disk',
   },
 ]
 
@@ -226,6 +238,11 @@ export const EducationBoard = (props: any) => {
             bottom: props.controlY,
             right: props.controlX,
           }}
+          prevText={props.prevText}
+          nextText={props.nextText}
+          zoomInText={props.zoomInText}
+          zoomOutText={props.zoomOutText}
+          fullScreenText={props.fullScreenText}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
           totalPage={props.totalPage}
@@ -268,6 +285,11 @@ EducationBoard.args = {
   width: 640,
   height: 525,
   toolbarName: 'Tools',
+  zoomInText: 'zoomIn ui-kit',
+  zoomOutText: 'zoomOut ui-kit',
+  prevText: 'prevText ui-kit',
+  nextText: 'prevText ui-kit',
+  fullScreenText: 'fullScreenText ui-kit'
 }
 
 const StrokeListPanel = () => {

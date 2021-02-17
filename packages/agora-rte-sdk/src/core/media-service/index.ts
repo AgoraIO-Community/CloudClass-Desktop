@@ -166,7 +166,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       let list = this.electron.client.videoDeviceManager.enumerateVideoDevices()
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
-        label: it.deviceName,
+        devicename: it.deviceName,
         kind: 'videoinput'
       }))
       return list
@@ -188,7 +188,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       let list = this.electron.client.audioDeviceManager.enumerateRecordingDevices()
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
-        label: it.deviceName,
+        devicename: it.deviceName,
         kind: 'audioinput'
       }))
       return list

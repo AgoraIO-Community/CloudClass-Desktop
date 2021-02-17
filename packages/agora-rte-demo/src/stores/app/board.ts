@@ -2,9 +2,9 @@ import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
 import { PPTProgressPhase } from '@/utils/upload-manager'
-import { Room, PPTKind, ViewMode, ApplianceNames, MemberState, AnimationMode } from 'white-web-sdk'
+import { Room, PPTKind, ViewMode, ApplianceNames, MemberState, AnimationMode, SceneDefinition } from 'white-web-sdk'
 import { BoardClient } from '@/components/netless-board/board-client';
-import { get, isEmpty, omit } from 'lodash';
+import { get, isEmpty, omit, uniqBy } from 'lodash';
 import { OSSConfig } from '@/utils/helper';
 import { BizLogger } from '@/utils/biz-logger';
 import OSS from 'ali-oss';
@@ -14,6 +14,10 @@ import { EduUser, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { EnumBoardState } from '@/modules/services/board-api';
 import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
 import {CursorTool} from '@netless/cursor-tool'
+import { fetchPPT } from '@/modules/course-ware';
+import { ConvertedFile } from '@/edu-sdk';
+import { agoraCaches } from '@/utils/web-download.file';
+import fetchProgress from 'fetch-progress';
 
 export enum BoardPencilSize {
   thin = 4,
@@ -81,56 +85,62 @@ static toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,
+    iconTooltipText: t('tool.selector'),
   },
   {
     itemName: 'pencil',
     toolTip: true,
     popoverType: 'drawer',
+    iconTooltipText: t('tool.pencil'),
   },
   {
     itemName: 'text',
     toolTip: true,
     popoverType: 'font',
+    iconTooltipText: t('tool.text'),
   },
   {
     itemName: 'rectangle',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: t('tool.rectangle'),
   },
   {
     itemName: 'elliptic',
     toolTip: true,
     popoverType: 'stroke',
+    iconTooltipText: t('tool.ellipse'),
   },
   {
     itemName: 'eraser',
     toolTip: true,
+    iconTooltipText: t('tool.eraser'),
   },
   {
     itemName: 'palette',
     toolTip: true,
     popoverType: 'color',
+    iconTooltipText: t('tool.color_picker'),
   },
   {
     itemName: 'new-page',
     toolTip: true,
+    iconTooltipText: t('tool.add'),
   },
   {
     itemName: 'move',
     toolTip: true,
-  },
-  {
-    itemName: 'upload',
-    toolTip: true,
-    popoverType: 'upload',
+    iconTooltipText: t('tool.hand_tool'),
   },
   {
     itemName: 'clear',
     toolTip: true,
+    iconTooltipText: t('tool.clear'),
   },
   {
     itemName: 'disk',
     toolTip: true,
+    iconTooltipText: t('tool.disk'),
   },
 ]
 
@@ -420,13 +430,246 @@ static toolItems: IToolItem[] = [
       this.ready = true
   }
 
+  async preloadCourseWare() {
+
+  }
+
+  checkShouldInitScene() {
+    if (this.isTeacher() && !this.teacherLogged()) {
+      return true
+    }
+    if (this.isStudent() && !this.studentLogged()) {
+      return false
+    }
+    return false
+  }
+
+  loadScene(data: any[]): SceneDefinition[] {
+    return data.map((item: ConvertedFile, index: number) => ({
+      name: `${index + 1}`,
+      componentCount: 1,
+      ppt: {
+        width: item.width,
+        height: item.height,
+        src: item.conversionFileUrl,
+      }
+    } as SceneDefinition))
+  }
+
+
+  @observable
+  sceneList: any[] = []
+
+  async startDownload(taskUuid: string) {
+    const isWeb = true
+    if (isWeb) {
+      const zipUrl = `https://convertcdn.netless.link/dynamicConvert/${taskUuid}.zip`;
+      const controller = new AbortController();
+      const signal = controller.signal;
+      const result = await fetch(zipUrl, {
+          method: "get",
+          signal: signal,
+      }).then(fetchProgress({
+          onProgress(progress: any) {
+            console.log(' percentage ', progress, controller)
+          },
+      }))
+      console.log(" result ", result)
+    }
+  }
+
+  @observable
+  _resourcesList: any[] = []
+
+  @observable
+  _boardItem: any = {
+    file: {
+      name: t('aclass.board_name'),
+      type: 'board',
+    },
+    currentPage: 0,
+    totalPage: 1,
+    resourceName: 'init',
+    scenePath: '/init'
+  }
+
+  @computed
+  get resourcesList(): any[] {
+    return [this._boardItem].concat(this._resourcesList)
+  }
+
+  changeSceneItem(resourceName: string, currentPage: number) {
+    if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
+      this.room.setScenePath(``)
+    } else {
+      this.room.setScenePath(`/${resourceName}`)
+    }
+
+    this.room.setSceneIndex(currentPage)
+    this.resourceName = resourceName
+  }
+
+  // 更新白板
+  updateBoardSceneItems ({scenes, resourceName, page, taskUuid}: any) {
+    const sceneName = `/${resourceName}`
+    const scenePath = `${sceneName}/${scenes[page].name}`
+    const dynamicTaskUuidList = get(this.room.state.globalState, 'dynamicTaskUuidList', [])
+
+    const dynamicTaskUuidItem = uniqBy([{
+      resourceName: resourceName,
+      taskUuid: taskUuid,
+    }].concat(dynamicTaskUuidList), 'resourceName')
+
+    this.room.setGlobalState({
+      dynamicTaskUuidList: dynamicTaskUuidItem
+    })
+    this.room.putScenes(sceneName, scenes)
+    this.room.setScenePath(scenePath)
+  }
+
+  findResourcePage (resourceName: string) {
+    const resource = this.resourcesList.find((it: any) => it.resourceName === resourceName)
+    if (resource) {
+      return resource.currentPage
+    }
+
+    return 0
+  }
+
+  getResourceName(str: string) {
+    if (str === "/") return "/init"
+    return str.split('/')[1]
+  }
+
+  @computed
+  get activeIndex(): number {
+    const idx = this.resourcesList.findIndex((it: any) => {
+      if (it.resourceName === this.resourceName) return true
+      return false
+    })
+
+    if (idx !== -1) return idx
+
+    return 0
+  }
+
+  updatePageHistory() {
+    const currentSceneState = this.room.state.sceneState
+    const resourceName = this.getResourceName(currentSceneState.contextPath)
+
+    // this.resourceName = resourceName
+    // this.totalPage = currentSceneState.scenes.length
+    // this.currentPage = +currentSceneState.index
+
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+
+    EduLogger.info("缓存白板的翻页")
+
+    this.room.setGlobalState({
+      currentSceneInfo: {
+        contextPath: currentSceneState.contextPath,
+        index: currentSceneState.index,
+        sceneName: currentSceneState.sceneName,
+        scenePath: currentSceneState.scenePath,
+        totalPage: currentSceneState.scenes.length,
+        resourceName: resourceName,
+      },
+      roomScenes: {
+        ...roomScenes,
+        [`${resourceName}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceName: resourceName,
+        }
+      }
+      // roomScenes: {
+      //   [`${resourceName}`]: {
+      //     contextPath: currentSceneState.contextPath,
+      //     index: currentSceneState.index,
+      //     sceneName: currentSceneState.sceneName,
+      //     scenePath: currentSceneState.scenePath,
+      //     totalPage: currentSceneState.scenes.length,
+      //     resourceName: resourceName,
+      //   }
+      // }
+    })
+  }
+
+  @observable
+  currentScenePath: string = ''
+
+  @observable
+  resourceName: string = '/'
+
+  updateLocalResourceList() {
+    const globalState: any = this.room.state.globalState
+    const roomScenes = globalState.roomScenes
+    if (!roomScenes) return
+    const newList = []
+    for (let resourceName of Object.keys(roomScenes)) {
+      const resource = roomScenes[resourceName]
+      if (!resourceName || resourceName === "init" || resourceName === "/init" || resourceName === "/") {
+        this._boardItem = {
+          file: {
+            name: t('aclass.board_name'),
+            type: 'board',
+          },
+          currentPage: resource.index,
+          totalPage: resource.totalPage,
+          scenePath: resource.scenePath,
+          resourceName: 'init',
+        }
+      } else {
+        newList.push({
+          file: {
+            name: resourceName,
+            type: 'ppt',
+          },
+          resourceName: resourceName,
+          currentPage: resource.index,
+          totalPage: resource.totalPage,
+          scenePath: resource.scenePath
+        })
+      }
+    }
+    this._resourcesList = newList
+  }
+
+  updateLocalSceneState() {
+    this.resourceName = this.getResourceName(this.room.state.sceneState.contextPath)
+    // this.totalPage = this.
+  }
+
+  // TODO: 首次进入房间加载整个动态ppt资源列表
+  async fetchRoomScenes() {
+    // TODO: 需要从外部获取
+    let ppt = await fetchPPT()
+    const firstCourseWare = ppt[0]
+    await this.startDownload(firstCourseWare.taskUuid)
+    if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
+      const scenes = firstCourseWare.taskProgress!.convertedFileList
+      const resourceName = `${firstCourseWare.resourceName}`
+      const page = this.findResourcePage(resourceName)
+      this.updateBoardSceneItems({
+        scenes,
+        resourceName,
+        page,
+        taskUuid: firstCourseWare.taskUuid
+      })
+      return scenes
+    }
+  }
+
   // TODO: aclass board init
   @action
   async aClassInit(info: {
     boardId: string,
     boardToken: string
   }) {
-    await this.aClassJoin({
+    await this.aClassJoinBoard({
       uuid: info.boardId,
       roomToken: info.boardToken,
       role: this.userRole,
@@ -462,6 +705,38 @@ static toolItems: IToolItem[] = [
 
     this.ready = true
     this.pptAutoFullScreen()
+
+    // 老师
+    if (this.isTeacher()) {
+      // 判断第一次登陆
+      if (!this.teacherLogged()) {
+        this.teacherFirstJoin()
+        EduLogger.info("老师第一次加入白板")
+        await this.fetchRoomScenes()
+      } else {
+        EduLogger.info("老师再次加入白板")
+      }
+    }
+    // 学生
+    if (this.isStudent()) {
+      // 判断第一次登陆
+      if (!this.studentLogged()) {
+        EduLogger.info("学生第一次加入白板")
+        this.studentFirstJoin()
+        await this.fetchRoomScenes()
+      } else {
+        EduLogger.info("学生再次加入白板")
+      }
+    }
+    if (!this.lockBoard) {
+      EduLogger.info("白板尚未锁定")
+    } else {
+      EduLogger.info("白板已经锁定")
+    }
+
+    this.updateLocalResourceList()
+    this.updateLocalSceneState()
+    this.updateSceneItems()
   }
 
   pptAutoFullScreen() {
@@ -545,7 +820,7 @@ static toolItems: IToolItem[] = [
   
 
   @action
-  async aClassJoin(params: any) {
+  async aClassJoinBoard(params: any) {
     const {role, ...data} = params
     const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
@@ -567,9 +842,8 @@ static toolItems: IToolItem[] = [
             this.room.disableDeviceInputs = false
           }
         }
-        // if (this.lockBoard) {}
       }
-      if (state.broadcastState?.broadcasterId === undefined) {
+      if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
           this.room.scalePptToFit()
         }
@@ -584,7 +858,12 @@ static toolItems: IToolItem[] = [
           this.scale = state.zoomScale
         })
       }
+      if (state.sceneState) {
+        this.updatePageHistory()
+      }
       if (state.sceneState || state.globalState) {
+        this.updateLocalResourceList()
+        this.updateLocalSceneState()
         this.updateSceneItems()
       }
       // if (state.globalState) {
@@ -620,22 +899,19 @@ static toolItems: IToolItem[] = [
     }
     this.resizeCallback = resizeCallback
     window.addEventListener('resize', this.resizeCallback)
-    this.updateSceneItems()
 
-    // 老师判断第一次登陆
-    if (this.isTeacher()) {
-      if (this.isFirstLogin()) {
-        EduLogger.info("first login board")
-        this.teacherFirstJoin()
-      }
-    } else {
-      EduLogger.info("detect whiteboard already setup")
-    }
     this.lockBoard = this.getCurrentLock(this.room.state) as any
   }
 
   isTeacher(): boolean {
-    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+    if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      return true
+    }
+    return false
+  }
+
+  isStudent(): boolean {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
       return true
     }
     return false
@@ -705,13 +981,6 @@ static toolItems: IToolItem[] = [
     window.addEventListener('resize', this.resizeCallback)
     this.updateSceneItems()
 
-    // 老师判断第一次登陆
-    if (this.isFirstLogin()) {
-      EduLogger.info("first login board")
-      this.teacherFirstJoin()
-    } else {
-      EduLogger.info("detect whiteboard already setup")
-    }
     this.lockBoard = this.getCurrentLock(this.room.state) as any
     if (this.appStore.userRole === EduRoleTypeEnum.student) {
       this.room.disableDeviceInputs = this.lockBoard
@@ -730,27 +999,56 @@ static toolItems: IToolItem[] = [
   unlockAClassBoard() {
     this.room.setGlobalState({
       follow: false,
-      granted: false,
+      granted: true,
     })
   }
 
   teacherFirstJoin() {
+    this.resetBoardScenes()
     this.enroll()
     this.lockAClassBoard()
+  }
+
+  studentFirstJoin() {
+    // this.resetBoardScenes()
+    this.studentEnroll()
+  }
+
+  resetBoardScenes() {
+    this.removeScenes('/', true)
+    this.room.setGlobalState({
+      currentSceneInfo: undefined,
+      roomScenes: undefined
+    })
+    EduLogger.info("重置白板全局自定义业务分页状态")
   }
 
   enroll() {
     this.room.setGlobalState({
       teacherFirstLogin: true
-    })  
+    })
   }
 
-  isFirstLogin(): boolean {
+  studentEnroll() {
+    this.room.setGlobalState({
+      studentFirstLogin: true
+    })
+  }
+
+  teacherLogged(): boolean {
     const teacherFirstLogin = get(this, 'room.state.globalState.teacherFirstLogin', -1)
     if (teacherFirstLogin === -1) {
-      return true
+      return false
     }
     return teacherFirstLogin
+  }
+
+  studentLogged(): boolean {
+    const studentFirstLogin = get(this, 'room.state.globalState.studentFirstLogin', -1)
+    if (studentFirstLogin === -1) {
+      return false
+    }
+    return studentFirstLogin
   }
 
 
@@ -1576,10 +1874,12 @@ static toolItems: IToolItem[] = [
 
   @action
   reset () {
+    this._resourcesList = []
     this.isFullScreen = false
     this.folder = ''
     this.lockBoard = true
     this.scenes = []
+    this.sceneList = []
     this.currentPage = 0
     this.totalPage = 0
     this.currentScene = '/init'
@@ -1717,6 +2017,9 @@ static toolItems: IToolItem[] = [
   hideExtension() {
     this.showExtension = false
   }
+
+  @observable
+  sss = '123'
 
   @action
   zoomBoard(type: string) {

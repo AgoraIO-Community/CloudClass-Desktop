@@ -4,12 +4,14 @@ import { ControlButton } from './button'
 
 export interface ControlScreenProps extends ControlBaseProps {
   isFullScreen: boolean,
+  fullScreenText?: string
 }
 
 export const ControlScreen = (props: ControlScreenProps) => {
 
   const icon = props.isFullScreen === true ? 'fullscreen': 'fullscreenExit'
+  const { fullScreenText } = props
   return (
-    <ControlButton icon={icon} toolTip={true} onClick={props.onClick}></ControlButton>
+    <ControlButton fullScreenText={fullScreenText} icon={icon} toolTip={true} onClick={props.onClick}></ControlButton>
   )
 }

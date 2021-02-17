@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "board_name": "Board",
     "exit": "Exit",
     "class_end": "Class is ended",
     "leave_room": "Leave room",
@@ -131,6 +132,7 @@ const en = {
     'unlock_board': 'Reset Whiteboard Follow'
   },
   'tool': {
+    'toolBarname': 'Tools',
     'selector': 'mouse selector',
     'pencil': 'penceil',
     'rectangle': 'rectangle',
@@ -141,7 +143,14 @@ const en = {
     'add': 'add new page',
     'upload': 'upload ',
     'hand_tool': 'hand selector',
-    'extension_tool': 'extension tool'
+    'extension_tool': 'extension tool',
+    'clear': 'clear',
+    'disk': 'disk',
+    'prev': 'back',
+    'next': 'forward',
+    'zoomIn': 'zoom in',
+    'zoomOut': 'zoom out',
+    'fullScreen': 'full screen',
   },
   'error': {
     'not_found': 'Page Not Found',

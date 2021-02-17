@@ -63,21 +63,50 @@ const sdkConfig: SDKConfig = {
 export type LanguageEnum = "" | "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar" 
 
+export type ConvertedFile = {
+  width: number,
+  height: number,
+  conversionFileUrl: string,
+}
+
+export type ConvertedFileList = ConvertedFile[]
+
+export type CourseWareItem = {
+  resourceName: string,
+  ext: string,
+  fileUrl: string,
+  conversion: {
+    type: string,
+  },
+  convert?: boolean,
+  taskUuid?: string,
+  taskToken?: string,
+  taskProgress?: {
+    totalPageSize?: number,
+    convertedPageSize?: number,
+    convertedPercentage?: number,
+    convertedFileList: ConvertedFileList
+  }
+}
+
+export type CourseWareList = CourseWareItem[]
+
 export type LaunchOption = {
-  userUuid: string
-  userName: string
-  roomUuid: string
-  roleType: EduRoleTypeEnum
-  roomType: EduRoomTypeEnum
-  roomName: string
-  listener: ListenerCallback
-  pretest: boolean
+  userUuid: string,
+  userName: string,
+  roomUuid: string,
+  roleType: EduRoleTypeEnum,
+  roomType: EduRoomTypeEnum,
+  roomName: string,
+  listener: ListenerCallback,
+  pretest: boolean,
   // rtmUid: string
-  rtmToken: string
-  language: LanguageEnum
-  translateLanguage: TranslateEnum 
+  rtmToken: string,
+  language: LanguageEnum,
+  translateLanguage: TranslateEnum,
   startTime: number,
   duration: number,
+  courseWareList: CourseWareList
 }
 
 export type ReplayOption = {
@@ -218,6 +247,7 @@ export class AgoraEduSDK {
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,
           sdkDomain: sdkConfig.sdkDomain,
+          courseWareList: option.courseWareList,
           oss: {
             region: data.netless.oss.region,
             bucketName: data.netless.oss.bucket,
@@ -280,6 +310,7 @@ export class AgoraEduSDK {
         sdkDomain: sdkConfig.sdkDomain,
         rtmUid: '',
         rtmToken: '',
+        courseWareList: [],
       },
       language: option.language,
       replayConfig: {

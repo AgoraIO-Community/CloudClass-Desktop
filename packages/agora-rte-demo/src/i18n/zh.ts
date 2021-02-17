@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "board_name": "白板",
     "exit": "退出",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
@@ -124,6 +125,7 @@ const zhCN: any = {
     'unlock_board': '取消白板跟随'
   },
   'tool': {
+    'toolBarname': '工具',
     'selector': '鼠标选择器',
     'pencil': '画笔',
     'rectangle': '矩形',
@@ -134,7 +136,14 @@ const zhCN: any = {
     'add': '新增一页',
     'upload': '上传',
     'hand_tool': '手抓工具',
-    'extension_tool': '扩展'
+    'extension_tool': '扩展',
+    'clear': '清除',
+    'disk': '云盘',
+    'prev': '后退',
+    'next': '前进',
+    'zoomIn': '放大',
+    'zoomOut': '缩小',
+    'fullScreen': '全屏',
   },
   'error': {
     'not_found': '页面找不到',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ConfirmDialog } from '@/components/dialog';
 import { Toast } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
@@ -48,6 +48,18 @@ export const RouteContainer = (props: RouteContainerProps) => {
 }
 
 export const RoomContainer = (props: AppContainerProps) => {
+
+  useEffect(() => {
+    if (navigator.serviceWorker && navigator.serviceWorker.register) {
+      navigator.serviceWorker.register('./worker.js').then(function(registration) {
+        console.log("registration finish")
+      }).catch(function(error) {
+        console.log('An error happened during installing the service worker:');
+        console.log(error.message)
+      })
+    }
+  }, [])
+
   return (
     <Provider store={props.store}>
       <ThemeContainer>
@@ -62,6 +74,18 @@ export const RoomContainer = (props: AppContainerProps) => {
 }
 
 export const AppContainer = (props: AppContainerProps) => {
+
+  useEffect(() => {
+    if (navigator.serviceWorker && navigator.serviceWorker.register) {
+      navigator.serviceWorker.register('./worker.js').then(function(registration) {
+        console.log("registration finish")
+      }).catch(function(error) {
+        console.log('An error happened during installing the service worker:');
+        console.log(error.message)
+      })
+    }
+  }, [])
+
   return (
     <Provider store={props.store}>
       <ThemeContainer>

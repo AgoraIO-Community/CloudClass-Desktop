@@ -36,30 +36,13 @@ export interface ControlButtonProps extends ControlBaseProps{
   toolTip?: boolean,
   active?: boolean,
   activeStyles?: CSSProperties,
+  iconTooltipText?: string,
+  zoomInText?: string,
+  zoomOutText?: string,
+  prevText?: string,
+  nextText?: string,
+  fullScreenText?: string,
 }
-
-const i18n = {
-  'back': 'back',
-  'forward': 'forward',
-  'zoomIn': 'zoomIn',
-  'zoomOut': 'zoomOut',
-  'fullscreen': 'fullscreen',
-  'fullscreenExit': 'fullscreenExit',
-
-  'pencil': 'pencil',
-  'text': 'text',
-  'mouse': 'mouse',
-  'eraser': 'eraser',
-  'rectangle': 'rectangle',
-  'elliptic': 'elliptic',
-  'palette': 'palette',
-  'new-page': 'new-page',
-  'move': 'move',
-  'upload': 'upload',
-  'clear': 'clear',
-  'disk': 'disk'
-}
-
 
 const buttonsMap = {
   'back': NavigateBeforeIcon,
@@ -91,6 +74,11 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
   style,
   iconStyle,
   onClick,
+  zoomInText,
+  zoomOutText,
+  prevText,
+  nextText,
+  fullScreenText,
 }) => {
   const ControlIconButton = buttonsMap[icon]
 
@@ -102,10 +90,15 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
 
   const activeStyle = active && activeStyles ? activeStyles : {}
 
+  // tools mapper
+  const titleMapper = [zoomInText, zoomOutText, prevText, nextText, fullScreenText]
+  const titleAction = titleMapper.filter(i => i !== undefined)
+  const title = titleAction[0]
+
   return (
     <React.Fragment>
       {toolTip ?
-        <Tooltip placement="top" title={i18n[icon]}>
+        <Tooltip placement="top" title={title ? title : ''}>
         <IconButton component="div" style={{
           width: 18,
           height: 18,
@@ -162,6 +155,7 @@ export const ToolButton = (
     style,
     iconStyle,
     onClick,
+    iconTooltipText,
     popoverComponent
   }: ControlButtonProps) => {
   const ControlIconButton = buttonsMap[icon]
@@ -187,7 +181,7 @@ export const ToolButton = (
   return (
     <React.Fragment>
       {toolTip ?
-         <Tooltip placement="right" title={i18n[icon]}>
+         <Tooltip placement="right" title={iconTooltipText ? iconTooltipText : ''}>
           <IconButton component="div" style={{
             width: 18,
             height: 18,
