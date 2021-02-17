@@ -45,7 +45,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
         <TableHead>
           <TableRow style={{ color: '#273D75' }}>
             <DownloadTableCell style={{ paddingLeft: 15 }} id="name" key="name" scope="row">
-              <span className={classes.downloadLabel}>全部: <span className={classes.downloadText}>48</span></span>
+              <span className={classes.downloadLabel}>全部: <span className={classes.downloadText}>{props.downloadList ? props.downloadList.length : 0}</span></span>
               &nbsp;
               <span className={classes.downloadLabel}>已下载: <span className={classes.downloadText}>1</span></span>
               &nbsp;

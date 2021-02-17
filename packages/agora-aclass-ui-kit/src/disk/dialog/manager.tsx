@@ -203,7 +203,6 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     deleteAllCacheComponent={props.deleteAllCacheComponent}
                     singleDownloadComponent={props.singleDownloadComponent}
                     singleDeleteComponent={props.singleDeleteComponent}
-                  
                     downloadList={props.downloadList}
                   />
                 )
