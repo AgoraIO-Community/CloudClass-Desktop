@@ -413,20 +413,20 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.timer && clearTimeout(this.timer)
     this.timer = setInterval(async() => {
       if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
-        await this.appStore.releaseRoom()
-        this.appStore.isNotInvisible && dialogManager.confirm({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-          },
-          onClose: () => {
-          }
-        })
+        // await this.appStore.releaseRoom()
+        // this.appStore.isNotInvisible && dialogManager.confirm({
+        //   title: t(`aclass.class_end`),
+        //   text: t(`aclass.leave_room`),
+        //   showConfirm: true,
+        //   showCancel: true,
+        //   confirmText: t('aclass.confirm.yes'),
+        //   visible: true,
+        //   cancelText: t('aclass.confirm.no'),
+        //   onConfirm: () => {
+        //   },
+        //   onClose: () => {
+        //   }
+        // })
         clearTimeout(this.timer)
         return
       } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
@@ -565,7 +565,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // TODO: this.appStore.params.startTime
       const startTime = new Date().getTime() + 1*60*1000
       // TODO: this.appStore.params.duration
-      const duration = 60
+      const duration = 1800
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,

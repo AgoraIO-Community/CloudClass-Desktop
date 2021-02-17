@@ -10,8 +10,8 @@ import { CustomizeIconBtn, Button, ControlButtonIcon } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 
 const defaultStyle = {
-  width: 36,
-  height: 36,
+  width: 32,
+  height: 32,
 }
 export interface IControlButtonProps {
   icon?: ControlButtonIcon,

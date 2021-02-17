@@ -291,6 +291,9 @@ const zhCN: any = {
     'start_in': '开始上课了：',
     'minutes': '分',
     'seconds': '秒',
+    'signal_good': '优',
+    'signal_weak': '良',
+    'signal_bad': '差',
   },
   'home': {
     'entry-home': '进入教室',

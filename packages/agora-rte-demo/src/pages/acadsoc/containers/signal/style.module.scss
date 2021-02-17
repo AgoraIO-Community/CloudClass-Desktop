@@ -1,0 +1,48 @@
+.signal {
+  width: 74px;
+  .signalGood {
+    display: flex;
+    .signal {
+      width: 32px;
+      height: 32px;
+      background-image: url('../../assets/signal-good.png');
+      margin: 2px;
+    }
+    .text {
+      color: #8eae7c;
+      font-size: 14px;
+      margin-left: 5px;
+      line-height: 32px;
+    }
+  }
+  .signalWeak {
+    display: flex;
+    .signal {
+      width: 32px;
+      height: 32px;
+      background-image: url('../../assets/signal-weak.png');
+      margin: 2px;
+    }
+    .text {
+      color: #f1c360;
+      font-size: 14px;
+      margin-left: 5px;
+      line-height: 32px;
+    }
+  }
+  .signalBad {
+    display: flex;
+    .signal {
+      width: 32px;
+      height: 32px;
+      background-image: url('../../assets/signal-bad.png');
+      margin: 2px;
+    }
+    .text {
+      color: red;
+      font-size: 14px;
+      margin-left: 5px;
+      line-height: 32px;
+    }
+  }
+}
