@@ -1,5 +1,16 @@
 .signal {
   width: 74px;
+  >div {
+    align-items: center;
+  }
+  .signal {
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #2C43BA;
+    border-radius: 50%;
+  }
+
   .signalGood {
     display: flex;
     .signal {
@@ -12,7 +23,6 @@
       color: #8eae7c;
       font-size: 14px;
       margin-left: 5px;
-      line-height: 32px;
     }
   }
   .signalWeak {
@@ -27,7 +37,6 @@
       color: #f1c360;
       font-size: 14px;
       margin-left: 5px;
-      line-height: 32px;
     }
   }
   .signalBad {
@@ -42,7 +51,6 @@
       color: red;
       font-size: 14px;
       margin-left: 5px;
-      line-height: 32px;
     }
   }
 }
