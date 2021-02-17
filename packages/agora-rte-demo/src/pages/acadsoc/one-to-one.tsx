@@ -28,6 +28,7 @@ export const AcadsocOneToOne = observer(() => {
       history.push('/')
       return
     }
+    acadsocStore.setHistory(history)
     acadsocStore.join()
     // TODO: only for ui debug
     // acadsocStore.joinRoom()
