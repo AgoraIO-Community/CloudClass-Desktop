@@ -36,7 +36,7 @@ const StrokeListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.size")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px', textShadow: '1px 1px 1px rgb(0 0 0 / 30%)'}}>{t("aclass.board.size")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Thin,
@@ -69,7 +69,7 @@ const ArrowListPanel = observer(() => {
       color: '#fff',
       fontSize: '12px',
     }}>
-      <span style={{width: '30px', height: '30px', margin: '0 7px'}}>{t("aclass.board.stroke")}</span>
+      <span style={{width: '30px', height: '30px', margin: '0 7px', textShadow: '1px 1px 1px rgb(0 0 0 / 30%)'}}>{t("aclass.board.stroke")}</span>
       <CustomMenuList
         itemList={[
           CustomMenuItemType.Pen,
@@ -243,7 +243,7 @@ export const FontPopover = observer(() => {
         currentColor={currentColor}
         onClick={onClick}
       />
-      <h2 style={{textAlign: 'center', color: 'white', fontSize: '14px'}}>字体大小</h2>
+      <h2 style={{textAlign: 'center', color: 'white', fontSize: '14px', textShadow: '1px 1px 1px rgb(0 0 0 / 30%)'}}>字体大小</h2>
       <FontSizeList />
     </PanelBackground>
   )
