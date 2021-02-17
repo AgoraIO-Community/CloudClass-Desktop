@@ -145,6 +145,31 @@ const zhCN: any = {
     'zoomOut': '缩小',
     'fullScreen': '全屏',
   },
+  'disk': {
+    'publicResources': '公共资源',
+    'privateResources': '我的云盘',
+    'downlownResources': '下载课件',
+
+    'upload': '上传',
+    'downloadAll': '全部下载',
+    'clearCache': '清空缓存',
+    'download': '下载',
+    'delete': '删除',
+
+    'all': '全部',
+    'downloaded': '已下载',
+    'notDownload': '未下载',
+
+    'operation': '操作',
+    'progress': '进度',
+    'file': '文件',
+    'fileName': '文件名',
+    'size': '大小',
+    'modificationTime': '修改时间',
+    'search': '搜索',
+    'noFile': '暂无文件',
+
+  },
   'error': {
     'not_found': '页面找不到',
     'components': {

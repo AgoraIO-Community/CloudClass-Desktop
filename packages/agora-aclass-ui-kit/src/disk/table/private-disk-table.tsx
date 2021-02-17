@@ -139,10 +139,12 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
 
 export interface DiskTablesProps {
   tabValue: number,
+  diskText?: any,
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
   uploadComponent?: React.ReactNode,
+  diskText?: any,
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
@@ -236,7 +238,9 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     })
   }
 
+
   const DiskTable = (props: DiskTablesProps) => {
+
     return (
       <Table
         className={classes.table}
@@ -245,6 +249,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         aria-label="enhanced table"
       >
         <EnhancedTableHead
+          diskText={props.diskText}
           numSelected={selected.length}
           // order={order}
           // orderBy={orderBy}
@@ -286,6 +291,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     )
   }
 
+
   const render = () => {
     return (
       <>
@@ -309,7 +315,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               id="disk-input-search"
               className={classSearch.input}
               onChange={handleChange}
-              placeholder={'搜索'}
+              placeholder={props.diskText.search}
               variant='outlined'
               value={searchContent}
               InputProps={{
@@ -330,7 +336,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows && <DiskTable tabValue={props.tabValue} /> || <TableEmpty /> }
+        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> || <TableEmpty diskText={props.diskText} /> }
       </>
     )
   }

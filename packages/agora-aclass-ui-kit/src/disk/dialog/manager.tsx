@@ -98,6 +98,7 @@ interface NetworkDiskDialogProps {
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
+  diskText?: any,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -162,9 +163,9 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             onChange={handleChange}
             aira-label="disk tabs"
           >
-            <DiskTab id="disk-tab-public" label="公共资源" />
-            <DiskTab id="disk-tab-private" label="我的云盘" />
-            <DiskTab id="disk-tab-ware" label="下载课件" />
+            <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
+            <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
+            <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
           </DiskTabs>
         </div>
         <div style={{
@@ -186,18 +187,19 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             }}>
               {
                 activeValue === 0 && (
-                  <PublicDiskTables tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
+                  <PublicDiskTables diskText={props.diskText} tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
                 )
               }
 
               {
                 activeValue === 1 && (
-                  <PrivateDiskTables tabValue={activeValue} uploadComponent={props.uploadComponent} privateList={props.privateList}></PrivateDiskTables>
+                  <PrivateDiskTables diskText={props.diskText} tabValue={activeValue} uploadComponent={props.uploadComponent} privateList={props.privateList}></PrivateDiskTables>
                 )
               }
               {
                 activeValue === 2 && (
                   <DownloadDiskTables
+                    diskText={props.diskText}
                     tabValue={activeValue}
                     donwloadAllComponent={props.donwloadAllComponent}
                     deleteAllCacheComponent={props.deleteAllCacheComponent}

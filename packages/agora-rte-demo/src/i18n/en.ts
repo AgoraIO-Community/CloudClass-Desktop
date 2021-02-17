@@ -152,6 +152,31 @@ const en = {
     'zoomOut': 'zoom out',
     'fullScreen': 'full screen',
   },
+  'disk': {
+    'publicResources': 'public resources',
+    'privateResources': 'my courses',
+    'downlownResources': 'download courses',
+
+    'upload': 'upload',
+    'downloadAll': 'download all',
+    'clearCache': 'clear cache',
+    'download': 'download',
+    'delete': 'delete',
+
+    'all': 'all',
+    'downloaded': 'downloaded',
+    'notDownload': 'not downloaded',
+
+    'operation': 'operation',
+    'progress': 'progress',
+    'file': 'file',
+    'fileName': 'file name',
+    'size': 'size',
+    'modificationTime': 'modification time',
+    'search': 'search',
+    'noFile': 'no file',
+
+  },
   'error': {
     'not_found': 'Page Not Found',
     'components': {

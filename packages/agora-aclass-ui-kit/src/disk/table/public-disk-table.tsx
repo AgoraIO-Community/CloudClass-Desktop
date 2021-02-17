@@ -11,6 +11,7 @@ import TableEmpty from "../dialog/table-empty";
 
 interface PublicDiskTablesProps extends DiskTablesProps {
   publicList?: any,
+  diskText?: any,
 }
 
 const PublicDiskTables = (props: PublicDiskTablesProps) => {
@@ -163,9 +164,10 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
           <div className={classSearch.titleButton}></div>
           <div>
             <TextField
+              id="disk-input-search"
               className={classSearch.input}
               onChange={handleChange}
-              placeholder={'搜索'}
+              placeholder={props.diskText.search}
               variant='outlined'
               value={searchContent}
               InputProps={{
@@ -186,7 +188,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows && <DiskTable tabValue={props.tabValue}/> || <TableEmpty /> }
+        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> || <TableEmpty diskText={props.diskText} /> }
       </>
     );
   };

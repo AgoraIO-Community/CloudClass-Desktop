@@ -1,7 +1,11 @@
 import React from 'react';
 import IconEmpty from '../assets/icon-empty.png'
 
-const TableEmpty = () => {
+interface TableEmptyProps {
+  diskText?: any,
+}
+
+const TableEmpty = (props: TableEmptyProps) => {
   const render = () => {
     return (
       <div style={{
@@ -12,7 +16,7 @@ const TableEmpty = () => {
         flexFlow: 'column',
       }}>
         <img src={IconEmpty} />
-        <div style={{ color: '#A9AEC5', fontSize: '14px' }}>暂无文件</div>
+        <div style={{ color: '#A9AEC5', fontSize: '14px' }}>{props.diskText.noFile}</div>
       </div>
     );
   };

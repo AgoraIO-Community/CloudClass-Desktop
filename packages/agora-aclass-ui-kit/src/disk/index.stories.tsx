@@ -97,6 +97,22 @@ export const NetworkDisk = () => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
+      diskText={{
+        publicTab: '公共资源 ui-kit',
+        privateTab: '我的云盘 ui-kit',
+        downloadTab: '下载课件 ui-kit',
+        fileName: '文件名 ui-kit',
+        size: '大小 ui-kit',
+        modificationTime: '修改时间 ui-kit',
+        search: '搜索 ui-kit',
+        noFile: '暂无文件 ui-kit',
+        file: '文件',
+        progress: '进度',
+        operation: '操作',
+        all: '全部',
+        downloaded: '已下载',
+        notDownload: '未下载',
+      }}
     />
   )
 }

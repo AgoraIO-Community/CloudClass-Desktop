@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
 import { useBoardStore } from '@/hooks'
 import MD5 from 'js-md5'
@@ -7,7 +7,7 @@ import { HandleUploadType } from '@/services/upload-service'
 import { PPTKind } from 'white-web-sdk'
 import { EduLogger } from 'agora-rte-sdk'
 import { Progress } from '@/components/progress/progress'
-import { useEffect } from 'react'
+import {t} from '@/i18n'
 
 
 const UploadingProgress = observer((props: any) => {
@@ -88,7 +88,7 @@ const NetworkDisk = observer((props: any) => {
       <UploadFile
         customRequest={uploadRequest}
         showUploadList={false}
-        uploadButton={() => <DiskButton onClick={onUpload} id="disk-button-upload" color={'primary'} text={'上传'} />}
+        uploadButton={() => <DiskButton onClick={onUpload} id="disk-button-upload" color={'primary'} text={t('disk.upload')} />}
         progressComponents={() => <UploadingProgress />}
       />
     )
@@ -96,29 +96,27 @@ const NetworkDisk = observer((props: any) => {
 
   const donwloadAllComponent = () => {
     return (
-      <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} />
+      <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
     )
   }
 
   const deleteAllCache = () => {
     return (
-      <DiskButton id="disk-button-clear-storage" color={'secondary'} text={'清空缓存'} />
+      <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
     )
   }
 
   const singleDonwload = () => {
     return (
-      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
     )
   }
 
   const singleDelete = () => {
     return (
-      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
     )
   }
-
-  console.log('boardStore.allResources', boardStore.allResources)
 
   return (
     <DiskManagerDialog
@@ -162,6 +160,22 @@ const NetworkDisk = observer((props: any) => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
+      diskText={{
+        publicTab: t('disk.publicResources'),
+        privateTab: t('disk.privateResources'),
+        downloadTab: t('disk.downlownResources'),
+        fileName: t('disk.fileName'),
+        size: t('disk.size'),
+        modificationTime: t('disk.modificationTime'),
+        search: t('disk.search'),
+        noFile: t('disk.noFile'),
+        file: t('disk.file'),
+        progress: t('disk.progress'),
+        operation: t('disk.operation'),
+        all: t('disk.all'),
+        downloaded: t('disk.downloaded'),
+        notDownload: t('disk.notDownload'),
+      }}
     />
   )
 })
