@@ -12,8 +12,8 @@ type ResourceMenuProps = {
 
 export const MenuButton = (props: any) => {
   return (
-    <div className={`${styles.menuButton} ${props.className}`}>
-      <div onClick={props.onClick}>{props.name}</div>
+    <div onClick={props.onClick} className={`${styles.menuButton} ${props.className}`}>
+      <div>{props.name}</div>
       {props.showClose ? <div onClick={props.onClose} style={{ height: '100%', position: 'absolute', right: '2px'}}>
         <CloseIcon style={{fontSize: '14px'}}></CloseIcon>
       </div> : null}
