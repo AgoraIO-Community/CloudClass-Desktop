@@ -278,10 +278,10 @@ const zhCN: any = {
     'student_interactive_apply': `"{reason}"想和你连麦`
   },
   'placeholder': {
-    'teacher_noEnter': '等待老师进入',
-    'student_noEnter': '等待学生进入',
-    'teacher_Left': '老师离开了',
-    'student_Left': '学生离开了',
+    'teacher_noEnter': '等待外教进入教室...',
+    'student_noEnter': '等待学生进入教室...',
+    'teacher_Left': '老师已离开教室',
+    'student_Left': '学生已离开教室',
     'noCamera': '没有摄像头',
     'noAvailableCamera': '未检测到摄像头',
   },

@@ -93,12 +93,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     borderTop: '1px solid #0000001a',
     paddingTop: '4px',
-    lineHeight: '12px',
+    lineHeight: '18px',
     marginTop: '3px'
   },
   bubbleContent: {
     wordWrap: 'break-word',
     wordBreak: 'break-all',
+    fontSize: 14
   }
 }))
 

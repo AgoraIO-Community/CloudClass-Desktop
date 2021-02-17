@@ -47,7 +47,7 @@ ChatBubble.args = {
 const messages = [{
   sendTime: '14:22',
   isSender: true,
-  chatText: "你好么, 我是可可爱爱的橙子",
+  chatText: "你好么, 我是可可爱爱的橙子,你好么, 我是可可爱爱的橙子,你好么, 我是可可爱爱的橙子,你好么, 我是可可爱爱的橙子,你好么, 我是可可爱爱的橙子",
   userName: "可爱的柠檬",
   status:'loading',
 }, {
