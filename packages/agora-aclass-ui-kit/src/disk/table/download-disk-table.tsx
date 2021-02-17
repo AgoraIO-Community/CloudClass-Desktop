@@ -9,6 +9,10 @@ import TableEmpty from "../dialog/table-empty";
 
 interface DownloadDiskTablesProps extends DiskTablesProps {
   downloadList?: any,
+  donwloadAllComponent?: React.ReactNode,
+  deleteAllCacheComponent?: React.ReactNode,
+  singleDownloadComponent?: React.ReactNode,
+  singleDeleteComponent?: React.ReactNode,
 }
 
 const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
@@ -29,7 +33,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
 
   const rows = props.downloadList
 
-  const DiskTable = (props: DiskTablesProps) => {
+  const DiskTable = (props: DownloadDiskTablesProps) => {
     return (
       <Table
         className={classes.table}
@@ -51,8 +55,10 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
               <DiskAllProgress value={50} />
             </DownloadTableCell>
             <DownloadTableCell align="right">
-              <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} />
-              <DiskButton id="disk-button-clear-storage" color={'secondary'} text={'清空缓存'} />
+              { props.donwloadAllComponent }
+              { props.deleteAllCacheComponent }
+              {/* <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} /> */}
+              {/* <DiskButton id="disk-button-clear-storage" color={'secondary'} text={'清空缓存'} /> */}
             </DownloadTableCell>
           </TableRow>
         </TableHead>
@@ -80,8 +86,10 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
                     <DiskSingleProgress value={row.calories} />
                   </DiskTableCell>
                   <DiskTableCell style={{ color: '#586376' }} align="right">
-                    <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
-                    <DiskButton id="disk-button-delete" text={'删除'} color={'secondary'} />
+                    { props.singleDownloadComponent }
+                    { props.singleDeleteComponent }
+                    {/* <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+                    <DiskButton id="disk-button-delete" text={'删除'} color={'secondary'} /> */}
                   </DiskTableCell>
                 </TableRow>
               );

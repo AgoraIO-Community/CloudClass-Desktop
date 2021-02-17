@@ -93,6 +93,11 @@ interface NetworkDiskDialogProps {
   downloadList?: any,
   // upload
   uploadComponent?: React.ReactNode,
+  // downloadComponet
+  donwloadAllComponent?: React.ReactNode,
+  deleteAllCacheComponent?: React.ReactNode,
+  singleDownloadComponent?: React.ReactNode,
+  singleDeleteComponent?: React.ReactNode,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -192,7 +197,15 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
               }
               {
                 activeValue === 2 && (
-                  <DownloadDiskTables tabValue={activeValue} downloadList={props.downloadList}></DownloadDiskTables>
+                  <DownloadDiskTables
+                    tabValue={activeValue}
+                    donwloadAllComponent={props.donwloadAllComponent}
+                    deleteAllCacheComponent={props.deleteAllCacheComponent}
+                    singleDownloadComponent={props.singleDownloadComponent}
+                    singleDeleteComponent={props.singleDeleteComponent}
+                  
+                    downloadList={props.downloadList}
+                  />
                 )
               }
             </TableContainer>
