@@ -44,7 +44,7 @@ export const NavigationControlButton = ({ icon, iconStyle, onClick,styles }: ICo
       height: 36,
       padding: 0,
       color: '#ffffff',
-      marginLeft: 20,
+      marginLeft: 15,
       ...styles
     }} onClick={onClick}
     >
