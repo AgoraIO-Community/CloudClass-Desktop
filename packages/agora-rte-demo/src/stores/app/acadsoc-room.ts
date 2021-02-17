@@ -565,7 +565,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // TODO: this.appStore.params.startTime
       const startTime = new Date().getTime() + 1*60*1000
       // TODO: this.appStore.params.duration
-      const duration = 1800
+      const duration = 180
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,
