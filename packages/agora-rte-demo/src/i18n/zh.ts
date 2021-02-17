@@ -158,6 +158,8 @@ const zhCN: any = {
     'clearCache': '清空缓存',
     'download': '下载',
     'delete': '删除',
+    'deleteSuccess': '删除文件成功！',
+    'deleteFailed': '删除文件失败！',
 
     'all': '全部',
     'downloaded': '已下载',
@@ -172,6 +174,27 @@ const zhCN: any = {
     'search': '搜索',
     'noFile': '暂无文件',
 
+  },
+  'fileTip': {
+    'fileType': '格式类型',
+    'supportText': '教室内支持的文件格式',
+    'ppt': 'Powerpoint演示文档',
+    'word': 'Word文档',
+    'excel': 'Excel文档',
+    'pdf': 'Pdf文档',
+    'video': '视频',
+    'audio': '音频',
+    'txt': '文本文档',
+    'pic': '图片',
+
+    'pptType': 'ppt pptx pptm',
+    'wordType': 'docx doc',
+    'excelType': 'xlsx xls csv',
+    'pdfType': 'pdf',
+    'videoType': 'XXX',
+    'audioType': 'XXX',
+    'txtType': 'XXX',
+    'picType': 'XXX',
   },
   'error': {
     'not_found': '页面找不到',

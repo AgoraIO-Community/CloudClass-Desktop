@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
-import { useBoardStore } from '@/hooks'
+import { useBoardStore, useDiskStore } from '@/hooks'
 import MD5 from 'js-md5'
 import { HandleUploadType } from '@/services/upload-service'
 import { PPTKind } from 'white-web-sdk'
@@ -34,6 +34,8 @@ const UploadingProgress = observer((props: any) => {
 const NetworkDisk = observer((props: any) => {
 
   const boardStore = useBoardStore()
+  const diskStore = useDiskStore()
+  console.log('disk store')
 
   const handleClose = () => {
     console.log('close network disk', props.openDisk)
@@ -139,12 +141,6 @@ const NetworkDisk = observer((props: any) => {
     console.log("selected", selected)
   }
 
-  const deleteComponent = () => {
-    return (
-      <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
-    )
-  }
-
   const handleRefresh = async () => {
     await boardStore.loadCloudResources()
   }
@@ -157,10 +153,10 @@ const NetworkDisk = observer((props: any) => {
 
   return (
     <DiskManagerDialog
-      removeText={"删除"}
+      removeText={t('disk.delete')}
       handleDelete={handleDelete}
-      removeSuccess={"删除成功"}
-      removeFailed={"删除失败"}
+      removeSuccess={t('disk.deleteSuccess')}
+      removeFailed={t('disk.deleteFailed')}
       fullWidth={false}
       visible={props.openDisk}
       onClose={handleClose}
@@ -201,24 +197,10 @@ const NetworkDisk = observer((props: any) => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
-      diskText={{
-        publicTab: t('disk.publicResources'),
-        privateTab: t('disk.privateResources'),
-        downloadTab: t('disk.downlownResources'),
-        fileName: t('disk.fileName'),
-        size: t('disk.size'),
-        modificationTime: t('disk.modificationTime'),
-        search: t('disk.search'),
-        noFile: t('disk.noFile'),
-        file: t('disk.file'),
-        progress: t('disk.progress'),
-        operation: t('disk.operation'),
-        all: t('disk.all'),
-        downloaded: t('disk.downloaded'),
-        notDownload: t('disk.notDownload'),
-      }}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
+      diskText={diskStore.diskTextDoc}
+      fileTooltipText={diskStore.fileTooltipTextDoc}
     />
   )
 })

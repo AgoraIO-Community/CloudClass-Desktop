@@ -156,15 +156,17 @@ const en = {
     'fullScreen': 'full screen',
   },
   'disk': {
-    'publicResources': 'public resources',
-    'privateResources': 'my courses',
-    'downlownResources': 'download courses',
+    'publicResources': 'Public',
+    'privateResources': 'Mine',
+    'downlownResources': 'Download',
 
     'upload': 'upload',
     'downloadAll': 'download all',
     'clearCache': 'clear cache',
     'download': 'download',
     'delete': 'delete',
+    'deleteSuccess': 'File deleted successfully!',
+    'deleteFailed': 'Failed to delete file!',
 
     'all': 'all',
     'downloaded': 'downloaded',
@@ -179,6 +181,27 @@ const en = {
     'search': 'search',
     'noFile': 'no file',
 
+  },
+  'fileTip': {
+    'fileType': 'File formats',
+    'supportText': 'Supported file formats in the classroom',
+    'ppt': 'Powerpoint',
+    'word': 'Word',
+    'excel': 'Excel',
+    'pdf': 'Pdf',
+    'video': 'Video',
+    'audio': 'Audio',
+    'txt': 'Txt',
+    'pic': 'Picture',
+
+    'pptType': 'ppt pptx pptm',
+    'wordType': 'docx doc',
+    'excelType': 'xlsx xls csv',
+    'pdfType': 'pdf',
+    'videoType': 'XXX',
+    'audioType': 'XXX',
+    'txtType': 'XXX',
+    'picType': 'XXX',
   },
   'error': {
     'not_found': 'Page Not Found',

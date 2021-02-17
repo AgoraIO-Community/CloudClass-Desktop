@@ -87,6 +87,7 @@ interface NetworkDiskDialogProps {
   dialogHeaderStyle?: React.CSSProperties,
   closeBtnStyle?: React.CSSProperties,
   questionBtnStyle?: React.CSSProperties,
+  fileTooltipText?: any,
   // list data
   publicList?: any,
   privateList?: any,
@@ -123,6 +124,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         {...paperProps}
         closeBtnStyle={props.closeBtnStyle}
         questionBtnStyle={props.questionBtnStyle}
+        fileTooltipText={props.fileTooltipText}
         headerStyle={props.dialogHeaderStyle}
         onClose={onClose}
         showHeader={true}
