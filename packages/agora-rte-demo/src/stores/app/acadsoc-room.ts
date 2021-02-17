@@ -10,6 +10,7 @@ import {
   GenericErrorWrapper,
   EduUser,
   EduStream,
+  EduRoleType,
   EduVideoSourceType,
 } from 'agora-rte-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -971,24 +972,15 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
         BizLogger.info('room-chat-message', evt)
       })
-  
-      if (this.roomInfo.userRole === EduRoleTypeEnum.teacher) {
-        await roomManager.join({
-          userRole: `host`,
-          roomUuid,
-          userName: `${this.roomInfo.userName}`,
-          userUuid: `${this.userUuid}`,
-        })
-      } else {
-        const {sceneType, userRole} = this.getStudentConfig()
-        await roomManager.join({
-          userRole: userRole,
-          roomUuid,
-          userName: `${this.roomInfo.userName}`,
-          userUuid: `${this.userUuid}`,
-          sceneType,
-        })
-      }
+      const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
+      const { sceneType } = this.getStudentConfig()
+      await roomManager.join({
+        userRole: EduRoleType[userRole],
+        roomUuid,
+        userName: `${this.roomInfo.userName}`,
+        userUuid: `${this.userUuid}`,
+        sceneType,
+      })
       this.sceneStore._roomManager = roomManager;
       this.appStore._boardService = new EduBoardService({
         prefix: '',

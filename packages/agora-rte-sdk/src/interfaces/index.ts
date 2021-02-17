@@ -104,11 +104,14 @@ export enum EduRoomTypeEnum {
  * teacher = 1，为老师
  * student = 2，为学生
  * assistant = 3，为助教
+ * invisible = 0，为观众
  */
 export enum EduRoleType {
   teacher = 'host',
   audience = 'audience',
-  student = 'broadcaster'
+  student = 'broadcaster',
+  invisible = 'invisible',
+  assistant = 'assistant'
 }
 
 /**
