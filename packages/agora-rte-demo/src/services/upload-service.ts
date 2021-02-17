@@ -8,6 +8,32 @@ import { Room, PPT, PPTKind, ApplianceNames, LegacyPPTConverter } from 'white-we
 import MD5 from 'js-md5';
 import { resolveFileInfo } from '@/utils/helper';
 
+
+const transDataToResource = (data: any) => {
+  if (!data.taskUuid) {
+    return {
+      name: data.resourceName,
+      ext: data.ext,
+      calories: data.size || 0,
+      url: data.url,
+      taskUuid: '',
+      taskProgress: null,
+      convertedPercentage: 100,
+      fat: data.updateTime,
+    }
+  }
+  return {
+    name: data.resourceName,
+    ext: data.ext,
+    calories: data.size || 0,
+    taskUuid: data.taskUuid,
+    taskProgress: data.taskProgress,
+    url: data.url,
+    convertedPercentage: data.taskProgress.convertedPercentage,
+    fat: data.updateTime
+  }
+}
+
 export interface UploadServiceResult {
   success: boolean,
   data: any,
@@ -34,6 +60,7 @@ export type FetchStsTokenResult = {
 
 export type HandleUploadType = {
   file: File,
+  fileSize: number,
   resourceName: string,
   userUuid: string,
   roomUuid: string,
@@ -42,6 +69,7 @@ export type HandleUploadType = {
   converting: boolean,
   kind: any,
   pptConverter: LegacyPPTConverter,
+  pptResult?: any,
   onProgress: (evt: {phase: string, progress: number}) => any,
 }
 
@@ -68,7 +96,9 @@ export class UploadService extends ApiBase {
       })
     }
 
-    const file = res[0]
+    const files = res.data
+
+    const file = files.find((file: any) => file.resourceName === params.name)
 
     if (file) {
       return {
@@ -85,7 +115,7 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async fetchStsToken(params: {roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType}) {
+  async fetchStsToken(params: {roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
       method: 'POST',
@@ -93,6 +123,7 @@ export class UploadService extends ApiBase {
         resourceName: params.resourceName,
         ext: params.ext,
         conversion: params.conversion,
+        size: params.fileSize
       }
     })
     if (res.code !== 0) {
@@ -103,19 +134,24 @@ export class UploadService extends ApiBase {
     }
     return {
       success: true,
-      data: res as FetchStsTokenResult
+      data: res.data as FetchStsTokenResult
     }
   }
 
   // 服务端创建课件，并申请stsToken
-  async createMaterial(params: {name: string, roomUuid: string, userUuid: string, ext: "",}): Promise<UploadServiceResult> {
+  async createMaterial(params: any): Promise<UploadServiceResult> {
 
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
-      method: 'POST',
+      method: 'PUT',
       data: {
-        resourceName: name,
-        ext: ""
+        url: params.url,
+        resourceName: params.resourceName,
+        ext: params.ext,
+        taskUuid: params.taskUuid ? params.taskUuid : undefined,
+        taskToken: '',
+        taskProgress: params.taskProgress ? params.taskProgress : undefined,
+        size: params.size,
       }
     })
 
@@ -141,6 +177,44 @@ export class UploadService extends ApiBase {
       data: null,
       message: 'not_found'
     }
+  }
+
+  async fetchPublicResources(roomUuid: string) {
+    const res = await this.fetch({
+      url: `/v1/rooms/${roomUuid}/resources`,
+      method: 'GET',
+    })
+
+    if (res.code !== 0) {
+      throw new GenericErrorWrapper({
+        code: res.code,
+        message: res.msg || res.message
+      })
+    }
+
+    console.log("loading public resource", JSON.stringify(res.data))
+
+    const resources = res.data.map(transDataToResource)
+
+    return resources
+  }
+
+  async fetchPersonResources(roomUuid: string, userUuid: string) {
+    const res = await this.fetch({
+      url: `/v1/rooms/${roomUuid}/users/${userUuid}/resources`,
+      method: 'GET',
+    })
+
+    if (res.code !== 0) {
+      throw new GenericErrorWrapper({
+        code: res.code,
+        message: res.msg || res.message
+      })
+    }
+    console.log("loading person resource", JSON.stringify(res.data))
+    const resources = res.data.map(transDataToResource)
+
+    return resources
   }
 
   async handleUpload(payload: HandleUploadType) {
@@ -159,7 +233,8 @@ export class UploadService extends ApiBase {
       userUuid: payload.userUuid,
       resourceName: payload.resourceName,
       ext: payload.ext,
-      conversion: payload.conversion
+      conversion: payload.conversion,
+      fileSize: payload.fileSize,
     })
 
     const ossConfig = fetchResult.data
@@ -196,14 +271,35 @@ export class UploadService extends ApiBase {
         url: pptURL,
         kind: payload.kind,
         onProgressUpdated: (progress: number) => {
+          console.log('progress ', progress)
           payload.onProgress({
             phase: 'finish',
             progress
           })
         },
       })
+
+      const convertingModel = {
+        taskUuid: res.uuid,
+        taskProgress: {
+          totalPageSize: res.scenes.length,
+          convertedPageSize: res.scenes.length,
+          convertedPercentage: 100,
+          convertedFileList: res.scenes
+        }
+      }
+
+      await this.createMaterial({
+        roomUuid: payload.roomUuid,
+        userUuid: payload.userUuid,
+        resourceName: payload.resourceName,
+        ext: 'pptx',
+        ...convertingModel
+      })
       return {
         resourceName: payload.resourceName,
+        url: pptURL,
+        ext: payload.ext,
         scenes: res.scenes,
       }
     } else {
@@ -220,14 +316,23 @@ export class UploadService extends ApiBase {
         userUuid: payload.userUuid,
         appId: this.appId
       })
+      // await this.createMaterial({
+      //   url: resourceUrl,
+      //   roomUuid: payload.roomUuid,
+      //   userUuid: payload.userUuid,
+      //   resourceName: payload.resourceName,
+      //   ext: payload.ext,
+      //   size: payload.fileSize,
+      // })
       return {
         resourceName: payload.resourceName,
+        ext: payload.ext,
+        url: resourceUrl
       }
     }
   }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-    debugger
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
       file,
@@ -238,13 +343,13 @@ export class UploadService extends ApiBase {
           }
         },
         callback: {
-          url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+          // TODO: upload-service.ts
+          // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+          url: `https://api-solutions-dev.bj2.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
           body: ossParams.callbackBody,
           contentType: ossParams.contentType,
         }
       });
-
-      debugger
     if (res.res.status === 200) {
       return ossClient.generateObjectUrl(key);
     } else {

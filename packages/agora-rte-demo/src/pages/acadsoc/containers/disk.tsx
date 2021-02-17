@@ -6,6 +6,24 @@ import MD5 from 'js-md5'
 import { HandleUploadType } from '@/services/upload-service'
 import { PPTKind } from 'white-web-sdk'
 import { EduLogger } from 'agora-rte-sdk'
+import { Progress } from '@/components/progress/progress'
+import { useEffect } from 'react'
+
+
+const UploadingProgress = observer((props: any) => {
+
+  const boardStore = useBoardStore()
+
+  const {fileLoading, uploadingProgress} = boardStore
+
+  console.log("正在上传ing ", fileLoading, uploadingProgress)
+
+  return (
+    fileLoading ? 
+    <Progress title={`${uploadingProgress}`}></Progress>
+    : null
+  )
+})
 
 const NetworkDisk = observer((props: any) => {
 
@@ -22,31 +40,26 @@ const NetworkDisk = observer((props: any) => {
 
   const uploadRequest = async ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
     const resourceName = MD5(`${file}`)
-    // file: File,
-    // resourceName: string,
-    // userUuid: string,
-    // roomUuid: string,
-    // ext: string,
-    // conversion: any,
-    // converting: boolean,
-    // kind: any,
-    // pptConverter: LegacyPPTConverter,
-    // onProgress: (evt: {phase: string, progress: number}) => any,
     const ext = file.name.split(".").pop()
+    const isDynamic = ext === 'pptx'
+
+    // const convertConfig = {
+    //   converting: isDynamic ? true : false,
+    //   // conversion: {
+    //   //   type: isDynamic ? 'dynamic' : 'static',
+    //   //   scale: 1.2,
+    //   //   preview: false,
+    //   //   outputFormat: isDynamic ? '' : ext
+    //   // }
+    // }
     const payload = {
       file: file,
+      fileSize: file.size,
       ext: file.name.split(".").pop(),
       resourceName: resourceName,
-      onProgress: (evt: any) => {
-        console.log("converting evt: ", evt)
-      },
-      conversion: {
-        type: 'dynamic',
-        scale: 1.2,
-        preview: false,
-        outputFormat: ext,
-      },
+      converting: isDynamic ? true : false,
       kind: PPTKind.Dynamic,
+      pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
     } as HandleUploadType
     if (ext === 'pptx') {
       EduLogger.info("upload dynamic pptx")
@@ -72,6 +85,7 @@ const NetworkDisk = observer((props: any) => {
         customRequest={uploadRequest}
         showUploadList={false}
         uploadButton={() => <DiskButton onClick={onUpload} id="disk-button-upload" color={'primary'} text={'上传'} />}
+        progressComponents={() => <UploadingProgress />}
       />
     )
   }
@@ -110,6 +124,9 @@ const NetworkDisk = observer((props: any) => {
         right: 18,
         color: 'white'
       }}
+      publicList={boardStore.publicResources}
+      privateList={boardStore.personalResources}
+      downloadList={boardStore.allResources}
       uploadComponent={uploadComponent()}
     />
   )

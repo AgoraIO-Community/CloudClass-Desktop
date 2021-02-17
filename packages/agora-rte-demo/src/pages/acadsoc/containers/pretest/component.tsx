@@ -131,8 +131,9 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = (props) => {
           value={props.value}
           onChange={props.onChange}
           style={{
-            paddingRight: '24px',
+            // paddingRight: '24px',
             width: '100%',
+            background: 'white',
           }}
           inputProps={{
             style: {}

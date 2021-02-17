@@ -510,7 +510,7 @@ static toolItems: IToolItem[] = [
   }
 
   // 更新白板
-  updateBoardSceneItems ({scenes, resourceName, page, taskUuid}: any) {
+  updateBoardSceneItems ({scenes, resourceName, page, taskUuid}: any, setScene: boolean) {
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
     const dynamicTaskUuidList = get(this.room.state.globalState, 'dynamicTaskUuidList', [])
@@ -523,8 +523,10 @@ static toolItems: IToolItem[] = [
     this.room.setGlobalState({
       dynamicTaskUuidList: dynamicTaskUuidItem
     })
-    this.room.putScenes(sceneName, scenes)
-    this.room.setScenePath(scenePath)
+    if (setScene) {
+      this.room.putScenes(sceneName, scenes)
+      this.room.setScenePath(scenePath)
+    }
   }
 
   findResourcePage (resourceName: string) {
@@ -585,17 +587,19 @@ static toolItems: IToolItem[] = [
           resourceName: resourceName,
         }
       }
-      // roomScenes: {
-      //   [`${resourceName}`]: {
-      //     contextPath: currentSceneState.contextPath,
-      //     index: currentSceneState.index,
-      //     sceneName: currentSceneState.sceneName,
-      //     scenePath: currentSceneState.scenePath,
-      //     totalPage: currentSceneState.scenes.length,
-      //     resourceName: resourceName,
-      //   }
-      // }
     })
+    const sceneState = this.room.state.sceneState
+    const name = this.getResourceName(sceneState.contextPath)
+    
+    const courseWare = this.courseWareList.find((item: any) => item.resourceName === name)
+    if (courseWare) {
+      this.updateBoardSceneItems({
+        scenes: sceneState.scenes,
+        resourceName: name,
+        page: sceneState.index,
+        taskUuid: courseWare.taskUuid,
+      }, false)
+    }
   }
 
   @observable
@@ -643,12 +647,20 @@ static toolItems: IToolItem[] = [
     // this.totalPage = this.
   }
 
+  updateCourseWareList() {
+    this.courseWareList = get(this, 'room.state.globalState.dynamicTaskUuidList', [])
+  }
+
+  @observable
+  courseWareList: any[] = []
+
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
     // TODO: 需要从外部获取
     let ppt = await fetchPPT()
     const firstCourseWare = ppt[0]
     await this.startDownload(firstCourseWare.taskUuid)
+    // const items = this.appStore.params.config.courseWareList
     if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
       const scenes = firstCourseWare.taskProgress!.convertedFileList
       const resourceName = `${firstCourseWare.resourceName}`
@@ -658,7 +670,7 @@ static toolItems: IToolItem[] = [
         resourceName,
         page,
         taskUuid: firstCourseWare.taskUuid
-      })
+      }, true)
       return scenes
     }
   }
@@ -734,9 +746,12 @@ static toolItems: IToolItem[] = [
       EduLogger.info("白板已经锁定")
     }
 
+    await this.loadCloudResources()
+
     this.updateLocalResourceList()
     this.updateLocalSceneState()
     this.updateSceneItems()
+    this.updateCourseWareList()
   }
 
   pptAutoFullScreen() {
@@ -859,6 +874,16 @@ static toolItems: IToolItem[] = [
         })
       }
       if (state.sceneState) {
+        // () => {
+        //   const dynamicTaskUuidItem = uniqBy([{
+        //     resourceName: resourceName,
+        //     taskUuid: taskUuid,
+        //   }].concat(dynamicTaskUuidList), 'resourceName')
+      
+        //   this.room.setGlobalState({
+        //     dynamicTaskUuidList: dynamicTaskUuidItem
+        //   })
+        // }
         this.updatePageHistory()
       }
       if (state.sceneState || state.globalState) {
@@ -866,9 +891,9 @@ static toolItems: IToolItem[] = [
         this.updateLocalSceneState()
         this.updateSceneItems()
       }
-      // if (state.globalState) {
-      //   this.updateBoardState()
-      // }
+      if (state.globalState) {
+        this.updateCourseWareList()
+      }
     })
     BizLogger.info("[breakout board] join", data)
     const cursorAdapter = new CursorTool(); //新版鼠标追踪
@@ -1872,10 +1897,20 @@ static toolItems: IToolItem[] = [
   @observable
   _grantPermission?: boolean = false
 
+  @observable
+  fileLoading: boolean = false
+  @observable
+  uploadingProgress: number = 0
+
   @action
   reset () {
+    this.publicResources = []
+    this.personalResources = []
     this._resourcesList = []
+    this.courseWareList = []
     this.isFullScreen = false
+    this.fileLoading = false
+    this.uploadingProgress = 0
     this.folder = ''
     this.lockBoard = true
     this.scenes = []
@@ -2056,13 +2091,39 @@ static toolItems: IToolItem[] = [
 
   async handleUpload(payload: any) {
     try {
-      await this.appStore.uploadService.handleUpload({
+      this.fileLoading = true
+      let res = await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
+        onProgress: (evt: any) => {
+          console.log(evt)
+        },
       })
+      EduLogger.info(`上传课件成功, result: ${JSON.stringify(res)}`)
+      // console.log(" done ", file)
+      this.fileLoading = false
     } catch (err) {
       console.error(err)
+      this.fileLoading = false
+    }
+  }
+
+  @observable
+  publicResources: any[] = []
+
+  @observable
+  personalResources: any[] = []
+
+  @computed
+  get allResources(): any[] {
+    return [this.publicResources].concat(this.personalResources)
+  }
+
+  async loadCloudResources() {
+    this.publicResources = await this.appStore.uploadService.fetchPublicResources(this.appStore.roomInfo.roomUuid)
+    if (this.isTeacher()) {
+      this.personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
     }
   }
 }
