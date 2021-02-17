@@ -91,7 +91,7 @@ export const TeacherVideo = observer(() => {
         onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
-          minHeight: '194px',
+          // minHeight: '120pxpx',
           maxHeight: '194px',
           overflow: 'hidden',
         }}
@@ -101,8 +101,8 @@ export const TeacherVideo = observer(() => {
         { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
         { !!userStream.video === false ? <VideoPlaceholder /> : null}
         { userStream.audio ? 
-          <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
-            <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+          <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
+            <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />
           </div> : null }
       </Video>
     </div>
@@ -186,7 +186,7 @@ export const StudentVideo = observer(() => {
         onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
-          minHeight: '194px',
+          // minHeight: '194px',
           maxHeight: '194px',
           overflow: 'hidden',
         }}

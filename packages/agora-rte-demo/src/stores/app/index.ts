@@ -1,3 +1,4 @@
+// import { UploadService } from './../../modules/upload/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
 import {
@@ -41,6 +42,7 @@ import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
 import { AcadsocRoomStore } from './acadsoc-room';
 import { DeviceSettingStore } from './device-setting';
+import { UploadService } from '@/services/upload-service';
 
 type RoomInfoParams = {
   roomName: string
@@ -127,9 +129,14 @@ export class AppStore {
 
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
+  _uploadService?: UploadService;
 
   get boardService() {
     return this._boardService as EduBoardService;
+  }
+
+  get uploadService() {
+    return this._uploadService as UploadService;
   }
 
   get recordService() {
@@ -661,6 +668,7 @@ export class AppStore {
   reset() {
     this._boardService = undefined
     this._recordService = undefined
+    this._uploadService = undefined
     // this.roomInfo = {}
     this.resetWebPrepareScreen()
     this.removeScreenShareWindow()

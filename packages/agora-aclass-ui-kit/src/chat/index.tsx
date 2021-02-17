@@ -147,6 +147,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       boxSizing: 'border-box',
       outline:'none',
       minHeight: '21px',
+      fontFamily: 'SourceHanSansCN-Regular'
     },
     toolButton: {
       display: 'flex',

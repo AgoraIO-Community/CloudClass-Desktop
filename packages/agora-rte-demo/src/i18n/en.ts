@@ -28,7 +28,7 @@ const en = {
       "unblock":"chat",
       "send":"Send",
       "disablePlaceholder": "Chat messages have been banned",
-      "placeholder":"block send message",
+      "placeholder":"Enter chat...",
       "title":"Chat",
       "loading":'loading',
       "fail":'Translation failure'
