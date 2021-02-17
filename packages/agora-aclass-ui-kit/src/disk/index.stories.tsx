@@ -34,6 +34,30 @@ export const NetworkDisk = () => {
     )
   }
 
+  const donwloadAllComponent = () => {
+    return (
+      <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} />
+    )
+  }
+
+  const deleteAllCache = () => {
+    return (
+      <DiskButton id="disk-button-clear-storage" color={'secondary'} text={'清空缓存'} />
+    )
+  }
+
+  const singleDonwload = () => {
+    return (
+      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+    )
+  }
+
+  const singleDelete = () => {
+    return (
+      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+    )
+  }
+
   return (
     <DiskManagerDialog
       fullWidth={false}
@@ -69,6 +93,10 @@ export const NetworkDisk = () => {
         color: 'white'
       }}
       uploadComponent={uploadComponent()}
+      donwloadAllComponent={donwloadAllComponent()}
+      deleteAllCacheComponent={deleteAllCache()}
+      singleDownloadComponent={singleDonwload()}
+      singleDeleteComponent={singleDelete()}
     />
   )
 }

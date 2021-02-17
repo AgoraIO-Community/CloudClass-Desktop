@@ -45,9 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
       right: '3px',
       justifyContent: 'center',
       alignItems: 'center',
-      width: 12,
-      minWidth: 12,
-      height: 12,
+      width: 20,
+      minWidth: 20,
+      height: 20,
       borderRadius: 3,
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
       '&:hover': {
@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       bottom: 3,
       zIndex: 3,
+      fontSize: 12,
     },
     ellipticBox: {
       display: 'flex',
@@ -94,16 +95,18 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 95,
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
       borderRadius: 15,
-      fontSize: 10,
-      paddingLeft: 4,
-      paddingRight: 4,
+      fontSize: 12,
+      // paddingLeft: 4,
+      // paddingRight: 4,
+      lineHeight: '12px',
       color: '#ffffff',
+      padding: '3px 8px',
     },
     teacherIcon: {
       background: `url(${TeacherIcon}) no-repeat`,
       backgroundPosition: 'center',
       backgroundSize: 'contain',
-      height: 14,
+      height: 12,
       width: 13,
       margin: '0 2px'
     },
@@ -111,39 +114,51 @@ const useStyles = makeStyles((theme: Theme) =>
       background: `url(${StudentIcon}) no-repeat`,
       backgroundPosition: 'center',
       backgroundSize: 'contain',
-      height: 14,
+      height: 12,
       width: 13,
       margin: '0 2px'
     },
     UnMuteCameIcon: {
       background: `url(${UnMuteCam}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     UnMuteBoardIcon: {
       background: `url(${DrawIcon}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     UnMuteMicIcon: {
       background: `url(${UnMuteMic}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     MuteCameIcon: {
       background: `url(${MuteCam}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     MuteMicIcon: {
       background: `url(${MuteMic}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     MuteBoardIcon: {
       background: `url(${DisableDrawIcon}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      height: 25,
+      width: 25
     },
     btnRoot: {
       padding: 0,
@@ -237,6 +252,7 @@ const AudioIconButton = (props: MediaButtonProps) => {
 
 interface EllipticBoxProps {
   children: React.ReactElement,
+  style?: React.CSSProperties,
 }
 
 const EllipticBox = (props: EllipticBoxProps) => {

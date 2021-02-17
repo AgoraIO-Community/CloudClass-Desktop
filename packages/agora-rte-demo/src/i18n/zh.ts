@@ -27,7 +27,7 @@ const zhCN: any = {
       "banned": "禁言",
       "unblock":"聊天",
       "disablePlaceholder": "已禁止发聊天消息",
-      "placeholder":"说点什么",
+      "placeholder":"说点什么...",
       "send":"发送",
       "title":"聊天",
       "loading":'翻译中',
@@ -260,7 +260,7 @@ const zhCN: any = {
     'noAvailableCamera': '未检测到摄像头',
   },
   'chat': {
-    'placeholder': '说点什么',
+    'placeholder': '说点什么...',
     'banned': '禁言中',
     'send': '发送'
   },

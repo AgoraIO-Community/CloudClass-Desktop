@@ -53,6 +53,7 @@ export const PretestHeader: React.FC<PretestHeaderProps> = (props) => {
 
 const AClassSelect = withStyles((theme: Theme) => ({
   root: {
+    fontSize: '14px',
     margin: 0,
     padding: 0,
     minWidth: '100%',
@@ -66,6 +67,8 @@ const AClassSelect = withStyles((theme: Theme) => ({
     '& .MuiSelect-select': {
       padding: 0,
       backgroundColor: '#000000',
+      fontSize: '14px',
+      paddingLeft: '10px !important',
       '&:focus': {
         backgroundColor: '#000000'
       }

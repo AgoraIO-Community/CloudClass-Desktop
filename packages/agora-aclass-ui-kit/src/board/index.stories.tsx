@@ -56,12 +56,12 @@ export const StrokePopover = () => {
     }}>
       <>
         <StrokeListPanel />
-        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <div style={{borderBottom: '1px solid #C3970A', margin: '7px 0'}}></div>
         <ColorPalette
           currentColor={currentColor}
           onClick={onClick}
         />
-        <div style={{borderBottom: '2px solid #B98D00', margin: '7px 0'}}></div>
+        <div style={{borderBottom: '1px solid #C3970A', margin: '7px 0'}}></div>
         <ArrowListPanel />
       </>
     </PanelBackground>
