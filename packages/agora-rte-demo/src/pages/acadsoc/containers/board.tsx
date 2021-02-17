@@ -97,7 +97,7 @@ export const BoardView = () => {
 export const EduWhiteBoard = observer(() => {
   const boardStore = useBoardStore()
   const ready = boardStore.ready
-  const isLoading = boardStore.isLoading
+  const {isLoading, loadingStatus} = boardStore
   const boardRef = useRef<HTMLDivElement | null>(null)
   const mountToDOM = useCallback((dom: any) => {
     if (dom) {
@@ -130,7 +130,7 @@ export const EduWhiteBoard = observer(() => {
       fullScreenText={t('tool.fullScreen')}
     >
       {
-        isLoading ? <Progress title={t("whiteboard.loading")}></Progress> : null
+        isLoading ? <Progress title={loadingStatus}></Progress> : null
       }
       {
         ready ? 

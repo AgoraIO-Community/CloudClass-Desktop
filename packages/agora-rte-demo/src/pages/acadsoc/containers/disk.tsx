@@ -19,10 +19,14 @@ const UploadingProgress = observer((props: any) => {
   console.log("正在上传ing ", fileLoading, uploadingProgress)
 
   return (
-    fileLoading ? 
+    <>
+    233
+    {fileLoading ? 
     <Progress title={`${uploadingProgress}`}></Progress>
-    : null
+    : null}
+    </>
   )
+  
 })
 
 const NetworkDisk = observer((props: any) => {

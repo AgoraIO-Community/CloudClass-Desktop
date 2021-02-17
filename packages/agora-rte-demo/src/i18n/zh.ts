@@ -152,6 +152,7 @@ const zhCN: any = {
     }
   },
   'whiteboard': {
+    'downloading': '下载中 {reason}%...',
     'loading': '加载中...',
     'converting': '转换中...',
     'global_state_limit': '请不要给白板设置过大的globalState size',

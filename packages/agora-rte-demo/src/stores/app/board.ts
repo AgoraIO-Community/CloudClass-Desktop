@@ -1,3 +1,4 @@
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
@@ -461,21 +462,46 @@ static toolItems: IToolItem[] = [
   sceneList: any[] = []
 
   async startDownload(taskUuid: string) {
-    const isWeb = true
-    if (isWeb) {
-      const zipUrl = `https://convertcdn.netless.link/dynamicConvert/${taskUuid}.zip`;
-      const controller = new AbortController();
-      const signal = controller.signal;
-      const result = await fetch(zipUrl, {
-          method: "get",
-          signal: signal,
-      }).then(fetchProgress({
-          onProgress(progress: any) {
-            console.log(' percentage ', progress, controller)
-          },
-      }))
-      console.log(" result ", result)
+    const isWeb = this.appStore.isElectron ? false : true
+    try {
+      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
+      this.preloading = true
+      if (isWeb) {
+        await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
+          this.preloadingProgress = progress
+        })
+      } else {
+        const controller = new AbortController();
+        const resourcesHost = "convertcdn.netless.link";
+        const signal = controller.signal;
+        const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+        const res = await fetch(zipUrl, {
+            method: "get",
+            signal: signal,
+        }).then(fetchProgress({
+            onProgress: (progress: any) => {
+              if (progress.hasOwnProperty('percentage')) {
+                this.preloadingProgress = get(progress, 'percentage')
+              }
+            },
+        }));
+        if (res.status !== 200) {
+          throw new GenericErrorWrapper({
+            code: res.status,
+            message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
+          })
+        }
+      }
+      this.preloading = false
+      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      this.preloading = false
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
     }
+  }
+
+  async startNativeDownload(taskUuid: string) {
+
   }
 
   @observable
@@ -553,6 +579,20 @@ static toolItems: IToolItem[] = [
     if (idx !== -1) return idx
 
     return 0
+  }
+
+  async autoFetchDynamicTask() {
+    const currentSceneState = this.room.state.sceneState
+    const resourceName = this.getResourceName(currentSceneState.contextPath)
+    const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
+    if (isRootDir) {
+      const globalState = (this.room.state.globalState as any)
+      const taskUuidList = get(globalState, 'dynamicTaskUuidList', [])
+      const pptItem = taskUuidList.find((it: any) => it.resourceName === resourceName)
+      if (pptItem) {
+        await this.startDownload(pptItem.taskUuid)
+      }
+    }
   }
 
   updatePageHistory() {
@@ -658,6 +698,8 @@ static toolItems: IToolItem[] = [
   async fetchRoomScenes() {
     // TODO: 需要从外部获取
     let ppt = await fetchPPT()
+    //@ts-ignore
+    window.fetchPPT = fetchPPT
     const firstCourseWare = ppt[0]
     await this.startDownload(firstCourseWare.taskUuid)
     // const items = this.appStore.params.config.courseWareList
@@ -874,17 +916,8 @@ static toolItems: IToolItem[] = [
         })
       }
       if (state.sceneState) {
-        // () => {
-        //   const dynamicTaskUuidItem = uniqBy([{
-        //     resourceName: resourceName,
-        //     taskUuid: taskUuid,
-        //   }].concat(dynamicTaskUuidList), 'resourceName')
-      
-        //   this.room.setGlobalState({
-        //     dynamicTaskUuidList: dynamicTaskUuidItem
-        //   })
-        // }
         this.updatePageHistory()
+        this.autoFetchDynamicTask()
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList()
@@ -2072,14 +2105,35 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  @observable
+  preloading: boolean = false
+
+  @observable
+  preloadingProgress: number = 0
+
   @computed
   get isLoading() {
     if (!this.ready) {
       return 'preparing'
     }
-    // if (this.)
+    if (this.preloading) {
+      return true
+    }
+  }
+
+
+  @computed
+  get loadingStatus() {
+    if (!this.ready) {
+      return t("whiteboard.loading")
+    }
+    if (this.preloading) {
+      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+    }
+
     return ''
   }
+
 
   toggleAClassLockBoard() {
     if (this.lockBoard) {
