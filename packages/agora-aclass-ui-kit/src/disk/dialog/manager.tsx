@@ -93,6 +93,12 @@ interface NetworkDiskDialogProps {
   downloadList?: any,
   // upload
   uploadComponent?: React.ReactNode,
+  handleDelete: (evt: any) => any,
+  removeText: string,
+  removeSuccess: string,
+  removeFailed: string,
+  // deleteComponent?: React.ReactNode,
+  refreshComponent?: React.ReactNode,
   // downloadComponet
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
@@ -193,7 +199,17 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
 
               {
                 activeValue === 1 && (
-                  <PrivateDiskTables diskText={props.diskText} tabValue={activeValue} uploadComponent={props.uploadComponent} privateList={props.privateList}></PrivateDiskTables>
+                  <PrivateDiskTables tabValue={activeValue}
+                    diskText={props.diskText}
+                    uploadComponent={props.uploadComponent}
+                    handleDelete={props.handleDelete}
+                    // deleteComponent={props.deleteComponent}
+                    refreshComponent={props.refreshComponent}
+                    removeText={props.removeText}
+                    removeSuccess={props.removeSuccess}
+                    removeFailed={props.removeFailed}
+                    privateList={props.privateList}
+                  ></PrivateDiskTables>
                 )
               }
               {

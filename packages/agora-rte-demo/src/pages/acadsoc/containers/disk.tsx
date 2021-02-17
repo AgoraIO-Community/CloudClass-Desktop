@@ -8,6 +8,8 @@ import { PPTKind } from 'white-web-sdk'
 import { EduLogger } from 'agora-rte-sdk'
 import { Progress } from '@/components/progress/progress'
 import {t} from '@/i18n'
+import styles from './disk.module.scss'
+import IconRefresh from '../assets/icon-refresh.png'
 
 
 const UploadingProgress = observer((props: any) => {
@@ -42,8 +44,22 @@ const NetworkDisk = observer((props: any) => {
     console.log('reload network disk')
   }
 
+  const calcUploadFilesMd5 = async (file: File) => {
+    return new Promise(resolve => {
+      const time = new Date().getTime(); 
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file); //计算文件md5
+      fileReader.onload = async() => {
+          const md5Str = MD5(fileReader.result); 
+          const et= new Date().getTime();
+          resolve(md5Str);
+      };
+    });
+  }
+
   const uploadRequest = async ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
-    const resourceName = MD5(`${file}`)
+    const md5 = await calcUploadFilesMd5(file)
+    const resourceName = MD5(`${md5}`)
     const ext = file.name.split(".").pop()
     const isDynamic = ext === 'pptx'
 
@@ -118,8 +134,33 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
+  const handleDelete = async (selected: any) => {
+    await boardStore.removeMaterialList(selected)
+    console.log("selected", selected)
+  }
+
+  const deleteComponent = () => {
+    return (
+      <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
+    )
+  }
+
+  const handleRefresh = async () => {
+    await boardStore.loadCloudResources()
+  }
+
+  const refreshComponent = () => {
+    return (
+      <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
+    )
+  }
+
   return (
     <DiskManagerDialog
+      removeText={"删除"}
+      handleDelete={handleDelete}
+      removeSuccess={"删除成功"}
+      removeFailed={"删除失败"}
       fullWidth={false}
       visible={props.openDisk}
       onClose={handleClose}
@@ -176,6 +217,8 @@ const NetworkDisk = observer((props: any) => {
         downloaded: t('disk.downloaded'),
         notDownload: t('disk.notDownload'),
       }}
+      // deleteComponent={deleteComponent()}
+      refreshComponent={refreshComponent()}
     />
   )
 })

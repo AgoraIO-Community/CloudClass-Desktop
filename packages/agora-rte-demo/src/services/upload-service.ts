@@ -9,11 +9,13 @@ import MD5 from 'js-md5';
 import { resolveFileInfo } from '@/utils/helper';
 
 
-const transDataToResource = (data: any) => {
+export const transDataToResource = (data: any) => {
   if (!data.taskUuid) {
     return {
+      id: data.resourceUuid,
       name: data.resourceName,
       ext: data.ext,
+      type: data.ext,
       calories: data.size || 0,
       url: data.url,
       taskUuid: '',
@@ -23,8 +25,10 @@ const transDataToResource = (data: any) => {
     }
   }
   return {
+    id: data.resourceUuid,
     name: data.resourceName,
     ext: data.ext,
+    type: data.ext,
     calories: data.size || 0,
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
@@ -194,9 +198,9 @@ export class UploadService extends ApiBase {
 
     console.log("loading public resource", JSON.stringify(res.data))
 
-    const resources = res.data.map(transDataToResource)
+    // const resources = res.data.map(transDataToResource)
 
-    return resources
+    return res.data
   }
 
   async fetchPersonResources(roomUuid: string, userUuid: string) {
@@ -212,9 +216,9 @@ export class UploadService extends ApiBase {
       })
     }
     console.log("loading person resource", JSON.stringify(res.data))
-    const resources = res.data.map(transDataToResource)
+    // const resources = res.data.map(transDataToResource)
 
-    return resources
+    return res.data
   }
 
   async handleUpload(payload: HandleUploadType) {
@@ -417,8 +421,22 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async handleConverting() {
-    
+  async removeMaterials(params: {resourceUuids: string[], roomUuid: string, userUuid: string}) {
+    const res = await this.fetch({
+      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      method: 'DELETE',
+      data: {
+        resourceUuids: params.resourceUuids
+      }
+    })
+
+    if (res.code !== 0) {
+      throw new GenericErrorWrapper({
+        code: res.code,
+        message: res.message
+      })
+    }
+    return res.data
   }
 
 }

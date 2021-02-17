@@ -72,7 +72,7 @@ export const TeacherVideo = observer(() => {
   const renderer = userStream.renderer
 
   return (
-    <div style={{marginBottom: '10px'}}>
+    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
       <Video
         className={""}
         uid={`${userStream.userUuid}`}
@@ -91,7 +91,9 @@ export const TeacherVideo = observer(() => {
         onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
-          // minHeight: '120pxpx',
+          flex: 1,
+          height: 'auto',
+          // minHeight: '120px',
           maxHeight: '194px',
           overflow: 'hidden',
         }}
@@ -167,7 +169,7 @@ export const StudentVideo = observer(() => {
   }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
-    <div style={{marginBottom: '10px'}}>
+    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
       <Video
         uid={`${userStream.userUuid}`}
         className={""}
@@ -186,6 +188,8 @@ export const StudentVideo = observer(() => {
         onClick={debounce(handleClick, 500)}
         style={{
           width: '268px',
+          flex: 1,
+          height: 'auto',
           // minHeight: '194px',
           maxHeight: '194px',
           overflow: 'hidden',
@@ -197,8 +201,8 @@ export const StudentVideo = observer(() => {
         { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
         { !!userStream.video === false ? <VideoPlaceholder /> : null}
         { userStream.audio ? 
-        <div style={{position: 'absolute', right: 5, bottom: 24, zIndex: 999}}>
-          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'5px'} />
+        <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
+          <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />
         </div> : null }
       </Video>
     </div>

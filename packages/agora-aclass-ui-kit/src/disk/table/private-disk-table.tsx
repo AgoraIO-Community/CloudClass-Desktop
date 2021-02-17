@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { IconButton, Table, TableBody, TableRow, InputAdornment, Theme, TextField } from "@material-ui/core";
 import { makeStyles, createStyles, withStyles } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search';
@@ -145,6 +145,12 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
   uploadComponent?: React.ReactNode,
   diskText?: any,
+  // deleteComponent?: React.ReactNode,
+  removeText: string,
+  handleDelete: (evt: any) => any,
+  removeSuccess: string,
+  removeFailed: string,
+  refreshComponent?: React.ReactNode,
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
@@ -164,19 +170,19 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n: any) => n.name);
+      const newSelecteds = rows.map((n: any) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -191,7 +197,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     setSelected(newSelected);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -214,21 +220,24 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
   const handleUpload = () => {
     console.log('>>>>>upload')
-    // setOpenToast({
-    //   open: true,
-    //   toastMessage: '文件上传成功！',
-    //   type: 'success',
-    // })
   }
 
-  const handleDelete = () => {
-    console.log('>>>>delete')
-    setOpenToast({
-      open: true,
-      toastMessage: '删除文件失败！',
-      type: 'error',
-    })
-  }
+  const handleDelete = useCallback(async (evt: any) => {
+    try {
+      await props.handleDelete(selected)
+      setOpenToast({
+        open: true,
+        toastMessage: props.removeSuccess,
+        type: 'error',
+      })
+    } catch (err) {
+      setOpenToast({
+        open: true,
+        toastMessage: props.removeFailed,
+        type: 'error',
+      })
+    }
+  }, [selected])
 
   const handleCloseAlert = () => {
     setOpenToast({
@@ -261,16 +270,16 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row: any, index: number) => {
-              const isItemSelected = isSelected(row.name);
+              const isItemSelected = isSelected(row.id);
               const labelId = `private-table-checkbox-${index}`;
 
               return (
                 <TableRow
-                  onClick={(event) => handleClick(event, row.name)}
+                  onClick={(event) => handleClick(event, row.id)}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row.name}
+                  key={row.id}
                 >
                   <DiskTableCell padding="checkbox">
                     <DiskCheckbox
@@ -306,9 +315,10 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
             { props.uploadComponent }
-            {/* <DiskButton id="disk-button-upload" onClick={handleUpload} color={'primary'} text={'上传'} /> */}
-            <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={'删除'} />
-            <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} />
+            <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
+            {/* { props.deleteComponent } */}
+            { props.refreshComponent }
+            {/* <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} /> */}
           </div>
           <div>
             <TextField

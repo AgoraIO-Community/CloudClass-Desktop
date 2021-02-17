@@ -19,6 +19,7 @@ import { fetchPPT } from '@/modules/course-ware';
 import { ConvertedFile } from '@/edu-sdk';
 import { agoraCaches } from '@/utils/web-download.file';
 import fetchProgress from 'fetch-progress';
+import { transDataToResource } from '@/services/upload-service';
 
 export enum BoardPencilSize {
   thin = 4,
@@ -581,6 +582,10 @@ static toolItems: IToolItem[] = [
     return 0
   }
 
+  closeMaterial(resourceName: string) {
+    this.room.setScenePath('')
+  }
+
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
@@ -689,6 +694,7 @@ static toolItems: IToolItem[] = [
 
   updateCourseWareList() {
     this.courseWareList = get(this, 'room.state.globalState.dynamicTaskUuidList', [])
+    this._personalResources = get(this, 'room.state.globalState.materialList', [])
   }
 
   @observable
@@ -1938,7 +1944,7 @@ static toolItems: IToolItem[] = [
   @action
   reset () {
     this.publicResources = []
-    this.personalResources = []
+    this._personalResources = []
     this._resourcesList = []
     this.courseWareList = []
     this.isFullScreen = false
@@ -2143,6 +2149,26 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  async removeMaterialList(resourceUuids: any[]) {
+    try {
+      const res = await this.appStore.uploadService.removeMaterials({
+        resourceUuids: resourceUuids,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
+      })
+      const globalState = this.room.state.globalState as any
+      const materialList = get(globalState, 'materialList', [])
+      // const resourceUuids = this
+      const newList = materialList.filter((e: any) => !resourceUuids.includes(e.id))
+      this.room.setGlobalState({
+        materialList: newList
+      })
+      EduLogger.info("remove removeMaterialList success", res)
+    } catch (err) {
+      throw err
+    }
+  }
+
   async handleUpload(payload: any) {
     try {
       this.fileLoading = true
@@ -2154,6 +2180,14 @@ static toolItems: IToolItem[] = [
           console.log(evt)
         },
       })
+      const globalState = this.room.state.globalState as any
+      const materialList = get(globalState, 'materialList', [])
+      this.room.setGlobalState({
+        materialList: uniqBy(materialList.concat([{
+          ...res
+        }]), 'resourceName')
+      })
+      // const materialList
       EduLogger.info(`上传课件成功, result: ${JSON.stringify(res)}`)
       // console.log(" done ", file)
       this.fileLoading = false
@@ -2167,17 +2201,22 @@ static toolItems: IToolItem[] = [
   publicResources: any[] = []
 
   @observable
-  personalResources: any[] = []
+  _personalResources: any[] = []
+
+  @computed
+  get personalResources(): any[] {
+    return this._personalResources.map(transDataToResource)
+  }
 
   @computed
   get allResources(): any[] {
-    return [this.publicResources].concat(this.personalResources)
+    return this.publicResources.concat(this.personalResources)
   }
 
   async loadCloudResources() {
     this.publicResources = await this.appStore.uploadService.fetchPublicResources(this.appStore.roomInfo.roomUuid)
     if (this.isTeacher()) {
-      this.personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
+      this._personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
     }
   }
 }

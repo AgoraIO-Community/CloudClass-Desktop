@@ -3,6 +3,9 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "sure_close_board": "Are you sure close?",
+    "confirm_close": "sure",
+    "cancel_close": "cancel",
     "board_name": "Board",
     "exit": "Exit",
     "class_end": "Class is ended",

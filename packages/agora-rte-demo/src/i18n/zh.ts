@@ -3,6 +3,9 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "sure_close_board": "确定关闭当前课件",
+    "confirm_close": "确定关闭",
+    "cancel_close": "取消",
     "board_name": "白板",
     "exit": "离开教室",
     "class_end": "课程已结束",
