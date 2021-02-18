@@ -223,7 +223,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     {
       id: 'teacher'+Math.ceil(Math.random()*10),
       type: 'teacher',
-      content: 'Nancy',
+      content: '',
       isHidden: false,
       animation: '',
       zIndex: 0,
@@ -231,7 +231,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     {
       id: 'student'+Math.ceil(Math.random()*10),
       type: 'student',
-      content: 'Sue',
+      content: '',
       isHidden: false,
       animation: '',
       zIndex: 0,
@@ -523,8 +523,12 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get shiftClassTime(): string {
-    let minutes = this.minutes < 10? '0'+this.minutes : this.minutes
-    let seconds = this.seconds < 10? '0'+this.seconds : this.seconds
+    let minutes:any = this.minutes < 10? '0'+this.minutes : this.minutes
+    let seconds:any = this.seconds < 10? '0'+this.seconds : this.seconds
+    if(isNaN(minutes) || isNaN(seconds)) {
+      minutes = 0
+      seconds = 0
+    }
     return minutes + t('nav.minutes') + seconds + t('nav.seconds')
   }
 
