@@ -165,7 +165,7 @@ export const HomePage = observer(() => {
     <div className={`flex-container home-cover-web`}>
       {/* <CloudDiskUpload /> */}
       {loading ? <Loading /> : null}
-      {uiStore.isElectron ? null : 
+      {false ? null : 
       <div className="web-menu">
         <div className="web-menu-container">
           <div className="short-title">
@@ -206,7 +206,7 @@ export const HomePage = observer(() => {
       <div className="custom-card">
         {/* {!uiStore.isElectron ? <GithubIcon /> : null} */}
         <div className="flex-item cover">
-          {uiStore.isElectron ? 
+          {false ? 
           <>
           <div className={`short-title ${GlobalStorage.getLanguage()}`}>
             <span className="title">{t('home.short_title.title')}</span>
@@ -279,7 +279,7 @@ export const HomePage = observer(() => {
         </div>
         <div className="flex-item card">
           <div className="position-top card-menu">
-            {uiStore.isElectron && 
+            {false && 
             <>
                 <Tooltip title={t("icon.setting")} placement="bottom">
                   <span>
