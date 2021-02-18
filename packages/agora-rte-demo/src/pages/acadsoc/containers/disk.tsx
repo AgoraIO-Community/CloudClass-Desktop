@@ -35,7 +35,6 @@ const NetworkDisk = observer((props: any) => {
 
   const boardStore = useBoardStore()
   const diskStore = useDiskStore()
-  console.log('disk store')
 
   const handleClose = () => {
     console.log('close network disk', props.openDisk)
