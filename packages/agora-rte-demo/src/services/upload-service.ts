@@ -8,6 +8,24 @@ import { Room, PPT, PPTKind, ApplianceNames, LegacyPPTConverter } from 'white-we
 import MD5 from 'js-md5';
 import { resolveFileInfo } from '@/utils/helper';
 
+const formatExt = (ext: string) => {
+  const typeMapper = {
+      ppt: 'ppt',
+      pptm: 'ppt',
+      pptx: 'ppt',
+      
+      docx: 'word',
+      doc: 'word',
+      
+      xlsx: 'excel',
+      xls: 'excel',
+      csv: 'excel',
+      
+      pdf: 'pdf',
+      // video audio txt pic
+  }
+  return typeMapper[ext]
+}
 
 export const transDataToResource = (data: any) => {
   if (!data.taskUuid) {
@@ -15,7 +33,7 @@ export const transDataToResource = (data: any) => {
       id: data.resourceUuid,
       name: data.resourceName,
       ext: data.ext,
-      type: data.ext,
+      type: formatExt(data.ext),
       calories: data.size || 0,
       url: data.url,
       taskUuid: '',
@@ -28,7 +46,7 @@ export const transDataToResource = (data: any) => {
     id: data.resourceUuid,
     name: data.resourceName,
     ext: data.ext,
-    type: data.ext,
+    type: formatExt(data.ext),
     calories: data.size || 0,
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
