@@ -32,8 +32,8 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
   const classKey = showCheckbox ? classes.showCheckbox : classes.noCheckbox
 
   return (
-    <TableHead>
-      <TableRow style={{ color: '#273D75' }}>
+    <TableHead component="div">
+      <TableRow component="div" style={{ color: '#273D75' }}>
         { showCheckbox && <DiskTableCellHead padding="checkbox">
           <DiskCheckbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -43,10 +43,10 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
           />
         </DiskTableCellHead>
          }
-        <DiskTableCellHead className={classKey} id="name" key="name" scope="row">{diskText.fileName}</DiskTableCellHead>
-        <DiskTableCellHead className={classes.text} id="calories" key="calories" align="right">{diskText.size}</DiskTableCellHead>
-        <DiskTableCellHead className={classes.text} id="fat" key="fat" align="right">{diskText.modificationTime}</DiskTableCellHead>
-        <DiskTableCellHead className={classes.text} id="operation" key="operation" align="right">{diskText.operation}</DiskTableCellHead>
+        <DiskTableCellHead component="div" className={classKey} id="name" key="name" scope="row">{diskText.fileName}</DiskTableCellHead>
+        <DiskTableCellHead component="div" className={classes.text} id="calories" key="calories" align="right">{diskText.size}</DiskTableCellHead>
+        <DiskTableCellHead component="div" className={classes.text} id="fat" key="fat" align="right">{diskText.modificationTime}</DiskTableCellHead>
+        <DiskTableCellHead component="div" className={classes.text} id="operation" key="operation" align="right">{diskText.operation}</DiskTableCellHead>
       </TableRow>
     </TableHead>
   );

@@ -9,6 +9,7 @@ import { iconMapper, DiskTablesProps, useDiskTableStyles, useSearchStyles, getCo
 import CancelIcon from "@material-ui/icons/Cancel";
 import SearchIcon from "@material-ui/icons/Search";
 import TableEmpty from "../dialog/table-empty";
+import dayjs from 'dayjs';
 
 interface PublicDiskTablesProps extends DiskTablesProps {
   publicList?: any,
@@ -18,6 +19,7 @@ interface PublicDiskTablesProps extends DiskTablesProps {
 }
 
 const PublicDiskTables = (props: PublicDiskTablesProps) => {
+  const showText = props.showText
   const classes = useDiskTableStyles()
   const classSearch = useSearchStyles()
 
@@ -38,43 +40,8 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
   }
 
   const handleClearInput = () => {
-    console.log('>>>>>setSearchContent(``), clear all input')
     setSearchContent('')
   }
-
-  const DiskSearch = (props: any) => {
-    return (
-      <div className={classSearch.titleBox}>
-        <div className={classSearch.titleButton}>
-        </div>
-        <div>
-          <TextField
-            className={classSearch.input}
-            onChange={handleChange}
-            placeholder={'搜索'}
-            variant='outlined'
-            value={searchContent}
-            InputProps={{
-              classes: {
-                root: classSearch.root,
-              },
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClearInput} className={classSearch.iconButton}>
-                    <CancelIcon />
-                  </IconButton>
-                  <IconButton type="submit" className={classSearch.iconButton} aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            size="small" />
-        </div>
-      </div>
-    )
-  }
-
 
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
@@ -118,6 +85,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
   const DiskTable = (props: DiskTablesProps) => {
     return (
       <Table
+        component="div"
         className={classes.table}
         aria-labelledby="tableTitle"
         size={'medium'}
@@ -133,7 +101,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
           // onRequestSort={handleRequestSort}
           rowCount={rows.length}
         />
-        <TableBody>
+        <TableBody component="div">
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row: any, index: number) => {
@@ -142,7 +110,8 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
 
               return (
                 <TableRow
-                  onClick={(event) => handleClick(event, row.id)}
+                  component="div"
+                  onClick={(event: any) => handleClick(event, row.id)}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
@@ -154,22 +123,22 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
                       inputProps={{ 'aria-labelledby': labelId }}
                     />
                   </DiskTableCell> */}
-                  <DiskTableCell style={{ paddingLeft: 15 }} component="th" id={labelId} padding="none">
+                  <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={labelId} padding="none">
                     <div style={{ display: 'flex', overflow: 'hidden', textOverflow: 'ellipse', maxWidth: 150, whiteSpace: 'nowrap' }}>
                       <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
                       <div style={{ marginLeft: 5, textOverflow: 'ellipsis', overflow: 'hidden' }}>{row.name}</div>
                     </div>
                   </DiskTableCell>
-                  <DiskTableCell style={{ color: '#586376' }} align="right">{row.calories}</DiskTableCell>
-                  <DiskTableCell style={{ color: '#586376' }} align="right">{row.fat}</DiskTableCell>
+                  <DiskTableCell component="div" style={{ color: '#586376' }} align="right">{row.calories}</DiskTableCell>
+                  <DiskTableCell component="div" style={{ color: '#586376' }} align="right">{dayjs(row.fat).format("YYYY-MM-DD HH:mm:ss")}</DiskTableCell>
                   {
                     props.showOpenItem ? 
-                    <DiskTableCell align="right">
-                      <div style={{cursor: 'pointer'}} onClick={() => {
+                    <DiskTableCell component="div"  align="right">
+                      <span style={{color: '#586376',cursor: 'pointer'}} onClick={() => {
                         handleOpenCourse(row.id)
                       }}>
-                        {props.showText}
-                      </div>
+                        {showText}
+                      </span>
                     </DiskTableCell>
                     : null
                   }
@@ -186,7 +155,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        <div className={classSearch.titleBox}>
+        {/* <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}></div>
           <div>
             <TextField
@@ -213,7 +182,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
               }}
               size="small" />
           </div>
-        </div>
+        </div> */}
         { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
       </>
     );

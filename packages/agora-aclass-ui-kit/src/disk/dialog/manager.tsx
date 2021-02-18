@@ -202,6 +202,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             marginBottom: '16px',
           }}>
             <TableContainer style={{
+              display: 'flex',
               height: '480px',
               width: '730px',
               borderRadius: '20px',

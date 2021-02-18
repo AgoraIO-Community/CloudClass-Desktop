@@ -105,20 +105,158 @@ export const NetworkDisk = (props: any) => {
       donwloadAllComponent={donwloadAllComponent()}
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
-      publicList={[{
-        calories: '100',
-        id: '1',
-        name: 'test12312312312312312312313123123123123123123123123123',
-        type: 'ppt',
-        updateTime: `${Date.now()}`
-      }]}
-      downloadList={[
-        {calories: '100',
+      privateList={[
+        {
+          calories: '100',
+          id: '12',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pic',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '13',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'txt',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '1',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'audio',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
           id: '2',
-          name: 'test',
-          type: 'ppt',
-          updateTime: `${Date.now()}`
-        }
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'video',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '3',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pdf',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '4',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'excel',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '5',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'word',
+          fat: `${Date.now()}`
+        },
+      ]}
+      publicList={[
+        {
+          calories: '100',
+          id: '12',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pic',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '13',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'txt',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '1',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'audio',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '2',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'video',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '3',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pdf',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '4',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'excel',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '5',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'word',
+          fat: `${Date.now()}`
+        },
+      ]}
+      downloadList={[
+        {
+          calories: '100',
+          id: '12',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pic',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '13',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'txt',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '1',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'audio',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '2',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'video',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '3',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'pdf',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '4',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'excel',
+          fat: `${Date.now()}`
+        },
+        {
+          calories: '100',
+          id: '5',
+          name: 'test12312312312312312312313123123123123123123123123123',
+          type: 'word',
+          fat: `${Date.now()}`
+        },
       ]}
       singleDeleteComponent={singleDelete()}
       fileTooltipText={{
