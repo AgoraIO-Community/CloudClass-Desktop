@@ -5,7 +5,7 @@ import { DiskTableCell } from "../dialog/table-cell";
 import { DiskCheckbox } from "../control/checkbox";
 import { DiskButton } from "../control/disk-button";
 // disk table styles,  checkbox select function
-import { DiskTablesProps, useDiskTableStyles, useSearchStyles, getComparator, stableSort, createData, Order } from "./private-disk-table";
+import { iconMapper, DiskTablesProps, useDiskTableStyles, useSearchStyles, getComparator, stableSort, createData, Order } from "./private-disk-table";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SearchIcon from "@material-ui/icons/Search";
 import TableEmpty from "../dialog/table-empty";
@@ -123,14 +123,16 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
         size={'medium'}
         aria-label="enhanced table"
       >
-        {/* <EnhancedTableHead
+        <EnhancedTableHead
+          showCheckbox={false}
+          diskText={props.diskText}
           numSelected={selected.length}
           // order={order}
           // orderBy={orderBy}
-          onSelectAllClick={handleSelectAllClick}
+          // onSelectAllClick={handleSelectAllClick}
           // onRequestSort={handleRequestSort}
           rowCount={rows.length}
-        /> */}
+        />
         <TableBody>
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -146,14 +148,17 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
                   tabIndex={-1}
                   key={row.name}
                 >
-                  <DiskTableCell padding="checkbox">
+                  {/* <DiskTableCell padding="checkbox">
                     <DiskCheckbox
                       checked={isItemSelected}
                       inputProps={{ 'aria-labelledby': labelId }}
                     />
-                  </DiskTableCell>
-                  <DiskTableCell component="th" id={labelId} scope="row" padding="none">
-                    {row.name}
+                  </DiskTableCell> */}
+                  <DiskTableCell style={{ paddingLeft: 15 }} component="th" id={labelId} padding="none">
+                    <div style={{ display: 'flex' }}>
+                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+                      <div style={{ marginLeft: 5 }}>{row.name}</div>
+                    </div>
                   </DiskTableCell>
                   <DiskTableCell style={{ color: '#586376' }} align="right">{row.calories}</DiskTableCell>
                   <DiskTableCell style={{ color: '#586376' }} align="right">{row.fat}</DiskTableCell>
