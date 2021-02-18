@@ -121,44 +121,56 @@ const useStyles = makeStyles((theme: Theme) =>
     UnMuteCameIcon: {
       background: `url(${UnMuteCam}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     UnMuteBoardIcon: {
       background: `url(${DrawIcon}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     UnMuteMicIcon: {
       background: `url(${UnMuteMic}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     MuteCameIcon: {
       background: `url(${MuteCam}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     MuteMicIcon: {
       background: `url(${MuteMic}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     MuteBoardIcon: {
       background: `url(${DisableDrawIcon}) no-repeat`,
       backgroundPosition: 'center',
-      backgroundSize: 'contain',
+      backgroundSize: '65%',
       height: 25,
-      width: 25
+      width: 25,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '50%'
     },
     btnRoot: {
       padding: 0,

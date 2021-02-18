@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => {
       fontFamily: theme.typography.fontFamily,
       color: '#002591',
       display: 'flex',
-      fontSize: '8px',
+      fontSize: '14px',
       marginTop: '20px',
       // textAlign: 'center',
       // fontSize: '8px',

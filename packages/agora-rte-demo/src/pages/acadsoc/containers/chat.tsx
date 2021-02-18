@@ -145,6 +145,7 @@ export const ChatView = observer(() => {
       placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}
       sendButtonText={t('aclass.chat.send')}
+      translateButtonText={t('aclass.chat.translate')}
       isDisableSendButton={isDisableSendButton}
       loadingText={t('aclass.chat.loading')}
       failText={t('aclass.chat.fail')}

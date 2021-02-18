@@ -36,12 +36,11 @@ const backgroundColor = '#75C0FF'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
-    height: 130,
     borderColor: '#75C0FF',
     borderRadius: '7px',
     position: 'relative',
     background: backgroundColor,
-    padding: 5,
+    padding: 8,
     display: 'flex',
     flexDirection: 'column',
     boxShadow: "none",
@@ -53,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     alignItems: 'center',
     background: backgroundColor,
     minHeight: 20,
+    fontSize: 14,
+    paddingBottom: 3
   },
   closeButton: {
     zIndex: 1,
@@ -84,8 +85,6 @@ export const DialogFramePaper: React.FC<DialogFramePaperProps> = (props) => {
           {/* <div className></div> */}
         </div>
       : null}
-      {props.closeable ? 
-        <CloseButton className={classes.closeButton} onClick={props.onClose} style={props.closeBtnStyle}/> : null}
       {props.children ? props.children : null}
     </Paper>
   )

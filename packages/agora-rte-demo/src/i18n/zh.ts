@@ -34,7 +34,8 @@ const zhCN: any = {
       "send":"发送",
       "title":"聊天",
       "loading":'翻译中',
-      "fail":'翻译失败'
+      "fail":'翻译失败',
+      "translate": '翻译'
     },
     "device": {
       "keep": "请保持微笑哦~",

@@ -18,6 +18,7 @@ export interface BubbleProps {
   onClickTranslate: (evt?: any) => any,
   bubbleStyle?: React.CSSProperties,
   translateText?: string,
+  translateButtonText?: string,
   loadingText?: string,
   failText?: string,
   status: 'loading' | 'fail' | 'success',
@@ -39,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     maxWidth: 200,
     padding: '9px 10px',
-    border: '1px solid #dbe2e5',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
     lineHeight: '18px',
@@ -150,7 +150,7 @@ export const Bubble = (props: BubbleProps) => {
                 <WithIconButton  
                     icon={canTranslate && bubbleCanTrans ? canTranslateIcon : translate} 
                     style={{ alignItems: 'flex-start'}}/>
-                <span style={{padding: 5, color:'#4579FF'}}>Translate</span>
+                <span style={{padding: 5, color:'#4579FF'}}>{props.translateButtonText}</span>
               </div> : null}
         </div>
       </div>
