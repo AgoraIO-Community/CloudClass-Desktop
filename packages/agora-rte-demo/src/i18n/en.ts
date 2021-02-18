@@ -3,6 +3,8 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "notice": "Notice",
+    "upload_log_success": "upload log success",
     "sure_close_board": "Are you sure close?",
     "confirm_close": "sure",
     "cancel_close": "cancel",
