@@ -140,6 +140,8 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
 export interface DiskTablesProps {
   tabValue: number,
   diskText?: any,
+  showOpenItem?: boolean,
+  handleOpenCourse?: (evt: any) => any,
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
@@ -151,6 +153,8 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   removeSuccess: string,
   removeFailed: string,
   refreshComponent?: React.ReactNode,
+  showOpenItem?: boolean,
+  handleOpenCourse?: (evt: any) => any,
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
@@ -239,6 +243,14 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     }
   }, [selected])
 
+  const handleOpenCourse = async (resourcUuid: any) => {
+    try {
+      props.handleOpenCourse &&  await props.handleOpenCourse(resourcUuid)
+    } catch (err) {
+      console.log('打开课件错误')
+    }
+  }
+
   const handleCloseAlert = () => {
     setOpenToast({
       open: false,
@@ -292,6 +304,13 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                   </DiskTableCell>
                   <DiskTableCell align="right">{row.calories}</DiskTableCell>
                   <DiskTableCell align="right">{row.fat}</DiskTableCell>
+                  {
+                    props.showOpenItem ? 
+                    <DiskTableCell align="right">
+                      <DiskButton id="disk-button-download" onClick={() => handleOpenCourse(row.id)} style={{ marginRight: 20 }} text={props.diskText.openCourse} color={'primary'} />
+                    </DiskTableCell>
+                    : null
+                  }
                 </TableRow>
               );
             })}
@@ -346,7 +365,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> || <TableEmpty diskText={props.diskText} /> }
+        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
       </>
     )
   }

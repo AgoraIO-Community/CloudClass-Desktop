@@ -181,6 +181,7 @@ const en = {
     'search': 'search',
     'noFile': 'no file',
 
+    'openCourse': 'open',
   },
   'fileTip': {
     'fileType': 'File formats',
