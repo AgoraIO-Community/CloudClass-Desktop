@@ -157,6 +157,10 @@ export class EduManager extends EventEmitter {
       reportService.startTick('init', 'rtm', 'login')
       await this._login(userUuid)
       reportService.reportElapse('init', 'rtm', {api: 'login', result: true})
+<<<<<<< HEAD
+      reportService.startHB()
+=======
+>>>>>>> origin/dev/apaas
     }catch(e) {
       reportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
       throw e
@@ -181,6 +185,7 @@ export class EduManager extends EventEmitter {
             }
           }
         }
+        reportService.updateConnectionState(rtmWrapper.connectionState)
         this.fire('ConnectionStateChanged', evt)
       })
       rtmWrapper.on('MessageFromPeer', (evt: any) => {
@@ -236,6 +241,7 @@ export class EduManager extends EventEmitter {
       await this.rtmWrapper.destroyRtm()
       this.removeAllListeners()
       this._rtmWrapper = undefined
+      reportService.stopHB()
       reportService.resetParams()
       // refresh session id when logout to ensure next login get a new sid
       this._sessionId = uuidv4()

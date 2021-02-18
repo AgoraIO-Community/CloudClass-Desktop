@@ -34,7 +34,6 @@ export const AcadsocOneToOne = observer(() => {
     reportService.startTick('joinRoom', 'end')
     acadsocStore.join().then(() => {
       reportService.reportElapse('joinRoom', 'end', {result: true})
-      reportService.startHB()
     }).catch(e => {
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})
       throw e
