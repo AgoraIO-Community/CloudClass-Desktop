@@ -23,6 +23,7 @@ import { BizLogger } from '@/utils/biz-logger';
 // import {CloudDiskUpload} from '@/components/upload'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import dayjs from 'dayjs'
 
 const useStyles = makeStyles ((theme: Theme) => ({
   container: {
@@ -222,7 +223,7 @@ export const HomePage = observer(() => {
                   id="datetime-local"
                   label="开始上课时间："
                   type="datetime-local"
-                  defaultValue="2021-02-19T10:30"
+                  defaultValue={dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm")}
                   className={classes.textField}
                   InputLabelProps={{
                     shrink: true,
