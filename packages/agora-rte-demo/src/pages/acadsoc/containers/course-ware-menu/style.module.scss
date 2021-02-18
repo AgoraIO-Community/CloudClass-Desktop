@@ -8,6 +8,9 @@
   white-space: nowrap;
   width: calc(100% - 30px);
   color: white;
+  height: 30px;
+  overflow: auto;
+  overflow-x: hidden;
   .active{
     background-color: #303f9f;
   }

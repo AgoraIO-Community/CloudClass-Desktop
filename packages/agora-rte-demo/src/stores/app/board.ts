@@ -522,7 +522,7 @@ static toolItems: IToolItem[] = [
 
   @computed
   get resourcesList(): any[] {
-    return [this._boardItem].concat(this._resourcesList)
+    return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
   changeSceneItem(resourceName: string, currentPage: number) {
@@ -583,6 +583,23 @@ static toolItems: IToolItem[] = [
   }
 
   closeMaterial(resourceName: string) {
+    const currentSceneState = this.room.state.sceneState
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    this.room.setGlobalState({
+      roomScenes: {
+        ...roomScenes,
+        [`${resourceName}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceName: resourceName,
+          show: false,
+        }
+      }
+    })
+    // const resourceName = this.resourcesList.find((it: any) => it.resou)
     this.room.setScenePath('')
   }
 
@@ -630,6 +647,7 @@ static toolItems: IToolItem[] = [
           scenePath: currentSceneState.scenePath,
           totalPage: currentSceneState.scenes.length,
           resourceName: resourceName,
+          show: true,
         }
       }
     })
@@ -680,7 +698,8 @@ static toolItems: IToolItem[] = [
           resourceName: resourceName,
           currentPage: resource.index,
           totalPage: resource.totalPage,
-          scenePath: resource.scenePath
+          scenePath: resource.scenePath,
+          show: resource.show,
         })
       }
     }

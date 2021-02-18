@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #dbe2e5',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '12px',
+    lineHeight: '18px',
     backgroundColor: "#CBCCFF",
     color: '#2D3E6D',
     boxSizing: 'border-box',
@@ -138,7 +138,6 @@ export const Bubble = (props: BubbleProps) => {
       <div className={classes.chatMessage} style={isSender ? { flexDirection: 'row' } : { flexDirection: 'row-reverse' }}>
         <div className={classes.status}>
           {/* {canTranslate && bubbleCanTrans ? */}
-          <WithIconButton onClick={() => canTranslate && bubbleCanTrans && fetch({ ...props })} icon={canTranslate && bubbleCanTrans ? canTranslateIcon : translate} style={{ alignItems: 'flex-start', marginBottom: '5px' }} />
           {status === 'loading' && <Loading />}
           {status === 'fail' && <WithIconButton onClick={() => onClickFailButton(props)} icon={fail} iconStyle={{ width: '18px', height: '18px' }} />}
         </div>
@@ -146,6 +145,13 @@ export const Bubble = (props: BubbleProps) => {
           <>{content}</>
           {isShowTranslateText ? <div className={classes.translateText}>{translateText}</div> : null}
           {state.loading ? <div className={classes.translateText}><Loading />{loadingText}</div> : state.error ? <div className={classes.translateText}>{failText}</div> : null}
+          {!isShowTranslateText && !state.loading && !state.error ? 
+              <div onClick={() => canTranslate && bubbleCanTrans && fetch({ ...props })} style={{cursor:'pointer', marginTop: 5, display:'flex', alignItems:'center' }}>
+                <WithIconButton  
+                    icon={canTranslate && bubbleCanTrans ? canTranslateIcon : translate} 
+                    style={{ alignItems: 'flex-start'}}/>
+                <span style={{padding: 5, color:'#4579FF'}}>Translate</span>
+              </div> : null}
         </div>
       </div>
     </div>
