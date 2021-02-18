@@ -146,7 +146,7 @@ export class UploadService extends ApiBase {
   async createMaterial(params: any): Promise<UploadServiceResult> {
 
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
       data: {
         url: params.url,
@@ -253,13 +253,30 @@ export class UploadService extends ApiBase {
     })
 
     if (payload.converting === true) {
+      // const pptURL = await this.addFileToOss(
+      //   ossClient,
+      //   key,
+      //   payload.file,
+      //   (progress: any) => {
+      //     payload.onProgress({
+      //       phase: 'upload',
+      //       progress
+      //     })
+      //   },
+      //   {
+      //     callbackBody: ossConfig.callbackBody,
+      //     contentType: ossConfig.callbackContentType,
+      //     roomUuid: payload.roomUuid,
+      //     userUuid: payload.userUuid,
+      //     appId: this.appId
+      //   })
       const pptURL = await this.addFileToOss(
         ossClient,
         key,
         payload.file,
         (progress: any) => {
           payload.onProgress({
-            phase: 'upload',
+            phase: 'finish',
             progress
           })
         },
@@ -307,19 +324,23 @@ export class UploadService extends ApiBase {
         scenes: res.scenes,
       }
     } else {
-      const resourceUrl = await this.addFileToOss(ossClient, key, payload.file, (progress: any) => {
-        payload.onProgress({
-          phase: 'finish',
-          progress
+      const resourceUrl = await this.addFileToOss(
+        ossClient,
+        key,
+        payload.file,
+        (progress: any) => {
+          payload.onProgress({
+            phase: 'finish',
+            progress
+          })
+        },
+        {
+          callbackBody: ossConfig.callbackBody,
+          contentType: ossConfig.callbackContentType,
+          roomUuid: payload.roomUuid,
+          userUuid: payload.userUuid,
+          appId: this.appId
         })
-      },
-      {
-        callbackBody: ossConfig.callbackBody,
-        contentType: ossConfig.callbackContentType,
-        roomUuid: payload.roomUuid,
-        userUuid: payload.userUuid,
-        appId: this.appId
-      })
       // await this.createMaterial({
       //   url: resourceUrl,
       //   roomUuid: payload.roomUuid,
@@ -329,6 +350,7 @@ export class UploadService extends ApiBase {
       //   size: payload.fileSize,
       // })
       return {
+        // resourceUuid: fetchResult.data
         resourceName: payload.resourceName,
         ext: payload.ext,
         url: resourceUrl
@@ -337,6 +359,11 @@ export class UploadService extends ApiBase {
   }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
+
+    const callbackUrl = `https://api-solutions-dev.bj2.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`;
+
+    console.log(" addFileToOss ", callbackUrl)
+
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
       file,
@@ -349,7 +376,7 @@ export class UploadService extends ApiBase {
         callback: {
           // TODO: upload-service.ts
           // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
-          url: `https://api-solutions-dev.bj2.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+          url: callbackUrl,
           body: ossParams.callbackBody,
           contentType: ossParams.contentType,
         }

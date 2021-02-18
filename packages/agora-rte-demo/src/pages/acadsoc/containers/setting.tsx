@@ -210,6 +210,7 @@ export const SettingWeb = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
@@ -237,6 +238,7 @@ export const SettingWeb = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
@@ -259,6 +261,7 @@ export const SettingWeb = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
@@ -346,6 +349,7 @@ export const SettingNative = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
@@ -360,6 +364,7 @@ export const SettingNative = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
@@ -374,6 +379,7 @@ export const SettingNative = observer(() => {
               minWidth: 310,
               maxWidth: 310,
               background: 'white',
+              overflow: 'hidden'
             }}
           />
         </RowItem>
