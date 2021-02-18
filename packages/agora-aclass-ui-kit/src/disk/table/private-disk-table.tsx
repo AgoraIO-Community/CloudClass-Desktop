@@ -73,6 +73,7 @@ export const stableSort = function(array: any[], comparator: (a: any, b: any) =>
 export const useDiskTableStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
+      flexDirection: 'column',
       height: '480px',
       width: '730px',
       borderRadius: '20px',
@@ -116,7 +117,8 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingBottom: '20px'
+      paddingBottom: '20px',
+      flexDirection: 'column',
     },
     titleButton: {
       display: 'flex',
@@ -159,6 +161,7 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
   uploadComponent?: React.ReactNode,
   diskText?: any,
+  // deleteText: string,
   // deleteComponent?: React.ReactNode,
   removeText: string,
   handleDelete: (evt: any) => any,
@@ -183,6 +186,7 @@ export const iconMapper = {
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
   const showText = props.showText
+  // const deleteText = props.deleteText
   const classes = useDiskTableStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
@@ -268,9 +272,9 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     }
   }, [selected])
 
-  const handleOpenCourse = async (resourcUuid: any) => {
+  const handleOpenCourse = async (resourceUuid: any) => {
     try {
-      props.handleOpenCourse &&  await props.handleOpenCourse(resourcUuid)
+      props.handleOpenCourse &&  await props.handleOpenCourse(resourceUuid)
     } catch (err) {
       console.log('打开课件错误')
     }
@@ -343,6 +347,12 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                       }}>
                         {showText}
                       </span>
+{/* 
+                      <span style={{cursor: 'pointer'}} onClick={() => {
+                        handleOpenCourse(row.id, 'delete')
+                      }}>
+                        {deleteText}
+                      </span> */}
                     </DiskTableCell>
                     : null
                   }
@@ -366,13 +376,13 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
           toastType={type}
           key={'top-center'}
         />
-        {/* <div className={classSearch.titleBox}>
+        <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
             { props.uploadComponent }
             <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
             { props.refreshComponent }
           </div>
-          <div>
+          {/* <div>
             <TextField
               id="disk-input-search"
               className={classSearch.input}
@@ -396,6 +406,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                 )
               }}
               size="small" />
+<<<<<<< HEAD
           </div>
         </div> */}
         { rows && rows.length > 0 && 
@@ -412,6 +423,11 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
             <TableEmpty diskText={props.diskText} /> 
           </div>
           }
+=======
+          </div> */}
+        </div>
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
+>>>>>>> fix. course ware
       </>
     )
   }

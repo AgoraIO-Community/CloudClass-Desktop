@@ -150,6 +150,7 @@ const zhCN: any = {
     'fullScreen': '全屏',
   },
   'disk': {
+    'open': '打开',
     'publicResources': '公共资源',
     'privateResources': '我的云盘',
     'downlownResources': '下载课件',

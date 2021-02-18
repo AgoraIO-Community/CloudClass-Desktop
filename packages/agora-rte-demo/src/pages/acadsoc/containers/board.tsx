@@ -370,7 +370,7 @@ const useEduBoardStyles = makeStyles((theme: Theme) => ({
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
 
-  const [openDisk, setOpenDisk] = React.useState(false);
+  // const [openDisk, setOpenDisk] = React.useState(false);
 
   const showCourseMenuItem = boardStore.isTeacher()
 
@@ -415,7 +415,7 @@ export const EducationBoard = observer((props: any) => {
         break;
       }
       case 'disk': {
-        setOpenDisk(true)
+        boardStore.setOpenDisk()
         break;
       }
     }
@@ -478,7 +478,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.zoomBoard('fullscreenExit')
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk inRoom={true} openDisk={openDisk} setOpenDisk={setOpenDisk} /> : null }
+        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={boardStore.openDisk} setOpenDisk={() => boardStore.setOpenDisk()} /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

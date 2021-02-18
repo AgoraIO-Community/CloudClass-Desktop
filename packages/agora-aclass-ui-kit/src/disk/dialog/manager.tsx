@@ -119,7 +119,6 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
   const [activeValue, setActiveValue] = React.useState(0)
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setActiveValue(newValue)
-    console.log('>>>>>>>newValue', newValue)
   };
 
   const DiskPaper = (paperProps: any) => {
@@ -206,7 +205,8 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
               height: '480px',
               width: '730px',
               borderRadius: '20px',
-              padding: '20px'
+              padding: '20px',
+              flexDirection: 'column'
             }}>
               {
                 props.inRoom === true && activeValue === 0 && (

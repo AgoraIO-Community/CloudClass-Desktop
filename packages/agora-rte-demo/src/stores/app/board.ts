@@ -282,7 +282,7 @@ static toolItems: IToolItem[] = [
   isFullScreen: boolean = false
 
   @observable
-  donwloading: boolean = false
+  downloading: boolean = false
 
   @action
   changeScenePath(path: string) {
@@ -477,7 +477,7 @@ static toolItems: IToolItem[] = [
   async startDownload(taskUuid: string) {
     const isWeb = this.appStore.isElectron ? false : true
     try {
-      this.donwloading = true
+      this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
@@ -506,10 +506,10 @@ static toolItems: IToolItem[] = [
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.donwloading = false
+      this.downloading = false
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.donwloading = false
+      this.downloading = false
     }
   }
 
@@ -1991,6 +1991,7 @@ static toolItems: IToolItem[] = [
 
   @action
   reset () {
+    this.openDisk = true
     this.preloadingProgress = -1
     this.publicResources = []
     this._personalResources = []
@@ -2208,10 +2209,11 @@ static toolItems: IToolItem[] = [
       const globalState = this.room.state.globalState as any
       const materialList = get(globalState, 'materialList', [])
       // const resourceUuids = this
-      const newList = materialList.filter((e: any) => !resourceUuids.includes(e.id))
+      const newList = materialList.filter((e: any) => !resourceUuids.includes(e.resourceUuid))
       this.room.setGlobalState({
         materialList: newList
       })
+      this._personalResources = this._personalResources.filter((e => !resourceUuids.includes(e.id)))
       EduLogger.info("remove removeMaterialList success", res)
     } catch (err) {
       throw err
@@ -2219,8 +2221,15 @@ static toolItems: IToolItem[] = [
   }
 
   async putCourseResource(resourceUuid: string) {
-    const resource = this.resourcesList.find((it: any) => it.resourceUuid === resourceUuid)
+    const resource = this.allResources.find((it: any) => it.id === resourceUuid)
     if (resource) {
+      const scenes = resource.scenes
+      this.updateBoardSceneItems({
+        scenes,
+        resourceName: resource.resourceName,
+        page: 0,
+        taskUuid: resource.taskUuid,
+      }, false)
       this.room.putScenes(`/${resource.resourceName}`, resource.scenes)
       this.room.setScenePath(`/${resource.resourceName}/${resource.scenes[0].name}`)
     }
@@ -2228,6 +2237,7 @@ static toolItems: IToolItem[] = [
 
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
+    console.log("imageInfo", imageInfo)
     await netlessInsertImageOperation(this.room, {
       uuid: imageInfo.uuid,
       file: imageInfo.file,
@@ -2242,6 +2252,7 @@ static toolItems: IToolItem[] = [
   }
 
   async putAV(url: string, type: string) {
+    console.log("open media ", url, " type", type)
     if (type === 'video') {
       netlessInsertVideoOperation(this.room, {
         url: url,
@@ -2263,19 +2274,29 @@ static toolItems: IToolItem[] = [
   }
 
   async putSceneByResourceUuid(uuid: string) {
-    const resource = this.resourcesList.find((resource: any) => resource.resourceUuid === uuid)
-    if (resource.type === "pptx") {
-      await this.putCourseResource(uuid)
+    try {
+      const resource = this.allResources.find((resource: any) => resource.id === uuid)
+      if (!resource) {
+        console.log('未找到uuid相关的课件', uuid)
+      }
+      console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
+      if (resource.type === "ppt") {
+        await this.putCourseResource(uuid)
+        console.log("打开ppt成功")
+      }
+  
+      if (["video", "audio"].includes(resource.type)) {
+        await this.putAV(resource.url, resource.type)
+        console.log("打开音视频成功")
+      }  
+      if (["pic"].includes(resource.type)) {
+        await this.putImage(resource.url)
+        console.log("打开图片成功")
+      }
+    } catch (err) {
+      debugger
+      throw err
     }
-
-    if (["mp3", "mp4"].includes(resource.type)) {
-      await this.putAV(resource.url, resource.type)
-    }
-
-    if (["png", "jpg", "gif", "jpeg"].includes(resource.type)) {
-      await this.putImage(resource.url)
-    }
-    // if (resource.type === "pptx")
   }
 
   async handleUpload(payload: any) {
@@ -2327,6 +2348,13 @@ static toolItems: IToolItem[] = [
     if (this.isTeacher()) {
       this._personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
     }
+  }
+
+  @observable
+  openDisk: boolean = false
+  
+  setOpenDisk() {
+    this.openDisk = !this.openDisk
   }
 }
 

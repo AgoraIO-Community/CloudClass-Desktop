@@ -34,7 +34,8 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
   return (
     <TableHead component="div">
       <TableRow component="div" style={{ color: '#273D75' }}>
-        { showCheckbox && <DiskTableCellHead padding="checkbox">
+        { showCheckbox && 
+        <DiskTableCellHead component="div" padding="checkbox">
           <DiskCheckbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}

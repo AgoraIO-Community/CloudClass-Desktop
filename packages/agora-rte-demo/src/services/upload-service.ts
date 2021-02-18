@@ -27,13 +27,42 @@ const formatExt = (ext: string) => {
   return typeMapper[ext]
 }
 
+
+export const mapFileType = (type: string): string => {
+  if (type.match(/ppt|pptx|pptx/i)) {
+    return 'ppt'
+  }
+  if (type.match(/doc|docx/i)) {
+    return 'word'
+  }
+  if (type.match(/xls|xlsx/i)) {
+    return 'excel'
+  }
+  if (type.match(/mp4/i)) {
+    return 'video'
+  }
+  if (type.match(/mp3/i)) {
+    return 'audio'
+  }
+
+  if (type.match(/txt/i)) {
+    return 'txt'
+  }
+
+  if (type.match(/gif|png|jpeg|jpg/i)) {
+    return 'pic'
+  }
+
+  return 'txt'
+}
+
 export const transDataToResource = (data: any) => {
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
       name: data.resourceName,
       ext: data.ext,
-      type: formatExt(data.ext),
+      type: mapFileType(data.ext),
       calories: data.size || 0,
       url: data.url,
       taskUuid: '',
@@ -46,13 +75,14 @@ export const transDataToResource = (data: any) => {
     id: data.resourceUuid,
     name: data.resourceName,
     ext: data.ext,
-    type: formatExt(data.ext),
+    type: mapFileType(data.ext),
     calories: data.size || 0,
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
     url: data.url,
     convertedPercentage: data.taskProgress.convertedPercentage,
-    fat: data.updateTime
+    fat: data.updateTime,
+    scenes: data.scenes,
   }
 }
 
@@ -310,8 +340,9 @@ export class UploadService extends ApiBase {
         },
       })
 
+      console.log("转换完成 ", JSON.stringify(res))
+
       const convertingModel = {
-        resourceUuid,
         taskUuid: res.uuid,
         taskProgress: {
           totalPageSize: res.scenes.length,
@@ -325,6 +356,7 @@ export class UploadService extends ApiBase {
         roomUuid: payload.roomUuid,
         userUuid: payload.userUuid,
         resourceName: payload.resourceName,
+        resourceUuid,
         ext: 'pptx',
         ...convertingModel
       })
@@ -335,9 +367,10 @@ export class UploadService extends ApiBase {
         url: pptURL,
         ext: payload.ext,
         scenes: res.scenes,
+        ...convertingModel
       }
 
-      console.log("handleUpload#data coverting",resConvert)
+      console.log("handleUpload#data coverting",resConvert, " converting", res)
       return resConvert
 
     } else {

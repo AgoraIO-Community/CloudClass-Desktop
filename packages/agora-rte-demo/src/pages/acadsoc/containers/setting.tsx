@@ -383,11 +383,11 @@ export const SettingNative = observer(() => {
             }}
           />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <VolumeSlider value={20} onChange={(val: number) => {
             console.log("slider ", val)
           }} />
-        </RowItem>
+        </RowItem> */}
       </div>
     </DeviceManagerDialog>
   )
@@ -399,7 +399,8 @@ export const Setting = observer(() => {
   const isNative = uiStore.isElectron
   return (
     isNative ? 
-    <SettingNative /> :
+    <SettingNative />
+    :
     <SettingWeb />
   )
 })

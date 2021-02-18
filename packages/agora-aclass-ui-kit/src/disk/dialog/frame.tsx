@@ -68,7 +68,6 @@ const FileTypeToolTip = (props: TooltipProps) => {
 }
 
 const QuestionButton: React.FC<QuestionButtonProps> = (props) => {
-  console.log('propssssssssss', props)
   return (
     <FileTypeToolTip
       title={ <FileSupportTitle fileTooltipText={props.fileTooltipText} /> }>
