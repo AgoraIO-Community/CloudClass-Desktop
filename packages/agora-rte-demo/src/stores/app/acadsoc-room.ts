@@ -1352,7 +1352,8 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get signalLevel(): number {
-    if (this.appStore.mediaStore.networkQuality === 'excellent') {
+    const best = ['good', 'excellent']
+    if (best.includes(this.appStore.mediaStore.networkQuality)) {
       return 3
     }
 
