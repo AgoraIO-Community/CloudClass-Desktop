@@ -151,9 +151,13 @@ const NetworkDisk = observer((props: any) => {
 
   const refreshComponent = () => {
     return (
-      <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
+      <img id="disk-button-refresh" style={{ cursor: 'pointer' }} onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
     )
   }
+
+  console.log('boardStore.personalResources', boardStore.personalResources)
+  console.log('boardStore.publicResources', boardStore.publicResources)
+  console.log('boardStore.allResources', boardStore.allResources)
 
   return (
     <DiskManagerDialog

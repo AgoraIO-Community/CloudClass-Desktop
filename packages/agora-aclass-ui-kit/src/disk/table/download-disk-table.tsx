@@ -99,7 +99,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
             <div style={{ paddingTop: 54 }}>
               <TableEmpty diskText={props.diskText} />
             </div>}
