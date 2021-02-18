@@ -13,6 +13,7 @@ import {Trophy} from './containers/trophy/trophy'
 import { Setting } from '@/pages/acadsoc/containers/setting';
 import { MinimizeTeacher, MinimizeStudent, MinimizeChat} from './containers/minimize/minimize'
 import 'animate.css'
+import { reportService } from '@/services/report-service'
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -29,7 +30,15 @@ export const AcadsocOneToOne = observer(() => {
       return
     }
     acadsocStore.setHistory(history)
-    acadsocStore.join()
+    // REPORT
+    reportService.startTick('joinRoom', 'end')
+    acadsocStore.join().then(() => {
+      reportService.reportElapse('joinRoom', 'end', {result: true})
+      reportService.startHB()
+    }).catch(e => {
+      reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})
+      throw e
+    })
     // TODO: only for ui debug
     // acadsocStore.joinRoom()
   }, [])
