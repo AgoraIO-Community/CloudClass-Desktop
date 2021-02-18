@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { SignalBar } from './signal/signal'
-import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
 
@@ -102,9 +102,42 @@ export const Nav = observer(() => {
 const onRefresh = () => {
   window.location.reload()
 }
-const onCustomerService = () => {
-  console.log('click onCustomerService')
+
+const current = {
+  lock: false
 }
+
+const onCustomerService = async () => {
+
+  // const handleUpload = async () => {
+    // if (current.lock) return
+    try {
+      // current.lock = true
+      const id = await EduManager.uploadLog('test')
+      dialogManager.confirm({
+        title: t(`aclass.upload_log_success`),
+        text: `id: ${id}`,
+        showConfirm: true,
+        showCancel: true,
+        confirmText: t(`aclass.confirm_close`),
+        visible: true,
+        cancelText: t(`aclass.cancel_close`),
+        onConfirm: () => {
+        },
+        onCancel: () => {
+        }
+      })
+      // current.lock = false
+    } catch (err) {
+      console.log(err)
+      throw err
+      // current.lock = false
+    }
+  // }
+
+  // await handleUpload()
+}
+
 const onEquipmentDetection = () => {
   console.log('click onEquipmentDetection')
 }
