@@ -82,6 +82,13 @@ enum FollowState {
   Freedom = 0
 }
 
+export enum DownloadStatus {
+  notCache,
+  downloading,
+  cached,
+  failed,
+}
+
 export class BoardStore {
 
 static toolItems: IToolItem[] = [
@@ -272,6 +279,9 @@ static toolItems: IToolItem[] = [
 
   @observable
   isFullScreen: boolean = false
+
+  @observable
+  donwloading: boolean = false
 
   @action
   changeScenePath(path: string) {
@@ -466,6 +476,7 @@ static toolItems: IToolItem[] = [
   async startDownload(taskUuid: string) {
     const isWeb = this.appStore.isElectron ? false : true
     try {
+      this.donwloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
@@ -494,8 +505,10 @@ static toolItems: IToolItem[] = [
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+      this.donwloading = false
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
+      this.donwloading = false
     }
   }
 
