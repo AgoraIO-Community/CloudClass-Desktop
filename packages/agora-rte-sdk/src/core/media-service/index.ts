@@ -7,6 +7,7 @@ import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption,
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
+import { reportService } from '../services/report-service';
 
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
@@ -380,6 +381,18 @@ export class MediaService extends EventEmitter implements IMediaService {
   }
 
   async join(option: JoinOption): Promise<any> {
+    try {
+      // REPORT
+      reportService.startTick('joinRoom', 'rtc', 'joinChannel')
+      await this._join(option)
+      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: true})
+    } catch(e) {
+      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: false, errCode: `${e.code || e.message}`})
+      throw e
+    }
+  }
+
+  async _join(option: JoinOption): Promise<any> {
     if (this.isWeb) {
       await this.sdkWrapper.join(option)
     }

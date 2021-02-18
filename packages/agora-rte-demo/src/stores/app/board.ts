@@ -21,6 +21,7 @@ import { agoraCaches } from '@/utils/web-download.file';
 import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
+import { reportService } from '@/services/report-service';
 
 export enum BoardPencilSize {
   thin = 4,
@@ -767,15 +768,24 @@ static toolItems: IToolItem[] = [
     boardId: string,
     boardToken: string
   }) {
-    await this.aClassJoinBoard({
-      uuid: info.boardId,
-      roomToken: info.boardToken,
-      role: this.userRole,
-      isWritable: true,
-      disableDeviceInputs: true,
-      disableCameraTransform: true,
-      disableAutoResize: false
-    })
+    // REPORT
+    reportService.startTick('joinRoom', 'board', 'join')
+    try {
+      await this.aClassJoinBoard({
+        uuid: info.boardId,
+        roomToken: info.boardToken,
+        role: this.userRole,
+        isWritable: true,
+        disableDeviceInputs: true,
+        disableCameraTransform: true,
+        disableAutoResize: false
+      })
+      reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
+    } catch(e) {
+      reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})
+      // throw the error to return the process
+      throw e
+    }
     // 默认只有老师不用禁止跟随
     if (this.userRole !== EduRoleTypeEnum.teacher) {
       this.room.disableCameraTransform = true

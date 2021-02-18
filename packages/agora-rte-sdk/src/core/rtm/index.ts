@@ -5,6 +5,7 @@ import { RtmLogLevel } from './constants';
 import { get } from 'lodash';
 import { EduLogger } from '../logger';
 import { GenericErrorWrapper } from '../utils/generic-error';
+import { reportService } from '../services/report-service';
 
 //@ts-ignore
 AgoraRTM.setParameter({ 
@@ -172,6 +173,18 @@ export class RTMWrapper extends EventEmitter {
   private _channels: Record<string, any> = {}
 
   public async join(channel: any, bus: any, config: any) {
+    try {
+      // REPORT
+      reportService.startTick('joinRoom', 'rtm', 'joinChannel')
+      await this._join(channel, bus, config)
+      reportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: true})
+    }catch(e) {
+      reportService.reportElapse('joinRoom', 'rtm', {api:'joinChannel', result: false, errCode: `${e.code || e.message}`})
+      throw e
+    }
+  }
+
+  private async _join(channel: any, bus: any, config: any) {
     try {
       channel.on('ChannelMessage', (message: any, memberId: string, messagePros: any) => {
         EduLogger.info("[rtm] ChannelMessage", message)

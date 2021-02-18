@@ -4,6 +4,7 @@ import { EduUser, StreamType, DeleteStreamType, AgoraFetchParams, ClassroomState
 import { EduLogger } from '../logger';
 import { HttpClient } from '../utils/http-client';
 import { EntryRequestParams, UserStreamResponseData, UserStreamList, EduJoinRoomParams, JoinRoomResponseData } from "./interface";
+import { reportService } from "./report-service";
 
 export type CauseType = Record<string, any>
 
@@ -327,6 +328,8 @@ export class AgoraEduApi extends ApiBase {
   }
 
   async entryRoom(params: EntryRequestParams): Promise<any> {
+    // REPORT
+    reportService.startTick('joinRoom', 'http', 'entry')
     const data = {
       userName: params.userName,
       role: params.role,
@@ -340,6 +343,9 @@ export class AgoraEduApi extends ApiBase {
       data: data,
       token: params.token
     })
+    const statusCode = resp['_raw']['status']
+    const {code} = resp
+    reportService.reportHttp('joinRoom', 'http', 'entry', statusCode, statusCode === 200, code)
 
     return resp.data
   }
