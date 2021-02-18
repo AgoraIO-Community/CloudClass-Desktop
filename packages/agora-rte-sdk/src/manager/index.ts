@@ -157,10 +157,7 @@ export class EduManager extends EventEmitter {
       reportService.startTick('init', 'rtm', 'login')
       await this._login(userUuid)
       reportService.reportElapse('init', 'rtm', {api: 'login', result: true})
-<<<<<<< HEAD
       reportService.startHB()
-=======
->>>>>>> origin/dev/apaas
     }catch(e) {
       reportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
       throw e
