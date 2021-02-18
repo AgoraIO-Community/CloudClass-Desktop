@@ -25,6 +25,7 @@ export class DiskAppStore {
   reset() {
     this.courseWareList = []
     this.status = DiskLifeStateEnum.destroyed
+    // todo all observable reset
   }
 
   destroy() {

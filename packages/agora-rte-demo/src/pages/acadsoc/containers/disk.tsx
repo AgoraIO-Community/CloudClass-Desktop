@@ -159,6 +159,7 @@ const NetworkDisk = observer((props: any) => {
       // todo add item
       // showOpenItem={boardStore.showOpenCourse}
       // handleOpenCourse={handleOpenCourse}
+      inRoom={props.inRoom}
       removeText={t('disk.delete')}
       handleDelete={handleDelete}
       removeSuccess={t('disk.deleteSuccess')}

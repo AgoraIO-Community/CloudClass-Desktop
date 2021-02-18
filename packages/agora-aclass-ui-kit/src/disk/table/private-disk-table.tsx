@@ -76,7 +76,7 @@ export const useDiskTableStyles = makeStyles((theme: Theme) =>
       height: '480px',
       width: '730px',
       borderRadius: '20px',
-      padding: '20px'
+      padding: '20px',
     },
     table: {
       maxHeight: 510,
@@ -398,7 +398,20 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               size="small" />
           </div>
         </div> */}
-        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
+        { rows && rows.length > 0 && 
+          <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> 
+          || 
+          <div
+            style={{ 
+              height: '480px',
+              width: '730px',
+              borderRadius: '20px',
+              paddingTop: '54px',
+            }}
+          >
+            <TableEmpty diskText={props.diskText} /> 
+          </div>
+          }
       </>
     )
   }

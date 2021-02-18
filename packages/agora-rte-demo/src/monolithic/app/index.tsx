@@ -3,6 +3,7 @@ import { RoomParameters } from '@/edu-sdk/declare'
 import { AppStoreConfigParams } from '@/stores/app'
 import React, { useEffect } from 'react'
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
+import { StorageDisk } from '@/monolithic/disk/index'
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'eduClass',
@@ -44,6 +45,8 @@ export const App = (props: AppType) => {
       <AppContainer
         routes={routes}
       />
+      {/* fixme: 临时调试 */}
+      <StorageDisk></StorageDisk>
     </StylesProvider>
   )
 }

@@ -478,7 +478,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.zoomBoard('fullscreenExit')
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={openDisk} setOpenDisk={setOpenDisk} /> : null }
+        {boardStore.aClassHasPermission ? <NetworkDisk inRoom={true} openDisk={openDisk} setOpenDisk={setOpenDisk} /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

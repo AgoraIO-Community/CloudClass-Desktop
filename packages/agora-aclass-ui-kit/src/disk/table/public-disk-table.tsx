@@ -183,7 +183,19 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
               size="small" />
           </div>
         </div> */}
-        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> 
+        || 
+        <div
+          style={{ 
+            height: '480px',
+            width: '730px',
+            borderRadius: '20px',
+            paddingTop: '54px',
+          }}
+        >
+          <TableEmpty diskText={props.diskText} /> 
+        </div>
+        }
       </>
     );
   };
