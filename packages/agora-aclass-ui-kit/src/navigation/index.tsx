@@ -15,15 +15,24 @@ export const Navigation = (props: INavigation) => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '13px 11px 0px',
+      padding: '5px 10px',
       boxSizing: 'border-box'
     },
     navigationContainer: {
       display: 'flex',
       flexWrap: 'nowrap'
     },
-    region: {
-      marginRight: 49,
+    leftRegion: {
+      marginRight: 39,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '&:last-child': {
+        marginRight: 0,
+      }
+    },
+    rightRegion: {
+      marginRight: 24,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -38,7 +47,7 @@ export const Navigation = (props: INavigation) => {
       <div className={classes.navigationContainer} style={props.leftContainerStyle}>
         {
           props.leftContainer?.map((item, index) => {
-            return <div key={`leftContainer_${item.componentKey}`} className={classes.region}>
+            return <div key={`leftContainer_${item.componentKey}`} className={classes.leftRegion}>
               {item.isComponent ? item.renderItem && item.renderItem() :
                 <>
                   {item.icon ?? null}
@@ -51,7 +60,7 @@ export const Navigation = (props: INavigation) => {
       <div className={classes.navigationContainer} style={props.rightContainerStyle}>
         {
           props.rightContainer?.map((item, index) => {
-            return <div key={`rightContainer_${item.componentKey}`} className={classes.region}>
+            return <div key={`rightContainer_${item.componentKey}`} className={classes.rightRegion}>
               {item.isComponent ? item.renderItem && item.renderItem() :
                 <>
                   {item.icon ?? null}

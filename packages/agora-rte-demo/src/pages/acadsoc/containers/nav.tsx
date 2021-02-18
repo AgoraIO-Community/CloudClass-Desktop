@@ -93,7 +93,6 @@ export const Nav = observer(() => {
 
   return (
     <Navigation
-      background={'transparent'}
       leftContainer={statusBarList}
       rightContainer={actionBar}
     />

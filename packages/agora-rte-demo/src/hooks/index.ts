@@ -16,7 +16,8 @@ import {
   RecordingStore,
   AcadsocRoomStore,
   PretestStore,
-  DeviceSettingStore
+  DeviceSettingStore,
+  DiskStore,
  } from '@/stores/app';
 import { PlayerStore } from '@/stores/replay-app/player';
 import { ReplayUIStore } from '@/stores/replay-app/ui';
@@ -108,4 +109,9 @@ export const usePretestStore = (): PretestStore => {
 export const useDeviceSettingStore = (): DeviceSettingStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.deviceSettingStore
+}
+
+export const useDiskStore = (): DiskStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.diskStore
 }

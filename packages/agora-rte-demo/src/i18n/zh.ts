@@ -3,8 +3,11 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "sure_close_board": "确定关闭当前课件",
+    "confirm_close": "确定关闭",
+    "cancel_close": "取消",
     "board_name": "白板",
-    "exit": "退出",
+    "exit": "离开教室",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
     "assistant":{
@@ -145,6 +148,54 @@ const zhCN: any = {
     'zoomOut': '缩小',
     'fullScreen': '全屏',
   },
+  'disk': {
+    'publicResources': '公共资源',
+    'privateResources': '我的云盘',
+    'downlownResources': '下载课件',
+
+    'upload': '上传',
+    'downloadAll': '全部下载',
+    'clearCache': '清空缓存',
+    'download': '下载',
+    'delete': '删除',
+    'deleteSuccess': '删除文件成功！',
+    'deleteFailed': '删除文件失败！',
+
+    'all': '全部',
+    'downloaded': '已下载',
+    'notDownload': '未下载',
+
+    'operation': '操作',
+    'progress': '进度',
+    'file': '文件',
+    'fileName': '文件名',
+    'size': '大小',
+    'modificationTime': '修改时间',
+    'search': '搜索',
+    'noFile': '暂无文件',
+
+  },
+  'fileTip': {
+    'fileType': '格式类型',
+    'supportText': '教室内支持的文件格式',
+    'ppt': 'Powerpoint演示文档',
+    'word': 'Word文档',
+    'excel': 'Excel文档',
+    'pdf': 'Pdf文档',
+    'video': '视频',
+    'audio': '音频',
+    'txt': '文本文档',
+    'pic': '图片',
+
+    'pptType': 'ppt pptx pptm',
+    'wordType': 'docx doc',
+    'excelType': 'xlsx xls csv',
+    'pdfType': 'pdf',
+    'videoType': 'XXX',
+    'audioType': 'XXX',
+    'txtType': 'XXX',
+    'picType': 'XXX',
+  },
   'error': {
     'not_found': '页面找不到',
     'components': {
@@ -152,6 +203,7 @@ const zhCN: any = {
     }
   },
   'whiteboard': {
+    'downloading': '下载中 {reason}%...',
     'loading': '加载中...',
     'converting': '转换中...',
     'global_state_limit': '请不要给白板设置过大的globalState size',
@@ -252,10 +304,10 @@ const zhCN: any = {
     'student_interactive_apply': `"{reason}"想和你连麦`
   },
   'placeholder': {
-    'teacher_noEnter': '等待老师进入',
-    'student_noEnter': '等待学生进入',
-    'teacher_Left': '老师离开了',
-    'student_Left': '学生离开了',
+    'teacher_noEnter': '等待外教进入教室...',
+    'student_noEnter': '等待学生进入教室...',
+    'teacher_Left': '老师已离开教室',
+    'student_Left': '学生已离开教室',
     'noCamera': '没有摄像头',
     'noAvailableCamera': '未检测到摄像头',
   },
@@ -288,7 +340,7 @@ const zhCN: any = {
     'class_start': '课程开始',
     'back': '返回',
     'class_time_text': '距离上课还有：',
-    'start_in': '开始上课了：',
+    'start_in': '已开始上课：',
     'minutes': '分',
     'seconds': '秒',
     'signal_good': '优',

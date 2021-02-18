@@ -33,7 +33,7 @@ const iconPaths = {
 const PlaceHolderIcon: React.FC<{role: PlaceHolderRole, type: PlaceHolderType}> = (props) => {
   const iconPath = iconPaths[props.role][props.type]
   return (
-    <img src={iconPath} style={{width: '56px', height: '56px'}} alt=""/>
+    <img src={iconPath} style={{width: '54px', height: '54px'}} alt=""/>
   )
 }
 
@@ -46,7 +46,8 @@ export const PlaceHolderView: React.FC<PlaceHolderViewProps> = (props) => {
       <TextEllipsis 
         style={{
           marginTop: '8px',
-          fontSize: '16px',
+          fontSize: '12px',
+          fontWeight: 'bold',
           color: '#002591',
           ...props.textEllipsisStyle
         }}

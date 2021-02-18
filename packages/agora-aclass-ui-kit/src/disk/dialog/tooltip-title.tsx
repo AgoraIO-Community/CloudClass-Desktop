@@ -51,31 +51,37 @@ const useStylesFileType = makeStyles(() => ({
   }
 }))
 
-export const FileSupportTitle = () => {
+interface FileSupportTitleProps {
+  fileTooltipText?: any,
+}
+
+export const FileSupportTitle = (props: FileSupportTitleProps) => {
   const classes = useStylesFileType()
+
+  const { fileTooltipText } = props
 
   // file support item
   const fileSupportList: TipIconListProps[] = [
-    {icon: IconPpt, fileName: 'Powerpoint演示文档', fileType: '格式类型: ppt pptx pptm'},
-    {icon: IconWord, fileName: 'Word文档', fileType: '格式类型: docx doc'},
-    {icon: IconExcel, fileName: 'Excel文档', fileType: '格式类型: xlsx xls csv'},
-    {icon: IconPdf, fileName: 'Pdf文档', fileType: '格式类型: pdf'},
-    {icon: IconVideo, fileName: '视频', fileType: '格式类型: XXX'},
-    {icon: IconAudio, fileName: '音频', fileType: '格式类型: XXX'},
-    {icon: IconTxt, fileName: '文本文档', fileType: '格式类型: XXX'},
-    {icon: IconPicture, fileName: '图片', fileType: '格式类型: XXX'},
+    {icon: IconPpt, fileName: fileTooltipText.ppt, fileType: fileTooltipText.pptType},
+    {icon: IconWord, fileName: fileTooltipText.word, fileType: fileTooltipText.wordType},
+    {icon: IconExcel, fileName: fileTooltipText.excel, fileType: fileTooltipText.excelType},
+    {icon: IconPdf, fileName: fileTooltipText.pdf, fileType: fileTooltipText.pdfType},
+    {icon: IconVideo, fileName: fileTooltipText.video, fileType: fileTooltipText.videoType},
+    {icon: IconAudio, fileName: fileTooltipText.audio, fileType: fileTooltipText.audioType},
+    {icon: IconTxt, fileName: fileTooltipText.txt, fileType: fileTooltipText.txtType},
+    {icon: IconPicture, fileName: fileTooltipText.pic, fileType: fileTooltipText.picType},
   ]
 
   return (
     <Box id="disk-icon-file" className={classes.container}>
-      <div className={classes.title}>教室内支持的文件格式</div>
+      <div className={classes.title}>{fileTooltipText.supportText}</div>
       {
         fileSupportList.map((item, index) => {
           return <div key={index} className={classes.fileItem}>
             <img src={item.icon} className={classes.fileIcon} />
             <div className={classes.fileText}>
               <div className={classes.fileName}>{item.fileName}</div>
-              <div className={classes.fileType}>{item.fileType}</div>
+              <div className={classes.fileType}>{`${fileTooltipText.fileType}: `}{item.fileType}</div>
             </div>
           </div>
         })

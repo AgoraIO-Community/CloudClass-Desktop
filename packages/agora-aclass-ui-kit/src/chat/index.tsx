@@ -146,7 +146,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       border: 'none',
       boxSizing: 'border-box',
       outline:'none',
-      minHeight: '21px',
+      height: '21px',
       fontFamily: 'SourceHanSansCN-Regular'
     },
     toolButton: {
@@ -233,7 +233,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   }
   const handleChangeText = (event: any) => {
     const { value } = event.target;
-    setInputMessages(value.trim());
+    setInputMessages(value);
     onInputText && onInputText(event);
   }
   useEffect(() => {
@@ -248,6 +248,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   }
   const handleKeyDown = (event: any) => {
     if (event.keyCode === 13) {
+      event.preventDefault()
       handlerSendButton()
     }
   }

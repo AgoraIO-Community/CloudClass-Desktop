@@ -8,6 +8,7 @@ import { DiskAllProgress, DiskSingleProgress } from "../control/progress";
 import TableEmpty from "../dialog/table-empty";
 
 interface DownloadDiskTablesProps extends DiskTablesProps {
+  diskText?: any,
   downloadList?: any,
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
@@ -16,19 +17,6 @@ interface DownloadDiskTablesProps extends DiskTablesProps {
 }
 
 const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
-
-  const DownloadTableHead = (props: any) => {
-    return (
-      <TableHead>
-        <TableRow style={{ color: '#273D75' }}>
-          <DiskTableCellHead style={{ paddingLeft: 15 }} id="name" key="name" scope="row">文件</DiskTableCellHead>
-          <DiskTableCellHead id="calories" key="calories" align="left">进度</DiskTableCellHead>
-          <DiskTableCellHead style={{ paddingRight: 120 }} id="fat" key="fat" align="center">操作</DiskTableCellHead>
-        </TableRow>
-      </TableHead>
-    )
-  }
-
   const classes = useDiskTableStyles()
 
   const rows = props.downloadList
@@ -41,15 +29,21 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
         size={'medium'}
         aria-label="enhanced table"
       >
-        <DownloadTableHead />
+        <TableHead>
+          <TableRow style={{ color: '#273D75' }}>
+            <DiskTableCellHead style={{ paddingLeft: 15 }} id="name" key="name" scope="row">{props.diskText.file}</DiskTableCellHead>
+            <DiskTableCellHead id="calories" key="calories" align="left">{props.diskText.progress}</DiskTableCellHead>
+            <DiskTableCellHead style={{ paddingRight: 120 }} id="fat" key="fat" align="center">{props.diskText.operation}</DiskTableCellHead>
+          </TableRow>
+        </TableHead>
         <TableHead>
           <TableRow style={{ color: '#273D75' }}>
             <DownloadTableCell style={{ paddingLeft: 15 }} id="name" key="name" scope="row">
-              <span className={classes.downloadLabel}>全部: <span className={classes.downloadText}>48</span></span>
+              <span className={classes.downloadLabel}>{props.diskText.all}: <span className={classes.downloadText}>{props.downloadList ? props.downloadList.length : 0}</span></span>
               &nbsp;
-              <span className={classes.downloadLabel}>已下载: <span className={classes.downloadText}>1</span></span>
+              <span className={classes.downloadLabel}>{props.diskText.downloaded}: <span className={classes.downloadText}>1</span></span>
               &nbsp;
-              <span className={classes.downloadLabel}>未下载: <span className={classes.downloadText}>47</span></span>
+              <span className={classes.downloadLabel}>{props.diskText.notDownload}: <span className={classes.downloadText}>47</span></span>
             </DownloadTableCell>
             <DownloadTableCell align="left">
               <DiskAllProgress value={50} />
@@ -102,9 +96,9 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows && <DiskTable tabValue={props.tabValue}/> ||
+        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
             <div style={{ paddingTop: 54 }}>
-              <TableEmpty />
+              <TableEmpty diskText={props.diskText} />
             </div>}
       </>
     )

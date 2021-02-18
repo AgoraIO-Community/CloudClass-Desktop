@@ -97,6 +97,43 @@ export const NetworkDisk = () => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
+      fileTooltipText={{
+        fileType: '格式类型',
+        supportText: '教室内支持的文件格式',
+        ppt: 'Powerpoint演示文档',
+        word: 'Word文档',
+        excel: 'Excel文档',
+        pdf: 'Pdf文档',
+        video: '视频',
+        audio: '音频',
+        txt: '文本文档',
+        pic: '图片',
+
+        pptType: 'ppt pptx pptm',
+        wordType: 'docx doc',
+        excelType: 'xlsx xls csv',
+        pdfType: 'pdf',
+        videoType: 'XXX',
+        audioType: 'XXX',
+        txtType: 'XXX',
+        picType: 'XXX',
+      }}
+      diskText={{
+        publicTab: '公共资源 ui-kit',
+        privateTab: '我的云盘 ui-kit',
+        downloadTab: '下载课件 ui-kit',
+        fileName: '文件名 ui-kit',
+        size: '大小 ui-kit',
+        modificationTime: '修改时间 ui-kit',
+        search: '搜索 ui-kit',
+        noFile: '暂无文件 ui-kit',
+        file: '文件',
+        progress: '进度',
+        operation: '操作',
+        all: '全部',
+        downloaded: '已下载',
+        notDownload: '未下载',
+      }}
     />
   )
 }

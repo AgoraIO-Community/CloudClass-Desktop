@@ -87,17 +87,25 @@ interface NetworkDiskDialogProps {
   dialogHeaderStyle?: React.CSSProperties,
   closeBtnStyle?: React.CSSProperties,
   questionBtnStyle?: React.CSSProperties,
+  fileTooltipText?: any,
   // list data
   publicList?: any,
   privateList?: any,
   downloadList?: any,
   // upload
   uploadComponent?: React.ReactNode,
+  handleDelete: (evt: any) => any,
+  removeText: string,
+  removeSuccess: string,
+  removeFailed: string,
+  // deleteComponent?: React.ReactNode,
+  refreshComponent?: React.ReactNode,
   // downloadComponet
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
+  diskText?: any,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -116,6 +124,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         {...paperProps}
         closeBtnStyle={props.closeBtnStyle}
         questionBtnStyle={props.questionBtnStyle}
+        fileTooltipText={props.fileTooltipText}
         headerStyle={props.dialogHeaderStyle}
         onClose={onClose}
         showHeader={true}
@@ -162,9 +171,9 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             onChange={handleChange}
             aira-label="disk tabs"
           >
-            <DiskTab id="disk-tab-public" label="公共资源" />
-            <DiskTab id="disk-tab-private" label="我的云盘" />
-            <DiskTab id="disk-tab-ware" label="下载课件" />
+            <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
+            <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
+            <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
           </DiskTabs>
         </div>
         <div style={{
@@ -186,24 +195,34 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             }}>
               {
                 activeValue === 0 && (
-                  <PublicDiskTables tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
+                  <PublicDiskTables diskText={props.diskText} tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
                 )
               }
 
               {
                 activeValue === 1 && (
-                  <PrivateDiskTables tabValue={activeValue} uploadComponent={props.uploadComponent} privateList={props.privateList}></PrivateDiskTables>
+                  <PrivateDiskTables tabValue={activeValue}
+                    diskText={props.diskText}
+                    uploadComponent={props.uploadComponent}
+                    handleDelete={props.handleDelete}
+                    // deleteComponent={props.deleteComponent}
+                    refreshComponent={props.refreshComponent}
+                    removeText={props.removeText}
+                    removeSuccess={props.removeSuccess}
+                    removeFailed={props.removeFailed}
+                    privateList={props.privateList}
+                  ></PrivateDiskTables>
                 )
               }
               {
                 activeValue === 2 && (
                   <DownloadDiskTables
+                    diskText={props.diskText}
                     tabValue={activeValue}
                     donwloadAllComponent={props.donwloadAllComponent}
                     deleteAllCacheComponent={props.deleteAllCacheComponent}
                     singleDownloadComponent={props.singleDownloadComponent}
                     singleDeleteComponent={props.singleDeleteComponent}
-                  
                     downloadList={props.downloadList}
                   />
                 )

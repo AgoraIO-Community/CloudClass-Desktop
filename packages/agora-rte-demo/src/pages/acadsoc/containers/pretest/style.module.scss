@@ -242,9 +242,12 @@
   flex-direction: row;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  color: rgb(0, 37, 145);
+  // & 
   // align-items: center;
   .select {
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     flex: 1;

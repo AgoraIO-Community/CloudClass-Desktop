@@ -2,6 +2,8 @@ import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
 import { CourseWareMenu } from './menu-button'
 import {useBoardStore} from '@/hooks'
+import { dialogManager } from 'agora-aclass-ui-kit'
+import { t } from '@/i18n'
 
 export const CourseWareMenuContainer = observer(() => {
   const boardStore = useBoardStore()
@@ -25,6 +27,20 @@ export const CourseWareMenuContainer = observer(() => {
         }
 
         if (type === 'close') {
+          dialogManager.confirm({
+            title: t(`aclass.sure_close_board`),
+            text: '',
+            showConfirm: true,
+            showCancel: true,
+            confirmText: t(`aclass.confirm_close`),
+            visible: true,
+            cancelText: t(`aclass.cancel_close`),
+            onConfirm: () => {
+              boardStore.closeMaterial(name)
+            },
+            onCancel: () => {
+            }
+          })
           console.log('ware menu close', name, ' currentPage ', currentPage)
         }
       }}

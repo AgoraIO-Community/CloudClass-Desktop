@@ -3,6 +3,9 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "sure_close_board": "Are you sure close?",
+    "confirm_close": "sure",
+    "cancel_close": "cancel",
     "board_name": "Board",
     "exit": "Exit",
     "class_end": "Class is ended",
@@ -152,6 +155,54 @@ const en = {
     'zoomOut': 'zoom out',
     'fullScreen': 'full screen',
   },
+  'disk': {
+    'publicResources': 'Public',
+    'privateResources': 'Mine',
+    'downlownResources': 'Download',
+
+    'upload': 'upload',
+    'downloadAll': 'download all',
+    'clearCache': 'clear cache',
+    'download': 'download',
+    'delete': 'delete',
+    'deleteSuccess': 'File deleted successfully!',
+    'deleteFailed': 'Failed to delete file!',
+
+    'all': 'all',
+    'downloaded': 'downloaded',
+    'notDownload': 'not downloaded',
+
+    'operation': 'operation',
+    'progress': 'progress',
+    'file': 'file',
+    'fileName': 'file name',
+    'size': 'size',
+    'modificationTime': 'modification time',
+    'search': 'search',
+    'noFile': 'no file',
+
+  },
+  'fileTip': {
+    'fileType': 'File formats',
+    'supportText': 'Supported file formats in the classroom',
+    'ppt': 'Powerpoint',
+    'word': 'Word',
+    'excel': 'Excel',
+    'pdf': 'Pdf',
+    'video': 'Video',
+    'audio': 'Audio',
+    'txt': 'Txt',
+    'pic': 'Picture',
+
+    'pptType': 'ppt pptx pptm',
+    'wordType': 'docx doc',
+    'excelType': 'xlsx xls csv',
+    'pdfType': 'pdf',
+    'videoType': 'XXX',
+    'audioType': 'XXX',
+    'txtType': 'XXX',
+    'picType': 'XXX',
+  },
   'error': {
     'not_found': 'Page Not Found',
     'components': {
@@ -159,6 +210,7 @@ const en = {
     }
   },
   'whiteboard': {
+    'downloading': 'Downloading {reason}%...',
     'loading': 'Loading...',
     'converting': 'Converting...',
     'global_state_limit': 'globalState size limit size probably overflow',

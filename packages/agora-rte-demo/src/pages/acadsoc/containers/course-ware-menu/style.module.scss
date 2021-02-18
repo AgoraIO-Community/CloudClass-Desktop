@@ -1,11 +1,16 @@
 .courseMenu{
-  height: 45px;
+  // height: 45px;
+  margin-bottom: 5px;
+  font-size: 16px;
   overflow-y: hidden;
   overflow-x: auto;
   justify-content: space-between;
   white-space: nowrap;
   width: calc(100% - 30px);
   color: white;
+  height: 30px;
+  overflow: auto;
+  overflow-x: hidden;
   .active{
     background-color: #303f9f;
   }
@@ -23,13 +28,16 @@
     align-items: center;
     cursor: pointer;
     border-radius: 8px;
-    height: 32px;
-    font-size: 12px !important;
-    margin:0px 2px !important;
+    height: 26px;
+    font-weight: bold;
+    font-size: 14px !important;
+    margin: 0px 2px !important;
     color: white;
     position: relative;
     padding: 2px 10px;
+    width: 125px;
     background-color: #303f9f;
+    justify-content: center;
     &:hover {
       background: #5571FF;
       color: white;

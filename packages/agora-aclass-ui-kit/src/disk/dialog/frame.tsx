@@ -17,6 +17,7 @@ type QuestionButtonProps = {
   onClick?: () => any,
   className?: any,
   style?: React.CSSProperties,
+  fileTooltipText?: any,
 }
 
 export interface DiskFramePaperProps {
@@ -29,6 +30,7 @@ export interface DiskFramePaperProps {
   headerStyle?: React.CSSProperties,
   closeBtnStyle?: React.CSSProperties,
   questionBtnStyle? : React.CSSProperties,
+  fileTooltipText?: any,
 }
 
 
@@ -66,10 +68,10 @@ const FileTypeToolTip = (props: TooltipProps) => {
 }
 
 const QuestionButton: React.FC<QuestionButtonProps> = (props) => {
-
+  console.log('propssssssssss', props)
   return (
     <FileTypeToolTip
-      title={ <FileSupportTitle /> }>
+      title={ <FileSupportTitle fileTooltipText={props.fileTooltipText} /> }>
       <IconButton disableRipple  aria-label="close" className={props.className} style={props.style}>
         <HelpOutlineIcon style={{width: "34px", height: "34px"}} />
       </IconButton>
@@ -159,7 +161,7 @@ export const DiskFramePaper: React.FC<DiskFramePaperProps> = (props) => {
         </div>
         : null}
 
-      <QuestionButton className={classes.questionButton} onClick={props.onClose} style={props.questionBtnStyle} />
+      <QuestionButton fileTooltipText={props.fileTooltipText} className={classes.questionButton} onClick={props.onClose} style={props.questionBtnStyle} />
       <CloseButton className={classes.closeButton} onClick={props.onClose} style={props.closeBtnStyle} />
       {props.children ? props.children : null}
     </Paper>

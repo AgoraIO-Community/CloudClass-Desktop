@@ -1,3 +1,4 @@
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
@@ -18,6 +19,7 @@ import { fetchPPT } from '@/modules/course-ware';
 import { ConvertedFile } from '@/edu-sdk';
 import { agoraCaches } from '@/utils/web-download.file';
 import fetchProgress from 'fetch-progress';
+import { transDataToResource } from '@/services/upload-service';
 
 export enum BoardPencilSize {
   thin = 4,
@@ -461,21 +463,46 @@ static toolItems: IToolItem[] = [
   sceneList: any[] = []
 
   async startDownload(taskUuid: string) {
-    const isWeb = true
-    if (isWeb) {
-      const zipUrl = `https://convertcdn.netless.link/dynamicConvert/${taskUuid}.zip`;
-      const controller = new AbortController();
-      const signal = controller.signal;
-      const result = await fetch(zipUrl, {
-          method: "get",
-          signal: signal,
-      }).then(fetchProgress({
-          onProgress(progress: any) {
-            console.log(' percentage ', progress, controller)
-          },
-      }))
-      console.log(" result ", result)
+    const isWeb = this.appStore.isElectron ? false : true
+    try {
+      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
+      this.preloading = true
+      if (isWeb) {
+        await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
+          this.preloadingProgress = progress
+        })
+      } else {
+        const controller = new AbortController();
+        const resourcesHost = "convertcdn.netless.link";
+        const signal = controller.signal;
+        const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+        const res = await fetch(zipUrl, {
+            method: "get",
+            signal: signal,
+        }).then(fetchProgress({
+            onProgress: (progress: any) => {
+              if (progress.hasOwnProperty('percentage')) {
+                this.preloadingProgress = get(progress, 'percentage')
+              }
+            },
+        }));
+        if (res.status !== 200) {
+          throw new GenericErrorWrapper({
+            code: res.status,
+            message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
+          })
+        }
+      }
+      this.preloading = false
+      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      this.preloading = false
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
     }
+  }
+
+  async startNativeDownload(taskUuid: string) {
+
   }
 
   @observable
@@ -495,7 +522,7 @@ static toolItems: IToolItem[] = [
 
   @computed
   get resourcesList(): any[] {
-    return [this._boardItem].concat(this._resourcesList)
+    return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
   changeSceneItem(resourceName: string, currentPage: number) {
@@ -510,7 +537,7 @@ static toolItems: IToolItem[] = [
   }
 
   // 更新白板
-  updateBoardSceneItems ({scenes, resourceName, page, taskUuid}: any) {
+  updateBoardSceneItems ({scenes, resourceName, page, taskUuid}: any, setScene: boolean) {
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
     const dynamicTaskUuidList = get(this.room.state.globalState, 'dynamicTaskUuidList', [])
@@ -523,8 +550,10 @@ static toolItems: IToolItem[] = [
     this.room.setGlobalState({
       dynamicTaskUuidList: dynamicTaskUuidItem
     })
-    this.room.putScenes(sceneName, scenes)
-    this.room.setScenePath(scenePath)
+    if (setScene) {
+      this.room.putScenes(sceneName, scenes)
+      this.room.setScenePath(scenePath)
+    }
   }
 
   findResourcePage (resourceName: string) {
@@ -551,6 +580,41 @@ static toolItems: IToolItem[] = [
     if (idx !== -1) return idx
 
     return 0
+  }
+
+  closeMaterial(resourceName: string) {
+    const currentSceneState = this.room.state.sceneState
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    this.room.setGlobalState({
+      roomScenes: {
+        ...roomScenes,
+        [`${resourceName}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceName: resourceName,
+          show: false,
+        }
+      }
+    })
+    // const resourceName = this.resourcesList.find((it: any) => it.resou)
+    this.room.setScenePath('')
+  }
+
+  async autoFetchDynamicTask() {
+    const currentSceneState = this.room.state.sceneState
+    const resourceName = this.getResourceName(currentSceneState.contextPath)
+    const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
+    if (isRootDir) {
+      const globalState = (this.room.state.globalState as any)
+      const taskUuidList = get(globalState, 'dynamicTaskUuidList', [])
+      const pptItem = taskUuidList.find((it: any) => it.resourceName === resourceName)
+      if (pptItem) {
+        await this.startDownload(pptItem.taskUuid)
+      }
+    }
   }
 
   updatePageHistory() {
@@ -583,19 +647,22 @@ static toolItems: IToolItem[] = [
           scenePath: currentSceneState.scenePath,
           totalPage: currentSceneState.scenes.length,
           resourceName: resourceName,
+          show: true,
         }
       }
-      // roomScenes: {
-      //   [`${resourceName}`]: {
-      //     contextPath: currentSceneState.contextPath,
-      //     index: currentSceneState.index,
-      //     sceneName: currentSceneState.sceneName,
-      //     scenePath: currentSceneState.scenePath,
-      //     totalPage: currentSceneState.scenes.length,
-      //     resourceName: resourceName,
-      //   }
-      // }
     })
+    const sceneState = this.room.state.sceneState
+    const name = this.getResourceName(sceneState.contextPath)
+    
+    const courseWare = this.courseWareList.find((item: any) => item.resourceName === name)
+    if (courseWare) {
+      this.updateBoardSceneItems({
+        scenes: sceneState.scenes,
+        resourceName: name,
+        page: sceneState.index,
+        taskUuid: courseWare.taskUuid,
+      }, false)
+    }
   }
 
   @observable
@@ -631,7 +698,8 @@ static toolItems: IToolItem[] = [
           resourceName: resourceName,
           currentPage: resource.index,
           totalPage: resource.totalPage,
-          scenePath: resource.scenePath
+          scenePath: resource.scenePath,
+          show: resource.show,
         })
       }
     }
@@ -643,12 +711,23 @@ static toolItems: IToolItem[] = [
     // this.totalPage = this.
   }
 
+  updateCourseWareList() {
+    this.courseWareList = get(this, 'room.state.globalState.dynamicTaskUuidList', [])
+    this._personalResources = get(this, 'room.state.globalState.materialList', [])
+  }
+
+  @observable
+  courseWareList: any[] = []
+
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
     // TODO: 需要从外部获取
     let ppt = await fetchPPT()
+    //@ts-ignore
+    window.fetchPPT = fetchPPT
     const firstCourseWare = ppt[0]
     await this.startDownload(firstCourseWare.taskUuid)
+    // const items = this.appStore.params.config.courseWareList
     if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
       const scenes = firstCourseWare.taskProgress!.convertedFileList
       const resourceName = `${firstCourseWare.resourceName}`
@@ -658,7 +737,7 @@ static toolItems: IToolItem[] = [
         resourceName,
         page,
         taskUuid: firstCourseWare.taskUuid
-      })
+      }, true)
       return scenes
     }
   }
@@ -734,9 +813,12 @@ static toolItems: IToolItem[] = [
       EduLogger.info("白板已经锁定")
     }
 
+    await this.loadCloudResources()
+
     this.updateLocalResourceList()
     this.updateLocalSceneState()
     this.updateSceneItems()
+    this.updateCourseWareList()
   }
 
   pptAutoFullScreen() {
@@ -860,15 +942,16 @@ static toolItems: IToolItem[] = [
       }
       if (state.sceneState) {
         this.updatePageHistory()
+        this.autoFetchDynamicTask()
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList()
         this.updateLocalSceneState()
         this.updateSceneItems()
       }
-      // if (state.globalState) {
-      //   this.updateBoardState()
-      // }
+      if (state.globalState) {
+        this.updateCourseWareList()
+      }
     })
     BizLogger.info("[breakout board] join", data)
     const cursorAdapter = new CursorTool(); //新版鼠标追踪
@@ -1872,10 +1955,20 @@ static toolItems: IToolItem[] = [
   @observable
   _grantPermission?: boolean = false
 
+  @observable
+  fileLoading: boolean = false
+  @observable
+  uploadingProgress: number = 0
+
   @action
   reset () {
+    this.publicResources = []
+    this._personalResources = []
     this._resourcesList = []
+    this.courseWareList = []
     this.isFullScreen = false
+    this.fileLoading = false
+    this.uploadingProgress = 0
     this.folder = ''
     this.lockBoard = true
     this.scenes = []
@@ -2037,14 +2130,35 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  @observable
+  preloading: boolean = false
+
+  @observable
+  preloadingProgress: number = 0
+
   @computed
   get isLoading() {
     if (!this.ready) {
       return 'preparing'
     }
-    // if (this.)
+    if (this.preloading) {
+      return true
+    }
+  }
+
+
+  @computed
+  get loadingStatus() {
+    if (!this.ready) {
+      return t("whiteboard.loading")
+    }
+    if (this.preloading) {
+      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+    }
+
     return ''
   }
+
 
   toggleAClassLockBoard() {
     if (this.lockBoard) {
@@ -2054,15 +2168,74 @@ static toolItems: IToolItem[] = [
     }
   }
 
-  async handleUpload(payload: any) {
+  async removeMaterialList(resourceUuids: any[]) {
     try {
-      await this.appStore.uploadService.handleUpload({
-        ...payload,
+      const res = await this.appStore.uploadService.removeMaterials({
+        resourceUuids: resourceUuids,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
       })
+      const globalState = this.room.state.globalState as any
+      const materialList = get(globalState, 'materialList', [])
+      // const resourceUuids = this
+      const newList = materialList.filter((e: any) => !resourceUuids.includes(e.id))
+      this.room.setGlobalState({
+        materialList: newList
+      })
+      EduLogger.info("remove removeMaterialList success", res)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async handleUpload(payload: any) {
+    try {
+      this.fileLoading = true
+      let res = await this.appStore.uploadService.handleUpload({
+        ...payload,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
+        onProgress: (evt: any) => {
+          console.log(evt)
+        },
+      })
+      const globalState = this.room.state.globalState as any
+      const materialList = get(globalState, 'materialList', [])
+      this.room.setGlobalState({
+        materialList: uniqBy(materialList.concat([{
+          ...res
+        }]), 'resourceName')
+      })
+      // const materialList
+      EduLogger.info(`上传课件成功, result: ${JSON.stringify(res)}`)
+      // console.log(" done ", file)
+      this.fileLoading = false
     } catch (err) {
       console.error(err)
+      this.fileLoading = false
+    }
+  }
+
+  @observable
+  publicResources: any[] = []
+
+  @observable
+  _personalResources: any[] = []
+
+  @computed
+  get personalResources(): any[] {
+    return this._personalResources.map(transDataToResource)
+  }
+
+  @computed
+  get allResources(): any[] {
+    return this.publicResources.concat(this.personalResources)
+  }
+
+  async loadCloudResources() {
+    this.publicResources = await this.appStore.uploadService.fetchPublicResources(this.appStore.roomInfo.roomUuid)
+    if (this.isTeacher()) {
+      this._personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
     }
   }
 }
