@@ -98,6 +98,8 @@ interface NetworkDiskDialogProps {
   removeText: string,
   removeSuccess: string,
   removeFailed: string,
+  showOpenItem?: boolean,
+  handleOpenCourse?: (evt: any) => any,
   // deleteComponent?: React.ReactNode,
   refreshComponent?: React.ReactNode,
   // downloadComponet
@@ -195,7 +197,13 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             }}>
               {
                 activeValue === 0 && (
-                  <PublicDiskTables diskText={props.diskText} tabValue={activeValue} publicList={props.publicList}></PublicDiskTables>
+                  <PublicDiskTables
+                    diskText={props.diskText}
+                    tabValue={activeValue}
+                    publicList={props.publicList}
+                    showOpenItem={props.showOpenItem}
+                    handleOpenCourse={props.handleOpenCourse}
+                  ></PublicDiskTables>
                 )
               }
 
@@ -205,6 +213,8 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     diskText={props.diskText}
                     uploadComponent={props.uploadComponent}
                     handleDelete={props.handleDelete}
+                    showOpenItem={props.showOpenItem}
+                    handleOpenCourse={props.handleOpenCourse}
                     // deleteComponent={props.deleteComponent}
                     refreshComponent={props.refreshComponent}
                     removeText={props.removeText}
@@ -217,6 +227,8 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
               {
                 activeValue === 2 && (
                   <DownloadDiskTables
+                    showOpenItem={props.showOpenItem}
+                    handleOpenCourse={props.handleOpenCourse}
                     diskText={props.diskText}
                     tabValue={activeValue}
                     donwloadAllComponent={props.donwloadAllComponent}

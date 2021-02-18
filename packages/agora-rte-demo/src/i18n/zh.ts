@@ -174,6 +174,7 @@ const zhCN: any = {
     'search': '搜索',
     'noFile': '暂无文件',
 
+    'openCourse': '打开',
   },
   'fileTip': {
     'fileType': '格式类型',

@@ -140,6 +140,11 @@ const NetworkDisk = observer((props: any) => {
     console.log("selected", selected)
   }
 
+  const handleOpenCourse = async (resourceUuid: any) => {
+    // await boardStore.openCourse(resourceUuid)
+    // console.log("resourceUuid", resourceUuid)
+  }
+
   const handleRefresh = async () => {
     await boardStore.loadCloudResources()
   }
@@ -152,6 +157,9 @@ const NetworkDisk = observer((props: any) => {
 
   return (
     <DiskManagerDialog
+      // todo add item
+      // showOpenItem={boardStore.showOpenCourse}
+      // handleOpenCourse={handleOpenCourse}
       removeText={t('disk.delete')}
       handleDelete={handleDelete}
       removeSuccess={t('disk.deleteSuccess')}
