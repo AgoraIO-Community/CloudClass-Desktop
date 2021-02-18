@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
-import { DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
+import { iconMapper, DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
 
 import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/table-cell";
 import { DiskButton } from "../control/disk-button";
@@ -72,7 +72,10 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
                   key={row.name}
                 >
                   <DiskTableCell style={{ paddingLeft: 15 }} component="th" id={labelId} scope="row" padding="none">
-                    {row.name}
+                    <div style={{ display: 'flex' }}>
+                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+                      <div style={{ marginLeft: 5 }}>{row.name}</div>
+                    </div>
                   </DiskTableCell>
                   <DiskTableCell style={{ color: '#586376' }} align="left">
                     {/* {row.calories} */}
@@ -96,7 +99,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
             <div style={{ paddingTop: 54 }}>
               <TableEmpty diskText={props.diskText} />
             </div>}

@@ -62,6 +62,7 @@ export class DiskStore {
     all: t('disk.all'),
     downloaded: t('disk.downloaded'),
     notDownload: t('disk.notDownload'),
+    openFile: t('disk.openFile'),
   }
 
   @observable

@@ -11,14 +11,24 @@ import TableEmpty from "../dialog/table-empty";
 import { DiskButton } from "../control/disk-button";
 import IconRefresh from '../assets/icon-refresh.png'
 
+import IconPpt from '../assets/icon-ppt.png'
+import IconWord from '../assets/icon-word.png'
+import IconExcel from '../assets/icon-excel.png'
+import IconPdf from '../assets/icon-pdf.png'
+import IconVideo from '../assets/icon-video.png'
+import IconAudio from '../assets/icon-audio.png'
+import IconTxt from '../assets/icon-txt.png'
+import IconPicture from '../assets/icon-pic.png'
+
 export interface Data {
   calories: any;
   fat: number;
   name: string;
+  type?: any;
 }
 
-export const createData = function (name: string, calories: any, fat: number): Data {
-  return { name, calories, fat, };
+export const createData = function (name: string, calories: any, fat: number, type?: any): Data {
+  return { name, calories, fat, type,};
 }
 
 // mock data
@@ -140,6 +150,8 @@ export const useSearchStyles = makeStyles((theme: Theme) =>
 export interface DiskTablesProps {
   tabValue: number,
   diskText?: any,
+  showOpenItem?: boolean,
+  handleOpenCourse?: (evt: any) => any,
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
@@ -151,6 +163,19 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   removeSuccess: string,
   removeFailed: string,
   refreshComponent?: React.ReactNode,
+  showOpenItem?: boolean,
+  handleOpenCourse?: (evt: any) => any,
+}
+
+export const iconMapper = {
+  ppt: IconPpt,
+  word: IconWord,
+  excel: IconExcel,
+  pdf: IconPdf,
+  video: IconVideo,
+  audio: IconAudio,
+  txt: IconTxt,
+  pic: IconPicture,
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
@@ -239,6 +264,14 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     }
   }, [selected])
 
+  const handleOpenCourse = async (resourcUuid: any) => {
+    try {
+      props.handleOpenCourse &&  await props.handleOpenCourse(resourcUuid)
+    } catch (err) {
+      console.log('打开课件错误')
+    }
+  }
+
   const handleCloseAlert = () => {
     setOpenToast({
       open: false,
@@ -258,6 +291,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         aria-label="enhanced table"
       >
         <EnhancedTableHead
+          showCheckbox={true}
           diskText={props.diskText}
           numSelected={selected.length}
           // order={order}
@@ -288,10 +322,20 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                     />
                   </DiskTableCell>
                   <DiskTableCell component="th" id={labelId} scope="row" padding="none">
-                    {row.name}
+                    <div style={{ display: 'flex' }}>
+                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+                      <div style={{ marginLeft: 5 }}>{row.name}</div>
+                    </div>
                   </DiskTableCell>
                   <DiskTableCell align="right">{row.calories}</DiskTableCell>
                   <DiskTableCell align="right">{row.fat}</DiskTableCell>
+                  {
+                    props.showOpenItem ? 
+                    <DiskTableCell align="right">
+                      <DiskButton id="disk-button-download" onClick={() => handleOpenCourse(row.id)} style={{ marginRight: 20 }} text={props.diskText.openCourse} color={'primary'} />
+                    </DiskTableCell>
+                    : null
+                  }
                 </TableRow>
               );
             })}
@@ -346,7 +390,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               size="small" />
           </div>
         </div>
-        { rows && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> || <TableEmpty diskText={props.diskText} /> }
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
       </>
     )
   }

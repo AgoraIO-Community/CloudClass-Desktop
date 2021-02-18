@@ -34,7 +34,8 @@ const en = {
       "placeholder":"Enter chat...",
       "title":"Chat",
       "loading":'loading',
-      "fail":'Translation failure'
+      "fail":'Translation failure',
+      'translate': 'Translate'
     },
     "device": {
       "keep": "Please Keep Smile, :D",
@@ -181,6 +182,7 @@ const en = {
     'search': 'search',
     'noFile': 'no file',
 
+    'openCourse': 'open',
   },
   'fileTip': {
     'fileType': 'File formats',

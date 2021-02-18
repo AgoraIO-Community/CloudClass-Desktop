@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import 'animate.css'
 import styles from './style.module.scss'
-import { useAcadsocRoomStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { debounce } from '@/utils/utils';
 
 export const MinimizeTeacher = observer(() => {
 
   const acadsocStore = useAcadsocRoomStore()
+  const sceneStore = useSceneStore()
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
@@ -30,7 +31,7 @@ export const MinimizeTeacher = observer(() => {
     <div className={styles.teacherContainer}>
       <div className={styles.teacherContainer}>
         <div className={styles.mainIcon}></div>
-        <span className={styles.name}>{acadsocStore.minimizeView[0].content}</span>
+        <span className={styles.name}>{sceneStore.teacherStream.account}</span>
         <div className={styles.packupBackground} onClick={() => {
           debounce(bindUnwind('teacher'), 500)
         }}>
@@ -44,6 +45,7 @@ export const MinimizeTeacher = observer(() => {
 export const MinimizeStudent = observer(() => {
 
   const acadsocStore = useAcadsocRoomStore()
+  const sceneStore = useSceneStore()
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
@@ -66,7 +68,7 @@ export const MinimizeStudent = observer(() => {
     <div className={styles.studentContainer}>
       <div className={styles.teacherContainer}>
         <div className={styles.mainIcon}></div>
-        <span className={styles.name}>{acadsocStore.minimizeView[1].content}</span>
+        <span className={styles.name}>{sceneStore.studentStreams[0].account}</span>
         <div className={styles.packupBackground} onClick={() => {
           debounce(bindUnwind('student'), 500)
         }}>

@@ -133,6 +133,8 @@ export const NetworkDisk = () => {
         all: '全部',
         downloaded: '已下载',
         notDownload: '未下载',
+
+        openCourse: '打开课件'
       }}
     />
   )

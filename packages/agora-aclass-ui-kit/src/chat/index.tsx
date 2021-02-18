@@ -45,6 +45,7 @@ export interface ChatBoardProps {
   onClickMinimize?: () => any,
   failText?:string,
   sendButtonText?:string,
+  translateButtonText?:string,
   loadingText?:string,
   titleText?:string,
   isDisableSendButton:boolean,
@@ -73,6 +74,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     minHeight,
     titleText,
     sendButtonText,
+    translateButtonText,
     loadingText,
     failText,
     toolButtonStyle,
@@ -114,7 +116,8 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       alignItems: 'center',
       justifyItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      fontSize: 14
     },
     chat: {
       borderRadius: '10px',
@@ -256,10 +259,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
     <Box className={classes.chat}>
       {titleView ||
         <div className={classes.titleView}>
-          <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '22px', height: '22px', marginRight: '6px' }} />{props.titleText || 'chat'}</div>
+          <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '15px', height: '15px', marginRight: '6px' }} />{props.titleText || 'chat'}</div>
           <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
         </div>}
-      <div className={classes.chatContent} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
+      <div className={`${classes.chatContent} classroom-scrollbar`} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div className={classes.chatScroll}>
           {messages?.map((item, index) => {
             return <Bubble
@@ -272,9 +275,11 @@ export const ChatBoard = (props: ChatBoardProps) => {
               onClickTranslate={item.onClickTranslate}
               onClickFailButton={item.onClickFailButton ?item.onClickFailButton : () => {}}
               translateText={item.translateText}
+              translateButtonText={translateButtonText}
               status={item.status || 'success'}
               loadingText ={loadingText}
               failText={failText}
+              bubbleStyle={(index === messages.length - 1) ? {marginBottom: 10} : {}}
             />
           })}
         </div>

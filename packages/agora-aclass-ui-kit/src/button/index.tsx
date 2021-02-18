@@ -8,11 +8,11 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 const useButtonStyles = makeStyles((theme: Theme) =>
   createStyles({
     primary: {
-      width: '60px',
+      width: 'auto',
       minWidth: '60px',
-      padding: '0',
-      height: '20px',
-      borderRadius: '10px',
+      padding: '4px 30px',
+      borderRadius: '20px',
+      minHeight: '20px',
       fontWeight: 400,
       '&:hover': {
         backgroundColor: '#ECC54C'
@@ -23,11 +23,11 @@ const useButtonStyles = makeStyles((theme: Theme) =>
       textTransform: 'none',
     },
     secondary: {
-      width: '60px',
+      width: 'auto',
       minWidth: '60px',
-      padding: '0',
-      height: '20px',
-      borderRadius: '10px',
+      padding: '4px 30px',
+      minHeight: '20px',
+      borderRadius: '20px',
       fontWeight: 400,
       // '&:hover': {
       //   backgroundColor: '#ECC54C'
@@ -40,7 +40,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
     label: {
       color: '#ffffff',
       fontSize: '14px',
-      lineHeight: '9px',
+      // lineHeight: '9px',
     }
   }),
 )

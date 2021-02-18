@@ -35,7 +35,6 @@ const NetworkDisk = observer((props: any) => {
 
   const boardStore = useBoardStore()
   const diskStore = useDiskStore()
-  console.log('disk store')
 
   const handleClose = () => {
     console.log('close network disk', props.openDisk)
@@ -141,18 +140,26 @@ const NetworkDisk = observer((props: any) => {
     console.log("selected", selected)
   }
 
+  const handleOpenCourse = async (resourceUuid: any) => {
+    // await boardStore.openCourse(resourceUuid)
+    // console.log("resourceUuid", resourceUuid)
+  }
+
   const handleRefresh = async () => {
     await boardStore.loadCloudResources()
   }
 
   const refreshComponent = () => {
     return (
-      <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
+      <img id="disk-button-refresh" style={{ cursor: 'pointer' }} onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
     )
   }
 
   return (
     <DiskManagerDialog
+      // todo add item
+      // showOpenItem={boardStore.showOpenCourse}
+      // handleOpenCourse={handleOpenCourse}
       removeText={t('disk.delete')}
       handleDelete={handleDelete}
       removeSuccess={t('disk.deleteSuccess')}

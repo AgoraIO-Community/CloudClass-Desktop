@@ -17,8 +17,8 @@ const useLogoStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       justifyContent: 'center',
-      height: '51px',
-      width: '47px',
+      height: '72px',
+      width: '66px',
       marginTop: '5px',
       background: `url(${AclassLion}) no-repeat`,
       backgroundPosition: 'center',
@@ -109,31 +109,31 @@ const useDialogStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       flex: 1,
       minWidth: '200px',
-      maxWidth: '200px',
+      maxWidth: '250px',
       minHeight: '130px',
       alignItems: 'center',
       flexDirection: 'column',
       '&:first-child': {
-        padding: '0px'
+        padding: '0px',
+        borderRadius: 5
       }
     },
     dialogButtonGroup: {
       fontFamily: theme.typography.fontFamily,
       display: 'flex',
       justifyContent: 'center',
-      position: 'absolute',
-      bottom: '8px',
     },
     dialogTextTypography: {
       fontFamily: theme.typography.fontFamily,
       color: '#002591',
       textAlign: 'center',
-      fontSize: '8px',
-      marginTop: '6px',
-      marginBottom: '4px',
+      fontSize: '14px',
+      margin: '6px 0 0 0',
+      padding: '0 20px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      minWidth: 200,
       height: '36px',
     },
     // dialogBorder: {
@@ -147,7 +147,7 @@ const useDialogStyles = makeStyles((theme: Theme) => {
 export const DialogButtons = withStyles((theme: Theme) => ({
   root: {
     margin: 0,
-    padding: 0,
+    padding: '10px 0',
   },
 }))(DialogActions);
 

@@ -151,6 +151,13 @@ export class LogUpload {
     try {
       const ossCallbackUrl = `${this.sdkDomain}/monitor/v1/log/oss/callback`
       console.log("log: ossCallbackUrl ", ossCallbackUrl, " body ", JSON.stringify(callbackBody))
+      // const res = ossClient.multipartUpload(ossKey, file, {
+      //   callback: {
+      //     url: `${this.sdkDomain}/monitor/v1/log/oss/callback`,
+      //     body: callbackBody,
+      //     contentType: 'application/json',
+      //   }
+      // })
       let res = await ossClient.put(ossKey, file, {
         callback: {
           url: `${this.sdkDomain}/monitor/v1/log/oss/callback`,
@@ -158,6 +165,7 @@ export class LogUpload {
           contentType: 'application/json',
         }
       });
+      console.log(" ### res", res)
       return get(res, 'data.data', -1)
     } catch(err) {
       throw new GenericErrorWrapper(err)

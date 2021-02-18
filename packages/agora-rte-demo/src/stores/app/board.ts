@@ -20,6 +20,7 @@ import { ConvertedFile } from '@/edu-sdk';
 import { agoraCaches } from '@/utils/web-download.file';
 import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
+import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 
 export enum BoardPencilSize {
   thin = 4,
@@ -466,7 +467,6 @@ static toolItems: IToolItem[] = [
     const isWeb = this.appStore.isElectron ? false : true
     try {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      this.preloading = true
       if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
           this.preloadingProgress = progress
@@ -493,10 +493,8 @@ static toolItems: IToolItem[] = [
           })
         }
       }
-      this.preloading = false
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
     } catch (err) {
-      this.preloading = false
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
     }
   }
@@ -1962,6 +1960,7 @@ static toolItems: IToolItem[] = [
 
   @action
   reset () {
+    this.preloadingProgress = -1
     this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
@@ -2134,7 +2133,7 @@ static toolItems: IToolItem[] = [
   preloading: boolean = false
 
   @observable
-  preloadingProgress: number = 0
+  preloadingProgress: number = -1
 
   @computed
   get isLoading() {
@@ -2152,7 +2151,7 @@ static toolItems: IToolItem[] = [
     if (!this.ready) {
       return t("whiteboard.loading")
     }
-    if (this.preloading) {
+    if (this.preloadingProgress !== -1) {
       return t("whiteboard.downloading", {reason: this.preloadingProgress})
     }
 
@@ -2185,6 +2184,42 @@ static toolItems: IToolItem[] = [
       EduLogger.info("remove removeMaterialList success", res)
     } catch (err) {
       throw err
+    }
+  }
+
+  async putImage(url: string) {
+    const imageInfo = await fetchNetlessImageByUrl(url)
+    await netlessInsertImageOperation(this.room, {
+      uuid: imageInfo.uuid,
+      file: imageInfo.file,
+      url: imageInfo.url,
+      width: imageInfo.width,
+      height: imageInfo.height,
+      //@ts-ignore
+      coordinateX: this.room.divElement.clientHeight / 2,
+      //@ts-ignore
+      coordinateY: this.room.divElement.clientWidth / 2,
+    })
+  }
+
+  async putAV(url: string, type: string) {
+    if (type === 'video') {
+      netlessInsertVideoOperation(this.room, {
+        url: url,
+        originX: 0,
+        originY: 0,
+        width: 480,
+        height: 270,
+      })
+    }
+    if (type === 'audio') {
+      netlessInsertAudioOperation(this.room, {
+        url: url,
+        originX: 0,
+        originY: 0,
+        width: 480,
+        height: 86,
+      })
     }
   }
 

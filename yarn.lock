@@ -3102,15 +3102,15 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/white-audio-plugin@1.2.16":
-  version "1.2.16"
-  resolved "https://registry.yarnpkg.com/@netless/white-audio-plugin/-/white-audio-plugin-1.2.16.tgz#ee8eea3b3c370d7648579129b8e280a48825111c"
-  integrity sha512-Gst6R9kplf+t/ZrGMX7JFHOpc/M+tobKhU7TtJNIIiubYAKxILeEvFNRkbULv5+QX8BJ3qF85MJxAKatWHxztA==
+"@netless/white-audio-plugin@1.2.19":
+  version "1.2.19"
+  resolved "https://registry.npm.taobao.org/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.19.tgz#0e3d01ee902bc931ce99f9eaf5f278195fb89d4e"
+  integrity sha1-Dj0B7pAryTHOmfnq9fJ4GV+4nU4=
 
-"@netless/white-video-plugin@1.2.15":
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.15.tgz#99bbfeb058e898faec636f477a0c609f789746cb"
-  integrity sha512-nuuuRfqP+u2zhQYzxUXBtZTf0ywyQ3GrUtkf2Eas27A/A8wcXoodnwnRE+KddeMGsMQt6T3uYDhqT/K9Wb2XDA==
+"@netless/white-video-plugin@1.2.18":
+  version "1.2.18"
+  resolved "https://registry.npm.taobao.org/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.18.tgz#0a2007b5b15ee572a24e6d4b9c658cce49124ac1"
+  integrity sha1-CiAHtbFe5XKiTm1LnGWMzkkSSsE=
 
 "@netless/zip@0.0.6":
   version "0.0.6"
@@ -24624,10 +24624,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.11.11:
-  version "2.11.11"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.11.11.tgz#0e5861e4c1fb0803d845c84805181fde30a075ff"
-  integrity sha512-jQOJ2//XIZRgdAZl9cQz+hK/iuCkY3pTA7e+yMkqtqRIzezxBDyg+LXKFi5stT0S+0U+F4OJHzVF5UyKuR+WvQ==
+white-web-sdk@2.11.12:
+  version "2.11.12"
+  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.11.12.tgz#96b8bd64d0a672ff33ba408222057dbb533e4f01"
+  integrity sha1-lri9ZNCmcv8zukCCIgV9u1M+TwE=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
