@@ -17,7 +17,7 @@ type AppType = {
   store: any
 }
 
-const DiskContainer = observer(() => {
+const DiskContainer = observer((props: any) => {
 
   const handleClose = () => {
     console.log('close network disk')
@@ -32,8 +32,8 @@ const DiskContainer = observer(() => {
         removeSuccess={t('disk.deleteSuccess')}
         removeFailed={t('disk.deleteFailed')}
         fullWidth={false}
-        visible={true}
-        onClose={handleClose}
+        visible={props.openDisk}
+        onClose={props.handleClose}
         dialogHeaderStyle={{
           minHeight: 40,
         }}
@@ -87,7 +87,7 @@ const DiskContainer = observer(() => {
           all: t('disk.all'),
           downloaded: t('disk.downloaded'),
           notDownload: t('disk.notDownload'),
-          openFile: t('disk.openFile'),
+          openFile: t('disk.openCourse'),
         }}
         fileTooltipText={{
           fileType: t('fileTip.fileType'),
@@ -119,7 +119,7 @@ export const StorageDisk = (props: any) => {
   return (
     <StylesProvider generateClassName={generateClassName}>
       <Provider store={props.store}>
-        <DiskContainer/>
+        <DiskContainer />
       </Provider>
     </StylesProvider>
   )

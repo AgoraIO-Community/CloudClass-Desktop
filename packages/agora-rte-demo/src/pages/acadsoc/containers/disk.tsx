@@ -223,7 +223,7 @@ const NetworkDisk = observer((props: any) => {
         all: t('disk.all'),
         downloaded: t('disk.downloaded'),
         notDownload: t('disk.notDownload'),
-        openFile: t('disk.openFile'),
+        openFile: t('disk.openCourse'),
       }}
       fileTooltipText={{
         fileType: t('fileTip.fileType'),
