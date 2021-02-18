@@ -406,12 +406,9 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                 )
               }}
               size="small" />
-<<<<<<< HEAD
-          </div>
-        </div> */}
-        { rows && rows.length > 0 && 
-          <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> 
-          || 
+          </div> */}
+        </div>
+        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || 
           <div
             style={{ 
               height: '480px',
@@ -422,12 +419,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
           >
             <TableEmpty diskText={props.diskText} /> 
           </div>
-          }
-=======
-          </div> */}
-        </div>
-        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
->>>>>>> fix. course ware
+        }
       </>
     )
   }
