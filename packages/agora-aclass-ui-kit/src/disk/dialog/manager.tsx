@@ -103,6 +103,10 @@ interface NetworkDiskDialogProps {
   // deleteComponent?: React.ReactNode,
   refreshComponent?: React.ReactNode,
   // downloadComponet
+  handleDownloadAll?: () => any,
+  handleClearcache?: () => any,
+  handleDownload?: (evt: any) => any,
+  handleDeleteSingle?: (evt: any) => any,
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
@@ -246,8 +250,12 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     handleOpenCourse={props.handleOpenCourse}
                     diskText={props.diskText}
                     tabValue={activeValue}
-                    donwloadAllComponent={props.donwloadAllComponent}
-                    deleteAllCacheComponent={props.deleteAllCacheComponent}
+                    handleDownloadAll={props.handleDownloadAll}
+                    handleClearcache={props.handleClearcache}
+                    handleDownload={props.handleDownload}
+                    handleDeleteSingle={props.handleDeleteSingle}
+                    // donwloadAllComponent={props.donwloadAllComponent}
+                    // deleteAllCacheComponent={props.deleteAllCacheComponent}
                     singleDownloadComponent={props.singleDownloadComponent}
                     singleDeleteComponent={props.singleDeleteComponent}
                     downloadList={props.downloadList}

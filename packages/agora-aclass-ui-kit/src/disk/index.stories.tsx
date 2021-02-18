@@ -209,49 +209,49 @@ export const NetworkDisk = (props: any) => {
       ]}
       downloadList={[
         {
-          calories: '100',
+          calories: 100,
           id: '12',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'pic',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '13',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'txt',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '1',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'audio',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '2',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'video',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '3',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'pdf',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '4',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'excel',
           fat: `${Date.now()}`
         },
         {
-          calories: '100',
+          calories: 100,
           id: '5',
           name: 'test12312312312312312312313123123123123123123123123123',
           type: 'word',
@@ -295,6 +295,8 @@ export const NetworkDisk = (props: any) => {
         all: '全部',
         downloaded: '已下载',
         notDownload: '未下载',
+        downloadAll: '全部下载',
+        clearCache: '清空缓存',
 
         openCourse: '打开课件'
       }}

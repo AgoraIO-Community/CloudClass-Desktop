@@ -24,6 +24,7 @@ import { BizLogger } from '@/utils/biz-logger';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import dayjs from 'dayjs'
+// import { StorageDisk } from '@/monolithic/disk/index'
 
 const useStyles = makeStyles ((theme: Theme) => ({
   container: {
@@ -359,5 +360,8 @@ export const HomePage = observer(() => {
         </div>
       </div>
     </div>
+    
+    // fixme 临时调试下载课件
+    // <StorageDisk></StorageDisk>
   )
 })

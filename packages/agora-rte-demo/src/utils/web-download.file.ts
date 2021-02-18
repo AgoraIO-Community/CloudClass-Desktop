@@ -52,6 +52,14 @@ export class AgoraCaches {
         }
     }
 
+    public clearAllCache = async () => {
+        const cache = await this.openCache("agora")
+        const keys = await cache.keys()
+        keys.forEach((key) => {
+            cache.delete(key)
+        }) 
+    }
+
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
         const cache = await this.openCache("agora");
         const keys = await cache.keys();

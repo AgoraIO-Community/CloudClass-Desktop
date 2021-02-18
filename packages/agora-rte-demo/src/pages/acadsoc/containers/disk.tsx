@@ -105,29 +105,45 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
+<<<<<<< Updated upstream
   const downloadAllComponent = () => {
     return (
       <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
     )
   }
+=======
+  // const donwloadAllComponent = () => {
+  //   return (
+  //     <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
+  //   )
+  // }
+>>>>>>> Stashed changes
 
-  const deleteAllCache = () => {
-    return (
-      <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
-    )
-  }
+  // const deleteAllCache = () => {
+  //   return (
+  //     <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
+  //   )
+  // }
 
+<<<<<<< Updated upstream
   const singleDownload = () => {
     return (
       <DiskButton disabled={boardStore.downloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
     )
   }
+=======
+  // const singleDonwload = () => {
+  //   return (
+  //     <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
+  //   )
+  // }
+>>>>>>> Stashed changes
 
-  const singleDelete = () => {
-    return (
-      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
-    )
-  }
+  // const singleDelete = () => {
+  //   return (
+  //     <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
+  //   )
+  // }
 
   const handleDelete = async (selected: any) => {
     if (selected.length) {
@@ -202,11 +218,12 @@ const NetworkDisk = observer((props: any) => {
       privateList={boardStore.personalResources}
       // downloadList={boardStore.allResources}
       uploadComponent={uploadComponent()}
-      donwloadAllComponent={downloadAllComponent()}
-      deleteAllCacheComponent={deleteAllCache()}
-      singleDownloadComponent={singleDownload()}
-      singleDeleteComponent={singleDelete()}
-      // handleOpenCourse={handleOpenCourse}
+      // donwloadAllComponent={donwloadAllComponent()}
+      // deleteAllCacheComponent={deleteAllCache()}
+      // singleDownloadComponent={singleDonwload()}
+      // singleDeleteComponent={singleDelete()}
+      handleOpenCourse={handleOpenCourse}
+      showOpenItem={true}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
       diskText={{
