@@ -57,6 +57,7 @@ export const TeacherVideo = observer(() => {
     }
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
+      t.content = userStream.userUuid
       // t.animationMinimize = ''
       // t.animation = 'animate__animated animate__backOutDown'
       // setTimeout(() => {
@@ -150,6 +151,7 @@ export const StudentVideo = observer(() => {
     }
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
+      t.content = userStream.userUuid
       // t.animationMinimize = ''
       // t.animation = 'animate__animated animate__backOutDown'
       // setTimeout(() => {
