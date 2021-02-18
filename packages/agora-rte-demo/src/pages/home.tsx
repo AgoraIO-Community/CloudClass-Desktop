@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Theme, FormControl, Tooltip } from '@material-ui/core';
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, createStyles} from '@material-ui/core/styles';
 import {CustomButton} from '@/components/custom-button';
 import { RoleRadio } from '@/components/role-radio';
 import {CustomIcon} from '@/components/icon';
@@ -21,8 +21,19 @@ import {observer} from 'mobx-react';
 import { homeApi } from '@/services/home-api';
 import { BizLogger } from '@/utils/biz-logger';
 // import {CloudDiskUpload} from '@/components/upload'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles ((theme: Theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
   formControl: {
     minWidth: '240px',
     maxWidth: '240px',
@@ -202,7 +213,66 @@ export const HomePage = observer(() => {
           <div className={`cover-placeholder ${t('home.cover_class')}`}></div>
           <div className='build-version'>{t("build_version")}</div>
           </>
-          : <div className={`cover-placeholder-web ${t('home.cover_class')}`}></div>
+          : 
+          // 测试 demo
+          <div className="test-demo">
+            <div style={{margin: '30px'}}>
+              <form className={classes.container} noValidate>
+                <TextField
+                  id="datetime-local"
+                  label="开始上课时间："
+                  type="datetime-local"
+                  defaultValue="2021-02-19T10:30"
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(e) => {
+                    let value = e.target.value
+                    let startTime = new Date(value).getTime()
+                    appStore.params.startTime = startTime
+                    // console.log('**上课开始时间', e.target.value)
+                  }}
+                />
+                <TextField 
+                  style={{marginLeft: '10px'}} 
+                  id="time-test1" 
+                  onChange={(e) => {
+                    let value = e.target.value
+                    let duration = Number(value) * 60
+                    appStore.params.duration = duration
+                    console.log('**课程持续时间', e.target.value)
+                  }}
+                  label="课程持续时间/分钟：" 
+                />
+              </form>
+            </div>
+            <div style={{margin: '20px'}}>
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
+              console.log('更新课件列表')
+            }}>
+             更新课件列表
+            </Button>
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
+              console.log('下载课件')
+            }}>
+             下载课件
+            </Button>
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
+              console.log('清空课件缓存')
+            }}>
+             清空课件缓存
+            </Button>
+            <CustomButton name={'测试课加入房间'} onClick={() => {
+              setSessionInfo({
+                ...session,
+                roomName: 'test_' + session.roomName
+              });
+              handleSubmit()
+            }}/>
+            </div>
+          </div>
+          // <div className={`cover-placeholder-web ${t('home.cover_class')}`}></div>
           }
         </div>
         <div className="flex-item card">

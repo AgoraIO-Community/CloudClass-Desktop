@@ -20,21 +20,21 @@ type RoomTypesList = {
 export class UIStore {
 
   static roomTypes: RoomTypesList[] = [
-    {
-      path: '/classroom/one-to-one',
-      text: 'home.1v1',
-      value: 0,
-    },
-    {
-      path: '/classroom/small-class',
-      text: 'home.mini_class',
-      value: 1,
-    },
-    {
-      path: '/classroom/big-class',
-      text: 'home.large_class',
-      value: 2,
-    },
+    // {
+    //   path: '/classroom/one-to-one',
+    //   text: 'home.1v1',
+    //   value: 0,
+    // },
+    // {
+    //   path: '/classroom/small-class',
+    //   text: 'home.mini_class',
+    //   value: 1,
+    // },
+    // {
+    //   path: '/classroom/big-class',
+    //   text: 'home.large_class',
+    //   value: 2,
+    // },
     // {
     //   path: 'breakout-class',
     //   text: 'home.super_mini_class',
