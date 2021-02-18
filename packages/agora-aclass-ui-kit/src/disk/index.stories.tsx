@@ -9,7 +9,7 @@ export default {
   title: '网盘'
 }
 
-export const NetworkDisk = () => {
+export const NetworkDisk = (props: any) => {
 
   const [open, setOpen] = React.useState(false);
 
@@ -60,6 +60,13 @@ export const NetworkDisk = () => {
 
   return (
     <DiskManagerDialog
+      handleDelete={() => {
+
+      }}
+      removeFailed={"删除失败"}
+      removeText={"删除失败"}
+      removeSuccess={"删除成功"}
+      inRoom={props.inRoom}
       fullWidth={false}
       visible={true}
       onClose={handleClose}
@@ -92,10 +99,27 @@ export const NetworkDisk = () => {
         right: 18,
         color: 'white'
       }}
+      showOpenItem={true}
+      diskOpenText={"打开"}
       uploadComponent={uploadComponent()}
       donwloadAllComponent={donwloadAllComponent()}
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
+      publicList={[{
+        calories: '100',
+        id: '1',
+        name: 'test12312312312312312312313123123123123123123123123123',
+        type: 'ppt',
+        updateTime: `${Date.now()}`
+      }]}
+      downloadList={[
+        {calories: '100',
+          id: '2',
+          name: 'test',
+          type: 'ppt',
+          updateTime: `${Date.now()}`
+        }
+      ]}
       singleDeleteComponent={singleDelete()}
       fileTooltipText={{
         fileType: '格式类型',
@@ -141,7 +165,7 @@ export const NetworkDisk = () => {
 }
 
 NetworkDisk.args = {
-
+  inRoom: true,
 }
 
 export const PrimaryButton = (props: any) => {

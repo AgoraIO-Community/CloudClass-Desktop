@@ -83,6 +83,7 @@ export type FetchStsTokenResult = {
 export type HandleUploadType = {
   file: File,
   fileSize: number,
+  resourceUuid: string,
   resourceName: string,
   userUuid: string,
   roomUuid: string,
@@ -137,10 +138,10 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async fetchStsToken(params: {roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
+  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
-      method: 'POST',
+      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}/sts`,
+      method: 'PUT',
       data: {
         resourceName: params.resourceName,
         ext: params.ext,
@@ -247,6 +248,7 @@ export class UploadService extends ApiBase {
         phase: 'finish',
         progress: 100,
       })
+      console.log("query#data ", queryResult.data)
       return queryResult.data
     }
 
@@ -254,6 +256,7 @@ export class UploadService extends ApiBase {
       roomUuid: payload.roomUuid,
       userUuid: payload.userUuid,
       resourceName: payload.resourceName,
+      resourceUuid: payload.resourceUuid,
       ext: payload.ext,
       conversion: payload.conversion,
       fileSize: payload.fileSize,
@@ -270,24 +273,13 @@ export class UploadService extends ApiBase {
       stsToken: ossConfig.securityToken,
     })
 
+    const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
+    
+    console.log("callback body: ", fetchCallbackBody)
+
+    const resourceUuid = fetchCallbackBody.resourceUuid
+
     if (payload.converting === true) {
-      // const pptURL = await this.addFileToOss(
-      //   ossClient,
-      //   key,
-      //   payload.file,
-      //   (progress: any) => {
-      //     payload.onProgress({
-      //       phase: 'upload',
-      //       progress
-      //     })
-      //   },
-      //   {
-      //     callbackBody: ossConfig.callbackBody,
-      //     contentType: ossConfig.callbackContentType,
-      //     roomUuid: payload.roomUuid,
-      //     userUuid: payload.userUuid,
-      //     appId: this.appId
-      //   })
       const pptURL = await this.addFileToOss(
         ossClient,
         key,
@@ -319,6 +311,7 @@ export class UploadService extends ApiBase {
       })
 
       const convertingModel = {
+        resourceUuid,
         taskUuid: res.uuid,
         taskProgress: {
           totalPageSize: res.scenes.length,
@@ -335,12 +328,18 @@ export class UploadService extends ApiBase {
         ext: 'pptx',
         ...convertingModel
       })
-      return {
+      const resConvert = {
+        resourceUuid,
+        size: fetchCallbackBody.size,
         resourceName: payload.resourceName,
         url: pptURL,
         ext: payload.ext,
         scenes: res.scenes,
       }
+
+      console.log("handleUpload#data coverting",resConvert)
+      return resConvert
+
     } else {
       const resourceUrl = await this.addFileToOss(
         ossClient,
@@ -359,20 +358,15 @@ export class UploadService extends ApiBase {
           userUuid: payload.userUuid,
           appId: this.appId
         })
-      // await this.createMaterial({
-      //   url: resourceUrl,
-      //   roomUuid: payload.roomUuid,
-      //   userUuid: payload.userUuid,
-      //   resourceName: payload.resourceName,
-      //   ext: payload.ext,
-      //   size: payload.fileSize,
-      // })
-      return {
-        // resourceUuid: fetchResult.data
+
+      const resStatic = {
+        resourceUuid: resourceUuid,
+        size: fetchCallbackBody.size,
         resourceName: payload.resourceName,
         ext: payload.ext,
         url: resourceUrl
       }
+      return resStatic
     }
   }
 

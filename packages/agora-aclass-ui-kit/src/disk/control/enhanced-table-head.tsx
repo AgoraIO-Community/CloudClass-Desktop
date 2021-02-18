@@ -46,6 +46,7 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
         <DiskTableCellHead className={classKey} id="name" key="name" scope="row">{diskText.fileName}</DiskTableCellHead>
         <DiskTableCellHead className={classes.text} id="calories" key="calories" align="right">{diskText.size}</DiskTableCellHead>
         <DiskTableCellHead className={classes.text} id="fat" key="fat" align="right">{diskText.modificationTime}</DiskTableCellHead>
+        <DiskTableCellHead className={classes.text} id="operation" key="operation" align="right">{diskText.operation}</DiskTableCellHead>
       </TableRow>
     </TableHead>
   );

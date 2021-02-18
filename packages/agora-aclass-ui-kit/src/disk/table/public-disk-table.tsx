@@ -76,12 +76,12 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
   }
 
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -96,11 +96,11 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
     setSelected(newSelected);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   if (event.target.checked) {
-  //     const newSelecteds = rows.map((n: any) => n.name);
+  //     const newSelecteds = rows.map((n: any) => n.id);
   //     setSelected(newSelecteds);
   //     return;
   //   }
@@ -137,16 +137,16 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row: any, index: number) => {
-              const isItemSelected = isSelected(row.name);
+              const isItemSelected = isSelected(row.id);
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
                 <TableRow
-                  onClick={(event) => handleClick(event, row.name)}
+                  onClick={(event) => handleClick(event, row.id)}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row.name}
+                  key={row.id}
                 >
                   {/* <DiskTableCell padding="checkbox">
                     <DiskCheckbox
@@ -155,9 +155,9 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
                     />
                   </DiskTableCell> */}
                   <DiskTableCell style={{ paddingLeft: 15 }} component="th" id={labelId} padding="none">
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', overflow: 'hidden', textOverflow: 'ellipse', maxWidth: 150, whiteSpace: 'nowrap' }}>
                       <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
-                      <div style={{ marginLeft: 5 }}>{row.name}</div>
+                      <div style={{ marginLeft: 5, textOverflow: 'ellipsis', overflow: 'hidden' }}>{row.name}</div>
                     </div>
                   </DiskTableCell>
                   <DiskTableCell style={{ color: '#586376' }} align="right">{row.calories}</DiskTableCell>
@@ -165,7 +165,11 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
                   {
                     props.showOpenItem ? 
                     <DiskTableCell align="right">
-                      <DiskButton id="disk-button-download" onClick={() => handleOpenCourse(row.id)} style={{ marginRight: 20 }} text={props.diskText.openCourse} color={'primary'} />
+                      <div style={{cursor: 'pointer'}} onClick={() => {
+                        handleOpenCourse(row.id)
+                      }}>
+                        {props.showText}
+                      </div>
                     </DiskTableCell>
                     : null
                   }

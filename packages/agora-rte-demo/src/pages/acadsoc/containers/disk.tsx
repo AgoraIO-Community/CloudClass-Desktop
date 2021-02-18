@@ -22,7 +22,6 @@ const UploadingProgress = observer((props: any) => {
 
   return (
     <>
-    233
     {fileLoading ? 
     <Progress title={`${uploadingProgress}`}></Progress>
     : null}
@@ -60,24 +59,18 @@ const NetworkDisk = observer((props: any) => {
 
   const uploadRequest = async ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
     const md5 = await calcUploadFilesMd5(file)
-    const resourceName = MD5(`${md5}`)
+    const resourceUuid = MD5(`${md5}`)
+    const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
     const isDynamic = ext === 'pptx'
 
-    // const convertConfig = {
-    //   converting: isDynamic ? true : false,
-    //   // conversion: {
-    //   //   type: isDynamic ? 'dynamic' : 'static',
-    //   //   scale: 1.2,
-    //   //   preview: false,
-    //   //   outputFormat: isDynamic ? '' : ext
-    //   // }
-    // }
+
     const payload = {
       file: file,
       fileSize: file.size,
-      ext: file.name.split(".").pop(),
-      resourceName: resourceName,
+      ext: ext,
+      resourceName: name,
+      resourceUuid: resourceUuid,
       converting: isDynamic ? true : false,
       kind: PPTKind.Dynamic,
       pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
@@ -91,13 +84,6 @@ const NetworkDisk = observer((props: any) => {
   const onUpload = (evt: any) => {
     console.log('upload file', evt)
     return evt
-    // await boardStore.handleUpload({
-    //   file: file,
-    //   resourceName: MD5(`${file}`),
-    //   onProgress: (evt: any) => {
-    //     console.log("converting evt: ", evt)
-    //   }
-    // })
   }
 
   const uploadComponent = () => {
@@ -106,7 +92,6 @@ const NetworkDisk = observer((props: any) => {
         customRequest={uploadRequest}
         showUploadList={false}
         uploadButton={() => <DiskButton onClick={onUpload} id="disk-button-upload" color={'primary'} text={t('disk.upload')} />}
-        progressComponents={() => <UploadingProgress />}
       />
     )
   }
@@ -136,13 +121,13 @@ const NetworkDisk = observer((props: any) => {
   }
 
   const handleDelete = async (selected: any) => {
-    await boardStore.removeMaterialList(selected)
-    console.log("selected", selected)
+    if (selected.length) {
+      await boardStore.removeMaterialList(selected)
+    }
   }
 
   const handleOpenCourse = async (resourceUuid: any) => {
-    // await boardStore.openCourse(resourceUuid)
-    // console.log("resourceUuid", resourceUuid)
+    await boardStore.putSceneByResourceUuid(resourceUuid)
   }
 
   const handleRefresh = async () => {
@@ -156,6 +141,7 @@ const NetworkDisk = observer((props: any) => {
   }
 
   return (
+    <>
     <DiskManagerDialog
       // todo add item
       // showOpenItem={boardStore.showOpenCourse}
@@ -204,11 +190,16 @@ const NetworkDisk = observer((props: any) => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
+      handleOpenCourse={handleOpenCourse}
+      showOpenItem={true}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
       diskText={diskStore.diskTextDoc}
       fileTooltipText={diskStore.fileTooltipTextDoc}
-    />
+    >
+      <UploadingProgress />
+    </DiskManagerDialog>
+    </>
   )
 })
 

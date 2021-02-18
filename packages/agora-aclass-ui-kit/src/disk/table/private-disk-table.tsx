@@ -152,6 +152,7 @@ export interface DiskTablesProps {
   diskText?: any,
   showOpenItem?: boolean,
   handleOpenCourse?: (evt: any) => any,
+  showText?: string
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
@@ -332,7 +333,11 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                   {
                     props.showOpenItem ? 
                     <DiskTableCell align="right">
-                      <DiskButton id="disk-button-download" onClick={() => handleOpenCourse(row.id)} style={{ marginRight: 20 }} text={props.diskText.openCourse} color={'primary'} />
+                      <div style={{cursor: 'pointer'}} onClick={() => {
+                        handleOpenCourse(row.id)
+                      }}>
+                        {props.showText}
+                      </div>
                     </DiskTableCell>
                     : null
                   }

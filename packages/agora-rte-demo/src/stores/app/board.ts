@@ -717,8 +717,16 @@ static toolItems: IToolItem[] = [
   @observable
   courseWareList: any[] = []
 
+
+  findFirstPPT() {
+    const list = this.appStore.params.config.courseWareList
+    const ppt = list.find((it: any) => {})
+  }
+
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
+
+    console.log(" tasks ",)
     // TODO: 需要从外部获取
     let ppt = await fetchPPT()
     //@ts-ignore
@@ -2187,6 +2195,14 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  async putCourseResource(resourceUuid: string) {
+    const resource = this.resourcesList.find((it: any) => it.resourceUuid === resourceUuid)
+    if (resource) {
+      this.room.putScenes(`/${resource.resourceName}`, resource.scenes)
+      this.room.setScenePath(`/${resource.resourceName}/${resource.scenes[0].name}`)
+    }
+  }
+
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
     await netlessInsertImageOperation(this.room, {
@@ -2221,6 +2237,22 @@ static toolItems: IToolItem[] = [
         height: 86,
       })
     }
+  }
+
+  async putSceneByResourceUuid(uuid: string) {
+    const resource = this.resourcesList.find((resource: any) => resource.resourceUuid === uuid)
+    if (resource.type === "pptx") {
+      await this.putCourseResource(uuid)
+    }
+
+    if (["mp3", "mp4"].includes(resource.type)) {
+      await this.putAV(resource.url, resource.type)
+    }
+
+    if (["png", "jpg", "gif", "jpeg"].includes(resource.type)) {
+      await this.putImage(resource.url)
+    }
+    // if (resource.type === "pptx")
   }
 
   async handleUpload(payload: any) {
