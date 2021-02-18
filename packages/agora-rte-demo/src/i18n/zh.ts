@@ -348,6 +348,7 @@ const zhCN: any = {
     'signal_good': '优',
     'signal_weak': '良',
     'signal_bad': '差',
+    'signal_unknown': '未知',
   },
   'home': {
     'entry-home': '进入教室',

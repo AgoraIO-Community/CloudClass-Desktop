@@ -22,6 +22,7 @@ const useStyles = makeStyles ((theme: Theme) => ({
 
 export const RoleRadio: React.FC<any> = (props) => {
   const classes = useStyles();
+  // props.type === 3?
   return (
     <RadioGroup className={classes.radioGroup} row value={props.role} onChange={props.onChange}>
       <FormControlLabel
@@ -31,24 +32,20 @@ export const RoleRadio: React.FC<any> = (props) => {
         label={t("home.teacher")}
         labelPlacement="end"
       />
-      { props.type === 3?
-        <FormControlLabel
-          className={"custom-radio align-middle"}
-          value="assistant"
-          control={<Radio className={"custom-radio"} color="primary" />}
-          label={t("home.assistant")}
-          labelPlacement="end"
+      <FormControlLabel
+        className={"custom-radio align-middle"}
+        value="assistant"
+        control={<Radio className={"custom-radio"} color="primary" />}
+        label={t("home.assistant")}
+        labelPlacement="end"
       /> 
-      : null
-      }{props.type === 3?
-          <FormControlLabel
-            className={"custom-radio align-right"}
-            value="invisible"
-            control={<Radio className={"custom-radio"} color="primary" />}
-            label={t("home.invisible")}
-            labelPlacement="end"
-          /> : null
-      }
+      <FormControlLabel
+        className={"custom-radio align-right"}
+        value="invisible"
+        control={<Radio className={"custom-radio"} color="primary" />}
+        label={t("home.invisible")}
+        labelPlacement="end"
+      />
       <FormControlLabel
         className={"custom-radio align-right"}
         value="student"

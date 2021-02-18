@@ -348,6 +348,7 @@ const en = {
     'signal_good': 'Good',
     'signal_weak': 'Weak',
     'signal_bad': 'Bad',
+    'signal_unknown': 'signal Unknown',
   },
   'home': {
     'entry-home': 'Join Classroom',

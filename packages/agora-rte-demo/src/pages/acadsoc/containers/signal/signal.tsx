@@ -27,7 +27,11 @@ export const SignalBar = observer((props: SignalProps) => {
           <div className={styles.signal}></div> 
           <span className={styles.text}>{t('nav.signal_bad')}</span>
         </div> 
-        : null
+        : 
+        <div className={styles.signalUnknown}>
+          <div className={styles.signal}></div> 
+          <span className={styles.text}>{t('nav.signal_unknown')}</span>
+        </div> 
       }
     </div>
   )
