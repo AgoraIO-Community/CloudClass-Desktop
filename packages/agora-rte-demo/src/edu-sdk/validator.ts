@@ -1,6 +1,6 @@
 import { isBoolean, isEmpty, isString, isFunction, isNumber, isArray } from 'lodash';
 import { AgoraEduSDKConfigParams } from "./declare"
-import { ReplayOption, LaunchOption } from "./index"
+import { ReplayOption, LaunchOption, DiskOption } from "./index"
 
 const pattern = /^[0-9a-zA-Z!#$%&()+-:;<=.>?@[\]^_{}|~,]+$/
 
@@ -205,4 +205,13 @@ export const checkConfigParams = (params: AgoraEduSDKConfigParams) => {
   if (params.appId.length !== 32) {
     throw new AgoraSDKError('appId parameter is invalid')
   }
+}
+
+export const checkDiskParams = (dom: Element, params?: DiskOption) => {
+  if (!dom) {
+    throw new AgoraSDKError("dom is empty")
+  }
+  // if (isEmpty(params)) {
+  //   throw new AgoraSDKError('disk config parameter cannot be empty')
+  // }
 }

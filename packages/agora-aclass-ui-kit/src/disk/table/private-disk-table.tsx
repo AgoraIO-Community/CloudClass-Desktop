@@ -19,6 +19,7 @@ import IconVideo from '../assets/icon-video.png'
 import IconAudio from '../assets/icon-audio.png'
 import IconTxt from '../assets/icon-txt.png'
 import IconPicture from '../assets/icon-pic.png'
+import dayjs from 'dayjs';
 
 export interface Data {
   calories: any;
@@ -75,7 +76,7 @@ export const useDiskTableStyles = makeStyles((theme: Theme) =>
       height: '480px',
       width: '730px',
       borderRadius: '20px',
-      padding: '20px'
+      padding: '20px',
     },
     table: {
       maxHeight: 510,
@@ -152,6 +153,7 @@ export interface DiskTablesProps {
   diskText?: any,
   showOpenItem?: boolean,
   handleOpenCourse?: (evt: any) => any,
+  showText?: string
 }
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
@@ -179,6 +181,8 @@ export const iconMapper = {
 }
 
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
+
+  const showText = props.showText
   const classes = useDiskTableStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
@@ -285,6 +289,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
     return (
       <Table
+        component="div"
         className={classes.table}
         aria-labelledby="tableTitle"
         size={'medium'}
@@ -300,7 +305,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
           // onRequestSort={handleRequestSort}
           rowCount={rows.length}
         />
-        <TableBody>
+        <TableBody component="div">
           {stableSort(rows, getComparator(order, orderBy))
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row: any, index: number) => {
@@ -309,30 +314,35 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
               return (
                 <TableRow
-                  onClick={(event) => handleClick(event, row.id)}
+                  component="div"
+                  onClick={(event: any) => handleClick(event, row.id)}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   key={row.id}
                 >
-                  <DiskTableCell padding="checkbox">
+                  <DiskTableCell component="div" padding="checkbox">
                     <DiskCheckbox
                       checked={isItemSelected}
                       inputProps={{ 'aria-labelledby': labelId }}
                     />
                   </DiskTableCell>
-                  <DiskTableCell component="th" id={labelId} scope="row" padding="none">
+                  <DiskTableCell component="div" id={labelId} scope="row" padding="none">
                     <div style={{ display: 'flex' }}>
                       <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
                       <div style={{ marginLeft: 5 }}>{row.name}</div>
                     </div>
                   </DiskTableCell>
-                  <DiskTableCell align="right">{row.calories}</DiskTableCell>
-                  <DiskTableCell align="right">{row.fat}</DiskTableCell>
+                  <DiskTableCell component="div" align="right">{row.calories}</DiskTableCell>
+                  <DiskTableCell component="div" align="right">{dayjs(row.fat).format("YYYY-MM-DD HH:mm:ss")}</DiskTableCell>
                   {
                     props.showOpenItem ? 
-                    <DiskTableCell align="right">
-                      <DiskButton id="disk-button-download" onClick={() => handleOpenCourse(row.id)} style={{ marginRight: 20 }} text={props.diskText.openCourse} color={'primary'} />
+                    <DiskTableCell component="div" align="right">
+                      <span style={{cursor: 'pointer'}} onClick={() => {
+                        handleOpenCourse(row.id)
+                      }}>
+                        {showText}
+                      </span>
                     </DiskTableCell>
                     : null
                   }
@@ -356,13 +366,11 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
           toastType={type}
           key={'top-center'}
         />
-        <div className={classSearch.titleBox}>
+        {/* <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
             { props.uploadComponent }
             <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
-            {/* { props.deleteComponent } */}
             { props.refreshComponent }
-            {/* <img id="disk-button-refresh" onClick={handleRefresh} src={IconRefresh} className={classSearch.titleImg} /> */}
           </div>
           <div>
             <TextField
@@ -389,8 +397,21 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               }}
               size="small" />
           </div>
-        </div>
-        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || <TableEmpty diskText={props.diskText} /> }
+        </div> */}
+        { rows && rows.length > 0 && 
+          <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> 
+          || 
+          <div
+            style={{ 
+              height: '480px',
+              width: '730px',
+              borderRadius: '20px',
+              paddingTop: '54px',
+            }}
+          >
+            <TableEmpty diskText={props.diskText} /> 
+          </div>
+          }
       </>
     )
   }

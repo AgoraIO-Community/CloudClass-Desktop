@@ -108,6 +108,8 @@ interface NetworkDiskDialogProps {
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
   diskText?: any,
+  diskOpenText?: any,
+  inRoom?: boolean,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -168,15 +170,25 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
         {/*<tabs value={activeId} />*/}
         {/*<activeId === xxx && (渲染不同 table 组件)>*/}
         <div style={{ marginTop: '-2.2rem' }}>
-          <DiskTabs
-            value={activeValue}
-            onChange={handleChange}
-            aira-label="disk tabs"
-          >
-            <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
-            <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
-            <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
-          </DiskTabs>
+          {props.inRoom === true && 
+            <DiskTabs
+              value={activeValue}
+              onChange={handleChange}
+              aira-label="disk tabs"
+            >
+              <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
+              <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
+            </DiskTabs>
+          }
+          {props.inRoom === false && 
+            <DiskTabs
+              value={activeValue}
+              onChange={handleChange}
+              aira-label="disk tabs"
+            >
+              <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
+            </DiskTabs>
+          }
         </div>
         <div style={{
           display: 'flex',
@@ -190,25 +202,27 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
             marginBottom: '16px',
           }}>
             <TableContainer style={{
+              display: 'flex',
               height: '480px',
               width: '730px',
               borderRadius: '20px',
               padding: '20px'
             }}>
               {
-                activeValue === 0 && (
+                props.inRoom === true && activeValue === 0 && (
                   <PublicDiskTables
                     diskText={props.diskText}
                     tabValue={activeValue}
                     publicList={props.publicList}
                     showOpenItem={props.showOpenItem}
                     handleOpenCourse={props.handleOpenCourse}
+                    showText={props.diskOpenText}
                   ></PublicDiskTables>
                 )
               }
 
               {
-                activeValue === 1 && (
+                props.inRoom === true && activeValue === 1 && (
                   <PrivateDiskTables tabValue={activeValue}
                     diskText={props.diskText}
                     uploadComponent={props.uploadComponent}
@@ -221,11 +235,12 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     removeSuccess={props.removeSuccess}
                     removeFailed={props.removeFailed}
                     privateList={props.privateList}
+                    showText={props.diskOpenText}
                   ></PrivateDiskTables>
                 )
               }
               {
-                activeValue === 2 && (
+                props.inRoom === false && activeValue === 0 && (
                   <DownloadDiskTables
                     showOpenItem={props.showOpenItem}
                     handleOpenCourse={props.handleOpenCourse}
@@ -236,6 +251,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     singleDownloadComponent={props.singleDownloadComponent}
                     singleDeleteComponent={props.singleDeleteComponent}
                     downloadList={props.downloadList}
+                    showText={props.diskOpenText}
                   />
                 )
               }

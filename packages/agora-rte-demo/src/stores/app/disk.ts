@@ -25,46 +25,6 @@ export class DiskStore {
     this.appStore = appStore
   }
 
-  public fileTooltipTextDoc: any = {
-    fileType: t('fileTip.fileType'),
-    supportText: t('fileTip.supportText'),
-    ppt: t('fileTip.ppt'),
-    word: t('fileTip.word'),
-    excel: t('fileTip.excel'),
-    pdf: t('fileTip.pdf'),
-    video: t('fileTip.video'),
-    audio: t('fileTip.audio'),
-    txt: t('fileTip.txt'),
-    pic: t('fileTip.pic'),
-
-    pptType: t('fileTip.pptType'),
-    wordType: t('fileTip.wordType'),
-    excelType: t('fileTip.excelType'),
-    pdfType: t('fileTip.pdfType'),
-    videoType: t('fileTip.videoType'),
-    audioType: t('fileTip.audioType'),
-    txtType: t('fileTip.txtType'),
-    picType: t('fileTip.picType'),
-  }
-
-  public diskTextDoc: any = {
-    publicTab: t('disk.publicResources'),
-    privateTab: t('disk.privateResources'),
-    downloadTab: t('disk.downlownResources'),
-    fileName: t('disk.fileName'),
-    size: t('disk.size'),
-    modificationTime: t('disk.modificationTime'),
-    search: t('disk.search'),
-    noFile: t('disk.noFile'),
-    file: t('disk.file'),
-    progress: t('disk.progress'),
-    operation: t('disk.operation'),
-    all: t('disk.all'),
-    downloaded: t('disk.downloaded'),
-    notDownload: t('disk.notDownload'),
-    openFile: t('disk.openFile'),
-  }
-
   @observable
   loading: boolean = false
 

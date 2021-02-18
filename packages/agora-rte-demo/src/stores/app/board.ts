@@ -82,6 +82,13 @@ enum FollowState {
   Freedom = 0
 }
 
+export enum DownloadStatus {
+  notCache,
+  downloading,
+  cached,
+  failed,
+}
+
 export class BoardStore {
 
 static toolItems: IToolItem[] = [
@@ -272,6 +279,9 @@ static toolItems: IToolItem[] = [
 
   @observable
   isFullScreen: boolean = false
+
+  @observable
+  donwloading: boolean = false
 
   @action
   changeScenePath(path: string) {
@@ -466,6 +476,7 @@ static toolItems: IToolItem[] = [
   async startDownload(taskUuid: string) {
     const isWeb = this.appStore.isElectron ? false : true
     try {
+      this.donwloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
@@ -494,8 +505,10 @@ static toolItems: IToolItem[] = [
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+      this.donwloading = false
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
+      this.donwloading = false
     }
   }
 
@@ -717,8 +730,16 @@ static toolItems: IToolItem[] = [
   @observable
   courseWareList: any[] = []
 
+
+  findFirstPPT() {
+    const list = this.appStore.params.config.courseWareList
+    const ppt = list.find((it: any) => {})
+  }
+
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
+
+    console.log(" tasks ",)
     // TODO: 需要从外部获取
     let ppt = await fetchPPT()
     //@ts-ignore
@@ -2187,6 +2208,14 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  async putCourseResource(resourceUuid: string) {
+    const resource = this.resourcesList.find((it: any) => it.resourceUuid === resourceUuid)
+    if (resource) {
+      this.room.putScenes(`/${resource.resourceName}`, resource.scenes)
+      this.room.setScenePath(`/${resource.resourceName}/${resource.scenes[0].name}`)
+    }
+  }
+
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
     await netlessInsertImageOperation(this.room, {
@@ -2221,6 +2250,22 @@ static toolItems: IToolItem[] = [
         height: 86,
       })
     }
+  }
+
+  async putSceneByResourceUuid(uuid: string) {
+    const resource = this.resourcesList.find((resource: any) => resource.resourceUuid === uuid)
+    if (resource.type === "pptx") {
+      await this.putCourseResource(uuid)
+    }
+
+    if (["mp3", "mp4"].includes(resource.type)) {
+      await this.putAV(resource.url, resource.type)
+    }
+
+    if (["png", "jpg", "gif", "jpeg"].includes(resource.type)) {
+      await this.putImage(resource.url)
+    }
+    // if (resource.type === "pptx")
   }
 
   async handleUpload(payload: any) {

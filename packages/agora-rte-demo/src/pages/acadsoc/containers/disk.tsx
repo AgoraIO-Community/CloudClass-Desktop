@@ -22,7 +22,6 @@ const UploadingProgress = observer((props: any) => {
 
   return (
     <>
-    233
     {fileLoading ? 
     <Progress title={`${uploadingProgress}`}></Progress>
     : null}
@@ -60,24 +59,18 @@ const NetworkDisk = observer((props: any) => {
 
   const uploadRequest = async ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
     const md5 = await calcUploadFilesMd5(file)
-    const resourceName = MD5(`${md5}`)
+    const resourceUuid = MD5(`${md5}`)
+    const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
     const isDynamic = ext === 'pptx'
 
-    // const convertConfig = {
-    //   converting: isDynamic ? true : false,
-    //   // conversion: {
-    //   //   type: isDynamic ? 'dynamic' : 'static',
-    //   //   scale: 1.2,
-    //   //   preview: false,
-    //   //   outputFormat: isDynamic ? '' : ext
-    //   // }
-    // }
+
     const payload = {
       file: file,
       fileSize: file.size,
-      ext: file.name.split(".").pop(),
-      resourceName: resourceName,
+      ext: ext,
+      resourceName: name,
+      resourceUuid: resourceUuid,
       converting: isDynamic ? true : false,
       kind: PPTKind.Dynamic,
       pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
@@ -91,13 +84,15 @@ const NetworkDisk = observer((props: any) => {
   const onUpload = (evt: any) => {
     console.log('upload file', evt)
     return evt
-    // await boardStore.handleUpload({
-    //   file: file,
-    //   resourceName: MD5(`${file}`),
-    //   onProgress: (evt: any) => {
-    //     console.log("converting evt: ", evt)
-    //   }
-    // })
+  }
+
+  const handleDownloadAll = () => {
+    
+  }
+
+  const handleDownloadSingle = async () => {
+    await boardStore.startDownload("93b61ab070ec11eb8122cf10b9ec91f7")
+    console.log('download signgle 93b61ab070ec11eb8122cf10b9ec91f7')
   }
 
   const uploadComponent = () => {
@@ -106,14 +101,13 @@ const NetworkDisk = observer((props: any) => {
         customRequest={uploadRequest}
         showUploadList={false}
         uploadButton={() => <DiskButton onClick={onUpload} id="disk-button-upload" color={'primary'} text={t('disk.upload')} />}
-        progressComponents={() => <UploadingProgress />}
       />
     )
   }
 
   const donwloadAllComponent = () => {
     return (
-      <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
+      <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
     )
   }
 
@@ -125,7 +119,7 @@ const NetworkDisk = observer((props: any) => {
 
   const singleDonwload = () => {
     return (
-      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
+      <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
     )
   }
 
@@ -136,13 +130,13 @@ const NetworkDisk = observer((props: any) => {
   }
 
   const handleDelete = async (selected: any) => {
-    await boardStore.removeMaterialList(selected)
-    console.log("selected", selected)
+    if (selected.length) {
+      await boardStore.removeMaterialList(selected)
+    }
   }
 
   const handleOpenCourse = async (resourceUuid: any) => {
-    // await boardStore.openCourse(resourceUuid)
-    // console.log("resourceUuid", resourceUuid)
+    await boardStore.putSceneByResourceUuid(resourceUuid)
   }
 
   const handleRefresh = async () => {
@@ -155,11 +149,17 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
+  // console.log('boardStore.personalResources', boardStore.personalResources)
+  // console.log('boardStore.publicResources', boardStore.publicResources)
+  // console.log('boardStore.allResources', boardStore.allResources)
+
   return (
+    <>
     <DiskManagerDialog
       // todo add item
       // showOpenItem={boardStore.showOpenCourse}
       // handleOpenCourse={handleOpenCourse}
+      inRoom={props.inRoom}
       removeText={t('disk.delete')}
       handleDelete={handleDelete}
       removeSuccess={t('disk.deleteSuccess')}
@@ -204,11 +204,52 @@ const NetworkDisk = observer((props: any) => {
       deleteAllCacheComponent={deleteAllCache()}
       singleDownloadComponent={singleDonwload()}
       singleDeleteComponent={singleDelete()}
+      handleOpenCourse={handleOpenCourse}
+      showOpenItem={true}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
-      diskText={diskStore.diskTextDoc}
-      fileTooltipText={diskStore.fileTooltipTextDoc}
-    />
+      diskText={{
+        publicTab: t('disk.publicResources'),
+        privateTab: t('disk.privateResources'),
+        downloadTab: t('disk.downlownResources'),
+        fileName: t('disk.fileName'),
+        size: t('disk.size'),
+        modificationTime: t('disk.modificationTime'),
+        search: t('disk.search'),
+        noFile: t('disk.noFile'),
+        file: t('disk.file'),
+        progress: t('disk.progress'),
+        operation: t('disk.operation'),
+        all: t('disk.all'),
+        downloaded: t('disk.downloaded'),
+        notDownload: t('disk.notDownload'),
+        openFile: t('disk.openCourse'),
+      }}
+      fileTooltipText={{
+        fileType: t('fileTip.fileType'),
+        supportText: t('fileTip.supportText'),
+        ppt: t('fileTip.ppt'),
+        word: t('fileTip.word'),
+        excel: t('fileTip.excel'),
+        pdf: t('fileTip.pdf'),
+        video: t('fileTip.video'),
+        audio: t('fileTip.audio'),
+        txt: t('fileTip.txt'),
+        pic: t('fileTip.pic'),
+    
+        pptType: t('fileTip.pptType'),
+        wordType: t('fileTip.wordType'),
+        excelType: t('fileTip.excelType'),
+        pdfType: t('fileTip.pdfType'),
+        videoType: t('fileTip.videoType'),
+        audioType: t('fileTip.audioType'),
+        txtType: t('fileTip.txtType'),
+        picType: t('fileTip.picType'),
+      }}
+    >
+      <UploadingProgress />
+    </DiskManagerDialog>
+    </>
   )
 })
 

@@ -76,6 +76,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/pretest',
     component: () => <Pretest />
   },
+  // 'config': {
+  //   path: 'config',
+  //   component: () => <Pretest />
+  // },
   'home': {
     path: '/',
     // component: () => <div>hello</div>

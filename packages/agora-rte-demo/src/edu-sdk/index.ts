@@ -1,3 +1,4 @@
+import { SceneDefinition } from 'white-web-sdk';
 import '@/index.scss'
 import 'promise-polyfill/src/polyfill'
 import { RenderLiveRoom } from "@/monolithic/live-room"
@@ -8,7 +9,8 @@ import { ReplayAppStore } from "@/stores/replay-app"
 import { unmountComponentAtNode } from "react-dom"
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
 import { eduSDKApi } from '@/services/edu-sdk-api'
-import { AgoraSDKError, checkConfigParams, checkLaunchOption, checkReplayOption } from './validator'
+import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption } from './validator'
+import { diskAppStore, DiskAppStore, DiskLifeStateEnum } from '@/monolithic/disk/disk-store';
 
 export enum AgoraEduEvent {
   ready = 1,
@@ -121,6 +123,21 @@ export type ReplayOption = {
   language: LanguageEnum
 }
 
+export type AgoraEduBoardScene = SceneDefinition
+
+export type AgoraEduCourseWare = {
+  resourceUuid: string,
+  resourceName: string,
+  scenePath: string,
+  scenes: AgoraEduBoardScene[],
+  url: string,
+  type: string,
+}
+
+export type DiskOption = {
+  courseWareList: AgoraEduCourseWare[]
+}
+
 export type DelegateType = {
   delegate?: AppStore
 }
@@ -190,6 +207,12 @@ export class AgoraEduSDK {
   }
 
   static _debug: boolean = false 
+
+  static _list: AgoraEduCourseWare[]
+
+  static configCourseWares(list: AgoraEduCourseWare[]) {
+    this._list = list
+  }
 
   static config (params: AgoraEduSDKConfigParams) {
 
@@ -329,5 +352,11 @@ export class AgoraEduSDK {
     }
     instances["replay"] = new ReplayRoom(store, dom)
     return instances["replay"]
+  }
+
+  static openDisk(dom: Element) {
+    if (diskAppStore.status === DiskLifeStateEnum.init) {
+      throw new GenericErrorWrapper("already disk")
+    }
   }
 }
