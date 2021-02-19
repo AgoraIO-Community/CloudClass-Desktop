@@ -1,6 +1,6 @@
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import md5 from "js-md5";
-import { GenericErrorWrapper } from "../utils/generic-error";
+import { GenericError } from "../utils/generic-error";
 import { HttpClient } from "../utils/http-client";
 
 type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>
@@ -88,7 +88,7 @@ export class ReportService extends ApiBase {
         if (!!this.sid && !!this.appId && !!this.rtmUid) {
             return true
         }
-        throw new GenericErrorWrapper(new Error(`missing params: sid: ${this.sid}, rid: ${this.rid}, appId: ${this.appId}, uid: ${this.rtmUid}`))
+        throw new GenericError(new Error(`missing params: sid: ${this.sid}, rid: ${this.rid}, appId: ${this.appId}, uid: ${this.rtmUid}`))
     }
 
     updateConnectionState(state:string) {
@@ -156,7 +156,7 @@ export class ReportService extends ApiBase {
         let resp: any;
         resp = await HttpClient(`${this.prefix}${path}`, opts);
         if (resp.code !== "0") {
-          throw new GenericErrorWrapper({message: resp.message || resp.msg})
+          throw new GenericError({message: resp.message || resp.msg})
         }
         return resp
     }

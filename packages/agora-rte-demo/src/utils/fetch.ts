@@ -1,4 +1,4 @@
-import { GenericErrorWrapper } from 'agora-rte-sdk';
+import { GenericError } from 'agora-rte-sdk';
 import { getIntlError } from '../services/intl-error-helper';
 import { BizLogger } from './biz-logger';
 
@@ -19,7 +19,7 @@ export async function Fetch (input: RequestInfo, init?: RequestInit, retryCount:
     }
 
     const rescueError = (error: any) => {
-      const err = new GenericErrorWrapper(error)
+      const err = new GenericError(error)
       BizLogger.warn(`${err}`)
       throw err;
     }

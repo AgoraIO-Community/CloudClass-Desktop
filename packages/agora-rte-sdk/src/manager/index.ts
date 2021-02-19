@@ -10,7 +10,7 @@ import { EduClassroomManager } from '../room/edu-classroom-manager';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { EduConfiguration } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
-import { GenericErrorWrapper } from '../core/utils/generic-error';
+import { GenericError } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
 import { reportService } from '../core/services/report-service';
 
@@ -228,7 +228,7 @@ export class EduManager extends EventEmitter {
       EduLogger.debug(`login userUuid: ${userUuid} success`)
       this._rtmWrapper = rtmWrapper
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw new GenericError(err)
     }
   }
 

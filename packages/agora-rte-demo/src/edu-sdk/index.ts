@@ -3,7 +3,7 @@ import '@/index.scss'
 import 'promise-polyfill/src/polyfill'
 import { RenderLiveRoom } from "@/monolithic/live-room"
 import { RenderReplayRoom } from "@/monolithic/replay-room"
-import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
+import { GenericError, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
 import { AppStore } from "@/stores/app"
 import { ReplayAppStore } from "@/stores/replay-app"
 import { unmountComponentAtNode } from "react-dom"
@@ -244,7 +244,7 @@ export class AgoraEduSDK {
     checkLaunchOption(dom, option)
 
     if (locks.has("launch") || instances["launch"]) {
-      throw new GenericErrorWrapper("already launched")
+      throw new GenericError("already launched")
     }
 
     try {
@@ -312,7 +312,7 @@ export class AgoraEduSDK {
       return instances["launch"]
     } catch (err) {
       locks.delete("launch")
-      throw new GenericErrorWrapper(err)
+      throw new GenericError(err)
     }
   }
 
@@ -320,7 +320,7 @@ export class AgoraEduSDK {
 
     console.log(" replay ", dom, " option ", JSON.stringify(option))
     if (locks.has("replay") || instances["replay"]) {
-      throw new GenericErrorWrapper("already replayed")
+      throw new GenericError("already replayed")
     }
 
     checkReplayOption(dom, option)
@@ -356,7 +356,7 @@ export class AgoraEduSDK {
 
   static openDisk(dom: Element) {
     if (diskAppStore.status === DiskLifeStateEnum.init) {
-      throw new GenericErrorWrapper("already disk")
+      throw new GenericError("already disk")
     }
   }
 }

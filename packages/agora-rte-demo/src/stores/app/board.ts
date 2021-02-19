@@ -1,4 +1,4 @@
-import { GenericErrorWrapper } from 'agora-rte-sdk';
+import { GenericError } from 'agora-rte-sdk';
 import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
@@ -499,7 +499,7 @@ static toolItems: IToolItem[] = [
             },
         }));
         if (res.status !== 200) {
-          throw new GenericErrorWrapper({
+          throw new GenericError({
             code: res.status,
             message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
           })

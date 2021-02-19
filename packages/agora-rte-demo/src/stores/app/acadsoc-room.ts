@@ -7,11 +7,12 @@ import {
   EduTextMessage,
   EduSceneType,
   EduRoleTypeEnum,
-  GenericErrorWrapper,
+  GenericError,
   EduUser,
   EduStream,
   EduRoleType,
   EduVideoSourceType,
+  GenericErrorWrapper,
 } from 'agora-rte-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import uuidv4 from 'uuid/v4';
@@ -324,7 +325,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       }
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.warn(`${error}`)
       return{
         id: this.userUuid,
@@ -368,7 +369,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       return historyMessage
     } catch (err) {
       // this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -384,7 +385,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -402,7 +403,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -622,30 +623,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         this.seconds = this.msToMinutes(this.startedTime).seconds
         this.getTimer(this.seconds, 1)
       }
-      // 课程结束
-      if (checkInResult.state === EduClassroomStateEnum.end) {
-        try {
-          await this.appStore.releaseRoom()
-        } catch (err) {
-          EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
-        }
-        this.appStore.isNotInvisible && dialogManager.show({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
-          },
-          onCancel: () => {
-          }
-        })
-        this.appStore.uiStore.stopLoading()
-        return
-      }
+
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
@@ -653,7 +631,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {
-        const error = new GenericErrorWrapper(err)
+        const error = new GenericError(err)
         BizLogger.warn(`${error}`)
         this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
       })
@@ -693,7 +671,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             BizLogger.info("[demo] local-stream-removed emit done", evt)
           } catch (err) {
             BizLogger.error(`[demo] local-stream-removed async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = new GenericError(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -834,7 +812,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         try {
           return JSON.parse(str)
         } catch(err) {
-          const error = new GenericErrorWrapper(err)
+          const error = new GenericError(err)
           BizLogger.warn(`${error}`)
           return null
         }
@@ -866,7 +844,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_success'))
                 } catch (err) {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_failed'))
-                  const error = new GenericErrorWrapper(err)
+                  const error = new GenericError(err)
                   BizLogger.warn(`${error}`)
                 }
               }
@@ -886,7 +864,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   // }
                 } catch (err) {
                   // BizLogger.warn('published failed', err) 
-                  const error = new GenericErrorWrapper(err)
+                  const error = new GenericError(err)
                   BizLogger.error(`published failed:${error}`)
                   throw error
                 }
@@ -895,7 +873,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           } catch (err) {
             BizLogger.error(`[demo] user-message async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = new GenericError(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -1096,7 +1074,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         } catch (err) {
           this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
-          const error = new GenericErrorWrapper(err)
+          const error = new GenericError(err)
           BizLogger.warn(`${error}`)
         }
       }
@@ -1117,8 +1095,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.roomJoined = true
     } catch (err) {
       this.appStore.uiStore.stopLoading()
-      // throw new GenericEerr
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -1175,7 +1152,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         })
         if (res === 0) {
-          throw new GenericErrorWrapper('callApply failure')
+          throw new GenericError('callApply failure')
         }
         // await this.roomManager?.userService.sendCoVideoApply(teacher)
       }
@@ -1235,7 +1212,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       // if (res === 0) {
-      //   throw new GenericErrorWrapper('callApply failure')
+      //   throw new GenericError('callApply failure')
       // }
       // await this.roomManager?.userService.rejectCoVideoApply(user)
     }
@@ -1255,7 +1232,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       if (res === 0) {
-        throw new GenericErrorWrapper('callApply failure')
+        throw new GenericError('callApply failure')
       }
       await this.roomManager?.userService.inviteStreamBy({
         roomUuid: this.sceneStore.roomUuid,
@@ -1280,7 +1257,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.appStore.uiStore.updateLastSeqId(0)
     } catch (err) {
       this.reset()
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.error(`${error}`)
     }
   }

@@ -1,6 +1,6 @@
 import { ApiBase, ApiBaseInitializerParams } from '@/services/base';
 import { get } from "lodash";
-import { GenericErrorWrapper } from "agora-rte-sdk";
+import { GenericError } from "agora-rte-sdk";
 
 
 export enum EnumBoardState {
@@ -76,7 +76,7 @@ export class AgoraBoardApi extends ApiBase {
       })
       return res.data
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw new GenericError(err)
     }
   }
 

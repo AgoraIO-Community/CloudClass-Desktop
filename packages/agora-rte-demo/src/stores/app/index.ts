@@ -2,7 +2,7 @@
 import { CourseWareList } from './../../edu-sdk/index';
 
 import {
-  GenericErrorWrapper,
+  GenericError,
   EduManager,
   EduClassroomManager,
   LocalUserRenderer,
@@ -549,7 +549,7 @@ export class AppStore {
         this.uiStore.addToast(t('toast.failed_to_enable_screen_sharing') + `${err.message}`)
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.error(`${error}`)
     } finally {
       this.waitingShare = false
@@ -651,7 +651,7 @@ export class AppStore {
       this.removeScreenShareWindow()
       this.sharing = true
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = new GenericError(err)
       BizLogger.warn(`${error}`)
       // if (!this.mediaService.screenRenderer) {
       //   await this.mediaService.stopScreenShare()
@@ -702,7 +702,7 @@ export class AppStore {
         this.params.listener(AgoraEduEvent.destroyed)
       }
       this.resetStates()
-      const exception = new GenericErrorWrapper(err)
+      const exception = new GenericError(err)
       throw exception
     }
   }
