@@ -143,7 +143,6 @@ export const StudentVideo = observer(() => {
       }
     }
     if (type.sourceType === 'trophy') {
-      acadsocStore.getTrophyPreview()
       if(acadsocStore.isTrophyLimit) {
         acadsocStore.appStore.uiStore.addToast(t('toast.reward_limit'))
         return

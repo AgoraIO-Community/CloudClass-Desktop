@@ -406,11 +406,6 @@ export class AcadsocRoomStore extends SimpleInterval {
       BizLogger.warn(`${error}`)
     }
   }
-
-  @action
-  getTrophyPreview() {
-    this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
-  }
   
   // 奖杯
   @action
@@ -445,7 +440,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.timer && clearTimeout(this.timer)
     this.timer = setInterval(async() => {
       if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
-        await this.appStore.releaseRoom()
         this.appStore.isNotInvisible && dialogManager.confirm({
           title: t(`aclass.class_end`),
           text: t(`aclass.leave_room`),
@@ -460,6 +454,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           onCancel: () => {
           }
         })
+        await this.appStore.releaseRoom()
         clearTimeout(this.timer)
         return
       } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
@@ -985,6 +980,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
           this.studentsReward = get(classroom, 'roomProperties.students', {})
           this.roomReward = get(classroom, 'roomProperties.reward', {})
+          this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
           if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
             clearTimeout(this.timer)

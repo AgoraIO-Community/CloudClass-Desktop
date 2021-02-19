@@ -233,6 +233,7 @@ export const HomePage = observer(() => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  style={{width: '250px'}}
                   onChange={(e) => {
                     let value = e.target.value
                     setStartTime(new Date(value).getTime())
