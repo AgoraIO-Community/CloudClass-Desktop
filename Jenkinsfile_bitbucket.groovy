@@ -6,29 +6,19 @@ import jenkins.model.CauseOfInterruption
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 @Library('agora-build-pipeline-library') _
 
-@Field def branches = [:]
-@Field def companion_branch = ''
 @Field def release_branch_pattern = ~/^release\/(\d+.\d+.\d+(.\d)?)_[a-z]+$|arsenal/
 @Field def repo_name = "cloudclass-desktop"
 @Field def repo_branch = ""
-@Field def COMMIT_INFO = [:]
-@Field def COMMIT_PR_INFO = [:]
-@Field def REPOS = [
-        "cloudclass-desktop":"ssh://git@git.agoralab.co/aduc/cloudclass-desktop.git",
-        "ad-continuous":"ssh://git@git.agoralab.co/aduc/ad-continuous.git"
-]
 
 withWechatNotify {
     withKnownErrorHandling {
         timestamps {
             repo_branch = env.CHANGE_BRANCH ?: env.BRANCH_NAME
-            REPOS.remove(repo_name)
-            (COMMIT_INFO, COMMIT_PR_INFO) = preBuildCheck()
             abortPreviousRunningBuilds()
 
             def build_params = [
                 string(name: 'build_branch', value: repo_branch),
-                string(name: 'ci_branch', value: branches["ad-continuous"]?:companion_branch),
+                string(name: 'ci_branch', value: 'master'),
                 string(name: 'build_env', value: 'test')
             ]
             parallel( MacBuild: {
@@ -72,16 +62,6 @@ def currentJenkinsBuild() {
 def commitHashForBuild( build ) {
     def scmAction = build?.actions.find { action -> action instanceof jenkins.scm.api.SCMRevisionAction }
     return scmAction?.revision?.hasProperty('hash') ? scmAction?.revision?.hash : scmAction?.revision
-}
-
-
-
-def preBuildCheck() {
-    companion_branch = env.CHANGE_TARGET ?: env.BRANCH_NAME
-    def utils = new agora.build.Utils()
-    // Check the companion pull requests
-    (commit_info, companion_pr_info) = utils.companionPullRequestsChecker(REPOS, repo_branch, branches)
-    return [commit_info, companion_pr_info]
 }
 
 def abortPreviousRunningBuilds() {
