@@ -84,7 +84,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
     },
     label: {
       fontSize: '14px',
-      lineHeight: '9px',
+      // lineHeight: '9px',
     }
   }),
 )
