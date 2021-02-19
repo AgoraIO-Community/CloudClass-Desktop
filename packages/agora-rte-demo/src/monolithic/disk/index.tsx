@@ -23,6 +23,28 @@ const DiskContainer = observer((props: any) => {
     console.log('close network disk')
   }
 
+  const handleDownloadAll = async () => {
+    
+  }
+
+  const handleClearcache = async () => {
+    await diskAppStore.deleteAllCache()
+  }
+
+  const handleDownload = async (resourceUuid: any) => {
+    await diskAppStore.startDownload(resourceUuid)
+  }
+
+  const handleDeleteSingle = async (resourceUuid: any) => {
+    await diskAppStore.deleteSingle(resourceUuid)
+  }
+
+  const donwloadAllComponent = () => {
+    return (
+      <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
+    )
+  }
+
   return (
     <div>
       <DiskManagerDialog
@@ -32,7 +54,7 @@ const DiskContainer = observer((props: any) => {
         removeSuccess={t('disk.deleteSuccess')}
         removeFailed={t('disk.deleteFailed')}
         fullWidth={false}
-        visible={props.openDisk}
+        visible={true}
         onClose={props.handleClose}
         dialogHeaderStyle={{
           minHeight: 40,
@@ -63,15 +85,41 @@ const DiskContainer = observer((props: any) => {
           right: 18,
           color: 'white'
         }}
-        // downloadList={boardStore.allResources}
+        downloadList={[
+          {
+            calories: '100',
+            id: '93b61ab070ec11eb8122cf10b9ec91f7',
+            name: '12312312312dsfjdskf',
+            type: 'pic',
+            fat: `${Date.now()}`,
+          },
+          {
+            calories: '100',
+            id: '14',
+            name: 'jhkxv',
+            type: 'ppt',
+            fat: `${Date.now()}`,
+          },
+          {
+            calories: '0',
+            id: '15',
+            name: 'sdadsdsd',
+            type: 'word',
+            fat: `${Date.now()}`,
+          },
+        ]}
         // uploadComponent={uploadComponent()}
         // donwloadAllComponent={donwloadAllComponent()}
         // deleteAllCacheComponent={deleteAllCache()}
         // singleDownloadComponent={singleDonwload()}
         // singleDeleteComponent={singleDelete()}
         // handleOpenCourse={handleOpenCourse}
-        showOpenItem={true}
+        showOpenItem={false}
         // deleteComponent={deleteComponent()}
+        handleDownloadAll={handleDownloadAll}
+        handleClearcache={handleClearcache}
+        handleDownload={handleDownload}
+        handleDeleteSingle={handleDeleteSingle}
         diskText={{
           publicTab: t('disk.publicResources'),
           privateTab: t('disk.privateResources'),
@@ -88,6 +136,9 @@ const DiskContainer = observer((props: any) => {
           downloaded: t('disk.downloaded'),
           notDownload: t('disk.notDownload'),
           openFile: t('disk.openCourse'),
+
+          downloadAll: t('disk.downloadAll'),
+          clearCache: t('disk.clearCache'),
         }}
         fileTooltipText={{
           fileType: t('fileTip.fileType'),

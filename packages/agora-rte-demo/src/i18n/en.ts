@@ -157,6 +157,7 @@ const en = {
     'fullScreen': 'full screen',
   },
   'disk': {
+    'open': 'Open',
     'publicResources': 'Public',
     'privateResources': 'Mine',
     'downlownResources': 'Download',

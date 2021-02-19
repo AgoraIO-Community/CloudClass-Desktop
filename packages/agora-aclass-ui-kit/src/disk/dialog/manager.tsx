@@ -103,6 +103,10 @@ interface NetworkDiskDialogProps {
   // deleteComponent?: React.ReactNode,
   refreshComponent?: React.ReactNode,
   // downloadComponet
+  handleDownloadAll?: () => any,
+  handleClearcache?: () => any,
+  handleDownload?: (evt: any) => any,
+  handleDeleteSingle?: (evt: any) => any,
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
@@ -119,7 +123,6 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
   const [activeValue, setActiveValue] = React.useState(0)
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setActiveValue(newValue)
-    console.log('>>>>>>>newValue', newValue)
   };
 
   const DiskPaper = (paperProps: any) => {
@@ -206,7 +209,8 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
               height: '480px',
               width: '730px',
               borderRadius: '20px',
-              padding: '20px'
+              padding: '20px',
+              flexDirection: 'column'
             }}>
               {
                 props.inRoom === true && activeValue === 0 && (
@@ -246,8 +250,12 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     handleOpenCourse={props.handleOpenCourse}
                     diskText={props.diskText}
                     tabValue={activeValue}
-                    donwloadAllComponent={props.donwloadAllComponent}
-                    deleteAllCacheComponent={props.deleteAllCacheComponent}
+                    handleDownloadAll={props.handleDownloadAll}
+                    handleClearcache={props.handleClearcache}
+                    handleDownload={props.handleDownload}
+                    handleDeleteSingle={props.handleDeleteSingle}
+                    // donwloadAllComponent={props.donwloadAllComponent}
+                    // deleteAllCacheComponent={props.deleteAllCacheComponent}
                     singleDownloadComponent={props.singleDownloadComponent}
                     singleDeleteComponent={props.singleDeleteComponent}
                     downloadList={props.downloadList}

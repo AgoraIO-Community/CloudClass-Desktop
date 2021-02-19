@@ -76,31 +76,37 @@ export type FetchImageResult = {
 }
 
 export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageResult> => {
-  const res = await fetch(url)
-  const blob = await res.blob()
-  const contentType = blob.type
-  const image = new Image()
-  const reader = new FileReader()
-  const file = new File([blob], url, {type: contentType})
-  const result = await new Promise((resolve) => {
-    reader.readAsDataURL(blob)
-      reader.onload = () => {
-        image.src = reader.result as string;
-        image.onload = () => {
-          const uuid = MD5(reader.result)
-          const res = getImageSize(image)
-          const result = {
-            width: res.width,
-            height: res.height,
-            file: file,
-            url,
-            uuid
+  try {
+    const res = await fetch(url)
+    const blob = await res.blob()
+    const contentType = blob.type
+    const image = new Image()
+    const reader = new FileReader()
+    const file = new File([blob], url, {type: contentType})
+    const result = await new Promise((resolve) => {
+      reader.readAsDataURL(blob)
+        reader.onload = () => {
+          image.src = reader.result as string;
+          image.onload = () => {
+            const uuid = MD5(reader.result)
+            const res = getImageSize(image)
+            const result = {
+              width: res.width,
+              height: res.height,
+              file: file,
+              url,
+              uuid
+            }
+            resolve(result)
           }
-          resolve(result)
         }
-      }
-    })
-  return result as FetchImageResult
+      })
+    return result as FetchImageResult
+  } catch (err) {
+    debugger
+    throw err
+  }
+
 }
 
 export const netlessInsertImageOperation = async (room: Room, imageFile: NetlessImageFile) => {

@@ -105,29 +105,29 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
-  const donwloadAllComponent = () => {
-    return (
-      <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
-    )
-  }
+  // const donwloadAllComponent = () => {
+  //   return (
+  //     <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
+  //   )
+  // }
 
-  const deleteAllCache = () => {
-    return (
-      <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
-    )
-  }
+  // const deleteAllCache = () => {
+  //   return (
+  //     <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
+  //   )
+  // }
 
-  const singleDonwload = () => {
-    return (
-      <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
-    )
-  }
+  // const singleDonwload = () => {
+  //   return (
+  //     <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
+  //   )
+  // }
 
-  const singleDelete = () => {
-    return (
-      <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
-    )
-  }
+  // const singleDelete = () => {
+  //   return (
+  //     <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
+  //   )
+  // }
 
   const handleDelete = async (selected: any) => {
     if (selected.length) {
@@ -137,10 +137,11 @@ const NetworkDisk = observer((props: any) => {
 
   const handleOpenCourse = async (resourceUuid: any) => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
+    boardStore.openDisk = false
   }
 
   const handleRefresh = async () => {
-    await boardStore.loadCloudResources()
+    // await boardStore.loadCloudResources()
   }
 
   const refreshComponent = () => {
@@ -156,10 +157,11 @@ const NetworkDisk = observer((props: any) => {
   return (
     <>
     <DiskManagerDialog
+      inRoom={true}
       // todo add item
-      // showOpenItem={boardStore.showOpenCourse}
-      // handleOpenCourse={handleOpenCourse}
-      inRoom={props.inRoom}
+      showOpenItem={true}
+      diskOpenText={t("disk.open")}
+      handleOpenCourse={handleOpenCourse}
       removeText={t('disk.delete')}
       handleDelete={handleDelete}
       removeSuccess={t('disk.deleteSuccess')}
@@ -196,16 +198,16 @@ const NetworkDisk = observer((props: any) => {
         right: 18,
         color: 'white'
       }}
-      publicList={boardStore.publicResources}
+      publicList={boardStore.allResources}
       privateList={boardStore.personalResources}
-      downloadList={boardStore.allResources}
+      // downloadList={boardStore.allResources}
       uploadComponent={uploadComponent()}
-      donwloadAllComponent={donwloadAllComponent()}
-      deleteAllCacheComponent={deleteAllCache()}
-      singleDownloadComponent={singleDonwload()}
-      singleDeleteComponent={singleDelete()}
-      handleOpenCourse={handleOpenCourse}
-      showOpenItem={true}
+      // donwloadAllComponent={donwloadAllComponent()}
+      // deleteAllCacheComponent={deleteAllCache()}
+      // singleDownloadComponent={singleDonwload()}
+      // singleDeleteComponent={singleDelete()}
+      // handleOpenCourse={handleOpenCourse}
+      // showOpenItem={true}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
       diskText={{
@@ -246,9 +248,8 @@ const NetworkDisk = observer((props: any) => {
         txtType: t('fileTip.txtType'),
         picType: t('fileTip.picType'),
       }}
-    >
-      <UploadingProgress />
-    </DiskManagerDialog>
+    />
+    <UploadingProgress />
     </>
   )
 })

@@ -11,6 +11,8 @@ import { AgoraEduApi } from '../core/services/edu-api';
 import { EduConfiguration } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { GenericErrorWrapper } from '../core/utils/generic-error';
+import {v4 as uuidv4} from 'uuid';
+import { reportService } from '../core/services/report-service';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -45,6 +47,7 @@ export class EduManager extends EventEmitter {
   public _dataBuffer: Record<string, EduClassroomDataController> = {}
 
   public readonly _mediaService: MediaService;
+  private _sessionId: string = uuidv4();
 
   constructor(
     config: EduConfiguration
@@ -106,6 +109,10 @@ export class EduManager extends EventEmitter {
     return this._mediaService;
   }
 
+  get sessionId(): string {
+    return this._sessionId
+  }
+
   static init(config: EduConfiguration): EduManager {
     return new EduManager(config);
   }
@@ -142,7 +149,22 @@ export class EduManager extends EventEmitter {
     return this._rtmConnectionState
   }
 
+
   async login(userUuid: string) {
+    try {
+      // REPORT
+      reportService.initReportUserParams({sid: this._sessionId, appId: this.config.appId, uid: userUuid})
+      reportService.startTick('init', 'rtm', 'login')
+      await this._login(userUuid)
+      reportService.reportElapse('init', 'rtm', {api: 'login', result: true})
+      reportService.startHB()
+    }catch(e) {
+      reportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
+      throw e
+    }
+  }
+
+  async _login(userUuid: string) {
     EduLogger.debug(`login userUuid: ${userUuid}`)
     try {
       let {userUuid: uuid, rtmToken} = await this.prepareLogin(userUuid)
@@ -160,6 +182,7 @@ export class EduManager extends EventEmitter {
             }
           }
         }
+        reportService.updateConnectionState(rtmWrapper.connectionState)
         this.fire('ConnectionStateChanged', evt)
       })
       rtmWrapper.on('MessageFromPeer', (evt: any) => {
@@ -215,13 +238,18 @@ export class EduManager extends EventEmitter {
       await this.rtmWrapper.destroyRtm()
       this.removeAllListeners()
       this._rtmWrapper = undefined
+      reportService.stopHB()
+      reportService.resetParams()
+      // refresh session id when logout to ensure next login get a new sid
+      this._sessionId = uuidv4()
     }
   }
 
   createClassroom(params: ClassroomInitParams): EduClassroomManager {
 
     const roomUuid = params.roomUuid
-
+    
+    reportService.initReportRoomParams({rid: roomUuid})
     let classroomManager = new EduClassroomManager({
       roomUuid: roomUuid,
       roomName: params.roomName,

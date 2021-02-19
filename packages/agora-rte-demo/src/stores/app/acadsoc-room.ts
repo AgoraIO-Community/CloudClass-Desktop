@@ -28,6 +28,7 @@ import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
 import {EduClassroomStateEnum} from '@/stores/app/scene';
 import { UploadService } from '@/services/upload-service';
+import { reportService } from '@/services/report-service';
 
 export enum EduClassroomCountdownEnum {
   first = 5,
@@ -575,8 +576,20 @@ export class AcadsocRoomStore extends SimpleInterval {
         rtmUid: this.appStore.params.config.rtmUid,
       })
       const roomUuid = this.roomInfo.roomUuid
+
       const startTime = this.appStore.params.startTime
       const duration = this.appStore.params.duration
+      
+      // REPORT
+      // CRITICAL REPORT ONLY STARTS AFTER BELOW LINE
+      reportService.initReportParams({
+        appId: this.eduManager.config.appId,
+        uid: this.appStore.params.config.rtmUid,
+        rid: roomUuid,
+        sid: this.eduManager.sessionId
+      })
+      reportService.reportEC('joinRoom', 'start')
+      
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,

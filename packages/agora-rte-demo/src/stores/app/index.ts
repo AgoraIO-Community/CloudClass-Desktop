@@ -43,6 +43,7 @@ import { MemoryStorage } from '@/utils/custom-storage';
 import { AcadsocRoomStore } from './acadsoc-room';
 import { DeviceSettingStore } from './device-setting';
 import { UploadService } from '@/services/upload-service';
+import { reportService } from '@/services/report-service';
 
 type RoomInfoParams = {
   roomName: string
@@ -298,6 +299,10 @@ export class AppStore {
       })
     }
 
+    this.eduManager.on('ConnectionStateChanged', ({newState}) => {
+      reportService.updateConnectionState(newState)
+    })
+
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
@@ -305,6 +310,7 @@ export class AppStore {
         GlobalStorage.save('agora_edu_room', {
           roomInfo: data.roomInfo,
         })
+        this
       })
     } else {
       this.setRoomInfo({
@@ -684,6 +690,7 @@ export class AppStore {
   async releaseRoom() {
     try {
       await this.roomStore.leave()
+      reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {
         this.params.listener(AgoraEduEvent.destroyed)

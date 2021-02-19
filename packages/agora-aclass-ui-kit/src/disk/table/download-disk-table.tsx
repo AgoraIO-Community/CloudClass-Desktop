@@ -14,12 +14,36 @@ interface DownloadDiskTablesProps extends DiskTablesProps {
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
+  handleDownloadAll?: () => any,
+  handleClearcache?: () => any,
+  handleDownload?: (evt: any) => any,
+  handleDeleteSingle?: (evt: any) => any,
 }
 
 const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const classes = useDiskTableStyles()
 
   const rows = props.downloadList
+
+  const notDownload = 3
+
+  const handleDownloadAll = async () => {
+    props.handleDownloadAll && await props.handleDownloadAll()
+  }
+
+  const handleClearcache = async () => {
+    props.handleClearcache && await props.handleClearcache()
+  }
+
+  const handleDownload = async (evt: any) => {
+    console.log('handleDownload', evt)
+    props.handleDownload && await props.handleDownload(evt)
+  }
+
+  const handleDeleteSingle = async (evt: any) => {
+    console.log('handleDeleteSingle', evt)
+    props.handleDeleteSingle && await props.handleDeleteSingle(evt)
+  }
 
   const DiskTable = (props: DownloadDiskTablesProps) => {
     return (
@@ -37,23 +61,29 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
             <DiskTableCellHead component="div" style={{ paddingRight: 120 }} id="fat" key="fat" align="center">{props.diskText.operation}</DiskTableCellHead>
           </TableRow>
         </TableHead>
-        <TableHead>
+        <TableHead component="div">
           <TableRow component="div" style={{ color: '#273D75' }}>
             <DownloadTableCell component="div" style={{ paddingLeft: 15 }} id="name" key="name" scope="row">
-              <span className={classes.downloadLabel}>{props.diskText.all}: <span className={classes.downloadText}>{props.downloadList ? props.downloadList.length : 0}</span></span>
+              <span className={classes.downloadLabel}>{props.diskText.all}: <span className={classes.downloadText}>{rows ? rows.length : 0}</span></span>
               &nbsp;
               <span className={classes.downloadLabel}>{props.diskText.downloaded}: <span className={classes.downloadText}>1</span></span>
               &nbsp;
               <span className={classes.downloadLabel}>{props.diskText.notDownload}: <span className={classes.downloadText}>47</span></span>
             </DownloadTableCell>
             <DownloadTableCell component="div" align="left">
-              <DiskAllProgress value={50} />
+              <DiskAllProgress value={notDownload / rows.length * 100} />
             </DownloadTableCell>
             <DownloadTableCell component="div" align="right">
-              { props.donwloadAllComponent }
-              { props.deleteAllCacheComponent }
-              {/* <DiskButton id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} /> */}
-              {/* <DiskButton id="disk-button-clear-storage" color={'secondary'} text={'清空缓存'} /> */}
+              {/* { props.donwloadAllComponent }
+              { props.deleteAllCacheComponent } */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={props.diskText.downloadAll} />
+                <DiskButton onClick={handleClearcache} id="disk-button-clear-storage" color={'secondary'} text={props.diskText.clearCache} />
+              </div>
             </DownloadTableCell>
           </TableRow>
         </TableHead>
@@ -76,7 +106,13 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
                   <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={labelId} scope="row" padding="none">
                     <div style={{ display: 'flex' }}>
                       <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
-                      <div style={{ marginLeft: 5 }}>{row.name}</div>
+                      <div style={{ 
+                        marginLeft: 5,
+                        width: 300,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}>{row.name}</div>
                     </div>
                   </DiskTableCell>
                   <DiskTableCell component="div" style={{ color: '#586376' }} align="left">
@@ -85,10 +121,10 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
                     <DiskSingleProgress value={row.calories} />
                   </DiskTableCell>
                   <DiskTableCell component="div" style={{ color: '#586376' }} align="right">
-                    { props.singleDownloadComponent }
-                    { props.singleDeleteComponent }
-                    {/* <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
-                    <DiskButton id="disk-button-delete" text={'删除'} color={'secondary'} /> */}
+                    {/* { props.singleDownloadComponent }
+                    { props.singleDeleteComponent } */}
+                    <DiskButton onClick={() => handleDownload(row.id)} id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
+                    <DiskButton onClick={() => handleDeleteSingle(row.id)} id="disk-button-delete" text={'删除'} color={'secondary'} />
                   </DiskTableCell>
                 </TableRow>
               );

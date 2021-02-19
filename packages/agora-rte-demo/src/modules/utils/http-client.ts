@@ -4,7 +4,9 @@ export const HttpClient = async (url: string, opts: any): Promise<any> => {
   let fetchResponse: any = {}
   try {
     fetchResponse = await fetch(url, opts);
-    const resp = await fetchResponse.json();
+    const {status} = fetchResponse
+    let resp = await fetchResponse.json();
+    resp['_raw'] = {status}
     EduLogger.info(`[http] ${opts.method}#${url} response params: `, JSON.stringify(opts), ` response: `, JSON.stringify(resp), ' status: ', fetchResponse.status, ' statusText: ', fetchResponse.statusText)
     return resp;
   } catch (err) {

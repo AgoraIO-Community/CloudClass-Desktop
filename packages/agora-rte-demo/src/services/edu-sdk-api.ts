@@ -1,5 +1,6 @@
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import { HttpClient } from "@/modules/utils/http-client";
+import { reportService } from "./report-service";
 
 type ConfigResult = {
   customerId: string,
@@ -57,6 +58,8 @@ export class EduSDKApi extends ApiBase {
     startTime?: number,
     duration?: number,
   }) {
+    // REPORT
+    reportService.startTick('joinRoom', 'http', 'preflight')
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}`,
       method: 'PUT',
@@ -69,6 +72,9 @@ export class EduSDKApi extends ApiBase {
       }
     })
     res.data.ts = res.ts
+    const statusCode = res['_raw']['status']
+    const {code} = res
+    reportService.reportHttp('joinRoom', 'http', 'preflight', statusCode, statusCode === 200, code)
     return res.data
   }
 
