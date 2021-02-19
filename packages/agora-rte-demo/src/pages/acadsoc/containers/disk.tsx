@@ -105,19 +105,11 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
-<<<<<<< Updated upstream
-  const downloadAllComponent = () => {
-    return (
-      <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
-    )
-  }
-=======
   // const donwloadAllComponent = () => {
   //   return (
   //     <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
   //   )
   // }
->>>>>>> Stashed changes
 
   // const deleteAllCache = () => {
   //   return (
@@ -125,19 +117,11 @@ const NetworkDisk = observer((props: any) => {
   //   )
   // }
 
-<<<<<<< Updated upstream
-  const singleDownload = () => {
-    return (
-      <DiskButton disabled={boardStore.downloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
-    )
-  }
-=======
   // const singleDonwload = () => {
   //   return (
   //     <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
   //   )
   // }
->>>>>>> Stashed changes
 
   // const singleDelete = () => {
   //   return (
