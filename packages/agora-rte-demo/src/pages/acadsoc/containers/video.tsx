@@ -6,7 +6,23 @@ import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
 import { t } from '@/i18n'
-import { debounce } from '@/utils/utils';
+import { debounce } from '@/utils/utils'
+
+const canDisable = (resource: string, isLocal: boolean, role: EduRoleTypeEnum, streamUuid: string) => { 
+  if (!streamUuid) return true
+  if (resource === 'teacher') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'student') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.student].includes(role)) {
+      return false
+    }
+    return true
+  }
+}
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -37,7 +53,7 @@ export const TeacherVideo = observer(() => {
   const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
   const roomInfo = sceneStore.roomInfo
-  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = canDisable('teacher', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -124,7 +140,7 @@ export const StudentVideo = observer(() => {
 
   const isTeacher = acadsocStore.isTeacher
 
-  const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = canDisable('student', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type

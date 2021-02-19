@@ -840,11 +840,8 @@ static toolItems: IToolItem[] = [
 
     if (this.online && this.room) {
       await this.room.setWritable(true)
-      if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
         this.room.disableDeviceInputs = false
-      }
-      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
-        this.room.disableDeviceInputs = true
       }
       if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
         if (this.lockBoard) {
