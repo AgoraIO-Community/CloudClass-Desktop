@@ -26,6 +26,16 @@
     display: inline-flex;
     flex-direction: row;
     align-items: center;
+
+    .title {
+      max-width: 110px;
+      /* width: 110px; */
+      word-break: break-all;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
     cursor: pointer;
     border-radius: 8px;
     height: 26px;

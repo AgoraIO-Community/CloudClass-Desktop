@@ -11,10 +11,10 @@ import {useHistory} from 'react-router-dom';
 import { Loading } from '@/components/loading';
 import {GithubIcon} from '@/components/github-icon';
 import { t } from '../i18n';
-import { useUIStore, useRoomStore, useAppStore } from '@/hooks';
+import { useUIStore, useRoomStore, useAppStore, useBoardStore } from '@/hooks';
 import { UIStore } from '@/stores/app';
 import { GlobalStorage } from '@/utils/custom-storage';
-import { EduManager } from 'agora-rte-sdk';
+import { EduManager, GenericErrorWrapper } from 'agora-rte-sdk';
 import {isElectron} from '@/utils/platform';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import {observer} from 'mobx-react';
@@ -24,7 +24,38 @@ import { BizLogger } from '@/utils/biz-logger';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import dayjs from 'dayjs'
-// import { StorageDisk } from '@/monolithic/disk/index'
+import { CourseWareItem } from '@/edu-sdk';
+import { mapFileType } from '@/services/upload-service';
+import {agoraCaches} from '@/utils/web-download.file'
+import { PPTProgress } from '@/components/netless-board/loading';
+
+const transformPPT = (data: any): CourseWareItem[] => {
+  return [].concat(data).map((item: any) => ({
+    ...item,
+    type: mapFileType(item.ext),
+    scenes: item.taskProgress.convertedFileList,
+  }))
+}
+
+export async function fetchPPT(payload: {type: string}) {
+  let res = await fetch("https://api-solutions-dev.bj2.agoralab.co/scene/apps/f488493d1886435f963dfb3d95984fd4/v1/rooms/courseware0/users/liyang1/properties/resources", {
+    method: 'GET',
+    headers: {
+      "token": "eyJhbGciOiJIUzI1NiJ9.eyJwcmltYXJ5U3RyZWFtVXVpZCI6IjE5NjU3ODQ1MzgiLCJhcHBJZCI6ImY0ODg0OTNkMTg4NjQzNWY5NjNkZmIzZDk1OTg0ZmQ0IiwidXNlclV1aWQiOiJsaXlhbmcxIiwicm9vbVV1aWQiOiJjb3Vyc2V3YXJlMCIsImlhdCI6MTYxMzEzMjE0Mn0.ZqBsGg-fEpBNM-ZB7yA4meWwIPX0eq4pildVwkUrCd4"
+    },
+  })
+  const resText: any = await res.text()
+  const text = JSON.parse(resText)
+  if (text.code !== 0) {
+    throw new GenericErrorWrapper({
+      message: text.msg,
+      code: text.code
+    })
+  }
+  const ppt = text.data[payload.type]
+  console.log(" ppt ", ppt , " payload.type ", payload.type)
+  return ppt
+}
 
 const useStyles = makeStyles ((theme: Theme) => ({
   container: {
@@ -78,6 +109,8 @@ export const HomePage = observer(() => {
   const uiStore = useUIStore();
 
   const appStore = useAppStore();
+
+  const boardStore = useBoardStore();
 
   const handleSetting = (evt: any) => {
     history.push({pathname: '/setting'})
@@ -165,10 +198,32 @@ export const HomePage = observer(() => {
     }
   }
 
+  const fetchCourseWareList = async () => {
+    let courseWareList = []
+    courseWareList = await fetchPPT({type: 'large'})
+    appStore.updateCourseWareList(transformPPT(courseWareList))
+  }
+
+
+  async function downloadPPT(taskUuid: string) {
+    await boardStore.startDownload(taskUuid)
+  }
+
+  const fetchCourseWareZip = async () => {
+    const courseWareList = appStore.params.config.courseWareList
+    for (const item of courseWareList) {
+      if (item.taskUuid) {
+        await downloadPPT(item.taskUuid)
+      }
+    }
+  }
+
   return (
     <div className={`flex-container home-cover-web`}>
       {/* <CloudDiskUpload /> */}
       {loading ? <Loading /> : null}
+      <PPTProgress />
+      {/* {downloading ? <} */}
       {false ? null : 
       <div className="web-menu">
         <div className="web-menu-container">
@@ -253,14 +308,10 @@ export const HomePage = observer(() => {
               </form>
             </div>
             <div style={{margin: '20px'}}>
-            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
-              console.log('更新课件列表')
-            }}>
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={fetchCourseWareList}>
              更新课件列表
             </Button>
-            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
-              console.log('下载课件')
-            }}>
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={fetchCourseWareZip}>
              下载课件
             </Button>
             <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {

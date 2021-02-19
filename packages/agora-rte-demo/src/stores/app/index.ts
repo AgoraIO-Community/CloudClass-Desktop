@@ -1,3 +1,4 @@
+import { CourseWareItem } from './../../edu-sdk/index';
 // import { UploadService } from './../../modules/upload/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
@@ -299,7 +300,12 @@ export class AppStore {
       })
     }
 
-    this.eduManager.on('ConnectionStateChanged', ({newState}) => {
+    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
+
+      if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
+        await this.destroy()
+        this.acadsocStore.history.push('/')
+      }
       reportService.updateConnectionState(newState)
     })
 
@@ -575,6 +581,11 @@ export class AppStore {
   }
 
   @action
+  updateCourseWareList(courseWareList: CourseWareItem[]) {
+    this.params.config.courseWareList = courseWareList
+  }
+
+  @action
   showScreenShareWindowWithItems () {
     if (this.isElectron) {
       this.mediaService.prepareScreenShare().then((items: any) => {
@@ -689,7 +700,9 @@ export class AppStore {
   @action
   async releaseRoom() {
     try {
-      await this.roomStore.leave()
+      // if (this.roomStore.)
+      await this.acadsocStore.leave()
+      // await this.roomStore.leave()
       reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {

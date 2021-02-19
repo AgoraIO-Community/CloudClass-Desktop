@@ -10,3 +10,10 @@ export const BoardLoading = observer(() => {
     boardStore.loadingType ? <Progress title={boardStore.loadingType === 'converting' ? t("whiteboard.converting") : t("whiteboard.loading")}></Progress> : null
   )
 })
+
+export const PPTProgress = observer(() => {
+  const boardStore = useBoardStore()
+  return (
+    boardStore.downloading ? <Progress title={`下载中 ${boardStore.preloadingProgress}%`}></Progress> : null
+  )
+})
