@@ -1016,7 +1016,8 @@ static toolItems: IToolItem[] = [
   }
 
   isTeacher(): boolean {
-    if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+    const isNeedShowBoardUser =[EduRoleTypeEnum.teacher,EduRoleTypeEnum.assistant,EduRoleTypeEnum.invisible]
+    if (isNeedShowBoardUser.includes(this.appStore.roomInfo.userRole)) {
       return true
     }
     return false
