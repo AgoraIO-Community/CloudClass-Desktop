@@ -206,8 +206,8 @@ const NetworkDisk = observer((props: any) => {
       // deleteAllCacheComponent={deleteAllCache()}
       // singleDownloadComponent={singleDonwload()}
       // singleDeleteComponent={singleDelete()}
-      handleOpenCourse={handleOpenCourse}
-      showOpenItem={true}
+      // handleOpenCourse={handleOpenCourse}
+      // showOpenItem={true}
       // deleteComponent={deleteComponent()}
       refreshComponent={refreshComponent()}
       diskText={{
