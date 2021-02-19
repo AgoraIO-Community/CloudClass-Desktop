@@ -24,7 +24,7 @@ const DiskContainer = observer((props: any) => {
   }
 
   const handleDownloadAll = async () => {
-    
+    await diskAppStore.downloadAll(testDownloadList.map(item => item.id))
   }
 
   const handleClearcache = async () => {
@@ -44,6 +44,30 @@ const DiskContainer = observer((props: any) => {
       <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
     )
   }
+
+  const testDownloadList = [
+    {
+      calories: '100',
+      id: '93b61ab070ec11eb8122cf10b9ec91f7',
+      name: '12312312312dsfjdskf',
+      type: 'pic',
+      fat: `${Date.now()}`,
+    },
+    {
+      calories: '100',
+      id: '4277472d763b57248f84a2cd24d89253',
+      name: 'jhkxv',
+      type: 'ppt',
+      fat: `${Date.now()}`,
+    },
+    {
+      calories: '0',
+      id: '93b61ab070ec11e111b8122cf10b9ec91f7',
+      name: 'sdadsdsd',
+      type: 'word',
+      fat: `${Date.now()}`,
+    },
+  ]
 
   return (
     <div>
@@ -85,29 +109,7 @@ const DiskContainer = observer((props: any) => {
           right: 18,
           color: 'white'
         }}
-        downloadList={[
-          {
-            calories: '100',
-            id: '93b61ab070ec11eb8122cf10b9ec91f7',
-            name: '12312312312dsfjdskf',
-            type: 'pic',
-            fat: `${Date.now()}`,
-          },
-          {
-            calories: '100',
-            id: '14',
-            name: 'jhkxv',
-            type: 'ppt',
-            fat: `${Date.now()}`,
-          },
-          {
-            calories: '0',
-            id: '15',
-            name: 'sdadsdsd',
-            type: 'word',
-            fat: `${Date.now()}`,
-          },
-        ]}
+        downloadList={testDownloadList}
         // uploadComponent={uploadComponent()}
         // donwloadAllComponent={donwloadAllComponent()}
         // deleteAllCacheComponent={deleteAllCache()}

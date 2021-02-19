@@ -104,7 +104,18 @@ export class DiskAppStore {
       agoraCaches.clearAllCache()
       EduLogger.info('删除全部缓存完成....')
     } catch (err) {
-      EduLogger.info('删除全部缓存失败....')
+      EduLogger.info(`删除全部缓存失败....: ${err}`)
+    }
+  }
+
+  async downloadAll(list: string[]) {
+    try {
+      let promiseList: any = []
+      list.forEach((e) => { promiseList.push(this.startDownload(e))})
+      Promise.all(promiseList)
+      EduLogger.info(`全部下载成功....`)
+    } catch (err) {
+      EduLogger.info(`全部下载失败....: ${err}`)
     }
   }
 }
