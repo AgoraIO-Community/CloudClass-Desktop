@@ -22,7 +22,7 @@ export const Trophy = observer(() => {
   }, [audioRef.current])
 
   return(
-    <div>
+    <div className="trophy-container">
       <section className="gift-animation-container" id="gift_animation_container">
         <div className="gift-animation scalc giftAnimationBig">
 

@@ -64,6 +64,13 @@ type MinimizeType = Array<{
   zIndex: number,
 }>
 
+type RoomRewardType = {
+  room: number,
+  config: {
+    roomLimit: number,
+  }
+}
+
 export enum acadsocRoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
 }
@@ -130,6 +137,14 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomType: 0,
     },
     students: {},
+  }
+
+  @observable
+  roomReward: RoomRewardType = {
+    room: 0,
+    config: {
+      roomLimit: 0,
+    }
   }
 
   @observable
@@ -209,6 +224,9 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   trophyNumber: number = 0
+
+  @observable
+  isTrophyLimit: boolean = false
 
   @observable
   unwind: MinimizeType = []  // 最小化
@@ -389,6 +407,11 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
 
+  @action
+  getTrophyPreview() {
+    this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
+  }
+  
   // 奖杯
   @action
   async sendReward(userUuid: string, reward: number) {
@@ -961,6 +984,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           // acadsoc
           this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
           this.studentsReward = get(classroom, 'roomProperties.students', {})
+          this.roomReward = get(classroom, 'roomProperties.reward', {})
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
           if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
             clearTimeout(this.timer)
