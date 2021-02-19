@@ -7,6 +7,7 @@ import uuidv4 from 'uuid/v4';
 import { Room, PPT, PPTKind, ApplianceNames, LegacyPPTConverter } from 'white-web-sdk';
 import MD5 from 'js-md5';
 import { resolveFileInfo } from '@/utils/helper';
+import { CourseWareItem } from "@/edu-sdk";
 
 const formatExt = (ext: string) => {
   const typeMapper = {
@@ -56,7 +57,7 @@ export const mapFileType = (type: string): string => {
   return 'txt'
 }
 
-export const transDataToResource = (data: any) => {
+export const transDataToResource = (data: CourseWareItem) => {
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
@@ -80,7 +81,7 @@ export const transDataToResource = (data: any) => {
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
     url: data.url,
-    convertedPercentage: data.taskProgress.convertedPercentage,
+    convertedPercentage: data.taskProgress!.convertedPercentage,
     fat: data.updateTime,
     scenes: data.scenes,
   }
