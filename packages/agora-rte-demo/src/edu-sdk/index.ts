@@ -75,11 +75,15 @@ export type ConvertedFileList = ConvertedFile[]
 
 export type CourseWareItem = {
   resourceName: string,
+  resourceUuid: string,
   ext: string,
-  fileUrl: string,
+  url: string,
   conversion: {
     type: string,
   },
+  size: number,
+  updateTime: number,
+  scenes: SceneDefinition[],
   convert?: boolean,
   taskUuid?: string,
   taskToken?: string,
