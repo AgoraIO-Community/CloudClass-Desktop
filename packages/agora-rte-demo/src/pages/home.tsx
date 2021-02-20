@@ -141,7 +141,7 @@ export const HomePage = observer(() => {
     role: getRoleType(appStore.roomInfo.userRole),
     userName: appStore.roomInfo.userName,
     startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
-    duration: 30 * 60,
+    duration: 30
   });
 
   //@ts-ignore
@@ -150,8 +150,6 @@ export const HomePage = observer(() => {
   const [required, setRequired] = useState<any>({} as any);
 
   const [loading, setLoading] = useState<boolean>(false)
-
-  // const [startTime, setStartTime] = useState<any>(dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"))
 
   const handleSubmit = async () => {
     if (!session.roomName) {
@@ -194,7 +192,7 @@ export const HomePage = observer(() => {
       })
       
       appStore.params.startTime = +dayjs(session.startTime)
-      appStore.params.duration = session.duration
+      appStore.params.duration = session.duration * 60
 
       const path = roomTypes[session.roomType].path
       history.push(`${path}`)
