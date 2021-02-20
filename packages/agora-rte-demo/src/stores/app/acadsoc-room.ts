@@ -205,8 +205,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     return this.time + this.timeShift
   }
   
-  @observable
-  notice?: any = undefined
 
   @observable
   timeShift: number = 0
@@ -348,7 +346,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.joined = false
     this.roomJoined = false
     this.time = 0
-    this.notice = undefined
     this.classroomSchedule = undefined
     clearTimeout(this.timer)
   }
@@ -388,7 +385,6 @@ export class AcadsocRoomStore extends SimpleInterval {
           type: 1,
         }
       })
-      // await this.roomManager?.userService.sendRoomChatMessage(message)
       return {
         id: this.userUuid,
         ts,
