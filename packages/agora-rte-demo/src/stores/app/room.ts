@@ -163,7 +163,7 @@ export class RoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -240,7 +240,7 @@ export class RoomStore extends SimpleInterval {
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {
-        const error = new GenericErrorWrapper(err)
+        const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
         this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
       })
@@ -280,7 +280,7 @@ export class RoomStore extends SimpleInterval {
             BizLogger.info("[demo] local-stream-removed emit done", evt)
           } catch (err) {
             BizLogger.error(`[demo] local-stream-removed async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -421,7 +421,7 @@ export class RoomStore extends SimpleInterval {
         try {
           return JSON.parse(str)
         } catch(err) {
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
           return null
         }
@@ -453,7 +453,7 @@ export class RoomStore extends SimpleInterval {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_success'))
                 } catch (err) {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_failed'))
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.warn(`${error}`)
                 }
               }
@@ -473,7 +473,7 @@ export class RoomStore extends SimpleInterval {
                   // }
                 } catch (err) {
                   // BizLogger.warn('published failed', err) 
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.error(`published failed:${error}`)
                   throw error
                 }
@@ -482,7 +482,7 @@ export class RoomStore extends SimpleInterval {
             }
           } catch (err) {
             BizLogger.error(`[demo] user-message async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -648,7 +648,7 @@ export class RoomStore extends SimpleInterval {
           }
         } catch (err) {
           this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
       }
@@ -670,7 +670,7 @@ export class RoomStore extends SimpleInterval {
     } catch (err) {
       this.appStore.uiStore.stopLoading()
       // throw new GenericEerr
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -722,7 +722,7 @@ export class RoomStore extends SimpleInterval {
           }
         })
         if (res === 0) {
-          throw new GenericErrorWrapper('callApply failure')
+          throw GenericErrorWrapper('callApply failure')
         }
         // await this.roomManager?.userService.sendCoVideoApply(teacher)
       }
@@ -782,7 +782,7 @@ export class RoomStore extends SimpleInterval {
         }
       })
       // if (res === 0) {
-      //   throw new GenericErrorWrapper('callApply failure')
+      //   throw GenericErrorWrapper('callApply failure')
       // }
       // await this.roomManager?.userService.rejectCoVideoApply(user)
     }
@@ -802,7 +802,7 @@ export class RoomStore extends SimpleInterval {
         }
       })
       if (res === 0) {
-        throw new GenericErrorWrapper('callApply failure')
+        throw GenericErrorWrapper('callApply failure')
       }
       await this.roomManager?.userService.inviteStreamBy({
         roomUuid: this.sceneStore.roomUuid,
@@ -827,7 +827,7 @@ export class RoomStore extends SimpleInterval {
       this.appStore.uiStore.updateLastSeqId(0)
     } catch (err) {
       this.reset()
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }

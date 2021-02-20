@@ -210,7 +210,9 @@ const en = {
     'not_found': 'Page Not Found',
     'components': {
       'paramsEmpty': 'params：{reason} can`t be empty',
-    }
+    },
+    'class_end': 'The classroom is end.',
+    'unknown': 'Unknown error occured.'
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',

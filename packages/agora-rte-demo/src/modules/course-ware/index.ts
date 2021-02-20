@@ -12,7 +12,7 @@ export async function fetchPPT() {
   const resText: any = await res.text()
   const text = JSON.parse(resText)
   if (text.code !== 0) {
-    throw new GenericErrorWrapper({
+    throw GenericErrorWrapper({
       message: text.msg,
       code: text.code
     })

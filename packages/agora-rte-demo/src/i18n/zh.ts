@@ -203,7 +203,9 @@ const zhCN: any = {
     'not_found': '页面找不到',
     'components': {
       'paramsEmpty': '参数：{reason}不能为空',
-    }
+    },
+    'class_end': '课程已结束，请点击确定离开教室',
+    'unknown': '发生未知错误，请点击确认离开教室'
   },
   'whiteboard': {
     'downloading': '下载中 {reason}%...',

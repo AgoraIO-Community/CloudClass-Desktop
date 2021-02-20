@@ -244,7 +244,7 @@ export class AgoraEduSDK {
     checkLaunchOption(dom, option)
 
     if (locks.has("launch") || instances["launch"]) {
-      throw new GenericErrorWrapper("already launched")
+      throw GenericErrorWrapper("already launched")
     }
 
     try {
@@ -312,7 +312,7 @@ export class AgoraEduSDK {
       return instances["launch"]
     } catch (err) {
       locks.delete("launch")
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -320,7 +320,7 @@ export class AgoraEduSDK {
 
     console.log(" replay ", dom, " option ", JSON.stringify(option))
     if (locks.has("replay") || instances["replay"]) {
-      throw new GenericErrorWrapper("already replayed")
+      throw GenericErrorWrapper("already replayed")
     }
 
     checkReplayOption(dom, option)
@@ -356,7 +356,7 @@ export class AgoraEduSDK {
 
   static openDisk(dom: Element) {
     if (diskAppStore.status === DiskLifeStateEnum.init) {
-      throw new GenericErrorWrapper("already disk")
+      throw GenericErrorWrapper("already disk")
     }
   }
 }
