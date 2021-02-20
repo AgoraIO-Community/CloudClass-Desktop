@@ -5,7 +5,7 @@ import md5 from "js-md5";
 import { t } from "@/i18n";
 import { get } from "lodash";
 import { UAParser } from 'ua-parser-js';
-import { GenericError } from "agora-rte-sdk";
+import { GenericErrorWrapper } from "agora-rte-sdk";
 
 const UA = new UAParser();
 const parser = UA.getResult()
@@ -168,7 +168,7 @@ export class LogUpload {
       console.log(" ### res", res)
       return get(res, 'data.data', -1)
     } catch(err) {
-      throw new GenericError(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

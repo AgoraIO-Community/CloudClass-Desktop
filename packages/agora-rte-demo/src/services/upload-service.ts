@@ -1,4 +1,4 @@
-import { EduLogger, EduRoomType, GenericError } from "agora-rte-sdk";
+import { EduLogger, EduRoomType, GenericErrorWrapper } from "agora-rte-sdk";
 import { BizLogger } from "@/utils/biz-logger";
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import OSS from "ali-oss";
@@ -143,7 +143,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -180,7 +180,7 @@ export class UploadService extends ApiBase {
       }
     })
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -209,7 +209,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -239,7 +239,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.msg || res.message
       })
@@ -259,7 +259,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.msg || res.message
       })
@@ -503,7 +503,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericError({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })

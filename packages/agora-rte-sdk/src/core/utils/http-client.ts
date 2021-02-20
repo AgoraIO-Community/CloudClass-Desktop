@@ -1,4 +1,4 @@
-import { GenericError } from './generic-error';
+import { GenericErrorWrapper } from './generic-error';
 import { EduLogger } from "../logger";
 
 export const HttpClient = async (url: string, opts: any): Promise<any> => {
@@ -12,6 +12,6 @@ export const HttpClient = async (url: string, opts: any): Promise<any> => {
     return resp;
   } catch (err) {
     EduLogger.info(`[http] ${opts.method}#${url} request failed code: ${err.code}, msg: ${err.message}, params: `, JSON.stringify(opts), ' status: ', fetchResponse.status, ' statusText: ', fetchResponse.statusText)
-    throw new GenericError(err)
+    throw GenericErrorWrapper(err)
   }
 }

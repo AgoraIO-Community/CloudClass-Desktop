@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid';
-import { GenericError } from './../utils/generic-error';
+import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
@@ -445,7 +445,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.destroyAllRenderers()
     } catch (err) {
       this.destroyAllRenderers()
-      new GenericError(err)
+      GenericErrorWrapper(err)
     }
   }
 
@@ -460,7 +460,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   async leaveSubChannel(channelName: string): Promise<any> {
     EduLogger.info(`call leaveSubChannel `, `${JSON.stringify(channelName)}`)
-    if (!channelName) throw new GenericError({ message: 'channelName is invalid' })
+    if (!channelName) throw GenericErrorWrapper({ message: 'channelName is invalid' })
     if (this.isWeb) {
       await this.sdkWrapper.leaveSubChannel(channelName)
     } else {

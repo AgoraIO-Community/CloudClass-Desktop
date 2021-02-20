@@ -4,7 +4,7 @@ import AgoraRTM from 'agora-rtm-sdk'
 import { RtmLogLevel } from './constants';
 import { get } from 'lodash';
 import { EduLogger } from '../logger';
-import { GenericError } from '../utils/generic-error';
+import { GenericErrorWrapper } from '../utils/generic-error';
 import { reportService } from '../services/report-service';
 
 //@ts-ignore
@@ -161,7 +161,7 @@ export class RTMWrapper extends EventEmitter {
         await client.logout()
       }
       this.reset()
-      throw new GenericError(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -224,7 +224,7 @@ export class RTMWrapper extends EventEmitter {
       await channel.join()
       this.channels[config.channelName] = channel
     } catch (err) {
-      throw new GenericError(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -237,7 +237,7 @@ export class RTMWrapper extends EventEmitter {
         delete this.channels[config.channelName]
       }
     } catch (err) {
-      throw new GenericError(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

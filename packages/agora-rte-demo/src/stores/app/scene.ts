@@ -3,7 +3,7 @@ import { Mutex } from './../../utils/mutex';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericError, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction } from 'mobx';
@@ -363,7 +363,7 @@ export class SceneStore extends SimpleInterval {
       this.removeScreenShareWindow()
       this.sharing = true
     } catch (err) {
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       this.waitingShare = false
       this.appStore.uiStore.addToast(t('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
@@ -424,7 +424,7 @@ export class SceneStore extends SimpleInterval {
     } catch (err) {
       this.unLockCamera()
       BizLogger.info('[demo] action in openCamera >>> openCamera')
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err
     }
@@ -511,7 +511,7 @@ export class SceneStore extends SimpleInterval {
     } catch (err) {
       this.unLockMicrophone()
       BizLogger.info('[demo] action in openMicrophone >>> openMicrophone')
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err
     }
@@ -580,7 +580,7 @@ export class SceneStore extends SimpleInterval {
         }
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     } finally {
       this.waitingShare = false
@@ -720,7 +720,7 @@ export class SceneStore extends SimpleInterval {
       this.joiningRTC = true
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_join_rtc_please_refresh_and_try_again'))
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err
     }
@@ -736,7 +736,7 @@ export class SceneStore extends SimpleInterval {
       this.appStore.reset()
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_leave_rtc'))
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }

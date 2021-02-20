@@ -10,7 +10,7 @@ import {
   AgoraElectronRTCWrapper,
   StartScreenShareParams,
   PrepareScreenShareParams,
-  GenericError,
+  GenericErrorWrapper,
   EduAudioSourceType,
   EduTextMessage,
   EduClassroomStateType,
@@ -1117,7 +1117,7 @@ export class BreakoutRoomStore extends SimpleInterval {
           }
         } catch (err) {
           BizLogger.error(`[demo] [breakout] user-message async handler failed`)
-          const error = new GenericError(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.error(`${error}`)
         }
       })
@@ -1199,7 +1199,7 @@ export class BreakoutRoomStore extends SimpleInterval {
           BizLogger.info("[demo] [breakout] largeClassroom# local-stream-updated", evt)
         } catch (err) {
           BizLogger.error('[demo] [breakout] largeClassroom# local-stream-updated ', err.message)
-          const error = new GenericError(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.error(`${error}`)
         }
       })
@@ -1220,7 +1220,7 @@ export class BreakoutRoomStore extends SimpleInterval {
           BizLogger.info("local-stream-removed", evt)
         } catch (err) {
           BizLogger.error('[demo] [breakout] LargeClassroom# local-stream-removed ', err.message)
-          const error = new GenericError(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.error(`${error}`)
         }
       })
@@ -1499,7 +1499,7 @@ export class BreakoutRoomStore extends SimpleInterval {
           BizLogger.info("[demo] [breakout] [student] local-stream-updated", evt)
         } catch (err) {
           BizLogger.error('[demo] [breakout] [student] Classroom# local-stream-updated ', err.message)
-          const error = new GenericError(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.error(`${error}`)
         }
       })
@@ -1520,7 +1520,7 @@ export class BreakoutRoomStore extends SimpleInterval {
           BizLogger.info("[demo] [breakout] [student] local-stream-removed", evt)
         } catch (err) {
           BizLogger.error('[demo] [breakout] [student] Classroom# local-stream-removed ', err.message)
-          const error = new GenericError(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.error(`${error}`)
         }
       })
@@ -1739,7 +1739,7 @@ export class BreakoutRoomStore extends SimpleInterval {
       this.studentRoomStreamList = groupManager.getFullStreamList()
       this.teacherRoomStreamList = largeRoomManager.getFullStreamList()
     } catch (err) {
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
       throw error
     }
@@ -2049,7 +2049,7 @@ export class BreakoutRoomStore extends SimpleInterval {
       this.studentRoomStreamList = groupManager.getFullStreamList()
       this.teacherRoomStreamList = largeRoomManager.getFullStreamList()
     } catch (err) {
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
       throw error
     }
@@ -2272,7 +2272,7 @@ export class BreakoutRoomStore extends SimpleInterval {
       // this.appStore.uiStore.reset()
     } catch (err) {
       this.reset()
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }
@@ -2299,7 +2299,7 @@ export class BreakoutRoomStore extends SimpleInterval {
       // this.appStore.uiStore.reset()
     } catch (err) {
       this.reset()
-      const error = new GenericError(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }

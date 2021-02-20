@@ -1,4 +1,4 @@
-import { GenericError } from "../utils/generic-error";
+import { GenericErrorWrapper } from "../utils/generic-error";
 import { HttpClient } from "../utils/http-client";
 import { AgoraFetchParams } from "../../interfaces";
 
@@ -86,7 +86,7 @@ export abstract class ApiBase {
       resp = await HttpClient(`${this.prefix}${url}`, opts);
     }
     if (resp.code !== 0) {
-      throw new GenericError({message: resp.message || resp.msg})
+      throw GenericErrorWrapper({message: resp.message || resp.msg})
     }
     return resp
   }

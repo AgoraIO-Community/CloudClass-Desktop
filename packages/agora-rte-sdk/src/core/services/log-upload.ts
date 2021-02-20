@@ -3,7 +3,7 @@ import OSS from "ali-oss";
 import md5 from "js-md5";
 import { get } from "lodash";
 import { UAParser } from 'ua-parser-js';
-import { GenericError } from "../utils/generic-error";
+import { GenericErrorWrapper } from "../utils/generic-error";
 
 const UA = new UAParser();
 const parser = UA.getResult()
@@ -159,7 +159,7 @@ export class LogUpload {
       });
       return get(res, 'data.data', -1)
     } catch(err) {
-      throw new GenericError(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

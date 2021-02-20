@@ -6,7 +6,7 @@ import {
   EduTextMessage,
   EduSceneType,
   EduRoleTypeEnum,
-  GenericError,
+  GenericErrorWrapper,
   EduUser,
   EduStream,
   EduVideoSourceType,

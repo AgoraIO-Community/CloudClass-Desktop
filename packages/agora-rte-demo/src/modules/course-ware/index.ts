@@ -1,4 +1,4 @@
-import { GenericError } from 'agora-rte-sdk';
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 // const myHeaders = new Headers();
 // myHeaders.append("token", "eyJhbGciOiJIUzI1NiJ9.eyJwcmltYXJ5U3RyZWFtVXVpZCI6IjE5NjU3ODQ1MzgiLCJhcHBJZCI6ImY0ODg0OTNkMTg4NjQzNWY5NjNkZmIzZDk1OTg0ZmQ0IiwidXNlclV1aWQiOiJsaXlhbmcxIiwicm9vbVV1aWQiOiJjb3Vyc2V3YXJlMCIsImlhdCI6MTYxMzEzMjE0Mn0.ZqBsGg-fEpBNM-ZB7yA4meWwIPX0eq4pildVwkUrCd4");
 
@@ -12,7 +12,7 @@ export async function fetchPPT() {
   const resText: any = await res.text()
   const text = JSON.parse(resText)
   if (text.code !== 0) {
-    throw new GenericError({
+    throw GenericErrorWrapper({
       message: text.msg,
       code: text.code
     })

@@ -1,4 +1,4 @@
-import { EduLogger, GenericError } from "agora-rte-sdk";
+import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
 
 export const HttpClient = async (url: string, opts: any): Promise<any> => {
   let fetchResponse: any = {}
@@ -11,6 +11,6 @@ export const HttpClient = async (url: string, opts: any): Promise<any> => {
     return resp;
   } catch (err) {
     EduLogger.info(`[http] ${opts.method}#${url} request failed code: ${err.code}, msg: ${err.message}, params: `, JSON.stringify(opts), ' status: ', fetchResponse.status, ' statusText: ', fetchResponse.statusText)
-    throw new GenericError(err)
+    throw GenericErrorWrapper(err)
   }
 }

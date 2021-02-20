@@ -1,4 +1,4 @@
-import { GenericError } from 'agora-rte-sdk';
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 
 import { EduLogger, EduManager, AgoraWebRtcWrapper, AgoraElectronRTCWrapper } from 'agora-rte-sdk'
 import fetchProgress from "fetch-progress"
@@ -76,7 +76,7 @@ export class DiskAppStore {
             },
         }));
         if (res.status !== 200) {
-          throw new GenericError({
+          throw GenericErrorWrapper({
             code: res.status,
             message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
           })
