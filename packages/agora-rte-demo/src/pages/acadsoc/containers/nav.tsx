@@ -20,9 +20,9 @@ const userSignalStatus = [{
 
 const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
-  const startTime: string = acadsocStore.classTimeText + acadsocStore.shiftClassTime
+  const startTime: string = acadsocStore.classTimeText
   return (
-    <StartView text={startTime} isEnd={acadsocStore.isRed}/>
+    <StartView text={startTime} isEnd={acadsocStore.isClassroomDelayed}/>
   )
 })
 
