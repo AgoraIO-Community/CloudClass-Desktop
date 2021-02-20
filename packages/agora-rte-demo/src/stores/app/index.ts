@@ -13,6 +13,7 @@ import {
   AgoraElectronRTCWrapper,
   EduRoleTypeEnum,
   EduUserService,
+  EduLogger,
 } from 'agora-rte-sdk'
 import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';
@@ -300,10 +301,10 @@ export class AppStore {
       })
     }
 
-    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
-
+    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}: any) => {
       if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
         await this.destroy()
+        this.uiStore.addToast(t('toast.kick'))
         this.acadsocStore.history.push('/')
       }
       reportService.updateConnectionState(newState)
