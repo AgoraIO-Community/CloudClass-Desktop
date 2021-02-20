@@ -74,10 +74,12 @@ const useStyles = makeStyles ((theme: Theme) => ({
 }));
 
 type SessionInfo = {
-  roomName: string
-  roomType: number
-  userName: string
-  role: string
+  roomName: string,
+  roomType: number,
+  userName: string,
+  role: string,
+  startTime: string,
+  duration: number,
 }
 
 const roleName = [
@@ -138,6 +140,8 @@ export const HomePage = observer(() => {
     roomType: appStore.roomInfo.roomType,
     role: getRoleType(appStore.roomInfo.userRole),
     userName: appStore.roomInfo.userName,
+    startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
+    duration: 30,
   });
 
   //@ts-ignore
@@ -147,7 +151,7 @@ export const HomePage = observer(() => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  const [startTime, setStartTime] = useState<any>(dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"))
+  // const [startTime, setStartTime] = useState<any>(dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"))
 
   const handleSubmit = async () => {
     if (!session.roomName) {
@@ -174,8 +178,6 @@ export const HomePage = observer(() => {
     const roomUuid = `${session.roomName}${roomType}`;
     const uid = `${session.userName}${userRole}`;
 
-    appStore.params.startTime = new Date(startTime).getTime()  // 默认开始上课时间
-
     try {
       setLoading(true)
       let {userUuid, rtmToken} = await homeApi.login(uid)
@@ -190,6 +192,10 @@ export const HomePage = observer(() => {
         userUuid: `${userUuid}`,
         roomUuid: `${roomUuid}`,
       })
+      
+      appStore.params.startTime = +dayjs(session.startTime)
+      appStore.params.duration = session.duration
+
       const path = roomTypes[session.roomType].path
       history.push(`${path}`)
     } catch (err) {
@@ -283,25 +289,29 @@ export const HomePage = observer(() => {
                   id="datetime-local"
                   label="开始上课时间："
                   type="datetime-local"
-                  defaultValue={startTime}
+                  // defaultValue={session.startTime}
                   className={classes.textField}
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  value={session.startTime}
                   style={{width: '250px'}}
-                  onChange={(e) => {
-                    let value = e.target.value
-                    setStartTime(new Date(value).getTime())
-                    appStore.params.startTime = startTime
+                  onChange={(e: any) => {
+                    setSessionInfo({
+                      ...session,
+                      startTime: e.target.value
+                    })
                   }}
                 />
                 <TextField 
                   style={{marginLeft: '10px'}} 
-                  id="time-test1" 
-                  onChange={(e) => {
-                    let value = e.target.value
-                    let duration = Number(value) * 60
-                    appStore.params.duration = duration
+                  id="time-test1"
+                  value={session.duration}
+                  onChange={(e: any) => {
+                    setSessionInfo({
+                      ...session,
+                      duration: e.target.value
+                    })
                   }}
                   label="课程持续时间/分钟：" 
                 />

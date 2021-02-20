@@ -474,17 +474,21 @@ static toolItems: IToolItem[] = [
   @observable
   sceneList: any[] = []
 
+  controller: any = undefined
+
   async startDownload(taskUuid: string) {
     const isWeb = this.appStore.isElectron ? false : true
     try {
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (isWeb) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
+        await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
           this.preloadingProgress = progress
+          this.controller = controller
         })
       } else {
         const controller = new AbortController();
+        this.controller = controller
         const resourcesHost = "convertcdn.netless.link";
         const signal = controller.signal;
         const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
@@ -2034,8 +2038,13 @@ static toolItems: IToolItem[] = [
 
   @action
   reset () {
+    this.downloading = false
     this.openDisk = false
     this.preloadingProgress = -1
+    if (this.controller) {
+      this.controller.abort()
+      this.controller = undefined
+    }
     // this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
