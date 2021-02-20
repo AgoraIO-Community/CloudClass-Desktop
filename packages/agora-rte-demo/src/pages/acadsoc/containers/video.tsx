@@ -98,11 +98,11 @@ export const TeacherVideo = observer(() => {
         resizable={false}
         showBoardIcon={false}
         disableBoard={true}
-        disableTrophy={acadsocStore.disableTrophy}
+        disableTrophy={disableButton}
         trophyNumber={0}
         visibleTrophy={false}
         role={"teacher"}
-        disableButton={Boolean(disableButton)}
+        disableButton={disableButton}
         videoState={userStream.video}
         audioState={userStream.audio}
         onClick={debounce(handleClick, 500)}
@@ -159,8 +159,11 @@ export const StudentVideo = observer(() => {
       }
     }
     if (type.sourceType === 'trophy') {
+      if(acadsocStore.isTrophyLimit) {
+        acadsocStore.appStore.uiStore.addToast(t('toast.reward_limit'))
+        return
+      }
       await acadsocStore.sendReward(uid, 1)
-      // acadsocStore.showTrophyAnimation = true
     }
     if (type.sourceType === 'board') {
       boardStore.toggleAClassLockBoard()
@@ -196,7 +199,7 @@ export const StudentVideo = observer(() => {
         resizable={false}
         showBoardIcon={true}
         disableBoard={isTeacher ? false : true}
-        disableTrophy={acadsocStore.disableTrophy}
+        disableTrophy={disableButton}
         trophyNumber={trophyNumber}
         visibleTrophy={true}
         role={"student"}
@@ -212,7 +215,7 @@ export const StudentVideo = observer(() => {
           maxHeight: '194px',
           overflow: 'hidden',
         }}
-        disableButton={Boolean(disableButton)}
+        disableButton={disableButton}
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >

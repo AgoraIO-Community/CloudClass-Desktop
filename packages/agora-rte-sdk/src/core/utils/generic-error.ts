@@ -1,9 +1,14 @@
-export class GenericErrorWrapper extends Error {
+export type GenericErrorExtraOptions = {
+  errCode: string
+}
+
+export class GenericError extends Error {
 
   stack?: string
   code?: number = Number.MIN_VALUE
+  errCode?: string
 
-  constructor(err: any) {
+  constructor(err: any, extra?:GenericErrorExtraOptions) {
     super(err)
     if (err instanceof String) {
       this.message = `${err}`
@@ -20,6 +25,10 @@ export class GenericErrorWrapper extends Error {
       if (err.hasOwnProperty('code')) {
         this.code = err.code
       }
+
+      if (extra && extra.hasOwnProperty('errCode')) {
+        this.errCode = extra.errCode
+      }
     }
   }
 
@@ -33,4 +42,11 @@ export class GenericErrorWrapper extends Error {
       })}`
     }
   }
+}
+
+export const GenericErrorWrapper = (err: any, extra?: GenericErrorExtraOptions): GenericError => {
+  if(err instanceof GenericError) {
+    return err
+  }
+  return new GenericError(err, extra)
 }

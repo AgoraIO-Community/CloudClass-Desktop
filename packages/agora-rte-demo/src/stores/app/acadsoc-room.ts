@@ -52,6 +52,8 @@ type AcadsocRoomProperties = {
     state: number,
     roomType: number,
   },
+  reward: RoomRewardType,
+  state: number,
   students: Record<string, ProcessType>,
 }
 
@@ -63,6 +65,13 @@ type MinimizeType = Array<{
   animation: string,
   zIndex: number,
 }>
+
+type RoomRewardType = {
+  room: number,
+  config: {
+    roomLimit: number,
+  }
+}
 
 export enum acadsocRoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
@@ -116,6 +125,30 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.history = history
   }
 
+  resetRoomProperties() {
+    this.roomProperties = {
+      board: {
+        info: {
+          boardAppId: '',
+          boardId: '',
+          boardToken: '',
+        }
+      },
+      record: {
+        state: 0,
+        roomType: 0,
+      },
+      state: 0,
+      reward: {
+        room: 0,
+        config: {
+          roomLimit: 0
+        }
+      },
+      students: {},
+    }
+  }
+
   @observable
   roomProperties: AcadsocRoomProperties = {
     board: {
@@ -128,6 +161,13 @@ export class AcadsocRoomStore extends SimpleInterval {
     record: {
       state: 0,
       roomType: 0,
+    },
+    state: 0,
+    reward: {
+      room: 0,
+      config: {
+        roomLimit: 0
+      }
     },
     students: {},
   }
@@ -174,8 +214,15 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   startedTime: number = 0   // 已经开始了多长时间
 
-  @observable
-  studentsReward: Record<string, number> = {}
+  @computed
+  get studentsReward() {
+    return get(this.roomProperties, 'students', {})
+  }
+
+  @computed
+  get roomReward() {
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+  }
 
   @observable
   showTranslate: boolean = false
@@ -209,6 +256,14 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   trophyNumber: number = 0
+
+  @computed
+  get isTrophyLimit(): boolean {
+    if (this.roomReward.room >= this.roomReward.config.roomLimit) {
+      return true
+    }
+    return false
+  }
 
   @observable
   unwind: MinimizeType = []  // 最小化
@@ -264,6 +319,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   reset() {
     this.appStore.resetStates()
     this.sceneStore.reset()
+    this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
     this.messages = []
@@ -324,7 +380,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       }
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       return{
         id: this.userUuid,
@@ -368,7 +424,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       return historyMessage
     } catch (err) {
       // this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -384,11 +440,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
-
+  
   // 奖杯
   @action
   async sendReward(userUuid: string, reward: number) {
@@ -402,7 +458,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -422,7 +478,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.timer && clearTimeout(this.timer)
     this.timer = setInterval(async() => {
       if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
-        await this.appStore.releaseRoom()
         this.appStore.isNotInvisible && dialogManager.confirm({
           title: t(`aclass.class_end`),
           text: t(`aclass.leave_room`),
@@ -437,6 +492,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           onCancel: () => {
           }
         })
+        await this.appStore.releaseRoom()
         clearTimeout(this.timer)
         return
       } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
@@ -542,6 +598,11 @@ export class AcadsocRoomStore extends SimpleInterval {
     const userRole = this.roomInfo.userRole
     return +this.roomInfo.roomType === 2 && userRole === EduRoleTypeEnum.student
   }
+  
+
+  updateRewardInfo() {
+    
+  }
 
   get eduManager() {
     return this.appStore.eduManager
@@ -622,30 +683,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         this.seconds = this.msToMinutes(this.startedTime).seconds
         this.getTimer(this.seconds, 1)
       }
-      // 课程结束
-      if (checkInResult.state === EduClassroomStateEnum.end) {
-        try {
-          await this.appStore.releaseRoom()
-        } catch (err) {
-          EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
-        }
-        this.appStore.isNotInvisible && dialogManager.show({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
-          },
-          onCancel: () => {
-          }
-        })
-        this.appStore.uiStore.stopLoading()
-        return
-      }
+
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
@@ -653,7 +691,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {
-        const error = new GenericErrorWrapper(err)
+        const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
         this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
       })
@@ -693,7 +731,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             BizLogger.info("[demo] local-stream-removed emit done", evt)
           } catch (err) {
             BizLogger.error(`[demo] local-stream-removed async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -837,7 +875,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         try {
           return JSON.parse(str)
         } catch(err) {
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
           return null
         }
@@ -869,7 +907,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_success'))
                 } catch (err) {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_failed'))
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.warn(`${error}`)
                 }
               }
@@ -889,7 +927,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   // }
                 } catch (err) {
                   // BizLogger.warn('published failed', err) 
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.error(`published failed:${error}`)
                   throw error
                 }
@@ -898,7 +936,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           } catch (err) {
             BizLogger.error(`[demo] user-message async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -907,6 +945,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
+          this.roomProperties = get(classroom, 'roomProperties')
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
             // await this.appStore.releaseRoom()
@@ -962,8 +1001,10 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
-          this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
-          this.studentsReward = get(classroom, 'roomProperties.students', {})
+          // this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
+          // this.studentsReward = get(classroom, 'roomProperties.students', {})
+          // this.roomReward = get(classroom, 'roomProperties.reward', {})
+          // this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
           if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
             clearTimeout(this.timer)
@@ -1103,12 +1144,15 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         } catch (err) {
           this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
       }
   
-      const roomProperties = roomManager.getClassroomInfo().roomProperties
+      const roomProperties = roomManager.getClassroomInfo().roomProperties as any
+
+      //@ts-ignore
+      this.roomProperties = roomProperties
     
       this.sceneStore.userList = roomManager.getFullUserList()
       this.sceneStore.streamList = roomManager.getFullStreamList()
@@ -1124,8 +1168,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.roomJoined = true
     } catch (err) {
       this.appStore.uiStore.stopLoading()
-      // throw new GenericEerr
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -1190,7 +1233,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         })
         if (res === 0) {
-          throw new GenericErrorWrapper('callApply failure')
+          throw GenericErrorWrapper('callApply failure')
         }
         // await this.roomManager?.userService.sendCoVideoApply(teacher)
       }
@@ -1250,7 +1293,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       // if (res === 0) {
-      //   throw new GenericErrorWrapper('callApply failure')
+      //   throw GenericErrorWrapper('callApply failure')
       // }
       // await this.roomManager?.userService.rejectCoVideoApply(user)
     }
@@ -1270,7 +1313,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       if (res === 0) {
-        throw new GenericErrorWrapper('callApply failure')
+        throw GenericErrorWrapper('callApply failure')
       }
       await this.roomManager?.userService.inviteStreamBy({
         roomUuid: this.sceneStore.roomUuid,
@@ -1295,7 +1338,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.appStore.uiStore.updateLastSeqId(0)
     } catch (err) {
       this.reset()
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }

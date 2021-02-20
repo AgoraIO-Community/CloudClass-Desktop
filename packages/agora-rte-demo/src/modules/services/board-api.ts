@@ -76,7 +76,7 @@ export class AgoraBoardApi extends ApiBase {
       })
       return res.data
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

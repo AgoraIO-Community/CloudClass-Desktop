@@ -214,7 +214,9 @@ const en = {
     'not_found': 'Page Not Found',
     'components': {
       'paramsEmpty': 'params：{reason} can`t be empty',
-    }
+    },
+    'class_end': 'The classroom is end.',
+    'unknown': 'Unknown error occured.'
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',
@@ -313,6 +315,7 @@ const en = {
     'time_interval_between_end': `The class will be over in {reason} minutes`,
     'class_is_end': `Class is over. The classroom will close in {reason} minutes`,
     'time_interval_between_close': `The classroom will close in {reason} minutes`,
+    'reward_limit': 'The maximum number of trophies in the room has been reached',
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {

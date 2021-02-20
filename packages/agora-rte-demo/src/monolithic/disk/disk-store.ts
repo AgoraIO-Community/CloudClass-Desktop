@@ -76,7 +76,7 @@ export class DiskAppStore {
             },
         }));
         if (res.status !== 200) {
-          throw new GenericErrorWrapper({
+          throw GenericErrorWrapper({
             code: res.status,
             message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
           })

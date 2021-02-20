@@ -343,7 +343,7 @@ export class AgoraEduApi extends ApiBase {
       data: data,
       token: params.token
     })
-    const statusCode = resp['_raw']['status']
+    const statusCode = resp['__status']
     const {code} = resp
     reportService.reportHttp('joinRoom', 'http', 'entry', statusCode, statusCode === 200, code)
 

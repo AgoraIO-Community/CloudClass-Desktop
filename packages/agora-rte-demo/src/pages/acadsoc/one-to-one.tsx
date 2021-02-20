@@ -14,6 +14,10 @@ import { Setting } from '@/pages/acadsoc/containers/setting';
 import { MinimizeTeacher, MinimizeStudent, MinimizeChat} from './containers/minimize/minimize'
 import 'animate.css'
 import { reportService } from '@/services/report-service'
+import { GenericError, EduLogger } from 'agora-rte-sdk'
+import { dialogManager } from 'agora-aclass-ui-kit'
+import { t } from '@/i18n'
+import { BusinessExceptions } from '@/utils/biz-error'
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -22,6 +26,28 @@ export const AcadsocOneToOne = observer(() => {
   const uiStore = useUIStore()
   const acadsocStore = useAcadsocRoomStore()
   const boardStore = useBoardStore()
+
+  const handleJoinFail = async (err:GenericError) => {
+    try {
+      await appStore.releaseRoom()
+    } catch (err) {
+      EduLogger.info(" appStore.releaseRoom ", err.message)
+    }
+    dialogManager.show({
+      text: BusinessExceptions.getReadableText(err.errCode),
+      showConfirm: true,
+      showCancel: false,
+      confirmText: t('aclass.confirm.yes'),
+      visible: true,
+      cancelText: t('aclass.confirm.no'),
+      onConfirm: () => {
+        uiStore.unblock()
+        history.push('/')
+      }
+    })
+    appStore.uiStore.stopLoading()
+    return
+  }
 
   useEffect(() => {
     if (appStore.userRole < 0) {
@@ -36,7 +62,7 @@ export const AcadsocOneToOne = observer(() => {
       reportService.reportElapse('joinRoom', 'end', {result: true})
     }).catch(e => {
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})
-      throw e
+      handleJoinFail(e)
     })
     // TODO: only for ui debug
     // acadsocStore.joinRoom()
@@ -52,12 +78,12 @@ export const AcadsocOneToOne = observer(() => {
       <div className={!boardStore.isFullScreen ? styles.flexBox : styles.fullScreen}>
         <div className={styles.mainContainer}>
           <BoardView />
+          {
+            acadsocStore.showTrophyAnimation ? 
+            <Trophy></Trophy>
+            : null
+          }
           <div className={styles.rightContainer}>
-            {
-              acadsocStore.showTrophyAnimation ? 
-              <Trophy></Trophy>
-              : null
-            }
             {
               acadsocStore.minimizeView.filter(e => !e.isHidden).map((e:any) => (
                 e.type === 'teacher' ?

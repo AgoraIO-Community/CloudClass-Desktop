@@ -147,6 +147,8 @@ export const HomePage = observer(() => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
+  const [startTime, setStartTime] = useState<any>(dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"))
+
   const handleSubmit = async () => {
     if (!session.roomName) {
       setRequired({...required, roomName: t('home.missing_room_name')});
@@ -171,6 +173,8 @@ export const HomePage = observer(() => {
 
     const roomUuid = `${session.roomName}${roomType}`;
     const uid = `${session.userName}${userRole}`;
+
+    appStore.params.startTime = new Date(startTime).getTime()  // 默认开始上课时间
 
     try {
       setLoading(true)
@@ -279,16 +283,16 @@ export const HomePage = observer(() => {
                   id="datetime-local"
                   label="开始上课时间："
                   type="datetime-local"
-                  defaultValue={dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm")}
+                  defaultValue={startTime}
                   className={classes.textField}
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  style={{width: '250px'}}
                   onChange={(e) => {
                     let value = e.target.value
-                    let startTime = new Date(value).getTime()
+                    setStartTime(new Date(value).getTime())
                     appStore.params.startTime = startTime
-                    // console.log('**上课开始时间', e.target.value)
                   }}
                 />
                 <TextField 
@@ -298,7 +302,6 @@ export const HomePage = observer(() => {
                     let value = e.target.value
                     let duration = Number(value) * 60
                     appStore.params.duration = duration
-                    console.log('**课程持续时间', e.target.value)
                   }}
                   label="课程持续时间/分钟：" 
                 />

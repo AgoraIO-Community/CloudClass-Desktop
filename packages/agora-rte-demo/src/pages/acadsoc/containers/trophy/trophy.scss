@@ -1,4 +1,11 @@
 
+.trophy-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .gift-animation-container .gift-animation{
   position: absolute;
   left: calc(50% - 160px);
