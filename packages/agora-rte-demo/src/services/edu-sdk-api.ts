@@ -72,7 +72,7 @@ export class EduSDKApi extends ApiBase {
       }
     })
     res.data.ts = res.ts
-    const statusCode = res['_raw']['status']
+    const statusCode = res['__status']
     const {code} = res
     reportService.reportHttp('joinRoom', 'http', 'preflight', statusCode, statusCode === 200, code)
     return res.data

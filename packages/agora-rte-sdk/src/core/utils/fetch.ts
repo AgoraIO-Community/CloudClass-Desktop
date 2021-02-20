@@ -26,7 +26,7 @@ export async function Fetch (input: RequestInfo, init?: RequestInit, retryCount:
     }
 
     const rescueError = (error: any) => {
-      EduLogger.warn(`${new GenericErrorWrapper(error)}`)
+      EduLogger.warn(`${GenericErrorWrapper(error)}`)
       throw error;
     }
 
@@ -51,8 +51,8 @@ export async function AgoraFetch(input: RequestInfo, init?: RequestInit, retryCo
     return await Fetch(input, init, retryCount);
   } catch(err) {
     if (err && err.message === 'request timeout') {
-      throw new GenericErrorWrapper({code: err.code, message: null, name: 'AgoraFetch request timeout'})
+      throw GenericErrorWrapper({code: err.code, message: null, name: 'AgoraFetch request timeout'})
     }
-    throw new GenericErrorWrapper(err)
+    throw GenericErrorWrapper(err)
   }
 }

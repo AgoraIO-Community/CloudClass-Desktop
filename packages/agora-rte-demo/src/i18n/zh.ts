@@ -203,7 +203,9 @@ const zhCN: any = {
     'not_found': '页面找不到',
     'components': {
       'paramsEmpty': '参数：{reason}不能为空',
-    }
+    },
+    'class_end': '课程已结束，请点击确定离开教室',
+    'unknown': '发生未知错误，请点击确认离开教室'
   },
   'whiteboard': {
     'downloading': '下载中 {reason}%...',
@@ -301,6 +303,7 @@ const zhCN: any = {
     'time_interval_between_end': `课程还有 {reason} 分钟结束`,
     'class_is_end': `下课咯，教室还有 {reason} 分钟关闭`,
     'time_interval_between_close': `教室关闭还有 {reason} 分钟`,
+    'reward_limit': '当前房间奖杯数已达到上限',
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

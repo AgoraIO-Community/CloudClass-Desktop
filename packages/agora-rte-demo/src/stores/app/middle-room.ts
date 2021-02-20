@@ -446,7 +446,7 @@ export class MiddleRoomStore extends SimpleInterval {
             BizLogger.info("[demo] local-stream-removed emit done", evt)
           } catch (err) {
             BizLogger.error(`[demo] local-stream-removed async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -931,7 +931,7 @@ export class MiddleRoomStore extends SimpleInterval {
           }
         } catch (err) {
           this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
       }
@@ -1436,7 +1436,7 @@ async groupPlatform (group:any) {
     try {
       await this.roomManager?.userService.batchUpdateStreamAttributes(streams)
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1445,7 +1445,7 @@ async groupPlatform (group:any) {
     try {
       await this.roomManager?.userService.batchRemoveStreamAttributes(streams)
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1454,7 +1454,7 @@ async groupPlatform (group:any) {
     try {
       await this.roomManager?.userService.batchUpdateRoomAttributes(properties)
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1463,7 +1463,7 @@ async groupPlatform (group:any) {
     try {
       await this.roomManager?.userService.batchRemoveRoomAttributes()
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1472,7 +1472,7 @@ async groupPlatform (group:any) {
     try {
       await this.roomManager?.userService.batchRemoveUserAttributes(userUuid)
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1489,7 +1489,7 @@ async groupPlatform (group:any) {
         sender: true,
       })
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -1537,7 +1537,7 @@ async groupPlatform (group:any) {
       this.appStore.uiStore.updateLastSeqId(0)
     } catch (err) {
       this.reset()
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }

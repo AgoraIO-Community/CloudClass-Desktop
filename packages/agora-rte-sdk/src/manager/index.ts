@@ -228,7 +228,7 @@ export class EduManager extends EventEmitter {
       EduLogger.debug(`login userUuid: ${userUuid} success`)
       this._rtmWrapper = rtmWrapper
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

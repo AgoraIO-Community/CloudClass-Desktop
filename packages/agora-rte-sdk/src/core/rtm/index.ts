@@ -161,7 +161,7 @@ export class RTMWrapper extends EventEmitter {
         await client.logout()
       }
       this.reset()
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -224,7 +224,7 @@ export class RTMWrapper extends EventEmitter {
       await channel.join()
       this.channels[config.channelName] = channel
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
@@ -237,7 +237,7 @@ export class RTMWrapper extends EventEmitter {
         delete this.channels[config.channelName]
       }
     } catch (err) {
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 
