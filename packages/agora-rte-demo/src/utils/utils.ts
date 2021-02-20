@@ -86,7 +86,7 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
     const result = await new Promise((resolve) => {
       reader.readAsDataURL(blob)
         reader.onload = () => {
-          image.onload = () => {
+          image.addEventListener('load', () => {
             const uuid = MD5(reader.result)
             const res = getImageSize(image)
             const result = {
@@ -97,7 +97,7 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
               uuid
             }
             resolve(result)
-          }
+          }, false)
           image.src = reader.result as string;
         }
       })
