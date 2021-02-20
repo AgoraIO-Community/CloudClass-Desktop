@@ -20,6 +20,8 @@ export enum EduClassroomStateEnum {
   beforeStart = 0,
   start = 1,
   end = 2,
+  // close state is front-end only state
+  close = 3
 }
 
 export enum ClassStateEnum {
