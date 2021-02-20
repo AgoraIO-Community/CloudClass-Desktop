@@ -28,7 +28,7 @@ export {
 
 export { EduLogger } from './core/logger/index';
 export { EduManager } from './manager/index';
-export { GenericErrorWrapper } from './core/utils/generic-error';
+export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
 export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
 export { AgoraWebRtcWrapper } from './core/media-service/web/index';
 

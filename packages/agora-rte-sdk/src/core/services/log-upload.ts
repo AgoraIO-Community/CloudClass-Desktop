@@ -159,7 +159,7 @@ export class LogUpload {
       });
       return get(res, 'data.data', -1)
     } catch(err) {
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
   }
 

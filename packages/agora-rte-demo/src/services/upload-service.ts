@@ -143,7 +143,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -180,7 +180,7 @@ export class UploadService extends ApiBase {
       }
     })
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -209,7 +209,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })
@@ -239,7 +239,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.msg || res.message
       })
@@ -259,7 +259,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.msg || res.message
       })
@@ -503,7 +503,7 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw new GenericErrorWrapper({
+      throw GenericErrorWrapper({
         code: res.code,
         message: res.message
       })

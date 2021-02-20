@@ -9,7 +9,7 @@ export class MessageSerializer {
     try {
       return JSON.parse(message)
     } catch (err) {
-      EduLogger.warn(`${new GenericErrorWrapper(err)}`)
+      EduLogger.warn(`${GenericErrorWrapper(err)}`)
       return null
     }
   }
