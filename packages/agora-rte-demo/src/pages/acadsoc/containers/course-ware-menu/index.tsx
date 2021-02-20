@@ -27,7 +27,7 @@ export const CourseWareMenuContainer = observer(() => {
         }
 
         if (type === 'close') {
-          dialogManager.confirm({
+          dialogManager.show({
             title: t(`aclass.sure_close_board`),
             text: '',
             showConfirm: true,
@@ -39,6 +39,7 @@ export const CourseWareMenuContainer = observer(() => {
               boardStore.closeMaterial(name)
             },
             onCancel: () => {
+              
             }
           })
           console.log('ware menu close', name, ' currentPage ', currentPage)

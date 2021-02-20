@@ -3,7 +3,9 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
-    "sure_close_board": "确定关闭当前课件",
+    "notice": "提示",
+    "upload_log_success": "上传成功",
+    "sure_close_board": "是否确定关闭当前课件？",
     "confirm_close": "确定关闭",
     "cancel_close": "取消",
     "board_name": "白板",
@@ -299,6 +301,7 @@ const zhCN: any = {
     'failed_to_initiate_a_raise_of_hand_application': '发起举手申请失败',
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
+    'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason} 分钟`,
     'time_interval_between_end': `课程还有 {reason} 分钟结束`,
     'class_is_end': `下课咯，教室还有 {reason} 分钟关闭`,

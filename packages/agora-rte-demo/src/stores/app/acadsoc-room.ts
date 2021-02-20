@@ -750,6 +750,9 @@ export class AcadsocRoomStore extends SimpleInterval {
           const tag = uuidv4()
           BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `, JSON.stringify(evt))
           if (evt.type === 'main') {
+            if (this.isAssistant) {
+              return
+            }
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             if (localStream && localStream.state !== 0) {
@@ -1097,12 +1100,16 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
   
       const localStreamData = roomManager.data.localStreamData
+
+      const canPublishRTC = (localStreamData: any): boolean => {
+        const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student]
+        if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+          return true
+        }
+        return false
+      }
   
-      let canPublish = this.roomInfo.userRole === EduRoleTypeEnum.teacher ||
-         localStreamData && !!(+localStreamData.state) ||
-         (this.roomInfo.userRole === EduRoleTypeEnum.student && +this.roomInfo.roomType !== 2)
-  
-      if (canPublish) {
+      if (canPublishRTC(localStreamData)) {
   
         const localStreamData = roomManager.data.localStreamData
   
@@ -1163,6 +1170,14 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.appStore.uiStore.stopLoading()
       throw GenericErrorWrapper(err)
     }
+  }
+
+  @computed
+  get isAssistant() {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.assistant) {
+      return true
+    }
+    return false
   }
 
   @action
@@ -1352,7 +1367,8 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get signalLevel(): number {
-    if (this.appStore.mediaStore.networkQuality === 'excellent') {
+    const best = ['good', 'excellent']
+    if (best.includes(this.appStore.mediaStore.networkQuality)) {
       return 3
     }
 

@@ -411,7 +411,8 @@ export const EducationBoard = observer((props: any) => {
         break;
       }
       case 'clear': {
-        boardStore.toggleAClassLockBoard()
+        boardStore.clearScene()
+        // boardStore.toggleAClassLockBoard()
         break;
       }
       case 'disk': {
