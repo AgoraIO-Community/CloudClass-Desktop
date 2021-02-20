@@ -221,7 +221,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get roomReward() {
-    return get(this.roomProperties, 'reward', {})
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
   }
 
   @observable
