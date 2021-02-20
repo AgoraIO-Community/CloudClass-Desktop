@@ -2347,7 +2347,6 @@ static toolItems: IToolItem[] = [
         console.log("打开图片成功")
       }
     } catch (err) {
-      debugger
       throw err
     }
   }

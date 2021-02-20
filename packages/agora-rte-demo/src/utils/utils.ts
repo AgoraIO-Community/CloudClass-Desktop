@@ -103,7 +103,6 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
       })
     return result as FetchImageResult
   } catch (err) {
-    debugger
     throw err
   }
 
