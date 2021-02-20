@@ -78,12 +78,12 @@ export const AcadsocOneToOne = observer(() => {
       <div className={!boardStore.isFullScreen ? styles.flexBox : styles.fullScreen}>
         <div className={styles.mainContainer}>
           <BoardView />
+          {
+            acadsocStore.showTrophyAnimation ? 
+            <Trophy></Trophy>
+            : null
+          }
           <div className={styles.rightContainer}>
-            {
-              acadsocStore.showTrophyAnimation ? 
-              <Trophy></Trophy>
-              : null
-            }
             {
               acadsocStore.minimizeView.filter(e => !e.isHidden).map((e:any) => (
                 e.type === 'teacher' ?

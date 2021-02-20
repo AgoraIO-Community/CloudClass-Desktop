@@ -310,6 +310,7 @@ const en = {
     'time_interval_between_end': `The class will be over in {reason} minutes`,
     'class_is_end': `Class is over. The classroom will close in {reason} minutes`,
     'time_interval_between_close': `The classroom will close in {reason} minutes`,
+    'reward_limit': 'The maximum number of trophies in the room has been reached',
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {

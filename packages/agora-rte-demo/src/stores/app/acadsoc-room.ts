@@ -52,6 +52,8 @@ type AcadsocRoomProperties = {
     state: number,
     roomType: number,
   },
+  reward: RoomRewardType,
+  state: number,
   students: Record<string, ProcessType>,
 }
 
@@ -63,6 +65,13 @@ type MinimizeType = Array<{
   animation: string,
   zIndex: number,
 }>
+
+type RoomRewardType = {
+  room: number,
+  config: {
+    roomLimit: number,
+  }
+}
 
 export enum acadsocRoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
@@ -116,6 +125,30 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.history = history
   }
 
+  resetRoomProperties() {
+    this.roomProperties = {
+      board: {
+        info: {
+          boardAppId: '',
+          boardId: '',
+          boardToken: '',
+        }
+      },
+      record: {
+        state: 0,
+        roomType: 0,
+      },
+      state: 0,
+      reward: {
+        room: 0,
+        config: {
+          roomLimit: 0
+        }
+      },
+      students: {},
+    }
+  }
+
   @observable
   roomProperties: AcadsocRoomProperties = {
     board: {
@@ -128,6 +161,13 @@ export class AcadsocRoomStore extends SimpleInterval {
     record: {
       state: 0,
       roomType: 0,
+    },
+    state: 0,
+    reward: {
+      room: 0,
+      config: {
+        roomLimit: 0
+      }
     },
     students: {},
   }
@@ -174,8 +214,15 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   startedTime: number = 0   // 已经开始了多长时间
 
-  @observable
-  studentsReward: Record<string, number> = {}
+  @computed
+  get studentsReward() {
+    return get(this.roomProperties, 'students', {})
+  }
+
+  @computed
+  get roomReward() {
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+  }
 
   @observable
   showTranslate: boolean = false
@@ -209,6 +256,14 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   trophyNumber: number = 0
+
+  @computed
+  get isTrophyLimit(): boolean {
+    if (this.roomReward.room >= this.roomReward.config.roomLimit) {
+      return true
+    }
+    return false
+  }
 
   @observable
   unwind: MinimizeType = []  // 最小化
@@ -264,6 +319,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   reset() {
     this.appStore.resetStates()
     this.sceneStore.reset()
+    this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
     this.messages = []
@@ -388,7 +444,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       BizLogger.warn(`${error}`)
     }
   }
-
+  
   // 奖杯
   @action
   async sendReward(userUuid: string, reward: number) {
@@ -422,7 +478,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.timer && clearTimeout(this.timer)
     this.timer = setInterval(async() => {
       if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
-        await this.appStore.releaseRoom()
         this.appStore.isNotInvisible && dialogManager.confirm({
           title: t(`aclass.class_end`),
           text: t(`aclass.leave_room`),
@@ -437,6 +492,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           onCancel: () => {
           }
         })
+        await this.appStore.releaseRoom()
         clearTimeout(this.timer)
         return
       } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
@@ -541,6 +597,11 @@ export class AcadsocRoomStore extends SimpleInterval {
   isBigClassStudent(): boolean {
     const userRole = this.roomInfo.userRole
     return +this.roomInfo.roomType === 2 && userRole === EduRoleTypeEnum.student
+  }
+  
+
+  updateRewardInfo() {
+    
   }
 
   get eduManager() {
@@ -881,6 +942,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
+          this.roomProperties = get(classroom, 'roomProperties')
           const classState = get(classroom, 'roomStatus.courseState')
           if (classState === EduClassroomStateEnum.end) {
             // await this.appStore.releaseRoom()
@@ -936,8 +998,10 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
-          this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
-          this.studentsReward = get(classroom, 'roomProperties.students', {})
+          // this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
+          // this.studentsReward = get(classroom, 'roomProperties.students', {})
+          // this.roomReward = get(classroom, 'roomProperties.reward', {})
+          // this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
           if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
             clearTimeout(this.timer)
@@ -1078,7 +1142,10 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       }
   
-      const roomProperties = roomManager.getClassroomInfo().roomProperties
+      const roomProperties = roomManager.getClassroomInfo().roomProperties as any
+
+      //@ts-ignore
+      this.roomProperties = roomProperties
     
       this.sceneStore.userList = roomManager.getFullUserList()
       this.sceneStore.streamList = roomManager.getFullStreamList()
