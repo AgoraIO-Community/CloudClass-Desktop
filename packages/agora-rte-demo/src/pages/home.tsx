@@ -141,7 +141,7 @@ export const HomePage = observer(() => {
     role: getRoleType(appStore.roomInfo.userRole),
     userName: appStore.roomInfo.userName,
     startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
-    duration: 30,
+    duration: 30 * 60,
   });
 
   //@ts-ignore
