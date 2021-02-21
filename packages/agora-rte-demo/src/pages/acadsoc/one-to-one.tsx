@@ -62,7 +62,7 @@ export const AcadsocOneToOne = observer(() => {
       handleJoinFail(e)
     })
     // TODO: only for ui debug
-    acadsocStore.joinRoom()
+    // acadsocStore.joinRoom()
   }, [])
 
   return (
@@ -80,8 +80,10 @@ export const AcadsocOneToOne = observer(() => {
             <Trophy></Trophy>
             : null
           }
-          <RightContainer/>
-        </div>
+          <div className={styles.rightContainer}>
+            <RightContainer/>
+          </div>
+        </div>   
       </div>
       <Setting />
     </div>

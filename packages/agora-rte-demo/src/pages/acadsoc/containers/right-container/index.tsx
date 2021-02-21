@@ -67,7 +67,7 @@ export const RightContainer = observer(() => {
   }, [viewTopMap, acadsocStore.minimizeView, acadsocStore.unwind.length, rightContainerHeight])
 
   return (
-    <div className={styles.rightContainer} ref={rightContainerRef}>
+    <div className={styles.container} ref={rightContainerRef}>
       {
         acadsocStore.minimizeView.map((e:any) => (
           <div 
