@@ -634,6 +634,17 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
       this.appStore.uiStore.stopLoading()
 
+      // logout will clean up eduManager events, so we need to put the listener here
+      this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
+        BizLogger.warn(`ConnectionStateChanged`, newState, reason)
+        if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
+          await this.appStore.releaseRoom()
+          this.history.push('/')
+          this.appStore.uiStore.addToast(t('toast.classroom_remote_join'))
+        }
+        reportService.updateConnectionState(newState)
+      })
+
       await this.eduManager.login(this.userUuid)
   
       const roomManager = this.eduManager.createClassroom({

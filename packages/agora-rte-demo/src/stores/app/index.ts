@@ -300,15 +300,6 @@ export class AppStore {
       })
     }
 
-    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
-
-      if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
-        await this.destroy()
-        this.acadsocStore.history.push('/')
-      }
-      reportService.updateConnectionState(newState)
-    })
-
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
