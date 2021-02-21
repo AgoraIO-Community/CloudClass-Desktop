@@ -79,8 +79,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noUser: {
     color: '#383839',
-    padding:'15px 0',
-    textAlign:'center',
+    padding: '15px 0',
+    textAlign: 'center',
   }
 }))
 export const LongMenu = (props: IProps) => {
@@ -108,9 +108,9 @@ export const LongMenu = (props: IProps) => {
     <div>
       <div className={classes.assistant}>
         <div onClick={handleClick} className={classes.userNetwork}>
-          <NavigationControlButton icon="userNetwork" iconStyle={{ width: 20, height: 16 }} styles={{margin:0}}/>
+          <NavigationControlButton icon="userNetwork" iconStyle={{ width: 20, height: 16 }} styles={{ margin: 0 }} />
           <span>{props.title}</span>
-          <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 10, height: 7, margin: 0 }}  styles={{margin:0}}/>
+          <NavigationControlButton icon={!iconUp ? 'triangleDown' : 'triangleUp'} iconStyle={{ width: 10, height: 7, margin: 0 }} styles={{ margin: 0 }} />
         </div>
       </div>
       {iconUp ? <div className={classes.userNetworkContent}>
@@ -124,12 +124,9 @@ export const LongMenu = (props: IProps) => {
                   <div>{option.userName}</div>
                   <div>
                     {props.delayText}：
-                <span style={{ color: colorMap[option.signalLevel] }}>{option.delay}ms</span>
-
-                  </div>
-                  <div>
-                    {props.lossRate}：
-              <span className={classes.packagesLost} style={{ color: colorMap[option.signalLevel] }} >{option.packagesLost}%</span>
+                <span style={{ color: colorMap[option.signalLevel] }} >{option.delay}ms</span>
+                    <span className={classes.packagesLost}>{props.lossRate}：</span>
+                    <span style={{ color: colorMap[option.signalLevel] }} >{option.packagesLost}%</span>
                   </div>
                 </div>
               </li>
