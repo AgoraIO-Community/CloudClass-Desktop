@@ -30,16 +30,9 @@
 ## Preparations
 
 - Ensure your environment is well configured in Agora Console, if you are not sure what to do, please contact our technical support.
-- Rename `.env.example` to `.env.local` and configure the following parameters:
-  - **(Required) The Agora App ID that you get**
+- Rename `.env.example` to `.env` and configure the following parameters:
   ```bash
-  # Agora App ID
-  REACT_APP_AGORA_APP_ID=agora appId
-  REACT_APP_AGORA_LOG=true
-  ELECTRON_START_URL=http://localhost:3000
-  ```
-  - **(Required) The Agora Customer ID and Customer Secret that you get**
-  ```bash
+# CONFIGS PROVIDED BY YOU
 REACT_APP_AGORA_APP_ID=<YOUR APPID>
 REACT_APP_NETLESS_APP_ID=<YOUR NETLESS APPID>
   ```

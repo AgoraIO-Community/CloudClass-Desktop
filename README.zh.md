@@ -31,12 +31,12 @@
 ## 准备工作
 
 - 请确保你已经完成灵动课堂项目指南中的[前提条件](https://docs.agora.io/cn/agora-class/agora_class_prep?platform=Web)。
-- 重命名 `.env.example` 为 `.env.local`，并配置以下参数：
-   - **（必填）你获取到的声网 App ID**
-   ```bash
+- 重命名 `.env.example` 为 `.env`，并配置以下参数：
+  ```bash
+# CONFIGS PROVIDED BY YOU
 REACT_APP_AGORA_APP_ID=<YOUR APPID>
 REACT_APP_NETLESS_APP_ID=<YOUR NETLESS APPID>
-   ```
+  ```
 
 - 中国区客户推荐使用以下方式安装 npm 依赖包和 electron & node-sass 加速
   > 我们建议使用 npm 而非 yarn 或 cnpm
