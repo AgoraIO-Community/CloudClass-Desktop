@@ -1,0 +1,42 @@
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  min-width: 268px;
+  flex: 1;
+  margin-left: 10px;
+  position: relative;
+}
+
+.minimizeContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}  
+
+.animation {
+  width: 100%;
+  position: absolute;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.75s;
+  -webkit-transition-timing-function: ease;
+  transition-property: all;
+  transition-duration: 0.75s;
+  transition-timing-function: ease;
+}
+
+.animationMinimize {
+  z-index: 99;
+  right: 0px;
+  height:40px;
+  width: 222px;
+  position: absolute;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.75s;
+  -webkit-transition-timing-function: ease;
+  transition-property: all;
+  transition-duration: 0.75s;
+  transition-timing-function: ease;
+}

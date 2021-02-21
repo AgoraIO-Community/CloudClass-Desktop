@@ -55,14 +55,16 @@ type AcadsocRoomProperties = {
   students: Record<string, ProcessType>,
 }
 
-type MinimizeType = Array<{
+type MinimizeType = {
   id: string,
-  type: string,
+  type: 'teacher' | 'student' | 'chat',
   content: string,
   isHidden: boolean,
   animation: string,
   zIndex: number,
-}>
+  height: number,
+  width?: number,
+}
 
 type RoomRewardType = {
   room: number,
@@ -229,7 +231,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   isTrophyLimit: boolean = false
 
   @observable
-  unwind: MinimizeType = []  // 最小化
+  unwind: MinimizeType[] = []  // 最小化
 
   @observable
   isBespread: boolean = true  // 是否铺满
@@ -238,7 +240,10 @@ export class AcadsocRoomStore extends SimpleInterval {
   isRed: boolean = false  // 是否变红
 
   @observable
-  minimizeView: MinimizeType = [
+  additional: boolean = false
+
+  @observable
+  minimizeView: MinimizeType[] = [
     {
       id: 'teacher'+Math.ceil(Math.random()*10),
       type: 'teacher',
@@ -246,6 +251,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 194,
     },
     {
       id: 'student'+Math.ceil(Math.random()*10),
@@ -254,6 +260,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 194,
     },
     {
       id: 'chat'+Math.ceil(Math.random()*10),
@@ -262,6 +269,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 212,
     },
   ]
 
@@ -980,7 +988,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
           this.studentsReward = get(classroom, 'roomProperties.students', {})
           this.roomReward = get(classroom, 'roomProperties.reward', {})
-          this.isTrophyLimit = this.roomReward.room >= this.roomReward.config.roomLimit
+          const roomLimit = get(classroom, 'roomProperties.reward.config.roomLimit', {})
+          this.isTrophyLimit = this.roomReward.room >= roomLimit
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
           if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
             clearTimeout(this.timer)

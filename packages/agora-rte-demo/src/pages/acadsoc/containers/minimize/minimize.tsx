@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import 'animate.css'
 import styles from './style.module.scss'
 import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
 import { debounce } from '@/utils/utils';
@@ -12,13 +11,6 @@ export const MinimizeTeacher = observer(() => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    // t.animation = ''
-    // t.animationMinimize = 'animate__animated animate__backOutUp'
-    // setTimeout(() => {
-    //   t.isHidden = false
-    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    //   acadsocStore.unwind.splice(i, 1)
-    // }, 1000)
     t.isHidden = false
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
@@ -49,13 +41,6 @@ export const MinimizeStudent = observer(() => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    // t.animation = ''
-    // t.animationMinimize = 'animate__animated animate__backOutUp'
-    // setTimeout(() => {
-    //   t.isHidden = false
-    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    //   acadsocStore.unwind.splice(i, 1)
-    // }, 1000)
     t.isHidden = false
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
     acadsocStore.unwind.splice(i, 1)
@@ -89,13 +74,6 @@ export const MinimizeChat = observer((props: ChatProps) => {
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
-    // t.animation = ''
-    // t.animationMinimize = 'animate__animated animate__backOutUp'
-    // setTimeout(() => {
-    //   t.isHidden = false
-    //   let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    //   acadsocStore.unwind.splice(i, 1)
-    // }, 1000)
     t.isHidden = false
     acadsocStore.resetUnreadMessageCount()
     let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )

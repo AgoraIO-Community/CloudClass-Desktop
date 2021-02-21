@@ -101,12 +101,6 @@ export const ChatView = observer(() => {
 
   const chatMinimize = () => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
-    // t.animationMinimize = ''
-    // t.animation = 'animate__animated animate__backOutDown'
-    // setTimeout(() => {
-    //   t.isHidden = true
-    //   acadsocStore.unwind.push(t)
-    // }, 1000)
     t.isHidden = true
     acadsocStore.unwind.push(t)
     acadsocStore.isBespread = false
@@ -133,14 +127,14 @@ export const ChatView = observer(() => {
       bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
-      isBespread={acadsocStore.isBespread}
+      isBespread={true}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
       onPullFresh={onPullFresh}
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
-      onClickMinimize={debounce(chatMinimize, 500)}
+      onClickMinimize={debounce(chatMinimize, 100)}
       // onInputText={onInputText}
       placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}
