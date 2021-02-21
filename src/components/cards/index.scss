@@ -1,0 +1,35 @@
+.cards-btn-group {
+  .confirm {
+    box-shadow: none;
+    width:90px;
+    height:34px;
+    background:#44A2FC;
+    border-radius:17px;
+    font-size:14px;
+    font-weight:400;
+    color:#ffffff;
+    line-height:20px;
+    &:hover {
+      background: #82C2FF;
+      box-shadow: none;
+    }
+  }
+  .cancel {
+    box-shadow: none;
+    width:90px;
+    height:34px;
+    background:#ffffff;
+    border-radius:17px;
+    font-size:14px;
+    font-weight:400;
+    color:#44A2FC;
+    line-height:20px;
+    border: 1px solid #44A2FC;
+    &:hover {
+      box-shadow: none;
+      background: #ffffff;
+      color: #7CBFFF;
+      border: 1px solid #7CBFFF;
+    }
+  }
+}

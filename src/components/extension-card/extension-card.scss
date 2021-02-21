@@ -1,0 +1,25 @@
+.extension-card {
+  margin: -50px 50px;
+  .paperCard {
+    width: 114px;
+    // height: 91px;
+    background: #FFFFFF;
+    .group-item {
+      width: 28px;
+      height: 28px;
+      margin-right: 5px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url('./assets/icon-group.png');
+    }
+    .hand-item {
+      width: 28px;
+      height: 28px;
+      margin-right: 5px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url('./assets/icon-hand.png');
+    }
+  }
+  
+}

@@ -1,0 +1,116 @@
+.video-marquee {
+  scroll-behavior: smooth;
+  display: flex;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.video-marquee-container {
+  .group {
+    min-width: auto;
+    .video-marquee-mask {
+      margin: 0;
+    }
+  }
+}
+
+.small-class-room .agora-video-view {
+  min-width: 187px;
+  min-height: 106px;
+  max-width: 187px;
+  max-height: 106px;
+}
+
+.small-class-room .agora-video-view .teacher-placeholder,
+.small-class-room .agora-video-view .student-placeholder {
+  display: flex;
+  top: 0;
+  width: 100%;
+  height: 80%;
+}
+
+.small-class-room {
+  min-width: 990px;
+  padding-top: 5px;
+  // > .agora-video-view {
+  //   min-width: 187px;
+  //   min-height: 106px;
+  //   max-width: 187px;
+  //   max-height: 106px;
+  // }
+}
+
+.video-marquee-container {
+  display: flex;
+  background: #F5F7F8;
+  // max-height: 122px;
+  // min-height: 122px;
+  align-items: flex-start;
+  // padding-top: 5px;
+
+  .agora-video-view {
+    // min-width: 187px;
+    // min-height: 106px;
+    // max-width: 187px;
+    // max-height: 106px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    .student-placeholder,
+    .teacher-placeholder {
+      flex: 1;
+      background-color: #DBE2E5;
+      justify-content: center;
+      box-sizing: border-box;
+      background-size: 200px;
+      // min-width: 187px;
+      // min-height: 82px;
+      // max-width: 187px;
+      // max-height: 82px;
+      border-radius: 2px;
+      box-sizing: border-box;
+      position: absolute;
+    }
+    .student-placeholder::before,
+    .teacher-placeholder::before {
+      background-size: 63px;
+    }
+  }
+}
+
+
+.video-marquee-mask {
+  overflow: hidden;
+  position: relative;
+  // margin-right: 10px;
+  .scroll-btn-group {
+    position: absolute;
+    left: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    .icon {
+      &.icon-left::after {
+        left: 10px;
+        position: relative;
+      }
+      &.icon-right::after {
+        right: 10px;
+        position: relative;
+      }
+      &::after {
+        border-radius: 15px;
+        background-color: rgba($color: #000000, $alpha: 0.4);
+      }
+      &:hover::after {
+        background-color: rgba($color: #000000, $alpha: 0.6);
+      }
+      display: flex;
+      width: 24px;
+      height: 24px;
+      z-index: 3;
+    }
+  }
+}

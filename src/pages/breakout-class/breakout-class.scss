@@ -1,0 +1,93 @@
+.room-container {
+  display: flex;
+  flex: 1;
+}
+.super-small-class {
+  .tab-teacher {
+    .MuiTab-textColorInherit {
+      color: #5ca2f5;
+    }
+    .PrivateTabIndicator-colorPrimary-3 {
+      background-color: #5ca2f5;
+    }
+    .PrivateTabIndicator-colorPrimary-5 {
+      background-color: #5ca2f5;
+    }
+    .MuiTab-root {
+      min-width: 135px;
+    }
+  }
+
+  .tab-student {
+    .MuiTab-textColorInherit {
+      color: #5ca2f5;
+    }
+    .PrivateTabIndicator-colorPrimary-5 {
+      background-color: #5ca2f5;
+    }
+    .MuiTab-root {
+      min-width: 135px;
+    }
+  }
+
+  .live-container {
+    .agora-video-view {
+      min-width: 189px;
+      min-height: 126px;
+      margin-right: 1rem;
+    }
+    .back-button {
+      padding: 4px;
+      display: flex;
+      box-sizing: border-box;
+      align-items: center;
+      height: 42px;
+      background: #fff;
+      box-shadow: 0 2px 4px 0 rgba(61, 30, 30, 0.1);
+      border-radius: 6px;
+      border: 1px solid #dbe2e5;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 15;
+      color: #44A2FC;
+      .item {
+        cursor: pointer;
+        display: flex;
+        margin: 2px;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  .super-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    bottom: 30px;
+    left: 10px;
+  }
+  .super-container {
+    .small-video {
+      display: flex;
+      .agora-video-view {
+        min-width: 189px;
+        min-height: 126px;
+      }
+      .agora-video-view .student-placeholder {
+        width: 100%;
+        height: 110px;
+        min-width: auto;
+        min-height: auto;
+      }
+      .agora-video-view .student-placeholder::before {
+        flex: 1 1;
+        background-color: #DBE2E5;
+        justify-content: center;
+        box-sizing: border-box;
+        background-size: 93px;
+      }
+    }   
+  }
+}

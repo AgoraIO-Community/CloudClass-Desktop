@@ -1,0 +1,124 @@
+.apply-user-list {
+  position: absolute;
+  bottom: 0px;
+  background: white;
+  left: 77px;
+  z-index: 99999;
+
+  .MuiListItem-button {
+    width: 118px;
+    height: 38px;
+    padding: 9px 15px;
+    display: flex;
+    justify-content: space-between;
+    &:hover {
+      .icons-lecture-board-inactive::after {
+        width: 100%;
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: ' ';
+        background-image: url('../../assets/icon-lecture-board-active.png');
+      }
+    }
+  }
+}
+
+.student-apply {
+  position: relative;
+}
+
+.tick-view {
+  background: 'white';
+  // content: '3';
+  position: absolute;
+  display: 'block';
+  text-align: 'center';
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+}
+
+.infinity-shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes move {
+  100% {
+    transform: translate3d(0, 0, -1000px);
+  }
+}
+.bubble-wrap {
+  margin: 0 auto;
+  width: 500px;
+  height: 500px;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  perspective: 600px;
+}
+.bubble {
+  position: absolute;
+  background: black;
+  opacity: .7;
+  border-radius: 50%;
+  animation: move 3s infinite;
+  
+}
+
+@for $i from 1 through 100 {
+  .bubble:nth-child(#{$i}){
+     $size: random(30)+px;
+     height: $size;
+     width: $size;
+     animation-delay: -$i * .2s;
+     transform: translate3d( (random(1000) * 1px),  (random(1000) * 1px), (random(2000) * 1px));
+     background: hsl( random(360) , 70%, 50%);
+  }
+ 
+}
+.tick-view ~ .active_hands_up {
+  // width: 1000px;
+  // height: 1025px;
+  // position: absolute;
+  // top: -25%;
+  // left: 50%;
+  // margin-left: -500px;
+  // margin-top: -500px;
+  // border-radius: 35%;
+  background: rgba(255, 255, 255, .75);
+  animation: wave 15s infinite linear;
+}
