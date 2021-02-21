@@ -6,23 +6,16 @@ import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { SignalBar } from './signal/signal'
-import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
 
-const userSignalStatus = [{
-  userName: '1111',
-  userUid: '111',
-  signalLevel: 2,
-  delay: 100,
-  packagesLost: 11
-}]
 
 const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
-  const startTime: string = acadsocStore.classTimeText + acadsocStore.shiftClassTime
+  const startTime: string = acadsocStore.classTimeText
   return (
-    <StartView text={startTime} isEnd={acadsocStore.isRed}/>
+    <StartView text={startTime} isEnd={acadsocStore.isClassroomDelayed}/>
   )
 })
 
@@ -44,7 +37,7 @@ const AssistantMenu = observer(() => {
       userUid: item.userUuid,
       signalLevel: signalLevel(packagesLost),
       delay: receiveDelay ? receiveDelay : '-',
-      packagesLost: packagesLost ? packagesLost : '-'
+      packagesLost: packagesLost 
     }
   })
   return (
@@ -102,9 +95,42 @@ export const Nav = observer(() => {
 const onRefresh = () => {
   window.location.reload()
 }
-const onCustomerService = () => {
-  console.log('click onCustomerService')
+
+const current = {
+  lock: false
 }
+
+const onCustomerService = async () => {
+
+  // const handleUpload = async () => {
+    // if (current.lock) return
+    try {
+      // current.lock = true
+      const id = await EduManager.uploadLog('test')
+      dialogManager.confirm({
+        title: t(`aclass.upload_log_success`),
+        text: `id: ${id}`,
+        showConfirm: true,
+        showCancel: true,
+        confirmText: t(`aclass.confirm_close`),
+        visible: true,
+        cancelText: t(`aclass.cancel_close`),
+        onConfirm: () => {
+        },
+        onCancel: () => {
+        }
+      })
+      // current.lock = false
+    } catch (err) {
+      console.log(err)
+      throw err
+      // current.lock = false
+    }
+  // }
+
+  // await handleUpload()
+}
+
 const onEquipmentDetection = () => {
   console.log('click onEquipmentDetection')
 }

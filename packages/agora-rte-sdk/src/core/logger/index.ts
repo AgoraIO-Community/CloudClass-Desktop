@@ -147,6 +147,10 @@ export class EduLogger {
     return ids.join("#")
   }
 
+  private async uploadCefLog() {
+
+  }
+
   static async uploadLog(roomId: string) {
     console.log('[LOG] [upload] roomId: ', roomId)
     let logs: any[] = []
@@ -164,6 +168,22 @@ export class EduLogger {
       roomId,
       file,
     )
+
+    // TODO: check cef bridge
+    //@ts-ignore
+    // if (window.agoraBridge && window.getCachePath) {
+    //   new Promise(resolve => {
+    //     window.getCachePath(function(path: string){
+    //       console.log(path);
+    //       // xxx.setLogFile(path+'agorasdk.log');
+    //       fetch('https://convertcdn.netless.link/agorasdk.log');
+    //     });
+
+    //   await this.logUploader.uploadLogFile(
+    //     roomId,
+    //     cefLog
+    //   )
+    // }
     await db.readAndDeleteBy(now)
     EduLogger.info(`完成日志上传，文件名: ${file.name}, 上传时间: ${now}, 日志上传，res: ${JSON.stringify(res)}`)
     return res;

@@ -77,7 +77,7 @@ export class ReportService extends ApiBase {
         if (!!this.sid && !!this.rid && !!this.appId && !!this.rtmUid) {
             return true
         }
-        throw new GenericErrorWrapper(new Error(`missing params: sid: ${this.sid}, rid: ${this.rid}, appId: ${this.appId}, uid: ${this.rtmUid}`))
+        throw GenericErrorWrapper(new Error(`missing params: sid: ${this.sid}, rid: ${this.rid}, appId: ${this.appId}, uid: ${this.rtmUid}`))
     }
 
     updateConnectionState(state:string) {
@@ -145,7 +145,7 @@ export class ReportService extends ApiBase {
         let resp: any;
         resp = await HttpClient(`${this.prefix}${path}`, opts);
         if (resp.code !== "0") {
-          throw new GenericErrorWrapper({message: resp.message || resp.msg})
+          throw GenericErrorWrapper({message: resp.message || resp.msg})
         }
         return resp
     }

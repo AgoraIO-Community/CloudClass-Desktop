@@ -3,6 +3,8 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "notice": "Notice",
+    "upload_log_success": "upload log success",
     "sure_close_board": "Are you sure close?",
     "confirm_close": "sure",
     "cancel_close": "cancel",
@@ -60,6 +62,8 @@ const en = {
       "cameraTestFailed": "Camera not work",
       "microphoneTestFailed": "Microphone not work",
       "speakerTestFailed": "Speaker not work",
+      "cancel": "Cancel",
+      "reload": "Reload"
     }
   },
   "extension": {
@@ -210,7 +214,9 @@ const en = {
     'not_found': 'Page Not Found',
     'components': {
       'paramsEmpty': 'params：{reason} can`t be empty',
-    }
+    },
+    'class_end': 'The classroom is end.',
+    'unknown': 'Unknown error occured.'
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',
@@ -304,6 +310,7 @@ const en = {
     'failed_to_initiate_a_raise_of_hand_application': 'Failed to initiate a raise of hand application',
     'failed_to_end_the_call': 'Failed to end the call',
     'failed_to_join_board': 'Failed to join board',
+    'classroom_remote_join': 'Account was logged in from remote device, you have left the classroom',
     'time_interval_between_start': `There are only {reason} mins classroom will be started`,
     'time_interval_between_end': `The class will be over in {reason} minutes`,
     'class_is_end': `Class is over. The classroom will close in {reason} minutes`,
@@ -343,8 +350,8 @@ const en = {
     'class_end': 'Class end',
     'class_start': 'Class start',
     'back': 'Back',
-    'class_time_text': 'The classroom will be started: ',
-    'start_in': 'Start in',
+    'to_start_in': 'The classroom will be started: ',
+    'started_elapse': 'Start in',
     'minutes': 'min',
     'seconds': 's',
     'signal_good': 'Good',

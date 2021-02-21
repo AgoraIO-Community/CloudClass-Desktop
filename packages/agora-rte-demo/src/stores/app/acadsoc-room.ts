@@ -29,12 +29,10 @@ import { get } from 'lodash';
 import {EduClassroomStateEnum} from '@/stores/app/scene';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration'
 
-export enum EduClassroomCountdownEnum {
-  first = 5,
-  second = 3,
-  third = 1,
-}
+dayjs.extend(duration)
 
 type ProcessType = {
   reward: number,
@@ -52,6 +50,8 @@ type AcadsocRoomProperties = {
     state: number,
     roomType: number,
   },
+  reward: RoomRewardType,
+  state: number,
   students: Record<string, ProcessType>,
 }
 
@@ -71,6 +71,12 @@ type RoomRewardType = {
   config: {
     roomLimit: number,
   }
+}
+
+type ClassroomScheduleType = {
+  startTime: number,
+  duration: number,
+  closeDelay: number
 }
 
 export enum acadsocRoomPropertiesChangeCause {
@@ -125,6 +131,30 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.history = history
   }
 
+  resetRoomProperties() {
+    this.roomProperties = {
+      board: {
+        info: {
+          boardAppId: '',
+          boardId: '',
+          boardToken: '',
+        }
+      },
+      record: {
+        state: 0,
+        roomType: 0,
+      },
+      state: 0,
+      reward: {
+        room: 0,
+        config: {
+          roomLimit: 0
+        }
+      },
+      students: {},
+    }
+  }
+
   @observable
   roomProperties: AcadsocRoomProperties = {
     board: {
@@ -138,15 +168,14 @@ export class AcadsocRoomStore extends SimpleInterval {
       state: 0,
       roomType: 0,
     },
+    state: 0,
+    reward: {
+      room: 0,
+      config: {
+        roomLimit: 0
+      }
+    },
     students: {},
-  }
-
-  @observable
-  roomReward: RoomRewardType = {
-    room: 0,
-    config: {
-      roomLimit: 0,
-    }
   }
 
   @observable
@@ -166,60 +195,82 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   time: number = 0
+
+  @computed
+  get calibratedTime(): number {
+    return this.time + this.timeShift
+  }
   
   @observable
   notice?: any = undefined
 
   @observable
-  classState: number = 0
-
-  @observable
   timeShift: number = 0
 
   @observable
-  startTime: number = 0   // 课程开始时间
+  classroomSchedule?: ClassroomScheduleType
 
-  @observable
-  duration: number = 0   // 课程持续时间
+  @computed
+  get studentsReward() {
+    return get(this.roomProperties, 'students', {})
+  }
 
-  @observable
-  closeDelay: number = 0  // 教室延长关闭时间
+  @computed
+  get roomReward() {
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+  }
 
-  @observable
-  timeToStart: number = 0   // 距离开始还剩时间
+  @computed
+  get classTimeText() {
+    let timeText = ""
+    const format = `mm${t('nav.minutes')}ss${t('nav.seconds')}`
+    const placeholder = `--${t('nav.minutes')}--${t('nav.seconds')}`
+    const duration = this.classTimeDuration
 
-  @observable
-  startedTime: number = 0   // 已经开始了多长时间
+    // duration is always >= 0, if it's smaller than 0, display placeholder
+    if(duration < 0) {
+      timeText = `${t('nav.to_start_in')}${placeholder}`
+      return timeText
+    }
 
-  @observable
-  studentsReward: Record<string, number> = {}
+    switch(this.sceneStore.classState){
+      case EduClassroomStateEnum.beforeStart: 
+        timeText = `${t('nav.to_start_in')}${dayjs.duration(duration).format(format)}`
+        break;
+      case EduClassroomStateEnum.start:
+      case EduClassroomStateEnum.end:
+        timeText = `${t('nav.started_elapse')}${dayjs.duration(duration).format(format)}`
+        break;
+    }
+    return timeText
+  }
+
+  @computed
+  get classTimeDuration():number {
+    let duration = -1
+    if(this.classroomSchedule){
+      switch(this.sceneStore.classState){
+        case EduClassroomStateEnum.beforeStart: 
+          duration = Math.max(this.classroomSchedule.startTime - this.calibratedTime, 0)
+          break;
+        case EduClassroomStateEnum.start:
+        case EduClassroomStateEnum.end:
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0)
+          break;
+      }
+    }
+    return duration
+  }
+
+  @computed
+  get isClassroomDelayed() {
+    return this.sceneStore.classState === EduClassroomStateEnum.end
+  }
 
   @observable
   showTranslate: boolean = false
 
-  @observable
-  disableTrophy: boolean = false
-
-  @observable
-  translateText?: string = ''
-
-  @observable
-  minutes: number = 0
-
-  @observable
-  seconds: number = 0
-
-  @observable
-  classTime: number = 0
-
-  @observable
-  classTimeText: string = ''
-
-  @observable
   timer: any = null
-
-  @observable
-  additionalState: number = 0
 
   @observable
   showTrophyAnimation: boolean = false
@@ -227,8 +278,13 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   trophyNumber: number = 0
 
-  @observable
-  isTrophyLimit: boolean = false
+  @computed
+  get isTrophyLimit(): boolean {
+    if (this.roomReward.room >= this.roomReward.config.roomLimit) {
+      return true
+    }
+    return false
+  }
 
   @observable
   unwind: MinimizeType[] = []  // 最小化
@@ -290,6 +346,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   reset() {
     this.appStore.resetStates()
     this.sceneStore.reset()
+    this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
     this.messages = []
@@ -297,10 +354,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.roomJoined = false
     this.time = 0
     this.notice = undefined
-    this.minutes = 0
-    this.seconds = 0
-    this.timeToStart = 0
-    this.startedTime = 0
+    this.classroomSchedule = undefined
     clearTimeout(this.timer)
   }
 
@@ -350,7 +404,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       }
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       return{
         id: this.userUuid,
@@ -394,7 +448,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       return historyMessage
     } catch (err) {
       // this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -410,7 +464,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
@@ -428,85 +482,59 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
   }
 
+  // @action
+  // showTimerToast(time: number) {
+  //   if(this.sceneStore.classState === EduClassroomStateEnum.beforeStart) {
+  //     this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: time}))
+  //   }
+  //   if(this.sceneStore.classState === EduClassroomStateEnum.start) {
+  //     this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: time}))
+  //   }
+  // }
+
   @action
-  showTimerToast(time: number) {
-    if(this.sceneStore.classState === EduClassroomStateEnum.beforeStart) {
-      this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: time}))
-    }
-    if(this.sceneStore.classState === EduClassroomStateEnum.start) {
-      this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: time}))
+  tickClassroom() {
+    // update time
+    this.time = dayjs().valueOf()
+    this.checkClassroomNotification()
+    clearTimeout(this.timer)
+    this.timer = setTimeout(() => {this.tickClassroom()}, 1000)
+  }
+
+  checkClassroomNotification() {
+    if(this.classroomSchedule) {
+      let duration = dayjs.duration(this.classTimeDuration)
+      let reverseDurationToEnd = dayjs.duration(this.classroomSchedule.duration - this.classTimeDuration)
+      let reverseDurationToClose = dayjs.duration(this.classroomSchedule.duration + this.classroomSchedule.closeDelay - this.classTimeDuration)
+      switch(this.sceneStore.classState){
+        case EduClassroomStateEnum.beforeStart:
+          [5, 3, 1].forEach(min => {
+            if(duration.minutes() === min && duration.seconds() === 0) {
+              this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: min}))
+            }
+          })
+          break;
+        case EduClassroomStateEnum.start:
+          [5, 1].forEach(min => {
+            if(reverseDurationToEnd.minutes() === min && reverseDurationToEnd.seconds() === 0) {
+              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: min}))
+            }
+          })
+          break;
+        case EduClassroomStateEnum.end:
+          if(reverseDurationToClose.minutes() === 1 && reverseDurationToClose.seconds() === 0) {
+            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: 1}))
+          }
+          break;
+      }
     }
   }
 
-  @action
-  getTimer(time: number, step: number) {
-    this.timer && clearTimeout(this.timer)
-    this.timer = setInterval(async() => {
-      if(this.minutes === this.secondsToMinutes(this.duration + this.closeDelay).minutes && step === 1) {
-        this.appStore.isNotInvisible && dialogManager.confirm({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
-          },
-          onCancel: () => {
-          }
-        })
-        await this.appStore.releaseRoom()
-        clearTimeout(this.timer)
-        return
-      } else if(this.minutes === 0 && this.seconds === 1 && step === -1) {
-        this.seconds = 0
-        clearTimeout(this.timer)
-        return
-      } else {
-        time += step
-        this.seconds += step
-      }
-      // 正在上课 正计时
-      if(step === 1 && time >= 59) {
-        this.minutes += step
-        // 课程未结束
-        let classIsStart:number = this.secondsToMinutes(this.duration).minutes
-        if(this.minutes === (classIsStart - 5)) {
-          this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: 5}))
-        }
-        if(this.minutes === (classIsStart - 1)) {
-          this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: 1}))
-        }
-        // 课程结束
-        if(this.minutes === classIsStart) {
-          this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.secondsToMinutes(this.closeDelay).minutes}))
-        }
-        // 课程结束 教室未关闭提示
-        let classIsEnd:number = this.secondsToMinutes(this.duration + this.closeDelay).minutes
-        if(this.minutes === (classIsEnd - 1)) {
-          this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: 1}))
-        }
-        this.seconds = 0 
-        this.getTimer(-1, step)
-      }
-      // 倒计时
-      if(step === -1 && time <= 0) {
-        this.minutes += step
-        if([1, 3, 5].includes(this.minutes)) {
-          this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: this.minutes}))
-        }
-        this.seconds = 59
-        this.getTimer(60, step)
-      }
-    }, 1000)
-  }
 
   @computed
   get roomInfo() {
@@ -515,48 +543,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   @action 
   resetUnreadMessageCount(){
     this.unreadMessageCount = 0
-  }
-  @action
-  timeCalibration(time: number) {
-    // 误差小于一秒 忽略
-    if((this.timeShift / 1000) < 1) {
-      return 0
-    } else {
-      return time - new Date().getTime()
-    }
-  }
-
-  // ms 转分秒 首次获取时间
-  @action
-  msToMinutes(time: number) {
-    return {
-      minutes: parseInt(String(time / (60 * 1000))),
-      seconds: parseInt(String((time % (60 * 1000)) / 1000))
-    }
-  }
-
-  @action
-  secondsToMinutes(time: number) {
-    return {
-      minutes: parseInt(String(time / 60)),
-      seconds: parseInt(String(time % 60))
-    }
-  }  
-
-  @action
-  getStartedTime() {
-    this.startedTime = new Date().getTime() - this.startTime + this.timeShift
-  }
-
-  @computed
-  get shiftClassTime(): string {
-    let minutes:any = this.minutes < 10? '0'+this.minutes : this.minutes
-    let seconds:any = this.seconds < 10? '0'+this.seconds : this.seconds
-    if(isNaN(minutes) || isNaN(seconds)) {
-      minutes = 0
-      seconds = 0
-    }
-    return minutes + t('nav.minutes') + seconds + t('nav.seconds')
   }
 
   @computed
@@ -567,6 +553,11 @@ export class AcadsocRoomStore extends SimpleInterval {
   isBigClassStudent(): boolean {
     const userRole = this.roomInfo.userRole
     return +this.roomInfo.roomType === 2 && userRole === EduRoleTypeEnum.student
+  }
+  
+
+  updateRewardInfo() {
+    
   }
 
   get eduManager() {
@@ -627,51 +618,14 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
       console.log('***** checkInResult', checkInResult)
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
-      this.additionalState = checkInResult.state
-      this.timeShift = this.timeCalibration(checkInResult.ts)
-      this.startTime = checkInResult.startTime
-      this.duration = checkInResult.duration
-      this.closeDelay = checkInResult.closeDelay
-      // 课程开始之前
-      if(checkInResult.state === EduClassroomStateEnum.beforeStart) {
-        this.classTimeText = t('nav.class_time_text')
-        this.timeToStart = this.startTime - new Date().getTime() + this.timeShift
-        this.minutes = this.msToMinutes(this.timeToStart).minutes
-        this.seconds = this.msToMinutes(this.timeToStart).seconds
-        this.getTimer(this.seconds, -1)
+      this.timeShift = checkInResult.ts - dayjs().valueOf()
+      this.classroomSchedule = {
+        startTime: checkInResult.startTime,
+        duration: checkInResult.duration,
+        closeDelay: checkInResult.closeDelay
       }
-      // 正在上课
-      if(checkInResult.state === EduClassroomStateEnum.start) {
-        this.classTimeText = t('nav.start_in')
-        this.getStartedTime()  // 获取初始进入教室时间值
-        this.minutes = this.msToMinutes(this.startedTime).minutes
-        this.seconds = this.msToMinutes(this.startedTime).seconds
-        this.getTimer(this.seconds, 1)
-      }
-      // 课程结束
-      if (checkInResult.state === EduClassroomStateEnum.end) {
-        try {
-          await this.appStore.releaseRoom()
-        } catch (err) {
-          EduLogger.info(" appStore.releaseRoom ", JSON.stringify(err))
-        }
-        this.appStore.isNotInvisible && dialogManager.show({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
-          },
-          onCancel: () => {
-          }
-        })
-        this.appStore.uiStore.stopLoading()
-        return
-      }
+      this.tickClassroom()
+
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
@@ -679,7 +633,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {
-        const error = new GenericErrorWrapper(err)
+        const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
         this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
       })
@@ -719,7 +673,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             BizLogger.info("[demo] local-stream-removed emit done", evt)
           } catch (err) {
             BizLogger.error(`[demo] local-stream-removed async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -738,6 +692,9 @@ export class AcadsocRoomStore extends SimpleInterval {
           const tag = uuidv4()
           BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `, JSON.stringify(evt))
           if (evt.type === 'main') {
+            if (this.isAssistant) {
+              return
+            }
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             if (localStream && localStream.state !== 0) {
@@ -860,7 +817,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         try {
           return JSON.parse(str)
         } catch(err) {
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
           return null
         }
@@ -892,7 +849,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_success'))
                 } catch (err) {
                   this.appStore.uiStore.addToast(t('toast.co_video_close_failed'))
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.warn(`${error}`)
                 }
               }
@@ -912,7 +869,7 @@ export class AcadsocRoomStore extends SimpleInterval {
                   // }
                 } catch (err) {
                   // BizLogger.warn('published failed', err) 
-                  const error = new GenericErrorWrapper(err)
+                  const error = GenericErrorWrapper(err)
                   BizLogger.error(`published failed:${error}`)
                   throw error
                 }
@@ -921,7 +878,7 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           } catch (err) {
             BizLogger.error(`[demo] user-message async handler failed`)
-            const error = new GenericErrorWrapper(err)
+            const error = GenericErrorWrapper(err)
             BizLogger.error(`${error}`)
           }
         })
@@ -930,24 +887,25 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           BizLogger.info("## classroom ##: ", JSON.stringify(classroom))
-          const classState = get(classroom, 'roomStatus.courseState')
-          if (classState === EduClassroomStateEnum.end) {
-            // await this.appStore.releaseRoom()
-            // this.appStore.isNotInvisible && dialogManager.confirm({
-            //   title: t(`aclass.class_end`),
-            //   text: t(`aclass.leave_room`),
-            //   showConfirm: true,
-            //   showCancel: true,
-            //   confirmText: t('aclass.confirm.yes'),
-            //   visible: true,
-            //   cancelText: t('aclass.confirm.no'),
-            //   onConfirm: () => {
-            //   },
-            //   onClose: () => {
-            //   }
-            // })
-            // return
-          }
+          this.roomProperties = get(classroom, 'roomProperties')
+          const newClassState = get(classroom, 'roomStatus.courseState')
+          // if (classState === EduClassroomStateEnum.end) {
+          //   await this.appStore.releaseRoom()
+          //   this.appStore.isNotInvisible && dialogManager.confirm({
+          //     title: t(`aclass.class_end`),
+          //     text: t(`aclass.leave_room`),
+          //     showConfirm: true,
+          //     showCancel: true,
+          //     confirmText: t('aclass.confirm.yes'),
+          //     visible: true,
+          //     cancelText: t('aclass.confirm.no'),
+          //     onConfirm: () => {
+          //     },
+          //     onClose: () => {
+          //     }
+          //   })
+          //   return
+          // }
         
           const record = get(classroom, 'roomProperties.record')
           if (record) {
@@ -969,8 +927,9 @@ export class AcadsocRoomStore extends SimpleInterval {
               }
             }
           }
-          const newClassState = classroom.roomStatus.courseState
-          if (this.sceneStore.classState !== newClassState) {
+          
+          // update scene store
+          if (newClassState && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState
             if (this.sceneStore.classState === 1) {
               this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0)
@@ -983,29 +942,10 @@ export class AcadsocRoomStore extends SimpleInterval {
               this.delInterval('timer')
             }
           }
+
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
-          this.disableTrophy = this.roomInfo.userRole !== EduRoleTypeEnum.teacher
-          this.studentsReward = get(classroom, 'roomProperties.students', {})
-          this.roomReward = get(classroom, 'roomProperties.reward', {})
-          const roomLimit = get(classroom, 'roomProperties.reward.config.roomLimit', {})
-          this.isTrophyLimit = this.roomReward.room >= roomLimit
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
-          if(this.minutes === 0 && this.seconds === 0 && this.additionalState === 0) {
-            clearTimeout(this.timer)
-          }
-          if(this.sceneStore.classState === 1 && this.additionalState === 0) {
-            clearTimeout(this.timer)
-            this.classTimeText = t('nav.start_in')
-            // 上课后 初始化计时
-            this.minutes = 0
-            this.seconds = 0
-            this.getTimer(this.seconds, 1)
-          }
-          if(this.sceneStore.classState === 2) {
-            console.log('提示：课程已结束')
-            this.isRed = true
-          }
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
@@ -1085,12 +1025,16 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
   
       const localStreamData = roomManager.data.localStreamData
+
+      const canPublishRTC = (localStreamData: any): boolean => {
+        const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student]
+        if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+          return true
+        }
+        return false
+      }
   
-      let canPublish = this.roomInfo.userRole === EduRoleTypeEnum.teacher ||
-         localStreamData && !!(+localStreamData.state) ||
-         (this.roomInfo.userRole === EduRoleTypeEnum.student && +this.roomInfo.roomType !== 2)
-  
-      if (canPublish) {
+      if (canPublishRTC(localStreamData)) {
   
         const localStreamData = roomManager.data.localStreamData
   
@@ -1125,12 +1069,15 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         } catch (err) {
           this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
-          const error = new GenericErrorWrapper(err)
+          const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
       }
   
-      const roomProperties = roomManager.getClassroomInfo().roomProperties
+      const roomProperties = roomManager.getClassroomInfo().roomProperties as any
+
+      //@ts-ignore
+      this.roomProperties = roomProperties
     
       this.sceneStore.userList = roomManager.getFullUserList()
       this.sceneStore.streamList = roomManager.getFullStreamList()
@@ -1146,9 +1093,16 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.roomJoined = true
     } catch (err) {
       this.appStore.uiStore.stopLoading()
-      // throw new GenericEerr
-      throw new GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err)
     }
+  }
+
+  @computed
+  get isAssistant() {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.assistant) {
+      return true
+    }
+    return false
   }
 
   @action
@@ -1204,7 +1158,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
         })
         if (res === 0) {
-          throw new GenericErrorWrapper('callApply failure')
+          throw GenericErrorWrapper('callApply failure')
         }
         // await this.roomManager?.userService.sendCoVideoApply(teacher)
       }
@@ -1264,7 +1218,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       // if (res === 0) {
-      //   throw new GenericErrorWrapper('callApply failure')
+      //   throw GenericErrorWrapper('callApply failure')
       // }
       // await this.roomManager?.userService.rejectCoVideoApply(user)
     }
@@ -1284,7 +1238,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
       if (res === 0) {
-        throw new GenericErrorWrapper('callApply failure')
+        throw GenericErrorWrapper('callApply failure')
       }
       await this.roomManager?.userService.inviteStreamBy({
         roomUuid: this.sceneStore.roomUuid,
@@ -1309,7 +1263,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.appStore.uiStore.updateLastSeqId(0)
     } catch (err) {
       this.reset()
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     }
   }
@@ -1338,7 +1292,8 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get signalLevel(): number {
-    if (this.appStore.mediaStore.networkQuality === 'excellent') {
+    const best = ['good', 'excellent']
+    if (best.includes(this.appStore.mediaStore.networkQuality)) {
       return 3
     }
 

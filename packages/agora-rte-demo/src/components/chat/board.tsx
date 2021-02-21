@@ -1,7 +1,6 @@
 import React from 'react';
 import {ChatPanel, ChatPanelProps} from './panel';
 import { ChatMessage } from '@/utils/types';
-import { observer } from 'mobx-react'
 
 interface ChatBoardProps extends ChatPanelProps {
   name?: string

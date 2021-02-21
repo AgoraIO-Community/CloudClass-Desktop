@@ -6,7 +6,36 @@ import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
 import { t } from '@/i18n'
-import { debounce } from '@/utils/utils';
+import { debounce } from '@/utils/utils'
+
+const shouldDisable = (resource: string, isLocal: boolean, role: EduRoleTypeEnum, streamUuid: string) => { 
+  if (!streamUuid) return true
+  if (resource === 'teacher') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'student') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'trophy') {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'board') {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  return true
+}
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -37,7 +66,8 @@ export const TeacherVideo = observer(() => {
   const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
   const roomInfo = sceneStore.roomInfo
-  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = shouldDisable('teacher', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -76,7 +106,7 @@ export const TeacherVideo = observer(() => {
         resizable={false}
         showBoardIcon={false}
         disableBoard={true}
-        disableTrophy={disableButton}
+        disableTrophy={disableTrophy}
         trophyNumber={0}
         visibleTrophy={false}
         role={"teacher"}
@@ -116,7 +146,9 @@ export const StudentVideo = observer(() => {
 
   const isTeacher = acadsocStore.isTeacher
 
-  const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = shouldDisable('student', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableBoard = shouldDisable('board', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -168,8 +200,8 @@ export const StudentVideo = observer(() => {
         minimal={true}
         resizable={false}
         showBoardIcon={true}
-        disableBoard={isTeacher ? false : true}
-        disableTrophy={disableButton}
+        disableBoard={disableBoard}
+        disableTrophy={disableTrophy}
         trophyNumber={trophyNumber}
         visibleTrophy={true}
         role={"student"}

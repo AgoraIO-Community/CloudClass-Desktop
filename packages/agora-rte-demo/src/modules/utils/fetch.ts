@@ -19,7 +19,7 @@ export async function Fetch (input: RequestInfo, init?: RequestInit, retryCount:
     }
 
     const rescueError = (error: any) => {
-      const err = new GenericErrorWrapper(error)
+      const err = GenericErrorWrapper(error)
       BizLogger.warn(`${err}`)
       throw err;
     }

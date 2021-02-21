@@ -1,3 +1,4 @@
+import { CourseWareItem } from './../../edu-sdk/index';
 // import { UploadService } from './../../modules/upload/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
@@ -299,7 +300,12 @@ export class AppStore {
       })
     }
 
-    this.eduManager.on('ConnectionStateChanged', ({newState}) => {
+    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
+
+      if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
+        await this.destroy()
+        this.acadsocStore.history.push('/')
+      }
       reportService.updateConnectionState(newState)
     })
 
@@ -549,7 +555,7 @@ export class AppStore {
         this.uiStore.addToast(t('toast.failed_to_enable_screen_sharing') + `${err.message}`)
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.error(`${error}`)
     } finally {
       this.waitingShare = false
@@ -572,6 +578,11 @@ export class AppStore {
         await this.showScreenShareWindowWithItems()
       }
     }
+  }
+
+  @action
+  updateCourseWareList(courseWareList: CourseWareItem[]) {
+    this.params.config.courseWareList = courseWareList
   }
 
   @action
@@ -651,7 +662,7 @@ export class AppStore {
       this.removeScreenShareWindow()
       this.sharing = true
     } catch (err) {
-      const error = new GenericErrorWrapper(err)
+      const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       // if (!this.mediaService.screenRenderer) {
       //   await this.mediaService.stopScreenShare()
@@ -689,7 +700,9 @@ export class AppStore {
   @action
   async releaseRoom() {
     try {
-      await this.roomStore.leave()
+      // if (this.roomStore.)
+      await this.acadsocStore.leave()
+      // await this.roomStore.leave()
       reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {
@@ -702,7 +715,7 @@ export class AppStore {
         this.params.listener(AgoraEduEvent.destroyed)
       }
       this.resetStates()
-      const exception = new GenericErrorWrapper(err)
+      const exception = GenericErrorWrapper(err)
       throw exception
     }
   }
