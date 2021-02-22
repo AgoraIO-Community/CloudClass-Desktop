@@ -2331,6 +2331,10 @@ static toolItems: IToolItem[] = [
         await this.putCourseResource(uuid)
         console.log("打开ppt成功")
       }
+      if (resource.type === "pdf") {
+        //TODO open pdf
+      }
+  
   
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
@@ -2345,7 +2349,7 @@ static toolItems: IToolItem[] = [
     }
   }
 
-  async handleUpload(payload: any) {
+  async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
       let res = await this.appStore.uploadService.handleUpload({
