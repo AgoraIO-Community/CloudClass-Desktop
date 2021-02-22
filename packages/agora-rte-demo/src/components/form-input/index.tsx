@@ -41,11 +41,11 @@ export const FormInput = (props: any) => {
 
   const onCompositionEnd = (evt: any) => {
     imeLock.current = false
-    updateValue(props.value.replace(/[^0-9a-zA-Z$]/g, '').slice(0, LIMIT_LENGTH))
+    updateValue(props.value.replace(/[^0-9a-zA-Z$_]/g, '').slice(0, LIMIT_LENGTH))
   }
 
   const onChange = (evt: any) => {
-    const val = evt.target.value.replace(/[^0-9a-zA-Z$]/g, '').slice(0, LIMIT_LENGTH)
+    const val = evt.target.value.replace(/[^0-9a-zA-Z$_]/g, '').slice(0, LIMIT_LENGTH)
     if (imeLock.current) {
     } else {
       evt.target.value = val

@@ -661,13 +661,7 @@ static toolItems: IToolItem[] = [
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
 
-    // this.resourceName = resourceName
-    // this.totalPage = currentSceneState.scenes.length
-    // this.currentPage = +currentSceneState.index
-
     const roomScenes = (this.room.state.globalState as any).roomScenes
-
-    EduLogger.info("缓存白板的翻页")
 
     this.room.setGlobalState({
       currentSceneInfo: {
@@ -1304,10 +1298,9 @@ static toolItems: IToolItem[] = [
       }
       case 'add': {
         const room = this.room
-        const newIndex = room.state.sceneState.index + 1
-        const scenePath = room.state.sceneState.scenePath
-        const currentPath = `/${pathName(scenePath)}`
         if (room.isWritable) {
+          room.setScenePath('/init')
+          const newIndex = room.state.sceneState.scenes.length
           room.putScenes("/", [{}], newIndex)
           // room.putScenes(currentPath, [{}], newIndex)
           room.setSceneIndex(newIndex)
@@ -2337,6 +2330,10 @@ static toolItems: IToolItem[] = [
         await this.putCourseResource(uuid)
         console.log("打开ppt成功")
       }
+      if (resource.type === "pdf") {
+        //TODO open pdf
+      }
+  
   
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
@@ -2351,7 +2348,7 @@ static toolItems: IToolItem[] = [
     }
   }
 
-  async handleUpload(payload: any) {
+  async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
       let res = await this.appStore.uploadService.handleUpload({

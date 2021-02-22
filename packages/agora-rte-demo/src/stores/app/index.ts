@@ -12,6 +12,7 @@ import {
   AgoraElectronRTCWrapper,
   EduRoleTypeEnum,
   EduUserService,
+  EduLogger,
 } from 'agora-rte-sdk'
 import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';

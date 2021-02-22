@@ -163,7 +163,7 @@ export class SceneStore extends SimpleInterval {
   recording: boolean = false
 
   @observable
-  isMuted?: boolean = undefined
+  isMuted: boolean = false
 
   _roomManager?: EduClassroomManager = undefined;
 
@@ -205,7 +205,7 @@ export class SceneStore extends SimpleInterval {
     this.joiningRTC = false
     this.recordId = ''
     this.recording = false  
-    this.isMuted = undefined
+    this.isMuted = false
     this._roomManager = undefined
   }
 
