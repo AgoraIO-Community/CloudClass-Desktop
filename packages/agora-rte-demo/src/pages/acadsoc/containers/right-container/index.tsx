@@ -35,7 +35,7 @@ export const RightContainer = observer(() => {
       top = top + view.height + 10   
     }
     return topMap
-  }, [acadsocStore, acadsocStore.minimizeView, acadsocStore.minimizeView.filter(e => !e.isHidden).length])
+  }, [JSON.stringify(acadsocStore.minimizeView)])
 
   const unwindTopMap = useMemo(() => {
     let top = rightContainerHeight - 50
