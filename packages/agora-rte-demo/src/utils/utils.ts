@@ -154,7 +154,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          pluginVideoUrl: file.url
+          pluginAudioUrl: file.url
           // isNavigationDisable: false
       }
     }
