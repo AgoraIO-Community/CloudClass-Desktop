@@ -9,7 +9,7 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
 
 const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
-  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher]) {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
     return false
   }
 

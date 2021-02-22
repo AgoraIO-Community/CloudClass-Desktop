@@ -1298,10 +1298,9 @@ static toolItems: IToolItem[] = [
       }
       case 'add': {
         const room = this.room
-        const newIndex = room.state.sceneState.index + 1
-        const scenePath = room.state.sceneState.scenePath
-        const currentPath = `/${pathName(scenePath)}`
         if (room.isWritable) {
+          room.setScenePath('/init')
+          const newIndex = room.state.sceneState.scenes.length
           room.putScenes("/", [{}], newIndex)
           // room.putScenes(currentPath, [{}], newIndex)
           room.setSceneIndex(newIndex)
