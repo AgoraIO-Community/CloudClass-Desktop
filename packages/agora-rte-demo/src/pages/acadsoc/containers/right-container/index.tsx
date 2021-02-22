@@ -10,22 +10,20 @@ import styles from './style.module.scss'
 export const RightContainer = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
   const rightContainerRef = useRef<any>()
-  const [resizeTrigger, setResizeTrigger] = useState<number>(0)
+  const [rightContainerHeight, setRightContainerHeight] = useState<number>(0)
 
   useEffect(() => {
     const onResize = () => {
-      setResizeTrigger(resizeTrigger+1)
+      let t = rightContainerRef.current ? rightContainerRef.current.clientHeight : 0
+      setRightContainerHeight(t)
       console.log('window resize')
     }
     window.addEventListener('resize', onResize)
+    onResize()
     return () => {
       window.removeEventListener('resize', onResize)
     }
-  }, [window, resizeTrigger])
-
-  const rightContainerHeight = useMemo(() => {
-    return rightContainerRef.current? rightContainerRef.current.clientHeight : 0
-  }, [rightContainerRef, rightContainerRef.current, resizeTrigger])
+  }, [])
 
   const viewTopMap = useMemo(() => {
     let top = 10
