@@ -202,8 +202,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     return this.time + this.timeShift
   }
   
-  @observable
-  notice?: any = undefined
 
   @observable
   timeShift: number = 0
@@ -354,7 +352,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.joined = false
     this.roomJoined = false
     this.time = 0
-    this.notice = undefined
     this.classroomSchedule = undefined
     this.disposers.forEach(disposer => disposer())
     clearTimeout(this.timer)
@@ -395,7 +392,6 @@ export class AcadsocRoomStore extends SimpleInterval {
           type: 1,
         }
       })
-      // await this.roomManager?.userService.sendRoomChatMessage(message)
       return {
         id: this.userUuid,
         ts,
@@ -834,67 +830,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           return null
         }
       }
-      this.eduManager.on('user-message', async (evt: any) => {
-        await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          if (!this.sceneStore.joiningRTC) {
-            return 
-          }
-          try {
-            BizLogger.info('[rtm] user-message', evt)
-            // const fromUserUuid = evt.message.fromUser.userUuid
-            // const fromUserName = evt.message.fromUser.userName
-            const msg = decodeMsg(evt.message.message)
-            // const messageData = JSON.parse(msg.message)
-            BizLogger.info("user-message", msg)
-            if (msg) {
-              const {cmd, data} = msg
-              const {type, userName: fromUserName, userId: fromUserUuid} = data
-              BizLogger.info("data", data)
-              this.showNotice(type as PeerInviteEnum, fromUserUuid)
-              if (type === PeerInviteEnum.studentApply) {
-                this.showDialog(fromUserName, fromUserUuid)
-              }
-              if (type === PeerInviteEnum.teacherStop) {
-                try {
-                  await this.sceneStore.closeCamera()
-                  await this.sceneStore.closeMicrophone()
-                  this.appStore.uiStore.addToast(t('toast.co_video_close_success'))
-                } catch (err) {
-                  this.appStore.uiStore.addToast(t('toast.co_video_close_failed'))
-                  const error = GenericErrorWrapper(err)
-                  BizLogger.warn(`${error}`)
-                }
-              }
-              if (type === PeerInviteEnum.teacherAccept 
-                && this.isBigClassStudent()) {
-                try {
-                  // await this.sceneStore.prepareCamera()
-                  // await this.sceneStore.prepareMicrophone()
-                  BizLogger.info("propertys ", this.sceneStore._hasCamera, this.sceneStore._hasMicrophone)
-                  // if (this.sceneStore._hasCamera) {
-                  await this.sceneStore.openCamera()
-                  // }
-      
-                  // if (this.sceneStore._hasMicrophone) {
-                  BizLogger.info('open microphone')
-                  await this.sceneStore.openMicrophone()
-                  // }
-                } catch (err) {
-                  // BizLogger.warn('published failed', err) 
-                  const error = GenericErrorWrapper(err)
-                  BizLogger.error(`published failed:${error}`)
-                  throw error
-                }
-                this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.publish_rtc_success'))
-              }
-            }
-          } catch (err) {
-            BizLogger.error(`[demo] user-message async handler failed`)
-            const error = GenericErrorWrapper(err)
-            BizLogger.error(`${error}`)
-          }
-        })
-      })
+      // this.eduManager.on('user-message', async (evt: any) => {
+      // })
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
@@ -1043,7 +980,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
           userInfo: {} as EduUser
         })
-        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.publish_business_flow_successfully'))
+        EduLogger.info("toast.publish_business_flow_successfully")
+        // this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.publish_business_flow_successfully'))
         this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
         try {
           // await this.sceneStore.prepareCamera()
@@ -1129,145 +1067,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   getRewardByUid(uid: string): number {
     return get(this.studentsReward, `${uid}.reward`, 0)
   }
-
-  @action
-  showNotice(type: PeerInviteEnum, userUuid: string) {
-    let text = t('toast.you_have_a_default_message')
-    switch(type) {
-      case PeerInviteEnum.teacherAccept: {
-        text = t('toast.the_teacher_agreed')
-        break;
-      }
-      case PeerInviteEnum.studentApply: {
-        text = t('toast.student_applied')
-        break;
-      }
-      case PeerInviteEnum.teacherStop: {
-        text = t('toast.you_were_dismissed_by_the_teacher')
-        break;
-      }
-      case PeerInviteEnum.studentStop:
-      case PeerInviteEnum.studentCancel: 
-        text = t('toast.student_canceled')
-        this.removeDialogBy(userUuid)
-        break;
-      case PeerInviteEnum.teacherReject: {
-        text = t('toast.the_teacher_refused')
-        break;
-      }
-    }
-    this.notice = {
-      reason: text,
-      userUuid
-    }
-    this.appStore.uiStore.addToast(this.notice.reason)
-  }
-
-  @action
-  async callApply() {
-    try {
-      const teacher = this.roomManager?.getFullUserList().find((it: EduUser) => it.userUuid === this.sceneStore.teacherStream.userUuid)
-      if (teacher) {
-        const res = await eduSDKApi.handsUp({
-          roomUuid: this.roomInfo.roomUuid,
-          toUserUuid: teacher.userUuid,
-          payload: {
-            userId: this.roomInfo.userUuid,
-            userName: this.roomInfo.userName,
-            type: PeerInviteEnum.studentApply,
-          }
-        })
-        if (res === 0) {
-          throw GenericErrorWrapper('callApply failure')
-        }
-        // await this.roomManager?.userService.sendCoVideoApply(teacher)
-      }
-    } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_initiate_a_raise_of_hand_application') + ` ${err.message}`)
-    }
-  }
-
-  @action
-  async callEnded() {
-    try {
-      await this.sceneStore.closeStream(this.roomInfo.userUuid, true)
-    } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_end_the_call') + ` ${err.message}`)
-    }
-  }
-
-  showDialog(userName: string, userUuid: any) {
-    const isExists = this.appStore
-      .uiStore
-      .dialogs.filter((it: DialogType) => it.dialog.option)
-      .find((it: DialogType) => it.dialog.option.userUuid === userUuid)
-    if (isExists) {
-      return
-    }
-    this.appStore.uiStore.showDialog({
-      type: 'apply',
-      option: {
-        userUuid,
-      },
-      message: `${userName}` + t('icon.requests_to_connect_the_microphone')
-    })
-  }
-
-  removeDialogBy(userUuid: any) {
-    const target = this.appStore
-    .uiStore
-    .dialogs.filter((it: DialogType) => it.dialog.option)
-    .find((it: DialogType) => it.dialog.option.userUuid === userUuid)
-    if (target) {
-      this.appStore.uiStore.removeDialog(target.id)
-    }
-  }
-
-
-  async teacherRejectApply() {
-    const userUuid = (this.notice as any).userUuid
-    const user = this.roomManager?.getFullUserList().find(it => it.userUuid === userUuid)
-    if (user) {
-      const res = await eduSDKApi.handsUp({
-        roomUuid: this.roomInfo.roomUuid,
-        toUserUuid: user.userUuid,
-        payload: {
-          userId: user.userUuid,
-          userName: user.userName,
-          type: PeerInviteEnum.teacherReject,
-        }
-      })
-      // if (res === 0) {
-      //   throw GenericErrorWrapper('callApply failure')
-      // }
-      // await this.roomManager?.userService.rejectCoVideoApply(user)
-    }
-  }
-
-  async teacherAcceptApply() {
-    const userUuid = (this.notice as any).userUuid
-    const user = this.roomManager?.data.userList.find(it => it.user.userUuid === userUuid)
-    if (user) {
-      const res = await eduSDKApi.handsUp({
-        roomUuid: this.roomInfo.roomUuid,
-        toUserUuid: user.user.userUuid,
-        payload: {
-          userId: user.user.userUuid,
-          userName: user.user.userName,
-          type: PeerInviteEnum.teacherAccept,
-        }
-      })
-      if (res === 0) {
-        throw GenericErrorWrapper('callApply failure')
-      }
-      await this.roomManager?.userService.inviteStreamBy({
-        roomUuid: this.sceneStore.roomUuid,
-        streamUuid: user.streamUuid,
-        userUuid: user.user.userUuid
-      })
-    }
-  }
-
+  
   @action
   async leave() {
     try {

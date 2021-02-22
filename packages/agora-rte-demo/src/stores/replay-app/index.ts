@@ -31,10 +31,6 @@ export class ReplayAppStore {
     const {config, replayConfig, language} = params
     this.params = params
 
-    if (language) {
-
-    }
-
     this.uiStore = new ReplayUIStore()
     this.playerStore = new PlayerStore(this)
   }
@@ -56,3 +52,5 @@ export class ReplayAppStore {
     }
   }
 }
+
+// export const replayAppStore = new ReplayAppStore()

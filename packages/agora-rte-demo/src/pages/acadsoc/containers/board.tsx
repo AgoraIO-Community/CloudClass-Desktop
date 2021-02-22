@@ -11,9 +11,10 @@ import {
   CustomMenuItemType,
   CustomMenuList,
   DiskManagerDialog,
+  IToolItem,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
-import { useBoardStore,useAppStore } from '@/hooks'
+import { useBoardStore,useAppStore, useSceneStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
@@ -366,13 +367,20 @@ const useEduBoardStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const shouldVisibleMenu = (role: EduRoleTypeEnum) => {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+    return true
+  }
+  return false
+}
 
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
+  const sceneStore = useSceneStore()
 
   // const [openDisk, setOpenDisk] = React.useState(false);
 
-  const showCourseMenuItem = boardStore.isTeacher()
+  const showCourseMenuItem = shouldVisibleMenu(sceneStore.roomInfo.userRole)
 
   const classes = useEduBoardStyles()
 
@@ -423,11 +431,28 @@ export const EducationBoard = observer((props: any) => {
     boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
   const appStore = useAppStore()
-  const isStudent = appStore.roomInfo.userRole === EduRoleTypeEnum.student
-  const getStudentBoardItems = () => {
-    const removeItem = ['new-page', 'clear']
-    const studentBoardItems = BoardStore.toolItems.filter((item) => !removeItem.includes(item.itemName))
-    return studentBoardItems
+  // const isStudent = appStore.roomInfo.userRole === EduRoleTypeEnum.student
+  // const getStudentBoardItems = () => {
+  //   const removeItem = ['new-page', 'clear']
+  //   const studentBoardItems = BoardStore.toolItems.filter((item) => !removeItem.includes(item.itemName))
+  //   return studentBoardItems
+  // }
+
+  const getBoardItemsBy = (role: EduRoleTypeEnum) => {
+    switch (role) {
+      case EduRoleTypeEnum.student: {
+        const removeItem = ['new-page', 'clear']
+        return BoardStore.toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
+      }
+      case EduRoleTypeEnum.invisible:
+      case EduRoleTypeEnum.teacher: {
+        return BoardStore.toolItems
+      }
+      case EduRoleTypeEnum.assistant: {
+        return BoardStore.toolItems.filter((item: IToolItem) => item.itemName === 'disk')
+      }
+    }
+    return []
   }
 
   
@@ -496,7 +521,7 @@ export const EducationBoard = observer((props: any) => {
             position: 'absolute'
           }}
           items={
-            isStudent ? getStudentBoardItems():BoardStore.toolItems
+            getBoardItemsBy(appStore.roomInfo.userRole)
           }
           onClick={onClickTool}
         /> : null}
