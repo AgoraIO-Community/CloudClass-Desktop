@@ -31,6 +31,7 @@ import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'
+import { QuickTypeEnum } from '@/types/global';
 
 dayjs.extend(duration)
 
@@ -639,7 +640,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
           this.appStore.uiStore.addToast(t('toast.classroom_remote_join'))
-          this.noticeBeKickedRoom()
+          this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
         reportService.updateConnectionState(newState)
       })
@@ -1290,21 +1291,43 @@ export class AcadsocRoomStore extends SimpleInterval {
     })
   }
 
-  noticeQuitRoom() {
-    dialogManager.confirm({
-      title: t(`aclass.class_end`),
-      text: t(`aclass.leave_room`),
-      showConfirm: true,
-      showCancel: true,
-      confirmText: t('aclass.confirm.yes'),
-      visible: true,
-      cancelText: t('aclass.confirm.no'),
-      onConfirm: () => {
-        this.history.push('/')
-      },
-      onClose: () => {
+  noticeQuitRoomWith(quickType: QuickTypeEnum) {
+    switch(quickType) {
+      case QuickTypeEnum.Kick: {
+        dialogManager.confirm({
+          title: t(`aclass.notice`),
+          text: t(`toast.kick`),
+          showConfirm: true,
+          showCancel: true,
+          confirmText: t('aclass.confirm.yes'),
+          visible: true,
+          cancelText: t('aclass.confirm.no'),
+          onConfirm: () => {
+            this.history.push('/')
+          },
+          onClose: () => {
+          }
+        })
+        break;
       }
-    })
+      case QuickTypeEnum.End: {
+        dialogManager.confirm({
+          title: t(`aclass.class_end`),
+          text: t(`aclass.leave_room`),
+          showConfirm: true,
+          showCancel: true,
+          confirmText: t('aclass.confirm.yes'),
+          visible: true,
+          cancelText: t('aclass.confirm.no'),
+          onConfirm: () => {
+            this.history.push('/')
+          },
+          onClose: () => {
+          }
+        })
+        break;
+      }
+    }
   }
 
   async endRoom() {
@@ -1313,7 +1336,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       state: 2
     })
     await this.appStore.releaseRoom()
-    this.noticeQuitRoom()
+    this.noticeQuitRoomWith(QuickTypeEnum.End)
   }
 
   @computed
