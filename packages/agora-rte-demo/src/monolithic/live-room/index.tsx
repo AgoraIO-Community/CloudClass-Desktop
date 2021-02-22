@@ -6,10 +6,6 @@ import React from 'react'
 import {render} from 'react-dom'
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
 
-const generateClassName = createGenerateClassName({
-  productionPrefix: 'eduClass',
-})
-
 const routes: string[] = [
   "setting",
   "1v1",
@@ -20,6 +16,11 @@ const routes: string[] = [
 ]
 
 export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
+
+  const generateClassName = createGenerateClassName({
+    productionPrefix: `eduClass_${+Date.now()}`,
+  })
+  
   return (
     <StylesProvider generateClassName={generateClassName}>
       <RoomContainer
@@ -31,9 +32,9 @@ export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
   )
 }
 
-export const RenderLiveRoom = ({dom, store}: RoomComponentConfigProps<AppStore>, delegate: DelegateType) => (
-  render(
-    <LiveRoom store={store} />,
-    dom
-  )
-)
+// export const RenderLiveRoom = ({dom, store}: RoomComponentConfigProps<AppStore>, delegate: DelegateType) => (
+//   render(
+//     <LiveRoom store={store} />,
+//     dom
+//   )
+// )

@@ -16,6 +16,7 @@ import {Invisible} from './invisible'
 import { AcadsocOneToOne } from './acadsoc';
 import { Pretest } from './acadsoc/containers/pretest';
 import { Setting } from './acadsoc/containers/setting';
+import { LaunchPage } from './launch';
 
 export type AppRouteComponent = {
   path: string
@@ -71,6 +72,11 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'aClass': {
     path: '/acadsoc/one-to-one',
     component: () => <AcadsocOneToOne />
+  },
+  // TODO: acadsoc主页
+  'launch': {
+    path: '/acadsoc/launch',
+    component: () => <LaunchPage />
   },
   'pretest': {
     path: '/pretest',
