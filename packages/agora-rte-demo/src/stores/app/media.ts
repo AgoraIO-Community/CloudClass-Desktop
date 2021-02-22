@@ -113,7 +113,8 @@ export class MediaStore {
         onCancel: () => {
         }
       })
-      await this.appStore.deviceStore.init({ audio: true })
+      await this.appStore.pretestStore.init({ audio: true})
+      // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
@@ -132,7 +133,8 @@ export class MediaStore {
         }
       })
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
-      await this.appStore.deviceStore.init({ video: true })
+      // await this.appStore.deviceStore.init({ video: true })
+      await this.appStore.pretestStore.init({ video: true})
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
