@@ -208,7 +208,7 @@ const BaseDialog: React.FC<DialogProps> = (props) => {
         }
       }}
       PaperComponent={(paperProps: any) => {
-        return <DialogFramePaper {...paperProps} closeable={true} onClose={onClose} />
+        return <DialogFramePaper {...paperProps} closeable={false} onClose={onClose} />
       }}
       // PaperProps={{
       //   style: {
