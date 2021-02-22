@@ -8,6 +8,14 @@ import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
 
+const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher]) {
+    return false
+  }
+
+  return !!isMuted
+}
+
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
   const acadsocStore = useAcadsocRoomStore()
@@ -15,8 +23,8 @@ export const ChatView = observer(() => {
   const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
-  const [isDisableSendButton, setDisableSendButton] = useState(false)
-  // const [isDisableSendButton, setDisableSendButton] = useState(false)
+
+  const disableChat = shouldDisable(sceneStore.roomInfo.userRole, sceneStore.isMuted)
 
   const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
@@ -120,7 +128,6 @@ export const ChatView = observer(() => {
       } else {
         await sceneStore.unmuteChat()
       }
-      setDisableSendButton(sceneStore.mutedChat)
     }
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
   useEffect(() => {
@@ -130,7 +137,7 @@ export const ChatView = observer(() => {
   const appStore=useAppStore()
   return (
     <ChatBoard
-      bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
+      bannedText={disableChat ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
       isBespread={acadsocStore.isBespread}
@@ -141,11 +148,10 @@ export const ChatView = observer(() => {
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
       onClickMinimize={debounce(chatMinimize, 500)}
-      // onInputText={onInputText}
-      placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
+      placeholder={disableChat ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}
       sendButtonText={t('aclass.chat.send')}
-      isDisableSendButton={isDisableSendButton}
+      isDisableSendButton={disableChat}
       loadingText={t('aclass.chat.loading')}
       failText={t('aclass.chat.fail')}
       toolButtonStyle={appStore.roomInfo.userRole ===EduRoleTypeEnum.student ?{opacity:0.3,cursor:'not-allowed'}:{}}

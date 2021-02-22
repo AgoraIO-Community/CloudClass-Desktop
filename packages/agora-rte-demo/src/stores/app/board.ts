@@ -667,7 +667,7 @@ static toolItems: IToolItem[] = [
 
     const roomScenes = (this.room.state.globalState as any).roomScenes
 
-    EduLogger.info("缓存白板的翻页")
+    // EduLogger.info("缓存白板的翻页")
 
     this.room.setGlobalState({
       currentSceneInfo: {

@@ -13,7 +13,7 @@ import {
   DiskManagerDialog,
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
-import { useBoardStore,useAppStore } from '@/hooks'
+import { useBoardStore,useAppStore, useSceneStore } from '@/hooks'
 import { Progress } from '@/components/progress/progress'
 import { ZoomController } from './zoom-controller'
 import { noop } from 'lodash'
@@ -366,13 +366,20 @@ const useEduBoardStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const shouldVisibleMenu = (role: EduRoleTypeEnum) => {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+    return true
+  }
+  return false
+}
 
 export const EducationBoard = observer((props: any) => {
   const boardStore = useBoardStore()
+  const sceneStore = useSceneStore()
 
   // const [openDisk, setOpenDisk] = React.useState(false);
 
-  const showCourseMenuItem = boardStore.isTeacher()
+  const showCourseMenuItem = shouldVisibleMenu(sceneStore.roomInfo.userRole)
 
   const classes = useEduBoardStyles()
 
