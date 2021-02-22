@@ -286,13 +286,14 @@ interface TrophyBoxProps {
 const TrophyBox = (props: TrophyBoxProps) => {
 
   return (
-    <div onClick={props.onClick} style={props.disable ? {pointerEvents: 'none'} : {cursor: 'pointer'}}>
+    <div onClick={props.onClick} style={props.disable ? {cursor: 'not-allowed'} : {cursor: 'pointer'}}>
       <EllipticBox>
         <>
           <CustomButton component="div" style={{
             background: `url(${props.iconUrl}) no-repeat`,
             backgroundSize: 'contain',
             backgroundPosition: 'center',
+            pointerEvents: props.disable ? 'none' : 'auto',
             minWidth: 18,
             minHeight: 18,
             '&:hover': {

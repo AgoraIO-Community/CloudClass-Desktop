@@ -120,6 +120,7 @@ export const StudentVideo = (props: any) => {
       boardState={board}
       showBoardIcon={true}
       disableBoard={props.disableBoard}
+      disableTrophy={props.disableTrophy}
       minimal={props.minimal}
       resizable={false}
       visibleTrophy={true}
@@ -148,5 +149,6 @@ StudentVideo.args = {
   height: '150px',
   minimal: true,
   disableButton: false,
-  disableBoard: false
+  disableBoard: false,
+  disableTrophy: false
 }
