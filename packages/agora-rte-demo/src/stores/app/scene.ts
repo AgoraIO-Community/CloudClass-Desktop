@@ -20,6 +20,8 @@ export enum EduClassroomStateEnum {
   beforeStart = 0,
   start = 1,
   end = 2,
+  // close state is front-end only state
+  close = 3
 }
 
 export enum ClassStateEnum {
@@ -161,7 +163,7 @@ export class SceneStore extends SimpleInterval {
   recording: boolean = false
 
   @observable
-  isMuted?: boolean = undefined
+  isMuted: boolean = false
 
   _roomManager?: EduClassroomManager = undefined;
 
@@ -203,7 +205,7 @@ export class SceneStore extends SimpleInterval {
     this.joiningRTC = false
     this.recordId = ''
     this.recording = false  
-    this.isMuted = undefined
+    this.isMuted = false
     this._roomManager = undefined
   }
 

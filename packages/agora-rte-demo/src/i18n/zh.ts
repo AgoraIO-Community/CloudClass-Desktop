@@ -3,13 +3,16 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
-    "sure_close_board": "确定关闭当前课件",
+    "notice": "提示",
+    "upload_log_success": "上传成功",
+    "sure_close_board": "是否确定关闭当前课件？",
     "confirm_close": "确定关闭",
     "cancel_close": "取消",
     "board_name": "白板",
     "exit": "离开教室",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
+    "send_frequently":"发送频繁",
     "assistant":{
       "noRemoteUser":"无实时网络信息，当前无用户在线",
       "delay":"网络延时",
@@ -148,6 +151,7 @@ const zhCN: any = {
     'zoomIn': '放大',
     'zoomOut': '缩小',
     'fullScreen': '全屏',
+    'reduction':'还原'
   },
   'disk': {
     'open': '打开',
@@ -194,10 +198,10 @@ const zhCN: any = {
     'wordType': 'docx doc',
     'excelType': 'xlsx xls csv',
     'pdfType': 'pdf',
-    'videoType': 'XXX',
-    'audioType': 'XXX',
-    'txtType': 'XXX',
-    'picType': 'XXX',
+    'videoType': 'mp4',
+    'audioType': 'mp3',
+    'txtType': 'txt',
+    'picType': 'gif png jpeg jpg',
   },
   'error': {
     'not_found': '页面找不到',
@@ -299,11 +303,12 @@ const zhCN: any = {
     'failed_to_initiate_a_raise_of_hand_application': '发起举手申请失败',
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
+    'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason} 分钟`,
     'time_interval_between_end': `课程还有 {reason} 分钟结束`,
     'class_is_end': `下课咯，教室还有 {reason} 分钟关闭`,
     'time_interval_between_close': `教室关闭还有 {reason} 分钟`,
-    'reward_limit': '当前房间奖杯数已达到上限',
+    'reward_limit': '奖杯已全部发完'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -345,8 +350,8 @@ const zhCN: any = {
     'class_end': '课程结束',
     'class_start': '课程开始',
     'back': '返回',
-    'class_time_text': '距离上课还有：',
-    'start_in': '已开始上课：',
+    'to_start_in': '距离上课还有：',
+    'started_elapse': '已开始上课：',
     'minutes': '分',
     'seconds': '秒',
     'signal_good': '优',

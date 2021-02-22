@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 8,
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    lineHeight: '12px',
+    lineHeight: '18px',
     color: '#2D3E6D',
     background: '#AADCF6',
     boxSizing: 'border-box',
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderTop: '1px solid #0000001a',
-    lineHeight: '12px',
+    lineHeight: '18px',
     paddingTop: '4px',
     marginTop: '3px'
   },

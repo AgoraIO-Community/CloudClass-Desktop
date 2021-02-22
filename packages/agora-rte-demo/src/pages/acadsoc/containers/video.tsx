@@ -6,7 +6,36 @@ import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
 import { t } from '@/i18n'
-import { debounce } from '@/utils/utils';
+import { debounce } from '@/utils/utils'
+
+const shouldDisable = (resource: string, isLocal: boolean, role: EduRoleTypeEnum, streamUuid: string) => { 
+  if (!streamUuid) return true
+  if (resource === 'teacher') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'student') {
+    if (isLocal || [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'trophy') {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  if (resource === 'board') {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+      return false
+    }
+    return true
+  }
+  return true
+}
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -37,7 +66,8 @@ export const TeacherVideo = observer(() => {
   const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
   const roomInfo = sceneStore.roomInfo
-  const disableButton = (isLocal || roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = shouldDisable('teacher', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -58,22 +88,16 @@ export const TeacherVideo = observer(() => {
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
       t.content = userStream.userUuid
-      // t.animationMinimize = ''
-      // t.animation = 'animate__animated animate__backOutDown'
-      // setTimeout(() => {
-      //   t.isHidden = true
-      //   acadsocStore.unwind.push(t)
-      // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal])
+  }, [userStream.video, userStream.audio, isLocal, acadsocStore])
 
   const renderer = userStream.renderer
 
   return (
-    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
+    <div style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
       <Video
         className={""}
         uid={`${userStream.userUuid}`}
@@ -82,20 +106,18 @@ export const TeacherVideo = observer(() => {
         resizable={false}
         showBoardIcon={false}
         disableBoard={true}
-        disableTrophy={disableButton}
+        disableTrophy={disableTrophy}
         trophyNumber={0}
         visibleTrophy={false}
         role={"teacher"}
         disableButton={disableButton}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={debounce(handleClick, 500)}
+        onClick={debounce(handleClick, 200)}
         style={{
-          width: '268px',
           flex: 1,
-          height: 'auto',
-          // minHeight: '120px',
-          maxHeight: '194px',
+          width: '100%',
+          height: '100%',
           overflow: 'hidden',
         }}
         placeHolderType={userStream.placeHolderType}
@@ -124,7 +146,9 @@ export const StudentVideo = observer(() => {
 
   const isTeacher = acadsocStore.isTeacher
 
-  const disableButton = (userStream.streamUuid && isLocal || userStream.streamUuid && roomInfo.userRole === EduRoleTypeEnum.teacher) ? false : true
+  const disableButton = shouldDisable('student', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
+  const disableBoard = shouldDisable('board', isLocal, roomInfo.userRole, userStream.streamUuid)
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -155,17 +179,11 @@ export const StudentVideo = observer(() => {
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
       t.content = userStream.userUuid
-      // t.animationMinimize = ''
-      // t.animation = 'animate__animated animate__backOutDown'
-      // setTimeout(() => {
-      //   t.isHidden = true
-      //   acadsocStore.unwind.push(t)
-      // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, boardStore])
+  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore])
 
   const renderer = userStream.renderer
   
@@ -174,7 +192,7 @@ export const StudentVideo = observer(() => {
   }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
-    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
+    <div style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
       <Video
         uid={`${userStream.userUuid}`}
         className={""}
@@ -182,21 +200,19 @@ export const StudentVideo = observer(() => {
         minimal={true}
         resizable={false}
         showBoardIcon={true}
-        disableBoard={isTeacher ? false : true}
-        disableTrophy={disableButton}
+        disableBoard={disableBoard}
+        disableTrophy={disableTrophy}
         trophyNumber={trophyNumber}
         visibleTrophy={true}
         role={"student"}
         boardState={boardStore.lockBoard ? false : true}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={debounce(handleClick, 500)}
+        onClick={debounce(handleClick, 200)}
         style={{
-          width: '268px',
           flex: 1,
-          height: 'auto',
-          // minHeight: '194px',
-          maxHeight: '194px',
+          width: '100%',
+          height: '100%',
           overflow: 'hidden',
         }}
         disableButton={disableButton}

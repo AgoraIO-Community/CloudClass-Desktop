@@ -198,7 +198,7 @@ const NetworkDisk = observer((props: any) => {
         right: 18,
         color: 'white'
       }}
-      publicList={boardStore.allResources}
+      publicList={boardStore.publicResources}
       privateList={boardStore.personalResources}
       // downloadList={boardStore.allResources}
       uploadComponent={uploadComponent()}

@@ -3,21 +3,31 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
-import { useAcadsocRoomStore, useSceneStore,useAppStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hooks'
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
 
+const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
+    return false
+  }
+
+  return !!isMuted
+}
+
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
+  const uiStore = useUIStore()
   const acadsocStore = useAcadsocRoomStore()
   const sceneStore = useSceneStore()
-  const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
+  // const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
-  const [isDisableSendButton, setDisableSendButton] = useState(false)
-  // const [isDisableSendButton, setDisableSendButton] = useState(false)
 
+  const disableChat = shouldDisable(sceneStore.roomInfo.userRole, sceneStore.isMuted)
+
+  // let sendTimer = new Date().getTime()
   const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
     const viewList = newMessage;
@@ -32,7 +42,7 @@ export const ChatView = observer(() => {
   }
   const transformationMessage = (messageList?: ChatMessage[]) => {
     const { roomChatMessages } = acadsocStore
-    setStoreMessageList(roomChatMessages)
+    // setStoreMessageList(roomChatMessages)
     const list = messageList || roomChatMessages
     const message: ChatMessageList = list.map((messageItem) => {
       const sendTime = new Date(messageItem.ts)
@@ -76,11 +86,16 @@ export const ChatView = observer(() => {
   }
   const sendMessage = async (message: any) => {
     if (!message.trim()) return
-    const current = new Date()
+    const current = new Date().getTime()
+
+    // if (current - sendTimer < 1500) {
+    //   uiStore.addToast(t('aclass.send_frequently'))
+    //   return
+    // }
     const chatMessage: ChatMessageList = [{
       userName: acadsocStore.roomInfo.userName,
       messagesId: +Date.now(),
-      id: current.getTime().toString(),
+      id: current.toString(),
       sendTime: dayjs().format('HH:mm'),
       showTranslate: true,
       chatText: message,
@@ -88,52 +103,48 @@ export const ChatView = observer(() => {
       status: 'loading',
       onClickTranslate: onClickTranslate
     }]
+    // sendTimer = current;
     setMessages(newMessage.concat(chatMessage))
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
   }
-  
-  // const onInputText = (event: any) => {
-  //   if (isDisableSendButton) return
-  //   const { value } = event.target;
-  //   // if (!!value.trim()) 
-  // }
 
   const chatMinimize = () => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
-    // t.animationMinimize = ''
-    // t.animation = 'animate__animated animate__backOutDown'
-    // setTimeout(() => {
-    //   t.isHidden = true
-    //   acadsocStore.unwind.push(t)
-    // }, 1000)
     t.isHidden = true
     acadsocStore.unwind.push(t)
     acadsocStore.isBespread = false
   }
-
+  const isCanMute = () => {
+    const canMuteChatUser = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant]
+    return canMuteChatUser.includes(acadsocStore.appStore.roomInfo.userRole)
+  }
   const onClickBannedButton = useCallback(async () => {
-    if (acadsocStore.appStore.roomInfo.userRole
-        === EduRoleTypeEnum.teacher) {
+    if (isCanMute()) {
       if (!sceneStore.mutedChat) {
         await sceneStore.muteChat()
       } else {
         await sceneStore.unmuteChat()
       }
-      setDisableSendButton(sceneStore.mutedChat)
     }
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
+  const isChatAllowed = () => {
+    const { isMuted = false } = sceneStore
+    return isMuted && !isCanMute()
+  }
   useEffect(() => {
-    isFetchHistory && fetchMessage()
+    if (acadsocStore.roomInfo.userUuid) {
+      isFetchHistory && fetchMessage()
+    }
     setMessages(transformationMessage())
   }, [acadsocStore.roomChatMessages.length])
   const appStore=useAppStore()
   return (
     <ChatBoard
-      bannedText={!isDisableSendButton ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
+      bannedText={sceneStore.isMuted ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
-      isBespread={acadsocStore.isBespread}
+      isBespread={true}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
@@ -141,11 +152,10 @@ export const ChatView = observer(() => {
       onClickBannedButton={onClickBannedButton}
       onClickSendButton={sendMessage}
       onClickMinimize={debounce(chatMinimize, 500)}
-      // onInputText={onInputText}
-      placeholder={isDisableSendButton ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
+      placeholder={disableChat ? t("aclass.chat.disablePlaceholder") : t('aclass.chat.placeholder')}
       titleText={t('aclass.chat.title')}
       sendButtonText={t('aclass.chat.send')}
-      isDisableSendButton={isDisableSendButton}
+      isDisableSendButton={disableChat}
       loadingText={t('aclass.chat.loading')}
       failText={t('aclass.chat.fail')}
       toolButtonStyle={appStore.roomInfo.userRole ===EduRoleTypeEnum.student ?{opacity:0.3,cursor:'not-allowed'}:{}}

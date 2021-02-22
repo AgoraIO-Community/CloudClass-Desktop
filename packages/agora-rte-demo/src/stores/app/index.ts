@@ -1,4 +1,4 @@
-// import { UploadService } from './../../modules/upload/index';
+import { CourseWareItem } from './../../edu-sdk/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
 import {
@@ -12,6 +12,7 @@ import {
   AgoraElectronRTCWrapper,
   EduRoleTypeEnum,
   EduUserService,
+  EduLogger,
 } from 'agora-rte-sdk'
 import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';
@@ -299,10 +300,6 @@ export class AppStore {
       })
     }
 
-    this.eduManager.on('ConnectionStateChanged', ({newState}) => {
-      reportService.updateConnectionState(newState)
-    })
-
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
@@ -575,6 +572,11 @@ export class AppStore {
   }
 
   @action
+  updateCourseWareList(courseWareList: CourseWareItem[]) {
+    this.params.config.courseWareList = courseWareList
+  }
+
+  @action
   showScreenShareWindowWithItems () {
     if (this.isElectron) {
       this.mediaService.prepareScreenShare().then((items: any) => {
@@ -689,7 +691,7 @@ export class AppStore {
   @action
   async releaseRoom() {
     try {
-      await this.roomStore.leave()
+      await this.acadsocStore.leave()
       reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {

@@ -6,7 +6,6 @@ import { WithIconButton } from './control/button'
 import forbiddenSpeech from './assets/forbiddenSpeech.png'
 import chat from './assets/chat.png'
 import TelegramIcon from '@material-ui/icons/Telegram';
-import { debounce } from "lodash";
 
 export type ChatMessage = {
   id: string,
@@ -100,7 +99,6 @@ export const ChatBoard = (props: ChatBoardProps) => {
       overflowY: 'scroll',
       flex: 1,
       // maxHeight: maxHeight || '200px',
-      minHeight: minHeight || '50px',
       borderWidth: '0px',
       padding: '10px',
       borderRadius: '10px 10px 0 0 ',
@@ -134,7 +132,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       flexWrap: 'nowrap',
       justifyItems: 'center',
-      minHeight: '30px',
+      height: '30px',
       flexDirection: 'row-reverse'
     },
     input: {
@@ -142,6 +140,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       background: "#fff",
       borderRadius: '0 0 10px 10px',
       padding: '10px 10px',
+      height: '15%',
     },
     chatTextArea: {
       resize: 'none',
@@ -201,6 +200,11 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      cursor: 'pointer',
+      border:'none',
+      '&:hover':{
+        background: '#fff4',
+      }
     },
     strip: {
       width: '16px',
@@ -246,7 +250,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   const handlerSendButton = () => {
     setIsSendButton(true)
     const message =inputMessages.trim()
-    onClickSendButton && debounce(onClickSendButton, 1500)(message);
+    onClickSendButton && onClickSendButton(message);
     setInputMessages("")
   }
   const handleKeyDown = (event: any) => {
@@ -260,7 +264,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       {titleView ||
         <div className={classes.titleView}>
           <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '15px', height: '15px', marginRight: '6px' }} />{props.titleText || 'chat'}</div>
-          <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
+          <button className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></button>
         </div>}
       <div className={`${classes.chatContent} classroom-scrollbar`} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div className={classes.chatScroll}>

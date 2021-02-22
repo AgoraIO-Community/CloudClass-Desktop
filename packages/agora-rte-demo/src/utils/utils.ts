@@ -86,8 +86,7 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
     const result = await new Promise((resolve) => {
       reader.readAsDataURL(blob)
         reader.onload = () => {
-          image.src = reader.result as string;
-          image.onload = () => {
+          image.addEventListener('load', () => {
             const uuid = MD5(reader.result)
             const res = getImageSize(image)
             const result = {
@@ -98,12 +97,12 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
               uuid
             }
             resolve(result)
-          }
+          }, false)
+          image.src = reader.result as string;
         }
       })
     return result as FetchImageResult
   } catch (err) {
-    debugger
     throw err
   }
 
@@ -155,7 +154,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          pluginVideoUrl: file.url
+          pluginAudioUrl: file.url
           // isNavigationDisable: false
       }
     }
