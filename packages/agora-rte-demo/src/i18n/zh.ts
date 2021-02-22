@@ -306,7 +306,7 @@ const zhCN: any = {
     'time_interval_between_end': `课程还有 {reason} 分钟结束`,
     'class_is_end': `下课咯，教室还有 {reason} 分钟关闭`,
     'time_interval_between_close': `教室关闭还有 {reason} 分钟`,
-    'reward_limit': '当前房间奖杯数已达到上限',
+    'reward_limit': '奖杯已全部发完'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

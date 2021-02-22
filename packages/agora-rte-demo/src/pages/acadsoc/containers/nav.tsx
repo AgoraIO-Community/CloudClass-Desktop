@@ -10,13 +10,6 @@ import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
 
-const userSignalStatus = [{
-  userName: '1111',
-  userUid: '111',
-  signalLevel: 2,
-  delay: 100,
-  packagesLost: 11
-}]
 
 const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
@@ -44,7 +37,7 @@ const AssistantMenu = observer(() => {
       userUid: item.userUuid,
       signalLevel: signalLevel(packagesLost),
       delay: receiveDelay ? receiveDelay : '-',
-      packagesLost: packagesLost ? packagesLost : '-'
+      packagesLost: packagesLost 
     }
   })
   return (
