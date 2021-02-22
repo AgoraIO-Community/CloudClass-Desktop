@@ -286,9 +286,10 @@ interface TrophyBoxProps {
 const TrophyBox = (props: TrophyBoxProps) => {
 
   return (
+    <div onClick={props.onClick} style={props.disable ? {pointerEvents: 'none'} : {cursor: 'pointer'}}>
       <EllipticBox>
         <>
-        <CustomButton disableButton={props.disable} component="div" style={{
+          <CustomButton component="div" style={{
             background: `url(${props.iconUrl}) no-repeat`,
             backgroundSize: 'contain',
             backgroundPosition: 'center',
@@ -301,7 +302,7 @@ const TrophyBox = (props: TrophyBoxProps) => {
               opacity: 0.9
             },
             marginRight: 5,
-          }} onClick={props.onClick} />
+          }} />
           <TextEllipsis
             maxWidth={25}
             style={{
@@ -315,6 +316,7 @@ const TrophyBox = (props: TrophyBoxProps) => {
           </TextEllipsis>
         </>
       </EllipticBox>
+    </div>
   )
 }
 
