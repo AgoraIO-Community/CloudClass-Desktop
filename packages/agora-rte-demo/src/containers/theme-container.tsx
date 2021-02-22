@@ -4,7 +4,20 @@ import { createMuiTheme } from '@material-ui/core/styles';
 
 const THEME = createMuiTheme({
   typography: {
-   "fontFamily": 'SourceHanSansCN-Regular',
+   "fontFamily": [
+     "Helvetica",
+     "Tahoma",
+     "Arial",
+     "STXihei",
+     "华文细黑",
+     "Microsoft YaHei",
+     "微软雅黑",
+     "SimSun",
+     "宋体",
+     "Heiti",
+     "黑体",
+     "sans-serif"
+   ].join(','),
    "fontSize": 14,
    "fontWeightLight": 300,
    "fontWeightRegular": 400,

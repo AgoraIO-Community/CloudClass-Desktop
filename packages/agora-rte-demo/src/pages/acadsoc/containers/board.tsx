@@ -150,7 +150,7 @@ export interface FontSizeListProps {
 const useFontStyles = makeStyles((theme: Theme) => ({
   root: {
     fontSize: '14px',
-    fontFamily: 'SourceHanSansCN-Regular',
+    fontFamily: theme.typography.fontFamily,
     display: 'flex',
     // justifyContent: 'flex-start',
     alignItems: 'center',
