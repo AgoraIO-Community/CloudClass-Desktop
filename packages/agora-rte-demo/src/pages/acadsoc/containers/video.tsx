@@ -88,22 +88,16 @@ export const TeacherVideo = observer(() => {
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
       t.content = userStream.userUuid
-      // t.animationMinimize = ''
-      // t.animation = 'animate__animated animate__backOutDown'
-      // setTimeout(() => {
-      //   t.isHidden = true
-      //   acadsocStore.unwind.push(t)
-      // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal])
+  }, [userStream.video, userStream.audio, isLocal, acadsocStore])
 
   const renderer = userStream.renderer
 
   return (
-    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
+    <div style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
       <Video
         className={""}
         uid={`${userStream.userUuid}`}
@@ -119,13 +113,11 @@ export const TeacherVideo = observer(() => {
         disableButton={disableButton}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={debounce(handleClick, 500)}
+        onClick={debounce(handleClick, 200)}
         style={{
-          width: '268px',
           flex: 1,
-          height: 'auto',
-          // minHeight: '120px',
-          maxHeight: '194px',
+          width: '100%',
+          height: '100%',
           overflow: 'hidden',
         }}
         placeHolderType={userStream.placeHolderType}
@@ -187,17 +179,11 @@ export const StudentVideo = observer(() => {
     if (type.sourceType === 'minimal') {
       let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
       t.content = userStream.userUuid
-      // t.animationMinimize = ''
-      // t.animation = 'animate__animated animate__backOutDown'
-      // setTimeout(() => {
-      //   t.isHidden = true
-      //   acadsocStore.unwind.push(t)
-      // }, 1000)
       t.isHidden = true
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, boardStore])
+  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore])
 
   const renderer = userStream.renderer
   
@@ -206,7 +192,7 @@ export const StudentVideo = observer(() => {
   }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
-    <div style={{marginBottom: '10px', minHeight: '194px', display: 'flex'}}>
+    <div style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
       <Video
         uid={`${userStream.userUuid}`}
         className={""}
@@ -222,13 +208,11 @@ export const StudentVideo = observer(() => {
         boardState={boardStore.lockBoard ? false : true}
         videoState={userStream.video}
         audioState={userStream.audio}
-        onClick={debounce(handleClick, 500)}
+        onClick={debounce(handleClick, 200)}
         style={{
-          width: '268px',
           flex: 1,
-          height: 'auto',
-          // minHeight: '194px',
-          maxHeight: '194px',
+          width: '100%',
+          height: '100%',
           overflow: 'hidden',
         }}
         disableButton={disableButton}
