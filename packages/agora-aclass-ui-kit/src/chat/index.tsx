@@ -6,7 +6,6 @@ import { WithIconButton } from './control/button'
 import forbiddenSpeech from './assets/forbiddenSpeech.png'
 import chat from './assets/chat.png'
 import TelegramIcon from '@material-ui/icons/Telegram';
-import { debounce } from "lodash";
 
 export type ChatMessage = {
   id: string,
@@ -246,7 +245,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
   const handlerSendButton = () => {
     setIsSendButton(true)
     const message =inputMessages.trim()
-    onClickSendButton && debounce(onClickSendButton, 1500)(message);
+    onClickSendButton && onClickSendButton(message);
     setInputMessages("")
   }
   const handleKeyDown = (event: any) => {
