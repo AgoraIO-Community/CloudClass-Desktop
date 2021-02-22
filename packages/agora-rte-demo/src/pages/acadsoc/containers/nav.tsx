@@ -30,14 +30,14 @@ const AssistantMenu = observer(() => {
   const acadsocRoomStore = useAcadsocRoomStore()
   const userList = mediaStore.signalStatus;
   const remoteUsers: ISignalStatus[] = userList.filter((item) => item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
-    const receiveDelay = parseInt(item.receiveDelay, 10) ?? '-';
-    const packagesLost = parseInt(item.packetLossRate, 10) ?? '-'
+    const receiveDelay = parseInt(item.receiveDelay, 10)
+    const packagesLost = parseInt(item.packetLossRate, 10)
     return {
       userName: item.userName,
       userUid: item.userUuid,
       signalLevel: signalLevel(packagesLost),
-      delay: receiveDelay ? receiveDelay : '-',
-      packagesLost: packagesLost 
+      delay: isNaN(receiveDelay) ? '-' : receiveDelay,
+      packagesLost: isNaN(packagesLost) ? '-' : packagesLost,
     }
   })
   return (

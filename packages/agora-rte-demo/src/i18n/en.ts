@@ -12,6 +12,7 @@ const en = {
     "exit": "Exit",
     "class_end": "Class is ended",
     "leave_room": "Leave room",
+    "send_frequently":"send frequently",
     "assistant":{
       "noRemoteUser":"No real-time network information, currently no users online",
       "delay":"Network Delay",
@@ -159,6 +160,7 @@ const en = {
     'zoomIn': 'zoom in',
     'zoomOut': 'zoom out',
     'fullScreen': 'full screen',
+    'reduction': 'reduction'
   },
   'disk': {
     'open': 'Open',

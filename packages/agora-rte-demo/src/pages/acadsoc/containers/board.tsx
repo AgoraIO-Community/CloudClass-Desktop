@@ -128,7 +128,7 @@ export const EduWhiteBoard = observer(() => {
       nextText={t('tool.next')}
       zoomInText={t('tool.zoomIn')}
       zoomOutText={t('tool.zoomOut')}
-      fullScreenText={t('tool.fullScreen')}
+      fullScreenText={!boardStore.isFullScreen?t('tool.fullScreen'):t('tool.reduction')}
     >
       {
         isLoading ? <Progress title={loadingStatus}></Progress> : null
