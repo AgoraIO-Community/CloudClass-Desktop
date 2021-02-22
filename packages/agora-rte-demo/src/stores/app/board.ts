@@ -661,13 +661,7 @@ static toolItems: IToolItem[] = [
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
 
-    // this.resourceName = resourceName
-    // this.totalPage = currentSceneState.scenes.length
-    // this.currentPage = +currentSceneState.index
-
     const roomScenes = (this.room.state.globalState as any).roomScenes
-
-    // EduLogger.info("缓存白板的翻页")
 
     this.room.setGlobalState({
       currentSceneInfo: {
