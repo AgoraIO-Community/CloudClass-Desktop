@@ -1,5 +1,4 @@
 import { CourseWareItem } from './../../edu-sdk/index';
-// import { UploadService } from './../../modules/upload/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
 import {
@@ -691,9 +690,7 @@ export class AppStore {
   @action
   async releaseRoom() {
     try {
-      // if (this.roomStore.)
       await this.acadsocStore.leave()
-      // await this.roomStore.leave()
       reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {

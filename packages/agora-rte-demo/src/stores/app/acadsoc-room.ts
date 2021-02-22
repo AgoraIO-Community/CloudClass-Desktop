@@ -636,11 +636,10 @@ export class AcadsocRoomStore extends SimpleInterval {
 
       // logout will clean up eduManager events, so we need to put the listener here
       this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
-        BizLogger.warn(`ConnectionStateChanged`, newState, reason)
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
-          this.history.push('/')
           this.appStore.uiStore.addToast(t('toast.classroom_remote_join'))
+          this.noticeBeKickedRoom()
         }
         reportService.updateConnectionState(newState)
       })
@@ -1097,6 +1096,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       this.joined = true
       this.roomJoined = true
     } catch (err) {
+      this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
       throw GenericErrorWrapper(err)
     }
@@ -1273,12 +1273,24 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
 
-  async endRoom() {
-    await eduSDKApi.updateClassState({
-      roomUuid: this.roomInfo.roomUuid,
-      state: 2
+  noticeBeKickedRoom() {
+    dialogManager.confirm({
+      title: t(`aclass.notice`),
+      text: t(`toast.kick`),
+      showConfirm: true,
+      showCancel: true,
+      confirmText: t('aclass.confirm.yes'),
+      visible: true,
+      cancelText: t('aclass.confirm.no'),
+      onConfirm: () => {
+        this.history.push('/')
+      },
+      onClose: () => {
+      }
     })
-    await this.appStore.releaseRoom()
+  }
+
+  noticeQuitRoom() {
     dialogManager.confirm({
       title: t(`aclass.class_end`),
       text: t(`aclass.leave_room`),
@@ -1293,6 +1305,15 @@ export class AcadsocRoomStore extends SimpleInterval {
       onClose: () => {
       }
     })
+  }
+
+  async endRoom() {
+    await eduSDKApi.updateClassState({
+      roomUuid: this.roomInfo.roomUuid,
+      state: 2
+    })
+    await this.appStore.releaseRoom()
+    this.noticeQuitRoom()
   }
 
   @computed
