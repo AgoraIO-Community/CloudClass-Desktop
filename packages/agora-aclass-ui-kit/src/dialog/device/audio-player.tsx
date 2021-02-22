@@ -1,7 +1,7 @@
 import React, { ReactEventHandler, useRef, useState } from 'react'
 import VideoPlayIcon from '../assets/play.png'
 import VideoPauseIcon from '../assets/pause.png'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export interface AudioPlayerProps {
   playText: string,
@@ -10,7 +10,7 @@ export interface AudioPlayerProps {
   style?: React.CSSProperties
 }
 
-const useStyles = makeStyles(() => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100px',
     height: '30px',
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => createStyles({
     justifyContent: 'center',
     alignItems: 'center',
     color: 'white',
-    fontFamily: 'SourceHanSansCN-Bold'
+    fontFamily: theme.typography.fontFamily
   },
   text: {
     fontSize: '14px',
