@@ -16,7 +16,7 @@ export const RightContainer = observer(() => {
     const onResize = () => {
       let t = rightContainerRef.current ? rightContainerRef.current.clientHeight : 0
       setRightContainerHeight(t)
-      console.log('window resize')
+      // console.log('window resize')
     }
     window.addEventListener('resize', onResize)
     onResize()
@@ -69,6 +69,7 @@ export const RightContainer = observer(() => {
       {
         acadsocStore.minimizeView.map((e:any) => (
           <div 
+           // TODO: need refactor
             className={e.isHidden? styles.animationMinimize : styles.animation} 
             key={e.id} 
             style={
