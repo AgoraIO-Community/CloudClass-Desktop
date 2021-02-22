@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
-import { useAcadsocRoomStore, useSceneStore,useAppStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hooks'
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
@@ -18,6 +18,7 @@ const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
 
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
+  const uiStore = useUIStore()
   const acadsocStore = useAcadsocRoomStore()
   const sceneStore = useSceneStore()
   // const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
@@ -26,6 +27,7 @@ export const ChatView = observer(() => {
 
   const disableChat = shouldDisable(sceneStore.roomInfo.userRole, sceneStore.isMuted)
 
+  // let sendTimer = new Date().getTime()
   const resendMessage = async (message: any) => {
     const { roomChatMessages } = acadsocStore
     const viewList = newMessage;
@@ -84,11 +86,16 @@ export const ChatView = observer(() => {
   }
   const sendMessage = async (message: any) => {
     if (!message.trim()) return
-    const current = new Date()
+    const current = new Date().getTime()
+
+    // if (current - sendTimer < 1500) {
+    //   uiStore.addToast(t('aclass.send_frequently'))
+    //   return
+    // }
     const chatMessage: ChatMessageList = [{
       userName: acadsocStore.roomInfo.userName,
       messagesId: +Date.now(),
-      id: current.getTime().toString(),
+      id: current.toString(),
       sendTime: dayjs().format('HH:mm'),
       showTranslate: true,
       chatText: message,
@@ -96,6 +103,7 @@ export const ChatView = observer(() => {
       status: 'loading',
       onClickTranslate: onClickTranslate
     }]
+    // sendTimer = current;
     setMessages(newMessage.concat(chatMessage))
     const data = await acadsocStore.sendMessage(message)
     acadsocStore.addChatMessage(data)
@@ -125,7 +133,9 @@ export const ChatView = observer(() => {
     return isMuted && !isCanMute()
   }
   useEffect(() => {
-    isFetchHistory && fetchMessage()
+    if (acadsocStore.roomInfo.userUuid) {
+      isFetchHistory && fetchMessage()
+    }
     setMessages(transformationMessage())
   }, [acadsocStore.roomChatMessages.length])
   const appStore=useAppStore()

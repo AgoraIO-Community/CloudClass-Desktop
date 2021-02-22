@@ -378,8 +378,8 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         />
         <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
-            { props.uploadComponent }
-            <DiskButton id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
+            {props.uploadComponent}
+            <DiskButton disabled={selected.length === 0} id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
             { props.refreshComponent }
           </div>
           {/* <div>

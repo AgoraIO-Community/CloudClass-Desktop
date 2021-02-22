@@ -200,6 +200,11 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      cursor: 'pointer',
+      border:'none',
+      '&:hover':{
+        background: '#fff4',
+      }
     },
     strip: {
       width: '16px',
@@ -259,7 +264,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       {titleView ||
         <div className={classes.titleView}>
           <div className={classes.title}><WithIconButton icon={chat} iconStyle={{ width: '15px', height: '15px', marginRight: '6px' }} />{props.titleText || 'chat'}</div>
-          <div className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></div>
+          <button className={classes.minimize} onClick={onClickMinimize}><span className={classes.strip} /></button>
         </div>}
       <div className={`${classes.chatContent} classroom-scrollbar`} onScroll={(event) => scrollEvent(event)} ref={chatRef}>
         <div className={classes.chatScroll}>

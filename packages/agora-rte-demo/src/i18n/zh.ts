@@ -12,6 +12,7 @@ const zhCN: any = {
     "exit": "离开教室",
     "class_end": "课程已结束",
     "leave_room": "离开教室",
+    "send_frequently":"发送频繁",
     "assistant":{
       "noRemoteUser":"无实时网络信息，当前无用户在线",
       "delay":"网络延时",
@@ -150,6 +151,7 @@ const zhCN: any = {
     'zoomIn': '放大',
     'zoomOut': '缩小',
     'fullScreen': '全屏',
+    'reduction':'还原'
   },
   'disk': {
     'open': '打开',
@@ -196,10 +198,10 @@ const zhCN: any = {
     'wordType': 'docx doc',
     'excelType': 'xlsx xls csv',
     'pdfType': 'pdf',
-    'videoType': 'XXX',
-    'audioType': 'XXX',
-    'txtType': 'XXX',
-    'picType': 'XXX',
+    'videoType': 'mp4',
+    'audioType': 'mp3',
+    'txtType': 'txt',
+    'picType': 'gif png jpeg jpg',
   },
   'error': {
     'not_found': '页面找不到',
