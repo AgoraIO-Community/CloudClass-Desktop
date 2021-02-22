@@ -1,5 +1,4 @@
 import { CourseWareItem } from './../../edu-sdk/index';
-// import { UploadService } from './../../modules/upload/index';
 import { CourseWareList } from './../../edu-sdk/index';
 
 import {
@@ -299,15 +298,6 @@ export class AppStore {
         sdkDomain: config.sdkDomain,
       })
     }
-
-    this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
-
-      if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
-        await this.destroy()
-        this.acadsocStore.history.push('/')
-      }
-      reportService.updateConnectionState(newState)
-    })
 
     if (isEmpty(roomInfoParams)) {
       this.load()
@@ -700,9 +690,7 @@ export class AppStore {
   @action
   async releaseRoom() {
     try {
-      // if (this.roomStore.)
       await this.acadsocStore.leave()
-      // await this.roomStore.leave()
       reportService.stopHB()
       this.unmountDom()
       if (this.params && this.params.listener) {

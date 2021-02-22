@@ -41,3 +41,8 @@ export type CourseWareUploadResult = {
   scenes?: readonly SceneDefinition[],
   taskUuid?: string,
 }
+
+export enum QuickTypeEnum { 
+  Kick = "kick",
+  End = "end"
+}
