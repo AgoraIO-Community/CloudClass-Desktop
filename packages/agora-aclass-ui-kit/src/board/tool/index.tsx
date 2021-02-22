@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&::after': {
       background: 'rgba(185,141,0,.4)'
     }
-  }
+  },
+
 }))
 
 const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
@@ -70,9 +71,6 @@ export const Tool: React.FC<ToolProps> = (props) => {
       {...props.style}
     } className={classes.toolBox}>
       <Typography component="div" style={{
-        fontSize: 12,
-        color: 'white',
-        textShadow: '0 0 3px #775c09, 0 0 3px #e2a910',
         // width: 32,
         width: "95%",
         background: `url(${ToolbarIcon}) no-repeat`,
@@ -81,8 +79,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
         height: 32,
         lineHeight: '32px',
         userSelect: 'none',
-        margin: 6,
-        fontFamily: 'SourceHanSansCN-Regular'
+        margin: 6
       }}>
       </Typography>
       {props.items.map(({iconTooltipText, toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
