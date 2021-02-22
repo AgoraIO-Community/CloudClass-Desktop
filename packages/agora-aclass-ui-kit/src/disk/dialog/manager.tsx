@@ -12,7 +12,7 @@ import {
   TableContainer,
 } from '@material-ui/core'
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles'
-import React, { ReactEventHandler } from 'react'
+import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { CustomizeTheme, themeConfig } from '../../theme'
 import { noop } from '../../declare'
 
@@ -103,8 +103,9 @@ interface NetworkDiskDialogProps {
   // deleteComponent?: React.ReactNode,
   refreshComponent?: React.ReactNode,
   // downloadComponet
+  setDownloadList?: Dispatch<SetStateAction<any>>,
   handleDownloadAll?: () => any,
-  handleClearcache?: () => any,
+  handleClearcache?: () => Promise<void>,
   handleDownload?: (evt: any) => any,
   handleDeleteSingle?: (evt: any) => any,
   donwloadAllComponent?: React.ReactNode,
@@ -246,6 +247,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
               {
                 props.inRoom === false && activeValue === 0 && (
                   <DownloadDiskTables
+                    setDownloadList={props.setDownloadList}
                     showOpenItem={props.showOpenItem}
                     handleOpenCourse={props.handleOpenCourse}
                     diskText={props.diskText}

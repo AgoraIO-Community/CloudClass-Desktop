@@ -28,6 +28,7 @@ import { CourseWareItem } from '@/edu-sdk';
 import { mapFileType } from '@/services/upload-service';
 import {agoraCaches} from '@/utils/web-download.file'
 import { PPTProgress } from '@/components/netless-board/loading';
+import { StorageDisk } from '@/monolithic/disk/index'
 
 const transformPPT = (data: any): CourseWareItem[] => {
   return [].concat(data).map((item: any) => ({
@@ -422,8 +423,7 @@ export const HomePage = observer(() => {
         </div>
       </div>
     </div>
-    
-    // fixme 临时调试下载课件
-    // <StorageDisk></StorageDisk>
   )
+  // fixme 临时调试下载课件
+  // return <StorageDisk></StorageDisk>
 })

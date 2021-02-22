@@ -58,6 +58,10 @@ export const NetworkDisk = (props: any) => {
     )
   }
 
+  const handleDeleteSingle = () => {
+    console.log('handleDeleteSingle')
+  }
+
   return (
     <DiskManagerDialog
       handleDelete={() => {
@@ -101,6 +105,7 @@ export const NetworkDisk = (props: any) => {
       }}
       showOpenItem={true}
       diskOpenText={"打开"}
+      handleDeleteSingle={handleDeleteSingle}
       uploadComponent={uploadComponent()}
       donwloadAllComponent={donwloadAllComponent()}
       deleteAllCacheComponent={deleteAllCache()}
@@ -210,52 +215,66 @@ export const NetworkDisk = (props: any) => {
       downloadList={[
         {
           calories: 100,
-          id: '12',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '12',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'pic',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'notCache',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '13',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '13',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'txt',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'notCache',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '1',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '1',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'audio',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'downloading',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '2',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '2',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'video',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'downloading',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '3',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '3',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'pdf',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'cached',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '4',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '4',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'excel',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'cached',
+          progress: -1,
         },
         {
           calories: 100,
-          id: '5',
-          name: 'test12312312312312312312313123123123123123123123123123',
+          resourceUuid: '5',
+          resourceName: 'test12312312312312312312313123123123123123123123123123',
           type: 'word',
-          fat: `${Date.now()}`
+          fat: `${Date.now()}`,
+          status: 'downloading',
+          progress: -1,
         },
       ]}
       singleDeleteComponent={singleDelete()}
@@ -297,8 +316,11 @@ export const NetworkDisk = (props: any) => {
         notDownload: '未下载',
         downloadAll: '全部下载',
         clearCache: '清空缓存',
+        download: '下载',
+        delete: '删除',
+        downloading: '下载中',
 
-        openCourse: '打开课件'
+        openCourse: '打开课件',
       }}
     />
   )

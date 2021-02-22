@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
 import { iconMapper, DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
 
@@ -6,7 +6,7 @@ import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/t
 import { DiskButton } from "../control/disk-button";
 import { DiskAllProgress, DiskSingleProgress } from "../control/progress";
 import TableEmpty from "../dialog/table-empty";
-
+import { cloneDeep } from "lodash" 
 interface DownloadDiskTablesProps extends DiskTablesProps {
   diskText?: any,
   downloadList?: any,
@@ -15,9 +15,10 @@ interface DownloadDiskTablesProps extends DiskTablesProps {
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
   handleDownloadAll?: () => any,
-  handleClearcache?: () => any,
+  handleClearcache?: () => Promise<void>,
   handleDownload?: (evt: any) => any,
   handleDeleteSingle?: (evt: any) => any,
+  setDownloadList?: Dispatch<SetStateAction<any>>,
 }
 
 const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
@@ -35,17 +36,100 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
     props.handleClearcache && await props.handleClearcache()
   }
 
-  const handleDownload = async (evt: any) => {
-    console.log('handleDownload', evt)
-    props.handleDownload && await props.handleDownload(evt)
+  const checkProgress = (index: number) => {
+    setTimeout(() => {
+      if (rows[index].status === 'downloading') {
+        props.setDownloadList && props.setDownloadList(cloneDeep(rows))
+        checkProgress(index)
+      }
+    }, 1000)
   }
 
-  const handleDeleteSingle = async (evt: any) => {
-    console.log('handleDeleteSingle', evt)
-    props.handleDeleteSingle && await props.handleDeleteSingle(evt)
+  const handleDownload = (evt: any, index: number) => {
+    if (props.handleDownload) {
+      rows[index].status = 'downloading'
+      props.setDownloadList && props.setDownloadList(cloneDeep(rows))
+      checkProgress(index)
+      props.handleDownload(evt).then(() => {
+        rows[index].status = 'cached'
+        rows[index].progress = 100
+        props.setDownloadList && props.setDownloadList(cloneDeep(rows))
+      })
+    }
+  }
+
+  const handleDeleteSingle = async (evt: any, index: number) => {
+    // props.handleDeleteSingle && await props.handleDeleteSingle(evt)
+    if (props.handleDeleteSingle) {
+      props.handleDeleteSingle(evt).then(() => {
+        rows[index].status = 'notCache'
+        rows[index].progress = 0
+        props.setDownloadList && props.setDownloadList(cloneDeep(rows))
+      })
+    }
+  }
+
+  const DownloadTableRow = (props: any) => {
+    let row = props.data
+    let index = props.index
+    return (
+      <TableRow
+        component="div"
+        // onClick={(event) => handleClick(event, row.id)}
+        role="checkbox"
+        // aria-checked={isItemSelected}
+        tabIndex={-1}
+        key={row.id}
+      >
+        <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={index} scope="row" padding="none">
+          <div style={{ display: 'flex' }}>
+            <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+            <div style={{ 
+              marginLeft: 5,
+              width: 300,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>{row.resourceName}</div>
+          </div>
+        </DiskTableCell>
+        <DiskTableCell component="div" style={{ color: '#586376' }} align="left">
+          {/* {row.calories} */}
+          {/* 下载进度 */}
+          <DiskSingleProgress value={row.progress} />
+        </DiskTableCell>
+        <DiskTableCell component="div" style={{ color: '#586376' }} align="right">
+          {/* { props.singleDownloadComponent }
+          { props.singleDeleteComponent } */}
+          {
+            row.status === 'notCache' && 
+            <>
+              <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.download} />
+              <DiskButton color={'inherit'} id="disk-button-delete" text={props.diskText.delete} />
+            </>
+          }
+          {
+            row.status === 'downloading' &&
+            <>
+              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.downloading} />
+              <DiskButton color={'inherit'} id="disk-button-delete" text={props.diskText.delete} />
+            </>
+          }
+          {
+            row.status === 'cached' &&
+            <>
+              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.downloaded} />
+              <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid, index)} id="disk-button-delete" text={props.diskText.delete} />
+            </>
+          }
+        </DiskTableCell>
+      </TableRow>
+    )
   }
 
   const DiskTable = (props: DownloadDiskTablesProps) => {
+
+
     return (
       <Table
         component="div"
@@ -92,41 +176,10 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
             // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             rows.map((row: any, index: number) => {
               // const isItemSelected = isSelected(row.id);
-              const labelId = `download-disk-${index}`;
+              // const labelId = `download-disk-${index}`;
 
               return (
-                <TableRow
-                  component="div"
-                  // onClick={(event) => handleClick(event, row.id)}
-                  role="checkbox"
-                  // aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.id}
-                >
-                  <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={labelId} scope="row" padding="none">
-                    <div style={{ display: 'flex' }}>
-                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
-                      <div style={{ 
-                        marginLeft: 5,
-                        width: 300,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}>{row.name}</div>
-                    </div>
-                  </DiskTableCell>
-                  <DiskTableCell component="div" style={{ color: '#586376' }} align="left">
-                    {/* {row.calories} */}
-                    {/* 下载进度 */}
-                    <DiskSingleProgress value={row.calories} />
-                  </DiskTableCell>
-                  <DiskTableCell component="div" style={{ color: '#586376' }} align="right">
-                    {/* { props.singleDownloadComponent }
-                    { props.singleDeleteComponent } */}
-                    <DiskButton onClick={() => handleDownload(row.id)} id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} color={'primary'} />
-                    <DiskButton onClick={() => handleDeleteSingle(row.id)} id="disk-button-delete" text={'删除'} color={'secondary'} />
-                  </DiskTableCell>
-                </TableRow>
+                <DownloadTableRow data={row} index={index} diskText={props.diskText} />
               );
             })}
         </TableBody>
@@ -137,7 +190,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} /> ||
+        { rows && rows.length > 0 && <DiskTable setDownloadList={props.setDownloadList} tabValue={props.tabValue} diskText={props.diskText} /> ||
             <div style={{ 
               paddingTop: 54,
               height: '480px',

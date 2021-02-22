@@ -34,7 +34,6 @@ const useButtonStyles = makeStyles((theme: Theme) =>
       color: '#5471FE',
       backgroundColor: '#ffffff',
       border: '1px solid #5471FE',
-      // marginLeft: '20px',
       textTransform: 'none',
       '&:hover': {
         color: '#7C91F8',
@@ -62,8 +61,9 @@ const useButtonStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#E0442F',
       },
     },
-    disabled: {
-      width: '120px',
+    // disabled
+    inherit: {
+      width: '100px',
       minWidth: '60px',
       padding: '0',
       height: '34px',
@@ -92,7 +92,7 @@ const useButtonStyles = makeStyles((theme: Theme) =>
 export interface DiskButtonProps {
   id?: string,
   text: string,
-  color: "primary" | "secondary",
+  color: "primary" | "secondary" | "inherit",
   onClick?: ReactEventHandler<any>,
   style?: CSSProperties,
   disabled?: boolean,
