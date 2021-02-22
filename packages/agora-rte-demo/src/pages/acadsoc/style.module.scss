@@ -46,30 +46,3 @@
     right: 0;
   }
 }
-
-.minimizeContainer {
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-}  
-
-.animation {
-  -webkit-transition-property: width height background-color font-size left top color;
-  -webkit-transition-duration: 1s;
-  -webkit-transition-timing-function: ease;
-  transition-property: width height background-color font-size left top color;
-  transition-duration: 1s;
-  transition-timing-function: ease;
-}
-
-.animationMinimize {
-  -webkit-transition-property: width height background-color font-size left top color;
-  -webkit-transition-duration: 1s;
-  -webkit-transition-timing-function: ease;
-  transition-property: width height background-color font-size left top color;
-  transition-duration: 1s;
-  transition-timing-function: ease;
-}

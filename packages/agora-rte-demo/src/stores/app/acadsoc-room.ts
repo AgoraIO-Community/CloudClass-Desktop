@@ -35,12 +35,6 @@ import { QuickTypeEnum } from '@/types/global';
 
 dayjs.extend(duration)
 
-export enum EduClassroomCountdownEnum {
-  first = 5,
-  second = 3,
-  third = 1,
-}
-
 type ProcessType = {
   reward: number,
 }
@@ -62,14 +56,16 @@ type AcadsocRoomProperties = {
   students: Record<string, ProcessType>,
 }
 
-type MinimizeType = Array<{
+type MinimizeType = {
   id: string,
-  type: string,
+  type: 'teacher' | 'student' | 'chat',
   content: string,
   isHidden: boolean,
   animation: string,
   zIndex: number,
-}>
+  height: number,
+  width?: number,
+}
 
 type RoomRewardType = {
   room: number,
@@ -290,13 +286,19 @@ export class AcadsocRoomStore extends SimpleInterval {
   }
 
   @observable
-  unwind: MinimizeType = []  // 最小化
+  unwind: MinimizeType[] = []  // 最小化
 
   @observable
   isBespread: boolean = true  // 是否铺满
 
   @observable
-  minimizeView: MinimizeType = [
+  isRed: boolean = false  // 是否变红
+
+  @observable
+  additional: boolean = false
+
+  @observable
+  minimizeView: MinimizeType[] = [
     {
       id: 'teacher'+Math.ceil(Math.random()*10),
       type: 'teacher',
@@ -304,6 +306,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 194,
     },
     {
       id: 'student'+Math.ceil(Math.random()*10),
@@ -312,6 +315,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 194,
     },
     {
       id: 'chat'+Math.ceil(Math.random()*10),
@@ -320,6 +324,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       isHidden: false,
       animation: '',
       zIndex: 0,
+      height: 212,
     },
   ]
 
@@ -871,6 +876,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
 
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
+          // acadsoc
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
         })
       })

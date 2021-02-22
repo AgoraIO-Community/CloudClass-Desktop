@@ -103,12 +103,6 @@ export const ChatView = observer(() => {
 
   const chatMinimize = () => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
-    // t.animationMinimize = ''
-    // t.animation = 'animate__animated animate__backOutDown'
-    // setTimeout(() => {
-    //   t.isHidden = true
-    //   acadsocStore.unwind.push(t)
-    // }, 1000)
     t.isHidden = true
     acadsocStore.unwind.push(t)
     acadsocStore.isBespread = false
@@ -137,10 +131,10 @@ export const ChatView = observer(() => {
   const appStore=useAppStore()
   return (
     <ChatBoard
-      bannedText={disableChat ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
+      bannedText={sceneStore.isMuted ? t("aclass.chat.banned") : t("aclass.chat.unblock")}
       panelBackColor={'#DEF4FF'}
       panelBorderColor={'#75C0FF'}
-      isBespread={acadsocStore.isBespread}
+      isBespread={true}
       borderWidth={10}
       maxHeight={'200px'}
       messages={newMessage}
