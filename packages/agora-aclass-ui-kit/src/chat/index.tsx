@@ -99,7 +99,6 @@ export const ChatBoard = (props: ChatBoardProps) => {
       overflowY: 'scroll',
       flex: 1,
       // maxHeight: maxHeight || '200px',
-      minHeight: minHeight || '50px',
       borderWidth: '0px',
       padding: '10px',
       borderRadius: '10px 10px 0 0 ',
@@ -133,7 +132,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       flexWrap: 'nowrap',
       justifyItems: 'center',
-      minHeight: '30px',
+      height: '30px',
       flexDirection: 'row-reverse'
     },
     input: {
@@ -141,6 +140,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
       background: "#fff",
       borderRadius: '0 0 10px 10px',
       padding: '10px 10px',
+      height: '15%',
     },
     chatTextArea: {
       resize: 'none',
