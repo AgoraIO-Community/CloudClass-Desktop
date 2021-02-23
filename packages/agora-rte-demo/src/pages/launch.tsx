@@ -31,7 +31,14 @@ export const LaunchPage = observer(() => {
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
       })
-      roomRef.current = await AgoraEduSDK.launch(dom, launchOption)
+      roomRef.current = await AgoraEduSDK.launch(dom, {
+        ...launchOption,
+        listener: (evt: AgoraEduEvent) => {
+          if (evt === AgoraEduEvent.destroyed) {
+            history.push('/')
+          }
+        }
+      })
     }
     return () => {
       if (roomRef.current) {
@@ -41,6 +48,6 @@ export const LaunchPage = observer(() => {
   }, [AgoraEduSDK])
 
   return (
-    <div ref={mountLaunch} id="app"></div>
+    <div ref={mountLaunch} id="app" style={{width: '100%', height: '100%'}}></div>
   )
 })

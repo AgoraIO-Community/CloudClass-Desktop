@@ -181,60 +181,63 @@ export const HomePage = observer(() => {
     const roomUuid = `${session.roomName}${roomType}`;
     const uid = `${session.userName}${userRole}`;
 
-    try {
-      setLoading(true)
-      let {userUuid, rtmToken} = await homeApi.login(uid)
-      setLoading(false)
-      appStore.setRoomInfo({
-        rtmUid: userUuid,
-        rtmToken: rtmToken,
-        roomType: roomType,
-        roomName: session.roomName,
-        userName: session.userName,
-        userRole: userRole,
-        userUuid: `${userUuid}`,
-        roomUuid: `${roomUuid}`,
-      })
-      
-      appStore.params.startTime = +dayjs(session.startTime)
-      appStore.params.duration = session.duration * 60
-
-      const path = roomTypes[session.roomType].path
-      history.push(`${path}`)
-    } catch (err) {
-      BizLogger.warn(JSON.stringify(err))
-      setLoading(false)
-    }
-
     // try {
     //   setLoading(true)
     //   let {userUuid, rtmToken} = await homeApi.login(uid)
-    //   homeStore.setLaunchConfig({
+    //   setLoading(false)
+    //   appStore.setRoomInfo({
     //     rtmUid: userUuid,
-    //     pretest: true,
-    //     courseWareList: courseWareList,
-    //     translateLanguage: "auto",
-    //     language: "en",
-    //     userUuid: `${userUuid}`,
-    //     rtmToken,
-    //     roomUuid,
+    //     rtmToken: rtmToken,
     //     roomType: roomType,
     //     roomName: session.roomName,
     //     userName: session.userName,
-    //     roleType: userRole,
-    //     startTime: +dayjs(session.startTime),
-    //     duration: session.duration * 60,
-    //     listener: (evt: AgoraEduEvent) => {
-    //       console.log("launch 组件生命周期", evt)
-    //     }
+    //     userRole: userRole,
+    //     userUuid: `${userUuid}`,
+    //     roomUuid: `${roomUuid}`,
     //   })
-    //   setLoading(false)
-    //   history.push('/acadsoc/launch')
-    //   // history.push(roomTypes[0].path)
+      
+    //   appStore.params.startTime = +dayjs(session.startTime)
+    //   appStore.params.duration = session.duration * 60
+
+    //   const path = roomTypes[session.roomType].path
+    //   history.push(`${path}`)
     // } catch (err) {
     //   BizLogger.warn(JSON.stringify(err))
     //   setLoading(false)
     // }
+
+    try {
+      setLoading(true)
+      let {userUuid, rtmToken} = await homeApi.login(uid)
+      homeStore.setLaunchConfig({
+        rtmUid: userUuid,
+        pretest: true,
+        courseWareList: courseWareList,
+        translateLanguage: "auto",
+        language: "en",
+        userUuid: `${userUuid}`,
+        rtmToken,
+        roomUuid,
+        roomType: roomType,
+        roomName: session.roomName,
+        userName: session.userName,
+        roleType: userRole,
+        startTime: +dayjs(session.startTime),
+        duration: session.duration * 60,
+        // listener: (evt: AgoraEduEvent) => {
+        //   console.log("launch 组件生命周期", evt)
+        //   if (evt === 2) {
+        //     history.push('/')
+        //   }
+        // }
+      })
+      setLoading(false)
+      history.push('/acadsoc/launch')
+      // history.push(roomTypes[0].path)
+    } catch (err) {
+      BizLogger.warn(JSON.stringify(err))
+      setLoading(false)
+    }
   }
 
   const fetchCourseWareList = async () => {

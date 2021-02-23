@@ -1036,7 +1036,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       try {
         await this.appStore.releaseRoom()
       } catch (err) {
-        EduLogger.info("appStore.releaseRoom failed: ", err.message)
+        EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
       dialogManager.show({
         text: t(`error.class_end`),
@@ -1045,9 +1045,8 @@ export class AcadsocRoomStore extends SimpleInterval {
         confirmText: t('aclass.confirm.yes'),
         visible: true,
         cancelText: t('aclass.confirm.no'),
-        onConfirm: () => {
-          this.appStore.uiStore.unblock()
-          this.history.push('/')
+        onConfirm: async () => {
+          await this.appStore.destroyRoom()
         },
         onClose: () => {
         }
@@ -1088,23 +1087,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
 
-  noticeBeKickedRoom() {
-    dialogManager.confirm({
-      title: t(`aclass.notice`),
-      text: t(`toast.kick`),
-      showConfirm: true,
-      showCancel: true,
-      confirmText: t('aclass.confirm.yes'),
-      visible: true,
-      cancelText: t('aclass.confirm.no'),
-      onConfirm: () => {
-        this.history.push('/')
-      },
-      onClose: () => {
-      }
-    })
-  }
-
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
@@ -1116,8 +1098,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           confirmText: t('aclass.confirm.yes'),
           visible: true,
           cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
+          onConfirm: async () => {
+            await this.appStore.destroyRoom()
           },
           onClose: () => {
           }
@@ -1133,8 +1115,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           confirmText: t('aclass.confirm.yes'),
           visible: true,
           cancelText: t('aclass.confirm.no'),
-          onConfirm: () => {
-            this.history.push('/')
+          onConfirm: async () => {
+            await this.appStore.destroyRoom()
           },
           onClose: () => {
           }

@@ -45,7 +45,7 @@ import { AcadsocRoomStore } from './acadsoc-room';
 import { DeviceSettingStore } from './device-setting';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
-import { ClassRoomAbstractStore } from '@/edu-sdk/controller';
+import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
 import { HomeStore } from './home';
 
 type RoomInfoParams = {
@@ -698,6 +698,10 @@ export class AppStore implements ClassRoomAbstractStore {
   }
   async destroy() {
     await this.releaseRoom()
+  }
+
+  async destroyRoom() {
+    await controller.appController.destroy()
   }
 }
 export * from './acadsoc-room';

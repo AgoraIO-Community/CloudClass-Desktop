@@ -28,6 +28,8 @@ export const RouteContainer = (props: RouteContainerProps) => {
     return acc
   }, [])
 
+  console.log("route container ", props)
+
   return (
     <>
     <Switch>

@@ -480,6 +480,7 @@ export class SceneStore extends SimpleInterval {
   async closeCamera() {
     await this.mediaService.closeCamera()
     this.resetCameraTrack()
+    BizLogger.info("close camera in scene store")
   }
 
   lockMicrophone() {

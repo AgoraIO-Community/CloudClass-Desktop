@@ -12,6 +12,8 @@ const routes: string[] = [
   "smallClass",
   "bigClass",
   "replayPage",
+  "pretest",
+  "aClass"
   // "home"
 ]
 
