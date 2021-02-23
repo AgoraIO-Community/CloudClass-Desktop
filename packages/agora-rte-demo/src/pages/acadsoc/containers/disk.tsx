@@ -62,8 +62,11 @@ const NetworkDisk = observer((props: any) => {
     const resourceUuid = MD5(`${md5}`)
     const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
-    const isDynamic = ext === 'pptx'
 
+    const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
+    const isNeedConverting = needConvertingFile.includes(ext)
+    const needDynamicFileType = ['pptx']
+    const isDynamic = needDynamicFileType.includes(ext)
 
     const payload = {
       file: file,
@@ -71,8 +74,8 @@ const NetworkDisk = observer((props: any) => {
       ext: ext,
       resourceName: name,
       resourceUuid: resourceUuid,
-      converting: isDynamic ? true : false,
-      kind: PPTKind.Dynamic,
+      converting: isNeedConverting,
+      kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
       pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
     } as HandleUploadType
     if (ext === 'pptx') {
@@ -131,8 +134,9 @@ const NetworkDisk = observer((props: any) => {
 
   const handleDelete = async (selected: any) => {
     if (selected.length) {
-      await boardStore.removeMaterialList(selected)
+        await boardStore.removeMaterialList(selected)
     }
+    return false
   }
 
   const handleOpenCourse = async (resourceUuid: any) => {

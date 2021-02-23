@@ -105,7 +105,7 @@ export const DiskButton = (props: DiskButtonProps = { text: '', color: 'primary'
 
   return (
     <CustomizeTheme>
-      <MButton {...props} onClick={onClick} classes={{ root: classKey, label: classes.label }} variant="contained" color={props.color} disableElevation disableRipple>
+      <MButton {...props} onClick={onClick} classes={{ root: classKey, label: classes.label }} variant="contained" color={props.color} disableElevation disableRipple disabled={props.disabled ?? false} >
         {props.text}
       </MButton>
     </CustomizeTheme>
