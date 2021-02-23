@@ -11,8 +11,8 @@ import {useHistory} from 'react-router-dom';
 import { Loading } from '@/components/loading';
 import {GithubIcon} from '@/components/github-icon';
 import { t } from '../i18n';
-import { useUIStore, useRoomStore, useAppStore, useBoardStore } from '@/hooks';
-import { UIStore } from '@/stores/app';
+import { useUIStore, useRoomStore, useAppStore, useBoardStore, useHomeStore } from '@/hooks';
+import { AppStore, UIStore } from '@/stores/app';
 import { GlobalStorage } from '@/utils/custom-storage';
 import { EduManager, GenericErrorWrapper } from 'agora-rte-sdk';
 import {isElectron} from '@/utils/platform';
@@ -24,10 +24,11 @@ import { BizLogger } from '@/utils/biz-logger';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import dayjs from 'dayjs'
-import { CourseWareItem } from '@/edu-sdk';
+import { CourseWareItem, LaunchOption } from '@/edu-sdk';
 import { mapFileType } from '@/services/upload-service';
 import {agoraCaches} from '@/utils/web-download.file'
 import { PPTProgress } from '@/components/netless-board/loading';
+import { AgoraEduEvent } from '@/edu-sdk/declare';
 
 const transformPPT = (data: any): CourseWareItem[] => {
   return [].concat(data).map((item: any) => ({
@@ -114,6 +115,10 @@ export const HomePage = observer(() => {
 
   const boardStore = useBoardStore();
 
+  const homeStore = useHomeStore()
+
+  const [courseWareList, updateCourseWareList] = useState<any[]>([])
+
   const handleSetting = (evt: any) => {
     history.push({pathname: '/setting'})
   }
@@ -176,26 +181,59 @@ export const HomePage = observer(() => {
     const roomUuid = `${session.roomName}${roomType}`;
     const uid = `${session.userName}${userRole}`;
 
+    // try {
+    //   setLoading(true)
+    //   let {userUuid, rtmToken} = await homeApi.login(uid)
+    //   setLoading(false)
+    //   appStore.setRoomInfo({
+    //     rtmUid: userUuid,
+    //     rtmToken: rtmToken,
+    //     roomType: roomType,
+    //     roomName: session.roomName,
+    //     userName: session.userName,
+    //     userRole: userRole,
+    //     userUuid: `${userUuid}`,
+    //     roomUuid: `${roomUuid}`,
+    //   })
+      
+    //   appStore.params.startTime = +dayjs(session.startTime)
+    //   appStore.params.duration = session.duration * 60
+
+    //   const path = roomTypes[session.roomType].path
+    //   history.push(`${path}`)
+    // } catch (err) {
+    //   BizLogger.warn(JSON.stringify(err))
+    //   setLoading(false)
+    // }
+
     try {
       setLoading(true)
       let {userUuid, rtmToken} = await homeApi.login(uid)
-      setLoading(false)
-      appStore.setRoomInfo({
+      homeStore.setLaunchConfig({
         rtmUid: userUuid,
-        rtmToken: rtmToken,
+        pretest: true,
+        courseWareList: courseWareList,
+        translateLanguage: "auto",
+        language: "en",
+        userUuid: `${userUuid}`,
+        rtmToken,
+        roomUuid,
         roomType: roomType,
         roomName: session.roomName,
         userName: session.userName,
-        userRole: userRole,
-        userUuid: `${userUuid}`,
-        roomUuid: `${roomUuid}`,
+        roleType: userRole,
+        startTime: +dayjs(session.startTime),
+        duration: session.duration * 60,
+        // listener: (evt: AgoraEduEvent) => {
+        //   console.log("launch 组件生命周期", evt)
+        //   if (evt === 2) {
+        //     history.push('/')
+        //   }
+        // }
       })
-      
-      appStore.params.startTime = +dayjs(session.startTime)
-      appStore.params.duration = session.duration * 60
-
-      const path = roomTypes[session.roomType].path
-      history.push(`${path}`)
+      setLoading(false)
+      history.push('/acadsoc/launch')
+      // history.push(roomTypes[0].path)
     } catch (err) {
       BizLogger.warn(JSON.stringify(err))
       setLoading(false)
@@ -203,9 +241,9 @@ export const HomePage = observer(() => {
   }
 
   const fetchCourseWareList = async () => {
-    let courseWareList = []
-    courseWareList = await fetchPPT({type: 'large'})
-    appStore.updateCourseWareList(transformPPT(courseWareList))
+    const list = await fetchPPT({type: 'large'})
+    updateCourseWareList(transformPPT(list))
+    appStore.updateCourseWareList(transformPPT(list))
   }
 
 

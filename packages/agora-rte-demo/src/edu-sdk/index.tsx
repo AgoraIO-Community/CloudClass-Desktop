@@ -1,8 +1,9 @@
 import { SceneDefinition } from 'white-web-sdk';
 import '@/index.scss'
 import 'promise-polyfill/src/polyfill'
-import { RenderLiveRoom } from "@/monolithic/live-room"
-import { RenderReplayRoom } from "@/monolithic/replay-room"
+import React from 'react'
+import { ReplayRoom } from "@/monolithic/replay-room"
+import { LiveRoom } from "@/monolithic/live-room"
 import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
 import { AppStore } from "@/stores/app"
 import { ReplayAppStore } from "@/stores/replay-app"
@@ -11,12 +12,7 @@ import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
 import { eduSDKApi } from '@/services/edu-sdk-api'
 import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption } from './validator'
 import { diskAppStore, DiskAppStore, DiskLifeStateEnum } from '@/monolithic/disk/disk-store';
-
-export enum AgoraEduEvent {
-  ready = 1,
-  destroyed = 2
-}
-
+import { controller, EduSDKInternalStateEnum } from './controller';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -97,22 +93,25 @@ export type CourseWareItem = {
 
 export type CourseWareList = CourseWareItem[]
 
+/**
+ * LaunchOption 接口
+ */
 export type LaunchOption = {
-  userUuid: string,
-  userName: string,
-  roomUuid: string,
-  roleType: EduRoleTypeEnum,
-  roomType: EduRoomTypeEnum,
-  roomName: string,
-  listener: ListenerCallback,
-  pretest: boolean,
-  // rtmUid: string
-  rtmToken: string,
-  language: LanguageEnum,
-  translateLanguage: TranslateEnum,
-  startTime: number,
-  duration: number,
-  courseWareList: CourseWareList
+  userUuid: string, // 用户uuid
+  userName: string, // 用户昵称
+  roomUuid: string, // 房间uuid
+  roleType: EduRoleTypeEnum, // 角色
+  roomType: EduRoomTypeEnum, // 房间类型
+  roomName: string, // 房间名称
+  listener: ListenerCallback, // launch状态
+  pretest: boolean, // 开启设备检测
+  rtmUid: string
+  rtmToken: string, // rtmToken
+  language: LanguageEnum, // 国际化
+  translateLanguage: TranslateEnum, // 翻译语言
+  startTime: number, // 房间开始时间
+  duration: number, // 课程时长
+  courseWareList: CourseWareList // 课件列表
 }
 
 export type ReplayOption = {
@@ -146,47 +145,30 @@ export type DelegateType = {
   delegate?: AppStore
 }
 
-class ReplayRoom {
+// class ReplayRoom {
 
-  private readonly store!: ReplayAppStore
-  private dom!: Element
+//   private readonly store!: ReplayAppStore
+//   private dom!: Element
 
-  constructor(store: ReplayAppStore, dom: Element) {
-    this.store = store
-    this.dom = dom
-  }
+//   constructor(store: ReplayAppStore, dom: Element) {
+//     this.store = store
+//     this.dom = dom
+//   }
 
-  async destroy () {
-    await this.store.destroy()
-    unmountComponentAtNode(this.dom)
-    instances["replay"] = undefined
-  }
-}
+//   async destroy () {
+//     await this.store.destroy()
+//     unmountComponentAtNode(this.dom)
+//     instances["replay"] = undefined
+//   }
+// }
 
-class ClassRoom {
-
-  private readonly store!: AppStore
-  private dom!: Element
-
-  constructor(store: AppStore, dom: Element) {
-    this.store = store
-    this.dom = dom
-  }
-
-  async destroy () {
-    await this.store.destroy()
-    unmountComponentAtNode(this.dom)
-    instances["launch"] = undefined
-  }
-}
-
-const stores: Map<string, AppStore> = new Map()
+// const stores: Map<string, AppStore> = new Map()
 
 const locks: Map<string, boolean> = new Map()
 
-const instances: Record<string, any> = {
+// const instances: Record<string, any> = {
 
-}
+// }
 
 const roomTypes = {
   [EduRoomTypeEnum.Room1v1Class]: {
@@ -242,24 +224,29 @@ export class AgoraEduSDK {
     }
   }
 
+  /**
+   * 开启在线教育场景
+   * @param dom DOM元素
+   * @param option LaunchOption
+   */
   static async launch(dom: Element, option: LaunchOption) {
     console.log("launch ", dom, " option ", option)
 
-    checkLaunchOption(dom, option)
-
-    if (locks.has("launch") || instances["launch"]) {
+    if (controller.appController.hasCalled) {
       throw GenericErrorWrapper("already launched")
     }
 
+    const unlock = controller.appController.acquireLock()
     try {
-      locks.set("launch", true)
+      checkLaunchOption(dom, option)
       eduSDKApi.updateRtmInfo({
         rtmUid: option.userUuid,
         rtmToken: option.rtmToken,
       })
       const data = await eduSDKApi.getConfig()
 
-      let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
+      // let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
+      let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
       let roomPath = mainPath
 
       console.log("main Path", mainPath, " room Path", roomPath)
@@ -302,60 +289,60 @@ export class AgoraEduSDK {
         mainPath: mainPath,
         roomPath: roomPath,
         pretest: option.pretest,
-        listener: option.listener,
       })
       //@ts-ignore
-      window.globalStore = store
-      stores.set("app", store)
-      RenderLiveRoom({dom, store}, this._map["classroom"])
-      if (store.params.listener) {
-        store.params.listener(AgoraEduEvent.ready)
-      }
-      locks.delete("launch")
-      instances["launch"] = new ClassRoom(store, dom)
-      return instances["launch"]
+      // window.globalStore = store
+      // stores.set("app", store)
+      controller.appController.create(store, <LiveRoom store={store} />, dom, option.listener)
+      unlock()
     } catch (err) {
-      locks.delete("launch")
+      unlock()
       throw GenericErrorWrapper(err)
     }
+    
+    return controller.appController.getClassRoom()
   }
 
   static async replay(dom: Element, option: ReplayOption) {
 
     console.log(" replay ", dom, " option ", JSON.stringify(option))
-    if (locks.has("replay") || instances["replay"]) {
+    if (controller.replayController.hasCalled) {
       throw GenericErrorWrapper("already replayed")
     }
 
-    checkReplayOption(dom, option)
+    const unlock = controller.replayController.acquireLock()
+    try {
+      checkReplayOption(dom, option)
 
-    const store = new ReplayAppStore({
-      config: {
-        agoraAppId: sdkConfig.configParams.appId,
-        agoraNetlessAppId: option.whiteboardAppId,
-        enableLog: true,
-        sdkDomain: sdkConfig.sdkDomain,
-        rtmUid: '',
-        rtmToken: '',
-        courseWareList: [],
-      },
-      language: option.language,
-      replayConfig: {
-        whiteboardUrl: option.videoUrl,
-        logoUrl: '',
-        whiteboardId: option.whiteboardId,
-        whiteboardToken: option.whiteboardToken,
-        startTime: option.beginTime,
-        endTime: option.endTime,
-      },
-      listener: option.listener,
-    })
-    RenderReplayRoom({dom, store}, this._map["replay"])
-    if (store.params.listener) {
-      store.params.listener(AgoraEduEvent.ready)
+      const store = new ReplayAppStore({
+        config: {
+          agoraAppId: sdkConfig.configParams.appId,
+          agoraNetlessAppId: option.whiteboardAppId,
+          enableLog: true,
+          sdkDomain: sdkConfig.sdkDomain,
+          rtmUid: '',
+          rtmToken: '',
+          courseWareList: [],
+        },
+        language: option.language,
+        replayConfig: {
+          whiteboardUrl: option.videoUrl,
+          logoUrl: '',
+          whiteboardId: option.whiteboardId,
+          whiteboardToken: option.whiteboardToken,
+          startTime: option.beginTime,
+          endTime: option.endTime,
+        },
+      })
+
+      controller.replayController.create(store, <ReplayRoom store={store}/>, dom, option.listener)
+      unlock()
+    } catch (err) {
+      unlock()
+      throw GenericErrorWrapper(err)
     }
-    instances["replay"] = new ReplayRoom(store, dom)
-    return instances["replay"]
+
+    return controller.replayController.getClassRoom()
   }
 
   static openDisk(dom: Element) {

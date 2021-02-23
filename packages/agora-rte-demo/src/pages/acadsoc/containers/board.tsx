@@ -441,7 +441,7 @@ export const EducationBoard = observer((props: any) => {
   const getBoardItemsBy = (role: EduRoleTypeEnum) => {
     switch (role) {
       case EduRoleTypeEnum.student: {
-        const removeItem = ['new-page', 'clear']
+        const removeItem = ['new-page', 'clear', 'disk']
         return BoardStore.toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
       }
       case EduRoleTypeEnum.invisible:

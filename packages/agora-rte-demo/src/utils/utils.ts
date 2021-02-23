@@ -1,5 +1,7 @@
+import { AgoraMediaDeviceEnum } from "@/types/global"
 import MD5 from "js-md5"
 import { Room } from "white-web-sdk"
+import { GlobalStorage } from "./custom-storage"
 
 export const debounce = function(foo:any, t:number) {
   let timer:any
@@ -159,4 +161,14 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       }
     }
   )
+}
+
+// media device helper
+export const getDeviceLabelFromStorage = (type: string) => {
+  const mediaDeviceStorage = GlobalStorage.read("mediaDevice") || {}
+
+  if (!['cameraLabel', 'microphoneLabel'].includes(type)) {
+    return AgoraMediaDeviceEnum.Default
+  }
+  return mediaDeviceStorage[type]
 }
