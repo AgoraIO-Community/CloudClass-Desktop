@@ -19,7 +19,8 @@ withWechatNotify {
             def build_params = [
                 string(name: 'build_branch', value: repo_branch),
                 string(name: 'ci_branch', value: 'master'),
-                string(name: 'build_env', value: 'test')
+                string(name: 'build_env', value: 'test'),
+                booleanParam(name: 'Package_Publish', value: false),
             ]
             parallel( MacBuild: {
                 stage('Compile on Mac') {
