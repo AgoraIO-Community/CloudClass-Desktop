@@ -109,7 +109,7 @@ const useDialogStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       flex: 1,
       minWidth: '200px',
-      maxWidth: '250px',
+      maxWidth: '300px',
       minHeight: '130px',
       alignItems: 'center',
       flexDirection: 'column',
@@ -134,7 +134,6 @@ const useDialogStyles = makeStyles((theme: Theme) => {
       alignItems: 'center',
       justifyContent: 'center',
       minWidth: 200,
-      height: '36px',
     },
     // dialogBorder: {
     //   borderRadius: theme.palette.frame.borderRadius,
