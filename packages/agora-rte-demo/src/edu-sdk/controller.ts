@@ -90,9 +90,7 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     this._store = store
     this.dom = dom
     this.callback = callback
-    const result = render(component, this.dom)
-    //@ts-ignore
-    window.result = result
+    render(component, this.dom)
     this._state = EduSDKInternalStateEnum.Initialized
     this.callback(AgoraEduEvent.ready)
   }
