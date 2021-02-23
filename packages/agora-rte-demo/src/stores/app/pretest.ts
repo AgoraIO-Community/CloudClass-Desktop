@@ -188,10 +188,7 @@ export class PretestStore {
   }
 
   handleDeviceChange (...args: any[]) {
-    console.log("device change #### ", args)
-    // GlobalStorage.save({})
     const prevMediaDevice = GlobalStorage.read("mediaDevice") || {}
-
 
     const cameraLabel = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
     const microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'label'})
