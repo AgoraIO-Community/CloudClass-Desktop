@@ -846,14 +846,14 @@ export class AcadsocRoomStore extends SimpleInterval {
               this.sceneStore.recordState = true
             } else {
               if (state === 0 && this.sceneStore.recordState) {
-                this.addChatMessage({
-                  id: 'system',
-                  ts: Date.now(),
-                  text: '',
-                  account: 'system',
-                  link: this.sceneStore.roomUuid,
-                  sender: false
-                })
+                // this.addChatMessage({
+                //   id: 'system',
+                //   ts: Date.now(),
+                //   text: '',
+                //   account: 'system',
+                //   link: this.sceneStore.roomUuid,
+                //   sender: false
+                // })
                 this.sceneStore.recordState = false
                 // this.sceneStore.recordId = ''
               }
