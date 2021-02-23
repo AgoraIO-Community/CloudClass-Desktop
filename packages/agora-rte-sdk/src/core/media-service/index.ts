@@ -117,6 +117,12 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.sdkWrapper.on('rtcStats', (evt: any) => {
       this.fire('rtcStats', evt)
     })
+    this.sdkWrapper.on('localVideoStats', (evt: any) => {
+      this.fire('localVideoStats', evt)
+    })
+    this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
+      this.fire('remoteVideoStats', evt)
+    })
     // this.sdkWrapper.on('volume-indication', (volumes: MediaVolume[]) => {
     //   this.fire('volume-indication', {
     //     volumes
@@ -263,12 +269,23 @@ export class MediaService extends EventEmitter implements IMediaService {
     return defaultLabel
   }
 
-  getSpeakerLabel(): string {
+  private getNativeSpeakerLabel(): string {
     if (this.isElectron) {
+      if (this.electron._cefClient) {
+        //@ts-ignore TODO: can uuse camelCase transform function get deviceName
+        return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo().deviceName
+      }
       //@ts-ignore
       const deviceItem = this.electron.client.getPlaybackDeviceInfo()[0]
       //@ts-ignore
       return deviceItem.devicename
+    }
+    return ''
+  }
+
+  getSpeakerLabel(): string {
+    if (this.isElectron) {
+      return this.getNativeSpeakerLabel()
     }
 
     return ''

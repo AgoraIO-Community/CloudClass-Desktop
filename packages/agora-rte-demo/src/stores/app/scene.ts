@@ -806,8 +806,22 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
+    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.closeCamera')
+      }
+    }
+
     if (this.appStore.isElectron) {
       if (!this.cameraRenderer) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
+      }
+      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
+      if (result === false) {
         return {
           placeHolderType: 'noCamera',
           text: t('placeholder.noCamera')
@@ -857,7 +871,22 @@ export class SceneStore extends SimpleInterval {
 
     const remoteUserRenderer = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer
 
+    if (!!stream.hasVideo === false) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.closeCamera')
+      }
+    }
+
     if (this.appStore.isElectron) {
+      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
+      if (result === false) {
+        return {
+          placeHolderType: 'noCamera',
+          text: t('placeholder.noCamera')
+        }
+      }
+      // if (+stream.streamUuid)
       if (!remoteUserRenderer) {
         return {
           placeHolderType: 'noCamera',
@@ -890,6 +919,17 @@ export class SceneStore extends SimpleInterval {
       return this.fixNativeVolume(level)
     }
     return this.fixWebVolume(level)
+  }
+
+  queryVideoFrameIsNotFrozen (uid: number): boolean {
+    const isLocal = +this.cameraEduStream.streamUuid === +uid
+    if (isLocal) {
+      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[0]
+      return frameRate > 0
+    } else {
+      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[uid]
+      return frameRate > 0
+    }
   }
 
   @computed

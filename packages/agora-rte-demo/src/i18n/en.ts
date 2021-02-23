@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "pretest": "Device Pretest",
     "notice": "Notice",
     "upload_log_success": "upload log success",
     "sure_close_board": "Are you sure close?",
@@ -95,6 +96,7 @@ const en = {
     'teacher_Left': 'Teacher Left',
     'student_Left': 'Student Left',
     'noCamera': 'No Camera',
+    'closeCamera': 'Closed Camera',
     'noAvailableCamera': 'No Available Camera',
   },
   "unknown": "[unknown]: ",

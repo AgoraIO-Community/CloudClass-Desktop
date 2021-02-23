@@ -148,10 +148,14 @@ export class MediaStore {
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      const uid = evt.user.uid
+      this.rendererOutputFrameRate[uid] = 1
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      const uid = evt.user.uid
+      delete this.rendererOutputFrameRate[uid]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -192,6 +196,14 @@ export class MediaStore {
         // this.speakers.set(+speaker.uid, +speaker.volume)
       })
     })
+    this.mediaService.on('localVideoStats', (evt: any) => {
+      this.rendererOutputFrameRate[0] = evt.stats.renderOutputFrameRate
+    })
+    this.mediaService.on('remoteVideoStats', (evt: any) => {
+      if (this.rendererOutputFrameRate.hasOwnProperty(evt.uid)) {
+        this.rendererOutputFrameRate[evt.uid] = evt.stats.rendererOutputFrameRate
+      }
+    })
   }
 
   @observable
@@ -199,6 +211,9 @@ export class MediaStore {
   
   @observable
   speakers: Record<number, number> = {}
+
+  @observable
+  rendererOutputFrameRate: Record<number, number> = {}
 
   @observable
   networkQuality: string = 'unknown'
@@ -214,6 +229,7 @@ export class MediaStore {
     this.autoplay = false
     this.totalVolume = 0
     this.speakers = {}
+    this.rendererOutputFrameRate = {}
   }
 
   @observable

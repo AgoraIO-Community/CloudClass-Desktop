@@ -476,6 +476,69 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         }
       })
     })
+    this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+      this.fire('remoteVideoStats', {
+        user: {
+          uid,
+        },
+        stats: {
+          uid,
+          delay,
+          width,
+          height,
+          receivedBitrate,
+          decoderOutputFrameRate,
+          rendererOutputFrameRate,
+          packetLossRate,
+          rxStreamType,
+          frozenRate, 
+          totalActiveTime,
+          publishDuration
+        }
+      })
+    })
+    this.client.on('LocalVideoStats', (sentBitrate: number, sentFrameRate: number, encoderOutputFrameRate: number, rendererOutputFrameRate: number, targetBitrate: number, targetFrameRate: number, qualityAdaptIndication: any, encodedBitrate: number, encodedFrameWidth: number, encodedFrameHeight: number, encodedFrameCount: number, codecType: number, txPacketLossRate: number, captureFrameRate: number, captureBrightnessLevel: number) => {
+      this.fire('localVideoStats', {
+        stats: {
+          sentBitrate,
+          sentFrameRate,
+          encoderOutputFrameRate,
+          rendererOutputFrameRate,
+          targetBitrate,
+          targetFrameRate,
+          qualityAdaptIndication,
+          encodedBitrate,
+          encodedFrameWidth,
+          encodedFrameHeight,
+          encodedFrameCount,
+          codecType,
+          txPacketLossRate,
+          captureFrameRate,
+          captureBrightnessLevel
+        }
+      })
+    })
+    this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+      this.fire('remoteVideoStats', {
+        user: {
+          uid,
+        },
+        stats: {
+          uid,
+          delay,
+          width,
+          height,
+          receivedBitrate,
+          decoderOutputFrameRate,
+          rendererOutputFrameRate,
+          packetLossRate,
+          rxStreamType,
+          frozenRate, 
+          totalActiveTime,
+          publishDuration
+        }
+      })
+    })
     this.client.on('RemoteVideoStateChanged', (uid: number, state: number, reason: any) => {
       console.log('remoteVideoStateChanged ', reason, uid)
       if (reason === 5) {
