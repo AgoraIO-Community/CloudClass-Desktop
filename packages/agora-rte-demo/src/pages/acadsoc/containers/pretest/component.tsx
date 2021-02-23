@@ -1,7 +1,7 @@
 import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import { Theme, withStyles } from '@material-ui/core/styles'
 import { DevicePicker, Volume, VolumeDirectionEnum } from 'agora-aclass-ui-kit'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styles from './style.module.scss'
 import CustomIconArrow from './assets/rectangle.png'
 import { RendererPlayer } from '@/components/media-player'
@@ -193,12 +193,30 @@ export interface PretestVideoDetectProps extends PretestMediaDetectBaseProps {
 export const VideoDetect: React.FC<PretestVideoDetectProps> = (props) => {
   return (
     <div className={styles.foreground}>
-      <DeviceSelect
+      <DevicePicker
         name={props.label}
         value={props.value}
         onChange={props.onChange}
         list={props.list}
+        selectStyle={{
+          minWidth: 375,
+          maxWidth: 375,
+          color: '#002591',
+          fontSize: 14,
+          background: 'white',
+          overflow: 'hidden'
+        }}
+        pickerStyle={{
+          position: 'relative',
+          left: 4
+        }}
       />
+      {/* <DeviceSelect
+        name={props.label}
+        value={props.value}
+        onChange={props.onChange}
+        list={props.list}
+      /> */}
       <div className={styles.detectPosition}>
         <CameraPreview
           id={'camera'}
@@ -245,11 +263,11 @@ export const BottomButtonGroup: React.FC<any> = (props) => {
       {props.detectText ? <DetectNoticeText text={props.detectText} /> : null}
       <div className={styles.no} onClick={props.onNo}>
         <div className={styles.icon}></div>
-        {props.noText}
+        <div>{props.noText}</div>
       </div>
       <div className={styles.yes} onClick={props.onYes}>
         <div className={styles.icon}></div>
-        {props.yesText}
+        <div>{props.yesText}</div>
       </div>
     </div>
   )
@@ -263,15 +281,26 @@ export interface PretestAudioDetectProps extends PretestMediaDetectBaseProps {
 export const AudioDetect: React.FC<PretestAudioDetectProps> = (props) => {
 
   // TODO: need more test volume indicator
-  const volume = props.volume ? (props.volume * 100) % 25 : 0
+  const volume = props.volume ? ((props.volume * 100) % 25) : 0
 
   return (
     <div className={styles.foreground}>
-      <DeviceSelect
+      <DevicePicker
         name={props.label}
         value={props.value}
         onChange={props.onChange}
         list={props.list}
+        selectStyle={{
+          minWidth: 375,
+          maxWidth: 375,
+          color: '#002591',
+          fontSize: 14,
+          background: 'white',
+          overflow: 'hidden'
+        }}
+        pickerStyle={{
+          position: 'relative',
+        }}
       />
       <div className={styles.positionVolume}>
         <div className={styles.iconVolume}></div>
@@ -304,31 +333,43 @@ export const SpeakerDetect: React.FC<PretestSpeakerDetectProps> = (props) => {
 
   const audioRef = useRef<any>(null)
 
-  const paused = useRef<any>(false)
+  const [playing, updatePlay] = useState<boolean>(false)
 
-  const handlePlay = () => {
+
+  const handlePlay = useCallback(() => {
     if (audioRef.current) {
-      if (!paused.current) {
+      if (!playing) {
         audioRef.current.play()
-        paused.current = true
+        updatePlay(true)
       } else {
         audioRef.current.pause()
         audioRef.current.currentTime = 0
-        paused.current = false
+        updatePlay(false)
       }
     }
-  }
+  }, [playing])
 
   return (
     <div className={styles.foreground}>
-      <DeviceSelect
+      <DevicePicker
         name={props.label}
         value={props.value}
         onChange={props.onChange}
         list={props.list}
+        selectStyle={{
+          minWidth: 375,
+          maxWidth: 375,
+          color: '#002591',
+          fontSize: 14,
+          background: 'white',
+          overflow: 'hidden'
+        }}
+        pickerStyle={{
+          position: 'relative',
+        }}
       />
       <div className={styles.positionSpeaker}>
-        <div className={styles.iconPlay} onClick={handlePlay}></div>
+        <div className={playing ? styles.iconPaused : styles.iconPlay} onClick={handlePlay}></div>
         <audio ref={audioRef} src={props.url}></audio>
       </div>
       <BottomButtonGroup

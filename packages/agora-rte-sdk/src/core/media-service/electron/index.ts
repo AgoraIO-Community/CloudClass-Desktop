@@ -279,6 +279,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('AudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
+      // console.log("AudioVolumeIndication ", JSON.stringify({speakers, speakerNumber, totalVolume}))
       this.fire('local-audio-volume', {
         totalVolume: +totalVolume
       })
@@ -476,45 +477,35 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         }
       })
     })
-    this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+    this.client.on('RemoteVideoStats', (evt: any) => {
       this.fire('remoteVideoStats', {
         user: {
-          uid,
+          uid: evt.uid,
         },
         stats: {
-          uid,
-          delay,
-          width,
-          height,
-          receivedBitrate,
-          decoderOutputFrameRate,
-          rendererOutputFrameRate,
-          packetLossRate,
-          rxStreamType,
-          frozenRate, 
-          totalActiveTime,
-          publishDuration
+          ...evt
         }
       })
     })
-    this.client.on('LocalVideoStats', (sentBitrate: number, sentFrameRate: number, encoderOutputFrameRate: number, rendererOutputFrameRate: number, targetBitrate: number, targetFrameRate: number, qualityAdaptIndication: any, encodedBitrate: number, encodedFrameWidth: number, encodedFrameHeight: number, encodedFrameCount: number, codecType: number, txPacketLossRate: number, captureFrameRate: number, captureBrightnessLevel: number) => {
+    this.client.on('LocalVideoStats', (evt: any[]) => {
       this.fire('localVideoStats', {
         stats: {
-          sentBitrate,
-          sentFrameRate,
-          encoderOutputFrameRate,
-          rendererOutputFrameRate,
-          targetBitrate,
-          targetFrameRate,
-          qualityAdaptIndication,
-          encodedBitrate,
-          encodedFrameWidth,
-          encodedFrameHeight,
-          encodedFrameCount,
-          codecType,
-          txPacketLossRate,
-          captureFrameRate,
-          captureBrightnessLevel
+          ...evt
+          // sentBitrate,
+          // sentFrameRate,
+          // encoderOutputFrameRate,
+          // rendererOutputFrameRate,
+          // targetBitrate,
+          // targetFrameRate,
+          // qualityAdaptIndication,
+          // encodedBitrate,
+          // encodedFrameWidth,
+          // encodedFrameHeight,
+          // encodedFrameCount,
+          // codecType,
+          // txPacketLossRate,
+          // captureFrameRate,
+          // captureBrightnessLevel
         }
       })
     })

@@ -141,10 +141,10 @@ export class UploadService extends ApiBase {
   }
 
   // 查询服务端是否已经存在课件
-  async queryMaterial(params: {name: string, roomUuid: string, userUuid: string}): Promise<UploadServiceResult> {
+  async queryMaterial(params: {name: string, roomUuid: string}): Promise<UploadServiceResult> {
 
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'GET',
     })
 
@@ -174,9 +174,9 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
+  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}/sts`,
+      url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}/sts`,
       method: 'PUT',
       data: {
         resourceName: params.resourceName,
@@ -200,7 +200,7 @@ export class UploadService extends ApiBase {
   // 服务端创建课件，并申请stsToken
   async createMaterial(params: CreateMaterialParams): Promise<UploadServiceResult> {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}`,
+      url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
       data: {
         url: params.url,
@@ -276,7 +276,7 @@ export class UploadService extends ApiBase {
   }
 
   async handleUpload(payload: HandleUploadType) {
-    const queryResult = await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid, userUuid: payload.userUuid})
+    const queryResult = await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
     if (queryResult.success) {
       EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({
@@ -289,7 +289,7 @@ export class UploadService extends ApiBase {
 
     const fetchResult = await this.fetchStsToken({
       roomUuid: payload.roomUuid,
-      userUuid: payload.userUuid,
+      // userUuid: payload.userUuid,
       resourceName: payload.resourceName,
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
@@ -329,7 +329,7 @@ export class UploadService extends ApiBase {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
-          userUuid: payload.userUuid,
+          // userUuid: payload.userUuid,
           appId: this.appId
         })
       const pptConverter = payload.pptConverter
@@ -351,11 +351,11 @@ export class UploadService extends ApiBase {
         taskUuid: taskResult.uuid,
         url: uploadResult.ossURL,
         roomUuid: payload.roomUuid,
-        userUuid: payload.userUuid,
+        // userUuid: payload.userUuid,
         resourceName: payload.resourceName,
         resourceUuid,
         taskToken: taskResult.roomToken,
-        ext: 'pptx',
+        ext: taskResult.ext,
         size: uploadResult.size,
         taskProgress: {
           totalPageSize: taskResult.scenes.length,
@@ -413,8 +413,9 @@ export class UploadService extends ApiBase {
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
 
+    const prefix = `${REACT_APP_AGORA_APP_SDK_DOMAIN}` === `https://api-solutions-dev.bj2.agoralab.co` ? `https://api-solutions-dev.bj2.agoralab.co` : `https://api-solutions.agoralab.co`
     // TODO: 生产环境需要更替地址
-    const callbackUrl = `https://api-solutions-dev.bj2.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`;
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 
     console.log(" addFileToOss ", callbackUrl)
 
@@ -509,7 +510,7 @@ export class UploadService extends ApiBase {
 
   async removeMaterials(params: {resourceUuids: string[], roomUuid: string, userUuid: string}) {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'DELETE',
       data: {
         resourceUuids: params.resourceUuids

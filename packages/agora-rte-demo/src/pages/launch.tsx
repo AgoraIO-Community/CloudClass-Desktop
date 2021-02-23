@@ -4,10 +4,13 @@ import { useAppStore, useHomeStore } from '@/hooks'
 import { AgoraEduEvent } from '@/edu-sdk/declare'
 import { EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
-import { ClassRoom, ClassRoomAbstractStore } from '@/edu-sdk/controller'
+import { ClassRoom, ClassRoomAbstractStore, controller } from '@/edu-sdk/controller'
 import { AppStore } from '@/stores/app'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
+
+//@ts-ignore
+window.controller = controller
 
 export const LaunchPage = observer(() => {
 

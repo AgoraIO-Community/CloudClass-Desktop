@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
@@ -91,7 +92,10 @@ export class MediaStore {
   }
   private appStore: AppStore;
 
-  constructor(appStore: any) {
+  id: string = uuidv4()
+
+  constructor(appStore: AppStore) {
+    console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
@@ -197,11 +201,11 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      this.rendererOutputFrameRate[0] = evt.stats.renderOutputFrameRate
+      this.rendererOutputFrameRate[0] = evt.stats.encoderOutputFrameRate
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
-      if (this.rendererOutputFrameRate.hasOwnProperty(evt.uid)) {
-        this.rendererOutputFrameRate[evt.uid] = evt.stats.rendererOutputFrameRate
+      if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
+        this.rendererOutputFrameRate[evt.user.uid] = evt.stats.decoderOutputFrameRate
       }
     })
   }

@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 import { GlobalStorage } from './../../utils/custom-storage';
 import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
@@ -162,7 +163,11 @@ export class PretestStore {
 
   appStore: AppStore;
 
+
+  id: string = uuidv4()
+
   constructor(appStore: AppStore) {
+    console.log("[ID] pretestStore ### ", this.id)
     this.appStore = appStore
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange.bind(this))
   }

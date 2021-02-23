@@ -1,4 +1,3 @@
-import { GenAppContainer } from '@/containers/app-container'
 import { RoomParameters } from '@/edu-sdk/declare'
 import { AppStoreConfigParams } from '@/stores/app'
 import React, { useEffect } from 'react'

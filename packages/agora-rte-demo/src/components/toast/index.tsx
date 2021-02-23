@@ -47,7 +47,7 @@ interface ToastProps {
   closeToast: CallableFunction
 }
 
-const ToastMessage = (props: ToastProps) => {
+export const ToastMessage = (props: ToastProps) => {
 
   useTimeout(() => {
     props && props.closeToast()

@@ -88,9 +88,14 @@ export class MediaService extends EventEmitter implements IMediaService {
         const userRenderer = this.remoteUsersRenderer[userIndex]
         this.remoteUsersRenderer.splice(userIndex, 1)
         this.fire('user-unpublished', {
+          user,
           remoteUserRender: userRenderer
         })
       }
+    })
+
+    this.sdkWrapper.on('track-ended', (evt: any) => {
+      this.fire('track-ended', evt)
     })
 
     this.sdkWrapper.on('user-published', (evt: any) => {
@@ -111,6 +116,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         }
       }
       this.fire('user-published', {
+        user: user,
         remoteUserRender: this.remoteUsersRenderer[userIndex]
       })
     })
