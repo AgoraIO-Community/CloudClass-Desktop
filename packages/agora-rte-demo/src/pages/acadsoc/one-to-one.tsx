@@ -26,7 +26,7 @@ export const AcadsocOneToOne = observer(() => {
 
   const handleJoinFail = async (err:GenericError) => {
     try {
-      await appStore.destroyRoom()
+      await appStore.destroy()
     } catch (err) {
       EduLogger.info(" appStore.destroyRoom ", err.message)
     }
@@ -37,9 +37,10 @@ export const AcadsocOneToOne = observer(() => {
       confirmText: t('aclass.confirm.yes'),
       visible: true,
       cancelText: t('aclass.confirm.no'),
-      onConfirm: () => {
-        uiStore.unblock()
-        history.push('/')
+      onConfirm: async () => {
+        await appStore.destroyRoom()
+        // uiStore.unblock()
+        // history.push('/')
       }
     })
     appStore.uiStore.stopLoading()
