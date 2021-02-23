@@ -279,6 +279,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('AudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
+      // console.log("AudioVolumeIndication ", JSON.stringify({speakers, speakerNumber, totalVolume}))
       this.fire('local-audio-volume', {
         totalVolume: +totalVolume
       })
@@ -473,6 +474,59 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         remotePacketLoss:{
           audioStats: this._remoteAudioStats,
           videoStats: this._remoteVideoStats
+        }
+      })
+    })
+    this.client.on('RemoteVideoStats', (evt: any) => {
+      this.fire('remoteVideoStats', {
+        user: {
+          uid: evt.uid,
+        },
+        stats: {
+          ...evt
+        }
+      })
+    })
+    this.client.on('LocalVideoStats', (evt: any[]) => {
+      this.fire('localVideoStats', {
+        stats: {
+          ...evt
+          // sentBitrate,
+          // sentFrameRate,
+          // encoderOutputFrameRate,
+          // rendererOutputFrameRate,
+          // targetBitrate,
+          // targetFrameRate,
+          // qualityAdaptIndication,
+          // encodedBitrate,
+          // encodedFrameWidth,
+          // encodedFrameHeight,
+          // encodedFrameCount,
+          // codecType,
+          // txPacketLossRate,
+          // captureFrameRate,
+          // captureBrightnessLevel
+        }
+      })
+    })
+    this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+      this.fire('remoteVideoStats', {
+        user: {
+          uid,
+        },
+        stats: {
+          uid,
+          delay,
+          width,
+          height,
+          receivedBitrate,
+          decoderOutputFrameRate,
+          rendererOutputFrameRate,
+          packetLossRate,
+          rxStreamType,
+          frozenRate, 
+          totalActiveTime,
+          publishDuration
         }
       })
     })

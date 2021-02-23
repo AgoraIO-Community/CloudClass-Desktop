@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "pretest": "Device Pretest",
     "notice": "Notice",
     "upload_log_success": "upload log success",
     "sure_close_board": "Are you sure close?",
@@ -50,13 +51,13 @@ const en = {
       "speaker": "Speaker：",
       "yes": "Yes",
       "no": "No",
-      "repeat": "Re Detect",
+      "repeat": "Retry",
       "enter": "Enter ClassRoom",
       "changed": "media device changed",
       "video_failed": "The camera device is occupied or pulled out, which makes it unavailable. Please check the device",
       "audio_failed": "The microphone device is occupied or pulled out, which makes it unavailable. Please check the device",
-      "report_result_failed": "media device not work",
-      "report_result_success": "media device detect success",
+      "report_result_failed": "Media Device Pretest Failure",
+      "report_result_success": "Media Device Pretest Success",
       "videoDetectText": "Can you see your camera preview?",
       "audioDetectText": "When speaking into the microphone, can you hear the sound and see the volume indicator",
       "speakerDetectText": "Click play button, can you heard the sound ?",
@@ -95,6 +96,7 @@ const en = {
     'teacher_Left': 'Teacher Left',
     'student_Left': 'Student Left',
     'noCamera': 'No Camera',
+    'closeCamera': 'Closed Camera',
     'noAvailableCamera': 'No Available Camera',
   },
   "unknown": "[unknown]: ",

@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "pretest": "设备检测",
     "notice": "提示",
     "upload_log_success": "上传成功",
     "sure_close_board": "是否确定关闭当前课件？",
@@ -321,6 +322,7 @@ const zhCN: any = {
     'teacher_Left': '老师已离开教室',
     'student_Left': '学生已离开教室',
     'noCamera': '没有摄像头',
+    'closeCamera': '已关闭摄像头',
     'noAvailableCamera': '未检测到摄像头',
   },
   'chat': {

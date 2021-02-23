@@ -806,6 +806,13 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
+    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.closeCamera')
+      }
+    }
+
     if (this.appStore.isElectron) {
       if (!this.cameraRenderer) {
         return {
@@ -857,6 +864,13 @@ export class SceneStore extends SimpleInterval {
 
     const remoteUserRenderer = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer
 
+    if (!!stream.hasVideo === false) {
+      return {
+        placeHolderType: 'noCamera',
+        text: t('placeholder.closeCamera')
+      }
+    }
+
     if (this.appStore.isElectron) {
       if (!remoteUserRenderer) {
         return {
@@ -892,6 +906,35 @@ export class SceneStore extends SimpleInterval {
     return this.fixWebVolume(level)
   }
 
+  queryVideoFrameIsNotFrozen (uid: number): boolean {
+    if (this.appStore.uiStore.isElectron) {
+      const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
+      if (isLocal) {
+        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[0]
+        return frameRate > 0
+      } else {
+        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[uid]
+        return frameRate > 0
+      }
+    } else {
+      const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
+      if (isLocal) {
+        if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer?.videoTrack) {
+          return false
+        } else {
+          return true
+        }
+      } else {
+        const targetUserRenderer = this.remoteUsersRenderer.find((it: any) => it.uid === +uid)
+        if (!targetUserRenderer || targetUserRenderer && !targetUserRenderer.videoTrack) {
+          return false
+        } else {
+          return true
+        }
+      }
+    }
+  }
+
   @computed
   get teacherStream(): EduMediaStream {
 
@@ -900,6 +943,7 @@ export class SceneStore extends SimpleInterval {
     if (localUser && localUser.userRole === EduRoleTypeEnum.teacher
       && this.cameraEduStream) {
 
+      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
       const {placeHolderType, text} = this.getLocalPlaceHolderProps()
       return {
         local: true,
@@ -913,6 +957,7 @@ export class SceneStore extends SimpleInterval {
         volumeLevel: this.localVolume,
         placeHolderType: placeHolderType,
         placeHolderText: text,
+        notFreeze: result
       } as any
     }
 
@@ -922,6 +967,7 @@ export class SceneStore extends SimpleInterval {
       const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
       const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
       const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
+      const result = this.queryVideoFrameIsNotFrozen(+teacherStream.streamUuid)
       return {
         local: false,
         account: user.userName,
@@ -934,6 +980,7 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: volumeLevel,
+        notFreeze: result,
       } as any
     }
     return {
@@ -948,6 +995,7 @@ export class SceneStore extends SimpleInterval {
       placeHolderType: 'noEnter',
       placeHolderText: t('placeholder.teacher_Left'),
       volumeLevel: 0,
+      notFreeze: true,
     } as any
   }
 
@@ -1017,7 +1065,7 @@ export class SceneStore extends SimpleInterval {
       volume = this.appStore.mediaStore.speakers[0] || 0
       return this.fixNativeVolume(volume)
     }
-    if (this.appStore.isWeb && this.cameraEduStream.streamUuid) {
+    if (this.appStore.isWeb && get(this, 'cameraEduStream.streamUuid', 0)) {
       volume = this.appStore.mediaStore.speakers[+this.cameraEduStream.streamUuid] || 0
       return this.fixWebVolume(volume)
     }
@@ -1032,6 +1080,7 @@ export class SceneStore extends SimpleInterval {
         if (!user || this.isLocalStream(stream)) return acc;
         const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
         const volumeLevel = this.getFixAudioVolume(+stream.streamUuid)
+        const result = this.queryVideoFrameIsNotFrozen(+stream.streamUuid)
         acc.push({
           local: false,
           account: user.userName,
@@ -1044,6 +1093,7 @@ export class SceneStore extends SimpleInterval {
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
+          notFreeze: result
         } as any)
         return acc;
       }
@@ -1055,6 +1105,7 @@ export class SceneStore extends SimpleInterval {
 
     if (this.cameraEduStream && isStudent) {
       const props = this.getLocalPlaceHolderProps()
+      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -1067,6 +1118,7 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: this.localVolume,
+        notFreeze: result
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -1083,7 +1135,8 @@ export class SceneStore extends SimpleInterval {
       showControls: false,
       placeHolderType: 'noEnter',
       placeHolderText: t('placeholder.student_Left'),
-      volumeLevel: 0
+      volumeLevel: 0,
+      notFreeze: true
     } as any]
   }
 

@@ -21,6 +21,8 @@ export const PretestWebComponent: React.FC<PretestComponentProps> = observer((pr
 
   const location = useLocation()
 
+  const pretestStore = usePretestStore()
+
   const [tab, setTabValue] = useState<string>('video')
 
   const lock = useRef<boolean>(false)
@@ -76,8 +78,6 @@ export const PretestWebComponent: React.FC<PretestComponentProps> = observer((pr
   useEffect(() => {
     onNext('video')
   }, [])
-
-  const pretestStore = usePretestStore()
 
   const camOk = useCallback(async () => {
     if (!lock.current) {

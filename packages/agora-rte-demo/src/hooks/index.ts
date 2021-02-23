@@ -118,6 +118,13 @@ export const useDiskStore = (): DiskStore => {
 }
 
 export const useHomeStore = (): HomeStore => {
-  const context = useContext<appContext>(MobXProviderContext)
-  return context.store.homeStore
+  const context = useContext<HomeContext>(MobXProviderContext)
+  return context.store
+}
+
+export type HomeContext = Record<string, HomeStore>
+
+export const useHomeUIStore = (): UIStore => {
+  const context = useContext<HomeContext>(MobXProviderContext)
+  return context.store.uiStore
 }

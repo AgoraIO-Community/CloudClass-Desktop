@@ -28,8 +28,8 @@ export const CourseWareMenuContainer = observer(() => {
 
         if (type === 'close') {
           dialogManager.show({
-            title: t(`aclass.sure_close_board`),
-            text: '',
+            title: '',
+            text: t(`aclass.sure_close_board`),
             showConfirm: true,
             showCancel: true,
             confirmText: t(`aclass.confirm_close`),

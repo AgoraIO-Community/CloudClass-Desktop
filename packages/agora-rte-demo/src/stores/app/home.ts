@@ -1,16 +1,16 @@
 import { GlobalStorage } from './../../utils/custom-storage';
 import { LaunchOption } from "@/edu-sdk";
-import { AppStore } from "@/stores/app/index";
+import { AppStore, UIStore } from "@/stores/app/index";
 
 export class HomeStore {
 
-  appStore!: AppStore;
-
   launchOption!: Omit<LaunchOption, 'listener'>
 
-  constructor(context: AppStore) {
-    this.appStore = context
+  uiStore!: UIStore
+
+  constructor(context: any) {
     this.launchOption = GlobalStorage.read("launchConfig") || {}
+    this.uiStore = new UIStore(this as any)
   }
 
   setLaunchConfig(payload: Omit<LaunchOption, 'listener'>) {

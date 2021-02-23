@@ -1,3 +1,4 @@
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { isBoolean, isEmpty, isString, isFunction, isNumber, isArray } from 'lodash';
 import { AgoraEduSDKConfigParams } from "./declare"
 import { ReplayOption, LaunchOption, DiskOption } from "./index"
@@ -88,7 +89,7 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError('listener parameter should be a function')
   }
 
-  if (![1, 2].includes(option.roleType)) {
+  if (![EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant, EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(option.roleType)) {
     throw new AgoraSDKError(`${option.roleType}, roleType parameter is invalid`)
   }
 

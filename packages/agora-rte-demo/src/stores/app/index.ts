@@ -1,5 +1,5 @@
-import { CourseWareItem } from './../../edu-sdk/index';
-import { CourseWareList } from './../../edu-sdk/index';
+import uuidv4 from 'uuid/v4';
+import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
 
 import {
   GenericErrorWrapper,
@@ -242,8 +242,11 @@ export class AppStore implements ClassRoomAbstractStore {
     this.customScreenShareItems = []
   }
 
+  id: string = uuidv4()
+
   constructor(params: AppStoreInitParams) {
     this.params = params
+    console.log("[ID] appStore ### ", this.id)
     console.log(" roomInfoParams ", params.roomInfoParams)
     console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params

@@ -11,7 +11,7 @@ import {useHistory} from 'react-router-dom';
 import { Loading } from '@/components/loading';
 import {GithubIcon} from '@/components/github-icon';
 import { t } from '../i18n';
-import { useUIStore, useRoomStore, useAppStore, useBoardStore, useHomeStore } from '@/hooks';
+import { useUIStore, useRoomStore, useAppStore, useBoardStore, useHomeStore, useHomeUIStore } from '@/hooks';
 import { AppStore, UIStore } from '@/stores/app';
 import { GlobalStorage } from '@/utils/custom-storage';
 import { EduManager, GenericErrorWrapper } from 'agora-rte-sdk';
@@ -30,6 +30,8 @@ import {agoraCaches} from '@/utils/web-download.file'
 import { PPTProgress } from '@/components/netless-board/loading';
 import { StorageDisk } from '@/monolithic/disk/index'
 import { AgoraEduEvent } from '@/edu-sdk/declare';
+import { startDownload } from '@/utils/utils';
+import { Progress } from '@/components/progress/progress';
 
 const transformPPT = (data: any): CourseWareItem[] => {
   return [].concat(data).map((item: any) => ({
@@ -110,11 +112,7 @@ export const HomePage = observer(() => {
 
   const history = useHistory();
 
-  const uiStore = useUIStore();
-
-  const appStore = useAppStore();
-
-  const boardStore = useBoardStore();
+  const uiStore = useHomeUIStore();
 
   const homeStore = useHomeStore()
 
@@ -142,12 +140,18 @@ export const HomePage = observer(() => {
   }
 
   const [session, setSessionInfo] = useState<SessionInfo>({
-    roomName: appStore.roomInfo.roomName,
-    roomType: appStore.roomInfo.roomType,
-    role: getRoleType(appStore.roomInfo.userRole),
-    userName: appStore.roomInfo.userName,
+    roomName: '',
+    roomType: 0,
+    role: '',
+    userName: '',
     startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
     duration: 30
+    // roomName: appStore.roomInfo.roomName,
+    // roomType: appStore.roomInfo.roomType,
+    // role: getRoleType(appStore.roomInfo.userRole),
+    // userName: appStore.roomInfo.userName,
+    // startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
+    // duration: 30
   });
 
   //@ts-ignore
@@ -244,16 +248,24 @@ export const HomePage = observer(() => {
   const fetchCourseWareList = async () => {
     const list = await fetchPPT({type: 'large'})
     updateCourseWareList(transformPPT(list))
-    appStore.updateCourseWareList(transformPPT(list))
+    // appStore.updateCourseWareList(transformPPT(list))
   }
 
+  const [downloading, setDownloading] = useState<boolean>(false)
+
+  const [progressing, setProgressing] = useState<number>(0)
 
   async function downloadPPT(taskUuid: string) {
-    await boardStore.startDownload(taskUuid)
+    setDownloading(true)
+    await startDownload(window.isElectron, taskUuid, (progress: number) => {
+      console.log("progress", progress)
+      setProgressing(progress)
+
+    })
+    setDownloading(false)
   }
 
   const fetchCourseWareZip = async () => {
-    const courseWareList = appStore.params.config.courseWareList
     for (const item of courseWareList) {
       if (item.taskUuid) {
         await downloadPPT(item.taskUuid)
@@ -265,7 +277,8 @@ export const HomePage = observer(() => {
     <div className={`flex-container home-cover-web`}>
       {/* <CloudDiskUpload /> */}
       {loading ? <Loading /> : null}
-      <PPTProgress />
+      {/* <PPTProgress /> */}
+      {downloading ? <Progress title={`下载中: ${progressing}%`} /> : null}
       {/* {downloading ? <} */}
       {false ? null : 
       <div className="web-menu">

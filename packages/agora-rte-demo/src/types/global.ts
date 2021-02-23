@@ -9,7 +9,7 @@ export type NetlessTaskProgress = {
 
 export type CreateMaterialParams = {
   roomUuid: string,
-  userUuid: string,
+  // userUuid: string,
   resourceUuid: string,
   url: string,
   resourceName: string,
