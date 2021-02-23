@@ -89,7 +89,7 @@ export const AppContainer = (props: AppContainerProps) => {
   return (
     <Provider store={props.store}>
       <ThemeContainer>
-        <HashRouter basename={props.basename}>
+        <HashRouter>
           <Toast />
           <ConfirmDialog />
           <RouteContainer routes={props.routes} />

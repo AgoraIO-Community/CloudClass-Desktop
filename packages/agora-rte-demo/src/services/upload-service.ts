@@ -52,7 +52,7 @@ export const mapFileType = (type: string): string => {
     return 'txt'
   }
 
-  if (type.match(/gif|png|jpeg|jpg/i)) {
+  if (type.match(/gif|png|jpeg|jpg|bmp/i)) {
     return 'pic'
   }
   if (type.match(/pdf/i)) {

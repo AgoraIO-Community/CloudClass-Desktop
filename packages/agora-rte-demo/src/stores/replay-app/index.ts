@@ -1,5 +1,5 @@
+import { ClassRoomAbstractStore } from '@/edu-sdk/controller';
 import { LanguageEnum } from '@/edu-sdk';
-import { AgoraEduEvent } from "@/edu-sdk";
 import { AppStoreConfigParams } from "../app";
 import { PlayerStore } from "./player";
 import { ReplayUIStore } from "./ui";
@@ -17,10 +17,9 @@ export type ReplayAppStoreInitParams = {
   config: AppStoreConfigParams
   replayConfig: ReplayConfigParam
   language: LanguageEnum
-  listener: (evt: AgoraEduEvent) => void
 }
 
-export class ReplayAppStore {
+export class ReplayAppStore implements ClassRoomAbstractStore {
 
   playerStore!: PlayerStore;
   uiStore!: ReplayUIStore;

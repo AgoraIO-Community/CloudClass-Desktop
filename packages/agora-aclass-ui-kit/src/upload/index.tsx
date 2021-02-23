@@ -55,7 +55,7 @@ export const UploadFile = (props: IProps) => {
     customRequest: sendRequest,
   } = props;
   const uploaderProps = {
-    accept: 'image/*,.bmp,.jpg,.png,.gif,.pdf,.pptx,.mp3,.mp4',
+    accept: 'image/*,.bmp,.jpg,.png,.gif,.pdf,.pptx,.mp3,.mp4,.doc,.docx',
     multiple: false,
     onStart(file: { name: any; }) {
       onStart && onStart(file)

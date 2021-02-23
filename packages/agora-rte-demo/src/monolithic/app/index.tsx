@@ -15,6 +15,7 @@ const routes: string[] = [
   "bigClass",
   "middleClass",
   "aClass",
+  "launch", // launch测试页面
   "pretest",
   "breakoutClassAssistantRoom",
   "breakoutClassCourses",
