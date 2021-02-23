@@ -7,7 +7,8 @@ import { observer, Provider } from 'mobx-react'
 import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { noop } from 'lodash'
-import { diskAppStore, DiskAppStore, DiskLifeStateEnum } from '@/monolithic/disk/disk-store';
+import { diskAppStore, DiskAppStore, DiskLifeStateEnum, } from '@/monolithic/disk/disk-store';
+import DownloadDisk from '@/components/download-disk/index'
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'agoraEduDisk',
@@ -23,20 +24,21 @@ const DiskContainer = observer((props: any) => {
 
   const [testDownloadList, setTestDownloadList] = useState({})
 
-  const handleClearcache = useCallback(async() => {
-    await diskAppStore.deleteAllCache()
-  }, [])
+  // const handleClearcache = useCallback(async() => {
+  //   await diskAppStore.deleteAllCache()
+  // }, [])
     
-  const handleDownload = useCallback(async (resourceUuid: any) => {
-    await diskAppStore.startDownload(resourceUuid)
-  }, [])
+  // const handleDownload = useCallback(async (resourceUuid: any) => {
+  //   await diskAppStore.startDownload(resourceUuid)
+  // }, [])
 
-  const handleDeleteSingle = useCallback(async(resourceUuid: any) => {
-    await diskAppStore.deleteSingle(resourceUuid)
-  }, [])
+  // const handleDeleteSingle = useCallback(async(resourceUuid: any) => {
+  //   await diskAppStore.deleteSingle(resourceUuid)
+  // }, [])
 
   const checkDownload = useCallback(async () => {
     const tmp = await diskAppStore.checkDownloadList(diskAppStore.tempDownloadList)
+    console.log('tmp', tmp)
     setFirst(true);
     setTestDownloadList(tmp);
   }, [])
@@ -81,11 +83,17 @@ const DiskContainer = observer((props: any) => {
             right: 18,
             color: 'white'
           }}
-          downloadList={testDownloadList}
+          // downloadList={testDownloadList}
           showOpenItem={false}
-          handleClearcache={handleClearcache}
-          handleDownload={handleDownload}
-          handleDeleteSingle={handleDeleteSingle}
+          // handleClearcache={handleClearcache}
+          downloadDiskComponent={
+            <DownloadDisk
+              downloadList={testDownloadList} 
+              handleClearcache={diskAppStore.deleteAllCache}
+              handleDownload={diskAppStore.startDownload}
+              handleDeleteSingle={diskAppStore.deleteSingle}    
+            />
+          }
           diskText={{
             publicTab: t('disk.publicResources'),
             privateTab: t('disk.privateResources'),

@@ -150,8 +150,6 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
     )
   }
 
-  // console.log('>>>>>>>>rows', typeof rows, rows)
-
   const render = () => {
     return (
       <>

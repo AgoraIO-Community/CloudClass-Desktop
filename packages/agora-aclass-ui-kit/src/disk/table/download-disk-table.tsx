@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
-import { iconMapper, DiskTablesProps, useDiskTableStyles, createData } from "./private-disk-table";
+import { iconMapper, DiskTablesProps, useDiskTableStyles } from "./private-disk-table";
 
 import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/table-cell";
 import { DiskButton } from "../control/disk-button";
 import { DiskAllProgress, DiskSingleProgress } from "../control/progress";
 import TableEmpty from "../dialog/table-empty";
+import IconEmpty from '../assets/icon-empty.png'
 import { cloneDeep } from "lodash" 
 interface DownloadDiskTablesProps extends DiskTablesProps {
   diskText?: any,
@@ -104,22 +105,22 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
           {
             row.status === 'notCache' && 
             <>
-              <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.download} />
-              <DiskButton color={'inherit'} id="disk-button-delete" text={props.diskText.delete} />
+              <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={'下载'} />
+              <DiskButton color={'inherit'} id="disk-button-delete" text={'删除'} />
             </>
           }
           {
             row.status === 'downloading' &&
             <>
-              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.downloading} />
-              <DiskButton color={'inherit'} id="disk-button-delete" text={props.diskText.delete} />
+              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={'下载中'} />
+              <DiskButton color={'inherit'} id="disk-button-delete" text={'删除'} />
             </>
           }
           {
             row.status === 'cached' &&
             <>
-              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={props.diskText.downloaded} />
-              <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid, index)} id="disk-button-delete" text={props.diskText.delete} />
+              <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={'已完成'} />
+              <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid, index)} id="disk-button-delete" text={'删除'} />
             </>
           }
         </DiskTableCell>
@@ -140,19 +141,19 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
       >
         <TableHead component="div">
           <TableRow component="div" style={{ color: '#273D75' }}>
-            <DiskTableCellHead component="div" style={{ paddingLeft: 15 }} id="name" key="name" scope="row">{props.diskText.file}</DiskTableCellHead>
-            <DiskTableCellHead component="div" id="calories" key="calories" align="left">{props.diskText.progress}</DiskTableCellHead>
-            <DiskTableCellHead component="div" style={{ paddingRight: 120 }} id="fat" key="fat" align="center">{props.diskText.operation}</DiskTableCellHead>
+            <DiskTableCellHead component="div" style={{ paddingLeft: 15 }} id="name" key="name" scope="row">{'文件'}</DiskTableCellHead>
+            <DiskTableCellHead component="div" id="calories" key="calories" align="left">{'进度'}</DiskTableCellHead>
+            <DiskTableCellHead component="div" style={{ paddingRight: 120 }} id="fat" key="fat" align="center">{'操作'}</DiskTableCellHead>
           </TableRow>
         </TableHead>
         <TableHead component="div">
           <TableRow component="div" style={{ color: '#273D75' }}>
             <DownloadTableCell component="div" style={{ paddingLeft: 15 }} id="name" key="name" scope="row">
-              <span className={classes.downloadLabel}>{props.diskText.all}: <span className={classes.downloadText}>{rows ? rows.length : 0}</span></span>
+              <span className={classes.downloadLabel}>{'全部'}: <span className={classes.downloadText}>{rows ? rows.length : 0}</span></span>
               &nbsp;
-              <span className={classes.downloadLabel}>{props.diskText.downloaded}: <span className={classes.downloadText}>1</span></span>
+              <span className={classes.downloadLabel}>{'已下载'}: <span className={classes.downloadText}>1</span></span>
               &nbsp;
-              <span className={classes.downloadLabel}>{props.diskText.notDownload}: <span className={classes.downloadText}>47</span></span>
+              <span className={classes.downloadLabel}>{'未下载'}: <span className={classes.downloadText}>47</span></span>
             </DownloadTableCell>
             <DownloadTableCell component="div" align="left">
               <DiskAllProgress value={notDownload / rows.length * 100} />
@@ -165,8 +166,8 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-                <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={props.diskText.downloadAll} />
-                <DiskButton onClick={handleClearcache} id="disk-button-clear-storage" color={'secondary'} text={props.diskText.clearCache} />
+                <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={'全部下载'} />
+                <DiskButton onClick={handleClearcache} id="disk-button-clear-storage" color={'secondary'} text={'清除缓存'} />
               </div>
             </DownloadTableCell>
           </TableRow>
@@ -179,7 +180,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
               // const labelId = `download-disk-${index}`;
 
               return (
-                <DownloadTableRow data={row} index={index} diskText={props.diskText} />
+                <DownloadTableRow data={row} index={index} />
               );
             })}
         </TableBody>
@@ -190,15 +191,25 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
   const render = () => {
     return (
       <>
-        { rows && rows.length > 0 && <DiskTable setDownloadList={props.setDownloadList} tabValue={props.tabValue} diskText={props.diskText} /> ||
+        { rows && rows.length > 0 && <DiskTable setDownloadList={props.setDownloadList} tabValue={props.tabValue} /> ||
             <div style={{ 
               paddingTop: 54,
               height: '480px',
               width: '730px',
               borderRadius: '20px',
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: '50px',
+                flexFlow: 'column',
               }}>
-              <TableEmpty diskText={props.diskText} />
-            </div>}
+                <img src={IconEmpty} />
+                <div style={{ color: '#A9AEC5', fontSize: '14px' }}>{'暂无文件'}</div>
+              </div>
+            </div>
+            }
       </>
     )
   }

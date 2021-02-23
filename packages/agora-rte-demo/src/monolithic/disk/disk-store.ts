@@ -68,15 +68,6 @@ export class DiskAppStore {
       status: 'notCache',
       progress: 0,
     },
-    {
-      calories: '100',
-      resourceUuid: '93b61ab070ec11eb8122cf10b9ec91f7',
-      resourceName: '23232323',
-      type: 'ppt',
-      fat: `${Date.now()}`,
-      status: 'notCache',
-      progress: 0,
-    },
   ]
 
   async checkDownloadList(downloadList: any) { 
@@ -97,19 +88,17 @@ export class DiskAppStore {
     return downloadList
   }
 
-  async startDownload(taskUuid: string) {
-    // const isWeb = this.isElectron ? false : true
+  async startDownload(taskUuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) {
     const isCached = await agoraCaches.hasTaskUUID(taskUuid)
     if (isCached) {
-      console.log('已缓存', isCached)
+      EduLogger.info(`文件已缓存.... taskUuid: ${taskUuid}`)
       return
     }
     try {
-      this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (!isElectron) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          this.tempDownloadList.find(item => item.resourceUuid === taskUuid)!.progress = progress
+          onProgressCallback && onProgressCallback(progress)
         })
       } else {
         const controller = new AbortController();
@@ -122,9 +111,7 @@ export class DiskAppStore {
         }).then(fetchProgress({
             onProgress: (progress: any) => {
               if (progress.hasOwnProperty('percentage')) {
-                console.log('>>>on progress', progress)
-                // this.preloadingProgress = get(progress, 'percentage')
-                this.tempDownloadList.find(item => item.resourceUuid === taskUuid)!.progress = get(progress, 'percentage')
+                onProgressCallback && onProgressCallback(progress)
               }
             },
         }));
@@ -136,10 +123,9 @@ export class DiskAppStore {
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      onComplete && onComplete()
     } catch (err) {
-      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
     }
   }
 
@@ -154,7 +140,7 @@ export class DiskAppStore {
 
   async deleteAllCache() {
     try {
-      agoraCaches.clearAllCache()
+      await agoraCaches.clearAllCache()
       EduLogger.info('删除全部缓存完成....')
     } catch (err) {
       EduLogger.info(`删除全部缓存失败....: ${err}`)

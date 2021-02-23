@@ -1,13 +1,53 @@
-import React from 'react'
+import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { DiskButton } from './control/disk-button'
 import { DiskManagerDialog } from './dialog/manager'
 import { Loading } from './control/loading'
 import TableEmpty from "./dialog/table-empty";
 import { UploadFile } from '../upload/index'
+import DownloadDiskTables from './table/download-disk-table'
 
 export default {
   title: '网盘'
 }
+
+// interface DownloadDiskProps {
+//   // downloadComponet
+//   downloadList?: any,
+
+//   showOpenItem?: boolean,
+//   setDownloadList?: Dispatch<SetStateAction<any>>,
+//   handleDownloadAll?: () => any,
+//   handleClearcache?: () => Promise<void>,
+//   handleDownload?: (evt: any) => any,
+//   handleDeleteSingle?: (evt: any) => any,
+//   donwloadAllComponent?: React.ReactNode,
+//   deleteAllCacheComponent?: React.ReactNode,
+//   singleDownloadComponent?: React.ReactNode,
+//   singleDeleteComponent?: React.ReactNode,
+//   diskText?: any,
+//   diskOpenText?: any,
+//   inRoom?: boolean,
+// }
+
+// const DownloadDisk = (props: DownloadDiskProps) => {
+//   return (
+//     <>
+//       <DownloadDiskTables
+//         tabValue={0}
+//         setDownloadList={props.setDownloadList}
+//         diskText={props.diskText}
+//         handleDownloadAll={props.handleDownloadAll}
+//         handleClearcache={props.handleClearcache}
+//         handleDownload={props.handleDownload}
+//         handleDeleteSingle={props.handleDeleteSingle}
+//         singleDownloadComponent={props.singleDownloadComponent}
+//         singleDeleteComponent={props.singleDeleteComponent}
+//         downloadList={props.downloadList}
+//         showText={props.diskOpenText}
+//       />
+//     </>
+//   )
+// }
 
 export const NetworkDisk = (props: any) => {
 
@@ -106,10 +146,11 @@ export const NetworkDisk = (props: any) => {
       showOpenItem={true}
       diskOpenText={"打开"}
       handleDeleteSingle={handleDeleteSingle}
-      uploadComponent={uploadComponent()}
-      donwloadAllComponent={donwloadAllComponent()}
-      deleteAllCacheComponent={deleteAllCache()}
-      singleDownloadComponent={singleDonwload()}
+      // downloadDiskComponent={DownloadDisk(props)}
+      // uploadComponent={uploadComponent()}
+      // donwloadAllComponent={donwloadAllComponent()}
+      // deleteAllCacheComponent={deleteAllCache()}
+      // singleDownloadComponent={singleDonwload()}
       privateList={[
         {
           calories: '100',

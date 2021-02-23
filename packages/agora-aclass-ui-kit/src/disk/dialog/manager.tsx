@@ -115,6 +115,8 @@ interface NetworkDiskDialogProps {
   diskText?: any,
   diskOpenText?: any,
   inRoom?: boolean,
+  //
+  downloadDiskComponent?: React.ReactNode,
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -245,25 +247,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                 )
               }
               {
-                props.inRoom === false && activeValue === 0 && (
-                  <DownloadDiskTables
-                    setDownloadList={props.setDownloadList}
-                    showOpenItem={props.showOpenItem}
-                    handleOpenCourse={props.handleOpenCourse}
-                    diskText={props.diskText}
-                    tabValue={activeValue}
-                    handleDownloadAll={props.handleDownloadAll}
-                    handleClearcache={props.handleClearcache}
-                    handleDownload={props.handleDownload}
-                    handleDeleteSingle={props.handleDeleteSingle}
-                    // donwloadAllComponent={props.donwloadAllComponent}
-                    // deleteAllCacheComponent={props.deleteAllCacheComponent}
-                    singleDownloadComponent={props.singleDownloadComponent}
-                    singleDeleteComponent={props.singleDeleteComponent}
-                    downloadList={props.downloadList}
-                    showText={props.diskOpenText}
-                  />
-                )
+                props.inRoom === false && activeValue === 0 && (props.downloadDiskComponent)
               }
             </TableContainer>
           </Paper>
