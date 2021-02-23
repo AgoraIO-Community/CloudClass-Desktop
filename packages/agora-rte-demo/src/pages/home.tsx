@@ -28,6 +28,7 @@ import { CourseWareItem, LaunchOption } from '@/edu-sdk';
 import { mapFileType } from '@/services/upload-service';
 import {agoraCaches} from '@/utils/web-download.file'
 import { PPTProgress } from '@/components/netless-board/loading';
+import { StorageDisk } from '@/monolithic/disk/index'
 import { AgoraEduEvent } from '@/edu-sdk/declare';
 
 const transformPPT = (data: any): CourseWareItem[] => {

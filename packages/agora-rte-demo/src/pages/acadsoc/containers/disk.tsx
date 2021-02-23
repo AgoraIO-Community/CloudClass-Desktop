@@ -154,10 +154,6 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
-  // console.log('boardStore.personalResources', boardStore.personalResources)
-  // console.log('boardStore.publicResources', boardStore.publicResources)
-  // console.log('boardStore.allResources', boardStore.allResources)
-
   return (
     <>
     <DiskManagerDialog

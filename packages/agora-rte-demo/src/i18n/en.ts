@@ -179,6 +179,7 @@ const en = {
     'all': 'all',
     'downloaded': 'downloaded',
     'notDownload': 'not downloaded',
+    'downloading': 'downloading',
 
     'operation': 'operation',
     'progress': 'progress',

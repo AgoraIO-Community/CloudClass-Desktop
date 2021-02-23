@@ -170,6 +170,7 @@ const zhCN: any = {
     'all': '全部',
     'downloaded': '已下载',
     'notDownload': '未下载',
+    'downloading': '下载中',
 
     'operation': '操作',
     'progress': '进度',
