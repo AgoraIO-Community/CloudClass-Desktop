@@ -85,6 +85,8 @@ export const DialogFramePaper: React.FC<DialogFramePaperProps> = (props) => {
           {/* <div className></div> */}
         </div>
       : null}
+      {props.closeable ? 
+      <CloseButton className={classes.closeButton} onClick={props.onClose} style={props.closeBtnStyle}/> : null}
       {props.children ? props.children : null}
     </Paper>
   )
