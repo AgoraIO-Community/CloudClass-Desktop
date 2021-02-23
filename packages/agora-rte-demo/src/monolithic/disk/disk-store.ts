@@ -57,7 +57,6 @@ export class DiskAppStore {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (!isElectron) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          console.log('>>>>>progress', progress)
           this.preloadingProgress = progress
         })
       } else {
