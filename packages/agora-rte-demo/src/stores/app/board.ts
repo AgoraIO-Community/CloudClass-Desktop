@@ -2326,7 +2326,7 @@ static toolItems: IToolItem[] = [
         console.log('未找到uuid相关的课件', uuid)
       }
       console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
-      const putCourseFileType = ["ppt", "pdf", "doc", "docx", "pptx"]
+      const putCourseFileType = ["ppt", "word"]
       if (putCourseFileType.includes(resource.type)) {
         await this.putCourseResource(uuid)
         console.log(`打开文件成功,文件类型${resource.type}`)
