@@ -42,11 +42,11 @@ export const MinimizeStudent = observer(() => {
   const studentViewRef = useRef<any>()
 
   useEffect(() => {
-    acadsocStore.trophyFlyoutEnd = {
+    acadsocStore.trophyFlyout.endPosition = {
       x: studentViewRef.current?.getBoundingClientRect().left + 120,
       y: studentViewRef.current?.getBoundingClientRect().top 
     }
-  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.isStudentMini])
+  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.trophyFlyout.minimizeTrigger])
 
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )

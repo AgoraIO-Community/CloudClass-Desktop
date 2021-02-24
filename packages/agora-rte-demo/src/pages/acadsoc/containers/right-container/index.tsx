@@ -32,18 +32,17 @@ export const RightContainer = observer(() => {
   }, [])
 
   useEffect(() => {
-    rightContainerRef.current?.addEventListener('transitionend', () => {
-      acadsocStore.isStudentMini = !acadsocStore.isStudentMini
-    })
+    const event = () => {
+      acadsocStore.trophyFlyout.minimizeTrigger = !acadsocStore.trophyFlyout.minimizeTrigger
+    }
+    rightContainerRef.current?.addEventListener('transitionend', event)
     return () => {
-      rightContainerRef.current.removeEventListener('transitionend', () => {
-        acadsocStore.isStudentMini = !acadsocStore.isStudentMini
-      })
+      rightContainerRef.current.removeEventListener('transitionend', event)
     }
   }, [])
 
   useEffect(() => {
-    acadsocStore.trophyFlyoutStart = {
+    acadsocStore.trophyFlyout.startPosition = {
       x: acadsocStore.windowWidth / 2,
       y: acadsocStore.windowHeight / 2
     }

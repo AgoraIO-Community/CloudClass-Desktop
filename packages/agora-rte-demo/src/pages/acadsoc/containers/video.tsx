@@ -164,11 +164,11 @@ export const StudentVideo = observer(() => {
   const studentViewRef = useRef<any>()
   
   useEffect(() => {
-    acadsocStore.trophyFlyoutEnd = {
+    acadsocStore.trophyFlyout.endPosition = {
       x: studentViewRef.current?.getBoundingClientRect().left + 120,
       y: studentViewRef.current?.getBoundingClientRect().top 
     }
-  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.isStudentMini])
+  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.trophyFlyout.minimizeTrigger])
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
