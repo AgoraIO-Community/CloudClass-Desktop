@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useRef, useEffect } from 'react'
 import {Video, Volume} from 'agora-aclass-ui-kit'
 import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
@@ -161,6 +161,15 @@ export const StudentVideo = observer(() => {
   const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
   const disableBoard = shouldDisable('board', isLocal, roomInfo.userRole, userStream.streamUuid)
 
+  const studentViewRef = useRef<any>()
+  
+  useEffect(() => {
+    acadsocStore.trophyFlyoutEnd = {
+      x: studentViewRef.current?.getBoundingClientRect().left + 120,
+      y: studentViewRef.current?.getBoundingClientRect().top 
+    }
+  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.isStudentMini])
+
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
     if (type.sourceType === 'video') {
@@ -203,7 +212,7 @@ export const StudentVideo = observer(() => {
   }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
 
   return (
-    <div style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
+    <div ref={studentViewRef} style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
       <Video
         uid={`${userStream.userUuid}`}
         className={""}
@@ -212,7 +221,7 @@ export const StudentVideo = observer(() => {
         resizable={false}
         showBoardIcon={true}
         disableBoard={disableBoard}
-        disableTrophy={disableTrophy}
+        disableTrophy={disableTrophy}  
         trophyNumber={trophyNumber}
         visibleTrophy={true}
         role={"student"}

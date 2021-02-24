@@ -197,6 +197,27 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   time: number = 0
 
+  @observable
+  windowWidth: number = 0
+
+  @observable
+  windowHeight: number = 0
+
+  @observable
+  isStudentMini: boolean = false
+
+  @observable
+  trophyFlyoutStart: {x: number, y: number} = {
+    x: 0,
+    y: 0,
+  }
+
+  @observable
+  trophyFlyoutEnd: {x: number, y: number} = {
+    x: 0,
+    y: 0,
+  }
+
   @computed
   get calibratedTime(): number {
     return this.time + this.timeShift
@@ -614,7 +635,6 @@ export class AcadsocRoomStore extends SimpleInterval {
         startTime: startTime,  // 单位：毫秒
         duration: duration,    // 秒
       })
-      console.log('***** checkInResult', checkInResult)
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
       this.classroomSchedule = {
