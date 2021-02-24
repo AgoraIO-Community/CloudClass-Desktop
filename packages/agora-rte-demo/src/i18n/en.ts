@@ -3,6 +3,14 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "home": {
+      "material_list": "Update Material List",
+      "download_course": "Download Material",
+      "clear_course_cache": "Clear Material Storage",
+      "join_test_room": "Join Test Room",
+      "begin_time": "Begin Time:",
+      "duration": "Duration mins:",
+    },
     "pretest": "Device Pretest",
     "notice": "Notice",
     "upload_log_success": "upload log success",
@@ -222,7 +230,8 @@ const en = {
       'paramsEmpty': 'params：{reason} can`t be empty',
     },
     'class_end': 'The classroom is end.',
-    'unknown': 'Unknown error occured.'
+    'unknown': 'Unknown error occured.',
+    'room_is_full': 'The room is full',
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',
