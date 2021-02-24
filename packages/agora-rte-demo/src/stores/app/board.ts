@@ -829,11 +829,11 @@ static toolItems: IToolItem[] = [
       throw e
     }
     // 默认只有老师不用禁止跟随
-    if (this.userRole !== EduRoleTypeEnum.teacher) {
-      this.room.disableCameraTransform = true
-    } else {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
       this.room.setViewMode(ViewMode.Broadcaster)
       this.room.disableCameraTransform = false
+    } else {
+      this.room.disableCameraTransform = true
     }
 
     if (this.online && this.room) {
@@ -844,8 +844,10 @@ static toolItems: IToolItem[] = [
       if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
         if (this.lockBoard) {
           this.room.disableDeviceInputs = true
+          this.room.disableCameraTransform = true
         } else {
           this.room.disableDeviceInputs = false
+          this.room.disableCameraTransform = false
         }
       }
     }
@@ -989,8 +991,10 @@ static toolItems: IToolItem[] = [
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
             this.room.disableDeviceInputs = true
+            this.room.disableCameraTransform = true
           } else {
             this.room.disableDeviceInputs = false
+            this.room.disableCameraTransform = false
           }
         }
       }
