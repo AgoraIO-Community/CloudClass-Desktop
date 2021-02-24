@@ -155,8 +155,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     const config = {
       bitrate: 0,
       frameRate: 15,
-      height: 360,
-      width: 640,
+      height: 240,
+      width: 320,
     }
     const videoEncoderConfiguration = Object.assign({
       width: config.width,
