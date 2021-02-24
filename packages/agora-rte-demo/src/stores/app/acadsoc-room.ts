@@ -23,7 +23,6 @@ import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction, reaction, IReactionDisposer } from 'mobx';
 import { ChatMessage } from '@/utils/types';
 import { t } from '@/i18n';
-import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
 import {EduClassroomStateEnum, SceneVideoConfiguration} from '@/stores/app/scene';

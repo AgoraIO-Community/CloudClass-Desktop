@@ -1,39 +1,14 @@
 
-@import "./icons.scss";
-@import "./components/apply-user-list/index.scss";
-@import "./components/cards/index.scss";
-@import "./components/chat/index.scss";
-@import "./components/chat/panel.scss";
+// @import "./icons.scss";
 @import "./components/circle-loading/index.scss";
-@import "./components/dialog/dialog.scss";
-@import "./components/extension-card/extension-card.scss";
-@import "./components/github-icon/index.scss";
-@import "./components/group-list/index.scss";
-@import "./components/middle-grouping/middle-grouping.scss";
 @import "./components/native-shared-window/native-shared-window.scss";
-@import "./components/nav/nav.scss";
-@import "./components/netless-board/upload/upload-notice.scss";
-@import "./components/netless-board/netless-whiteboard.scss";
 @import "./components/progress/progress.scss";
 @import "./components/role-radio/role-radio.scss";
 @import "./components/screen-sharing/index.scss";
-@import "./components/student-list/student-list.scss";
 @import "./components/toast/toast.scss";
-@import "./components/video-marquee/video-marquee.scss";
 @import "./components/video-player/index.scss";
-@import "./components/volume/index.scss";
 
-@import "./pages/breakout-class/breakout-class.scss";
-@import "./pages/breakout-class/assistant-courses-page/index.scss";
-
-@import "./pages/classroom/big-class.scss";
-@import "./pages/classroom/room.scss";
-@import "./pages/classroom/small-class.scss";
-@import "./pages/device-detect/index.scss";
-@import "./pages/middle-class/middle-class.scss";
-@import "./pages/replay/replay.scss";
 @import "./pages/home.scss";
-// @import "~video.js/dist/video-js.css";
 
 html, body, #root {
   width: 100%;

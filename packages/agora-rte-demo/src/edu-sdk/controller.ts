@@ -2,7 +2,6 @@ import { unmountComponentAtNode } from 'react-dom'
 import { AgoraEduEvent } from './declare'
 import { AppStore } from '@/stores/app'
 import { render } from 'react-dom'
-import { ReplayAppStore } from '@/stores/replay-app/index'
 import { ReactElement } from 'react'
 
 export enum EduSDKInternalStateEnum {
@@ -116,15 +115,7 @@ export class MainController {
     this.appController.create(store, component, dom, callback)
   }
 
-  createReplayAppStore(store: ReplayAppStore, component: ReactElement, dom: Element, callback: EventCallableFunction) {
-    this.replayController.create(store, component, dom, callback)
-  }
-
   getAppClassRoom() {
-    return this.appController.getClassRoom()
-  }
-
-  getReplayClassRoom() {
     return this.appController.getClassRoom()
   }
 }

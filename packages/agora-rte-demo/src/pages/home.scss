@@ -18,24 +18,4 @@
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
-
-  .cover-en {
-    display: block;
-    background-repeat: no-repeat;
-    height: 500px;
-    width: 350px;
-    background-size: contain;
-    position: absolute;
-    background-image: url("~@/assets/cover-us.png");
-  }
-
-  .cover-cn {
-    display: block;
-    background-repeat: no-repeat;
-    height: 500px;
-    width: 350px;
-    background-size: contain;
-    position: absolute;
-    background-image: url("~@/assets/cover-cn.png");
-  }
 }

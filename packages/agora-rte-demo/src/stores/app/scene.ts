@@ -9,7 +9,6 @@ import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction } from 'mobx';
 import { get } from 'lodash';
 import { t } from '@/i18n';
-import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
 
@@ -525,7 +524,7 @@ export class SceneStore extends SimpleInterval {
     }
     this.lockMicrophone()
     try {
-      const deviceId = this.appStore.deviceStore.microphoneId
+      const deviceId = this.appStore.pretestStore.microphoneId
       await this.mediaService.openMicrophone({deviceId})
       this._microphoneTrack = this.mediaService.microphoneTrack
       // this.microphoneLabel = this.mediaService.getMicrophoneLabel()
