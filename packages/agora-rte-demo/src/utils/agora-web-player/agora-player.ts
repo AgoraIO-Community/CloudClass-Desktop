@@ -1,10 +1,10 @@
 import { PlayerLogger } from './logger';
 
 import { EventEmitter } from 'events'
-import Videojs, {VideoJsPlayer} from 'video.js'
+// import Videojs, {VideoJsPlayer} from 'video.js'
 import './index.css';
 
-import '@videojs/http-streaming'
+// import '@videojs/http-streaming'
 import { BizLogger } from '../biz-logger';
 
 export { TimelineScheduler } from './timeline-scheduler';
@@ -13,7 +13,7 @@ export interface AgoraPlayerCallback {
   onPhaseChanged: (evt: any) => void
 }
 
-type Player = VideoJsPlayer
+type Player = any
 
 export enum PhaseState {
   init = 'init',
@@ -60,17 +60,18 @@ export class AgoraPlayer extends EventEmitter {
     this.$el = document.createElement('video')
     this.$el.id = 'video-player'
     this.$el.className = "video-js video-layout"
-    this.player = Videojs(this.$el, {
-      preload: 'auto',
-      controls: false,
-      autoplay: false,
-      loop: false,
-      html5: {
-        hls: {
-          overrideNative: true
-        }
-      }
-    })
+    this.player = {} as any
+    // this.player = Videojs(this.$el, {
+    //   preload: 'auto',
+    //   controls: false,
+    //   autoplay: false,
+    //   loop: false,
+    //   html5: {
+    //     hls: {
+    //       overrideNative: true
+    //     }
+    //   }
+    // })
 
     this.type = this.url.split('.').pop() || 'mp4'
 

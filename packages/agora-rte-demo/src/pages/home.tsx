@@ -229,12 +229,6 @@ export const HomePage = observer(() => {
         roleType: userRole,
         startTime: +dayjs(session.startTime),
         duration: session.duration * 60,
-        // listener: (evt: AgoraEduEvent) => {
-        //   console.log("launch 组件生命周期", evt)
-        //   if (evt === 2) {
-        //     history.push('/')
-        //   }
-        // }
       })
       setLoading(false)
       history.push('/acadsoc/launch')
