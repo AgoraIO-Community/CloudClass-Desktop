@@ -47,19 +47,19 @@ export const Trophy = observer(() => {
     } 
     if (trophyState !== 'move') {
       return {
-        left: acadsocStore.trophyFlyoutStart.x + 'px',
-        top: acadsocStore.trophyFlyoutStart.y + 'px',
+        left: acadsocStore.trophyFlyout.startPosition.x + 'px',
+        top: acadsocStore.trophyFlyout.startPosition.y + 'px',
         display,
       }
     } else {
       return {
-        left: acadsocStore.trophyFlyoutEnd.x + 'px',
-        top: acadsocStore.trophyFlyoutEnd.y + 'px',
+        left: acadsocStore.trophyFlyout.endPosition.x + 'px',
+        top: acadsocStore.trophyFlyout.endPosition.y + 'px',
         display,
         animation: 'trophyContainer 5s ease infinite'
       }
     }
-  }, [trophyState,JSON.stringify(acadsocStore.trophyFlyoutStart), JSON.stringify(acadsocStore.trophyFlyoutEnd)])
+  }, [trophyState, JSON.stringify(acadsocStore.trophyFlyout.startPosition), JSON.stringify(acadsocStore.trophyFlyout.endPosition)])
 
   return(
     <div 

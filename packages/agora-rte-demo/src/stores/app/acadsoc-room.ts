@@ -74,6 +74,18 @@ type RoomRewardType = {
   }
 }
 
+type TrophyType = {
+  minimizeTrigger: boolean,
+  startPosition: {
+    x: number,
+    y: number,
+  },
+  endPosition: {
+    x: number,
+    y: number,
+  }
+}
+
 type ClassroomScheduleType = {
   startTime: number,
   duration: number,
@@ -204,18 +216,16 @@ export class AcadsocRoomStore extends SimpleInterval {
   windowHeight: number = 0
 
   @observable
-  isStudentMini: boolean = false
-
-  @observable
-  trophyFlyoutStart: {x: number, y: number} = {
-    x: 0,
-    y: 0,
-  }
-
-  @observable
-  trophyFlyoutEnd: {x: number, y: number} = {
-    x: 0,
-    y: 0,
+  trophyFlyout: TrophyType = {
+    minimizeTrigger: false,
+    startPosition: {
+      x: 0,
+      y: 0,
+    },
+    endPosition: {
+      x: 0,
+      y: 0,
+    }
   }
 
   @computed
