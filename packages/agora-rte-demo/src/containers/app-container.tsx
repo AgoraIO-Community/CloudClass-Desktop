@@ -1,5 +1,4 @@
-import React, { useDebugValue, useEffect } from 'react';
-import { ConfirmDialog } from '@/components/dialog';
+import React, { useEffect } from 'react';
 import { Toast, ToastMessage } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
@@ -72,7 +71,6 @@ export const RoomContainer = (props: RoomContainerProps) => {
       <ThemeContainer>
         <Router>
           <Toast />
-          {/* <ConfirmDialog /> */}
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>
@@ -121,7 +119,6 @@ export const AppContainer = (props: AppContainerProps) => {
       <ThemeContainer>
         <HashRouter>
           <AppToast />
-          {/* <ConfirmDialog /> */}
           <RouteContainer routes={props.routes} />
         </HashRouter>
       </ThemeContainer>

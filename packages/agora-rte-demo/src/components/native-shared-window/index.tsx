@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {CustomButton} from '@/components/custom-button';
-import { useBreakoutRoomStore, useSceneStore } from '@/hooks'
+import { useSceneStore } from '@/hooks'
 import { observer } from 'mobx-react';
 import { BizLogger } from '@/utils/biz-logger';
 
@@ -77,53 +77,54 @@ export const WindowList: React.FC<WindowListProps> = ({
   )
 }
 
-const NativeSharedWindowController = observer(() => {
-  const sceneStore = useSceneStore()
-  const breakoutRoomStore = useBreakoutRoomStore()
+// const NativeSharedWindowController = observer(() => {
+//   const sceneStore = useSceneStore()
+//   const breakoutRoomStore = useBreakoutRoomStore()
 
-  var roomStatus = sceneStore.customScreenShareWindowVisible
-  var breakoutRoomStatus = breakoutRoomStore.customScreenShareWindowVisible
+//   var roomStatus = sceneStore.customScreenShareWindowVisible
+//   var breakoutRoomStatus = breakoutRoomStore.customScreenShareWindowVisible
 
-  const [windowId, setWindowId] = useState<number>(0)
+//   const [windowId, setWindowId] = useState<number>(0)
 
-  return (
-    (roomStatus || breakoutRoomStatus) ? 
-    <WindowList
-      windowId={windowId}
-      title={'Please select and click window for share'}
-      items={sceneStore.customScreenShareItems}
-      cancel={() => {
-        if(roomStatus) {
-          sceneStore.removeScreenShareWindow()
-        }
-        if(breakoutRoomStatus) {
-          breakoutRoomStore.removeScreenShareWindow()
-        }
-      }}
-      selectWindow={(windowId: any) => {
-        BizLogger.info('windowId', windowId)
-        setWindowId(windowId)
-      }}
-      confirm={async (evt: any) => {
-        if (!windowId) {
-          BizLogger.warn("windowId is empty");
-          return;
-        }
-        console.log('windowId confirm', windowId)
-        if(roomStatus) {
-          await sceneStore.startNativeScreenShareBy(windowId)
-        }
-        if(breakoutRoomStatus) {
-          await breakoutRoomStore.startNativeScreenShareBy(windowId)
-        }
-      }}
-    />
-    : null
-  )
-})
+//   return (
+//     (roomStatus || breakoutRoomStatus) ? 
+//     <WindowList
+//       windowId={windowId}
+//       title={'Please select and click window for share'}
+//       items={sceneStore.customScreenShareItems}
+//       cancel={() => {
+//         if(roomStatus) {
+//           sceneStore.removeScreenShareWindow()
+//         }
+//         if(breakoutRoomStatus) {
+//           breakoutRoomStore.removeScreenShareWindow()
+//         }
+//       }}
+//       selectWindow={(windowId: any) => {
+//         BizLogger.info('windowId', windowId)
+//         setWindowId(windowId)
+//       }}
+//       confirm={async (evt: any) => {
+//         if (!windowId) {
+//           BizLogger.warn("windowId is empty");
+//           return;
+//         }
+//         console.log('windowId confirm', windowId)
+//         if(roomStatus) {
+//           await sceneStore.startNativeScreenShareBy(windowId)
+//         }
+//         if(breakoutRoomStatus) {
+//           await breakoutRoomStore.startNativeScreenShareBy(windowId)
+//         }
+//       }}
+//     />
+//     : null
+//   )
+// })
 
 export default function NativeSharedWindowContainer() {
   return (
-    <NativeSharedWindowController />
+    <div />
+    // <NativeSharedWindowController />
   )
 }

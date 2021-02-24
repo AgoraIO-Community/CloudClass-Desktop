@@ -2,11 +2,10 @@ import { SceneDefinition } from 'white-web-sdk';
 import '@/index.scss'
 import 'promise-polyfill/src/polyfill'
 import React from 'react'
-import { ReplayRoom } from "@/monolithic/replay-room"
+// import { ReplayRoom } from "@/monolithic/replay-room"
 import { LiveRoom } from "@/monolithic/live-room"
 import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
 import { AppStore } from "@/stores/app"
-import { ReplayAppStore } from "@/stores/replay-app"
 import { unmountComponentAtNode } from "react-dom"
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
 import { eduSDKApi } from '@/services/edu-sdk-api'
@@ -303,6 +302,7 @@ export class AgoraEduSDK {
     return controller.appController.getClassRoom()
   }
 
+  // TODO: @deprecated method
   static async replay(dom: Element, option: ReplayOption) {
 
     console.log(" replay ", dom, " option ", JSON.stringify(option))
@@ -314,28 +314,28 @@ export class AgoraEduSDK {
     try {
       checkReplayOption(dom, option)
 
-      const store = new ReplayAppStore({
-        config: {
-          agoraAppId: sdkConfig.configParams.appId,
-          agoraNetlessAppId: option.whiteboardAppId,
-          enableLog: true,
-          sdkDomain: sdkConfig.sdkDomain,
-          rtmUid: '',
-          rtmToken: '',
-          courseWareList: [],
-        },
-        language: option.language,
-        replayConfig: {
-          whiteboardUrl: option.videoUrl,
-          logoUrl: '',
-          whiteboardId: option.whiteboardId,
-          whiteboardToken: option.whiteboardToken,
-          startTime: option.beginTime,
-          endTime: option.endTime,
-        },
-      })
+      // const store = new ReplayAppStore({
+      //   config: {
+      //     agoraAppId: sdkConfig.configParams.appId,
+      //     agoraNetlessAppId: option.whiteboardAppId,
+      //     enableLog: true,
+      //     sdkDomain: sdkConfig.sdkDomain,
+      //     rtmUid: '',
+      //     rtmToken: '',
+      //     courseWareList: [],
+      //   },
+      //   language: option.language,
+      //   replayConfig: {
+      //     whiteboardUrl: option.videoUrl,
+      //     logoUrl: '',
+      //     whiteboardId: option.whiteboardId,
+      //     whiteboardToken: option.whiteboardToken,
+      //     startTime: option.beginTime,
+      //     endTime: option.endTime,
+      //   },
+      // })
 
-      controller.replayController.create(store, <ReplayRoom store={store}/>, dom, option.listener)
+      // controller.replayController.create(store, <ReplayRoom store={store}/>, dom, option.listener)
       unlock()
     } catch (err) {
       unlock()

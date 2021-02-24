@@ -96,7 +96,7 @@ export interface CustomMenuListProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  active: {
+  customItemMenuActive: {
     background: 'rgba(0, 0, 0, 0.12)',
     backgroundColor: '#faebd7',
     borderRadius: '3px'
@@ -113,7 +113,7 @@ export const CustomMenuList: React.FC<CustomMenuListProps> = (props) => {
         return (
           <CustomMenuItemBaseButton
             key={`${item}${index}`}
-            className={item === props.active ? classes.active : ''}
+            className={item === props.active ? classes.customItemMenuActive : ''}
             iconType={item}
             btnStyle={props.btnStyle}
             icon={iconMap[item].path}

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CustomIcon } from "../icon"
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
-import { useMiddleRoomStore, useSceneStore } from '@/hooks'
+import { useSceneStore } from '@/hooks'
 import { RendererPlayer } from '../media-player'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
@@ -46,51 +46,51 @@ function usePrevious<T>(value: T): T {
   return ref.current
 }
 
-export const MediaMenu = observer((props: RewardMenuPropsType) => {
-  const {video, audio, userUuid, rewardNum} = props
-  const sceneStore = useSceneStore()
-  const middleRoomStore = useMiddleRoomStore() 
+// export const MediaMenu = observer((props: RewardMenuPropsType) => {
+//   const {video, audio, userUuid, rewardNum} = props
+//   const sceneStore = useSceneStore()
+//   const middleRoomStore = useMiddleRoomStore() 
   
-  const handleAudioClick = async () => {
-    if (props.audio) {
-      await sceneStore.muteAudio(props.userUuid, false)
-    } else {
-      await sceneStore.unmuteAudio(props.userUuid, false)
-    }
-  }
+//   const handleAudioClick = async () => {
+//     if (props.audio) {
+//       await sceneStore.muteAudio(props.userUuid, false)
+//     } else {
+//       await sceneStore.unmuteAudio(props.userUuid, false)
+//     }
+//   }
 
-  const handleVideoClick = async () => {
-    if (props.video) {
-      await sceneStore.muteVideo(props.userUuid, false)
-    } else {
-      await sceneStore.unmuteVideo(props.userUuid, false)
-    }
-  }
+//   const handleVideoClick = async () => {
+//     if (props.video) {
+//       await sceneStore.muteVideo(props.userUuid, false)
+//     } else {
+//       await sceneStore.unmuteVideo(props.userUuid, false)
+//     }
+//   }
 
-  // TODO: 需要完善，中班课场景的发送奖励
-  const sendReward = useCallback(async () => {
-    await middleRoomStore.sendReward(userUuid, rewardNum)
-  }, [userUuid, rewardNum])
+//   // TODO: 需要完善，中班课场景的发送奖励
+//   const sendReward = useCallback(async () => {
+//     await middleRoomStore.sendReward(userUuid, rewardNum)
+//   }, [userUuid, rewardNum])
 
-  // TODO: close co-video
-  const handleClose = async () =>{
-    await middleRoomStore.sendClose(props.userUuid)
-  }
+//   // TODO: close co-video
+//   const handleClose = async () =>{
+//     await middleRoomStore.sendClose(props.userUuid)
+//   }
 
-  return (
-    <div className="hover-menu">
-      {
-        userUuid ? 
-        <>
-          <CustomIcon onClick={handleAudioClick} className={audio ? "icon-speaker-on" : "icon-speaker-off"} data={"audio"} />
-          <CustomIcon onClick={handleVideoClick} className={video ? "icons-camera-unmute-s" : "icons-camera-mute-s"} data={"video"} />
-          <CustomIcon onClick={handleClose} className={"icons-close-co-video"} data={"close-co-video"} />
-          <CustomIcon onClick={sendReward} className={"icon-hollow-white-star"} data={"reward"} />
-        </> : null
-      }
-    </div>
-  )
-})
+//   return (
+//     <div className="hover-menu">
+//       {
+//         userUuid ? 
+//         <>
+//           <CustomIcon onClick={handleAudioClick} className={audio ? "icon-speaker-on" : "icon-speaker-off"} data={"audio"} />
+//           <CustomIcon onClick={handleVideoClick} className={video ? "icons-camera-unmute-s" : "icons-camera-mute-s"} data={"video"} />
+//           <CustomIcon onClick={handleClose} className={"icons-close-co-video"} data={"close-co-video"} />
+//           <CustomIcon onClick={sendReward} className={"icon-hollow-white-star"} data={"reward"} />
+//         </> : null
+//       }
+//     </div>
+//   )
+// })
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = React.memo((props: any) => {
   const {
@@ -178,13 +178,13 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = React.memo((props: any) =
   return (
     <div className={`${className ? className : 'agora-video-view'}`}>
       {showClose ? <div className="icon-close" onClick={handleClose}></div> : null}
-      {showHover ? 
+      {/* {showHover ? 
         <MediaMenu
           userUuid={`${userUuid}`}
           video={video}
           audio={audio}
           rewardNum={rewardNum as number}
-        /> : null}
+        /> : null} */}
       {rewardVisible ?
         <StartEffect destroy={onDestroy} /> : null}
       {

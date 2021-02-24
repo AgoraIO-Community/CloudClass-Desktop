@@ -1,8 +1,6 @@
-import { ReplayStore } from './../stores/app/replay';
 import { LaunchOption, ReplayOption } from './index';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { AppStore } from '@/stores/app';
-import { ReplayAppStore } from '@/stores/replay-app';
 
 export type RoomConfigProps<T> = {
   store: T

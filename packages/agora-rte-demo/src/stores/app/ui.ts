@@ -1,7 +1,6 @@
 import { GlobalStorage } from '@/utils/custom-storage';
 import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
-import { DialogMessage, DialogType } from '@/components/dialog';
 import { platform } from '@/utils/platform';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
 interface NoticeMessage {
@@ -77,7 +76,7 @@ export class UIStore {
   notice?: NoticeMessage = undefined
 
   @observable
-  dialog?: DialogMessage = undefined
+  dialog?: any = undefined
 
   @observable
   settingDialog: boolean = false
@@ -98,7 +97,7 @@ export class UIStore {
   _language: string = '';
 
   @observable
-  dialogs: DialogType[] = []
+  dialogs: any[] = []
 
   @observable
   activeTab: string = 'chatroom'
@@ -230,12 +229,12 @@ export class UIStore {
   }
 
   @action
-  showDialog (dialog: DialogMessage) {
+  showDialog (dialog: any) {
    this.addDialog(dialog)
   }
 
   @action
-  addDialog (dialog: DialogMessage) {
+  addDialog (dialog: any) {
     this.dialogs.push({
       dialog,
       id: this.dialogs.length,
@@ -298,7 +297,7 @@ export class UIStore {
 
   @computed
   get showPagination (): boolean {
-    const { userRole } = this.appStore.roomStore.roomInfo
+    const { userRole } = this.appStore.acadsocStore.roomInfo
     if (userRole !== EduRoleTypeEnum.student) {
       return true
     }
@@ -312,7 +311,7 @@ export class UIStore {
   
   @computed
   get showScaler(): boolean {
-    const userRole = this.appStore.roomStore.roomInfo.userRole
+    const userRole = this.appStore.acadsocStore.roomInfo.userRole
     if (userRole !== EduRoleTypeEnum.student) {
       return true
     }
@@ -321,11 +320,11 @@ export class UIStore {
 
   @computed
   get showFooterMenu(): boolean {
-    const userRole = this.appStore.roomStore.roomInfo.userRole
+    const userRole = this.appStore.acadsocStore.roomInfo.userRole
     if (userRole !== EduRoleTypeEnum.student) {
       return true
     }
-    const roomType = this.appStore.roomStore.roomInfo.roomType
+    const roomType = this.appStore.acadsocStore.roomInfo.roomType
     if (userRole === EduRoleTypeEnum.student && `${roomType}` === `${EduRoomType.SceneTypeMiddleClass}`) {
       return true
     }
@@ -334,8 +333,8 @@ export class UIStore {
 
   @computed
   get showApplyUserList(): boolean {
-    const userRole = this.appStore.roomStore.roomInfo.userRole
-    const roomType = this.appStore.roomStore.roomInfo.roomType
+    const userRole = this.appStore.acadsocStore.roomInfo.userRole
+    const roomType = this.appStore.acadsocStore.roomInfo.roomType
     if (`${roomType}` === `${EduRoomType.SceneTypeMiddleClass}`) {
       return true
     }
@@ -344,7 +343,7 @@ export class UIStore {
 
   @computed
   get showTools(): boolean {
-    const userRole = this.appStore.roomStore.roomInfo.userRole
+    const userRole = this.appStore.acadsocStore.roomInfo.userRole
     if (userRole !== EduRoleTypeEnum.student) {
       return true
     }

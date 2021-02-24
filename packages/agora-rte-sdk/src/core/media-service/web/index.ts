@@ -600,7 +600,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
         cameraId: option.deviceId,
         encoderConfig: {
-          frameRate: 15,
+          frameRate: option.encoderConfig.frameRate,
+          width: option.encoderConfig.width,
+          height: option.encoderConfig.height,
         },
         // encoderConfig: option.encoderConfig
       })
@@ -974,7 +976,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     } else {
       EduLogger.info("change test camera try open test camera ", deviceId)
       await this.openTestCamera({
-        deviceId
+        deviceId,
+        encoderConfig: {
+          width: 320,
+          height: 240,
+          frameRate: 15
+        }
       })
     }
   }

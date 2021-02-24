@@ -3,6 +3,14 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "home": {
+      "material_list": "更新课件列表",
+      "download_course": "下载课件",
+      "clear_course_cache": "清空课件缓存",
+      "join_test_room": "测试课加入房间",
+      "begin_time": "开始上课时间:",
+      "duration": "课程持续时间/分钟",
+    },
     "pretest": "设备检测",
     "notice": "提示",
     "upload_log_success": "上传成功",
@@ -212,7 +220,8 @@ const zhCN: any = {
       'paramsEmpty': '参数：{reason}不能为空',
     },
     'class_end': '课程已结束，请点击确定离开教室',
-    'unknown': '发生未知错误，请点击确认离开教室'
+    'unknown': '发生未知错误，请点击确认离开教室',
+    'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'whiteboard': {
     'downloading': '下载中 {reason}%...',

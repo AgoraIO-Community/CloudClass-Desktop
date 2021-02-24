@@ -331,7 +331,7 @@ static toolItems: IToolItem[] = [
   }
 
   get localUser(): EduUser {
-    return this.appStore.roomStore.roomManager.localUser.user
+    return this.appStore.acadsocStore.roomManager.localUser.user
   }
 
   get localUserUuid() {
@@ -1028,9 +1028,9 @@ static toolItems: IToolItem[] = [
       ...data,
       cursorAdapter,
       userPayload: {
-        userId: this.appStore.roomStore.roomInfo.userUuid,
+        userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
-        cursorName: this.appStore.roomStore.roomInfo.userName,
+        cursorName: this.appStore.acadsocStore.roomInfo.userName,
       }
     })
     cursorAdapter.setRoom(this.boardClient.room)
@@ -1111,7 +1111,7 @@ static toolItems: IToolItem[] = [
       ...data,
       cursorAdapter,
       userPayload: {
-        userId: this.appStore.roomStore.roomInfo.userUuid,
+        userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: ""
       }
     })
