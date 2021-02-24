@@ -1,6 +1,6 @@
 import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import { Theme, withStyles } from '@material-ui/core/styles'
-import { DevicePicker, Volume, VolumeDirectionEnum } from 'agora-aclass-ui-kit'
+import { DevicePicker, Volume, VolumeDirectionEnum, MicWave } from 'agora-aclass-ui-kit'
 import React, { useCallback, useRef, useState } from 'react'
 import styles from './style.module.scss'
 import CustomIconArrow from './assets/rectangle.png'
@@ -259,17 +259,20 @@ export const ReportBottomButtonGroup: React.FC<any> = (props) => {
 
 export const BottomButtonGroup: React.FC<any> = (props) => {
   return (
-    <div className={styles.btnGroup}>
+    <div className={styles.btnGroupWrapper}>
       {props.detectText ? <DetectNoticeText text={props.detectText} /> : null}
-      <div className={styles.no} onClick={props.onNo}>
-        <div className={styles.icon}></div>
-        <div>{props.noText}</div>
-      </div>
-      <div className={styles.yes} onClick={props.onYes}>
-        <div className={styles.icon}></div>
-        <div>{props.yesText}</div>
+      <div className={styles.btnGroup}>
+        <div className={styles.no} onClick={props.onNo}>
+          <div className={styles.icon}></div>
+          <div>{props.noText}</div>
+        </div>
+        <div className={styles.yes} onClick={props.onYes}>
+          <div className={styles.icon}></div>
+          <div>{props.yesText}</div>
+        </div>
       </div>
     </div>
+
   )
 }
 
@@ -303,13 +306,18 @@ export const AudioDetect: React.FC<PretestAudioDetectProps> = (props) => {
         }}
       />
       <div className={styles.positionVolume}>
-        <div className={styles.iconVolume}></div>
+        <MicWave
+          currentVolume={volume}
+          maxVolume={25}
+          threshold={0.2}
+        />
         <Volume
           currentVolume={volume}
           width={'5px'}
-          height={'35px'}
+          height={'25px'}
           maxLength={25}
           direction={VolumeDirectionEnum.Right}
+          foregroundColor={'#75C0FF'}
         />
       </div>
       <BottomButtonGroup
@@ -427,13 +435,15 @@ export const TestReport: React.FC<any> = (props) => {
           </div>
         </div>
       </div>
-      <ReportBottomButtonGroup
-        swapYes={props.result}
-        noText={props.noText}
-        yesText={props.yesText}
-        onNo={props.onNo}
-        onYes={props.onYes}
-      />
+      <div className={styles.btnGroupWrapper}>
+        <ReportBottomButtonGroup
+          swapYes={props.result}
+          noText={props.noText}
+          yesText={props.yesText}
+          onNo={props.onNo}
+          onYes={props.onYes}
+        />
+      </div>
     </div>
   )
 }

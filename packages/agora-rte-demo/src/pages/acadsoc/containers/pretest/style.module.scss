@@ -16,7 +16,7 @@
 
   .rightFrame {
     width: 520px;
-    height: 414px;
+    height: 384px;
     border-radius: 15px;
     // padding: 0px 20px 20px;
     color: #ffffff;
@@ -65,10 +65,14 @@
 
 .font {
   color: #75C0FF;
+  margin-top: 5px;
+  font-size:12px;
+  margin-left: 5px;
 }
 
 .icon {
   background: #DEF4FF;
+  margin-left: 5px;
   .audio {
     background: url('./assets/mic.png');
     background-size: contain;
@@ -99,11 +103,11 @@
 }
 
 .detectText {
-  position: absolute;
-  top: -51px;
+  position: relative;
   color: #002591;
   font-size: 16px;
-  left: 111px;
+  margin-bottom: 8px;
+  padding: 0 10px;
 }
 
 .iconVolume {
@@ -146,7 +150,7 @@
 
 .positionSpeaker {
   position: absolute;
-  top: 121px;
+  top: 100px;
   left: 215px;
   display: flex;
   flex-direction: row;
@@ -162,6 +166,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  >div:first-child {
+    margin-right: 24px;
+  }
 }
 
 .rendererPlaceholder {
@@ -200,15 +208,19 @@
   }
 }
 
+.btnGroupWrapper {
+  position: absolute;
+  bottom: 34px;
+  left: 103px;
+}
+
 .btnGroup {
   display: flex;
   flex-direction: row;
   align-items: center;
   color: white;
-  position: absolute;
-  bottom: 40px;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   left: 5px;
   .no {
     display: flex;
@@ -231,9 +243,10 @@
       width: 15px;
       height: 15px;
       margin: 15px;
-      margin-left: 9px;
+      margin-left: 0px;
     }
   }
+
 
   .yes {
     display: flex;
@@ -320,6 +333,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
+    font-size: 14px;
     bottom: -22px;
   }
 }
