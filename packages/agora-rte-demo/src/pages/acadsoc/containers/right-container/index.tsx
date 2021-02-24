@@ -35,6 +35,11 @@ export const RightContainer = observer(() => {
     rightContainerRef.current?.addEventListener('transitionend', () => {
       acadsocStore.isStudentMini = !acadsocStore.isStudentMini
     })
+    return () => {
+      rightContainerRef.current.removeEventListener('transitionend', () => {
+        acadsocStore.isStudentMini = !acadsocStore.isStudentMini
+      })
+    }
   }, [])
 
   useEffect(() => {
