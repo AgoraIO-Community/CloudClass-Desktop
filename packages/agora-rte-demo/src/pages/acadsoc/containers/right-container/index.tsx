@@ -10,20 +10,39 @@ import styles from './style.module.scss'
 export const RightContainer = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
   const rightContainerRef = useRef<any>()
+
   const [rightContainerHeight, setRightContainerHeight] = useState<number>(0)
 
+  // 监听窗口变化
   useEffect(() => {
     const onResize = () => {
       let t = rightContainerRef.current ? rightContainerRef.current.clientHeight : 0
       setRightContainerHeight(t)
-      // console.log('window resize')
+      acadsocStore.windowWidth = window.innerWidth
+      acadsocStore.windowHeight = window.innerHeight
     }
     window.addEventListener('resize', onResize)
     onResize()
+    // 初始化窗口宽高
+    acadsocStore.windowWidth = window.innerWidth
+    acadsocStore.windowHeight = window.innerHeight
     return () => {
       window.removeEventListener('resize', onResize)
     }
   }, [])
+
+  useEffect(() => {
+    rightContainerRef.current?.addEventListener('transitionend', () => {
+      acadsocStore.isStudentMini = !acadsocStore.isStudentMini
+    })
+  }, [])
+
+  useEffect(() => {
+    acadsocStore.trophyFlyoutStart = {
+      x: acadsocStore.windowWidth / 2,
+      y: acadsocStore.windowHeight / 2
+    }
+  }, [acadsocStore.windowWidth, acadsocStore.windowHeight])
 
   const viewTopMap = useMemo(() => {
     let top = 10

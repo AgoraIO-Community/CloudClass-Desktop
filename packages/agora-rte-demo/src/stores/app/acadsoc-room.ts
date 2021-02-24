@@ -197,6 +197,27 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   time: number = 0
 
+  @observable
+  windowWidth: number = 0
+
+  @observable
+  windowHeight: number = 0
+
+  @observable
+  isStudentMini: boolean = false
+
+  @observable
+  trophyFlyoutStart: {x: number, y: number} = {
+    x: 0,
+    y: 0,
+  }
+
+  @observable
+  trophyFlyoutEnd: {x: number, y: number} = {
+    x: 0,
+    y: 0,
+  }
+
   @computed
   get calibratedTime(): number {
     return this.time + this.timeShift

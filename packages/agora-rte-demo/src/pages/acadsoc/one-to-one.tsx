@@ -75,11 +75,7 @@ export const AcadsocOneToOne = observer(() => {
       <div className={!boardStore.isFullScreen ? styles.flexBox : styles.fullScreen}>
         <div className={styles.mainContainer}>
           <BoardView />
-          {
-            acadsocStore.showTrophyAnimation ? 
-            <Trophy></Trophy>
-            : null
-          }
+          <Trophy></Trophy>
           <div className={styles.rightContainer}>
             <RightContainer/>
           </div>

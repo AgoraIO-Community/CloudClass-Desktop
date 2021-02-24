@@ -1,9 +1,27 @@
-
 .trophy-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: fixed;
+  z-index: 999;
+  transition: top 1s cubic-bezier(0.15, -0.75, 0.88, 0.33), 
+  left 1s cubic-bezier(0, 0, 0, 0);
+}
+
+@keyframes trophyContainer {  
+  0%{
+    transform: scale(1); 
+    // opacity:0.5;
+  }
+  25%{
+    transform: scale(0.75);
+    // opacity:0.75;
+  }
+  50%{
+    transform: scale(0.5);
+    // opacity:0.5;
+  }
+  75%{
+    transform: scale(0.25);
+    // opacity:0.25;
+  }
 }
 
 .gift-animation-container .gift-animation{

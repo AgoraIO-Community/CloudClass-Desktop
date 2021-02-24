@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { observer } from 'mobx-react'
 import styles from './style.module.scss'
 import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
@@ -39,6 +39,16 @@ export const MinimizeStudent = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
   const sceneStore = useSceneStore()
 
+  const studentViewRef = useRef<any>()
+
+  useEffect(() => {
+    acadsocStore.trophyFlyoutEnd = {
+      x: studentViewRef.current?.getBoundingClientRect().left + 120,
+      y: studentViewRef.current?.getBoundingClientRect().top 
+    }
+    console.log('****** ', studentViewRef.current?.getBoundingClientRect() )
+  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.isStudentMini])
+
   const bindUnwind = (type:string) => {
     let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
     t.isHidden = false
@@ -50,7 +60,7 @@ export const MinimizeStudent = observer(() => {
   }
 
   return (
-    <div className={styles.studentContainer}>
+    <div className={styles.studentContainer} ref={studentViewRef}>
       <div className={styles.teacherContainer}>
         <div className={styles.mainIcon}></div>
         <span className={styles.name}>{sceneStore.studentStreams[0].account}</span>
