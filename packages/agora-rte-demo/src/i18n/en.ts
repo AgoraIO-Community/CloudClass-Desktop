@@ -43,9 +43,9 @@ const en = {
     },
     "device": {
       "keep": "Please Keep Smile, :D",
-      "videoDetectTitle": "camera test",
-      "audioDetectTitle": "microphone test",
-      "speakerDetectTitle": "speaker test",
+      "videoDetectTitle": "Camera Test",
+      "audioDetectTitle": "Mic Test",
+      "speakerDetectTitle": "Speaker Test",
       "camera": "Camera：",
       "mic": "Microphone：",
       "speaker": "Speaker：",

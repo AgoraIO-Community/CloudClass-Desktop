@@ -155,7 +155,8 @@ export const DevicePicker: React.FC<DeviceItemProps> = (props) => {
             fontFamily: fontFamily,
           }}
           inputProps={{
-            style: {}
+            style: {
+            }
           }}
         >
           {props.list.map((item: any, idx: number) => (
