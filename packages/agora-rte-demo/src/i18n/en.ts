@@ -221,7 +221,8 @@ const en = {
       'paramsEmpty': 'params：{reason} can`t be empty',
     },
     'class_end': 'The classroom is end.',
-    'unknown': 'Unknown error occured.'
+    'unknown': 'Unknown error occured.',
+    'room_is_full': 'The room is full',
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',

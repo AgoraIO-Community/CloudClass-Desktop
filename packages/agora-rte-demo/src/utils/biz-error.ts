@@ -1,7 +1,8 @@
 import { t } from "@/i18n";
 
 const ExceptionMapping = {
-    "20410100": t('error.class_end')
+    "20410100": t('error.class_end'),
+    "20403001": t('error.room_is_full')
 }
 
 
