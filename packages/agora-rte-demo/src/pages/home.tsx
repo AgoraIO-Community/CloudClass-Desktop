@@ -211,6 +211,8 @@ export const HomePage = observer(() => {
     //   setLoading(false)
     // }
 
+    const language = uiStore.language.match(/^zh/) ? "zh": "en"
+
     try {
       setLoading(true)
       let {userUuid, rtmToken} = await homeApi.login(uid)
@@ -219,7 +221,7 @@ export const HomePage = observer(() => {
         pretest: true,
         courseWareList: courseWareList,
         translateLanguage: "auto",
-        language: "en",
+        language: language,
         userUuid: `${userUuid}`,
         rtmToken,
         roomUuid,
@@ -272,7 +274,7 @@ export const HomePage = observer(() => {
       {/* <CloudDiskUpload /> */}
       {loading ? <Loading /> : null}
       {/* <PPTProgress /> */}
-      {downloading ? <Progress title={`下载中: ${progressing}%`} /> : null}
+      {downloading ? <Progress title={`downloading: ${progressing}%`} /> : null}
       {/* {downloading ? <} */}
       {false ? null : 
       <div className="web-menu">
@@ -299,7 +301,6 @@ export const HomePage = observer(() => {
                 value={uiStore.language.match(/^zh/) ? 0 : 1}
                 onChange={(evt: any) => {
                   const value = evt.target.value;
-                  // window.location.reload()
                   if (value === 0) {
                     uiStore.setLanguage('zh-CN');
                   } else {
@@ -331,7 +332,7 @@ export const HomePage = observer(() => {
               <form className={classes.container} noValidate>
                 <TextField
                   id="datetime-local"
-                  label="开始上课时间："
+                  label={t("aclass.home.begin_time")}
                   type="datetime-local"
                   // defaultValue={session.startTime}
                   className={classes.textField}
@@ -357,29 +358,31 @@ export const HomePage = observer(() => {
                       duration: e.target.value
                     })
                   }}
-                  label="课程持续时间/分钟：" 
+                  label={t("aclass.home.duration")}
                 />
               </form>
             </div>
             <div style={{margin: '20px'}}>
             <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={fetchCourseWareList}>
-             更新课件列表
+              {t("aclass.home.material_list")}
             </Button>
             <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={fetchCourseWareZip}>
-             下载课件
+              {t("aclass.home.download_course")}
             </Button>
             <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
               console.log('清空课件缓存')
             }}>
-             清空课件缓存
+             {t("aclass.home.clear_course_cache")}
             </Button>
-            <CustomButton name={'测试课加入房间'} onClick={() => {
+            <Button variant="contained" style={{margin: '5px'}} color="primary" onClick={() => {
               setSessionInfo({
                 ...session,
                 roomName: 'test_' + session.roomName
               });
               handleSubmit()
-            }}/>
+            }}>
+             {t("aclass.home.join_test_room")}
+            </Button>
             </div>
           </div>
           // <div className={`cover-placeholder-web ${t('home.cover_class')}`}></div>
@@ -468,8 +471,5 @@ export const HomePage = observer(() => {
         </div>
       </div>
     </div>
-    
-    // fixme 临时调试下载课件
-    // <StorageDisk></StorageDisk>
   )
 })

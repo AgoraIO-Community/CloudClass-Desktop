@@ -237,7 +237,12 @@ export class DeviceSettingStore {
   @action
   async openTestCamera() {
     const deviceId = this._cameraId
-    await this.mediaService.openTestCamera({deviceId})
+    await this.mediaService.openTestCamera({
+      deviceId,
+      encoderConfig: {
+        ...this.appStore.sceneStore.videoEncoderConfiguration,
+      }
+    })
     this._cameraRenderer = this.mediaService.cameraTestRenderer
     this.cameraLabel = this.mediaService.getTestCameraLabel()
     this._cameraId = this.cameraId

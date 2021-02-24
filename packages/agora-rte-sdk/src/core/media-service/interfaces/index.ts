@@ -80,10 +80,13 @@ export declare interface PrepareScreenShareParams {
   shareAudio?: 'enable' | 'auto' | 'disable'
   encoderConfig?: any
 }
-
 export declare interface CameraOption {
   deviceId: string
-  encoderConfig?: any
+  encoderConfig: {
+    width: number,
+    height: number,
+    frameRate: number,
+  }
 }
 
 export declare interface MicrophoneOption {

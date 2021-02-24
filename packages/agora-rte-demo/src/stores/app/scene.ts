@@ -11,10 +11,17 @@ import { get } from 'lodash';
 import { t } from '@/i18n';
 import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
+import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
 
 const delay = 2000
 
 const ms = 500
+
+export type SceneVideoConfiguration = {
+  width: number,
+  height: number,
+  frameRate: number
+}
 
 export enum EduClassroomStateEnum {
   beforeStart = 0,
@@ -82,6 +89,16 @@ export class SceneStore extends SimpleInterval {
 
   @observable
   _screenVideoRenderer?: LocalUserRenderer = undefined;
+
+
+  @computed
+  get videoEncoderConfiguration(): SceneVideoConfiguration {
+    return {
+      width: 320,
+      height: 240,
+      frameRate: 15
+    }
+  }
 
   @computed
   get totalVolume(): number {
@@ -407,7 +424,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action
-  async openCamera() {
+  async openCamera(option?: SceneVideoConfiguration) {
     if (this._cameraRenderer) {
       return BizLogger.warn('[demo] Camera already exists')
     }
@@ -416,12 +433,16 @@ export class SceneStore extends SimpleInterval {
     }
     this.lockCamera()
     try {
-      const deviceId = this.appStore.deviceStore.cameraId
-      await this.mediaService.openCamera({deviceId})
+      const deviceId = this.appStore.pretestStore.cameraId
+      const config = {
+        deviceId,
+        encoderConfig: {
+          ...option
+        }
+      } as CameraOption
+      await this.mediaService.openCamera(config)
       this._cameraRenderer = this.mediaService.cameraRenderer
-      // this.cameraLabel = this.mediaService.getCameraLabel()
-      // this._cameraId = this.cameraId
-      BizLogger.info('[demo] action in openCamera >>> openCamera')
+      BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
     } catch (err) {
       this.unLockCamera()

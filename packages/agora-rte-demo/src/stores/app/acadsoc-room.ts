@@ -26,7 +26,7 @@ import { t } from '@/i18n';
 import { DialogType } from '@/components/dialog';
 import { BizLogger } from '@/utils/biz-logger';
 import { get } from 'lodash';
-import {EduClassroomStateEnum} from '@/stores/app/scene';
+import {EduClassroomStateEnum, SceneVideoConfiguration} from '@/stores/app/scene';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
 import dayjs from 'dayjs';
@@ -578,6 +578,11 @@ export class AcadsocRoomStore extends SimpleInterval {
     
   }
 
+  @computed
+  get videoEncoderConfiguration() {
+    return this.appStore.sceneStore.videoEncoderConfiguration
+  }
+
   @action
   async join() {
     try {
@@ -714,7 +719,7 @@ export class AcadsocRoomStore extends SimpleInterval {
               if (this.sceneStore.joiningRTC) {
                 // if (this.sceneStore._hasCamera) {
                 if (this.sceneStore.cameraEduStream.hasVideo) {
-                  await this.sceneStore.openCamera()
+                  await this.sceneStore.openCamera(this.videoEncoderConfiguration)
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after openCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 } else {
                   await this.sceneStore.closeCamera()
@@ -988,7 +993,7 @@ export class AcadsocRoomStore extends SimpleInterval {
           // await this.sceneStore.prepareMicrophone()
           if (this.sceneStore._cameraEduStream) {
             if (this.sceneStore._cameraEduStream.hasVideo) {
-              await this.sceneStore.openCamera()
+              await this.sceneStore.openCamera(this.videoEncoderConfiguration)
             } else {
               await this.sceneStore.closeCamera()
             }

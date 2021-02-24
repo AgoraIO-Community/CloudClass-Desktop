@@ -418,7 +418,14 @@ export class BreakoutRoomStore extends SimpleInterval {
     this.lockCamera()
     try {
       const deviceId = this._cameraId
-      await this.mediaService.openCamera({deviceId})
+      await this.mediaService.openCamera({
+        deviceId,
+        encoderConfig: {
+          width: 320,
+          height: 240,
+          frameRate: 15
+        }
+      })
       this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this._cameraId = this.cameraId
