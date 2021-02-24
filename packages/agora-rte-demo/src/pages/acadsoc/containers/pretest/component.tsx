@@ -259,17 +259,20 @@ export const ReportBottomButtonGroup: React.FC<any> = (props) => {
 
 export const BottomButtonGroup: React.FC<any> = (props) => {
   return (
-    <div className={styles.btnGroup}>
+    <div className={styles.btnGroupWrapper}>
       {props.detectText ? <DetectNoticeText text={props.detectText} /> : null}
-      <div className={styles.no} onClick={props.onNo}>
-        <div className={styles.icon}></div>
-        <div>{props.noText}</div>
-      </div>
-      <div className={styles.yes} onClick={props.onYes}>
-        <div className={styles.icon}></div>
-        <div>{props.yesText}</div>
+      <div className={styles.btnGroup}>
+        <div className={styles.no} onClick={props.onNo}>
+          <div className={styles.icon}></div>
+          <div>{props.noText}</div>
+        </div>
+        <div className={styles.yes} onClick={props.onYes}>
+          <div className={styles.icon}></div>
+          <div>{props.yesText}</div>
+        </div>
       </div>
     </div>
+
   )
 }
 
@@ -427,13 +430,15 @@ export const TestReport: React.FC<any> = (props) => {
           </div>
         </div>
       </div>
-      <ReportBottomButtonGroup
-        swapYes={props.result}
-        noText={props.noText}
-        yesText={props.yesText}
-        onNo={props.onNo}
-        onYes={props.onYes}
-      />
+      <div className={styles.btnGroupWrapper}>
+        <ReportBottomButtonGroup
+          swapYes={props.result}
+          noText={props.noText}
+          yesText={props.yesText}
+          onNo={props.onNo}
+          onYes={props.onYes}
+        />
+      </div>
     </div>
   )
 }
