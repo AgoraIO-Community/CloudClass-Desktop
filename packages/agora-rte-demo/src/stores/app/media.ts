@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
@@ -91,7 +92,10 @@ export class MediaStore {
   }
   private appStore: AppStore;
 
-  constructor(appStore: any) {
+  id: string = uuidv4()
+
+  constructor(appStore: AppStore) {
+    console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
@@ -113,7 +117,8 @@ export class MediaStore {
         onCancel: () => {
         }
       })
-      await this.appStore.deviceStore.init({ audio: true })
+      await this.appStore.pretestStore.init({ audio: true})
+      // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
@@ -132,7 +137,8 @@ export class MediaStore {
         }
       })
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
-      await this.appStore.deviceStore.init({ video: true })
+      // await this.appStore.deviceStore.init({ video: true })
+      await this.appStore.pretestStore.init({ video: true})
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
@@ -146,10 +152,14 @@ export class MediaStore {
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      const uid = evt.user.uid
+      this.rendererOutputFrameRate[uid] = 1
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      const uid = evt.user.uid
+      delete this.rendererOutputFrameRate[uid]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -190,6 +200,14 @@ export class MediaStore {
         // this.speakers.set(+speaker.uid, +speaker.volume)
       })
     })
+    this.mediaService.on('localVideoStats', (evt: any) => {
+      this.rendererOutputFrameRate[0] = evt.stats.encoderOutputFrameRate
+    })
+    this.mediaService.on('remoteVideoStats', (evt: any) => {
+      if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
+        this.rendererOutputFrameRate[evt.user.uid] = evt.stats.decoderOutputFrameRate
+      }
+    })
   }
 
   @observable
@@ -197,6 +215,9 @@ export class MediaStore {
   
   @observable
   speakers: Record<number, number> = {}
+
+  @observable
+  rendererOutputFrameRate: Record<number, number> = {}
 
   @observable
   networkQuality: string = 'unknown'
@@ -212,6 +233,7 @@ export class MediaStore {
     this.autoplay = false
     this.totalVolume = 0
     this.speakers = {}
+    this.rendererOutputFrameRate = {}
   }
 
   @observable

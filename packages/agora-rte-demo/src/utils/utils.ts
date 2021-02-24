@@ -1,5 +1,10 @@
+import { AgoraMediaDeviceEnum } from "@/types/global"
+import fetchProgress from "@netless/fetch-progress"
 import MD5 from "js-md5"
+import { get } from "lodash"
 import { Room } from "white-web-sdk"
+import { GlobalStorage } from "./custom-storage"
+import { agoraCaches } from "./web-download.file"
 
 export const debounce = function(foo:any, t:number) {
   let timer:any
@@ -159,4 +164,39 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       }
     }
   )
+}
+
+// media device helper
+export const getDeviceLabelFromStorage = (type: string) => {
+  const mediaDeviceStorage = GlobalStorage.read("mediaDevice") || {}
+
+  if (!['cameraLabel', 'microphoneLabel'].includes(type)) {
+    return AgoraMediaDeviceEnum.Default
+  }
+  return mediaDeviceStorage[type]
+}
+
+export const startDownload = async (isNative: boolean, taskUuid: string, callback: (progress: number) => any) => {
+  if (isNative) {
+    const controller = new AbortController();
+      const resourcesHost = "convertcdn.netless.link";
+      const signal = controller.signal;
+      const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+      const res = await fetch(zipUrl, {
+          method: "get",
+          signal: signal,
+      }).then(fetchProgress({
+          onProgress: (progress: any) => {
+            if (progress.hasOwnProperty('percentage')) {
+              callback(get(progress, 'percentage'))
+            }
+          },
+      }));
+    console.log("native端 课件下载完成")
+  } else {
+    await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+      callback(progress)
+    })
+    console.log("web端 课件下载完成")
+  }
 }

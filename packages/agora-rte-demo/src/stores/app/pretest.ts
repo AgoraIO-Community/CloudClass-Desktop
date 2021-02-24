@@ -1,6 +1,11 @@
+import uuidv4 from 'uuid/v4';
+import { GlobalStorage } from './../../utils/custom-storage';
 import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, reaction } from 'mobx';
+import { isEmpty } from 'lodash';
+import { getDeviceLabelFromStorage } from '@/utils/utils';
+import { AgoraMediaDeviceEnum } from '@/types/global';
 
 export class PretestStore {
   static resolutions: any[] = [
@@ -82,10 +87,10 @@ export class PretestStore {
   deviceList: any[] = []
 
   @observable
-  cameraLabel: string = '';
+  cameraLabel: string = getDeviceLabelFromStorage('cameraLabel');
 
   @observable
-  microphoneLabel: string = '';
+  microphoneLabel: string = getDeviceLabelFromStorage('microphoneLabel');
   _totalVolume: any;
 
   @observable
@@ -96,7 +101,7 @@ export class PretestStore {
 
   @computed
   get cameraId(): string {
-    const defaultValue = 'unknown'
+    const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel)
     if (this.cameraList[idx]) {
       return this.cameraList[idx].deviceId
@@ -106,7 +111,7 @@ export class PretestStore {
 
   @computed
   get microphoneId(): string {
-    const defaultValue = 'unknown'
+    const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel)
     if (this.microphoneList[idx]) {
       return this.microphoneList[idx].deviceId
@@ -158,8 +163,46 @@ export class PretestStore {
 
   appStore: AppStore;
 
+
+  id: string = uuidv4()
+
   constructor(appStore: AppStore) {
+    console.log("[ID] pretestStore ### ", this.id)
     this.appStore = appStore
+    reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange.bind(this))
+  }
+
+  getDeviceItem(list: any[], queryDevice: {type: string, value: string, targetField: string}) {
+    const type = `${queryDevice.type}`
+    const targetField = `${queryDevice.targetField}`
+    const _defaultValue = targetField === 'label' ? 'default' : ''
+    const defaultValue = isEmpty(list) ? _defaultValue : list[0][type]
+    const device: any = list.find((it: any) => it[type] === queryDevice.value)
+    const targetLabelValue = device ? device[targetField] : defaultValue
+    return targetLabelValue
+  }
+
+  @computed
+  get exactCameraId(): string {
+    return this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
+  }
+
+  @computed
+  get exactMicrophoneId(): string {
+    return this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'label'})
+  }
+
+  handleDeviceChange (...args: any[]) {
+    const prevMediaDevice = GlobalStorage.read("mediaDevice") || {}
+
+    const cameraLabel = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
+    const microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'label'})
+
+    GlobalStorage.save("mediaDevice", {
+      ...prevMediaDevice,
+      cameraLabel: cameraLabel,
+      microphoneLabel: microphoneLabel,
+    })
   }
 
   @action
@@ -175,8 +218,8 @@ export class PretestStore {
   @action
   reset() {
     this.resolutionIdx = 0
-    this.cameraLabel = ''
-    this.microphoneLabel = ''
+    this.cameraLabel = getDeviceLabelFromStorage('cameraLabel')
+    this.microphoneLabel =  getDeviceLabelFromStorage('microphoneLabel')
     this.web.reset()
     this.resetCameraTrack()
     this.resetMicrophoneTrack()
@@ -193,7 +236,7 @@ export class PretestStore {
   get cameraList(): any[] {
     return this._cameraList
       // .concat([{
-      //   deviceId: 'unknown',
+      //   deviceId: AgoraMediaDeviceEnum.Default,
       //   label: '禁用',
       // }])
   }
@@ -205,7 +248,7 @@ export class PretestStore {
   get microphoneList(): any[] {
     return this._microphoneList
       // .concat([{
-      //   deviceId: 'unknown',
+      //   deviceId: AgoraMediaDeviceEnum.Default,
       //   label: '禁用',
       // }])
   }
@@ -260,7 +303,7 @@ export class PretestStore {
 
   @action
   async openTestCamera() {
-    const deviceId = this._cameraId
+    const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
     await this.mediaService.openTestCamera({deviceId})
     this._cameraRenderer = this.mediaService.cameraTestRenderer
     this.cameraLabel = this.mediaService.getTestCameraLabel()
@@ -280,7 +323,7 @@ export class PretestStore {
       await this.changeElectronTestCamera(deviceId)
       return
     }
-    if (deviceId === 'unknown') {
+    if (deviceId === AgoraMediaDeviceEnum.Default) {
       await this.mediaService.closeTestCamera()
       this._cameraRenderer = undefined
       this._cameraId = deviceId
@@ -300,7 +343,7 @@ export class PretestStore {
 
   @action
   async openTestMicrophone() {
-    const deviceId = this._microphoneId
+    const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
     await this.mediaService.openTestMicrophone({deviceId})
     if (this.isWeb) {
       this._microphoneTrack = this.web.microphoneTrack
@@ -322,13 +365,13 @@ export class PretestStore {
       await this.changeElectronTestMicrophone(deviceId)
       return
     }
-    if (deviceId === 'unknown') {
+    if (deviceId === AgoraMediaDeviceEnum.Default) {
       await this.mediaService.closeTestMicrophone()
       if (this.isWeb) {
         this._microphoneTrack = undefined
       }
       this._microphoneId = deviceId
-      this.microphoneLabel = deviceId
+      this.microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: this._microphoneId, targetField: 'label'})
     } else {
       await this.mediaService.changeTestMicrophone(deviceId)
       if (this.isWeb) {
@@ -370,7 +413,7 @@ export class PretestStore {
   /// live room camera operator
   @action
   async openCamera() {
-    const deviceId = this._cameraId
+    const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
     await this.mediaService.openCamera({deviceId})
     this._cameraRenderer = this.mediaService.cameraRenderer
     this.cameraLabel = this.mediaService.getCameraLabel()
@@ -386,7 +429,7 @@ export class PretestStore {
 
   @action
   async changeCamera(deviceId: string) {
-    if (deviceId === 'unknown') {
+    if (deviceId === AgoraMediaDeviceEnum.Default) {
       await this.mediaService.closeCamera()
       this._cameraRenderer = undefined
       this._cameraId = deviceId
@@ -406,7 +449,7 @@ export class PretestStore {
 
   @action
   async openMicrophone() {
-    const deviceId = this._microphoneId
+    const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
     await this.mediaService.openMicrophone({deviceId})
     if (this.isWeb) {
       this._microphoneTrack = this.web.microphoneTrack
@@ -432,7 +475,7 @@ export class PretestStore {
 
   @action
   async changeMicrophone(deviceId: string) {
-    if (deviceId === 'unknown') {
+    if (deviceId === AgoraMediaDeviceEnum.Default) {
       await this.mediaService.closeMicrophone()
       if (this.isWeb) {
         this._microphoneTrack = undefined

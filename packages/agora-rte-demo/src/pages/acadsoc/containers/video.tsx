@@ -47,7 +47,8 @@ export interface VideoMediaStream {
   showControls: boolean,
   placeHolderType: any,
   placeHolderText: string,
-  volumeLevel: number
+  volumeLevel: number,
+  notFreeze: boolean
 }
 
 const VideoPlaceholder = () => (
@@ -55,6 +56,15 @@ const VideoPlaceholder = () => (
   <div className={styles.camIcon}></div>
     <div className={styles.text}>
       {t('placeholder.noCamera')}
+    </div>
+  </div>
+)
+
+const ClosedCameraPlaceholder = () => (
+  <div className={styles.cameraPlaceholder}>
+  <div className={styles.camIcon}></div>
+    <div className={styles.text}>
+      {t('placeholder.closeCamera')}
     </div>
   </div>
 )
@@ -124,7 +134,8 @@ export const TeacherVideo = observer(() => {
         placeHolderText={userStream.placeHolderText}
       >
         { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-        { !!userStream.video === false ? <VideoPlaceholder /> : null}
+        { !!userStream.video === false ? <ClosedCameraPlaceholder /> : null}
+        { userStream.notFreeze ? null : <VideoPlaceholder /> }
         { userStream.audio ? 
           <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
             <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />
@@ -229,7 +240,9 @@ export const StudentVideo = observer(() => {
         placeHolderText={userStream.placeHolderText}
       >
         { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-        { !!userStream.video === false ? <VideoPlaceholder /> : null}
+        { !!userStream.video === false ? <ClosedCameraPlaceholder /> : null}
+        { userStream.notFreeze ? null : <VideoPlaceholder /> }
+        { !!userStream}
         { userStream.audio ? 
         <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
           <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />

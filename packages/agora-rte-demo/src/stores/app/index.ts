@@ -1,5 +1,5 @@
-import { CourseWareItem } from './../../edu-sdk/index';
-import { CourseWareList } from './../../edu-sdk/index';
+import uuidv4 from 'uuid/v4';
+import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
 
 import {
   GenericErrorWrapper,
@@ -45,6 +45,8 @@ import { AcadsocRoomStore } from './acadsoc-room';
 import { DeviceSettingStore } from './device-setting';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
+import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
+import { HomeStore } from './home';
 
 type RoomInfoParams = {
   roomName: string
@@ -81,12 +83,10 @@ export type AppStoreInitParams = {
   translateLanguage: TranslateEnum
   startTime?: number
   duration?: number
-  listener?: ListenerCallback
   pretest?: boolean
   mainPath?: string
   roomPath?: string
   resetRoomInfo: boolean
-  unmountDom?: CallableFunction
 }
 
 export type RoomInfo = {
@@ -107,7 +107,7 @@ export type DeviceInfo = {
   microphoneName: string
 }
 
-export class AppStore {
+export class AppStore implements ClassRoomAbstractStore {
   // stores
   uiStore!: UIStore;
   boardStore!: BoardStore;
@@ -124,6 +124,7 @@ export class AppStore {
   pretestStore!: PretestStore;
   deviceSettingStore!: DeviceSettingStore;
   diskStore!: DiskStore;
+  homeStore!: HomeStore;
 
   eduManager!: EduManager;
 
@@ -241,8 +242,11 @@ export class AppStore {
     this.customScreenShareItems = []
   }
 
+  id: string = uuidv4()
+
   constructor(params: AppStoreInitParams) {
     this.params = params
+    console.log("[ID] appStore ### ", this.id)
     console.log(" roomInfoParams ", params.roomInfoParams)
     console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
@@ -365,6 +369,7 @@ export class AppStore {
     this.breakoutRoomStore = new BreakoutRoomStore(this)
     this.extensionStore = new ExtensionStore(this)
     this.diskStore = new DiskStore(this)
+    this.homeStore = new HomeStore(this)
     this._screenVideoRenderer = undefined
   }
 
@@ -682,27 +687,13 @@ export class AppStore {
     this.removeScreenShareWindow()
   }
 
-  unmountDom() {
-    if (this.params.unmountDom) {
-      this.params.unmountDom()
-    }
-  }
-
   @action
   async releaseRoom() {
     try {
       await this.acadsocStore.leave()
       reportService.stopHB()
-      this.unmountDom()
-      if (this.params && this.params.listener) {
-        this.params.listener(AgoraEduEvent.destroyed)
-      }
       this.resetStates()
     } catch (err) {
-      this.unmountDom()
-      if (this.params && this.params.listener) {
-        this.params.listener(AgoraEduEvent.destroyed)
-      }
       this.resetStates()
       const exception = GenericErrorWrapper(err)
       throw exception
@@ -710,6 +701,10 @@ export class AppStore {
   }
   async destroy() {
     await this.releaseRoom()
+  }
+
+  async destroyRoom() {
+    await controller.appController.destroy()
   }
 }
 export * from './acadsoc-room';
@@ -725,3 +720,4 @@ export { RecordingStore } from './recording';
 export {DeviceSettingStore} from './device-setting';
 export {PretestStore} from './pretest';
 export {DiskStore} from './disk';
+export {HomeStore} from './home';

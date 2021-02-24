@@ -9,16 +9,17 @@ const generateClassName = createGenerateClassName({
 })
 
 const routes: string[] = [
-  "setting",
+  // "setting",
   "1v1",
-  "smallClass",
-  "bigClass",
-  "middleClass",
+  // "smallClass",
+  // "bigClass",
+  // "middleClass",
   "aClass",
-  "pretest",
-  "breakoutClassAssistantRoom",
-  "breakoutClassCourses",
-  "breakoutClassRoom",
+  "launch", // launch测试页面
+  // "pretest",
+  // "breakoutClassAssistantRoom",
+  // "breakoutClassCourses",
+  // "breakoutClassRoom",
   "replayPage",
   'invisibleJoinRoom',
   "home"

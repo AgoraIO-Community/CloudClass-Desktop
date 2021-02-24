@@ -10,7 +10,6 @@ import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
 
-
 const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
   const startTime: string = acadsocStore.classTimeText
@@ -181,7 +180,7 @@ const actionBar: IStatusBar = [{
 
     const history = useHistory()
     const acadsocRoomStore = useAcadsocRoomStore()
-    const appStore =useAppStore()
+    const appStore = useAppStore()
 
     const onExitRoom = () => {
       appStore.isNotInvisible && dialogManager.show({
@@ -191,8 +190,7 @@ const actionBar: IStatusBar = [{
         visible: true,
         cancelText: t(`aclass.confirm.no`),
         onConfirm: async () => {
-          await acadsocRoomStore.leave()
-          history.replace('/')
+          await appStore.destroyRoom()
         },
         onCancel: () => {
         }

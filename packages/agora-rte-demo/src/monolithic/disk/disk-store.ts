@@ -9,11 +9,18 @@ import { isElectron } from '@/utils/platform';
 import { observable } from 'mobx';
 import { AgoraEduCourseWare } from './../../edu-sdk/index';
 import { agoraCaches } from '@/utils/web-download.file';
+import { DownloadStatus } from '@/stores/app/board';
 
 export enum DiskLifeStateEnum {
   default = 0,
   init = 1,
   destroyed = 1,
+}
+
+export enum downloadStatus {
+  notCache = 'notCache',
+  downloading = 'downloading',
+  cached = 'cached',
 }
 
 export class DiskAppStore {
@@ -23,8 +30,9 @@ export class DiskAppStore {
   @observable
   courseWareList: AgoraEduCourseWare[] = []
 
-  @observable
-  preloadingProgress: number = -1
+  // @observable
+  // preloadingProgress: number = -1
+  // fileProgress: { [fileId: string]: number }
 
   @observable
   downloading: boolean = false
@@ -42,23 +50,55 @@ export class DiskAppStore {
   reset() {
     // all observable reset
     this.courseWareList = []
-    this.preloadingProgress = -1
+    // this.preloadingProgress = -1
     this.status = DiskLifeStateEnum.destroyed
   }
 
   destroy() {
     this.reset()
   }
+  
+  tempDownloadList = [
+    {
+      calories: '100',
+      resourceUuid: '93b61ab070ec11eb8122cf10b9ec91f7',
+      resourceName: '12312312312dsfjdskf',
+      type: 'ppt',
+      fat: `${Date.now()}`,
+      status: 'notCache',
+      progress: 0,
+    },
+  ]
 
-  async startDownload(taskUuid: string) {
-    // const isWeb = this.isElectron ? false : true
+  async checkDownloadList(downloadList: any) { 
+    const pList = downloadList.map((item: any) => {
+      return agoraCaches.hasTaskUUID(item.resourceUuid);
+    })
+
+    const tmp = await Promise.all(pList);
+
+    tmp.forEach((res: any, index: number) => {
+      const item = downloadList[index]
+      if (res) {
+        item.status = downloadStatus.cached
+      } else {
+        item.status = downloadStatus.notCache
+      }
+    })
+    return downloadList
+  }
+
+  async startDownload(taskUuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) {
+    const isCached = await agoraCaches.hasTaskUUID(taskUuid)
+    if (isCached) {
+      EduLogger.info(`文件已缓存.... taskUuid: ${taskUuid}`)
+      return
+    }
     try {
-      this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (!isElectron) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          console.log('>>>>>progress', progress)
-          this.preloadingProgress = progress
+          onProgressCallback && onProgressCallback(progress)
         })
       } else {
         const controller = new AbortController();
@@ -71,7 +111,7 @@ export class DiskAppStore {
         }).then(fetchProgress({
             onProgress: (progress: any) => {
               if (progress.hasOwnProperty('percentage')) {
-                this.preloadingProgress = get(progress, 'percentage')
+                onProgressCallback && onProgressCallback(progress)
               }
             },
         }));
@@ -83,10 +123,9 @@ export class DiskAppStore {
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      onComplete && onComplete()
     } catch (err) {
-      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
     }
   }
 
@@ -101,7 +140,7 @@ export class DiskAppStore {
 
   async deleteAllCache() {
     try {
-      agoraCaches.clearAllCache()
+      await agoraCaches.clearAllCache()
       EduLogger.info('删除全部缓存完成....')
     } catch (err) {
       EduLogger.info(`删除全部缓存失败....: ${err}`)

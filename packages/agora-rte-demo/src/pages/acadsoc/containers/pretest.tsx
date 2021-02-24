@@ -10,6 +10,7 @@ import MicPng from '../assets/mic.png'
 import { DevicePicker, AudioVolume, Button, DeviceManagerDialog, DeviceTabs, DialogFramePaper, RowItem, VolumeDirectionEnum, VolumeSlider } from "agora-aclass-ui-kit";
 import { RendererPlayer } from '@/components/media-player'
 import { PretestWebComponent } from './pretest/container'
+import { t } from '@/i18n'
 
 
 export type DeviceList = {
@@ -411,7 +412,7 @@ export const PretestWeb = observer(() => {
 export const Pretest = observer(() => {
   return (
     <PretestWebComponent
-      headerTitle={"设备检测"}
+      headerTitle={t("aclass.pretest")}
     />
   )
 })

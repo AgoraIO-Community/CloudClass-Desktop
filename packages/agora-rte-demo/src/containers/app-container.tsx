@@ -1,18 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useDebugValue, useEffect } from 'react';
 import { ConfirmDialog } from '@/components/dialog';
-import { Toast } from '@/components/toast';
+import { Toast, ToastMessage } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
-import { AppStore, AppStoreConfigParams } from '@/stores/app';
-import { Provider } from 'mobx-react';
+import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
+import { observer, Provider } from 'mobx-react';
 import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'react-router-dom';
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
+import { BizLogger } from '@/utils/biz-logger';
+import { useHomeUIStore } from '@/hooks';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
 }
 
 export interface AppContainerProps extends RouteContainerProps {
+  basename?: string
+  store: HomeStore
+}
+
+export interface RoomContainerProps extends RouteContainerProps {
   basename?: string
   store: AppStore
 }
@@ -47,7 +54,7 @@ export const RouteContainer = (props: RouteContainerProps) => {
   )
 }
 
-export const RoomContainer = (props: AppContainerProps) => {
+export const RoomContainer = (props: RoomContainerProps) => {
 
   useEffect(() => {
     if (navigator.serviceWorker && navigator.serviceWorker.register) {
@@ -65,7 +72,7 @@ export const RoomContainer = (props: AppContainerProps) => {
       <ThemeContainer>
         <Router>
           <Toast />
-          <ConfirmDialog />
+          {/* <ConfirmDialog /> */}
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>
@@ -86,12 +93,35 @@ export const AppContainer = (props: AppContainerProps) => {
     }
   }, [])
 
+  console.log(" app container ### ", props.routes)
+  // useDebugValue(props)
+
+  const AppToast = observer(() => {
+
+    const uiStore = useHomeUIStore()
+  
+    return (
+      <div className="notice-message-container">
+        {uiStore.toastQueue.map((message: string, idx: number) => 
+          <ToastMessage
+            message={message}
+            key={`${idx}${message}${Date.now()}`}
+            closeToast={() => {
+              uiStore.removeToast(message)
+              BizLogger.info("close Toast", message)
+            }}
+          />
+        )}
+      </div>
+    )
+  })
+
   return (
     <Provider store={props.store}>
       <ThemeContainer>
-        <HashRouter basename={props.basename}>
-          <Toast />
-          <ConfirmDialog />
+        <HashRouter>
+          <AppToast />
+          {/* <ConfirmDialog /> */}
           <RouteContainer routes={props.routes} />
         </HashRouter>
       </ThemeContainer>
@@ -110,7 +140,7 @@ type GenAppContainerProps = {
 type GenAppComponentProps = Pick<AppContainerComponentProps, "routes" | "basename">
 
 export const GenAppContainer = ({globalId, resetRoomInfo, ...config}: GenAppContainerProps) => {
-  const appStore = new AppStore({
+  const appStore = new HomeStore({
     config: config.appConfig,
     roomInfoParams: config.roomConfig,
     language: "",

@@ -160,6 +160,12 @@ export interface DiskTablesProps {
 interface PrivateDiskTablesProps extends DiskTablesProps {
   privateList?: any,
   uploadComponent?: React.ReactNode,
+  uploadListComponent?: React.ReactNode,  
+  isOpenToast:boolean,
+  toastMessage?: {
+    type: string,
+    message:string
+  },
   diskText?: any,
   // deleteText: string,
   // deleteComponent?: React.ReactNode,
@@ -256,20 +262,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
   }
 
   const handleDelete = useCallback(async (evt: any) => {
-    try {
-      await props.handleDelete(selected)
-      setOpenToast({
-        open: true,
-        toastMessage: props.removeSuccess,
-        type: 'error',
-      })
-    } catch (err) {
-      setOpenToast({
-        open: true,
-        toastMessage: props.removeFailed,
-        type: 'error',
-      })
-    }
+    await props.handleDelete(selected)
   }, [selected])
 
   const handleOpenCourse = async (resourceUuid: any) => {
@@ -369,11 +362,11 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     return (
       <>
         <DiskToast
-          onOpenToast={open}
+          onOpenToast={props.isOpenToast}
           onClose={handleCloseAlert}
-          message={toastMessage}
+          message={props.toastMessage?.message|| ''}
           //@ts-ignore
-          toastType={type}
+          toastType={props.toastMessage?.type ||''}
           key={'top-center'}
         />
         <div className={classSearch.titleBox}>
@@ -408,6 +401,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
               size="small" />
           </div> */}
         </div>
+        {props.uploadListComponent}
         { rows && rows.length > 0 && <DiskTable tabValue={props.tabValue} diskText={props.diskText} showOpenItem={props.showOpenItem} handleOpenCourse={props.handleOpenCourse} /> || 
           <div
             style={{ 

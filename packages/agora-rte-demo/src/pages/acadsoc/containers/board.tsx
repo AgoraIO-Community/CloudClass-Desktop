@@ -150,7 +150,7 @@ export interface FontSizeListProps {
 const useFontStyles = makeStyles((theme: Theme) => ({
   root: {
     fontSize: '14px',
-    fontFamily: 'SourceHanSansCN-Regular',
+    fontFamily: theme.typography.fontFamily,
     display: 'flex',
     // justifyContent: 'flex-start',
     alignItems: 'center',
@@ -441,7 +441,7 @@ export const EducationBoard = observer((props: any) => {
   const getBoardItemsBy = (role: EduRoleTypeEnum) => {
     switch (role) {
       case EduRoleTypeEnum.student: {
-        const removeItem = ['new-page', 'clear']
+        const removeItem = ['new-page', 'clear', 'disk']
         return BoardStore.toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
       }
       case EduRoleTypeEnum.invisible:

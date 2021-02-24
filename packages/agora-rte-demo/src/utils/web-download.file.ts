@@ -1,5 +1,6 @@
 import fetchProgress from "fetch-progress"
 import "@netless/zip";
+import { copySync } from "fs-extra";
 const contentTypesByExtension = {
     "css": "text/css",
     "js": "application/javascript",

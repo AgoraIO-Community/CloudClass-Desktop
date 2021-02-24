@@ -9,7 +9,7 @@ export type NetlessTaskProgress = {
 
 export type CreateMaterialParams = {
   roomUuid: string,
-  userUuid: string,
+  // userUuid: string,
   resourceUuid: string,
   url: string,
   resourceName: string,
@@ -45,4 +45,9 @@ export type CourseWareUploadResult = {
 export enum QuickTypeEnum { 
   Kick = "kick",
   End = "end"
+}
+
+export enum AgoraMediaDeviceEnum {
+  Default = "default",
+  Unknown = "unknown"
 }

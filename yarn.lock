@@ -3102,15 +3102,15 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/white-audio-plugin@1.2.19":
-  version "1.2.19"
-  resolved "https://registry.npm.taobao.org/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.19.tgz#0e3d01ee902bc931ce99f9eaf5f278195fb89d4e"
-  integrity sha1-Dj0B7pAryTHOmfnq9fJ4GV+4nU4=
+"@netless/white-audio-plugin@1.2.20":
+  version "1.2.20"
+  resolved "https://registry.npm.taobao.org/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.20.tgz#32541b91b7cb135a459b40b5d3a9ea53eee09731"
+  integrity sha1-MlQbkbfLE1pFm0C106nqU+7glzE=
 
-"@netless/white-video-plugin@1.2.18":
-  version "1.2.18"
-  resolved "https://registry.npm.taobao.org/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.18.tgz#0a2007b5b15ee572a24e6d4b9c658cce49124ac1"
-  integrity sha1-CiAHtbFe5XKiTm1LnGWMzkkSSsE=
+"@netless/white-video-plugin@1.2.19":
+  version "1.2.19"
+  resolved "https://registry.npm.taobao.org/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.19.tgz#3458b7816af6618c995dc7bce3088b532de59212"
+  integrity sha1-NFi3gWr2YYyZXce84wiLUy3lkhI=
 
 "@netless/zip@0.0.6":
   version "0.0.6"

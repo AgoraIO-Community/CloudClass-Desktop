@@ -11,6 +11,7 @@
     flex-direction: column;
     position: relative;
     top: -30px;
+    text-align: center;
   }
 
   .rightFrame {
@@ -99,9 +100,10 @@
 
 .detectText {
   position: absolute;
-  top: -25px;
+  top: -51px;
   color: #002591;
   font-size: 16px;
+  left: 111px;
 }
 
 .iconVolume {
@@ -116,6 +118,17 @@
 
 .iconPlay {
   background: url('./assets/play.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 75px;
+  height: 75px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.iconPaused {
+  background: url('./assets/pause.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -144,7 +157,7 @@
 .positionVolume {
   position: absolute;
   top: 121px;
-  left: 154px;
+  left: 133px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -155,7 +168,9 @@
   position: relative;
   width: 240px;
   height: 135px;
-  border-radius: 12.5px;
+  border-radius: 10px;
+  border: 1px solid rgb(0, 37, 145);
+  overflow: hidden;
 }
 
 .placeholder {
@@ -191,9 +206,10 @@
   align-items: center;
   color: white;
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   width: 100%;
   justify-content: center;
+  left: 5px;
   .no {
     display: flex;
     justify-content: center;
@@ -204,6 +220,8 @@
     height: 39px;
     line-height: 39px;
     margin: 10px;
+    font-size: 14px;
+    // justify-content: space-between;
     cursor: pointer;
     .icon {
       background: url('./assets/not.png');
@@ -212,6 +230,8 @@
       background-position: center;
       width: 15px;
       height: 15px;
+      margin: 15px;
+      margin-left: 9px;
     }
   }
 
@@ -225,6 +245,8 @@
     height: 39px;
     line-height: 39px;
     margin: 10px;
+    font-size: 14px;
+    // justify-content: space-between;
     cursor: pointer;
     .icon {
       background: url('./assets/confirm.png');
@@ -233,6 +255,8 @@
       background-position: center;
       width: 15px;
       height: 15px;
+      margin: 15px;
+      margin-left: 9px;
     }
   }
 }
@@ -295,6 +319,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    bottom: -22px;
   }
 }
 
@@ -308,6 +334,20 @@
   align-items: center;
   padding: 20px;
   position: relative;
+  & .MuiFormInput-root {
+    font-size: 14px;
+    padding-left: 10px !important;
+    color: #002591;
+    justify-content: flex-start;
+  }
+  & .MuiInputBase-root {
+    font-size: 14px;
+  }
+  & .MuiSelect-root {
+    padding-left: 10px !important;
+    color: #002591;
+    justify-content: flex-start;
+  }
 }
 
 .header {
@@ -350,6 +390,7 @@
   flex-direction: row;
   align-items: center;
   margin: 15px;
+  margin-bottom: 0px;
 }
 
 .detectFail {

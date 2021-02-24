@@ -1,4 +1,8 @@
 import { observer } from 'mobx-react'
+import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { IconButton} from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close';
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
 import { useBoardStore, useDiskStore } from '@/hooks'
@@ -10,7 +14,21 @@ import { Progress } from '@/components/progress/progress'
 import {t} from '@/i18n'
 import styles from './disk.module.scss'
 import IconRefresh from '../assets/icon-refresh.png'
-
+const BorderLinearProgress = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      height: 10,
+      borderRadius: 5,
+    },
+    colorPrimary: {
+      backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+    },
+    bar: {
+      borderRadius: 5,
+      backgroundColor: '#1a90ff',
+    },
+  }),
+)(LinearProgress);
 
 const UploadingProgress = observer((props: any) => {
 
@@ -34,9 +52,20 @@ const NetworkDisk = observer((props: any) => {
 
   const boardStore = useBoardStore()
   const diskStore = useDiskStore()
+  const [process,setProcess] = useState<number>(0)
+  const [isUploadFile,setIsUploadFile] = useState<boolean>(false)
+  const [file,setUploadFile] = useState({
+    fileName:'',
+    fileSize:'',
+    fileID:''
+  })
+  // const [cancelFileList,setCancelFileList]= useState<string[]>([])
+  const [toastMessage,setToastMessage]= useState({type:'',message:''})
+  const [isOpenToast,setIsOpenToast]= useState(false)
 
   const handleClose = () => {
     console.log('close network disk', props.openDisk)
+    setIsOpenToast(false)
     props.setOpenDisk(false)
   }
 
@@ -57,22 +86,50 @@ const NetworkDisk = observer((props: any) => {
     });
   }
 
+
   const uploadRequest = async ({action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials} : any) => {
     const md5 = await calcUploadFilesMd5(file)
     const resourceUuid = MD5(`${md5}`)
     const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
-    const isDynamic = ext === 'pptx'
 
-
+    const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
+    const isNeedConverting = needConvertingFile.includes(ext)
+    const needDynamicFileType = ['pptx']
+    const isDynamic = needDynamicFileType.includes(ext)
+    setIsUploadFile(true)
+    setProcess(0)
+    setIsOpenToast(false)
+    setUploadFile({
+      fileName: name,
+      fileSize: file.size,
+      fileID: resourceUuid
+    })
     const payload = {
       file: file,
       fileSize: file.size,
       ext: ext,
       resourceName: name,
       resourceUuid: resourceUuid,
-      converting: isDynamic ? true : false,
-      kind: PPTKind.Dynamic,
+      converting: isNeedConverting,
+      kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
+      onProgress: async(evt) => {
+        const { progress } = evt;
+        const parent = Math.floor(progress * 100)
+        setProcess(parent)
+        if (parent === 100) {
+          setIsOpenToast(true)
+          setProcess(0)
+          setIsUploadFile(false)
+          setToastMessage({
+            type:'success',
+            message:'上传成功'
+          })
+        }
+        // if (cancelFileList.includes(resourceUuid) && progress === 100) {
+        //   await boardStore.removeMaterialList([file.fileID])
+        // }
+      },
       pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
     } as HandleUploadType
     if (ext === 'pptx') {
@@ -80,7 +137,48 @@ const NetworkDisk = observer((props: any) => {
     }
     await boardStore.handleUpload(payload)
   }
+  const cancelUpload = async () => {
+    setIsUploadFile(false)
+    if (process < 100) {
+      // const list =cancelFileList;
+      // list.push(file.fileID)
+      // setCancelFileList(list)
+      await boardStore.cancelUpload()
+      await boardStore.removeMaterialList([file.fileID])
+    }
+  }
+  const uploadListComponent = () => {
+    if (!isUploadFile) return <></>
+    return <div className={styles.uploadList}>
+      <header>
+       {t('disk.upload')}
+        <IconButton id="disk-icon-close" disableRipple aria-label="close" className={styles.close} onClick={cancelUpload}>
+          <CloseIcon style={{ width: "24px", height: "24px" }} />
+        </IconButton>
+      </header>
+      <div className={styles.listContent}>
+        <ul className={styles.listTitle}>
+          <li>
+            <div>{t('disk.fileName')}</div>
+            <div>{file.fileName}</div>
+          </li>
+          <li>
+            <div>{t('disk.size')}</div>
+            <div>{file.fileSize}</div>
+          </li>
+          <li>
+            <div>{t('disk.progress')}</div>
+            <div><BorderLinearProgress variant="determinate" value={process} /></div>
+          </li>
+          <li>
+            <div>{t('disk.operation')}</div>
+            <div className={styles.delete}  onClick={cancelUpload}></div>
+          </li>
+        </ul>
+      </div>
+    </div>
 
+  }
   const onUpload = (evt: any) => {
     console.log('upload file', evt)
     return evt
@@ -130,9 +228,23 @@ const NetworkDisk = observer((props: any) => {
   // }
 
   const handleDelete = async (selected: any) => {
-    if (selected.length) {
-      await boardStore.removeMaterialList(selected)
+    try{
+      if (selected.length) {
+        await boardStore.removeMaterialList(selected)
+        setIsOpenToast(true)
+        setToastMessage({
+          type:'success',
+          message:t('disk.deleteSuccess')
+        })
     }
+    }catch(error){
+      setIsOpenToast(true)
+      setToastMessage({
+        type:'error',
+        message:t('disk.deleteFailed')
+      })
+    }
+  
   }
 
   const handleOpenCourse = async (resourceUuid: any) => {
@@ -149,10 +261,6 @@ const NetworkDisk = observer((props: any) => {
       <img id="disk-button-refresh" style={{ cursor: 'pointer' }} onClick={handleRefresh} src={IconRefresh} className={styles.titleImg} />
     )
   }
-
-  // console.log('boardStore.personalResources', boardStore.personalResources)
-  // console.log('boardStore.publicResources', boardStore.publicResources)
-  // console.log('boardStore.allResources', boardStore.allResources)
 
   return (
     <>
@@ -202,6 +310,9 @@ const NetworkDisk = observer((props: any) => {
       privateList={boardStore.personalResources}
       // downloadList={boardStore.allResources}
       uploadComponent={uploadComponent()}
+      uploadListComponent={uploadListComponent()}
+      isOpenToast={isOpenToast}
+      toastMessage={toastMessage}
       // donwloadAllComponent={donwloadAllComponent()}
       // deleteAllCacheComponent={deleteAllCache()}
       // singleDownloadComponent={singleDonwload()}

@@ -1,3 +1,4 @@
+import { HomeStore } from '@/stores/app/home';
 import { ReplayAppStore } from '@/stores/replay-app';
 import { SceneStore } from './../stores/app/scene';
 import { MediaStore } from './../stores/app/media';
@@ -114,4 +115,16 @@ export const useDeviceSettingStore = (): DeviceSettingStore => {
 export const useDiskStore = (): DiskStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.diskStore
+}
+
+export const useHomeStore = (): HomeStore => {
+  const context = useContext<HomeContext>(MobXProviderContext)
+  return context.store
+}
+
+export type HomeContext = Record<string, HomeStore>
+
+export const useHomeUIStore = (): UIStore => {
+  const context = useContext<HomeContext>(MobXProviderContext)
+  return context.store.uiStore
 }

@@ -25,9 +25,9 @@ export const ReplayRoom = ({store,...props}: RoomConfigProps<ReplayAppStore>) =>
   )
 }
 
-export const RenderReplayRoom = ({dom, store, ...props}: RoomComponentConfigProps<ReplayAppStore>, delegate: DelegateType) => (
-  render(
-    <ReplayRoom {...props} store={store} />,
-    dom
-  )
-)
+// export const RenderReplayRoom = ({dom, store, ...props}: RoomComponentConfigProps<ReplayAppStore>, delegate: DelegateType) => (
+//   render(
+//     <ReplayRoom {...props} store={store} />,
+//     dom
+//   )
+// )

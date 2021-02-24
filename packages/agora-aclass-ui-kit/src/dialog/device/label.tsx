@@ -34,6 +34,8 @@ const AClassSelect = withStyles((theme: Theme) => ({
     '&.MuiSelect-select': {
       padding: 0,
       backgroundColor: 'transparent',
+      justifyContent: 'flex-start',
+      paddingLeft: 15,
       '&:focus': {
         backgroundColor: 'transparent'
       }
@@ -117,11 +119,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+const fontFamily = [
+  "Helvetica",
+  "Tahoma",
+  "Arial",
+  "STXihei",
+  "华文细黑",
+  "Microsoft YaHei",
+  "微软雅黑",
+  "SimSun",
+  "宋体",
+  "Heiti",
+  "黑体",
+  "sans-serif"
+].join(',')
+
 export const DevicePicker: React.FC<DeviceItemProps> = (props) => {
   const classes = useStyles()
   return (
     <div className={classes.item} style={props.pickerStyle}>
-      <InputLabel style={{color: '#002591', fontSize: '16px', marginRight: '13px'}} id={props.id}>{props.name}</InputLabel>
+      <InputLabel style={{color: '#002591', fontSize: '14px', fontFamily: fontFamily, marginRight: '13px'}} id={props.id}>{props.name}</InputLabel>
       <div className={classes.select} style={props.selectStyle}>
         <AClassSelect
           defaultValue={props.defaultValue}
@@ -133,6 +150,9 @@ export const DevicePicker: React.FC<DeviceItemProps> = (props) => {
           onChange={props.onChange}
           style={{
             paddingRight: 0,
+            color: '#002591',
+            fontSize: '14px',
+            fontFamily: fontFamily,
           }}
           inputProps={{
             style: {}

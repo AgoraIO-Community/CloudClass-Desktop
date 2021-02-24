@@ -12,7 +12,7 @@ import {
   TableContainer,
 } from '@material-ui/core'
 import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles'
-import React, { ReactEventHandler } from 'react'
+import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { CustomizeTheme, themeConfig } from '../../theme'
 import { noop } from '../../declare'
 
@@ -94,6 +94,7 @@ interface NetworkDiskDialogProps {
   downloadList?: any,
   // upload
   uploadComponent?: React.ReactNode,
+  uploadListComponent?:React.ReactNode,
   handleDelete: (evt: any) => any,
   removeText: string,
   removeSuccess: string,
@@ -103,8 +104,9 @@ interface NetworkDiskDialogProps {
   // deleteComponent?: React.ReactNode,
   refreshComponent?: React.ReactNode,
   // downloadComponet
+  setDownloadList?: Dispatch<SetStateAction<any>>,
   handleDownloadAll?: () => any,
-  handleClearcache?: () => any,
+  handleClearcache?: () => Promise<void>,
   handleDownload?: (evt: any) => any,
   handleDeleteSingle?: (evt: any) => any,
   donwloadAllComponent?: React.ReactNode,
@@ -114,6 +116,13 @@ interface NetworkDiskDialogProps {
   diskText?: any,
   diskOpenText?: any,
   inRoom?: boolean,
+  //
+  downloadDiskComponent?: React.ReactNode,
+  isOpenToast?:boolean,
+  toastMessage?: {
+    type: string,
+    message:string
+  },
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -240,28 +249,15 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     removeFailed={props.removeFailed}
                     privateList={props.privateList}
                     showText={props.diskOpenText}
+                    uploadListComponent={props.uploadListComponent}
+                    isOpenToast={props.isOpenToast || false}
+                    toastMessage={props.toastMessage}
+                    
                   ></PrivateDiskTables>
                 )
               }
               {
-                props.inRoom === false && activeValue === 0 && (
-                  <DownloadDiskTables
-                    showOpenItem={props.showOpenItem}
-                    handleOpenCourse={props.handleOpenCourse}
-                    diskText={props.diskText}
-                    tabValue={activeValue}
-                    handleDownloadAll={props.handleDownloadAll}
-                    handleClearcache={props.handleClearcache}
-                    handleDownload={props.handleDownload}
-                    handleDeleteSingle={props.handleDeleteSingle}
-                    // donwloadAllComponent={props.donwloadAllComponent}
-                    // deleteAllCacheComponent={props.deleteAllCacheComponent}
-                    singleDownloadComponent={props.singleDownloadComponent}
-                    singleDeleteComponent={props.singleDeleteComponent}
-                    downloadList={props.downloadList}
-                    showText={props.diskOpenText}
-                  />
-                )
+                props.inRoom === false && activeValue === 0 && (props.downloadDiskComponent)
               }
             </TableContainer>
           </Paper>

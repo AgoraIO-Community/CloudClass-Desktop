@@ -26,9 +26,9 @@ export const AcadsocOneToOne = observer(() => {
 
   const handleJoinFail = async (err:GenericError) => {
     try {
-      await appStore.releaseRoom()
+      await appStore.destroyRoom()
     } catch (err) {
-      EduLogger.info(" appStore.releaseRoom ", err.message)
+      EduLogger.info(" appStore.destroyRoom ", err.message)
     }
     dialogManager.show({
       text: BusinessExceptions.getReadableText(err.errCode),

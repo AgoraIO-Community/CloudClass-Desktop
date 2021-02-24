@@ -52,7 +52,7 @@ export const mapFileType = (type: string): string => {
     return 'txt'
   }
 
-  if (type.match(/gif|png|jpeg|jpg/i)) {
+  if (type.match(/gif|png|jpeg|jpg|bmp/i)) {
     return 'pic'
   }
   if (type.match(/pdf/i)) {
@@ -134,17 +134,26 @@ export type HandleUploadType = {
 
 
 export class UploadService extends ApiBase {
-
+  ossClient: OSS | null;
+  abortCheckpoint:{
+    name?:string,
+    uploadId?:string
+  }
   constructor(params: ApiBaseInitializerParams) {
     super(params)
+    this.ossClient = null
+    this.abortCheckpoint = {
+      name: '',
+      uploadId: ''
+    }
     this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
   }
 
   // 查询服务端是否已经存在课件
-  async queryMaterial(params: {name: string, roomUuid: string, userUuid: string}): Promise<UploadServiceResult> {
+  async queryMaterial(params: {name: string, roomUuid: string}): Promise<UploadServiceResult> {
 
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'GET',
     })
 
@@ -174,9 +183,9 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, userUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
+  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}/sts`,
+      url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}/sts`,
       method: 'PUT',
       data: {
         resourceName: params.resourceName,
@@ -200,7 +209,7 @@ export class UploadService extends ApiBase {
   // 服务端创建课件，并申请stsToken
   async createMaterial(params: CreateMaterialParams): Promise<UploadServiceResult> {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources/${params.resourceUuid}`,
+      url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
       data: {
         url: params.url,
@@ -276,12 +285,12 @@ export class UploadService extends ApiBase {
   }
 
   async handleUpload(payload: HandleUploadType) {
-    const queryResult = await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid, userUuid: payload.userUuid})
+    const queryResult = await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
     if (queryResult.success) {
       EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({
         phase: 'finish',
-        progress: 100,
+        progress: 1,
       })
       console.log("query#data ", queryResult.data)
       return queryResult.data
@@ -289,7 +298,7 @@ export class UploadService extends ApiBase {
 
     const fetchResult = await this.fetchStsToken({
       roomUuid: payload.roomUuid,
-      userUuid: payload.userUuid,
+      // userUuid: payload.userUuid,
       resourceName: payload.resourceName,
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
@@ -299,7 +308,7 @@ export class UploadService extends ApiBase {
 
     const ossConfig = fetchResult.data
     const key = ossConfig.ossKey
-    const ossClient = new OSS({
+    this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
       accessKeySecret: `${ossConfig.accessKeySecret}`,
       bucket: `${ossConfig.bucketName}`,
@@ -311,15 +320,15 @@ export class UploadService extends ApiBase {
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     console.log("callback body: ", fetchCallbackBody)
-
     const resourceUuid = fetchCallbackBody.resourceUuid
 
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
-        ossClient,
+        this.ossClient,
         key,
         payload.file,
         (progress: any) => {
+          console.log('onProgress converting',progress)
           payload.onProgress({
             phase: 'finish',
             progress
@@ -329,7 +338,7 @@ export class UploadService extends ApiBase {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
-          userUuid: payload.userUuid,
+          // userUuid: payload.userUuid,
           appId: this.appId
         })
       const pptConverter = payload.pptConverter
@@ -337,7 +346,6 @@ export class UploadService extends ApiBase {
         url: uploadResult.ossURL,
         kind: payload.kind,
         onProgressUpdated: (...args: any[]) => {
-          console.log('progress ', args)
           payload.onProgress({
             phase: 'finish',
             progress: args[0],
@@ -351,11 +359,11 @@ export class UploadService extends ApiBase {
         taskUuid: taskResult.uuid,
         url: uploadResult.ossURL,
         roomUuid: payload.roomUuid,
-        userUuid: payload.userUuid,
+        // userUuid: payload.userUuid,
         resourceName: payload.resourceName,
         resourceUuid,
         taskToken: taskResult.roomToken,
-        ext: 'pptx',
+        ext: taskResult.ext,
         size: uploadResult.size,
         taskProgress: {
           totalPageSize: taskResult.scenes.length,
@@ -382,13 +390,13 @@ export class UploadService extends ApiBase {
       }
     } else {
       const uploadResult = await this.addFileToOss(
-        ossClient,
+       this.ossClient,
         key,
         payload.file,
-        (progress: any) => {
+        (...args: any[]) => {
           payload.onProgress({
             phase: 'finish',
-            progress
+            progress:args[1]
           })
         },
         {
@@ -410,19 +418,28 @@ export class UploadService extends ApiBase {
       return result
     }
   }
+   cancelFileUpload() {
+    // const { name = '', uploadId = '' } = this.abortCheckpoint
+    // this.ossClient?.abortMultipartUpload(name, uploadId);
+    (this.ossClient as any).cancel()
+    console.log('error click cancel', (this.ossClient as any)?.cancel())
+  }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
 
+    const prefix = `${REACT_APP_AGORA_APP_SDK_DOMAIN}` === `https://api-solutions-dev.bj2.agoralab.co` ? `https://api-solutions-dev.bj2.agoralab.co` : `https://api-solutions.agoralab.co`
     // TODO: 生产环境需要更替地址
-    const callbackUrl = `https://api-solutions-dev.bj2.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`;
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 
     console.log(" addFileToOss ", callbackUrl)
 
+    try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
       file,
       {
-        progress: (p: any) => {
+        progress: (p, cpt, res) => {
+          this.abortCheckpoint = cpt
           if (onProgress) {
             onProgress(PPTProgressPhase.Uploading, p);
           }
@@ -445,7 +462,10 @@ export class UploadService extends ApiBase {
     } else {
       throw new Error(`upload to ali oss error, status is ${res.res.status}`);
     }
-  }
+  }catch (err) {
+      console.log('error', err)
+    }
+}
 
   async fetchImageInfo(file: File, x: number, y: number) {
     await new Promise(resolve => {
@@ -509,7 +529,7 @@ export class UploadService extends ApiBase {
 
   async removeMaterials(params: {resourceUuids: string[], roomUuid: string, userUuid: string}) {
     const res = await this.fetch({
-      url: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/resources`,
+      url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'DELETE',
       data: {
         resourceUuids: params.resourceUuids

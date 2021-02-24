@@ -15,7 +15,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    edu_sdk: "./src/edu-sdk/index.ts",
+    edu_sdk: "./src/edu-sdk/index.tsx",
   },
   mode: "production",
   output: {
