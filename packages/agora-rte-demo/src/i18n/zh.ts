@@ -161,6 +161,7 @@ const zhCN: any = {
     'downlownResources': '下载课件',
 
     'upload': '上传',
+    'uploadSuccess':'文件上传成功',
     'downloadAll': '全部下载',
     'clearCache': '清空缓存',
     'download': '下载',

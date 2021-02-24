@@ -2352,7 +2352,7 @@ static toolItems: IToolItem[] = [
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
         onProgress: (evt: any) => {
-          console.log(evt)
+          payload.onProgress(evt);
         },
       })
       const globalState = this.room.state.globalState as any
@@ -2372,6 +2372,9 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  async cancelUpload() {
+    await this.appStore.uploadService.cancelFileUpload()
+  }
   clearScene() {
     this.room.cleanCurrentScene()
   }

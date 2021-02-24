@@ -1,9 +1,10 @@
-import React, {ReactEventHandler} from 'react';
+import React, {ReactEventHandler, useState} from 'react';
 import { noop } from '../../declare'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Snackbar,  SnackbarOrigin, SnackbarContent, } from '@material-ui/core'
 import IconSuccess from '../assets/icon-success.png'
 import IconFail from '../assets/icon-fail.png'
+import { useEffect } from 'react';
 
 export interface State extends SnackbarOrigin {
   open: boolean;
@@ -54,8 +55,19 @@ const DiskToast = (props: DiskToastProps) => {
   const classes = useStyles()
   const onClose = props.onClose ? props.onClose : noop
   const classKey = classes[props.toastType]
+  const [openToast,setOpenToast]=useState(props.onOpenToast)
 
-
+  useEffect(() => {
+    let timeoutId: any;
+    if (props.onOpenToast) {
+      timeoutId = setTimeout(() => {
+        setOpenToast(false)
+      }, 2000);
+    }
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [props.onOpenToast])
   const ToastMessage = () => {
     return (
       <div className={classes.messageBox}>
@@ -64,13 +76,11 @@ const DiskToast = (props: DiskToastProps) => {
       </div>
     )
   }
-
   return (
     <Snackbar
       className={classes.root}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      open={props.onOpenToast}
-      onClose={onClose}
+      open={openToast}
       key={props.message}
     >
       <SnackbarContent
