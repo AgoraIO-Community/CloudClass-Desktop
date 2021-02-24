@@ -635,7 +635,6 @@ export class AcadsocRoomStore extends SimpleInterval {
         startTime: startTime,  // 单位：毫秒
         duration: duration,    // 秒
       })
-      console.log('***** checkInResult', checkInResult)
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
       this.classroomSchedule = {

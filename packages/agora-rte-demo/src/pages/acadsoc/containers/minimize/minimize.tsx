@@ -46,7 +46,6 @@ export const MinimizeStudent = observer(() => {
       x: studentViewRef.current?.getBoundingClientRect().left + 120,
       y: studentViewRef.current?.getBoundingClientRect().top 
     }
-    console.log('****** ', studentViewRef.current?.getBoundingClientRect() )
   }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.isStudentMini])
 
   const bindUnwind = (type:string) => {
