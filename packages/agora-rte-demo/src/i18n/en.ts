@@ -179,6 +179,7 @@ const en = {
     'downlownResources': 'Download',
 
     'upload': 'upload',
+    'uploadSuccess':'File uploaded successfully',
     'downloadAll': 'download all',
     'clearCache': 'clear cache',
     'download': 'download',

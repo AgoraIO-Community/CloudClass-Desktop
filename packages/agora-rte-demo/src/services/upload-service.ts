@@ -134,9 +134,18 @@ export type HandleUploadType = {
 
 
 export class UploadService extends ApiBase {
-
+  ossClient: OSS | null;
+  abortCheckpoint:{
+    name?:string,
+    uploadId?:string
+  }
   constructor(params: ApiBaseInitializerParams) {
     super(params)
+    this.ossClient = null
+    this.abortCheckpoint = {
+      name: '',
+      uploadId: ''
+    }
     this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
   }
 
@@ -281,7 +290,7 @@ export class UploadService extends ApiBase {
       EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({
         phase: 'finish',
-        progress: 100,
+        progress: 1,
       })
       console.log("query#data ", queryResult.data)
       return queryResult.data
@@ -299,7 +308,7 @@ export class UploadService extends ApiBase {
 
     const ossConfig = fetchResult.data
     const key = ossConfig.ossKey
-    const ossClient = new OSS({
+    this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
       accessKeySecret: `${ossConfig.accessKeySecret}`,
       bucket: `${ossConfig.bucketName}`,
@@ -311,15 +320,15 @@ export class UploadService extends ApiBase {
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     console.log("callback body: ", fetchCallbackBody)
-
     const resourceUuid = fetchCallbackBody.resourceUuid
 
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
-        ossClient,
+        this.ossClient,
         key,
         payload.file,
         (progress: any) => {
+          console.log('onProgress converting',progress)
           payload.onProgress({
             phase: 'finish',
             progress
@@ -337,7 +346,6 @@ export class UploadService extends ApiBase {
         url: uploadResult.ossURL,
         kind: payload.kind,
         onProgressUpdated: (...args: any[]) => {
-          console.log('progress ', args)
           payload.onProgress({
             phase: 'finish',
             progress: args[0],
@@ -382,13 +390,13 @@ export class UploadService extends ApiBase {
       }
     } else {
       const uploadResult = await this.addFileToOss(
-        ossClient,
+       this.ossClient,
         key,
         payload.file,
-        (progress: any) => {
+        (...args: any[]) => {
           payload.onProgress({
             phase: 'finish',
-            progress
+            progress:args[1]
           })
         },
         {
@@ -410,6 +418,12 @@ export class UploadService extends ApiBase {
       return result
     }
   }
+   cancelFileUpload() {
+    // const { name = '', uploadId = '' } = this.abortCheckpoint
+    // this.ossClient?.abortMultipartUpload(name, uploadId);
+    (this.ossClient as any).cancel()
+    console.log('error click cancel', (this.ossClient as any)?.cancel())
+  }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
 
@@ -419,11 +433,13 @@ export class UploadService extends ApiBase {
 
     console.log(" addFileToOss ", callbackUrl)
 
+    try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
       file,
       {
-        progress: (p: any) => {
+        progress: (p, cpt, res) => {
+          this.abortCheckpoint = cpt
           if (onProgress) {
             onProgress(PPTProgressPhase.Uploading, p);
           }
@@ -446,7 +462,10 @@ export class UploadService extends ApiBase {
     } else {
       throw new Error(`upload to ali oss error, status is ${res.res.status}`);
     }
-  }
+  }catch (err) {
+      console.log('error', err)
+    }
+}
 
   async fetchImageInfo(file: File, x: number, y: number) {
     await new Promise(resolve => {

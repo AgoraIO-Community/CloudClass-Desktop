@@ -94,6 +94,7 @@ interface NetworkDiskDialogProps {
   downloadList?: any,
   // upload
   uploadComponent?: React.ReactNode,
+  uploadListComponent?:React.ReactNode,
   handleDelete: (evt: any) => any,
   removeText: string,
   removeSuccess: string,
@@ -117,6 +118,11 @@ interface NetworkDiskDialogProps {
   inRoom?: boolean,
   //
   downloadDiskComponent?: React.ReactNode,
+  isOpenToast?:boolean,
+  toastMessage?: {
+    type: string,
+    message:string
+  },
 }
 
 const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
@@ -243,6 +249,10 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     removeFailed={props.removeFailed}
                     privateList={props.privateList}
                     showText={props.diskOpenText}
+                    uploadListComponent={props.uploadListComponent}
+                    isOpenToast={props.isOpenToast || false}
+                    toastMessage={props.toastMessage}
+                    
                   ></PrivateDiskTables>
                 )
               }
