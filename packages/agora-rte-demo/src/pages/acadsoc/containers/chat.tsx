@@ -7,7 +7,7 @@ import { useAcadsocRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hoo
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
-
+let isGetHistory = true;
 const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
   if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
     return false
@@ -128,12 +128,9 @@ export const ChatView = observer(() => {
       }
     }
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
-  const isChatAllowed = () => {
-    const { isMuted = false } = sceneStore
-    return isMuted && !isCanMute()
-  }
   useEffect(() => {
-    if (acadsocStore.roomInfo.userUuid) {
+    if (acadsocStore.roomInfo.userUuid && isGetHistory) {
+      isGetHistory = false
       isFetchHistory && fetchMessage()
     }
     setMessages(transformationMessage())

@@ -88,9 +88,11 @@ const DiskContainer = observer((props: any) => {
           downloadDiskComponent={
             <DownloadDisk
               downloadList={testDownloadList} 
+              handleDownloadAll={diskAppStore.downloadAll}
               handleClearcache={diskAppStore.deleteAllCache}
-              handleDownload={diskAppStore.startDownload}
-              handleDeleteSingle={diskAppStore.deleteSingle}    
+              handleDownload={DiskAppStore.startDownload}
+              handleDeleteSingle={diskAppStore.deleteSingle}
+              registerTaskCallback={diskAppStore.registerTaskCallback}
             />
           }
           diskText={{

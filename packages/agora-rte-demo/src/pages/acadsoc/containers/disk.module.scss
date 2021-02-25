@@ -35,18 +35,41 @@ header {
   line-height: 20px;
   list-style: none;
   display: flex;
+  flex-direction: column;
   width: 100%;
   margin: 0;
   justify-content: space-between;
   padding: 0;
   li {
-    flex: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 12px 15px;
+    align-items: center;
+    box-sizing: border-box;
   }
-  li > div:first-child {
+  li > div {
+    width: 25%;
+  }
+  li > div:first-child{
+    word-break: break-word;
+
+  }
+  li > div:nth-child(3) , li > div:nth-child(1){
+    flex: 1;
+    padding-right: 5px;
+  }
+  li:first-child {
     background: #f8f8fb;
   }
-  div {
-    padding: 0 15px;
+  li:nth-child(2) {
+    border: 1px solid #e3e3ec;
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
   }
 }
 .fileList {
@@ -55,17 +78,22 @@ header {
 }
 .delete {
   cursor: "pointer";
+  display: inline-block;
   width: 24px;
   height: 24px;
   background-size: 24px;
-  background-position: center;
   background-image: url("../assets/delete.png");
   background-repeat: no-repeat;
+  background-position: 15px center;
   &:hover {
     background-image: url("../assets/deleteHover.png");
   }
   .close {
     width: 24px;
     height: 24px;
+  }
+  .process {
+    width: 80%;
+    height: 44px;
   }
 }

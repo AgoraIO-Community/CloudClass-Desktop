@@ -2006,6 +2006,8 @@ static toolItems: IToolItem[] = [
   @observable
   sceneType: string = ''
   @observable
+  isCancel: boolean =false
+  @observable
   uploadingPhase: string = '';
   @observable
   convertingPhase: string = '';
@@ -2330,7 +2332,7 @@ static toolItems: IToolItem[] = [
         console.log('未找到uuid相关的课件', uuid)
       }
       console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
-      const putCourseFileType = ["ppt", "word"]
+      const putCourseFileType = ["ppt", "word","pdf"]
       if (putCourseFileType.includes(resource.type)) {
         await this.putCourseResource(uuid)
         console.log(`打开文件成功,文件类型${resource.type}`)
@@ -2348,10 +2350,16 @@ static toolItems: IToolItem[] = [
     }
   }
 
+  async getFileInQueryMateria(fileName: string) {
+    return await this.appStore.uploadService.getFileInQueryMateria({
+      roomUuid: this.appStore.roomInfo.roomUuid,
+      resourceName:fileName
+    })
+  }
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
-      let res = await this.appStore.uploadService.handleUpload({
+      let res =await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
@@ -2359,6 +2367,10 @@ static toolItems: IToolItem[] = [
           payload.onProgress(evt);
         },
       })
+      console.log('isCancel',this.isCancel)
+      if (this.isCancel) {
+        return
+      }
       const globalState = this.room.state.globalState as any
       const materialList = get(globalState, 'materialList', [])
       this.room.setGlobalState({
