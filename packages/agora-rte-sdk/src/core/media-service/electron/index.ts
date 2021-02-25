@@ -670,7 +670,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   async join(option: any): Promise<any> {
     try {
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
-      EduLogger.info("electron joinSubChannel ", ret)
+      EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `joinSubChannel failure`,
@@ -704,16 +704,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   async leave(): Promise<any> {
     try {
       let ret = this.client.setClientRole(2)
-      if (ret < 0) {
-        throw GenericErrorWrapper({
-          message: `setClientRole failure`,
-          code: ret
-        })
-      }
+      // if (ret < 0) {
+      //   throw GenericErrorWrapper({
+      //     message: `setClientRole failure`,
+      //     code: ret
+      //   })
+      // }
+      EduLogger.info("electron.setClientRole ", ret)
       if (this.joined === false) {
+        EduLogger.info("electron.leave already left")
         return
       }
       ret = this.client.leaveChannel()
+      EduLogger.info("electron.already leaveChannel, ret ", ret)
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `leaveSubChannel failure`,
