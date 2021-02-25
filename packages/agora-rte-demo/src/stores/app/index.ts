@@ -243,6 +243,7 @@ export class AppStore implements ClassRoomAbstractStore {
 
       //@ts-ignore
       if (window.agoraBridge) {
+        AgoraCEF.AgoraRtcEngine.release()
         const cefClient = new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId)
         console.log("#### cef initialize", cefClient)
         //@ts-ignore
