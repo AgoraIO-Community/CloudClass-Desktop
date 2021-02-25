@@ -59,7 +59,7 @@ const DiskToast = (props: DiskToastProps) => {
 
   useEffect(() => {
     let timeoutId: any;
-    if (props.onOpenToast) {
+    if (props.onOpenToast && !timeoutId) {
       timeoutId = setTimeout(() => {
         setOpenToast(false)
       }, 2000);
