@@ -2395,6 +2395,14 @@ static toolItems: IToolItem[] = [
     this.room.cleanCurrentScene()
   }
 
+  moveCamera() {
+    this.room.moveCamera({
+      centerX: 0,
+      centerY: 0,
+      scale: 1,
+    })
+  }
+
   // @observable
   // publicResources: any[] = []
   @computed

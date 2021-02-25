@@ -170,7 +170,8 @@ const en = {
     'zoomIn': 'zoom in',
     'zoomOut': 'zoom out',
     'fullScreen': 'full screen',
-    'reduction': 'reduction'
+    'reduction': 'reduction',
+    'reset': 'Center',
   },
   'disk': {
     'open': 'Open',

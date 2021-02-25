@@ -160,7 +160,8 @@ const zhCN: any = {
     'zoomIn': '放大',
     'zoomOut': '缩小',
     'fullScreen': '全屏',
-    'reduction':'还原'
+    'reduction':'还原',
+    'reset':'居中',
   },
   'disk': {
     'open': '打开',

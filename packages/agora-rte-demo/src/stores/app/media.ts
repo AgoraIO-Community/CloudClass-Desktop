@@ -112,7 +112,7 @@ export class MediaStore {
         visible: true,
         cancelText: t('aclass.device.cancel'),
         onConfirm: () => {
-          // window.location.reload()
+          window.location.reload()
         },
         onCancel: () => {
         }
