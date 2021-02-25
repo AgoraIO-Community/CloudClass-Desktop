@@ -6,6 +6,7 @@ import ZoomInIcon from '@material-ui/icons/ZoomIn'
 import ZoomOutIcon from '@material-ui/icons/ZoomOut'
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
+import MoveCamera from '../assets/reset.png'
 import IconButton from '@material-ui/core/IconButton'
 import Pencil from '../assets/pencil.png'
 import Mouse from '../assets/mouse.png'
@@ -42,6 +43,7 @@ export interface ControlButtonProps extends ControlBaseProps{
   prevText?: string,
   nextText?: string,
   fullScreenText?: string,
+  moveCameraText?: string,
 }
 
 const buttonsMap = {
@@ -64,6 +66,7 @@ const buttonsMap = {
   'upload': (props: any) => <CustomizeIconBtn icon={Upload} style={{...defaultStyle, ...props.style}} />,
   'clear': (props: any) => <CustomizeIconBtn icon={Clear} style={{...defaultStyle, ...props.style}} />,
   'disk': (props: any) => <CustomizeIconBtn icon={Disk} style={{...defaultStyle, ...props.style}} />,
+  'moveCamera': (props: any) => <CustomizeIconBtn icon={MoveCamera} style={{...defaultStyle, ...props.style}} />,
 }
 
 export const ControlButton: React.FC<ControlButtonProps> = ({
@@ -79,6 +82,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
   prevText,
   nextText,
   fullScreenText,
+  moveCameraText,
 }) => {
   const ControlIconButton = buttonsMap[icon]
 
@@ -91,7 +95,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
   const activeStyle = active && activeStyles ? activeStyles : {}
 
   // tools mapper
-  const titleMapper = [zoomInText, zoomOutText, prevText, nextText, fullScreenText]
+  const titleMapper = [zoomInText, zoomOutText, prevText, nextText, fullScreenText, moveCameraText]
   const titleAction = titleMapper.filter(i => i !== undefined)
   const title = titleAction[0]
 
@@ -103,6 +107,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
           width: 18,
           height: 18,
           padding: 0,
+          margin: 5,
           color: '#ffffff',
           ...activeStyle,
           ...style
@@ -114,6 +119,7 @@ export const ControlButton: React.FC<ControlButtonProps> = ({
           width: 18,
           height: 18,
           padding: 0,
+          margin: 5,
           color: '#ffffff',
           ...activeStyle,
           ...style

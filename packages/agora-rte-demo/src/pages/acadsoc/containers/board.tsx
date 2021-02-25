@@ -129,6 +129,7 @@ export const EduWhiteBoard = observer(() => {
       zoomInText={t('tool.zoomIn')}
       zoomOutText={t('tool.zoomOut')}
       fullScreenText={!boardStore.isFullScreen?t('tool.fullScreen'):t('tool.reduction')}
+      moveCameraText={t('tool.reset')}
     >
       {
         isLoading ? <Progress title={loadingStatus}></Progress> : null
@@ -480,6 +481,7 @@ export const EducationBoard = observer((props: any) => {
           nextText={props.nextText}
           zoomInText={props.zoomInText}
           zoomOutText={props.zoomOutText}
+          moveCameraText={props.moveCameraText}
           fullScreenText={props.fullScreenText}
           showPaginator={props.showPaginator}
           currentPage={props.currentPage}
@@ -502,6 +504,9 @@ export const EducationBoard = observer((props: any) => {
           }}
           onExitFullScreen={() => {
             boardStore.zoomBoard('fullscreenExit')
+          }}
+          onMoveCamera={() => {
+            boardStore.moveCamera()
           }}
         /> : null}
         {boardStore.aClassHasPermission ? <NetworkDisk openDisk={boardStore.openDisk} setOpenDisk={() => boardStore.setOpenDisk()} /> : null }
