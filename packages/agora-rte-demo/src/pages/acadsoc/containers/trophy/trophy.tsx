@@ -26,13 +26,14 @@ export const Trophy = observer(() => {
     if (acadsocStore.showTrophyAnimation) {
       setTrophyState('appear')
       if (!audioRef.current) return
-      audioRef.current.play()
-      setTimeout(() => {
-        if(audioRef.current) {
-          audioRef.current.pause()
-          audioRef.current.currentTime = 0
-        }
-      }, 1500)
+      audioRef.current.play().then(() => {
+        setTimeout(() => {
+          if(audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+          }
+        }, 1500)
+      })
     }
   }, [acadsocStore.showTrophyAnimation, audioRef.current])
 
@@ -71,7 +72,7 @@ export const Trophy = observer(() => {
       <div>
         <audio id={"gift_audio"}              
             controls
-            src="https://webdemo.agora.io/effect_trophy.wav"
+            src="https://webdemo.agora.io/effect_trophy.mp3"
             ref={audioRef}
             style={{"width":"1px","height":"1px","display":"none"}} 
         >

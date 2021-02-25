@@ -187,6 +187,9 @@ export const StudentVideo = observer(() => {
       }
     }
     if (type.sourceType === 'trophy') {
+      if(disableTrophy) {
+        return
+      }
       if(acadsocStore.isTrophyLimit) {
         acadsocStore.appStore.uiStore.addToast(t('toast.reward_limit'))
         return
@@ -203,7 +206,7 @@ export const StudentVideo = observer(() => {
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore])
+  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore, disableTrophy])
 
   const renderer = userStream.renderer
   
