@@ -888,7 +888,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           code: ret
         }
       }
-      if (option) {
+      //TODO: cef api
+      if (this._cefClient) {
+        //@ts-ignore
+        option.deviceId && this.client.audioDeviceManager.setRecordingDevice(option.deviceId)
+      } else {
+        //@ts-ignore
         option.deviceId && this.client.setAudioRecordingDevice(option.deviceId)
       }
       if (this.joined) {

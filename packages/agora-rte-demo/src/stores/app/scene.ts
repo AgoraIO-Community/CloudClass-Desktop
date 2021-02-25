@@ -752,9 +752,21 @@ export class SceneStore extends SimpleInterval {
   async leaveRtc() {
     try {
       this.joiningRTC = false
-      await this.closeCamera()
-      await this.closeMicrophone()
-      await this.mediaService.leave()
+      try {
+        await this.closeCamera()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
+      try {
+        await this.closeMicrophone()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
+      try {
+        await this.mediaService.leave()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
       this.appStore.uiStore.addToast(t('toast.leave_rtc_channel'))
       this.appStore.reset()
     } catch (err) {
