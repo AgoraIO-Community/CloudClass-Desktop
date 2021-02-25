@@ -1,6 +1,6 @@
 import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { DiskTablesProps } from 'agora-aclass-ui-kit'
-import DownloadDiskTables from './download-disk-table'
+import DownloadDiskTablesContainer from './download-disk-table'
 
 interface DownloadDiskProps {
   // downloadComponet
@@ -8,10 +8,12 @@ interface DownloadDiskProps {
 
   showOpenItem?: boolean,
   setDownloadList?: Dispatch<SetStateAction<any>>,
-  handleDownloadAll?: () => any,
-  handleClearcache?: () => Promise<void>,
-  handleDownload?: (evt: any) => any,
-  handleDeleteSingle?: (evt: any) => any,
+
+  registerTaskCallback: (uuid: string, onProgress: (progress: number) => void, onComplete: () => void) => any,
+  handleDownloadAll: (evt: any) => any,
+  handleClearcache: () => Promise<void>,
+  handleDownload: (uuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) => any,
+  handleDeleteSingle: (evt: any) => any,
   donwloadAllComponent?: React.ReactNode,
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
@@ -28,11 +30,12 @@ export interface DownloadDiskTablesProps extends DiskTablesProps {
   deleteAllCacheComponent?: React.ReactNode,
   singleDownloadComponent?: React.ReactNode,
   singleDeleteComponent?: React.ReactNode,
-  handleDownloadAll?: () => any,
 
-  handleClearcache?: () => Promise<void>,
-  handleDownload?: (evt: any) => any,
-  handleDeleteSingle?: (evt: any) => any,
+  registerTaskCallback: (uuid: string, onProgress: (progress: number) => void, onComplete: () => void) => any,
+  handleDownloadAll: (evt: any) => any,
+  handleClearcache: () => Promise<void>,
+  handleDownload: (uuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) => any,
+  handleDeleteSingle: (evt: any) => any,
   setDownloadList?: Dispatch<SetStateAction<any>>,
 }
 
@@ -40,10 +43,11 @@ export interface DownloadDiskTablesProps extends DiskTablesProps {
 const DownloadDisk = (props: DownloadDiskProps) => {
   return (
     <>
-      <DownloadDiskTables
+      <DownloadDiskTablesContainer
         tabValue={0}
         setDownloadList={props.setDownloadList}
         diskText={props.diskText}
+        registerTaskCallback={props.registerTaskCallback}
         handleDownloadAll={props.handleDownloadAll}
         handleClearcache={props.handleClearcache}
         handleDownload={props.handleDownload}

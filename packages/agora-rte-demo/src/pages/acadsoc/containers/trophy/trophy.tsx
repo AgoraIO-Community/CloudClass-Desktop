@@ -35,7 +35,7 @@ export const Trophy = observer(() => {
         }, 1500)
       })
     }
-  }, [acadsocStore.showTrophyAnimation])
+  }, [acadsocStore.showTrophyAnimation, audioRef.current])
 
   const animationStyle = useMemo(() => {
     let display = 'none'
