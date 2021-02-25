@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 import { IconButton} from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';
 import React, { useCallback, useRef, useState, useEffect } from 'react'
@@ -19,6 +20,8 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
     root: {
       height: 10,
       borderRadius: 5,
+      margin: '5px 0',
+      // width: '80%'
     },
     colorPrimary: {
       backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
@@ -54,6 +57,7 @@ const NetworkDisk = observer((props: any) => {
   const diskStore = useDiskStore()
   const [process,setProcess] = useState<number>(0)
   const [isUploadFile,setIsUploadFile] = useState<boolean>(false)
+  const [isTrans,setIsTrans] = useState<boolean>(false)
   const [file,setUploadFile] = useState({
     fileName:'',
     fileSize:'',
@@ -100,6 +104,7 @@ const NetworkDisk = observer((props: any) => {
     setIsUploadFile(true)
     setProcess(0)
     setIsOpenToast(false)
+    setIsTrans(false)
     setUploadFile({
       fileName: name,
       fileSize: file.size,
@@ -114,16 +119,20 @@ const NetworkDisk = observer((props: any) => {
       converting: isNeedConverting,
       kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
       onProgress: async(evt) => {
-        const { progress } = evt;
+        const { progress, isTransFile  = false , isLastProgress = false } = evt;
         const parent = Math.floor(progress * 100)
         setProcess(parent)
-        if (parent === 100) {
-          setIsOpenToast(true)
-          setProcess(0)
-          setIsUploadFile(false)
+        setIsTrans(isTransFile)
+        if (isLastProgress && parent == 100) {
+          setTimeout(() => {
+            // setProcess(0)
+            console.log('onProgress',isOpenToast)
+            !isOpenToast && setIsOpenToast(true)
+            setIsUploadFile(false)
+          }, 1000)
           setToastMessage({
-            type:'success',
-            message:'上传成功'
+            type: 'success',
+            message: '上传成功'
           })
         }
         // if (cancelFileList.includes(resourceUuid) && progress === 100) {
@@ -139,13 +148,25 @@ const NetworkDisk = observer((props: any) => {
   }
   const cancelUpload = async () => {
     setIsUploadFile(false)
-    if (process < 100) {
-      // const list =cancelFileList;
-      // list.push(file.fileID)
-      // setCancelFileList(list)
-      await boardStore.cancelUpload()
-      await boardStore.removeMaterialList([file.fileID])
+    // if (process < 100) {
+    // const list =cancelFileList;
+    // list.push(file.fileID)
+    // setCancelFileList(list)
+    await boardStore.cancelUpload()
+    const queryResult = await boardStore.getFileInQueryMateria(file.fileName)
+    if (queryResult.success) {
+      boardStore.removeMaterialList([file.fileID])
     }
+    console.log('boardStore.personalResources', boardStore.personalResources)
+    // }
+  }
+  const fileSizeTransSize = (data: number | string) => {
+    const toMB = 1024 * 1024
+    let transData = data;
+    if (typeof (data) === 'string') {
+      transData = parseInt(data, 10)
+    }
+    return ((transData as number) / toMB).toFixed(2) + 'MB'
   }
   const uploadListComponent = () => {
     if (!isUploadFile) return <></>
@@ -160,19 +181,17 @@ const NetworkDisk = observer((props: any) => {
         <ul className={styles.listTitle}>
           <li>
             <div>{t('disk.fileName')}</div>
-            <div>{file.fileName}</div>
-          </li>
-          <li>
             <div>{t('disk.size')}</div>
-            <div>{file.fileSize}</div>
-          </li>
-          <li>
             <div>{t('disk.progress')}</div>
-            <div><BorderLinearProgress variant="determinate" value={process} /></div>
+            <div>{t('disk.operation')}</div>
           </li>
           <li>
-            <div>{t('disk.operation')}</div>
-            <div className={styles.delete}  onClick={cancelUpload}></div>
+            <div>{file.fileName}</div>
+            <div>{fileSizeTransSize(file.fileSize)}</div>
+            <div>
+            {isTrans?t('whiteboard.converting'):t('disk.upload')}<BorderLinearProgress variant="determinate" value={process} className={styles.process} /></div>
+            <div onClick={cancelUpload} className={styles.delete} >
+            </div>
           </li>
         </ul>
       </div>

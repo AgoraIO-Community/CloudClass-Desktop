@@ -129,7 +129,7 @@ export type HandleUploadType = {
   kind: any,
   pptConverter: LegacyPPTConverter,
   pptResult?: any,
-  onProgress: (evt: {phase: string, progress: number}) => any,
+  onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
 }
 
 
@@ -165,8 +165,11 @@ export class UploadService extends ApiBase {
     }
 
     const files = res.data
-
-    const file = files.find((file: any) => file.resourceName === params.name)
+    const file = files.find((fileItem: any) => {
+      console.log(fileItem.resourceName, params.name)
+      return fileItem.resourceName === params.name
+    })
+    console.log('onProgress', file, params.name)
 
     if (file) {
       return {
@@ -284,13 +287,20 @@ export class UploadService extends ApiBase {
     return res.data
   }
 
+  async getFileInQueryMateria(payload: {
+    roomUuid: string,
+    resourceName: string
+  }) {
+  return await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
+    }
   async handleUpload(payload: HandleUploadType) {
-    const queryResult = await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
+    const queryResult = await this.getFileInQueryMateria(payload)
     if (queryResult.success) {
       EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({
         phase: 'finish',
         progress: 1,
+        isLastProgress:true
       })
       console.log("query#data ", queryResult.data)
       return queryResult.data
@@ -327,11 +337,11 @@ export class UploadService extends ApiBase {
         this.ossClient,
         key,
         payload.file,
-        (progress: any) => {
-          console.log('onProgress converting',progress)
+        (...args: any) => {
+           console.log('onProgress converting',args)
           payload.onProgress({
             phase: 'finish',
-            progress
+            progress: args[1]
           })
         },
         {
@@ -346,14 +356,21 @@ export class UploadService extends ApiBase {
         url: uploadResult.ossURL,
         kind: payload.kind,
         onProgressUpdated: (...args: any[]) => {
+          console.log('onProgressUpdated',args)
           payload.onProgress({
             phase: 'finish',
             progress: args[0],
+            isTransFile: true,
           })
         },
       })
-
       console.log("转换完成 ", JSON.stringify(taskResult))
+      payload.onProgress({
+        phase: 'finish',
+        progress: 1,
+        isTransFile: true,
+        isLastProgress: true
+      })
 
       let materialResult = await this.createMaterial({
         taskUuid: taskResult.uuid,
@@ -394,9 +411,11 @@ export class UploadService extends ApiBase {
         key,
         payload.file,
         (...args: any[]) => {
+          console.log('onProgress uploadResult addFileToOss ',args)
           payload.onProgress({
             phase: 'finish',
-            progress:args[1]
+            progress:args[1],
+            isLastProgress:true
           })
         },
         {
@@ -441,6 +460,7 @@ export class UploadService extends ApiBase {
         progress: (p, cpt, res) => {
           this.abortCheckpoint = cpt
           if (onProgress) {
+             console.log('onProgress  addFileToOss function ',PPTProgressPhase.Uploading, p)
             onProgress(PPTProgressPhase.Uploading, p);
           }
         },
