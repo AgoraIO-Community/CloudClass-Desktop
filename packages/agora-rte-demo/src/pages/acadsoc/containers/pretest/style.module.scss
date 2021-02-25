@@ -166,6 +166,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  >div:first-child {
+    margin-right: 24px;
+  }
 }
 
 .rendererPlaceholder {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
-import { useReplayUIStore, useUIStore } from '@/hooks';
+import { useHomeUIStore, useUIStore } from '@/hooks';
 import { BizLogger } from '@/utils/biz-logger';
 
 export interface SnackbarMessage {
@@ -84,7 +84,7 @@ export const Toast = observer(() => {
 
 export const ToastContainer = observer(() => {
 
-  const uiStore = useReplayUIStore()
+  const uiStore = useHomeUIStore()
 
   return (
     <div className="notice-message-container-comp">

@@ -17,16 +17,9 @@ import {
 import * as AgoraCEF from 'agora-cef-sdk';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduBoardService } from '@/modules/board/edu-board-service';
-import { DeviceStore } from './device';
 import { UIStore } from './ui';
 import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
 import { BoardStore } from './board';
-import { RoomStore } from './room';
-import { RecordingStore } from './recording';
-import { ReplayStore } from './replay';
-import { BreakoutRoomStore } from './breakout-room';
-import { MiddleRoomStore } from './middle-room';
-import { ExtensionStore } from './extension'
 import { PretestStore } from './pretest'
 import { DiskStore } from './disk'
 // import { get, isEmpty } from 'lodash';
@@ -42,7 +35,6 @@ import { get, isEmpty } from 'lodash';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
 import { AcadsocRoomStore } from './acadsoc-room';
-import { DeviceSettingStore } from './device-setting';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
@@ -111,18 +103,10 @@ export class AppStore implements ClassRoomAbstractStore {
   // stores
   uiStore!: UIStore;
   boardStore!: BoardStore;
-  roomStore!: RoomStore;
-  deviceStore!: DeviceStore;
-  recordingStore!: RecordingStore;
-  breakoutRoomStore!: BreakoutRoomStore;
-  middleRoomStore!: MiddleRoomStore;
-  extensionStore!: ExtensionStore;
-  replayStore!: ReplayStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
   acadsocStore!: AcadsocRoomStore;
   pretestStore!: PretestStore;
-  deviceSettingStore!: DeviceSettingStore;
   diskStore!: DiskStore;
   homeStore!: HomeStore;
 
@@ -357,17 +341,9 @@ export class AppStore implements ClassRoomAbstractStore {
     }
 
     this.pretestStore = new PretestStore(this)
-    this.deviceSettingStore = new DeviceSettingStore(this)
     this.acadsocStore = new AcadsocRoomStore(this)
     this.boardStore = new BoardStore(this)
-    this.recordingStore = new RecordingStore(this)
-    this.roomStore = new RoomStore(this)
     this.sceneStore = new SceneStore(this)
-    this.middleRoomStore = new MiddleRoomStore(this)
-    this.deviceStore = new DeviceStore(this)
-    this.replayStore = new ReplayStore(this)
-    this.breakoutRoomStore = new BreakoutRoomStore(this)
-    this.extensionStore = new ExtensionStore(this)
     this.diskStore = new DiskStore(this)
     this.homeStore = new HomeStore(this)
     this._screenVideoRenderer = undefined
@@ -710,14 +686,6 @@ export class AppStore implements ClassRoomAbstractStore {
 export * from './acadsoc-room';
 export { UIStore } from './ui';
 export { BoardStore } from './board';
-export { RoomStore } from './room';
-export { DeviceStore } from './device';
-export { BreakoutRoomStore } from './breakout-room';
-export { MiddleRoomStore } from './middle-room';
-export { ExtensionStore } from './extension';
-export { ReplayStore } from './replay';
-export { RecordingStore } from './recording';
-export {DeviceSettingStore} from './device-setting';
 export {PretestStore} from './pretest';
 export {DiskStore} from './disk';
 export {HomeStore} from './home';

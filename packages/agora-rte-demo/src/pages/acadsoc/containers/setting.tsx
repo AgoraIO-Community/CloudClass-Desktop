@@ -5,8 +5,8 @@ import VideoDetectPng from '../assets/camera-detect.png'
 import SpeakerPng from '../assets/speaker.png'
 import MicPng from '../assets/mic.png'
 import { observer } from 'mobx-react'
-import React, { useEffect, useState } from 'react'
-import { useDeviceStore, usePretestStore, useUIStore } from '@/hooks'
+import React, { ReactEventHandler, useEffect, useState } from 'react'
+import { usePretestStore, useUIStore } from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { t } from '@/i18n'
 import { CameraPreview } from './pretest/component'
@@ -120,9 +120,31 @@ const VolumeController = observer(() => {
 
   return (
     <SpeakerDeviceVolume 
+      // key={pretestStore.microphoneId}
       currentVolume={pretestStore.totalVolume * 100 % 52}
       width={'8px'}
       direction={VolumeDirectionEnum.Right}
+    />
+  )
+})
+
+const MicrophoneDeviceItem = observer(({handleMicrophoneChange}: {handleMicrophoneChange: ReactEventHandler<any>}) => {
+
+  const pretestStore = usePretestStore()
+
+  return (
+    <DevicePicker
+      name={t("aclass.device.mic")}
+      value={pretestStore.microphoneId}
+      onChange={handleMicrophoneChange}
+      list={pretestStore.microphoneList}
+      id="microphone"
+      selectStyle={{
+        minWidth: 310,
+        maxWidth: 310,
+        background: 'white',
+        overflow: 'hidden'
+      }}
     />
   )
 })
@@ -228,6 +250,7 @@ export const SettingWeb = observer(() => {
           </div>
         </RowItem>
         <RowItem>
+          {/* <MicrophoneDeviceItem handleMicrophoneChange={handleMicrophoneChange} /> */}
           <DevicePicker
             name={t("aclass.device.mic")}
             value={pretestStore.microphoneId}
@@ -354,7 +377,8 @@ export const SettingNative = observer(() => {
           />
         </RowItem>
         <RowItem>
-          <DevicePicker
+          <MicrophoneDeviceItem handleMicrophoneChange={handleMicrophoneChange} />
+          {/* <DevicePicker
             name={t("aclass.device.mic")}
             value={pretestStore.microphoneId}
             onChange={handleMicrophoneChange}
@@ -366,7 +390,7 @@ export const SettingNative = observer(() => {
               background: 'white',
               overflow: 'hidden'
             }}
-          />
+          /> */}
         </RowItem>
         <RowItem>
           <DevicePicker

@@ -10,6 +10,7 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 @Field def repo_name = "cloudclass-desktop"
 @Field def repo_branch = ""
 
+
 withWechatNotify {
     withKnownErrorHandling {
         timestamps {

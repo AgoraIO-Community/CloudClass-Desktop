@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory, useLocation, } from 'react-router-dom';
-import { useRoomStore, useAppStore } from '@/hooks';
+import { useAppStore } from '@/hooks';
 import { homeApi } from '@/services/home-api';
 import { UIStore } from '@/stores/app';
 import { observer } from 'mobx-react';

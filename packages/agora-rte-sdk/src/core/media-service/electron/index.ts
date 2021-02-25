@@ -155,8 +155,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     const config = {
       bitrate: 0,
       frameRate: 15,
-      height: 360,
-      width: 640,
+      height: 240,
+      width: 320,
     }
     const videoEncoderConfiguration = Object.assign({
       width: config.width,
@@ -749,7 +749,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
       if (option) {
         option.deviceId && this.client.setVideoDevice(option.deviceId)
-        option.encoderConfig && this.client.setVideoEncoderConfiguration(option.encoderConfig)
+        // TODO: cef configuration
+        //@ts-ignore
+        option.encoderConfig && this.client.setVideoEncoderConfiguration({
+          //@ts-ignore
+          dimensions: {
+            width: option.encoderConfig.width,
+            height: option.encoderConfig.height,
+          },
+          frameRate: option.encoderConfig.frameRate
+        })
       }
       if (this.joined) {
         ret = this.client.muteLocalVideoStream(false)

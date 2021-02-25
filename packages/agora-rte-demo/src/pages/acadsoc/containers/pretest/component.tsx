@@ -1,6 +1,6 @@
 import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import { Theme, withStyles } from '@material-ui/core/styles'
-import { DevicePicker, Volume, VolumeDirectionEnum } from 'agora-aclass-ui-kit'
+import { DevicePicker, Volume, VolumeDirectionEnum, MicWave } from 'agora-aclass-ui-kit'
 import React, { useCallback, useRef, useState } from 'react'
 import styles from './style.module.scss'
 import CustomIconArrow from './assets/rectangle.png'
@@ -306,13 +306,18 @@ export const AudioDetect: React.FC<PretestAudioDetectProps> = (props) => {
         }}
       />
       <div className={styles.positionVolume}>
-        <div className={styles.iconVolume}></div>
+        <MicWave
+          currentVolume={volume}
+          maxVolume={25}
+          threshold={0.2}
+        />
         <Volume
           currentVolume={volume}
           width={'5px'}
-          height={'35px'}
+          height={'25px'}
           maxLength={25}
           direction={VolumeDirectionEnum.Right}
+          foregroundColor={'#75C0FF'}
         />
       </div>
       <BottomButtonGroup

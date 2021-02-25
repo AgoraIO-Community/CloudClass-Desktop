@@ -345,26 +345,24 @@ export class EduUserService extends EventEmitter implements IEduUserService {
   }
 
   public async updateMainStreamState(args: Record<string, boolean>) {
-    const prevAudioState = +this.localStream.stream.hasAudio
-    const prevVideoState = +this.localStream.stream.hasVideo
-    const curAudioState = args.hasOwnProperty('audioState') ? +args['audioState']: prevAudioState
-    const curVideoState = args.hasOwnProperty('videoState') ? +args['videoState'] : prevVideoState
-    EduLogger.info("args### ", args, this.localStream.stream, args)
-    await this.apiService.updateBizStream({
+    // const prevAudioState = +this.localStream.stream.hasAudio
+    // const prevVideoState = +this.localStream.stream.hasVideo
+    // const curAudioState = args.hasOwnProperty('audioState') ? +args['audioState']: prevAudioState
+    // const curVideoState = args.hasOwnProperty('videoState') ? +args['videoState'] : prevVideoState
+    const videoState: any = args.hasOwnProperty('videoState') ? +args.videoState : undefined
+    const audioState: any = args.hasOwnProperty('audioState') ? +args.audioState : undefined
+    const params = {
+      videoSourceType: this.localStream.stream.videoSourceType,
+      audioSourceType: this.localStream.stream.audioSourceType,
       roomUuid: this.roomUuid,
       userUuid: this.localUserUuid,
       streamUuid: this.data.streamMap['main'].streamUuid,
-      videoSourceType: this.localStream.stream.videoSourceType,
-      audioSourceType: this.localStream.stream.audioSourceType,
-      videoState: curVideoState,
-      audioState: curAudioState,
       streamName: this.localStream.stream.streamName,
-      generateToken: false
-    })
-    // this.localStream.updateMediaState({
-    //   hasVideo: curVideoState,
-    //   hasAudio: curAudioState,
-    // })
+      generateToken: false,
+      videoState: videoState,
+      audioState: audioState
+    }
+    await this.apiService.updateBizStream(params)
   }
 
   public async muteStudentChatByRoles(roles: string[]) {

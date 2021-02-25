@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import {dialogManager, Dialog , PromptDialog, DeviceManagerDialog, AudioPlayer, AudioVolume, DeviceTabs, DialogFramePaper} from '.'
 import { Button } from '../button'
@@ -8,6 +8,7 @@ import VideoDetectPng from './assets/camera-detect.png'
 import SpeakerPng from './assets/speaker.png'
 import MicPng from './assets/mic.png'
 import { VolumeDirectionEnum } from '../volume'
+import { MicWave } from './device/micwave'
 
 export default {
   title: '对话框',
@@ -504,6 +505,12 @@ export interface DeviceTestProps {
   onChangeMicrophone: (evt: any) => any,
 }
 
+export interface MicWaveProps {
+  currentVolume: number,
+  maxVolume: number,
+  threshold: number
+}
+
 export const DeviceTest: React.FC<DeviceTestProps> = (props) => {
 
   const classes = useStyles()
@@ -726,4 +733,25 @@ DeviceTest.defaultProps = {
   microphoneList: [{
     name: 'unknown'
   }]
+}
+
+export const MicWaveTest: React.FC<MicWaveProps> = (props) => {
+  const [volume, setVolume] = useState(0)
+
+  useEffect(() => {
+    setInterval(() => {
+      setVolume(Math.floor(Math.random() * 100))
+    }, Math.random() * 3 * 1000)
+  }, [])
+  return (
+    <div style={{display: "flex", flexDirection: "row", width: 786, height: 660}}>
+      <MicWave currentVolume={volume} maxVolume={100} threshold={0.25}></MicWave>
+    </div>
+  )
+}
+
+MicWaveTest.defaultProps = {
+  currentVolume: 50,
+  maxVolume: 100,
+  threshold: 0.25
 }

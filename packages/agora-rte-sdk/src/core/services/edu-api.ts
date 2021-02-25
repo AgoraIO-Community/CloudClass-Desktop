@@ -706,8 +706,8 @@ export class AgoraEduApi extends ApiBase {
       userUuid,
       streamName,
       streamUuid,
-      videoSourceType,
-      audioSourceType,
+      // videoSourceType,
+      // audioSourceType,
       videoState,
       audioState,
       generateToken
@@ -718,8 +718,8 @@ export class AgoraEduApi extends ApiBase {
       method: 'PUT',
       data: {
         streamName,
-        videoSourceType,
-        audioSourceType,
+        // videoSourceType,
+        // audioSourceType,
         videoState,
         audioState,
         generateToken

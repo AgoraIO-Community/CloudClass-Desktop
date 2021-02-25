@@ -1,16 +1,4 @@
 import React from 'react';
-import {DeviceDetectPage} from './device-detect';
-import {
-  BigClassPage,
-  OneToOneRoomPage,
-  SmallClassPage
-} from './classroom';
-import {
-  MiddleRoomPage
-} from './middle-class';
-import { ReplayPage } from './replay';
-import { BreakoutClassroom } from './breakout-class/breakout-class';
-import { AssistantCoursesPage } from './breakout-class/assistant-courses-page';
 import { HomePage } from './home';
 import {Invisible} from './invisible'
 import { AcadsocOneToOne } from './acadsoc';
@@ -32,38 +20,6 @@ export const routesMap: Record<string, AppRouteComponent> = {
   '1v1': {
     path: '/classroom/one-to-one',
     component: () => <AcadsocOneToOne />
-  },
-  'smallClass': {
-    path: '/classroom/small-class',
-    component: () => <SmallClassPage />
-  },
-  'bigClass': {
-    path: '/classroom/big-class',
-    component: () => <BigClassPage />
-  },
-  'replayPage': {
-    path: '/replay/record/:roomUuid',
-    component: () => <ReplayPage />
-  },
-  'recordPage': {
-    path: '/record/:roomUuid',
-    component: () => <ReplayPage />
-  },
-  'middleClass': {
-    path: '/classroom/middle-class',
-    component: () => <MiddleRoomPage />
-  },
-  'breakoutClassRoom': {
-    path: '/classroom/breakout-class',
-    component: () => <BreakoutClassroom />
-  },
-  'breakoutClassCourses': {
-    path: '/breakout-class/assistant/courses',
-    component: () => <AssistantCoursesPage />
-  },
-  'breakoutClassAssistantRoom': {
-    path: '/breakout-class/assistant/courses/:course_name',
-    component: () => <BreakoutClassroom />
   },
   'invisibleJoinRoom': {
     path: '/invisible/courses',

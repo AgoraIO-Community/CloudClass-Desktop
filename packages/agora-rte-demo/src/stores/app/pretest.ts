@@ -304,11 +304,16 @@ export class PretestStore {
   @action
   async openTestCamera() {
     const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-    await this.mediaService.openTestCamera({deviceId})
+    await this.mediaService.openTestCamera({
+      deviceId,
+      encoderConfig: {
+        ...this.appStore.sceneStore.videoEncoderConfiguration
+      }
+    })
     this._cameraRenderer = this.mediaService.cameraTestRenderer
     this.cameraLabel = this.mediaService.getTestCameraLabel()
     this._cameraId = this.cameraId
-    this.appStore.deviceInfo.cameraName = this.cameraLabel
+    // this.appStore.deviceInfo.cameraName = this.cameraLabel
   }
 
   @action
@@ -332,12 +337,17 @@ export class PretestStore {
       if (this.cameraRenderer) {
         await this.mediaService.changeTestCamera(deviceId)
       } else {
-        await this.mediaService.openTestCamera({deviceId})
+        await this.mediaService.openTestCamera({
+          deviceId,
+          encoderConfig: {
+            ...this.appStore.sceneStore.videoEncoderConfiguration
+          }
+        })
       }
       this._cameraRenderer = this.mediaService.cameraTestRenderer
       this.cameraLabel = this.mediaService.getTestCameraLabel()
       this._cameraId = this.cameraId
-      this.appStore.deviceInfo.cameraName = this.cameraLabel
+      // this.appStore.deviceInfo.cameraName = this.cameraLabel
     }
   }
 
@@ -349,7 +359,7 @@ export class PretestStore {
       this._microphoneTrack = this.web.microphoneTrack
     }
     this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+    // this.appStore.deviceInfo.microphoneName = this.microphoneLabel
     this._microphoneId = this.microphoneId
   }
 
@@ -378,7 +388,7 @@ export class PretestStore {
         this._microphoneTrack = this.web.microphoneTrack
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-      this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+      // this.appStore.deviceInfo.microphoneName = this.microphoneLabel
       this._microphoneId = this.microphoneId
     }
   }
@@ -390,7 +400,7 @@ export class PretestStore {
       this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getTestCameraLabel()
       this._cameraId = this.cameraId
-      this.appStore.deviceInfo.cameraName = this.cameraLabel
+      // this.appStore.deviceInfo.cameraName = this.cameraLabel
     }
   }
 
@@ -414,11 +424,16 @@ export class PretestStore {
   @action
   async openCamera() {
     const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-    await this.mediaService.openCamera({deviceId})
+    await this.mediaService.openCamera({
+      deviceId,
+      encoderConfig: {
+        ...this.appStore.sceneStore.videoEncoderConfiguration
+      }
+    })
     this._cameraRenderer = this.mediaService.cameraRenderer
     this.cameraLabel = this.mediaService.getCameraLabel()
     this._cameraId = this.cameraId
-    this.appStore.deviceInfo.cameraName = this.cameraLabel
+    // this.appStore.deviceInfo.cameraName = this.cameraLabel
   }
 
   @action
@@ -438,12 +453,17 @@ export class PretestStore {
       if (this.cameraRenderer) {
         await this.mediaService.changeCamera(deviceId)
       } else {
-        await this.mediaService.openCamera({deviceId})
+        await this.mediaService.openCamera({
+          deviceId,
+          encoderConfig: {
+            ...this.appStore.sceneStore.videoEncoderConfiguration
+          }
+        })
       }
       this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this._cameraId = this.cameraId
-      this.appStore.deviceInfo.cameraName = this.cameraLabel
+      // this.appStore.deviceInfo.cameraName = this.cameraLabel
     }
   }
 
@@ -455,7 +475,7 @@ export class PretestStore {
       this._microphoneTrack = this.web.microphoneTrack
     }
     this.microphoneLabel = this.mediaService.getMicrophoneLabel()
-    this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+    // this.appStore.deviceInfo.microphoneName = this.microphoneLabel
     this._microphoneId = this.microphoneId
   }
 
