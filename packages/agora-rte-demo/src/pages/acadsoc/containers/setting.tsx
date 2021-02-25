@@ -212,7 +212,7 @@ export const SettingWeb = observer(() => {
         right: 18,
         color: 'white',
         //@ts-ignore
-        '& .MuiIconButton-label': {
+        '& .MuiIconButtonLabel': {
           fontSize: '25px'
         }
         // ['& .MuiSvgIcon-root']: {
