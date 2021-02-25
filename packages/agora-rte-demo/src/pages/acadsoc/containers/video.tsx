@@ -206,7 +206,7 @@ export const StudentVideo = observer(() => {
       acadsocStore.unwind.push(t)
       acadsocStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore])
+  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore, disableTrophy])
 
   const renderer = userStream.renderer
   
