@@ -13,32 +13,28 @@ export const Trophy = observer(() => {
   const audioRef = useRef<HTMLAudioElement | null>(null) 
 
   useEffect(() => {
-    if (!audioRef.current) return
-    audioRef.current.play()
-    setTimeout(() => {
-      if(audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.currentTime = 0
-      }
-    }, 1500)
-  }, [audioRef.current])
-
-  useEffect(() => {
     trophyRef.current?.addEventListener('transitionend', () => {
       acadsocStore.showTrophyAnimation = false
       setTrophyState('none')
     })
     giftRef.current?.addEventListener('animationend', () => {
       setTrophyState('move')
-      
     })
   }, [])
 
   useEffect(() => {
     if (acadsocStore.showTrophyAnimation) {
       setTrophyState('appear')
+      if (!audioRef.current) return
+      audioRef.current.play()
+      setTimeout(() => {
+        if(audioRef.current) {
+          audioRef.current.pause()
+          audioRef.current.currentTime = 0
+        }
+      }, 1500)
     }
-  }, [acadsocStore.showTrophyAnimation])
+  }, [acadsocStore.showTrophyAnimation, audioRef.current])
 
   const animationStyle = useMemo(() => {
     let display = 'none'
