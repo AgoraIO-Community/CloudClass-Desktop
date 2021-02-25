@@ -2,16 +2,8 @@
   width: 100%;
   height: 100%;
   position: relative;
+  margin-top: -10px;
 }
-
-.minimizeContainer {
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-}  
 
 .animation {
   width: 100%;
