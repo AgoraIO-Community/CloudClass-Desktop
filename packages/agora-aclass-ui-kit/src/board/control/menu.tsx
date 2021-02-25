@@ -6,7 +6,7 @@ import { ControlBaseProps } from '../declare'
 import {Paginator} from './paginator'
 import {ControlScale} from './scale'
 import {ControlScreen} from './screen'
-
+import {ControlMoveCamera} from './reset'
 export interface ControlMenuProps extends ControlBaseProps {
   showPaginator: boolean,
   currentPage?: number,
@@ -20,6 +20,7 @@ export interface ControlMenuProps extends ControlBaseProps {
   zoomOutText?: string,
   prevText?: string,
   nextText?: string,
+  moveCameraText?: string,
   fullScreenText?: string,
 }
 
@@ -71,6 +72,7 @@ export const ControlMenu = (propArgs: ControlMenuProps) => {
     onClick,
     zoomInText,
     zoomOutText,
+    moveCameraText,
     prevText,
     nextText,
     fullScreenText,
@@ -106,6 +108,10 @@ export const ControlMenu = (propArgs: ControlMenuProps) => {
               isFullScreen={isFullScreen}
               onClick={onClick}
             /> : null}
+            <ControlMoveCamera
+              moveCameraText={moveCameraText}
+              onClick={onClick}
+            />
         </div>
         <div className={classes.undertone}></div>
       </div>

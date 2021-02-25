@@ -8,6 +8,7 @@ export interface ZoomControllerProps extends ControlMenuProps {
   changeFooterMenu: (type: string) => void,
   onFullScreen: () => any,
   onExitFullScreen: () => any,
+  onMoveCamera: () => any,
 }
 
 export class ZoomController extends React.Component<ZoomControllerProps, {}> {
@@ -116,6 +117,7 @@ export class ZoomController extends React.Component<ZoomControllerProps, {}> {
             nextText={this.props.nextText}
             zoomInText={this.props.zoomInText}
             zoomOutText={this.props.zoomOutText}
+            moveCameraText={this.props.moveCameraText}
             fullScreenText={this.props.fullScreenText}
             showPaginator={this.props.showPaginator}
             currentPage={this.props.currentPage}
@@ -144,6 +146,10 @@ export class ZoomController extends React.Component<ZoomControllerProps, {}> {
 
               if (type === 'fullscreenExit') {
                 this.props.onExitFullScreen()
+                return
+              }
+              if (type === 'moveCamera') {
+                this.props.onMoveCamera()
                 return
               }
             }}
