@@ -17,11 +17,11 @@ const routes: string[] = [
   // "home"
 ]
 
-export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
+const generateClassName = createGenerateClassName({
+  productionPrefix: `eduClassDemo`,
+})
 
-  const generateClassName = createGenerateClassName({
-    productionPrefix: `eduClass_${+Date.now()}`,
-  })
+export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
   
   return (
     <StylesProvider generateClassName={generateClassName}>
@@ -33,10 +33,3 @@ export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
     </StylesProvider>
   )
 }
-
-// export const RenderLiveRoom = ({dom, store}: RoomComponentConfigProps<AppStore>, delegate: DelegateType) => (
-//   render(
-//     <LiveRoom store={store} />,
-//     dom
-//   )
-// )
