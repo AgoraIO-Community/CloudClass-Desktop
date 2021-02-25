@@ -223,7 +223,7 @@ const en = {
     'videoType': 'mp4',
     'audioType': 'mp3',
     'txtType': 'txt',
-    'picType': 'gif png jpeg jpg',
+    'picType': 'gif png jpeg jpg bmp',
   },
   'error': {
     'not_found': 'Page Not Found',
