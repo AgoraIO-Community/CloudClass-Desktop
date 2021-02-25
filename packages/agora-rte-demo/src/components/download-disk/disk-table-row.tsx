@@ -1,28 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TableRow } from '@material-ui/core';
 import { diskAppStore, downloadStatus } from '@/monolithic/disk/disk-store';
 import { iconMapper, DiskTableCell, DiskButton, DiskSingleProgress } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 
+interface DownloadTableRowProps {
+  index: number,
+  data: any,
+  registerTaskCallback: (uuid: string, onProgress: (progress: number) => void, onComplete: () => void) => any,
+  handleDownload: (uuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) => any,
+  handleDeleteSingle: (evt: any) => any,
+  handleClearcache: (evt: any) => any,
+}
 
-const DownloadTableRow = (props: any) => {
+const DownloadTableRow = (props: DownloadTableRowProps) => {
   let row = props.data
   let index = props.index
 
   const [ status, setStatus ] = useState(props.data.status)
-  const [ progress, setProgress ] = useState(row.progress)
-
-  const handleDownload = (uuid: string, index: number) => {
-    row.status = downloadStatus.downloading,
-    setStatus(downloadStatus.downloading)
-    props.handleDownload(uuid,
-      (currentProgress: number) => {
-        setProgress(currentProgress)
+  const [ progress, setProgress ] = useState(props.data.progress)
+  
+  useEffect(() => {
+    props.registerTaskCallback(props.data.resourceUuid, 
+      (progress: number) => {
+        setProgress(progress)
       },
       () => {
         setStatus(downloadStatus.cached)
-        row.status = downloadStatus.cached
-        row.progress = 100
+        props.data.status = downloadStatus.cached
+        props.data.progress = 100
+      }
+    )
+  }, [])
+
+  const handleDownload = (uuid: string, index: number) => {
+    props.data.status = downloadStatus.downloading,
+    setStatus(downloadStatus.downloading)
+    props.handleDownload(uuid,
+      (progress: number) => {
+        setProgress(progress)
+      },
+      () => {
+        setStatus(downloadStatus.cached)
+        props.data.status = downloadStatus.cached
+        props.data.progress = 100
       }
     )
   }
@@ -45,7 +66,6 @@ const DownloadTableRow = (props: any) => {
     >
       <DiskTableCell
         style={{ paddingLeft: 15 }}
-        id={index}
         scope="row"
         padding="none">
         <div style={{ display: 'flex' }}>
@@ -69,21 +89,21 @@ const DownloadTableRow = (props: any) => {
         align="right"
       >
         {
-          status === 'notCache' && 
+          status === downloadStatus.notCache && 
           <>
             <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} />
             <DiskButton color={'inherit'} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
         {
-          status === 'downloading' &&
+          status === downloadStatus.downloading &&
           <>
             <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.downloading')} />
             <DiskButton color={'inherit'} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
         {
-          status === 'cached' &&
+          status === downloadStatus.cached &&
           <>
             <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.downloaded')} />
             <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid)} id="disk-button-delete" text={t('disk.delete')} />

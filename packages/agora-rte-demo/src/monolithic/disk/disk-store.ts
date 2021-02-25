@@ -88,7 +88,16 @@ export class DiskAppStore {
     return downloadList
   }
 
-  async startDownload(taskUuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) {
+  static downloadCallback = {}
+
+  registerTaskCallback(uuid: string, onProgress: (progress: number) => void, onComplete: () => void) {
+    DiskAppStore.downloadCallback[uuid] = {
+      onProgress,
+      onComplete,
+    }
+  }
+
+  static async startDownload(taskUuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) {
     const isCached = await agoraCaches.hasTaskUUID(taskUuid)
     if (isCached) {
       EduLogger.info(`文件已缓存.... taskUuid: ${taskUuid}`)
@@ -98,7 +107,8 @@ export class DiskAppStore {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       if (!isElectron) {
         await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          onProgressCallback && onProgressCallback(progress)
+          // onProgressCallback && onProgressCallback(progress)
+          DiskAppStore.downloadCallback[taskUuid].onProgress(progress)
         })
       } else {
         const controller = new AbortController();
@@ -111,7 +121,7 @@ export class DiskAppStore {
         }).then(fetchProgress({
             onProgress: (progress: any) => {
               if (progress.hasOwnProperty('percentage')) {
-                onProgressCallback && onProgressCallback(progress)
+                DiskAppStore.downloadCallback[taskUuid].onProgress(progress)
               }
             },
         }));
@@ -123,7 +133,7 @@ export class DiskAppStore {
         }
       }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      onComplete && onComplete()
+      DiskAppStore.downloadCallback[taskUuid].onComplete()
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
     }
@@ -147,10 +157,12 @@ export class DiskAppStore {
     }
   }
 
-  async downloadAll(list: string[]) {
+  async downloadAll(list: any) {
     try {
       let promiseList: any = []
-      list.forEach((e) => { promiseList.push(this.startDownload(e))})
+      list.forEach((e: any) => {
+        promiseList.push(DiskAppStore.startDownload(e.resourceUuid))
+      })
       Promise.all(promiseList)
       EduLogger.info(`全部下载成功....`)
     } catch (err) {
