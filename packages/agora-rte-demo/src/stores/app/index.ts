@@ -1,3 +1,4 @@
+import { dialogManager } from 'agora-aclass-ui-kit';
 import uuidv4 from 'uuid/v4';
 import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
 
@@ -681,6 +682,7 @@ export class AppStore implements ClassRoomAbstractStore {
   }
 
   async destroyRoom() {
+    dialogManager.removeAll()
     await controller.appController.destroy()
   }
 }

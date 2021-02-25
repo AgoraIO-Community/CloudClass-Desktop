@@ -18,13 +18,15 @@ const routes: string[] = [
 ]
 
 const generateClassName = createGenerateClassName({
-  productionPrefix: `eduClassDemo`,
+  productionPrefix: `room`,
+  disableGlobal: false,
+  seed: 'live',
 })
 
 export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
   
   return (
-    <StylesProvider generateClassName={generateClassName}>
+    <StylesProvider injectFirst generateClassName={generateClassName}>
       <RoomContainer
         mainPath={store.params.mainPath}
         routes={routes}

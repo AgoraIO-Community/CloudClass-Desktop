@@ -10,7 +10,9 @@ import { diskAppStore, DiskAppStore, DiskLifeStateEnum, } from '@/monolithic/dis
 import DownloadDisk from '@/components/download-disk/index'
 
 const generateClassName = createGenerateClassName({
-  productionPrefix: 'agoraEduDisk',
+  productionPrefix: 'disk',
+  disableGlobal: false,
+  seed: 'cloud',
 })
 
 type AppType = {
@@ -150,7 +152,7 @@ const DiskContainer = observer((props: any) => {
 
 export const StorageDisk = (props: any) => {
   return (
-    <StylesProvider generateClassName={generateClassName}>
+    <StylesProvider injectFirst generateClassName={generateClassName}>
       <Provider store={props.store}>
         <DiskContainer />
       </Provider>
