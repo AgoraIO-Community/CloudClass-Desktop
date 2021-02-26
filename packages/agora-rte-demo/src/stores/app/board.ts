@@ -2396,11 +2396,15 @@ static toolItems: IToolItem[] = [
   }
 
   moveCamera() {
-    this.room.moveCamera({
-      centerX: 0,
-      centerY: 0,
-      scale: 1,
-    })
+    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
+      this.room.scalePptToFit()
+    } else {
+      this.room.moveCamera({
+        centerX: 0,
+        centerY: 0,
+        scale: 1,
+      })
+    }
   }
 
   // @observable
