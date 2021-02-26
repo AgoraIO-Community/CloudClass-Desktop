@@ -58,7 +58,7 @@ export class BoardClient extends EventEmitter {
     this.disconnected = true
   }
 
-  async join(params: JoinRoomParams) {
+  async join(params: JoinRoomParams, isAssistant?: boolean) {
     BizLogger.info('[breakout board] before board client join', params)
     this.room = await this.client.joinRoom(params, {
       onPhaseChanged: phase => {
@@ -86,11 +86,20 @@ export class BoardClient extends EventEmitter {
         this.emit('onPPTLoadProgress', {uuid, progress})
       },
     })
-    this.room.setMemberState({
-      strokeColor: [252, 58, 63],
-      currentApplianceName: ApplianceNames.selector,
-      textSize: 24,
-    })
+    if (isAssistant) {
+      this.room.setMemberState({
+        strokeColor: [252, 58, 63],
+        currentApplianceName: ApplianceNames.arrow,
+        textSize: 24,
+      })
+    } else {
+      this.room.setMemberState({
+        strokeColor: [252, 58, 63],
+        currentApplianceName: ApplianceNames.selector,
+        textSize: 24,
+      })
+    }
+
     BizLogger.info('[breakout board] board client join')
     this.disconnected = false
   }

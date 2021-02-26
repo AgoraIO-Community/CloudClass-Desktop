@@ -1035,7 +1035,8 @@ static toolItems: IToolItem[] = [
         userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
         cursorName: this.appStore.acadsocStore.roomInfo.userName,
-      }
+      },
+      isAssistant: this.appStore.acadsocStore.isAssistant
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {

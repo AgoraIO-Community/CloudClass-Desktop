@@ -103,13 +103,19 @@ export class MediaService extends EventEmitter implements IMediaService {
       EduLogger.debug("sdkwrapper user-published", user)
       const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid)
       if (userIndex === -1) {
-        this.remoteUsersRenderer.push(new RemoteUserRenderer({
+        const newUserRenderer = new RemoteUserRenderer({
           context: this,
           uid: +user.uid,
           channel: evt.channel,
           videoTrack: user.videoTrack,
           sourceType: 'default',
-        }))
+        })
+        this.remoteUsersRenderer.push(newUserRenderer)
+        this.fire('user-published', {
+          user: user,
+          remoteUserRender: newUserRenderer
+        })
+        return
       } else {
         if (user.videoTrack) {
           this.remoteUsersRenderer[userIndex].videoTrack = user.videoTrack
@@ -139,11 +145,11 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.remoteUsersRenderer = []
     //@ts-ignore
     if (window.agoraBridge) {
-      this.electron.client.on('onAudioDeviceStateChanged', (evt: any) => {
+      this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
         this.fire('audio-device-changed', (evt))
       })
 
-      this.electron.client.on('onVideoDeviceStateChanged', (evt: any) => {
+      this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
         this.fire('video-device-changed', (evt))
       })
     } else {
