@@ -362,7 +362,7 @@ const NetworkDisk = observer((props: any) => {
         supportText: t('fileTip.supportText'),
         ppt: t('fileTip.ppt'),
         word: t('fileTip.word'),
-        excel: t('fileTip.excel'),
+        // excel: t('fileTip.excel'),
         pdf: t('fileTip.pdf'),
         video: t('fileTip.video'),
         audio: t('fileTip.audio'),
@@ -371,7 +371,7 @@ const NetworkDisk = observer((props: any) => {
     
         pptType: t('fileTip.pptType'),
         wordType: t('fileTip.wordType'),
-        excelType: t('fileTip.excelType'),
+        // excelType: t('fileTip.excelType'),
         pdfType: t('fileTip.pdfType'),
         videoType: t('fileTip.videoType'),
         audioType: t('fileTip.audioType'),

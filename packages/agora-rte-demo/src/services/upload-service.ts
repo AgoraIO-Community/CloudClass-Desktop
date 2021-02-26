@@ -62,6 +62,14 @@ export const mapFileType = (type: string): string => {
   return 'txt'
 }
 
+export const fileSizeConversionUnit= (data: number | string) => {
+  const toMB = 1024 * 1024
+  let transData = data;
+  if (typeof (data) === 'string') {
+    transData = parseInt(data, 10)
+  }
+  return ((transData as number) / toMB).toFixed(2) + 'MB'
+}
 export const transDataToResource = (data: CourseWareItem) => {
   if (!data.taskUuid) {
     return {
@@ -69,7 +77,7 @@ export const transDataToResource = (data: CourseWareItem) => {
       name: data.resourceName,
       ext: data.ext,
       type: mapFileType(data.ext),
-      calories: data.size || 0,
+      calories: fileSizeConversionUnit(data.size) || 0,
       url: data.url,
       taskUuid: '',
       taskProgress: null,
@@ -82,7 +90,7 @@ export const transDataToResource = (data: CourseWareItem) => {
     name: data.resourceName,
     ext: data.ext,
     type: mapFileType(data.ext),
-    calories: data.size || 0,
+    calories: fileSizeConversionUnit(data.size) || 0,
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
     url: data.url,

@@ -64,7 +64,7 @@ export const FileSupportTitle = (props: FileSupportTitleProps) => {
   const fileSupportList: TipIconListProps[] = [
     {icon: IconPpt, fileName: fileTooltipText.ppt, fileType: fileTooltipText.pptType},
     {icon: IconWord, fileName: fileTooltipText.word, fileType: fileTooltipText.wordType},
-    {icon: IconExcel, fileName: fileTooltipText.excel, fileType: fileTooltipText.excelType},
+    // {icon: IconExcel, fileName: fileTooltipText.excel, fileType: fileTooltipText.excelType},
     {icon: IconPdf, fileName: fileTooltipText.pdf, fileType: fileTooltipText.pdfType},
     {icon: IconVideo, fileName: fileTooltipText.video, fileType: fileTooltipText.videoType},
     {icon: IconAudio, fileName: fileTooltipText.audio, fileType: fileTooltipText.audioType},
