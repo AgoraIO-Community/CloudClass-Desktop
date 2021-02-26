@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => {
             position: "absolute",
             width: '100%',
             height: '100%',
-            margin: 10,
+            margin: '0 auto',
             borderRadius: "50%",
             animation: "$wave 2s ease-out",
             animationIterationCount: 1,
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => {
             position: "absolute",
             width: '100%',
             height: '100%',
-            margin: 10,
+            margin: '0 auto',
             borderRadius: "50%",
             background: "#74C0FF"
         },
