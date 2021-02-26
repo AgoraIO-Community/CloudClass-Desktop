@@ -7,6 +7,10 @@ import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 
+const convertUid = (uid: any) => {
+  return +uid
+}
+
 interface ScreenShareOption {
   profile: number,
   windowId: number,
@@ -305,7 +309,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("userjoined", uid)
       this.fire('user-published', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         channel: this.channel
       })
@@ -315,7 +319,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("removestream", uid)
       this.fire('user-unpublished', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         channel: this.channel
       })
@@ -342,7 +346,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: +uid,
           },
           mediaType: 'video',
         })
@@ -351,7 +355,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 6) {
         this.fire('user-published', {
           user: {
-            uid,
+            uid: +uid,
           },
           mediaType: 'video',
         })
@@ -391,7 +395,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localVideoStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'video',
         msg: error
@@ -399,7 +403,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localAudioStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'audio',
         msg: error
@@ -413,13 +417,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
       this.fire('stream-fallback', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         isFallbackOrRecover
       })
     })
     this.client.on('remoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
       this.fire('stream-fallback', {
-        uid,
+        uid: convertUid(uid),
         isFallbackOrRecover
       })
     })
@@ -428,14 +432,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('remoteVideoStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      this._remoteVideoStats[evt.uid] = {
+      const uid = convertUid(evt.uid)
+      this._remoteVideoStats[uid] = {
         videoLossRate: evt.packetLossRate,
         videoReceiveDelay: evt.delay
       }
     })
     this.client.on('remoteAudioStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      this._remoteAudioStats[evt.uid] = {
+      const uid = convertUid(+evt.uid)
+      this._remoteAudioStats[uid] = {
         audioLossRate: evt.audioLossRate,
         audioReceiveDelay: evt.networkTransportDelay
       }
@@ -446,7 +452,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       console.log("userjoined", uid)
       this.fire('user-published', {
         user: {
-          uid,
+          uid: convertUid(uid),
         }
       })
     })
@@ -455,7 +461,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       console.log("removestream", uid)
       this.fire('user-unpublished', {
         user: {
-          uid
+          uid: convertUid(uid),
         },
       })
     })
@@ -480,10 +486,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('RemoteVideoStats', (evt: any) => {
       this.fire('remoteVideoStats', {
         user: {
-          uid: evt.uid,
+          uid: convertUid(evt.uid),
         },
         stats: {
-          ...evt
+          ...evt,
+          uid: convertUid(evt.uid)
         }
       })
     })
@@ -512,10 +519,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
       this.fire('remoteVideoStats', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         stats: {
-          uid,
+          uid: convertUid(uid),
           delay,
           width,
           height,
@@ -535,7 +542,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'video',
         })
@@ -544,7 +551,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 6) {
         this.fire('user-published', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'video',
         })
@@ -557,7 +564,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'audio',
         })
@@ -584,7 +591,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('LocalVideoStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'video',
         msg: error
@@ -592,7 +599,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('LocalAudioStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'audio',
         msg: error
@@ -606,13 +613,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('LocalPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
       this.fire('stream-fallback', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         isFallbackOrRecover
       })
     })
     this.client.on('RemoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
       this.fire('stream-fallback', {
-        uid,
+        uid: convertUid(uid),
         isFallbackOrRecover
       })
     })
@@ -629,7 +636,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         EduLogger.info('ELECTRON user-published channel ', uid, option.channel)
         this.fire('user-published', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           channel: option.channel
         })
@@ -638,7 +645,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         EduLogger.info('ELECTRON user-unpublished channel ', uid, option.channel)
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           channel: option.channel
         })
