@@ -3,5 +3,8 @@
   "private": true,
   "devDependencies": {
     "lerna": "^3.22.1"
+  },
+  "dependencies": {
+    "agora-classroom-sdk": "^1.0.1-rc.1"
   }
 }
