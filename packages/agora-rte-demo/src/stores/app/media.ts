@@ -171,13 +171,13 @@ export class MediaStore {
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       const uid = evt.user.uid
-      this.rendererOutputFrameRate[uid] = 1
+      this.rendererOutputFrameRate[`${uid}`] = 1
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       const uid = evt.user.uid
-      delete this.rendererOutputFrameRate[uid]
+      delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -222,11 +222,13 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      this.rendererOutputFrameRate[0] = evt.stats.encoderOutputFrameRate
+      this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
+      BizLogger.info("remoteVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
-        this.rendererOutputFrameRate[evt.user.uid] = evt.stats.decoderOutputFrameRate
+        this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
+        BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
       }
     })
   }

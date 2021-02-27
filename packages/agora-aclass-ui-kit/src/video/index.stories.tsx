@@ -38,6 +38,7 @@ export const TeacherVideo = (props: any) => {
         height: props.height,
       }}
       placeHolderType={"closedCamera"}
+      placeHolderText="closedCamera"
     >
       {/* <div>media</div> */}
     </Video>
@@ -81,6 +82,7 @@ export const TeacherPlaceHolderVideo = (props: any) => {
         height: props.height,
       }}
       placeHolderType={"noEnter"}
+      placeHolderText="noEnter"
     >
       {/* <div>media</div> */}
     </Video>

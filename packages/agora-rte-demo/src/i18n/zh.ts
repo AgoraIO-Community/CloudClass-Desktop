@@ -335,7 +335,9 @@ const zhCN: any = {
     'closedCamera': '已关闭摄像头',
     'noAvailableCamera': '未检测到摄像头',
     'cameraLoading': '摄像头准备中...',
-    'loading': '加载中...'
+    'loading': '加载中...',
+    'openingCamera': '正在打开摄像头',
+    'closingCamera': '正在关闭摄像头',
   },
   'chat': {
     'placeholder': '说点什么...',

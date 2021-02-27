@@ -547,6 +547,7 @@ static toolItems: IToolItem[] = [
     } else {
       this.room.setScenePath(`/${resourceName}`)
     }
+    this.moveCamera()
 
     const sceneState = this.room.state.sceneState
     const name = this.getResourceName(sceneState.contextPath)
@@ -563,9 +564,13 @@ static toolItems: IToolItem[] = [
         ]
       })
     }
-    // this.updatePageHistory()
-
-    this.room.setSceneIndex(currentPage)
+    if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
+      if (currentPage !== 0) {
+        this.room.setSceneIndex(currentPage)
+      }
+    } else {
+      this.room.setSceneIndex(currentPage)
+    }
     this.resourceName = resourceName
   }
 

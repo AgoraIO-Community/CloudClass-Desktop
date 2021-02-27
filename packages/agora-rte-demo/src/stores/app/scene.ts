@@ -188,6 +188,8 @@ export class SceneStore extends SimpleInterval {
   @action
   reset() {
     this.mediaService.reset()
+    this.openingCamera = false
+    this.closingCamera = false
     // this.cameraLabel = '';
     // this.microphoneLabel = '';
     // this._cameraId = '';
@@ -422,6 +424,12 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info('[demo] unlockCamera ')
   }
 
+  @observable
+  openingCamera: boolean = false
+
+  @observable
+  closingCamera: boolean = false
+
   @action
   async openCamera(option?: SceneVideoConfiguration) {
     if (this._cameraRenderer) {
@@ -468,15 +476,22 @@ export class SceneStore extends SimpleInterval {
 
   @action
   async muteLocalCamera() {
-    if (this.cameraLock) {
+    if (this.cameraLock || this.closingCamera === true) {
       return BizLogger.warn('[demo] openCamera locking')
     }
-    BizLogger.info('[demo] [local] muteLocalCamera')
-    if (this._cameraRenderer) {
-      await this.closeCamera()
-      this.unLockCamera()
+    this.closingCamera = true
+    try {
+      BizLogger.info('[demo] [local] muteLocalCamera')
+      if (this._cameraRenderer) {
+        await this.closeCamera()
+        this.unLockCamera()
+      }
+      await this.roomManager?.userService.updateMainStreamState({'videoState': false})
+      this.closingCamera = false
+    } catch (err) {
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
+      this.closingCamera = false
     }
-    await this.roomManager?.userService.updateMainStreamState({'videoState': false})
   }
 
   @action 
@@ -485,8 +500,15 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
     }
-    await this.openCamera()
-    await this.roomManager?.userService.updateMainStreamState({'videoState': true})
+    try {
+      this.openingCamera = true
+      await this.openCamera()
+      await this.roomManager?.userService.updateMainStreamState({'videoState': true})
+      this.openingCamera = false
+    } catch (err) {
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
+      this.openingCamera = false
+    }
   }
 
   @action
@@ -506,6 +528,7 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
     }
+    this.closingCamera = true
     await this.openMicrophone()
     await this.roomManager?.userService.updateMainStreamState({'audioState': true})
   }
@@ -856,6 +879,20 @@ export class SceneStore extends SimpleInterval {
   getLocalPlaceHolderProps() {
     const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
 
+    if (this.openingCamera === true) {
+      return {
+        placeHolderType: 'openingCamera',
+        text: t('placeholder.openingCamera')
+      }
+    }
+
+    if (this.closingCamera === true) {
+      return {
+        placeHolderType: 'closedCamera',
+        text: t('placeholder.closingCamera')
+      }
+    }
+
     if (!this.cameraEduStream) {
       // placeholder
       if (meIsTeacher) {
@@ -865,7 +902,9 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+    if (this.openingCamera === false
+      && (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) 
+      && this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
       return {
         placeHolderType: 'closedCamera',
         text: t('placeholder.closedCamera')
@@ -877,7 +916,11 @@ export class SceneStore extends SimpleInterval {
 
     // TODO: native platform
     if (this.appStore.isElectron) {
-      if (!this.cameraRenderer || this.queryVideoFrameIsNotFrozen(+streamUuid) === false || this.queryCamIssue(userUuid)) {
+      if (this.cameraEduStream 
+          && this.cameraEduStream.hasVideo === true 
+          && this.closingCamera === false 
+          // TODO: camera not work
+          && (!this.cameraRenderer || this.queryVideoFrameIsNotFrozen(+streamUuid) === false || this.queryCamIssue(userUuid))) {
         return {
           placeHolderType: 'noAvailableCamera',
           text: t('placeholder.noAvailableCamera')
@@ -892,13 +935,17 @@ export class SceneStore extends SimpleInterval {
     } else 
     // TODO: web platform
     {
-      if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack || this.queryCamIssue(userUuid)) {
+      if (this.cameraEduStream 
+        && this.cameraEduStream.hasVideo === true 
+        && this.closingCamera === false 
+        // TODO: camera not work
+        && (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack || this.queryCamIssue(userUuid))) {
         return {
           placeHolderType: 'noAvailableCamera',
           text: t('placeholder.noAvailableCamera')
         }
       }
-      if (this.cameraEduStream && this.cameraRenderer && this.cameraRenderer.videoTrack) {
+      if (this.cameraRenderer && this.cameraRenderer.videoTrack) {
         return {
           placeHolderType: 'none',
           text: ''
@@ -983,10 +1030,10 @@ export class SceneStore extends SimpleInterval {
     if (this.appStore.uiStore.isElectron) {
       const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
       if (isLocal) {
-        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[0]
+        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
         return frameRate > 0
       } else {
-        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[uid]
+        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
         return frameRate > 0
       }
     } else {

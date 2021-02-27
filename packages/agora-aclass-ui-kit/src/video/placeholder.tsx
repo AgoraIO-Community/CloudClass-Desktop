@@ -5,6 +5,7 @@ import LeftPng from './assets/left.png'
 import NoAvailableCamera from './assets/no-camera.png'
 import ClosedCamera from './assets/closed-camera.png'
 import LoadingPng from './assets/loading-camera.png'
+import OpeningCamera from './assets/open-camera.png'
 import { TextEllipsis } from '../typography'
 
 export interface PlaceHolderViewProps {
@@ -16,7 +17,7 @@ export interface PlaceHolderViewProps {
 }
 
 export type PlaceHolderRole = 'teacher' | 'student'
-export type PlaceHolderType = 'noEnter' | 'left' | 'noAvailableCamera' | 'closedCamera' | 'loading' | 'none'
+export type PlaceHolderType = 'noEnter' | 'left' | 'noAvailableCamera' | 'closedCamera' | 'openingCamera' | 'loading' | 'none'
 
 const iconPaths = {
   'teacher': {
@@ -24,14 +25,16 @@ const iconPaths = {
     left: LeftPng,
     noAvailableCamera: NoAvailableCamera,
     loading: LoadingPng,
-    closedCamera: ClosedCamera
+    closedCamera: ClosedCamera,
+    openingCamera: OpeningCamera,
   },
   'student': {
     noEnter: WaitingPng,
     left: LeftPng,
     noAvailableCamera: NoAvailableCamera,
     loading: LoadingPng,
-    closedCamera: ClosedCamera
+    closedCamera: ClosedCamera,
+    openingCamera: OpeningCamera
   }
 }
 

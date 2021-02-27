@@ -107,6 +107,8 @@ const en = {
     'noAvailableCamera': 'No Available Camera',
     'cameraLoading': 'Preparing Camera',
     'loading': 'Loading...',
+    'openingCamera': 'Opening Camera',
+    'closingCamera': 'Closing Camera',
   },
   "unknown": "[unknown]: ",
   "from_room": "[Room]: ",
