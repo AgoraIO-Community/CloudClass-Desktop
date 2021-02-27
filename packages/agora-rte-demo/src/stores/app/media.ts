@@ -100,6 +100,24 @@ export class MediaStore {
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
+    this.mediaService.on('track-ended', (evt: any) => {
+      if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.cameraRenderer.stop()
+        this.appStore.pretestStore.resetCameraTrack()
+      }
+      if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
+        this.appStore.sceneStore.cameraRenderer.stop()
+        this.appStore.sceneStore.resetCameraTrack()
+      }
+
+      if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.resetMicrophoneTrack()
+      }
+      if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
+        this.appStore.sceneStore.resetMicrophoneTrack()
+      }
+      BizLogger.info("track-ended", evt)
+    })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))

@@ -3,7 +3,7 @@ import { Mutex } from './../../utils/mutex';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction } from 'mobx';
@@ -511,6 +511,36 @@ export class SceneStore extends SimpleInterval {
   unLockMicrophone() {
     this.microphoneLock = false
     BizLogger.info('[demo] unLockMicrophone ')
+  }
+
+  async changeWebCamera(deviceId: string) {
+    const sceneStore = this.appStore.sceneStore
+    const cameraEduStream = sceneStore.cameraEduStream
+    if (!cameraEduStream || !!cameraEduStream.hasVideo === false) {
+      EduLogger.info("userStream has been muted video")
+      return
+    }
+    if (this.cameraRenderer) {
+      await this.mediaService.changeCamera(deviceId)
+    } else {
+      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
+      this._cameraRenderer = this.mediaService.cameraRenderer
+    }
+  }
+
+  async changeWebMicrophone(deviceId: string) {
+    const sceneStore = this.appStore.sceneStore
+    const cameraEduStream = sceneStore.cameraEduStream
+    if (!cameraEduStream || !!cameraEduStream.hasAudio === false) {
+      EduLogger.info("userStream has been muted audio")
+      return
+    }
+    if (this.mediaService.web.microphoneTrack) {
+      await this.mediaService.changeMicrophone(deviceId)
+    } else {
+      await this.mediaService.openMicrophone({deviceId})
+      this._microphoneTrack = this.mediaService.microphoneTrack
+    }
   }
 
   @action

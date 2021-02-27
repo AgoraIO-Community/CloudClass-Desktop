@@ -10,6 +10,12 @@ export type AgoraWebVolumeResult = {
   level: number,
   uid: UID
 }
+
+export type FireTrackEndedAction = {
+  resource: 'audio' | 'video',
+  tag: string,
+  trackId: string
+}
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   _client?: IAgoraRTCClient;
@@ -585,34 +591,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   async openCamera(option?: CameraOption): Promise<any> {
     EduLogger.info('[agora-web] invoke web#openCamera')
-    if (!option) {
-      this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
-        encoderConfig: {
-          frameRate: 15,
-        }
-      })
-      this.cameraTrack.on('track-ended', () => {
-        this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
-        this.fire('track-ended', {video: true})
-      })
-      EduLogger.info(`[agora-web] create default camera [${this.cameraTrack.getTrackId()}] video track success`)
-    } else {
-      this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
-        cameraId: option.deviceId,
-        encoderConfig: {
-          frameRate: option.encoderConfig.frameRate,
-          width: option.encoderConfig.width,
-          height: option.encoderConfig.height,
-        },
-        // encoderConfig: option.encoderConfig
-      })
-      const cameraId = this.cameraTrack.getTrackId()
-      this.cameraTrack.on('track-ended', () => {
-        this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
-        this.fire('track-ended', {video: true})
-      })
-      EduLogger.info(`[agora-web] create camera [${cameraId}], option: ${JSON.stringify(option)} success`)
-    }
+    await this.acquireCameraTrack('cameraRenderer', option)
     if (this.hasCamera === undefined) {
       EduLogger.info(`[agora-web] prepare attempt open camera in web`)
       const cameraList = await this.getCameras()
@@ -621,8 +600,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       EduLogger.info(`[agora-web] prepare open camera success`)
     }
     if (this.joined && this.publishedVideo) {
-      const cameraId = this.cameraTrack.getTrackId()
-      await this.client.publish([this.cameraTrack])
+      const cameraId = this.cameraTrack!.getTrackId()
+      const videoTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'video')
+      await this.client.unpublish(videoTracks)
+      await this.client.publish([this.cameraTrack!])
       EduLogger.info(`[agora-web] publish camera [${cameraId}] success`)
     }
   }
@@ -633,19 +614,21 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       try {
         await this.unpublishTrack(this.cameraTrack)
         if (this.cameraTrack) {
-          const trackId = this.cameraTestTrack?.getTrackId()
+          const trackId = this.cameraTrack?.getTrackId()
           this.cameraTrack.isPlaying && this.cameraTrack.stop()
           this.cameraTrack.close()
           EduLogger.info(`[agora-web] close camera [${trackId}] success`)
           this.cameraTrack = undefined
+          this.fire('track-ended', {video: true, trackId: trackId, type: 'localCameraRenderer'})
         }
       } catch (err) {
         if (this.cameraTrack) {
-          const trackId = this.cameraTestTrack?.getTrackId()
+          const trackId = this.cameraTrack?.getTrackId()
           this.cameraTrack.isPlaying && this.cameraTrack.stop()
           this.cameraTrack.close()
           EduLogger.info(`[agora-web] close camera [${trackId}] success`)
           this.cameraTrack = undefined
+          this.fire('track-ended', {video: true, trackId: trackId, type: 'localCameraRenderer'})
         }
         throw GenericErrorWrapper(err)
       }
@@ -664,27 +647,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   async openMicrophone(option?: MicrophoneOption): Promise<any> {
+    if (this.microphoneTrack) throw 'microphone track already exists'
     EduLogger.info('[agora-web] invoke web#openMicrophone')
-    if (!option) {
-      this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
-      this.microphoneTrack.on('track-ended', () => {
-        this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
-        this.fire('track-ended', {audio: true})
-      })
-      EduLogger.info(`[agora-web] create audio track [${this.microphoneTrack.getTrackId()}] success`)
-    } else {
-      this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
-        microphoneId: option.deviceId
-      })
-      this.microphoneTrack.on('track-ended', () => {
-        this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
-        this.fire('track-ended', {audio: true})
-      })
-      EduLogger.info(`[agora-web] create audio track with  by deviceId: ${option.deviceId} [${this.microphoneTrack.getTrackId()}] success`)
-    }
+    await this.acquireMicrophoneTrack('microphoneTrack', option)
     if (this.microphoneTrack) {
-      this.microphoneTrack.stop()
-      EduLogger.info(`[agora-web] create audio track stop playback [${this.microphoneTrack.getTrackId()}] success`)
+      this.microphoneTrack!.stop()
+      EduLogger.info(`[agora-web] create audio track stop playback [${this.microphoneTrack!.getTrackId()}] success`)
     }
     if (this.hasMicrophone === undefined) {
       EduLogger.info(`[agora-web] prepare attempt open microphone in web`)
@@ -694,8 +662,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       EduLogger.info(`[agora-web] prepare open microphone success`)
     }
     if (this.joined && this.publishedAudio) {
-      await this.client.publish([this.microphoneTrack])
-      EduLogger.info(`[agora-web] publish audio track [${this.microphoneTrack.getTrackId()}] success`)
+      const audioTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'audio')
+      await this.client.unpublish(audioTracks)
+      await this.client.publish([this.microphoneTrack!])
+      EduLogger.info(`[agora-web] publish audio track [${this.microphoneTrack!.getTrackId()}] success`)
     }
   }
 
@@ -933,28 +903,112 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     })
   }
 
+  private fireTrackEnd({resource, tag, trackId}: FireTrackEndedAction) {
+    this.fire("track-ended", {resource, tag, trackId})
+  }
+
+  private async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer', option?: CameraOption) {
+    if (type === 'cameraTestRenderer') {
+      if (!option) {
+        this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
+          encoderConfig: {
+            frameRate: 15
+          }
+        })
+      } else {
+        this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
+          cameraId: option.deviceId,
+          encoderConfig: {
+            frameRate: option.encoderConfig.frameRate,
+            width: option.encoderConfig.width,
+            height: option.encoderConfig.height,
+          }
+        })
+      }
+      const trackId = this.cameraTestTrack.getTrackId()
+      EduLogger.info("open test camera create track ", trackId, " option " , JSON.stringify(option))
+      this.cameraTestTrack.on('track-ended', () => {
+        EduLogger.info("test camera renderer track-ended ", trackId, " option " , JSON.stringify(option))
+        this.cameraTestTrack && this.closeTestTrack(this.cameraTestTrack)
+        this.fireTrackEnd({resource: 'video', tag: 'cameraTestRenderer', trackId})
+      })
+    }
+
+    if (type === 'cameraRenderer') {
+      if (!option) {
+        this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
+          encoderConfig: {
+            frameRate: 15
+          }
+        })
+      } else {
+        this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
+          cameraId: option.deviceId,
+          encoderConfig: {
+            frameRate: option.encoderConfig.frameRate,
+            width: option.encoderConfig.width,
+            height: option.encoderConfig.height,
+          }
+        })
+      }
+      const trackId = this.cameraTrack.getTrackId()
+      EduLogger.info("open camera create track ", trackId, " option " , JSON.stringify(option))
+      this.cameraTrack.on('track-ended', () => {
+        EduLogger.info("camera renderer track-ended ", trackId, " option " , JSON.stringify(option))
+        this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
+        this.fireTrackEnd({resource: 'video', tag: 'cameraRenderer', trackId})
+      })
+    }
+  }
+
+  private async acquireMicrophoneTrack(type: 'microphoneTestTrack' | 'microphoneTrack', option?: MicrophoneOption) {
+    if (type === 'microphoneTestTrack') {
+      if (!option) {
+        this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
+        const trackId = this.microphoneTestTrack.getTrackId()
+        this.microphoneTestTrack.on('track-ended', () => {
+          this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
+          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTestTrack', trackId})
+        })
+      } else {
+        this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
+          microphoneId: option.deviceId
+        })
+        const trackId = this.microphoneTestTrack.getTrackId()
+        this.microphoneTestTrack.on('track-ended', () => {
+          this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
+          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTestTrack', trackId})
+        })
+      }
+    }
+
+    if (type === 'microphoneTrack') {
+      if (!option) {
+        this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
+        const trackId = this.microphoneTrack.getTrackId()
+        EduLogger.info(`[agora-web] create audio track with  by default deviceId: [${trackId}] success`)
+        this.microphoneTrack.on('track-ended', () => {
+          this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
+          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTrack', trackId})
+        })
+      } else {
+        this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
+          microphoneId: option.deviceId
+        })
+        const trackId = this.microphoneTrack.getTrackId()
+        EduLogger.info(`[agora-web] create audio track with  by deviceId: ${option.deviceId} [${trackId}] success`)
+        this.microphoneTrack.on('track-ended', () => {
+          this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
+          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTrack', trackId})
+        })
+      }
+    }
+  }
+
   async openTestCamera(option?: CameraOption): Promise<any> {
     EduLogger.info(" test camera", JSON.stringify(option))
     if (this.cameraTestTrack) throw 'camera test track already exists'
-    if (!option) {
-      this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack()
-      this.cameraTestTrack.on('track-ended', () => {
-        EduLogger.info("track-ended")
-        this.cameraTestTrack && this.closeMediaTrack(this.cameraTestTrack)
-        this.fire('track-ended', {video: true})
-      })
-    } else {
-      EduLogger.info("open test camera create track", JSON.stringify(option))
-      this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
-        cameraId: option.deviceId,
-        encoderConfig: option.encoderConfig
-      })
-      this.cameraTestTrack.on('track-ended', () => {
-        EduLogger.info("track-ended")
-        this.cameraTestTrack && this.closeMediaTrack(this.cameraTestTrack)
-        this.fire('track-ended', {video: true})
-      })
-    }
+    await this.acquireCameraTrack('cameraTestRenderer', option)
   }
   
   closeTestCamera() {
@@ -988,21 +1042,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   
   async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
     if (this.microphoneTestTrack) throw 'microphone test track already exists'
-    if (!option) {
-      this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
-      this.microphoneTestTrack.on('track-ended', () => {
-        this.microphoneTestTrack && this.closeMediaTrack(this.microphoneTestTrack)
-        this.fire('track-ended', {audio: true})
-      })
-    } else {
-      this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
-        microphoneId: option.deviceId
-      })
-      this.microphoneTestTrack.on('track-ended', () => {
-        this.microphoneTestTrack && this.closeMediaTrack(this.microphoneTestTrack)
-        this.fire('track-ended', {audio: true})
-      })
-    }
+    await this.acquireMicrophoneTrack('microphoneTestTrack', option)
     if (this.microphoneTestTrack) {
       this.addInterval((track: ILocalAudioTrack) => {
         if (track) {

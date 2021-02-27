@@ -13,7 +13,7 @@ export interface PretestComponentProps {
   children?: React.ElementType
 }
 
-export const PretestWebComponent: React.FC<PretestComponentProps> = observer((props) => {
+export const PretestContainer: React.FC<PretestComponentProps> = observer((props) => {
 
   const history = useHistory()
 
@@ -27,50 +27,56 @@ export const PretestWebComponent: React.FC<PretestComponentProps> = observer((pr
 
   const lock = useRef<boolean>(false)
 
+  const acquireLock = () => {
+    lock.current = true
+    return () => {
+      lock.current = false
+    }
+  }
+
   const onNext = async (nextValue: String) => {
     if (nextValue === 'video') {
-      lock.current = true
+      const unlock = acquireLock()
       try {
         await pretestStore.init({video: true})
         await pretestStore.openTestCamera()
       } catch (err) {
       }
-      lock.current = false
+
+      unlock()
       setTabValue('video')
     }
 
     if (nextValue === 'audio') {
-      lock.current = true
+      const unlock = acquireLock()
       try {
         await pretestStore.closeTestCamera()
         await pretestStore.init({audio: true})
         await pretestStore.openTestMicrophone()
       } catch(err) {
-
       }
-      lock.current = false
+      unlock()
       setTabValue('audio')
     }
 
     if (nextValue === 'speaker') {
-      lock.current = true
+      const lock = acquireLock()
       try {
         await pretestStore.closeTestMicrophone()
       } catch(err) {
-
       }
-      lock.current = false
+      lock()
       setTabValue('speaker')
     }
 
     if (nextValue === 'report') {
-      lock.current = true
+      const lock = acquireLock()
       try {
         await pretestStore.closeTestMicrophone()
       } catch(err) {
 
       }
-      lock.current = false
+      lock()
       setTabValue('report')
     }
   }
@@ -237,7 +243,7 @@ export const PretestWebComponent: React.FC<PretestComponentProps> = observer((pr
             onChange={async (evt: any) => {
               lock.current = true
               try {
-                await pretestStore.changeTestMicrophone(evt.target.value)
+                await pretestStore.changeTestSpeaker(evt.target.value)
                 lock.current = false
               } catch (err) {
                 lock.current = false

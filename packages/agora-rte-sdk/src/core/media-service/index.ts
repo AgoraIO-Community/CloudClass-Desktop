@@ -29,6 +29,9 @@ export class MediaService extends EventEmitter implements IMediaService {
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
     this._id = uuidv4()
+    this.cameraRenderer = undefined
+    this.screenRenderer = undefined
+    this.remoteUsersRenderer = []
     EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`)
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
@@ -100,7 +103,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
     this.sdkWrapper.on('user-published', (evt: any) => {
       const user = evt.user
-      EduLogger.debug("sdkwrapper user-published", user)
+      EduLogger.debug("sdk wrapper user-published", user)
       const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid)
       if (userIndex === -1) {
         const newUserRenderer = new RemoteUserRenderer({
@@ -111,6 +114,7 @@ export class MediaService extends EventEmitter implements IMediaService {
           sourceType: 'default',
         })
         this.remoteUsersRenderer.push(newUserRenderer)
+        EduLogger.debug("sdk wrapper user-published add remote user renderer, renderers length: ", this.remoteUsersRenderer.length)
         this.fire('user-published', {
           user: user,
           remoteUserRender: newUserRenderer
@@ -140,9 +144,6 @@ export class MediaService extends EventEmitter implements IMediaService {
     //     volumes
     //   })
     // })
-    this.cameraRenderer = undefined
-    this.screenRenderer = undefined
-    this.remoteUsersRenderer = []
     //@ts-ignore
     if (window.agoraBridge) {
       this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
@@ -529,6 +530,9 @@ export class MediaService extends EventEmitter implements IMediaService {
           videoTrack: this.web.cameraTrack
         })
       } else {
+        if (this.cameraRenderer._playing) {
+          this.cameraRenderer.stop()
+        }
         this.cameraRenderer.videoTrack = this.web.cameraTrack
       }
     }

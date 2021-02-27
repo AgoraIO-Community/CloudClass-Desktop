@@ -447,9 +447,3 @@ export const TestReport: React.FC<any> = (props) => {
     </div>
   )
 }
-
-export const PretestNativeComponent = () => {
-  return (
-    <div></div>
-  )  
-}

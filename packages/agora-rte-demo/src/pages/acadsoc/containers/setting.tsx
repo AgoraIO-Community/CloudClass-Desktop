@@ -174,15 +174,15 @@ export const SettingWeb = observer(() => {
   }, [visible])
 
   const handleCameraChange = async (evt: any) => {
-    await pretestStore.changeTestCamera(evt.target.value)
+    await pretestStore.switchCamera(evt.target.value)
   }
 
   const handleMicrophoneChange = async (evt: any) => {
-    await pretestStore.changeTestMicrophone(evt.target.value)
+    await pretestStore.switchMicrophone(evt.target.value)
   }
 
   const handleSpeakerChange = async (evt: any) => {
-    await pretestStore.changeTestSpeaker(evt.target.value)
+    await pretestStore.switchSpeaker(evt.target.value)
   }
 
   const handleClose = () => {
@@ -236,7 +236,7 @@ export const SettingWeb = observer(() => {
             }}
           />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <div className={classes.cameraDetect}>
             <div style={{flex: 1}}></div>
             <div className={styles.positionSettingPreview}>
@@ -248,7 +248,7 @@ export const SettingWeb = observer(() => {
               />
             </div>
           </div>
-        </RowItem>
+        </RowItem> */}
         <RowItem>
           {/* <MicrophoneDeviceItem handleMicrophoneChange={handleMicrophoneChange} /> */}
           <DevicePicker
@@ -265,14 +265,9 @@ export const SettingWeb = observer(() => {
             }}
           />
         </RowItem>
-        <RowItem>
+        {/* <RowItem>
           <VolumeController />
-          {/* <SpeakerDeviceVolume 
-            currentVolume={pretestStore.totalVolume * 100 % 52}
-            width={'8px'}
-            direction={VolumeDirectionEnum.Right}
-          /> */}
-        </RowItem>
+        </RowItem> */}
         <RowItem>
           <DevicePicker
             name={t("aclass.device.speaker")}
@@ -321,15 +316,15 @@ export const SettingNative = observer(() => {
   }, [visible])
 
   const handleCameraChange = async (evt: any) => {
-    await pretestStore.changeTestCamera(evt.target.value)
+    await pretestStore.switchCamera(evt.target.value)
   }
 
   const handleMicrophoneChange = async (evt: any) => {
-    await pretestStore.changeTestMicrophone(evt.target.value)
+    await pretestStore.switchMicrophone(evt.target.value)
   }
 
   const handleSpeakerChange = async (evt: any) => {
-    await pretestStore.changeTestSpeaker(evt.target.value)
+    await pretestStore.switchSpeaker(evt.target.value)
   }
 
   const handleClose = () => {

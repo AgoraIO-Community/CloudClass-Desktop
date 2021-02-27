@@ -147,6 +147,8 @@ const SignalBarContainer = observer(() => {
 const ActionBarContainer = observer(() => {
   const uiStore = useUIStore()
 
+  const roomStore = useAcadsocRoomStore()
+
   const handleSetting = useCallback(() => {
     if (uiStore.aclassVisible) {
       uiStore.hideMediaSetting()
@@ -155,11 +157,15 @@ const ActionBarContainer = observer(() => {
     }
   }, [uiStore.aclassVisible])
 
-  const buttonArr = [
+  const menuBars = [
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService', clickEvent: onCustomerService },
     { name: 'equipmentDetection', clickEvent: handleSetting },
   ]
+
+  const buttonArr = roomStore.isAssistant ? 
+    menuBars.filter(({name}: {name: string}) => name !== 'equipmentDetection') :
+    menuBars
 
   return (
     <ActionButtons buttonArr={buttonArr} />
