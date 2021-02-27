@@ -323,7 +323,8 @@ const TrophyBox = (props: TrophyBoxProps) => {
 
 interface ParticipantIdentityCardProps {
   nickname: string,
-  role: string
+  role: string,
+  visible: boolean
 }
 
 const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
@@ -339,7 +340,7 @@ const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
   const roleKey = roles[props.role] || defaultRoleClassKey
 
   return (
-    <Box component="div" className={classes.idCard}>
+    <Box visibility={props.visible ? "visible" : "hidden"} component="div" className={classes.idCard}>
       <EllipticBox>
         <>
           <div className={roleKey}></div>
@@ -402,10 +403,14 @@ const VideoFrame: React.FC<VideoFrameProps> = (props) => {
     })
   }, [props.uid, onClick])
   
+  // do not show accessories when user is not in the room
+  const accessoriesVisible = (props.placeHolderType !== 'noEnter') && (props.placeHolderType !== 'left') 
+        && (props.placeHolderType !== 'loading')
+
   return (
     <div className={classes.root} style={props.style}>
       <PlaceHolderView role={props.role} type={props.placeHolderType} text={props.placeHolderText} style={props.placeholderStyle} />
-      {props.visibleTrophy ? <Box
+      {accessoriesVisible && props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
         <TrophyBox disable={props.disableTrophy} iconUrl={TrophyIcon} number={props.trophyNumber} onClick={onClickTrophy}/>
@@ -413,8 +418,9 @@ const VideoFrame: React.FC<VideoFrameProps> = (props) => {
       <ParticipantIdentityCard
         nickname={props.nickname}
         role={props.role}
+        visible={accessoriesVisible}
       />
-      <Box className={classes.avBtn} component="div">
+      <Box visibility={accessoriesVisible ? "visible" : "hidden"} className={classes.avBtn} component="div">
         {
           props.showBoardIcon ?
             <BoardIconButton disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
