@@ -1,39 +1,53 @@
-import React, { useEffect } from 'react';
-import { useHistory, useLocation, } from 'react-router-dom';
-import { useAppStore } from '@/hooks';
+import React, { useEffect, useRef } from 'react';
+import { useHistory, } from 'react-router-dom';
+import {  useHomeStore , useAudienceParams} from '@/hooks';
+import { AgoraEduEvent } from '@/edu-sdk/declare'
 import { homeApi } from '@/services/home-api';
-import { UIStore } from '@/stores/app';
+import { LaunchOption, LanguageEnum, TranslateEnum } from "@/edu-sdk";
+import { AgoraEduSDK } from '@/edu-sdk'
 import { observer } from 'mobx-react';
 
-export const Invisible = observer((props: any) => {
-  const appStore = useAppStore();
+
+export const Invisible = observer(() => {
   const history = useHistory();
-  const roomTypes = UIStore.roomTypes
-  const { search } = useLocation()
+  const homeStore = useHomeStore()
+  const roomRef = useRef<any>()
   const setRoomInfo = async () => {
-    const params: any = new URLSearchParams(search)
-    const userUuid = params.get('userUuid');
-    const userRole = params.get('userRole') || 0;
-    const roomType = params.get('roomType') || 0;
-    const roomUuid = params.get('roomUuid');
-    const roomName = params.get('roomName')||'audience';
+    console.log('useAudienceParams',useAudienceParams())
+    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience', userName = 'audience', duration = 1000 }: any = useAudienceParams()
     const uid = `audience${userRole}`
     const { rtmToken } = await homeApi.login(uid)
-    appStore.setRoomInfo({
-      rtmUid: userUuid,
-      rtmToken,
-      roomType,
-      roomName,
-      userName: 'audience',
-      userRole: userRole,
-      userUuid: `${userUuid}`,
-      roomUuid: `${roomUuid}`,
+    AgoraEduSDK.config({
+      appId: `${REACT_APP_AGORA_APP_ID}`,
     })
-    const path = roomType ? roomTypes[roomType].path : '/acadsoc/one-to-one'
-    history.push(`${path}`)
+    const config = {
+      rtmUid: userUuid,
+      pretest: false,
+      courseWareList: [],
+      translateLanguage: ("auto" as TranslateEnum),
+      language: ('en' as LanguageEnum),
+      userUuid,
+      rtmToken,
+      roomUuid,
+      roomName,
+      userName,
+      roomType: parseInt(roomType,10),
+      roleType:  parseInt(userRole,10),
+      startTime: new Date().getTime(),
+      duration,
+    }
+    homeStore.setLaunchConfig(config as Omit<LaunchOption, 'listener'>)
+    await AgoraEduSDK.launch(roomRef?.current, {
+      ...config,
+      listener: (evt: AgoraEduEvent) => {
+        if (evt === AgoraEduEvent.destroyed) {
+          history.push('/')
+        }
+      }
+    })
   }
   useEffect(() => {
     setRoomInfo()
   }, []);
-  return (<div />)
+  return (<div ref={roomRef}  style={{width: '100%', height: '100%'}}/>)
 })
