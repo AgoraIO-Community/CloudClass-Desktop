@@ -155,12 +155,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
     this.client.enableAudioVolumeIndication(1000, 3, true)
-    this.client.setVideoProfile(43, false);
-    const config = {
+
+    const resolutionConfig = options.resolution
+    const config: any = {
       bitrate: 0,
-      frameRate: 15,
-      height: 240,
-      width: 320,
+      frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
+      width: resolutionConfig ? resolutionConfig?.height : 320,
+      height: resolutionConfig ? resolutionConfig?.height : 240,
     }
     const videoEncoderConfiguration = Object.assign({
       width: config.width,

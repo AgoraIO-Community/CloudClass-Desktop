@@ -99,16 +99,19 @@ export class LocalUserRenderer extends UserRenderer {
             if (oldEl) {
               const items = [...oldEl]
               items.forEach((item: any) => {
-                item.innerHTML = ''
+                if (item.id && item.id.match(/^agoraLocal/i)) {
+                  item.innerHTML = ''
+                }
               })
             }
 
             this.el = document.createElement('canvas')
+            this.el.id = `agoraLocal-${this.uid}`
             this.el.style.position = 'absolute'
             this.el.style.height = '100%'
             this.el.style.width = '100%'
             this.el.style.objectFit = 'cover'
-            this.el.style.transform = 'rotateY(180deg)'
+            this.el.style.transform = 'rotateY(180deg) scale(1.0)'
             // this.el.style.visibility = 'visible'
             // this.el.style.visibility = 'visible'
             // Object.assign(this.el.style, {
@@ -191,15 +194,18 @@ export class RemoteUserRenderer extends UserRenderer {
           if (oldEl) {
             const items = [...oldEl]
             items.forEach((item: any) => {
-              item.innerHTML = ''
+              if (item.id && item.id.match(/^agoraRemote/i)) {
+                item.innerHTML = ''
+              }
             })
           }
           this.el = document.createElement('canvas')
+          this.el.id = `agoraRemote-${this.uid}`
           this.el.style.position = 'absolute'
           this.el.style.height = '100%'
           this.el.style.width = '100%'
           this.el.style.objectFit = 'cover'
-          this.el.style.transform = 'rotateY(180deg)'
+          this.el.style.transform = 'rotateY(180deg) scale(1.0)'
           dom.appendChild(this.el)
           //@ts-ignore
           this.electron.client.setupRemoteVideo(this.el, +this.uid)

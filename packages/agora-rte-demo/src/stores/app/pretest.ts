@@ -184,6 +184,14 @@ export class PretestStore {
     return targetLabelValue
   }
 
+  getVideoDeviceLabelBy(deviceId: string) {
+    return this.getDeviceItem(this.cameraList, {type: 'deviceId', value: deviceId, targetField: 'label'})
+  }
+
+  getAudioDeviceLabelBy(deviceId: string) {
+    return this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: deviceId, targetField: 'label'})
+  }
+
   @computed
   get exactCameraId(): string {
     return this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
@@ -366,13 +374,13 @@ export class PretestStore {
     this.resetMicrophoneTrack()
   }
 
-  updateCameraLabel() {
-    this.cameraLabel = this.mediaService.getCameraLabel()
+  updateCameraLabel(label: string) {
+    this.cameraLabel = label
     this._cameraId = this.cameraId
   }
 
-  updateMicrophoneLabel() {
-    this.microphoneLabel = this.mediaService.getMicrophoneLabel()
+  updateMicrophoneLabel(label: string) {
+    this.microphoneLabel = label
     this._microphoneId = this.microphoneId
   }
 
@@ -414,9 +422,53 @@ export class PretestStore {
     if (this.isNative) {
       await this.changeNativeCamera(deviceId)
     } else {
-      // await this.changeTestCamera(deviceId)
-      await this.appStore.sceneStore.changeWebCamera(deviceId)
-      this.updateCameraLabel()
+      await this.changeWebCamera(deviceId)
+    }
+  }
+
+  async changeWebCamera(deviceId: string) {
+    if (this.appStore.sceneStore.cameraRenderer) {
+      await this.mediaService.changeCamera(deviceId)
+      const label = this.mediaService.getCameraLabel()
+      this.appStore.pretestStore.updateCameraLabel(label)
+    } else {
+      const sceneStore = this.appStore.sceneStore
+      const cameraEduStream = sceneStore.cameraEduStream
+      if (!cameraEduStream || !!cameraEduStream.hasVideo === false) {
+        EduLogger.info("userStream has been muted video")
+        const deviceLabel = this.getVideoDeviceLabelBy(deviceId)
+        if (deviceLabel) {
+          this.updateCameraLabel(deviceLabel)
+        }
+        return
+      }
+      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
+      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
+      const label = this.mediaService.getCameraLabel()
+      this.updateCameraLabel(label)
+    }
+  }
+
+  async changeWebMicrophone(deviceId: string) {
+    if (this.appStore.sceneStore._microphoneTrack) {
+      await this.mediaService.changeMicrophone(deviceId)
+      const label = this.mediaService.getMicrophoneLabel()
+      this.updateMicrophoneLabel(label)
+    } else {
+      const sceneStore = this.appStore.sceneStore
+      const cameraEduStream = sceneStore.cameraEduStream
+      if (!cameraEduStream || !!cameraEduStream.hasAudio === false) {
+        EduLogger.info("userStream has been muted audio")
+        const deviceLabel = this.appStore.pretestStore.getAudioDeviceLabelBy(deviceId)
+        if (deviceLabel) {
+          this.updateMicrophoneLabel(deviceLabel)
+        }
+        return
+      }
+      await this.mediaService.openMicrophone({deviceId})
+      this.appStore.sceneStore._microphoneTrack = this.mediaService.microphoneTrack
+      const label = this.mediaService.getMicrophoneLabel()
+      this.updateMicrophoneLabel(label)
     }
   }
 
@@ -424,9 +476,7 @@ export class PretestStore {
     if (this.isNative) {
       await this.changeNativeMicrophone(deviceId)
     } else {
-      // await this.changeTestMicrophone(deviceId)
-      await this.appStore.sceneStore.changeWebMicrophone(deviceId)
-      this.updateMicrophoneLabel()
+      await this.changeWebMicrophone(deviceId)
     }
   }
 

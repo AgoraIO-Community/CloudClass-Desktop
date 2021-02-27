@@ -513,36 +513,6 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info('[demo] unLockMicrophone ')
   }
 
-  async changeWebCamera(deviceId: string) {
-    const sceneStore = this.appStore.sceneStore
-    const cameraEduStream = sceneStore.cameraEduStream
-    if (!cameraEduStream || !!cameraEduStream.hasVideo === false) {
-      EduLogger.info("userStream has been muted video")
-      return
-    }
-    if (this.cameraRenderer) {
-      await this.mediaService.changeCamera(deviceId)
-    } else {
-      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
-      this._cameraRenderer = this.mediaService.cameraRenderer
-    }
-  }
-
-  async changeWebMicrophone(deviceId: string) {
-    const sceneStore = this.appStore.sceneStore
-    const cameraEduStream = sceneStore.cameraEduStream
-    if (!cameraEduStream || !!cameraEduStream.hasAudio === false) {
-      EduLogger.info("userStream has been muted audio")
-      return
-    }
-    if (this.mediaService.web.microphoneTrack) {
-      await this.mediaService.changeMicrophone(deviceId)
-    } else {
-      await this.mediaService.openMicrophone({deviceId})
-      this._microphoneTrack = this.mediaService.microphoneTrack
-    }
-  }
-
   @action
   async openMicrophone() {
     if (this._microphoneTrack) {

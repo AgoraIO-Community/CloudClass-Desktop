@@ -164,12 +164,12 @@ export const SettingWeb = observer(() => {
   useEffect(() => {
     if (visible) {
       pretestStore.init({video: true, audio: true})
-      pretestStore.openTestCamera()
-      pretestStore.openTestMicrophone()
+      // pretestStore.openTestCamera()
+      // pretestStore.openTestMicrophone()
     }
     return () => {
-      pretestStore.closeTestCamera()
-      pretestStore.closeTestMicrophone()
+      // pretestStore.closeTestCamera()
+      // pretestStore.closeTestMicrophone()
     }
   }, [visible])
 
