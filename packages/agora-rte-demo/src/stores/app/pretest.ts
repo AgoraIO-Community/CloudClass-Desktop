@@ -419,10 +419,14 @@ export class PretestStore {
   }
 
   async switchCamera(deviceId: string) {
-    if (this.isNative) {
-      await this.changeNativeCamera(deviceId)
-    } else {
-      await this.changeWebCamera(deviceId)
+    try {
+      if (this.isNative) {
+        await this.changeNativeCamera(deviceId)
+      } else {
+        await this.changeWebCamera(deviceId)
+      }
+    } catch (err) {
+      this.appStore.uiStore.addToast(err)
     }
   }
 
@@ -473,10 +477,14 @@ export class PretestStore {
   }
 
   async switchMicrophone(deviceId: string) {
-    if (this.isNative) {
-      await this.changeNativeMicrophone(deviceId)
-    } else {
-      await this.changeWebMicrophone(deviceId)
+    try {
+      if (this.isNative) {
+        await this.changeNativeMicrophone(deviceId)
+      } else {
+        await this.changeWebMicrophone(deviceId)
+      }
+    } catch (err) {
+      this.appStore.uiStore.addToast(err)
     }
   }
 

@@ -177,6 +177,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
       this.client.setLogFile(this.logPath)
     }
+    //TODO: set cef client log path
+    if (this._cefClient) {
+      window.getCachePath((path: string) => {
+        const dstPath = path+'agorasdk.log'
+        this.client.setLogFile(dstPath);
+        EduLogger.info("set cef log path success, dest path: ", dstPath)
+      })
+    }
   }
   muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
     throw new Error('Method not implemented.');
@@ -395,6 +403,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info('joinedchannel', uid)
     })
     this.client.on('localVideoStateChanged', (state: number, error: number) => {
+      this.fire('localVideoStateChanged', {
+        uid: convertUid(this.localUid),
+        state,
+        type: 'video',
+        msg: error
+      })
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,
@@ -591,6 +605,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       console.log('joinedchannel', uid)
     })
     this.client.on('LocalVideoStateChanged', (state: number, error: number) => {
+      this.fire('localVideoStateChanged', {
+        uid: convertUid(this.localUid),
+        state,
+        type: 'video',
+        msg: error
+      })
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,

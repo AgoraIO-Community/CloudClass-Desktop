@@ -330,11 +330,12 @@ const zhCN: any = {
   'placeholder': {
     'teacher_noEnter': '等待外教进入教室...',
     'student_noEnter': '等待学生进入教室...',
-    'teacher_Left': '老师已离开教室',
+    'teacher_Left': '外教已离开教室',
     'student_Left': '学生已离开教室',
-    'noCamera': '没有摄像头',
-    'closeCamera': '已关闭摄像头',
+    'closedCamera': '已关闭摄像头',
     'noAvailableCamera': '未检测到摄像头',
+    'cameraLoading': '摄像头准备中...',
+    'loading': '加载中...'
   },
   'chat': {
     'placeholder': '说点什么...',

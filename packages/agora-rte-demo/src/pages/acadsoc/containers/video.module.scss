@@ -5,6 +5,25 @@
   }
 }
 
+.spin {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  border: 0.25rem solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  -webkit-animation: spin 1s infinite linear;
+          animation: spin 1s infinite linear;
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .cameraPlaceholder {
   display: flex;
   flex-direction: column;
@@ -17,14 +36,38 @@
   width: 100%;
   box-sizing: border-box;
   // border-radius: 13px;
-  .camIcon {
-    background: url('../assets/no-camera.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 54px;
-    height: 54px;
-  }
+  // .noCamIcon {
+  //   background: url('../assets/no-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .closeCameraIcon {
+  //   background: url('../assets/closed-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .loadingCamera {
+  //   background: url('../assets/loading-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .prepareCamera {
+  //   background: url('../assets/prepare-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
   .text {
     color: rgb(0, 37, 145);
     font-size: 12px;

@@ -37,7 +37,7 @@ export const TeacherVideo = (props: any) => {
         width: props.width,
         height: props.height,
       }}
-      placeHolderType={"none"}
+      placeHolderType={"closedCamera"}
     >
       {/* <div>media</div> */}
     </Video>

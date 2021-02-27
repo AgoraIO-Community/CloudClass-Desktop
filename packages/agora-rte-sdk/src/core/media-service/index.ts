@@ -139,6 +139,9 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
       this.fire('remoteVideoStats', evt)
     })
+    this.sdkWrapper.on('localVideoStateChanged', (evt: any) => {
+      this.fire('localVideoStateChanged', evt)
+    })
     // this.sdkWrapper.on('volume-indication', (volumes: MediaVolume[]) => {
     //   this.fire('volume-indication', {
     //     volumes

@@ -1,8 +1,10 @@
 import { Box } from '@material-ui/core'
 import React from 'react'
-import TeacherLeavePng from './assets/teacher-leave.png'
-import StudentLeavePng from './assets/student-leave.png'
-import NoCameraPng from './assets/no-camera.png'
+import WaitingPng from './assets/waiting.png'
+import LeftPng from './assets/left.png'
+import NoAvailableCamera from './assets/no-camera.png'
+import ClosedCamera from './assets/closed-camera.png'
+import LoadingPng from './assets/loading-camera.png'
 import { TextEllipsis } from '../typography'
 
 export interface PlaceHolderViewProps {
@@ -14,18 +16,22 @@ export interface PlaceHolderViewProps {
 }
 
 export type PlaceHolderRole = 'teacher' | 'student'
-export type PlaceHolderType = 'waitingFor' | 'noEnter' | 'noCamera' | 'none'
+export type PlaceHolderType = 'noEnter' | 'left' | 'noAvailableCamera' | 'closedCamera' | 'loading' | 'none'
 
 const iconPaths = {
   'teacher': {
-    waitingFor: TeacherLeavePng,
-    noEnter: TeacherLeavePng,
-    noCamera: NoCameraPng,
+    noEnter: WaitingPng,
+    left: LeftPng,
+    noAvailableCamera: NoAvailableCamera,
+    loading: LoadingPng,
+    closedCamera: ClosedCamera
   },
   'student': {
-    waitingFor: StudentLeavePng,
-    noEnter: StudentLeavePng,
-    noCamera: NoCameraPng,
+    noEnter: WaitingPng,
+    left: LeftPng,
+    noAvailableCamera: NoAvailableCamera,
+    loading: LoadingPng,
+    closedCamera: ClosedCamera
   }
 }
 

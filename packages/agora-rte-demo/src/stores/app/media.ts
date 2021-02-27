@@ -202,6 +202,9 @@ export class MediaStore {
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
     })
+    this.mediaService.on('localVideoStateChanged', (evt: any) => {
+      BizLogger.info(' ###localVideoStateChanged### ', JSON.stringify(evt))
+    })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
       if (this.appStore.uiStore.isElectron) {
