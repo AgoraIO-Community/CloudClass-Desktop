@@ -6,6 +6,7 @@ import { observable, action, computed } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
+import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
 
@@ -108,6 +109,13 @@ export class MediaStore {
       if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
         this.appStore.sceneStore.cameraRenderer.stop()
         this.appStore.sceneStore.resetCameraTrack()
+        eduSDKApi.reportCameraState({
+          roomUuid: this.appStore.roomInfo.roomUuid,
+          userUuid: this.appStore.roomInfo.userUuid,
+          state: 0
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
+        })
       }
 
       if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
@@ -223,6 +231,15 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
+      if (this.rendererOutputFrameRate[`${0}`] <= 0) {
+        eduSDKApi.reportCameraState({
+          roomUuid: this.appStore.roomInfo.roomUuid,
+          userUuid: this.appStore.roomInfo.userUuid,
+          state: 0
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+        })
+      }
       BizLogger.info("remoteVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
