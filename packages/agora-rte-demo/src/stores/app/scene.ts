@@ -877,12 +877,21 @@ export class SceneStore extends SimpleInterval {
   }
 
   getLocalPlaceHolderProps() {
-    const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
-
     if (this.openingCamera === true) {
       return {
         placeHolderType: 'openingCamera',
         text: t('placeholder.openingCamera')
+      }
+    }
+
+    if (this.openingCamera === false
+      && (
+        (this.cameraRenderer && this.cameraRenderer.videoTrack && this.cameraRenderer._playing === true)
+        || (this.cameraRenderer && this.cameraRenderer._playing === true)
+        )) {
+      return {
+        placeHolderType: 'none',
+        text: ''
       }
     }
 
@@ -893,73 +902,85 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (!this.cameraEduStream) {
-      // placeholder
-      if (meIsTeacher) {
-        return this.defaultTeacherPlaceholder
-      } else {
-        return this.defaultStudentPlaceholder
-      }
-    }
-
-    if (this.openingCamera === false
-      && (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) 
-      && this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+    if (
+      this.closingCamera === false
+      && (!this.cameraRenderer
+        || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
+        || (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false))) {
       return {
         placeHolderType: 'closedCamera',
         text: t('placeholder.closedCamera')
       }
     }
 
-    const userUuid = this.roomInfo.userUuid
     const streamUuid = +this.cameraEduStream.streamUuid
 
     // TODO: native platform
     if (this.appStore.isElectron) {
-      if (this.cameraEduStream 
-          && this.cameraEduStream.hasVideo === true 
-          && this.closingCamera === false 
-          // TODO: camera not work
-          && (!this.cameraRenderer || this.queryVideoFrameIsNotFrozen(+streamUuid) === false || this.queryCamIssue(userUuid))) {
-        return {
-          placeHolderType: 'noAvailableCamera',
-          text: t('placeholder.noAvailableCamera')
-        }
-      }
-      if (this.cameraEduStream && this.cameraRenderer) {
+      if (this.cameraEduStream
+        && !!this.cameraEduStream.hasVideo === true
+        && this.cameraRenderer
+        && this.cameraRenderer._playing === true
+        && (this.queryVideoFrameIsNotFrozen(+streamUuid) === true)) {
         return {
           placeHolderType: 'none',
           text: ''
+        }
+      }
+      if (this.cameraEduStream 
+        && !!this.cameraEduStream.hasVideo === true 
+        && this.closingCamera === false 
+        // TODO: camera not work
+        && (!this.cameraRenderer 
+          || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
+          || (this.cameraRenderer && this.cameraRenderer._playing === true) 
+          || (this.queryVideoFrameIsNotFrozen(+streamUuid) === false))) {
+        return {
+          placeHolderType: 'noAvailableCamera',
+          text: t('placeholder.noAvailableCamera')
         }
       }
     } else 
     // TODO: web platform
     {
-      if (this.cameraEduStream 
-        && this.cameraEduStream.hasVideo === true 
-        && this.closingCamera === false 
-        // TODO: camera not work
-        && (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack || this.queryCamIssue(userUuid))) {
-        return {
-          placeHolderType: 'noAvailableCamera',
-          text: t('placeholder.noAvailableCamera')
+      if (this.openingCamera === false || this.closingCamera === false) {
+        if (this.cameraEduStream 
+          && !!this.cameraEduStream.hasVideo === true
+          && this.cameraRenderer
+          // && this.cameraRenderer._playing === true
+          && this.cameraRenderer.videoTrack
+          ) {
+          return {
+            placeHolderType: 'none',
+            text: ''
+          }
         }
-      }
-      if (this.cameraRenderer && this.cameraRenderer.videoTrack) {
-        return {
-          placeHolderType: 'none',
-          text: ''
+
+        if (
+          this.cameraEduStream 
+          && !!this.cameraEduStream.hasVideo === true 
+          && !this.cameraRenderer 
+          || (this.cameraRenderer 
+              // && this.cameraRenderer._playing === true 
+              && !this.cameraRenderer.videoTrack 
+              && this.queryVideoFrameIsNotFrozen(+streamUuid) === false)
+            ) {
+          return {
+            placeHolderType: 'noAvailableCamera',
+            text: t('placeholder.noAvailableCamera')
+          }
         }
       }
     }
+    
+        
+    const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
 
-    // placeholder
     if (meIsTeacher) {
       return this.defaultTeacherPlaceholder
     } else {
       return this.defaultStudentPlaceholder
     }
-
   }
 
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
@@ -1072,9 +1093,9 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         showControls: this.canControl(this.appStore.userUuid),
-        volumeLevel: this.localVolume,
         placeHolderType: placeHolderType,
         placeHolderText: text,
+        volumeLevel: this.localVolume,
       } as any
     }
 
@@ -1194,7 +1215,6 @@ export class SceneStore extends SimpleInterval {
         if (!user || this.isLocalStream(stream)) return acc;
         const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
         const volumeLevel = this.getFixAudioVolume(+stream.streamUuid)
-        const result = this.queryVideoFrameIsNotFrozen(+stream.streamUuid)
         acc.push({
           local: false,
           account: user.userName,
@@ -1207,8 +1227,6 @@ export class SceneStore extends SimpleInterval {
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
-          notFreeze: result,
-          camIssue: this.queryCamIssue(user.userUuid)
         } as any)
         return acc;
       }
@@ -1220,7 +1238,6 @@ export class SceneStore extends SimpleInterval {
 
     if (this.cameraEduStream && isStudent) {
       const props = this.getLocalPlaceHolderProps()
-      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -1233,8 +1250,6 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: this.localVolume,
-        notFreeze: result,
-        camIssue: this.queryCamIssue(localUser.userUuid)
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -1252,8 +1267,6 @@ export class SceneStore extends SimpleInterval {
       placeHolderText: this.defaultStudentPlaceholder.text,
       placeHolderType: this.defaultStudentPlaceholder.placeHolderType,
       volumeLevel: 0,
-      notFreeze: true,
-      camIssue: false
     } as any]
   }
 
