@@ -884,17 +884,6 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (this.openingCamera === false
-      && (
-        (this.cameraRenderer && this.cameraRenderer.videoTrack && this.cameraRenderer._playing === true)
-        || (this.cameraRenderer && this.cameraRenderer._playing === true)
-        )) {
-      return {
-        placeHolderType: 'none',
-        text: ''
-      }
-    }
-
     if (this.closingCamera === true) {
       return {
         placeHolderType: 'closedCamera',
@@ -902,14 +891,33 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (
-      this.closingCamera === false
-      && (!this.cameraRenderer
-        || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
-        || (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false))) {
+    if (this.cameraRenderer && this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
       return {
-        placeHolderType: 'closedCamera',
-        text: t('placeholder.closedCamera')
+        placeHolderType: 'openingCamera',
+        text: t('placeholder.openingCamera')
+      }
+    }
+
+    if (this.appStore.isElectron) {
+      if (
+        this.closingCamera === false
+        && (!this.cameraRenderer
+          || (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false))) {          
+        return {
+          placeHolderType: 'closedCamera',
+          text: t('placeholder.closedCamera')
+        }
+      }
+    } else {
+      if (
+        this.closingCamera === false
+        && (!this.cameraRenderer
+          || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
+          || (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false))) {          
+        return {
+          placeHolderType: 'closedCamera',
+          text: t('placeholder.closedCamera')
+        }
       }
     }
 
@@ -940,9 +948,7 @@ export class SceneStore extends SimpleInterval {
           text: t('placeholder.noAvailableCamera')
         }
       }
-    } else 
-    // TODO: web platform
-    {
+    } else {
       if (this.openingCamera === false || this.closingCamera === false) {
         if (this.cameraEduStream 
           && !!this.cameraEduStream.hasVideo === true
