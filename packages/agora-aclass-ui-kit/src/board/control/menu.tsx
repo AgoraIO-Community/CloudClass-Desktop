@@ -86,7 +86,7 @@ export const ControlMenu = (propArgs: ControlMenuProps) => {
 
   return (
     <CustomizeTheme>
-      <div style={{...props.style, color: '#ffffff', fontSize: 8}} className={classes.root}>
+      <div style={{...props.style, color: '#ffffff', fontSize: 8, paddingRight: 19}} className={classes.root}>
         <div className={classes.tools}>
           {showPaginator ? <Paginator
             prevText={prevText}
