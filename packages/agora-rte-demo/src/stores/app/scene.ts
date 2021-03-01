@@ -454,22 +454,8 @@ export class SceneStore extends SimpleInterval {
       }
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
-      eduSDKApi.reportCameraState({
-        roomUuid: this.appStore.roomInfo.roomUuid,
-        userUuid: this.appStore.roomInfo.userUuid,
-        state: 1
-      }).catch((err) => {
-        BizLogger.info(`[demo] action in report device camera state failed, reason: ${err}`)
-      })
     } catch (err) {
       this.unLockCamera()
-      eduSDKApi.reportCameraState({
-        roomUuid: this.appStore.roomInfo.roomUuid,
-        userUuid: this.appStore.roomInfo.userUuid,
-        state: 0
-      }).catch((err) => {
-        BizLogger.info(`[demo] action in report device camera state failed, reason: ${err}`)
-      })
       BizLogger.info('[demo] action in openCamera >>> openCamera')
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)

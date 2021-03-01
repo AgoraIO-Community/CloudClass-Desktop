@@ -1,14 +1,10 @@
 import { EventEmitter } from 'events';
-import { wait } from '../utils';
+import { convertUid, wait } from '../utils';
 import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
-
-const convertUid = (uid: any) => {
-  return +uid
-}
 
 export class CEFVideoEncoderConfiguration {
   /**

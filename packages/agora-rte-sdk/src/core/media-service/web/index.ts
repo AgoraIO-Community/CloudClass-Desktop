@@ -5,6 +5,7 @@ import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import {isEmpty} from 'lodash';
+import { convertUid } from '../utils';
 
 export type AgoraWebVolumeResult = {
   level: number,
@@ -226,8 +227,28 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     })
     this.client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
-      const videoStats =this.client.getRemoteVideoStats()
-      // EduLogger.info('[web] network-quality', evt)
+      const videoStats = this.client.getRemoteVideoStats()
+      const localVideoStats = this.client.getLocalVideoStats()
+      console.log("network quality ", videoStats, localVideoStats)
+      this.fire('localVideoStats', {
+        stats: {
+          encoderOutputFrameRate: localVideoStats.captureFrameRate,
+        }
+      })
+      for (let uid of Object.keys(videoStats)) {
+        const videoState = videoStats[`${uid}`]
+        if (videoState) {
+          this.fire('remoteVideoStats', {
+            user: {
+              uid: convertUid(uid)
+            },
+            stats: {
+              uid: convertUid(uid),
+              decoderOutputFrameRate: isNaN(videoState.renderFrameRate!) ? NaN : videoState.renderFrameRate,
+            }
+          })
+        }
+      }
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
@@ -320,6 +341,27 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
+      const localVideoStats = this.client.getLocalVideoStats()
+      console.log("network quality ", videoStats, localVideoStats)
+      this.fire('localVideoStats', {
+        stats: {
+          encoderOutputFrameRate: localVideoStats.captureFrameRate,
+        }
+      })
+      for (let uid of Object.keys(videoStats)) {
+        const videoState = videoStats[`${uid}`]
+        if (videoState) {
+          this.fire('remoteVideoStats', {
+            user: {
+              uid: convertUid(uid)
+            },
+            stats: {
+              uid: convertUid(uid),
+              decoderOutputFrameRate: isNaN(videoState.renderFrameRate!) ? NaN : videoState.renderFrameRate,
+            }
+          })
+        }
+      }
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
