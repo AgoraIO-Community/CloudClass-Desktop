@@ -899,16 +899,16 @@ export class SceneStore extends SimpleInterval {
     const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
     if (this.cameraEduStream 
       && !!this.cameraEduStream.hasVideo === true) {
-      if (this.cameraRenderer) {
-        return {
-          placeHolderType: 'none',
-          text: ''
-        }
-      }
       if (isFreeze) {
         return {
           placeHolderType: 'noAvailableCamera',
           text: t('placeholder.noAvailableCamera')
+        }
+      }
+      if (this.cameraRenderer) {
+        return {
+          placeHolderType: 'none',
+          text: ''
         }
       }
     }
