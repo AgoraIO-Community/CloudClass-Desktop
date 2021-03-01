@@ -912,7 +912,6 @@ export class AcadsocRoomStore extends SimpleInterval {
               this.delInterval('timer')
             }
           }
-
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged

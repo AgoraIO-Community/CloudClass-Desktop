@@ -33,20 +33,28 @@ export const Paginator = (props: PaginatorProps) => {
   return (
     <Box flex={1} display="flex" justifyContent="space-between" flexDirection="row">
       <ControlButton toolTip={true} prevText={prevText} icon={prevIcon} onClick={onClickPrev} />
-      <Box>
-        <TextEllipsis maxWidth={50}>
-          <React.Fragment>
-            {props.currentPage}
-          </React.Fragment>
-        </TextEllipsis>
-      </Box>
-      /
-      <Box>
-        <TextEllipsis maxWidth={50}>
-          <React.Fragment>
-            {props.totalPage}
-          </React.Fragment>
-        </TextEllipsis>
+      <Box display="flex" flex-direction="row" marginTop="3px">
+        <Box>
+          <TextEllipsis maxWidth={50}>
+            <React.Fragment>
+              {props.currentPage}
+            </React.Fragment>
+          </TextEllipsis>
+        </Box>
+        <Box>
+          <TextEllipsis maxWidth={50}>
+            <React.Fragment>
+              /
+            </React.Fragment>
+          </TextEllipsis>
+        </Box>
+        <Box>
+          <TextEllipsis maxWidth={50}>
+            <React.Fragment>
+              {props.totalPage}
+            </React.Fragment>
+          </TextEllipsis>
+        </Box>
       </Box>
       <ControlButton toolTip={true} nextText={nextText} icon={nextIcon} onClick={onClickNext} />
     </Box>
