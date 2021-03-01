@@ -355,12 +355,14 @@ static toolItems: IToolItem[] = [
     })
     const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
     const follow = get(this.room.state.globalState, 'follow', 0)
+    const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
     this.grantUsers = grantUsers
     const boardUser = this.grantUsers.includes(this.localUserUuid)
     if (boardUser) {
       this._grantPermission = true
     }
     this.follow = follow
+    this.isFullScreen = isFullScreen
     // 默认只有老师不用禁止跟随
     if (this.userRole !== EduRoleTypeEnum.teacher) {
       if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -408,12 +410,14 @@ static toolItems: IToolItem[] = [
       })
       const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
       const follow = get(this.room.state.globalState, 'follow', 0)
+      const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
       this.grantUsers = grantUsers
       const boardUser = this.grantUsers.includes(this.localUserUuid)
       if (boardUser) {
         this._grantPermission = true
       }
       this.follow = follow
+      this.isFullScreen = isFullScreen
       // 默认只有老师不用禁止跟随
       if (this.userRole !== EduRoleTypeEnum.teacher) {
         if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -854,7 +858,7 @@ static toolItems: IToolItem[] = [
     this.pptAutoFullScreen()
 
     // 老师
-    if (this.isTeacher()) {
+    if ( this.userRole  === EduRoleTypeEnum.teacher) {
       // 判断第一次登陆
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
@@ -986,6 +990,7 @@ static toolItems: IToolItem[] = [
       if (state.globalState) {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
+        this.isFullScreen =  get(state, 'globalState.isFullScreen', false)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
             this.room.disableDeviceInputs = true
@@ -993,6 +998,7 @@ static toolItems: IToolItem[] = [
             this.room.disableDeviceInputs = false
           }
         }
+     
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
@@ -1056,7 +1062,7 @@ static toolItems: IToolItem[] = [
   }
 
   isTeacher(): boolean {
-    const isNeedShowBoardUser =[EduRoleTypeEnum.teacher,EduRoleTypeEnum.assistant,EduRoleTypeEnum.invisible]
+    const isNeedShowBoardUser = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.invisible]
     if (isNeedShowBoardUser.includes(this.appStore.roomInfo.userRole)) {
       return true
     }
@@ -2196,6 +2202,9 @@ static toolItems: IToolItem[] = [
   zoomBoard(type: string) {
     console.log('zoomBoard ', type)
     // 白板全屏
+    if (this.userRole === EduRoleTypeEnum.teacher) {
+      this.setFullScreen(type === 'fullscreen')
+    }
     if (type === 'fullscreen') {
       this.isFullScreen = true
       return
@@ -2206,6 +2215,12 @@ static toolItems: IToolItem[] = [
       this.isFullScreen = false
       return
     }
+  }
+
+  setFullScreen(type:boolean){
+    this.room.setGlobalState({
+      isFullScreen: type
+    })
   }
 
   @observable
