@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
@@ -179,7 +179,7 @@ export class MediaStore {
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       const uid = evt.user.uid
-      this.rendererOutputFrameRate[`${uid}`] = 1
+      this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
@@ -231,21 +231,44 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
-      if (this.rendererOutputFrameRate[`${0}`] <= 0) {
-        eduSDKApi.reportCameraState({
-          roomUuid: this.appStore.roomInfo.roomUuid,
-          userUuid: this.appStore.roomInfo.userUuid,
-          state: 0
-        }).catch((err) => {
-          BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-        })
-      }
       BizLogger.info("remoteVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
         this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
         BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+      }
+    })
+
+    reaction(() => JSON.stringify([
+      this.appStore.roomInfo.roomUuid,
+      this.appStore.roomInfo.userUuid,
+      this.appStore.isElectron,
+      this.rendererOutputFrameRate[`${0}`]]), () => {
+      if (this.appStore.isElectron && this.appStore.roomInfo.roomUuid && this.appStore.roomInfo.userUuid) {
+        if (this.rendererOutputFrameRate[`${0}`] <= 0) {
+          eduSDKApi.reportCameraState({
+            roomUuid: this.appStore.roomInfo.roomUuid,
+            userUuid: this.appStore.roomInfo.userUuid,
+            state: 0
+          }).catch((err) => {
+            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+          }).then(() => {
+            BizLogger.info(`[CAMERA] report camera device not working`)
+          })
+        }
+        
+        if (this.rendererOutputFrameRate[`${0}`] > 0) {
+          eduSDKApi.reportCameraState({
+            roomUuid: this.appStore.roomInfo.roomUuid,
+            userUuid: this.appStore.roomInfo.userUuid,
+            state: 1
+          }).catch((err) => {
+            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+          }).then(() => {
+            BizLogger.info(`[CAMERA] report camera device working`)
+          })
+        }
       }
     })
   }
