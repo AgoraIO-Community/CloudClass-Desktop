@@ -171,7 +171,7 @@ const en = {
     'zoomOut': 'zoom out',
     'fullScreen': 'full screen',
     'reduction': 'reduction',
-    'reset': 'Center',
+    'reset': 'center',
   },
   'disk': {
     'open': 'Open',
@@ -332,6 +332,8 @@ const en = {
     'class_is_end': `Class is over. The classroom will be closed in {reason}`,
     'time_interval_between_close': `The classroom will be closed in {reason}`,
     'reward_limit': 'The maximum number of trophies in the room has been reached',
+    'chat_disable': 'Turn on mute mode',
+    'chat_enable': 'Turn off mute mode',
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {
