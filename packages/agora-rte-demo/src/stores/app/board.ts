@@ -987,6 +987,7 @@ static toolItems: IToolItem[] = [
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      console.log('onRoomStateChanged',state.globalState)
       if (state.globalState) {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
