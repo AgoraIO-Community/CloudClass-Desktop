@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
@@ -24,6 +24,7 @@ export const ChatView = observer(() => {
   // const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
+  const [chatMute, setChatMute] = useState<number>(2)
 
   const disableChat = shouldDisable(sceneStore.roomInfo.userRole, sceneStore.isMuted)
 
@@ -128,6 +129,22 @@ export const ChatView = observer(() => {
       }
     }
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
+
+  useEffect(() => {
+    if (chatMute === 1) {
+      acadsocStore.appStore.uiStore.addToast(t('toast.chat_disable'))
+    } else if(chatMute === 0){
+      acadsocStore.appStore.uiStore.addToast(t('toast.chat_enable'))
+    }
+    return (() => {
+      if(sceneStore.isMuted) {
+        setChatMute(0)
+      } else {
+        setChatMute(1)
+      }
+    })
+  }, [sceneStore.isMuted])
+
   useEffect(() => {
     if (acadsocStore.roomInfo.userUuid && isGetHistory) {
       isGetHistory = false
