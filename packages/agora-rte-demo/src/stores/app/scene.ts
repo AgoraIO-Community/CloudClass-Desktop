@@ -449,6 +449,9 @@ export class SceneStore extends SimpleInterval {
       } as CameraOption
       await this.mediaService.openCamera(config)
       this._cameraRenderer = this.mediaService.cameraRenderer
+      if (this.isElectron) {
+        this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
+      }
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
       eduSDKApi.reportCameraState({
@@ -928,21 +931,19 @@ export class SceneStore extends SimpleInterval {
       if (this.cameraEduStream
         && !!this.cameraEduStream.hasVideo === true
         && this.cameraRenderer
-        && this.cameraRenderer._playing === true
-        && (this.queryVideoFrameIsNotFrozen(+streamUuid) === true)) {
+        && this.cameraRenderer._playing === true) {
         return {
           placeHolderType: 'none',
           text: ''
         }
       }
+      const isNotFrozen = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
       if (this.cameraEduStream 
         && !!this.cameraEduStream.hasVideo === true 
-        && this.closingCamera === false 
         // TODO: camera not work
         && (!this.cameraRenderer 
-          || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
-          || (this.cameraRenderer && this.cameraRenderer._playing === true) 
-          || (this.queryVideoFrameIsNotFrozen(+streamUuid) === false))) {
+          // || (this.cameraRenderer && !this.cameraRenderer.videoTrack)
+          || (this.cameraRenderer && this.cameraRenderer._playing === true && isNotFrozen === false))) {
         return {
           placeHolderType: 'noAvailableCamera',
           text: t('placeholder.noAvailableCamera')
@@ -978,15 +979,18 @@ export class SceneStore extends SimpleInterval {
         }
       }
     }
-    
-        
-    const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
-
-    if (meIsTeacher) {
-      return this.defaultTeacherPlaceholder
-    } else {
-      return this.defaultStudentPlaceholder
+      
+    return {
+      placeHolderType: 'none',
+      text: ''
     }
+    // const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
+
+    // if (meIsTeacher) {
+    //   return this.defaultTeacherPlaceholder
+    // } else {
+    //   return this.defaultStudentPlaceholder
+    // }
   }
 
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
@@ -1018,7 +1022,7 @@ export class SceneStore extends SimpleInterval {
         }
       }
     } else {
-      if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack) {
+      if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack || this.queryCamIssue(userUuid)) {
         return {
           placeHolderType: 'noAvailableCamera',
           text: t('placeholder.noAvailableCamera')
