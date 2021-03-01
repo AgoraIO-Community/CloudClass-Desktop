@@ -137,11 +137,13 @@ export const ChatView = observer(() => {
       acadsocStore.appStore.uiStore.addToast(t('toast.chat_enable'))
     }
     return (() => {
-      if(sceneStore.isMuted) {
-        setChatMute(0)
-      } else {
-        setChatMute(1)
-      }
+      setTimeout(() => {
+        if(sceneStore.isMuted) {
+          setChatMute(0)
+        } else {
+          setChatMute(1)
+        }
+      }, 1000)
     })
   }, [sceneStore.isMuted])
 
