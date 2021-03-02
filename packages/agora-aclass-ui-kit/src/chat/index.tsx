@@ -219,7 +219,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
     },
     bannedText:{
       minWidth:'48px',
-      textAlign:'center'
+      textAlign:'right'
     }
   }))
   const classes = useStyles()
