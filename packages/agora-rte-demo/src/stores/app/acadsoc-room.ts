@@ -547,14 +547,14 @@ export class AcadsocRoomStore extends SimpleInterval {
           [5, 1].forEach(min => {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
             }
           })
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
           }
           if(durationToClose < 0) {
             // close
@@ -1205,7 +1205,7 @@ export class AcadsocRoomStore extends SimpleInterval {
     let short_hours_text = `HH [${t('nav.short.hours')}]`;
     let short_mins_text = `mm [${t('nav.short.minutes')}]`;
     let short_seconds_text = `ss [${t('nav.short.seconds')}]`;
-
+    console.log('dDurationToEnd1',mode);
     if(mode === TimeFormatType.Timeboard) {
       // always display all time segment
       if(seconds < 60 * 60) {
