@@ -191,6 +191,7 @@ export class SceneStore extends SimpleInterval {
     this.mediaService.reset()
     this.openingCamera = false
     this.closingCamera = false
+    this.loadingMicrophone = false
     // this.cameraLabel = '';
     // this.microphoneLabel = '';
     // this._cameraId = '';
@@ -431,6 +432,9 @@ export class SceneStore extends SimpleInterval {
   @observable
   closingCamera: boolean = false
 
+  @observable
+  loadingMicrophone: boolean = false
+
   @action
   async openCamera(option?: SceneVideoConfiguration) {
     if (this._cameraRenderer) {
@@ -464,6 +468,18 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  waitFor(fn: () => boolean, timeout: number, checkinterval: number) {
+    return new Promise<void>(async (resolve, reject) => {
+      for(let i = 0; i < timeout; i += checkinterval) {
+        await (() => new Promise((resolve) => {setTimeout(resolve, checkinterval)}))()
+        if(fn()){
+          return resolve()
+        }
+      }
+      return reject(GenericErrorWrapper(new Error('operation timeout')))
+    })
+  }
+
   @action
   async muteLocalCamera() {
     if (this.cameraLock || this.closingCamera === true) {
@@ -476,7 +492,12 @@ export class SceneStore extends SimpleInterval {
         await this.closeCamera()
         this.unLockCamera()
       }
-      await this.roomManager?.userService.updateMainStreamState({'videoState': false})
+      await Promise.all([
+        await this.roomManager?.userService.updateMainStreamState({'videoState': false}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasVideo === false
+        }, 10000, 200)
+      ])
       this.closingCamera = false
     } catch (err) {
       BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
@@ -493,7 +514,12 @@ export class SceneStore extends SimpleInterval {
     try {
       this.openingCamera = true
       await this.openCamera()
-      await this.roomManager?.userService.updateMainStreamState({'videoState': true})
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'videoState': true}), 
+        this.waitFor(() => {
+          return this.queryVideoFrameIsNotFrozen(+this.roomManager?.userService.localStream.stream.streamUuid)
+        }, 3000, 100)
+      ])
       this.openingCamera = false
     } catch (err) {
       BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
@@ -507,6 +533,7 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
     }
+
     await this.closeMicrophone()
     this.unLockMicrophone()
     await this.roomManager?.userService.updateMainStreamState({'audioState': false})
