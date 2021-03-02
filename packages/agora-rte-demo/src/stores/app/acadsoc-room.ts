@@ -538,17 +538,16 @@ export class AcadsocRoomStore extends SimpleInterval {
   chatIsBanned(isStudentChatAllowed: boolean) {
     if(!this.joined) {
       return
-    } else {
-      // 判断是否等于上一次的值 相同则不更新
-      if (this.preChatMuted !== undefined && this.preChatMuted !== isStudentChatAllowed) {
-        if (this.preChatMuted) {
-          this.appStore.uiStore.addToast(t('toast.chat_disable'))
-        } else {
-          this.appStore.uiStore.addToast(t('toast.chat_enable'))
-        }
-      } 
-      this.preChatMuted = isStudentChatAllowed
     }
+    // 判断是否等于上一次的值 相同则不更新
+    if (this.preChatMuted !== undefined && this.preChatMuted !== isStudentChatAllowed) {
+      if (this.preChatMuted) {
+        this.appStore.uiStore.addToast(t('toast.chat_disable'))
+      } else {
+        this.appStore.uiStore.addToast(t('toast.chat_enable'))
+      }
+    } 
+    this.preChatMuted = isStudentChatAllowed
   }
 
   async checkClassroomNotification() {
