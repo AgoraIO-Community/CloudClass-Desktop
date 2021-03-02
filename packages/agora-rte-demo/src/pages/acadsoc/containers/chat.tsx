@@ -131,20 +131,13 @@ export const ChatView = observer(() => {
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
 
   useEffect(() => {
-    if (chatMute === 1) {
-      acadsocStore.appStore.uiStore.addToast(t('toast.chat_disable'))
-    } else if(chatMute === 0){
-      acadsocStore.appStore.uiStore.addToast(t('toast.chat_enable'))
+    if(acadsocStore.joinSuccess) {
+      if (sceneStore.isMuted) {
+        acadsocStore.appStore.uiStore.addToast(t('toast.chat_disable'))
+      } else{
+        acadsocStore.appStore.uiStore.addToast(t('toast.chat_enable'))
+      }
     }
-    return (() => {
-      setTimeout(() => {
-        if(sceneStore.isMuted) {
-          setChatMute(0)
-        } else {
-          setChatMute(1)
-        }
-      }, 1000)
-    })
   }, [sceneStore.isMuted])
 
   useEffect(() => {
