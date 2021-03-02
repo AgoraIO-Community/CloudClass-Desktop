@@ -12,6 +12,7 @@ import {
   CustomMenuList,
   DiskManagerDialog,
   IToolItem,
+  BrushToast
 } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { useBoardStore,useAppStore, useSceneStore } from '@/hooks'
@@ -98,7 +99,7 @@ export const BoardView = () => {
 export const EduWhiteBoard = observer(() => {
   const boardStore = useBoardStore()
   const ready = boardStore.ready
-  const {isLoading, loadingStatus} = boardStore
+  const { isLoading, loadingStatus, enableStatus } = boardStore
   const boardRef = useRef<HTMLDivElement | null>(null)
   const mountToDOM = useCallback((dom: any) => {
     if (dom) {
@@ -134,6 +135,7 @@ export const EduWhiteBoard = observer(() => {
       {
         isLoading ? <Progress title={loadingStatus}></Progress> : null
       }
+      <BrushToast position={{ 'position': 'absolute' }} isShowBrushToast={enableStatus !== 'disable'} text={enableStatus ? t('aclass.board.brushEnabled') : t('aclass.board.brushDisabled')} disableIcon={!enableStatus} />
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null

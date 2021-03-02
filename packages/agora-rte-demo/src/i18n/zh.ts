@@ -37,6 +37,8 @@ const zhCN: any = {
     "board": {
       "size": "大小",
       "stroke": "画笔",
+      "brushEnabled":"画笔已启用",
+      "brushDisabled":"画笔已禁用",
     },
     "chat": {
       "banned": "禁言",
