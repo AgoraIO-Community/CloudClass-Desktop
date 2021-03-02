@@ -214,7 +214,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   time: number = 0
 
   @observable
-  preChatMuted: boolean | undefined
+  isStudentChatAllowed: boolean | undefined
 
   @observable
   windowWidth: number = 0
@@ -533,18 +533,21 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @action
   chatIsBanned(isStudentChatAllowed: boolean) {
+    const isFirstLoad = () => {
+      return this.isStudentChatAllowed === undefined
+    }
     if(!this.joined) {
       return
     }
     // 判断是否等于上一次的值 相同则不更新
-    if (this.preChatMuted !== undefined && this.preChatMuted !== isStudentChatAllowed) {
-      if (this.preChatMuted) {
+    if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
+      if (this.isStudentChatAllowed) {
         this.appStore.uiStore.addToast(t('toast.chat_disable'))
       } else {
         this.appStore.uiStore.addToast(t('toast.chat_enable'))
       }
     } 
-    this.preChatMuted = isStudentChatAllowed
+    this.isStudentChatAllowed = isStudentChatAllowed
   }
 
   async checkClassroomNotification() {
