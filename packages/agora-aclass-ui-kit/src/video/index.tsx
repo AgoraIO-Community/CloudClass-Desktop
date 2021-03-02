@@ -15,6 +15,8 @@ import DisableDrawIcon  from './assets/disable-draw.png'
 import { TextEllipsis } from '../typography'
 import {PlaceHolderView, PlaceHolderRole, PlaceHolderType} from './placeholder'
 
+
+
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
     avBtn: {
@@ -178,11 +180,30 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
       }
     },
+    SpinIcon: {
+      borderRadius: '50%',
+      width: 19,
+      height: 19,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      border: '3px solid rgba(255, 255, 255, 0.2)',
+      borderTopColor: "white",
+      animation: "$spin 1s infinite linear"
+    },
+
+    "@keyframes spin": {
+      '0%': {
+        transform: 'rotate(0deg)'
+      },
+      "100%": {
+        transform: 'rotate(360deg)'
+      }
+  },
   })
 )
 
 interface MediaButtonProps {
   enabled: boolean,
+  loading: boolean,
   onClick: VideoItemOnClick,
   disable?: boolean
 }
@@ -223,7 +244,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
 
-  const className = props.enabled ? classes.UnMuteCameIcon : classes.MuteCameIcon
+  const className = props.loading ? classes.SpinIcon : props.enabled ? classes.UnMuteCameIcon : classes.MuteCameIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
@@ -244,7 +265,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
 const AudioIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
-  const className = props.enabled ? classes.UnMuteMicIcon : classes.MuteMicIcon
+  const className = props.loading ? classes.SpinIcon : props.enabled ? classes.UnMuteMicIcon : classes.MuteMicIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
@@ -367,6 +388,9 @@ export interface VideoFrameProps {
   resizable: boolean,
   videoState: boolean,
   audioState: boolean,
+  videoLoading: boolean,
+  audioLoading: boolean,
+  boardLoading: boolean,
   boardState?: boolean,
   disableTrophy: boolean,
   showBoardIcon?: boolean,
@@ -423,11 +447,11 @@ const VideoFrame: React.FC<VideoFrameProps> = (props) => {
       <Box visibility={accessoriesVisible ? "visible" : "hidden"} className={classes.avBtn} component="div">
         {
           props.showBoardIcon ?
-            <BoardIconButton disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
+            <BoardIconButton loading={props.boardLoading} disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
             null
         }
-        <VideoIconButton disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
-        <AudioIconButton disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
+        <VideoIconButton loading={props.videoLoading} disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
+        <AudioIconButton loading={props.audioLoading} disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
       </Box>
       {props.minimal && <CustomButton
         component="div"
