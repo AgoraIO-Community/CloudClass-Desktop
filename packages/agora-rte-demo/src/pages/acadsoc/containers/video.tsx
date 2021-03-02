@@ -137,7 +137,7 @@ export const TeacherVideo = observer(() => {
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >
-        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<CameraDefaultPlaceholder />} className={styles.videoRenderer} /> : null}
+        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} /*placeholderComponent={<CameraDefaultPlaceholder />}*/ className={styles.videoRenderer} /> : null}
         { userStream.audio ? 
           <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
             <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />

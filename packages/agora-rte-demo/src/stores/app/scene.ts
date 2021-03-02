@@ -7,7 +7,7 @@ import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, reaction } from 'mobx';
 import { get } from 'lodash';
 import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
@@ -457,8 +457,14 @@ export class SceneStore extends SimpleInterval {
       if (this.isElectron) {
         this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
       }
+
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
+
+      // wait until frame available
+      await this.waitFor(() => {
+        return (this.cameraRenderer?.renderFrameRate || 0) !== 0
+      }, 10000, 100)
     } catch (err) {
       this.unLockCamera()
       BizLogger.info('[demo] action in openCamera >>> openCamera')
@@ -513,12 +519,9 @@ export class SceneStore extends SimpleInterval {
     }
     try {
       this.openingCamera = true
-      await this.openCamera()
       await Promise.all([
-        this.roomManager?.userService.updateMainStreamState({'videoState': true}), 
-        this.waitFor(() => {
-          return this.queryVideoFrameIsNotFrozen(+this.roomManager?.userService.localStream.stream.streamUuid)
-        }, 3000, 100)
+        this.openCamera(),
+        this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
       this.openingCamera = false
     } catch (err) {
@@ -898,15 +901,6 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: 'openingCamera',
         text: t('placeholder.openingCamera')
       }
-    } else {
-      if (this.cameraRenderer 
-        && this.cameraEduStream 
-        && !!this.cameraEduStream.hasVideo === false) {
-        return {
-          placeHolderType: 'openingCamera',
-          text: t('placeholder.openingCamera')
-        }
-      }
     }
 
     if (this.closingCamera === true) {
@@ -941,8 +935,8 @@ export class SceneStore extends SimpleInterval {
       }
     }
     return {
-      placeHolderType: 'none',
-      text: ''
+      placeHolderType: 'loading',
+      text: t(`placeholder.loading`)
     }
   }
 
@@ -1006,8 +1000,10 @@ export class SceneStore extends SimpleInterval {
       return false
     }
     if (isLocal) {
-      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
-      return frameRate > 0
+      // const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
+      // return frameRate > 0
+      const freezeCount = this.cameraRenderer?.freezeCount || 0
+      return freezeCount < 3
     } else {
       const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
       return frameRate > 0
