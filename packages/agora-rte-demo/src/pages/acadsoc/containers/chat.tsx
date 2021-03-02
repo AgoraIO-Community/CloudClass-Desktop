@@ -24,7 +24,6 @@ export const ChatView = observer(() => {
   // const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
   const [isFetchHistory, setIsFetchHistory] = useState(true)
-  const [chatMute, setChatMute] = useState<number>(2)
 
   const disableChat = shouldDisable(sceneStore.roomInfo.userRole, sceneStore.isMuted)
 
