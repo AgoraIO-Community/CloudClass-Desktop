@@ -1229,7 +1229,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     let short_hours_text = `HH [${t('nav.short.hours')}]`;
     let short_mins_text = `mm [${t('nav.short.minutes')}]`;
     let short_seconds_text = `ss [${t('nav.short.seconds')}]`;
-    console.log('dDurationToEnd1',mode);
     if(mode === TimeFormatType.Timeboard) {
       // always display all time segment
       if(seconds < 60 * 60) {
