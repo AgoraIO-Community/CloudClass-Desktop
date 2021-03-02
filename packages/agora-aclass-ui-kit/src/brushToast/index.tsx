@@ -47,11 +47,11 @@ export const BrushToast = (props: IBrushToast) => {
   const { icon, disableIcon, isShowBrushToast } = props
   const [isShowToast, setIsShowToast] = useState(isShowBrushToast);
   useEffect(() => {
-    let timer: any;
+    let timer: NodeJS.Timeout ;
     if (isShowBrushToast) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setIsShowToast(false)
-      }, 3000)
+      }, 2500)
     }
     setIsShowToast(isShowBrushToast)
     return (() => { clearTimeout(timer) })
