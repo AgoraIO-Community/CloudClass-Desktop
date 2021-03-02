@@ -282,6 +282,9 @@ static toolItems: IToolItem[] = [
   isFullScreen: boolean = false
 
   @observable
+  enableStatus: string|boolean = 'disable'
+
+  @observable
   downloading: boolean = false
 
   @action
@@ -990,7 +993,11 @@ static toolItems: IToolItem[] = [
       if (state.globalState) {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
-        this.isFullScreen =  get(state, 'globalState.isFullScreen', false)
+        this.isFullScreen = get(state, 'globalState.isFullScreen', false)
+        if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
+          this.enableStatus = get(state, 'globalState.granted', 'disable')
+          console.log('globalState.granted',this.enableStatus);
+        }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
             this.room.disableDeviceInputs = true
@@ -998,7 +1005,6 @@ static toolItems: IToolItem[] = [
             this.room.disableDeviceInputs = false
           }
         }
-     
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {

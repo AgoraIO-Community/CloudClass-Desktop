@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     maxHeight: '38px',
     minWidth: '130px',
-    padding: '9px 9px 9px 19px',
+    padding: '9px 9px 9px 28px',
     boxSizing: 'border-box'
   }
 }))
@@ -47,21 +47,21 @@ export const BrushToast = (props: IBrushToast) => {
   const { icon, disableIcon, isShowBrushToast } = props
   const [isShowToast, setIsShowToast] = useState(isShowBrushToast);
   useEffect(() => {
-    let timer:any;
+    let timer: any;
     if (isShowBrushToast) {
       setTimeout(() => {
         setIsShowToast(false)
-      }, 2000)
+      }, 3000)
     }
     setIsShowToast(isShowBrushToast)
     return (() => { clearTimeout(timer) })
-  }, [isShowBrushToast])
+  }, [isShowBrushToast, disableIcon])
 
   const classes = useStyles()
   return (
-    isShowToast && <div className={`${classes.brushContainer} ${disableIcon ? classes.disableBrushContainer : null}`} style={props.position}>
+    isShowToast ? <div className={`${classes.brushContainer} ${disableIcon ? classes.disableBrushContainer : null}`} style={props.position}>
       {icon || <img className={classes.brush} src={IconDraw} />}
       <div className={classes.tips}>{props.text}</div>
-    </div>
+    </div> : <div></div>
   )
 }
