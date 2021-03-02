@@ -648,6 +648,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RemoteVideoStats', (evt: any) => {
+      this._remoteVideoStats[evt.uid] = {
+        videoLossRate: evt.packetLossRate,
+        videoReceiveDelay: evt.delay
+      }
       this.fire('remoteVideoStats', {
         user: {
           uid: convertUid(evt.uid),
@@ -681,6 +685,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+      this._remoteVideoStats[uid] = {
+        videoLossRate: packetLossRate,
+        videoReceiveDelay: delay
+      }
       this.fire('remoteVideoStats', {
         user: {
           uid: convertUid(uid),
