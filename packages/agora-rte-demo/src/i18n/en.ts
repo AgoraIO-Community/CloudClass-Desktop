@@ -37,6 +37,8 @@ const en = {
     "board": {
       "size": "Size",
       "stroke": "Stroke",
+      "brushEnabled":"Brush enabled",
+      "brushDisabled":"Brush disabled",
     },
     "chat": {
       "banned": "banned",
