@@ -996,7 +996,6 @@ static toolItems: IToolItem[] = [
         this.isFullScreen = get(state, 'globalState.isFullScreen', false)
         if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           this.enableStatus = get(state, 'globalState.granted', 'disable')
-          console.log('globalState.granted',this.enableStatus);
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
