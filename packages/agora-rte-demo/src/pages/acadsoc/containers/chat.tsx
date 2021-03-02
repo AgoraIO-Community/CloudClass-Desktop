@@ -130,16 +130,6 @@ export const ChatView = observer(() => {
   }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
 
   useEffect(() => {
-    if(acadsocStore.joinSuccess) {
-      if (sceneStore.isMuted) {
-        acadsocStore.appStore.uiStore.addToast(t('toast.chat_disable'))
-      } else{
-        acadsocStore.appStore.uiStore.addToast(t('toast.chat_enable'))
-      }
-    }
-  }, [sceneStore.isMuted])
-
-  useEffect(() => {
     if (acadsocStore.roomInfo.userUuid && isGetHistory) {
       isGetHistory = false
       isFetchHistory && fetchMessage()
