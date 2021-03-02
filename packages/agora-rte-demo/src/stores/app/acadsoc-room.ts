@@ -314,9 +314,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   trophyNumber: number = 0
 
-  @observable
-  joinSuccess: boolean = false
-
   @computed
   get isTrophyLimit(): boolean {
     if (this.roomReward.room >= this.roomReward.config.roomLimit) {
