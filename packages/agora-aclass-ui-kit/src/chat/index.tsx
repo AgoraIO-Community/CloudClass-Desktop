@@ -216,6 +216,10 @@ export const ChatBoard = (props: ChatBoardProps) => {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    bannedText:{
+      minWidth:'48px',
+      textAlign:'right'
     }
   }))
   const classes = useStyles()
@@ -228,7 +232,7 @@ export const ChatBoard = (props: ChatBoardProps) => {
         <WithIconButton
           iconStyle={{ width: '20px', height: '20px', marginRight: '5px' }}
           icon={forbiddenSpeech} />
-          {props.bannedText}
+          <span className={classes.bannedText}>{props.bannedText}</span>
       </div>)
   }
   const scrollEvent = (event: any) => {
