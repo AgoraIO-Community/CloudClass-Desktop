@@ -6,7 +6,7 @@ import { GlobalStorage } from './../../utils/custom-storage';
 import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
 import { observable, computed, action, runInAction, reaction } from 'mobx';
-import { isEmpty } from 'lodash';
+import { delay, isEmpty } from 'lodash';
 import { getDeviceLabelFromStorage } from '@/utils/utils';
 import { AgoraMediaDeviceEnum } from '@/types/global';
 
@@ -343,7 +343,6 @@ export class PretestStore {
     } else {
       if (this.cameraRenderer) {
         if (this.appStore.isElectron) {
-          this.cameraRenderer.stop()
           await this.mediaService.changeTestCamera(deviceId)
           this._cameraRenderer = this.mediaService.cameraRenderer
         } else {
@@ -358,9 +357,6 @@ export class PretestStore {
         })
       }
       this.updateTestCameraLabel()
-      // this._cameraRenderer = this.mediaService.cameraTestRenderer
-      // this.cameraLabel = this.mediaService.getTestCameraLabel()
-      // this._cameraId = this.cameraId
     }
   }
 

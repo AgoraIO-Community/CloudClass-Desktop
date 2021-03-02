@@ -63,8 +63,6 @@ export const AcadsocOneToOne = observer(() => {
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})
       handleJoinFail(e)
     })
-    // TODO: only for ui debug
-    // acadsocStore.joinRoom()
   }, [])
 
   return (
