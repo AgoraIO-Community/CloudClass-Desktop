@@ -611,7 +611,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     // TODO: CEF event handlers
     this.client.on('UserJoined', (uid: number, elapsed: number) => {
-      console.log("userjoined", uid)
+      console.log("[agora-rte-sdk] userjoined", uid)
       this.fire('user-published', {
         user: {
           uid: convertUid(uid),
@@ -620,7 +620,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     //or event removeStream
     this.client.on('UserOffline', (uid: number, elapsed: number) => {
-      console.log("removestream", uid)
+      console.log("[agora-rte-sdk] removestream", uid)
       this.fire('user-unpublished', {
         user: {
           uid: convertUid(uid),

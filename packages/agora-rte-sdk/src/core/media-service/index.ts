@@ -89,7 +89,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid && it.channel === evt.channel)
       if (userIndex !== -1) {
         const userRenderer = this.remoteUsersRenderer[userIndex]
-        this.remoteUsersRenderer.splice(userIndex, 1)
+        this.remoteUsersRenderer = this.remoteUsersRenderer.filter((it: any) => it === userRenderer)
+        // this.remoteUsersRenderer.splice(userIndex, 1)
         this.fire('user-unpublished', {
           user,
           remoteUserRender: userRenderer
