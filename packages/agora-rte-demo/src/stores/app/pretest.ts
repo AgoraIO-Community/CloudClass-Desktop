@@ -1,3 +1,4 @@
+import { LocalVideoStreamState } from './media';
 import { EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from './../../modules/utils/biz-logger';
 import uuidv4 from 'uuid/v4';
@@ -341,7 +342,13 @@ export class PretestStore {
       this.cameraLabel = ''
     } else {
       if (this.cameraRenderer) {
-        await this.mediaService.changeTestCamera(deviceId)
+        if (this.appStore.isElectron) {
+          this.cameraRenderer.stop()
+          await this.mediaService.changeTestCamera(deviceId)
+          this._cameraRenderer = this.mediaService.cameraRenderer
+        } else {
+          await this.mediaService.changeTestCamera(deviceId)
+        }
       } else {
         await this.mediaService.openTestCamera({
           deviceId,
@@ -524,7 +531,13 @@ export class PretestStore {
       this.cameraLabel = ''
     } else {
       if (this.cameraRenderer) {
-        await this.mediaService.changeCamera(deviceId)
+        if (this.appStore.isElectron) {
+          this.cameraRenderer.stop()
+          await this.mediaService.changeCamera(deviceId)
+          this._cameraRenderer = this.mediaService.cameraRenderer
+        } else {
+          await this.mediaService.changeCamera(deviceId)
+        }
       } else {
         await this.mediaService.openCamera({
           deviceId,

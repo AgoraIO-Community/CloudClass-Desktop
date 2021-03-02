@@ -107,7 +107,7 @@ export const EduWhiteBoard = observer(() => {
       boardStore.unmount()
     }
   }, [boardRef.current, boardStore])
-  
+
   return (
     <EducationBoard
       showPaginator={true}
@@ -387,6 +387,8 @@ export const EducationBoard = observer((props: any) => {
 
   const currentActiveToolItem = boardStore.currentActiveToolItem
 
+  const toolItems = useBoardStore().toolItems
+
   const onClickTool = useCallback((type: string) => {
     if (!boardStore.boardClient) {
       return
@@ -431,32 +433,26 @@ export const EducationBoard = observer((props: any) => {
     }
     boardStore.currentActiveToolItem = type
   }, [boardStore.boardClient])
-  const appStore = useAppStore()
-  // const isStudent = appStore.roomInfo.userRole === EduRoleTypeEnum.student
-  // const getStudentBoardItems = () => {
-  //   const removeItem = ['new-page', 'clear']
-  //   const studentBoardItems = BoardStore.toolItems.filter((item) => !removeItem.includes(item.itemName))
-  //   return studentBoardItems
-  // }
 
-  const getBoardItemsBy = (role: EduRoleTypeEnum) => {
+  const appStore = useAppStore()
+
+  const getBoardItemsBy = useCallback((role: EduRoleTypeEnum) => {
     switch (role) {
       case EduRoleTypeEnum.student: {
         const removeItem = ['new-page', 'clear', 'disk']
-        return BoardStore.toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
+        return toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
       }
       case EduRoleTypeEnum.invisible:
       case EduRoleTypeEnum.teacher: {
-        return BoardStore.toolItems
+        return toolItems
       }
       case EduRoleTypeEnum.assistant: {
-        return BoardStore.toolItems.filter((item: IToolItem) => item.itemName === 'disk')
+        return toolItems.filter((item: IToolItem) => item.itemName === 'disk')
       }
     }
     return []
-  }
+  }, [toolItems])
 
-  
   return (
     <div className={classes.boardBoxContainer}>
       {showCourseMenuItem ? <CourseWareMenuContainer /> : null}

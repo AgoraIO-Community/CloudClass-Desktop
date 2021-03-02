@@ -1,3 +1,4 @@
+import { LocalVideoStreamState } from './media';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { Mutex } from './../../utils/mutex';
 import { SimpleInterval } from './../mixin/simple-interval';
@@ -974,6 +975,9 @@ export class SceneStore extends SimpleInterval {
 
   queryVideoFrameIsNotFrozen (uid: number): boolean {
     const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
+    if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+      return false
+    }
     if (isLocal) {
       const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
       return frameRate > 0

@@ -10,6 +10,23 @@ import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
 
+export enum LocalVideoStreamState {
+  LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
+  LOCAL_VIDEO_STREAM_STATE_CAPTURING = 1,
+  LOCAL_VIDEO_STREAM_STATE_ENCODING = 2,
+  LOCAL_VIDEO_STREAM_STATE_FAILED = 3
+}
+
+export enum LocalVideoErrorEnum {
+  OK = 0,
+  FAILURE = 2,
+  NO_PERMISSION = 2,
+  BUSY = 3,
+  CAPTURE_FAILURE = 4,
+  ENCODE_FAILURE = 5,
+  SCREEN_CAPTURE_WINDOW_MINIMIZED = 11,
+  SCREEN_CAPTURE_WINDOW_CLOSED = 12
+}
 
 const networkQualityLevel = [
   'unknown',
@@ -45,6 +62,9 @@ export class MediaStore {
   get mediaService() {
     return this.appStore.mediaService
   }
+
+  @observable
+  localVideoState: LocalVideoStreamState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
 
   @observable
   _delay: number = 0
@@ -211,7 +231,11 @@ export class MediaStore {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
     })
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
-      BizLogger.info(' ###localVideoStateChanged### ', JSON.stringify(evt))
+      const {state, msg} = evt
+      if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
+          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
+        this.localVideoState = state
+      }
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
@@ -291,6 +315,7 @@ export class MediaStore {
   }
 
   reset() {
+    this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
     this.networkQuality = 'unknown'
     this.autoplay = false

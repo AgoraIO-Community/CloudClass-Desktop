@@ -19,6 +19,5 @@ export const t = (name: string, options?: any): string => {
       content = content.replace(/\{.+\}/, options.reason);
     }
   }
-
   return content;
 }

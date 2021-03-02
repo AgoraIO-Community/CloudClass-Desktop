@@ -92,7 +92,7 @@ export enum DownloadStatus {
 
 export class BoardStore {
 
-static toolItems: IToolItem[] = [
+  toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,

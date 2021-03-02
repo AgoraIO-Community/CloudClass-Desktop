@@ -551,7 +551,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localVideoStateChanged', (state: number, error: number) => {
       this.fire('localVideoStateChanged', {
-        uid: convertUid(this.localUid),
+        // uid: convertUid(this.localUid),
         state,
         type: 'video',
         msg: error
@@ -751,18 +751,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('JoinChannelSuccess', (channel: string, uid: number) => {
       console.log('joinedchannel', uid)
     })
-    this.client.on('LocalVideoStateChanged', (state: number, error: number) => {
+    this.client.on('LocalVideoStateChanged', (...args: any[]) => {
+      console.log(" ## native ## localVideoStateChanged", JSON.stringify(args))
       this.fire('localVideoStateChanged', {
-        uid: convertUid(this.localUid),
-        state,
+        // uid: convertUid(this.localUid),
+        state: args[0],
         type: 'video',
-        msg: error
+        msg: args[1]
       })
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
-        state,
+        state: args[0],
         type: 'video',
-        msg: error
+        msg: args[1]
       })
     })
     this.client.on('LocalAudioStateChanged', (state: number, error: number) => {

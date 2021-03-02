@@ -181,6 +181,7 @@ export const PretestContainer: React.FC<PretestComponentProps> = observer((props
         {
           tab === 'video' ? 
           <VideoDetect
+            cameraId={pretestStore.cameraId}
             value={pretestStore.cameraId}
             renderer={pretestStore.cameraRenderer}
             label={t("aclass.device.camera")}

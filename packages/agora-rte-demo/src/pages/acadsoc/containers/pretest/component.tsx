@@ -152,13 +152,14 @@ export interface CameraPreviewProps {
   renderer?: any
   previewPlaceText: string
   id: string
+  cameraId: any
 }
 
 export const CameraPreview: React.FC<CameraPreviewProps> = (props) => {
   return (
     <RendererPlayer
       className={styles.rendererPlaceholder}
-      key={props.renderer && props.renderer.videoTrack ? props.renderer.videoTrack.getTrackId() : ''}
+      key={props.renderer && props.renderer.videoTrack ? props.renderer.videoTrack.getTrackId() : props.cameraId}
       track={props.renderer}
       id={props.id}
       placeholderComponent={
@@ -187,6 +188,7 @@ export interface PretestMediaDetectBaseProps {
 
 export interface PretestVideoDetectProps extends PretestMediaDetectBaseProps {
   renderer?: any,
+  cameraId: any,
   // disableBtnGroup: boolean
 }
 
@@ -219,6 +221,7 @@ export const VideoDetect: React.FC<PretestVideoDetectProps> = (props) => {
       /> */}
       <div className={styles.detectPosition}>
         <CameraPreview
+          cameraId={props.cameraId}
           id={'camera'}
           previewPlaceText={t('aclass.device.keep')}
           renderer={props.renderer}
