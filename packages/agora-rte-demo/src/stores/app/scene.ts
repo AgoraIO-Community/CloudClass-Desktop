@@ -1398,7 +1398,21 @@ export class SceneStore extends SimpleInterval {
     } else {
       const stream = this.getStreamBy(userUuid)
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStopStudentMicrophone(targetStream as EduStream)
+      
+      try {
+        this.setLoadingMicrophone(true, true)
+        await Promise.all([
+          this.roomManager?.userService.remoteStopStudentMicrophone(targetStream as EduStream),
+          this.waitFor(() => {
+            const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
+            return !!targetStream?.hasAudio === false
+          }, 10000, 200)
+        ])
+        this.setLoadingMicrophone(false, true)
+      }catch(err) {
+        this.setLoadingMicrophone(false, true)
+        throw err
+      }
     }
   }
 
@@ -1416,14 +1430,15 @@ export class SceneStore extends SimpleInterval {
       try {
         this.setLoadingMicrophone(true, true)
         await Promise.all([
-          await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream),
+          this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream),
           this.waitFor(() => {
-            return !!stream?.hasAudio === false
+            const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
+            return !!targetStream?.hasAudio === true
           }, 10000, 200)
         ])
         this.setLoadingMicrophone(false, true)
       }catch(err) {
-        this.setLoadingMicrophone(true, true)
+        this.setLoadingMicrophone(false, true)
         throw err
       }
     }
@@ -1438,7 +1453,21 @@ export class SceneStore extends SimpleInterval {
     } else {
       const stream = this.getStreamBy(userUuid)
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStopStudentCamera(targetStream as EduStream)
+      try {
+        this.setClosingCamera(true, true)
+        await Promise.all([
+          this.roomManager?.userService.remoteStopStudentCamera(targetStream as EduStream),
+          this.waitFor(() => {
+            const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
+            return !!targetStream?.hasVideo === false
+          }, 10000, 200)
+        ])
+
+        this.setClosingCamera(false, true)
+      } catch(err) {
+        this.setClosingCamera(false, true)
+        throw err
+      }
     }
   }
 
@@ -1454,7 +1483,21 @@ export class SceneStore extends SimpleInterval {
         await this.mediaService.muteRemoteVideo(+stream.streamUuid, false)
       }
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStartStudentCamera(targetStream as EduStream)
+
+      try {
+        this.setOpeningCamera(true, true)
+        await Promise.all([
+          this.roomManager?.userService.remoteStartStudentCamera(targetStream as EduStream),
+          this.waitFor(() => {
+            const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
+            return !!targetStream?.hasVideo === true
+          }, 10000, 200)
+        ])
+        this.setOpeningCamera(false, true)
+      } catch(err) {
+        this.setOpeningCamera(false, true)
+        throw err
+      }
     }
   }
 
