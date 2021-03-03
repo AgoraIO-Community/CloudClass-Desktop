@@ -1330,7 +1330,7 @@ export class BoardStore {
         if (room.isWritable) {
           room.setScenePath('/init')
           const newIndex = room.state.sceneState.scenes.length
-          room.putScenes("/", [{name: `/init/${newIndex}`}], newIndex)
+          room.putScenes("/", [{name: `${newIndex}`}], newIndex)
           // room.putScenes(currentPath, [{}], newIndex)
           room.setSceneIndex(newIndex)
         }
