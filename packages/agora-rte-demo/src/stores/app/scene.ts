@@ -7,7 +7,7 @@ import { EduRecordService } from '@/modules/record/edu-record-service';
 import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, reaction } from 'mobx';
 import { get } from 'lodash';
 import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
@@ -189,9 +189,12 @@ export class SceneStore extends SimpleInterval {
   @action
   reset() {
     this.mediaService.reset()
-    this.openingCamera = false
-    this.closingCamera = false
-    this.loadingMicrophone = false
+    this.openingTeacherCamera = false
+    this.closingTeacherCamera = false
+    this.loadingTeacherMicrophone = false
+    this.openingStudentCamera = false
+    this.closingStudentCamera = false
+    this.loadingStudentMicrophone = false
     // this.cameraLabel = '';
     // this.microphoneLabel = '';
     // this._cameraId = '';
@@ -427,13 +430,63 @@ export class SceneStore extends SimpleInterval {
   }
 
   @observable
-  openingCamera: boolean = false
+  openingTeacherCamera: boolean = false
 
   @observable
-  closingCamera: boolean = false
+  closingTeacherCamera: boolean = false
 
   @observable
-  loadingMicrophone: boolean = false
+  openingStudentCamera: boolean = false
+
+  @observable
+  closingStudentCamera: boolean = false
+
+  @observable
+  loadingTeacherMicrophone: boolean = false
+
+  @observable
+  loadingStudentMicrophone: boolean = false
+
+  @action
+  setOpeningCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.openingStudentCamera = value) : (this.openingTeacherCamera = value)
+    } else {
+      isRemote ? (this.openingTeacherCamera = value) : (this.openingStudentCamera = value)
+    }
+  }
+
+  @action
+  setClosingCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.closingStudentCamera = value): (this.closingTeacherCamera = value)
+    } else {
+      isRemote ? (this.closingTeacherCamera = value): (this.closingStudentCamera = value)
+    }
+  }
+
+  @action
+  setLoadingMicrophone(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.loadingStudentMicrophone = value): (this.loadingTeacherMicrophone = value)
+    } else {
+      isRemote ? (this.loadingTeacherMicrophone = value): (this.loadingStudentMicrophone = value)
+    }
+  }
+
+  get openingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.openingTeacherCamera : this.openingStudentCamera
+  }
+
+
+  get closingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.closingTeacherCamera : this.closingStudentCamera
+  }
+
+
+  get loadingMicrophone(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.loadingTeacherMicrophone : this.loadingStudentMicrophone
+  }
 
   @action
   async openCamera(option?: SceneVideoConfiguration) {
@@ -457,14 +510,19 @@ export class SceneStore extends SimpleInterval {
       if (this.isElectron) {
         this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
       }
+
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
+
+      // wait until frame available
+      await this.waitFor(() => {
+        return (this.cameraRenderer?.renderFrameRate || 0) !== 0
+      }, 10000, 100)
     } catch (err) {
       this.unLockCamera()
-      BizLogger.info('[demo] action in openCamera >>> openCamera')
       const error = GenericErrorWrapper(err)
-      BizLogger.warn(`${error}`)
-      throw err
+      BizLogger.warn('[demo] action in openCamera >>> openCamera', error)
+      throw error
     }
   }
 
@@ -485,7 +543,7 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock || this.closingCamera === true) {
       return BizLogger.warn('[demo] openCamera locking')
     }
-    this.closingCamera = true
+    this.setClosingCamera(true, false)
     try {
       BizLogger.info('[demo] [local] muteLocalCamera')
       if (this._cameraRenderer) {
@@ -498,10 +556,13 @@ export class SceneStore extends SimpleInterval {
           return this.cameraEduStream.hasVideo === false
         }, 10000, 200)
       ])
-      this.closingCamera = false
+      this.setClosingCamera(false, false)
     } catch (err) {
-      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
-      this.closingCamera = false
+      this.unLockCamera()
+      this.setClosingCamera(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
     }
   }
 
@@ -511,19 +572,18 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
     }
+    this.setOpeningCamera(true, false)
     try {
-      this.openingCamera = true
-      await this.openCamera()
       await Promise.all([
-        this.roomManager?.userService.updateMainStreamState({'videoState': true}), 
-        this.waitFor(() => {
-          return this.queryVideoFrameIsNotFrozen(+this.roomManager?.userService.localStream.stream.streamUuid)
-        }, 3000, 100)
+        this.openCamera(),
+        this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
-      this.openingCamera = false
+      this.setOpeningCamera(false, false)
     } catch (err) {
-      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
-      this.openingCamera = false
+      this.setOpeningCamera(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
     }
   }
 
@@ -534,9 +594,25 @@ export class SceneStore extends SimpleInterval {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
     }
 
-    await this.closeMicrophone()
-    this.unLockMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': false})
+    this.setLoadingMicrophone(true, false)
+    try {
+      await this.closeMicrophone()
+      this.unLockMicrophone()
+
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': false}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === false
+        }, 10000, 200)
+      ])
+      this.setLoadingMicrophone(false, false)
+    }catch(err) {
+      this.unLockMicrophone()
+      this.setLoadingMicrophone(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalmicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action 
@@ -545,8 +621,24 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
     }
-    await this.openMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': true})
+
+    this.setLoadingMicrophone(true, false)
+
+    try {
+      await this.openMicrophone()
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': true}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === true
+        }, 10000, 200)
+      ])
+      this.setLoadingMicrophone(false, false)
+    }catch(err){
+      this.setLoadingMicrophone(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] unmuteLocalMicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action
@@ -898,15 +990,6 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: 'openingCamera',
         text: t('placeholder.openingCamera')
       }
-    } else {
-      if (this.cameraRenderer 
-        && this.cameraEduStream 
-        && !!this.cameraEduStream.hasVideo === false) {
-        return {
-          placeHolderType: 'openingCamera',
-          text: t('placeholder.openingCamera')
-        }
-      }
     }
 
     if (this.closingCamera === true) {
@@ -941,8 +1024,8 @@ export class SceneStore extends SimpleInterval {
       }
     }
     return {
-      placeHolderType: 'none',
-      text: ''
+      placeHolderType: 'loading',
+      text: t(`placeholder.loading`)
     }
   }
 
@@ -1006,8 +1089,10 @@ export class SceneStore extends SimpleInterval {
       return false
     }
     if (isLocal) {
-      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
-      return frameRate > 0
+      // const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
+      // return frameRate > 0
+      const freezeCount = this.cameraRenderer?.freezeCount || 0
+      return freezeCount < 3
     } else {
       const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
       return frameRate > 0
@@ -1327,7 +1412,20 @@ export class SceneStore extends SimpleInterval {
         await this.mediaService.muteRemoteAudio(+stream.streamUuid, false)
       }
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream)
+
+      try {
+        this.setLoadingMicrophone(true, true)
+        await Promise.all([
+          await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream),
+          this.waitFor(() => {
+            return !!stream?.hasAudio === false
+          }, 10000, 200)
+        ])
+        this.setLoadingMicrophone(false, true)
+      }catch(err) {
+        this.setLoadingMicrophone(true, true)
+        throw err
+      }
     }
   }
 

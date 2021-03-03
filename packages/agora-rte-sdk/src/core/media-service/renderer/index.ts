@@ -75,6 +75,10 @@ export abstract class UserRenderer implements IMediaRenderer {
 export class LocalUserRenderer extends UserRenderer {
 
   private el: HTMLCanvasElement | undefined;
+  private fpsTimer: any;
+  private previousFrame: number = 0;
+  renderFrameRate: number = 0;
+  freezeCount: number = 0;
 
   constructor(config: UserRendererInit) {
     super(config)
@@ -82,10 +86,27 @@ export class LocalUserRenderer extends UserRenderer {
   }
 
   play(dom: HTMLElement, fit?: boolean): void {
+    // clear flag when re-play
+    clearInterval(this.fpsTimer)
+    this.renderFrameRate = 0
+    this.previousFrame = 0
+    this.freezeCount = 0
     if (this.isWeb) {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
+        
+        let videoElement = dom.getElementsByTagName('video')[0] as any
+        this.fpsTimer = setInterval(() => {
+          let frames = videoElement.getVideoPlaybackQuality().totalVideoFrames
+          this.renderFrameRate = frames - this.previousFrame
+          this.previousFrame = frames
+          if(this.renderFrameRate === 0) {
+            this.freezeCount++
+          } else {
+            this.freezeCount = 0
+          }
+        }, 1000)
       }
     }
     if (this.isElectron) {
@@ -104,6 +125,22 @@ export class LocalUserRenderer extends UserRenderer {
                 }
               })
             }
+
+            this.fpsTimer = setInterval(() => {
+              let fps = 0
+              // @ts-ignore
+              if(window.bufferMap && window.bufferMap[0]){
+                // @ts-ignore
+                fps = window.bufferMap[0].fps || 0
+              }
+
+              this.renderFrameRate = fps
+              if(fps === 0) {
+                this.freezeCount++
+              } else {
+                this.freezeCount = 0
+              }
+            }, 1000)
 
             this.el = document.createElement('canvas')
             this.el.id = `agoraLocal-${this.uid}`

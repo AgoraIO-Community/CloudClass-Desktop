@@ -257,7 +257,7 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
-      BizLogger.info("remoteVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {

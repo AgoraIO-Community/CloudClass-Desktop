@@ -633,7 +633,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   async openCamera(option?: CameraOption): Promise<any> {
     EduLogger.info('[agora-web] invoke web#openCamera')
-    await this.acquireCameraTrack('cameraRenderer', option)
+    try {
+      await this.acquireCameraTrack('cameraRenderer', option)
+    } catch(err) {
+      this.fire('localVideoStateChanged', {state: 3, error: 0})
+      throw err
+    }
     if (this.hasCamera === undefined) {
       EduLogger.info(`[agora-web] prepare attempt open camera in web`)
       const cameraList = await this.getCameras()
