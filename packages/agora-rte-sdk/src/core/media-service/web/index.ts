@@ -5,7 +5,7 @@ import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import {isEmpty} from 'lodash';
-import { convertUid } from '../utils';
+import { convertUid, paramsConfig } from '../utils';
 
 export type AgoraWebVolumeResult = {
   level: number,
