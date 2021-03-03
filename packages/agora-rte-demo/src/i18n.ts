@@ -4,10 +4,13 @@ import zhCN from './i18n/zh';
 import en from './i18n/en';
 import { BizLogger } from './utils/biz-logger';
 
+export const getLanguage = () => GlobalStorage.getLanguage().match(/zh/) ? 'zh' : 'en'
+
 export const BUILD_VERSION = REACT_APP_BUILD_VERSION as string;
 
 export const t = (name: string, options?: any): string => {
-  const lang = GlobalStorage.getLanguage().match(/zh/) ? zhCN : en;
+  const lang = getLanguage() === 'zh' ? zhCN : en
+  // const lang = GlobalStorage.getLanguage().match(/zh/) ? zhCN : en;
   let content = get(lang, name, null);
   if (!content) {
     BizLogger.warn(`[DEMO] i18n ${lang}: ${name} has no match`);

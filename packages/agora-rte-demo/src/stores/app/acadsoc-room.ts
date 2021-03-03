@@ -214,6 +214,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   time: number = 0
 
   @observable
+  isStudentChatAllowed: boolean | undefined
+
+  @observable
   windowWidth: number = 0
 
   @observable
@@ -528,6 +531,25 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.timer = setTimeout(() => {this.tickClassroom()}, 1000)
   }
 
+  @action
+  chatIsBanned(isStudentChatAllowed: boolean) {
+    const isFirstLoad = () => {
+      return this.isStudentChatAllowed === undefined
+    }
+    if(!this.joined) {
+      return
+    }
+    // 判断是否等于上一次的值 相同则不更新
+    if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
+      if (this.isStudentChatAllowed) {
+        this.appStore.uiStore.addToast(t('toast.chat_disable'))
+      } else {
+        this.appStore.uiStore.addToast(t('toast.chat_enable'))
+      }
+    } 
+    this.isStudentChatAllowed = isStudentChatAllowed
+  }
+
   async checkClassroomNotification() {
     if(this.classroomSchedule) {
       let duration = this.classTimeDuration
@@ -547,14 +569,14 @@ export class AcadsocRoomStore extends SimpleInterval {
           [5, 1].forEach(min => {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
             }
           })
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
           }
           if(durationToClose < 0) {
             // close
@@ -914,6 +936,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
           // acadsoc
+          const isStudentChatAllowed = classroom.roomStatus.isStudentChatAllowed
+          this.chatIsBanned(isStudentChatAllowed)
           this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
         })
       })
@@ -1228,7 +1252,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     let short_hours_text = `HH [${t('nav.short.hours')}]`;
     let short_mins_text = `mm [${t('nav.short.minutes')}]`;
     let short_seconds_text = `ss [${t('nav.short.seconds')}]`;
-
     if(mode === TimeFormatType.Timeboard) {
       // always display all time segment
       if(seconds < 60 * 60) {

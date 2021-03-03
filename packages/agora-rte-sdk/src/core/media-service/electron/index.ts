@@ -611,7 +611,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     // TODO: CEF event handlers
     this.client.on('UserJoined', (uid: number, elapsed: number) => {
-      console.log("userjoined", uid)
+      console.log("[agora-rte-sdk] userjoined", uid)
       this.fire('user-published', {
         user: {
           uid: convertUid(uid),
@@ -620,7 +620,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     //or event removeStream
     this.client.on('UserOffline', (uid: number, elapsed: number) => {
-      console.log("removestream", uid)
+      console.log("[agora-rte-sdk] removestream", uid)
       this.fire('user-unpublished', {
         user: {
           uid: convertUid(uid),
@@ -636,6 +636,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('NetworkQuality', (...args: any[]) => {
       console.log("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      EduLogger.info( "remoteAudioStats: ", this._remoteAudioStats)
+      EduLogger.info( "remoteVideoStats: ", this._remoteVideoStats)
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
@@ -646,6 +648,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RemoteVideoStats', (evt: any) => {
+      this._remoteVideoStats[evt.uid] = {
+        videoLossRate: evt.packetLossRate,
+        videoReceiveDelay: evt.delay
+      }
       this.fire('remoteVideoStats', {
         user: {
           uid: convertUid(evt.uid),
@@ -679,6 +685,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
+      this._remoteVideoStats[uid] = {
+        videoLossRate: packetLossRate,
+        videoReceiveDelay: delay
+      }
       this.fire('remoteVideoStats', {
         user: {
           uid: convertUid(uid),
