@@ -289,10 +289,10 @@ export class AgoraEduSDK {
         roomPath: roomPath,
         pretest: option.pretest,
       })
-      //@ts-ignore
-      // window.globalStore = store
       // stores.set("app", store)
       controller.appController.create(store, <LiveRoom store={store} />, dom, option.listener)
+      //@ts-ignore
+      window.globalStore = controller.appController.store
       unlock()
     } catch (err) {
       unlock()

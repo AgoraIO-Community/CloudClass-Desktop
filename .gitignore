@@ -32,3 +32,5 @@ packages/agora-rte-demo/vendor/dev.git/
 .ts.back.txt
 *.ts.back.txt
 *.sh
+packages/agora-rte-demo/env.test.local
+ManyCamSetup.exe

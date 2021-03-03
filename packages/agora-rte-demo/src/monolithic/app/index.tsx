@@ -1,12 +1,7 @@
 import { GenAppContainer } from '@/containers/app-container'
 import { RoomParameters } from '@/edu-sdk/declare'
 import { AppStoreConfigParams } from '@/stores/app'
-import React, { useEffect } from 'react'
-import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
-
-const generateClassName = createGenerateClassName({
-  productionPrefix: 'eduClass',
-})
+import React from 'react'
 
 const routes: string[] = [
   // "setting",
@@ -41,10 +36,8 @@ export const App = (props: AppType) => {
   })
 
   return (
-    <StylesProvider generateClassName={generateClassName}>
-      <AppContainer
-        routes={routes}
-      />
-    </StylesProvider>
+    <AppContainer
+      routes={routes}
+    />
   )
 }

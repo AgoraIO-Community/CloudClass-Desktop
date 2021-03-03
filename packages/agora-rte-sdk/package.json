@@ -63,8 +63,8 @@
     "worker-loader": "2.0.0"
   },
   "dependencies": {
-    "agora-rtc-sdk-ng": "4.2.1",
-    "agora-rtm-sdk": "1.4.1-201"
+    "agora-rtc-sdk-ng": "4.3.0",
+    "agora-rtm-sdk": "1.4.2"
   },
   "peerDependencies": {
     "agora-electron-sdk": "education290"

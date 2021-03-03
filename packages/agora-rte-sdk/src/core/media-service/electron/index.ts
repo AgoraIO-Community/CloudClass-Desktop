@@ -1,11 +1,148 @@
 import { EventEmitter } from 'events';
-import { wait } from '../utils';
+import { convertUid, wait } from '../utils';
 import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
-// import { CustomBtoa } from '@/utils/helper';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
+
+export class CEFVideoEncoderConfiguration {
+  /**
+   * The video frame dimensions (px) used to specify the video quality and measured by the total number of pixels along a
+   * frame's width and height: [VideoDimensions]{@link AgoraRtcEngine.VideoDimensions}. The default value is 640 x 360.
+   */
+  dimensions: CEFVideoDimensions;
+  /**
+   * The frame rate of the video: [FRAME_RATE]{@link AgoraRtcEngine.FRAME_RATE}. The default value is 15.
+   *
+   * Note that we do not recommend setting this to a value greater than 30.
+   */
+  frameRate: number;
+  /**
+   * The minimum frame rate of the video. The default value is -1.
+   */
+  minFrameRate: number;
+  /**
+   The video encoding bitrate (Kbps).
+
+   Choose one of the following options:
+
+   - [STANDARD_BITRATE]{@link AgoraRtcEngine.STANDARD_BITRATE}: (Recommended) The standard bitrate.
+   - The `COMMUNICATION` profile: the encoding bitrate equals the base bitrate.
+   - The `LIVE_BROADCASTING` profile: the encoding bitrate is twice the base bitrate.
+   - [COMPATIBLE_BITRATE]{@link AgoraRtcEngine.COMPATIBLE_BITRATE}: The compatible bitrate: the bitrate stays the same regardless of the
+   profile.
+
+   The `COMMUNICATION` profile prioritizes smoothness, while the `LIVE_BROADCASTING` profile prioritizes video quality (requiring
+   a higher bitrate). We recommend setting the bitrate mode as `STANDARD_BITRATE` to address this difference.
+
+   The following table lists the recommended video encoder configurations, where the base bitrate applies to the `COMMUNICATION`
+   profile. Set your bitrate based on this table. If you set a bitrate beyond the proper range, the SDK automatically sets it
+   to within the range.
+
+   @note In the following table, **Base Bitrate** applies to the `COMMUNICATION` profile, and **Live Bitrate** applies to the
+   `LIVE_BROADCASTING` profile.
+
+   | Resolution             | Frame Rate (fps) | Base Bitrate (Kbps)                    | Live Bitrate (Kbps)                    |
+   |------------------------|------------------|----------------------------------------|----------------------------------------|
+   | 160 * 120              | 15               | 65                                     | 130                                    |
+   | 120 * 120              | 15               | 50                                     | 100                                    |
+   | 320 * 180              | 15               | 140                                    | 280                                    |
+   | 180 * 180              | 15               | 100                                    | 200                                    |
+   | 240 * 180              | 15               | 120                                    | 240                                    |
+   | 320 * 240              | 15               | 200                                    | 400                                    |
+   | 240 * 240              | 15               | 140                                    | 280                                    |
+   | 424 * 240              | 15               | 220                                    | 440                                    |
+   | 640 * 360              | 15               | 400                                    | 800                                    |
+   | 360 * 360              | 15               | 260                                    | 520                                    |
+   | 640 * 360              | 30               | 600                                    | 1200                                   |
+   | 360 * 360              | 30               | 400                                    | 800                                    |
+   | 480 * 360              | 15               | 320                                    | 640                                    |
+   | 480 * 360              | 30               | 490                                    | 980                                    |
+   | 640 * 480              | 15               | 500                                    | 1000                                   |
+   | 480 * 480              | 15               | 400                                    | 800                                    |
+   | 640 * 480              | 30               | 750                                    | 1500                                   |
+   | 480 * 480              | 30               | 600                                    | 1200                                   |
+   | 848 * 480              | 15               | 610                                    | 1220                                   |
+   | 848 * 480              | 30               | 930                                    | 1860                                   |
+   | 640 * 480              | 10               | 400                                    | 800                                    |
+   | 1280 * 720             | 15               | 1130                                   | 2260                                   |
+   | 1280 * 720             | 30               | 1710                                   | 3420                                   |
+   | 960 * 720              | 15               | 910                                    | 1820                                   |
+   | 960 * 720              | 30               | 1380                                   | 2760                                   |
+   | 1920 * 1080            | 15               | 2080                                   | 4160                                   |
+   | 1920 * 1080            | 30               | 3150                                   | 6300                                   |
+   | 1920 * 1080            | 60               | 4780                                   | 6500                                   |
+   | 2560 * 1440            | 30               | 4850                                   | 6500                                   |
+   | 2560 * 1440            | 60               | 6500                                   | 6500                                   |
+   | 3840 * 2160            | 30               | 6500                                   | 6500                                   |
+   | 3840 * 2160            | 60               | 6500                                   | 6500                                   |
+   */
+  bitrate: number;
+  /**
+   * The minimum encoding bitrate (Kbps).
+   *
+   * The SDK automatically adjusts the encoding bitrate to adapt to the network conditions. Using a value greater than the default
+   * value forces the video encoder to output high-quality images but may cause more packet loss and hence sacrifice the smoothness
+   * of the video transmission. That said, unless you have special requirements for image quality, Agora does not recommend
+   * changing this value.
+   *
+   * @note This parameter applies only to the `LIVE_BROADCASTING` profile.
+   */
+  minBitrate: number;
+  /**
+   * The video orientation mode of the video: [ORIENTATION_MODE]{@link AgoraRtcEngine.ORIENTATION_MODE}.
+   */
+  orientationMode: number;
+  /**
+   * The video encoding degradation preference under limited bandwidth:
+   * [DEGRADATION_PREFERENCE]{@link AgoraRtcEngine.DEGRADATION_PREFERENCE}.
+   */
+  degradationPreference: number;
+  /**
+   * Sets the mirror mode of the published local video stream. It only affects the video that the remote user sees. See
+   * [VIDEO_MIRROR_MODE_TYPE]{@link AgoraRtcEngine.VIDEO_MIRROR_MODE_TYPE}.
+   *
+   * @note The SDK disables the mirror mode by default.
+   */
+  mirrorMode: number;
+
+  constructor(
+    dimensions: CEFVideoDimensions = new CEFVideoDimensions(),
+    frameRate: any = 15,
+    minFrameRate: number = -1,
+    bitrate: number = 0,
+    minBitrate: number = -1,
+    orientationMode: number = 0,
+    degradationPreference: number = 0,
+    mirrorMode: number = 0
+  ) {
+    this.dimensions = dimensions;
+    this.frameRate = frameRate;
+    this.minFrameRate = minFrameRate;
+    this.bitrate = bitrate;
+    this.minBitrate = minBitrate;
+    this.orientationMode = orientationMode;
+    this.degradationPreference = degradationPreference;
+    this.mirrorMode = mirrorMode;
+  }
+}
+
+export class CEFVideoDimensions {
+  /**
+   * Width (pixels) of the video.
+   */
+  width: number;
+  /**
+   * Height (pixels) of the video.
+   */
+  height: number;
+
+  constructor(width: number = 640, height: number = 480) {
+    this.width = width;
+    this.height = height;
+  }
+}
 
 interface ScreenShareOption {
   profile: number,
@@ -151,13 +288,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
     this.client.enableAudioVolumeIndication(1000, 3, true)
-    this.client.setVideoProfile(43, false);
-    const config = {
+    // this.client.setVideoProfile(20)
+
+    const resolutionConfig = options.resolution
+    const config: any = {
       bitrate: 0,
-      frameRate: 15,
-      height: 240,
-      width: 320,
+      frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
+      width: resolutionConfig ? resolutionConfig?.width : 320,
+      height: resolutionConfig ? resolutionConfig?.height : 240,
     }
+
     const videoEncoderConfiguration = Object.assign({
       width: config.width,
       height: config.height,
@@ -165,12 +305,32 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       minFrameRate: -1,
       minBitrate: config.bitrate,
     })
-    this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
+    if (this._cefClient) {
+      //@ts-ignore
+      this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
+        new CEFVideoDimensions(
+          videoEncoderConfiguration.width,
+          videoEncoderConfiguration.height,
+        ),
+        videoEncoderConfiguration.frameRate
+        )
+      )
+    } else {
+      this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
+    }
     console.log("[electron] video encoder config ", JSON.stringify(config))
     this.client.setClientRole(2)
     if (this.logPath) {
       EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
       this.client.setLogFile(this.logPath)
+    }
+    //TODO: set cef client log path
+    if (this._cefClient) {
+      window.getCachePath((path: string) => {
+        const dstPath = path+'agorasdk.log'
+        this.client.setLogFile(dstPath);
+        EduLogger.info("set cef log path success, dest path: ", dstPath)
+      })
     }
   }
   muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
@@ -305,7 +465,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("userjoined", uid)
       this.fire('user-published', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         channel: this.channel
       })
@@ -315,7 +475,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info("removestream", uid)
       this.fire('user-unpublished', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         channel: this.channel
       })
@@ -342,7 +502,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: +uid,
           },
           mediaType: 'video',
         })
@@ -351,7 +511,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 6) {
         this.fire('user-published', {
           user: {
-            uid,
+            uid: +uid,
           },
           mediaType: 'video',
         })
@@ -390,8 +550,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.info('joinedchannel', uid)
     })
     this.client.on('localVideoStateChanged', (state: number, error: number) => {
+      this.fire('localVideoStateChanged', {
+        // uid: convertUid(this.localUid),
+        state,
+        type: 'video',
+        msg: error
+      })
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'video',
         msg: error
@@ -399,7 +565,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localAudioStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'audio',
         msg: error
@@ -413,13 +579,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('localPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
       this.fire('stream-fallback', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         isFallbackOrRecover
       })
     })
     this.client.on('remoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
       this.fire('stream-fallback', {
-        uid,
+        uid: convertUid(uid),
         isFallbackOrRecover
       })
     })
@@ -428,14 +594,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('remoteVideoStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      this._remoteVideoStats[evt.uid] = {
+      const uid = convertUid(evt.uid)
+      this._remoteVideoStats[uid] = {
         videoLossRate: evt.packetLossRate,
         videoReceiveDelay: evt.delay
       }
     })
     this.client.on('remoteAudioStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      this._remoteAudioStats[evt.uid] = {
+      const uid = convertUid(+evt.uid)
+      this._remoteAudioStats[uid] = {
         audioLossRate: evt.audioLossRate,
         audioReceiveDelay: evt.networkTransportDelay
       }
@@ -443,19 +611,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     // TODO: CEF event handlers
     this.client.on('UserJoined', (uid: number, elapsed: number) => {
-      console.log("userjoined", uid)
+      console.log("[agora-rte-sdk] userjoined", uid)
       this.fire('user-published', {
         user: {
-          uid,
+          uid: convertUid(uid),
         }
       })
     })
     //or event removeStream
     this.client.on('UserOffline', (uid: number, elapsed: number) => {
-      console.log("removestream", uid)
+      console.log("[agora-rte-sdk] removestream", uid)
       this.fire('user-unpublished', {
         user: {
-          uid
+          uid: convertUid(uid),
         },
       })
     })
@@ -486,10 +654,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
       this.fire('remoteVideoStats', {
         user: {
-          uid: evt.uid,
+          uid: convertUid(evt.uid),
         },
         stats: {
-          ...evt
+          ...evt,
+          uid: convertUid(evt.uid)
         }
       })
     })
@@ -522,10 +691,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
       this.fire('remoteVideoStats', {
         user: {
-          uid,
+          uid: convertUid(uid),
         },
         stats: {
-          uid,
+          uid: convertUid(uid),
           delay,
           width,
           height,
@@ -545,7 +714,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'video',
         })
@@ -554,7 +723,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 6) {
         this.fire('user-published', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'video',
         })
@@ -567,7 +736,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       if (reason === 5) {
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           mediaType: 'audio',
         })
@@ -592,17 +761,24 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('JoinChannelSuccess', (channel: string, uid: number) => {
       console.log('joinedchannel', uid)
     })
-    this.client.on('LocalVideoStateChanged', (state: number, error: number) => {
-      this.fire('user-info-updated', {
-        uid: this.localUid,
-        state,
+    this.client.on('LocalVideoStateChanged', (...args: any[]) => {
+      console.log(" ## native ## localVideoStateChanged", JSON.stringify(args))
+      this.fire('localVideoStateChanged', {
+        // uid: convertUid(this.localUid),
+        state: args[0],
         type: 'video',
-        msg: error
+        msg: args[1]
+      })
+      this.fire('user-info-updated', {
+        uid: convertUid(this.localUid),
+        state: args[0],
+        type: 'video',
+        msg: args[1]
       })
     })
     this.client.on('LocalAudioStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         state,
         type: 'audio',
         msg: error
@@ -616,13 +792,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('LocalPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
       this.fire('stream-fallback', {
-        uid: this.localUid,
+        uid: convertUid(this.localUid),
         isFallbackOrRecover
       })
     })
     this.client.on('RemoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
       this.fire('stream-fallback', {
-        uid,
+        uid: convertUid(uid),
         isFallbackOrRecover
       })
     })
@@ -639,7 +815,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         EduLogger.info('ELECTRON user-published channel ', uid, option.channel)
         this.fire('user-published', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           channel: option.channel
         })
@@ -648,7 +824,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         EduLogger.info('ELECTRON user-unpublished channel ', uid, option.channel)
         this.fire('user-unpublished', {
           user: {
-            uid,
+            uid: convertUid(uid),
           },
           channel: option.channel
         })
@@ -680,7 +856,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   async join(option: any): Promise<any> {
     try {
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
-      EduLogger.info("electron joinSubChannel ", ret)
+      EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `joinSubChannel failure`,
@@ -714,16 +890,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   async leave(): Promise<any> {
     try {
       let ret = this.client.setClientRole(2)
-      if (ret < 0) {
-        throw GenericErrorWrapper({
-          message: `setClientRole failure`,
-          code: ret
-        })
-      }
+      // if (ret < 0) {
+      //   throw GenericErrorWrapper({
+      //     message: `setClientRole failure`,
+      //     code: ret
+      //   })
+      // }
+      EduLogger.info("electron.setClientRole ", ret)
       if (this.joined === false) {
+        EduLogger.info("electron.leave already left")
         return
       }
       ret = this.client.leaveChannel()
+      EduLogger.info("electron.already leaveChannel, ret ", ret)
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `leaveSubChannel failure`,
@@ -758,17 +937,29 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       if (option) {
-        option.deviceId && this.client.setVideoDevice(option.deviceId)
+        option.deviceId && (ret = this.client.setVideoDevice(option.deviceId))
+        if (ret < 0) {
+          throw GenericErrorWrapper({
+            message: `setVideoDevice failure`,
+            code: ret
+          })
+        }
         // TODO: cef configuration
         //@ts-ignore
-        option.encoderConfig && this.client.setVideoEncoderConfiguration({
-          //@ts-ignore
-          dimensions: {
-            width: option.encoderConfig.width,
-            height: option.encoderConfig.height,
-          },
-          frameRate: option.encoderConfig.frameRate
-        })
+        option.encoderConfig && (ret = this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
+          new CEFVideoDimensions(
+            option.encoderConfig.width,
+            option.encoderConfig.height
+          ),
+          option.encoderConfig.frameRate
+          )
+        ))
+        if (ret < 0) {
+          throw GenericErrorWrapper({
+            message: `setVideoEncoderConfiguration failure`,
+            code: ret
+          })
+        }
       }
       if (this.joined) {
         ret = this.client.muteLocalVideoStream(false)
@@ -898,7 +1089,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           code: ret
         }
       }
-      if (option) {
+      //TODO: cef api
+      if (this._cefClient) {
+        //@ts-ignore
+        option.deviceId && this.client.audioDeviceManager.setRecordingDevice(option.deviceId)
+      } else {
+        //@ts-ignore
         option.deviceId && this.client.setAudioRecordingDevice(option.deviceId)
       }
       if (this.joined) {

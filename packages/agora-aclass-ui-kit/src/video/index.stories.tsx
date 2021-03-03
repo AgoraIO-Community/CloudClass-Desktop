@@ -24,6 +24,9 @@ export const TeacherVideo = (props: any) => {
     <Video
       className=""
       uid={1}
+      videoLoading={props.videoLoading}
+      audioLoading={props.audioLoading}
+      boardLoading={false}
       nickname="Nancy"
       minimal={true}
       resizable={false}
@@ -37,7 +40,8 @@ export const TeacherVideo = (props: any) => {
         width: props.width,
         height: props.height,
       }}
-      placeHolderType={"none"}
+      placeHolderType={"closedCamera"}
+      placeHolderText="closedCamera"
     >
       {/* <div>media</div> */}
     </Video>
@@ -47,6 +51,8 @@ export const TeacherVideo = (props: any) => {
 TeacherVideo.args = {
   width: '200px',
   height: '150px',
+  videoLoading: false,
+  audioLoading: false
 }
 
 export const TeacherPlaceHolderVideo = (props: any) => {
@@ -67,6 +73,9 @@ export const TeacherPlaceHolderVideo = (props: any) => {
     <Video
       className=""
       uid={1}
+      videoLoading={props.videoLoading}
+      audioLoading={props.audioLoading}
+      boardLoading={false}
       nickname="Nancy"
       minimal={true}
       resizable={false}
@@ -81,6 +90,7 @@ export const TeacherPlaceHolderVideo = (props: any) => {
         height: props.height,
       }}
       placeHolderType={"noEnter"}
+      placeHolderText="noEnter"
     >
       {/* <div>media</div> */}
     </Video>
@@ -90,6 +100,8 @@ export const TeacherPlaceHolderVideo = (props: any) => {
 TeacherPlaceHolderVideo.args = {
   width: '200px',
   height: '150px',
+  videoLoading: false,
+  audioLoading: false
 }
 
 
@@ -116,6 +128,9 @@ export const StudentVideo = (props: any) => {
     <Video
       className=""
       uid={1}
+      videoLoading={props.videoLoading}
+      audioLoading={props.audioLoading}
+      boardLoading={false}
       nickname="Nancy"
       boardState={board}
       showBoardIcon={true}
@@ -150,5 +165,7 @@ StudentVideo.args = {
   minimal: true,
   disableButton: false,
   disableBoard: false,
-  disableTrophy: false
+  disableTrophy: false,
+  videoLoading: false,
+  audioLoading: false
 }

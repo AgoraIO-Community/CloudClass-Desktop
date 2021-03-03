@@ -3,6 +3,7 @@ import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
 import { platform } from '@/utils/platform';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
+import { getLanguage } from '@/i18n';
 interface NoticeMessage {
   type: string
   message: string
@@ -94,7 +95,7 @@ export class UIStore {
   curSeqId: number = 0
 
   @observable
-  _language: string = '';
+  _language: string = getLanguage();
 
   @observable
   dialogs: any[] = []

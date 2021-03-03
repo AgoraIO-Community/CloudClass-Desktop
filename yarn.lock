@@ -5648,15 +5648,15 @@ agora-electron-sdk@education290:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
-agora-rtc-sdk-ng@4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.2.1.tgz#2cca0acc4cce07c347e10eed3470851552be9469"
-  integrity sha512-c8LJMd7jeUhtqT7Mr/MHfblVVcZAzPge+IJ1Lkl08VsFPIAcdiNZah7gdvFvYmO97QreODkRQjVFNwqW283S+w==
+agora-rtc-sdk-ng@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.3.0.tgz?cache=0&sync_timestamp=1611735273369&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fagora-rtc-sdk-ng%2Fdownload%2Fagora-rtc-sdk-ng-4.3.0.tgz#08dba32fbf4777cffd7069f3c3e66a33b954c1c5"
+  integrity sha1-CNujL79Hd8/9cGnzw+ZqM7lUwcU=
 
-agora-rtm-sdk@1.4.1-201:
-  version "1.4.1-201"
-  resolved "https://registry.yarnpkg.com/agora-rtm-sdk/-/agora-rtm-sdk-1.4.1-201.tgz#082af9159d124b9ae1bf7918186318fa1b8a1381"
-  integrity sha512-FBBC54VCegrNoycjArscghJ+li4vMYfmdnxFYjbJmH/b7KSVDP/9FGnxffpk1hF2BLkxGWwhAiCA+NLNMzEoAg==
+agora-rtm-sdk@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.npm.taobao.org/agora-rtm-sdk/download/agora-rtm-sdk-1.4.2.tgz#d4595b27e2bc24d554403397f0ae1e5caa5bb602"
+  integrity sha1-1FlbJ+K8JNVUQDOX8K4eXKpbtgI=
 
 airbnb-js-shims@^2.2.1:
   version "2.2.1"

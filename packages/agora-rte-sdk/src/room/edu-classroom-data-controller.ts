@@ -284,8 +284,8 @@ export class EduClassroomDataController {
         // TODO: 
         case EduChannelMessageCmdType.userListBatchUpdated: {
           EduLogger.info(`[${this._id}] before [${seqId}]#userListBatchUpdated: `, JSON.stringify(data))
-          // const user = MessageSerializer.getChangedUser(data)
-          // this.updateUserState(user)
+          const user = MessageSerializer.getChangedUser(data)
+          this.updateUserState(user)
           // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, data)
           // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, user)
           break;
