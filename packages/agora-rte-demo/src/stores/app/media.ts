@@ -115,6 +115,15 @@ export class MediaStore {
 
   id: string = uuidv4()
 
+  @computed
+  get device(): boolean {
+    if (this.rendererOutputFrameRate[`${0}`] > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   constructor(appStore: AppStore) {
     console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
@@ -269,32 +278,19 @@ export class MediaStore {
     reaction(() => JSON.stringify([
       this.appStore.roomInfo.roomUuid,
       this.appStore.roomInfo.userUuid,
-      this.appStore.isElectron,
-      this.rendererOutputFrameRate[`${0}`]]), () => {
-      if (this.appStore.isElectron && this.appStore.roomInfo.roomUuid && this.appStore.roomInfo.userUuid) {
-        if (this.rendererOutputFrameRate[`${0}`] <= 0) {
-          eduSDKApi.reportCameraState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 0
-          }).catch((err) => {
-            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-          }).then(() => {
-            BizLogger.info(`[CAMERA] report camera device not working`)
-          })
-        }
-        
-        if (this.rendererOutputFrameRate[`${0}`] > 0) {
-          eduSDKApi.reportCameraState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 1
-          }).catch((err) => {
-            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-          }).then(() => {
-            BizLogger.info(`[CAMERA] report camera device working`)
-          })
-        }
+      this.device
+    ]), (data: string) => {
+      const [roomUuid, userUuid, device] = JSON.parse(data)
+      if (roomUuid && userUuid) {
+        eduSDKApi.reportCameraState({
+          roomUuid: roomUuid,
+          userUuid: userUuid,
+          state: +device
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+        }).then(() => {
+          BizLogger.info(`[CAMERA] report camera device not working`)
+        })
       }
     })
   }
@@ -306,7 +302,9 @@ export class MediaStore {
   speakers: Record<number, number> = {}
 
   @observable
-  rendererOutputFrameRate: Record<number, number> = {}
+  rendererOutputFrameRate: Record<number, number> = {
+    0: 0
+  }
 
   @observable
   networkQuality: string = 'unknown'
@@ -324,7 +322,9 @@ export class MediaStore {
     this.autoplay = false
     this.totalVolume = 0
     this.speakers = {}
-    this.rendererOutputFrameRate = {}
+    this.rendererOutputFrameRate = {
+      0: 0
+    }
   }
 
   @observable
