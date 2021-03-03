@@ -467,10 +467,9 @@ export class SceneStore extends SimpleInterval {
       }, 10000, 100)
     } catch (err) {
       this.unLockCamera()
-      BizLogger.info('[demo] action in openCamera >>> openCamera')
       const error = GenericErrorWrapper(err)
-      BizLogger.warn(`${error}`)
-      throw err
+      BizLogger.warn('[demo] action in openCamera >>> openCamera', error)
+      throw error
     }
   }
 
@@ -506,8 +505,11 @@ export class SceneStore extends SimpleInterval {
       ])
       this.closingCamera = false
     } catch (err) {
-      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
+      this.unLockCamera()
       this.closingCamera = false
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
     }
   }
 
@@ -517,16 +519,18 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
     }
+    this.openingCamera = true
     try {
-      this.openingCamera = true
       await Promise.all([
         this.openCamera(),
         this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
       this.openingCamera = false
     } catch (err) {
-      BizLogger.info(`[demo] [local] muteLocalCamera, ${err}`)
       this.openingCamera = false
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
     }
   }
 
@@ -537,9 +541,25 @@ export class SceneStore extends SimpleInterval {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
     }
 
-    await this.closeMicrophone()
-    this.unLockMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': false})
+    this.loadingMicrophone = true
+    try {
+      await this.closeMicrophone()
+      this.unLockMicrophone()
+
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': false}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === false
+        }, 10000, 200)
+      ])
+      this.loadingMicrophone = false
+    }catch(err) {
+      this.unLockMicrophone()
+      this.loadingMicrophone = false
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalmicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action 
@@ -548,8 +568,24 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
     }
-    await this.openMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': true})
+
+    this.loadingMicrophone = true
+
+    try {
+      await this.openMicrophone()
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': true}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === true
+        }, 10000, 200)
+      ])
+      this.loadingMicrophone = false
+    }catch(err){
+      this.loadingMicrophone = false
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] unmuteLocalMicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action

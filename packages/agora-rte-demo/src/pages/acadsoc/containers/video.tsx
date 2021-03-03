@@ -125,7 +125,7 @@ export const TeacherVideo = observer(() => {
         videoState={userStream.video}
         audioState={userStream.audio}
         videoLoading={sceneStore.openingCamera || sceneStore.closingCamera}
-        audioLoading={false}
+        audioLoading={sceneStore.loadingMicrophone}
         boardLoading={false}
         onClick={debounce(handleClick, 200)}
         style={{
