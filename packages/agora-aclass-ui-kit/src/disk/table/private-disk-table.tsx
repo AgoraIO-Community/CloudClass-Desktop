@@ -20,6 +20,7 @@ import IconAudio from '../assets/icon-audio.png'
 import IconTxt from '../assets/icon-txt.png'
 import IconPicture from '../assets/icon-pic.png'
 import dayjs from 'dayjs';
+import { useEffect } from 'react';
 
 export interface Data {
   calories: any;
@@ -197,6 +198,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<any>('calories')
   const [selected, setSelected] = React.useState<string[]>([])
+  const [isOpenToast, setIsOpenToast] = React.useState(props.isOpenToast)
   const [openToast, setOpenToast] = React.useState({
     open: false,
     toastMessage: '',
@@ -356,13 +358,15 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
       </Table>
     )
   }
-
-
+  useEffect(() => {
+    console.log('isOpenToast disk,props.isOpenToast is:', props.isOpenToast)
+    setIsOpenToast(props.isOpenToast)
+  }, [props.isOpenToast])
   const render = () => {
     return (
       <>
         <DiskToast
-          onOpenToast={props.isOpenToast}
+          onOpenToast={isOpenToast}
           onClose={handleCloseAlert}
           message={props.toastMessage?.message|| ''}
           //@ts-ignore
