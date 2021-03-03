@@ -64,6 +64,7 @@ const DiskToast = (props: DiskToastProps) => {
         setOpenToast(false)
       }, 2000);
     }
+    setOpenToast(props.onOpenToast)
     return () => {
       clearTimeout(timeoutId);
     };

@@ -64,8 +64,8 @@ const NetworkDisk = observer((props: any) => {
     fileID:''
   })
   // const [cancelFileList,setCancelFileList]= useState<string[]>([])
-  const [toastMessage,setToastMessage]= useState({type:'',message:''})
-  const [isOpenToast,setIsOpenToast]= useState(false)
+  const [toastMessage, setToastMessage] = useState({ type: '', message: '' })
+  const [isOpenToast, setIsOpenToast] = useState(false)
 
   const handleClose = () => {
     console.log('close network disk', props.openDisk)
@@ -127,7 +127,7 @@ const NetworkDisk = observer((props: any) => {
           setTimeout(() => {
             // setProcess(0)
             console.log('onProgress',isOpenToast)
-            !isOpenToast && setIsOpenToast(true)
+            setIsOpenToast(true)
             setIsUploadFile(false)
           }, 1000)
           setToastMessage({
