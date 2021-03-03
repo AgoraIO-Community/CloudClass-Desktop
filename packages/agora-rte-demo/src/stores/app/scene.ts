@@ -1412,7 +1412,20 @@ export class SceneStore extends SimpleInterval {
         await this.mediaService.muteRemoteAudio(+stream.streamUuid, false)
       }
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream)
+
+      try {
+        this.setLoadingMicrophone(true, true)
+        await Promise.all([
+          await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream),
+          this.waitFor(() => {
+            return !!stream?.hasAudio === false
+          }, 10000, 200)
+        ])
+        this.setLoadingMicrophone(false, true)
+      }catch(err) {
+        this.setLoadingMicrophone(true, true)
+        throw err
+      }
     }
   }
 

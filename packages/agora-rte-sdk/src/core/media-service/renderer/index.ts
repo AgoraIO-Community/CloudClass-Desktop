@@ -126,6 +126,22 @@ export class LocalUserRenderer extends UserRenderer {
               })
             }
 
+            this.fpsTimer = setInterval(() => {
+              let fps = 0
+              // @ts-ignore
+              if(window.bufferMap && window.bufferMap[0]){
+                // @ts-ignore
+                fps = window.bufferMap[0].fps || 0
+              }
+
+              this.renderFrameRate = fps
+              if(fps === 0) {
+                this.freezeCount++
+              } else {
+                this.freezeCount = 0
+              }
+            }, 1000)
+
             this.el = document.createElement('canvas')
             this.el.id = `agoraLocal-${this.uid}`
             this.el.style.position = 'absolute'
