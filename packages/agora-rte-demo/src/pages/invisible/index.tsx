@@ -14,11 +14,11 @@ export const Invisible = observer(() => {
   const roomRef = useRef<any>()
   const setRoomInfo = async () => {
     console.log('useAudienceParams',useAudienceParams())
-    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience', userName = 'audience', duration = 1000 }: any = useAudienceParams()
+    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience', userName = 'audience', duration = 1000,appId }: any = useAudienceParams()
     const uid = `audience${userRole}`
     const { rtmToken } = await homeApi.login(uid)
     AgoraEduSDK.config({
-      appId: `${REACT_APP_AGORA_APP_ID}`,
+      appId: appId || `${REACT_APP_AGORA_APP_ID}`,
     })
     const config = {
       rtmUid: userUuid,

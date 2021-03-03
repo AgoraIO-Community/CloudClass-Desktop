@@ -25,10 +25,10 @@ window.AgoraEduSDK = AgoraEduSDK
 if (isElectron) {
   EduManager.useElectron()
 }
-const search = new URLSearchParams(location.href.split('?').pop())
+
 eduSDKApi.updateConfig({
   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-  appId: search.get('appId') || `${REACT_APP_AGORA_APP_ID}`,
+  appId: `${REACT_APP_AGORA_APP_ID}`,
 })
 
 // AgoraEduSDK.config({
