@@ -126,13 +126,13 @@ const NetworkDisk = observer((props: any) => {
         if (isLastProgress && parent == 100) {
           setTimeout(() => {
             // setProcess(0)
-            console.log('onProgress',isOpenToast)
+            console.log('isOpenToast disk，onProgress：',isOpenToast)
             setIsOpenToast(true)
             setIsUploadFile(false)
           }, 1000)
           setToastMessage({
             type: 'success',
-            message: '上传成功'
+            message: t('disk.uploadSuccess')
           })
         }
         // if (cancelFileList.includes(resourceUuid) && progress === 100) {
