@@ -385,6 +385,9 @@ export const HomePage = observer(() => {
             }}>
              {t("aclass.home.join_test_room")}
             </Button>
+            <Button target="_blank" style={{margin: '5px'}} variant="contained" component="a" color="primary" href={`?lang=${uiStore.language}/#/download`}>
+              {t("aclass.downloadPage")}
+            </Button>
             </div>
           </div>
           // <div className={`cover-placeholder-web ${t('home.cover_class')}`}></div>

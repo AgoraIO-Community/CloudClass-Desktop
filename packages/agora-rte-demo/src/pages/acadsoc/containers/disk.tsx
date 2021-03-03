@@ -4,9 +4,9 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import { IconButton} from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';
-import React, { useCallback, useRef, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { DiskManagerDialog, UploadFile, DiskButton } from 'agora-aclass-ui-kit'
-import { useBoardStore, useDiskStore } from '@/hooks'
+import { useBoardStore } from '@/hooks'
 import MD5 from 'js-md5'
 import { HandleUploadType } from '@/services/upload-service'
 import { PPTKind } from 'white-web-sdk'
@@ -54,7 +54,6 @@ const UploadingProgress = observer((props: any) => {
 const NetworkDisk = observer((props: any) => {
 
   const boardStore = useBoardStore()
-  const diskStore = useDiskStore()
   const [process,setProcess] = useState<number>(0)
   const [isUploadFile,setIsUploadFile] = useState<boolean>(false)
   const [isTrans,setIsTrans] = useState<boolean>(false)
@@ -222,30 +221,6 @@ const NetworkDisk = observer((props: any) => {
     )
   }
 
-  // const donwloadAllComponent = () => {
-  //   return (
-  //     <DiskButton onClick={handleDownloadAll} id="disk-button-donwload-all" style={{ marginRight: 20 }} color={'primary'} text={t('disk.downloadAll')} />
-  //   )
-  // }
-
-  // const deleteAllCache = () => {
-  //   return (
-  //     <DiskButton id="disk-button-clear-storage" color={'secondary'} text={t('disk.clearCache')} />
-  //   )
-  // }
-
-  // const singleDonwload = () => {
-  //   return (
-  //     <DiskButton disabled={boardStore.donwloading} onClick={handleDownloadSingle} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} color={'primary'} />
-  //   )
-  // }
-
-  // const singleDelete = () => {
-  //   return (
-  //     <DiskButton id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.delete')} color={'primary'} />
-  //   )
-  // }
-
   const handleDelete = async (selected: any) => {
     try{
       if (selected.length) {
@@ -332,9 +307,9 @@ const NetworkDisk = observer((props: any) => {
       uploadListComponent={uploadListComponent()}
       isOpenToast={isOpenToast}
       toastMessage={toastMessage}
-      // donwloadAllComponent={donwloadAllComponent()}
+      // downloadAllComponent={downloadAllComponent()}
       // deleteAllCacheComponent={deleteAllCache()}
-      // singleDownloadComponent={singleDonwload()}
+      // singleDownloadComponent={singledownload()}
       // singleDeleteComponent={singleDelete()}
       // handleOpenCourse={handleOpenCourse}
       // showOpenItem={true}

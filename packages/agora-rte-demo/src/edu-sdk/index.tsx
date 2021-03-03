@@ -9,9 +9,10 @@ import { AppStore } from "@/stores/app"
 import { unmountComponentAtNode } from "react-dom"
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
 import { eduSDKApi } from '@/services/edu-sdk-api'
-import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption } from './validator'
-import { diskAppStore, DiskAppStore, DiskLifeStateEnum } from '@/monolithic/disk/disk-store';
+import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption, checkDiskOption } from './validator'
 import { controller, EduSDKInternalStateEnum } from './controller';
+import { StorageStore } from '@/stores/storage';
+import { StorageDisk } from '@/monolithic/disk';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -125,6 +126,12 @@ export type ReplayOption = {
   language: LanguageEnum
 }
 
+export type OpenDiskOption = {
+  listener: ListenerCallback, // launch状态
+  language: LanguageEnum, // 国际化
+  courseWareList: CourseWareList // 课件列表
+}
+
 export type AgoraEduBoardScene = SceneDefinition
 
 export type AgoraEduCourseWare = {
@@ -143,31 +150,6 @@ export type DiskOption = {
 export type DelegateType = {
   delegate?: AppStore
 }
-
-// class ReplayRoom {
-
-//   private readonly store!: ReplayAppStore
-//   private dom!: Element
-
-//   constructor(store: ReplayAppStore, dom: Element) {
-//     this.store = store
-//     this.dom = dom
-//   }
-
-//   async destroy () {
-//     await this.store.destroy()
-//     unmountComponentAtNode(this.dom)
-//     instances["replay"] = undefined
-//   }
-// }
-
-// const stores: Map<string, AppStore> = new Map()
-
-const locks: Map<string, boolean> = new Map()
-
-// const instances: Record<string, any> = {
-
-// }
 
 const roomTypes = {
   [EduRoomTypeEnum.Room1v1Class]: {
@@ -313,29 +295,6 @@ export class AgoraEduSDK {
     const unlock = controller.replayController.acquireLock()
     try {
       checkReplayOption(dom, option)
-
-      // const store = new ReplayAppStore({
-      //   config: {
-      //     agoraAppId: sdkConfig.configParams.appId,
-      //     agoraNetlessAppId: option.whiteboardAppId,
-      //     enableLog: true,
-      //     sdkDomain: sdkConfig.sdkDomain,
-      //     rtmUid: '',
-      //     rtmToken: '',
-      //     courseWareList: [],
-      //   },
-      //   language: option.language,
-      //   replayConfig: {
-      //     whiteboardUrl: option.videoUrl,
-      //     logoUrl: '',
-      //     whiteboardId: option.whiteboardId,
-      //     whiteboardToken: option.whiteboardToken,
-      //     startTime: option.beginTime,
-      //     endTime: option.endTime,
-      //   },
-      // })
-
-      // controller.replayController.create(store, <ReplayRoom store={store}/>, dom, option.listener)
       unlock()
     } catch (err) {
       unlock()
@@ -345,9 +304,30 @@ export class AgoraEduSDK {
     return controller.replayController.getClassRoom()
   }
 
-  static openDisk(dom: Element) {
-    if (diskAppStore.status === DiskLifeStateEnum.init) {
-      throw GenericErrorWrapper("already disk")
+  static async openDisk(dom: Element, option: OpenDiskOption) {
+    if (controller.storageController.hasCalled) {
+      throw GenericErrorWrapper("already opened")
     }
+
+    const unlock = controller.storageController.acquireLock()
+
+    try {
+      unlock()
+      checkDiskOption(dom, option)
+
+      const store = new StorageStore({
+        courseWareList: option.courseWareList,  
+        language: option.language
+      })
+
+      await store.refreshState()
+
+      controller.storageController.create(store, <StorageDisk store={store} />, dom, option.listener)
+    } catch (err) {
+      unlock()
+      throw GenericErrorWrapper(err)
+    }
+
+    return controller.storageController.getClassRoom()
   }
 }

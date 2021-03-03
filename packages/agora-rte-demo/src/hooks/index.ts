@@ -1,3 +1,4 @@
+import { StorageStore } from '@/stores/storage';
 import { HomeStore } from '@/stores/app/home';
 import { SceneStore } from './../stores/app/scene';
 import { MediaStore } from './../stores/app/media';
@@ -49,11 +50,6 @@ export const usePretestStore = (): PretestStore => {
   return context.store.pretestStore
 }
 
-export const useDiskStore = (): DiskStore => {
-  const context = useContext<appContext>(MobXProviderContext)
-  return context.store.diskStore
-}
-
 export const useHomeStore = (): HomeStore => {
   const context = useContext<HomeContext>(MobXProviderContext)
   return context.store
@@ -77,4 +73,11 @@ export const useAudienceParams = (params?: string): string | { [key: string]: an
     return audienceParams
   }
   return urlParams.get(params)
+}
+
+export type StorageContext = Record<string, StorageStore>
+
+export const useStorageStore = (): StorageStore => {
+  const context = useContext<StorageContext>(MobXProviderContext)
+  return context.store
 }

@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "downloadPage": "Download Page",
     "home": {
       "material_list": "Update Material List",
       "download_course": "Download Material",
