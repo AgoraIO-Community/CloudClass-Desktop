@@ -100,6 +100,14 @@ export type DeviceInfo = {
   microphoneName: string
 }
 
+//TODO: cef release
+window.onbeforeunload = () => {
+  if (window.agoraBridge) {
+    AgoraCEF.AgoraRtcEngine.release()
+    console.log("[agora-apaas] cef release ", Date.now())
+  }
+}
+
 export class AppStore implements ClassRoomAbstractStore {
   // stores
   uiStore!: UIStore;
@@ -225,16 +233,9 @@ export class AppStore implements ClassRoomAbstractStore {
     this.sharing = false
     this.customScreenShareWindowVisible = false
     this.customScreenShareItems = []
-    window.removeEventListener('beforeunload', this._handleBeforeUnload)
   }
 
   id: string = uuidv4()
-
-  private _handleBeforeUnload () {
-    if (window.agoraBridge) {
-      AgoraCEF.AgoraRtcEngine.release()
-    }
-  }
 
   constructor(params: AppStoreInitParams) {
     this.params = params
@@ -243,7 +244,6 @@ export class AppStore implements ClassRoomAbstractStore {
     console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
-    window.addEventListener('beforeunload', this._handleBeforeUnload);
     //@ts-ignore
     // window.rtcEngine.on('error', (evt) => {
     //   console.log('electron ', evt)
@@ -252,7 +252,6 @@ export class AppStore implements ClassRoomAbstractStore {
 
       //@ts-ignore
       if (window.agoraBridge) {
-        AgoraCEF.AgoraRtcEngine.release()
         const cefClient = new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId)
         console.log("#### cef initialize", cefClient)
         //@ts-ignore

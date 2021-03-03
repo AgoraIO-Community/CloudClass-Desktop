@@ -3,7 +3,7 @@ import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed, reaction } from 'mobx';
-import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
+import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -198,12 +198,14 @@ export class MediaStore {
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
@@ -317,6 +319,7 @@ export class MediaStore {
   reset() {
     this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
+    EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`)
     this.networkQuality = 'unknown'
     this.autoplay = false
     this.totalVolume = 0
@@ -376,6 +379,7 @@ export class MediaStore {
   @action
   resetRoomState() {
     this.remoteUsersRenderer = []
+    EduLogger.info(`[agora-apaas] [media#renderers] resetRoomState clear remoteUsersRenderer`)
     this.networkQuality = 'unknown'
     this.autoplay = false
     this._delay = 0

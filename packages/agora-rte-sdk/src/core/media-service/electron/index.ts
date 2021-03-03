@@ -421,6 +421,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   private fire(...eventArgs: any[]) {
     const [eventName, ...args] = eventArgs
+
+    if (['user-unpublished', 'user-published'].includes(eventName)) {
+      EduLogger.info(`[agora-apaas] ${eventName} ${JSON.stringify(args)}`)
+    }
     // EduLogger.info(eventName, ...args)
     this.emit(eventName, ...args)
   }
@@ -611,20 +615,30 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     // TODO: CEF event handlers
     this.client.on('UserJoined', (uid: number, elapsed: number) => {
-      console.log("[agora-rte-sdk] userjoined", uid)
+      EduLogger.info('[agora-apaas] cef platform UserJoined ', uid, elapsed)
       this.fire('user-published', {
         user: {
           uid: convertUid(uid),
+        },
+        caller: {
+          name: 'UserJoined',
+          uid,
+          elapsed
         }
       })
     })
     //or event removeStream
     this.client.on('UserOffline', (uid: number, elapsed: number) => {
-      console.log("[agora-rte-sdk] removestream", uid)
+      EduLogger.info('[agora-apaas] cef platform UserOffline ', uid, elapsed)
       this.fire('user-unpublished', {
         user: {
           uid: convertUid(uid),
         },
+        caller: {
+          name: 'UserOffline',
+          uid,
+          elapsed
+        }
       })
     })
     this.client.on('ConnectionStateChanged', (state: any, reason: any) => {
@@ -710,22 +724,34 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RemoteVideoStateChanged', (uid: number, state: number, reason: any) => {
-      console.log('remoteVideoStateChanged ', reason, uid)
-      if (reason === 5) {
+      EduLogger.info('[agora-apaas] cef platform remoteVideoStateChanged ', reason, uid)
+      if ([5, 7, 8].includes(reason)) {
         this.fire('user-unpublished', {
           user: {
             uid: convertUid(uid),
           },
           mediaType: 'video',
+          caller: {
+            name: 'RemoteVideoStateChanged',
+            uid, 
+            state,
+            reason
+          }
         })
       }
 
-      if (reason === 6) {
+      if ([6, 9].includes(reason)) {
         this.fire('user-published', {
           user: {
             uid: convertUid(uid),
           },
           mediaType: 'video',
+          caller: {
+            name: 'RemoteVideoStateChanged',
+            uid, 
+            state,
+            reason
+          }
         })
       }
     })
@@ -734,16 +760,21 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
       // remote user disable audio
       if (reason === 5) {
-        this.fire('user-unpublished', {
-          user: {
-            uid: convertUid(uid),
-          },
-          mediaType: 'audio',
-        })
+        // this.fire('user-unpublished', {
+        //   user: {
+        //     uid: convertUid(uid),
+        //   },
+        //   mediaType: 'audio',
+        //   caller: {
+        //     name: 'RemoteAudioStateChanged',
+        //     reason,
+        //     state,
+        //   }
+        // })
       }
 
       if (reason === 6) {
-        console.log('user-published audio', uid)
+        // console.log('user-published audio', uid)
         // this.fire('user-published', {
         //   user: {
         //     uid,
