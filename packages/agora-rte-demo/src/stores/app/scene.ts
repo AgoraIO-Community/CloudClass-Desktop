@@ -189,9 +189,12 @@ export class SceneStore extends SimpleInterval {
   @action
   reset() {
     this.mediaService.reset()
-    this.openingCamera = false
-    this.closingCamera = false
-    this.loadingMicrophone = false
+    this.openingTeacherCamera = false
+    this.closingTeacherCamera = false
+    this.loadingTeacherMicrophone = false
+    this.openingStudentCamera = false
+    this.closingStudentCamera = false
+    this.loadingStudentMicrophone = false
     // this.cameraLabel = '';
     // this.microphoneLabel = '';
     // this._cameraId = '';
@@ -427,13 +430,63 @@ export class SceneStore extends SimpleInterval {
   }
 
   @observable
-  openingCamera: boolean = false
+  openingTeacherCamera: boolean = false
 
   @observable
-  closingCamera: boolean = false
+  closingTeacherCamera: boolean = false
 
   @observable
-  loadingMicrophone: boolean = false
+  openingStudentCamera: boolean = false
+
+  @observable
+  closingStudentCamera: boolean = false
+
+  @observable
+  loadingTeacherMicrophone: boolean = false
+
+  @observable
+  loadingStudentMicrophone: boolean = false
+
+  @action
+  setOpeningCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.openingStudentCamera = value) : (this.openingTeacherCamera = value)
+    } else {
+      isRemote ? (this.openingTeacherCamera = value) : (this.openingStudentCamera = value)
+    }
+  }
+
+  @action
+  setClosingCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.closingStudentCamera = value): (this.closingTeacherCamera = value)
+    } else {
+      isRemote ? (this.closingTeacherCamera = value): (this.closingStudentCamera = value)
+    }
+  }
+
+  @action
+  setLoadingMicrophone(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.loadingStudentMicrophone = value): (this.loadingTeacherMicrophone = value)
+    } else {
+      isRemote ? (this.loadingTeacherMicrophone = value): (this.loadingStudentMicrophone = value)
+    }
+  }
+
+  get openingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.openingTeacherCamera : this.openingStudentCamera
+  }
+
+
+  get closingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.closingTeacherCamera : this.closingStudentCamera
+  }
+
+
+  get loadingMicrophone(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.loadingTeacherMicrophone : this.loadingStudentMicrophone
+  }
 
   @action
   async openCamera(option?: SceneVideoConfiguration) {
@@ -490,7 +543,7 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock || this.closingCamera === true) {
       return BizLogger.warn('[demo] openCamera locking')
     }
-    this.closingCamera = true
+    this.setClosingCamera(true, false)
     try {
       BizLogger.info('[demo] [local] muteLocalCamera')
       if (this._cameraRenderer) {
@@ -503,10 +556,10 @@ export class SceneStore extends SimpleInterval {
           return this.cameraEduStream.hasVideo === false
         }, 10000, 200)
       ])
-      this.closingCamera = false
+      this.setClosingCamera(false, false)
     } catch (err) {
       this.unLockCamera()
-      this.closingCamera = false
+      this.setClosingCamera(false, false)
       const error = GenericErrorWrapper(err)
       BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
       throw error
@@ -519,15 +572,15 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
     }
-    this.openingCamera = true
+    this.setOpeningCamera(true, false)
     try {
       await Promise.all([
         this.openCamera(),
         this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
-      this.openingCamera = false
+      this.setOpeningCamera(false, false)
     } catch (err) {
-      this.openingCamera = false
+      this.setOpeningCamera(false, false)
       const error = GenericErrorWrapper(err)
       BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
       throw error
@@ -541,7 +594,7 @@ export class SceneStore extends SimpleInterval {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
     }
 
-    this.loadingMicrophone = true
+    this.setLoadingMicrophone(true, false)
     try {
       await this.closeMicrophone()
       this.unLockMicrophone()
@@ -552,10 +605,10 @@ export class SceneStore extends SimpleInterval {
           return this.cameraEduStream.hasAudio === false
         }, 10000, 200)
       ])
-      this.loadingMicrophone = false
+      this.setLoadingMicrophone(false, false)
     }catch(err) {
       this.unLockMicrophone()
-      this.loadingMicrophone = false
+      this.setLoadingMicrophone(false, false)
       const error = GenericErrorWrapper(err)
       BizLogger.info(`[demo] [local] muteLocalmicrophone, ${error}`)
       throw error
@@ -569,7 +622,7 @@ export class SceneStore extends SimpleInterval {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
     }
 
-    this.loadingMicrophone = true
+    this.setLoadingMicrophone(true, false)
 
     try {
       await this.openMicrophone()
@@ -579,9 +632,9 @@ export class SceneStore extends SimpleInterval {
           return this.cameraEduStream.hasAudio === true
         }, 10000, 200)
       ])
-      this.loadingMicrophone = false
+      this.setLoadingMicrophone(false, false)
     }catch(err){
-      this.loadingMicrophone = false
+      this.setLoadingMicrophone(false, false)
       const error = GenericErrorWrapper(err)
       BizLogger.info(`[demo] [local] unmuteLocalMicrophone, ${error}`)
       throw error

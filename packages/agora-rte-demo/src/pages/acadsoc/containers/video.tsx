@@ -124,8 +124,8 @@ export const TeacherVideo = observer(() => {
         disableButton={disableButton}
         videoState={userStream.video}
         audioState={userStream.audio}
-        videoLoading={sceneStore.openingCamera || sceneStore.closingCamera}
-        audioLoading={sceneStore.loadingMicrophone}
+        videoLoading={sceneStore.openingTeacherCamera || sceneStore.closingTeacherCamera}
+        audioLoading={sceneStore.loadingTeacherMicrophone}
         boardLoading={false}
         onClick={debounce(handleClick, 200)}
         style={{
@@ -241,8 +241,8 @@ export const StudentVideo = observer(() => {
         boardState={boardStore.lockBoard ? false : true}
         videoState={userStream.video}
         audioState={userStream.audio}
-        videoLoading={sceneStore.openingCamera || sceneStore.closingCamera}
-        audioLoading={false}
+        videoLoading={sceneStore.openingStudentCamera || sceneStore.closingStudentCamera}
+        audioLoading={sceneStore.loadingStudentMicrophone}
         boardLoading={false}
         onClick={debounce(handleClick, 200)}
         style={{
