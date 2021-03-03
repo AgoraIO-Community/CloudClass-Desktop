@@ -132,7 +132,7 @@ const NetworkDisk = observer((props: any) => {
           }, 1000)
           setToastMessage({
             type: 'success',
-            message: t('uploadSuccess')
+            message: t('disk.uploadSuccess')
           })
         }
         // if (cancelFileList.includes(resourceUuid) && progress === 100) {
