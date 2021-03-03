@@ -303,7 +303,7 @@ export class MediaStore {
 
   @observable
   rendererOutputFrameRate: Record<number, number> = {
-    0: 0
+    0: 1
   }
 
   @observable
@@ -323,7 +323,7 @@ export class MediaStore {
     this.totalVolume = 0
     this.speakers = {}
     this.rendererOutputFrameRate = {
-      0: 0
+      0: 1
     }
   }
 
