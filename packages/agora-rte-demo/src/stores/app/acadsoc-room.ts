@@ -1049,7 +1049,14 @@ export class AcadsocRoomStore extends SimpleInterval {
           // await this.sceneStore.prepareMicrophone()
           if (this.sceneStore._cameraEduStream) {
             if (this.sceneStore._cameraEduStream.hasVideo) {
-              await this.sceneStore.openCamera(this.videoEncoderConfiguration)
+              this.appStore.sceneStore.setOpeningCamera(true, false)
+              try {
+                await this.sceneStore.openCamera(this.videoEncoderConfiguration)
+                this.appStore.sceneStore.setOpeningCamera(false, false)
+              } catch (err) {
+                this.appStore.sceneStore.setOpeningCamera(false, false)
+                throw err
+              }
             } else {
               await this.sceneStore.closeCamera()
             }
@@ -1134,10 +1141,26 @@ export class AcadsocRoomStore extends SimpleInterval {
   async leave() {
     try {
       this.sceneStore.joiningRTC = false
-      await this.sceneStore.leaveRtc()
-      await this.appStore.boardStore.leave()
-      await this.eduManager.logout()
-      await this.roomManager?.leave()
+      try {
+        await this.sceneStore.leaveRtc()
+      } catch (err) {
+        BizLogger.error(`${err}`)
+      }
+      try {
+        await this.appStore.boardStore.leave()
+      } catch (err) {
+        BizLogger.error(`${err}`)
+      }
+      try {
+        await this.eduManager.logout()
+      } catch (err) {
+        BizLogger.error(`${err}`)
+      }
+      try {
+        await this.roomManager?.leave()
+      } catch (err) {
+        BizLogger.error(`${err}`)
+      }
       this.appStore.uiStore.addToast(t('toast.successfully_left_the_business_channel'))
       this.delInterval('timer')
       this.reset()

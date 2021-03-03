@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import React, { useCallback, useMemo, useRef, useEffect } from 'react'
+import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react'
 import {Video, Volume} from 'agora-aclass-ui-kit'
 import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
@@ -36,6 +36,7 @@ const shouldDisable = (resource: string, isLocal: boolean, role: EduRoleTypeEnum
   }
   return true
 }
+
 export interface VideoMediaStream {
   streamUuid: string,
   userUuid: string,
@@ -48,23 +49,15 @@ export interface VideoMediaStream {
   placeHolderType: any,
   placeHolderText: string,
   volumeLevel: number,
-  notFreeze: boolean
+  notFreeze: boolean,
+  camIssue: boolean
 }
 
-const VideoPlaceholder = () => (
+const CameraDefaultPlaceholder = () => (
   <div className={styles.cameraPlaceholder}>
-  <div className={styles.camIcon}></div>
+  <div className={styles.loadingCamera}></div>
     <div className={styles.text}>
-      {t('placeholder.noCamera')}
-    </div>
-  </div>
-)
-
-const ClosedCameraPlaceholder = () => (
-  <div className={styles.cameraPlaceholder}>
-  <div className={styles.camIcon}></div>
-    <div className={styles.text}>
-      {t('placeholder.closeCamera')}
+      {t('placeholder.cameraLoading')}
     </div>
   </div>
 )
@@ -83,9 +76,17 @@ export const TeacherVideo = observer(() => {
     const {uid} = type
     if (type.sourceType === 'video') {
       if (type.enabled) {
-        await sceneStore.muteVideo(uid, isLocal)
+        try {
+          await sceneStore.muteVideo(uid, isLocal)
+        } catch (err) {
+          throw err
+        }
       } else {
-        await sceneStore.unmuteVideo(uid, isLocal)
+        try {
+          await sceneStore.unmuteVideo(uid, isLocal)
+        } catch (err) {
+          throw err
+        }
       }
     }
     if (type.sourceType === 'audio') {
@@ -123,6 +124,9 @@ export const TeacherVideo = observer(() => {
         disableButton={disableButton}
         videoState={userStream.video}
         audioState={userStream.audio}
+        videoLoading={sceneStore.openingTeacherCamera || sceneStore.closingTeacherCamera}
+        audioLoading={sceneStore.loadingTeacherMicrophone}
+        boardLoading={false}
         onClick={debounce(handleClick, 200)}
         style={{
           flex: 1,
@@ -133,9 +137,7 @@ export const TeacherVideo = observer(() => {
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >
-        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-        { !!userStream.video === false ? <ClosedCameraPlaceholder /> : null}
-        { userStream.notFreeze ? null : <VideoPlaceholder /> }
+        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} /*placeholderComponent={<CameraDefaultPlaceholder />}*/ className={styles.videoRenderer} /> : null}
         { userStream.audio ? 
           <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
             <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />
@@ -174,9 +176,17 @@ export const StudentVideo = observer(() => {
     const {uid} = type
     if (type.sourceType === 'video') {
       if (type.enabled) {
-        await sceneStore.muteVideo(uid, isLocal)
+        try {
+          await sceneStore.muteVideo(uid, isLocal)
+        } catch (err) {
+          throw err
+        }
       } else {
-        await sceneStore.unmuteVideo(uid, isLocal)
+        try {
+          await sceneStore.unmuteVideo(uid, isLocal)
+        } catch (err) {
+          throw err
+        }
       }
     }
     if (type.sourceType === 'audio') {
@@ -231,6 +241,9 @@ export const StudentVideo = observer(() => {
         boardState={boardStore.lockBoard ? false : true}
         videoState={userStream.video}
         audioState={userStream.audio}
+        videoLoading={sceneStore.openingStudentCamera || sceneStore.closingStudentCamera}
+        audioLoading={sceneStore.loadingStudentMicrophone}
+        boardLoading={false}
         onClick={debounce(handleClick, 200)}
         style={{
           flex: 1,
@@ -242,10 +255,7 @@ export const StudentVideo = observer(() => {
         placeHolderType={userStream.placeHolderType}
         placeHolderText={userStream.placeHolderText}
       >
-        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<VideoPlaceholder />} className={styles.videoRenderer} /> : null}
-        { !!userStream.video === false ? <ClosedCameraPlaceholder /> : null}
-        { userStream.notFreeze ? null : <VideoPlaceholder /> }
-        { !!userStream}
+        { userStream.renderer && !!userStream.video ? <RendererPlayer key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ``} track={renderer} id={userStream.streamUuid} placeholderComponent={<CameraDefaultPlaceholder />} className={styles.videoRenderer} /> : null}
         { userStream.audio ? 
         <div style={{position: 'absolute', right: 7, bottom: 32, zIndex: 999}}>
           <Volume foregroundColor={'rgb(228 183 23)'} currentVolume={userStream.volumeLevel} maxLength={5} width={'18px'} height={'3px'} />

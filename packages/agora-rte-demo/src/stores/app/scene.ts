@@ -1,12 +1,13 @@
+import { LocalVideoStreamState } from './media';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { Mutex } from './../../utils/mutex';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { RoomApi } from './../../services/room-api';
 import { AppStore } from '@/stores/app/index';
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, reaction } from 'mobx';
 import { get } from 'lodash';
 import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
@@ -188,6 +189,12 @@ export class SceneStore extends SimpleInterval {
   @action
   reset() {
     this.mediaService.reset()
+    this.openingTeacherCamera = false
+    this.closingTeacherCamera = false
+    this.loadingTeacherMicrophone = false
+    this.openingStudentCamera = false
+    this.closingStudentCamera = false
+    this.loadingStudentMicrophone = false
     // this.cameraLabel = '';
     // this.microphoneLabel = '';
     // this._cameraId = '';
@@ -422,6 +429,65 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info('[demo] unlockCamera ')
   }
 
+  @observable
+  openingTeacherCamera: boolean = false
+
+  @observable
+  closingTeacherCamera: boolean = false
+
+  @observable
+  openingStudentCamera: boolean = false
+
+  @observable
+  closingStudentCamera: boolean = false
+
+  @observable
+  loadingTeacherMicrophone: boolean = false
+
+  @observable
+  loadingStudentMicrophone: boolean = false
+
+  @action
+  setOpeningCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.openingStudentCamera = value) : (this.openingTeacherCamera = value)
+    } else {
+      isRemote ? (this.openingTeacherCamera = value) : (this.openingStudentCamera = value)
+    }
+  }
+
+  @action
+  setClosingCamera(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.closingStudentCamera = value): (this.closingTeacherCamera = value)
+    } else {
+      isRemote ? (this.closingTeacherCamera = value): (this.closingStudentCamera = value)
+    }
+  }
+
+  @action
+  setLoadingMicrophone(value: boolean, isRemote: boolean) {
+    if(this.roomInfo.userRole === EduRoleTypeEnum.teacher){
+      isRemote ? (this.loadingStudentMicrophone = value): (this.loadingTeacherMicrophone = value)
+    } else {
+      isRemote ? (this.loadingTeacherMicrophone = value): (this.loadingStudentMicrophone = value)
+    }
+  }
+
+  get openingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.openingTeacherCamera : this.openingStudentCamera
+  }
+
+
+  get closingCamera(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.closingTeacherCamera : this.closingStudentCamera
+  }
+
+
+  get loadingMicrophone(){
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? this.loadingTeacherMicrophone : this.loadingStudentMicrophone
+  }
+
   @action
   async openCamera(option?: SceneVideoConfiguration) {
     if (this._cameraRenderer) {
@@ -441,28 +507,63 @@ export class SceneStore extends SimpleInterval {
       } as CameraOption
       await this.mediaService.openCamera(config)
       this._cameraRenderer = this.mediaService.cameraRenderer
+      if (this.isElectron) {
+        this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
+      }
+
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
+
+      // wait until frame available
+      await this.waitFor(() => {
+        return (this.cameraRenderer?.renderFrameRate || 0) !== 0
+      }, 10000, 100)
     } catch (err) {
       this.unLockCamera()
-      BizLogger.info('[demo] action in openCamera >>> openCamera')
       const error = GenericErrorWrapper(err)
-      BizLogger.warn(`${error}`)
-      throw err
+      BizLogger.warn('[demo] action in openCamera >>> openCamera', error)
+      throw error
     }
+  }
+
+  waitFor(fn: () => boolean, timeout: number, checkinterval: number) {
+    return new Promise<void>(async (resolve, reject) => {
+      for(let i = 0; i < timeout; i += checkinterval) {
+        await (() => new Promise((resolve) => {setTimeout(resolve, checkinterval)}))()
+        if(fn()){
+          return resolve()
+        }
+      }
+      return reject(GenericErrorWrapper(new Error('operation timeout')))
+    })
   }
 
   @action
   async muteLocalCamera() {
-    if (this.cameraLock) {
+    if (this.cameraLock || this.closingCamera === true) {
       return BizLogger.warn('[demo] openCamera locking')
     }
-    BizLogger.info('[demo] [local] muteLocalCamera')
-    if (this._cameraRenderer) {
-      await this.closeCamera()
+    this.setClosingCamera(true, false)
+    try {
+      BizLogger.info('[demo] [local] muteLocalCamera')
+      if (this._cameraRenderer) {
+        await this.closeCamera()
+        this.unLockCamera()
+      }
+      await Promise.all([
+        await this.roomManager?.userService.updateMainStreamState({'videoState': false}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasVideo === false
+        }, 10000, 200)
+      ])
+      this.setClosingCamera(false, false)
+    } catch (err) {
       this.unLockCamera()
+      this.setClosingCamera(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
     }
-    await this.roomManager?.userService.updateMainStreamState({'videoState': false})
   }
 
   @action 
@@ -471,8 +572,19 @@ export class SceneStore extends SimpleInterval {
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
     }
-    await this.openCamera()
-    await this.roomManager?.userService.updateMainStreamState({'videoState': true})
+    this.setOpeningCamera(true, false)
+    try {
+      await Promise.all([
+        this.openCamera(),
+        this.roomManager?.userService.updateMainStreamState({'videoState': true})
+      ])
+      this.setOpeningCamera(false, false)
+    } catch (err) {
+      this.setOpeningCamera(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalCamera, ${error}`)
+      throw error
+    }
   }
 
   @action
@@ -481,9 +593,26 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
     }
-    await this.closeMicrophone()
-    this.unLockMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': false})
+
+    this.setLoadingMicrophone(true, false)
+    try {
+      await this.closeMicrophone()
+      this.unLockMicrophone()
+
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': false}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === false
+        }, 10000, 200)
+      ])
+      this.setLoadingMicrophone(false, false)
+    }catch(err) {
+      this.unLockMicrophone()
+      this.setLoadingMicrophone(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] muteLocalmicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action 
@@ -492,8 +621,24 @@ export class SceneStore extends SimpleInterval {
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
     }
-    await this.openMicrophone()
-    await this.roomManager?.userService.updateMainStreamState({'audioState': true})
+
+    this.setLoadingMicrophone(true, false)
+
+    try {
+      await this.openMicrophone()
+      await Promise.all([
+        this.roomManager?.userService.updateMainStreamState({'audioState': true}),
+        this.waitFor(() => {
+          return this.cameraEduStream.hasAudio === true
+        }, 10000, 200)
+      ])
+      this.setLoadingMicrophone(false, false)
+    }catch(err){
+      this.setLoadingMicrophone(false, false)
+      const error = GenericErrorWrapper(err)
+      BizLogger.info(`[demo] [local] unmuteLocalMicrophone, ${error}`)
+      throw error
+    }
   }
 
   @action
@@ -752,9 +897,21 @@ export class SceneStore extends SimpleInterval {
   async leaveRtc() {
     try {
       this.joiningRTC = false
-      await this.closeCamera()
-      await this.closeMicrophone()
-      await this.mediaService.leave()
+      try {
+        await this.closeCamera()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
+      try {
+        await this.closeMicrophone()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
+      try {
+        await this.mediaService.leave()
+      } catch (err) {
+        BizLogger.warn(`${err}`)
+      }
       this.appStore.uiStore.addToast(t('toast.leave_rtc_channel'))
       this.appStore.reset()
     } catch (err) {
@@ -787,87 +944,89 @@ export class SceneStore extends SimpleInterval {
   }
 
   @computed
-  get defaultTeacherPlaceholder(): any {
+  get defaultTeacherPlaceholder() {
+    if (this.appStore.uiStore.loading) {
+      return {
+        placeHolderType: 'loading',
+        text: t(`placeholder.loading`)
+      }
+    }
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
         placeHolderType: 'noEnter',
-        text: t(`placeholder.teacher_Left`)
+        text: t(`placeholder.teacher_noEnter`)
       }
     }
     return {
-      placeHolderType: 'noEnter',
-      text: t(`placeholder.teacher_noEnter`)
+      placeHolderType: 'left',
+      text: t(`placeholder.teacher_Left`)
     }
   }
 
   @computed
-  get defaultStudentPlaceholder(): any {
+  get defaultStudentPlaceholder() {
+    if (this.appStore.uiStore.loading) {
+      return {
+        placeHolderType: 'loading',
+        text: t(`placeholder.loading`)
+      }
+    }
+    // if (this.classState)
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
         placeHolderType: 'noEnter',
-        text: t(`placeholder.student_Left`)
+        text: t(`placeholder.student_noEnter`)
       }
     }
     return {
-      placeHolderType: 'noEnter',
-      text: t(`placeholder.student_noEnter`)
+      placeHolderType: 'left',
+      text: t(`placeholder.student_Left`)
     }
   }
 
   getLocalPlaceHolderProps() {
-    const meIsTeacher = this.appStore.userRole === EduRoleTypeEnum.teacher
-
-    if (!this.cameraEduStream) {
-      // placeholder
-      if (meIsTeacher) {
-        return this.defaultTeacherPlaceholder
-      } else {
-        return this.defaultStudentPlaceholder
-      }
-    }
-
-    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+    if (this.openingCamera === true) {
       return {
-        placeHolderType: 'noCamera',
-        text: t('placeholder.closeCamera')
+        placeHolderType: 'openingCamera',
+        text: t('placeholder.openingCamera')
       }
     }
 
-    if (this.appStore.isElectron) {
-      if (!this.cameraRenderer) {
+    if (this.closingCamera === true) {
+      return {
+        placeHolderType: 'closedCamera',
+        text: t('placeholder.closingCamera')
+      }
+    }
+
+    if ((this.cameraEduStream && !!this.cameraEduStream.hasVideo === false)) {
+      return {
+        placeHolderType: 'closedCamera',
+        text: t('placeholder.closedCamera')
+      }
+    }
+
+    const streamUuid = +this.cameraEduStream.streamUuid
+    const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
+    if (this.cameraEduStream 
+      && !!this.cameraEduStream.hasVideo === true) {
+      if (isFreeze) {
         return {
-          placeHolderType: 'noCamera',
-          text: t('placeholder.noCamera')
+          placeHolderType: 'noAvailableCamera',
+          text: t('placeholder.noAvailableCamera')
         }
       }
-      if (this.cameraEduStream && this.cameraRenderer) {
+      if (this.cameraRenderer) {
         return {
           placeHolderType: 'none',
           text: ''
         }
       }
-    } else {
-      if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer.videoTrack) {
-        return {
-          placeHolderType: 'noCamera',
-          text: t('placeholder.noCamera')
-        }
-      }
-      if (this.cameraEduStream && this.cameraRenderer && this.cameraRenderer.videoTrack) {
-        return {
-          placeHolderType: 'none',
-          text: ''
-        }
-      }
     }
-
-    // placeholder
-    if (meIsTeacher) {
-      return this.defaultTeacherPlaceholder
-    } else {
-      return this.defaultStudentPlaceholder
+    return {
+      placeHolderType: 'loading',
+      text: t(`placeholder.loading`)
     }
-
   }
 
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
@@ -882,28 +1041,18 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    const remoteUserRenderer = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer
-
     if (!!stream.hasVideo === false) {
       return {
-        placeHolderType: 'noCamera',
-        text: t('placeholder.closeCamera')
+        placeHolderType: 'closedCamera',
+        text: t('placeholder.closedCamera')
       }
     }
 
-    if (this.appStore.isElectron) {
-      if (!remoteUserRenderer) {
-        return {
-          placeHolderType: 'noCamera',
-          text: t('placeholder.noCamera')
-        }
-      }
-    } else {
-      if (!remoteUserRenderer || remoteUserRenderer && !remoteUserRenderer.videoTrack) {
-        return {
-          placeHolderType: 'noCamera',
-          text: t('placeholder.noCamera')
-        }
+    const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
+    if (isFreeze) {
+      return {
+        placeHolderType: 'noAvailableCamera',
+        text: t('placeholder.noAvailableCamera')
       }
     }
 
@@ -926,32 +1075,27 @@ export class SceneStore extends SimpleInterval {
     return this.fixWebVolume(level)
   }
 
+  queryCamIssue(userUuid: string): boolean {
+    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    if (user && user.userProperties) {
+      return !!get(user.userProperties, 'devices.camera', 1) === false
+    }
+    return false
+  }
+
   queryVideoFrameIsNotFrozen (uid: number): boolean {
-    if (this.appStore.uiStore.isElectron) {
-      const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
-      if (isLocal) {
-        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[0]
-        return frameRate > 0
-      } else {
-        const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[uid]
-        return frameRate > 0
-      }
+    const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
+    if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+      return false
+    }
+    if (isLocal) {
+      // const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
+      // return frameRate > 0
+      const freezeCount = this.cameraRenderer?.freezeCount || 0
+      return freezeCount < 3
     } else {
-      const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
-      if (isLocal) {
-        if (!this.cameraRenderer || this.cameraRenderer && !this.cameraRenderer?.videoTrack) {
-          return false
-        } else {
-          return true
-        }
-      } else {
-        const targetUserRenderer = this.remoteUsersRenderer.find((it: any) => it.uid === +uid)
-        if (!targetUserRenderer || targetUserRenderer && !targetUserRenderer.videoTrack) {
-          return false
-        } else {
-          return true
-        }
-      }
+      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
+      return frameRate > 0
     }
   }
 
@@ -962,8 +1106,6 @@ export class SceneStore extends SimpleInterval {
     const localUser = this.localUser
     if (localUser && localUser.userRole === EduRoleTypeEnum.teacher
       && this.cameraEduStream) {
-
-      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
       const {placeHolderType, text} = this.getLocalPlaceHolderProps()
       return {
         local: true,
@@ -974,10 +1116,9 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         showControls: this.canControl(this.appStore.userUuid),
-        volumeLevel: this.localVolume,
         placeHolderType: placeHolderType,
         placeHolderText: text,
-        notFreeze: result
+        volumeLevel: this.localVolume,
       } as any
     }
 
@@ -987,7 +1128,6 @@ export class SceneStore extends SimpleInterval {
       const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
       const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
       const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
-      const result = this.queryVideoFrameIsNotFrozen(+teacherStream.streamUuid)
       return {
         local: false,
         account: user.userName,
@@ -1000,7 +1140,6 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: volumeLevel,
-        notFreeze: result,
       } as any
     }
     return {
@@ -1012,10 +1151,9 @@ export class SceneStore extends SimpleInterval {
       audio: false,
       renderer: undefined,
       showControls: false,
-      placeHolderType: 'noEnter',
-      placeHolderText: t('placeholder.teacher_Left'),
+      placeHolderText: this.defaultTeacherPlaceholder.text,
+      placeHolderType: this.defaultTeacherPlaceholder.placeHolderType,
       volumeLevel: 0,
-      notFreeze: true,
     } as any
   }
 
@@ -1100,7 +1238,6 @@ export class SceneStore extends SimpleInterval {
         if (!user || this.isLocalStream(stream)) return acc;
         const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
         const volumeLevel = this.getFixAudioVolume(+stream.streamUuid)
-        const result = this.queryVideoFrameIsNotFrozen(+stream.streamUuid)
         acc.push({
           local: false,
           account: user.userName,
@@ -1113,7 +1250,6 @@ export class SceneStore extends SimpleInterval {
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
-          notFreeze: result
         } as any)
         return acc;
       }
@@ -1125,7 +1261,6 @@ export class SceneStore extends SimpleInterval {
 
     if (this.cameraEduStream && isStudent) {
       const props = this.getLocalPlaceHolderProps()
-      const result = this.queryVideoFrameIsNotFrozen(+this.cameraEduStream.streamUuid)
       streamList = [{
         local: true,
         account: localUser.userName,
@@ -1138,7 +1273,6 @@ export class SceneStore extends SimpleInterval {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: this.localVolume,
-        notFreeze: result
       } as EduMediaStream].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -1153,10 +1287,9 @@ export class SceneStore extends SimpleInterval {
       audio: false,
       renderer: undefined,
       showControls: false,
-      placeHolderType: 'noEnter',
-      placeHolderText: t('placeholder.student_Left'),
+      placeHolderText: this.defaultStudentPlaceholder.text,
+      placeHolderType: this.defaultStudentPlaceholder.placeHolderType,
       volumeLevel: 0,
-      notFreeze: true
     } as any]
   }
 
@@ -1279,7 +1412,20 @@ export class SceneStore extends SimpleInterval {
         await this.mediaService.muteRemoteAudio(+stream.streamUuid, false)
       }
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-      await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream)
+
+      try {
+        this.setLoadingMicrophone(true, true)
+        await Promise.all([
+          await this.roomManager?.userService.remoteStartStudentMicrophone(targetStream as EduStream),
+          this.waitFor(() => {
+            return !!stream?.hasAudio === false
+          }, 10000, 200)
+        ])
+        this.setLoadingMicrophone(false, true)
+      }catch(err) {
+        this.setLoadingMicrophone(true, true)
+        throw err
+      }
     }
   }
 

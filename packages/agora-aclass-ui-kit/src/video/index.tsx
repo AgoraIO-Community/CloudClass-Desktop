@@ -15,6 +15,8 @@ import DisableDrawIcon  from './assets/disable-draw.png'
 import { TextEllipsis } from '../typography'
 import {PlaceHolderView, PlaceHolderRole, PlaceHolderType} from './placeholder'
 
+
+
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
     avBtn: {
@@ -178,11 +180,30 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
       }
     },
+    SpinIcon: {
+      borderRadius: '50%',
+      width: 19,
+      height: 19,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      border: '3px solid rgba(255, 255, 255, 0.2)',
+      borderTopColor: "white",
+      animation: "$spin 1s infinite linear"
+    },
+
+    "@keyframes spin": {
+      '0%': {
+        transform: 'rotate(0deg)'
+      },
+      "100%": {
+        transform: 'rotate(360deg)'
+      }
+  },
   })
 )
 
 interface MediaButtonProps {
   enabled: boolean,
+  loading: boolean,
   onClick: VideoItemOnClick,
   disable?: boolean
 }
@@ -223,7 +244,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
 
-  const className = props.enabled ? classes.UnMuteCameIcon : classes.MuteCameIcon
+  const className = props.loading ? classes.SpinIcon : props.enabled ? classes.UnMuteCameIcon : classes.MuteCameIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
@@ -244,7 +265,7 @@ const VideoIconButton = (props: MediaButtonProps) => {
 const AudioIconButton = (props: MediaButtonProps) => {
 
   const classes = useStyles()
-  const className = props.enabled ? classes.UnMuteMicIcon : classes.MuteMicIcon
+  const className = props.loading ? classes.SpinIcon : props.enabled ? classes.UnMuteMicIcon : classes.MuteMicIcon
 
   const onClick = useCallback(() => {
     if (props.onClick) {
@@ -323,7 +344,8 @@ const TrophyBox = (props: TrophyBoxProps) => {
 
 interface ParticipantIdentityCardProps {
   nickname: string,
-  role: string
+  role: string,
+  visible: boolean
 }
 
 const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
@@ -339,7 +361,7 @@ const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
   const roleKey = roles[props.role] || defaultRoleClassKey
 
   return (
-    <Box component="div" className={classes.idCard}>
+    <Box visibility={props.visible ? "visible" : "hidden"} component="div" className={classes.idCard}>
       <EllipticBox>
         <>
           <div className={roleKey}></div>
@@ -366,6 +388,9 @@ export interface VideoFrameProps {
   resizable: boolean,
   videoState: boolean,
   audioState: boolean,
+  videoLoading: boolean,
+  audioLoading: boolean,
+  boardLoading: boolean,
   boardState?: boolean,
   disableTrophy: boolean,
   showBoardIcon?: boolean,
@@ -402,10 +427,14 @@ const VideoFrame: React.FC<VideoFrameProps> = (props) => {
     })
   }, [props.uid, onClick])
   
+  // do not show accessories when user is not in the room
+  const accessoriesVisible = (props.placeHolderType !== 'noEnter') && (props.placeHolderType !== 'left') 
+        && (props.placeHolderType !== 'loading')
+
   return (
     <div className={classes.root} style={props.style}>
       <PlaceHolderView role={props.role} type={props.placeHolderType} text={props.placeHolderText} style={props.placeholderStyle} />
-      {props.visibleTrophy ? <Box
+      {accessoriesVisible && props.visibleTrophy ? <Box
         className={classes.trophyNum}
         component="div">
         <TrophyBox disable={props.disableTrophy} iconUrl={TrophyIcon} number={props.trophyNumber} onClick={onClickTrophy}/>
@@ -413,15 +442,16 @@ const VideoFrame: React.FC<VideoFrameProps> = (props) => {
       <ParticipantIdentityCard
         nickname={props.nickname}
         role={props.role}
+        visible={accessoriesVisible}
       />
-      <Box className={classes.avBtn} component="div">
+      <Box visibility={accessoriesVisible ? "visible" : "hidden"} className={classes.avBtn} component="div">
         {
           props.showBoardIcon ?
-            <BoardIconButton disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
+            <BoardIconButton loading={props.boardLoading} disable={props.disableBoard} enabled={Boolean(props.boardState)} onClick={onClick} /> : 
             null
         }
-        <VideoIconButton disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
-        <AudioIconButton disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
+        <VideoIconButton loading={props.videoLoading} disable={props.disableButton} enabled={props.videoState} onClick={onClick} />
+        <AudioIconButton loading={props.audioLoading} disable={props.disableButton} enabled={props.audioState} onClick={onClick}/>
       </Box>
       {props.minimal && <CustomButton
         component="div"

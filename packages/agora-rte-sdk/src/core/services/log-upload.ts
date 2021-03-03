@@ -109,12 +109,31 @@ export class LogUpload {
     return res;
   }
 
+  //TODO: only work in agora cef platform
+  private async uploadCefLogFile(roomId: string) {
+    if (window.getCachePath) {
+      await new Promise((resolve) => {
+        window.getCachePath((path: string) => {
+          console.log(`CEF LOG ${path}agorasdk.log`);
+          resolve(path)
+        })
+      })
+    }
+    let resp = await fetch('https://convertcdn.netless.link/agorasdk.log');
+    const blob = await resp.blob()
+    const contentType = blob.type
+    const fileName = `${roomId}-cef.log`
+    const file = new File([blob], fileName, {type: contentType})
+    await this.uploadToOss(roomId, file, 'log')
+  }
+
   // upload log
   async uploadLogFile(
     roomId: string,
     file: any
   ) {
     const res = await this.uploadToOss(roomId, file, 'log')
+    await this.uploadCefLogFile(roomId)
     return res;
   }
 

@@ -92,7 +92,7 @@ export enum DownloadStatus {
 
 export class BoardStore {
 
-static toolItems: IToolItem[] = [
+  toolItems: IToolItem[] = [
   {
     itemName: 'mouse',
     toolTip: true,
@@ -554,6 +554,7 @@ static toolItems: IToolItem[] = [
     } else {
       this.room.setScenePath(`/${resourceName}`)
     }
+    this.moveCamera()
 
     const sceneState = this.room.state.sceneState
     const name = this.getResourceName(sceneState.contextPath)
@@ -570,9 +571,13 @@ static toolItems: IToolItem[] = [
         ]
       })
     }
-    // this.updatePageHistory()
-
-    this.room.setSceneIndex(currentPage)
+    if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
+      if (currentPage !== 0) {
+        this.room.setSceneIndex(currentPage)
+      }
+    } else {
+      this.room.setSceneIndex(currentPage)
+    }
     this.resourceName = resourceName
   }
 
@@ -836,11 +841,11 @@ static toolItems: IToolItem[] = [
       throw e
     }
     // 默认只有老师不用禁止跟随
-    if (this.userRole !== EduRoleTypeEnum.teacher) {
-      this.room.disableCameraTransform = true
-    } else {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
       this.room.setViewMode(ViewMode.Broadcaster)
       this.room.disableCameraTransform = false
+    } else {
+      this.room.disableCameraTransform = true
     }
 
     if (this.online && this.room) {
@@ -851,8 +856,10 @@ static toolItems: IToolItem[] = [
       if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
         if (this.lockBoard) {
           this.room.disableDeviceInputs = true
+          this.room.disableCameraTransform = true
         } else {
           this.room.disableDeviceInputs = false
+          this.room.disableCameraTransform = false
         }
       }
     }
@@ -1000,8 +1007,10 @@ static toolItems: IToolItem[] = [
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
             this.room.disableDeviceInputs = true
+            this.room.disableCameraTransform = true
           } else {
             this.room.disableDeviceInputs = false
+            this.room.disableCameraTransform = false
           }
         }
       }
@@ -1042,7 +1051,8 @@ static toolItems: IToolItem[] = [
         userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
         cursorName: this.appStore.acadsocStore.roomInfo.userName,
-      }
+      },
+      isAssistant: this.appStore.acadsocStore.isAssistant
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -2412,11 +2422,15 @@ static toolItems: IToolItem[] = [
   }
 
   moveCamera() {
-    this.room.moveCamera({
-      centerX: 0,
-      centerY: 0,
-      scale: 1,
-    })
+    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
+      this.room.scalePptToFit()
+    } else {
+      this.room.moveCamera({
+        centerX: 0,
+        centerY: 0,
+        scale: 1,
+      })
+    }
   }
 
   // @observable

@@ -38,13 +38,13 @@ const DiskTable = (props: DownloadDiskTablesProps) => {
             id="calories"
             key="calories"
             align="left"
-          >{'进度'}</DiskTableCellHead>
+          >{t('disk.progress')}</DiskTableCellHead>
           <DiskTableCellHead
             style={{ paddingRight: 120 }}
             id="fat"
             key="fat"
             align="center"
-          >{'操作'}</DiskTableCellHead>
+          >{t('disk.operation')}</DiskTableCellHead>
         </TableRow>
       </TableHead>
       <TableHead>

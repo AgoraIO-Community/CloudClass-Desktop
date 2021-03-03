@@ -123,12 +123,15 @@ export class EduLogger {
 
   static async uploadElectronLog(roomId: any) {
     //@ts-ignore
-    let file = await window.doGzip();
-    const res = await this.logUploader.uploadZipLogFile(
-      roomId,
-      file
-    )
-    return res;
+    if (window.doGzip) {
+      //@ts-ignore
+      let file = await window.doGzip();
+      const res = await this.logUploader.uploadZipLogFile(
+        roomId,
+        file
+      )
+      return res;
+    }
   }
 
   // 当前时间戳

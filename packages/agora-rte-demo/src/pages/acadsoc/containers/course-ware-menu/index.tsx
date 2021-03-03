@@ -13,7 +13,7 @@ export const CourseWareMenuContainer = observer(() => {
       resourceName,
       currentPage,
     )
-    boardStore.pptAutoFullScreen()
+    // boardStore.pptAutoFullScreen()
   }, [boardStore])
 
   return (

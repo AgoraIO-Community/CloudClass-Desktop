@@ -2,13 +2,31 @@ import uuidv4 from 'uuid/v4';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
+import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
 
+export enum LocalVideoStreamState {
+  LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
+  LOCAL_VIDEO_STREAM_STATE_CAPTURING = 1,
+  LOCAL_VIDEO_STREAM_STATE_ENCODING = 2,
+  LOCAL_VIDEO_STREAM_STATE_FAILED = 3
+}
+
+export enum LocalVideoErrorEnum {
+  OK = 0,
+  FAILURE = 2,
+  NO_PERMISSION = 2,
+  BUSY = 3,
+  CAPTURE_FAILURE = 4,
+  ENCODE_FAILURE = 5,
+  SCREEN_CAPTURE_WINDOW_MINIMIZED = 11,
+  SCREEN_CAPTURE_WINDOW_CLOSED = 12
+}
 
 const networkQualityLevel = [
   'unknown',
@@ -44,6 +62,9 @@ export class MediaStore {
   get mediaService() {
     return this.appStore.mediaService
   }
+
+  @observable
+  localVideoState: LocalVideoStreamState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
 
   @observable
   _delay: number = 0
@@ -100,6 +121,31 @@ export class MediaStore {
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
+    this.mediaService.on('track-ended', (evt: any) => {
+      if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.cameraRenderer.stop()
+        this.appStore.pretestStore.resetCameraTrack()
+      }
+      if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
+        this.appStore.sceneStore.cameraRenderer.stop()
+        this.appStore.sceneStore.resetCameraTrack()
+        eduSDKApi.reportCameraState({
+          roomUuid: this.appStore.roomInfo.roomUuid,
+          userUuid: this.appStore.roomInfo.userUuid,
+          state: 0
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
+        })
+      }
+
+      if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.resetMicrophoneTrack()
+      }
+      if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
+        this.appStore.sceneStore.resetMicrophoneTrack()
+      }
+      BizLogger.info("track-ended", evt)
+    })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
@@ -153,13 +199,13 @@ export class MediaStore {
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       const uid = evt.user.uid
-      this.rendererOutputFrameRate[uid] = 1
+      this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       const uid = evt.user.uid
-      delete this.rendererOutputFrameRate[uid]
+      delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -184,6 +230,13 @@ export class MediaStore {
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
     })
+    this.mediaService.on('localVideoStateChanged', (evt: any) => {
+      const {state, msg} = evt
+      if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
+          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
+        this.localVideoState = state
+      }
+    })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
       if (this.appStore.uiStore.isElectron) {
@@ -201,11 +254,45 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      this.rendererOutputFrameRate[0] = evt.stats.encoderOutputFrameRate
+      this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
+      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
-        this.rendererOutputFrameRate[evt.user.uid] = evt.stats.decoderOutputFrameRate
+        this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
+        BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+      }
+    })
+
+    reaction(() => JSON.stringify([
+      this.appStore.roomInfo.roomUuid,
+      this.appStore.roomInfo.userUuid,
+      this.appStore.isElectron,
+      this.rendererOutputFrameRate[`${0}`]]), () => {
+      if (this.appStore.isElectron && this.appStore.roomInfo.roomUuid && this.appStore.roomInfo.userUuid) {
+        if (this.rendererOutputFrameRate[`${0}`] <= 0) {
+          eduSDKApi.reportCameraState({
+            roomUuid: this.appStore.roomInfo.roomUuid,
+            userUuid: this.appStore.roomInfo.userUuid,
+            state: 0
+          }).catch((err) => {
+            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+          }).then(() => {
+            BizLogger.info(`[CAMERA] report camera device not working`)
+          })
+        }
+        
+        if (this.rendererOutputFrameRate[`${0}`] > 0) {
+          eduSDKApi.reportCameraState({
+            roomUuid: this.appStore.roomInfo.roomUuid,
+            userUuid: this.appStore.roomInfo.userUuid,
+            state: 1
+          }).catch((err) => {
+            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+          }).then(() => {
+            BizLogger.info(`[CAMERA] report camera device working`)
+          })
+        }
       }
     })
   }
@@ -228,6 +315,7 @@ export class MediaStore {
   }
 
   reset() {
+    this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
     this.networkQuality = 'unknown'
     this.autoplay = false

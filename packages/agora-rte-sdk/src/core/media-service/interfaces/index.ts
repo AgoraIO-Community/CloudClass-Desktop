@@ -39,7 +39,12 @@ export declare interface ElectronWrapperInitOption {
   videoSourceLogPath: string
   AgoraRtcEngine: any
   appId: string
-  cefClient: any
+  cefClient: any,
+  resolution?: {
+    width: number,
+    height: number,
+    frameRate: number
+  }
 }
 
 /**

@@ -17,14 +17,38 @@
   width: 100%;
   box-sizing: border-box;
   // border-radius: 13px;
-  .camIcon {
-    background: url('../assets/no-camera.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 54px;
-    height: 54px;
-  }
+  // .noCamIcon {
+  //   background: url('../assets/no-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .closeCameraIcon {
+  //   background: url('../assets/closed-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .loadingCamera {
+  //   background: url('../assets/loading-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
+  // .prepareCamera {
+  //   background: url('../assets/prepare-camera.png');
+  //   background-size: contain;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   width: 54px;
+  //   height: 54px;
+  // }
   .text {
     color: rgb(0, 37, 145);
     font-size: 12px;

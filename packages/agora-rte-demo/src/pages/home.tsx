@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Theme, FormControl, Tooltip } from '@material-ui/core';
-import {makeStyles, createStyles} from '@material-ui/core/styles';
+import { Theme, FormControl, Tooltip, Checkbox, FormControlLabel } from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 import {CustomButton} from '@/components/custom-button';
 import { RoleRadio } from '@/components/role-radio';
 import {CustomIcon} from '@/components/icon';
@@ -83,6 +83,7 @@ type SessionInfo = {
   role: string,
   startTime: string,
   duration: number,
+  pretest: boolean
 }
 
 const roleName = [
@@ -144,7 +145,8 @@ export const HomePage = observer(() => {
     role: '',
     userName: '',
     startTime: dayjs().add(2, 'minute').format("YYYY-MM-DDTHH:mm"),
-    duration: 30
+    duration: 30,
+    pretest: true,
     // roomName: appStore.roomInfo.roomName,
     // roomType: appStore.roomInfo.roomType,
     // role: getRoleType(appStore.roomInfo.userRole),
@@ -184,6 +186,7 @@ export const HomePage = observer(() => {
 
     const roomUuid = `${session.roomName}${roomType}`;
     const uid = `${session.userName}${userRole}`;
+    const pretest = !!(session.pretest)
 
     // try {
     //   setLoading(true)
@@ -217,7 +220,7 @@ export const HomePage = observer(() => {
       let {userUuid, rtmToken} = await homeApi.login(uid)
       homeStore.setLaunchConfig({
         rtmUid: userUuid,
-        pretest: true,
+        pretest,
         courseWareList: courseWareList,
         translateLanguage: "auto",
         language: language,
@@ -464,6 +467,17 @@ export const HomePage = observer(() => {
                    role: evt.target.value
                  });
               }} requiredText={required.role}></RoleRadio>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <FormControlLabel
+                control={<Checkbox checked={session.pretest} onChange={(evt: any) => {
+                  setSessionInfo({
+                    ...session,
+                    pretest: evt.target.checked
+                  });
+                }} color="primary" name="pretest" />}
+                label={t('aclass.pretest')} 
+              />
             </FormControl>
             <CustomButton name={t('home.room_join')} onClick={handleSubmit}/>
           </div>
