@@ -549,11 +549,26 @@ export class BoardStore {
   }
 
   changeSceneItem(resourceName: string, currentPage: number) {
+    let targetPath = resourceName
     if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
-      this.room.setScenePath(``)
+      targetPath = "/"
     } else {
-      this.room.setScenePath(`/${resourceName}`)
+      targetPath = `/${resourceName}`
     }
+
+    const sceneIsChanged = targetPath !== this.room.state.sceneState.contextPath
+    if (sceneIsChanged) {
+      if (targetPath === "/") {
+        if (currentPage === 0) {
+          this.room.setScenePath(`/init`)
+        } else {
+          this.room.setScenePath(`/${currentPage}`)
+        }
+      } else {
+        this.room.setScenePath(`${targetPath}/${currentPage+1}`)
+      }
+    }
+
     this.moveCamera()
 
     const sceneState = this.room.state.sceneState
@@ -570,13 +585,6 @@ export class BoardStore {
           }
         ]
       })
-    }
-    if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
-      if (currentPage !== 0) {
-        this.room.setSceneIndex(currentPage)
-      }
-    } else {
-      this.room.setSceneIndex(currentPage)
     }
     this.resourceName = resourceName
   }
@@ -1322,7 +1330,7 @@ export class BoardStore {
         if (room.isWritable) {
           room.setScenePath('/init')
           const newIndex = room.state.sceneState.scenes.length
-          room.putScenes("/", [{}], newIndex)
+          room.putScenes("/", [{name: `${newIndex}`}], newIndex)
           // room.putScenes(currentPath, [{}], newIndex)
           room.setSceneIndex(newIndex)
         }

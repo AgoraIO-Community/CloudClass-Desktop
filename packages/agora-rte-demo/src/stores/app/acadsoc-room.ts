@@ -1049,12 +1049,12 @@ export class AcadsocRoomStore extends SimpleInterval {
           // await this.sceneStore.prepareMicrophone()
           if (this.sceneStore._cameraEduStream) {
             if (this.sceneStore._cameraEduStream.hasVideo) {
-              this.appStore.sceneStore.setOpeningCamera(true, false)
+              this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
               try {
                 await this.sceneStore.openCamera(this.videoEncoderConfiguration)
-                this.appStore.sceneStore.setOpeningCamera(false, false)
+                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
               } catch (err) {
-                this.appStore.sceneStore.setOpeningCamera(false, false)
+                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
                 throw err
               }
             } else {

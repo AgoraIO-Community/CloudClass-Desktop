@@ -209,7 +209,6 @@
     "wait-on": "3.3.0",
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-cli": "4.3.1",
-    "white-web-sdk": "2.11.12",
     "worker-loader": "2.0.0",
     "zlib": "1.0.5"
   },
@@ -228,6 +227,7 @@
     "postcss": "^8.2.6",
     "react": "16.13.1",
     "react-beautiful-dnd": "13.0.0",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "white-web-sdk": "2.11.11"
   }
 }

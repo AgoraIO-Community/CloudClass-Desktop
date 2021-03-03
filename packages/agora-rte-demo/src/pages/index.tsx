@@ -5,6 +5,7 @@ import { AcadsocOneToOne } from './acadsoc';
 import { Pretest } from './acadsoc/containers/pretest';
 import { Setting } from './acadsoc/containers/setting';
 import { LaunchPage } from './launch';
+import { DownloadPage } from './download';
 
 export type AppRouteComponent = {
   path: string
@@ -33,6 +34,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   'launch': {
     path: '/acadsoc/launch',
     component: () => <LaunchPage />
+  },
+  'downloadStorage': {
+    path: '/download',
+    component: () => <DownloadPage />
   },
   'pretest': {
     path: '/pretest',

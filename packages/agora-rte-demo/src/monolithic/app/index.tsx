@@ -15,6 +15,7 @@ const routes: string[] = [
   // "breakoutClassAssistantRoom",
   // "breakoutClassCourses",
   // "breakoutClassRoom",
+  "downloadStorage",
   "replayPage",
   'invisibleJoinRoom',
   "home"
