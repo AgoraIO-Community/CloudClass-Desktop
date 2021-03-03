@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { convertUid, wait } from '../utils';
+import { convertUid, paramsConfig, wait } from '../utils';
 import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
@@ -282,6 +282,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         code: ret
       })
     }
+    console.log("set Parameters result: ", this.client.setParameters(JSON.stringify(paramsConfig)))
     this.init()
     this.client.setChannelProfile(1)
     this.client.enableVideo()

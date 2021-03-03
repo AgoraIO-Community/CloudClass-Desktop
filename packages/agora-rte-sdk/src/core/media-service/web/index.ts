@@ -279,6 +279,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   registerClientByChannelName(channelName: string) {
     const client = this.agoraWebSdk.createClient(this.clientConfig);
+    //@ts-ignore
+    this.agoraWebSdk.setParameter(paramsConfig)
     client.on('user-published', async (user, mediaType) => {
       EduLogger.info("user-published ", user, mediaType)
       if (user.uid !== this.localScreenUid) {
