@@ -237,6 +237,7 @@ const zhCN: any = {
     'unlocked_board': '白板已解除锁定。',
   },
   'toast': {
+    'warning_sensitive_words': '请注意，您的对话带有敏感词语（例如：联系信息或金钱）',
     'kick_by_teacher': '被老师踢出',
     'upload_log_failure': '上传日志失败，错误类型：{reason}, 详情参考开发者工具',
     'show_log_id': `请提供你的日志ID: {no}`,

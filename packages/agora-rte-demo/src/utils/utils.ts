@@ -1,5 +1,6 @@
 import { AgoraMediaDeviceEnum } from "@/types/global"
 import fetchProgress from "@netless/fetch-progress"
+import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import { Room } from "white-web-sdk"
@@ -198,5 +199,34 @@ export const startDownload = async (isNative: boolean, taskUuid: string, callbac
       callback(progress)
     })
     console.log("web端 课件下载完成")
+  }
+}
+
+export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {
+  const fromStudent = ['broadcaster', 'audience'].includes(messageFromRole)
+  const fromTeacher = ['host', 'assistant'].includes(messageFromRole)
+  if ([EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) && fromStudent) {
+    return true
+  }
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) && fromTeacher) {
+    return false
+  }
+  return false
+ }
+
+export const showMaskText = (text: string, sensitiveWords: string[]) => {
+  for (let word of sensitiveWords) {
+    text = text.replace(word, "****")
+  }
+  return text
+}
+
+export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessage) => {
+  const fromUser = message.fromUser
+  const chatText = message.message
+  if (showOriginText(userRole, fromUser.role)) {
+    return chatText
+  } else {
+    return showMaskText(chatText, message.sensitiveWords)
   }
 }

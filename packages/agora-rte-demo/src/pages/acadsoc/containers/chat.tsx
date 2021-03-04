@@ -7,6 +7,7 @@ import { useAcadsocRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hoo
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
+import { get } from 'lodash';
 let isGetHistory = true;
 const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
   if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role)) {
@@ -79,7 +80,7 @@ export const ChatView = observer(() => {
     setIsFetchHistory(false)
     const res = nextId !== 'last' && await acadsocStore.getHistoryChatMessage({ nextId, sort: 0 })
 
-    setNextID(res.nextId || 'last')
+    setNextID(get(res, 'nextId', 'last'))
   }
   const onPullFresh = () => {
     fetchMessage()

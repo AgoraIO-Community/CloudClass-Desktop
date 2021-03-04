@@ -31,6 +31,7 @@ import { reportService } from '@/services/report-service';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum } from '@/types/global';
+import { filterChatText } from '@/utils/utils';
 
 dayjs.extend(duration)
 
@@ -421,7 +422,7 @@ export class AcadsocRoomStore extends SimpleInterval {
   async sendMessage(message: any) {
     const ts = +Date.now();
     try {
-      await eduSDKApi.sendChat({
+      const result = await eduSDKApi.sendChat({
         roomUuid: this.roomInfo.roomUuid,
         userUuid: this.roomInfo.userUuid,
         data: {
@@ -429,6 +430,12 @@ export class AcadsocRoomStore extends SimpleInterval {
           type: 1,
         }
       })
+
+      const sensitiveWords = get(result, 'sensitiveWords', [])
+      if (sensitiveWords.length) {
+        this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
+      }
+
       return {
         id: this.userUuid,
         ts,
@@ -468,8 +475,13 @@ export class AcadsocRoomStore extends SimpleInterval {
         data
       })
       historyMessage.list.map((item:any)=>{
+        const text = filterChatText(this.roomInfo.userRole, {
+          fromUser: item.fromUser,
+          message: item.message,
+          sensitiveWords: get(item, 'sensitiveWords', [])
+        } as any)
         this.roomChatMessages.unshift({
-          text:item.message,
+          text: text,
           ts:item.sendTime,
           id:item.sequences,
           fromRoomUuid:item.fromUser.userUuid,
@@ -895,7 +907,6 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          BizLogger.info("## classroom ##property-updated: ", JSON.stringify(classroom))
           this.roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
         
@@ -944,13 +955,19 @@ export class AcadsocRoomStore extends SimpleInterval {
       roomManager.on('room-chat-message', (evt: any) => {
         const {textMessage} = evt;
         const message = textMessage as EduTextMessage
+
+        const fromUser = message.fromUser
+
+        const chatMessage = filterChatText(this.roomInfo.userRole, message)
+        
         this.addChatMessage({
-          id: message.fromUser.userUuid,
+          id: fromUser.userUuid,
           ts: message.timestamp,
-          text: message.message,
-          account: message.fromUser.userName,
+          text: chatMessage,
+          account: fromUser.userName,
           sender: false
         })
+        console.log(' room-chat-message ', JSON.stringify(evt))
          const minimizeView = this.minimizeView.find((item) => item.type === 'chat' )
         if (minimizeView?.isHidden) { this.unreadMessageCount = this.unreadMessageCount + 1 }
         else {

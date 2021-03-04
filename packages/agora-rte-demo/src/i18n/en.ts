@@ -250,6 +250,7 @@ const en = {
     'unlocked_board': 'The whiteboard already unlocked',
   },
   'toast': {
+    'warning_sensitive_words': 'Please note that your conversation with sensitive words（eg: contact information or money) , which may violate the training kit and other relevant regulations of Acadsoc.',
     'kick_by_teacher': 'Kicked by teacher',
     'upload_log_failure': 'Upload Log Failure，ErrorName: {reason}，see more details in devtool',
     'show_log_id': `Report your log ID: {reason}`,
