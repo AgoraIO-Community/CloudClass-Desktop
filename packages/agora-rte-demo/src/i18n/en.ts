@@ -193,6 +193,7 @@ const en = {
     'delete': 'delete',
     'deleteSuccess': 'File deleted successfully!',
     'deleteFailed': 'Failed to delete file!',
+    'notSupported':'Uploading this type of file is not supported at present',
 
     'all': 'all',
     'downloaded': 'downloaded',

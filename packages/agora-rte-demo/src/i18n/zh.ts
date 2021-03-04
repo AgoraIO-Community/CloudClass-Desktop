@@ -180,6 +180,7 @@ const zhCN: any = {
     'delete': '删除',
     'deleteSuccess': '删除文件成功！',
     'deleteFailed': '删除文件失败！',
+    'notSupported':'暂不支持上传该类型的文件',
 
     'all': '全部',
     'downloaded': '已下载',
