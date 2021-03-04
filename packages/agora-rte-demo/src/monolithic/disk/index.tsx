@@ -6,7 +6,6 @@ import { t } from '@/i18n'
 import { noop } from 'lodash'
 // import DownloadDisk from '@/components/download-disk/index'
 import { useStorageStore } from '@/hooks'
-import { StorageStore } from '@/stores/storage'
 import { DownloadDiskTable } from '@/components/download-disk/download-disk-table'
 
 const generateClassName = createGenerateClassName({
@@ -59,8 +58,6 @@ const DownloadDiskContainer = observer(() => {
 const DiskContainer = observer((props: any) => {
 
   const storageStore = useStorageStore()
-
-  console.log("storage store", storageStore)
 
   return (
     <div>
