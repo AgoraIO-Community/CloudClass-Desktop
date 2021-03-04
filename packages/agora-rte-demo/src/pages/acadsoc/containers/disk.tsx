@@ -96,6 +96,17 @@ const NetworkDisk = observer((props: any) => {
     const resourceUuid = MD5(`${md5}`)
     const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
+    setIsOpenToast(false)
+    const supportedFileTypes = ['bmp','jpg','png','gif','pdf','pptx','mp3','mp4','doc','docx']
+    console.log('supportedFileTypes.includes(ext)', supportedFileTypes.includes(ext))
+    if(!supportedFileTypes.includes(ext)){
+      setIsOpenToast(true)
+      setToastMessage({
+        type: 'error',
+        message: t('disk.notSupported')
+      })
+      return
+    }
 
     const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
     const isNeedConverting = needConvertingFile.includes(ext)
@@ -103,7 +114,6 @@ const NetworkDisk = observer((props: any) => {
     const isDynamic = needDynamicFileType.includes(ext)
     setIsUploadFile(true)
     setProcess(0)
-    setIsOpenToast(false)
     setIsTrans(false)
     setUploadFile({
       fileName: name,
@@ -269,6 +279,7 @@ const NetworkDisk = observer((props: any) => {
   const handleOpenCourse = async (resourceUuid: any) => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
     boardStore.openDisk = false
+    setIsOpenToast(false)
   }
 
   const handleRefresh = async () => {
