@@ -34,3 +34,4 @@ packages/agora-rte-demo/vendor/dev.git/
 *.sh
 packages/agora-rte-demo/env.test.local
 ManyCamSetup.exe
+packages/agora-rte-demo/alcass/

@@ -3,3 +3,5 @@ export const wait = (ms: number) => new Promise((_, reject) => setTimeout(reject
 export const convertUid = (uid: any) => {
   return +uid
 }
+
+export const paramsConfig = {"appScenario":0, "appVersion":"1.1.0"}

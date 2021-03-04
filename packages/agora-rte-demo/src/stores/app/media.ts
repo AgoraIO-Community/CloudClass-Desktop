@@ -3,7 +3,7 @@ import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed, reaction } from 'mobx';
-import { LocalUserRenderer,EduRoleTypeEnum } from 'agora-rte-sdk';
+import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -115,6 +115,15 @@ export class MediaStore {
 
   id: string = uuidv4()
 
+  @computed
+  get device(): boolean {
+    if (this.rendererOutputFrameRate[`${0}`] > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   constructor(appStore: AppStore) {
     console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
@@ -198,12 +207,14 @@ export class MediaStore {
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
+      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
@@ -267,32 +278,19 @@ export class MediaStore {
     reaction(() => JSON.stringify([
       this.appStore.roomInfo.roomUuid,
       this.appStore.roomInfo.userUuid,
-      this.appStore.isElectron,
-      this.rendererOutputFrameRate[`${0}`]]), () => {
-      if (this.appStore.isElectron && this.appStore.roomInfo.roomUuid && this.appStore.roomInfo.userUuid) {
-        if (this.rendererOutputFrameRate[`${0}`] <= 0) {
-          eduSDKApi.reportCameraState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 0
-          }).catch((err) => {
-            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-          }).then(() => {
-            BizLogger.info(`[CAMERA] report camera device not working`)
-          })
-        }
-        
-        if (this.rendererOutputFrameRate[`${0}`] > 0) {
-          eduSDKApi.reportCameraState({
-            roomUuid: this.appStore.roomInfo.roomUuid,
-            userUuid: this.appStore.roomInfo.userUuid,
-            state: 1
-          }).catch((err) => {
-            BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-          }).then(() => {
-            BizLogger.info(`[CAMERA] report camera device working`)
-          })
-        }
+      this.device
+    ]), (data: string) => {
+      const [roomUuid, userUuid, device] = JSON.parse(data)
+      if (roomUuid && userUuid) {
+        eduSDKApi.reportCameraState({
+          roomUuid: roomUuid,
+          userUuid: userUuid,
+          state: +device
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+        }).then(() => {
+          BizLogger.info(`[CAMERA] report camera device not working`)
+        })
       }
     })
   }
@@ -304,7 +302,9 @@ export class MediaStore {
   speakers: Record<number, number> = {}
 
   @observable
-  rendererOutputFrameRate: Record<number, number> = {}
+  rendererOutputFrameRate: Record<number, number> = {
+    0: 1
+  }
 
   @observable
   networkQuality: string = 'unknown'
@@ -317,11 +317,14 @@ export class MediaStore {
   reset() {
     this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
+    EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`)
     this.networkQuality = 'unknown'
     this.autoplay = false
     this.totalVolume = 0
     this.speakers = {}
-    this.rendererOutputFrameRate = {}
+    this.rendererOutputFrameRate = {
+      0: 1
+    }
   }
 
   @observable
@@ -376,6 +379,7 @@ export class MediaStore {
   @action
   resetRoomState() {
     this.remoteUsersRenderer = []
+    EduLogger.info(`[agora-apaas] [media#renderers] resetRoomState clear remoteUsersRenderer`)
     this.networkQuality = 'unknown'
     this.autoplay = false
     this._delay = 0
