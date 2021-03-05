@@ -21,7 +21,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
   
   const progressMap = useStorageStore().progressMap
 
-  const progress = progressMap[row.resourceUuid]
+  const progress = progressMap[row.taskUuid]
 
   const handleDownload = (uuid: string, _: number) => {
     props.handleDownload(uuid)
@@ -36,7 +36,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
       component="div"
       role="checkbox"
       tabIndex={-1}
-      key={row.resourceUuid}
+      key={row.taskUuid}
     >
       <DiskTableCell
         style={{ paddingLeft: 15}}
@@ -65,7 +65,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
         {
           status === DownloadFileStatus.NotCached && 
           <>
-            <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} />
+            <DiskButton color={'primary'} onClick={() => handleDownload(row.taskUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} />
             <DiskButton color={'inherit'} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
@@ -80,7 +80,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
           status === DownloadFileStatus.Cached &&
           <>
             <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.downloaded')} />
-            <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid)} id="disk-button-delete" text={t('disk.delete')} />
+            <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.taskUuid)} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
       </DiskTableCell>

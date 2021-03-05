@@ -21,6 +21,7 @@ const transformStorageCourseWares = (item: CourseWareItem): StorageCourseWareIte
     fat: `${Date.now()}`,
     resourceUuid: item.resourceUuid,
     resourceName: item.resourceName,
+    taskUuid: item.taskUuid!,
     status: DownloadFileStatus.NotCached,
     progress: 0,
     type: item.ext
@@ -35,6 +36,7 @@ export type StorageCourseWareItem = {
   progress: number,
   resourceName: string,
   resourceUuid: string,
+  taskUuid: string,
   status: DownloadFileStatus,
   type: StorageFileType
 }
@@ -85,9 +87,9 @@ export class StorageStore implements ClassRoomAbstractStore {
     const newCourseWareList = [...this._courseWareList]
     for (let i = 0; i < newCourseWareList.length; i++) {
       const item = newCourseWareList[i]
-      const res = await agoraCaches.hasTaskUUID(item.resourceUuid)
+      const res = await agoraCaches.hasTaskUUID(item.taskUuid)
       item.progress = res === true ? 100 : 0
-      this.progressMap[item.resourceUuid] = item.progress
+      this.progressMap[item.taskUuid] = item.progress
       item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
     }
     this._courseWareList = newCourseWareList
@@ -110,7 +112,7 @@ export class StorageStore implements ClassRoomAbstractStore {
 
   @computed
   get totalProgress(): number {
-    return +(this.courseWareList.filter((e => this.progressMap[e.resourceUuid] && this.progressMap[e.resourceUuid] === 100)).length  / this.courseWareList.length).toFixed(2) * 100
+    return +(this.courseWareList.filter((e => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100)).length  / this.courseWareList.length).toFixed(2) * 100
   }
 
   async destroy () {
@@ -128,7 +130,7 @@ export class StorageStore implements ClassRoomAbstractStore {
 
   async checkDownloadList(downloadList: any) { 
     const pList = downloadList.map((item: any) => {
-      return agoraCaches.hasTaskUUID(item.resourceUuid);
+      return agoraCaches.hasTaskUUID(item.taskUuid);
     })
 
     const tmp = await Promise.all(pList);
@@ -226,7 +228,7 @@ export class StorageStore implements ClassRoomAbstractStore {
     try {
       const courseItem = this.courseWareList
       for (let i = 0; i < courseItem.length; i++) {
-        await this.startDownload(courseItem[i].resourceUuid)
+        await this.startDownload(courseItem[i].taskUuid)
       }
       await this.refreshState()
       EduLogger.info(`全部下载成功....`)

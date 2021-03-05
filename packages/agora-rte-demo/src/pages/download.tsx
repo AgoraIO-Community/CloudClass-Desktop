@@ -1,5 +1,6 @@
 import { AgoraEduSDK } from '@/edu-sdk'
 import { AgoraEduEvent } from '@/edu-sdk/declare'
+import { storage } from '@/utils/custom-storage'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -16,28 +17,7 @@ export const DownloadPage = () => {
 
     await AgoraEduSDK.openDisk(ref.current!, {
       language: searchParams.get("lang")?.match(/zh/i) ? "zh" : "en",
-      courseWareList: [
-        {
-          ext: "ppt",
-          url: "",
-          resourceName: "default_ppt",
-          resourceUuid: "93b61ab070ec11eb8122cf10b9ec91f7",
-          updateTime: +Date.now(),
-          scenes: [],
-          conversion: {type: "dynamic"},
-          size: 100,
-        },
-        {
-          ext: "ppt",
-          url: "",
-          resourceName: "default_ppt1",
-          resourceUuid: "6ffabb20765611eb9579d36d3e11d923",
-          updateTime: +Date.now(),
-          scenes: [],
-          conversion: {type: "dynamic"},
-          size: 100,
-        },
-      ],
+      courseWareList: storage.getCourseWareSaveList(),
       listener: (evt: any) => {
         if (evt === AgoraEduEvent.destroyed) {
           history.push('/')
