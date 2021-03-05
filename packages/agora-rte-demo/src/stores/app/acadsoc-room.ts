@@ -431,9 +431,11 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       })
 
-      const sensitiveWords = get(result, 'sensitiveWords', [])
-      if (sensitiveWords.length) {
-        this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
+      if (this.isTeacher || this.isAssistant) {
+        const sensitiveWords = get(result, 'sensitiveWords', [])
+        if (sensitiveWords.length) {
+          this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
+        }
       }
 
       return {

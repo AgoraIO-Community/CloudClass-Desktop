@@ -14,6 +14,7 @@ import DrawIcon  from './assets/draw.png'
 import DisableDrawIcon  from './assets/disable-draw.png'
 import { TextEllipsis } from '../typography'
 import {PlaceHolderView, PlaceHolderRole, PlaceHolderType} from './placeholder'
+import styles from '../aclass.css'
 
 
 
@@ -365,7 +366,7 @@ const ParticipantIdentityCard = (props: ParticipantIdentityCardProps) => {
       <EllipticBox>
         <>
           <div className={roleKey}></div>
-          <div>{props.nickname}</div>
+          <div className={styles.nickName}>{props.nickname}</div>
         </>
       </EllipticBox>
     </Box>

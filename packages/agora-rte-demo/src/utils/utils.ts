@@ -216,7 +216,8 @@ export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: strin
 
 export const showMaskText = (text: string, sensitiveWords: string[]) => {
   for (let word of sensitiveWords) {
-    text = text.replace(word, "****")
+    const regexp = new RegExp(word, 'g')
+    text = text.replace(regexp, "*".repeat(word.length))
   }
   return text
 }
