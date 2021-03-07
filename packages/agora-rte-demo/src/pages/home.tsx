@@ -55,12 +55,10 @@ export async function fetchPPT() {
       code: result.code
     })
   }
-  console.log("result ", JSON.stringify(result))
   const pptList = []
   for (let key of Object.keys(result.data)) {
     pptList.push(result.data[key])
   }
-  console.log(" ppt ", pptList)
   return pptList
 }
 
@@ -262,7 +260,6 @@ export const HomePage = observer(() => {
   async function downloadPPT(taskUuid: string) {
     setDownloading(true)
     await startDownload(window.isElectron, taskUuid, (progress: number) => {
-      console.log("progress", progress)
       setProgressing(progress)
 
     })
