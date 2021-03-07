@@ -91,9 +91,6 @@ export const AppContainer = (props: AppContainerProps) => {
     }
   }, [])
 
-  console.log(" app container ### ", props.routes)
-  // useDebugValue(props)
-
   const AppToast = observer(() => {
 
     const uiStore = useHomeUIStore()

@@ -59,6 +59,7 @@ export type AppStoreConfigParams = {
   rtmUid: string
   rtmToken: string
   courseWareList: CourseWareList
+  personalCourseWareList?: CourseWareList
   oss?: {
     region: string
     bucketName: string

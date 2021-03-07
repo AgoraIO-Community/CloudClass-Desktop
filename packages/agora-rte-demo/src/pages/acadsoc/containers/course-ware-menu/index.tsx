@@ -18,6 +18,7 @@ export const CourseWareMenuContainer = observer(() => {
 
   return (
     <CourseWareMenu
+      // isTeacher={boardStore.roleIsTeacher}
       active={boardStore.activeIndex}
       items={boardStore.resourcesList}
       onClick={(name: string, currentPage: number, type: string) => {

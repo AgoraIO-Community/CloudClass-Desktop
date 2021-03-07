@@ -225,7 +225,8 @@ export const HomePage = observer(() => {
       homeStore.setLaunchConfig({
         rtmUid: userUuid,
         pretest,
-        courseWareList: courseWareList,
+        courseWareList: courseWareList.slice(0, 1),
+        personalCourseWareList: courseWareList.slice(1, courseWareList.length),
         translateLanguage: "auto",
         language: language,
         userUuid: `${userUuid}`,

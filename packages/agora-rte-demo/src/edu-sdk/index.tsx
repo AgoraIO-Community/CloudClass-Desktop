@@ -112,6 +112,7 @@ export type LaunchOption = {
   startTime: number, // 房间开始时间
   duration: number, // 课程时长
   courseWareList: CourseWareList // 课件列表
+  personalCourseWareList?: CourseWareList // 个人课件列表
 }
 
 export type ReplayOption = {
@@ -243,6 +244,7 @@ export class AgoraEduSDK {
           enableLog: true,
           sdkDomain: sdkConfig.sdkDomain,
           courseWareList: option.courseWareList,
+          personalCourseWareList: option.personalCourseWareList,
           oss: {
             region: data.netless.oss.region,
             bucketName: data.netless.oss.bucket,

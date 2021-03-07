@@ -9,7 +9,7 @@ const contentTypesByExtension = {
     "html": "text/html",
     "htm": "text/html"
 }
-const cacheStorageKey = cacheStorageKey
+const cacheStorageKey = 'netless'
 // cdn link 可能会变
 const resourcesHost = "convertcdn.netless.link";
 export class AgoraCaches {

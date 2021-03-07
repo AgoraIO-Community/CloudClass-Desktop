@@ -1,14 +1,18 @@
+.courseMenuTopArea {
+  margin-top: 39px;
+}
+
 .courseMenu{
   // height: 45px;
   margin-bottom: 5px;
   font-size: 16px;
-  // overflow-y: hidden;
-  // overflow-x: auto;
-  justify-content: space-between;
-  white-space: nowrap;
-  width: calc(100% - 30px);
+  overflow-y: scroll;
+  display: flex;
+  // white-space: nowrap;
+  width: calc(100% - 6px);
   color: white;
   height: 30px;
+  position: absolute;
   // overflow: auto;
   // overflow-x: hidden;
   .active{
@@ -46,6 +50,8 @@
     position: relative;
     padding: 2px 10px;
     width: 125px;
+    min-width: 125px;
+    max-width: 125px;
     background-color: #303f9f;
     justify-content: center;
     &:hover {

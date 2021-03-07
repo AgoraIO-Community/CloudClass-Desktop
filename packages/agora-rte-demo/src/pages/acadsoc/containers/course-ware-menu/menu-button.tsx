@@ -4,8 +4,8 @@ import styles from './style.module.scss'
 import CloseIcon from '@material-ui/icons/Close';
 
 type ResourceMenuProps = {
-  active: number
-  items: any[]
+  active: number,
+  items: any[],
   onClick: (rootPath: string, currentPage: number, type: string) => void
 }
 
@@ -27,7 +27,7 @@ export const CourseWareMenu: React.FC<ResourceMenuProps> = (
     onClick,
   }
 ) => {
-  return (    
+  return (
     <div className={styles.courseMenu}>
         {items.map((it, key: number) => (
           <MenuButton key={key}

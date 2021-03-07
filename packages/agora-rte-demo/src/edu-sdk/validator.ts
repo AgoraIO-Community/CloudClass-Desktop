@@ -78,7 +78,7 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
   }
 
   if (!isString(option.translateLanguage)) {
-    throw new AgoraSDKError('language parameter should be string')
+    throw new AgoraSDKError('translateLanguage parameter should be string')
   }
 
   if (!option.listener) {
@@ -115,6 +115,10 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 
   if (!isArray(option.courseWareList)) {
     throw new AgoraSDKError('courseWareList parameter should be valid array')
+  }
+
+  if (option.personalCourseWareList && !isArray(option.personalCourseWareList)) {
+    throw new AgoraSDKError('personalCourseWareList parameter should be valid array')
   }
 
   // if (option.userUuid && option.userUuid.length > 89) {

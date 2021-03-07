@@ -62,14 +62,18 @@ export const mapFileType = (type: string): string => {
   return 'txt'
 }
 
-export const fileSizeConversionUnit= (data: number | string) => {
-  const toMB = 1024 * 1024
-  let transData = data;
-  if (typeof (data) === 'string') {
-    transData = parseInt(data, 10)
-  }
-  return ((transData as number) / toMB).toFixed(2) + 'MB'
+export type BytesType = number | string
+
+export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
+  const bytes = +fileBytes
+  if(bytes == 0) return '0 Bytes';
+  const k = 1000,
+    dm = decimalPoint || 2,
+    units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
 }
+
 export const transDataToResource = (data: CourseWareItem) => {
   if (!data.taskUuid) {
     return {
