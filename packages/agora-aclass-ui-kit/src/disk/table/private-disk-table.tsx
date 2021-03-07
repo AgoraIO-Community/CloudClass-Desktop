@@ -359,7 +359,6 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     )
   }
   useEffect(() => {
-    console.log('isOpenToast disk,props.isOpenToast is:', props.isOpenToast)
     setIsOpenToast(props.isOpenToast)
   }, [props.isOpenToast])
   const render = () => {
