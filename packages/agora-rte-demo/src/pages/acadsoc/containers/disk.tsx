@@ -15,6 +15,7 @@ import { Progress } from '@/components/progress/progress'
 import {t} from '@/i18n'
 import styles from './disk.module.scss'
 import IconRefresh from '../assets/icon-refresh.png'
+import { fileSizeConversionUnit } from '@/utils/utils';
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -38,8 +39,6 @@ const UploadingProgress = observer((props: any) => {
   const boardStore = useBoardStore()
 
   const {fileLoading, uploadingProgress} = boardStore
-
-  console.log("正在上传ing ", fileLoading, uploadingProgress)
 
   return (
     <>
@@ -67,7 +66,6 @@ const NetworkDisk = observer((props: any) => {
   const [isOpenToast, setIsOpenToast] = useState(false)
 
   const handleClose = () => {
-    console.log('close network disk', props.openDisk)
     setIsOpenToast(false)
     props.setOpenDisk(false)
   }
@@ -97,7 +95,6 @@ const NetworkDisk = observer((props: any) => {
     const ext = file.name.split(".").pop()
     setIsOpenToast(false)
     const supportedFileTypes = ['bmp','jpg','png','gif','pdf','pptx','mp3','mp4','doc','docx']
-    console.log('supportedFileTypes.includes(ext)', supportedFileTypes.includes(ext))
     if(!supportedFileTypes.includes(ext)){
       setIsOpenToast(true)
       setToastMessage({
@@ -135,7 +132,6 @@ const NetworkDisk = observer((props: any) => {
         if (isLastProgress && parent == 100) {
           setTimeout(() => {
             // setProcess(0)
-            console.log('isOpenToast disk，onProgress：',isOpenToast)
             setIsOpenToast(true)
             setIsUploadFile(false)
           }, 1000)
@@ -166,16 +162,6 @@ const NetworkDisk = observer((props: any) => {
     if (queryResult.success) {
       boardStore.removeMaterialList([file.fileID])
     }
-    console.log('boardStore.personalResources', boardStore.personalResources)
-    // }
-  }
-  const fileSizeTransSize = (data: number | string) => {
-    const toMB = 1024 * 1024
-    let transData = data;
-    if (typeof (data) === 'string') {
-      transData = parseInt(data, 10)
-    }
-    return ((transData as number) / toMB).toFixed(2) + 'MB'
   }
   const uploadListComponent = () => {
     if (!isUploadFile) return <></>
@@ -196,7 +182,7 @@ const NetworkDisk = observer((props: any) => {
           </li>
           <li>
             <div>{file.fileName}</div>
-            <div>{fileSizeTransSize(file.fileSize)}</div>
+            <div>{fileSizeConversionUnit(file.fileSize)}</div>
             <div>
             {isTrans?t('whiteboard.converting'):t('disk.upload')}<BorderLinearProgress variant="determinate" value={process} className={styles.process} /></div>
             <div onClick={cancelUpload} className={styles.delete} >
@@ -208,7 +194,6 @@ const NetworkDisk = observer((props: any) => {
 
   }
   const onUpload = (evt: any) => {
-    console.log('upload file', evt)
     return evt
   }
 
@@ -218,7 +203,6 @@ const NetworkDisk = observer((props: any) => {
 
   const handleDownloadSingle = async () => {
     await boardStore.startDownload("93b61ab070ec11eb8122cf10b9ec91f7")
-    console.log('download signgle 93b61ab070ec11eb8122cf10b9ec91f7')
   }
 
   const uploadComponent = () => {

@@ -231,3 +231,15 @@ export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessag
     return showMaskText(chatText, message.sensitiveWords)
   }
 }
+
+export type BytesType = number | string
+
+export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
+  const bytes = +fileBytes
+  if(bytes == 0) return '0 Bytes';
+  const k = 1000,
+    dm = decimalPoint || 2,
+    units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
+}
