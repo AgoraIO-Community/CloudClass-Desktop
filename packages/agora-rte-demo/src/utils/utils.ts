@@ -209,14 +209,15 @@ export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: strin
     return true
   }
   if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) && fromTeacher) {
-    return false
+    return true
   }
   return false
  }
 
 export const showMaskText = (text: string, sensitiveWords: string[]) => {
+  console.log('sensitiveWords ', sensitiveWords)
   for (let word of sensitiveWords) {
-    const regexp = new RegExp(word, 'g')
+    const regexp = new RegExp(word, 'gi')
     text = text.replace(regexp, "*".repeat(word.length))
   }
   return text

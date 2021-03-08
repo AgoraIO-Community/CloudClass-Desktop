@@ -111,7 +111,7 @@ export type LaunchOption = {
   translateLanguage: TranslateEnum, // 翻译语言
   startTime: number, // 房间开始时间
   duration: number, // 课程时长
-  courseWareList: CourseWareList // 课件列表
+  courseWareList: CourseWareList, // 课件列表
   personalCourseWareList?: CourseWareList // 个人课件列表
 }
 

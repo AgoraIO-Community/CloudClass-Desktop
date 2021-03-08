@@ -2,19 +2,32 @@
   margin-top: 39px;
 }
 
+.courseMenu {
+  &::-webkit-scrollbar {
+    height: 4px;
+    background: transparent;
+  }
+  &::-webkit-resizer,
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
 .courseMenu{
-  // height: 45px;
+  padding-bottom: 4px;
   margin-bottom: 5px;
   font-size: 16px;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  overflow-x: auto;
   display: flex;
-  // white-space: nowrap;
   width: calc(100% - 6px);
   color: white;
   height: 30px;
   position: absolute;
-  // overflow: auto;
-  // overflow-x: hidden;
   .active{
     background-color: #303f9f;
   }
