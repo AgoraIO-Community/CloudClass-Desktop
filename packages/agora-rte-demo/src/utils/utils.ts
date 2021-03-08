@@ -203,7 +203,7 @@ export const startDownload = async (isNative: boolean, taskUuid: string, callbac
 }
 
 export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {
-  const fromStudent = ['broadcaster', 'audience'].includes(messageFromRole)
+  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(messageFromRole)
   const fromTeacher = ['host', 'assistant'].includes(messageFromRole)
   if ([EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) && fromStudent) {
     return true
