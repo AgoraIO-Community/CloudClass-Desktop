@@ -5,20 +5,40 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   colors: {
     gray: colors.coolGray,
-    blue: "#357BF6",
+    blue: '#357BF6',
     red: colors.rose,
     pink: colors.fuchsia,
   },
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        'primary': '#357BF6',
+        'primary-hover': '#639AFA',
+        'primary-active': '#2663D0',
+      },
+      borderColor: {
+        'danger': '#DE5753',
+        'danger-hover': '#F56F6B',
+        'danger-active': '#C02621',
+      },
+      textColor: {
+        'primary': '#357BF6',
+        'primary-hover': '#639AFA',
+        'primary-active': '#2663D0',
+        'danger': '#DE5753',
+        'danger-hover': '#F56F6B',
+        'danger-active': '#C02621',
+      },
+    },
     fontFamily: {
       'scenario': ['helvetica neue', 'arial', 'PingFangSC', 'microsoft yahei']
     }
   },
   variants: {
+    backgroundColor: ['hover', 'active'],
     extend: {
-      opacity: ['disabled'],
-    }
+      opacity: ['disabled']
+    },
   },
   plugins: [],
 }

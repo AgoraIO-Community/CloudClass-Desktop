@@ -10,23 +10,35 @@
     @apply font-scenario;
 }
 
+.btn.small {
+    @apply h-8 w-20 text-sm;
+}
+
+.btn.large {
+    @apply h-8 text-base;
+    width: 280px;
+
+}
 .btn {
-    @apply cursor-pointer w-20 h-8 rounded-full text-sm;
+    @apply cursor-pointer text-base rounded-full;
 }
 
-.btn:hover {
-    @apply btn-hover;
+.btn:focus {
+    @apply outline-none;
 }
 
-.btn-hover {
-    background-color: var(--primary-hover);
+.btn.primary {
+    @apply text-white bg-primary;
+    @apply hover:bg-primary-hover;
+    @apply active:bg-primary-active;
 }
 
-:root {
-    --primary: #357BF6;
-    --primary-hover: #639AFA;
+.btn.danger {
+    @apply text-danger bg-white border-danger border;
 }
-
-.bg-primary {
-    background-color: var(--primary);
+.btn.danger:hover {
+    @apply text-danger-hover border-danger-hover;
+}
+.btn.danger:active {
+    @apply text-danger-active border-danger-active;
 }

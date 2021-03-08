@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "outDir": "lib",
+    "jsx": "react",
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "paths": {
+      "~components": ["./src/components"],
+      "~styles": ["./src/styles"],
+      "~utilities": ["./src/utilities"],
+      "~components/*": ["./src/components/*"],
+      "~styles/*": ["./src/styles/*"],
+      "~utilities/*": ["./src/utilities/*"]
+    }
+  }
+}

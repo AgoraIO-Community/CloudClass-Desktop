@@ -23,7 +23,7 @@
     "start": "vite",
     "build": "run-s build:bundle build:types",
     "b": "yarn build",
-    "build:types": "tsc",
+    "build:types": "tsc -p ./ts.release.json",
     "build:bundle": "vite build",
     "storybook": "start-storybook -p 6006",
     "s": "yarn storybook",

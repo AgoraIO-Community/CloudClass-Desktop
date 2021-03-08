@@ -15,7 +15,7 @@ export default defineConfig({
     outDir: "lib",
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "AgoraAclassUiKitN",
+      name: "AgoraScenarioUIKit",
     },
     rollupOptions: {
       output: {

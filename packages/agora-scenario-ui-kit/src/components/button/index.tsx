@@ -5,15 +5,17 @@ import { BaseElementProps } from '~utilities';
 export interface ButtonProps extends BaseElementProps {
   type?: 'primary' | 'danger';
   disabled?: boolean;
+  large?: boolean;
 }
 
-export const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children }) => {
+export const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children, large }) => {
   const cls = classnames({
     [`btn`]: 1,
-    [`text-white bg-primary`]: type === 'primary',
-    [`text-red-500 border border-red-500`]: type === 'danger',
-    [`active:outline-none`]: 1,
-    [`focus:outline-none`]: 1,
+    [`${type}`]: 1,
+    [`large`]: !!large,
+    [`small`]: !large,
+    // [`active:outline-none`]: 1,
+    // [`focus:outline-none`]: 1,
     [`disabled:opacity-50`]: !!disabled,
   });
   return (
