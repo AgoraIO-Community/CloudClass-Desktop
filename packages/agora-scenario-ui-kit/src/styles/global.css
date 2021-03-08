@@ -1,0 +1,32 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+@import 'tailwindcss/screens';
+
+* {
+    @apply font-scenario;
+}
+
+.btn {
+    @apply cursor-pointer w-20 h-8 rounded-full text-sm;
+}
+
+.btn:hover {
+    @apply btn-hover;
+}
+
+.btn-hover {
+    background-color: var(--primary-hover);
+}
+
+:root {
+    --primary: #357BF6;
+    --primary-hover: #639AFA;
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}

@@ -11,6 +11,9 @@ module.exports = {
   },
   theme: {
     extend: {},
+    fontFamily: {
+      'scenario': ['helvetica neue', 'arial', 'PingFangSC', 'microsoft yahei']
+    }
   },
   variants: {
     extend: {

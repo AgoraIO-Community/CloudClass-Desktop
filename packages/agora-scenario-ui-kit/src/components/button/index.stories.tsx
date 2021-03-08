@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Button } from '.';
+import { Button } from '~components/button';
 
 const meta: Meta = {
   title: 'Components/Button',
@@ -9,12 +9,12 @@ const meta: Meta = {
 
 export const Docs = () => (
   <>
-    <Button type="primary">Primary</Button>
-    <Button type="danger">Ghost</Button>
-    <Button type="primary" disabled>
+    <Button id="primary" type="primary">Primary</Button>
+    <Button id="Ghost" type="danger">Ghost</Button>
+    <Button id="primary" type="primary" disabled>
       Primary
     </Button>
-    <Button type="danger" disabled>
+    <Button id="danger" type="danger" disabled>
       Ghost
     </Button>
   </>
