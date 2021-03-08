@@ -6,7 +6,7 @@ export interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children }) => {
+export const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children }) => {
   const cls = classnames({
     [`cursor-pointer w-20 h-8 rounded-full text-sm font-sans`]: 1,
     [`text-white bg-primary`]: type === 'primary',
@@ -21,5 +21,3 @@ const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children }) => {
     </button>
   );
 };
-
-export default Button;
