@@ -7,30 +7,19 @@ const meta: Meta = {
   component: Button,
 };
 
-export const Docs = (props: {primaryText: string, dangerText: string}) => (
-  <div className="grid grid-flow-col md:grid-flow-col">
-    <Button id="primary" type="primary">{props.primaryText}</Button>
-    <Button id="Ghost" type="danger">{props.dangerText}</Button>
-    <Button id="primary" type="primary" disabled>
-      {props.primaryText}
-    </Button>
-    <Button id="danger" type="danger" disabled>
-      {props.dangerText}
-    </Button>
-    <Button id="primary" type="primary" large>{props.primaryText}</Button>
-    <Button id="Ghost" type="danger" large>{props.dangerText}</Button>
-    <Button id="primary" type="primary" disabled large>
-      {props.primaryText}
-    </Button>
-    <Button id="danger" type="danger" disabled large>
-      {props.dangerText}
-    </Button>
-  </div>
+export const Docs = () => (
+  <>
+    <div>
+      <Button>Primary</Button>
+      <Button type="danger">Danger</Button>
+    </div>
+    <div className="mt-4">
+      <Button size="lg">Primary</Button>
+      <Button type="danger" size="lg">
+        Danger
+      </Button>
+    </div>
+  </>
 );
-
-Docs.args = {
-  primaryText: 'Primary',
-  dangerText: 'Danger',
-}
 
 export default meta;

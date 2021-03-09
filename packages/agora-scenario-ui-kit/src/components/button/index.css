@@ -1,0 +1,44 @@
+.btn {
+  @apply cursor-pointer text-base rounded-full;
+}
+
+.btn-default {
+}
+
+.btn-primary {
+  @apply text-white bg-primary;
+  @apply hover:bg-primary-hover;
+  @apply active:bg-primary-active;
+}
+
+.btn-ghost {
+}
+
+.btn-danger {
+  @apply text-danger bg-white border-danger border;
+}
+
+.btn-danger:hover {
+  @apply text-danger-hover border-danger-hover;
+}
+
+.btn-danger:active {
+  @apply text-danger-active border-danger-active;
+}
+
+.btn-sm {
+  width: 80px;
+  height: 30px;
+}
+
+.btn-lg {
+  width: 280px;
+  height: 40px;
+}
+
+.btn:focus {
+  @apply outline-none;
+}
+.btn[disabled] {
+  @apply disabled:opacity-50;
+}

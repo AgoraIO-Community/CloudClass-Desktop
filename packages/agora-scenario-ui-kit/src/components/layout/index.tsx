@@ -1,75 +1,69 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { FC } from 'react';
 import classnames from 'classnames';
+import { BaseProps } from '~components/interface/base-props';
+import './index.css';
 
-export interface LayoutGeneralProps {
-  style?: CSSProperties;
-  className?: string;
-}
-export interface LayoutProps extends LayoutGeneralProps {
+export interface LayoutProps extends BaseProps {
   direction?: ' row' | 'col';
 }
 
 export const Layout: FC<LayoutProps> = ({
   direction = 'row',
-  style,
   className,
   children,
+  ...restProps
 }) => {
   const cls = classnames({
-    [`flex flex-${direction}`]: 1,
+    [`layout layout-${direction}`]: 1,
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} style={style}>
+    <div {...restProps} className={cls}>
       {children}
     </div>
   );
 };
 
-export const Header: FC<LayoutGeneralProps> = ({
+export const Header: FC<BaseProps> = ({
   className,
-  style,
   children,
+  ...restProps
 }) => {
   const cls = classnames({
-    [`flex flex-row border-b border-gray-100 h-12 w-full`]: 1,
+    [`layout-header`]: 1,
     [`${className}`]: !!className,
   });
 
   return (
-    <header style={style} className={cls}>
+    <header {...restProps} className={cls}>
       {children}
     </header>
   );
 };
 
-export const Aside: FC<LayoutGeneralProps> = ({
-  className,
-  style,
-  children,
-}) => {
+export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
-    [`flex flex-col border-l border-gray-100 w-72 h-full`]: 1,
+    [`layout-aside`]: 1,
     [`${className}`]: !!className,
   });
   return (
-    <aside style={style} className={cls}>
+    <aside {...restProps} className={cls}>
       {children}
     </aside>
   );
 };
 
-export const Content: FC<LayoutGeneralProps> = ({
+export const Content: FC<BaseProps> = ({
   className,
-  style,
   children,
+  ...restProps
 }) => {
   const cls = classnames({
-    [`flex flex-row h-full flex-1`]: 1,
+    [`layout-content`]: 1,
     [`${className}`]: !!className,
   });
   return (
-    <section style={style} className={cls}>
+    <section {...restProps} className={cls}>
       {children}
     </section>
   );
