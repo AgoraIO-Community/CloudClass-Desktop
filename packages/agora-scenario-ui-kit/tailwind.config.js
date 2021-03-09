@@ -14,12 +14,17 @@ module.exports = {
       backgroundColor: {
         'primary': '#357BF6',
         'primary-hover': '#639AFA',
-        'primary-active': '#2663D0',
+        'primary-active': '#2663D0'
       },
       borderColor: {
         'danger': '#DE5753',
         'danger-hover': '#F56F6B',
         'danger-active': '#C02621',
+
+        'secondary': '#D2D2E2',
+        'secondary-hover': '#639AFA',
+        'secondary-active': '#2663D0',
+
       },
       textColor: {
         'primary': '#357BF6',
@@ -28,6 +33,10 @@ module.exports = {
         'danger': '#DE5753',
         'danger-hover': '#F56F6B',
         'danger-active': '#C02621',
+        'secondary': '#357BF6',
+        'secondary-hover': '#639AFA',
+        'secondary-active': '#2663D0',
+        'ghost': '#677386',
       },
     },
     fontFamily: {

@@ -7,19 +7,26 @@ const meta: Meta = {
   component: Button,
 };
 
-export const Docs = () => (
+type DocsProps = {
+  primary: string,
+  secondary: string,
+  ghost: string,
+  danger: string,
+}
+
+export const Docs = ({primary, secondary, ghost, danger}: DocsProps) => (
   <>
-    <h5>Types</h5>
-    <div className="my-4">
-      <Button>Primary</Button>
-      <Button type="danger">Danger</Button>
+    <div>
+      <Button>{primary}</Button>
+      <Button type="secondary">{secondary}</Button>
+      <Button type="ghost">{ghost}</Button>
+      <Button type="danger">{danger}</Button>
     </div>
-    <h5>Size</h5>
-    <div className="my-4">
-      <Button size="lg">Primary</Button>
-      <Button type="danger" size="lg">
-        Danger
-      </Button>
+    <div className="mt-4">
+      <Button size="lg">{primary}</Button>
+      <Button type="secondary" size="lg">{secondary}</Button>
+      <Button type="ghost" size="lg">{ghost}</Button>
+      <Button type="danger" size="lg">{danger}</Button>
     </div>
     <h5>Disabled</h5>
     <div className="my-4">
@@ -30,5 +37,12 @@ export const Docs = () => (
     </div>
   </>
 );
+
+Docs.args = {
+  primary: '确定',
+  secondary: '取消',
+  ghost: 'ghost',
+  danger: 'danger',
+}
 
 export default meta;
