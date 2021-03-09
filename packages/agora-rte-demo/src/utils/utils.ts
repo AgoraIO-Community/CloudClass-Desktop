@@ -178,28 +178,28 @@ export const getDeviceLabelFromStorage = (type: string) => {
 }
 
 export const startDownload = async (isNative: boolean, taskUuid: string, callback: (progress: number) => any) => {
-  if (isNative) {
-    const controller = new AbortController();
-      const resourcesHost = "convertcdn.netless.link";
-      const signal = controller.signal;
-      const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      const res = await fetch(zipUrl, {
-          method: "get",
-          signal: signal,
-      }).then(fetchProgress({
-          onProgress: (progress: any) => {
-            if (progress.hasOwnProperty('percentage')) {
-              callback(get(progress, 'percentage'))
-            }
-          },
-      }));
-    console.log("native端 课件下载完成")
-  } else {
+  // if (isNative) {
+  //   const controller = new AbortController();
+  //     const resourcesHost = "convertcdn.netless.link";
+  //     const signal = controller.signal;
+  //     const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+  //     const res = await fetch(zipUrl, {
+  //         method: "get",
+  //         signal: signal,
+  //     }).then(fetchProgress({
+  //         onProgress: (progress: any) => {
+  //           if (progress.hasOwnProperty('percentage')) {
+  //             callback(get(progress, 'percentage'))
+  //           }
+  //         },
+  //     }));
+  //   console.log("native端 课件下载完成")
+  // } else {
     await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
       callback(progress)
     })
     console.log("web端 课件下载完成")
-  }
+  // }
 }
 
 export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {

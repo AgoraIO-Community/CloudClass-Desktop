@@ -517,34 +517,34 @@ export class BoardStore {
     try {
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      if (isWeb) {
+      // if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
           this.preloadingProgress = progress
           this.controller = controller
         })
-      } else {
-        const controller = new AbortController();
-        this.controller = controller
-        const resourcesHost = "convertcdn.netless.link";
-        const signal = controller.signal;
-        const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-        const res = await fetch(zipUrl, {
-            method: "get",
-            signal: signal,
-        }).then(fetchProgress({
-            onProgress: (progress: any) => {
-              if (progress.hasOwnProperty('percentage')) {
-                this.preloadingProgress = get(progress, 'percentage')
-              }
-            },
-        }));
-        if (res.status !== 200) {
-          throw GenericErrorWrapper({
-            code: res.status,
-            message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-          })
-        }
-      }
+      // } else {
+      //   const controller = new AbortController();
+      //   this.controller = controller
+      //   const resourcesHost = "convertcdn.netless.link";
+      //   const signal = controller.signal;
+      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+      //   const res = await fetch(zipUrl, {
+      //       method: "get",
+      //       signal: signal,
+      //   }).then(fetchProgress({
+      //       onProgress: (progress: any) => {
+      //         if (progress.hasOwnProperty('percentage')) {
+      //           this.preloadingProgress = get(progress, 'percentage')
+      //         }
+      //       },
+      //   }));
+      //   if (res.status !== 200) {
+      //     throw GenericErrorWrapper({
+      //       code: res.status,
+      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
+      //     })
+      //   }
+      // }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
       this.downloading = false
     } catch (err) {
