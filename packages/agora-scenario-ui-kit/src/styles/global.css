@@ -9,36 +9,3 @@
 * {
     @apply font-scenario;
 }
-
-.btn.small {
-    @apply h-8 w-20 text-sm;
-}
-
-.btn.large {
-    @apply h-8 text-base;
-    width: 280px;
-
-}
-.btn {
-    @apply cursor-pointer text-base rounded-full;
-}
-
-.btn:focus {
-    @apply outline-none;
-}
-
-.btn.primary {
-    @apply text-white bg-primary;
-    @apply hover:bg-primary-hover;
-    @apply active:bg-primary-active;
-}
-
-.btn.danger {
-    @apply text-danger bg-white border-danger border;
-}
-.btn.danger:hover {
-    @apply text-danger-hover border-danger-hover;
-}
-.btn.danger:active {
-    @apply text-danger-active border-danger-active;
-}

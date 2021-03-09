@@ -1,25 +1,28 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseElementProps } from '~utilities';
+import { BaseProps } from '~components/interface/base-props';
+import './index.css';
 
-export interface ButtonProps extends BaseElementProps {
-  type?: 'primary' | 'danger';
+export interface ButtonProps extends BaseProps {
+  type?: 'default' | 'primary' | 'ghost' | 'danger';
+  size?: 'sm' | 'lg';
   disabled?: boolean;
-  large?: boolean;
 }
 
-export const Button: FC<ButtonProps> = ({ type = 'primary', disabled, children, large }) => {
+export const Button: FC<ButtonProps> = ({
+  type = 'primary',
+  size = 'sm',
+  disabled,
+  children,
+  className,
+  ...restProps
+}) => {
   const cls = classnames({
-    [`btn`]: 1,
-    [`${type}`]: 1,
-    [`large`]: !!large,
-    [`small`]: !large,
-    // [`active:outline-none`]: 1,
-    // [`focus:outline-none`]: 1,
-    [`disabled:opacity-50`]: !!disabled,
+    [`btn btn-${size} btn-${type}`]: 1,
+    [`${className}`]: !!className,
   });
   return (
-    <button className={cls} disabled={disabled}>
+    <button className={cls} disabled={disabled} {...restProps}>
       {children}
     </button>
   );

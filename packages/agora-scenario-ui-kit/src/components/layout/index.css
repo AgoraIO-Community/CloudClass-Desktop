@@ -1,0 +1,24 @@
+.layout {
+  @apply flex;
+}
+
+.layout-row {
+  @apply flex-row;
+}
+
+.layout-col {
+  @apply flex-col;
+}
+
+.layout-content {
+  @apply flex flex-row flex-1 h-full;
+}
+
+.layout-header {
+  @apply flex flex-row border-b border-gray-100 w-full;
+  height: 44px;
+}
+
+.layout-aside {
+  @apply flex flex-col border-l border-gray-100 h-full w-72;
+}
