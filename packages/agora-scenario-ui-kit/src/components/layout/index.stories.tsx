@@ -12,7 +12,7 @@ const meta: Meta = {
   },
 };
 
-export const Layouts = () => (
+export const Docs = () => (
   <Layout
     direction="col"
     className="bg-green-300"

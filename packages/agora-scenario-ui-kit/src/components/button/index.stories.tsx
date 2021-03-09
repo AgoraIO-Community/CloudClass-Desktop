@@ -9,13 +9,22 @@ const meta: Meta = {
 
 export const Docs = () => (
   <>
-    <div>
+    <h5>Types</h5>
+    <div className="my-4">
       <Button>Primary</Button>
       <Button type="danger">Danger</Button>
     </div>
-    <div className="mt-4">
+    <h5>Size</h5>
+    <div className="my-4">
       <Button size="lg">Primary</Button>
       <Button type="danger" size="lg">
+        Danger
+      </Button>
+    </div>
+    <h5>Disabled</h5>
+    <div className="my-4">
+      <Button size="lg" disabled>Primary</Button>
+      <Button type="danger" size="lg" disabled>
         Danger
       </Button>
     </div>
