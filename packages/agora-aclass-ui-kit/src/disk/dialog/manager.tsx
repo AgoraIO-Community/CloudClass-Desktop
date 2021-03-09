@@ -244,6 +244,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
                     handleOpenCourse={props.handleOpenCourse}
                     // deleteComponent={props.deleteComponent}
                     refreshComponent={props.refreshComponent}
+                    removeTextVisible={false}
                     removeText={props.removeText}
                     removeSuccess={props.removeSuccess}
                     removeFailed={props.removeFailed}
