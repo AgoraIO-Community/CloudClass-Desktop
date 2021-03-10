@@ -20,6 +20,10 @@ module.exports = {
 
         'download-fg': '#456DFD',
         'download-bg': '#E3E3F0',
+
+        'success': '#FAFFFF',
+        'error': '#FFF2F2',
+        'warning': '#FFFBF4'
       },
       borderColor: {
         'danger': '#DE5753',
@@ -32,6 +36,10 @@ module.exports = {
 
         'table': '#E3E3EC',
         'table-bottom': '#E3E3EC',
+        'success': '#357BF6',
+        'error': '#F07766',
+        'warning': '#F0C996'
+
       },
       textColor: {
         'primary': '#357BF6',
