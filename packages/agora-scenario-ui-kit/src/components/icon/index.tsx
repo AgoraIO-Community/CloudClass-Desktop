@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
 import './index.css';
-
 export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
@@ -32,21 +31,30 @@ export const Icon: FC<IconProps> = ({
   );
 };
 
-const getIconColor = (type: string) => {
+const getIconInfo = (type: string) => {
   const mapping: Record<string, string> = {
-    'format-ppt': '#F6B081',
-    'format-docx': '#96CBE1',
-    'format-doc': '#A6DDBF',
-    'format-mp3': '#6C82D1',
-    'format-mp4': '#A8ABE9',
-    'format-pdf': '#A3C3DE',
-
+    'ppt': '#F6B081',
+    'word': '#96CBE1',
+    'excel': '#A6DDBF',
+    'audio': '#6C82D1',
+    'video': '#A8ABE9',
+    'pdf': '#A3C3DE',
+    'image': '#A3F2E6',
   }
   return mapping[type]
 }
 
+export type FormatIconType =
+  | 'ppt'
+  | 'word'
+  | 'excel'
+  | 'audio'
+  | 'video'
+  | 'pdf'
+  | 'image'
+
 export interface IconBoxProps extends BaseProps {
-  iconType: IconTypes
+  iconType: FormatIconType
 }
 
 export const IconBox: FC<IconBoxProps> = ({
@@ -55,8 +63,9 @@ export const IconBox: FC<IconBoxProps> = ({
   ...restProps
 }) => {
 
-  const color = getIconColor(iconType)
+  const color = getIconInfo(iconType)
+  const type = `format-${iconType}` as IconTypes
   return (
-    <Icon style={style} color={color} type={iconType} {...restProps}></Icon>
+    <Icon style={style} color={color} type={type} {...restProps}></Icon>
   )
 }

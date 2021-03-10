@@ -7,6 +7,7 @@ export interface ButtonProps extends BaseProps {
   type?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'lg';
   disabled?: boolean;
+  onClick?: any;
 }
 
 export const Button: FC<ButtonProps> = ({

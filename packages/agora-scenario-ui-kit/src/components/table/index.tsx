@@ -24,13 +24,16 @@ export const Table: React.FC<TableProps> = ({className, children, align, ...rest
   )
 }
 
-export interface ColProps extends TableBaseProps {}
+export interface ColProps extends TableBaseProps {
+  width?: 30
+}
 
-export const Col: React.FC<ColProps> = ({children, className, align, ...restProps}) => {
+export const Col: React.FC<ColProps> = ({children, className, align, width, ...restProps}) => {
   const cls = classnames({
     ['table-col-item']: 1,
     [`${className}`]: !!className,
-    [`justify-${align}`]: !!align
+    [`justify-${align}`]: !!align,
+    [`flex-width-${width}`]: !!width,
   })
   return (
     <div className={cls} {...restProps}>
@@ -39,13 +42,20 @@ export const Col: React.FC<ColProps> = ({children, className, align, ...restProp
   )
 }
 
-export interface RowProps extends TableBaseProps {}
+export interface RowProps extends TableBaseProps {
+  border?: 1,
+  height?: 10,
+  gap?: 10,
+}
 
-export const Row: React.FC<RowProps> = ({children, className, align, ...restProps}) => {
+export const Row: React.FC<RowProps> = ({children, className, border, gap, align, height, ...restProps}) => {
   const cls = classnames({
     ['table-row-item']: 1,
     [`${className}`]: !!className,
-    [`justify-${align}`]: !!align
+    [`justify-${align}`]: !!align,
+    [`border-bottom-width-${border}`]: !!border,
+    [`table-row-x-${height}`]: !!height,
+    [`item-gap-${gap}`]: !!gap
   })
   return (
     <div className={cls} {...restProps}>
@@ -73,15 +83,12 @@ export const Inline: React.FC<ItemFontColorProps> = ({
 
 export interface RowProps extends TableBaseProps {}
 
-export const TableHeader: React.FC<RowProps> = ({children, className, align, ...restProps}) => {
+export const TableHeader: React.FC<RowProps> = ({className, ...restProps}) => {
   const cls = classnames({
-    ['table-header']: 1,
-    [`justify-${align}`]: !!align,
+    ['table-header']: 1
   })
   return (
-    <div className={cls} {...restProps}>
-      {children}
-    </div>
+    <Row className={cls} {...restProps} />
   )
 }
 
@@ -122,5 +129,31 @@ export const Progress: React.FC<ProgressProps> = ({
         <div className={fgCls} style={{width: `${progressWidth}%`}}></div>
       </div>
     </div>
+  )
+}
+
+export interface CheckBoxProps extends BaseProps {
+  checked?: boolean,
+  onClick?: (evt: any) => any,
+  indeterminate?: boolean,
+}
+
+export const CheckBox: React.FC<CheckBoxProps> = ({indeterminate, children, className, ...restProps}) => {
+
+  const cls = classnames({
+    ["form-checkbox h-5 w-5 text-red-600"]: 1,
+    [`indeterminate`]: indeterminate,
+  })
+
+  const mountDom = (dom: HTMLInputElement | null) => {
+    dom && (dom.indeterminate = indeterminate!)
+  }
+
+  const handleChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
+    indeterminate && (evt.currentTarget.indeterminate = !evt.currentTarget.checked)
+  }
+
+  return (
+    <input ref={mountDom} onChange={handleChange} type="checkbox" className={cls} {...restProps} />
   )
 }

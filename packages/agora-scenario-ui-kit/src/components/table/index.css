@@ -1,17 +1,11 @@
 .table-flex-container {
-  @apply flex flex-col border border-table;
+  @apply flex flex-col;
   color: #191919;
 }
 
 .table-row-item {
-  @apply flex flex-1 flex-row border border-table-bottom table-row-height;
+  @apply flex flex-row;
   font-size: 13px;
-  margin: 0px 0px -1px -1px;
-}
-
-.table-row-height {
-  padding: 10px;
-  line-height: 20px;
 }
 
 .table-col-item {
@@ -23,7 +17,37 @@
   font-size: 13px;
   line-height: 18px;
   background-color: #F9F9FC;
-  border: 1px solid rgba(255, 255, 255, 0.49);
-  padding: 9px;
+  padding: 10px;
+  @apply border-bottom-width-1;
   line-height: 20px;
+}
+
+.border-bottom-width-1 {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  @apply border-table-bottom;
+  margin: 0px 0px -1px -1px;
+}
+
+.item-gap-10 {
+  gap: 10px;
+}
+
+.table-row-x-10 {
+  padding: 10px;
+  line-height: 20px;
+}
+
+.flex-width-30 {
+  flex: 30px 0 0;
+}
+
+/* .indeterminate {
+  background-color: #357BF6;
+  color: white;
+} */
+
+input.indeterminate:indeterminate {
+  background-color: #357BF6;
+  color: white;
 }
