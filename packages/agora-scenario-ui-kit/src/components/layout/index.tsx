@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import './index.css';
 
 export interface LayoutProps extends BaseProps {
-  direction?: ' row' | 'col';
+  direction?: 'row' | 'col';
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -18,7 +18,7 @@ export const Layout: FC<LayoutProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div {...restProps} className={cls}>
+    <div className={cls} {...restProps}>
       {children}
     </div>
   );
@@ -35,7 +35,7 @@ export const Header: FC<BaseProps> = ({
   });
 
   return (
-    <header {...restProps} className={cls}>
+    <header className={cls} {...restProps}>
       {children}
     </header>
   );
@@ -47,7 +47,7 @@ export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
     [`${className}`]: !!className,
   });
   return (
-    <aside {...restProps} className={cls}>
+    <aside className={cls} {...restProps}>
       {children}
     </aside>
   );
@@ -63,10 +63,8 @@ export const Content: FC<BaseProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <section {...restProps} className={cls}>
+    <section className={cls} {...restProps}>
       {children}
     </section>
   );
 };
-
-export default Layout;
