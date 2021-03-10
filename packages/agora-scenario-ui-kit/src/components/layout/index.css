@@ -15,7 +15,7 @@
 }
 
 .layout-header {
-  @apply flex flex-row border-b border-gray-100 w-full;
+  @apply flex flex-row justify-between items-center border-b border-gray-100 w-full bg-white;
   height: 44px;
 }
 
