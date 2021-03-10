@@ -14,7 +14,11 @@ module.exports = {
       backgroundColor: {
         'primary': '#357BF6',
         'primary-hover': '#639AFA',
-        'primary-active': '#2663D0'
+        'primary-active': '#2663D0',
+
+        'success': '#FAFFFF',
+        'error': '#FFF2F2',
+        'warning': '#FFFBF4'
       },
       borderColor: {
         'danger': '#DE5753',
@@ -24,6 +28,10 @@ module.exports = {
         'secondary': '#D2D2E2',
         'secondary-hover': '#639AFA',
         'secondary-active': '#2663D0',
+
+        'success': '#357BF6',
+        'error': '#F07766',
+        'warning': '#F0C996'
 
       },
       textColor: {

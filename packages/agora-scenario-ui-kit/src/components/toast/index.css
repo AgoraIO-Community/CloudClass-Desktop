@@ -1,0 +1,26 @@
+.toast {
+    width: 260px;
+    height: 44px;
+    color: #191919;
+    font-size: 14px;
+    box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    @apply cursor-pointer flex items-center box-border;
+}
+
+.toast i {
+    margin-left: 16px;
+    margin-right: 8px;
+}
+
+.toast-success {
+    @apply bg-success border-success border;
+}
+
+.toast-error {
+    @apply bg-error border-error border;
+}
+
+.toast-warning {
+    @apply bg-warning border-warning border;
+}
