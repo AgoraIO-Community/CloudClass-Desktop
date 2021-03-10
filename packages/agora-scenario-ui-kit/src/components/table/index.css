@@ -1,0 +1,29 @@
+.table-flex-container {
+  @apply flex flex-col border border-table;
+  color: #191919;
+}
+
+.table-row-item {
+  @apply flex flex-1 flex-row border border-table-bottom table-row-height;
+  font-size: 13px;
+  margin: 0px 0px -1px -1px;
+}
+
+.table-row-height {
+  padding: 10px;
+  line-height: 20px;
+}
+
+.table-col-item {
+  @apply flex flex-1 items-center;
+}
+
+.table-header {
+  @apply flex flex-1 flex-row;
+  font-size: 13px;
+  line-height: 18px;
+  background-color: #F9F9FC;
+  border: 1px solid rgba(255, 255, 255, 0.49);
+  padding: 9px;
+  line-height: 20px;
+}

@@ -31,3 +31,32 @@ export const Icon: FC<IconProps> = ({
       {...restProps}></i>
   );
 };
+
+const getIconColor = (type: string) => {
+  const mapping: Record<string, string> = {
+    'format-ppt': '#F6B081',
+    'format-docx': '#96CBE1',
+    'format-doc': '#A6DDBF',
+    'format-mp3': '#6C82D1',
+    'format-mp4': '#A8ABE9',
+    'format-pdf': '#A3C3DE',
+
+  }
+  return mapping[type]
+}
+
+export interface IconBoxProps extends BaseProps {
+  iconType: IconTypes
+}
+
+export const IconBox: FC<IconBoxProps> = ({
+  style,
+  iconType,
+  ...restProps
+}) => {
+
+  const color = getIconColor(iconType)
+  return (
+    <Icon style={style} color={color} type={iconType} {...restProps}></Icon>
+  )
+}

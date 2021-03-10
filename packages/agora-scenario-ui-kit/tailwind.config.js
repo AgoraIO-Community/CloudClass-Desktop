@@ -1,7 +1,7 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: ['./src/**/*.{ts,tsx}',],
+  purge: ['./src/**/*.{ts,tsx}'],
   darkMode: false, // or 'media' or 'class'
   colors: {
     gray: colors.coolGray,
@@ -14,7 +14,12 @@ module.exports = {
       backgroundColor: {
         'primary': '#357BF6',
         'primary-hover': '#639AFA',
-        'primary-active': '#2663D0'
+        'primary-active': '#2663D0',
+        'table-header': '#F9F9FC',
+        'table-body': '#FFFFFF',
+
+        'download-fg': '#456DFD',
+        'download-bg': '#E3E3F0',
       },
       borderColor: {
         'danger': '#DE5753',
@@ -25,6 +30,8 @@ module.exports = {
         'secondary-hover': '#639AFA',
         'secondary-active': '#2663D0',
 
+        'table': '#E3E3EC',
+        'table-bottom': '#E3E3EC',
       },
       textColor: {
         'primary': '#357BF6',

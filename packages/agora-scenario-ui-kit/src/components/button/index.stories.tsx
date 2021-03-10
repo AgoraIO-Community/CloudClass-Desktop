@@ -35,6 +35,12 @@ export const Docs = ({primary, secondary, ghost, danger}: DocsProps) => (
       <Button type="ghost" size="lg" disabled>{ghost}</Button>
       <Button type="danger" size="lg" disabled>{danger}</Button>
     </div>
+    <div className="my-4">
+      <Button size="sm" disabled>{primary}</Button>
+      <Button type="secondary" size="sm" disabled>{secondary}</Button>
+      <Button type="ghost" size="sm" disabled>{ghost}</Button>
+      <Button type="danger" size="sm" disabled>{danger}</Button>
+    </div>
   </>
 );
 
