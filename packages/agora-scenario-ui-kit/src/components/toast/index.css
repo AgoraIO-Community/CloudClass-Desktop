@@ -17,22 +17,10 @@
     @apply bg-success border-success border;
 }
 
-.toast-success i {
-    color: #357BF6 !important;
-}
-
 .toast-error {
     @apply bg-error border-error border;
 }
 
-.toast-error i {
-    color: #F04C36 !important;
-}
-
 .toast-warning {
     @apply bg-warning border-warning border;
-}
-
-.toast-warning i {
-    color: #FFA229 !important;
 }
