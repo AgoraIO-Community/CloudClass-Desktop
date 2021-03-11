@@ -1,23 +1,29 @@
+import React, { EventHandler, FC, SyntheticEvent } from 'react';
 import classnames from 'classnames';
-import React, { FC } from 'react';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
 import './index.css';
+
+export type { IconTypes } from './icon-types';
+
 export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
   color?: string;
+  onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
+
 export const Icon: FC<IconProps> = ({
   type,
   className,
   style,
-  size = 24,
-  color = '#333',
+  size,
+  color,
   ...restProps
 }) => {
   const cls = classnames({
     [`iconfont icon-${type}`]: true,
+    [`${className}`]: !!className,
   });
   return (
     <i
