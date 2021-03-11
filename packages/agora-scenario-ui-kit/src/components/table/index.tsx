@@ -13,7 +13,7 @@ export interface TableProps extends TableBaseProps {}
 
 export const Table: React.FC<TableProps> = ({className, children, align, ...restProps}) => {
   const cls = classnames({
-    ['table-flex-container']: 1,
+    'table-flex-container': 1,
     [`${className}`]: !!className,
     [`justify-${align}`]: !!align
   })
@@ -30,7 +30,7 @@ export interface ColProps extends TableBaseProps {
 
 export const Col: React.FC<ColProps> = ({children, className, align, width, ...restProps}) => {
   const cls = classnames({
-    ['table-col-item']: 1,
+    'table-col-item': 1,
     [`${className}`]: !!className,
     [`justify-${align}`]: !!align,
     [`flex-width-${width}`]: !!width,
@@ -50,7 +50,7 @@ export interface RowProps extends TableBaseProps {
 
 export const Row: React.FC<RowProps> = ({children, className, border, gap, align, height, ...restProps}) => {
   const cls = classnames({
-    ['table-row-item']: 1,
+    'table-row-item': 1,
     [`${className}`]: !!className,
     [`justify-${align}`]: !!align,
     [`border-bottom-width-${border}`]: !!border,
@@ -85,7 +85,7 @@ export interface RowProps extends TableBaseProps {}
 
 export const TableHeader: React.FC<RowProps> = ({className, ...restProps}) => {
   const cls = classnames({
-    ['table-header']: 1
+    'table-header': 1
   })
   return (
     <Row className={cls} {...restProps} />
@@ -141,7 +141,7 @@ export interface CheckBoxProps extends BaseProps {
 export const CheckBox: React.FC<CheckBoxProps> = ({indeterminate, children, className, ...restProps}) => {
 
   const cls = classnames({
-    ["form-checkbox h-5 w-5 text-red-600"]: 1,
+    'form-checkbox h-5 w-5 text-red-600': 1,
     [`indeterminate`]: indeterminate,
   })
 

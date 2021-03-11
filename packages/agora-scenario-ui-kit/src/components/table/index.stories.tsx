@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { CheckBox, Col, Inline, Progress, Row, Table, TableHeader } from '~components/table';
-import { IconBox } from '~components/icon';
+import { Meta } from '@storybook/react';
+import React, { useCallback, useMemo } from 'react';
 import { Button } from '~components';
-import ReactDOM from 'react-dom';
+import { IconBox } from '~components/icon';
+import { CheckBox, Col, Inline, Progress, Row, Table, TableHeader } from '~components/table';
 import { formatFileSize } from '~utilities';
 
 const meta: Meta = {
@@ -91,6 +90,10 @@ export const CloudStorage = ({width, size}: CloudStorageProps) => {
         <Col>大小</Col>
         <Col>修改时间</Col>
       </TableHeader>
+      <Table style={{
+        maxHeight: 450,
+        overflow: 'auto'
+      }}>
       {resizeList(list, size).map(({name, progress, date, type}: any, idx: number) => 
         <Row height={10} border={1} key={idx} >
           <Col>
@@ -105,6 +108,7 @@ export const CloudStorage = ({width, size}: CloudStorageProps) => {
           </Col>
         </Row>
       )}
+      </Table>
     </Table>
   )
 }
@@ -172,7 +176,7 @@ UploadList.args = {
   size: 0
 }
 
-export const CheckList = ({size, width, progress}: UploadListProps) => {
+const CheckList = ({size, width, progress}: UploadListProps) => {
 
   const [items, updateItems] = React.useState<any[]>(list)
 

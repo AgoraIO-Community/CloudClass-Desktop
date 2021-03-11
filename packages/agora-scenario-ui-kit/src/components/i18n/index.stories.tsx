@@ -1,15 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
 import { Meta } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { IconBox } from '~components/icon';
+import React from 'react';
 import { Button } from '~components';
-import ReactDOM from 'react-dom';
-import { formatFileSize } from '~utilities';
 import { makeI18nProvider } from '.';
 
 const meta: Meta = {
   title: 'Components/I18n',
-  // component: 
 };
 
 const {I18nProvider, useI18nContext} = makeI18nProvider("zh")

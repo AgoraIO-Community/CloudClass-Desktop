@@ -1,12 +1,10 @@
+import { RendererPlayer } from '@/components/media-player'
+import { t } from '@/i18n'
 import { InputLabel, MenuItem, Select } from '@material-ui/core'
 import { Theme, withStyles } from '@material-ui/core/styles'
-import { DevicePicker, Volume, VolumeDirectionEnum, MicWave } from 'agora-aclass-ui-kit'
+import { DevicePicker, MicWave, Volume, VolumeDirectionEnum } from 'agora-aclass-ui-kit'
 import React, { useCallback, useRef, useState } from 'react'
 import styles from './style.module.scss'
-import CustomIconArrow from './assets/rectangle.png'
-import { RendererPlayer } from '@/components/media-player'
-import { SpeakerDeviceVolume } from '../pretest'
-import { t } from '@/i18n'
 
 interface PretestButtonProps {
   text: string
