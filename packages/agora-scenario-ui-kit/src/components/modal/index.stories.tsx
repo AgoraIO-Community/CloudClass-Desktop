@@ -1,12 +1,12 @@
 import React from 'react'
 import { Meta } from '@storybook/react';
-import { Popup } from '~components/popup'
+import { Modal } from '~components/modal'
 import { Icon } from '~components/icon'
 import { Button } from '~components/button'
 
 const meta: Meta = {
-    title: 'Components/Popup',
-    component: Popup,
+    title: 'Components/Modal',
+    component: Modal,
 };
 
 type DocsProps = {
@@ -16,7 +16,7 @@ type DocsProps = {
 export const Docs = ({ title }: DocsProps) => (
     <>
         <div className="mt-4">
-            <Popup
+            <Modal
                 title={title}
                 footer={
                     [
@@ -26,10 +26,10 @@ export const Docs = ({ title }: DocsProps) => (
                 }
             >
                 <p>你确定要下课吗？</p>
-            </Popup>
+            </Modal>
         </div>
         <div className="mt-4">
-            <Popup
+            <Modal
                 title={title}
                 closable={false}
                 footer={
@@ -39,11 +39,11 @@ export const Docs = ({ title }: DocsProps) => (
                 }
             >
                 <p>试用时间到，教室已解散！</p>
-            </Popup>
+            </Modal>
 
         </div>
         <div className="mt-4">
-            <Popup
+            <Modal
                 title={title}
                 width={320}
                 footer={
@@ -53,18 +53,41 @@ export const Docs = ({ title }: DocsProps) => (
                     ]
                 }
             >
-                <Icon type="red-caution" color="#F04C36" size={50}/>
+                <Icon type="red-caution" color="#F04C36" size={50} />
                 <p>
                     课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件
                 </p>
-            </Popup>
+            </Modal>
 
+        </div>
+        <div className="mt-4">
+            <Button onClick={() => {
+                Modal.show({
+                    width: 280,
+                    title: '自己封装的show方法',
+                    closable: true,
+                    footer: [
+                        <Button type="secondary" action="cancel">cancel</Button>,
+                        <Button action="ok">ok</Button>
+                    ],
+                    onOk: () => {console.log('ok')},
+                    onCancel: () => {console.log('cancel')},
+                    children: (
+                        <>
+                            <Icon type="red-caution" color="#F04C36" size={50} />
+                            <p>
+                                课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件
+                            </p>
+                        </>
+                    )
+                })
+            }}>show modal</Button>
         </div>
     </>
 );
 
 Docs.args = {
-    title: 'popup title'
+    title: 'Modal Title'
 }
 
 export default meta;
