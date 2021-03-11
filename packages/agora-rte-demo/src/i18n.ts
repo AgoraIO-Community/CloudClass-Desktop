@@ -1,7 +1,7 @@
 import { GlobalStorage } from '@/utils/custom-storage';
-import {get, isEmpty} from 'lodash';
-import zhCN from './i18n/zh';
+import { get, isEmpty } from 'lodash';
 import en from './i18n/en';
+import zhCN from './i18n/zh';
 import { BizLogger } from './utils/biz-logger';
 
 export const getLanguage = () => GlobalStorage.getLanguage().match(/zh/) ? 'zh' : 'en'
