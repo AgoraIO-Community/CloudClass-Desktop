@@ -409,10 +409,11 @@ export interface EduCustomMessage {
 }
 
 export interface EduTextMessage {
-  fromUser: EduUserInfo
-  message: string
-  type: number
-  timestamp: number
+  fromUser: EduUserInfo,
+  message: string,
+  sensitiveWords: string[],
+  type: number,
+  timestamp: number,
 }
 
 export interface EduRenderConfig {

@@ -463,7 +463,8 @@ export const EducationBoard = observer((props: any) => {
         height: props.height,
         position: 'relative',
         boxSizing: 'border-box',
-        background: 'white'
+        background: 'white',
+        marginTop: boardStore.roleIsTeacher ? '39px' : '0',
       }}>
         {boardStore.aClassHasPermission ? 
         <ZoomController

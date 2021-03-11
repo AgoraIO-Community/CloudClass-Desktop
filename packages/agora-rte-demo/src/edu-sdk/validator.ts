@@ -1,7 +1,7 @@
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { isBoolean, isEmpty, isString, isFunction, isNumber, isArray } from 'lodash';
 import { AgoraEduSDKConfigParams } from "./declare"
-import { ReplayOption, LaunchOption, DiskOption } from "./index"
+import { ReplayOption, LaunchOption, DiskOption, OpenDiskOption } from "./index"
 
 const pattern = /^[0-9a-zA-Z!#$%&()+-:;<=.>?@[\]^_{}|~,]+$/
 
@@ -78,7 +78,7 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
   }
 
   if (!isString(option.translateLanguage)) {
-    throw new AgoraSDKError('language parameter should be string')
+    throw new AgoraSDKError('translateLanguage parameter should be string')
   }
 
   if (!option.listener) {
@@ -117,6 +117,10 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError('courseWareList parameter should be valid array')
   }
 
+  if (option.personalCourseWareList && !isArray(option.personalCourseWareList)) {
+    throw new AgoraSDKError('personalCourseWareList parameter should be valid array')
+  }
+
   // if (option.userUuid && option.userUuid.length > 89) {
   //   throw new AgoraSDKError('userUuid parameter cannot be empty')
   // }
@@ -131,6 +135,24 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 
   if (!pattern.test(option.roomUuid)) {
     throw new AgoraSDKError('roomUuid parameter is invalid')
+  }
+}
+
+export const checkDiskOption = (dom: Element, option: OpenDiskOption) => {
+  if (!dom) {
+    throw new AgoraSDKError('dom parameter cannot be empty')
+  }
+  
+  if (isEmpty(option)) {
+    throw new AgoraSDKError('option parameter cannot be empty')
+  }
+
+  if (!isFunction(option.listener)) {
+    throw new AgoraSDKError('listener parameter should be function')
+  }
+
+  if (!isArray(option.courseWareList)) {
+    throw new AgoraSDKError('courseWareList parameter should be valid array')
   }
 }
 

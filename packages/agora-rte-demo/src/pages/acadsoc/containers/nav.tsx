@@ -9,6 +9,8 @@ import { SignalBar } from './signal/signal'
 import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
 import { t } from '@/i18n'
+import { controller } from '@/edu-sdk/controller'
+import { AgoraEduEvent } from '@/edu-sdk/declare'
 
 const StartViewBox = observer(() => {
   const acadsocStore = useAcadsocRoomStore()
@@ -100,7 +102,6 @@ const current = {
 }
 
 const onCustomerService = async () => {
-
   // const handleUpload = async () => {
     // if (current.lock) return
     try {
@@ -130,10 +131,6 @@ const onCustomerService = async () => {
   // await handleUpload()
 }
 
-const onEquipmentDetection = () => {
-  console.log('click onEquipmentDetection')
-}
-
 type IStatusBar = INavigationItem[]
 
 const SignalBarContainer = observer(() => {
@@ -158,6 +155,12 @@ const ActionBarContainer = observer(() => {
   }, [uiStore.aclassVisible])
 
   const menuBars = [
+    {
+      name: 'customerService',
+      clickEvent: () => {
+        controller.appController.callback(AgoraEduEvent.clicked)
+      },
+    },
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService', clickEvent: onCustomerService },
     { name: 'equipmentDetection', clickEvent: handleSetting },

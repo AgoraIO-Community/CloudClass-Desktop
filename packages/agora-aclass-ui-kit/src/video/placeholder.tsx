@@ -58,9 +58,10 @@ export const PlaceHolderView: React.FC<PlaceHolderViewProps> = (props) => {
           fontSize: '12px',
           fontWeight: 'bold',
           color: '#002591',
+          
           ...props.textEllipsisStyle
         }}
-        maxWidth="27">
+        maxWidth="249">
         <>
           {props.text ? props.text : props.type}
         </>

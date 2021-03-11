@@ -73,13 +73,10 @@ export class UploadFileProvider {
     const uploadPath = `${this.ossConfig.folder}${path}`
     const res: MultipartUploadResult = await this.ossClient.multipartUpload(uploadPath, file, {
       progress: (p: any) => {
-        console.log(p)
         if (onProgress) {
         }
       },
     })
-    console.log(res);
-
   }
   public setFolder(folderPath: string) {
     this.folder = folderPath

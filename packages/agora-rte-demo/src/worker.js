@@ -30,6 +30,6 @@ self.onfetch = function(event) {
 
 var cachePromise;
 function openCache() {
-  if (!cachePromise) { cachePromise = caches.open('agora'); }
+  if (!cachePromise) { cachePromise = caches.open('netless'); }
   return cachePromise;
 }
