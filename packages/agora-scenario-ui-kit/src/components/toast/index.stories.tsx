@@ -3,8 +3,6 @@ import { Meta } from '@storybook/react';
 import { Toast } from '~components/toast';
 import { Button } from '~components/button'
 
-import Notification from 'rc-notification'
-
 const meta: Meta = {
   title: 'Components/Toast',
   component: Toast,
@@ -39,18 +37,26 @@ export const Docs = ({success, error, warning, toastText, toastType = 'success'}
     </div>
     <div className="mt-4">
       <Button size="lg" onClick={() => {
-        Notification.newInstance({}, notification => {
-          notification.notice({
-            content: <Toast type={toastType}>{toastText}</Toast>,
-            style: {
-              position: 'fixed',
-              top: '5%',
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }
-          });
-        });
-      }}>show toast</Button>
+        Toast.show({
+          type: toastType,
+          text: toastType,
+          duration: 1,
+        })
+      }}>show toast - default right top corner</Button>
+    </div>
+    <div className="mt-4">
+      <Button size="lg" onClick={() => {
+        Toast.show({
+          type: toastType,
+          text: '自己定义的内容，时间设置5s，居中',
+          duration: 5,
+          style: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }
+        })
+      }}>show toast - user define</Button>
     </div>
   </>
 );
@@ -60,7 +66,6 @@ Docs.args = {
   error: 'error',
   warning: 'warning',
   toastText: 'test',
-
 }
 
 export default meta;
