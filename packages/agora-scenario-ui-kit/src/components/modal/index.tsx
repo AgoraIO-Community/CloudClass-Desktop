@@ -15,9 +15,9 @@ export interface ModalProps extends BaseProps {
     /** 底部内容 */
     footer?: React.ReactNode;
     /** 点击确定回调 */
-    onOk?: (e: React.MouseEvent<HTMLElement>) => void;
+    onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
-    onCancel?: (e: React.MouseEvent<HTMLElement>) => void;
+    onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
 }
 
 export const Modal: FC<ModalProps> = ({
@@ -53,8 +53,8 @@ export const Modal: FC<ModalProps> = ({
                             React.cloneElement(item, {
                                 onClick: e => {
                                     const { action } = item.props;
-                                    action === 'ok' && onOk(e);
-                                    action === 'cancel' && onCancel(e);
+                                    action === 'ok' && onOk && onOk(e);
+                                    action === 'cancel' && onCancel && onCancel(e);
                                 }
                             })
                         }
