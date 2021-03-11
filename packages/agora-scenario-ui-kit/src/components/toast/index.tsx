@@ -6,7 +6,7 @@ import { IconTypes } from '~components/icon/icon-types';
 import Notification from 'rc-notification'
 import './index.css';
 
-const toastDict: Record<string, {iconType: IconTypes, color: string}> = {
+const toastDict: Record<string, { iconType: IconTypes, color: string }> = {
   success: {
     iconType: 'checked',
     color: '#357BF6'
@@ -49,18 +49,17 @@ export const Toast: FC<ToastProps> = ({
 Toast.show = function ({
   type,
   text,
-  duration = 1.5
+  duration = 1.5,
+  style = {
+    top: 0,
+    right: 0,
+  }
 }) {
   Notification.newInstance({}, notification => {
     notification.notice({
       content: <Toast type={type}>{text}</Toast>,
       duration,
-      style: {
-        position: 'fixed',
-        top: '5%',
-        left: '50%',
-        transform: 'translateX(-50%)'
-      }
+      style: Object.assign({position: 'fixed'}, style)
     });
   });
 }

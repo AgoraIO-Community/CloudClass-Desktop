@@ -40,9 +40,23 @@ export const Docs = ({success, error, warning, toastText, toastType = 'success'}
         Toast.show({
           type: toastType,
           text: toastType,
-          duration: 5,
+          duration: 1,
         })
-      }}>show toast</Button>
+      }}>show toast - default right top corner</Button>
+    </div>
+    <div className="mt-4">
+      <Button size="lg" onClick={() => {
+        Toast.show({
+          type: toastType,
+          text: '自己定义的内容，时间设置5s，居中',
+          duration: 5,
+          style: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }
+        })
+      }}>show toast - user define</Button>
     </div>
   </>
 );
