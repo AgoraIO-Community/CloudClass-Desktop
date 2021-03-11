@@ -3,8 +3,6 @@ import { Meta } from '@storybook/react';
 import { Toast } from '~components/toast';
 import { Button } from '~components/button'
 
-import Notification from 'rc-notification'
-
 const meta: Meta = {
   title: 'Components/Toast',
   component: Toast,
@@ -39,17 +37,11 @@ export const Docs = ({success, error, warning, toastText, toastType = 'success'}
     </div>
     <div className="mt-4">
       <Button size="lg" onClick={() => {
-        Notification.newInstance({}, notification => {
-          notification.notice({
-            content: <Toast type={toastType}>{toastText}</Toast>,
-            style: {
-              position: 'fixed',
-              top: '5%',
-              left: '50%',
-              transform: 'translateX(-50%)'
-            }
-          });
-        });
+        Toast.show({
+          type: toastType,
+          text: toastType,
+          duration: 5,
+        })
       }}>show toast</Button>
     </div>
   </>
@@ -60,7 +52,6 @@ Docs.args = {
   error: 'error',
   warning: 'warning',
   toastText: 'test',
-
 }
 
 export default meta;
