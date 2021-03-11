@@ -13,6 +13,15 @@ type DocsProps = {
     title: string
 }
 
+function asyncOkFunction () {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            console.log('ok')
+            resolve('ok')
+        }, 3000)
+    })
+}
+
 export const Docs = ({ title }: DocsProps) => (
     <>
         <div className="mt-4">
@@ -70,7 +79,7 @@ export const Docs = ({ title }: DocsProps) => (
                         <Button type="secondary" action="cancel">cancel</Button>,
                         <Button action="ok">ok</Button>
                     ],
-                    onOk: () => {console.log('ok')},
+                    onOk: asyncOkFunction,
                     onCancel: () => {console.log('cancel')},
                     children: (
                         <>
