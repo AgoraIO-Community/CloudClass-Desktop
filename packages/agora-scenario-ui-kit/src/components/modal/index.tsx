@@ -84,12 +84,12 @@ Modal.show = function (
             notification.removeNotice(modalId)
             notification.destroy()
         }
-        const tmpOk = () => {
-            onOk()
+        const tmpOk = async () => {
+            await onOk()
             hideModal()
         }
-        const tmpCancel = () => {
-            onCancel()
+        const tmpCancel = async () => {
+            await onCancel()
             hideModal()
         }
         const Comp = (
