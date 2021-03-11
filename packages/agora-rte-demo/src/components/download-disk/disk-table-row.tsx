@@ -1,60 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { TableRow } from '@material-ui/core';
-import { diskAppStore, downloadStatus } from '@/monolithic/disk/disk-store';
 import { iconMapper, DiskTableCell, DiskButton, DiskSingleProgress } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
+import { DownloadFileStatus } from '@/stores/storage';
+import { useStorageStore } from '@/hooks';
+import { observer } from 'mobx-react';
 
 interface DownloadTableRowProps {
   index: number,
   data: any,
-  registerTaskCallback: (uuid: string, onProgress: (progress: number) => void, onComplete: () => void) => any,
   handleDownload: (uuid: string, onProgressCallback?: (progress: number) => void, onComplete?: () => void) => any,
   handleDeleteSingle: (evt: any) => any,
-  handleClearcache: (evt: any) => any,
 }
 
-const DownloadTableRow = (props: DownloadTableRowProps) => {
-  let row = props.data
-  let index = props.index
+export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
+  const row = props.data
+  const index = props.index
 
-  const [ status, setStatus ] = useState(props.data.status)
-  const [ progress, setProgress ] = useState(props.data.progress)
+  const status = row.status
   
-  useEffect(() => {
-    props.registerTaskCallback(props.data.resourceUuid, 
-      (progress: number) => {
-        setProgress(progress)
-      },
-      () => {
-        setStatus(downloadStatus.cached)
-        props.data.status = downloadStatus.cached
-        props.data.progress = 100
-      }
-    )
-  }, [])
+  const progressMap = useStorageStore().progressMap
 
-  const handleDownload = (uuid: string, index: number) => {
-    props.data.status = downloadStatus.downloading,
-    setStatus(downloadStatus.downloading)
-    props.handleDownload(uuid,
-      (progress: number) => {
-        setProgress(progress)
-      },
-      () => {
-        setStatus(downloadStatus.cached)
-        props.data.status = downloadStatus.cached
-        props.data.progress = 100
-      }
-    )
+  const progress = progressMap[row.taskUuid]
+
+  const handleDownload = (uuid: string, _: number) => {
+    props.handleDownload(uuid)
   }
 
   const handleDeleteSingle = async (uuid: string) => {
-    diskAppStore.deleteSingle(uuid).then(() => {
-      row.status = downloadStatus.notCache
-      row.progress = 0
-      setStatus(row.status)
-      setProgress(row.progress)
-    })
+    props.handleDeleteSingle(uuid)
   }
 
   return (
@@ -62,10 +36,10 @@ const DownloadTableRow = (props: DownloadTableRowProps) => {
       component="div"
       role="checkbox"
       tabIndex={-1}
-      key={row.id}
+      key={row.taskUuid}
     >
       <DiskTableCell
-        style={{ paddingLeft: 15 }}
+        style={{ paddingLeft: 15}}
         scope="row"
         padding="none">
         <div style={{ display: 'flex' }}>
@@ -89,29 +63,27 @@ const DownloadTableRow = (props: DownloadTableRowProps) => {
         align="right"
       >
         {
-          status === downloadStatus.notCache && 
+          status === DownloadFileStatus.NotCached && 
           <>
-            <DiskButton color={'primary'} onClick={() => handleDownload(row.resourceUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} />
+            <DiskButton color={'primary'} onClick={() => handleDownload(row.taskUuid, index)} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.download')} />
             <DiskButton color={'inherit'} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
         {
-          status === downloadStatus.downloading &&
+          status === DownloadFileStatus.Downloading &&
           <>
             <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.downloading')} />
             <DiskButton color={'inherit'} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
         {
-          status === downloadStatus.cached &&
+          status === DownloadFileStatus.Cached &&
           <>
             <DiskButton color={'inherit'} id="disk-button-download" style={{ marginRight: 20 }} text={t('disk.downloaded')} />
-            <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.resourceUuid)} id="disk-button-delete" text={t('disk.delete')} />
+            <DiskButton color={'secondary'} onClick={() => handleDeleteSingle(row.taskUuid)} id="disk-button-delete" text={t('disk.delete')} />
           </>
         }
       </DiskTableCell>
     </TableRow>
   )
-}
-
-export default DownloadTableRow
+})

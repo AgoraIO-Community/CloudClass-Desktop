@@ -18,12 +18,12 @@ export const CourseWareMenuContainer = observer(() => {
 
   return (
     <CourseWareMenu
+      // isTeacher={boardStore.roleIsTeacher}
       active={boardStore.activeIndex}
       items={boardStore.resourcesList}
       onClick={(name: string, currentPage: number, type: string) => {
         if (type === 'open') {
           handleClick(name, currentPage)
-          console.log('ware menu open', name, ' currentPage ', currentPage)
         }
 
         if (type === 'close') {

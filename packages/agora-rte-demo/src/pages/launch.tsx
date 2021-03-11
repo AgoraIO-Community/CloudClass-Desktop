@@ -37,6 +37,7 @@ export const LaunchPage = observer(() => {
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {
+          console.log("launch#listener ", evt)
           if (evt === AgoraEduEvent.destroyed) {
             history.push('/')
           }

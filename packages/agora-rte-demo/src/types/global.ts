@@ -48,6 +48,6 @@ export enum QuickTypeEnum {
 }
 
 export enum AgoraMediaDeviceEnum {
-  Default = "DEFAULT",
+  Default = "",
   Unknown = "unknown"
 }

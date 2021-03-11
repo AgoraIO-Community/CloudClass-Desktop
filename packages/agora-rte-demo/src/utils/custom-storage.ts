@@ -88,4 +88,33 @@ export class CustomStorage {
   }
 }
 
+export class PersistLocalStorage {
+  private storage: AppStorage;
+
+  languageKey: string = 'app_storage'
+
+  constructor() {
+    this.storage = window.localStorage
+  }
+
+  saveCourseWareList(jsonStringify: string) {
+    this.storage.setItem("courseWare", jsonStringify)
+  }
+
+  getCourseWareSaveList() {
+    const str = this.storage.getItem("courseWare")
+    if (!str) {
+      return []
+    }
+    try {
+      return JSON.parse(str) as []
+    } catch (err) {
+      return []
+    }
+  }
+
+}
+
 export const GlobalStorage = new CustomStorage();
+
+export const storage = new PersistLocalStorage()

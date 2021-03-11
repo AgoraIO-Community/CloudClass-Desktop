@@ -107,7 +107,8 @@ export class MainController {
   
   constructor(
     public readonly appController = new EduSDKController(),
-    public readonly replayController = new EduSDKController()
+    public readonly replayController = new EduSDKController(),
+    public readonly storageController = new EduSDKController()
   ) {
   }
 
