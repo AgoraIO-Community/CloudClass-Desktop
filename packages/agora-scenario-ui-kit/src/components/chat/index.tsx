@@ -7,12 +7,37 @@ import { Message } from './interface';
 import { ChatMessage } from './chat-message';
 
 export interface ChatProps {
+  /**
+   * 消息列表
+   */
   messages?: Message[];
+  /**
+   * 是否对学生禁言
+   */
   canChatting?: boolean;
+  /**
+   * 是否主持人
+   */
   isHost?: boolean;
+  /**
+   * 当前用户 uid
+   */
   uid: string | number;
+  /**
+   * 输入框内容的值
+   */
+  chatText?: string;
+  /**
+   *  禁言状态改变的回调
+   */
   onCanChattingChange: (canChatting: boolean) => void;
+  /**
+   * 输入框发生变化的回调
+   */
   onText: (content?: string) => void;
+  /**
+   * 点击发送按钮的回调
+   */
   onSend: () => void;
 }
 
@@ -21,6 +46,7 @@ export const Chat: FC<ChatProps> = ({
   canChatting,
   uid,
   isHost,
+  chatText,
   onCanChattingChange,
   onText,
   onSend,
@@ -50,12 +76,17 @@ export const Chat: FC<ChatProps> = ({
           <Placeholder />
         ) : (
           messages.map((message) => (
-            <ChatMessage key={message.id} {...message} isOwn={uid === message.uid} />
+            <ChatMessage
+              key={message.id}
+              {...message}
+              isOwn={uid === message.uid}
+            />
           ))
         )}
       </div>
       <div className="chat-texting">
         <textarea
+          value={chatText}
           rows={1}
           className="chat-texting-message"
           placeholder="请输入消息"
