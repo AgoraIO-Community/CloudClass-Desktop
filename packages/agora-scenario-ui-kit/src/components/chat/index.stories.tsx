@@ -11,28 +11,28 @@ const meta: Meta = {
     uid: '2',
     messages: [
       {
-        id: 'fjdjjdjd',
+        id: 'fjdjjdjd1',
         uid: '1',
         username: 'Lily True',
         timestamp: Date.now(),
         content: '你好',
       },
       {
-        id: 'fjdjjdjd',
+        id: 'fjdjjdjd2',
         uid: '1',
         username: 'Lily True',
         timestamp: Date.now(),
         content: '有人吗',
       },
       {
-        id: 'fjdjjdjd',
+        id: 'fjdjjdjd3',
         uid: '1',
         username: 'Lily True',
         timestamp: Date.now(),
         content: '今天讲什么？',
       },
       {
-        id: 'fjdjjdjd',
+        id: 'fjdjjdjd4',
         uid: '2',
         username: 'Victor Tsoi',
         timestamp: Date.now(),

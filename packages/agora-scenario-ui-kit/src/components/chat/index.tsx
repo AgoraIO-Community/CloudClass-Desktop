@@ -50,7 +50,7 @@ export const Chat: FC<ChatProps> = ({
           <Placeholder />
         ) : (
           messages.map((message) => (
-            <ChatMessage {...message} isOwn={uid === message.uid} />
+            <ChatMessage key={message.id} {...message} isOwn={uid === message.uid} />
           ))
         )}
       </div>
