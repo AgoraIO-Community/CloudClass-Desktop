@@ -5,35 +5,26 @@ import './index.css';
 import { Icon } from '~components/icon';
 
 export interface ToolBarProps extends BaseProps {
+  iconList: Array<string>,
+  mouseSelectorOpen: () => void,
+  mouseSelectorClose: () => void,
+  handleClickEvent: (event: string) => void,
+  minimize?: boolean,  // 控制收起
   color?: string,
   palletColor?: string,
-  // mouseSelectorOpen?: () => void,
-  // mouseSelectorClose?: () => void,
-  handleClickEvent: (event: string) => void,
-  // minimize?: boolean,  // 控制收起
 }
-
-const iconList = ['select', 'pen', 'text', 'eraser', 'color', 'blank-page', 'hand', 'cloud', 'follow', 'tools', 'register']
 
 export const ToolBar: FC<ToolBarProps> = ({
   color,
-  // minimize,
-  // mouseSelectorOpen,
-  // mouseSelectorClose,
+  iconList,
+  minimize,
+  palletColor,
+  mouseSelectorOpen,
+  mouseSelectorClose,
   handleClickEvent,
 }) => {
 
-  const [minimize, setMinimize] = useState<boolean>(false)
   const [selectedElement, setSelectedElement] = useState<string>('')
-
-
-  const mouseSelectorOpen = () => {
-    setMinimize(false)
-  }
-
-  const mouseSelectorClose = () => {
-    setMinimize(true)
-  }
 
   const handleEvent = (e: string) => {
     setSelectedElement(e)
@@ -44,7 +35,7 @@ export const ToolBar: FC<ToolBarProps> = ({
     // 图标为调色盘时特殊处理
     if(selectedElement === e) {
       if(e === 'color') {
-        return ''
+        return palletColor
       }
       return '#357BF6'
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Meta } from '@storybook/react';
 import { ToolBar } from '~components/tool-bar';
 
@@ -7,13 +7,30 @@ const meta: Meta = {
   component: ToolBar,
 };
 
-const click = (e: any) => {
-  console.log('******', e)
+const iconList = ['select', 'pen', 'text', 'eraser', 'color', 'blank-page', 'hand', 'cloud', 'follow', 'tools', 'register']
+const [minimize, setMinimize] = useState<boolean>(false)
+
+const mouseSelectorOpen = () => {
+  setMinimize(false)
+}
+
+const mouseSelectorClose = () => {
+  setMinimize(true)
+}
+
+const clickEvent = (e: any) => {
+  console.log('图标被点击了', e)
 }
 
 export const Docs = () => (
   <>
-    <ToolBar handleClickEvent={click}></ToolBar>
+    <ToolBar 
+      iconList={iconList}
+      minimize={minimize}
+      handleClickEvent={clickEvent} 
+      mouseSelectorClose={mouseSelectorClose}
+      mouseSelectorOpen={mouseSelectorOpen}>
+    </ToolBar>
   </>
 );
 
