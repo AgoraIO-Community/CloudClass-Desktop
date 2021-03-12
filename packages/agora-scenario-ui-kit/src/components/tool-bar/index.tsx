@@ -12,11 +12,13 @@ export interface ToolBarProps extends BaseProps {
   minimize?: boolean,  // 控制收起
   color?: string,
   palletColor?: string,
+  extendList?: Array<string>,
 }
 
 export const ToolBar: FC<ToolBarProps> = ({
   color,
   iconList,
+  extendList,
   minimize,
   palletColor,
   mouseSelectorOpen,
@@ -66,7 +68,7 @@ export const ToolBar: FC<ToolBarProps> = ({
                     <Icon type={item} size={28} className={'mouse-hover pointer'} color={settingIconColor(item)}/>
                   </div> 
                   {
-                    ['color', 'pen', 'tools'].includes(item) ?
+                    extendList?.includes(item) ?
                     <div style={{marginTop: '-38px'}} onClick={() => {handleEvent(item)}}> 
                       <Icon type={'triangle-down'} size={24} className={'pointer'} color={'#7B88A0'}/>
                     </div> : null

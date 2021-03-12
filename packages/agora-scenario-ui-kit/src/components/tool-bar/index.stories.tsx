@@ -8,6 +8,7 @@ const meta: Meta = {
 };
 
 const iconList = ['select', 'pen', 'text', 'eraser', 'color', 'blank-page', 'hand', 'cloud', 'follow', 'tools', 'register']
+const extendList = ['color', 'pen', 'tools']
 const [minimize, setMinimize] = useState<boolean>(false)
 
 const mouseSelectorOpen = () => {
@@ -29,7 +30,9 @@ export const Docs = () => (
       minimize={minimize}
       handleClickEvent={clickEvent} 
       mouseSelectorClose={mouseSelectorClose}
-      mouseSelectorOpen={mouseSelectorOpen}>
+      mouseSelectorOpen={mouseSelectorOpen}
+      extendList={extendList}
+      >
     </ToolBar>
   </>
 );
