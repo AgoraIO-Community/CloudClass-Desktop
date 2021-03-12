@@ -117,7 +117,6 @@ export class StorageStore implements ClassRoomAbstractStore {
 
   async destroy () {
     this._courseWareList = []
-    this.language = "en"
     this.progressMap = {}
   }
 

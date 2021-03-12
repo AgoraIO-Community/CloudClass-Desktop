@@ -508,7 +508,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.moveCamera()
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={boardStore.openDisk} setOpenDisk={() => boardStore.setOpenDisk()} /> : null }
+        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

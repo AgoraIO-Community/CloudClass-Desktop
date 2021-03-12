@@ -50,7 +50,9 @@ const UploadingProgress = observer((props: any) => {
   
 })
 
-const NetworkDisk = observer((props: any) => {
+const NetworkDisk = observer(() => {
+
+  console.log("network disk: ")
 
   const boardStore = useBoardStore()
   const [process,setProcess] = useState<number>(0)
@@ -67,7 +69,7 @@ const NetworkDisk = observer((props: any) => {
 
   const handleClose = () => {
     setIsOpenToast(false)
-    props.setOpenDisk(false)
+    boardStore.setOpenDisk()
   }
 
   const onReload = () => {
@@ -264,7 +266,8 @@ const NetworkDisk = observer((props: any) => {
       removeSuccess={t('disk.deleteSuccess')}
       removeFailed={t('disk.deleteFailed')}
       fullWidth={false}
-      visible={props.openDisk}
+      // setOpenDisk={() => boardStore.setOpenDisk()} 
+      visible={boardStore.openDisk}
       onClose={handleClose}
       dialogHeaderStyle={{
         minHeight: 40,

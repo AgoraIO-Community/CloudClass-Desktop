@@ -152,122 +152,118 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
     console.log('onupload')
   }
 
-  const render = () => {
-    return (
-      <MDialog
-        maxWidth={'md'}
-        fullWidth={true}
-        BackdropProps={{
-          style: {
-            background: 'transparent',
-          }
-        }}
-        PaperComponent={(paperProps: any) => {
-          return (DiskPaper(paperProps))
-        }}
-        PaperProps={{
-          style: {
-            // width: '800px',
-            // height: '586px',
-            borderRadius: '20px',
-            ...props.paperStyle
-          },
-        }}
-        disableBackdropClick={true}
-        disableEscapeKeyDown={true}
-        open={props.visible}
-        onClose={onClose}
-      >
-        {/*  active Id  tables */}
-        {/*<tabs value={activeId} />*/}
-        {/*<activeId === xxx && (渲染不同 table 组件)>*/}
-        <div style={{ marginTop: '-2.2rem' }}>
-          {props.inRoom === true && 
-            <DiskTabs
-              value={activeValue}
-              onChange={handleChange}
-              aira-label="disk tabs"
-            >
-              <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
-              <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
-            </DiskTabs>
-          }
-          {props.inRoom === false && 
-            <DiskTabs
-              value={activeValue}
-              onChange={handleChange}
-              aira-label="disk tabs"
-            >
-              <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
-            </DiskTabs>
-          }
-        </div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
+  return (
+    <MDialog
+      maxWidth={'md'}
+      fullWidth={true}
+      BackdropProps={{
+        style: {
+          background: 'transparent',
+        }
+      }}
+      PaperComponent={(paperProps: any) => {
+        return (DiskPaper(paperProps))
+      }}
+      PaperProps={{
+        style: {
+          // width: '800px',
+          // height: '586px',
+          borderRadius: '20px',
+          ...props.paperStyle
+        },
+      }}
+      disableBackdropClick={true}
+      disableEscapeKeyDown={true}
+      open={props.visible}
+      onClose={onClose}
+    >
+      {/*  active Id  tables */}
+      {/*<tabs value={activeId} />*/}
+      {/*<activeId === xxx && (渲染不同 table 组件)>*/}
+      <div style={{ marginTop: '-2.2rem' }}>
+        {props.inRoom === true && 
+          <DiskTabs
+            value={activeValue}
+            onChange={handleChange}
+            aira-label="disk tabs"
+          >
+            <DiskTab id="disk-tab-public" label={props.diskText.publicTab} />
+            <DiskTab id="disk-tab-private" label={props.diskText.privateTab} />
+          </DiskTabs>
+        }
+        {props.inRoom === false && 
+          <DiskTabs
+            value={activeValue}
+            onChange={handleChange}
+            aira-label="disk tabs"
+          >
+            <DiskTab id="disk-tab-ware" label={props.diskText.downloadTab} />
+          </DiskTabs>
+        }
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+      }}>
+        <Paper style={{
+          width: '770px',
+          borderRadius: '10px',
+          marginBottom: '16px',
         }}>
-          <Paper style={{
-            width: '770px',
-            borderRadius: '10px',
-            marginBottom: '16px',
+          <TableContainer style={{
+            display: 'flex',
+            height: '480px',
+            width: '730px',
+            borderRadius: '20px',
+            padding: '20px',
+            flexDirection: 'column'
           }}>
-            <TableContainer style={{
-              display: 'flex',
-              height: '480px',
-              width: '730px',
-              borderRadius: '20px',
-              padding: '20px',
-              flexDirection: 'column'
-            }}>
-              {
-                props.inRoom === true && activeValue === 0 && (
-                  <PublicDiskTables
-                    diskText={props.diskText}
-                    tabValue={activeValue}
-                    publicList={props.publicList}
-                    showOpenItem={props.showOpenItem}
-                    handleOpenCourse={props.handleOpenCourse}
-                    showText={props.diskOpenText}
-                  ></PublicDiskTables>
-                )
-              }
+            {
+              props.inRoom === true && activeValue === 0 && (
+                <PublicDiskTables
+                  diskText={props.diskText}
+                  tabValue={activeValue}
+                  publicList={props.publicList}
+                  showOpenItem={props.showOpenItem}
+                  handleOpenCourse={props.handleOpenCourse}
+                  showText={props.diskOpenText}
+                ></PublicDiskTables>
+              )
+            }
 
-              {
-                props.inRoom === true && activeValue === 1 && (
-                  <PrivateDiskTables tabValue={activeValue}
-                    diskText={props.diskText}
-                    uploadComponent={props.uploadComponent}
-                    handleDelete={props.handleDelete}
-                    showOpenItem={props.showOpenItem}
-                    handleOpenCourse={props.handleOpenCourse}
-                    // deleteComponent={props.deleteComponent}
-                    refreshComponent={props.refreshComponent}
-                    removeTextVisible={false}
-                    removeText={props.removeText}
-                    removeSuccess={props.removeSuccess}
-                    removeFailed={props.removeFailed}
-                    privateList={props.privateList}
-                    showText={props.diskOpenText}
-                    uploadListComponent={props.uploadListComponent}
-                    isOpenToast={props.isOpenToast || false}
-                    toastMessage={props.toastMessage}
-                    
-                  ></PrivateDiskTables>
-                )
-              }
-              {
-                props.inRoom === false && activeValue === 0 && (props.downloadDiskComponent)
-              }
-            </TableContainer>
-          </Paper>
-        </div>
-      </MDialog>
-    )
-  }
-
-  return render()
+            {
+              props.inRoom === true && activeValue === 1 && (
+                <PrivateDiskTables tabValue={activeValue}
+                  diskText={props.diskText}
+                  uploadComponent={props.uploadComponent}
+                  handleDelete={props.handleDelete}
+                  showOpenItem={props.showOpenItem}
+                  handleOpenCourse={props.handleOpenCourse}
+                  // deleteComponent={props.deleteComponent}
+                  refreshComponent={props.refreshComponent}
+                  removeTextVisible={false}
+                  removeText={props.removeText}
+                  removeSuccess={props.removeSuccess}
+                  removeFailed={props.removeFailed}
+                  privateList={props.privateList}
+                  showText={props.diskOpenText}
+                  uploadListComponent={props.uploadListComponent}
+                  isOpenToast={props.isOpenToast || false}
+                  toastMessage={props.toastMessage}
+                  
+                ></PrivateDiskTables>
+              )
+            }
+            {
+              props.inRoom === false && activeValue === 0 && (props.downloadDiskComponent)
+            }
+          </TableContainer>
+        </Paper>
+      </div>
+    </MDialog>
+  )
 }
 
 export interface DiskManagerDialogProps extends NetworkDiskDialogProps {}
