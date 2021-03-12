@@ -1,0 +1,78 @@
+.chat-panel {
+  @apply bg-white;
+  width: 300px;
+  border-radius: 4px;
+}
+
+.chat-header {
+  @apply flex items-center justify-between;
+  height: 44px;
+  padding: 0 15px;
+  border-bottom: 1px solid #ececf1;
+}
+
+.chat-header-title {
+  font-size: 13px;
+  font-weight: 400;
+  color: #191919;
+}
+
+.chat-header-message-state {
+  font-size: 24px;
+  color: #979797;
+}
+
+.chat-notice {
+  @apply flex justify-center items-center w-full;
+  height: 32px;
+  background: #f9f9fc;
+  border: 1px solid #ececf1;
+  font-size: 12px;
+  font-weight: 400;
+  color: #191919;
+}
+
+.chat-notice .iconfont {
+  margin-right: 5px;
+  font-size: 17px;
+  color: #f04c36;
+}
+
+.chat-history {
+  height: 300px;
+  padding-bottom: 18px;
+  overflow-y: scroll;
+}
+
+.chat-texting {
+  @apply flex justify-between items-center;
+  padding: 15px;
+  min-height: 60px;
+  width: 100%;
+  background-color: #f9f9fc;
+  border-radius: 18px 18px 4px 4px;
+  border: 1px solid #ececf1;
+}
+
+.chat-texting > textarea {
+  @apply resize-none w-full;
+}
+
+.chat-texting.focus > textarea {
+  height: 80px;
+  margin-top: 10px;
+}
+
+.chat-texting.focus {
+  @apply flex flex-col items-end justify-end;
+}
+
+.chat-texting-message {
+  @apply bg-transparent;
+}
+
+.chat-texting-message:hover,
+:active,
+:focus {
+  @apply outline-none;
+}

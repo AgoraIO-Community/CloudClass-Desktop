@@ -1,20 +1,24 @@
-import React, { FC } from 'react';
+import React, { EventHandler, FC, SyntheticEvent } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
 import './index.css';
 
+export type { IconTypes } from './icon-types';
+
 export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
   color?: string;
+  onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
+
 export const Icon: FC<IconProps> = ({
   type,
   className,
   style,
-  size = 24,
-  color = '#333',
+  size,
+  color,
   ...restProps
 }) => {
   const cls = classnames({
@@ -32,3 +36,42 @@ export const Icon: FC<IconProps> = ({
       {...restProps}></i>
   );
 };
+
+const getIconInfo = (type: string) => {
+  const mapping: Record<string, string> = {
+    'ppt': '#F6B081',
+    'word': '#96CBE1',
+    'excel': '#A6DDBF',
+    'audio': '#6C82D1',
+    'video': '#A8ABE9',
+    'pdf': '#A3C3DE',
+    'image': '#A3F2E6',
+  }
+  return mapping[type]
+}
+
+export type FormatIconType =
+  | 'ppt'
+  | 'word'
+  | 'excel'
+  | 'audio'
+  | 'video'
+  | 'pdf'
+  | 'image'
+
+export interface IconBoxProps extends BaseProps {
+  iconType: FormatIconType
+}
+
+export const IconBox: FC<IconBoxProps> = ({
+  style,
+  iconType,
+  ...restProps
+}) => {
+
+  const color = getIconInfo(iconType)
+  const type = `format-${iconType}` as IconTypes
+  return (
+    <Icon style={style} color={color} type={type} {...restProps}></Icon>
+  )
+}

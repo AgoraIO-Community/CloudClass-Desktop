@@ -1,6 +1,5 @@
 import fetchProgress from "fetch-progress"
 import "@netless/zip";
-import { copySync } from "fs-extra";
 const contentTypesByExtension = {
     "css": "text/css",
     "js": "application/javascript",
@@ -10,6 +9,7 @@ const contentTypesByExtension = {
     "html": "text/html",
     "htm": "text/html"
 }
+const cacheStorageKey = 'netless'
 // cdn link 可能会变
 const resourcesHost = "convertcdn.netless.link";
 export class AgoraCaches {
@@ -22,7 +22,7 @@ export class AgoraCaches {
     }
 
     public deleteCache = async () => {
-        const result = await caches.delete("agora");
+        const result = await caches.delete(cacheStorageKey);
         console.log(`remove agora cache successfully: ${result}`);
         this.agoraCaches = null;
     }
@@ -31,7 +31,7 @@ export class AgoraCaches {
      * 计算 cache 占用空间，大小单位为 Byte，/1024 为 KiB 大小。
      */
     public calculateCache = async (): Promise<number> => {
-        const cache = await agoraCaches.openCache("agora");
+        const cache = await agoraCaches.openCache(cacheStorageKey);
         const keys = await cache.keys();
         let size = 0;
         for (const request of keys) {
@@ -44,7 +44,7 @@ export class AgoraCaches {
     }
 
     public deleteTaskUUID = async (uuid: string) =>  {
-        const cache = await this.openCache("agora");
+        const cache = await this.openCache(cacheStorageKey);
         const keys = await cache.keys();
         for (const request of keys) {
             if (request.url.indexOf(uuid) !== -1) {
@@ -54,7 +54,7 @@ export class AgoraCaches {
     }
 
     public clearAllCache = async () => {
-        const cache = await this.openCache("agora")
+        const cache = await this.openCache(cacheStorageKey)
         const keys = await cache.keys()
         keys.forEach((key) => {
             cache.delete(key)
@@ -62,7 +62,7 @@ export class AgoraCaches {
     }
 
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
-        const cache = await this.openCache("agora");
+        const cache = await this.openCache(cacheStorageKey);
         const keys = await cache.keys();
         for (const request of keys) {
             if (request.url.indexOf(uuid) !== -1) {
@@ -117,7 +117,7 @@ export class AgoraCaches {
         }
         return new Promise((fulfill, reject) => {
             entry.getData(new zip.BlobWriter(), (data: any) => {
-                return agoraCaches.openCache("agora").then((cache) => {
+                return agoraCaches.openCache(cacheStorageKey).then((cache) => {
                     const location = this.getLocation(entry.filename);
                     const response = new Response(data, {
                         headers: {

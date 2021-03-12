@@ -1,0 +1,37 @@
+.chat-message {
+  @apply flex flex-col w-full;
+  padding: 0 15px;
+  margin-top: 18px;
+}
+
+.chat-message-right {
+  text-align: right;
+}
+
+.chat-message-left {
+  text-align: left;
+}
+
+.chat-message-username {
+  font-size: 12px;
+  color: #586376;
+}
+
+.chat-message-content {
+  @apply inline-block;
+  min-height: 38px;
+  border-radius: 4px;
+  padding: 9px 10px;
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #191919;
+}
+
+.chat-message-content.ghost {
+  border: 1px solid #ececf1;
+}
+
+.chat-message-content.blue {
+  background-color: #e1ebfc;
+}

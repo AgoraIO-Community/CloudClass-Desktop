@@ -1,0 +1,53 @@
+.table-flex-container {
+  @apply flex flex-col;
+  color: #191919;
+}
+
+.table-row-item {
+  @apply flex flex-row;
+  font-size: 13px;
+}
+
+.table-col-item {
+  @apply flex flex-1 items-center;
+}
+
+.table-header {
+  @apply flex flex-1 flex-row;
+  font-size: 13px;
+  line-height: 18px;
+  background-color: #F9F9FC;
+  padding: 10px;
+  @apply border-bottom-width-1;
+  line-height: 20px;
+}
+
+.border-bottom-width-1 {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  @apply border-table-bottom;
+  margin: 0px 0px -1px -1px;
+}
+
+.item-gap-10 {
+  gap: 10px;
+}
+
+.table-row-x-10 {
+  padding: 10px;
+  line-height: 20px;
+}
+
+.flex-width-30 {
+  flex: 30px 0 0;
+}
+
+/* .indeterminate {
+  background-color: #357BF6;
+  color: white;
+} */
+
+input.indeterminate:indeterminate {
+  background-color: #357BF6;
+  color: white;
+}

@@ -1,5 +1,6 @@
 import { AgoraMediaDeviceEnum } from "@/types/global"
 import fetchProgress from "@netless/fetch-progress"
+import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import { Room } from "white-web-sdk"
@@ -177,26 +178,69 @@ export const getDeviceLabelFromStorage = (type: string) => {
 }
 
 export const startDownload = async (isNative: boolean, taskUuid: string, callback: (progress: number) => any) => {
-  if (isNative) {
-    const controller = new AbortController();
-      const resourcesHost = "convertcdn.netless.link";
-      const signal = controller.signal;
-      const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      const res = await fetch(zipUrl, {
-          method: "get",
-          signal: signal,
-      }).then(fetchProgress({
-          onProgress: (progress: any) => {
-            if (progress.hasOwnProperty('percentage')) {
-              callback(get(progress, 'percentage'))
-            }
-          },
-      }));
-    console.log("native端 课件下载完成")
-  } else {
+  // if (isNative) {
+  //   const controller = new AbortController();
+  //     const resourcesHost = "convertcdn.netless.link";
+  //     const signal = controller.signal;
+  //     const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+  //     const res = await fetch(zipUrl, {
+  //         method: "get",
+  //         signal: signal,
+  //     }).then(fetchProgress({
+  //         onProgress: (progress: any) => {
+  //           if (progress.hasOwnProperty('percentage')) {
+  //             callback(get(progress, 'percentage'))
+  //           }
+  //         },
+  //     }));
+  //   console.log("native端 课件下载完成")
+  // } else {
     await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
       callback(progress)
     })
     console.log("web端 课件下载完成")
+  // }
+}
+
+export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {
+  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(messageFromRole)
+  const fromTeacher = ['host', 'assistant'].includes(messageFromRole)
+  if ([EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) && fromStudent) {
+    return true
   }
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) && fromTeacher) {
+    return true
+  }
+  return false
+ }
+
+export const showMaskText = (text: string, sensitiveWords: string[]) => {
+  console.log('sensitiveWords ', sensitiveWords)
+  for (let word of sensitiveWords) {
+    const regexp = new RegExp(word, 'gi')
+    text = text.replace(regexp, "*".repeat(word.length))
+  }
+  return text
+}
+
+export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessage) => {
+  const fromUser = message.fromUser
+  const chatText = message.message
+  if (showOriginText(userRole, fromUser.role)) {
+    return chatText
+  } else {
+    return showMaskText(chatText, message.sensitiveWords)
+  }
+}
+
+export type BytesType = number | string
+
+export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
+  const bytes = +fileBytes
+  if(bytes == 0) return '0 Bytes';
+  const k = 1000,
+    dm = decimalPoint || 2,
+    units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
 }

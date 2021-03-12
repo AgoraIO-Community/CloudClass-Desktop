@@ -110,6 +110,7 @@ export class EduSDKApi extends ApiBase {
     })
     return res.data
   }
+  
   async getHistoryChatMessage(params: {
     roomUuid: string,
     userUuid: string,

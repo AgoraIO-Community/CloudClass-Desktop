@@ -1,19 +1,30 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 import { Toast } from '~components/toast';
+import { Button } from '~components/button'
 
 const meta: Meta = {
   title: 'Components/Toast',
   component: Toast,
+  argTypes: {
+    toastType: {
+      control: {
+        type: 'select',
+        options: ['success', 'error', 'warning']
+      }
+    }
+  }
 };
 
 type DocsProps = {
   success: string,
   error: string,
-  warning: string
+  warning: string,
+  toastText: string,
+  toastType: any,
 }
 
-export const Docs = ({success, error, warning}: DocsProps) => (
+export const Docs = ({success, error, warning, toastText, toastType = 'success'}: DocsProps) => (
   <>
     <div>
       <Toast>{success}</Toast>
@@ -24,13 +35,37 @@ export const Docs = ({success, error, warning}: DocsProps) => (
     <div className="mt-4">
       <Toast type="warning">{warning}</Toast>
     </div>
+    <div className="mt-4">
+      <Button size="lg" onClick={() => {
+        Toast.show({
+          type: toastType,
+          text: toastType,
+          duration: 1,
+        })
+      }}>show toast - default right top corner</Button>
+    </div>
+    <div className="mt-4">
+      <Button size="lg" onClick={() => {
+        Toast.show({
+          type: toastType,
+          text: '自己定义的内容，时间设置5s，居中',
+          duration: 5,
+          style: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }
+        })
+      }}>show toast - user define</Button>
+    </div>
   </>
 );
 
 Docs.args = {
   success: 'success',
   error: 'error',
-  warning: 'warning'
+  warning: 'warning',
+  toastText: 'test',
 }
 
 export default meta;

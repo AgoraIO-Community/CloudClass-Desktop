@@ -47,16 +47,25 @@
 .btn-sm {
   width: 80px;
   height: 30px;
+  font-size: 14px;
 }
 
 .btn-lg {
   width: 280px;
   height: 40px;
+  font-size: 16px;
 }
 
 .btn:focus {
   @apply outline-none;
 }
+
 .btn[disabled] {
   @apply disabled:opacity-50 pointer-events-none;
+}
+
+.btn.btn-sm[disabled] {
+  color: white;
+  background-color: #E2E2EE;
+  border: none;
 }

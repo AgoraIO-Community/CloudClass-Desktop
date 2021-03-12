@@ -177,6 +177,7 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   refreshComponent?: React.ReactNode,
   showOpenItem?: boolean,
   handleOpenCourse?: (evt: any) => any,
+  removeTextVisible?: boolean
 }
 
 export const iconMapper = {
@@ -359,7 +360,6 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
     )
   }
   useEffect(() => {
-    console.log('isOpenToast disk,props.isOpenToast is:', props.isOpenToast)
     setIsOpenToast(props.isOpenToast)
   }, [props.isOpenToast])
   const render = () => {
@@ -376,7 +376,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
         <div className={classSearch.titleBox}>
           <div className={classSearch.titleButton}>
             {props.uploadComponent}
-            <DiskButton disabled={selected.length === 0} id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} />
+            {props.removeTextVisible ? <DiskButton disabled={selected.length === 0} id="disk-button-delete" style={{ marginLeft: '20px', }} onClick={handleDelete} color={'secondary'} text={props.removeText} /> : null}
             { props.refreshComponent }
           </div>
           {/* <div>

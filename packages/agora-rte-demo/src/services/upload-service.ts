@@ -10,6 +10,7 @@ import { resolveFileInfo } from '@/utils/helper';
 import { CourseWareItem } from "@/edu-sdk";
 import { get } from "lodash";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types/global";
+import { fileSizeConversionUnit } from "@/utils/utils";
 
 const formatExt = (ext: string) => {
   const typeMapper = {
@@ -62,14 +63,6 @@ export const mapFileType = (type: string): string => {
   return 'txt'
 }
 
-export const fileSizeConversionUnit= (data: number | string) => {
-  const toMB = 1024 * 1024
-  let transData = data;
-  if (typeof (data) === 'string') {
-    transData = parseInt(data, 10)
-  }
-  return ((transData as number) / toMB).toFixed(2) + 'MB'
-}
 export const transDataToResource = (data: CourseWareItem) => {
   if (!data.taskUuid) {
     return {
@@ -174,10 +167,8 @@ export class UploadService extends ApiBase {
 
     const files = res.data
     const file = files.find((fileItem: any) => {
-      console.log(fileItem.resourceName, params.name)
       return fileItem.resourceName === params.name
     })
-    console.log('onProgress', file, params.name)
 
     if (file) {
       return {
@@ -270,8 +261,6 @@ export class UploadService extends ApiBase {
       })
     }
 
-    console.log("loading public resource", JSON.stringify(res.data))
-
     // const resources = res.data.map(transDataToResource)
 
     return res.data
@@ -289,7 +278,6 @@ export class UploadService extends ApiBase {
         message: res.msg || res.message
       })
     }
-    console.log("loading person resource", JSON.stringify(res.data))
     // const resources = res.data.map(transDataToResource)
 
     return res.data
@@ -310,7 +298,6 @@ export class UploadService extends ApiBase {
         progress: 1,
         isLastProgress:true
       })
-      console.log("query#data ", queryResult.data)
       return queryResult.data
     }
 
@@ -337,7 +324,6 @@ export class UploadService extends ApiBase {
 
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
-    console.log("callback body: ", fetchCallbackBody)
     const resourceUuid = fetchCallbackBody.resourceUuid
 
     if (payload.converting === true) {
@@ -346,7 +332,6 @@ export class UploadService extends ApiBase {
         key,
         payload.file,
         (...args: any) => {
-           console.log('onProgress converting',args)
           payload.onProgress({
             phase: 'finish',
             progress: args[1]
@@ -364,7 +349,6 @@ export class UploadService extends ApiBase {
         url: uploadResult.ossURL,
         kind: payload.kind,
         onProgressUpdated: (...args: any[]) => {
-          console.log('onProgressUpdated',args)
           payload.onProgress({
             phase: 'finish',
             progress: args[0],
@@ -372,7 +356,6 @@ export class UploadService extends ApiBase {
           })
         },
       })
-      console.log("转换完成 ", JSON.stringify(taskResult))
       payload.onProgress({
         phase: 'finish',
         progress: 1,
@@ -419,7 +402,6 @@ export class UploadService extends ApiBase {
         key,
         payload.file,
         (...args: any[]) => {
-          console.log('onProgress uploadResult addFileToOss ',args)
           payload.onProgress({
             phase: 'finish',
             progress:args[1],
@@ -458,8 +440,6 @@ export class UploadService extends ApiBase {
     // TODO: 生产环境需要更替地址
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 
-    console.log(" addFileToOss ", callbackUrl)
-
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
@@ -468,7 +448,6 @@ export class UploadService extends ApiBase {
         progress: (p, cpt, res) => {
           this.abortCheckpoint = cpt
           if (onProgress) {
-             console.log('onProgress  addFileToOss function ',PPTProgressPhase.Uploading, p)
             onProgress(PPTProgressPhase.Uploading, p);
           }
         },
@@ -482,7 +461,6 @@ export class UploadService extends ApiBase {
       });
     if (res.res.status === 200) {
       const data = get(res.data, 'data', {})
-      console.log(" >>> data", data)
       return {
         ossURL: ossClient.generateObjectUrl(key),
         ...data

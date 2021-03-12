@@ -59,6 +59,7 @@ export type AppStoreConfigParams = {
   rtmUid: string
   rtmToken: string
   courseWareList: CourseWareList
+  personalCourseWareList?: CourseWareList
   oss?: {
     region: string
     bucketName: string
@@ -120,8 +121,6 @@ export class AppStore implements ClassRoomAbstractStore {
   homeStore!: HomeStore;
 
   eduManager!: EduManager;
-
-  // userService?: EduUserService;
 
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
@@ -353,7 +352,6 @@ export class AppStore implements ClassRoomAbstractStore {
     this.acadsocStore = new AcadsocRoomStore(this)
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
-    this.diskStore = new DiskStore(this)
     this.homeStore = new HomeStore(this)
     this._screenVideoRenderer = undefined
   }
@@ -696,6 +694,6 @@ export class AppStore implements ClassRoomAbstractStore {
 export * from './acadsoc-room';
 export { UIStore } from './ui';
 export { BoardStore } from './board';
-export {PretestStore} from './pretest';
-export {DiskStore} from './disk';
-export {HomeStore} from './home';
+export { PretestStore } from './pretest';
+export { DiskStore } from './disk';
+export { HomeStore } from './home';
