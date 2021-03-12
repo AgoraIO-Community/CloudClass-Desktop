@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import './index.css';
 import { Icon } from '~components/icon';
 
-export interface LeftToolBarProps extends BaseProps {
+export interface ToolBarProps extends BaseProps {
   color?: string,
   palletColor?: string,
   // mouseSelectorOpen?: () => void,
@@ -15,7 +15,7 @@ export interface LeftToolBarProps extends BaseProps {
 
 const iconList = ['select', 'pen', 'text', 'eraser', 'color', 'blank-page', 'hand', 'cloud', 'follow', 'tools', 'register']
 
-export const ToolBar: FC<LeftToolBarProps> = ({
+export const ToolBar: FC<ToolBarProps> = ({
   color,
   // minimize,
   // mouseSelectorOpen,
