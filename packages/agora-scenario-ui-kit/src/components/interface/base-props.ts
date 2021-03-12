@@ -4,4 +4,5 @@ export interface BaseProps {
   style?: CSSProperties;
   className?: string;
   id?: string;
+  [key: string]: any;
 }
