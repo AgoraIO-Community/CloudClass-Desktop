@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactEventHandler, SyntheticEvent, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Placeholder } from './placeholder';
 import './index.css';
@@ -51,6 +51,18 @@ export const Chat: FC<ChatProps> = ({
   onText,
   onSend,
 }) => {
+  const [focused, setFocused] = useState<boolean>(false);
+
+  const handleFocus = () => setFocused(true);
+
+  const handleBlur = () => {
+    if (!!chatText) {
+      return;
+    }
+    debugger;
+    setFocused(false);
+  };
+
   return (
     <div className="chat-panel">
       <div className="chat-header">
@@ -84,7 +96,7 @@ export const Chat: FC<ChatProps> = ({
           ))
         )}
       </div>
-      <div className="chat-texting">
+      <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
         <textarea
           value={chatText}
           rows={1}
@@ -92,6 +104,8 @@ export const Chat: FC<ChatProps> = ({
           placeholder="请输入消息"
           disabled={!isHost && !canChatting}
           onChange={(e) => onText(e.currentTarget.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
         <Button disabled={!isHost && !canChatting} onClick={onSend}>
           发送

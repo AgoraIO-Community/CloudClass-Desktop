@@ -54,6 +54,19 @@
   border: 1px solid #ececf1;
 }
 
+.chat-texting > textarea {
+  @apply resize-none w-full;
+}
+
+.chat-texting.focus > textarea {
+  height: 80px;
+  margin-top: 10px;
+}
+
+.chat-texting.focus {
+  @apply flex flex-col items-end justify-end;
+}
+
 .chat-texting-message {
   @apply bg-transparent;
 }
