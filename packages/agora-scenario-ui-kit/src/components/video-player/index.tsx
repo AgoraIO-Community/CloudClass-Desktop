@@ -1,10 +1,19 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
-import './index.css';
 import { Icon } from '~components/icon';
+import { Popover } from '~components/popover';
+import './index.css';
 
 export interface VideoPlayerProps extends BaseProps {
+  /**
+   * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
+   */
+  isHost?: boolean;
+  /**
+   * 是否本地用户
+   */
+  isLocal?: boolean;
   /**
    * 用户的唯一标识
    */
@@ -38,10 +47,6 @@ export interface VideoPlayerProps extends BaseProps {
    */
   whiteboardGranted?: boolean;
   /**
-   * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
-   */
-  isHost?: boolean;
-  /**
    * 摄像头状态变更时的回调
    */
   onCameraStateChange: (uid: string | number, enabled: boolean) => void;
@@ -63,12 +68,18 @@ export interface VideoPlayerProps extends BaseProps {
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
+  uid,
   className,
   stars = 0,
   isHost,
   username,
   micEnabled,
+  cameraEnabled,
   whiteboardGranted,
+  onCameraStateChange,
+  onMicStateChange,
+  onWhiteboardGrantedStateChange,
+  onSendStar,
 }) => {
   const cls = classnames({
     [`video-player`]: 1,
@@ -78,28 +89,64 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     [`mic-state`]: 1,
     [`disabled`]: !micEnabled,
   });
-  return (
-    <div className={cls}>
-      <div className="top-right-info">
-        {stars > 0 && !isHost ? (
-          <>
-            <Icon className="stars" type="star" />
-            <span className="stars-label">x{stars}</span>
-          </>
-        ) : null}
-      </div>
-      <div className="bottom-left-info">
-        <Icon
-          className={micStateCls}
-          type={micEnabled ? 'microphone-on' : 'microphone-off'}
-        />
-        <span className="username">{username}</span>
-      </div>
-      <div className="bottom-right-info">
-        {whiteboardGranted && !isHost ? (
-          <Icon className="whiteboard-state" type="whiteboard" />
-        ) : null}
-      </div>
+
+  const tools = (
+    <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
+      <Icon
+        className={micEnabled ? '' : 'red'}
+        type={micEnabled ? 'microphone-on' : 'microphone-off'}
+        onClick={() => onMicStateChange(uid, !micEnabled)}
+      />
+      <Icon
+        className={cameraEnabled ? '' : 'red'}
+        type={cameraEnabled ? 'camera' : 'camera-off'}
+        onClick={() => onCameraStateChange(uid, !cameraEnabled)}
+      />
+      {isHost ? (
+        <>
+          <Icon
+            className={cameraEnabled ? '' : 'yellow'}
+            type="whiteboard"
+            onClick={() =>
+              onWhiteboardGrantedStateChange(uid, !whiteboardGranted)
+            }
+          />
+          <Icon type="star-outline" onClick={() => onSendStar(uid)} />
+        </>
+      ) : null}
     </div>
+  );
+  return (
+    <Popover
+      align={{
+        offset: [-8, 0],
+      }}
+      overlayClassName="video-player-tools-popover"
+      content={tools}
+      placement="left"
+      trigger="click">
+      <div className={cls}>
+        <div className="top-right-info">
+          {stars > 0 ? (
+            <>
+              <Icon className="stars" type="star" />
+              <span className="stars-label">x{stars}</span>
+            </>
+          ) : null}
+        </div>
+        <div className="bottom-left-info">
+          <Icon
+            className={micStateCls}
+            type={micEnabled ? 'microphone-on' : 'microphone-off'}
+          />
+          <span className="username">{username}</span>
+        </div>
+        <div className="bottom-right-info">
+          {whiteboardGranted ? (
+            <Icon className="whiteboard-state" type="whiteboard" />
+          ) : null}
+        </div>
+      </div>
+    </Popover>
   );
 };

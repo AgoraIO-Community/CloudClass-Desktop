@@ -1,4 +1,4 @@
-import React, { FC, ReactEventHandler, SyntheticEvent, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Placeholder } from './placeholder';
 import './index.css';
@@ -59,7 +59,6 @@ export const Chat: FC<ChatProps> = ({
     if (!!chatText) {
       return;
     }
-    debugger;
     setFocused(false);
   };
 
