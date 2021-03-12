@@ -125,14 +125,15 @@ export const BizHeader: FC<BizHeaderProps> = ({
           <Icon type="exit" size={24} onClick={onExit} />
         </div>
       </Header>
-      {/* modal has a bug which can not trigger onOK & onCancel, onClick does not work either. */}
+      {/* modal api seems not reasonable */}
       {modalVisible ? (
         <Modal
           onCancel={() => setModalVisible(false)}
           onOk={handleEndSession}
+          
           footer={[
-            <Button type="secondary">取消</Button>,
-            <Button type="primary">确认</Button>,
+            <Button type="secondary" action="cancel">取消</Button>,
+            <Button type="primary" action="ok">确认</Button>,
           ]}
           title="下课确认">
           <p>你确定要下课吗？</p>
