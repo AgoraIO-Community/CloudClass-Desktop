@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Chat, ChatProps } from '~components/chat';
 
@@ -44,9 +44,15 @@ const meta: Meta = {
 };
 
 export const Docs: FC<ChatProps> = (props) => {
+  const [text, setText] = useState<string>();
   return (
     <div className="p-5 bg-black">
-      <Chat {...props} />
+      <Chat
+        {...props}
+        chatText={text}
+        onText={(val) => setText(val)}
+        onSend={() => setText('')}
+      />
     </div>
   );
 };
