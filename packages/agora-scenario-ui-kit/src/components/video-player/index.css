@@ -13,7 +13,7 @@
 }
 
 .bottom-left-info {
-  @apply absolute bottom-0 left-0 flex items-center;
+  @apply absolute bottom-0 left-0 flex items-end;
   padding: 8px;
 }
 
@@ -46,9 +46,69 @@
 .username {
   @apply text-white font-medium;
   font-size: 12px;
+  margin-bottom: 5px;
 }
 
 .whiteboard-state {
   color: #ffe72e;
   font-size: 18px;
+}
+
+.video-player-tools {
+  @apply flex flex-col items-center;
+  width: 36px;
+  background: #ffffff;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 18px;
+  padding: 16px 10px;
+}
+.video-player-tools.host {
+  height: 168px;
+}
+
+.video-player-tools > .iconfont {
+  @apply cursor-pointer box-content;
+  font-size: 22px;
+  color: #357bf6;
+}
+
+.video-player-tools > .iconfont.red {
+  color: #ff0000;
+}
+
+.video-player-tools > .iconfont.yellow {
+  color: #ffe72e;
+}
+
+.video-player-tools-popover {
+  padding: 0;
+}
+.video-player-tools-popover > .popover-content > .popover-arrow {
+  display: none;
+}
+
+.video-player-tools-popover > .popover-content > .popover-inner {
+  background: transparent;
+  border-radius: none;
+  box-shadow: none;
+}
+
+.video-player-tools-popover
+  > .popover-content
+  > .popover-inner
+  > .popover-inner-content {
+  padding: 0;
+}
+
+.volume-indicators {
+  @apply flex flex-col;
+  margin-left: 6px;
+}
+
+.v-indicator {
+  @apply rounded;
+  height: 1px;
+  width: 6px;
+  background-color: #357bf6;
+  margin-bottom: 4px;
 }

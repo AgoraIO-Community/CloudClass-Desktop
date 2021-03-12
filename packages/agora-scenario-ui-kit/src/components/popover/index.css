@@ -108,6 +108,7 @@
   border-style: solid;
   border-width: 4.24264069px;
   transform: rotate(45deg);
+  background: #fff;
 }
 .popover-placement-top > .popover-content > .popover-arrow,
 .popover-placement-topLeft > .popover-content > .popover-arrow,
