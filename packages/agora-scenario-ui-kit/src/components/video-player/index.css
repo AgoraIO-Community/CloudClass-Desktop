@@ -98,3 +98,16 @@
   > .popover-inner-content {
   padding: 0;
 }
+
+.volume-indicators {
+  @apply flex flex-col;
+  margin-left: 6px;
+}
+
+.v-indicator {
+  @apply rounded;
+  height: 1px;
+  width: 6px;
+  background-color: #357bf6;
+  margin-bottom: 4px;
+}

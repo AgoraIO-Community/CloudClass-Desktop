@@ -10,6 +10,7 @@ const meta: Meta = {
     stars: 5,
     micEnabled: true,
     whiteboardGranted: true,
+    micVolume: 0.95,
   },
 };
 

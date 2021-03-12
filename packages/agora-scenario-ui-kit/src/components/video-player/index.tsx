@@ -4,6 +4,7 @@ import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import './index.css';
+import { VolumeIndicator } from './volume-indicator';
 
 export interface VideoPlayerProps extends BaseProps {
   /**
@@ -35,7 +36,7 @@ export interface VideoPlayerProps extends BaseProps {
    */
   micEnabled?: boolean;
   /**
-   * 麦克风声音大小
+   * 麦克风声音大小 0-1
    */
   micVolume?: number;
   /**
@@ -74,6 +75,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   isHost,
   username,
   micEnabled,
+  micVolume,
   cameraEnabled,
   whiteboardGranted,
   onCameraStateChange,
@@ -135,10 +137,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           ) : null}
         </div>
         <div className="bottom-left-info">
-          <Icon
-            className={micStateCls}
-            type={micEnabled ? 'microphone-on' : 'microphone-off'}
-          />
+          <div>
+            <VolumeIndicator volume={micVolume} />
+            <Icon
+              className={micStateCls}
+              type={micEnabled ? 'microphone-on' : 'microphone-off'}
+            />
+          </div>
           <span className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
