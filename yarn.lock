@@ -20434,7 +20434,7 @@ rc-notification@4.4.0:
     rc-animate "3.x"
     rc-util "^5.0.1"
 
-rc-tooltip@^5.1.0:
+rc-tooltip@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/rc-tooltip/-/rc-tooltip-5.1.0.tgz#abb453c463c31a705aa01d268279f4ae6ae3b15f"
   integrity sha512-pFqD1JZwNIpbdcefB7k5xREoHAWM/k3yQwYF0iminbmDXERgq4rvBfUwIvlCqqZSM7HDr9hYeYr6ZsVNaKtvCQ==
@@ -20442,7 +20442,7 @@ rc-tooltip@^5.1.0:
     "@babel/runtime" "^7.11.2"
     rc-trigger "^5.0.0"
 
-rc-trigger@^5.0.0:
+rc-trigger@5.2.3, rc-trigger@^5.0.0:
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-5.2.3.tgz#8c55046ab432d7b52d51c69afb57ebb5bbe37e17"
   integrity sha512-6Fokao07HUbqKIDkDRFEM0AGZvsvK0Fbp8A/KFgl1ngaqfO1nY037cISCG1Jm5fxImVsXp9awdkP7Vu5cxjjog==
@@ -20462,6 +20462,15 @@ rc-upload@3.3.4:
     classnames "^2.2.5"
     rc-util "^5.2.0"
 
+rc-util@5.8.1, rc-util@^5.0.1, rc-util@^5.2.0, rc-util@^5.2.1, rc-util@^5.3.0, rc-util@^5.5.0:
+  version "5.8.1"
+  resolved "https://registry.npm.taobao.org/rc-util/download/rc-util-5.8.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frc-util%2Fdownload%2Frc-util-5.8.1.tgz#e3630abfb92b40becb31476cee136d65e80e02e0"
+  integrity sha1-42MKv7krQL7LMUds7hNtZegOAuA=
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    react-is "^16.12.0"
+    shallowequal "^1.1.0"
+
 rc-util@^4.15.3:
   version "4.21.1"
   resolved "https://registry.npm.taobao.org/rc-util/download/rc-util-4.21.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frc-util%2Fdownload%2Frc-util-4.21.1.tgz#88602d0c3185020aa1053d9a1e70eac161becb05"
@@ -20471,15 +20480,6 @@ rc-util@^4.15.3:
     prop-types "^15.5.10"
     react-is "^16.12.0"
     react-lifecycles-compat "^3.0.4"
-    shallowequal "^1.1.0"
-
-rc-util@^5.0.1, rc-util@^5.2.0, rc-util@^5.2.1, rc-util@^5.3.0, rc-util@^5.5.0, rc-util@^5.8.1:
-  version "5.8.1"
-  resolved "https://registry.npm.taobao.org/rc-util/download/rc-util-5.8.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frc-util%2Fdownload%2Frc-util-5.8.1.tgz#e3630abfb92b40becb31476cee136d65e80e02e0"
-  integrity sha1-42MKv7krQL7LMUds7hNtZegOAuA=
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    react-is "^16.12.0"
     shallowequal "^1.1.0"
 
 rc@^1.2.8:
