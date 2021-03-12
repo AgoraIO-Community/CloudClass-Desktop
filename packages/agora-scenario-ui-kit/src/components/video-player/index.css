@@ -13,7 +13,7 @@
 }
 
 .bottom-left-info {
-  @apply absolute bottom-0 left-0 flex items-center;
+  @apply absolute bottom-0 left-0 flex items-end;
   padding: 8px;
 }
 
@@ -46,6 +46,7 @@
 .username {
   @apply text-white font-medium;
   font-size: 12px;
+  margin-bottom: 5px;
 }
 
 .whiteboard-state {

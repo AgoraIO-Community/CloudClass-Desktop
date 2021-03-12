@@ -125,8 +125,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       }}
       overlayClassName="video-player-tools-popover"
       content={tools}
-      placement="left"
-      trigger="click">
+      placement="left">
       <div className={cls}>
         <div className="top-right-info">
           {stars > 0 ? (
