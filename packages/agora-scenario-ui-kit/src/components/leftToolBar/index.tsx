@@ -77,7 +77,7 @@ export const LeftToolBar: FC<LeftToolBarProps> = ({
                   {
                     ['color', 'pen', 'tools'].includes(item) ?
                     <div style={{marginTop: '-38px'}} onClick={() => {handleEvent(item)}}> 
-                      <Icon type={'triangle-down'} className={'pointer'} color={'#7B88A0'}/>
+                      <Icon type={'triangle-down'} size={24} className={'pointer'} color={'#7B88A0'}/>
                     </div> : null
                   }
                 </div>
