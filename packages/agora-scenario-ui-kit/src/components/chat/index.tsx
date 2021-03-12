@@ -59,7 +59,6 @@ export const Chat: FC<ChatProps> = ({
     if (!!chatText) {
       return;
     }
-    debugger;
     setFocused(false);
   };
 
