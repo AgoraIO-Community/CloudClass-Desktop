@@ -1,10 +1,10 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { LeftToolBar } from '~components/leftToolBar';
+import { ToolBar } from '~components/tool-bar';
 
 const meta: Meta = {
-  title: 'Components/LeftToolBar',
-  component: LeftToolBar,
+  title: 'Components/ToolBar',
+  component: ToolBar,
 };
 
 const click = (e: any) => {
@@ -13,7 +13,7 @@ const click = (e: any) => {
 
 export const Docs = () => (
   <>
-    <LeftToolBar handleClickEvent={click}></LeftToolBar>
+    <ToolBar handleClickEvent={click}></ToolBar>
   </>
 );
 

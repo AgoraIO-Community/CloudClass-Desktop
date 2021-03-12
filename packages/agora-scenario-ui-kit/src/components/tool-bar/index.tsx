@@ -15,7 +15,7 @@ export interface LeftToolBarProps extends BaseProps {
 
 const iconList = ['select', 'pen', 'text', 'eraser', 'color', 'blank-page', 'hand', 'cloud', 'follow', 'tools', 'register']
 
-export const LeftToolBar: FC<LeftToolBarProps> = ({
+export const ToolBar: FC<LeftToolBarProps> = ({
   color,
   // minimize,
   // mouseSelectorOpen,
