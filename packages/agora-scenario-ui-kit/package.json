@@ -54,7 +54,8 @@
     "vite": "2.0.5"
   },
   "dependencies": {
-    "classnames": "^2.2.6"
+    "classnames": "^2.2.6",
+    "tailwindcss": "^2.0.3"
   },
   "browserslist": {
     "production": [

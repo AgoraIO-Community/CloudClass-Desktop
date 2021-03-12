@@ -1,0 +1,70 @@
+.minimize {
+  width: 42px;
+  height: 42px;
+  @apply bg-white;
+  padding-left: 5px;
+  padding-top: 0.2px;
+  border-radius: 0px 21px 21px 0px;
+}
+
+.control-minimize {
+  width: 32px;
+  height: 32px;
+  margin-top: 5px;
+  background-image: url('./assets/icon-open.png');
+}
+
+.control-minimize:hover {
+  width: 32px;
+  height: 32px;
+  margin-top: 5px;
+  background-image: url('./assets/icon-openhover.png');
+}
+
+.control-unwind {
+  width: 32px;
+  height: 32px;
+  margin-top: 5px;
+  background-image: url('./assets/icon-close.png');
+}
+
+.control-unwind:hover {
+  width: 32px;
+  height: 32px;
+  margin-top: 5px;
+  background-image: url('./assets/icon-closehover.png');
+}
+
+.tool-bar {
+  width: 42px;
+  height: 515px;
+  border-radius: 21px;
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  @apply flex;
+  @apply flex-col;
+}
+
+.tool-bar-box {
+  @apply flex;
+  @apply flex-col;
+}
+
+.mouse-hover:hover {
+  width: 32px;
+  height: 32px;
+  border-radius: 21px;
+  color: #191919;	
+  background-color: #e9e9f2;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.mouse-hover:active {
+
+}
+
+
+
+

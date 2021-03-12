@@ -19,6 +19,7 @@ export const Icon: FC<IconProps> = ({
 }) => {
   const cls = classnames({
     [`iconfont icon-${type}`]: true,
+    [`${className}`]: !!className,
   });
   return (
     <i
