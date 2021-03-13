@@ -1,7 +1,8 @@
 /* FIXME: etxtract colors to tailwind config */
 
 .biz-header {
-  padding: 0 15px;
+  /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
+  padding: 0 15px 0 8px;
 }
 
 .biz-header-title-wrap {
@@ -29,18 +30,50 @@
   @apply cursor-pointer;
 }
 
-.biz-signal-quality-excellent {
+/* 因为 iconfont icon设计不合规无法对齐 特此 hack */
+.biz-signal-quality {
+  @apply text-center;
+  width: 40px;
+}
+.biz-signal-quality.popover-open {
+  
+}
+.biz-signal-quality.excellent {
   color: #0bad69;
 }
 
-.biz-signal-quality-good {
+.biz-signal-quality.good {
   color: #f5b723;
 }
 
-.biz-signal-quality-bad {
+.biz-signal-quality.bad {
   color: #f04c36;
 }
 
-.biz-signal-quality-unknown {
+.biz-signal-quality.unknown {
   color: #666;
+}
+
+.biz-signal-content-row {
+  @apply flex justify-between;
+}
+.biz-signal-content-row.margin-top-9 {
+  margin-top: 9px;
+}
+
+.biz-signal-content-row > .padding-right-27 {
+  padding-right: 27px;
+}
+
+.biz-col {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.biz-col > label {
+  color: #586376;
+}
+
+.biz-col > span {
+  color: #191919;
 }

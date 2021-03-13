@@ -10,11 +10,16 @@ const meta: Meta = {
     stars: 5,
     micEnabled: true,
     whiteboardGranted: true,
-  }
+    micVolume: 0.95,
+  },
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
-  return <VideoPlayer {...restProps}>{children}</VideoPlayer>;
+  return (
+    <div className="m-10">
+      <VideoPlayer {...restProps}>{children}</VideoPlayer>
+    </div>
+  );
 };
 
 export default meta;

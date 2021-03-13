@@ -1,8 +1,11 @@
-import React, { EventHandler, FC, SyntheticEvent } from 'react';
+import React, { EventHandler, FC, SyntheticEvent, useState } from 'react';
 import { Button } from '~components/button';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';
+import { Popover } from '~components/popover';
+import { SignalContent } from './signal-content';
 import './index.css';
+import { Modal } from '~components/modal';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
@@ -54,7 +57,7 @@ export interface BizHeaderProps {
   /**
    * 点击结束课程，用户点击确认结束后的回调
    */
-  onEnd: EventHandler<SyntheticEvent<HTMLButtonElement>>;
+  onEnd: () => void;
   /**
    * 开始上课的回调
    */
@@ -85,32 +88,57 @@ export const BizHeader: FC<BizHeaderProps> = ({
   onDeviceChange,
   onExit,
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleEndSession = () => {
+    setModalVisible(false);
+    onEnd();
+  };
   return (
-    <Header className="biz-header">
-      <div className={`biz-signal-quality-${signalQuality}`}>
-        <Icon
-          className="cursor-pointer"
-          type={SIGNAL_QUALITY_ICONS[signalQuality] as IconTypes}
-          size={24}
-        />
-      </div>
-      <div className="biz-header-title-wrap">
-        <div className="biz-header-title">{title}</div>
-        <div>
-          {isStarted ? (
-            <Button type="danger" onClick={onEnd}>
-              下课
-            </Button>
-          ) : (
-            <Button onClick={onBegin}>上课</Button>
-          )}
+    <>
+      <Header className="biz-header">
+        <Popover
+          content={<SignalContent {...monitor} />}
+          placement="bottomLeft">
+          <div className={`biz-signal-quality ${signalQuality}`}>
+            <Icon
+              className="cursor-pointer"
+              type={SIGNAL_QUALITY_ICONS[signalQuality] as IconTypes}
+              size={24}
+            />
+          </div>
+        </Popover>
+        <div className="biz-header-title-wrap">
+          <div className="biz-header-title">{title}</div>
+          <div>
+            {isStarted ? (
+              <Button type="danger" onClick={() => setModalVisible(true)}>
+                下课
+              </Button>
+            ) : (
+              <Button onClick={onBegin}>上课</Button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="header-actions">
-        <Icon type="record" size={24} onClick={onRecord} />
-        <Icon type="set" size={24} />
-        <Icon type="exit" size={24} onClick={onExit} />
-      </div>
-    </Header>
+        <div className="header-actions">
+          <Icon type="record" size={24} onClick={onRecord} />
+          <Icon type="set" size={24} />
+          <Icon type="exit" size={24} onClick={onExit} />
+        </div>
+      </Header>
+      {/* modal api seems not reasonable */}
+      {modalVisible ? (
+        <Modal
+          onCancel={() => setModalVisible(false)}
+          onOk={handleEndSession}
+          
+          footer={[
+            <Button type="secondary" action="cancel">取消</Button>,
+            <Button type="primary" action="ok">确认</Button>,
+          ]}
+          title="下课确认">
+          <p>你确定要下课吗？</p>
+        </Modal>
+      ) : null}
+    </>
   );
 };
