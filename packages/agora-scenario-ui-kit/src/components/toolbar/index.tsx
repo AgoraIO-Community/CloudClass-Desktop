@@ -2,40 +2,54 @@ import React, { FC, useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import './index.css';
-import { Icon } from '~components/icon';
+import { Icon, IconTypes } from '~components/icon';
+
+export interface IconListType {
+  id: string,
+  type: IconTypes,
+  isCanExtend?: boolean,
+}
 
 export interface ToolBarProps extends BaseProps {
-  iconList: Array<string>,
-  mouseSelectorOpen: () => void,
+  iconList: Array<IconListType>,
+  handleClickEvent: (event: IconListType) => void,
   mouseSelectorClose: () => void,
-  handleClickEvent: (event: string) => void,
-  minimize?: boolean,  // 控制收起
   color?: string,
   palletColor?: string,
-  extendList?: Array<string>,
 }
+
+export interface ToolBarMinimizeProps extends BaseProps {
+  mouseSelectorOpen: () => void,
+}
+
+export const ToolBarMinimize: FC<ToolBarMinimizeProps> = ({mouseSelectorOpen}) => {
+  return (
+    <div className='minimize shadow'>
+      <div className='control-minimize' onClick={mouseSelectorOpen}>
+        
+      </div>
+    </div>
+  )
+} 
 
 export const ToolBar: FC<ToolBarProps> = ({
   color,
   iconList,
-  extendList,
-  minimize,
   palletColor,
-  mouseSelectorOpen,
   mouseSelectorClose,
   handleClickEvent,
 }) => {
 
   const [selectedElement, setSelectedElement] = useState<string>('')
 
-  const handleEvent = (e: string) => {
-    setSelectedElement(e)
+  const handleEvent = (e: IconListType) => {
+    setSelectedElement(e.type)
     handleClickEvent(e)
   }
 
   const settingIconColor = (e: string) => {
-    // 图标为调色盘时特殊处理
     if(selectedElement === e) {
+      // 图标为调色盘时特殊处理
       if(e === 'color') {
         return palletColor
       }
@@ -46,13 +60,6 @@ export const ToolBar: FC<ToolBarProps> = ({
   
   return (
     <>
-    {
-      minimize ?
-      <div className='minimize shadow'>
-        <div className='control-minimize' onClick={mouseSelectorOpen}>
-          
-        </div>
-      </div> :
       <div className='tool-bar' style={{backgroundColor: color}}>
         <div className='mx-auto'>
           <div className='control-unwind' onClick={mouseSelectorClose}>
@@ -61,15 +68,15 @@ export const ToolBar: FC<ToolBarProps> = ({
         </div>
         <div className='tool-bar-box' style={{marginTop: '10px'}}>
           {
-            iconList.map((item: string) =>{
+            iconList.map((item: IconListType) =>{
               return (
-                <div className='mx-auto' key={item}>
-                  <div onClick={() => {handleEvent(item)}}>
-                    <Icon type={item} size={28} className={'mouse-hover pointer'} color={settingIconColor(item)}/>
+                <div className='mx-auto' key={item.id} onClick={() => {handleEvent(item)}}>
+                  <div>
+                    <Icon type={item.type} size={28} className={'mouse-hover pointer'} color={settingIconColor(item.type)}/>
                   </div> 
                   {
-                    extendList?.includes(item) ?
-                    <div style={{marginTop: '-38px'}} onClick={() => {handleEvent(item)}}> 
+                    item.isCanExtend ?
+                    <div style={{marginTop: '-38px'}}> 
                       <Icon type={'triangle-down'} size={24} className={'pointer'} color={'#7B88A0'}/>
                     </div> : null
                   }
@@ -79,7 +86,6 @@ export const ToolBar: FC<ToolBarProps> = ({
           }
         </div>
       </div>  
-    }
     </>
   )
 }

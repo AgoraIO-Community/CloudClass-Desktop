@@ -1,5 +1,5 @@
 export * from './button'
-export * from './tool-bar'
+export * from './toolbar'
 export * from './layout'
 export * from './styles'
 export * from './biz-header';
