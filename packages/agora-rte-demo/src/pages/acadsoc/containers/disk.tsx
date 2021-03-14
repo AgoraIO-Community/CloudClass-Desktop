@@ -52,8 +52,6 @@ const UploadingProgress = observer((props: any) => {
 
 const NetworkDisk = observer(() => {
 
-  console.log("network disk: ")
-
   const boardStore = useBoardStore()
   const [process,setProcess] = useState<number>(0)
   const [isUploadFile,setIsUploadFile] = useState<boolean>(false)

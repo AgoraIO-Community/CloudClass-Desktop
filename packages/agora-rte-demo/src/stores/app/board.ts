@@ -308,7 +308,18 @@ export class BoardStore {
   menuTitle: string = '课件目录'
 
   @observable
-  isFullScreen: boolean = false
+  localFullScreen: boolean = false
+
+  updateFullScreen(screen: boolean = false) {
+    // if (this.userRole === EduRoleTypeEnum.teacher || screen) {
+      this.localFullScreen = screen
+    // }
+  }
+
+  @computed
+  get isFullScreen(): boolean {
+    return this.localFullScreen
+  }
 
   @observable
   enableStatus: string|boolean = 'disable'
@@ -387,14 +398,14 @@ export class BoardStore {
     })
     const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
     const follow = get(this.room.state.globalState, 'follow', 0)
-    const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
+    const globalState = this.room.state.globalState as any
     this.grantUsers = grantUsers
     const boardUser = this.grantUsers.includes(this.localUserUuid)
     if (boardUser) {
       this._grantPermission = true
     }
     this.follow = follow
-    this.isFullScreen = isFullScreen
+    this.updateFullScreen(globalState.isFullScreen)
     // 默认只有老师不用禁止跟随
     if (this.userRole !== EduRoleTypeEnum.teacher) {
       if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -449,7 +460,6 @@ export class BoardStore {
         this._grantPermission = true
       }
       this.follow = follow
-      this.isFullScreen = isFullScreen
       // 默认只有老师不用禁止跟随
       if (this.userRole !== EduRoleTypeEnum.teacher) {
         if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -1016,7 +1026,7 @@ export class BoardStore {
       if (state.globalState) {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
-        this.isFullScreen = get(state, 'globalState.isFullScreen', false)
+        this.updateFullScreen(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           this.enableStatus = get(state, 'globalState.granted', 'disable')
         }
@@ -2093,7 +2103,7 @@ export class BoardStore {
     this._personalResources = []
     this._resourcesList = []
     this.courseWareList = []
-    this.isFullScreen = false
+    this.localFullScreen = false
     this.fileLoading = false
     this.uploadingProgress = 0
     this.folder = ''
@@ -2247,16 +2257,28 @@ export class BoardStore {
     // 白板全屏
     if (this.userRole === EduRoleTypeEnum.teacher) {
       this.setFullScreen(type === 'fullscreen')
-    }
-    if (type === 'fullscreen') {
-      this.isFullScreen = true
-      return
-    }
-
-    // 白板退出全屏
-    if (type === 'fullscreenExit') {
-      this.isFullScreen = false
-      return
+      if (type === 'fullscreen') {
+        this.updateFullScreen(true)
+        return
+      }
+      
+      if (type === 'fullscreenExit') {
+        this.updateFullScreen(false)
+        return
+      }
+    } else {
+      const globalState = this.room.state.globalState as any
+      if (!globalState.isFullScreen) {
+        if (type === 'fullscreen') {
+          this.updateFullScreen(true)
+          return
+        }
+        
+        if (type === 'fullscreenExit') {
+          this.updateFullScreen(false)
+          return
+        }
+      }
     }
   }
 
