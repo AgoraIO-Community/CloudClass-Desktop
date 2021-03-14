@@ -327,11 +327,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
     //TODO: set cef client log path
     if (this._cefClient) {
-      window.getCachePath((path: string) => {
-        const dstPath = path+'agorasdk.log'
-        this.client.setLogFile(dstPath);
-        EduLogger.info("set cef log path success, dest path: ", dstPath)
-      })
+      // window.getCachePath((path: string) => {
+      //   const dstPath = path+'agorasdk.log'
+      //   this.client.setLogFile(dstPath);
+      //   EduLogger.info("set cef log path success, dest path: ", dstPath)
+      // })
     }
   }
   muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
