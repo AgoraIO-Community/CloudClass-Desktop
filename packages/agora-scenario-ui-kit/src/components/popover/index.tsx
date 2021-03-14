@@ -17,8 +17,8 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
     { prefixCls: customizePrefixCls, title, content, ...otherProps } = {
       placement: 'top' as TooltipPlacement,
       trigger: 'hover',
-      mouseEnterDelay: 0.1,
-      mouseLeaveDelay: 0.1,
+      mouseEnterDelay: 0.01,
+      mouseLeaveDelay: 0.01,
       overlayStyle: {},
     },
     ref,

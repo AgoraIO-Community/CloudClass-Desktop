@@ -46,7 +46,7 @@ export type IconTypes =
   | 'zoom-in'
   | 'microphone-off'
   | 'microphone-on'
-  | 'contact'
+  | 'register'
   | 'hands-up'
   | 'on-podium'
   | 'authorized'
@@ -59,4 +59,5 @@ export type IconTypes =
   | 'circle'
   | 'close'
   | 'checked'
+  | 'register'
   | 'red-caution';
