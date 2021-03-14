@@ -293,9 +293,9 @@ export const Docs = () => (
     </div>
     <div className="p-4 w-40 text-center">
       <div>
-        <Icon type="contact" />
+        <Icon type="register" />
       </div>
-      <div>contact</div>
+      <div>register</div>
     </div>
     <div className="p-4 w-40 text-center">
       <div>
@@ -374,6 +374,12 @@ export const Docs = () => (
         <Icon type="red-caution" />
       </div>
       <div>red-caution</div>
+    </div>
+    <div className="p-4 w-40 text-center">
+      <div>
+        <Icon type="register" />
+      </div>
+      <div>register</div>
     </div>
   </div>
 );
