@@ -1,7 +1,8 @@
 const threadLoader = require("thread-loader")
 const webpack = require("webpack")
 const TerserPlugin = require('terser-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
@@ -37,7 +38,7 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
     alias: {
       'src': path.resolve(__dirname, 'src'),
     }
@@ -98,17 +99,41 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         loader: "url-loader",
       },
+      {
+        test: /\.css$/i,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          }
+        ]
+      },
     ],
   },
   optimization: {
     minimizer: [
         new TerserPlugin({
             parallel: true,
-        })
+        }),
+        // new OptimizeCssAssetsPlugin({
+        //   assetNameRegExp: /\.css$/g,
+        //   cssProcessorOptions: {
+        //       safe: true,
+        //       autoprefixer: { disable: true },
+        //       mergeLonghand: false,
+        //       discardComments: {
+        //           removeAll: true
+        //       }
+        //   },
+        //   canPrint: true
+        // })
     ]
 },
   plugins: [
     // new BundleAnalyzerPlugin(),
+    // new MiniCssExtractPlugin(),
     new HardSourceWebpackPlugin({
       root: process.cwd(),
       directories: [],

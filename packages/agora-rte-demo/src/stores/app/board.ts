@@ -16,12 +16,41 @@ import { EnumBoardState } from '@/modules/services/board-api';
 import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
 import {CursorTool} from '@netless/cursor-tool'
 import { fetchPPT } from '@/modules/course-ware';
-import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
+import { ConvertedFile, ConvertedFileList, CourseWareItem } from '@/edu-sdk';
 import { agoraCaches } from '@/utils/web-download.file';
 import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { reportService } from '@/services/report-service';
+
+const transformConvertedListToScenes = (taskProgress: any) => {
+  if (taskProgress && taskProgress.convertedFileList) {
+    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+      name: `${index+1}`,
+      componentCount: 1,
+      ppt: {
+        width: item.width,
+        height: item.height,
+        src: item.conversionFileUrl
+      }
+    }))
+  }
+  return []
+}
+
+const transformMaterialList = (item: CourseWareItem) => {
+  return {
+    ext: item.ext,
+    resourceName: item.resourceName,
+    resourceUuid: item.resourceUuid,
+    scenes: transformConvertedListToScenes(item.taskProgress),
+    size: item.size,
+    taskProgress: item.taskProgress,
+    taskUuid: item.taskUuid || "",
+    updateTime: item.updateTime,
+    url: item.url
+  }
+}
 
 export enum BoardPencilSize {
   thin = 4,
@@ -279,7 +308,18 @@ export class BoardStore {
   menuTitle: string = '课件目录'
 
   @observable
-  isFullScreen: boolean = false
+  localFullScreen: boolean = false
+
+  updateFullScreen(screen: boolean = false) {
+    // if (this.userRole === EduRoleTypeEnum.teacher || screen) {
+      this.localFullScreen = screen
+    // }
+  }
+
+  @computed
+  get isFullScreen(): boolean {
+    return this.localFullScreen
+  }
 
   @observable
   enableStatus: string|boolean = 'disable'
@@ -358,14 +398,14 @@ export class BoardStore {
     })
     const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
     const follow = get(this.room.state.globalState, 'follow', 0)
-    const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
+    const globalState = this.room.state.globalState as any
     this.grantUsers = grantUsers
     const boardUser = this.grantUsers.includes(this.localUserUuid)
     if (boardUser) {
       this._grantPermission = true
     }
     this.follow = follow
-    this.isFullScreen = isFullScreen
+    this.updateFullScreen(globalState.isFullScreen)
     // 默认只有老师不用禁止跟随
     if (this.userRole !== EduRoleTypeEnum.teacher) {
       if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -420,7 +460,6 @@ export class BoardStore {
         this._grantPermission = true
       }
       this.follow = follow
-      this.isFullScreen = isFullScreen
       // 默认只有老师不用禁止跟随
       if (this.userRole !== EduRoleTypeEnum.teacher) {
         if (this.boardClient.room && this.boardClient.room.isWritable) {
@@ -488,34 +527,34 @@ export class BoardStore {
     try {
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      if (isWeb) {
+      // if (isWeb) {
         await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
           this.preloadingProgress = progress
           this.controller = controller
         })
-      } else {
-        const controller = new AbortController();
-        this.controller = controller
-        const resourcesHost = "convertcdn.netless.link";
-        const signal = controller.signal;
-        const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-        const res = await fetch(zipUrl, {
-            method: "get",
-            signal: signal,
-        }).then(fetchProgress({
-            onProgress: (progress: any) => {
-              if (progress.hasOwnProperty('percentage')) {
-                this.preloadingProgress = get(progress, 'percentage')
-              }
-            },
-        }));
-        if (res.status !== 200) {
-          throw GenericErrorWrapper({
-            code: res.status,
-            message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-          })
-        }
-      }
+      // } else {
+      //   const controller = new AbortController();
+      //   this.controller = controller
+      //   const resourcesHost = "convertcdn.netless.link";
+      //   const signal = controller.signal;
+      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+      //   const res = await fetch(zipUrl, {
+      //       method: "get",
+      //       signal: signal,
+      //   }).then(fetchProgress({
+      //       onProgress: (progress: any) => {
+      //         if (progress.hasOwnProperty('percentage')) {
+      //           this.preloadingProgress = get(progress, 'percentage')
+      //         }
+      //       },
+      //   }));
+      //   if (res.status !== 200) {
+      //     throw GenericErrorWrapper({
+      //       code: res.status,
+      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
+      //     })
+      //   }
+      // }
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
       this.downloading = false
     } catch (err) {
@@ -767,7 +806,6 @@ export class BoardStore {
 
   updateLocalSceneState() {
     this.resourceName = this.getResourceName(this.room.state.sceneState.contextPath)
-    // this.totalPage = this.
   }
 
   updateCourseWareList() {
@@ -786,13 +824,6 @@ export class BoardStore {
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
-
-    // console.log(" tasks ",)
-    // TODO: 需要从外部获取
-    // let ppt = await fetchPPT()
-    //@ts-ignore
-    // window.fetchPPT = fetchPPT
-    // const firstCourseWare = ppt[0]
     const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
       return []
@@ -812,16 +843,6 @@ export class BoardStore {
       }, true)
       return scenes
     }
-  }
-
-  loadRoomScenes() {
-    const globalState = this.room.state.globalState as any
-    const roomScenes: any = globalState.roomScenes
-    // for (const resourceName of Object.keys(roomScenes)) {
-    //   if (resourceName) {
-
-    //   }
-    // }
   }
 
   // TODO: aclass board init
@@ -876,14 +897,13 @@ export class BoardStore {
     this.pptAutoFullScreen()
 
     // 老师
-    if ( this.userRole  === EduRoleTypeEnum.teacher) {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
       // 判断第一次登陆
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
         EduLogger.info("老师第一次加入白板")
         await this.fetchRoomScenes()
       } else {
-        // this.loadRoomScenes()
         EduLogger.info("老师再次加入白板")
       }
     }
@@ -903,8 +923,6 @@ export class BoardStore {
     } else {
       EduLogger.info("白板已经锁定")
     }
-
-    // await this.loadCloudResources()
 
     this.updateLocalResourceList()
     this.updateLocalSceneState()
@@ -1008,7 +1026,7 @@ export class BoardStore {
       if (state.globalState) {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
-        this.isFullScreen = get(state, 'globalState.isFullScreen', false)
+        this.updateFullScreen(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           this.enableStatus = get(state, 'globalState.granted', 'disable')
         }
@@ -1082,6 +1100,11 @@ export class BoardStore {
     window.addEventListener('resize', this.resizeCallback)
 
     this.lockBoard = this.getCurrentLock(this.room.state) as any
+  }
+
+  @computed
+  get roleIsTeacher(): boolean {
+    return this.isTeacher()
   }
 
   isTeacher(): boolean {
@@ -1185,10 +1208,17 @@ export class BoardStore {
     })
   }
 
+  syncLocalPersonalCourseWareList() {
+    this.room.setGlobalState({
+      materialList: this.internalResources.map(transformMaterialList)
+    })
+  }
+
   teacherFirstJoin() {
     this.resetBoardScenes()
     this.enroll()
     this.lockAClassBoard()
+    this.syncLocalPersonalCourseWareList()
   }
 
   studentFirstJoin() {
@@ -2073,7 +2103,7 @@ export class BoardStore {
     this._personalResources = []
     this._resourcesList = []
     this.courseWareList = []
-    this.isFullScreen = false
+    this.localFullScreen = false
     this.fileLoading = false
     this.uploadingProgress = 0
     this.folder = ''
@@ -2227,16 +2257,28 @@ export class BoardStore {
     // 白板全屏
     if (this.userRole === EduRoleTypeEnum.teacher) {
       this.setFullScreen(type === 'fullscreen')
-    }
-    if (type === 'fullscreen') {
-      this.isFullScreen = true
-      return
-    }
-
-    // 白板退出全屏
-    if (type === 'fullscreenExit') {
-      this.isFullScreen = false
-      return
+      if (type === 'fullscreen') {
+        this.updateFullScreen(true)
+        return
+      }
+      
+      if (type === 'fullscreenExit') {
+        this.updateFullScreen(false)
+        return
+      }
+    } else {
+      const globalState = this.room.state.globalState as any
+      if (!globalState.isFullScreen) {
+        if (type === 'fullscreen') {
+          this.updateFullScreen(true)
+          return
+        }
+        
+        if (type === 'fullscreenExit') {
+          this.updateFullScreen(false)
+          return
+        }
+      }
     }
   }
 
@@ -2390,6 +2432,7 @@ export class BoardStore {
       resourceName:fileName
     })
   }
+
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
@@ -2401,7 +2444,7 @@ export class BoardStore {
           payload.onProgress(evt);
         },
       })
-      console.log('isCancel',this.isCancel)
+
       if (this.isCancel) {
         return
       }
@@ -2410,11 +2453,8 @@ export class BoardStore {
       this.room.setGlobalState({
         materialList: uniqBy(materialList.concat([{
           ...res
-        }]), 'resourceName')
+        }]), 'resourceUuid')
       })
-      // const materialList
-      EduLogger.info(`上传课件成功, result: ${JSON.stringify(res)}`)
-      // console.log(" done ", file)
       this.fileLoading = false
     } catch (err) {
       console.error(err)
@@ -2441,11 +2481,14 @@ export class BoardStore {
     }
   }
 
-  // @observable
-  // publicResources: any[] = []
   @computed
   get publicResources() {
     return this.appStore.params.config.courseWareList.map(transDataToResource)
+  }
+
+  @computed
+  get internalResources(): CourseWareItem[] {
+    return this.appStore.params.config.personalCourseWareList ?? []
   }
 
   @observable
@@ -2459,13 +2502,6 @@ export class BoardStore {
   @computed
   get allResources() {
     return this.publicResources.concat(this.personalResources)
-  }
-
-  async loadCloudResources() {
-    // this.publicResources = await this.appStore.uploadService.fetchPublicResources(this.appStore.roomInfo.roomUuid)
-    if (this.isTeacher()) {
-      this._personalResources = await this.appStore.uploadService.fetchPersonResources(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid)
-    }
   }
 
   @observable

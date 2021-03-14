@@ -463,7 +463,8 @@ export const EducationBoard = observer((props: any) => {
         height: props.height,
         position: 'relative',
         boxSizing: 'border-box',
-        background: 'white'
+        background: 'white',
+        marginTop: boardStore.roleIsTeacher ? '39px' : '0',
       }}>
         {boardStore.aClassHasPermission ? 
         <ZoomController
@@ -507,7 +508,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.moveCamera()
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={boardStore.openDisk} setOpenDisk={() => boardStore.setOpenDisk()} /> : null }
+        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

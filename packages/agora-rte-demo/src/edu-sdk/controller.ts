@@ -10,7 +10,7 @@ export enum EduSDKInternalStateEnum {
   Destroyed = "destroyed"
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent, args?: any) => any
 
 export abstract class ClassRoomAbstractStore {
 
@@ -107,7 +107,8 @@ export class MainController {
   
   constructor(
     public readonly appController = new EduSDKController(),
-    public readonly replayController = new EduSDKController()
+    public readonly replayController = new EduSDKController(),
+    public readonly storageController = new EduSDKController()
   ) {
   }
 

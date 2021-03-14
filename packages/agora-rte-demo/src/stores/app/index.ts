@@ -59,6 +59,8 @@ export type AppStoreConfigParams = {
   rtmUid: string
   rtmToken: string
   courseWareList: CourseWareList
+  personalCourseWareList?: CourseWareList
+  cachePath?: string
   oss?: {
     region: string
     bucketName: string
@@ -120,8 +122,6 @@ export class AppStore implements ClassRoomAbstractStore {
   homeStore!: HomeStore;
 
   eduManager!: EduManager;
-
-  // userService?: EduUserService;
 
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
@@ -261,7 +261,7 @@ export class AppStore implements ClassRoomAbstractStore {
           rtmToken: config.rtmToken,
           platform: 'electron',
           logLevel: '' as any,
-          logDirectoryPath: '',
+          logDirectoryPath: config.cachePath || '',
           // @ts-ignore
           cefClient,
           // cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
@@ -277,7 +277,7 @@ export class AppStore implements ClassRoomAbstractStore {
           rtmToken: config.rtmToken,
           platform: 'electron',
           logLevel: '' as any,
-          logDirectoryPath: '',
+          logDirectoryPath: config.cachePath || '',
           // @ts-ignore
           agoraRtc: window.rtcEngine,
           // agoraRtc: window,
@@ -291,7 +291,7 @@ export class AppStore implements ClassRoomAbstractStore {
         rtmToken: config.rtmToken,
         platform: 'web',
         logLevel: '' as any,
-        logDirectoryPath: '',
+        logDirectoryPath: config.cachePath || '',
         codec: 'vp8',
         sdkDomain: config.sdkDomain,
       })
@@ -353,7 +353,6 @@ export class AppStore implements ClassRoomAbstractStore {
     this.acadsocStore = new AcadsocRoomStore(this)
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
-    this.diskStore = new DiskStore(this)
     this.homeStore = new HomeStore(this)
     this._screenVideoRenderer = undefined
   }
@@ -696,6 +695,6 @@ export class AppStore implements ClassRoomAbstractStore {
 export * from './acadsoc-room';
 export { UIStore } from './ui';
 export { BoardStore } from './board';
-export {PretestStore} from './pretest';
-export {DiskStore} from './disk';
-export {HomeStore} from './home';
+export { PretestStore } from './pretest';
+export { DiskStore } from './disk';
+export { HomeStore } from './home';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Theme, FormControl, Tooltip, Checkbox, FormControlLabel } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import {CustomButton} from '@/components/custom-button';
@@ -12,7 +12,7 @@ import { Loading } from '@/components/loading';
 import { t } from '../i18n';
 import { useUIStore, useAppStore, useBoardStore, useHomeStore, useHomeUIStore } from '@/hooks';
 import { AppStore, UIStore } from '@/stores/app';
-import { GlobalStorage } from '@/utils/custom-storage';
+import { GlobalStorage, storage } from '@/utils/custom-storage';
 import { EduManager, GenericErrorWrapper } from 'agora-rte-sdk';
 import {isElectron} from '@/utils/platform';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
@@ -23,7 +23,7 @@ import { BizLogger } from '@/utils/biz-logger';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import dayjs from 'dayjs'
-import { CourseWareItem, LaunchOption } from '@/edu-sdk';
+import { AgoraEduSDK, CourseWareItem, LaunchOption } from '@/edu-sdk';
 import { mapFileType } from '@/services/upload-service';
 import {agoraCaches} from '@/utils/web-download.file'
 import { PPTProgress } from '@/components/netless-board/loading';
@@ -40,7 +40,7 @@ const transformPPT = (data: any): CourseWareItem[] => {
   }))
 }
 
-export async function fetchPPT(payload: {type: string}) {
+export async function fetchPPT() {
   let res = await fetch("https://api-solutions-dev.bj2.agoralab.co/scene/apps/f488493d1886435f963dfb3d95984fd4/v1/rooms/courseware0/users/liyang1/properties/resources", {
     method: 'GET',
     headers: {
@@ -48,16 +48,18 @@ export async function fetchPPT(payload: {type: string}) {
     },
   })
   const resText: any = await res.text()
-  const text = JSON.parse(resText)
-  if (text.code !== 0) {
+  const result = JSON.parse(resText)
+  if (result.code !== 0) {
    throw GenericErrorWrapper({
-      message: text.msg,
-      code: text.code
+      message: result.msg,
+      code: result.code
     })
   }
-  const ppt = text.data[payload.type]
-  console.log(" ppt ", ppt , " payload.type ", payload.type)
-  return ppt
+  const pptList = []
+  for (let key of Object.keys(result.data)) {
+    pptList.push(result.data[key])
+  }
+  return pptList
 }
 
 const useStyles = makeStyles ((theme: Theme) => ({
@@ -116,7 +118,7 @@ export const HomePage = observer(() => {
 
   const homeStore = useHomeStore()
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>([])
+  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
 
   const handleSetting = (evt: any) => {
     history.push({pathname: '/setting'})
@@ -221,7 +223,8 @@ export const HomePage = observer(() => {
       homeStore.setLaunchConfig({
         rtmUid: userUuid,
         pretest,
-        courseWareList: courseWareList,
+        courseWareList: courseWareList.slice(0, 1),
+        personalCourseWareList: courseWareList.slice(1, courseWareList.length),
         translateLanguage: "auto",
         language: language,
         userUuid: `${userUuid}`,
@@ -244,9 +247,10 @@ export const HomePage = observer(() => {
   }
 
   const fetchCourseWareList = async () => {
-    const list = await fetchPPT({type: 'large'})
-    updateCourseWareList(transformPPT(list))
-    // appStore.updateCourseWareList(transformPPT(list))
+    const list = await fetchPPT()
+    const courseWareList = transformPPT(list)
+    storage.saveCourseWareList(JSON.stringify(courseWareList))
+    updateCourseWareList(courseWareList)
   }
 
   const [downloading, setDownloading] = useState<boolean>(false)
@@ -256,7 +260,6 @@ export const HomePage = observer(() => {
   async function downloadPPT(taskUuid: string) {
     setDownloading(true)
     await startDownload(window.isElectron, taskUuid, (progress: number) => {
-      console.log("progress", progress)
       setProgressing(progress)
 
     })
@@ -385,6 +388,36 @@ export const HomePage = observer(() => {
             }}>
              {t("aclass.home.join_test_room")}
             </Button>
+            <Button onClick={async () => {
+              const dom = document.createElement("div")
+              Object.assign(dom.style, {
+                position: 'absolute',
+                width: '500px',
+                height: '500px',
+              })
+              dom.id = "disk"
+              document.body.appendChild(dom)
+              try {
+                await AgoraEduSDK.openDisk(dom, {
+                  language: uiStore.language.match(/^zh/) ? "zh": "en",
+                  courseWareList: storage.getCourseWareSaveList(),
+                  listener: (evt: any) => {
+                    if (evt === AgoraEduEvent.destroyed) {
+                      history.push('/')
+                    }
+                  }
+                })
+              } catch (err) {
+                console.error(err)
+                const targetDom$ = document.querySelector(`#${dom.id}`)
+                if (targetDom$) {
+                  targetDom$.parentElement?.removeChild(targetDom$)
+                }
+              }
+
+            }} style={{margin: '5px'}} variant="contained" component="a" color="primary">
+              {t("aclass.downloadPage")}
+            </Button>
             </div>
           </div>
           // <div className={`cover-placeholder-web ${t('home.cover_class')}`}></div>
@@ -484,7 +517,6 @@ export const HomePage = observer(() => {
         </div>
       </div>
     </div>
-    
     // fixme 临时调试下载课件
   // return  <StorageDisk></StorageDisk>
   )

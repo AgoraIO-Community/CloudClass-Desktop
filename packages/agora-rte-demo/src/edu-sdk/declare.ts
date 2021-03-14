@@ -14,12 +14,14 @@ export interface RoomComponentConfigProps<T> {
 
 export enum AgoraEduEvent {
   ready = 1,
-  destroyed = 2
+  destroyed = 2,
+  menuclicked = 3
 }
 
 
 export type AgoraEduSDKConfigParams = {
-  appId: string
+  appId: string,
+  cachePath?: string
 }
 
 export interface RoomParameters {

@@ -1,10 +1,10 @@
-import React from 'react'
-import { observer } from 'mobx-react'
+import { useUIStore } from '@/hooks';
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { useUIStore } from '@/hooks'
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { observer } from 'mobx-react';
+import React from 'react';
 
 export const Alert = (props: AlertProps) => {
   return (
