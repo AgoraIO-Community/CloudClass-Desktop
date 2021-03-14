@@ -36,3 +36,5 @@ packages/agora-rte-demo/env.test.local
 ManyCamSetup.exe
 packages/agora-rte-demo/alcass/
 packages/agora-rte-demo/aclass_app/
+packages/agora-rte-demo/akasuo
+yarn-error.log

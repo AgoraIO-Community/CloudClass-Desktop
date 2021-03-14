@@ -1,5 +1,15 @@
 import fetchProgress from "fetch-progress"
-import "@netless/zip";
+import { StrategyHandler } from 'workbox-strategies/StrategyHandler'
+//@ts-ignore
+// import {createReader, ZipReader, BlobReader} from "@zip.js/zip.js/dist/zip.js";
+import { ZipReader, BlobReader, BlobWriter, configure } from '@zip.js/zip.js'
+
+configure({
+    useWebWorkers: false
+})
+
+type CacheResourceType = 'dynamicConvert' | 'staticConvert'
+
 const contentTypesByExtension = {
     "css": "text/css",
     "js": "application/javascript",
@@ -62,17 +72,26 @@ export class AgoraCaches {
     }
 
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
-        const cache = await this.openCache(cacheStorageKey);
-        const keys = await cache.keys();
-        for (const request of keys) {
-            if (request.url.indexOf(uuid) !== -1) {
-                return true;
-            }
+      const cache = await this.openCache(cacheStorageKey);
+      const keys = await cache.keys();
+      for (const request of keys) {
+        if (request.url.indexOf(uuid) !== -1) {
+          return true;
         }
-        return false;
+      }
+      return false;
     }
 
     public startDownload = async (taskUuid: string, onProgress?: (progress: number, controller: AbortController) => void): Promise<void> => {
+        const channel = new BroadcastChannel('onFetchProgress')
+        channel.onmessage = ({data}: any) => {
+          if (data.url.match(taskUuid)) {
+            if (onProgress) {
+                console.log('data', data.progress)
+                onProgress(data.progress, controller);
+            }
+          }
+        }
         const controller = new AbortController();
         const signal = controller.signal;
         const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
@@ -80,57 +99,68 @@ export class AgoraCaches {
             method: "get",
             signal: signal,
         }).then(fetchProgress({
-            onProgress(progress: any) {
-                if (onProgress) {
-                    onProgress(progress.percentage, controller);
-                }
-            },
+            // onProgress(progress: any) {
+            //     if (onProgress) {
+            //         onProgress(progress.percentage, controller);
+            //     }
+            // },
         }));
         if (res.status !== 200) {
             throw new Error(`download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`);
         }
         // const buffer = await res.arrayBuffer();
         // const zipReader = await this.getZipReader(buffer);
-        // return await this.cacheContents(zipReader);
+        // return await this.cacheResources(zipReader);
     }
 
-    private getZipReader = (data: any): Promise<any> => {
-        return new Promise((fulfill, reject) => {
-            zip.createReader(new zip.ArrayBufferReader(data), fulfill, reject);
+    async handleZipFile(response: Response) {
+        const blob = await response.blob()
+        const zipReader = await this.getZipReader(blob);
+        const entry = await zipReader.getEntries()
+        const cacheType = response.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
+        return await this.cacheResources(entry, cacheType);
+    }
+
+    private createZipReader = (fileBlob: Blob): ZipReader => {
+        return new ZipReader(new BlobReader(fileBlob))
+    }
+
+    public getZipReader = (file: Blob): Promise<ZipReader> => {
+        return new Promise((resolve: any, reject: any) => {
+            return resolve(this.createZipReader(file))
         });
     }
 
-    private getContentType = (filename: any): string => {
+    public getContentType = (filename: any): string => {
         const tokens = filename.split(".");
         const extension = tokens[tokens.length - 1];
         return contentTypesByExtension[extension] || "text/plain";
     }
 
 
-    private getLocation = (filename?: string): string => {
+    public getLocation = (filename?: string, type?: CacheResourceType): string => {
+        if (filename) {
+            return `https://${resourcesHost}/${type}/${filename}`
+        }
         return `https://${resourcesHost}/dynamicConvert/${filename}`;
     }
 
-    private cacheEntry = (entry: any): Promise<void> => {
+    public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
         if (entry.directory) {
             return Promise.resolve();
         }
-        return new Promise((fulfill, reject) => {
-            entry.getData(new zip.BlobWriter(), (data: any) => {
-                return agoraCaches.openCache(cacheStorageKey).then((cache) => {
-                    const location = this.getLocation(entry.filename);
-                    const response = new Response(data, {
-                        headers: {
-                            "Content-Type": this.getContentType(entry.filename)
-                        }
-                    });
-                    if (entry.filename === "index.html") {
-                        cache.put(this.getLocation(), response.clone());
-                    }
-                    return cache.put(location, response);
-                }).then(fulfill, reject);
-            });
+        const data = await entry.getData(new BlobWriter())
+        const cache = await agoraCaches.openCache(cacheStorageKey)
+        const location = this.getLocation(entry.filename, type)
+        const response = new Response(data, {
+            headers: {
+                "Content-Type": this.getContentType(entry.filename)
+            }
         });
+        if (entry.filename === "index.html") {
+            cache.put(this.getLocation(), response.clone());
+        }
+        return cache.put(location, response);
     }
 
     public availableSpace = async (): Promise<number> => {
@@ -146,14 +176,18 @@ export class AgoraCaches {
         }
     }
 
-    private cacheContents = (reader: any): Promise<void> => {
+    public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
         return new Promise((fulfill, reject) => {
-            reader.getEntries((entries: any) => {
-                console.log('Installing', entries.length, 'files from zip');
-                Promise.all(entries.map(this.cacheEntry)).then(fulfill as any, reject);
-            });
+            // reader.getEntries((entries: any) => {
+                Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
+            // });
         });
     }
+}
+
+export type ProgressData = {
+    progress: number,
+    url: string,
 }
 
 export const agoraCaches = new AgoraCaches();

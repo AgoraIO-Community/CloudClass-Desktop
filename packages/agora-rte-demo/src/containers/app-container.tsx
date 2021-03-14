@@ -7,11 +7,19 @@ import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'rea
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
 import { BizLogger } from '@/utils/biz-logger';
-import { useHomeUIStore } from '@/hooks';
+import { useBoardStore, useHomeUIStore } from '@/hooks';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
 }
+
+const workerPath = './serviceWorker.js'
+
+
+const handleProgress = (data: any) => {
+  console.log("progress ", data)
+}
+
 
 export interface AppContainerProps extends RouteContainerProps {
   basename?: string
@@ -57,7 +65,8 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useEffect(() => {
     if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
+      navigator.serviceWorker.addEventListener('message', (event: any) => handleProgress(event.data))
+      navigator.serviceWorker.register(workerPath).then(function(registration) {
         console.log("registration finish")
       }).catch(function(error) {
         console.log('An error happened during installing the service worker:');
@@ -77,12 +86,12 @@ export const RoomContainer = (props: RoomContainerProps) => {
     </Provider>
   )
 }
-
 export const AppContainer = (props: AppContainerProps) => {
 
   useEffect(() => {
     if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
+      navigator.serviceWorker.addEventListener('message', (event: any) => handleProgress(event.data))
+      navigator.serviceWorker.register(workerPath).then(function(registration) {
         console.log("registration finish")
       }).catch(function(error) {
         console.log('An error happened during installing the service worker:');
