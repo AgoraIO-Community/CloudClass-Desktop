@@ -63,7 +63,21 @@ export const mapFileType = (type: string): string => {
   return 'txt'
 }
 
-export const transDataToResource = (data: CourseWareItem) => {
+type MaterialDataResource = {
+  id: string,
+  name: string,
+  ext: string,
+  type: string,
+  calories: string | number,
+  taskUuid: string,
+  taskProgress: any,
+  url: string,
+  convertedPercentage?: number,
+  fat: number,
+  scenes?: any[]
+}
+
+export const transDataToResource = (data: CourseWareItem): MaterialDataResource => {
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
