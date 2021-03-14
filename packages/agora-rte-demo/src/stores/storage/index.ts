@@ -87,10 +87,12 @@ export class StorageStore implements ClassRoomAbstractStore {
     const newCourseWareList = [...this._courseWareList]
     for (let i = 0; i < newCourseWareList.length; i++) {
       const item = newCourseWareList[i]
-      const res = await agoraCaches.hasTaskUUID(item.taskUuid)
-      item.progress = res === true ? 100 : 0
-      this.progressMap[item.taskUuid] = item.progress
-      item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+      if (item) {
+        const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        item.progress = res === true ? 100 : 0
+        this.progressMap[item.taskUuid] = item.progress
+        item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+      }
     }
     this._courseWareList = newCourseWareList
   }
