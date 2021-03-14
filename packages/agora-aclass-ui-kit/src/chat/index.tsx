@@ -218,7 +218,6 @@ export const ChatBoard = (props: ChatBoardProps) => {
       alignItems: 'center'
     },
     bannedText:{
-      minWidth:'48px',
       textAlign:'right'
     }
   }))
