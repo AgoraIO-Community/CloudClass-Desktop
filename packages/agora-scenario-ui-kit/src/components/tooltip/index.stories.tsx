@@ -9,6 +9,7 @@ const meta: Meta = {
   args: {
     title: 'Hello Tooltip',
   },
+  
 };
 
 export const Docs: FC<TooltipProps> = (props) => {
