@@ -1,5 +1,5 @@
 .video-player {
-  @apply relative;
+  @apply relative flex items-center justify-center;
   height: 168px;
   width: 300px;
   background: #000;
