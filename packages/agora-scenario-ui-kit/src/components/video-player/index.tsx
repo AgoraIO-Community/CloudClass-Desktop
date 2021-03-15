@@ -71,6 +71,7 @@ export interface VideoPlayerProps extends BaseProps {
 export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
   className,
+  poster,
   stars = 0,
   isHost,
   username,
@@ -127,6 +128,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       content={tools}
       placement="left">
       <div className={cls}>
+        {poster ? (
+          <img className="video-player-poster" src={poster} alt="poster" />
+        ) : null}
         <div className="top-right-info">
           {stars > 0 ? (
             <>

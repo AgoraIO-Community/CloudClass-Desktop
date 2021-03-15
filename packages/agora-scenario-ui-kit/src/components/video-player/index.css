@@ -1,10 +1,16 @@
 .video-player {
-  @apply relative;
+  @apply relative flex items-center justify-center;
   height: 168px;
   width: 300px;
   background: #000;
   border-radius: 4px;
   color: #fff;
+}
+.video-player-poster {
+  display: inline-block;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 4px;
 }
 
 .top-right-info {
