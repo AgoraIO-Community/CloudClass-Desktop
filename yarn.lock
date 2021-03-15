@@ -3297,6 +3297,11 @@
     sprintf-js "^1.1.2"
     utf8 "^3.0.0"
 
+"@open-wc/webpack-import-meta-loader@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.npm.taobao.org/@open-wc/webpack-import-meta-loader/download/@open-wc/webpack-import-meta-loader-0.4.7.tgz#d8212640a386a66bf06a2a4c101936467839b5a1"
+  integrity sha1-2CEmQKOGpmvwaipMEBk2Rng5taE=
+
 "@pmmmwh/react-refresh-webpack-plugin@0.4.2":
   version "0.4.2"
   resolved "https://registry.npm.taobao.org/@pmmmwh/react-refresh-webpack-plugin/download/@pmmmwh/react-refresh-webpack-plugin-0.4.2.tgz?cache=0&sync_timestamp=1614596915979&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40pmmmwh%2Freact-refresh-webpack-plugin%2Fdownload%2F%40pmmmwh%2Freact-refresh-webpack-plugin-0.4.2.tgz#1f9741e0bde9790a0e13272082ed7272a083620d"
@@ -4980,6 +4985,101 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
+"@types/workbox-background-sync@*":
+  version "4.3.1"
+  resolved "https://registry.npm.taobao.org/@types/workbox-background-sync/download/@types/workbox-background-sync-4.3.1.tgz?cache=0&sync_timestamp=1613385786425&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-background-sync%2Fdownload%2F%40types%2Fworkbox-background-sync-4.3.1.tgz#fcde451d654f207f2a402ed92e793b884ae2f369"
+  integrity sha1-/N5FHWVPIH8qQC7ZLnk7iEri82k=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-broadcast-update@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-broadcast-update/download/@types/workbox-broadcast-update-4.3.0.tgz?cache=0&sync_timestamp=1613385786108&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-broadcast-update%2Fdownload%2F%40types%2Fworkbox-broadcast-update-4.3.0.tgz#b908a8b6776058e0e1c5e760db066462acb569d2"
+  integrity sha1-uQiotndgWODhxedg2wZkYqy1adI=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-cacheable-response@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-cacheable-response/download/@types/workbox-cacheable-response-4.3.0.tgz?cache=0&sync_timestamp=1613385786604&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-cacheable-response%2Fdownload%2F%40types%2Fworkbox-cacheable-response-4.3.0.tgz#506a37bc67809607f50dc785a06dd20d74e73a85"
+  integrity sha1-UGo3vGeAlgf1DceFoG3SDXTnOoU=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-core@*", "@types/workbox-core@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-core/download/@types/workbox-core-4.3.0.tgz?cache=0&sync_timestamp=1613385786938&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-core%2Fdownload%2F%40types%2Fworkbox-core-4.3.0.tgz#c2f2a2caad4785f6ccdbef539477d49de6cc9160"
+  integrity sha1-wvKiyq1HhfbM2+9TlHfUnebMkWA=
+
+"@types/workbox-expiration@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-expiration/download/@types/workbox-expiration-4.3.0.tgz?cache=0&sync_timestamp=1613385786764&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-expiration%2Fdownload%2F%40types%2Fworkbox-expiration-4.3.0.tgz#a442335f262a54aa87cdb37099005dd2899e8a03"
+  integrity sha1-pEIzXyYqVKqHzbNwmQBd0omeigM=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-google-analytics@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-google-analytics/download/@types/workbox-google-analytics-4.3.0.tgz?cache=0&sync_timestamp=1613385787576&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-google-analytics%2Fdownload%2F%40types%2Fworkbox-google-analytics-4.3.0.tgz#5531c27b5d3556b9aa9abb548acba3f449a63b9c"
+  integrity sha1-VTHCe101VrmqmrtUisuj9EmmO5w=
+
+"@types/workbox-navigation-preload@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-navigation-preload/download/@types/workbox-navigation-preload-4.3.0.tgz?cache=0&sync_timestamp=1613385787264&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-navigation-preload%2Fdownload%2F%40types%2Fworkbox-navigation-preload-4.3.0.tgz#4d0b56d9186d9cb983e8891bc6fcbb41eb548dd2"
+  integrity sha1-TQtW2RhtnLmD6Ikbxvy7QetUjdI=
+
+"@types/workbox-precaching@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-precaching/download/@types/workbox-precaching-4.3.0.tgz?cache=0&sync_timestamp=1613385787732&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-precaching%2Fdownload%2F%40types%2Fworkbox-precaching-4.3.0.tgz#c04b5b6c9f77690b0b58cf87c6f8ef632661f8e1"
+  integrity sha1-wEtbbJ93aQsLWM+HxvjvYyZh+OE=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-range-requests@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-range-requests/download/@types/workbox-range-requests-4.3.0.tgz?cache=0&sync_timestamp=1613385788057&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-range-requests%2Fdownload%2F%40types%2Fworkbox-range-requests-4.3.0.tgz#fb56ec7322ea1bf93c2b73114c6e9878ae9c36f8"
+  integrity sha1-+1bscyLqG/k8K3MRTG6YeK6cNvg=
+  dependencies:
+    "@types/workbox-core" "*"
+
+"@types/workbox-routing@*", "@types/workbox-routing@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-routing/download/@types/workbox-routing-4.3.0.tgz?cache=0&sync_timestamp=1613385788395&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-routing%2Fdownload%2F%40types%2Fworkbox-routing-4.3.0.tgz#617e00b18806630cffff550b3d2ab09866f89411"
+  integrity sha1-YX4AsYgGYwz//1ULPSqwmGb4lBE=
+
+"@types/workbox-strategies@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-strategies/download/@types/workbox-strategies-4.3.0.tgz?cache=0&sync_timestamp=1613385787102&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-strategies%2Fdownload%2F%40types%2Fworkbox-strategies-4.3.0.tgz#5fde9a05db2874500221d3bb8d35c80dc998f41a"
+  integrity sha1-X96aBdsodFACIdO7jTXIDcmY9Bo=
+  dependencies:
+    "@types/workbox-core" "*"
+    "@types/workbox-routing" "*"
+
+"@types/workbox-streams@*":
+  version "4.3.0"
+  resolved "https://registry.npm.taobao.org/@types/workbox-streams/download/@types/workbox-streams-4.3.0.tgz?cache=0&sync_timestamp=1613385787899&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-streams%2Fdownload%2F%40types%2Fworkbox-streams-4.3.0.tgz#eaae51894b9943fb44e726e35afd3d98e83edcb6"
+  integrity sha1-6q5RiUuZQ/tE5ybjWv09mOg+3LY=
+  dependencies:
+    "@types/workbox-routing" "*"
+
+"@types/workbox-sw@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.npm.taobao.org/@types/workbox-sw/download/@types/workbox-sw-4.3.1.tgz?cache=0&sync_timestamp=1613385788233&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fworkbox-sw%2Fdownload%2F%40types%2Fworkbox-sw-4.3.1.tgz#93d8f95d352c63614debfbe3ac46d34bf2c60089"
+  integrity sha1-k9j5XTUsY2FN6/vjrEbTS/LGAIk=
+  dependencies:
+    "@types/workbox-background-sync" "*"
+    "@types/workbox-broadcast-update" "*"
+    "@types/workbox-cacheable-response" "*"
+    "@types/workbox-core" "*"
+    "@types/workbox-expiration" "*"
+    "@types/workbox-google-analytics" "*"
+    "@types/workbox-navigation-preload" "*"
+    "@types/workbox-precaching" "*"
+    "@types/workbox-range-requests" "*"
+    "@types/workbox-routing" "*"
+    "@types/workbox-strategies" "*"
+    "@types/workbox-streams" "*"
+
 "@types/yargs-parser@*":
   version "20.2.0"
   resolved "https://registry.npm.taobao.org/@types/yargs-parser/download/@types/yargs-parser-20.2.0.tgz#dd3e6699ba3237f0348cd085e4698780204842f9"
@@ -5510,6 +5610,11 @@
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@yarnpkg/lockfile/download/@yarnpkg/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha1-53qX+9NFt22DJF7c0X05OxtB+zE=
+
+"@zip.js/zip.js@^2.2.22":
+  version "2.2.22"
+  resolved "https://registry.npm.taobao.org/@zip.js/zip.js/download/@zip.js/zip.js-2.2.22.tgz#3be5bdb57e86702f34f81ef3116af83d4b7ea1b8"
+  integrity sha1-O+W9tX6GcC80+B7zEWr4PUt+obg=
 
 "@zkochan/cmd-shim@^3.1.0":
   version "3.1.0"
@@ -19807,20 +19912,10 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
-react-dom@16.13.1:
+react-dom@16.13.1, react-dom@^16.8.0:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
   integrity sha1-wb03MxoEhsB47lTEdAcgmTsuDn8=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.19.1"
-
-react-dom@^16.8.0:
-  version "16.14.0"
-  resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
-  integrity sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -20170,19 +20265,10 @@ react-use@13.24.0:
     ts-easing "^0.2.0"
     tslib "^1.10.0"
 
-react@16.13.1:
+react@16.13.1, react@^16.8.0:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react/download/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha1-LoGIIvGpdDEiwGPWQQ2FweOv5I4=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
-react@^16.8.0:
-  version "16.14.0"
-  resolved "https://registry.npm.taobao.org/react/download/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -24879,7 +24965,7 @@ workbox-build@^4.3.1:
     workbox-sw "^4.3.1"
     workbox-window "^4.3.1"
 
-workbox-build@^5.1.4:
+workbox-build@^5.1.3, workbox-build@^5.1.4:
   version "5.1.4"
   resolved "https://registry.npm.taobao.org/workbox-build/download/workbox-build-5.1.4.tgz?cache=0&sync_timestamp=1614021642796&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-build%2Fdownload%2Fworkbox-build-5.1.4.tgz#23d17ed5c32060c363030c8823b39d0eabf4c8c7"
   integrity sha1-I9F+1cMgYMNjAwyII7OdDqv0yMc=
@@ -24944,6 +25030,11 @@ workbox-core@^5.1.4:
   version "5.1.4"
   resolved "https://registry.npm.taobao.org/workbox-core/download/workbox-core-5.1.4.tgz?cache=0&sync_timestamp=1614021638915&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-core%2Fdownload%2Fworkbox-core-5.1.4.tgz#8bbfb2362ecdff30e25d123c82c79ac65d9264f4"
   integrity sha1-i7+yNi7N/zDiXRI8gseaxl2SZPQ=
+
+workbox-core@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.npm.taobao.org/workbox-core/download/workbox-core-6.1.1.tgz?cache=0&sync_timestamp=1614021638915&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-core%2Fdownload%2Fworkbox-core-6.1.1.tgz#c8a9b424031b0cf7dacf9d7b8e023d126c9d0167"
+  integrity sha1-yKm0JAMbDPfaz517jgI9EmydAWc=
 
 workbox-expiration@^4.3.1:
   version "4.3.1"
@@ -25050,6 +25141,13 @@ workbox-strategies@^5.1.4:
     workbox-core "^5.1.4"
     workbox-routing "^5.1.4"
 
+workbox-strategies@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.npm.taobao.org/workbox-strategies/download/workbox-strategies-6.1.1.tgz?cache=0&sync_timestamp=1614021641570&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-strategies%2Fdownload%2Fworkbox-strategies-6.1.1.tgz#6e0adda84bcda17d3d0c48baec2eab9b988b9ca6"
+  integrity sha1-bgrdqEvNoX09DEi67C6rm5iLnKY=
+  dependencies:
+    workbox-core "^6.1.1"
+
 workbox-streams@^4.3.1:
   version "4.3.1"
   resolved "https://registry.npm.taobao.org/workbox-streams/download/workbox-streams-4.3.1.tgz?cache=0&sync_timestamp=1614021640257&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-streams%2Fdownload%2Fworkbox-streams-4.3.1.tgz#0b57da70e982572de09c8742dd0cb40a6b7c2cc3"
@@ -25083,6 +25181,18 @@ workbox-webpack-plugin@4.3.1:
     "@babel/runtime" "^7.0.0"
     json-stable-stringify "^1.0.1"
     workbox-build "^4.3.1"
+
+workbox-webpack-plugin@5.1.3:
+  version "5.1.3"
+  resolved "https://registry.npm.taobao.org/workbox-webpack-plugin/download/workbox-webpack-plugin-5.1.3.tgz?cache=0&sync_timestamp=1614021608568&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fworkbox-webpack-plugin%2Fdownload%2Fworkbox-webpack-plugin-5.1.3.tgz#a7070e3ea0eedb6f87e11fd916ec5d4430a6e348"
+  integrity sha1-pwcOPqDu22+H4R/ZFuxdRDCm40g=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    fast-json-stable-stringify "^2.0.0"
+    source-map-url "^0.4.0"
+    upath "^1.1.2"
+    webpack-sources "^1.3.0"
+    workbox-build "^5.1.3"
 
 workbox-webpack-plugin@5.1.4:
   version "5.1.4"

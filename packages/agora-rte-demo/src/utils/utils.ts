@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { workerPath } from './../edu-sdk/controller';
 import { AgoraMediaDeviceEnum } from "@/types/global"
 import fetchProgress from "@netless/fetch-progress"
 import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
@@ -243,4 +245,48 @@ export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: numb
     units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
     i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
+}
+
+window.addEventListener('sw.update', (evt: Event) => {
+  console.log('[sw] utils ', evt)
+})
+
+export const registerWorker = (workerPath: string) => {
+  const emitUpdate = () => {
+    const event = document.createEvent('Event')
+    event.initEvent('sw.update', true, true)
+    window.dispatchEvent(event)
+  }
+  
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(workerPath).then(function (reg) {
+      if (reg.waiting) {
+        emitUpdate()
+        return
+      }
+  
+      reg.onupdatefound = function () {
+        const installingWorker = reg.installing;
+        if (installingWorker) {
+          installingWorker.onstatechange = function () {
+            switch (installingWorker.state) {
+              case 'installed':
+                if (navigator.serviceWorker.controller) {
+                  emitUpdate()
+                }
+                break
+            }
+          }
+        }
+      }
+    }).catch(function(e) {
+      console.error('Error during service worker registration:', e)
+    })
+  }
+}
+
+export const useStorageSW = (workerPath: string) => {
+  useEffect(() => {
+    registerWorker(workerPath)
+  }, [registerWorker, workerPath])
 }

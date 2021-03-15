@@ -22,6 +22,7 @@ import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { reportService } from '@/services/report-service';
+import { createRef } from 'react';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -66,7 +67,8 @@ const transformMaterialItem = (item: CourseWareItem): MaterialItem => {
 
 interface CacheInfo {
   progress: number,
-  cached: boolean
+  cached: boolean,
+  skip: boolean
 }
 
 export enum BoardPencilSize {
@@ -557,7 +559,6 @@ export class BoardStore {
       this.currentTaskUuid = taskUuid
       const cacheInfo = this.cacheMap.get(taskUuid)
       if (cacheInfo && cacheInfo.cached) {
-        console.warn(`task${taskUuid} already cached`)
         return
       }
       this.cancelDownloading()
@@ -567,9 +568,20 @@ export class BoardStore {
       await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
         this.preloadingProgress = progress
         this.controller = controller
+        const cacheInfo = this.cacheMap.get(taskUuid)
+
+        const currentProgress = get(cacheInfo, 'progress', 0)
+        const skip = get(cacheInfo, 'skip', false)
+        if (skip) {
+          return
+        }
+
+        const newProgress = Math.max(currentProgress, progress)
+
         this.cacheMap.set(taskUuid, {
-          progress: progress || 0,
-          cached: progress === 100,
+          progress: newProgress,
+          cached: newProgress === 100,
+          skip: false,
         })
       })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
@@ -621,7 +633,11 @@ export class BoardStore {
           this.room.setScenePath(`/${currentPage}`)
         }
       } else {
-        this.room.setScenePath(`${targetPath}/${currentPage+1}`)
+        const targetResource = this.allResources.find((item => item.name === resourceName))
+        if (targetResource) {
+          const scenePath = targetResource!.scenes![currentPage].name
+          this.room.setScenePath(`${targetPath}/${scenePath}`)
+        }
       }
     }
 
@@ -868,9 +884,12 @@ export class BoardStore {
       const item = courseWareList[i]
       if (item) {
         const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        const cacheInfo = this.cacheMap.get(item.taskUuid)
+        const skip = get(cacheInfo, 'skip', false)
         this.cacheMap.set(item.taskUuid, {
           progress: res === true ? 100 : 0,
-          cached: res
+          cached: res,
+          skip: skip
         })
       }
     }
@@ -2338,22 +2357,36 @@ export class BoardStore {
   @observable
   currentTaskUuid: string = ''
 
+  
+  skipTask() {
+    const taskUuid = this.currentTaskUuid
+    if (taskUuid) {
+      const cacheInfo = this.cacheMap.get(taskUuid)
+      if (cacheInfo) {
+        cacheInfo.skip = true
+        this.cacheMap.set(taskUuid, cacheInfo)
+      }
+    }
+  }
+
   @computed
   get loadingStatus() {
     if (!this.ready) {
-      return t("whiteboard.loading")
+      return {
+        type: 'preparing',
+        text: t("whiteboard.loading")
+      }
     }
 
     if (this.currentTaskUuid) {
       const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
-      if (cacheInfo && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
-        return t("whiteboard.downloading", {reason: cacheInfo?.progress})
+      if (cacheInfo && cacheInfo.skip !== true && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+        return {
+          type: 'downloading',
+          text: t("whiteboard.downloading", {reason: cacheInfo?.progress})
+        }
       }
     }
-
-    // if (this.preloadingProgress !== -1) {
-    //   return t("whiteboard.downloading", {reason: this.preloadingProgress})
-    // }
 
     return ''
   }
