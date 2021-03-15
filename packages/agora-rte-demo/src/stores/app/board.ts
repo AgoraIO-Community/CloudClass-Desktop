@@ -156,12 +156,12 @@ export class BoardStore {
     toolTip: true,
     iconTooltipText: t('tool.eraser'),
   },
-  {
-    itemName: 'palette',
-    toolTip: true,
-    popoverType: 'color',
-    iconTooltipText: t('tool.color_picker'),
-  },
+  // {
+  //   itemName: 'palette',
+  //   toolTip: true,
+  //   popoverType: 'color',
+  //   iconTooltipText: t('tool.color_picker'),
+  // },
   {
     itemName: 'new-page',
     toolTip: true,
