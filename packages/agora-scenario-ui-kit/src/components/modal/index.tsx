@@ -13,14 +13,18 @@ export interface ModalProps extends BaseProps {
     /** 是否显示右上角的关闭按钮 */
     closable?: boolean;
     /** 底部内容 */
-    footer?: React.ReactNode;
+    footer?: React.ReactNode[];
     /** 点击确定回调 */
     onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
     onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
 }
 
-export const Modal: FC<ModalProps> = ({
+type ModalType = FC<ModalProps> & {
+    show: (params: ModalProps) => void,
+}
+
+export const Modal: ModalType = ({
     width = 280,
     title = 'modal title',
     closable = true,
@@ -41,17 +45,17 @@ export const Modal: FC<ModalProps> = ({
                 <div className="modal-title-text">
                     {title}
                 </div>
-                {closable ? (<div className="modal-title-close" onClick={() => {onCancel()}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
+                {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => {onCancel(e)}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
             </div>
             <div className="modal-content">
                 {children}
             </div>
             <div className="modal-footer">
-                {footer.map((item, index) => (
+                {footer && footer.map((item: any, index: number) => (
                     <div className="btn-div" key={index}>
                         {
                             React.cloneElement(item, {
-                                onClick: e => {
+                                onClick: (e: React.MouseEvent<HTMLElement>) => {
                                     const { action } = item.props;
                                     action === 'ok' && onOk && onOk(e);
                                     action === 'cancel' && onCancel && onCancel(e);
@@ -65,7 +69,7 @@ export const Modal: FC<ModalProps> = ({
     )
 }
 
-Modal.show = function (
+Modal.show = (
     {
         width = 280,
         title = 'modal title',
@@ -77,19 +81,19 @@ Modal.show = function (
         className,
         ...restProps
     }
-) {
+) => {
     Notification.newInstance({}, notification => {
         const modalId = 'modal-' + Date.now()
         const hideModal = () => {
             notification.removeNotice(modalId)
             notification.destroy()
         }
-        const tmpOk = async () => {
-            await onOk()
+        const tmpOk = async (e: React.MouseEvent<HTMLElement>) => {
+            await onOk(e)
             hideModal()
         }
-        const tmpCancel = async () => {
-            await onCancel()
+        const tmpCancel = async (e: React.MouseEvent<HTMLElement>) => {
+            await onCancel(e)
             hideModal()
         }
         const Comp = (

@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
-import { Button } from '~components';
+import { Button, Modal } from '~components';
 import { IconBox } from '~components/icon';
 import { CheckBox, Col, Inline, Progress, Row, Table, TableHeader } from '~components/table';
 import { formatFileSize } from '~utilities';
@@ -255,6 +255,31 @@ CheckList.args = {
   width: 560,
   progress: 0,
   size: 0
+}
+
+export const CheckBoxShowCase = () => {
+  return (
+    <Button
+      onClick={() => {
+          Modal.show({
+              width: 662,
+              title: '自己封装的show方法',
+              closable: true,
+              footer: [
+                  <Button type="secondary" action="cancel">cancel</Button>,
+                  <Button action="ok">ok</Button>
+              ],
+              onOk: () => {console.log('ok')},
+              onCancel: () => { console.log('cancel') },
+              children: (
+                <CheckBox />
+              )
+          })
+      }}
+    >
+    show checklist
+  </Button>
+  )
 }
 
 export default meta;
