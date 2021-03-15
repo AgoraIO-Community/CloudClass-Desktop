@@ -4,3 +4,7 @@
 .slider .rc-slider-handle {
     border-color: #0073FF;
 }
+
+.agora-slider-tooltip .rc-slider-tooltip-inner {
+    min-width: 50px;
+}
