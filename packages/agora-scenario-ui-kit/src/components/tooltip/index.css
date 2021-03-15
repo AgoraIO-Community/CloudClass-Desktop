@@ -2,10 +2,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: rgba(0, 0, 0, 0.85);
-  font-size: 14px;
+  color: #191919;
+  font-size: 12px;
   font-variant: tabular-nums;
-  line-height: 1.5715;
+  font-weight: 400;
+  line-height: 1.8;
   list-style: none;
   font-feature-settings: 'tnum';
   position: absolute;
@@ -40,13 +41,13 @@
 .tooltip-inner {
   min-width: 30px;
   min-height: 32px;
-  padding: 6px 8px;
-  color: #fff;
+  padding: 5px 12px;
+  color: #191919;
   text-align: left;
   text-decoration: none;
   word-wrap: break-word;
-  background-color: rgba(0, 0, 0, 0.75);
-  border-radius: 2px;
+  background-color: #fff;
+  border-radius: 4px;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
@@ -69,7 +70,7 @@
   width: 5px;
   height: 5px;
   margin: auto;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: #fff;
   content: '';
   pointer-events: auto;
 }
