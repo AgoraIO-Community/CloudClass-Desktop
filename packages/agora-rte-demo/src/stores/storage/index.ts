@@ -164,7 +164,8 @@ export class StorageStore implements ClassRoomAbstractStore {
     try {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
       await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-        this.progressMap[taskUuid] = progress
+        const currentProgress = this.progressMap[taskUuid]
+        this.progressMap[taskUuid] = Math.max(progress, currentProgress)
       })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
     } catch (err) {

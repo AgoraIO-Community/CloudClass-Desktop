@@ -1,15 +1,19 @@
 import { precacheAndRoute } from 'workbox-precaching';
 import { RangeRequestsPlugin } from 'workbox-range-requests';
 import { CacheFirst } from 'workbox-strategies/CacheFirst';
-import { CacheOnly } from 'workbox-strategies/CacheOnly';
 import { NetworkFirst, NetworkFirstOptions } from 'workbox-strategies/NetworkFirst';
 import { registerRoute } from 'workbox-routing/registerRoute';
-import { agoraCaches } from '../utils/web-download.file';
+import { agoraCaches, CacheResourceType } from '../utils/web-download.file';
 import { StrategyHandler } from 'workbox-strategies/StrategyHandler';
-import progress from '@/components/progress/progress';
+import { ZipReader, BlobReader, BlobWriter, getMimeType } from '@zip.js/zip.js';
+
+type ZipFileType = 'dynamicConvert' | 'staticConvert'
+
+const swLog = console.log.bind(null, '[sw] ')
+
+const resourcesHost = "convertcdn.netless.link";
 
 declare var self: ServiceWorkerGlobalScope
-
 
 const cacheName = 'netless'
 
@@ -18,17 +22,15 @@ if (manifest) {
   precacheAndRoute(manifest);
 }
 
-
 if ('BroadcastChannel' in self) {
-  console.log("Broadcast channel is supported")
+  swLog("Broadcast channel is supported")
 }
 
 const channel = new BroadcastChannel('onFetchProgress');
 
-
 const onProgress = (payload: { loaded: number, total: number, url: string }) => {
   const progressSize = Math.ceil(payload.loaded / payload.total * 100)
-  console.log(" loaded ", payload.loaded, " total ", payload.total, " progressSize ", progressSize)
+  // swLog(" loaded ", payload.loaded, " total ", payload.total, " progressSize ", progressSize)
   channel.postMessage({
     url: payload.url,
     progress: progressSize,
@@ -38,16 +40,12 @@ const onProgress = (payload: { loaded: number, total: number, url: string }) => 
 
 class PreFetchZipStrategy extends NetworkFirst {
 
-  private _requests: Map<any, any>;
-
   constructor(options: NetworkFirstOptions) {
     super(options)
-    this._requests = new Map();
   }
 
   async _handle(request: Request, handler: StrategyHandler): Promise<any> {
     const responsePromise = handler.fetch(request.url)
-    this._requests.set(request.url, responsePromise);
     try {
       const response = await responsePromise;
       const result = response.clone();
@@ -64,26 +62,80 @@ class PreFetchZipStrategy extends NetworkFirst {
             onProgress({ loaded, total, url: request.url })
             controller.enqueue(value);
           }
-          controller.close();
+          controller.close()
         }
       }))
-      await this.handleZipFile(newResponse)
+      const cacheType = request.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
+      await this.handleZipFile(newResponse, cacheType)
       return result
     } catch (err) {
       console.error(err)
-      this._requests.delete(request.url);
+      throw err
     }
   }
 
-  async handleZipFile(response: Response) {
-    await agoraCaches.handleZipFile(response)
+  async handleZipFile(response: Response, type: ZipFileType) {
+    await this._handleZipFile(response, type)
+  }
+
+  private async _handleZipFile(response: Response, type: ZipFileType) {
+    const blob = await response.blob()
+    const zipReader = await this.getZipReader(blob)
+    const entry = await zipReader.getEntries()
+    return await this.cacheResources(entry, type)
+  }
+
+  public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
+    return new Promise((fulfill, reject) => {
+      return Promise.allSettled(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
+    })
+  }
+
+  private createZipReader = (fileBlob: Blob): ZipReader => {
+      return new ZipReader(new BlobReader(fileBlob))
+  }
+
+  public getZipReader = (file: Blob): Promise<ZipReader> => {
+      return new Promise((resolve: any, reject: any) => {
+          return resolve(this.createZipReader(file))
+      });
+  }
+
+  public getContentType = (filename: any): string => {
+      return getMimeType(filename)
+  }
+
+
+  public getLocation = (filename?: string, type?: CacheResourceType): string => {
+      if (filename) {
+          return `https://${resourcesHost}/${type}/${filename}`
+      }
+      return `https://${resourcesHost}/dynamicConvert/${filename}`;
+  }
+
+  public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
+      if (entry.directory) {
+          return Promise.resolve();
+      }
+      const data = await entry.getData(new BlobWriter())
+      const cache = await agoraCaches.openCache(cacheName)
+      const location = this.getLocation(entry.filename, type)
+      // swLog('location', location)
+      const response = new Response(data, {
+          headers: {
+              "Content-Type": this.getContentType(entry.filename)
+          }
+      });
+      if (entry.filename === "index.html") {
+          cache.put(this.getLocation(), response.clone());
+          return Promise.resolve()
+      }
+      return cache.put(location, response);
   }
 }
 
 const openCacheStorage = () => {
-  if ('caches' in self) {
-    return caches.open(cacheName)
-  }
+  return self.caches.open(cacheName)
 }
 
 const ZipFirstStrategy = new PreFetchZipStrategy({
@@ -102,7 +154,7 @@ registerRoute(
   'GET',
 );
 
-const resourcePattern = new RegExp('^https://convertcdn\.netless\.link\/(static|dynamic)Convert/\(\\S+)\.[^zip]$');
+const resourcePattern = new RegExp('^https://convertcdn\.netless\.link\/(static|dynamic)Convert');
 
 const cacheFirst = new CacheFirst({ cacheName });
 const cacheRangeFile = new CacheFirst({
@@ -112,7 +164,7 @@ const cacheRangeFile = new CacheFirst({
 })
 
 const cacheNetworkRaceHandler = async (options: any) => {
-  console.log("handle cache first", options)
+  // swLog("handle cache first", options)
   return cacheFirst.handle(options)
 };
 
@@ -121,12 +173,20 @@ const cacheRangeFileHandler = async (options: any) => {
 };
 
 registerRoute(
-  ({ url }) => url.href.match(resourcePattern) && url.pathname.match(/\.(mp4|mp3|flv|avi|wav)$/i),
+  ({ url }: any) => {
+    const res = url.href.match(resourcePattern) && url.href.match(/\.(mp4|mp3|flv|avi|wav)$/i)
+    // swLog("static large file url", url.href, " hints ", res, " url ", url)
+    return res
+  },
   cacheRangeFileHandler
 )
 
 registerRoute(
-  resourcePattern,
+  ({ url }: any) => {
+    const res = url.href.match(resourcePattern) && !url.href.match(/\.(mp4|mp3|flv|avi|wav|zip)$/i)
+    // swLog("static assets file url", url.href, " hints ", res, " url ", url)
+    return res
+  },
   cacheNetworkRaceHandler,
   'GET',
 );
@@ -137,5 +197,12 @@ self.addEventListener('message', event => {
   }
 });
 
-self.addEventListener('install', (event: { waitUntil: (arg0: Promise<Cache> | undefined) => any; }) => event.waitUntil(openCacheStorage()));
-self.addEventListener('activate', (event: { waitUntil: (arg0: any) => any; }) => event.waitUntil(self.clients.claim()));
+self.addEventListener('activate', (event: any) => {
+  swLog('worker activate event ', event)
+})
+
+self.addEventListener('install', (event: { waitUntil: (arg0: Promise<Cache> | undefined) => any; }) => {
+  swLog('worker install event ', event)
+  return event.waitUntil(openCacheStorage())
+});
+// self.addEventListener('activate', (event: { waitUntil: (arg0: any) => any; }) => event.waitUntil(self.clients.claim()));

@@ -8,7 +8,7 @@ configure({
     useWebWorkers: false
 })
 
-type CacheResourceType = 'dynamicConvert' | 'staticConvert'
+export type CacheResourceType = 'dynamicConvert' | 'staticConvert'
 
 const contentTypesByExtension = {
     "css": "text/css",
@@ -41,6 +41,8 @@ export class AgoraCaches {
     public openCache = (cachesName: string): Promise<Cache> => {
         if (!this.agoraCaches) {
             this.agoraCaches = caches.open(cachesName);
+            //@ts-ignore
+            window.agoraCaches = this.agoraCaches
         }
         return this.agoraCaches;
     }
@@ -74,8 +76,12 @@ export class AgoraCaches {
             if (request.url.indexOf(uuid) !== -1) {
                 await cache.delete(request);
                 this.downloadList.delete(uuid)
+                if (this.agoraCaches) {
+                    
+                }
             }
         }
+        this.agoraCaches = null;
     }
 
     public clearAllCache = async () => {
@@ -85,6 +91,7 @@ export class AgoraCaches {
             cache.delete(key)
         })
         this.downloadList.clear()
+        this.agoraCaches = null;
     }
 
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
@@ -105,7 +112,7 @@ export class AgoraCaches {
         }
         const channel = new BroadcastChannel('onFetchProgress')
         channel.onmessage = ({data}: any) => {
-          console.log('startDownload ', data.url)
+        //   console.log('startDownload ', data.url)
           if (data.url.match(taskUuid)) {
             if (onProgress) {
                 this.downloadList.add(taskUuid)
@@ -123,7 +130,6 @@ export class AgoraCaches {
             onProgress: (progress: any) => {
                 if (onProgress) {
                     this.downloadList.add(taskUuid)
-                    console.log('fetchProgress progress ', progress)
                     onProgress(progress.percentage, controller);
                 }
             },
@@ -141,7 +147,14 @@ export class AgoraCaches {
         const zipReader = await this.getZipReader(blob);
         const entry = await zipReader.getEntries()
         const cacheType = response.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
+        console.log('cacheType ', cacheType, ' url ',  response.url)
         return await this.cacheResources(entry, cacheType);
+    }
+
+    public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
+        return new Promise((fulfill, reject) => {
+            return Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
+        });
     }
 
     private createZipReader = (fileBlob: Blob): ZipReader => {
@@ -198,12 +211,6 @@ export class AgoraCaches {
         } else {
             return 0;
         }
-    }
-
-    public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
-        return new Promise((fulfill, reject) => {
-            return Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
-        });
     }
 }
 

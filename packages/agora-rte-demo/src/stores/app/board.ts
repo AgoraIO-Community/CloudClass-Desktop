@@ -568,9 +568,19 @@ export class BoardStore {
       await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
         this.preloadingProgress = progress
         this.controller = controller
+        const cacheInfo = this.cacheMap.get(taskUuid)
+
+        const currentProgress = get(cacheInfo, 'progress', 0)
+        const skip = get(cacheInfo, 'skip', false)
+        if (skip) {
+          return
+        }
+
+        const newProgress = Math.max(currentProgress, progress)
+
         this.cacheMap.set(taskUuid, {
-          progress: progress || 0,
-          cached: progress === 100,
+          progress: newProgress,
+          cached: newProgress === 100,
           skip: false,
         })
       })
@@ -874,10 +884,12 @@ export class BoardStore {
       const item = courseWareList[i]
       if (item) {
         const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        const cacheInfo = this.cacheMap.get(item.taskUuid)
+        const skip = get(cacheInfo, 'skip', false)
         this.cacheMap.set(item.taskUuid, {
           progress: res === true ? 100 : 0,
           cached: res,
-          skip: false
+          skip: skip
         })
       }
     }
