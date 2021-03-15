@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
@@ -18,7 +18,7 @@ export interface VideoPlayerProps extends BaseProps {
   /**
    * 摄像头关闭时的占位图
    */
-  poster?: string;
+  placeholder?: string | ReactNode;
   /**
    * 学生获得的星星数量
    */
@@ -64,7 +64,7 @@ export interface VideoPlayerProps extends BaseProps {
 export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
   className,
-  poster,
+  placeholder,
   stars = 0,
   isHost,
   username,
@@ -119,9 +119,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       content={tools}
       placement="left">
       <div className={cls}>
-        {poster ? (
-          <img className="video-player-poster" src={poster} alt="poster" />
-        ) : null}
+        {placeholder ? <>{placeholder}</> : null}
         <div className="top-right-info">
           {stars > 0 ? (
             <>
