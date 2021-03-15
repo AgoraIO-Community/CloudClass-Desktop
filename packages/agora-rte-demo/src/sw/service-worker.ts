@@ -203,6 +203,7 @@ self.addEventListener('activate', (event: any) => {
 
 self.addEventListener('install', (event: { waitUntil: (arg0: Promise<Cache> | undefined) => any; }) => {
   swLog('worker install event ', event)
+  self.skipWaiting()
   return event.waitUntil(openCacheStorage())
 });
 // self.addEventListener('activate', (event: { waitUntil: (arg0: any) => any; }) => event.waitUntil(self.clients.claim()));
