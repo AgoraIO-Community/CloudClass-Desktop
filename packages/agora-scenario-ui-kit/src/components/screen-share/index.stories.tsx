@@ -20,8 +20,8 @@ type DocsProps = {
 export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps) => {
     const windowItems = [...'.'.repeat(programCount)].map((item, index) => (
         {
-            id: index + 1,
-            title: index + 1,
+            id: 'id-' + (index + 1),
+            title: 'title-' + (index + 1),
         }
     ))
     return (
@@ -38,6 +38,7 @@ export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps)
                     <ScreenShare
                         screenShareTitle={subTitle}
                         windowItems={windowItems}
+                        onConfirm={() => {}}
                     ></ScreenShare>
                 </Modal>
             </div>
@@ -52,13 +53,14 @@ export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps)
                                 <Button type="secondary" action="cancel">cancel</Button>,
                                 <Button action="ok">ok</Button>
                             ],
-                            onOk: () => {console.log('ok')},
-                            onCancel: () => { console.log('cancel') },
+                            onOk: () => {},
+                            onCancel: () => {},
                             children: (
                                 <>
                                     <ScreenShare
                                         screenShareTitle={subTitle}
                                         windowItems={windowItems}
+                                        onConfirm={id => console.log('user get', id)}
                                     ></ScreenShare>
                                 </>
                             )
