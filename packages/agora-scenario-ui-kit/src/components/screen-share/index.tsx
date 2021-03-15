@@ -32,7 +32,7 @@ export const ScreenShare: FC<ScreenShareProps> = ({
         [`screen-share sub-title`]: 1,
         [`${className}`]: !!className,
     });
-    let [activeIndex, setActiveIndex] = useState(0)
+    let [activeIndex, setActiveIndex] = useState<number>(0)
 
     const activeValue = useRef<number>(activeIndex)
     useEffect(() => {
