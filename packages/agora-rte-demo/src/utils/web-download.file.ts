@@ -23,6 +23,20 @@ const cacheStorageKey = 'netless'
 // cdn link 可能会变
 const resourcesHost = "convertcdn.netless.link";
 export class AgoraCaches {
+
+    private downloadList: Set<string> = new Set()
+
+    constructor() {
+        this.startObserver()
+    }
+
+    private startObserver () {
+        const notificationChannel = new BroadcastChannel('notificationChannel')
+        notificationChannel.onmessage = (ev: MessageEvent) => {
+            console.log('evt', ev)
+        }
+    }
+
     private agoraCaches: Promise<Cache> | null = null;
     public openCache = (cachesName: string): Promise<Cache> => {
         if (!this.agoraCaches) {
@@ -59,6 +73,7 @@ export class AgoraCaches {
         for (const request of keys) {
             if (request.url.indexOf(uuid) !== -1) {
                 await cache.delete(request);
+                this.downloadList.delete(uuid)
             }
         }
     }
@@ -68,7 +83,8 @@ export class AgoraCaches {
         const keys = await cache.keys()
         keys.forEach((key) => {
             cache.delete(key)
-        }) 
+        })
+        this.downloadList.clear()
     }
 
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
@@ -83,11 +99,16 @@ export class AgoraCaches {
     }
 
     public startDownload = async (taskUuid: string, onProgress?: (progress: number, controller: AbortController) => void): Promise<void> => {
+        if (this.downloadList.has(taskUuid)) {
+            console.log("already downloaded")
+            return
+        }
         const channel = new BroadcastChannel('onFetchProgress')
         channel.onmessage = ({data}: any) => {
+          console.log('startDownload ', data.url)
           if (data.url.match(taskUuid)) {
             if (onProgress) {
-                console.log('data', data.progress)
+                this.downloadList.add(taskUuid)
                 onProgress(data.progress, controller);
             }
           }
@@ -99,11 +120,13 @@ export class AgoraCaches {
             method: "get",
             signal: signal,
         }).then(fetchProgress({
-            // onProgress(progress: any) {
-            //     if (onProgress) {
-            //         onProgress(progress.percentage, controller);
-            //     }
-            // },
+            onProgress: (progress: any) => {
+                if (onProgress) {
+                    this.downloadList.add(taskUuid)
+                    console.log('fetchProgress progress ', progress)
+                    onProgress(progress.percentage, controller);
+                }
+            },
         }));
         if (res.status !== 200) {
             throw new Error(`download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`);
@@ -159,6 +182,7 @@ export class AgoraCaches {
         });
         if (entry.filename === "index.html") {
             cache.put(this.getLocation(), response.clone());
+            return Promise.resolve()
         }
         return cache.put(location, response);
     }
@@ -178,9 +202,7 @@ export class AgoraCaches {
 
     public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
         return new Promise((fulfill, reject) => {
-            // reader.getEntries((entries: any) => {
-                Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
-            // });
+            return Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(fulfill as any, reject);
         });
     }
 }

@@ -8,18 +8,11 @@ import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
 import { BizLogger } from '@/utils/biz-logger';
 import { useBoardStore, useHomeUIStore } from '@/hooks';
+import { workerPath } from '@/edu-sdk/controller';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
 }
-
-const workerPath = './serviceWorker.js'
-
-
-const handleProgress = (data: any) => {
-  console.log("progress ", data)
-}
-
 
 export interface AppContainerProps extends RouteContainerProps {
   basename?: string
@@ -65,7 +58,6 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useEffect(() => {
     if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.addEventListener('message', (event: any) => handleProgress(event.data))
       navigator.serviceWorker.register(workerPath).then(function(registration) {
         console.log("registration finish")
       }).catch(function(error) {
@@ -88,17 +80,16 @@ export const RoomContainer = (props: RoomContainerProps) => {
 }
 export const AppContainer = (props: AppContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.addEventListener('message', (event: any) => handleProgress(event.data))
-      navigator.serviceWorker.register(workerPath).then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (navigator.serviceWorker && navigator.serviceWorker.register) {
+  //     navigator.serviceWorker.register(workerPath).then(function(registration) {
+  //       console.log("registration finish")
+  //     }).catch(function(error) {
+  //       console.log('An error happened during installing the service worker:');
+  //       console.log(error.message)
+  //     })
+  //   }
+  // }, [])
 
   const AppToast = observer(() => {
 

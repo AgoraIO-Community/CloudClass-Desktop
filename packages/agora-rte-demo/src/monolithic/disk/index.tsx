@@ -7,6 +7,8 @@ import { noop } from 'lodash'
 // import DownloadDisk from '@/components/download-disk/index'
 import { useStorageStore } from '@/hooks'
 import { DownloadDiskTable } from '@/components/download-disk/download-disk-table'
+import { workerPath } from '@/edu-sdk/controller';
+import { useEffect } from 'react'
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'disk',
@@ -58,6 +60,17 @@ const DownloadDiskContainer = observer(() => {
 const DiskContainer = observer((props: any) => {
 
   const storageStore = useStorageStore()
+
+  useEffect(() => {
+    if (navigator.serviceWorker && navigator.serviceWorker.register) {
+      navigator.serviceWorker.register(workerPath).then(function(registration) {
+        console.log("disk container registration finish")
+      }).catch(function(error) {
+        console.log('An error happened during installing the service worker:');
+        console.log(error.message)
+      })
+    }
+  }, [])
 
   return (
     <div>

@@ -4,6 +4,8 @@ import { AppStore } from '@/stores/app'
 import { render } from 'react-dom'
 import { ReactElement } from 'react'
 
+export const workerPath = './serviceWorker.js'
+
 export enum EduSDKInternalStateEnum {
   Created = "created",
   Initialized = "initialized",

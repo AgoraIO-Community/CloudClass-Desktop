@@ -2,10 +2,11 @@ import { precacheAndRoute } from 'workbox-precaching';
 import { RangeRequestsPlugin } from 'workbox-range-requests';
 import { CacheFirst } from 'workbox-strategies/CacheFirst';
 import { CacheOnly } from 'workbox-strategies/CacheOnly';
-import {NetworkFirst, NetworkFirstOptions} from 'workbox-strategies/NetworkFirst';
+import { NetworkFirst, NetworkFirstOptions } from 'workbox-strategies/NetworkFirst';
 import { registerRoute } from 'workbox-routing/registerRoute';
-import {agoraCaches} from '../utils/web-download.file';
+import { agoraCaches } from '../utils/web-download.file';
 import { StrategyHandler } from 'workbox-strategies/StrategyHandler';
+import progress from '@/components/progress/progress';
 
 declare var self: ServiceWorkerGlobalScope
 
@@ -25,16 +26,18 @@ if ('BroadcastChannel' in self) {
 const channel = new BroadcastChannel('onFetchProgress');
 
 
-const onProgress = (payload: {loaded: number, total: number, url: string}) => {
+const onProgress = (payload: { loaded: number, total: number, url: string }) => {
+  const progressSize = Math.ceil(payload.loaded / payload.total * 100)
+  console.log(" loaded ", payload.loaded, " total ", payload.total, " progressSize ", progressSize)
   channel.postMessage({
     url: payload.url,
-    progress: Math.ceil(payload.loaded / payload.total * 100),
+    progress: progressSize,
   })
 }
 
 
 class PreFetchZipStrategy extends NetworkFirst {
-  
+
   private _requests: Map<any, any>;
 
   constructor(options: NetworkFirstOptions) {
@@ -43,12 +46,7 @@ class PreFetchZipStrategy extends NetworkFirst {
   }
 
   async _handle(request: Request, handler: StrategyHandler): Promise<any> {
-    // let responsePromise = this._requests.get(request.url);
-    // if (responsePromise) {
-    //   const response = await responsePromise;
-    //   return response.clone();
-    // } else {
-    const responsePromise = super._handle(request, handler);
+    const responsePromise = handler.fetch(request.url)
     this._requests.set(request.url, responsePromise);
     try {
       const response = await responsePromise;
@@ -57,18 +55,18 @@ class PreFetchZipStrategy extends NetworkFirst {
         async start(controller: ReadableStreamDefaultController<Uint8Array>) {
           let loaded = 0
           const contentLength = response.headers.get('content-length');
-          const total = parseInt(contentLength!, 10);
+          const total = +contentLength!;
           const reader = response!.body!.getReader();
-          for (;;) {
-            const {done, value}: any = await reader.read();
+          while (true) {
+            const { done, value }: any = await reader.read();
             if (done) break;
             loaded += value.byteLength;
-            onProgress({loaded, total, url: request.url})
+            onProgress({ loaded, total, url: request.url })
             controller.enqueue(value);
           }
           controller.close();
-        },
-      }));
+        }
+      }))
       await this.handleZipFile(newResponse)
       return result
     } catch (err) {
@@ -104,19 +102,9 @@ registerRoute(
   'GET',
 );
 
-const resourcePattern = new RegExp('https://convertcdn\.netless\.link\/(static|dynamic)Convert');
+const resourcePattern = new RegExp('^https://convertcdn\.netless\.link\/(static|dynamic)Convert/\(\\S+)\.[^zip]$');
 
-function promiseAny(promises: Array<Promise<Response>>): Promise<Response> {
-  return new Promise((resolve, reject) => {
-    promises = promises.map(p => Promise.resolve(p));
-    promises.forEach(p => p.then(resolve));
-    promises.reduce((a, b) => a.catch(() => b))
-      .catch(() => reject(Error('Unable get a response from network or cache.')));
-  });
-};
-
-const networkFirst = new NetworkFirst({cacheName});
-const cacheOnly = new CacheOnly({cacheName});
+const cacheFirst = new CacheFirst({ cacheName });
 const cacheRangeFile = new CacheFirst({
   plugins: [
     new RangeRequestsPlugin(),
@@ -124,21 +112,16 @@ const cacheRangeFile = new CacheFirst({
 })
 
 const cacheNetworkRaceHandler = async (options: any) => {
-  return promiseAny([
-    networkFirst.handle(options),
-    cacheOnly.handle(options),
-  ]);
+  console.log("handle cache first", options)
+  return cacheFirst.handle(options)
 };
 
 const cacheRangeFileHandler = async (options: any) => {
-  return promiseAny([
-    networkFirst.handle(options),
-    cacheRangeFile.handle(options)
-  ]);
+  return cacheRangeFile.handle(options)
 };
 
 registerRoute(
-  ({url}) => url.href.match(resourcePattern) && url.pathname.match(/\.(mp4|mp3|flv|avi|wav)$/i),
+  ({ url }) => url.href.match(resourcePattern) && url.pathname.match(/\.(mp4|mp3|flv|avi|wav)$/i),
   cacheRangeFileHandler
 )
 

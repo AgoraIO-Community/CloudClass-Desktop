@@ -163,33 +163,9 @@ export class StorageStore implements ClassRoomAbstractStore {
     }
     try {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      // if (!StorageStore.isNative) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          // if (this.downloadList.find)
-          this.progressMap[taskUuid] = progress
-        })
-      // } else {
-      //   const requestController = new AbortController();
-      //   const resourcesHost = "convertcdn.netless.link";
-      //   const signal = requestController.signal;
-      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      //   const res = await fetch(zipUrl, {
-      //       method: "get",
-      //       signal: signal,
-      //   }).then(fetchProgress({
-      //       onProgress: (progress: any) => {
-      //         if (progress.hasOwnProperty('percentage')) {
-      //           this.progressMap[taskUuid] = progress.percentage
-      //         }
-      //       },
-      //   }));
-      //   if (res.status !== 200) {
-      //     throw GenericErrorWrapper({
-      //       code: res.status,
-      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-      //     })
-      //   }
-      // }
+      await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
+        this.progressMap[taskUuid] = progress
+      })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
