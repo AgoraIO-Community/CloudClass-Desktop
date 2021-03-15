@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
@@ -12,17 +12,13 @@ export interface VideoPlayerProps extends BaseProps {
    */
   isHost?: boolean;
   /**
-   * 是否本地用户
-   */
-  isLocal?: boolean;
-  /**
    * 用户的唯一标识
    */
   uid: string | number;
   /**
-   * 摄像头关闭时的封面
+   * 摄像头关闭时的占位图
    */
-  poster?: string;
+  placeholder?: string | ReactNode;
   /**
    * 学生获得的星星数量
    */
@@ -48,29 +44,27 @@ export interface VideoPlayerProps extends BaseProps {
    */
   whiteboardGranted?: boolean;
   /**
-   * 摄像头状态变更时的回调
+   * 点击摄像头的按钮时的回调
    */
-  onCameraStateChange: (uid: string | number, enabled: boolean) => void;
+  onCameraClick: (uid: string | number) => Promise<any>;
   /**
-   * 摄像头状态变更时的回调
+   * 点击麦克风按钮时的回调
    */
-  onMicStateChange: (uid: string | number, enabled: boolean) => void;
+  onMicClick: (uid: string | number) => Promise<any>;
   /**
-   * 白板操作授权变更时的回调
+   * 点击白板操作授权按钮时的回调
    */
-  onWhiteboardGrantedStateChange: (
-    uid: string | number,
-    granted: boolean,
-  ) => void;
+  onWhiteboardClick: (uid: string | number) => Promise<any>;
   /**
    * 发送星星给学生
    */
-  onSendStar: (uid: string | number) => void;
+  onSendStar: (uid: string | number) => Promise<any>;
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
   className,
+  placeholder,
   stars = 0,
   isHost,
   username,
@@ -78,9 +72,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   micVolume,
   cameraEnabled,
   whiteboardGranted,
-  onCameraStateChange,
-  onMicStateChange,
-  onWhiteboardGrantedStateChange,
+  onCameraClick,
+  onMicClick,
+  onWhiteboardClick,
   onSendStar,
 }) => {
   const cls = classnames({
@@ -97,21 +91,19 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       <Icon
         className={micEnabled ? '' : 'red'}
         type={micEnabled ? 'microphone-on' : 'microphone-off'}
-        onClick={() => onMicStateChange(uid, !micEnabled)}
+        onClick={() => onMicClick(uid)}
       />
       <Icon
         className={cameraEnabled ? '' : 'red'}
         type={cameraEnabled ? 'camera' : 'camera-off'}
-        onClick={() => onCameraStateChange(uid, !cameraEnabled)}
+        onClick={() => onCameraClick(uid)}
       />
       {isHost ? (
         <>
           <Icon
             className={cameraEnabled ? '' : 'yellow'}
             type="whiteboard"
-            onClick={() =>
-              onWhiteboardGrantedStateChange(uid, !whiteboardGranted)
-            }
+            onClick={() => onWhiteboardClick(uid)}
           />
           <Icon type="star-outline" onClick={() => onSendStar(uid)} />
         </>
@@ -127,6 +119,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       content={tools}
       placement="left">
       <div className={cls}>
+        {placeholder ? <>{placeholder}</> : null}
         <div className="top-right-info">
           {stars > 0 ? (
             <>
