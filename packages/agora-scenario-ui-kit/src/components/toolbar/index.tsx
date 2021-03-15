@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
-import classnames from 'classnames';
+import React, { FC, useState } from 'react';
 import { BaseProps } from '~components/interface/base-props';
 import './index.css';
 import { Icon, IconTypes } from '~components/icon';
