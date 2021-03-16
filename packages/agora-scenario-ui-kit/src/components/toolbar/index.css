@@ -1,65 +1,104 @@
-.minimize {
+.toolbar {
+  width: 42px;
+}
+
+.toolbar.opened {
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 21px;
+}
+
+.toolbar .menu {
+  @apply flex justify-center items-center cursor-pointer;
+  margin-bottom: 18px;
+}
+
+.toolbar .menu.fold {
   width: 42px;
   height: 42px;
-  @apply bg-white;
-  padding-left: 5px;
-  padding-top: 0.2px;
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
   border-radius: 0px 21px 21px 0px;
 }
 
-.control-minimize {
-  width: 32px;
-  height: 32px;
-  margin-top: 5px;
-  background-image: url('./assets/icon-open.png');
-}
-
-.control-minimize:hover {
-  width: 32px;
-  height: 32px;
-  margin-top: 5px;
-  background-image: url('./assets/icon-openhover.png');
-}
-
-.control-unwind {
-  width: 32px;
-  height: 32px;
-  margin-top: 5px;
-  background-image: url('./assets/icon-close.png');
-}
-
-.control-unwind:hover {
-  width: 32px;
-  height: 32px;
-  margin-top: 5px;
-  background-image: url('./assets/icon-closehover.png');
-}
-
-.tool-bar {
+.toolbar .menu.unfold {
   width: 42px;
-  height: 515px;
-  border-radius: 21px;
-  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
-  @apply flex;
-  @apply flex-col;
+  height: 42px;
+  box-shadow: none;
+  border-radius: none;
 }
 
-.tool-bar-box {
-  @apply flex;
-  @apply flex-col;
+.toolbar > .tools {
+  @apply hidden;
 }
 
-.mouse-hover:hover {
-  width: 32px;
-  height: 32px;
-  border-radius: 21px;
-  color: #191919;	
-  background-color: #e9e9f2;
+.toolbar.opened > .tools {
+  @apply flex flex-col items-center;
 }
 
-.pointer {
-  cursor: pointer;
+.tool {
+  @apply cursor-pointer text-center relative;
+  height: 28px;
+  width: 29px;
+  line-height: 1;
+  margin-bottom: 10px;
+  color: #7b88a0;
 }
 
+.tool .expandable {
+  @apply absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 24px;
+  color: #7b88a0;
+}
 
+.active {
+  color: #357bf6;
+}
 
+.tool.expand,
+.tool:hover {
+  @apply rounded-full;
+  background: #f0f0f7;
+}
+
+.tool > .iconfont {
+  font-size: 28px;
+}
+
+.expand-tools {
+  @apply flex flex-row items-center flex-wrap;
+}
+
+.expand-tools.colors {
+    width: 140px;
+}
+
+.expand-tool {
+  @apply flex flex-col items-center  cursor-pointer;
+  margin-right: 8px;
+}
+
+.expand-tool.color {
+  @apply rounded-full text-center;
+  height: 22px;
+  width: 22px;
+  border: 1px solid #e1e1ea;
+  line-height: 0.8;
+  margin: 6px;
+}
+
+.expand-tool > .iconfont {
+  font-size: 26px;
+  color: #7b88a0;
+}
+
+.expand-tool > .active-indicator {
+  @apply rounded-full;
+  width: 3px;
+  height: 3px;
+  background: #868f9f;
+}
+
+.expand-tools-popover .popover-inner-content {
+  padding: 9px 10px;
+}
