@@ -133,6 +133,7 @@
     "@netless/react-seek-slider": "1.0.4",
     "@netless/white-audio-plugin": "1.2.20",
     "@netless/white-video-plugin": "1.2.19",
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@types/ali-oss": "6.0.4",
     "@types/axios": "0.14.0",
     "@types/deep-diff": "1.0.0",
@@ -149,6 +150,9 @@
     "@types/ua-parser-js": "0.7.33",
     "@types/uuid": "3.4.6",
     "@types/video.js": "7.3.4",
+    "@types/workbox-core": "^4.3.0",
+    "@types/workbox-routing": "^4.3.0",
+    "@types/workbox-sw": "^4.3.1",
     "agora-rte-sdk": "1.0.0",
     "ali-oss": "6.3.1",
     "axios": "0.19.2",
@@ -210,12 +214,14 @@
     "wait-on": "3.3.0",
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-cli": "4.3.1",
+    "workbox-webpack-plugin": "^6.1.1",
     "worker-loader": "2.0.0",
     "zlib": "1.0.5"
   },
   "dependencies": {
     "@netless/fetch-progress": "0.0.1",
     "@netless/zip": "0.0.6",
+    "@zip.js/zip.js": "^2.2.22",
     "adm-zip": "0.4.14",
     "agora-aclass-ui-kit": "0.0.1",
     "agora-cef-sdk": "file:./vendor/agora-cef-sdk",
@@ -229,6 +235,8 @@
     "react": "16.13.1",
     "react-beautiful-dnd": "13.0.0",
     "react-dom": "16.13.1",
-    "white-web-sdk": "2.11.11"
+    "white-web-sdk": "2.11.11",
+    "workbox-strategies": "^6.1.1",
+    "workbox-webpack-plugin": "^6.1.2"
   }
 }

@@ -36,10 +36,10 @@ interface CustomGlobalUtils {
   RTMRestful: RTMRestful
   EduLogger: EduLogger
   file: File
+  __WB_MANIFEST: Array<PrecacheEntry|string>
 }
 
-declare interface Window extends CustomGlobalUtils {
-
+declare interface Window extends CustomGlobalUtils {  
 }
 
 interface RtmTextMessage {
