@@ -81,6 +81,7 @@ interface NetworkDiskDialogProps {
   visible: boolean,
   children?: React.ReactElement,
   onClose?: ReactEventHandler<any>,
+  onSwitchTab?: ReactEventHandler<any>,
   id?: number,
   paperStyle?: React.CSSProperties,
   dialogContentStyle?: React.CSSProperties,
@@ -132,6 +133,7 @@ const NetworkDiskDialog: React.FC<NetworkDiskDialogProps> = (props) => {
   const [activeValue, setActiveValue] = React.useState(0)
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setActiveValue(newValue)
+    props.onSwitchTab && props.onSwitchTab(event)
   };
 
   const DiskPaper = (paperProps: any) => {
