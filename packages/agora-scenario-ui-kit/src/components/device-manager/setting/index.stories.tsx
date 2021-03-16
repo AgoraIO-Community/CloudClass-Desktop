@@ -18,7 +18,7 @@ const cameraArray = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头
 const microphoneArray = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
 const speakerArray = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
 
-console.log({ cameraArray, microphoneArray, speakerArray })
+// console.log({ cameraArray, microphoneArray, speakerArray })
 
 export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => (
     <>
