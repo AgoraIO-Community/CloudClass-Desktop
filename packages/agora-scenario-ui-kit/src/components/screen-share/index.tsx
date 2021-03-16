@@ -1,18 +1,21 @@
-import React, { FC , useEffect, useState} from 'react';
+import React, { FC , useEffect, useState, useRef} from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import './index.css';
 
+type WindowId = string | number;
+type WindowTitle = string | number;
+
 interface WindowItem {
-    id?: string | number;
-    title?: string;
+    id?: WindowId;
+    title?: WindowTitle;
 }
 
 export interface ScreenShareProps extends BaseProps {
     screenShareTitle?: string;
     scrollHeight?: number;
-    windowItems?: Array<WindowItem>[];
+    windowItems?: WindowItem[];
     onConfirm: ConfirmCallback;
 }
 
@@ -29,19 +32,18 @@ export const ScreenShare: FC<ScreenShareProps> = ({
         [`screen-share sub-title`]: 1,
         [`${className}`]: !!className,
     });
-    let [activeIndex, setActiveIndex] = useState(-1)
+    let [activeIndex, setActiveIndex] = useState<number>(0)
 
-    const activeValue = React.useRef<number>(activeIndex)
-
+    const activeValue = useRef<number>(activeIndex)
     useEffect(() => {
-        activeValue.current = activeIndex
+       activeValue.current = activeIndex;
     }, [activeIndex])
 
     useEffect(() => {
         return () => {
-            onConfirm(activeValue.current)
+            onConfirm(windowItems[activeValue.current].id)
         }
-    }, [activeValue, onConfirm])
+    }, [activeValue, windowItems, onConfirm])
 
     return (
         <>

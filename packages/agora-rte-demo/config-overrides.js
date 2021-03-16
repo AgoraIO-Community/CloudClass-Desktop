@@ -13,8 +13,47 @@ const {
   addWebpackAlias,
   // addWebpackTarget,
 } = require('customize-cra')
-const PurifyCSS = require('purifycss-webpack')
-const glob = require('glob-all')
+const path = require('path')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+
+function findSWPrecachePlugin(element) {
+  return element.constructor.name === 'GenerateSW';
+}
+
+function removeSWPrecachePlugin(config) {
+  const swPrecachePluginIndex = config.plugins.findIndex(findSWPrecachePlugin);
+  if (swPrecachePluginIndex !== -1) {
+    config.plugins.splice(swPrecachePluginIndex, 1); // mutates
+  }
+}
+
+exports.removeSWPrecachePlugin = removeSWPrecachePlugin;
+exports.findSWPrecachePlugin = findSWPrecachePlugin;
+
+const useSW = () => (config) => {
+  removeSWPrecachePlugin(config);
+  config.plugins.push(
+    //precacheAndRoute(self.__precacheManifest)
+    new InjectManifest({
+      // injectionPoint: '__WB_MANIFEST',
+      // importWorkboxFrom: 'local',
+      // importsDirectory: path.join(__dirname, 'public'),
+      swSrc: path.join(__dirname, './src/sw/service-worker.ts'),
+      // swSrc: path.join(process.cwd(), '/src/sw/index.worker.js'),
+      swDest: 'serviceWorker.js',
+      include: [],
+      exclude: [
+        /\.map$/,
+        /manifest$/,
+        /\.htaccess$/,
+        /service-worker\.js$/,
+        /sw\.js$/,
+      ],
+    })
+  );
+  return config;
+}
 
 const dotenv = require('dotenv')
 const {DefinePlugin} = require('webpack')
@@ -22,9 +61,7 @@ const addWebpackTarget = target => config => {
   config.target = target
   return config
 }
-const path = require('path')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const SimpleProgressWebpackPlugin = require( 'simple-progress-webpack-plugin' )
+
 
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
@@ -63,6 +100,15 @@ const setElectronDeps = isProd ? {
   "agora-electron-sdk": "commonjs2 agora-electron-sdk"
 }
 
+// fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
+const fixZipCodecIssue = () => config => {
+  config.module.rules.push({
+    test: /\.js$/,
+    loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+  })
+  return config
+}
+
 const useOptimizeBabelConfig = () => config => {
   const rule = {
     test: /\.(ts)x?$/i,
@@ -70,10 +116,11 @@ const useOptimizeBabelConfig = () => config => {
       path.resolve("src")
     ],
     use: [
-      'thread-loader', 'cache-loader', getBabelLoader(config).loader
+      'thread-loader', 'cache-loader', getBabelLoader(config).loader,
     ],
     exclude: [
       path.resolve("node_modules"),
+      path.resolve("src/sw"),
     ]
   }
 
@@ -152,7 +199,8 @@ module.exports = override(
     path.resolve("src")
   ]),
   babelExclude([
-    path.resolve("node_modules")
+    path.resolve("node_modules"),
+    // path.resolve("src/sw")
   ]),
   addWebpackPlugin(
     new HardSourceWebpackPlugin({
@@ -178,6 +226,8 @@ module.exports = override(
   //   // "analyzerMode": "static",
   //   // "reportFilename": "report.html"
   // }, true),
+  useSW(),
+  fixZipCodecIssue(),
   useOptimizeBabelConfig(),
   addWebpackAlias({
     ['@']: path.resolve(__dirname, 'src')

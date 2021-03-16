@@ -33,7 +33,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
 
   return (
     <TableRow
-      component="div"
+      // component="div"
       role="checkbox"
       tabIndex={-1}
       key={row.taskUuid}

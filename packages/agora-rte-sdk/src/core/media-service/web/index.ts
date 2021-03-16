@@ -229,7 +229,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
       const localVideoStats = this.client.getLocalVideoStats()
-      console.log("network quality ", videoStats, localVideoStats)
+      // console.log("network quality ", videoStats, localVideoStats)
       this.fire('localVideoStats', {
         stats: {
           encoderOutputFrameRate: localVideoStats.captureFrameRate,
@@ -344,7 +344,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
       const localVideoStats = this.client.getLocalVideoStats()
-      console.log("network quality ", videoStats, localVideoStats)
+      // console.log("network quality ", videoStats, localVideoStats)
       this.fire('localVideoStats', {
         stats: {
           encoderOutputFrameRate: localVideoStats.captureFrameRate,
