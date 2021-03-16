@@ -86,6 +86,9 @@ export class UIStore {
   toastQueue: string[] = []
 
   @observable
+  acadsocToastQueue: string[] = []
+
+  @observable
   autoplayToast: boolean = false
 
   @observable
@@ -125,6 +128,7 @@ export class UIStore {
     this.dialog = undefined
     this.settingDialog = false
     this.toastQueue  = []
+    this.acadsocToastQueue = []
     this.autoplayToast = false
     this.lastSeqId = 0
     this.curSeqId = 0
@@ -154,6 +158,19 @@ export class UIStore {
     const idx = this.toastQueue.findIndex((it: any) => (it === message))
     if (idx !== -1) {
       this.toastQueue.splice(idx, 1)
+    }
+  }
+
+  @action
+  addAcadsocToast(message: string) {
+    this.acadsocToastQueue.push(message)
+  }
+
+  @action
+  removeAcadsocToast(message: string) {
+    const idx = this.acadsocToastQueue.findIndex((it: any) => (it === message))
+    if (idx !== -1) {
+      this.acadsocToastQueue.splice(idx, 1)
     }
   }
 
