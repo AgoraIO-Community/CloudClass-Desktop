@@ -2,9 +2,11 @@ import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
 import { Button, Modal } from '~components';
-import { IconBox } from '~components/icon';
-import { CheckBox, Col, Inline, Progress, Row, Table, TableHeader } from '~components/table';
+import { Icon, IconBox } from '~components/icon';
+import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';
+import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
+import { Tab, TabPane } from '~components/tabs';
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -78,48 +80,45 @@ const list = [
 ]
 
 export type CloudStorageProps = {
-  width: number,
   size: number
 }
 
-export const CloudStorage = ({width, size}: CloudStorageProps) => {
-  return(
-    <Table style={{width: width}}>
+export const CloudStorage = ({ size }: CloudStorageProps) => {
+
+  const itemList = resizeList(list, size)
+
+  return (
+    <Table>
       <TableHeader>
         <Col>文件</Col>
         <Col>大小</Col>
         <Col>修改时间</Col>
       </TableHeader>
-      <Table style={{
-        maxHeight: 450,
-        overflow: 'auto'
-      }}>
-      {resizeList(list, size).map(({name, progress, date, type}: any, idx: number) => 
-        <Row height={10} border={1} key={idx} >
-          <Col>
-            <IconBox iconType={type} style={{marginRight: '6px'}} />
-            <Inline color="#191919">{name}</Inline>
-          </Col>
-          <Col>
-            <Inline color="#586376">{formatFileSize(size)}</Inline>
-          </Col>
-          <Col>
-            <Inline color="#586376">{date}</Inline>
-          </Col>
-        </Row>
-      )}
+      <Table className="table-container">
+        {itemList.map(({ name, progress, date, type }: any, idx: number) =>
+          <Row height={10} border={1} key={idx} >
+            <Col>
+              <IconBox iconType={type} style={{ marginRight: '6px' }} />
+              <Inline color="#191919">{name}</Inline>
+            </Col>
+            <Col>
+              <Inline color="#586376">{formatFileSize(size)}</Inline>
+            </Col>
+            <Col>
+              <Inline color="#586376">{date}</Inline>
+            </Col>
+          </Row>
+        )}
       </Table>
     </Table>
   )
 }
 
 CloudStorage.args = {
-  width: 560,
   size: 1
 }
 
 export type UploadListProps = {
-  width: number,
   progress: number,
   size: number,
 }
@@ -128,33 +127,32 @@ const resizeList = (items: any[], number: number): any[] => {
   if (number < 0) {
     return items
   }
-  return items.concat(resizeList(items, number -1))
+  return items.concat(resizeList(items, number - 1))
 }
 
-export const UploadList = ({size, width, progress}: UploadListProps) => {
+export const UploadList = ({ size, progress }: UploadListProps) => {
 
-  return(
-    <Table style={{width: width}}>
+  const itemList = resizeList(list, size)
+
+  return (
+    <Table>
       <TableHeader>
         <Col>文件</Col>
         <Col>进度</Col>
         <Col>操作</Col>
       </TableHeader>
-      <Table style={{
-        maxHeight: 450,
-        overflow: 'auto'
-      }}>
-        {resizeList(list, size).map(({name, progress, date, type}: any, idx: number) => 
+      <Table className="table-container">
+        {itemList.map(({ name, progress, type }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col>
-            <IconBox iconType={type} style={{marginRight: '6px'}} />
+              <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline color="#191919">{name}</Inline>
             </Col>
             <Col>
               <Progress width={60} type="download" progress={progress} />
             </Col>
             <Col>
-              <Row gap={10}>
+              <Row className="btn-group no-padding" gap={10}>
                 <Button type="secondary" onClick={() => {
                   action('download')
                 }}>下载</Button>
@@ -171,12 +169,11 @@ export const UploadList = ({size, width, progress}: UploadListProps) => {
 }
 
 UploadList.args = {
-  width: 560,
   progress: 0,
   size: 0
 }
 
-const CheckList = ({size, width, progress}: UploadListProps) => {
+const CheckList = ({ size, progress }: UploadListProps) => {
 
   const [items, updateItems] = React.useState<any[]>(list)
 
@@ -186,14 +183,14 @@ const CheckList = ({size, width, progress}: UploadListProps) => {
 
   const isSelectAll = useMemo(() => {
     return items.filter((item: any) => item.checked === true).length === items.length
-  }, [items]) 
+  }, [items])
 
   const handleSelectAll = React.useCallback((evt: any) => {
     if (!isSelectAll) {
-      const changedItems = items.map((item: any) => ({...item, checked: true}))
+      const changedItems = items.map((item: any) => ({ ...item, checked: true }))
       updateItems(changedItems)
     } else {
-      const changedItems = items.map((item: any) => ({...item, checked: false}))
+      const changedItems = items.map((item: any) => ({ ...item, checked: false }))
       updateItems(changedItems)
     }
   }, [items, updateItems, isSelectAll])
@@ -206,43 +203,37 @@ const CheckList = ({size, width, progress}: UploadListProps) => {
     }
   }, [items, updateItems])
 
-  return(
-    <Table style={{width: width}}>
+  return (
+    <Table>
       <TableHeader>
-        <Col width={30}>
+        <Col width={9}>
           <CheckBox checked={isSelectAll} indeterminate={isSelectAll ? false : hasSelected} onClick={handleSelectAll}></CheckBox>
         </Col>
         <Col>文件</Col>
-        <Col>进度</Col>
-        <Col>操作</Col>
+        {/* <Col></Col> */}
+        <Col>大小</Col>
+        <Col>修改时间</Col>
       </TableHeader>
-      <Table style={{
-        maxHeight: 450,
-        overflow: 'auto'
-      }}>
-        {items.map(({id, name, progress, date, type, checked}: any, idx: number) => 
+      <Table className="table-container">
+        {items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
-            <Col width={30}>
-              <CheckBox onClick={(evt: any) => {
+            <Col width={9}>
+              <CheckBox className="checkbox" onClick={(evt: any) => {
                 changeChecked(id, evt.currentTarget.checked)
               }} checked={checked}></CheckBox>
             </Col>
             <Col>
-            <IconBox iconType={type} style={{marginRight: '6px'}} />
+              <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline color="#191919">{name}</Inline>
             </Col>
+            {/* <Col>
+              <div style={{width: 30}}></div>
+            </Col> */}
             <Col>
-              <Progress width={60} type="download" progress={progress} />
+              <Inline color="#586376">{formatFileSize(size)}</Inline>
             </Col>
             <Col>
-              <Row gap={10}>
-                <Button type="secondary" onClick={() => {
-                  action('download')
-                }}>下载</Button>
-                <Button type="ghost" onClick={() => {
-                  action('deleted')
-                }}>删除</Button>
-              </Row>
+              <Inline color="#586376">{date}</Inline>
             </Col>
           </Row>
         )}
@@ -252,34 +243,88 @@ const CheckList = ({size, width, progress}: UploadListProps) => {
 }
 
 CheckList.args = {
-  width: 560,
   progress: 0,
   size: 0
 }
 
-export const CheckBoxShowCase = () => {
+type CourseWareManagerProps = {
+  onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
+  onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
+}
+
+export const CourseWareManager = ({
+  onOk = (e) => console.log('onOK'),
+  onCancel = (e) => console.log('onCancel'),
+}: CourseWareManagerProps) => {
+
+  const handleChange = (activeKey: string) => {
+    console.log('change Key', activeKey)
+  }
+
+  return (
+    <div className="agora-board-resources">
+      <div className="btn-pin">
+        <Icon type="close" hover onClick={onCancel}></Icon>
+      </div>
+      <Tab tabBarGutter={43} defaultActiveKey="2" onChange={handleChange}>
+        <TabPane tab="公共资源" key="1">
+          <CloudStorage size={1} />
+        </TabPane>
+        <TabPane tab="我的资源" key="2">
+          <Row className="btn-group margin-gap">
+            <Button type="primary">上传</Button>
+            <Button type="ghost">删除</Button>
+          </Row>
+          <CheckList size={1} progress={20} />
+        </TabPane>
+        <TabPane tab="下载课件" key="3">
+          <UploadList size={1} progress={20} />
+        </TabPane>
+      </Tab>
+    </div>
+  )
+}
+
+export const CheckBoxShowCase = ({ size, progress }: UploadListProps) => {
   return (
     <Button
       onClick={() => {
-          Modal.show({
-              width: 662,
-              title: '自己封装的show方法',
-              closable: true,
-              footer: [
-                  <Button type="secondary" action="cancel">cancel</Button>,
-                  <Button action="ok">ok</Button>
-              ],
-              onOk: () => {console.log('ok')},
-              onCancel: () => { console.log('cancel') },
-              children: (
-                <CheckBox />
-              )
-          })
+        Modal.show({
+          closable: true,
+          onOk: () => { console.log('ok') },
+          onCancel: () => { console.log('cancel') },
+          component: (
+            <CourseWareManager />
+          )
+        })
       }}
     >
-    show checklist
-  </Button>
+      show checklist
+    </Button>
   )
+}
+
+CheckBoxShowCase.args = {
+  progress: 0,
+  size: 0
+}
+
+export const UploadProgress = () => {
+  return (
+    <div className="">
+      <header className="">
+
+      </header>
+      <section>
+
+      </section>
+    </div>
+  )
+}
+
+UploadProgress.args = {
+  progress: 0,
+  size: 0
 }
 
 export default meta;

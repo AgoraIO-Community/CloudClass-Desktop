@@ -4,7 +4,6 @@ import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import Notification from 'rc-notification'
 import './index.css';
-
 export interface ModalProps extends BaseProps {
     /** 宽度 */
     width?: string | number;
@@ -18,6 +17,10 @@ export interface ModalProps extends BaseProps {
     onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
     onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
+    component?: React.ReactNode;
+    // TODO: need support
+    maskClosable?: boolean;
+    contentClassName?: string;
 }
 
 type ModalType = FC<ModalProps> & {
@@ -29,16 +32,34 @@ export const Modal: ModalType = ({
     title = 'modal title',
     closable = true,
     footer,
-    onOk = () => { console.log('ok') },
-    onCancel = () => { console.log('cancel') },
+    onOk = (e: React.MouseEvent<HTMLElement>) => { console.log('ok') },
+    onCancel = (e: React.MouseEvent<HTMLElement>) => { console.log('cancel') },
     children,
     className,
+    component,
+    contentClassName,
+    maskClosable,
     ...restProps
 }) => {
+
+    if (component) {
+        return (
+            React.cloneElement(component as unknown as React.ReactElement, {
+                onOk,
+                onCancel
+            })
+        )
+    }
     const cls = classnames({
         [`modal`]: 1,
         [`${className}`]: !!className,
     });
+
+    const contentCls = classnames({
+        [`modal-content`]: contentClassName ? false : true,
+        [`${contentClassName}`]: !!contentClassName,
+    })
+    
     return (
         <div className={cls} {...restProps} style={{ width }}>
             <div className="modal-title">
@@ -47,7 +68,7 @@ export const Modal: ModalType = ({
                 </div>
                 {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => {onCancel(e)}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
             </div>
-            <div className="modal-content">
+            <div className={contentCls}>
                 {children}
             </div>
             <div className="modal-footer">
@@ -79,6 +100,8 @@ Modal.show = (
         onCancel = () => { console.log('cancel') },
         children,
         className,
+        component,
+        maskClosable,
         ...restProps
     }
 ) => {
@@ -106,6 +129,8 @@ Modal.show = (
                 onCancel={tmpCancel}
                 children={children}
                 className={className}
+                component={component}
+                maskClosable={maskClosable}
                 {...restProps}
             ></Modal>
         )
