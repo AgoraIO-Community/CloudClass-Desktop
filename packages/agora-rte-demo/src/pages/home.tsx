@@ -408,6 +408,7 @@ export const HomePage = observer(() => {
                   }
                 })
               } catch (err) {
+                console.error(err)
                 const targetDom$ = document.querySelector(`#${dom.id}`)
                 if (targetDom$) {
                   targetDom$.parentElement?.removeChild(targetDom$)

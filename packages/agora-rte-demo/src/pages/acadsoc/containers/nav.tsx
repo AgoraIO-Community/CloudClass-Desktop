@@ -156,13 +156,17 @@ const ActionBarContainer = observer(() => {
 
   const menuBars = [
     {
-      name: 'customerService',
+      name: 'sos',
       clickEvent: () => {
-        controller.appController.callback(AgoraEduEvent.clicked)
+        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
       },
     },
     { name: 'refresh', clickEvent: onRefresh },
-    { name: 'customerService', clickEvent: onCustomerService },
+    { name: 'customerService',
+      clickEvent: () => {
+        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "customerService"})
+      }
+    },
     { name: 'equipmentDetection', clickEvent: handleSetting },
   ]
 

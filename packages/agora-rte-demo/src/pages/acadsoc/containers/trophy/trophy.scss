@@ -7,18 +7,18 @@
 
 @keyframes trophyContainer {  
   0%{
-    transform: scale(0.75); 
+    transform: scale(0.65); 
   }
   25%{
-    transform: scale(0.5);
+    transform: scale(0.3);
     opacity: 0.5;
   }
   50%{
-    transform: scale(0.25);
+    transform: scale(0.15);
     opacity: 0.25;
   }
   75%{
-    transform: scale(0.2);
+    transform: scale(0.1);
     opacity: 0.2;
   }
   100%{
@@ -30,8 +30,8 @@
   position: absolute;
   left: calc(50% - 160px);
   top: 50%;
-  width: 1.38rem;
-  height: 1.6rem;
+  width: 148px;
+  height: 129px;
   transform: translate(-50% , -50%) scale(1);
   background:url(../../assets/icon_trophy.png) no-repeat center center;
   background-size: 100% 100%;
@@ -54,19 +54,19 @@
 
 @keyframes giftAnimationBig{
   0%{
-      transform:translate(-50% , -50%)  scale(1);
+      transform:translate(-50% , -50%)  scale(0.8);
       margin-top: 0rem;
   }
   60%{
-      transform:translate(-50% , -50%)  scale(3.01875);
+      transform:translate(-50% , -50%)  scale(1);
       margin-top: 0rem;
   }
   80%{
-      transform:translate(-50% , -50%)  scale(3.01875);
+      transform:translate(-50% , -50%)  scale(1);
       margin-top: -0.4rem;
   }
   100%{
-      transform:translate(-50% , -50%)  scale(3.01875);
+      transform:translate(-50% , -50%)  scale(1);
       margin-top: 0rem;
   }
 

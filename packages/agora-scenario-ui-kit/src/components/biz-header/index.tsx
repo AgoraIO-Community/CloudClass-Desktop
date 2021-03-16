@@ -83,17 +83,10 @@ export const BizHeader: FC<BizHeaderProps> = ({
   signalQuality,
   title,
   monitor,
-  // devices,
-  // onEnd,
-  // onBegin,
-  // onRecord,
-  // onDeviceChange,
-  // onExit,
   onClick
 }) => {
 
-  const showModal = () => {
-    console.log('show modal')
+  const confirmEnd = () => {
     Modal.show({
       onCancel: () => { onClick('cancel') },
       onOk: () => { onClick('ended') },
@@ -111,13 +104,31 @@ export const BizHeader: FC<BizHeaderProps> = ({
     })
   }
 
+  const confirmExit = () => {
+    Modal.show({
+      onCancel: () => { onClick('cancel') },
+      onOk: () => { onClick('ended') },
+      width: 662,
+      component: (
+        <Modal
+          footer={[
+            <Button type="secondary" action="cancel">取消</Button>,
+            <Button type="primary" action="ok">确认</Button>,
+          ]}
+          title="下课确认">
+          <p>你确定要离开教室吗？</p>
+        </Modal>
+      )
+    })
+  }
+
   const handleClick = useCallback(() => {
     if (isStarted) {
-      showModal()
+      confirmEnd()
     } else {
       onClick('start')
     }
-  }, [isStarted, showModal])
+  }, [isStarted, onClick, confirmEnd])
 
   return (
     <>
@@ -147,7 +158,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="header-actions">
           <Icon type="record" size={24} onClick={() => onClick('record')} />
           <Icon type="set" size={24} />
-          <Icon type="exit" size={24} onClick={() => onClick('exit')} />
+          <Icon type="exit" size={24} onClick={() => confirmExit()} />
         </div>
       </Header>
       {/* modal api seems not reasonable */}

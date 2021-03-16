@@ -4,13 +4,15 @@ import { AppStore } from '@/stores/app'
 import { render } from 'react-dom'
 import { ReactElement } from 'react'
 
+export const workerPath = './serviceWorker.js'
+
 export enum EduSDKInternalStateEnum {
   Created = "created",
   Initialized = "initialized",
   Destroyed = "destroyed"
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent, args?: any) => any
 
 export abstract class ClassRoomAbstractStore {
 

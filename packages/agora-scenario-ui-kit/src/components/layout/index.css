@@ -15,10 +15,11 @@
 }
 
 .layout-header {
-  @apply flex flex-row justify-between items-center border-b border-gray-100 w-full bg-white;
+  @apply flex flex-row justify-between items-center border-b border-gray-100 w-full;
   height: 44px;
 }
 
 .layout-aside {
   @apply flex flex-col border-l border-gray-100 h-full w-72;
+  width: 19rem;
 }

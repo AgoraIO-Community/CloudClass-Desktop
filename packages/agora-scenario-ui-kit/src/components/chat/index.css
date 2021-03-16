@@ -1,6 +1,8 @@
 .chat-panel {
   @apply bg-white;
-  width: 300px;
+  /* width: 300px; */
+  position: relative;
+  flex: 1;
   border-radius: 4px;
 }
 
@@ -39,9 +41,10 @@
 }
 
 .chat-history {
-  height: 300px;
+  height: 58%;
   padding-bottom: 18px;
   overflow-y: scroll;
+  position: absolute;
 }
 
 .chat-texting {
@@ -52,6 +55,8 @@
   background-color: #f9f9fc;
   border-radius: 18px 18px 4px 4px;
   border: 1px solid #ececf1;
+  position: absolute;
+  bottom: 0;
 }
 
 .chat-texting > textarea {
