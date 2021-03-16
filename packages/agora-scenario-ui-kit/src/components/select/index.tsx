@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import RcSelect, { Option } from 'rc-select';
-import { Icon } from '~components/icon'
 
+import './rcselect.css'
 import './index.css'
 
 export interface SelectProps extends BaseProps {
@@ -30,19 +30,17 @@ export const Select: FC<SelectProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <div className={`select-wrap select-${size}`}>
-            <RcSelect
-                className={cls}
-                dropdownClassName={'select-dropdown'}
-                defaultValue={defaultValue}
-                value={value}
-                placeholder={placeholder}
-                listHeight={listHeight}
-                onChange={onChange}
-                {...restProps}
-            />
-            <Icon type="forward" color="red" size={16} className={'select-arrow-icon'}/>
-        </div>
+        <RcSelect
+            className={cls}
+            dropdownClassName={'select-dropdown'}
+            defaultValue={defaultValue}
+            value={value}
+            placeholder={placeholder}
+            listHeight={listHeight}
+            showArrow
+            onChange={onChange}
+            {...restProps}
+        />
     )
 }
 
