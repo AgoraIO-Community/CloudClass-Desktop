@@ -129,7 +129,6 @@ export const OneToOne: Story<any> = () => {
   return (
     <Layout
       direction="col"
-      className="bg-green-300"
       style={{
         height: '100vh'
       }}

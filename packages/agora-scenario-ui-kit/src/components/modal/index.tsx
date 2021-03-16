@@ -9,6 +9,8 @@ export interface ModalProps extends BaseProps {
     width?: string | number;
     /** 标题 */
     title?: string;
+    /** 遮罩效果 */
+    showMask?: boolean;
     /** 是否显示右上角的关闭按钮 */
     closable?: boolean;
     /** 底部内容 */
@@ -101,11 +103,15 @@ Modal.show = (
         children,
         className,
         component,
+        showMask,
         maskClosable,
         ...restProps
     }
 ) => {
-    Notification.newInstance({}, notification => {
+    const cls = classnames({
+        [`rc-mask`]: !!showMask,
+      })
+    Notification.newInstance({prefixCls: cls}, notification => {
         const modalId = 'modal-' + Date.now()
         const hideModal = () => {
             notification.removeNotice(modalId)

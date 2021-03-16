@@ -85,27 +85,9 @@ export const BizHeader: FC<BizHeaderProps> = ({
   monitor,
   onClick
 }) => {
-
-  const confirmEnd = () => {
-    Modal.show({
-      onCancel: () => { onClick('cancel') },
-      onOk: () => { onClick('ended') },
-      width: 662,
-      component: (
-        <Modal
-          footer={[
-            <Button type="secondary" action="cancel">取消</Button>,
-            <Button type="primary" action="ok">确认</Button>,
-          ]}
-          title="下课确认">
-          <p>你确定要下课吗？</p>
-        </Modal>
-      )
-    })
-  }
-
   const confirmExit = () => {
     Modal.show({
+      showMask: true,
       onCancel: () => { onClick('cancel') },
       onOk: () => { onClick('ended') },
       width: 662,
@@ -124,11 +106,29 @@ export const BizHeader: FC<BizHeaderProps> = ({
 
   const handleClick = useCallback(() => {
     if (isStarted) {
+      const confirmEnd = () => {
+        Modal.show({
+          showMask: true,
+          onCancel: () => { onClick('cancel') },
+          onOk: () => { onClick('ended') },
+          width: 662,
+          component: (
+            <Modal
+              footer={[
+                <Button type="secondary" action="cancel">取消</Button>,
+                <Button type="primary" action="ok">确认</Button>,
+              ]}
+              title="下课确认">
+              <p>你确定要下课吗？</p>
+            </Modal>
+          )
+        })
+      }
       confirmEnd()
     } else {
       onClick('start')
     }
-  }, [isStarted, onClick, confirmEnd])
+  }, [isStarted, onClick])
 
   return (
     <>
