@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "skip": "跳过",
     "downloadPage": "下载页面",
     "home": {
       "material_list": "更新课件列表",

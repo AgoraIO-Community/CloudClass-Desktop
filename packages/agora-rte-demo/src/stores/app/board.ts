@@ -22,6 +22,7 @@ import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { reportService } from '@/services/report-service';
+import { createRef } from 'react';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -38,7 +39,19 @@ const transformConvertedListToScenes = (taskProgress: any) => {
   return []
 }
 
-const transformMaterialList = (item: CourseWareItem) => {
+type MaterialItem = {
+    ext: string,
+    resourceName: string,
+    resourceUuid: string,
+    scenes: any[],
+    size: number,
+    taskProgress: any,
+    taskUuid: string,
+    updateTime: number,
+    url: string,
+}
+
+const transformMaterialItem = (item: CourseWareItem): MaterialItem => {
   return {
     ext: item.ext,
     resourceName: item.resourceName,
@@ -50,6 +63,12 @@ const transformMaterialList = (item: CourseWareItem) => {
     updateTime: item.updateTime,
     url: item.url
   }
+}
+
+interface CacheInfo {
+  progress: number,
+  cached: boolean,
+  skip: boolean
 }
 
 export enum BoardPencilSize {
@@ -522,39 +541,49 @@ export class BoardStore {
 
   controller: any = undefined
 
+  @observable
+  cacheMap = new Map<string, CacheInfo>()
+
+  cancelDownloading() {
+    if (this.controller) {
+      this.controller.abort()
+      this.controller = undefined
+      this.downloading = false
+      this.cacheMap.delete(this.currentTaskUuid)
+      this.preloadingProgress = -1
+    }
+  }
+
   async startDownload(taskUuid: string) {
-    const isWeb = this.appStore.isElectron ? false : true
     try {
+      this.currentTaskUuid = taskUuid
+      const cacheInfo = this.cacheMap.get(taskUuid)
+      if (cacheInfo && cacheInfo.cached) {
+        return
+      }
+      this.cancelDownloading()
+      // if (cancelDownloading)
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      // if (isWeb) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
-          this.preloadingProgress = progress
-          this.controller = controller
+      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+        this.preloadingProgress = progress
+        this.controller = controller
+        const cacheInfo = this.cacheMap.get(taskUuid)
+
+        const currentProgress = get(cacheInfo, 'progress', 0)
+        const skip = get(cacheInfo, 'skip', false)
+        if (skip) {
+          return
+        }
+
+        const newProgress = Math.max(currentProgress, progress)
+
+        this.cacheMap.set(taskUuid, {
+          progress: newProgress,
+          cached: newProgress === 100,
+          skip: false,
         })
-      // } else {
-      //   const controller = new AbortController();
-      //   this.controller = controller
-      //   const resourcesHost = "convertcdn.netless.link";
-      //   const signal = controller.signal;
-      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      //   const res = await fetch(zipUrl, {
-      //       method: "get",
-      //       signal: signal,
-      //   }).then(fetchProgress({
-      //       onProgress: (progress: any) => {
-      //         if (progress.hasOwnProperty('percentage')) {
-      //           this.preloadingProgress = get(progress, 'percentage')
-      //         }
-      //       },
-      //   }));
-      //   if (res.status !== 200) {
-      //     throw GenericErrorWrapper({
-      //       code: res.status,
-      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-      //     })
-      //   }
-      // }
+      })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
       this.downloading = false
     } catch (err) {
@@ -604,7 +633,11 @@ export class BoardStore {
           this.room.setScenePath(`/${currentPage}`)
         }
       } else {
-        this.room.setScenePath(`${targetPath}/${currentPage+1}`)
+        const targetResource = this.allResources.find((item => item.name === resourceName))
+        if (targetResource) {
+          const scenePath = targetResource!.scenes![currentPage].name
+          this.room.setScenePath(`${targetPath}/${scenePath}`)
+        }
       }
     }
 
@@ -705,13 +738,13 @@ export class BoardStore {
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
+    const globalState = this.room.state.globalState as any
+    const materialList = get(globalState, 'materialList', []) as MaterialItem[]
     const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
-    if (isRootDir) {
-      const globalState = (this.room.state.globalState as any)
-      const taskUuidList = get(globalState, 'dynamicTaskUuidList', [])
-      const pptItem = taskUuidList.find((it: any) => it.resourceName === resourceName)
-      if (pptItem) {
-        await this.startDownload(pptItem.taskUuid)
+    if (!isRootDir) {
+      const item = materialList.find((item: MaterialItem) => item.resourceName === resourceName)
+      if (item && item.taskUuid) {
+        await this.startDownload(item.taskUuid)
       }
     }
   }
@@ -845,6 +878,23 @@ export class BoardStore {
     }
   }
 
+  async refreshState() {
+    const courseWareList = this.allResources.filter((item) => item.taskUuid)
+    for (let i = 0; i < courseWareList.length; i++) {
+      const item = courseWareList[i]
+      if (item) {
+        const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        const cacheInfo = this.cacheMap.get(item.taskUuid)
+        const skip = get(cacheInfo, 'skip', false)
+        this.cacheMap.set(item.taskUuid, {
+          progress: res === true ? 100 : 0,
+          cached: res,
+          skip: skip
+        })
+      }
+    }
+  }
+
   // TODO: aclass board init
   @action
   async aClassInit(info: {
@@ -863,6 +913,7 @@ export class BoardStore {
         disableCameraTransform: true,
         disableAutoResize: false
       })
+      await this.refreshState()
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})
@@ -1210,7 +1261,7 @@ export class BoardStore {
 
   syncLocalPersonalCourseWareList() {
     this.room.setGlobalState({
-      materialList: this.internalResources.map(transformMaterialList)
+      materialList: this.internalResources.map(transformMaterialItem)
     })
   }
 
@@ -2099,6 +2150,7 @@ export class BoardStore {
       this.controller.abort()
       this.controller = undefined
     }
+    this.cacheMap = new Map<string, CacheInfo>()
     // this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
@@ -2299,19 +2351,41 @@ export class BoardStore {
     if (!this.ready) {
       return 'preparing'
     }
-    if (this.preloading) {
-      return true
-    }
+    return this.loadingStatus
   }
 
+  @observable
+  currentTaskUuid: string = ''
+
+  
+  skipTask() {
+    const taskUuid = this.currentTaskUuid
+    if (taskUuid) {
+      const cacheInfo = this.cacheMap.get(taskUuid)
+      if (cacheInfo) {
+        cacheInfo.skip = true
+        this.cacheMap.set(taskUuid, cacheInfo)
+      }
+    }
+  }
 
   @computed
   get loadingStatus() {
     if (!this.ready) {
-      return t("whiteboard.loading")
+      return {
+        type: 'preparing',
+        text: t("whiteboard.loading")
+      }
     }
-    if (this.preloadingProgress !== -1) {
-      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+
+    if (this.currentTaskUuid) {
+      const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
+      if (cacheInfo && cacheInfo.skip !== true && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+        return {
+          type: 'downloading',
+          text: t("whiteboard.downloading", {reason: cacheInfo?.progress})
+        }
+      }
     }
 
     return ''
