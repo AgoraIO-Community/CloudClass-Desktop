@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>icon-openhover</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="16" cy="16" r="16"></circle>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="灵动课堂Guide-11-工具栏b-收起" transform="translate(-1125.000000, -648.000000)">
+            <g id="icon-openhover" transform="translate(1141.000000, 664.000000) scale(-1, 1) translate(-1141.000000, -664.000000) translate(1125.000000, 648.000000)">
+                <g id="编组-36">
+                    <g id="椭圆形" stroke-linejoin="square">
+                        <circle stroke="#FFFFFF" stroke-width="2.5" fill="#639AFA" fill-rule="evenodd" cx="16" cy="16" r="14.75"></circle>
+                        <circle stroke="#639AFA" stroke-width="1" cx="16" cy="16" r="15.5"></circle>
+                    </g>
+                    <g id="编组-46" transform="translate(9.000000, 12.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2">
+                        <polyline id="路径-47" points="4 0 -3.99680289e-15 4 4 8"></polyline>
+                        <polyline id="路径-47备份" points="12.7580952 0 8.75809524 4 12.7580952 8"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
