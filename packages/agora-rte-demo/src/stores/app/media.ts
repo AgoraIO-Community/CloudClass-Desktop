@@ -210,6 +210,8 @@ export class MediaStore {
       EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       this.rendererOutputFrameRate[`${uid}`] = 0
+      this.rendererOutputFreezeCount[`${uid}`] = 0
+      this.rendererFirstFrameRendered[`${uid}`] = false
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
@@ -217,6 +219,8 @@ export class MediaStore {
       EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       delete this.rendererOutputFrameRate[`${uid}`]
+      delete this.rendererOutputFreezeCount[`${uid}`]
+      delete this.rendererFirstFrameRendered[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -271,6 +275,12 @@ export class MediaStore {
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
         this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
+        if(evt.stats.decoderOutputFrameRate === 0 ){
+          this.rendererOutputFreezeCount[`${evt.user.uid}`]++
+        } else if(evt.stats.decoderOutputFrameRate > 0) {
+          this.rendererOutputFreezeCount[`${evt.user.uid}`] = 0
+          this.rendererFirstFrameRendered[`${evt.user.uid}`] = true
+        }
         BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
       }
     })
@@ -307,6 +317,12 @@ export class MediaStore {
   }
 
   @observable
+  rendererOutputFreezeCount: Record<number, number> = {}
+  
+  @observable
+  rendererFirstFrameRendered: Record<number, boolean> = {}
+
+  @observable
   networkQuality: string = 'unknown'
 
   @action
@@ -325,6 +341,8 @@ export class MediaStore {
     this.rendererOutputFrameRate = {
       0: 1
     }
+    this.rendererOutputFreezeCount = {}
+    this.rendererFirstFrameRendered = {}
   }
 
   @observable

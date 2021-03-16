@@ -113,6 +113,7 @@ const en = {
     'loading': 'Loading...',
     'openingCamera': 'Opening Camera',
     'closingCamera': 'Closing Camera',
+    'preparingRemoteVideo': 'Preparing Remote Video',
   },
   "unknown": "[unknown]: ",
   "from_room": "[Room]: ",
