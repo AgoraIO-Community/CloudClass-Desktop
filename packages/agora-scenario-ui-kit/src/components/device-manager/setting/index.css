@@ -1,0 +1,21 @@
+.device-choose {
+    margin-bottom: 30px;
+}
+.device-title, .device-text {
+    font-size: 12px;
+    font-weight: 400;
+    color: #586376;
+    margin-bottom: 10px;
+}
+
+.device-volume {
+    margin-top: 15px;
+    @apply flex;
+}
+
+.device-volume .slider {
+    margin-left: 6px;
+    @apply flex-1;
+}
+
+

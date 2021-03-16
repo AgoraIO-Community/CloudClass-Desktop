@@ -48,11 +48,13 @@
 }
 
 .select-dropdown {
+    position: relative;
     width: 100%;
     background: #FFFFFF;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
     border: 1px solid #E2E2F0;
+    z-index: 2;
 }
 
 .select-dropdown .rc-select-item-option-state {
