@@ -3,9 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import RcSelect, { Option } from 'rc-select';
 
-import './rcselect.css'
 import './index.css'
-
 export interface SelectProps extends BaseProps {
     defaultValue?: string;
     value?: string | number;
