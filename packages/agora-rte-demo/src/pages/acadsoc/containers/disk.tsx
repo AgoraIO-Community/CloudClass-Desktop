@@ -15,7 +15,7 @@ import { Progress } from '@/components/progress/progress'
 import {t} from '@/i18n'
 import styles from './disk.module.scss'
 import IconRefresh from '../assets/icon-refresh.png'
-import { fileSizeConversionUnit } from '@/utils/utils';
+import { debounce, fileSizeConversionUnit } from '@/utils/utils';
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -50,7 +50,7 @@ const UploadingProgress = observer((props: any) => {
   
 })
 
-const NetworkDisk = observer((props: any) => {
+const NetworkDisk = observer(() => {
 
   const boardStore = useBoardStore()
   const [process,setProcess] = useState<number>(0)
@@ -64,10 +64,32 @@ const NetworkDisk = observer((props: any) => {
   // const [cancelFileList,setCancelFileList]= useState<string[]>([])
   const [toastMessage, setToastMessage] = useState({ type: '', message: '' })
   const [isOpenToast, setIsOpenToast] = useState(false)
+  let toastTimer:any = null
 
   const handleClose = () => {
+    hideToast()
+    boardStore.setOpenDisk()
+  }
+
+  const prepareToast = (type:string, message: string) => {
+    setToastMessage({
+      type,
+      message
+    })
+  }
+
+  const showToast = (fn?: () => any) => {
+    clearTimeout(toastTimer)
+    toastTimer = null
+    setIsOpenToast(true)
+    fn && fn()
+    toastTimer = setTimeout(() => {
+      hideToast()
+    }, 2000)
+  }
+
+  const hideToast = () => {
     setIsOpenToast(false)
-    props.setOpenDisk(false)
   }
 
   const onReload = () => {
@@ -93,14 +115,11 @@ const NetworkDisk = observer((props: any) => {
     const resourceUuid = MD5(`${md5}`)
     const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
-    setIsOpenToast(false)
+    hideToast()
     const supportedFileTypes = ['bmp','jpg','png','gif','pdf','pptx','mp3','mp4','doc','docx']
     if(!supportedFileTypes.includes(ext)){
-      setIsOpenToast(true)
-      setToastMessage({
-        type: 'error',
-        message: t('disk.notSupported')
-      })
+      prepareToast('error', t('disk.notSupported'))
+      showToast()
       return
     }
 
@@ -130,15 +149,10 @@ const NetworkDisk = observer((props: any) => {
         setProcess(parent)
         setIsTrans(isTransFile)
         if (isLastProgress && parent == 100) {
+          prepareToast('success', t('disk.uploadSuccess'))
           setTimeout(() => {
-            // setProcess(0)
-            setIsOpenToast(true)
-            setIsUploadFile(false)
+            showToast(() => {setIsUploadFile(false)})
           }, 1000)
-          setToastMessage({
-            type: 'success',
-            message: t('disk.uploadSuccess')
-          })
         }
         // if (cancelFileList.includes(resourceUuid) && progress === 100) {
         //   await boardStore.removeMaterialList([file.fileID])
@@ -219,18 +233,12 @@ const NetworkDisk = observer((props: any) => {
     try{
       if (selected.length) {
         await boardStore.removeMaterialList(selected)
-        setIsOpenToast(true)
-        setToastMessage({
-          type:'success',
-          message:t('disk.deleteSuccess')
-        })
+        prepareToast('success', t('disk.deleteSuccess'))
+        showToast()
     }
     }catch(error){
-      setIsOpenToast(true)
-      setToastMessage({
-        type:'error',
-        message:t('disk.deleteFailed')
-      })
+      prepareToast('error', t('disk.deleteFailed'))
+      showToast()
     }
   
   }
@@ -238,11 +246,15 @@ const NetworkDisk = observer((props: any) => {
   const handleOpenCourse = async (resourceUuid: any) => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
     boardStore.openDisk = false
-    setIsOpenToast(false)
+    hideToast()
   }
 
   const handleRefresh = async () => {
     // await boardStore.loadCloudResources()
+  }
+
+  const handleSwitchTab = async () => {
+    hideToast()
   }
 
   const refreshComponent = () => {
@@ -264,8 +276,10 @@ const NetworkDisk = observer((props: any) => {
       removeSuccess={t('disk.deleteSuccess')}
       removeFailed={t('disk.deleteFailed')}
       fullWidth={false}
-      visible={props.openDisk}
+      // setOpenDisk={() => boardStore.setOpenDisk()} 
+      visible={boardStore.openDisk}
       onClose={handleClose}
+      onSwitchTab={handleSwitchTab}
       dialogHeaderStyle={{
         minHeight: 40,
       }}

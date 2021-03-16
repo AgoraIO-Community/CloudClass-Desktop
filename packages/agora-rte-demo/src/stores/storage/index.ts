@@ -1,5 +1,5 @@
 import { GlobalStorage } from './../../utils/custom-storage';
-import { agoraCaches } from '@/utils/web-download.file';
+import { agoraCaches, ProgressData } from '@/utils/web-download.file';
 import { ClassRoomAbstractStore, controller } from "@/edu-sdk/controller";
 import { computed, observable, reaction } from "mobx";
 import { CourseWareItem, CourseWareList, LanguageEnum } from '@/edu-sdk';
@@ -87,10 +87,12 @@ export class StorageStore implements ClassRoomAbstractStore {
     const newCourseWareList = [...this._courseWareList]
     for (let i = 0; i < newCourseWareList.length; i++) {
       const item = newCourseWareList[i]
-      const res = await agoraCaches.hasTaskUUID(item.taskUuid)
-      item.progress = res === true ? 100 : 0
-      this.progressMap[item.taskUuid] = item.progress
-      item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+      if (item) {
+        const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        item.progress = res === true ? 100 : 0
+        this.progressMap[item.taskUuid] = item.progress
+        item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+      }
     }
     this._courseWareList = newCourseWareList
   }
@@ -117,7 +119,6 @@ export class StorageStore implements ClassRoomAbstractStore {
 
   async destroy () {
     this._courseWareList = []
-    this.language = "en"
     this.progressMap = {}
   }
 
@@ -162,33 +163,10 @@ export class StorageStore implements ClassRoomAbstractStore {
     }
     try {
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      // if (!StorageStore.isNative) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
-          // if (this.downloadList.find)
-          this.progressMap[taskUuid] = progress
-        })
-      // } else {
-      //   const requestController = new AbortController();
-      //   const resourcesHost = "convertcdn.netless.link";
-      //   const signal = requestController.signal;
-      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      //   const res = await fetch(zipUrl, {
-      //       method: "get",
-      //       signal: signal,
-      //   }).then(fetchProgress({
-      //       onProgress: (progress: any) => {
-      //         if (progress.hasOwnProperty('percentage')) {
-      //           this.progressMap[taskUuid] = progress.percentage
-      //         }
-      //       },
-      //   }));
-      //   if (res.status !== 200) {
-      //     throw GenericErrorWrapper({
-      //       code: res.status,
-      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-      //     })
-      //   }
-      // }
+      await agoraCaches.startDownload(taskUuid, (progress: number, _) => {
+        const currentProgress = this.progressMap[taskUuid]
+        this.progressMap[taskUuid] = Math.max(progress, currentProgress)
+      })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)

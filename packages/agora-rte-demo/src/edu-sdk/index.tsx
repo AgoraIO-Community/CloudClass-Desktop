@@ -245,6 +245,7 @@ export class AgoraEduSDK {
           sdkDomain: sdkConfig.sdkDomain,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
+          cachePath: sdkConfig.configParams.cachePath,
           oss: {
             region: data.netless.oss.region,
             bucketName: data.netless.oss.bucket,

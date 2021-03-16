@@ -1,16 +1,13 @@
+import { t } from '@/i18n'
+import { Select } from '@material-ui/core'
+import { makeStyles, Theme, withStyles } from '@material-ui/core/styles'
+import { AudioVolume } from "agora-aclass-ui-kit"
 import { observer } from 'mobx-react'
-import React, { useEffect, useState } from 'react'
-import { usePretestStore } from '@/hooks'
-
-import {makeStyles, styled, Theme, withStyles } from '@material-ui/core/styles'
-import { InputLabel, MenuItem, Select } from '@material-ui/core'
+import React from 'react'
 import VideoDetectPng from '../assets/camera-detect.png'
 import SpeakerPng from '../assets/speaker.png'
-import MicPng from '../assets/mic.png'
-import { DevicePicker, AudioVolume, Button, DeviceManagerDialog, DeviceTabs, DialogFramePaper, RowItem, VolumeDirectionEnum, VolumeSlider } from "agora-aclass-ui-kit";
-import { RendererPlayer } from '@/components/media-player'
 import { PretestContainer } from './pretest/container'
-import { t } from '@/i18n'
+
 
 
 export type DeviceList = {

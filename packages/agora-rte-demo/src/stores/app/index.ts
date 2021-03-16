@@ -60,6 +60,7 @@ export type AppStoreConfigParams = {
   rtmToken: string
   courseWareList: CourseWareList
   personalCourseWareList?: CourseWareList
+  cachePath?: string
   oss?: {
     region: string
     bucketName: string
@@ -260,7 +261,7 @@ export class AppStore implements ClassRoomAbstractStore {
           rtmToken: config.rtmToken,
           platform: 'electron',
           logLevel: '' as any,
-          logDirectoryPath: '',
+          logDirectoryPath: config.cachePath || '',
           // @ts-ignore
           cefClient,
           // cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
@@ -276,7 +277,7 @@ export class AppStore implements ClassRoomAbstractStore {
           rtmToken: config.rtmToken,
           platform: 'electron',
           logLevel: '' as any,
-          logDirectoryPath: '',
+          logDirectoryPath: config.cachePath || '',
           // @ts-ignore
           agoraRtc: window.rtcEngine,
           // agoraRtc: window,
@@ -290,7 +291,7 @@ export class AppStore implements ClassRoomAbstractStore {
         rtmToken: config.rtmToken,
         platform: 'web',
         logLevel: '' as any,
-        logDirectoryPath: '',
+        logDirectoryPath: config.cachePath || '',
         codec: 'vp8',
         sdkDomain: config.sdkDomain,
       })
