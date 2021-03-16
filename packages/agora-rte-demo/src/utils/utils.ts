@@ -247,10 +247,6 @@ export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: numb
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
 }
 
-window.addEventListener('sw.update', (evt: Event) => {
-  console.log('[sw] utils ', evt)
-})
-
 export const registerWorker = (workerPath: string) => {
   const emitUpdate = () => {
     const event = document.createEvent('Event')
