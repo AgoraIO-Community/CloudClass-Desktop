@@ -1089,6 +1089,14 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
+    const isFirstFrameRendered = this.queryVideoFirstFrameRendered(+stream.streamUuid)
+    if(!isFirstFrameRendered) {
+      return {
+        placeHolderType: 'openingCamera',
+        text: t('placeholder.cameraLoading')
+      }
+    }
+
     return {
       placeHolderType: 'none',
       text: ''
@@ -1127,9 +1135,14 @@ export class SceneStore extends SimpleInterval {
       const freezeCount = this.cameraRenderer?.freezeCount || 0
       return freezeCount < 3
     } else {
-      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
-      return frameRate > 0
+      const freezeCount = this.appStore.mediaStore.rendererOutputFreezeCount[`${uid}`] || 0
+      return freezeCount < 3
     }
+  }
+
+  queryVideoFirstFrameRendered (uid: number): boolean {
+    let firstFrameRendered = this.appStore.mediaStore.rendererFirstFrameRendered[`${uid}`] || false
+    return firstFrameRendered
   }
 
   @computed
@@ -1156,24 +1169,26 @@ export class SceneStore extends SimpleInterval {
     }
 
     // 当远端是老师时
-    const teacherStream = this.streamList.find((it: EduStream) => it.userInfo.role as string === 'host' && it.userInfo.userUuid === this.teacherUuid && it.videoSourceType !== EduVideoSourceType.screen) as EduStream
-    if (teacherStream) {
-      const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
-      const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
-      const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
-      return {
-        local: false,
-        account: user.userName,
-        userUuid: user.userUuid,
-        streamUuid: teacherStream.streamUuid,
-        video: teacherStream.hasVideo,
-        audio: teacherStream.hasAudio,
-        renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
-        showControls: this.canControl(user.userUuid),
-        placeHolderType: props.placeHolderType,
-        placeHolderText: props.text,
-        volumeLevel: volumeLevel,
-      } as any
+    if(localUser && localUser.userRole !== EduRoleTypeEnum.teacher) {
+      const teacherStream = this.streamList.find((it: EduStream) => it.userInfo.role as string === 'host' && it.userInfo.userUuid === this.teacherUuid && it.videoSourceType !== EduVideoSourceType.screen) as EduStream
+      if (teacherStream) {
+        const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
+        const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
+        const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
+        return {
+          local: false,
+          account: user.userName,
+          userUuid: user.userUuid,
+          streamUuid: teacherStream.streamUuid,
+          video: teacherStream.hasVideo,
+          audio: teacherStream.hasAudio,
+          renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
+          showControls: this.canControl(user.userUuid),
+          placeHolderType: props.placeHolderType,
+          placeHolderText: props.text,
+          volumeLevel: volumeLevel,
+        } as any
+      }
     }
     return {
       account: 'teacher',

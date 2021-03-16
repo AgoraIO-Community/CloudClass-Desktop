@@ -346,6 +346,7 @@ const zhCN: any = {
     'loading': '加载中...',
     'openingCamera': '正在打开摄像头',
     'closingCamera': '正在关闭摄像头',
+    'preparingRemoteVideo': '正在加载远端视频',
   },
   'chat': {
     'placeholder': '说点什么...',
