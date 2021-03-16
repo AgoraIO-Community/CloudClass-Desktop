@@ -133,11 +133,7 @@
     "@netless/react-seek-slider": "1.0.4",
     "@netless/white-audio-plugin": "1.2.20",
     "@netless/white-video-plugin": "1.2.19",
-<<<<<<< HEAD
     "@open-wc/webpack-import-meta-loader": "0.4.7",
-=======
-    "@open-wc/webpack-import-meta-loader": "^0.4.7",
->>>>>>> 6a1410cb185c96ef638bf592fa19ca4c1df99140
     "@types/ali-oss": "6.0.4",
     "@types/axios": "0.14.0",
     "@types/deep-diff": "1.0.0",
