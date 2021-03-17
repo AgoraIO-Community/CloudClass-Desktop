@@ -1,33 +1,14 @@
-.select-wrap {
-    position: relative;
-}
-
-.select-wrap .select-arrow-icon {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 10px;
-    width: 16px;
-    height: 16px;
-    margin: auto;
-    transform: rotate(90deg);
-    z-index: 0;
-}
-
-
 .select {
-    position: relative;
-    height: 40px;
+    height: 30px;
     border-radius: 4px;
     border: 1px solid #C4C4DC;
     cursor: pointer;
-    z-index: 1;
 }
 
 .select .rc-select-selector {
-    @apply box-border flex items-center;
     height: 100%;
     padding-left: 15px;
+    @apply box-border flex items-center;
 }
 
 .select .rc-select-selection-search {
@@ -44,7 +25,7 @@
 }
 
 .select-middle {
-    width: 280px;
+    width: 320px;
 }
 
 .select-dropdown {
