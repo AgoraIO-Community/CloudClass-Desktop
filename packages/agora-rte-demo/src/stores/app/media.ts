@@ -247,10 +247,11 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
       const {state, msg} = evt
-      if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
-          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
-        this.localVideoState = state
-      }
+      // if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
+      //     LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
+      //   this.localVideoState = state
+      // }
+      this.localVideoState = state
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
