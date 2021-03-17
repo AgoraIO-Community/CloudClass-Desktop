@@ -1,6 +1,5 @@
 .sub-title {
     font-size: 13px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #586376;
     align-self: flex-start;
@@ -39,7 +38,6 @@
 .program-item-title .title-text {
     margin-left: 7px;
     font-size: 13px;
-    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #191919;
 }

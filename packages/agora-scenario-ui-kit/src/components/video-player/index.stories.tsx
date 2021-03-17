@@ -11,6 +11,18 @@ const meta: Meta = {
     micEnabled: true,
     whiteboardGranted: true,
     micVolume: 0.95,
+    placeholder: (
+      <img
+        src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
+        alt="placeholder"
+        style={{
+          display: 'inline-block',
+          maxHeight: '100%',
+          maxWidth: '100%',
+          borderRadius: 4,
+        }}
+      />
+    ),
   },
 };
 

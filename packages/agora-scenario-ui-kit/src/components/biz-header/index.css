@@ -1,6 +1,7 @@
 /* FIXME: etxtract colors to tailwind config */
 
 .biz-header {
+  @apply bg-white;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
 }
@@ -36,7 +37,6 @@
   width: 40px;
 }
 .biz-signal-quality.popover-open {
-  
 }
 .biz-signal-quality.excellent {
   color: #0bad69;

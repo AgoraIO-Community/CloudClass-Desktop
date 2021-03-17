@@ -7,7 +7,9 @@ import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'rea
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
 import { BizLogger } from '@/utils/biz-logger';
-import { useHomeUIStore } from '@/hooks';
+import { useBoardStore, useHomeUIStore } from '@/hooks';
+import { workerPath } from '@/edu-sdk/controller';
+import { useStorageSW } from '@/utils/utils';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -55,16 +57,7 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  useStorageSW(workerPath)
 
   return (
     <Provider store={props.store}>
@@ -77,19 +70,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
     </Provider>
   )
 }
-
 export const AppContainer = (props: AppContainerProps) => {
-
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
 
   const AppToast = observer(() => {
 

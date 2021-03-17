@@ -1,92 +1,93 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import classnames from 'classnames';
+import { cloneDeep } from 'lodash';
 import { BaseProps } from '~components/interface/base-props';
+import { ExpandableToolItem, OnItemClick, Tool, ToolItem } from './tool';
+import unfoldAbsent from './assets/icon-close.svg';
+import foldAbsent from './assets/icon-open.svg';
+import unfoldHover from './assets/icon-close-hover.svg';
+import foldHover from './assets/icon-open-hover.svg';
 import './index.css';
-import { Icon, IconTypes } from '~components/icon';
+import { defaultTools } from './default-tools';
 
-export interface IconListType {
-  id: string,
-  type: IconTypes,
-  isCanExtend?: boolean,
+const menus: { [key: string]: string } = {
+  [`fold-absent`]: foldAbsent,
+  [`unfold-absent`]: unfoldAbsent,
+  [`fold-hover`]: foldHover,
+  [`unfold-hover`]: unfoldHover,
+};
+
+export interface ToolbarProps extends BaseProps {
+  tools?: ToolItem[];
+  defaultOpened?: boolean;
+  onClick?: (value: string, subValue?: string) => Promise<unknown>;
 }
 
-export interface ToolBarProps extends BaseProps {
-  iconList: Array<IconListType>,
-  handleClickEvent: (event: IconListType) => void,
-  mouseSelectorClose: () => void,
-  color?: string,
-  palletColor?: string,
-}
+export const Toolbar: FC<ToolbarProps> = ({
+  className,
+  style,
+  tools: customTools,
+  defaultOpened = true,
+  onClick,
+}) => {
+  const [opened, setOpened] = useState<boolean>(defaultOpened);
+  const [menuHover, setMenuHover] = useState<boolean>(false);
+  const [active, setActive] = useState<string>();
+  const [tools, setTools] = useState<ExpandableToolItem[]>(
+    customTools ?? defaultTools,
+  );
+  const cls = classnames({
+    [`toolbar`]: 1,
+    [`opened`]: opened,
+    [`${className}`]: !!className,
+  });
 
-export interface ToolBarMinimizeProps extends BaseProps {
-  mouseSelectorOpen: () => void,
-}
+  const handleItemClick: OnItemClick = (value, subItem) => {
+    const currentTool = tools.find((t) => t.value === value);
+    if (currentTool && currentTool.canActive) {
+      setActive(value);
+    }
+    const nextTools = cloneDeep(tools);
+    nextTools.forEach((tool) => {
+      if (tool.value === value && tool.expand && subItem) {
+        tool.expand.active = subItem;
+      }
+    });
+    setTools(nextTools);
+    if (typeof subItem === 'string' || typeof subItem === 'undefined') {
+      onClick && onClick(value, subItem);
+    } else {
+      onClick && onClick(value, (subItem as ToolItem).value);
+    }
+  };
 
-export const ToolBarMinimize: FC<ToolBarMinimizeProps> = ({mouseSelectorOpen}) => {
   return (
-    <div className='minimize shadow'>
-      <div className='control-minimize' onClick={mouseSelectorOpen}>
-        
+    <div className={cls} style={style}>
+      <div
+        className={`menu ${opened ? 'unfold' : 'fold'}`}
+        onMouseEnter={() => setMenuHover(true)}
+        onMouseLeave={() => setMenuHover(false)}
+        onClick={() => setOpened(!opened)}>
+        <img
+          src={
+            menus[
+              `${opened ? 'unfold' : 'fold'}-${menuHover ? 'hover' : 'absent'}`
+            ]
+          }
+          alt="menu"
+        />
+      </div>
+      <div className="tools">
+        {tools.map(({ value, ...restProps }) => (
+          <Tool
+            key={value}
+            value={value}
+            {...restProps}
+            onClick={handleItemClick}
+            isActive={active === value}
+          />
+        ))}
       </div>
     </div>
-  )
-} 
-
-export const ToolBar: FC<ToolBarProps> = ({
-  color,
-  iconList,
-  palletColor,
-  mouseSelectorClose,
-  handleClickEvent,
-}) => {
-
-  const [selectedElement, setSelectedElement] = useState<string>('')
-
-  const handleEvent = (e: IconListType) => {
-    setSelectedElement(e.type)
-    handleClickEvent(e)
-  }
-
-  const settingIconColor = (e: string) => {
-    if(selectedElement === e) {
-      // 图标为调色盘时特殊处理
-      if(e === 'color') {
-        return palletColor
-      }
-      return '#357BF6'
-    }
-    return '#7B88A0'
-  }
-  
-  return (
-    <>
-      <div className='tool-bar' style={{backgroundColor: color}}>
-        <div className='mx-auto'>
-          <div className='control-unwind' onClick={mouseSelectorClose}>
-        
-          </div>
-        </div>
-        <div className='tool-bar-box' style={{marginTop: '10px'}}>
-          {
-            iconList.map((item: IconListType) =>{
-              return (
-                <div className='mx-auto' key={item.id} onClick={() => {handleEvent(item)}}>
-                  <div>
-                    <Icon type={item.type} size={28} className={'mouse-hover pointer'} color={settingIconColor(item.type)}/>
-                  </div> 
-                  {
-                    item.isCanExtend ?
-                    <div style={{marginTop: '-38px'}}> 
-                      <Icon type={'triangle-down'} size={24} className={'pointer'} color={'#7B88A0'}/>
-                    </div> : null
-                  }
-                </div>
-              )
-            })
-          }
-        </div>
-      </div>  
-    </>
-  )
-}
-
+  );
+};

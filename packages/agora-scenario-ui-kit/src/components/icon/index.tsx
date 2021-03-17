@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
 import './index.css';
+import './style.css';
 
 export type { IconTypes } from './icon-types';
 
@@ -10,6 +11,7 @@ export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
   color?: string;
+  hover?: boolean;
   onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
 
@@ -19,11 +21,13 @@ export const Icon: FC<IconProps> = ({
   style,
   size,
   color,
+  hover,
   ...restProps
 }) => {
   const cls = classnames({
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
+    [`hover`]: !!hover,
   });
   return (
     <i

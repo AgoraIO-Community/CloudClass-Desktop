@@ -145,6 +145,7 @@ export class ZoomController extends React.Component<ZoomControllerProps, {}> {
               }
 
               if (type === 'fullscreenExit') {
+                console.log('fullscreenExit ', type)
                 this.props.onExitFullScreen()
                 return
               }

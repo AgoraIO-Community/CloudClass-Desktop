@@ -133,7 +133,12 @@ export const EduWhiteBoard = observer(() => {
       moveCameraText={t('tool.reset')}
     >
       {
-        isLoading ? <Progress title={loadingStatus}></Progress> : null
+        loadingStatus ? <Progress
+        title={loadingStatus.text}
+        showSkip={loadingStatus.type === 'downloading'}
+        onSkip={() => {
+          boardStore.skipTask()
+        }} ></Progress> : null
       }
       <BrushToast position={{ 'position': 'absolute' }} isShowBrushToast={enableStatus !== 'disable'} text={enableStatus ? t('aclass.board.brushEnabled') : t('aclass.board.brushDisabled')} disableIcon={!enableStatus} />
       {
@@ -508,7 +513,7 @@ export const EducationBoard = observer((props: any) => {
             boardStore.moveCamera()
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk openDisk={boardStore.openDisk} setOpenDisk={() => boardStore.setOpenDisk()} /> : null }
+        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 
         <Tool
           activeItem={currentActiveToolItem}

@@ -5,6 +5,7 @@ import './index.css';
 
 export interface LayoutProps extends BaseProps {
   direction?: 'row' | 'col';
+  children?: React.ReactNode;
 }
 
 export const Layout: FC<LayoutProps> = ({

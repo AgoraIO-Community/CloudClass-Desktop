@@ -4,54 +4,81 @@ import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import Notification from 'rc-notification'
 import './index.css';
-
 export interface ModalProps extends BaseProps {
     /** 宽度 */
     width?: string | number;
     /** 标题 */
     title?: string;
+    /** 遮罩效果 */
+    showMask?: boolean;
     /** 是否显示右上角的关闭按钮 */
     closable?: boolean;
     /** 底部内容 */
-    footer?: React.ReactNode;
+    footer?: React.ReactNode[];
     /** 点击确定回调 */
     onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
     onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
+    component?: React.ReactNode;
+    // TODO: need support
+    maskClosable?: boolean;
+    contentClassName?: string;
 }
 
-export const Modal: FC<ModalProps> = ({
+type ModalType = FC<ModalProps> & {
+    show: (params: ModalProps) => void,
+}
+
+export const Modal: ModalType = ({
     width = 280,
     title = 'modal title',
     closable = true,
     footer,
-    onOk = () => { console.log('ok') },
-    onCancel = () => { console.log('cancel') },
+    onOk = (e: React.MouseEvent<HTMLElement>) => { console.log('ok') },
+    onCancel = (e: React.MouseEvent<HTMLElement>) => { console.log('cancel') },
     children,
     className,
+    component,
+    contentClassName,
+    maskClosable,
     ...restProps
 }) => {
+
+    if (component) {
+        return (
+            React.cloneElement(component as unknown as React.ReactElement, {
+                onOk,
+                onCancel
+            })
+        )
+    }
     const cls = classnames({
         [`modal`]: 1,
         [`${className}`]: !!className,
     });
+
+    const contentCls = classnames({
+        [`modal-content`]: contentClassName ? false : true,
+        [`${contentClassName}`]: !!contentClassName,
+    })
+    
     return (
         <div className={cls} {...restProps} style={{ width }}>
             <div className="modal-title">
                 <div className="modal-title-text">
                     {title}
                 </div>
-                {closable ? (<div className="modal-title-close" onClick={() => {onCancel()}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
+                {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => {onCancel(e)}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
             </div>
-            <div className="modal-content">
+            <div className={contentCls}>
                 {children}
             </div>
             <div className="modal-footer">
-                {footer.map((item, index) => (
+                {footer && footer.map((item: any, index: number) => (
                     <div className="btn-div" key={index}>
                         {
                             React.cloneElement(item, {
-                                onClick: e => {
+                                onClick: (e: React.MouseEvent<HTMLElement>) => {
                                     const { action } = item.props;
                                     action === 'ok' && onOk && onOk(e);
                                     action === 'cancel' && onCancel && onCancel(e);
@@ -65,7 +92,7 @@ export const Modal: FC<ModalProps> = ({
     )
 }
 
-Modal.show = function (
+Modal.show = (
     {
         width = 280,
         title = 'modal title',
@@ -75,21 +102,27 @@ Modal.show = function (
         onCancel = () => { console.log('cancel') },
         children,
         className,
+        component,
+        showMask,
+        maskClosable,
         ...restProps
     }
-) {
-    Notification.newInstance({}, notification => {
+) => {
+    const cls = classnames({
+        [`rc-mask`]: !!showMask,
+      })
+    Notification.newInstance({prefixCls: cls}, notification => {
         const modalId = 'modal-' + Date.now()
         const hideModal = () => {
             notification.removeNotice(modalId)
             notification.destroy()
         }
-        const tmpOk = async () => {
-            await onOk()
+        const tmpOk = async (e: React.MouseEvent<HTMLElement>) => {
+            await onOk(e)
             hideModal()
         }
-        const tmpCancel = async () => {
-            await onCancel()
+        const tmpCancel = async (e: React.MouseEvent<HTMLElement>) => {
+            await onCancel(e)
             hideModal()
         }
         const Comp = (
@@ -102,6 +135,8 @@ Modal.show = function (
                 onCancel={tmpCancel}
                 children={children}
                 className={className}
+                component={component}
+                maskClosable={maskClosable}
                 {...restProps}
             ></Modal>
         )

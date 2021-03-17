@@ -13,7 +13,7 @@ export interface TableProps extends TableBaseProps {}
 
 export const Table: React.FC<TableProps> = ({className, children, align, ...restProps}) => {
   const cls = classnames({
-    'table-flex-container': 1,
+    [`table-flex-container`]: 1,
     [`${className}`]: !!className,
     [`justify-${align}`]: !!align
   })
@@ -25,7 +25,7 @@ export const Table: React.FC<TableProps> = ({className, children, align, ...rest
 }
 
 export interface ColProps extends TableBaseProps {
-  width?: 30
+  width?: 9 | 20
 }
 
 export const Col: React.FC<ColProps> = ({children, className, align, width, ...restProps}) => {
@@ -67,15 +67,17 @@ export const Row: React.FC<RowProps> = ({children, className, border, gap, align
 export interface ItemFontColorProps extends BaseProps {
   children: any,
   color?: string,
+  width?: number
 }
 
 export const Inline: React.FC<ItemFontColorProps> = ({
   children,
   color,
+  width,
   ...restProps
 }) => {
   return (
-    <span style={{color: color}} {...restProps}>
+    <span className="inline" style={{color: color, width}} {...restProps}>
       {children}
     </span>
   )
@@ -91,51 +93,11 @@ export const TableHeader: React.FC<RowProps> = ({className, ...restProps}) => {
     <Row className={cls} {...restProps} />
   )
 }
-
-export type ProgressType = 
-  | 'download'
-
-export interface ProgressProps extends BaseProps {
-  progress: number,
-  width: number,
-  type: ProgressType
-}
-
-export const Progress: React.FC<ProgressProps> = ({
-  progress, width, children, className, style,
-  type,
-  ...restProps}) => {
-
-  const cls = classnames({
-    [`${className}`]: !!className,
-  })
-
-  const bgCls = classnames({
-    [`overflow-hidden h-2 text-xs flex rounded bg-${type}-bg`]: 1,
-  })
-
-  const fgCls = classnames({
-    [`bg-${type}-fg`]: 1,
-  })
-
-  const progressWidth = progress * 100
-  
-  return (
-    <div className={cls} style={{
-      width: width,
-      ...style
-    }} {...restProps}>
-      <div className={bgCls}>
-        <div className={fgCls} style={{width: `${progressWidth}%`}}></div>
-      </div>
-    </div>
-  )
-}
-
 export interface CheckBoxProps extends BaseProps {
   checked?: boolean,
   onClick?: (evt: any) => any,
   indeterminate?: boolean,
+  className?: string,
 }
 
 export const CheckBox: React.FC<CheckBoxProps> = ({indeterminate, children, className, ...restProps}) => {
@@ -143,6 +105,7 @@ export const CheckBox: React.FC<CheckBoxProps> = ({indeterminate, children, clas
   const cls = classnames({
     'form-checkbox h-5 w-5 text-red-600': 1,
     [`indeterminate`]: indeterminate,
+    [`${className}`]: !!className,
   })
 
   const mountDom = (dom: HTMLInputElement | null) => {

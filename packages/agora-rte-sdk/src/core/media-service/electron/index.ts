@@ -282,7 +282,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         code: ret
       })
     }
-    console.log("set Parameters result: ", this.client.setParameters(JSON.stringify(paramsConfig)))
+
+    if (this.logPath) {
+      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
+      this.client.setLogFile(this.logPath)
+    }
+    
+    console.log("set Parameters result: ", JSON.stringify(paramsConfig), this.client.setParameters(JSON.stringify(paramsConfig)))
     this.init()
     this.client.setChannelProfile(1)
     this.client.enableVideo()
@@ -321,17 +327,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
     console.log("[electron] video encoder config ", JSON.stringify(config))
     this.client.setClientRole(2)
-    if (this.logPath) {
-      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
-      this.client.setLogFile(this.logPath)
-    }
     //TODO: set cef client log path
     if (this._cefClient) {
-      window.getCachePath((path: string) => {
-        const dstPath = path+'agorasdk.log'
-        this.client.setLogFile(dstPath);
-        EduLogger.info("set cef log path success, dest path: ", dstPath)
-      })
+      // window.getCachePath((path: string) => {
+      //   const dstPath = path+'agorasdk.log'
+      //   this.client.setLogFile(dstPath);
+      //   EduLogger.info("set cef log path success, dest path: ", dstPath)
+      // })
     }
   }
   muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
