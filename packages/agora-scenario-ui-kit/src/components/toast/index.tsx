@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { CSSProperties, FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon';
@@ -25,7 +25,11 @@ export interface ToastProps extends BaseProps {
   type?: 'success' | 'error' | 'warning';
 }
 
-export const Toast: FC<ToastProps> = ({
+type ToastType = FC<ToastProps> & {
+  show: (params: ToastProps) => void,
+}
+
+export const Toast: ToastType = ({
   type = 'success',
   children,
   className,
@@ -47,8 +51,8 @@ export const Toast: FC<ToastProps> = ({
 };
 
 Toast.show = function ({
-  type,
-  text,
+  type = 'success',
+  text = 'toast text',
   duration = 1.5,
   style = {
     top: 0,
@@ -57,9 +61,9 @@ Toast.show = function ({
 }) {
   Notification.newInstance({}, notification => {
     notification.notice({
-      content: <Toast type={type}>{text}</Toast>,
+      content: <Toast type={type as 'success' | 'error' | 'warning'}>{text}</Toast>,
       duration,
-      style: Object.assign({position: 'fixed'}, style)
+      style: Object.assign({position: 'fixed'}, style) as CSSProperties
     });
   });
 }

@@ -13,7 +13,11 @@ export interface SelectProps extends BaseProps {
     onChange?: (value: string) => void;
 }
 
-export const Select: FC<SelectProps> = ({
+type SelectType = FC<SelectProps> & {
+    Option?: any
+}
+
+export const Select: SelectType = ({
     defaultValue,
     value,
     placeholder,

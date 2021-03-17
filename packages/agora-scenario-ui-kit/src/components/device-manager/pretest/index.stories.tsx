@@ -88,7 +88,7 @@ export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
                     title: '设备检测',
                     width: 720,
                     footer: [<Button action="ok">完成检测</Button>],
-                    children: <ChildrenWrap/>
+                    children: <ChildrenWrap />
                 })
             }}>show pretest</Button>
         </div>
