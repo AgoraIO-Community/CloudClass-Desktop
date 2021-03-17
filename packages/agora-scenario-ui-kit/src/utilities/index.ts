@@ -33,16 +33,24 @@ export const translate = (lang: I18nLanguage, str: string) => {
   return textMap[lang][str]
 }
 
-export const makeContainer = () => {
+export const makeContainer = (name: string) => {
 
-  const Context = React.createContext({} as any)
+  const Context = React.createContext(null as any)
 
   return {
+    Context,
     Provider: <T>({children, value}: {children: React.ReactNode, value: T}) => {
+      Context.displayName = name
       return (
         React.createElement(Context.Provider, { value }, children)
       )
     },
-    useContext: <T>() => React.useContext<T>(Context)
+    useContext: <T>() => {
+      const context = React.useContext<T>(Context)
+      if (!context) {
+        throw new Error(`useContext must be used within a ${name}`);
+      }
+      return context;
+    }
   }
 }
