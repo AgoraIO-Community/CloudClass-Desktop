@@ -6,12 +6,18 @@
     @apply box-border bg-white;
 }
 
+.rc-notification-mask {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+}
+
 .modal-title {
     @apply box-border flex justify-between items-center;
     height: 40px;
     background-color: #F9F9FC;
     padding: 0 20px;
-
 }
 
 .modal-title-text {

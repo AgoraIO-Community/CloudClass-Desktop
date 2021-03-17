@@ -21,4 +21,5 @@
 
 .layout-aside {
   @apply flex flex-col border-l border-gray-100 h-full w-72;
+  width: 19rem;
 }

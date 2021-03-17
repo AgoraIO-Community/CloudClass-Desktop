@@ -13,11 +13,10 @@ type DocsProps = {
     title: string
 }
 
-function asyncOkFunction () {
+function asyncOkFunction (e: any): Promise<void> {
     return new Promise(resolve => {
         setTimeout(() => {
-            console.log('ok')
-            resolve('ok')
+            resolve()
         }, 3000)
     })
 }
