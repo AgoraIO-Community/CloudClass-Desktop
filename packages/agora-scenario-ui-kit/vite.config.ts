@@ -17,7 +17,6 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "AgoraScenarioUIKit",
     },
-    cssCodeSplit: true,
     rollupOptions: {
       output: {
         globals: {
