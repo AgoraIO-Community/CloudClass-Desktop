@@ -72,7 +72,7 @@ export const Pretest: FC<PretestProps> = ({
                             <CheckBox 
                                 style={{width: 12, height: 12}} 
                                 checked={isMirror}
-                                onChange={(e) => {
+                                onChange={(e: any) => {
                                     console.log('isMirror', e.target.checked)
                                     onSelectMirror(e.target.checked)
                                 }}
@@ -88,7 +88,13 @@ export const Pretest: FC<PretestProps> = ({
                     >
                         {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
-                    <VideoPlayer/>
+                    <VideoPlayer
+                        uid={''}
+                        onCameraClick={uid => new Promise(() => {})}
+                        onMicClick={uid => new Promise(() => {})}
+                        onSendStar={uid => new Promise(() => {})}
+                        onWhiteboardClick={uid => new Promise(() => {})}
+                    />
                 </div>
             </div>
             <div className="pretest-right">
