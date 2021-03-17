@@ -53,8 +53,8 @@ export const Setting: FC<SettingProps> = ({
                 <div className="device-title">摄像头</div>
                 <Select 
                     defaultValue={cameraId}
-                    onChange={value => {
-                        onChangeDevice('camera', value)
+                    onChange={async value => {
+                        await onChangeDevice('camera', value)
                     }}
                 >
                     {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
@@ -64,8 +64,8 @@ export const Setting: FC<SettingProps> = ({
                 <div className="device-title">麦克风</div>
                 <Select 
                     defaultValue={micorophoneId}
-                    onChange={value => {
-                        onChangeDevice('microphone', value)
+                    onChange={async value => {
+                        await onChangeDevice('microphone', value)
                     }}
                 >
                     {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
@@ -80,8 +80,8 @@ export const Setting: FC<SettingProps> = ({
                                 max={100}
                                 defaultValue={microphoneVolume}
                                 step={1}
-                                onChange={value => {
-                                    onChangeAudioVolume('microphone', value)
+                                onChange={async value => {
+                                    await onChangeAudioVolume('microphone', value)
                                 }}
                             ></Slider>
                         </div>
@@ -94,8 +94,8 @@ export const Setting: FC<SettingProps> = ({
                 <div className="device-title">扬声器</div>
                 <Select
                     defaultValue={speakerId}
-                    onChange={value => {
-                        onChangeDevice('speaker', value)
+                    onChange={async value => {
+                        await onChangeDevice('speaker', value)
                     }}
                 >
                     {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
@@ -110,8 +110,8 @@ export const Setting: FC<SettingProps> = ({
                                 max={100}
                                 defaultValue={speakerVolume}
                                 step={1}
-                                onChange={value => {
-                                    onChangeAudioVolume('speaker', value)
+                                onChange={async value => {
+                                    await onChangeAudioVolume('speaker', value)
                                 }}
                             ></Slider>
                         </div>
