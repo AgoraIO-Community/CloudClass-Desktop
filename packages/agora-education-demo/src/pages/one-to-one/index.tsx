@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   VideoPlayer, Chat, Toolbar,
   BizHeader, Aside, Content, Layout,
-  ZoomController
+  ZoomController,
 } from 'agora-scenario-ui-kit'
 import './1v1.style.css'
 
@@ -53,7 +53,7 @@ const ChatContainer: React.FC<any> = () => {
         }
       ]}
       chatText={text}
-      onText={(val) => setText(val)}
+      onText={(val?: string) => setText(val)}
       onSend={() => setText('')}
     />  
   )
