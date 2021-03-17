@@ -37,7 +37,6 @@ export const CloudStorage = ({width, size}: CloudStorageProps) => {
 }
 
 CloudStorage.args = {
-  width: 560,
   size: 1
 }
 

@@ -1,0 +1,23 @@
+@import './rc-tab.css';
+
+.rc-tabs {
+  font-size: 14;
+  color: #586376;
+  border: none;
+  font-weight: 400;
+}
+
+.rc-tabs-tab-btn {
+  font-weight: 400;
+}
+
+.rc-tabs-tab-active {
+  color: #191919;
+  font-weight: 400;
+}
+
+.rc-tabs-ink-bar {
+  position: absolute;
+  @apply bg-primary;
+  pointer-events: none;
+}

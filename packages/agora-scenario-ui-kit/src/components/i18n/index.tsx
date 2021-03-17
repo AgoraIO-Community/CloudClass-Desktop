@@ -11,7 +11,7 @@ export const makeI18nProvider = (lang: I18nLanguage) => {
   const {
     Provider,
     useContext: useI18nContext
-  } = makeContainer()
+  } = makeContainer('I18n')
 
   return {
     I18nProvider: ({children}: any) => {
