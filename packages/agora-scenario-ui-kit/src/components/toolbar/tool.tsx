@@ -1,60 +1,74 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { Icon, IconTypes } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 
-export type OnItemClick = (id: string, subId?: string) => void;
+export type ExpandableToolItemType = string | ToolItem;
+
+export type OnItemClick = (
+  value: string,
+  subItem?: ExpandableToolItemType,
+) => void;
 
 export interface ToolItem {
-  id: string;
-  label: string;
-  icon: IconTypes;
+  value: string;
+  label?: string;
+  icon?: IconTypes;
+  canActive?: boolean;
+  isActive?: boolean;
+  onClick?: OnItemClick;
+  renderContent?: (item: ExpandableToolItem) => ReactNode;
 }
 
 export interface Expandable {
-  render: (parentId: string, item: Partial<ToolItem>) => ReactNode;
-  items: Partial<ToolItem>[];
+  items: ExpandableToolItemType[];
+  active: ExpandableToolItemType;
+  renderExpand: (item: ExpandableToolItem) => ReactNode;
 }
 
 export interface ExpandableToolItem extends ToolItem {
   expand?: Expandable;
 }
 
-export interface ToolProps extends ExpandableToolItem {
-  onClick: OnItemClick;
-  isActive: boolean;
-}
+export interface ToolProps extends ExpandableToolItem {}
 
-export const Tool: FC<ToolProps> = ({
-  id,
-  label,
-  expand,
-  icon,
+const renderDefaultContent = ({
   isActive,
+  canActive,
+  value,
+  icon,
   onClick,
-}) => {
-  const content = (
-    <div
-      className={`tool ${isActive && !expand ? 'active' : ''}`}
-      style={{ color: icon === 'color' ? id : undefined }}
-      onClick={!expand ? () => onClick(id) : undefined}>
-      <Icon type={icon} />
-      {expand ? <Icon className="expandable" type={'triangle-down'} /> : null}
-    </div>
-  );
-  const expandContent = (
-    <div className={`expand-tools ${icon === 'color' ? 'colors' : ''}`}>
-      {expand?.items.map((item) => (
-        <div key={item.id} onClick={() => onClick(id, item.id)}>
-          {!!expand ? expand.render(id, item) : null}
-        </div>
-      ))}
-    </div>
-  );
+}: ExpandableToolItem) => {
   return (
-    <Tooltip title={label} placement="bottom">
+    <div
+      className={`tool ${isActive && canActive ? 'active' : ''}`}
+      onClick={() => onClick && onClick(value)}>
+      {icon ? <Icon type={icon} /> : null}
+    </div>
+  );
+};
+
+export const Tool: FC<ToolProps> = (props) => {
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const { label, expand, renderContent, onClick } = props;
+  const handleClick: OnItemClick = (value, subItem) => {
+    if (expand) {
+      setPopoverVisible(false);
+    }
+    onClick && onClick(value, subItem);
+  };
+  const customProps = { ...props, onClick: handleClick };
+  const content = renderContent
+    ? renderContent(customProps)
+    : renderDefaultContent(customProps);
+  const expandContent = expand ? expand.renderExpand(customProps) : null;
+  
+  return (
+    <Tooltip title={label ?? (expand?.active as ToolItem)?.label} placement="bottom">
       {expand ? (
         <Popover
+          visible={popoverVisible}
+          onVisibleChange={(visible) => setPopoverVisible(visible)}
           overlayClassName="expand-tools-popover"
           content={expandContent}
           trigger="click"
