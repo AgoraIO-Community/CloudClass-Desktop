@@ -60,4 +60,5 @@ export type IconTypes =
   | 'close'
   | 'checked'
   | 'register'
+  | 'kick-out'
   | 'red-caution';
