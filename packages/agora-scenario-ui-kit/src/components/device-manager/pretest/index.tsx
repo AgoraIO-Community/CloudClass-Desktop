@@ -18,18 +18,18 @@ interface DeviceProps {
 }
 
 export interface PretestProps extends BaseProps {
-    cameraArray?: DeviceProps[]; // 摄像头设备数组
-    microphoneArray?: DeviceProps[]; // 麦克风设备数组
-    speakerArray?: DeviceProps[]; // 扬声器设备数组
+    cameraList?: DeviceProps[]; // 摄像头设备数组
+    microphoneList?: DeviceProps[]; // 麦克风设备数组
+    speakerList?: DeviceProps[]; // 扬声器设备数组
     isNative?: boolean; // web平台没有扬声器下拉
     cameraError?: boolean; // 展示摄像头错误信息
     microphoneError?: boolean; // 展示麦克风错误信息
 }
 
 export const Pretest: FC<PretestProps> = ({
-    cameraArray = [],
-    microphoneArray = [],
-    speakerArray = [],
+    cameraList = [],
+    microphoneList = [],
+    speakerList = [],
     isNative = true,
     cameraError = false,
     microphoneError = false,
@@ -50,8 +50,8 @@ export const Pretest: FC<PretestProps> = ({
                             <CheckBox style={{width: 12, height: 12}}/> <span className="camera-mode">镜像模式</span>
                         </span>
                     </div>
-                    <Select defaultValue={cameraArray[0].deviceId}>
-                        {cameraArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                    <Select defaultValue={cameraList[0].deviceId}>
+                        {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
                     <VideoPlayer/>
                 </div>
@@ -61,18 +61,20 @@ export const Pretest: FC<PretestProps> = ({
                     <div className="device-title">
                         <span className="device-title-text">麦克风</span>
                     </div>
-                    <Select defaultValue={microphoneArray[0].deviceId}>
-                        {microphoneArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                    <Select defaultValue={microphoneList[0].deviceId}>
+                        {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
-                    <div className="device-volume">
-                        <span className="device-text">音量</span>
-                        <Slider
-                            min={0}
-                            max={100}
-                            defaultValue={50}
-                            step={1}
-                        ></Slider>
-                    </div>
+                    {isNative ? (
+                        <div className="device-volume">
+                            <span className="device-text">音量</span>
+                            <Slider
+                                min={0}
+                                max={100}
+                                defaultValue={50}
+                                step={1}
+                            ></Slider>
+                        </div>
+                    ) : ""}
                     <div className="device-volume-test">
                         <Icon type="microphone-on-outline" color="#0073FF"/>
                         <Volume
@@ -87,19 +89,21 @@ export const Pretest: FC<PretestProps> = ({
                         <span className="device-title-text">扬声器</span>
                     </div>
                     {isNative ? (
-                        <Select defaultValue={speakerArray[0].deviceId}>
-                            {speakerArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
-                        </Select>
+                        <>
+                            <Select defaultValue={speakerList[0].deviceId}>
+                                {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                            </Select>
+                            <div className="device-volume">
+                                <span className="device-text">音量</span>
+                                <Slider
+                                    min={0}
+                                    max={100}
+                                    defaultValue={50}
+                                    step={1}
+                                ></Slider>
+                            </div>
+                        </>
                     ) : ""}
-                    <div className="device-volume">
-                        <span className="device-text">音量</span>
-                        <Slider
-                            min={0}
-                            max={100}
-                            defaultValue={50}
-                            step={1}
-                        ></Slider>
-                    </div>
                     <div className="device-volume-test">
                         <Icon type="speaker" color="#0073FF"/>
                         <Volume

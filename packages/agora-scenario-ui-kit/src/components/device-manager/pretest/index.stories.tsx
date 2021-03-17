@@ -15,11 +15,11 @@ type DocsProps = {
     microphoneError: boolean; // 展示麦克风错误信息
 }
 
-const cameraArray = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头' + (index + 1), deviceId: 'camera-' + (index + 1) }))
-const microphoneArray = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
-const speakerArray = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
+const cameraList = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头' + (index + 1), deviceId: 'camera-' + (index + 1) }))
+const microphoneList = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
+const speakerList = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
 
-export const Docs = ({isNative, cameraError, microphoneError}: DocsProps) => (
+export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
     <>
         <div className="mt-4">
             <Modal
@@ -28,14 +28,33 @@ export const Docs = ({isNative, cameraError, microphoneError}: DocsProps) => (
                 footer={[<Button>完成检测</Button>]}
             >
                 <Pretest
-                    cameraArray={cameraArray}
-                    microphoneArray={microphoneArray}
-                    speakerArray={speakerArray}
+                    cameraList={cameraList}
+                    microphoneList={microphoneList}
+                    speakerList={speakerList}
                     isNative={isNative}
                     cameraError={cameraError}
                     microphoneError={microphoneError}
                 />
             </Modal>
+        </div>
+        <div className="mt-4">
+            <Button onClick={() => {
+                Modal.show({
+                    title: '设备检测',
+                    width: 720,
+                    footer: [<Button action="ok">完成检测</Button>],
+                    children: (
+                        <Pretest
+                            cameraList={cameraList}
+                            microphoneList={microphoneList}
+                            speakerList={speakerList}
+                            isNative={isNative}
+                            cameraError={cameraError}
+                            microphoneError={microphoneError}
+                        />
+                    )
+                })
+            }}>show pretest</Button>
         </div>
     </>
 )

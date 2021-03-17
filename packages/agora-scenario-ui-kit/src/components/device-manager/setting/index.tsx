@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select'
@@ -13,21 +13,33 @@ interface DeviceProps {
 }
 
 export interface SettingProps extends BaseProps {
-    cameraArray?: DeviceProps[]; // 摄像头设备数组
-    microphoneArray?: DeviceProps[]; // 麦克风设备数组
-    speakerArray?: DeviceProps[]; // 扬声器设备数组
+    cameraList?: DeviceProps[]; // 摄像头设备数组
+    cameraId?: string; // 选中的摄像头Id
+    microphoneList?: DeviceProps[]; // 麦克风设备数组
+    micorophoneId?: string; // 选中的麦克风Id
+    speakerList?: DeviceProps[]; // 扬声器设备数组
+    speakerId?: string; // 选中的扬声器Id
     hasMicrophoneVolume?: boolean; // 是否有麦克风音量slider
+    microphoneVolume?: number; // 麦克风音量
     hasSpeakerVolume?: boolean; // 是否有扬声器音量slider
-    onConfirm: (result: any) => void;
+    speakerVolume?: number; // 扬声器音量
+    onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
+    onChangeAudioVolume?: (deviceType: string, value: number) => void;
 }
 
 export const Setting: FC<SettingProps> = ({
-    cameraArray = [],
-    microphoneArray = [],
-    speakerArray = [],
+    cameraList = [],
+    cameraId,
+    microphoneList = [],
+    micorophoneId,
+    speakerList = [],
+    speakerId,
     hasMicrophoneVolume = true,
+    microphoneVolume = 50,
     hasSpeakerVolume = true,
-    onConfirm = result => {console.log(result)},
+    speakerVolume = 50,
+    onChangeDevice = (deviceType, value) => {},
+    onChangeAudioVolume = (deviceType, value) => {},
     className,
     ...restProps
 }) => {
@@ -35,40 +47,28 @@ export const Setting: FC<SettingProps> = ({
         [`setting`]: 1,
         [`${className}`]: !!className,
     });
-    const [result, setResult] = useState({
-        cameraDeviceId: cameraArray[0].deviceId,
-        microphoneDeviceId: microphoneArray[0].deviceId,
-        speakerDeviceId: speakerArray[0].deviceId,
-        microphoneVolume: 50,
-        speakerVolume: 50,
-    })
-    useEffect(() => {
-        return () => {
-            onConfirm(result)
-        }
-    }, [onConfirm, result])
     return (
         <div className={cls} {...restProps}>
             <div className="device-choose">
                 <div className="device-title">摄像头</div>
-                <Select defaultValue={cameraArray[0].deviceId} onChange={(value) => {
-                    setResult({
-                        ...result,
-                        cameraDeviceId: value as string,
-                    })
-                }}>
-                    {cameraArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                <Select 
+                    defaultValue={cameraId}
+                    onChange={value => {
+                        onChangeDevice('camera', value)
+                    }}
+                >
+                    {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
             </div>
             <div className="device-choose">
                 <div className="device-title">麦克风</div>
-                <Select defaultValue={microphoneArray[0].deviceId} onChange={(value) => {
-                    setResult({
-                        ...result,
-                        microphoneDeviceId: value as string,
-                    })
-                }}>
-                    {microphoneArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                <Select 
+                    defaultValue={micorophoneId}
+                    onChange={value => {
+                        onChangeDevice('microphone', value)
+                    }}
+                >
+                    {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
                 {
                 hasMicrophoneVolume ? 
@@ -78,13 +78,10 @@ export const Setting: FC<SettingProps> = ({
                             <Slider
                                 min={0}
                                 max={100}
-                                defaultValue={50}
+                                defaultValue={microphoneVolume}
                                 step={1}
                                 onChange={value => {
-                                    setResult({
-                                        ...result,
-                                        microphoneVolume: value
-                                    })
+                                    onChangeAudioVolume('microphone', value)
                                 }}
                             ></Slider>
                         </div>
@@ -95,13 +92,13 @@ export const Setting: FC<SettingProps> = ({
             </div>
             <div className="device-choose">
                 <div className="device-title">扬声器</div>
-                <Select defaultValue={speakerArray[0].deviceId} onChange={(value) => {
-                    setResult({
-                        ...result,
-                        speakerDeviceId: value as string,
-                    })
-                }}>
-                    {speakerArray.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                <Select
+                    defaultValue={speakerId}
+                    onChange={value => {
+                        onChangeDevice('speaker', value)
+                    }}
+                >
+                    {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
                 {
                     hasSpeakerVolume ? 
@@ -111,13 +108,10 @@ export const Setting: FC<SettingProps> = ({
                             <Slider
                                 min={0}
                                 max={100}
-                                defaultValue={50}
+                                defaultValue={speakerVolume}
                                 step={1}
                                 onChange={value => {
-                                    setResult({
-                                        ...result,
-                                        speakerVolume: value
-                                    })
+                                    onChangeAudioVolume('speaker', value)
                                 }}
                             ></Slider>
                         </div>

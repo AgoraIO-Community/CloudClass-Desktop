@@ -6,11 +6,11 @@ import RcSelect, { Option } from 'rc-select';
 import './index.css'
 export interface SelectProps extends BaseProps {
     defaultValue?: string;
-    value?: string | number;
+    value?: string;
     placeholder?: string;
     listHeight?: number;
     size?: 'large' | 'middle' | 'small';
-    onChange?: (value: string | number) => void;
+    onChange?: (value: string) => void;
 }
 
 export const Select: FC<SelectProps> = ({
