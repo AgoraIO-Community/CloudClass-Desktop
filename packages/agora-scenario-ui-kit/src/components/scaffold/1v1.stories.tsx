@@ -50,30 +50,6 @@ const ChatContainer: React.FC<any> = () => {
           timestamp: Date.now(),
           content:
             '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
-        },
-        {
-          id: 'fjdjjdjd4',
-          uid: '2',
-          username: 'Victor Tsoi',
-          timestamp: Date.now(),
-          content:
-            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
-        },
-        {
-          id: 'fjdjjdjd4',
-          uid: '2',
-          username: 'Victor Tsoi',
-          timestamp: Date.now(),
-          content:
-            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
-        },
-        {
-          id: 'fjdjjdjd4',
-          uid: '2',
-          username: 'Victor Tsoi',
-          timestamp: Date.now(),
-          content:
-            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
         }
       ]}
       chatText={text}

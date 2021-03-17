@@ -5,8 +5,8 @@
   "author": "xueqingxiao <xueqingxiao@agora.io>",
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop/tree/master/packages/agora-aclass-ui-kit-n#readme",
   "license": "MIT",
-  "main": "lib/agora-aclass-ui-kit-n.umd.js",
-  "modules": "lib/agora-aclass-ui-kit-n.es.js",
+  "main": "lib/agora-scenario-ui-kit.umd.js",
+  "modules": "lib/agora-scenario-ui-kit.es.js",
   "types": "lib/index.d.ts",
   "directories": {
     "lib": "lib",

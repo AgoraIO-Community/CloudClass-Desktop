@@ -23,6 +23,8 @@ const toastDict: Record<string, { iconType: IconTypes, color: string }> = {
 
 export interface ToastProps extends BaseProps {
   type?: 'success' | 'error' | 'warning';
+  text?: string;
+  duration?: number;
 }
 
 type ToastType = FC<ToastProps> & {

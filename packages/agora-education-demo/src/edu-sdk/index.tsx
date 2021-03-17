@@ -1,17 +1,16 @@
-import { SceneDefinition } from 'white-web-sdk';
-import '@/index.scss'
-import 'promise-polyfill/src/polyfill'
-import React from 'react'
+import '@/index.css';
+import 'agora-scenario-ui-kit/lib/style.css';
 // import { ReplayRoom } from "@/monolithic/replay-room"
-import { LiveRoom } from "@/monolithic/live-room"
-import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
-import { AppStore } from "@/stores/app"
-import { unmountComponentAtNode } from "react-dom"
-import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
-import { eduSDKApi } from '@/services/edu-sdk-api'
-import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption, checkDiskOption } from './validator'
-import { controller, EduSDKInternalStateEnum } from './controller';
-import { StorageStore } from '@/stores/storage';
+import { LiveRoom } from "@/monolithic/live-room";
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore } from "@/stores/app";
+import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import 'promise-polyfill/src/polyfill';
+import React from 'react';
+import { SceneDefinition } from 'white-web-sdk';
+import { controller } from './controller';
+import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
+import { checkConfigParams, checkLaunchOption } from './validator';
 export interface AliOSSBucket {
   key: string
   secret: string

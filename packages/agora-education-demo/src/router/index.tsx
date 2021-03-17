@@ -16,16 +16,26 @@ const PageSFC = (Component: React.FC<any>) => {
   return <Component />
 }
 export const routesMap: Record<string, AppRouteComponent> = {
-  [BizPageRouter.Setting]: {
-    path: '/setting',
-    component: () => PageSFC(SettingPage)
-  },
+  // [BizPageRouter.Setting]: {
+  //   path: '/setting',
+  //   component: () => PageSFC(SettingPage)
+  // },
+  // 一对一
   [BizPageRouter.OneToOne]: {
-    path: '/classroom/one-to-one',
+    path: '/classroom/1v1',
     component: () => PageSFC(OneToOne)
   },
+  // 观众端
   [BizPageRouter.OneToOneIncognito]: {
-    path: '/classroom/one-to-one/incognito',
+    path: '/incognito/1v1',
+    component: () => PageSFC(OneToOne)
+  },
+  [BizPageRouter.MidClass]: {
+    path: '/classroom/1v1',
+    component: () => PageSFC(OneToOne)
+  },
+  [BizPageRouter.MidClassIncognito]: {
+    path: '/incognito/mid',
     component: () => PageSFC(OneToOne)
   },
   [BizPageRouter.LaunchPage]: {

@@ -1,13 +1,11 @@
-import React, {useCallback, useEffect, useRef} from 'react'
-import {AgoraEduSDK} from '@/edu-sdk'
-import { useAppStore, useHomeStore } from '@/hooks'
-import { AgoraEduEvent } from '@/edu-sdk/declare'
-import { EduRoleType, EduRoleTypeEnum } from 'agora-rte-sdk'
-import { observer } from 'mobx-react'
+import { AgoraEduSDK } from '@/edu-sdk'
 import { ClassRoom, ClassRoomAbstractStore, controller } from '@/edu-sdk/controller'
-import { AppStore } from '@/stores/app'
-import { useHistory } from 'react-router-dom'
+import { AgoraEduEvent } from '@/edu-sdk/declare'
+import { useHomeStore } from '@/hooks'
 import { isEmpty } from 'lodash'
+import { observer } from 'mobx-react'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 
 //@ts-ignore
 window.controller = controller
