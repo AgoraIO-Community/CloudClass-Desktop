@@ -68,12 +68,10 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <ThemeContainer>
-        <Router>
-          <Toast />
-          <RouteContainer routes={props.routes} mainPath={props.mainPath} />
-        </Router>
-      </ThemeContainer>
+      <Router>
+        <Toast />
+        <RouteContainer routes={props.routes} mainPath={props.mainPath} />
+      </Router>
     </Provider>
   )
 }
@@ -91,34 +89,11 @@ export const AppContainer = (props: AppContainerProps) => {
     }
   }, [])
 
-  const AppToast = observer(() => {
-
-    const uiStore = useHomeUIStore()
-  
-    return (
-      <div className="notice-message-container">
-        {uiStore.toastQueue.map((message: string, idx: number) => 
-          <ToastMessage
-            message={message}
-            key={`${idx}${message}${Date.now()}`}
-            closeToast={() => {
-              uiStore.removeToast(message)
-              BizLogger.info("close Toast", message)
-            }}
-          />
-        )}
-      </div>
-    )
-  })
-
   return (
     <Provider store={props.store}>
-      <ThemeContainer>
-        <HashRouter>
-          <AppToast />
-          <RouteContainer routes={props.routes} />
-        </HashRouter>
-      </ThemeContainer>
+      <HashRouter>
+        <RouteContainer routes={props.routes} />
+      </HashRouter>
     </Provider>
   )
 }
