@@ -13,16 +13,7 @@ export interface PopoverProps extends AbstractTooltipProps {
 }
 
 export const Popover = React.forwardRef<unknown, PopoverProps>(
-  (
-    { prefixCls: customizePrefixCls, title, content, ...otherProps } = {
-      placement: 'top' as TooltipPlacement,
-      trigger: 'hover',
-      mouseEnterDelay: 0.01,
-      mouseLeaveDelay: 0.01,
-      overlayStyle: {},
-    },
-    ref,
-  ) => {
+  ({ prefixCls: customizePrefixCls, title, content, ...otherProps }, ref) => {
     const getOverlay = (prefixCls: string) => (
       <>
         {title && (
@@ -54,3 +45,11 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
     );
   },
 );
+
+Popover.defaultProps = {
+  placement: 'top' as TooltipPlacement,
+  trigger: 'hover',
+  mouseEnterDelay: 0.1,
+  mouseLeaveDelay: 0.1,
+  overlayStyle: {},
+};

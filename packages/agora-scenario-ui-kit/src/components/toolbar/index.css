@@ -70,7 +70,7 @@
 }
 
 .expand-tools.colors {
-    width: 140px;
+  width: 140px;
 }
 
 .expand-tool {
@@ -79,12 +79,17 @@
 }
 
 .expand-tool.color {
-  @apply rounded-full text-center;
+  @apply flex justify-center items-center rounded-full;
   height: 22px;
   width: 22px;
   border: 1px solid #e1e1ea;
-  line-height: 0.8;
   margin: 6px;
+}
+
+.expand-tool.color > .circle {
+  @apply rounded-full;
+  height: 18px;
+  width: 18px;
 }
 
 .expand-tool > .iconfont {
@@ -97,6 +102,15 @@
   width: 3px;
   height: 3px;
   background: #868f9f;
+}
+
+.expand-tool.toolkit {
+  margin-right: 0px;
+}
+
+.expand-tool > .label {
+  color: #7b88a0;
+  font-size: 12px;
 }
 
 .expand-tools-popover .popover-inner-content {

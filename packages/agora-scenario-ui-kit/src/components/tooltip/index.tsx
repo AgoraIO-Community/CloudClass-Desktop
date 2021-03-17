@@ -8,7 +8,7 @@ import { placements as Placements } from 'rc-tooltip/lib/placements';
 import { getTransitionName } from '~components/_util/motion';
 import { LiteralUnion } from '~components/_util/type';
 import { PresetColorType, PresetColorTypes } from '~components/_util/colors';
-import './index.css'
+import './index.css';
 
 export type { AdjustOverflow, PlacementsConfig };
 
@@ -68,7 +68,9 @@ const splitObject = (obj: any, keys: string[]) => {
   return { picked, omitted };
 };
 
-const PresetColorRegex = new RegExp(`^(${PresetColorTypes.join('|')})(-inverse)?$`);
+const PresetColorRegex = new RegExp(
+  `^(${PresetColorTypes.join('|')})(-inverse)?$`,
+);
 
 // Fix Tooltip won't hide at disabled button
 // mouse events don't trigger at disabled button in Chrome
@@ -227,10 +229,10 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
 
   let formattedOverlayInnerStyle = overlayInnerStyle;
   let arrowContentStyle;
-    if (color && !PresetColorRegex.test(color)) {
-      formattedOverlayInnerStyle = { ...overlayInnerStyle, background: color };
-      arrowContentStyle = { background: color };
-    }
+  if (color && !PresetColorRegex.test(color)) {
+    formattedOverlayInnerStyle = { ...overlayInnerStyle, background: color };
+    arrowContentStyle = { background: color };
+  }
 
   return (
     <RcTooltip
@@ -257,9 +259,14 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
           'zoom-big-fast',
           props.transitionName,
         ),
-        motionDeadline: 1000,
+        motionDeadline: 100,
       }}>
       {tempVisible ? cloneElement(child, { className: childCls }) : child}
     </RcTooltip>
   );
 });
+
+Tooltip.defaultProps = {
+  mouseEnterDelay: 0.1,
+  mouseLeaveDelay: 0.1,
+};
