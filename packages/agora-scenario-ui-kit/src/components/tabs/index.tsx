@@ -1,60 +1,63 @@
-import React from 'react'
-import { BaseProps } from '~components/interface/base-props'
-import RcTabs, {TabsProps as RcTabProps} from 'rc-tabs'
-import classnames from 'classnames'
-import './style.css'
+import React, { FC } from 'react';
+import './index.css';
+import RcTabs, { TabsProps as RcTabsProps } from 'rc-tabs';
+import { EditableConfig } from 'rc-tabs/lib/interface';
+import classNames from 'classnames';
+import { Icon } from '~components/icon';
 
-type TabBaseProps = Pick<RcTabProps, 
-  | 'prefixCls'
-  | 'className'
-  | 'style'
-  | 'children'
-  | 'id'
-  | 'activeKey'
-  | 'defaultActiveKey'
-  | 'onChange'
-  | 'onTabClick'
-  | 'onTabScroll'
-  | 'tabBarStyle'
-  | 'tabBarGutter'
-  | 'direction'
-  | 'tabBarExtraContent'
-  > & BaseProps
+export type TabsType = 'line' | 'card' | 'editable-card';
 
+export type { TabPaneProps } from 'rc-tabs';
 
-export interface TabProps extends TabBaseProps {
-  onChange: (activeKey: string) => void,
-  className?: string,
+export { TabPane } from 'rc-tabs';
+
+export interface TabsProps extends Omit<RcTabsProps, 'editable'> {
+  type?: TabsType;
+  centered?: boolean;
+  onEdit?: (
+    e: React.MouseEvent | React.KeyboardEvent | string,
+    action: 'add' | 'remove',
+  ) => void;
 }
 
-export const Tab: React.FC<TabProps> = ({
-  prefixCls,
-  size,
-  direction = 'ltr',
+export const Tabs: FC<TabsProps> = ({
+  type,
   className,
-  ...restProps
+  onEdit,
+  centered,
+  ...props
 }) => {
-  const cls = classnames({
-    [`rc-tabs-${size}`]: size,
-    [`${className}`]: !!className,
-  })
+  const { prefixCls: customizePrefixCls } = props;
+  const prefixCls = customizePrefixCls ?? 'tabs';
+
+  let editable: EditableConfig | undefined;
+  if (type === 'editable-card') {
+    editable = {
+      onEdit: (editType, { key, event }) => {
+        onEdit?.(editType === 'add' ? event : key!, editType);
+      },
+      showAdd: false,
+      removeIcon: <Icon type="close" />,
+    };
+  }
+  const rootPrefixCls = '';
 
   return (
     <RcTabs
-      direction={direction}
-      moreTransitionName={`${prefixCls}-slide-up`}
-      prefixCls="rc-tabs"
-      className={cls}
-      {...restProps}
-    ></RcTabs>
-  )
-}
-
-export const IconTab: React.FC<TabProps> = () => {
-  return (
-    <RcTabs></RcTabs>
-  )
-}
-
-export { TabPane } from 'rc-tabs';
-export type { TabPaneProps } from 'rc-tabs';
+      moreTransitionName={`${rootPrefixCls}-slide-up`}
+      {...props}
+      className={classNames(
+        {
+          [`${prefixCls}-card`]: ['card', 'editable-card'].includes(
+            type as string,
+          ),
+          [`${prefixCls}-editable-card`]: type === 'editable-card',
+          [`${prefixCls}-centered`]: centered,
+        },
+        className,
+      )}
+      editable={editable}
+      prefixCls={prefixCls}
+    />
+  );
+};

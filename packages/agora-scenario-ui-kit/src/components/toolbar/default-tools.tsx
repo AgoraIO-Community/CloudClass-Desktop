@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { Icon } from '~components/icon';
 import { ExpandableToolItem, ToolItem } from './tool';
 

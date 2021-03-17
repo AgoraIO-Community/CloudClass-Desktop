@@ -22,7 +22,7 @@ export interface ToolItem {
 
 export interface Expandable {
   items: ExpandableToolItemType[];
-  active: ExpandableToolItemType;
+  active?: ExpandableToolItemType;
   renderExpand: (item: ExpandableToolItem) => ReactNode;
 }
 
