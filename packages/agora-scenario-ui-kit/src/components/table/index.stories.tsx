@@ -6,7 +6,7 @@ import { Icon, IconBox } from '~components/icon';
 import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
-import { Tab, TabPane } from '~components/tabs';
+import { Tabs, TabPane } from '~components/tabs';
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -266,7 +266,7 @@ export const CourseWareManager = ({
       <div className="btn-pin">
         <Icon type="close" hover onClick={onCancel}></Icon>
       </div>
-      <Tab tabBarGutter={43} defaultActiveKey="2" onChange={handleChange}>
+      <Tabs tabBarGutter={43} defaultActiveKey="2" onChange={handleChange}>
         <TabPane tab="公共资源" key="1">
           <CloudStorage size={1} />
         </TabPane>
@@ -280,7 +280,7 @@ export const CourseWareManager = ({
         <TabPane tab="下载课件" key="3">
           <UploadList size={1} progress={20} />
         </TabPane>
-      </Tab>
+      </Tabs>
     </div>
   )
 }
