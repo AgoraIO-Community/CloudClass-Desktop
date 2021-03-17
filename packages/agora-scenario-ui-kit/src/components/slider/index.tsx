@@ -8,30 +8,17 @@ import './index.css';
 
 const { Handle } = RCSlider
 
+
+type tooltipPositionProps = 'top' | 'bottom'
 export interface SliderProps extends BaseProps {
     defaultValue: number;
     disabled?: boolean;
     max?: number;
     min?: number;
     step?: number;
+    tooltipPosition?: tooltipPositionProps;
     onChange?: (value: number) => void;
 }
-
-const handle = (props: any) => {
-    const { value, dragging, index, ...restProps } = props;
-    return (
-        <SliderTooltip
-            prefixCls="rc-slider-tooltip"
-            overlay={`${value}`}
-            visible={dragging}
-            placement="top"
-            key={index}
-            overlayClassName={'agora-slider-tooltip'}
-        >
-            <Handle value={value} {...restProps} />
-        </SliderTooltip>
-    );
-};
 
 export const Slider: FC<SliderProps> = ({
     defaultValue = 0,
@@ -39,10 +26,26 @@ export const Slider: FC<SliderProps> = ({
     max = 100,
     min = 0,
     step = 1,
+    tooltipPosition = 'bottom',
     onChange = (value: number) => { console.log(value) },
     className,
     ...restProps
 }) => {
+    const handle = (props: any) => {
+        const { value, dragging, index, ...restProps } = props;
+        return (
+            <SliderTooltip
+                prefixCls="rc-slider-tooltip"
+                overlay={`${value}`}
+                visible={dragging}
+                placement={tooltipPosition}
+                key={index}
+                overlayClassName={'agora-slider-tooltip'}
+            >
+                <Handle value={value} {...restProps} />
+            </SliderTooltip>
+        );
+    };
     const cls = classnames({
         [`slider`]: 1,
         [`${className}`]: !!className,
