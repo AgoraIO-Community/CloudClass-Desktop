@@ -62,6 +62,42 @@ export const ToastMessage = (props: ToastProps) => {
   )
 }
 
+
+export const AcadsocToastMessage = (props: ToastProps) => {
+  useTimeout(() => {
+    props && props.closeToast()
+  }, 2500)
+
+  return (
+    <div className={"custom-acadsoc-toast"}>
+      <div className="toast-icon"></div>
+      <div className="toast-container">
+        <span className="text" dangerouslySetInnerHTML={{__html:props.message.replace('{{', '<span class="highlight">').replace('}}', '</span>')}}></span>
+      </div>
+    </div>
+  )
+}
+
+
+export const AcadsocToast = observer(() => {
+  const uiStore = useUIStore()
+
+  return (
+    <div className="notice-message-container">
+      {uiStore.acadsocToastQueue.map((message: string, idx: number) => 
+        <AcadsocToastMessage
+          message={message}
+          key={`${idx}${message}${Date.now()}`}
+          closeToast={() => {
+            uiStore.removeAcadsocToast(message)
+            BizLogger.info("close Toast", message)
+          }}
+        />
+      )}
+    </div>
+  )
+})
+
 export const Toast = observer(() => {
 
   const uiStore = useUIStore()
