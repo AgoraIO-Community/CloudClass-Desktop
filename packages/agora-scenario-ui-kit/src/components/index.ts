@@ -13,3 +13,4 @@ export * from './modal'
 export * from './video-player';
 export * from './i18n'
 export * from './table'
+export * from './tabs'
