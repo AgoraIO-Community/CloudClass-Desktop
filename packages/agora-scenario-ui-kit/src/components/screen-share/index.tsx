@@ -1,8 +1,9 @@
-import React, { FC , useEffect, useState, useRef} from 'react';
+import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import './index.css';
+import { useUnMount } from '~utilities/hooks';
 
 type WindowId = string | number;
 type WindowTitle = string | number;
@@ -16,7 +17,9 @@ export interface ScreenShareProps extends BaseProps {
     screenShareTitle?: string;
     scrollHeight?: number;
     windowItems?: WindowItem[];
+    onActiveItem: (id: WindowId) => void;
     onConfirm: ConfirmCallback;
+    currentActiveId: WindowId;
 }
 
 type ConfirmCallback = (evt: any) => void
@@ -26,24 +29,16 @@ export const ScreenShare: FC<ScreenShareProps> = ({
     scrollHeight = 250,
     windowItems = [],
     className,
+    currentActiveId,
+    onActiveItem,
     onConfirm = (evt: any) => console.log('index', evt),
 }) => {
     const cls = classnames({
         [`screen-share sub-title`]: 1,
         [`${className}`]: !!className,
     });
-    let [activeIndex, setActiveIndex] = useState<number>(0)
 
-    const activeValue = useRef<number>(activeIndex)
-    useEffect(() => {
-       activeValue.current = activeIndex;
-    }, [activeIndex])
-
-    useEffect(() => {
-        return () => {
-            onConfirm(windowItems[activeValue.current].id)
-        }
-    }, [activeValue, windowItems, onConfirm])
+    useUnMount(() => onConfirm(currentActiveId))
 
     return (
         <>
@@ -53,14 +48,14 @@ export const ScreenShare: FC<ScreenShareProps> = ({
                     <div 
                         className={'program-item'} 
                         key={item.id} 
-                        style={{borderColor: index === activeIndex ? '#357BF6' : '#E8E8F2'}} 
+                        style={{borderColor: item.id === currentActiveId ? '#357BF6' : '#E8E8F2'}} 
                         onClick={() => {
-                            setActiveIndex(index)
+                            onActiveItem(item.id!)
                         }}
                     >
                         <div className="program-item-img"></div>
                         <div className="program-item-title">
-                            {index === activeIndex ? ( <Icon type="checked" size={16} color={'#357BF6'}/>) : ""}
+                            {item.id === currentActiveId  ? ( <Icon type="checked" size={16} color={'#357BF6'}/>) : ""}
                             <div className="title-text">{item.title}</div>
                         </div>
                     </div>

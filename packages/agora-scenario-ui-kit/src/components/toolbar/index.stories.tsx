@@ -7,8 +7,12 @@ const meta: Meta = {
   component: Toolbar,
 };
 
-export const Docs: FC<ToolbarProps> = () => {
-  return <Toolbar></Toolbar>;
+export const Docs: FC<ToolbarProps> = (props) => {
+  const handleClick = (value: string, subValue?: string) => {
+    console.log(value, subValue);
+    return Promise.resolve();
+  };
+  return <Toolbar {...props} onClick={handleClick}></Toolbar>;
 };
 
 export default meta;

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+import React from 'react';
+>>>>>>> 25f7a75f6f649485513d24f0b6026887136e3266
 import { Meta } from '@storybook/react';
 import { Modal } from '~components/modal'
 import { Setting } from '~components/device-manager/setting'
@@ -14,6 +18,7 @@ type DocsProps = {
     hasSpeakerVolume: boolean;
 }
 
+<<<<<<< HEAD
 const cameraList = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头' + (index + 1), deviceId: 'camera-' + (index + 1) }))
 const microphoneList = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
 const speakerList = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
@@ -93,6 +98,51 @@ export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => {
         </>
     )
 }
+=======
+const cameraArray = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头' + (index + 1), deviceId: 'camera-' + (index + 1) }))
+const microphoneArray = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
+const speakerArray = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
+
+// console.log({ cameraArray, microphoneArray, speakerArray })
+
+export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => (
+    <>
+        <div className="mt-4">
+            <Modal
+                title="设备选择"
+                width={360}
+                footer={[<Button>确定</Button>]}
+            >
+                <Setting
+                    cameraArray={cameraArray}
+                    microphoneArray={microphoneArray}
+                    speakerArray={speakerArray}
+                    hasMicrophoneVolume={hasMicrophoneVolume}
+                    hasSpeakerVolume={hasSpeakerVolume}
+                />
+            </Modal>
+        </div>
+        <div className="mt-4">
+            <Button onClick={() => {
+                Modal.show({
+                    title: "设备检测",
+                    width: 360,
+                    footer: [<Button action="ok">确定</Button>],
+                    children: (
+                        <Setting
+                            cameraArray={cameraArray}
+                            microphoneArray={microphoneArray}
+                            speakerArray={speakerArray}
+                            hasMicrophoneVolume={hasMicrophoneVolume}
+                            hasSpeakerVolume={hasSpeakerVolume}
+                        />
+                    )
+                })
+            }}>show setting</Button>
+        </div>
+    </>
+)
+>>>>>>> 25f7a75f6f649485513d24f0b6026887136e3266
 
 Docs.args = {
     hasMicrophoneVolume: true,
