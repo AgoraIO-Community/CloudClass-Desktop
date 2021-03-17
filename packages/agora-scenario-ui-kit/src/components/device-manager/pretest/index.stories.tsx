@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Modal } from '~components/modal'
 import { Pretest } from '~components/device-manager/pretest'
@@ -19,6 +19,48 @@ const cameraList = [...'.'.repeat(3)].map((item, index) => ({ label: '摄像头'
 const microphoneList = [...'.'.repeat(3)].map((item, index) => ({ label: '麦克风' + (index + 1), deviceId: 'microphone-' + (index + 1) }))
 const speakerList = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器' + (index + 1), deviceId: 'speaker-' + (index + 1) }))
 
+const ChildrenWrap = () => {
+    let [isMirror, setIsMirror] = useState<boolean>(true)
+    let [cameraId, setCameraId] = useState<string>(cameraList[0].deviceId)
+    let [microphoneId, setMicrophoneId] = useState<string>(microphoneList[0].deviceId)
+    let [speakerId, setSpeakerId] = useState<string>(speakerList[0].deviceId)
+    let [microphoneVolume, setMicrophoneVolume] = useState<number>(50)
+    let [speakerVolume, setSpeakerVolume] = useState<number>(50)
+    const changeDeviceFnDict: Record<string, CallableFunction> = {
+        'camera': setCameraId,
+        'microphone': setMicrophoneId,
+        'speaker': setSpeakerId
+    }
+    const changeAudioVolumeFnDict: Record<string, CallableFunction> = {
+        'microphone': setMicrophoneVolume,
+        'speaker': setSpeakerVolume,
+    }
+    return (
+        <Pretest
+            isMirror={isMirror}
+            cameraList={cameraList}
+            cameraId={cameraId}
+            microphoneList={microphoneList}
+            micorophoneId={microphoneId}
+            speakerList={speakerList}
+            speakerId={speakerId}
+            microphoneVolume={microphoneVolume}
+            speakerVolume={speakerVolume}
+            onSelectMirror={isMirror => {
+                setIsMirror(isMirror)
+            }}
+            onChangeDevice={(deviceType, value) => {
+                console.log(deviceType, value)
+                changeDeviceFnDict[deviceType](value)
+            }}
+            onChangeAudioVolume={(deviceType, value) => {
+                console.log(deviceType, value)
+                changeAudioVolumeFnDict[deviceType](value)
+            }}
+        />
+    )
+}
+
 export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
     <>
         <div className="mt-4">
@@ -29,8 +71,11 @@ export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
             >
                 <Pretest
                     cameraList={cameraList}
+                    cameraId={cameraList[0].deviceId}
                     microphoneList={microphoneList}
+                    micorophoneId={microphoneList[0].deviceId}
                     speakerList={speakerList}
+                    speakerId={speakerList[0].deviceId}
                     isNative={isNative}
                     cameraError={cameraError}
                     microphoneError={microphoneError}
@@ -43,16 +88,7 @@ export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
                     title: '设备检测',
                     width: 720,
                     footer: [<Button action="ok">完成检测</Button>],
-                    children: (
-                        <Pretest
-                            cameraList={cameraList}
-                            microphoneList={microphoneList}
-                            speakerList={speakerList}
-                            isNative={isNative}
-                            cameraError={cameraError}
-                            microphoneError={microphoneError}
-                        />
-                    )
+                    children: <ChildrenWrap/>
                 })
             }}>show pretest</Button>
         </div>

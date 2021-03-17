@@ -18,22 +18,44 @@ interface DeviceProps {
 }
 
 export interface PretestProps extends BaseProps {
+    isMirror?: boolean; // 是否镜像
     cameraList?: DeviceProps[]; // 摄像头设备数组
+    cameraId?: string; // 选中的摄像头Id
     microphoneList?: DeviceProps[]; // 麦克风设备数组
+    micorophoneId?: string; // 选中的麦克风Id
     speakerList?: DeviceProps[]; // 扬声器设备数组
+    speakerId?: string; // 选中的扬声器Id
     isNative?: boolean; // web平台没有扬声器下拉
+    microphoneVolume?: number; // 麦克风音量
+    microphoneLevel?: number;
+    speakerVolume?: number; // 扬声器音量
+    speakerLevel?: number;
     cameraError?: boolean; // 展示摄像头错误信息
     microphoneError?: boolean; // 展示麦克风错误信息
+    onSelectMirror?: (isMirror: boolean) => void;
+    onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
+    onChangeAudioVolume?: (deviceType: string, value: number) => void;
 }
 
 export const Pretest: FC<PretestProps> = ({
+    isMirror = true,
     cameraList = [],
+    cameraId,
     microphoneList = [],
+    micorophoneId,
     speakerList = [],
+    speakerId,
     isNative = true,
+    microphoneVolume = 50,
+    speakerVolume = 50,
+    microphoneLevel = 0,
+    speakerLevel = 0,
     cameraError = false,
     microphoneError = false,
     className,
+    onSelectMirror = (isMirror) => {},
+    onChangeDevice = (deviceType, value) => {},
+    onChangeAudioVolume = (deviceType, value) => {},
     ...restProps
 }) => {
     const cls = classnames({
@@ -47,10 +69,23 @@ export const Pretest: FC<PretestProps> = ({
                     <div className="device-title">
                         <span className="device-title-text">摄像头</span>
                         <span>
-                            <CheckBox style={{width: 12, height: 12}}/> <span className="camera-mode">镜像模式</span>
+                            <CheckBox 
+                                style={{width: 12, height: 12}} 
+                                checked={isMirror}
+                                onChange={(e) => {
+                                    console.log('isMirror', e.target.checked)
+                                    onSelectMirror(e.target.checked)
+                                }}
+                            /> 
+                            <span className="camera-mode" style={{marginLeft: 5}}>镜像模式</span>
                         </span>
                     </div>
-                    <Select defaultValue={cameraList[0].deviceId}>
+                    <Select 
+                        defaultValue={cameraId}
+                        onChange={async value => {
+                            await onChangeDevice('camera', value)
+                        }}
+                    >
                         {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
                     <VideoPlayer/>
@@ -61,7 +96,12 @@ export const Pretest: FC<PretestProps> = ({
                     <div className="device-title">
                         <span className="device-title-text">麦克风</span>
                     </div>
-                    <Select defaultValue={microphoneList[0].deviceId}>
+                    <Select 
+                        defaultValue={micorophoneId}
+                        onChange={async value => {
+                            await onChangeDevice('microphone', value)
+                        }}
+                    >
                         {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
                     {isNative ? (
@@ -70,15 +110,18 @@ export const Pretest: FC<PretestProps> = ({
                             <Slider
                                 min={0}
                                 max={100}
-                                defaultValue={50}
+                                defaultValue={microphoneVolume}
                                 step={1}
+                                onChange={async value => {
+                                    await onChangeAudioVolume('microphone', value)
+                                }}
                             ></Slider>
                         </div>
                     ) : ""}
                     <div className="device-volume-test">
                         <Icon type="microphone-on-outline" color="#0073FF"/>
                         <Volume
-                            currentVolumn={30}
+                            currentVolumn={microphoneLevel}
                             maxLength={48}
                             style={{marginLeft: 6}}
                         />
@@ -90,7 +133,12 @@ export const Pretest: FC<PretestProps> = ({
                     </div>
                     {isNative ? (
                         <>
-                            <Select defaultValue={speakerList[0].deviceId}>
+                            <Select 
+                                defaultValue={speakerId}
+                                onChange={async value => {
+                                    await onChangeDevice('speaker', value)
+                                }}
+                            >
                                 {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                             </Select>
                             <div className="device-volume">
@@ -98,8 +146,11 @@ export const Pretest: FC<PretestProps> = ({
                                 <Slider
                                     min={0}
                                     max={100}
-                                    defaultValue={50}
+                                    defaultValue={speakerVolume}
                                     step={1}
+                                    onChange={async value => {
+                                        await onChangeAudioVolume('speaker', value)
+                                    }}
                                 ></Slider>
                             </div>
                         </>
@@ -107,7 +158,7 @@ export const Pretest: FC<PretestProps> = ({
                     <div className="device-volume-test">
                         <Icon type="speaker" color="#0073FF"/>
                         <Volume
-                            currentVolumn={10}
+                            currentVolumn={speakerLevel}
                             maxLength={33}
                             style={{marginLeft: 6}}
                         />
