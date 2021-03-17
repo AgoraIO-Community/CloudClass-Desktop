@@ -1,17 +1,16 @@
-import { StorageStore } from '@/stores/storage';
-import { HomeStore } from '@/stores/app/home';
-import { SceneStore } from './../stores/app/scene';
-import { MediaStore } from './../stores/app/media';
-import { MobXProviderContext } from 'mobx-react';
-import { useContext } from 'react';
-import { 
+import {
+  AcadsocRoomStore,
   AppStore,
   BoardStore,
-  UIStore,
-  AcadsocRoomStore,
   PretestStore,
-  DiskStore,
+  UIStore
 } from '@/stores/app';
+import { HomeStore } from '@/stores/app/home';
+import { StorageStore } from '@/stores/storage';
+import { MobXProviderContext } from 'mobx-react';
+import { useContext } from 'react';
+import { MediaStore } from '@/stores/app/media';
+import { SceneStore } from '@/stores/app/scene';
 
 export type appContext = Record<string, AppStore>
 

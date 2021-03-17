@@ -1,20 +1,15 @@
 import { RoomContainer } from '@/containers/app-container'
-import { DelegateType } from '@/edu-sdk'
-import { RoomComponentConfigProps, RoomConfigProps } from '@/edu-sdk/declare'
+import { RoomConfigProps } from '@/edu-sdk/declare'
+import { BizPageRouter } from '@/types'
 import { AppStore } from '@/stores/app'
+import { createGenerateClassName, StylesProvider } from '@material-ui/core/styles'
 import React from 'react'
-import {render} from 'react-dom'
-import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles'
 
-const routes: string[] = [
-  "setting",
-  "1v1",
-  "smallClass",
-  "bigClass",
-  "replayPage",
-  "pretest",
-  "aClass"
-  // "home"
+const routes: BizPageRouter[] = [
+  BizPageRouter.Setting,
+  BizPageRouter.OneToOne,
+  BizPageRouter.OneToOneIncognito,
+  BizPageRouter.TestHomePage,
 ]
 
 const generateClassName = createGenerateClassName({

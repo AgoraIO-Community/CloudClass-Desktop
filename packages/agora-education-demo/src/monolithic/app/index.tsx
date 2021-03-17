@@ -1,24 +1,13 @@
 import { GenAppContainer } from '@/containers/app-container'
 import { RoomParameters } from '@/edu-sdk/declare'
+import { BizPageRouter } from '@/types'
 import { AppStoreConfigParams } from '@/stores/app'
 import React from 'react'
 
-const routes: string[] = [
-  // "setting",
-  "1v1",
-  // "smallClass",
-  // "bigClass",
-  // "middleClass",
-  "aClass",
-  "launch", // launch测试页面
-  // "pretest",
-  // "breakoutClassAssistantRoom",
-  // "breakoutClassCourses",
-  // "breakoutClassRoom",
-  "downloadStorage",
-  "replayPage",
-  'invisibleJoinRoom',
-  "home"
+const routes: BizPageRouter[] = [
+  BizPageRouter.OneToOne,
+  BizPageRouter.OneToOneIncognito,
+  BizPageRouter.TestHomePage,
 ]
 
 type AppType = {

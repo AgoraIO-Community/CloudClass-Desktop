@@ -12,7 +12,6 @@ import { eduSDKApi } from '@/services/edu-sdk-api'
 import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption, checkDiskOption } from './validator'
 import { controller, EduSDKInternalStateEnum } from './controller';
 import { StorageStore } from '@/stores/storage';
-import { StorageDisk } from '@/monolithic/disk';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -284,52 +283,5 @@ export class AgoraEduSDK {
     }
     
     return controller.appController.getClassRoom()
-  }
-
-  // TODO: @deprecated method
-  static async replay(dom: Element, option: ReplayOption) {
-
-    console.log(" replay ", dom, " option ", JSON.stringify(option))
-    if (controller.replayController.hasCalled) {
-      throw GenericErrorWrapper("already replayed")
-    }
-
-    const unlock = controller.replayController.acquireLock()
-    try {
-      checkReplayOption(dom, option)
-      unlock()
-    } catch (err) {
-      unlock()
-      throw GenericErrorWrapper(err)
-    }
-
-    return controller.replayController.getClassRoom()
-  }
-
-  static async openDisk(dom: Element, option: OpenDiskOption) {
-    if (controller.storageController.hasCalled) {
-      throw GenericErrorWrapper("already opened")
-    }
-
-    const unlock = controller.storageController.acquireLock()
-
-    try {
-      unlock()
-      checkDiskOption(dom, option)
-
-      const store = new StorageStore({
-        courseWareList: option.courseWareList,  
-        language: option.language
-      })
-
-      await store.refreshState()
-
-      controller.storageController.create(store, <StorageDisk store={store} />, dom, option.listener)
-    } catch (err) {
-      unlock()
-      throw GenericErrorWrapper(err)
-    }
-
-    return controller.storageController.getClassRoom()
   }
 }

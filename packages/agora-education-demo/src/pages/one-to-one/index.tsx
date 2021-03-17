@@ -2,6 +2,6 @@ import React from 'react'
 
 export const OneToOne = () => {
   return (
-    <div></div>
+    <div>1v1</div>
   )
 }

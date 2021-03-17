@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-import { Toast, ToastMessage } from '@/components/toast';
-import { routesMap, AppRouteComponent } from '@/pages';
-import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
-import { observer, Provider } from 'mobx-react';
-import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'react-router-dom';
-import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
-import { BizLogger } from '@/utils/biz-logger';
-import { useHomeUIStore } from '@/hooks';
+import { AppRouteComponent, routesMap } from '@/router';
+import { BizPageRouter } from '@/types';
+import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
+import { Provider } from 'mobx-react';
+import React, { useEffect } from 'react';
+import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 export interface RouteContainerProps {
-  routes: string[]
+  routes: BizPageRouter[]
   mainPath?: string
 }
 
@@ -35,7 +32,6 @@ export const RouteContainer = (props: RouteContainerProps) => {
   }, [])
 
   return (
-    <>
     <Switch>
     {
       routes.map((item, index) => (
@@ -49,7 +45,6 @@ export const RouteContainer = (props: RouteContainerProps) => {
       </Route> : null
     }
     </Switch>
-    </>
   )
 }
 
@@ -69,7 +64,6 @@ export const RoomContainer = (props: RoomContainerProps) => {
   return (
     <Provider store={props.store}>
       <Router>
-        <Toast />
         <RouteContainer routes={props.routes} mainPath={props.mainPath} />
       </Router>
     </Provider>
@@ -118,9 +112,6 @@ export const GenAppContainer = ({globalId, resetRoomInfo, ...config}: GenAppCont
     startTime: 0,
     duration: 0,
   })
-  // if (forwardWire) {
-  //   forwardWire.delegate = appStore
-  // }
   //@ts-ignore
   window[globalId] = appStore
   return (props: GenAppComponentProps) => (
