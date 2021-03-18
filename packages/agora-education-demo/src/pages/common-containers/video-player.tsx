@@ -39,7 +39,7 @@ export const VideoPlayerTeacher = () => {
             }}
           />
         }
-        controlPlacement={'top'}
+        controlPlacement={'left'}
         onOffPodiumClick={
           async (uid: any) => {
 
@@ -87,7 +87,7 @@ export const VideoPlayerStudent = () => {
             }}
           />
         }
-        controlPlacement={'top'}
+        controlPlacement={'left'}
         onOffPodiumClick={
           async (uid: any) => {
 
