@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Home } from './home'
+import { Home } from '.'
 
 export default {
   title: 'Scaffold/home',
