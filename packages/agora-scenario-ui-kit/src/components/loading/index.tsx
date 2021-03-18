@@ -2,17 +2,27 @@ import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Progress } from '~components/progress'
+import { Icon } from '~components/icon'
 import './index.css';
 
 import loadingGif from './assets/loading.gif';
-// import circleLoadingGif from './assets/circle-loading.gif';
+import circleLoadingGif from './assets/circle-loading.gif';
+
+interface UploadItem {
+    iconType?: string;
+    fileName?: string;
+    fileSize?: string;
+    uploadComplete?: boolean;
+    currentProgress?: number; // 当uploadComplete为true时生效
+}
 
 export interface LoadingProps extends BaseProps {
     hasLoadingGif?: boolean; 
     loadingText?: string;
     hasProgress?: boolean;
-    currentProgress?: number;
+    currentProgress?: number; // 当hasProgress为true时生效
     footer?: React.ReactNode[];
+    uploadItemList?: UploadItem[];
 }
 
 export const Loading: FC<LoadingProps> = ({
@@ -21,6 +31,7 @@ export const Loading: FC<LoadingProps> = ({
     hasProgress = false,
     currentProgress = 0.5,
     footer = [],
+    uploadItemList = [],
     className,
     ...restProps
 }) => {
@@ -36,6 +47,39 @@ export const Loading: FC<LoadingProps> = ({
                 <div className="loading-progress">
                     <Progress width={160} type="download" progress={currentProgress}/>
                     <span className="loading-progress-number">{currentProgress * 100}%</span>
+                </div>
+            ) : ""}
+            {(uploadItemList && uploadItemList.length) ? (
+                <div className="loading-upload-list">
+                    {uploadItemList.map((item, index) => (
+                        <div className="loading-upload-item" key={index}>
+                            <div>
+                                <Icon type={item.iconType as any} color="#F6B081"/>
+                            </div>
+                            <div className="loading-file-name">
+                                {item.fileName}
+                            </div>
+                            <div className="loading-file-size">
+                                {item.fileSize}
+                            </div>
+                            <div>
+                                {item.uploadComplete ? (
+                                    <div className="loading-progress">
+                                        <img src={circleLoadingGif} alt="upload success gif" width="20" height="20"/>
+                                        <span className="upload-success-text">转换中</span>
+                                    </div>
+                                ) : (
+                                    <div className="loading-progress">
+                                        <Progress width={60} type="download" progress={item.currentProgress as number}/>
+                                        <span className="upload-pending-text">{currentProgress * 100}%</span>
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <Icon type="delete" color="#273D75" style={{marginLeft: 60}}/>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : ""}
             {(footer && footer.length) ? (

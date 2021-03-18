@@ -3,6 +3,7 @@ import { Meta } from '@storybook/react';
 import { Card } from '~components/card';
 import { Loading } from '~components/loading';
 import { Button } from '~components/button'
+import { Modal } from '~components/modal'
 
 const meta: Meta = {
     title: 'Components/Loading',
@@ -32,9 +33,9 @@ export const Docs = () => (
         </div>
         <div className="mt-4">
             <Card width={258} height={162}>
-                <Loading 
-                    hasLoadingGif={false} 
-                    loadingText="课件加载中，请稍候…" 
+                <Loading
+                    hasLoadingGif={false}
+                    loadingText="课件加载中，请稍候…"
                     hasProgress
                     currentProgress={0}
                     footer={[<Button type="secondary">跳过</Button>]}
@@ -43,14 +44,68 @@ export const Docs = () => (
         </div>
         <div className="mt-4">
             <Card width={300} height={300}>
-                <Loading 
+                <Loading
                     hasLoadingGif
-                    loadingText="课件加载中，请稍候…" 
+                    loadingText="课件加载中，请稍候…"
                     hasProgress
                     currentProgress={0.7}
                     footer={[<Button type="secondary">跳过</Button>, <Button>确定</Button>]}
                 ></Loading>
             </Card>
+        </div>
+        <div className="mt-4">
+            <Modal
+                title="上传"
+                width={450}
+            >
+                <Loading
+                    hasLoadingGif={false}
+                    uploadItemList={
+                        [
+                            {
+                                iconType: 'format-pdf',
+                                fileName: 'pdf文件',
+                                fileSize: '2.4M',
+                                uploadComplete: false,
+                                currentProgress: .5,
+                            },
+                            {
+                                iconType: 'format-pdf',
+                                fileName: 'pdf文件',
+                                fileSize: '2.4M',
+                                uploadComplete: false,
+                                currentProgress: .5,
+                            }
+                        ]
+                    }
+                />
+            </Modal>
+        </div>
+        <div className="mt-4">
+            <Modal
+                title="上传"
+                width={450}
+            >
+                <Loading
+                    hasLoadingGif={false}
+                    uploadItemList={
+                        [
+                            {
+                                iconType: 'format-pdf',
+                                fileName: 'pdf文件33333333',
+                                fileSize: '1.3M',
+                                uploadComplete: true,
+                            },
+                            {
+                                iconType: 'format-ppt',
+                                fileName: 'ppt文件',
+                                fileSize: '1.3M',
+                                uploadComplete: true,
+                            }
+                        ]
+                    }
+                />
+            </Modal>
         </div>
     </>
 )
