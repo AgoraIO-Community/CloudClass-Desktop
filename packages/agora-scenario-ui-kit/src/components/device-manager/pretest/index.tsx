@@ -94,6 +94,8 @@ export const Pretest: FC<PretestProps> = ({
                         onMicClick={uid => new Promise(() => {})}
                         onSendStar={uid => new Promise(() => {})}
                         onWhiteboardClick={uid => new Promise(() => {})}
+                        onOffPodiumClick={uid => new Promise(() => {})}
+                        controlPlacement='top'
                     />
                 </div>
             </div>

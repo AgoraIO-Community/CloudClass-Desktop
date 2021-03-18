@@ -7,6 +7,8 @@ import React from 'react'
 const routes: BizPageRouter[] = [
   BizPageRouter.OneToOne,
   BizPageRouter.OneToOneIncognito,
+  BizPageRouter.SmallClass,
+  BizPageRouter.SmallClassIncognito,
   BizPageRouter.TestHomePage,
 ]
 
