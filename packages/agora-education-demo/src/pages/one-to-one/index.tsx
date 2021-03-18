@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   VideoPlayer, Chat, Toolbar,
   BizHeader, Aside, Content, Layout,
-  ZoomController,
+  ZoomController, Card, Loading
 } from 'agora-scenario-ui-kit'
 import './1v1.style.css'
 
@@ -87,6 +87,12 @@ const WhiteboardContainer = () => {
       <div className='toolbar-position'>
         <Toolbar className="toolbar-biz" />
       </div>
+      <Card width={258} height={113} className="card-loading-position">
+        <Loading hasLoadingGif={false} loadingText="课件加载中，请稍候…" hasProgress></Loading>
+      </Card>
+      <Card width={110} height={114} className="card-loading-position">
+        <Loading loadingText="加载中..."></Loading>
+      </Card>
       <ZoomController
         className='zoom-position'
         zoomValue={zoomValue}
@@ -182,6 +188,9 @@ export const OneToOne = () => {
           <ChatContainer />
         </Aside>
       </Layout>
+      <Card width={90} height={90} className="card-loading-position">
+        <Loading></Loading>
+      </Card>
     </Layout>
   )
 }
