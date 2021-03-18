@@ -1078,7 +1078,7 @@ export class BoardStore {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
         this.updateFullScreen(state.globalState.isFullScreen)
-        if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
+        if (!this.loading) {
           this.enableStatus = get(state, 'globalState.granted', 'disable')
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
