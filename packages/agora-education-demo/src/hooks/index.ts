@@ -19,11 +19,6 @@ export const useAppStore = (): AppStore => {
   return context.store
 }
 
-export const useUIStore = (): UIStore => {
-  const context = useContext<appContext>(MobXProviderContext);
-  return context.store.uiStore
-}
-
 export const useBoardStore = (): BoardStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.boardStore

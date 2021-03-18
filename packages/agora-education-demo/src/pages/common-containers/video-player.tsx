@@ -39,6 +39,12 @@ export const VideoPlayerTeacher = () => {
             }}
           />
         }
+        controlPlacement={'top'}
+        onOffPodiumClick={
+          async (uid: any) => {
+
+          }
+        }
       ></VideoPlayer>
     </>
   )
@@ -80,6 +86,12 @@ export const VideoPlayerStudent = () => {
               borderRadius: 4,
             }}
           />
+        }
+        controlPlacement={'top'}
+        onOffPodiumClick={
+          async (uid: any) => {
+
+          }
         }
       >
       </VideoPlayer>

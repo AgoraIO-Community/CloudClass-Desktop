@@ -98,7 +98,6 @@
     "electron:build": "npm run electron:copy:web && npm run electron:copy:electron",
     "dev": "cross-env TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired start",
     "s": "yarn dev",
-    "removeCache": "rm -rf packages/agora-aclass-ui-kit/node_modules/react && rm -rf packages/agora-aclass-ui-kit/node_modules/react-dom",
     "build": "cross-env NODE_ENV=production TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "analyze": "source-map-explorer 'build/static/js/*.js'",

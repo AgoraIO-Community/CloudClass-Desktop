@@ -4,6 +4,9 @@ import { VideoPlayer, Chat, Toolbar } from '~components'
 import { BizHeader } from '~components/biz-header'
 import { Aside, Content, Layout } from '~components/layout'
 import { ZoomController } from '~components/zoom-controller'
+import { Button } from '~components/button'
+import { Card } from '~components/card'
+import { Loading } from '~components/loading'
 import './1v1.style.css'
 
 export default {
@@ -55,7 +58,7 @@ const ChatContainer: React.FC<any> = () => {
       chatText={text}
       onText={(val) => setText(val)}
       onSend={() => setText('')}
-    />  
+    />
   )
 }
 
@@ -71,8 +74,8 @@ const BizHeaderContainer: React.FC<any> = () => {
         networkQuality: 'good',
         packetLostRate: 0
       }}
-      onClick={(itemType: string) => {}}
-     />
+      onClick={(itemType: string) => { }}
+    />
   )
 }
 
@@ -84,9 +87,16 @@ const WhiteboardContainer = () => {
 
   return (
     <div className="whiteboard" id="netless-board">
+      <Button>show loading</Button>
       <div className='toolbar-position'>
         <Toolbar className="toolbar-biz" />
       </div>
+      <Card width={258} height={113} className="card-loading-position">
+        <Loading hasLoadingGif={false} loadingText="课件加载中，请稍候…" hasProgress></Loading>
+      </Card>
+      <Card width={110} height={114} className="card-loading-position">
+        <Loading loadingText="加载中..."></Loading>
+      </Card>
       <ZoomController
         className='zoom-position'
         zoomValue={zoomValue}
@@ -120,7 +130,7 @@ export const OneToOne: Story<any> = () => {
             stars={0}
             uid={1}
             micEnabled={true}
-            whiteboardGranted={ true}
+            whiteboardGranted={true}
             micVolume={0.95}
             onCameraClick={async (uid: any) => {
 
@@ -152,7 +162,7 @@ export const OneToOne: Story<any> = () => {
             stars={5}
             uid={1}
             micEnabled={true}
-            whiteboardGranted={ true}
+            whiteboardGranted={true}
             micVolume={0.95}
             onCameraClick={async (uid: any) => {
 
@@ -182,6 +192,9 @@ export const OneToOne: Story<any> = () => {
           <ChatContainer />
         </Aside>
       </Layout>
+      <Card width={90} height={90} className="card-loading-position">
+        <Loading></Loading>
+      </Card>
     </Layout>
   )
 }

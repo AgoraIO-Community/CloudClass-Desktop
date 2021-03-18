@@ -1,4 +1,4 @@
-import { GlobalStorage } from '@/utils/custom-storage';
+import { GlobalStorage } from '@/utils/utils';
 import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
 import { platform } from '@/utils/utils';

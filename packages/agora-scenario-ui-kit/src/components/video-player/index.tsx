@@ -20,6 +20,18 @@ export interface VideoPlayerProps extends BaseProps {
    */
   placeholder?: string | ReactNode;
   /**
+   * 是否现实控制条
+   */
+  hideControl?: boolean;
+  /**
+   * 是否你展示全体下讲台，默认 false
+   */
+  hideOffPodium?: boolean;
+  /**
+   * hover 时控制条 展示的位置
+   */
+  controlPlacement: 'top' | 'right' | 'bottom' | 'left';
+  /**
    * 学生获得的星星数量
    */
   stars?: number;
@@ -52,6 +64,10 @@ export interface VideoPlayerProps extends BaseProps {
    */
   onMicClick: (uid: string | number) => Promise<any>;
   /**
+   * 全体下讲台
+   */
+  onOffPodiumClick: (uid: string | number) => Promise<any>;
+  /**
    * 点击白板操作授权按钮时的回调
    */
   onWhiteboardClick: (uid: string | number) => Promise<any>;
@@ -65,6 +81,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
   className,
   placeholder,
+  controlPlacement,
+  hideControl,
   stars = 0,
   isHost,
   username,
@@ -72,8 +90,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   micVolume,
   cameraEnabled,
   whiteboardGranted,
+  hideOffPodium,
   onCameraClick,
   onMicClick,
+  onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
 }) => {
@@ -100,6 +120,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       />
       {isHost ? (
         <>
+          {hideOffPodium ? null : (
+            <Icon
+              type="invite-to-podium"
+              onClick={() => onOffPodiumClick(uid)}
+            />
+          )}
           <Icon
             className={cameraEnabled ? '' : 'yellow'}
             type="whiteboard"
@@ -116,8 +142,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         offset: [-8, 0],
       }}
       overlayClassName="video-player-tools-popover"
-      content={tools}
-      placement="left">
+      content={hideControl ? null : tools}
+      placement={controlPlacement}>
       <div className={cls}>
         {placeholder ? <>{placeholder}</> : null}
         <div className="top-right-info">
