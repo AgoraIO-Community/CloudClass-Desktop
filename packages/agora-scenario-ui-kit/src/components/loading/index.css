@@ -1,0 +1,24 @@
+.loading {
+    @apply flex flex-col justify-center items-center;
+}
+.loading .loading-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #191919;
+    margin-bottom: 24px;
+}
+
+.loading .loading-progress {
+    @apply flex justify-center items-center;
+}
+
+.loading .loading-progress-number {
+    font-size: 18px;
+    font-weight: 400;
+    color: #357BF6;
+    margin-left: 12px;
+}
+
+.loading .loading-btn-line {
+    margin-top: 27px;
+}
