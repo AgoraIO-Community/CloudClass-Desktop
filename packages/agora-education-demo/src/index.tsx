@@ -7,7 +7,7 @@ import { isElectron } from '@/utils/utils';
 import { EduManager } from 'agora-rte-sdk';
 import { AgoraEduSDK } from '@/edu-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
-import { GlobalStorage } from '@/utils/custom-storage';
+import { GlobalStorage } from '@/utils/utils';
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";
 

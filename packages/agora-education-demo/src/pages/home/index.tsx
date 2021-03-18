@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Home} from 'agora-scenario-ui-kit'
+import { Home } from 'agora-scenario-ui-kit'
 
 export const HomePage = () => {
 

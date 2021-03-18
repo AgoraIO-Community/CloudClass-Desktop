@@ -6,17 +6,26 @@ import { EnumBoardState } from '@/modules/services/board-api';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
-import { BizLogger } from '@/utils/biz-logger';
 import { OSSConfig } from '@/utils/helper';
-import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
+import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
-import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
 import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
 import { get, isEmpty, omit, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+
+export enum CustomMenuItemType {
+  Thin = 'thin',
+  Small = 'small',
+  Normal = 'normal',
+  Large = 'large',
+  Pen = 'pen',
+  Arrow = 'arrow',
+  Mark = 'mark',
+  Laser = 'laser'
+}
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -116,7 +125,7 @@ export enum DownloadStatus {
 
 export class BoardStore {
 
-  toolItems: IToolItem[] = [
+  toolItems: any[] = [
   {
     itemName: 'mouse',
     toolTip: true,
@@ -1768,22 +1777,6 @@ export class BoardStore {
     }
   }
 
-  @action
-  addNotice(it: any) {
-    this.notices.push({
-      title: it.title,
-      type: it.type
-    })
-  }
-
-  @action
-  removeNotice(it: any) {
-    const idx = this.notices.findIndex((t: any) => t.title === it.title)
-    if (idx !== -1) {
-      this.notices.splice(idx, 1)
-    }
-  }
-
   @observable
   notices: any[] = []
   @observable
@@ -1825,7 +1818,6 @@ export class BoardStore {
   @action
   reset () {
     this.downloading = false
-    this.openDisk = false
     this.preloadingProgress = -1
     if (this.controller) {
       this.controller.abort()
@@ -1979,9 +1971,6 @@ export class BoardStore {
   hideExtension() {
     this.showExtension = false
   }
-
-  @observable
-  sss = '123'
 
   @action
   zoomBoard(type: string) {
@@ -2222,13 +2211,6 @@ export class BoardStore {
   @computed
   get allResources() {
     return this.publicResources.concat(this.personalResources)
-  }
-
-  @observable
-  openDisk: boolean = false
-  
-  setOpenDisk() {
-    this.openDisk = !this.openDisk
   }
 }
 

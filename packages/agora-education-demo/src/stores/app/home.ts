@@ -1,4 +1,4 @@
-import { GlobalStorage } from './../../utils/custom-storage';
+import { GlobalStorage } from './../../utils/utils';
 import { LaunchOption } from "@/edu-sdk";
 import { AppStore, UIStore } from "@/stores/app/index";
 

@@ -1,6 +1,6 @@
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { getIntlError } from '../services/intl-error-helper';
-import { BizLogger } from './biz-logger';
+import { BizLogger } from '@/utils/utils';
 
 const FETCH_TIMEOUT = 10000
 

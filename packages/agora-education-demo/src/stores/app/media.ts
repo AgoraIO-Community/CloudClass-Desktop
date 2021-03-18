@@ -4,8 +4,8 @@ import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
 import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
-import { BizLogger } from '@/utils/biz-logger';
-import { dialogManager } from 'agora-aclass-ui-kit';
+import { BizLogger } from '@/utils/utils';
+import { Modal } from 'agora-scenario-ui-kit';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
@@ -157,40 +157,44 @@ export class MediaStore {
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
-      appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
-      appStore.isNotInvisible && dialogManager.show({
-        title: t('aclass.device.audio_failed'),
-        text: t('aclass.device.audio_failed'),
-        showConfirm: true,
-        showCancel: true,
-        confirmText: t('aclass.device.reload'),
-        visible: true,
-        cancelText: t('aclass.device.cancel'),
-        onConfirm: () => {
-          window.location.reload()
-        },
-        onCancel: () => {
-        }
-      })
+      if (appStore.isNotInvisible) {
+        this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
+        // Modal.show({
+        //   title: t('aclass.device.audio_failed'),
+        //   // text: t('aclass.device.audio_failed'),
+
+        //   showConfirm: true,
+        //   showCancel: true,
+        //   confirmText: t('aclass.device.reload'),
+        //   visible: true,
+        //   cancelText: t('aclass.device.cancel'),
+        //   onConfirm: () => {
+        //     window.location.reload()
+        //   },
+        //   onCancel: () => {
+        //   }
+        // })
+      }
+
       await this.appStore.pretestStore.init({ audio: true})
       // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
-      appStore.isNotInvisible &&  dialogManager.show({
-        title: t('aclass.device.video_failed'),
-        text: t('aclass.device.video_failed'),
-        showConfirm: true,
-        showCancel: true,
-        confirmText: t('aclass.device.reload'),
-        visible: true,
-        cancelText: t('aclass.device.cancel'),
-        onConfirm: () => {
-          window.location.reload()
-        },
-        onCancel: () => {
-        }
-      })
+      // appStore.isNotInvisible &&  dialogManager.show({
+      //   title: t('aclass.device.video_failed'),
+      //   text: t('aclass.device.video_failed'),
+      //   showConfirm: true,
+      //   showCancel: true,
+      //   confirmText: t('aclass.device.reload'),
+      //   visible: true,
+      //   cancelText: t('aclass.device.cancel'),
+      //   onConfirm: () => {
+      //     window.location.reload()
+      //   },
+      //   onCancel: () => {
+      //   }
+      // })
       this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
       // await this.appStore.deviceStore.init({ video: true })
       await this.appStore.pretestStore.init({ video: true})

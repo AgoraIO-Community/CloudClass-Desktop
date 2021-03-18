@@ -1,4 +1,4 @@
-import { GlobalStorage } from './../../utils/custom-storage';
+import { GlobalStorage } from './../../utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { ClassRoomAbstractStore, controller } from "@/edu-sdk/controller";
 import { computed, observable, reaction } from "mobx";
