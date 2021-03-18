@@ -80,6 +80,23 @@
   color: #ffe72e;
 }
 
+.video-player-tools-popover.popover-placement-bottom
+  .video-player-tools
+  .iconfont,
+.video-player-tools-popover.popover-placement-top
+  .video-player-tools
+  .iconfont {
+  margin-right: 9px;
+}
+
+.video-player-tools-popover.popover-placement-bottom .video-player-tools,
+.video-player-tools-popover.popover-placement-top .video-player-tools {
+  margin-top: 2px;
+  @apply flex flex-row items-center justify-center;
+  height: 36px;
+  width: auto;
+}
+
 .video-player-tools-popover {
   padding: 0;
 }
