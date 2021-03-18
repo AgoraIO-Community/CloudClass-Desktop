@@ -6,12 +6,14 @@ import './index.css';
 export interface CardProps extends BaseProps {
     width?: number;
     height?: number;
+    borderRadius?: number | string;
     children?: React.ReactNode;
 }
 
 export const Card: FC<CardProps> = ({
     width = 90,
     height = 90,
+    borderRadius = 12,
     children,
     className,
     ...restProps
@@ -25,7 +27,8 @@ export const Card: FC<CardProps> = ({
             className={cls}
             style={{
                 width,
-                height
+                height,
+                borderRadius
             }} 
             {...restProps}
         >

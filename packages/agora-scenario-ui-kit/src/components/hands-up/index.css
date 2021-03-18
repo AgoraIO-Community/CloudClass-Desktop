@@ -1,0 +1,16 @@
+.student-hands-up .student-box {
+    width: 100%;
+    height: 100%;
+    padding: 0 16px;
+    @apply box-border flex justify-between items-center;
+}
+
+.students-hands-up .card {
+    @apply block overflow-y-scroll;
+}
+
+.students-hands-up .student-item {
+    width: 100%;
+    padding: 0 16px;
+    @apply box-border flex justify-between items-center;
+}
