@@ -1,0 +1,67 @@
+.roster-modal .modal-content {
+  padding: 0 1px;
+}
+
+.roster-wrap {
+  width: 100%;
+  height: 100%;
+}
+.roster-header {
+  font-size: 13px;
+  color: #191919;
+  padding: 11px 23px;
+}
+
+.roster-header > label {
+  color: #7b88a0;
+}
+
+.roster-table .table-container .table-row-item .table-col-item {
+  @apply box-content;
+  color: #191919;
+  height: 22px;
+  padding: 9px 0;
+}
+
+.roster-table .table-container .table-row-item .iconfont {
+  font-size: 22px;
+}
+
+.roster-table .on-podium,
+.roster-table .whiteboard-granted,
+.roster-table .camera-enabled,
+.roster-table .mic-enabled {
+  color: #0073ff;
+}
+
+.roster-table .camera-disabled,
+.roster-table .mic-disabled {
+  color: #f04c36;
+}
+
+.roster-table .whiteboard-ungranted {
+  color: #bdbdca;
+}
+
+.roster-table .star {
+  color: #979797;
+}
+
+.roster-table .star-nums {
+  color: #7b88a0;
+}
+
+.roster-table .kick-out {
+  @apply rounded-full text-center cursor-pointer inline-block;
+  color: #7b88a0;
+  height: 32px;
+  width: 32px;
+}
+
+.roster-table .kick-out:hover {
+  background-color: #e7e7f3;
+}
+
+.roster-table .action {
+  @apply cursor-pointer;
+}
