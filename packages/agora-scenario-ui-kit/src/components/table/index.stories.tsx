@@ -7,6 +7,7 @@ import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/tabl
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
+import { Loading } from '~components/loading'
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -274,6 +275,35 @@ export const CourseWareManager = ({
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
+            <Button type="secondary" onClick={() => {
+              Modal.show({
+                title: '上传',
+                width: 450,
+                children: (
+                  <Loading
+                    hasLoadingGif={false}
+                    uploadItemList={
+                      [
+                        {
+                          iconType: 'format-pdf',
+                          fileName: 'pdf文件',
+                          fileSize: '2.4M',
+                          uploadComplete: false,
+                          currentProgress: .5,
+                        },
+                        {
+                          iconType: 'format-pdf',
+                          fileName: 'pdf文件',
+                          fileSize: '2.4M',
+                          uploadComplete: false,
+                          currentProgress: .5,
+                        }
+                      ]
+                    }
+                  />
+                )
+              })
+            }}>Modal</Button>
           </Row>
           <CheckList size={1} progress={20} />
         </TabPane>
