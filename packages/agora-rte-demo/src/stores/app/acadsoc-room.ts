@@ -224,6 +224,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   windowHeight: number = 0
 
   @observable
+  rightContainerHeight: number = 0
+
+  @observable
   trophyFlyout: TrophyType = {
     minimizeTrigger: false,
     startPosition: {
@@ -336,36 +339,51 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
-  @observable
-  minimizeView: MinimizeType[] = [
-    {
-      id: 'teacher'+Math.ceil(Math.random()*10),
-      type: 'teacher',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'student'+Math.ceil(Math.random()*10),
-      type: 'student',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'chat'+Math.ceil(Math.random()*10),
-      type: 'chat',
-      content: 'Chat',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 212,
-    },
-  ]
+  @computed
+  get videoViewHeight(): number {
+    if(this.rightContainerHeight < 600 ) {
+      return 144
+    } else if(this.rightContainerHeight < 700) {
+      return 164
+    }
+    return 184
+  }
+  teacherVideoId: string = 'teacher'+Math.ceil(Math.random()*10)
+  studentVideoId: string = 'student'+Math.ceil(Math.random()*10)
+  chatId: string = 'chat'+Math.ceil(Math.random()*10)
+
+  @computed
+  get minimizeView() : MinimizeType[]{ 
+    return [
+      {
+        id: this.teacherVideoId,
+        type: 'teacher',
+        content: '',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: this.videoViewHeight,
+      },
+      {
+        id: this.studentVideoId,
+        type: 'student',
+        content: '',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: this.videoViewHeight,
+      },
+      {
+        id: this.chatId,
+        type: 'chat',
+        content: 'Chat',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: 212,
+      },
+    ]
+  }
 
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
@@ -1267,7 +1285,8 @@ export class AcadsocRoomStore extends SimpleInterval {
     let formatItems:string[] = []
 
     let hours_text = duration.hours() === 0 ? '' : `{{H}} [${t('nav.hours')}]`;
-    let mins_text = duration.minutes() === 0 ? '' : `{{m}} [${t('nav.minutes')}]`;
+    let mins_text = duration.minutes() === 0 ? '' : 
+            duration.seconds() === 0 ? `{{m}} [${t('nav.short.minutes')}]` : `{{m}} [${t('nav.minutes')}]`;
     let seconds_text = duration.seconds() === 0 ? '' : `{{s}} [${t('nav.seconds')}]`;
     let short_hours_text = `HH [${t('nav.short.hours')}]`;
     let short_mins_text = `mm [${t('nav.short.minutes')}]`;
