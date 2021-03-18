@@ -1,5 +1,5 @@
-import { BizLogger } from '@/utils/biz-logger';
-import {GlobalStorage} from '@/utils/custom-storage';
+import { BizLogger } from '@/utils/utils';
+import {GlobalStorage} from '@/utils/utils';
 
 const key = 'demo-i18n-error'
 

@@ -1,10 +1,129 @@
 import { AgoraMediaDeviceEnum } from "@/types"
-import fetchProgress from "@netless/fetch-progress"
 import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
 import MD5 from "js-md5"
-import { get } from "lodash"
+import { isEmpty } from "lodash"
 import { Room } from "white-web-sdk"
 import { agoraCaches } from "./web-download.file"
+
+export type AppStorage = Storage | MemoryStorage
+
+export class MemoryStorage {
+  constructor(
+    private readonly _storage = new Map<string, string>()
+  ) {
+  }
+
+  getItem(name: string) {
+    return this._storage.get(name)
+  }
+
+  setItem(name: string, value: string) {
+    this._storage.set(name, value)
+  }
+
+  removeItem(name: string) {
+    this._storage.delete(name)
+  }
+}
+
+export class CustomStorage {
+
+  private storage: AppStorage;
+
+  languageKey: string = 'demo_language'
+
+  constructor() {
+    this.storage = new MemoryStorage();
+  }
+
+  useSessionStorage() {
+    this.storage = window.sessionStorage
+  }
+
+  read(key: string): any {
+    try {
+      let json = JSON.parse(this.storage.getItem(key) as string);
+      return json
+    } catch(_) {
+      return this.storage.getItem(key);
+    }
+  }
+
+  save(key: string, val: any) {
+    this.storage.setItem(key, JSON.stringify(val));
+  }
+
+  clear(key: string) {
+    this.storage.removeItem(key);
+  }
+
+  setLanguage(lang: string) {
+    this.save(this.languageKey, lang)
+  }
+
+  getLanguage() {
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
+    return language;
+  }
+
+  getRtmMessage (): {count: any, messages: any[]} {
+    const channelMessages = GlobalStorage.read('channelMessages');
+    if (isEmpty(channelMessages)) return {
+      count: 0,
+      messages: []
+    }
+    const messages = channelMessages.filter((it: any) => it.message_type === "group_message");
+    const chatMessages = messages.reduce((collect: any[], value: any) => {
+      const payload = value.payload;
+      const json = JSON.parse(payload);
+      if (json.content) {
+        return collect.concat({
+          account: json.account,
+          content: json.content,
+          ms: value.ms,
+          src: value.src
+        });
+      }
+      return collect;
+    }, []);
+    return {
+      messages: chatMessages,
+      count: chatMessages.length
+    }
+  }
+}
+
+export class PersistLocalStorage {
+  private storage: AppStorage;
+
+  languageKey: string = 'app_storage'
+
+  constructor() {
+    this.storage = window.localStorage
+  }
+
+  saveCourseWareList(jsonStringify: string) {
+    this.storage.setItem("courseWare", jsonStringify)
+  }
+
+  getCourseWareSaveList() {
+    const str = this.storage.getItem("courseWare")
+    if (!str) {
+      return []
+    }
+    try {
+      return JSON.parse(str) as []
+    } catch (err) {
+      return []
+    }
+  }
+
+}
+
+export const GlobalStorage = new CustomStorage();
+
+export const storage = new PersistLocalStorage()
+
 
 export const debounce = function(foo:any, t:number) {
   let timer:any
@@ -244,151 +363,82 @@ export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: numb
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
 }
 
-import { isEmpty } from "lodash";
+export class BizLogger {
 
-type AppStorage = Storage | MemoryStorage
+  // recommend use enable true
+  static enable: boolean = true
 
-export class MemoryStorage {
-  constructor(
-    private readonly _storage = new Map<string, string>()
-  ) {
+  private static get currentTime(): string {
+    const date = new Date();
+    return `${date.toTimeString().split(" ")[0] + ":" + date.getMilliseconds()}`;
   }
 
-  getItem(name: string) {
-    return this._storage.get(name)
+  static setLogLevel(enabled: boolean) {
+    this.enable = enabled
   }
 
-  setItem(name: string, value: string) {
-    this._storage.set(name, value)
+  static warn(...args: any[]) {
+    this.log(`WARN`, ...args)
   }
 
-  removeItem(name: string) {
-    this._storage.delete(name)
-  }
-}
-
-export class CustomStorage {
-
-  private storage: AppStorage;
-
-  languageKey: string = 'demo_language'
-
-  constructor() {
-    this.storage = new MemoryStorage();
+  static debug(...args: any[]) {
+    this.log(`DEBUG`, ...args)
   }
 
-  useSessionStorage() {
-    this.storage = window.sessionStorage
+  static info(...args: any[]) {
+    this.log(`INFO`, ...args)
   }
 
-  read(key: string): any {
-    try {
-      let json = JSON.parse(this.storage.getItem(key) as string);
-      return json
-    } catch(_) {
-      return this.storage.getItem(key);
+  static error(...args: any[]) {
+    this.log(`ERROR`, ...args)
+  }
+
+  private static log(type: string, ...args: any[]) {
+    if (!this.enable) {
+      return
     }
-  }
+    const prefix = `${this.currentTime} %c[DEMO] [${type}]: `
 
-  save(key: string, val: any) {
-    this.storage.setItem(key, JSON.stringify(val));
-  }
+    let loggerArgs: any[] = [] 
 
-  clear(key: string) {
-    this.storage.removeItem(key);
-  }
-
-  setLanguage(lang: string) {
-    this.save(this.languageKey, lang)
-  }
-
-  getLanguage() {
-    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
-    return language;
-  }
-
-  getRtmMessage (): {count: any, messages: any[]} {
-    const channelMessages = GlobalStorage.read('channelMessages');
-    if (isEmpty(channelMessages)) return {
-      count: 0,
-      messages: []
-    }
-    const messages = channelMessages.filter((it: any) => it.message_type === "group_message");
-    const chatMessages = messages.reduce((collect: any[], value: any) => {
-      const payload = value.payload;
-      const json = JSON.parse(payload);
-      if (json.content) {
-        return collect.concat({
-          account: json.account,
-          content: json.content,
-          ms: value.ms,
-          src: value.src
-        });
+    const pattern: {[key: string]: any} = {
+      'WARN': {
+        call: () => {
+          loggerArgs = [prefix, "color: #9C640C;"].concat(args) as any
+          (console as any).log.apply(console, loggerArgs)
+        }
+      },
+      'DEBUG': {
+        call: () => {
+          loggerArgs = [prefix, "color: #99CC66;"].concat(args) as any
+          (console as any).log.apply(console, loggerArgs)
+        }
+      },
+      'INFO': {
+        call: () => {
+          loggerArgs = [prefix, "color: #99CC99; font-weight: bold;"].concat(args) as any
+          (console as any).log.apply(console, loggerArgs)
+        }
+      },
+      'ERROR': {
+        call: () => {
+          loggerArgs = [prefix, "color: #B22222; font-weight: bold;"].concat(args) as any
+          (console as any).log.apply(console, loggerArgs)
+        }
       }
-      return collect;
-    }, []);
-    return {
-      messages: chatMessages,
-      count: chatMessages.length
+    }
+  
+    if (pattern.hasOwnProperty(type)) {
+      (pattern[type] as any).call()
+    } else {
+      loggerArgs = [prefix, "color: #64B5F6;"].concat(args) as any
+      (console as any).log.apply(console, loggerArgs)
     }
   }
 }
-
-export class PersistLocalStorage {
-  private storage: AppStorage;
-
-  languageKey: string = 'app_storage'
-
-  constructor() {
-    this.storage = window.localStorage
-  }
-
-  saveCourseWareList(jsonStringify: string) {
-    this.storage.setItem("courseWare", jsonStringify)
-  }
-
-  getCourseWareSaveList() {
-    const str = this.storage.getItem("courseWare")
-    if (!str) {
-      return []
-    }
-    try {
-      return JSON.parse(str) as []
-    } catch (err) {
-      return []
-    }
-  }
-
-}
-
-export const GlobalStorage = new CustomStorage();
-
-export const storage = new PersistLocalStorage()
 
 export const isElectron = window.isElectron || window.agoraBridge ? true : false
 
 export const platform = window.isElectron || window.agoraBridge ? 'electron' : 'web'
-export class Mutex {
-  private mutex = Promise.resolve();
 
-  lock(): PromiseLike<() => void> {
-    let begin: (unlock: () => void) => void = unlock => {};
-
-    this.mutex = this.mutex.then(() => {
-      return new Promise(begin);
-    });
-
-    return new Promise(res => {
-      begin = res;
-    });
-  }
-
-  async dispatch<T>(fn: (() => T) | (() => PromiseLike<T>)): Promise<T> {
-    const unlock = await this.lock();
-    try {
-      return await Promise.resolve(fn());
-    } finally {
-      unlock();
-    }
-  }
-}
+BizLogger.info(`CURRENT RUNTIME: ${platform}`);

@@ -6,12 +6,7 @@ import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { reportService } from '@/services/report-service';
 import { UploadService } from '@/services/upload-service';
-import { BizLogger } from '@/utils/biz-logger';
-// import { get, isEmpty } from 'lodash';
-import { GlobalStorage } from '@/utils/custom-storage';
-import { platform } from '@/utils/utils';
-import { dialogManager } from 'agora-aclass-ui-kit';
-import * as AgoraCEF from 'agora-cef-sdk';
+import { BizLogger, GlobalStorage, platform } from '@/utils/utils';
 import {
   AgoraElectronRTCWrapper, AgoraWebRtcWrapper,
   EduClassroomManager, EduManager,
@@ -89,14 +84,6 @@ export type RoomInfo = {
 export type DeviceInfo = {
   cameraName: string,
   microphoneName: string,
-}
-
-//TODO: cef release
-window.onbeforeunload = () => {
-  if (window.agoraBridge) {
-    AgoraCEF.AgoraRtcEngine.release()
-    console.log("[agora-apaas] cef release ", Date.now())
-  }
 }
 
 export class AppStore implements ClassRoomAbstractStore {
@@ -232,46 +219,19 @@ export class AppStore implements ClassRoomAbstractStore {
     console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
-    //@ts-ignore
-    // window.rtcEngine.on('error', (evt) => {
-    //   console.log('electron ', evt)
-    // }
     if (platform === 'electron') {
-
-      //@ts-ignore
-      if (window.agoraBridge) {
-        const cefClient = new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId)
-        console.log("#### cef initialize", cefClient)
-        //@ts-ignore
-        this.eduManager = new EduManager({
-          appId: config.agoraAppId,
-          rtmUid: config.rtmUid,
-          rtmToken: config.rtmToken,
-          platform: 'electron',
-          logLevel: '' as any,
-          logDirectoryPath: '',
-          // @ts-ignore
-          cefClient,
-          // cefClient: new AgoraCEF.AgoraRtcEngine.RtcEngineContext(config.agoraAppId),
-          //@ts-ignore
-          agoraRtc: AgoraCEF.AgoraRtcEngine,
-          // agoraRtc: window,
-          sdkDomain: config.sdkDomain,
-        })
-      } else {
-        this.eduManager = new EduManager({
-          appId: config.agoraAppId,
-          rtmUid: config.rtmUid,
-          rtmToken: config.rtmToken,
-          platform: 'electron',
-          logLevel: '' as any,
-          logDirectoryPath: '',
-          // @ts-ignore
-          agoraRtc: window.rtcEngine,
-          // agoraRtc: window,
-          sdkDomain: config.sdkDomain,
-        })
-      }
+      this.eduManager = new EduManager({
+        appId: config.agoraAppId,
+        rtmUid: config.rtmUid,
+        rtmToken: config.rtmToken,
+        platform: 'electron',
+        logLevel: '' as any,
+        logDirectoryPath: '',
+        // @ts-ignore
+        agoraRtc: window.rtcEngine,
+        // agoraRtc: window,
+        sdkDomain: config.sdkDomain,
+      })
     } else {
       this.eduManager = new EduManager({
         appId: config.agoraAppId,
@@ -676,7 +636,7 @@ export class AppStore implements ClassRoomAbstractStore {
   }
 
   async destroyRoom() {
-    dialogManager.removeAll()
+    // Modal.removeAll()
     await controller.appController.destroy()
   }
 }
@@ -685,3 +645,4 @@ export { BoardStore } from './board';
 export { HomeStore } from './home';
 export { PretestStore } from './pretest';
 export { UIStore } from './ui';
+

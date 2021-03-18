@@ -1,4 +1,4 @@
-import { dialogManager } from 'agora-aclass-ui-kit';
+import { Modal } from 'agora-scenario-ui-kit';
 import {
   EduLogger,
   UserRenderer,
@@ -21,7 +21,7 @@ import { RoomApi } from '@/services/room-api';
 import { AppStore } from '@/stores/app/index';
 import { observable, computed, action, runInAction, reaction, IReactionDisposer } from 'mobx';
 import { t } from '@/i18n';
-import { BizLogger } from '@/utils/biz-logger';
+import { BizLogger } from '@/utils/utils';
 import { get } from 'lodash';
 import { EduClassroomStateEnum } from '@/stores/app/scene';
 import { UploadService } from '@/services/upload-service';
@@ -1123,19 +1123,19 @@ export class AcadsocRoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      dialogManager.show({
-        text: t(`error.class_end`),
-        showConfirm: true,
-        showCancel: false,
-        confirmText: t('aclass.confirm.yes'),
-        visible: true,
-        cancelText: t('aclass.confirm.no'),
-        onConfirm: async () => {
-          await this.appStore.destroyRoom()
-        },
-        onClose: () => {
-        }
-      })
+      // dialogManager.show({
+      //   text: t(`error.class_end`),
+      //   showConfirm: true,
+      //   showCancel: false,
+      //   confirmText: t('aclass.confirm.yes'),
+      //   visible: true,
+      //   cancelText: t('aclass.confirm.no'),
+      //   onConfirm: async () => {
+      //     await this.appStore.destroyRoom()
+      //   },
+      //   onClose: () => {
+      //   }
+      // })
     } else if(state === EduClassroomStateEnum.end) {
       this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
     }
@@ -1193,37 +1193,37 @@ export class AcadsocRoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
-        dialogManager.confirm({
-          title: t(`aclass.notice`),
-          text: t(`toast.kick`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: async () => {
-            await this.appStore.destroyRoom()
-          },
-          onClose: () => {
-          }
-        })
+        // dialogManager.confirm({
+        //   title: t(`aclass.notice`),
+        //   text: t(`toast.kick`),
+        //   showConfirm: true,
+        //   showCancel: true,
+        //   confirmText: t('aclass.confirm.yes'),
+        //   visible: true,
+        //   cancelText: t('aclass.confirm.no'),
+        //   onConfirm: async () => {
+        //     await this.appStore.destroyRoom()
+        //   },
+        //   onClose: () => {
+        //   }
+        // })
         break;
       }
       case QuickTypeEnum.End: {
-        dialogManager.confirm({
-          title: t(`aclass.class_end`),
-          text: t(`aclass.leave_room`),
-          showConfirm: true,
-          showCancel: true,
-          confirmText: t('aclass.confirm.yes'),
-          visible: true,
-          cancelText: t('aclass.confirm.no'),
-          onConfirm: async () => {
-            await this.appStore.destroyRoom()
-          },
-          onClose: () => {
-          }
-        })
+        // dialogManager.confirm({
+        //   title: t(`aclass.class_end`),
+        //   text: t(`aclass.leave_room`),
+        //   showConfirm: true,
+        //   showCancel: true,
+        //   confirmText: t('aclass.confirm.yes'),
+        //   visible: true,
+        //   cancelText: t('aclass.confirm.no'),
+        //   onConfirm: async () => {
+        //     await this.appStore.destroyRoom()
+        //   },
+        //   onClose: () => {
+        //   }
+        // })
         break;
       }
     }

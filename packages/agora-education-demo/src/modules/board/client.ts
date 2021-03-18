@@ -3,7 +3,7 @@ import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, 
 import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
-import { BizLogger } from '@/utils/biz-logger';
+import { BizLogger } from '@/utils/utils';
 
 export interface SceneFile {
   name: string

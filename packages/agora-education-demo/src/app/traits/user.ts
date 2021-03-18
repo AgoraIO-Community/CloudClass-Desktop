@@ -3,7 +3,7 @@ import { AgoraEduUser, EduRoleTypeEnum } from "agora-rte-sdk";
 /**
  * 用户
  */
- export interface LocalUserInterface {
+ export interface LocalUser {
 
   userUuid: string;
   userName: string;
