@@ -592,6 +592,8 @@ export class AcadsocRoomStore extends SimpleInterval {
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
+          } else if(dDurationToClose.minutes() === 0 && dDurationToClose.seconds() === 0) {
+            this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
           }
           if(durationToClose < 0) {
             // close
@@ -1139,8 +1141,6 @@ export class AcadsocRoomStore extends SimpleInterval {
         onClose: () => {
         }
       })
-    } else if(state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
     }
   }
 

@@ -245,11 +245,24 @@ export class PretestStore {
 
   @computed
   get cameraList(): any[] {
-    return this._cameraList
+    return this.sortCamList(this._cameraList)
       // .concat([{
       //   deviceId: AgoraMediaDeviceEnum.Default,
       //   label: '禁用',
       // }])
+  }
+
+  sortCamList(inputSources: any[]):any[] {
+    let outputSources:any[] = []
+    inputSources.forEach((camera) => {
+      let label = camera.label
+      if(label.includes('ManyCam')) {
+        outputSources.unshift(camera)
+      } else {
+        outputSources.push(camera)
+      }
+    })
+    return outputSources
   }
 
   @observable

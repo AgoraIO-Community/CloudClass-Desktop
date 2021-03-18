@@ -181,6 +181,12 @@
   overflow: hidden;
 }
 
+.rendererPlaceholderNoVideo {
+  canvas {
+    display: none;
+  }
+}
+
 .placeholder {
   display: flex;
   flex-direction: column;

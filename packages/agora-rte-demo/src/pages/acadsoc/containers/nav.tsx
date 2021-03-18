@@ -65,7 +65,7 @@ export const Nav = observer(() => {
   const classMessageView = {
     isComponent: false,
     componentKey: "classID",
-    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
+    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomName', '')}`
   }
 
   const statusBar = [
