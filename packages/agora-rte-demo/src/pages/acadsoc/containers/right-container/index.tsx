@@ -20,6 +20,7 @@ export const RightContainer = observer(() => {
       setRightContainerHeight(t)
       acadsocStore.windowWidth = window.innerWidth
       acadsocStore.windowHeight = window.innerHeight
+      acadsocStore.rightContainerHeight = t
     }
     window.addEventListener('resize', onResize)
     onResize()
