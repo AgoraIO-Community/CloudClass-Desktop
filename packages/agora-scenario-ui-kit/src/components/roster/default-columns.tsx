@@ -58,10 +58,10 @@ export const defaultColumns: Column[] = [
     key: 'stars',
     name: '奖励',
     render: (text) => (
-      <>
+      <div className="reward">
         <Icon className="star" type="star-outline" />
         <span className="star-nums">&nbsp;x{text}</span>
-      </>
+      </div>
     ),
   },
   {

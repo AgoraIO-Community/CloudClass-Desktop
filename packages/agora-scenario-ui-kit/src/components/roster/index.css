@@ -2,10 +2,17 @@
   padding: 0 1px;
 }
 
+.reward {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .roster-wrap {
   width: 100%;
   height: 100%;
 }
+
 .roster-header {
   font-size: 13px;
   color: #191919;

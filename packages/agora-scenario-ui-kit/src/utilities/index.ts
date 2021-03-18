@@ -54,3 +54,5 @@ export const makeContainer = (name: string) => {
     }
   }
 }
+
+export const list = (num: number) => Array.from({length: num * 10}, (_, i) => i)
