@@ -23,6 +23,7 @@ export interface ModalProps extends BaseProps {
     // TODO: need support
     maskClosable?: boolean;
     contentClassName?: string;
+    children?: React.ReactNode;
 }
 
 type ModalType = FC<ModalProps> & {

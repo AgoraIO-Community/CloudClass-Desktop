@@ -1,104 +1,94 @@
-import { dialogManager } from 'agora-aclass-ui-kit';
-import uuidv4 from 'uuid/v4';
-import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
-
-import {
-  GenericErrorWrapper,
-  EduManager,
-  EduClassroomManager,
-  LocalUserRenderer,
-  EduStream,
-  PrepareScreenShareParams,
-  AgoraWebRtcWrapper,
-  AgoraElectronRTCWrapper,
-  EduRoleTypeEnum,
-  EduUserService,
-  EduLogger,
-} from 'agora-rte-sdk'
-import * as AgoraCEF from 'agora-cef-sdk';
-import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduBoardService } from '@/modules/board/edu-board-service';
-import { UIStore } from './ui';
 import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
-import { BoardStore } from './board';
-import { PretestStore } from './pretest'
-import { DiskStore } from './disk'
+import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
+import { t } from '@/i18n';
+import { EduBoardService } from '@/modules/board/edu-board-service';
+import { EduRecordService } from '@/modules/record/edu-record-service';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { reportService } from '@/services/report-service';
+import { UploadService } from '@/services/upload-service';
+import { BizLogger } from '@/utils/biz-logger';
 // import { get, isEmpty } from 'lodash';
 import { GlobalStorage } from '@/utils/custom-storage';
-import { autorun, toJS, observable, action, computed, runInAction } from 'mobx';
-import { MediaStore } from './media';
-import { t } from '@/i18n';
-import { BizLogger } from '@/utils/biz-logger';
-import { platform } from '@/utils/platform';
-import { SceneStore } from './scene';
-import { ListenerCallback, AgoraEduEvent } from '@/edu-sdk/declare';
+import { platform } from '@/utils/utils';
+import { dialogManager } from 'agora-aclass-ui-kit';
+import * as AgoraCEF from 'agora-cef-sdk';
+import {
+  AgoraElectronRTCWrapper, AgoraWebRtcWrapper,
+  EduClassroomManager, EduManager,
+  EduRoleTypeEnum, EduStream, GenericErrorWrapper,
+  LocalUserRenderer,
+  PrepareScreenShareParams
+} from 'agora-rte-sdk';
 import { get, isEmpty } from 'lodash';
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import { MemoryStorage } from '@/utils/custom-storage';
+import { action, autorun, computed, observable, runInAction, toJS } from 'mobx';
+import uuidv4 from 'uuid/v4';
+import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
 import { AcadsocRoomStore } from './acadsoc-room';
-import { UploadService } from '@/services/upload-service';
-import { reportService } from '@/services/report-service';
-import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
+import { BoardStore } from './board';
 import { HomeStore } from './home';
+import { MediaStore } from './media';
+import { PretestStore } from './pretest';
+import { SceneStore } from './scene';
+import { UIStore } from './ui';
 
 type RoomInfoParams = {
-  roomName: string
-  roomType: number
-  roomUuid: string
-  userName: string
-  userRole: number
-  userUuid: string
+  roomName: string,
+  roomType: number,
+  roomUuid: string,
+  userName: string,
+  userRole: number,
+  userUuid: string,
 }
 
 export type AppStoreConfigParams = {
-  agoraAppId: string
-  agoraNetlessAppId: string
+  agoraAppId: string,
+  agoraNetlessAppId: string,
   // agoraRestFullToken: string
-  enableLog: boolean
-  sdkDomain: string
-  rtmUid: string
-  rtmToken: string
-  courseWareList: CourseWareList
-  personalCourseWareList?: CourseWareList
+  enableLog: boolean,
+  sdkDomain: string,
+  rtmUid: string,
+  rtmToken: string,
+  courseWareList: CourseWareList,
+  personalCourseWareList?: CourseWareList,
   oss?: {
-    region: string
-    bucketName: string
-    folder: string
-    accessKey: string
-    secretKey: string
-    endpoint: string
+    region: string,
+    bucketName: string,
+    folder: string,
+    accessKey: string,
+    secretKey: string,
+    endpoint: string,
   }
 }
 
 export type AppStoreInitParams = {
-  roomInfoParams?: RoomInfoParams
-  config: AppStoreConfigParams
-  language: LanguageEnum
-  translateLanguage: TranslateEnum
-  startTime?: number
-  duration?: number
-  pretest?: boolean
-  mainPath?: string
-  roomPath?: string
-  resetRoomInfo: boolean
+  roomInfoParams?: RoomInfoParams,
+  config: AppStoreConfigParams,
+  language: LanguageEnum,
+  translateLanguage: TranslateEnum,
+  startTime?: number,
+  duration?: number,
+  pretest?: boolean,
+  mainPath?: string,
+  roomPath?: string,
+  resetRoomInfo: boolean,
 }
 
 export type RoomInfo = {
-  roomName: string
-  roomType: number
-  userName: string
-  userRole: EduRoleTypeEnum
-  userUuid: string
-  roomUuid: string
-  rtmUid: string
-  rtmToken: string
-  groupName?: string
-  groupUuid?: string
+  roomName: string,
+  roomType: number,
+  userName: string,
+  userRole: EduRoleTypeEnum,
+  userUuid: string,
+  roomUuid: string,
+  rtmUid: string,
+  rtmToken: string,
+  groupName?: string,
+  groupUuid?: string,
 }
 
 export type DeviceInfo = {
-  cameraName: string
-  microphoneName: string
+  cameraName: string,
+  microphoneName: string,
 }
 
 //TODO: cef release
@@ -117,7 +107,6 @@ export class AppStore implements ClassRoomAbstractStore {
   sceneStore!: SceneStore;
   acadsocStore!: AcadsocRoomStore;
   pretestStore!: PretestStore;
-  diskStore!: DiskStore;
   homeStore!: HomeStore;
 
   eduManager!: EduManager;
@@ -692,8 +681,7 @@ export class AppStore implements ClassRoomAbstractStore {
   }
 }
 export * from './acadsoc-room';
-export { UIStore } from './ui';
 export { BoardStore } from './board';
-export { PretestStore } from './pretest';
-export { DiskStore } from './disk';
 export { HomeStore } from './home';
+export { PretestStore } from './pretest';
+export { UIStore } from './ui';

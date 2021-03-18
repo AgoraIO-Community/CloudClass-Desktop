@@ -1,14 +1,14 @@
 import { LocalVideoStreamState } from './media';
 import { EduLogger } from 'agora-rte-sdk';
-import { BizLogger } from './../../modules/utils/biz-logger';
+import { BizLogger } from '@/modules/utils/biz-logger';
 import uuidv4 from 'uuid/v4';
-import { GlobalStorage } from './../../utils/custom-storage';
+import { GlobalStorage } from '@/utils/custom-storage';
 import { AppStore } from '@/stores/app/index';
 import { AgoraWebRtcWrapper, MediaService, AgoraElectronRTCWrapper, StartScreenShareParams, PrepareScreenShareParams, LocalUserRenderer } from 'agora-rte-sdk';
 import { observable, computed, action, runInAction, reaction } from 'mobx';
 import { delay, isEmpty } from 'lodash';
 import { getDeviceLabelFromStorage } from '@/utils/utils';
-import { AgoraMediaDeviceEnum } from '@/types/global';
+import { AgoraMediaDeviceEnum } from '@/types';
 
 export class PretestStore {
   static resolutions: any[] = [

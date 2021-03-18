@@ -1,8 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
-import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import React, { FC } from 'react';
 import './index.css';
-import { Icon, IconTypes } from '~components/icon';
+import { Icon } from '~components/icon';
 
 export interface PersonnelListType {
   id: string,

@@ -1,17 +1,17 @@
-import { LocalVideoStreamState } from './media';
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import { Mutex } from './../../utils/mutex';
-import { SimpleInterval } from './../mixin/simple-interval';
+import { t } from '@/i18n';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { EduSceneType, MediaService, StartScreenShareParams, PrepareScreenShareParams, RemoteUserRenderer, AgoraElectronRTCWrapper, AgoraWebRtcWrapper, LocalUserRenderer, UserRenderer, EduClassroomManager, GenericErrorWrapper, EduUser, EduStream, EduVideoSourceType, EduRoleType, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
-import { RoomApi } from './../../services/room-api';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { RoomApi } from '@/services/room-api';
 import { AppStore } from '@/stores/app/index';
-import { observable, computed, action, runInAction, reaction } from 'mobx';
-import { get } from 'lodash';
-import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
+import { Mutex } from '@/utils/utils';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { get } from 'lodash';
+import { action, computed, observable, runInAction } from 'mobx';
+import { SimpleInterval } from './../mixin/simple-interval';
+import { LocalVideoStreamState } from './media';
 
 const delay = 2000
 

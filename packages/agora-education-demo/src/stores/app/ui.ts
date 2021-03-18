@@ -1,7 +1,7 @@
 import { GlobalStorage } from '@/utils/custom-storage';
 import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
-import { platform } from '@/utils/platform';
+import { platform } from '@/utils/utils';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
 import { getLanguage } from '@/i18n';
 interface NoticeMessage {

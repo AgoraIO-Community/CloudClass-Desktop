@@ -142,7 +142,7 @@ export class MediaStore {
           roomUuid: this.appStore.roomInfo.roomUuid,
           userUuid: this.appStore.roomInfo.userUuid,
           state: 0
-        }).catch((err) => {
+        }).catch((err: Error) => {
           BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
         })
       }

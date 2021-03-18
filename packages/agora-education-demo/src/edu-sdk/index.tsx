@@ -1,18 +1,16 @@
-import { SceneDefinition } from 'white-web-sdk';
-import '@/index.scss'
-import 'promise-polyfill/src/polyfill'
-import React from 'react'
+import '@/index.css';
+import 'agora-scenario-ui-kit/lib/style.css';
 // import { ReplayRoom } from "@/monolithic/replay-room"
-import { LiveRoom } from "@/monolithic/live-room"
-import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
-import { AppStore } from "@/stores/app"
-import { unmountComponentAtNode } from "react-dom"
-import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
-import { eduSDKApi } from '@/services/edu-sdk-api'
-import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption, checkDiskOption } from './validator'
-import { controller, EduSDKInternalStateEnum } from './controller';
-import { StorageStore } from '@/stores/storage';
-import { StorageDisk } from '@/monolithic/disk';
+import { LiveRoom } from "@/monolithic/live-room";
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore } from "@/stores/app";
+import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import 'promise-polyfill/src/polyfill';
+import React from 'react';
+import { SceneDefinition } from 'white-web-sdk';
+import { controller } from './controller';
+import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
+import { checkConfigParams, checkLaunchOption } from './validator';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -284,52 +282,5 @@ export class AgoraEduSDK {
     }
     
     return controller.appController.getClassRoom()
-  }
-
-  // TODO: @deprecated method
-  static async replay(dom: Element, option: ReplayOption) {
-
-    console.log(" replay ", dom, " option ", JSON.stringify(option))
-    if (controller.replayController.hasCalled) {
-      throw GenericErrorWrapper("already replayed")
-    }
-
-    const unlock = controller.replayController.acquireLock()
-    try {
-      checkReplayOption(dom, option)
-      unlock()
-    } catch (err) {
-      unlock()
-      throw GenericErrorWrapper(err)
-    }
-
-    return controller.replayController.getClassRoom()
-  }
-
-  static async openDisk(dom: Element, option: OpenDiskOption) {
-    if (controller.storageController.hasCalled) {
-      throw GenericErrorWrapper("already opened")
-    }
-
-    const unlock = controller.storageController.acquireLock()
-
-    try {
-      unlock()
-      checkDiskOption(dom, option)
-
-      const store = new StorageStore({
-        courseWareList: option.courseWareList,  
-        language: option.language
-      })
-
-      await store.refreshState()
-
-      controller.storageController.create(store, <StorageDisk store={store} />, dom, option.listener)
-    } catch (err) {
-      unlock()
-      throw GenericErrorWrapper(err)
-    }
-
-    return controller.storageController.getClassRoom()
   }
 }

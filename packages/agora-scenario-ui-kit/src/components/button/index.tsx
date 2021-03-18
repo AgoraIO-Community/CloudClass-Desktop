@@ -7,6 +7,7 @@ export interface ButtonProps extends BaseProps {
   type?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'lg';
   disabled?: boolean;
+  action?: string;
   onClick?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
 }
 
@@ -16,6 +17,7 @@ export const Button: FC<ButtonProps> = ({
   disabled,
   children,
   className,
+  action,
   ...restProps
 }) => {
   const cls = classnames({
