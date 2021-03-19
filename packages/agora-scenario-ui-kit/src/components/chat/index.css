@@ -77,7 +77,7 @@
 }
 
 .chat-texting-message:hover,
-:active,
-:focus {
+.chat-texting-message:active,
+.chat-texting-message:focus {
   @apply outline-none;
 }

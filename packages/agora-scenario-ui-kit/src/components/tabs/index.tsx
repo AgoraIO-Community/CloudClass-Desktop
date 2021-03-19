@@ -27,7 +27,10 @@ export const Tabs: FC<TabsProps> = ({
   centered,
   ...props
 }) => {
-  const { prefixCls: customizePrefixCls } = props;
+  const {
+    prefixCls: customizePrefixCls,
+    moreIcon = <Icon type="more" />,
+  } = props;
   const prefixCls = customizePrefixCls ?? 'tabs';
 
   let editable: EditableConfig | undefined;
@@ -40,7 +43,7 @@ export const Tabs: FC<TabsProps> = ({
       removeIcon: <Icon type="close" />,
     };
   }
-  const rootPrefixCls = '';
+  const rootPrefixCls = 'tabs';
 
   return (
     <RcTabs
@@ -56,6 +59,7 @@ export const Tabs: FC<TabsProps> = ({
         },
         className,
       )}
+      moreIcon={moreIcon}
       editable={editable}
       prefixCls={prefixCls}
     />
