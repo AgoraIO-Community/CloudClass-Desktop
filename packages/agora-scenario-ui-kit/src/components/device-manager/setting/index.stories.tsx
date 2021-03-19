@@ -65,7 +65,7 @@ const SettingContainer = () => {
         setVisible(false)
     }
     return (
-        <>
+        <div className="fixed-container">
             {visible ? (
                 <Modal
                     title="设备选择"
@@ -86,7 +86,7 @@ const SettingContainer = () => {
                     />
                 </Modal>
             ) : ""}
-        </>
+        </div>
     )
 }
 

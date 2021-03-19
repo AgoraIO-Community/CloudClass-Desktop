@@ -70,7 +70,7 @@ const PretestContainer = () => {
         setVisible(false)
     }
     return (
-        <>
+        <div className="fixed-container">
             {visible ? (
                 <Modal
                     title={'设备检测'}
@@ -92,7 +92,7 @@ const PretestContainer = () => {
                     />
                 </Modal>
             ) : ""}
-        </>
+        </div>
     )
 }
 

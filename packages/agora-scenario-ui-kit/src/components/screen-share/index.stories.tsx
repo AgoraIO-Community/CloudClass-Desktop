@@ -71,8 +71,8 @@ const ScreenShareContainer = () => {
     }
     // console.log({visible, windowItems, windowId})
     return (
-        <>
-            {iconBtnShow ? (<IconButton icon={<Icon type="exit"/>} buttonText="停止共享"/>) : ""}
+        <div className="fixed-container">
+            {iconBtnShow ? (<IconButton icon={<Icon type="exit" color="red"/>}  buttonTextColor="skyblue" buttonText="停止共享"/>) : ""}
             {visible ? (
                 <>
                     <Modal
@@ -100,7 +100,7 @@ const ScreenShareContainer = () => {
                     </Modal>
                 </>
             ) : ""}
-        </>
+        </div>
     )
 }
 
