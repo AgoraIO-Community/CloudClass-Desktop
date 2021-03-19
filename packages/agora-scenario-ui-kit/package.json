@@ -55,6 +55,7 @@
     "vite": "2.0.5"
   },
   "dependencies": {
+    "@types/react-transition-group": "^4.4.1",
     "classnames": "2.2.6",
     "rc-notification": "4.4.0",
     "rc-select": "12.1.6",
