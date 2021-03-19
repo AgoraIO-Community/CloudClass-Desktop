@@ -5,6 +5,7 @@ import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { Provider } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { registerWorker, useStorageSW } from '@/utils/utils';
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -50,15 +51,10 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
+  useStorageSW()
+
   useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
+    console.log('props.routes', props.routes)
   }, [])
 
   return (
@@ -72,16 +68,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
 export const AppContainer = (props: AppContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  useStorageSW()
 
   return (
     <Provider store={props.store}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { observer } from 'mobx-react'
-import { useAcadsocRoomStore } from '@/hooks'
+import { useRoomStore } from '@/hooks'
 import { StudentVideo, TeacherVideo } from '../video'
 import { ChatView } from '../chat'
 import { MinimizeTeacher, MinimizeStudent, MinimizeChat} from '../minimize/minimize'
@@ -8,7 +8,7 @@ import styles from './style.module.scss'
 
 
 export const RightContainer = observer(() => {
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const rightContainerRef = useRef<any>()
 
   const [rightContainerHeight, setRightContainerHeight] = useState<number>(0)
@@ -18,14 +18,14 @@ export const RightContainer = observer(() => {
     const onResize = () => {
       let t = rightContainerRef.current ? rightContainerRef.current.clientHeight : 0
       setRightContainerHeight(t)
-      acadsocStore.windowWidth = window.innerWidth
-      acadsocStore.windowHeight = window.innerHeight
+      roomStore.windowWidth = window.innerWidth
+      roomStore.windowHeight = window.innerHeight
     }
     window.addEventListener('resize', onResize)
     onResize()
     // 初始化窗口宽高
-    acadsocStore.windowWidth = window.innerWidth
-    acadsocStore.windowHeight = window.innerHeight
+    roomStore.windowWidth = window.innerWidth
+    roomStore.windowHeight = window.innerHeight
     return () => {
       window.removeEventListener('resize', onResize)
     }
@@ -33,7 +33,7 @@ export const RightContainer = observer(() => {
 
   useEffect(() => {
     const event = () => {
-      acadsocStore.trophyFlyout.minimizeTrigger = !acadsocStore.trophyFlyout.minimizeTrigger
+      roomStore.trophyFlyout.minimizeTrigger = !roomStore.trophyFlyout.minimizeTrigger
     }
     rightContainerRef.current?.addEventListener('transitionend', event)
     return () => {
@@ -42,39 +42,39 @@ export const RightContainer = observer(() => {
   }, [])
 
   useEffect(() => {
-    acadsocStore.trophyFlyout.startPosition = {
-      x: acadsocStore.windowWidth / 2,
-      y: acadsocStore.windowHeight / 2
+    roomStore.trophyFlyout.startPosition = {
+      x: roomStore.windowWidth / 2,
+      y: roomStore.windowHeight / 2
     }
-  }, [acadsocStore.windowWidth, acadsocStore.windowHeight])
+  }, [roomStore.windowWidth, roomStore.windowHeight])
 
   const viewTopMap = useMemo(() => {
     let top = 10
     let topMap = {}
-    let views = acadsocStore.minimizeView.filter(e => !e.isHidden)
+    let views = roomStore.minimizeView.filter(e => !e.isHidden)
     for(let i = 0; i < views.length; i++) {
       let view = views[i]
       topMap[view.id] = top
       top = top + view.height + 10   
     }
     return topMap
-  }, [JSON.stringify(acadsocStore.minimizeView)])
+  }, [JSON.stringify(roomStore.minimizeView)])
 
   const unwindTopMap = useMemo(() => {
     let top = rightContainerHeight - 50
     let topMap = {}
-    for(let i = acadsocStore.unwind.length - 1; i >= 0; i--) {
-      let one = acadsocStore.unwind[i]
+    for(let i = roomStore.unwind.length - 1; i >= 0; i--) {
+      let one = roomStore.unwind[i]
       topMap[one.id] = top
       top = top - 50
     }
     return topMap
-  }, [acadsocStore, acadsocStore.unwind, acadsocStore.unwind.length, rightContainerHeight])
+  }, [roomStore, roomStore.unwind, roomStore.unwind.length, rightContainerHeight])
 
   const chatHeight = useMemo(() => {
-    let chatView = acadsocStore.minimizeView.find(e => e.type === 'chat') as any
+    let chatView = roomStore.minimizeView.find(e => e.type === 'chat') as any
     let chatTop = viewTopMap[chatView.id]
-    let count = acadsocStore.unwind.length
+    let count = roomStore.unwind.length
     let chatBottomMargin
     if (count === 0) {
       chatBottomMargin = 0
@@ -85,12 +85,12 @@ export const RightContainer = observer(() => {
     }
 
     return rightContainerHeight - chatTop - chatBottomMargin
-  }, [viewTopMap, acadsocStore.minimizeView, acadsocStore.unwind.length, rightContainerHeight])
+  }, [viewTopMap, roomStore.minimizeView, roomStore.unwind.length, rightContainerHeight])
 
   return (
     <div className={styles.container} ref={rightContainerRef}>
       {
-        acadsocStore.minimizeView.map((e:any) => (
+        roomStore.minimizeView.map((e:any) => (
           <div 
            // TODO: need refactor
             className={e.isHidden? styles.animationMinimize : styles.animation} 
@@ -112,7 +112,7 @@ export const RightContainer = observer(() => {
                 : e.type === 'student' ?
                   <MinimizeStudent/>
                 : e.type === 'chat'?
-                  <MinimizeChat unread={acadsocStore.unreadMessageCount>99?'99+':acadsocStore.unreadMessageCount}></MinimizeChat>
+                  <MinimizeChat unread={roomStore.unreadMessageCount>99?'99+':roomStore.unreadMessageCount}></MinimizeChat>
                 : null
               )
               :

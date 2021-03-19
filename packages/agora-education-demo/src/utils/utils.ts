@@ -2,6 +2,7 @@ import { AgoraMediaDeviceEnum } from "@/types"
 import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
 import MD5 from "js-md5"
 import { isEmpty } from "lodash"
+import { useEffect } from "react"
 import { Room } from "white-web-sdk"
 import { agoraCaches } from "./web-download.file"
 
@@ -442,3 +443,43 @@ export const isElectron = window.isElectron || window.agoraBridge ? true : false
 export const platform = window.isElectron || window.agoraBridge ? 'electron' : 'web'
 
 BizLogger.info(`CURRENT RUNTIME: ${platform}`);
+
+export const registerWorker = (workerPath: string) => {
+  const emitUpdate = () => {
+    const event = document.createEvent('Event')
+    event.initEvent('sw.update', true, true)
+    window.dispatchEvent(event)
+  }
+  
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(workerPath).then(function (reg) {
+      if (reg.waiting) {
+        emitUpdate()
+        return
+      }
+  
+      reg.onupdatefound = function () {
+        const installingWorker = reg.installing;
+        if (installingWorker) {
+          installingWorker.onstatechange = function () {
+            switch (installingWorker.state) {
+              case 'installed':
+                if (navigator.serviceWorker.controller) {
+                  emitUpdate()
+                }
+                break
+            }
+          }
+        }
+      }
+    }).catch(function(e) {
+      console.error('Error during service worker registration:', e)
+    })
+  }
+}
+
+export const useStorageSW = (workerPath: string = './serviceWorker.js') => {
+  useEffect(() => {
+    registerWorker(workerPath)
+  }, [registerWorker, workerPath])
+}

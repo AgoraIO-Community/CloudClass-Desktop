@@ -138,6 +138,9 @@ export const OneToOne: Story<any> = () => {
             onMicClick={async (uid: any) => {
 
             }}
+            onOffPodiumClick={async () => {
+
+            }}
             onWhiteboardClick={async (uid: any) => {
 
             }}
@@ -174,6 +177,9 @@ export const OneToOne: Story<any> = () => {
 
             }}
             onSendStar={async (uid: any) => {
+
+            }}
+            onOffPodiumClick={async () => {
 
             }}
             placeholder={

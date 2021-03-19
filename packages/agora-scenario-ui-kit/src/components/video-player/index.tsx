@@ -79,6 +79,7 @@ export interface VideoPlayerProps extends BaseProps {
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
+  children,
   className,
   placeholder,
   controlPlacement,
@@ -145,6 +146,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       content={hideControl ? null : tools}
       placement={controlPlacement}>
       <div className={cls}>
+        {children ? children : null}
         {placeholder ? <>{placeholder}</> : null}
         <div className="top-right-info">
           {stars > 0 ? (

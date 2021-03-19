@@ -11,6 +11,7 @@ import { SceneDefinition } from 'white-web-sdk';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
+import { roomTypes } from '@/router';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -150,21 +151,6 @@ export type DelegateType = {
   delegate?: AppStore
 }
 
-const roomTypes = {
-  [EduRoomTypeEnum.Room1v1Class]: {
-    path: '/classroom/one-to-one'
-  },
-  [EduRoomTypeEnum.RoomSmallClass]: {
-    path: '/classroom/small-class'
-  },
-  [EduRoomTypeEnum.RoomBigClass]: {
-    path: '/classroom/big-class'
-  },
-  [EduRoomTypeEnum.RoomAcadosc]: {
-    path: '/acadsoc/one-to-one'
-  }
-}
-
 const devicePath = '/pretest'
 export class AgoraEduSDK {
 
@@ -225,8 +211,9 @@ export class AgoraEduSDK {
       })
       const data = await eduSDKApi.getConfig()
 
-      // let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
-      let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
+      let mainPath = roomTypes[option.roomType]?.path || '/classroom/1v1'
+      console.log('mainPath ', mainPath)
+      // let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
       let roomPath = mainPath
 
       console.log("main Path", mainPath, " room Path", roomPath)

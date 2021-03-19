@@ -4,3 +4,21 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
 }
+
+.rtc-video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+
+.edu-room .layout {
+  position: relative;
+}
+
+.edu-room .layout-aside {
+  max-width: 300px;
+  min-width: 300px;
+  flex: 1;
+}

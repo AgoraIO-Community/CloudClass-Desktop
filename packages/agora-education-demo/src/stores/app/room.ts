@@ -121,10 +121,10 @@ export type EduMediaStream = {
   local: boolean
   audio: boolean
   video: boolean
-  showControls: boolean
+  hideControl: boolean
 }
 
-export class AcadsocRoomStore extends SimpleInterval {
+export class RoomStore extends SimpleInterval {
 
   static resolutions: any[] = [
     {

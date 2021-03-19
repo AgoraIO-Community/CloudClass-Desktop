@@ -18,6 +18,7 @@ export interface HomeProps {
   onChangeScenario: (value: any) => void,
   onChangeText: (type: string, value: string) => void,
   onChangeDuration: (value: number) => void,
+  onClick: () => void | Promise<void>
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -30,7 +31,8 @@ export const Home: React.FC<HomeProps> = ({
   onChangeRole,
   onChangeScenario,
   onChangeText,
-  onChangeDuration
+  onChangeDuration,
+  onClick
 }: HomeProps) => {
 
   return (
@@ -96,7 +98,7 @@ export const Home: React.FC<HomeProps> = ({
             <input id="duration" type="number" className="mt-1 block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
             </Col>
           </Row>
-          <Button type="primary" size="lg">创建教室</Button>
+          <Button type="primary" size="lg" onClick={onClick}>创建教室</Button>
           <Row className="text-center">
             version: {version}
           </Row>

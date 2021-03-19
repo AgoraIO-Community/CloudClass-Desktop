@@ -46,6 +46,9 @@ export const HomePage = () => {
       onChangeDuration={(v: number) => {
         setDuration(v)
       }}
+      onClick={() => {
+        console.log('click')
+      }}
     />
   )
 }

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react'
 import {Video, Volume} from 'agora-aclass-ui-kit'
-import {useSceneStore, useAcadsocRoomStore, useBoardStore} from '@/hooks'
+import {useSceneStore, useRoomStore, useBoardStore} from '@/hooks'
 import { RendererPlayer } from '@/components/media-player'
 import { EduRoleTypeEnum, UserRenderer } from 'agora-rte-sdk'
 import styles from './video.module.scss'
@@ -64,7 +64,7 @@ const CameraDefaultPlaceholder = () => (
 
 export const TeacherVideo = observer(() => {
   const sceneStore = useSceneStore()
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
 
   const userStream = sceneStore.teacherStream as VideoMediaStream  
   const isLocal = userStream.local
@@ -97,13 +97,13 @@ export const TeacherVideo = observer(() => {
       }
     }
     if (type.sourceType === 'minimal') {
-      let t: any = acadsocStore.minimizeView.find((item) => item.type === 'teacher' )
+      let t: any = roomStore.minimizeView.find((item) => item.type === 'teacher' )
       t.content = userStream.userUuid
       t.isHidden = true
-      acadsocStore.unwind.push(t)
-      acadsocStore.isBespread = false
+      roomStore.unwind.push(t)
+      roomStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, acadsocStore])
+  }, [userStream.video, userStream.audio, isLocal, roomStore])
 
   const renderer = userStream.renderer
 
@@ -149,7 +149,7 @@ export const TeacherVideo = observer(() => {
 
 export const StudentVideo = observer(() => {
   const sceneStore = useSceneStore()
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const boardStore = useBoardStore()
 
   const userStream = sceneStore.studentStreams[0] as VideoMediaStream
@@ -157,7 +157,7 @@ export const StudentVideo = observer(() => {
   
   const isLocal = userStream.local
 
-  const isTeacher = acadsocStore.isTeacher
+  const isTeacher = roomStore.isTeacher
 
   const disableButton = shouldDisable('student', isLocal, roomInfo.userRole, userStream.streamUuid)
   const disableTrophy = shouldDisable('trophy', isLocal, roomInfo.userRole, userStream.streamUuid)
@@ -166,11 +166,11 @@ export const StudentVideo = observer(() => {
   const studentViewRef = useRef<any>()
   
   useEffect(() => {
-    acadsocStore.trophyFlyout.endPosition = {
+    roomStore.trophyFlyout.endPosition = {
       x: studentViewRef.current?.getBoundingClientRect().left + 120,
       y: studentViewRef.current?.getBoundingClientRect().top 
     }
-  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.trophyFlyout.minimizeTrigger])
+  }, [roomStore.windowWidth, roomStore.windowHeight, roomStore.trophyFlyout.minimizeTrigger])
 
   const handleClick = useCallback(async (type: any) => {
     const {uid} = type
@@ -200,29 +200,29 @@ export const StudentVideo = observer(() => {
       if(disableTrophy) {
         return
       }
-      if(acadsocStore.isTrophyLimit) {
-        acadsocStore.appStore.uiStore.addToast(t('toast.reward_limit'))
+      if(roomStore.isTrophyLimit) {
+        roomStore.appStore.uiStore.addToast(t('toast.reward_limit'))
         return
       }
-      await acadsocStore.sendReward(uid, 1)
+      await roomStore.sendReward(uid, 1)
     }
     if (type.sourceType === 'board') {
       boardStore.toggleAClassLockBoard()
     }
     if (type.sourceType === 'minimal') {
-      let t: any = acadsocStore.minimizeView.find((item) => item.type === 'student' )
+      let t: any = roomStore.minimizeView.find((item) => item.type === 'student' )
       t.content = userStream.userUuid
       t.isHidden = true
-      acadsocStore.unwind.push(t)
-      acadsocStore.isBespread = false
+      roomStore.unwind.push(t)
+      roomStore.isBespread = false
     }
-  }, [userStream.video, userStream.audio, isLocal, boardStore, acadsocStore, disableTrophy])
+  }, [userStream.video, userStream.audio, isLocal, boardStore, roomStore, disableTrophy])
 
   const renderer = userStream.renderer
   
   const trophyNumber = useMemo(() => {
-    return acadsocStore.getRewardByUid(userStream.userUuid)
-  }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
+    return roomStore.getRewardByUid(userStream.userUuid)
+  }, [roomStore.getRewardByUid, userStream.userUuid, roomStore.studentsReward])
 
   return (
     <div ref={studentViewRef} style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>

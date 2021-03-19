@@ -1,5 +1,5 @@
 import {
-  AcadsocRoomStore,
+  RoomStore,
   AppStore,
   BoardStore,
   PretestStore,
@@ -34,9 +34,14 @@ export const useSceneStore = (): SceneStore => {
   return context.store.sceneStore
 }
 
-export const useAcadsocRoomStore = (): AcadsocRoomStore => {
+export const useRoomStore = (): RoomStore => {
   const context = useContext<appContext>(MobXProviderContext)
-  return context.store.acadsocStore
+  return context.store.roomStore
+}
+
+export const useUIStore = (): UIStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.uiStore
 }
 
 export const usePretestStore = (): PretestStore => {

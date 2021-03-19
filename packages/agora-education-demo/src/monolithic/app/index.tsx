@@ -5,6 +5,7 @@ import { AppStoreConfigParams } from '@/stores/app'
 import React from 'react'
 
 const routes: BizPageRouter[] = [
+  BizPageRouter.LaunchPage,
   BizPageRouter.OneToOne,
   BizPageRouter.OneToOneIncognito,
   BizPageRouter.SmallClass,
