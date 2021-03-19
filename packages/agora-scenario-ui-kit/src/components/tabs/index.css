@@ -65,7 +65,8 @@
 .tabs-bottom > .tabs-nav,
 .tabs-top > div > .tabs-nav,
 .tabs-bottom > div > .tabs-nav {
-  margin: 0 0 16px 0;
+  /* margin: 0 0 16px 0; */
+  margin: 0;
 }
 .tabs-top > .tabs-nav::before,
 .tabs-bottom > .tabs-nav::before,

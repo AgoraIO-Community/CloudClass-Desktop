@@ -1,4 +1,5 @@
 import { OneToOne } from '@/pages/one-to-one';
+import { SmallClassRoom } from '@/pages/small-class-room';
 import { SettingPage } from '@/pages/setting';
 import { HomePage } from '@/pages/home';
 import { LaunchPage } from '@/pages/launch';
@@ -30,13 +31,13 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/incognito/1v1',
     component: () => PageSFC(OneToOne)
   },
-  [BizPageRouter.MidClass]: {
-    path: '/classroom/1v1',
-    component: () => PageSFC(OneToOne)
+  [BizPageRouter.SmallClass]: {
+    path: '/classroom/small',
+    component: () => PageSFC(SmallClassRoom)
   },
-  [BizPageRouter.MidClassIncognito]: {
-    path: '/incognito/mid',
-    component: () => PageSFC(OneToOne)
+  [BizPageRouter.SmallClassIncognito]: {
+    path: '/incognito/small',
+    component: () => PageSFC(SmallClassRoom)
   },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',

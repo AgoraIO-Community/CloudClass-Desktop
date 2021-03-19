@@ -262,12 +262,42 @@ export const CourseWareManager = ({
     console.log('change Key', activeKey)
   }
 
+  const showUpload = () => {
+    Modal.show({
+      title: '上传',
+      width: 450,
+      children: (
+        <Loading
+          hasLoadingGif={false}
+          uploadItemList={
+            [
+              {
+                iconType: 'format-pdf',
+                fileName: 'pdf文件',
+                fileSize: '2.4M',
+                uploadComplete: false,
+                currentProgress: .5,
+              },
+              {
+                iconType: 'format-pdf',
+                fileName: 'pdf文件',
+                fileSize: '2.4M',
+                uploadComplete: false,
+                currentProgress: .5,
+              }
+            ]
+          }
+        />
+      )
+    })
+  }
+
   return (
     <div className="agora-board-resources">
       <div className="btn-pin">
         <Icon type="close" hover onClick={onCancel}></Icon>
       </div>
-      <Tabs tabBarGutter={43} defaultActiveKey="2" onChange={handleChange}>
+      <Tabs defaultActiveKey="2" onChange={handleChange}>
         <TabPane tab="公共资源" key="1">
           <CloudStorage size={1} />
         </TabPane>
@@ -275,35 +305,6 @@ export const CourseWareManager = ({
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
-            <Button type="secondary" onClick={() => {
-              Modal.show({
-                title: '上传',
-                width: 450,
-                children: (
-                  <Loading
-                    hasLoadingGif={false}
-                    uploadItemList={
-                      [
-                        {
-                          iconType: 'format-pdf',
-                          fileName: 'pdf文件',
-                          fileSize: '2.4M',
-                          uploadComplete: false,
-                          currentProgress: .5,
-                        },
-                        {
-                          iconType: 'format-pdf',
-                          fileName: 'pdf文件',
-                          fileSize: '2.4M',
-                          uploadComplete: false,
-                          currentProgress: .5,
-                        }
-                      ]
-                    }
-                  />
-                )
-              })
-            }}>Modal</Button>
           </Row>
           <CheckList size={1} progress={20} />
         </TabPane>

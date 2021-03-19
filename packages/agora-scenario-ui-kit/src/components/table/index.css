@@ -106,6 +106,14 @@ input.indeterminate:indeterminate {
   overflow-y: hidden;
 }
 
+.agora-board-resources .tabs-nav-list {
+  padding-left: 24px;
+}
+
+.agora-board-resources .tabs-nav {
+  background-color: #F9F9FC;
+}
+
 .agora-board-resources .rc-tabs-nav {
   @apply bg-table-header;
   height: 40px;
