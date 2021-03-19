@@ -10,6 +10,8 @@ import './index.css';
 
 export { Colors } from './colors';
 
+export { Pens } from './pens'
+
 export type { ToolItem } from './tool';
 
 export interface ToolbarProps extends BaseProps {

@@ -58,10 +58,10 @@ const WindowContainer = ({
 const ScreenShareContainer = () => {
     const title = 'screen share title';
     const subTitle = 'screen share sub-title';
-    const programCount = 20;
+    // const programCount = 20;
     const [visible, setVisible] = useState<boolean>(true)
     const [iconBtnShow, setIconBtnShow] = useState<boolean>(false)
-    const [windowItems, setWindowItems] = useState([{
+    const [windowItems] = useState([{
         id: 'share-1',
         title: 'share-1'
     }])
@@ -104,15 +104,15 @@ const ScreenShareContainer = () => {
     )
 }
 
-export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps) => {
-    const windowItems = list(programCount).map((item, index) => (
-        {
-            id: 'id-' + (index + 1),
-            title: 'title-' + (index + 1),
-        }
-    ))
+export const Docs = ({ programCount }: DocsProps) => {
+    // const windowItems = list(programCount).map((item, index) => (
+    //     {
+    //         id: 'id-' + (index + 1),
+    //         title: 'title-' + (index + 1),
+    //     }
+    // ))
 
-    const [windowId, setWindowId] = useState<string>('')
+    // const [windowId, setWindowId] = useState<string>('')
     return (
         <>
             <div className="mt-4">

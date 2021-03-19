@@ -7,7 +7,7 @@ import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/tabl
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
-import { Loading } from '~components/loading'
+// import { Loading } from '~components/loading'
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -262,35 +262,35 @@ export const CourseWareManager = ({
     console.log('change Key', activeKey)
   }
 
-  const showUpload = () => {
-    Modal.show({
-      title: '上传',
-      width: 450,
-      children: (
-        <Loading
-          hasLoadingGif={false}
-          uploadItemList={
-            [
-              {
-                iconType: 'format-pdf',
-                fileName: 'pdf文件',
-                fileSize: '2.4M',
-                uploadComplete: false,
-                currentProgress: .5,
-              },
-              {
-                iconType: 'format-pdf',
-                fileName: 'pdf文件',
-                fileSize: '2.4M',
-                uploadComplete: false,
-                currentProgress: .5,
-              }
-            ]
-          }
-        />
-      )
-    })
-  }
+  // const showUpload = () => {
+  //   Modal.show({
+  //     title: '上传',
+  //     width: 450,
+  //     children: (
+  //       <Loading
+  //         hasLoadingGif={false}
+  //         uploadItemList={
+  //           [
+  //             {
+  //               iconType: 'format-pdf',
+  //               fileName: 'pdf文件',
+  //               fileSize: '2.4M',
+  //               uploadComplete: false,
+  //               currentProgress: .5,
+  //             },
+  //             {
+  //               iconType: 'format-pdf',
+  //               fileName: 'pdf文件',
+  //               fileSize: '2.4M',
+  //               uploadComplete: false,
+  //               currentProgress: .5,
+  //             }
+  //           ]
+  //         }
+  //       />
+  //     )
+  //   })
+  // }
 
   return (
     <div className="agora-board-resources">

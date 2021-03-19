@@ -116,3 +116,7 @@
 .expand-tools-popover .popover-inner-content {
   padding: 9px 10px;
 }
+
+.expand-tool .active-pen-div {
+  background: #868F9F;
+}
