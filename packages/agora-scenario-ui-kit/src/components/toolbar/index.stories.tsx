@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Toolbar, ToolbarProps, Colors, ToolItem } from '~components/toolbar';
+import { Toolbar, ToolbarProps, Colors, ToolItem, Pens } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -9,11 +9,29 @@ const meta: Meta = {
 
 export const Docs: FC<ToolbarProps> = (props) => {
   const [activeColor, setActiveColor] = useState('#7ed321');
+  const [activePen, setActivePen] = useState('pen')
   const tools: ToolItem[] = [
     {
       value: 'selection',
       label: '选择',
       icon: 'select',
+    },
+    {
+      value: 'pen',
+      label: '铅笔',
+      icon: 'pen',
+      component: () => {
+        const [pen, updatePen]= useState<string>('pen')
+        return (
+          <Pens
+            value='color'
+            label='颜色'
+            icon='color'
+            activePen={pen}
+            onClick={(color) => updatePen(color)}
+          />
+        )
+        },
     },
     {
       value: 'text',
@@ -29,13 +47,18 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'color',
       label: '颜色',
       icon: 'color',
-      render: (tool: ToolItem) => (
-        <Colors
-          {...tool}
-          activeColor={activeColor}
-          onClick={(color) => setActiveColor(color)}
-        />
-      ),
+      component: () => {
+        const [activeColor, updateColor]= useState<string>('#7ed321')
+        return (
+          <Colors
+            value='color'
+            label='颜色'
+            icon='color'
+            activeColor={activeColor}
+            onClick={(color) => updateColor(color)}
+          />
+        )
+      },
     },
     {
       value: 'blank-page',
