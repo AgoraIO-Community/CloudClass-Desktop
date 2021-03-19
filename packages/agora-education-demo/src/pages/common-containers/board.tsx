@@ -1,5 +1,6 @@
 import { useBoardStore,  } from '@/hooks'
-import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType, ToolItem } from 'agora-scenario-ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
+import { ToolItem } from 'agora-scenario-ui-kit/lib/components/toolbar/tool'
 import { observer } from 'mobx-react'
 import React, { useCallback, useRef } from 'react'
 
@@ -28,6 +29,18 @@ const useWhiteboardState = () => {
 
   const handleToolBarChange = (type: ZoomItemType) => {
     const toolbarMap: Record<ZoomItemType, CallableFunction> = {
+      'max': () => {
+        boardStore.zoomBoard('fullscreen')
+      },
+      'min': () => {
+        boardStore.zoomBoard('fullscreenExit')
+      },
+      'zoom-out': () => {
+        boardStore.setZoomScale('out')
+      },
+      'zoom-in': () => {
+        boardStore.setZoomScale('in')
+      },
       'forward': () => boardStore.changeFooterMenu('next_page'),
       'backward': () => boardStore.changeFooterMenu('prev_page'),
     }
@@ -39,7 +52,7 @@ const useWhiteboardState = () => {
   }
 
   return {
-    zoomValue: 0,
+    zoomValue: boardStore.scale,
     currentPage: boardStore.currentPage,
     totalPage: boardStore.totalPage,
     courseWareList: [],

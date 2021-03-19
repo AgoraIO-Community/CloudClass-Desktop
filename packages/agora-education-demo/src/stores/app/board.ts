@@ -7,7 +7,7 @@ import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
 import { OSSConfig } from '@/utils/helper';
-import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
+import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
@@ -123,7 +123,7 @@ export enum DownloadStatus {
   failed,
 }
 
-export class BoardStore {
+export class BoardStore extends ZoomController {
 
   toolItems: any[] = [
   {
@@ -344,6 +344,7 @@ export class BoardStore {
   folder: string = ''
 
   constructor(appStore: AppStore) {
+    super(0);
     this.appStore = appStore
     this._boardClient = undefined
     const ossConfig = this.appStore?.params?.config?.oss
@@ -360,6 +361,9 @@ export class BoardStore {
       this.ossClient = new OSS(demoOssConfig)
       this.folder = demoOssConfig.folder
     }
+    this.on('zoom-scale-changed', ({targetScale}: {targetScale: number}) => {
+      this.updateScale(targetScale)
+    })
   }
 
   get room(): Room {
@@ -1970,6 +1974,14 @@ export class BoardStore {
   @action
   hideExtension() {
     this.showExtension = false
+  }
+
+  setZoomScale(operation: string) {
+    if (operation === 'out') {
+      this.moveRuleIndex(-1)
+    } else {
+      this.moveRuleIndex(+1)
+    }
   }
 
   @action
