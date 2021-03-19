@@ -368,8 +368,9 @@ const en = {
     'yes': 'Yes',
     'is_hear': 'Can you hear the music while the music is playing?',
     'click_play': 'Start to detect speakers after clicking play',
-    'test_microphone': 'What to say to the microphone, check if the microphone is normal'
-    
+    'test_microphone': 'What to say to the microphone, check if the microphone is normal',
+    'camera_hint': 'If you can\'t see the preview, try ↑ to switch the camera',
+    'mic_hint': 'If you can\'t see the preview, try ↑ to switch the microphone'
   },
   'nav': {
     'delay': 'Delay: ',

@@ -224,6 +224,7 @@ export const VideoDetect: React.FC<PretestVideoDetectProps> = (props) => {
         onChange={props.onChange}
         list={props.list}
       /> */}
+      <div className={styles.pretestWarning}>{t('device.camera_hint')}</div>
       <div className={styles.detectPosition}>
         <CameraPreview
           cameraId={props.cameraId}
@@ -314,6 +315,7 @@ export const AudioDetect: React.FC<PretestAudioDetectProps> = (props) => {
           position: 'relative',
         }}
       />
+      <div className={styles.pretestWarning}>{t('device.mic_hint')}</div>
       <div className={styles.positionVolume}>
         <MicWave
           currentVolume={volume}
