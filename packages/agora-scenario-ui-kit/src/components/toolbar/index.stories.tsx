@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Toolbar, ToolbarProps, Colors, ToolItem } from '~components/toolbar';
+import { Toolbar, ToolbarProps, Colors, ToolItem, Pens } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -9,11 +9,24 @@ const meta: Meta = {
 
 export const Docs: FC<ToolbarProps> = (props) => {
   const [activeColor, setActiveColor] = useState('#7ed321');
+  const [activePen, setActivePen] = useState('pen')
   const tools: ToolItem[] = [
     {
       value: 'selection',
       label: '选择',
       icon: 'select',
+    },
+    {
+      value: 'pen',
+      label: '铅笔',
+      icon: 'pen',
+      render: (tool: ToolItem) => (
+        <Pens
+          {...tool}
+          activePen={activePen}
+          onClick={(pen: string) => setActivePen(pen)}
+        />
+      ),
     },
     {
       value: 'text',
