@@ -3,6 +3,8 @@ import { Meta } from '@storybook/react';
 import { ScreenShare } from '~components/screen-share'
 import { Button } from '~components/button'
 import { Modal } from '~components/modal'
+import { IconButton } from '~components/button/icon-btn'
+import { Icon } from '~components/icon'
 import { list } from '~utilities';
 
 const meta: Meta = {
@@ -35,21 +37,70 @@ const WindowContainer = ({
         <div className='modal'>
             <div className='modal-title'></div>
             <div className='modal-content'>
-            <ScreenShare
-                onActiveItem={(id: any) => {
-                    setWindowId(id)
-                }}
-                currentActiveId={windowId}
-                screenShareTitle={'subTitle'}
-                windowItems={windowItems}
-                onConfirm={() => {}}
-            ></ScreenShare>
+                <ScreenShare
+                    onActiveItem={(id: any) => {
+                        setWindowId(id)
+                    }}
+                    currentActiveId={windowId}
+                    screenShareTitle={'subTitle'}
+                    windowItems={windowItems}
+                    onConfirm={() => { }}
+                ></ScreenShare>
             </div>
             <div className='modal-footer'>
                 <Button type='ghost' onClick={onCancel}>Cancel</Button>
                 <Button type='ghost' onClick={onOk}>OK</Button>
             </div>
         </div>
+    )
+}
+
+const ScreenShareContainer = () => {
+    const title = 'screen share title';
+    const subTitle = 'screen share sub-title';
+    const programCount = 20;
+    const [visible, setVisible] = useState<boolean>(true)
+    const [iconBtnShow, setIconBtnShow] = useState<boolean>(false)
+    const [windowItems, setWindowItems] = useState([{
+        id: 'share-1',
+        title: 'share-1'
+    }])
+    const [windowId, setWindowId] = useState<string>('')
+    function closeModal () {
+        setVisible(false)
+    }
+    // console.log({visible, windowItems, windowId})
+    return (
+        <>
+            {iconBtnShow ? (<IconButton icon={<Icon type="exit"/>} buttonText="停止共享"/>) : ""}
+            {visible ? (
+                <>
+                    <Modal
+                        width={662}
+                        title={title}
+                        footer={[
+                            <Button type="secondary" action="cancel">cancel</Button>,
+                            <Button action="ok">ok</Button>
+                        ]}
+                        onCancel={closeModal}
+                        onOk={() => {
+                            setIconBtnShow(true)
+                            closeModal()
+                        }}
+                    >
+                        <ScreenShare
+                            onActiveItem={(id: any) => {
+                                setWindowId(id)
+                            }}
+                            currentActiveId={windowId}
+                            screenShareTitle={subTitle}
+                            windowItems={windowItems}
+                            onConfirm={() => {}}
+                        ></ScreenShare>
+                    </Modal>
+                </>
+            ) : ""}
+        </>
     )
 }
 
@@ -65,7 +116,7 @@ export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps)
     return (
         <>
             <div className="mt-4">
-                <Modal
+                {/* <Modal
                     width={662}
                     title={title}
                     footer={[
@@ -82,7 +133,8 @@ export const Docs = ({ title, subTitle, programCount, scrollHeight }: DocsProps)
                         windowItems={windowItems}
                         onConfirm={() => {}}
                     ></ScreenShare>
-                </Modal>
+                </Modal> */}
+                <ScreenShareContainer />
             </div>
             <div className="mt-4">
                 <Button
