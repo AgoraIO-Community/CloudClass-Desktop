@@ -52,7 +52,7 @@ const useWhiteboardState = () => {
   }
 
   return {
-    zoomValue: boardStore.scale,
+    zoomValue: boardStore.zoomValue,
     currentPage: boardStore.currentPage,
     totalPage: boardStore.totalPage,
     courseWareList: [],

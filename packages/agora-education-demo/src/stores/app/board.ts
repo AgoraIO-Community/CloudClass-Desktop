@@ -1798,6 +1798,11 @@ export class BoardStore extends ZoomController {
   @observable
   scale: number = 1
 
+  @computed
+  get zoomValue(): number {
+    return Math.ceil(this.scale * 100)
+  }
+
   @observable
   online: boolean = false;
 
