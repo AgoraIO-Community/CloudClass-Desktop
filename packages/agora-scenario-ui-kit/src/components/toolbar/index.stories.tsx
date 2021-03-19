@@ -20,13 +20,18 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'pen',
       label: '铅笔',
       icon: 'pen',
-      render: (tool: ToolItem) => (
-        <Pens
-          {...tool}
-          activePen={activePen}
-          onClick={(pen: string) => setActivePen(pen)}
-        />
-      ),
+      component: () => {
+        const [pen, updatePen]= useState<string>('pen')
+        return (
+          <Pens
+            value='color'
+            label='颜色'
+            icon='color'
+            activePen={pen}
+            onClick={(color) => updatePen(color)}
+          />
+        )
+        },
     },
     {
       value: 'text',
@@ -42,13 +47,18 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'color',
       label: '颜色',
       icon: 'color',
-      render: (tool: ToolItem) => (
-        <Colors
-          {...tool}
-          activeColor={activeColor}
-          onClick={(color) => setActiveColor(color)}
-        />
-      ),
+      component: () => {
+        const [activeColor, updateColor]= useState<string>('#7ed321')
+        return (
+          <Colors
+            value='color'
+            label='颜色'
+            icon='color'
+            activeColor={activeColor}
+            onClick={(color) => updateColor(color)}
+          />
+        )
+      },
     },
     {
       value: 'blank-page',

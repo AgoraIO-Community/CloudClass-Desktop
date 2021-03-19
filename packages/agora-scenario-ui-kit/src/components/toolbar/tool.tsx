@@ -7,18 +7,21 @@ export interface ToolItem {
   label: string;
   icon: IconTypes;
   isActive?: boolean;
-  render?: (tool: ToolItem) => ReactNode;
+  // render?: (tool: ToolItem) => ReactNode;
+  component?: any;
 }
 export interface ToolProps extends ToolItem {
   onClick?: (value: string) => void;
 }
 
 export const Tool: FC<ToolProps> = (props) => {
-  const { value, label, icon, isActive, onClick, render } = props;
+  const { value, label, icon, isActive, onClick, component: Component } = props;
+  // console.log(render, props)
   return (
     <>
-      {render ? (
-        render(props)
+      {Component ? (
+        <Component />
+        // React.cloneElement(Component)
       ) : (
         <Tooltip title={label} placement="bottom">
           <div
