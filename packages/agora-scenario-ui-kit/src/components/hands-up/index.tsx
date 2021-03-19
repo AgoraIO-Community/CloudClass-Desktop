@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
+import { CSSTransition } from 'react-transition-group'
 import './index.css';
 
 enum HandsUpState {
@@ -29,6 +30,8 @@ export interface HandsUpProps extends BaseHandsUpProps {
     state?: string;
     current?: number;
     total?: number;
+    animStart?: boolean;
+    timeout?: number;
 }
 
 export const HandsUp: FC<HandsUpProps> = ({
@@ -38,6 +41,8 @@ export const HandsUp: FC<HandsUpProps> = ({
     state = HandsUpState.Default,
     current = 0,
     total = 22,
+    animStart = false,
+    timeout = 1500,
     className,
     ...restProps
 }) => {
@@ -47,14 +52,20 @@ export const HandsUp: FC<HandsUpProps> = ({
     });
     return (
         <div className={cls} {...restProps}>
-            <Card
-                width={width}
-                height={height}
-                borderRadius={borderRadius}
+            <CSSTransition
+                in={animStart}
+                timeout={timeout}
+                classNames={'received-card'}
             >
-                <Icon type={state === HandsUpState.Default ? 'hands-up-student' : 'hands-up'} color={stateColorDict[state]} />
-                <span style={{ marginLeft: 10 }}>{current} / {total}</span>
-            </Card>
+                <Card
+                    width={width}
+                    height={height}
+                    borderRadius={borderRadius}
+                >
+                    <Icon type={state === HandsUpState.Default ? 'hands-up-student' : 'hands-up'} color={stateColorDict[state]} />
+                    <span style={{ marginLeft: 10 }}>{current} / {total}</span>
+                </Card>
+            </CSSTransition>
         </div>
     )
 }
@@ -88,9 +99,9 @@ export const StudentHandsUp: FC<StudentHandsUpProps> = ({
                 borderRadius={borderRadius}
             >
                 <div className="student-box">
-                    <span>{student?.name}</span>
+                    <span className="student-name">{student?.name}</span>
                     <span>
-                        <Icon type="checked" />
+                        <Icon type="checked" color="#0073FF"/>
                         <Icon type="close" style={{ marginLeft: 6 }} />
                     </span>
                 </div>
@@ -126,9 +137,9 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
                 {
                     students?.map((item, index) => (
                         <div className="student-item" key={index}>
-                            <span>{item?.name}</span>
+                            <span className="student-name">{item?.name}</span>
                             <span>
-                                <Icon type="checked" />
+                                <Icon type="checked" color="#0073FF"/>
                                 <Icon type="close" style={{ marginLeft: 6 }} />
                             </span>
                         </div>

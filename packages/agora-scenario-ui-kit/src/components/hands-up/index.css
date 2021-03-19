@@ -14,3 +14,32 @@
     padding: 0 16px;
     @apply box-border flex justify-between items-center;
 }
+
+.hands-up .card {
+    position: relative;
+}
+
+.received-card-enter {
+    left: 50px;
+    opacity: 0;
+}
+
+.received-card-enter-active {
+    left: 0px;
+    opacity: 1;
+    transition: 1500ms;
+}
+
+.received-card-enter .iconfont {
+    transform: rotate(45deg);
+}
+
+.received-card-enter-active .iconfont{
+    transform: rotate(0deg);
+    transition: 1500ms;
+}
+
+.student-box .student-name, .student-item .student-name {
+    font-size: 14px;
+    color: #586376;
+}
