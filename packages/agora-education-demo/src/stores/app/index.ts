@@ -18,7 +18,7 @@ import { get, isEmpty } from 'lodash';
 import { action, autorun, computed, observable, runInAction, toJS } from 'mobx';
 import uuidv4 from 'uuid/v4';
 import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
-import { RoomStore } from './acadsoc-room';
+import { RoomStore } from './room';
 import { BoardStore } from './board';
 import { HomeStore } from './home';
 import { MediaStore } from './media';
@@ -215,8 +215,8 @@ export class AppStore implements ClassRoomAbstractStore {
   constructor(params: AppStoreInitParams) {
     this.params = params
     console.log("[ID] appStore ### ", this.id)
-    console.log(" roomInfoParams ", params.roomInfoParams)
-    console.log(" config >>> params: ", {...this.params})
+    // console.log(" roomInfoParams ", params.roomInfoParams)
+    // console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
     if (platform === 'electron') {
@@ -640,9 +640,8 @@ export class AppStore implements ClassRoomAbstractStore {
     await controller.appController.destroy()
   }
 }
-export * from './acadsoc-room';
 export { BoardStore } from './board';
 export { HomeStore } from './home';
 export { PretestStore } from './pretest';
 export { UIStore } from './ui';
-
+export { RoomStore } from './room';

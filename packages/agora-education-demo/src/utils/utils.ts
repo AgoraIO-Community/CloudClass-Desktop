@@ -525,15 +525,14 @@ export class ZoomController extends EventEmitter {
   }
 
   private delaySyncRuleIndex(): void {
-      if (this.syncRuleIndexTimer !== null) {
-          clearTimeout(this.syncRuleIndexTimer);
-          this.syncRuleIndexTimer = null;
-      }
-      this.syncRuleIndexTimer = setTimeout(() => {
-          this.syncRuleIndexTimer = null;
-          this.tempRuleIndex = undefined;
-
-      }, ZoomController.syncDuration);
+    if (this.syncRuleIndexTimer !== null) {
+      clearTimeout(this.syncRuleIndexTimer);
+      this.syncRuleIndexTimer = null;
+    }
+    this.syncRuleIndexTimer = setTimeout(() => {
+      this.syncRuleIndexTimer = null;
+      this.tempRuleIndex = undefined;
+    }, ZoomController.syncDuration);
   }
 
   private static readRuleIndexByScale(scale: number): number {
@@ -558,24 +557,20 @@ export class ZoomController extends EventEmitter {
   }
 
 
-  protected moveRuleIndex(deltaIndex: number): void {
+  protected moveRuleIndex(deltaIndex: number, scale: number): number {
+    if (this.tempRuleIndex === undefined) {
+        this.tempRuleIndex = ZoomController.readRuleIndexByScale(scale);
+    }
+    this.tempRuleIndex += deltaIndex;
 
-      if (this.tempRuleIndex === undefined) {
-          this.tempRuleIndex = ZoomController.readRuleIndexByScale(this.zoomScale);
-      }
-      this.tempRuleIndex += deltaIndex;
+    if (this.tempRuleIndex > ZoomController.dividingRule.length - 1) {
+        this.tempRuleIndex = ZoomController.dividingRule.length - 1;
+    } else if (this.tempRuleIndex < 0) {
+        this.tempRuleIndex = 0;
+    }
+    const targetScale = ZoomController.dividingRule[this.tempRuleIndex];
 
-      if (this.tempRuleIndex > ZoomController.dividingRule.length - 1) {
-          this.tempRuleIndex = ZoomController.dividingRule.length - 1;
-
-      } else if (this.tempRuleIndex < 0) {
-          this.tempRuleIndex = 0;
-      }
-      const targetScale = ZoomController.dividingRule[this.tempRuleIndex];
-
-      this.delaySyncRuleIndex();
-      this.emit('zoom-scale-changed', {
-        targetScale
-      })
+    this.delaySyncRuleIndex();
+    return targetScale
   }
 }

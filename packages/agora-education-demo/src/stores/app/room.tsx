@@ -1,4 +1,3 @@
-import { Modal } from 'agora-scenario-ui-kit';
 import {
   EduLogger,
   UserRenderer,
@@ -30,6 +29,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum, ChatMessage} from '@/types';
 import { filterChatText } from '@/utils/utils';
+import { Button, Modal, Toast } from 'agora-scenario-ui-kit';
 
 dayjs.extend(duration)
 
@@ -445,7 +445,11 @@ export class RoomStore extends SimpleInterval {
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_send_chat'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       return{
@@ -510,7 +514,11 @@ export class RoomStore extends SimpleInterval {
         // this.appStore.params.translateLanguage
       })
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_translate_chat'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -528,7 +536,11 @@ export class RoomStore extends SimpleInterval {
         }]
       })
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_send_reward'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -554,9 +566,17 @@ export class RoomStore extends SimpleInterval {
     // 判断是否等于上一次的值 相同则不更新
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
-        this.appStore.uiStore.addToast(t('toast.chat_disable'))
+        Toast.show({
+          type: 'error',
+          text: t('toast.chat_disable'),
+          duration: 1.5,
+        })
       } else {
-        this.appStore.uiStore.addToast(t('toast.chat_enable'))
+        Toast.show({
+          type: 'error',
+          text: t('toast.chat_enable'),
+          duration: 1.5,
+        })
       }
     } 
     this.isStudentChatAllowed = isStudentChatAllowed
@@ -573,7 +593,11 @@ export class RoomStore extends SimpleInterval {
           [5, 3, 1].forEach(min => {
             let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+              Toast.show({
+                type: 'error',
+                text: t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
+                duration: 1.5,
+              })
             }
           })
           break;
@@ -581,14 +605,22 @@ export class RoomStore extends SimpleInterval {
           [5, 1].forEach(min => {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+              Toast.show({
+                type: 'error',
+                text: t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
+                duration: 1.5,
+              })
             }
           })
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
+            Toast.show({
+              type: 'error',
+              text: t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
+              duration: 1.5,
+            })
           }
           if(durationToClose < 0) {
             // close
@@ -705,7 +737,11 @@ export class RoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
+        this.appStore.isNotInvisible && Toast.show({
+          type: 'error',
+          text: t('toast.failed_to_join_board'),
+          duration: 1.5,
+        })
       })
       this.appStore.uiStore.stopLoading()
 
@@ -1086,7 +1122,13 @@ export class RoomStore extends SimpleInterval {
             }
           }
         } catch (err) {
-          this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
+          if (this.appStore.isNotInvisible) {
+            Toast.show({
+              text: (t('toast.media_method_call_failed') + `: ${err.message}`),
+              type: 'error',
+              duration: 1.5
+            })
+          }
           const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
@@ -1123,21 +1165,25 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      // dialogManager.show({
-      //   text: t(`error.class_end`),
-      //   showConfirm: true,
-      //   showCancel: false,
-      //   confirmText: t('aclass.confirm.yes'),
-      //   visible: true,
-      //   cancelText: t('aclass.confirm.no'),
-      //   onConfirm: async () => {
-      //     await this.appStore.destroyRoom()
-      //   },
-      //   onClose: () => {
-      //   }
-      // })
+      Modal.show({
+        title: t(`error.class_end`),
+        footer: [
+          <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
+          <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
+        ],
+        onOk: async () => {
+          await this.appStore.destroyRoom()
+        },
+        onCancel: () => {
+        }
+      })
     } else if(state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
+      const text = t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)})
+      Toast.show({
+        type: 'error',
+        text: text,
+        duration: 1.5
+      })
     }
   }
 
@@ -1178,7 +1224,7 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         BizLogger.error(`${err}`)
       }
-      this.appStore.uiStore.addToast(t('toast.successfully_left_the_business_channel'))
+      // this.appStore.uiStore.addToast(t('toast.successfully_left_the_business_channel'))
       this.delInterval('timer')
       this.reset()
       this.appStore.uiStore.updateCurSeqId(0)
@@ -1193,24 +1239,21 @@ export class RoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
-        // dialogManager.confirm({
-        //   title: t(`aclass.notice`),
-        //   text: t(`toast.kick`),
-        //   showConfirm: true,
-        //   showCancel: true,
-        //   confirmText: t('aclass.confirm.yes'),
-        //   visible: true,
-        //   cancelText: t('aclass.confirm.no'),
-        //   onConfirm: async () => {
-        //     await this.appStore.destroyRoom()
-        //   },
-        //   onClose: () => {
-        //   }
-        // })
+        Modal.show({
+          title: t(`aclass.notice`),
+          children: t(`toast.kick`),
+          footer: [
+            <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
+            <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
+          ],
+          onOk: async () => {
+            await this.appStore.destroyRoom()
+          }
+        })
         break;
       }
       case QuickTypeEnum.End: {
-        // dialogManager.confirm({
+        // Modal.confirm({
         //   title: t(`aclass.class_end`),
         //   text: t(`aclass.leave_room`),
         //   showConfirm: true,
@@ -1289,5 +1332,18 @@ export class RoomStore extends SimpleInterval {
       }
     }
     return duration.format(formatItems.join(' '))
+  }
+
+  @computed
+  get navigationState() {
+    return {
+      cpuUsage: 0,
+      isStarted: !!this.sceneStore.classState,
+      title: this.sceneStore.roomInfo.roomName,
+      signalQuality: this.appStore.mediaStore.networkQuality as any,
+      networkLatency: +this.appStore.mediaStore.delay,
+      networkQuality: this.appStore.mediaStore.networkQuality,
+      packetLostRate: 0,
+    }
   }
 }

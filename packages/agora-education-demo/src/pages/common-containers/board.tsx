@@ -44,7 +44,7 @@ const useWhiteboardState = () => {
       'forward': () => boardStore.changeFooterMenu('next_page'),
       'backward': () => boardStore.changeFooterMenu('prev_page'),
     }
-    toolbarMap[type]
+    toolbarMap[type] && toolbarMap[type]()
   }
 
   const handleZoomControllerChange = async () => {
@@ -60,6 +60,7 @@ const useWhiteboardState = () => {
     handleZoomControllerChange,
     ready: boardStore.ready,
     mountToDOM,
+    tools: boardStore.tools,
   }
 }
 
@@ -73,6 +74,7 @@ export const WhiteboardContainer = observer(() => {
     handleZoomControllerChange,
     ready,
     mountToDOM,
+    tools
   } = useWhiteboardState()
 
   return (
@@ -94,7 +96,7 @@ export const WhiteboardContainer = observer(() => {
         </TabPane>
       </Tabs>
       <div className='toolbar-position'>
-        <Toolbar className="toolbar-biz" />
+        <Toolbar tools={tools} className="toolbar-biz" />
       </div>
       <ZoomController
         className='zoom-position'

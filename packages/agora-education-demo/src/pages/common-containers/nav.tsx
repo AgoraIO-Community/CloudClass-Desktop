@@ -1,20 +1,31 @@
-import React, { useState } from 'react'
+import { useRoomStore } from '@/hooks'
 import { BizHeader } from 'agora-scenario-ui-kit'
+import { observer } from 'mobx-react'
+import React from 'react'
 
-export const NavigationBar: React.FC<any> = () => {
+const useNavigationContext = () => {
+  const roomStore = useRoomStore()
+  return roomStore.navigationState
+}
+
+export const NavigationBar: React.FC<any> = observer(() => {
+
+  const navigationState = useNavigationContext()
 
   return (
     <BizHeader
-      isStarted={true}
-      title="声网云课堂"
-      signalQuality='unknown'
+      isStarted={navigationState.isStarted}
+      title={navigationState.title}
+      signalQuality={navigationState.signalQuality}
       monitor={{
-        cpuUsage: 0,
-        networkLatency: 10,
-        networkQuality: 'good',
-        packetLostRate: 0
+        cpuUsage: navigationState.cpuUsage,
+        networkLatency: navigationState.networkLatency,
+        networkQuality: navigationState.networkQuality,
+        packetLostRate: navigationState.packetLostRate,
       }}
-      onClick={(itemType: string) => {}}
+      onClick={(itemType: string) => {
+
+      }}
     />
   )
-}
+})

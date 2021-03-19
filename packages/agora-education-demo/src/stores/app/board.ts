@@ -11,6 +11,7 @@ import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netless
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
+import { ToolItem } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
 import { get, isEmpty, omit, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -361,9 +362,7 @@ export class BoardStore extends ZoomController {
       this.ossClient = new OSS(demoOssConfig)
       this.folder = demoOssConfig.folder
     }
-    this.on('zoom-scale-changed', ({targetScale}: {targetScale: number}) => {
-      this.updateScale(targetScale)
-    })
+    this.scale = 0
   }
 
   get room(): Room {
@@ -1529,7 +1528,8 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       this.room.moveCamera({scale})
     }
-    this.scale = scale
+    this.scale = this.room.state.zoomScale
+    // this.scale = scale
   }
 
   @action
@@ -1824,6 +1824,61 @@ export class BoardStore extends ZoomController {
   @observable
   uploadingProgress: number = 0
 
+  @computed
+  get tools(): ToolItem[] {
+    const defaultTools: ToolItem[] = [
+      {
+        value: 'selection',
+        label: '选择',
+        icon: 'select',
+      },
+      {
+        value: 'text',
+        label: '文本',
+        icon: 'text',
+      },
+      {
+        value: 'eraser',
+        label: '橡皮',
+        icon: 'eraser',
+      },
+      {
+        value: 'color',
+        label: '颜色',
+        icon: 'color',
+      },
+      {
+        value: 'blank-page',
+        label: '新增空白页',
+        icon: 'blank-page',
+      },
+      {
+        value: 'hand',
+        label: '举手',
+        icon: 'hand',
+      },
+      {
+        value: 'cloud',
+        label: '云盘',
+        icon: 'cloud',
+      },
+      {
+        value: 'follow',
+        label: '视角跟随',
+        icon: 'follow',
+      },
+      {
+        value: 'tools',
+        label: '工具箱',
+        icon: 'tools',
+      }
+    ]
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return defaultTools
+    }
+    return defaultTools
+  }
+
   @action
   reset () {
     this.downloading = false
@@ -1983,9 +2038,11 @@ export class BoardStore extends ZoomController {
 
   setZoomScale(operation: string) {
     if (operation === 'out') {
-      this.moveRuleIndex(-1)
+      const scale = this.moveRuleIndex(-1, this.scale)
+      this.updateScale(scale)
     } else {
-      this.moveRuleIndex(+1)
+      const scale = this.moveRuleIndex(1, this.scale)
+      this.updateScale(scale)
     }
   }
 
