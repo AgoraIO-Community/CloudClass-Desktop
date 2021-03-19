@@ -282,7 +282,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: rgba(0, 0, 0, 0.85);
+  color: #7b88a0;
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5715;
@@ -313,19 +313,27 @@
     0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 .tabs-dropdown-menu-item {
+  display: flex;
+  align-items: center;
   min-width: 120px;
   margin: 0;
   padding: 5px 12px;
   overflow: hidden;
-  color: rgba(0, 0, 0, 0.85);
+  color: #7b88a0;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 22px;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
   transition: all 0.3s;
 }
+
+.tabs-dropdown-menu-item .iconfont {
+  font-size: 22px;
+  margin-right: 4px;
+}
+
 .tabs-dropdown-menu-item:hover {
   background: #f5f5f5;
 }
@@ -485,9 +493,10 @@
 .tabs > .tabs-nav .tabs-nav-more,
 .tabs > div > .tabs-nav .tabs-nav-more {
   position: relative;
-  padding: 8px 16px;
+  padding: 0 16px;
   background: transparent;
   border: 0;
+  outline: none;
 }
 .tabs > .tabs-nav .tabs-nav-more::after,
 .tabs > div > .tabs-nav .tabs-nav-more::after {
@@ -634,4 +643,60 @@
   flex: none;
   width: 100%;
   outline: none;
+}
+
+.tabs-slide-up-enter,
+.tabs-slide-up-appear {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.tabs-slide-up-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.tabs-slide-up-enter.tabs-slide-up-enter-active,
+.tabs-slide-up-appear.tabs-slide-up-appear-active {
+  animation-name: slideUpIn;
+  animation-play-state: running;
+}
+.tabs-slide-up-leave.tabs-slide-up-leave-active {
+  animation-name: slideUpOut;
+  animation-play-state: running;
+  pointer-events: none;
+}
+.tabs-slide-up-enter,
+.tabs-slide-up-appear {
+  opacity: 0;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.tabs-slide-up-leave {
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+}
+
+@keyframes slideUpOut {
+  0% {
+    transform: scaleY(1);
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0.8);
+    transform-origin: 0% 0%;
+    opacity: 0;
+  }
+}
+
+@keyframes slideUpIn {
+  0% {
+    transform: scaleY(0.8);
+    transform-origin: 0% 0%;
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: 0% 0%;
+    opacity: 1;
+  }
 }
