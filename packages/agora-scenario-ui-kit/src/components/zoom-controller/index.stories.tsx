@@ -21,7 +21,7 @@ export const Docs = ({ zoomValue, currentPage, totalPage }: DocsType) => (
                 currentPage={currentPage}
                 totalPage={totalPage}
                 clickHandler={e => {
-                    console.log('user', e.target)
+                    console.log('zoom item type ', e)
                 }}
             />
         </div>

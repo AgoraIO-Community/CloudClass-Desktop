@@ -1,21 +1,73 @@
-import { Icon, TabPane, Tabs, Toolbar, ZoomController } from 'agora-scenario-ui-kit'
-import { range } from 'lodash'
+import { useBoardStore,  } from '@/hooks'
+import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType, ToolItem } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
+import React, { useCallback, useRef } from 'react'
+
+export type WhiteBoardState = {
+  zoomValue: number,
+  currentPage: number,
+  totalPage: number,
+
+  items: ToolItem[],
+  handleToolBarChange: (evt: any) => Promise<any> | any,
+  handleZoomControllerChange: (e: any) => Promise<any> | any,
+}
 
 const useWhiteboardState = () => {
+  const boardStore = useBoardStore()
 
-  // const [state]
+  const boardRef = useRef<HTMLDivElement | null>(null)
+
+  const mountToDOM = useCallback((dom: any) => {
+    if (dom) {
+      boardStore.mount(dom)
+    } else {
+      boardStore.unmount()
+    }
+  }, [boardRef.current, boardStore])
+
+  const handleToolBarChange = (type: ZoomItemType) => {
+    const toolbarMap: Record<ZoomItemType, CallableFunction> = {
+      'forward': () => boardStore.changeFooterMenu('next_page'),
+      'backward': () => boardStore.changeFooterMenu('prev_page'),
+    }
+    toolbarMap[type]
+  }
+
+  const handleZoomControllerChange = async () => {
+      
+  }
+
+  return {
+    zoomValue: 0,
+    currentPage: boardStore.currentPage,
+    totalPage: boardStore.totalPage,
+    courseWareList: [],
+    handleToolBarChange,
+    handleZoomControllerChange,
+    ready: boardStore.ready,
+    mountToDOM,
+  }
 }
 
 export const WhiteboardContainer = observer(() => {
 
-  const zoomValue = 20
-  const currentPage = 1
-  const totalPage = 21
+  const {
+    zoomValue,
+    currentPage,
+    totalPage,
+    handleToolBarChange,
+    handleZoomControllerChange,
+    ready,
+    mountToDOM,
+  } = useWhiteboardState()
 
   return (
-    <div className="whiteboard" id="netless-board">
+    <div className="whiteboard">
+      {
+        ready ? 
+        <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
+      }
       <Tabs type="editable-card">
         <TabPane
           tab={
@@ -27,12 +79,6 @@ export const WhiteboardContainer = observer(() => {
           closable={false}
         key="0">
         </TabPane>
-        {/* {
-          range(5).map((i: number) => (
-            <TabPane tab="PPT课件制作规范" key={i+1}>
-            </TabPane>
-          ))
-        } */}
       </Tabs>
       <div className='toolbar-position'>
         <Toolbar className="toolbar-biz" />
@@ -42,9 +88,7 @@ export const WhiteboardContainer = observer(() => {
         zoomValue={zoomValue}
         currentPage={currentPage}
         totalPage={totalPage}
-        clickHandler={(e: any) => {
-          console.log('user', e.target)
-        }}
+        clickHandler={handleToolBarChange}
       />
     </div>
   )
