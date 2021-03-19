@@ -5,11 +5,24 @@ import { HomePage } from '@/pages/home';
 import { LaunchPage } from '@/pages/launch';
 import { PretestPage } from '@/pages/pretest';
 import React from 'react';
-import { BizPageRouter } from '@/types';
+import { BizPagePath, BizPageRouter } from '@/types';
+import { EduRoomTypeEnum } from 'agora-rte-sdk';
 
 export type AppRouteComponent = {
   path: string
   component: React.FC<any>
+}
+
+export const roomTypes = {
+  [EduRoomTypeEnum.Room1v1Class]: {
+    path: BizPagePath.OneToOnePath,
+  },
+  [EduRoomTypeEnum.RoomSmallClass]: {
+    path: BizPagePath.SmallClassPath,
+  },
+  [EduRoomTypeEnum.RoomBigClass]: {
+    path: BizPagePath.BigClassPath,
+  }
 }
 
 // TODO: need fix tsx

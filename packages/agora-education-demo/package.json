@@ -124,9 +124,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "7.7.5",
-    "@material-ui/core": "4.11.3",
-    "@material-ui/icons": "4.11.2",
-    "@material-ui/lab": "4.0.0-alpha.57",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.5",
     "@netless/react-seek-slider": "1.0.4",

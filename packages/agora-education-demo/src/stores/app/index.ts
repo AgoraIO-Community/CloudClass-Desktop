@@ -18,7 +18,7 @@ import { get, isEmpty } from 'lodash';
 import { action, autorun, computed, observable, runInAction, toJS } from 'mobx';
 import uuidv4 from 'uuid/v4';
 import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
-import { AcadsocRoomStore } from './acadsoc-room';
+import { RoomStore } from './acadsoc-room';
 import { BoardStore } from './board';
 import { HomeStore } from './home';
 import { MediaStore } from './media';
@@ -92,7 +92,7 @@ export class AppStore implements ClassRoomAbstractStore {
   boardStore!: BoardStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
-  acadsocStore!: AcadsocRoomStore;
+  roomStore!: RoomStore;
   pretestStore!: PretestStore;
   homeStore!: HomeStore;
 
@@ -298,7 +298,7 @@ export class AppStore implements ClassRoomAbstractStore {
     }
 
     this.pretestStore = new PretestStore(this)
-    this.acadsocStore = new AcadsocRoomStore(this)
+    this.roomStore = new RoomStore(this)
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.homeStore = new HomeStore(this)
@@ -622,7 +622,7 @@ export class AppStore implements ClassRoomAbstractStore {
   @action
   async releaseRoom() {
     try {
-      await this.acadsocStore.leave()
+      await this.roomStore.leave()
       reportService.stopHB()
       this.resetStates()
     } catch (err) {

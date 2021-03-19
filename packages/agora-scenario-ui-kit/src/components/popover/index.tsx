@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Tooltip, AbstractTooltipProps, TooltipPlacement } from '../tooltip';
+import React from 'react';
+import { AbstractTooltipProps, Tooltip } from '../tooltip';
 import {
   getRenderPropValue,
-  RenderFunction,
+  RenderFunction
 } from '../_util/getRenderPropValue';
 import { getTransitionName } from '../_util/motion';
 import './index.css';
@@ -47,7 +47,7 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
 );
 
 Popover.defaultProps = {
-  placement: 'top' as TooltipPlacement,
+  placement: 'top',
   trigger: 'hover',
   mouseEnterDelay: 0.1,
   mouseLeaveDelay: 0.1,

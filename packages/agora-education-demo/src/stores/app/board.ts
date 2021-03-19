@@ -367,7 +367,7 @@ export class BoardStore {
   }
 
   get localUser(): EduUser {
-    return this.appStore.acadsocStore.roomManager.localUser.user
+    return this.appStore.roomStore.roomManager.localUser.user
   }
 
   get localUserUuid() {
@@ -1068,11 +1068,11 @@ export class BoardStore {
       ...data,
       cursorAdapter,
       userPayload: {
-        userId: this.appStore.acadsocStore.roomInfo.userUuid,
+        userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: "",
-        cursorName: this.appStore.acadsocStore.roomInfo.userName,
+        cursorName: this.appStore.roomStore.roomInfo.userName,
       },
-      isAssistant: this.appStore.acadsocStore.isAssistant
+      isAssistant: this.appStore.roomStore.isAssistant
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -1157,7 +1157,7 @@ export class BoardStore {
       ...data,
       cursorAdapter,
       userPayload: {
-        userId: this.appStore.acadsocStore.roomInfo.userUuid,
+        userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: ""
       }
     })

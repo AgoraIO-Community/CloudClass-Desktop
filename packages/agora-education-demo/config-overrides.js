@@ -146,18 +146,18 @@ module.exports = override(
     use: { loader: 'worker-loader' },
   }),
   addWebpackExternals(setElectronDeps),
-  fixBabelImports("import", [
-    {
-      libraryName: "@material-ui/core",
-      libraryDirectory: "esm",
-      camel2DashComponentName: false
-    },
-    {
-      libraryName: "@material-ui/icon",
-      libraryDirectory: "esm",
-      camel2DashComponentName: false
-    }
-  ]),
+  // fixBabelImports("import", [
+  //   {
+  //     libraryName: "@material-ui/core",
+  //     libraryDirectory: "esm",
+  //     camel2DashComponentName: false
+  //   },
+  //   {
+  //     libraryName: "@material-ui/icon",
+  //     libraryDirectory: "esm",
+  //     camel2DashComponentName: false
+  //   }
+  // ]),
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)

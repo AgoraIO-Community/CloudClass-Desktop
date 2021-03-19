@@ -12,6 +12,7 @@
 
 .layout-content {
   @apply flex flex-row flex-1 h-full;
+  position: relative;
 }
 
 .layout-header {
@@ -21,5 +22,6 @@
 
 .layout-aside {
   @apply flex flex-col border-l border-gray-100 h-full w-72;
-  width: 19rem;
+  /* width: 19rem; */
+  @apply overflow-hidden;
 }

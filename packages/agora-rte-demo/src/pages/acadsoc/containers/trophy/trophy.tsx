@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef, useMemo} from 'react'
 import { observer } from 'mobx-react'
-import {useAcadsocRoomStore} from '@/hooks'
+import {useRoomStore} from '@/hooks'
 import './trophy.scss';
 
 export const Trophy = observer(() => {
 
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const [trophyState, setTrophyState] = useState<'none' | 'appear' | 'move'>('none')
 
   const giftRef = useRef<HTMLDivElement | null>(null)
@@ -14,7 +14,7 @@ export const Trophy = observer(() => {
 
   useEffect(() => {
     trophyRef.current?.addEventListener('transitionend', () => {
-      acadsocStore.showTrophyAnimation = false
+      roomStore.showTrophyAnimation = false
       setTrophyState('none')
     })
     giftRef.current?.addEventListener('animationend', () => {
@@ -23,7 +23,7 @@ export const Trophy = observer(() => {
   }, [])
 
   useEffect(() => {
-    if (acadsocStore.showTrophyAnimation) {
+    if (roomStore.showTrophyAnimation) {
       setTrophyState('appear')
       if (!audioRef.current) return
       audioRef.current.play().then(() => {
@@ -35,7 +35,7 @@ export const Trophy = observer(() => {
         }, 1500)
       })
     }
-  }, [acadsocStore.showTrophyAnimation, audioRef.current])
+  }, [roomStore.showTrophyAnimation, audioRef.current])
 
   const animationStyle = useMemo(() => {
     let display = 'none'
@@ -44,19 +44,19 @@ export const Trophy = observer(() => {
     } 
     if (trophyState !== 'move') {
       return {
-        left: acadsocStore.trophyFlyout.startPosition.x + 'px',
-        top: acadsocStore.trophyFlyout.startPosition.y + 'px',
+        left: roomStore.trophyFlyout.startPosition.x + 'px',
+        top: roomStore.trophyFlyout.startPosition.y + 'px',
         display,
       }
     } else {
       return {
-        left: acadsocStore.trophyFlyout.endPosition.x + 'px',
-        top: acadsocStore.trophyFlyout.endPosition.y + 'px',
+        left: roomStore.trophyFlyout.endPosition.x + 'px',
+        top: roomStore.trophyFlyout.endPosition.y + 'px',
         display,
         animation: 'trophyContainer 5s ease infinite'
       }
     }
-  }, [trophyState, JSON.stringify(acadsocStore.trophyFlyout.startPosition), JSON.stringify(acadsocStore.trophyFlyout.endPosition)])
+  }, [trophyState, JSON.stringify(roomStore.trophyFlyout.startPosition), JSON.stringify(roomStore.trophyFlyout.endPosition)])
 
   return(
     <div 
