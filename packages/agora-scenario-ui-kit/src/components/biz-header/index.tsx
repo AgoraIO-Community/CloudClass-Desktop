@@ -1,11 +1,10 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { Button } from '~components/button';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';
 import { Popover } from '~components/popover';
 import { SignalContent } from './signal-content';
 import './index.css';
-import { Modal } from '~components/modal';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
