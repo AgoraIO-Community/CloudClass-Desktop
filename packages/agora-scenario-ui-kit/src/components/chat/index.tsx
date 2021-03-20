@@ -5,6 +5,7 @@ import './index.css';
 import { Button } from '~components/button';
 import { Message } from './interface';
 import { ChatMessage } from './chat-message';
+import { ChatMin } from './chat-min'
 
 export interface ChatProps {
   /**
@@ -27,6 +28,13 @@ export interface ChatProps {
    * 输入框内容的值
    */
   chatText?: string;
+
+  closeIcon?: React.ReactElement;
+
+  minimize?: boolean;
+
+  unreadCount?: number;
+
   /**
    *  禁言状态改变的回调
    */
@@ -47,6 +55,9 @@ export const Chat: FC<ChatProps> = ({
   uid,
   isHost,
   chatText,
+  closeIcon,
+  minimize = false,
+  unreadCount = 0,
   onCanChattingChange,
   onText,
   onSend,
@@ -63,53 +74,67 @@ export const Chat: FC<ChatProps> = ({
   };
 
   return (
-    <div className="chat-panel">
-      <div className="chat-header">
-        <span className="chat-header-title">消息</span>
-        {isHost ? (
-          <Icon
-            onClick={() => onCanChattingChange(!canChatting)}
-            className="chat-header-message-state"
-            type={canChatting ? 'message-on' : 'message-off'}
-          />
-        ) : null}
-      </div>
-      {!canChatting ? (
-        <div className="chat-notice">
-          <span>
-            <Icon type="red-caution" />
-            <span>已开启学生禁言</span>
-          </span>
-        </div>
-      ) : null}
-      <div className="chat-history">
-        {!messages || messages.length === 0 ? (
-          <Placeholder />
-        ) : (
-          messages.map((message) => (
-            <ChatMessage
-              key={message.id}
-              {...message}
-              isOwn={uid === message.uid}
-            />
-          ))
-        )}
-      </div>
-      <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
-        <textarea
-          value={chatText}
-          rows={1}
-          className="chat-texting-message"
-          placeholder="请输入消息"
-          disabled={!isHost && !canChatting}
-          onChange={(e) => onText(e.currentTarget.value)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+    <>
+      {minimize ? (
+        <ChatMin
+          unreadCount={unreadCount}
         />
-        <Button disabled={!isHost && !canChatting} onClick={onSend}>
-          发送
+      ) : (
+        <div className="chat-panel">
+          <div className="chat-header">
+            <span className="chat-header-title">消息</span>
+            <span>
+              {isHost ? (
+                <Icon
+                  onClick={() => onCanChattingChange(!canChatting)}
+                  className="chat-header-message-state"
+                  type={canChatting ? 'message-on' : 'message-off'}
+                />
+              ) : null}
+              {
+                closeIcon && closeIcon
+              }
+            </span>
+          </div>
+          {!canChatting ? (
+            <div className="chat-notice">
+              <span>
+                <Icon type="red-caution" />
+                <span>已开启学生禁言</span>
+              </span>
+            </div>
+          ) : null}
+          <div className="chat-history">
+            {!messages || messages.length === 0 ? (
+              <Placeholder />
+            ) : (
+              messages.map((message) => (
+                <ChatMessage
+                  key={message.id}
+                  {...message}
+                  isOwn={uid === message.uid}
+                />
+              ))
+            )}
+          </div>
+          <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
+            <textarea
+              value={chatText}
+              rows={1}
+              className="chat-texting-message"
+              placeholder="请输入消息"
+              disabled={!isHost && !canChatting}
+              onChange={(e) => onText(e.currentTarget.value)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+            <Button disabled={!isHost && !canChatting} onClick={onSend}>
+              发送
         </Button>
-      </div>
-    </div>
+          </div>
+        </div>
+      )}
+
+    </>
   );
 };

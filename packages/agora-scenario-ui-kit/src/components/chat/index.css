@@ -41,7 +41,7 @@
 }
 
 .chat-history {
-  height: 58%;
+  height: 75%;
   padding-bottom: 18px;
   overflow-y: scroll;
   position: absolute;

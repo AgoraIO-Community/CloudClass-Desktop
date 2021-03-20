@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
-import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 import { Slider } from '~components/slider'
 
