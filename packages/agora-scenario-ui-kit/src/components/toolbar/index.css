@@ -128,7 +128,7 @@
 }
 
 .expand-tools.tool-cabinet {
-  width: 300px;
+  max-width: 300px;
 }
 
 .expand-tools .cabinet-item {

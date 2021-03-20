@@ -109,16 +109,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
                 icon: <Icon type="tools"/>,
                 name: 'cabinet-2'
               },
-              {
-                id: 'cabinet-3',
-                icon: <Icon type="tools"/>,
-                name: 'cabinet-3'
-              },
-              {
-                id: 'cabinet-4',
-                icon: <Icon type="tools"/>,
-                name: 'cabinet-4'
-              }
             ]}
           />
         )

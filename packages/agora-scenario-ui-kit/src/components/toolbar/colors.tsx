@@ -23,6 +23,10 @@ const defaultColors = [
 export interface ColorsProps extends ToolItem {
   colors?: string[];
   activeColor?: string;
+  colorSliderMin?: number;
+  colorSliderMax?: number;
+  colorSliderDefault?: number;
+  colorSliderStep?: number;
   onClick?: (value: string) => void;
 }
 
@@ -30,6 +34,10 @@ export const Colors: FC<ColorsProps> = ({
   label,
   colors = defaultColors,
   activeColor = '#7ed321',
+  colorSliderMin = 0,
+  colorSliderMax = 100,
+  colorSliderDefault = 50,
+  colorSliderStep = 1,
   onClick,
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
@@ -41,6 +49,10 @@ export const Colors: FC<ColorsProps> = ({
     <div className={`expand-tools colors`}>
       <Slider
         style={{width: '100%'}}
+        defaultValue={colorSliderDefault}
+        min={colorSliderMin}
+        max={colorSliderMax}
+        step={colorSliderStep}
       />
       {colors.map((color) => (
         <div

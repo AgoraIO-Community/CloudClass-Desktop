@@ -12,17 +12,23 @@ export interface CabinetItem {
 
 export interface ToolCabinetProps extends ToolItem { 
     cabinetList: CabinetItem[]
+    onClick?: (value: string) => void;
 }
 
 export const ToolCabinet: FC<ToolCabinetProps> = ({
     label,
     cabinetList = [],
+    onClick,
 }) => {
     const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
+    const handleClick = (cabinetId: string) => {
+        setPopoverVisible(!popoverVisible);
+        onClick && onClick(cabinetId);
+    };
     const content = (
         <div className={`expand-tools tool-cabinet`}>
             {cabinetList.map((item) => (
-                <div className="cabinet-item" key={item.id}>
+                <div className="cabinet-item" key={item.id} onClick={() => handleClick(item.id)}>
                     {item.icon}
                     <span>{item.name}</span>
                 </div>
