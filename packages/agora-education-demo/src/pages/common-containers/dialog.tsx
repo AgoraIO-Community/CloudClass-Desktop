@@ -126,10 +126,10 @@ export const Exit = observer((id: string) => {
   }, [isStarted])
   return (
     <Modal
-    onOk={onOK}
-    onCancel={onCancel}
-    footer={ButtonGroup()}
-    title="下课确认">
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title="下课确认">
     <p>你确定要离开教室吗？</p>
     </Modal>
   )

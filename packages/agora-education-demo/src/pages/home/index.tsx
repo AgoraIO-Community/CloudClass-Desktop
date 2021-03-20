@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import { Home } from 'agora-scenario-ui-kit'
-import { observer } from 'mobx-react'
-import { homeApi } from '@/services/home-api'
 import { useHomeStore } from '@/hooks'
-import {storage} from '@/utils/utils'
+import { homeApi } from '@/services/home-api'
+import { storage } from '@/utils/utils'
+import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk'
+import { Home } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
+import { observer } from 'mobx-react'
+import React, { useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
 
 export const HomePage = observer(() => {
@@ -13,9 +14,27 @@ export const HomePage = observer(() => {
 
   const [roomId, setRoomId] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
-  const [role, setRole] = useState<string>('')
-  const [scenario, setScenario] = useState<string>('')
+  const [userRole, setRole] = useState<string>('')
+  const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(3000)
+
+  const role = useMemo(() => {
+    const roles = {
+      'teacher': EduRoleTypeEnum.teacher,
+      'assistant': EduRoleTypeEnum.assistant,
+      'student': EduRoleTypeEnum.student,
+      'invisible': EduRoleTypeEnum.invisible
+    }
+    return roles[userRole]
+  }, [userRole])
+
+  const scenario = useMemo(() => {
+    const scenes = {
+      '1v1': EduSceneType.Scene1v1,
+      'mid-class': EduSceneType.SceneMedium
+    }
+    return scenes[curScenario]
+  }, [curScenario])
 
   const uid = `${roomId}${userName}${role}`
 
@@ -46,8 +65,8 @@ export const HomePage = observer(() => {
       version="1.2.0"
       roomId={roomId}
       userName={userName}
-      role={role}
-      scenario={scenario}
+      role={userRole}
+      scenario={curScenario}
       duration={duration}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
@@ -67,10 +86,10 @@ export const HomePage = observer(() => {
           userUuid: `${userUuid}`,
           rtmToken,
           roomUuid: roomId,
-          roomType: 0,
+          roomType: scenario,
           roomName: `test${roomId}`,
           userName: userName,
-          roleType: 1,
+          roleType: role,
           startTime: +dayjs(Date.now()),
           duration: duration,
         })
