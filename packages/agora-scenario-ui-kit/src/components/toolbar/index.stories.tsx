@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Toolbar, ToolbarProps, Colors, ToolItem, Pens } from '~components/toolbar';
+import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -72,6 +72,15 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'cloud',
       label: '云盘',
       icon: 'cloud',
+      component: () => {
+        return (
+          <CloudDisk
+            value="cloud"
+            label="云盘"
+            icon="cloud"
+          />
+        )
+      }
     },
     {
       value: 'follow',
