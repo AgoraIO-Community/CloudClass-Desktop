@@ -8,8 +8,8 @@ const meta: Meta = {
 };
 
 export const Docs: FC<ToolbarProps> = (props) => {
-  const [activeColor, setActiveColor] = useState('#7ed321');
-  const [activePen, setActivePen] = useState('pen')
+  const [activeColor, updateColor]= useState<string>('#7ed321')
+  const [pen, updatePen]= useState<string>('pen')
   const tools: ToolItem[] = [
     {
       value: 'selection',
@@ -21,12 +21,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '铅笔',
       icon: 'pen',
       component: () => {
-        const [pen, updatePen]= useState<string>('pen')
         return (
           <Pens
-            value='color'
-            label='颜色'
-            icon='color'
+            value="pen"
+            label="铅笔"
+            icon="pen"
             activePen={pen}
             onClick={(color) => updatePen(color)}
           />
@@ -48,7 +47,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '颜色',
       icon: 'color',
       component: () => {
-        const [activeColor, updateColor]= useState<string>('#7ed321')
         return (
           <Colors
             value='color'
