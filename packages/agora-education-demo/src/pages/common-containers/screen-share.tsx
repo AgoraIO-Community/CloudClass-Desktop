@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IconButton, Icon, Modal, Button, ScreenShare } from 'agora-scenario-ui-kit'
 
 export const ScreenShareContainer = () => {
-    const title = 'screen share title';
+    // TODO: 子标题待确认
     const subTitle = 'screen share sub-title';
     const [visible, setVisible] = useState<boolean>(true)
     const [iconBtnShow, setIconBtnShow] = useState<boolean>(false)
@@ -11,40 +11,22 @@ export const ScreenShareContainer = () => {
         title: 'share-1'
     }])
     const [windowId, setWindowId] = useState<string>('')
-    function closeModal() {
-        setVisible(false)
-    }
-    // console.log({visible, windowItems, windowId})
     return (
-        <div className="fixed-container">
+        <>
             {iconBtnShow ? (<IconButton icon={<Icon type="exit" color="red" />} buttonTextColor="skyblue" buttonText="停止共享" />) : ""}
             {visible ? (
                 <>
-                    <Modal
-                        width={662}
-                        title={title}
-                        footer={[
-                            <Button type="secondary" action="cancel">cancel</Button>,
-                            <Button action="ok">ok</Button>
-                        ]}
-                        onCancel={closeModal}
-                        onOk={() => {
-                            setIconBtnShow(true)
-                            closeModal()
+                    <ScreenShare
+                        onActiveItem={(id: any) => {
+                            setWindowId(id)
                         }}
-                    >
-                        <ScreenShare
-                            onActiveItem={(id: any) => {
-                                setWindowId(id)
-                            }}
-                            currentActiveId={windowId}
-                            screenShareTitle={subTitle}
-                            windowItems={windowItems}
-                            onConfirm={() => { }}
-                        ></ScreenShare>
-                    </Modal>
+                        currentActiveId={windowId}
+                        screenShareTitle={subTitle}
+                        windowItems={windowItems}
+                        onConfirm={() => { }}
+                    ></ScreenShare>
                 </>
             ) : ""}
-        </div>
+        </>
     )
 }

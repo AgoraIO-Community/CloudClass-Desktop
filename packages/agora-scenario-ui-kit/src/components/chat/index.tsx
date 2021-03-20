@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
-import { Placeholder } from './placeholder';
+import { Placeholder } from '~components/placeholder';
 import './index.css';
 import { Button } from '~components/button';
 import { Message } from './interface';
@@ -112,7 +112,9 @@ export const Chat: FC<ChatProps> = ({
           ) : null}
           <div className="chat-history">
             {!messages || messages.length === 0 ? (
-              <Placeholder />
+              <Placeholder 
+                placeholderDesc="还没有消息"
+              />
             ) : (
               messages.map((message) => (
                 <ChatMessage

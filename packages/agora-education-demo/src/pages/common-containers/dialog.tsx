@@ -5,6 +5,39 @@ import { Button, Modal } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
+import { ScreenShareContainer } from './screen-share'
+
+export const OpenShareScreen = observer(({id, resourceName}: {id: string, resourceName: string}) => {
+
+  const uiStore = useUIStore()
+
+  const onOK = async () => {
+    uiStore.removeDialog(id)
+  }
+
+  const onCancel = () => {
+    uiStore.removeDialog(id)
+  }
+
+  const ButtonGroup = useCallback(() => {
+    return [
+      <Button type={'secondary'} action="cancel">取消</Button>,
+      <Button type={'primary'} action="ok">确认</Button>,
+    ]
+  }, [])
+
+  return (
+    <Modal
+      width={662}
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title="屏幕共享"
+    >
+      <ScreenShareContainer/>
+    </Modal>
+  )
+})
 
 export const CloseConfirm = observer(({id, resourceName}: {id: string, resourceName: string}) => {
 
