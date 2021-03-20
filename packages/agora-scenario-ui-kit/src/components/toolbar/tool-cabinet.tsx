@@ -4,44 +4,37 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 
-const defaultPens = [
-    'pen',
-    'square',
-    'circle',
-    'line'
-]
+export interface CabinetItem {
+    id: string;
+    icon: React.ReactElement;
+    name: string;
+}
 
-export interface PensProps extends ToolItem {
-    pens?: string[];
-    activePen?: string;
+export interface ToolCabinetProps extends ToolItem { 
+    cabinetList: CabinetItem[]
     onClick?: (value: string) => void;
 }
 
-export const Pens: FC<PensProps> = ({
+export const ToolCabinet: FC<ToolCabinetProps> = ({
     label,
-    pens = defaultPens,
-    activePen = '#7ed321',
+    cabinetList = [],
     onClick,
 }) => {
     const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
-    const handleClick = (pen: string) => {
+    const handleClick = (cabinetId: string) => {
         setPopoverVisible(!popoverVisible);
-        onClick && onClick(pen);
+        onClick && onClick(cabinetId);
     };
     const content = (
-        <div className={`expand-tools pens`}>
-            {pens.map((pen) => (
-                <div
-                    key={pen}
-                    onClick={() => handleClick(pen)}
-                    className="expand-tool pen"
-                >
-                    <Icon type={pen as any} />
-                    <div className={activePen === pen ? "active-pen-div" : ""} style={{ width: 3, height: 3 }}></div>
+        <div className={`expand-tools tool-cabinet`}>
+            {cabinetList.map((item) => (
+                <div className="cabinet-item" key={item.id} onClick={() => handleClick(item.id)}>
+                    {item.icon}
+                    <span>{item.name}</span>
                 </div>
             ))}
         </div>
-    );
+    )
     return (
         <Tooltip title={label} placement="bottom">
             <Popover
@@ -52,10 +45,10 @@ export const Pens: FC<PensProps> = ({
                 content={content}
                 placement="right">
                 <div className="tool">
-                    <Icon type={activePen as any} />
-                    <Icon type="triangle-down" className="triangle-icon" />
+                    <Icon type="tools" />
+                    <Icon type="triangle-down" className="triangle-icon"/>
                 </div>
             </Popover>
         </Tooltip>
-    );
-};
+    )
+}

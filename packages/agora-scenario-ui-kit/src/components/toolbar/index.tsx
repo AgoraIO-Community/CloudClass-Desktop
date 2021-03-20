@@ -12,6 +12,10 @@ export { Colors } from './colors';
 
 export { Pens } from './pens'
 
+export { CloudDisk } from './cloud-disk'
+
+export { ToolCabinet } from './tool-cabinet'
+
 export type { ToolItem } from './tool';
 
 export interface ToolbarProps extends BaseProps {
