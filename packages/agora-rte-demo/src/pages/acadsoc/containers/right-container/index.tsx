@@ -78,7 +78,7 @@ export const RightContainer = observer(() => {
     let count = acadsocStore.unwind.length
     let chatBottomMargin
     if (count === 0) {
-      chatBottomMargin = 0
+      chatBottomMargin = 10
     } else if (count === 1) {
       chatBottomMargin = 100
     } else {

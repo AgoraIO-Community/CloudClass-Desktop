@@ -6,11 +6,14 @@ import { themeConfig } from '../theme'
 export interface BoardProps {
   children?: any,
   style?: CSSProperties,
+  borderless: boolean
 }
 
-export const Board = ({children, style}: BoardProps) => {
+export const Board = ({children, style, borderless}: BoardProps) => {
   return (
-    <Box style={{
+    <Box style={borderless ? {
+      ...style
+    } : {
       ...themeConfig.dialog.border,
       ...style
     }}>
