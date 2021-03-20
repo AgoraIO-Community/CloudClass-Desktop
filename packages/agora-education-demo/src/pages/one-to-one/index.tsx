@@ -11,6 +11,7 @@ import { NavigationBar } from '../common-containers/nav'
 import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/video-player'
 import classnames from 'classnames';
 import './1v1.style.css'
+import { ScreenSharePlayerContainer } from '../common-containers/screen-share-player'
 
 const use1v1Store = () => {
   const roomStore = useRoomStore()
@@ -60,6 +61,7 @@ export const OneToOne = observer(() => {
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
         <Content>
+          <ScreenSharePlayerContainer/>
           <WhiteboardContainer />
         </Content>
         <Aside className={fullscreenCls}>

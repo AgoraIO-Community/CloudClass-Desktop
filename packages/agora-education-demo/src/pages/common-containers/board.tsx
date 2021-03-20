@@ -6,6 +6,7 @@ import React, { useCallback, useRef } from 'react'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
+import { ToolCabinetContainer } from './tool-cabinet'
 
 export const allTools: ToolItem[] = [
   {
@@ -63,6 +64,9 @@ export const allTools: ToolItem[] = [
     value: 'tools',
     label: '工具箱',
     icon: 'tools',
+    component: () => {
+      return <ToolCabinetContainer/>
+    }
   }
 ]
 

@@ -100,14 +100,14 @@ export const Docs: FC<ToolbarProps> = (props) => {
             icon='tools'
             cabinetList={[
               {
-                id: 'cabinet-1',
+                id: 'screenShare',
                 icon: <Icon type="tools"/>,
-                name: 'cabinet-1'
+                name: '屏幕共享'
               },
               {
-                id: 'cabinet-2',
+                id: 'laserPoint',
                 icon: <Icon type="tools"/>,
-                name: 'cabinet-2'
+                name: '激光笔'
               },
             ]}
           />
