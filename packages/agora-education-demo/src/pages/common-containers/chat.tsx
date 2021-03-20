@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Chat } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import { useBoardStore, useRoomStore, useSceneStore } from '@/hooks'
+import { useBoardStore, useRoomStore, useSceneStore, useUIStore } from '@/hooks'
 import { get } from 'lodash'
 
 export const useChatContext = () => {
   const boardStore = useBoardStore()
   const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
+  const uiStore = useUIStore()
 
   const [nextId, setNextID] = useState('')
 
@@ -20,7 +21,6 @@ export const useChatContext = () => {
   }, [isMounted])
 
   const fetchMessage = async () => {
-    // setIsFetchHistory(false)
     const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
     isMounted.current && setNextID(get(res, 'nextId', 'last'))
   }
@@ -30,16 +30,6 @@ export const useChatContext = () => {
       fetchMessage()
     }
   }, [roomStore.joined])
-
-  // useEffect(() => {
-  //   if (roomStore.joined) {
-  //     if (sceneStore.isMuted) {
-
-  //     } else {
-        
-  //     }
-  //   }
-  // }, [roomStore.joined, sceneStore.isMuted])
 
   const [text, setText] = useState<string>('')
 
@@ -57,20 +47,21 @@ export const useChatContext = () => {
     }
   }, [sceneStore])
 
-  const [minimize, setMinimize] = useState<boolean>(false)
-
-
   useEffect(() => {
     if (boardStore.isFullScreen) {
-      setMinimize(true)
+      uiStore.chatMinimize = true
     } else {
-      setMinimize(false)
+      uiStore.chatMinimize = false
     }
-  }, [boardStore.isFullScreen, setMinimize])
+  }, [boardStore.isFullScreen, uiStore])
 
   const onClickMiniChat = useCallback(() => {
-    setMinimize(true)
-  }, [minimize, setMinimize])  
+    uiStore.toggleChatMinimize()
+  }, [uiStore])
+
+  const handleScrollTop = useCallback(() => {
+
+  }, [uiStore])
 
   return {
     meUid: roomStore.roomInfo.userUuid,
@@ -79,25 +70,31 @@ export const useChatContext = () => {
     onChangeText: (textValue: any) => {
       setText(textValue)
     },
-    isMuted: sceneStore.isMuted,
+    canChatting: !sceneStore.isMuted,
     isHost: sceneStore.isHost,
     handleSendText,
     onCanChattingChange,
     onClickMiniChat,
-    minimize
+    minimize: uiStore.chatMinimize,
+    handleScrollTop
   }
 }
 
 export const RoomChat: React.FC<any> = observer(() => {
 
-  const {meUid, minimize, isHost, messageList, isMuted, text, onChangeText, handleSendText, onCanChattingChange, onClickMiniChat} = useChatContext()
+  const {
+    meUid, minimize, isHost,
+    messageList, canChatting, text,
+    onChangeText, handleSendText,
+    onCanChattingChange, onClickMiniChat
+  } = useChatContext()
 
   return (
     <Chat
       minimize={minimize}
       onClickMiniChat={onClickMiniChat}
       onCanChattingChange={onCanChattingChange}
-      canChatting={isMuted}
+      canChatting={canChatting}
       isHost={isHost}
       uid={meUid}
       messages={messageList}

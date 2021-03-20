@@ -70,12 +70,13 @@ export class UIStore {
   @observable
   toastQueue: ToastType[] = []
 
+  @observable
+  chatMinimize: boolean = false
+
   appStore: AppStore;
 
   constructor(appStore: AppStore) {
     this.appStore = appStore
-    this.loading = false
-    this.boardLoading = false;
   }
 
   resetStateQueue() {
@@ -112,10 +113,15 @@ export class UIStore {
     return id;
   }
 
+  toggleChatMinimize() {
+    this.chatMinimize = !this.chatMinimize
+  }
+
   @action.bound
   reset() {
     this.loading = false
     this.boardLoading = false
+    this.chatMinimize = false
     this.resetStateQueue()
   }
 
