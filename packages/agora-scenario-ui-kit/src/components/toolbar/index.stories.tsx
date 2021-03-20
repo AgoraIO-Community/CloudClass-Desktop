@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Toolbar, ToolbarProps, Colors, ToolItem, Pens } from '~components/toolbar';
+import { Icon } from '~components/icon'
+import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk, ToolCabinet } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -8,8 +9,8 @@ const meta: Meta = {
 };
 
 export const Docs: FC<ToolbarProps> = (props) => {
-  const [activeColor, setActiveColor] = useState('#7ed321');
-  const [activePen, setActivePen] = useState('pen')
+  const [activeColor, updateColor]= useState<string>('#7ed321')
+  const [pen, updatePen]= useState<string>('pen')
   const tools: ToolItem[] = [
     {
       value: 'selection',
@@ -21,12 +22,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '铅笔',
       icon: 'pen',
       component: () => {
-        const [pen, updatePen]= useState<string>('pen')
         return (
           <Pens
-            value='color'
-            label='颜色'
-            icon='color'
+            value="pen"
+            label="铅笔"
+            icon="pen"
             activePen={pen}
             onClick={(color) => updatePen(color)}
           />
@@ -48,7 +48,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '颜色',
       icon: 'color',
       component: () => {
-        const [activeColor, updateColor]= useState<string>('#7ed321')
         return (
           <Colors
             value='color'
@@ -74,6 +73,15 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'cloud',
       label: '云盘',
       icon: 'cloud',
+      component: () => {
+        return (
+          <CloudDisk
+            value="cloud"
+            label="云盘"
+            icon="cloud"
+          />
+        )
+      }
     },
     {
       value: 'follow',
@@ -84,6 +92,27 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'tools',
       label: '工具箱',
       icon: 'tools',
+      component: () => {
+        return (
+          <ToolCabinet
+            value='tools'
+            label='工具箱'
+            icon='tools'
+            cabinetList={[
+              {
+                id: 'cabinet-1',
+                icon: <Icon type="tools"/>,
+                name: 'cabinet-1'
+              },
+              {
+                id: 'cabinet-2',
+                icon: <Icon type="tools"/>,
+                name: 'cabinet-2'
+              },
+            ]}
+          />
+        )
+      }
     },
   ];
   return <Toolbar {...props} tools={tools}></Toolbar>;

@@ -15,7 +15,7 @@ type DocsType = {
 
 export const Docs = ({ zoomValue, currentPage, totalPage }: DocsType) => (
     <>
-        <div>
+        <div className="mt-20">
             <ZoomController
                 zoomValue={zoomValue}
                 currentPage={currentPage}

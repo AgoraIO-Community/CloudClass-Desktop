@@ -39,3 +39,11 @@
     margin-left: 6px;
     margin-right: 5px;
 }
+
+.zoom-controller .iconfont::before{
+    border-radius: 50%;
+} 
+
+.zoom-controller .iconfont:hover::before {
+    background-color: #f0f0f7;
+}

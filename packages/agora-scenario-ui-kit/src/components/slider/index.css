@@ -6,5 +6,7 @@
 }
 
 .agora-slider-tooltip .rc-slider-tooltip-inner {
+    position: relative;
     min-width: 50px;
+    z-index: 99999;
 }

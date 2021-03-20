@@ -3,6 +3,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
+import { Slider } from '~components/slider'
 
 const defaultColors = [
   '#ffffff',
@@ -22,6 +23,10 @@ const defaultColors = [
 export interface ColorsProps extends ToolItem {
   colors?: string[];
   activeColor?: string;
+  colorSliderMin?: number;
+  colorSliderMax?: number;
+  colorSliderDefault?: number;
+  colorSliderStep?: number;
   onClick?: (value: string) => void;
 }
 
@@ -29,6 +34,10 @@ export const Colors: FC<ColorsProps> = ({
   label,
   colors = defaultColors,
   activeColor = '#7ed321',
+  colorSliderMin = 0,
+  colorSliderMax = 100,
+  colorSliderDefault = 50,
+  colorSliderStep = 1,
   onClick,
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
@@ -38,6 +47,13 @@ export const Colors: FC<ColorsProps> = ({
   };
   const content = (
     <div className={`expand-tools colors`}>
+      <Slider
+        style={{width: '100%'}}
+        defaultValue={colorSliderDefault}
+        min={colorSliderMin}
+        max={colorSliderMax}
+        step={colorSliderStep}
+      />
       {colors.map((color) => (
         <div
           key={color}
@@ -59,7 +75,10 @@ export const Colors: FC<ColorsProps> = ({
         trigger="click"
         content={content}
         placement="right">
-        <Icon type="color" color={activeColor} />
+        <div className="tool">
+          <Icon type="color" color={activeColor} />
+          <Icon type="triangle-down" className="triangle-icon"/>
+        </div>  
       </Popover>
   );
 };
