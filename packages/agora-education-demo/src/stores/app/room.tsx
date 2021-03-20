@@ -198,11 +198,19 @@ export class RoomStore extends SimpleInterval {
   @observable
   roomChatMessages: ChatMessage[] = []
 
-  @observable
-  unreadMessageCount: number = 0
+  @computed
+  get chatMessageList(): any[] {
+    return this.roomChatMessages.map((item: ChatMessage, key: number) => ({
+      id: `${item.id}${item.ts}${key}`,
+      uid: item.id,
+      username: `${item.account}`,
+      timestamp: item.ts,
+      content: item.text,
+    }))
+  }
 
   @observable
-  messages: any[] = []
+  unreadMessageCount: number = 0
 
   @observable
   joined: boolean = false
@@ -334,37 +342,6 @@ export class RoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
-  @observable
-  minimizeView: MinimizeType[] = [
-    {
-      id: 'teacher'+Math.ceil(Math.random()*10),
-      type: 'teacher',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'student'+Math.ceil(Math.random()*10),
-      type: 'student',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'chat'+Math.ceil(Math.random()*10),
-      type: 'chat',
-      content: 'Chat',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 212,
-    },
-  ]
-
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
   appStore!: AppStore;
@@ -385,7 +362,6 @@ export class RoomStore extends SimpleInterval {
     this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
-    this.messages = []
     this.joined = false
     this.roomJoined = false
     this.time = 0
@@ -465,9 +441,11 @@ export class RoomStore extends SimpleInterval {
     }
   }
   
-  @action setMessageList(messageList: ChatMessage[]) {
+  @action
+  setMessageList(messageList: ChatMessage[]) {
     this.roomChatMessages = messageList
   }
+
   @action
   async getHistoryChatMessage(data: {
     nextId: string,
@@ -1006,11 +984,6 @@ export class RoomStore extends SimpleInterval {
           sender: false
         })
         console.log(' room-chat-message ', JSON.stringify(evt))
-         const minimizeView = this.minimizeView.find((item) => item.type === 'chat' )
-        if (minimizeView?.isHidden) { this.unreadMessageCount = this.unreadMessageCount + 1 }
-        else {
-          this.unreadMessageCount = 0
-        }
         BizLogger.info('room-chat-message', evt)
       })
       const userRole = EduRoleTypeEnum[this.roomInfo.userRole]

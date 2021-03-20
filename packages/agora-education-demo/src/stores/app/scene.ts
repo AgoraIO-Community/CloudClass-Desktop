@@ -241,6 +241,14 @@ export class SceneStore extends SimpleInterval {
   }
 
   @computed
+  get isHost(): boolean {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+      return true
+    }
+    return false
+  }
+
+  @computed
   get remoteUsersRenderer() {
     return this.appStore.mediaStore.remoteUsersRenderer
   }

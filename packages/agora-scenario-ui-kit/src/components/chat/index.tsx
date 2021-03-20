@@ -46,7 +46,7 @@ export interface ChatProps {
   /**
    * 点击发送按钮的回调
    */
-  onSend: () => void;
+  onSend: () => void | Promise<void>;
 }
 
 export const Chat: FC<ChatProps> = ({
