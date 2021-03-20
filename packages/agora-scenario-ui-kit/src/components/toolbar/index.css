@@ -126,3 +126,19 @@
 .expand-tool .active-pen-div {
   background: #868F9F;
 }
+
+.expand-tools.tool-cabinet {
+  width: 300px;
+}
+
+.expand-tools .cabinet-item {
+  width: 100px;
+  height: 78px;
+  color: #7B88A0;
+  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+}
+
+.expand-tools .cabinet-item:hover {
+  color: #191919;
+  background-color: #F9F9FC;
+}
