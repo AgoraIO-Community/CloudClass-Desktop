@@ -15,7 +15,7 @@ export const ColorsContainer = observer(() => {
       label='颜色'
       icon='color'
       activeColor={activeColor}
-      onClick={(color) => boardStore.changeHexColor(color)}
+      onClick={(color: any) => boardStore.changeHexColor(color)}
     />
   )
 })

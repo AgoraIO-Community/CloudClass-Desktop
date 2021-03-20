@@ -24,7 +24,7 @@ const VideoList = observer(() => {
   const boardStore = useBoardStore()
 
   return (
-    boardStore.isFullScreen ?
+    !boardStore.isFullScreen ?
     <>
       <VideoPlayerTeacher/>
       <VideoPlayerStudent/>

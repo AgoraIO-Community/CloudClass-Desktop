@@ -1,5 +1,12 @@
 const path = require('path')
 
+const disableEsLint = (e) => {
+  return e.module.rules.filter(e =>
+    e.use && e.use.some(e => e.options && void 0 !== e.options.useEslintrc)).forEach(s => {
+      e.module.rules = e.module.rules.filter(e => e !== s)
+    }), e
+}
+
 module.exports = {
   "stories": [
     "../src/**/*.stories.mdx",
@@ -11,6 +18,7 @@ module.exports = {
     "@storybook/preset-create-react-app"
   ],
   webpackFinal: async (config) => {
+    config = disableEsLint(config);
     config.module.rules.push({
       test: /\.css$/,
       use: [

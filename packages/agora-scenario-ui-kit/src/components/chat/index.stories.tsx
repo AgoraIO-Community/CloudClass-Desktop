@@ -46,7 +46,7 @@ const meta: Meta = {
 export const Docs: FC<ChatProps> = (props) => {
   const [text, setText] = useState<string>();
   return (
-    <div className="p-5 bg-black">
+    <div className="p-5 bg-black"  style={{display: 'flex', height: 500, width: 400}}>
       <Chat
         {...props}
         chatText={text}

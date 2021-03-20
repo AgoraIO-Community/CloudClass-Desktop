@@ -175,3 +175,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     </Popover>
   );
 };
+
+
+export const VideoPlaceHolder = () => {
+  return (
+    <div className="placeholder-video">
+      <img src="" alt=""/>
+    </div>
+  )
+}
