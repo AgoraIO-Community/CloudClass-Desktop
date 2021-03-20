@@ -358,6 +358,7 @@ export class SceneStore extends SimpleInterval {
     if (this.isElectron) {
       this.mediaService.prepareScreenShare().then((items: any) => {
         runInAction(() => {
+          // TODO: addDialog
           this.customScreenShareWindowVisible = true
           this.customScreenShareItems = items
         })

@@ -38,3 +38,12 @@ html, body, #root {
   margin: 10px;
   height: auto;
 }
+
+.screen-share-player-container {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+}
