@@ -11,6 +11,7 @@ export interface ChatMinProps extends BaseProps {
 
 export const ChatMin: FC<ChatMinProps> = ({
     unreadCount = 0,
+    onClick,
     className,
     ...restProps
 }) => {
@@ -19,7 +20,7 @@ export const ChatMin: FC<ChatMinProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <div className={cls} {...restProps}>
+        <div className={cls} {...restProps} onClick={onClick}>
             <Icon type="chat" color="#7B88A0"/>
             {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""}
         </div>
