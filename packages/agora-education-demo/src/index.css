@@ -21,4 +21,12 @@ html, body, #root {
   max-width: 300px;
   min-width: 300px;
   flex: 1;
+  position: relative;
+}
+
+.fullscreen .chat-panel {
+  position: absolute;
+  bottom: 0;
+  height: 60%;
+  width: 100%;
 }

@@ -1,5 +1,6 @@
 .toolbar {
   width: 42px;
+  background-color: white;
 }
 
 .toolbar.opened {

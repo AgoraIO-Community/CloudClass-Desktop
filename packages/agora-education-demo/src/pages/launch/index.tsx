@@ -12,7 +12,6 @@ window.controller = controller
 
 export const LaunchPage = observer(() => {
 
-  console.log('launch')
   const homeStore = useHomeStore()
 
   const history = useHistory()
@@ -22,11 +21,10 @@ export const LaunchPage = observer(() => {
   const roomRef = useRef<ClassRoom<ClassRoomAbstractStore> | null>(null)
 
   useEffect(() => {
-    console.log('launchOption>>>>>>', launchOption)
-    // if (!launchOption || isEmpty(launchOption)) {
-    //   history.push('/')
-    //   return 
-    // }
+    if (!launchOption || isEmpty(launchOption)) {
+      history.push('/')
+      return 
+    }
   }, [])
 
   const mountLaunch = useCallback(async (dom: any) => {
@@ -38,9 +36,9 @@ export const LaunchPage = observer(() => {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)
-          // if (evt === AgoraEduEvent.destroyed) {
-          //   history.push('/')
-          // }
+          if (evt === AgoraEduEvent.destroyed) {
+            history.push('/')
+          }
         }
       })
     }

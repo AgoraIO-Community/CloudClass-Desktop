@@ -49,7 +49,7 @@ const use1v1VideoContext = (): VideoContainerContext => {
         await sceneStore.unmuteAudio(userUuid, isLocal)
       }
     }
-  }, [userRole, sceneStore])
+  }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
 
   const onSendStar = useCallback(async (uid: any) => {
 

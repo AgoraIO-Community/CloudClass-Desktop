@@ -30,6 +30,7 @@ import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum, ChatMessage} from '@/types';
 import { filterChatText } from '@/utils/utils';
 import { Button, Modal, Toast } from 'agora-scenario-ui-kit';
+import { KickEnd, RoomEnd } from '@/pages/common-containers/dialog';
 
 dayjs.extend(duration)
 
@@ -802,6 +803,7 @@ export class RoomStore extends SimpleInterval {
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
+          this.sceneStore.streamList = roomManager.getFullStreamList()
           if (!this.sceneStore.joiningRTC) {
             return 
           }
@@ -1165,18 +1167,7 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      Modal.show({
-        title: t(`error.class_end`),
-        footer: [
-          <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
-          <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
-        ],
-        onOk: async () => {
-          await this.appStore.destroyRoom()
-        },
-        onCancel: () => {
-        }
-      })
+      this.appStore.uiStore.addDialog(RoomEnd)
     } else if(state === EduClassroomStateEnum.end) {
       const text = t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)})
       Toast.show({
@@ -1239,20 +1230,22 @@ export class RoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
-        Modal.show({
-          title: t(`aclass.notice`),
-          children: t(`toast.kick`),
-          footer: [
-            <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
-            <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
-          ],
-          onOk: async () => {
-            await this.appStore.destroyRoom()
-          }
-        })
+        this.appStore.uiStore.addDialog(KickEnd)
+        // Modal.show({
+        //   title: t(`aclass.notice`),
+        //   children: t(`toast.kick`),
+        //   footer: [
+        //     <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
+        //     <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
+        //   ],
+        //   onOk: async () => {
+        //     await this.appStore.destroyRoom()
+        //   }
+        // })
         break;
       }
       case QuickTypeEnum.End: {
+        this.appStore.uiStore.addDialog(RoomEnd)
         // Modal.confirm({
         //   title: t(`aclass.class_end`),
         //   text: t(`aclass.leave_room`),

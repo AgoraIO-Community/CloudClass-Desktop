@@ -1,16 +1,42 @@
-import { useRoomStore } from '@/hooks'
-import { BizHeader } from 'agora-scenario-ui-kit'
+import { useRoomStore, useUIStore } from '@/hooks'
+import { BizHeader, Modal, Button } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
-
-const useNavigationContext = () => {
-  const roomStore = useRoomStore()
-  return roomStore.navigationState
-}
+import React, { useCallback, useState } from 'react'
+import { Exit } from './dialog'
 
 export const NavigationBar: React.FC<any> = observer(() => {
 
-  const navigationState = useNavigationContext()
+  const roomStore = useRoomStore()
+
+  const navigationState = roomStore.navigationState
+
+  const uiStore = useUIStore()
+
+  const handleClick = useCallback(async (type: string) => {
+    console.log(' nav handleClick ', type)
+    switch (type) {
+      case 'exit': {
+        uiStore.addDialog(Exit)
+        break
+      }
+      case 'record': {
+        console.log('record')
+        break
+      }
+      case 'setting': {
+        console.log('setting')
+        break
+      }
+      case 'courseControl': {
+        console.log('courseControl')
+        break
+      }
+    }
+  }, [navigationState.isStarted])
+
+  const onClick = (type: string) => {
+    console.log(' nav ', type)
+  }
 
   return (
     <BizHeader
@@ -23,9 +49,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
         networkQuality: navigationState.networkQuality,
         packetLostRate: navigationState.packetLostRate,
       }}
-      onClick={(itemType: string) => {
-
-      }}
+      onClick={handleClick}
     />
   )
 })

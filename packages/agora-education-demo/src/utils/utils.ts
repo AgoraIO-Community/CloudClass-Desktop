@@ -4,7 +4,7 @@ import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
 import MD5 from "js-md5"
 import { isEmpty } from "lodash"
 import { useEffect } from "react"
-import { Room } from "white-web-sdk"
+import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./web-download.file"
 
 export type AppStorage = Storage | MemoryStorage
@@ -125,7 +125,6 @@ export class PersistLocalStorage {
 export const GlobalStorage = new CustomStorage();
 
 export const storage = new PersistLocalStorage()
-
 
 export const debounce = function(foo:any, t:number) {
   let timer:any
@@ -573,4 +572,40 @@ export class ZoomController extends EventEmitter {
     this.delaySyncRuleIndex();
     return targetScale
   }
+}
+
+export const transLineTool = {
+  'pen': ApplianceNames.pencil,
+  'square': ApplianceNames.rectangle,
+  'circle': ApplianceNames.ellipse,
+  'line': ApplianceNames.straight,
+}
+
+export const transToolBar = {
+  'pen': ApplianceNames.pencil,
+  'square': ApplianceNames.rectangle,
+  'circle': ApplianceNames.ellipse,
+  'line': ApplianceNames.straight,
+  'selection': ApplianceNames.selector,
+  'text': ApplianceNames.text,
+  'hand': ApplianceNames.hand,
+  'eraser': ApplianceNames.eraser,
+  // 'color': 'color',
+  //  TODO: 'laserPoint icon' need import
+  'laserPointer': ApplianceNames.laserPointer,
+  // 'blank-page': 'new-page',
+  // 'cloud': 'cloud',
+  // 'follow': 'follow',
+  // 'tools': 'tools'
+}
+
+export const mapToolBar: any = {
+  [`${ApplianceNames.pencil}`]: 'pen', 
+  [`${ApplianceNames.rectangle}`]: 'square',
+  [`${ApplianceNames.ellipse}`]: 'circle',
+  [`${ApplianceNames.arrow}`]: 'line',
+  [`${ApplianceNames.selector}`]: 'selection',
+  [`${ApplianceNames.text}`]: 'text',
+  [`${ApplianceNames.hand}`]: 'hand',
+  [`${ApplianceNames.eraser}`]: 'eraser',
 }

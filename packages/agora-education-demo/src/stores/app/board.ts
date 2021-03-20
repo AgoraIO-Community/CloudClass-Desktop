@@ -7,7 +7,7 @@ import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
 import { OSSConfig } from '@/utils/helper';
-import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, ZoomController } from '@/utils/utils';
+import { BizLogger, fetchNetlessImageByUrl, transLineTool, mapToolBar, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
@@ -16,17 +16,9 @@ import OSS from 'ali-oss';
 import { get, isEmpty, omit, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
-
-export enum CustomMenuItemType {
-  Thin = 'thin',
-  Small = 'small',
-  Normal = 'normal',
-  Large = 'large',
-  Pen = 'pen',
-  Arrow = 'arrow',
-  Mark = 'mark',
-  Laser = 'laser'
-}
+import {PensContainer} from '../../pages/common-containers/pens'
+import {ColorsContainer} from '../../pages/common-containers/colors'
+import { allTools } from '@/pages/common-containers/board';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -125,117 +117,6 @@ export enum DownloadStatus {
 }
 
 export class BoardStore extends ZoomController {
-
-  toolItems: any[] = [
-  {
-    itemName: 'mouse',
-    toolTip: true,
-    iconTooltipText: t('tool.selector'),
-  },
-  {
-    itemName: 'pencil',
-    toolTip: true,
-    popoverType: 'drawer',
-    iconTooltipText: t('tool.pencil'),
-  },
-  {
-    itemName: 'text',
-    toolTip: true,
-    popoverType: 'font',
-    iconTooltipText: t('tool.text'),
-  },
-  {
-    itemName: 'rectangle',
-    toolTip: true,
-    popoverType: 'stroke',
-    iconTooltipText: t('tool.rectangle'),
-  },
-  {
-    itemName: 'elliptic',
-    toolTip: true,
-    popoverType: 'stroke',
-    iconTooltipText: t('tool.ellipse'),
-  },
-  {
-    itemName: 'eraser',
-    toolTip: true,
-    iconTooltipText: t('tool.eraser'),
-  },
-  {
-    itemName: 'palette',
-    toolTip: true,
-    popoverType: 'color',
-    iconTooltipText: t('tool.color_picker'),
-  },
-  {
-    itemName: 'new-page',
-    toolTip: true,
-    iconTooltipText: t('tool.add'),
-  },
-  {
-    itemName: 'move',
-    toolTip: true,
-    iconTooltipText: t('tool.hand_tool'),
-  },
-  {
-    itemName: 'clear',
-    toolTip: true,
-    iconTooltipText: t('tool.clear'),
-  },
-  {
-    itemName: 'disk',
-    toolTip: true,
-    iconTooltipText: t('tool.disk'),
-  },
-]
-
-  static items: any = [
-    {
-      name: 'selector',
-      text: t('tool.selector')
-    },
-    {
-      name: 'pencil',
-      text: t('tool.pencil')
-    },
-    {
-      name: 'rectangle',
-      text: t('tool.rectangle')
-    },
-    {
-      name: 'ellipse',
-      text: t('tool.ellipse')
-    },
-    {
-      name: 'text',
-      text: t('tool.text')
-    },
-    {
-      name: 'eraser',
-      text: t('tool.eraser')
-    },
-    {
-      name: 'color_picker',
-      text: t('tool.color_picker')
-    },
-    {
-      name: 'add',
-      text: t('tool.add')
-    },
-    {
-      name: 'upload',
-      text: t('tool.upload')
-    },
-    {
-      name: 'hand_tool',
-      text: t('tool.hand_tool')
-    },
-    {
-      name: 'extension_tool',
-      text: t('tool.extension_tool')
-    }
-  ]
-
   scenes: any[] = []
 
   @observable
@@ -366,70 +247,20 @@ export class BoardStore extends ZoomController {
   }
 
   get room(): Room {
-    return this.boardClient.room
+    return this.boardClient?.room as Room
   }
 
   get localUser(): EduUser {
     return this.appStore.roomStore.roomManager.localUser.user
   }
 
-  get localUserUuid() {
-    return this.appStore.userUuid
+  @computed
+  get activeSceneName(): string {
+    return get(this.resourcesList[this.activeIndex], 'resourceName', '')
   }
 
-  @action
-  async fetchInit() {
-    let {
-      info
-    } = await this.boardService.getBoardInfo()
-    await this.join({
-      uuid: info.boardId,
-      roomToken: info.boardToken,
-      // $el: dom,
-      role: this.userRole,
-      isWritable: true,
-      disableDeviceInputs: true,
-      disableCameraTransform: true,
-      disableAutoResize: false
-    })
-    const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
-    const follow = get(this.room.state.globalState, 'follow', 0)
-    const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
-    this.grantUsers = grantUsers
-    const boardUser = this.grantUsers.includes(this.localUserUuid)
-    if (boardUser) {
-      this._grantPermission = true
-    }
-    this.follow = follow
-    this.isFullScreen = isFullScreen
-    // 默认只有老师不用禁止跟随
-    if (this.userRole !== EduRoleTypeEnum.teacher) {
-      if (this.boardClient.room && this.boardClient.room.isWritable) {
-        if (this.follow === FollowState.Follow) {
-          // await this.setWritable(true)
-          this.room.setViewMode(ViewMode.Broadcaster)
-          this.room.disableCameraTransform = true
-          this.room.disableDeviceInputs = true
-          this.lock = true
-        }
-        if (this.follow === FollowState.Freedom) {
-          // await this.setWritable(true)
-          this.room.setViewMode(ViewMode.Freedom)
-          this.room.disableCameraTransform = false
-          this.room.disableDeviceInputs = false
-          this.lock = false
-        }
-      }
-    } else {
-      this.room.disableCameraTransform = false
-    }
-
-    if (this.hasPermission) {
-      await this.setWritable(true)
-    } else {
-      await this.setWritable(this._grantPermission as boolean)
-    }
-    this.ready = true
+  get localUserUuid() {
+    return this.appStore.userUuid
   }
 
   @action
@@ -440,7 +271,6 @@ export class BoardStore extends ZoomController {
       await this.join({
         uuid: info.boardId,
         roomToken: info.boardToken,
-        // $el: dom,
         role: this.userRole,
         isWritable: true,
         disableDeviceInputs: true,
@@ -487,20 +317,6 @@ export class BoardStore extends ZoomController {
       this.ready = true
   }
 
-  async preloadCourseWare() {
-
-  }
-
-  checkShouldInitScene() {
-    if (this.isTeacher() && !this.teacherLogged()) {
-      return true
-    }
-    if (this.isStudent() && !this.studentLogged()) {
-      return false
-    }
-    return false
-  }
-
   loadScene(data: any[]): SceneDefinition[] {
     return data.map((item: ConvertedFile, index: number) => ({
       name: `${index + 1}`,
@@ -520,48 +336,19 @@ export class BoardStore extends ZoomController {
   controller: any = undefined
 
   async startDownload(taskUuid: string) {
-    const isWeb = this.appStore.isElectron ? false : true
     try {
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      // if (isWeb) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
-          this.preloadingProgress = progress
-          this.controller = controller
-        })
-      // } else {
-      //   const controller = new AbortController();
-      //   this.controller = controller
-      //   const resourcesHost = "convertcdn.netless.link";
-      //   const signal = controller.signal;
-      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      //   const res = await fetch(zipUrl, {
-      //       method: "get",
-      //       signal: signal,
-      //   }).then(fetchProgress({
-      //       onProgress: (progress: any) => {
-      //         if (progress.hasOwnProperty('percentage')) {
-      //           this.preloadingProgress = get(progress, 'percentage')
-      //         }
-      //       },
-      //   }));
-      //   if (res.status !== 200) {
-      //     throw GenericErrorWrapper({
-      //       code: res.status,
-      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-      //     })
-      //   }
-      // }
+      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+        this.preloadingProgress = progress
+        this.controller = controller
+      })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
       this.downloading = false
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
       this.downloading = false
     }
-  }
-
-  async startNativeDownload(taskUuid: string) {
-
   }
 
   @observable
@@ -584,24 +371,30 @@ export class BoardStore extends ZoomController {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
-  changeSceneItem(resourceName: string, currentPage: number) {
+  changeSceneItem(resourceName: string) {
     let targetPath = resourceName
     if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
-      targetPath = "/"
+      targetPath = "init"
     } else {
       targetPath = `/${resourceName}`
     }
 
+    const targetRes = this.resourcesList.find((item: any) => item.resourceName === targetPath)
+    const currentPage = get(targetRes, 'currentPage', 0)
     const sceneIsChanged = targetPath !== this.room.state.sceneState.contextPath
     if (sceneIsChanged) {
-      if (targetPath === "/") {
+      if (targetPath === "init") {
         if (currentPage === 0) {
           this.room.setScenePath(`/init`)
         } else {
           this.room.setScenePath(`/${currentPage}`)
         }
       } else {
-        this.room.setScenePath(`${targetPath}/${currentPage+1}`)
+        const targetResource = this.allResources.find((item => item.name === resourceName))
+        if (targetResource) {
+          const scenePath = targetResource!.scenes![currentPage].name
+          this.room.setScenePath(`${targetPath}/${scenePath}`)
+        }
       }
     }
 
@@ -629,13 +422,6 @@ export class BoardStore extends ZoomController {
   updateBoardSceneItems ({scenes, resourceUuid, resourceName, page, taskUuid}: any, setScene: boolean) {
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
-    // const dynamicTaskUuidList = get(this.room.state.globalState, 'dynamicTaskUuidList', [])
-
-    // const dynamicTaskUuidItem = uniqBy([{
-    //   resourceName: resourceName,
-    //   taskUuid: taskUuid,
-    //   resourceUuid,
-    // }].concat(dynamicTaskUuidList), 'resourceUuid')
 
     this.room.setGlobalState({
       dynamicTaskUuidList: [
@@ -1296,112 +1082,60 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @computed
+  get currentSelector(): string {
+    return this.selector
+  }
+
+
+  @observable
+  lineSelector: string = 'pen'
+
   @action
   setTool(tool: string) {
     this.selector = tool
-    if (this.selector === 'upload') {
-      this.showUpload = true
-    }
-    else if (this.showUpload) {
-      this.showUpload = false
-    }
-
-    if (this.selector === 'color_picker') {
-      this.showColorPicker = true
-    } else if (this.showColorPicker) {
-      this.showColorPicker = false
-    }
-
-    if (this.selector === 'extension_tool') {
-      this.showExtension = true
-    } else if (this.showExtension) {
-      this.showExtension = false
-    }
 
     if (!this.room || !this.room.isWritable) return
 
-    switch(this.selector) {
-      case 'eraser':
-      case 'ellipse':
-      case 'rectangle':
-      case 'pencil':
-      case 'text':
-      case 'selector': {
-        this.room.handToolActive = false
-        this.room.setMemberState({
-          currentApplianceName: this.selector as any
-        });
-        break;
+    const appliance = transToolBar[tool]
+    if (appliance) {
+      const lineTool = transLineTool[tool]
+      if (lineTool) {
+        this.lineSelector = tool
       }
-      case 'color_picker': {
-        this.room.setMemberState({
-          currentApplianceName: "selector" as any,
-        });
-        break;
+      console.log('appliance', appliance)
+      this.room.setMemberState({
+        currentApplianceName: appliance
+      })
+      return
+    }
+
+    if (tool === 'blank-page') {
+      const room = this.room
+      if (room.isWritable) {
+        room.setScenePath('/init')
+        const newIndex = room.state.sceneState.scenes.length
+        room.putScenes("/", [{name: `${newIndex}`}], newIndex)
+        // room.putScenes(currentPath, [{}], newIndex)
+        room.setSceneIndex(newIndex)
       }
-      case 'hand_tool': {
-        if (true) {
-          this.room.setMemberState({
-            currentApplianceName: "hand" as any
-          })
-        }
-        break;
-      }
-      case 'extension_tool': {
-        // 点击扩展执行
-        
-        break;
-      }
-      case 'add': {
-        const room = this.room
-        if (room.isWritable) {
-          room.setScenePath('/init')
-          const newIndex = room.state.sceneState.scenes.length
-          room.putScenes("/", [{name: `${newIndex}`}], newIndex)
-          // room.putScenes(currentPath, [{}], newIndex)
-          room.setSceneIndex(newIndex)
-        }
-        break;
-      }
-      default:
-        this.room.handToolActive = false
-        this.room.setMemberState({
-          currentApplianceName: "selector" as any,
-        })
-        break;
+      return
     }
   }
 
   @action
-  changeStroke(value: CustomMenuItemType) {
-    if (this.room) {
-      const mapping = {
-        [CustomMenuItemType.Thin]: 4,
-        [CustomMenuItemType.Small]: 8,
-        [CustomMenuItemType.Normal]: 12,
-        [CustomMenuItemType.Large]: 18,
-      }
-      this.room.setMemberState({
-        strokeWidth: mapping[value],
-      })
-    }
-  }
-
-  @action
-  changeColor(color: any) {
-    const {rgb} = color;
-    const {r, g, b} = rgb;
-    if (this.room) {
-      this.room.setMemberState({
-        strokeColor: [r, g, b]
-      })
-      const [r1, g1, b1] = this.room.state.memberState.strokeColor
-      this.strokeColor = {
-        r: r1,
-        g: g1,
-        b: b1
-      }
-    }
+  changeStroke(value: any) {
+    // if (this.room) {
+    //   const mapping = {
+    //     [CustomMenuItemType.Thin]: 4,
+    //     [CustomMenuItemType.Small]: 8,
+    //     [CustomMenuItemType.Normal]: 12,
+    //     [CustomMenuItemType.Large]: 18,
+    //   }
+    //   this.room.setMemberState({
+    //     strokeWidth: mapping[value],
+    //   })
+    // }
   }
 
   rgbToHexColor(r: number, g: number, b: number): string {
@@ -1415,6 +1149,7 @@ export class BoardStore extends ZoomController {
 
   @action
   changeHexColor(colorHex: string) {
+    console.log('colorHex', colorHex)
     const r = parseInt(colorHex.slice(1, 3), 16);
     const g = parseInt(colorHex.slice(3, 5), 16);
     const b = parseInt(colorHex.slice(5, 7), 16);
@@ -1441,42 +1176,38 @@ export class BoardStore extends ZoomController {
 
   @computed
   get currentColor(): string {
-    if (this.room) {
-      const {r, g, b} = this.strokeColor
-      return this.rgbToHexColor(r, g, b)
-    }
-    return this.rgbToHexColor(255, 255, 255)
+    const {r, g, b} = this.strokeColor
+    return this.rgbToHexColor(r, g, b)
   }
 
   @observable
-  currentStroke: CustomMenuItemType = CustomMenuItemType.Normal;
+  currentStroke: string = ''
 
-  getCurrentStroke(memberState: MemberState): CustomMenuItemType {
-    const mapping = {
-      [4]: CustomMenuItemType.Thin,
-      [8]: CustomMenuItemType.Small,
-      [12]: CustomMenuItemType.Normal,
-      [18]: CustomMenuItemType.Large,
-    }
-    const value = mapping[memberState.strokeWidth]
-    if (value) {
-      return value
-    }
-    return CustomMenuItemType.Normal
+  getCurrentStroke(memberState: MemberState) {
+    // const mapping = {
+    //   [4]: CustomMenuItemType.Thin,
+    //   [8]: CustomMenuItemType.Small,
+    //   [12]: CustomMenuItemType.Normal,
+    //   [18]: CustomMenuItemType.Large,
+    // }
+    // const value = mapping[memberState.strokeWidth]
+    // if (value) {
+    //   return value
+    // }
+    return ''
   }
 
   @observable
-  currentArrow: CustomMenuItemType = CustomMenuItemType.Arrow;
+  currentArrow: any = 'pen';
 
-  getCurrentArrow(memberState: MemberState): CustomMenuItemType {
+  getCurrentArrow(memberState: MemberState) {
     const mapping = {
-      [ApplianceNames.arrow]: CustomMenuItemType.Arrow,
-      [ApplianceNames.laserPointer]: CustomMenuItemType.Laser,
-      [ApplianceNames.pencil]: CustomMenuItemType.Mark,
-      [ApplianceNames.straight]: CustomMenuItemType.Pen,
+      // [ApplianceNames.arrow]: 'arrow',
+      [ApplianceNames.laserPointer]: 'laserPointer',
+      [ApplianceNames.pencil]: 'pen',
+      [ApplianceNames.straight]: 'line',
     }
     return mapping[memberState.currentApplianceName]
-    // return CustomMenuItemType.Mark
   }
 
   @observable
@@ -1545,56 +1276,6 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  handleProgress (phase: PPTProgressPhase, percent: number) { 
-    if (phase === PPTProgressPhase.Uploading) {
-      if (percent < 1) {
-        runInAction(() => {
-          if (this.uploadingPhase !== 'uploading'){
-            this.uploadingPhase = 'uploading'
-          }
-        })
-      } else {
-        runInAction(() => {
-          this.uploadingPhase = 'upload_finished'
-        })
-      }
-      return;
-    }
-
-    if (phase === PPTProgressPhase.Converting) {
-      if (percent < 1) {
-        runInAction(() => {
-          if (this.convertingPhase !== 'converting') {
-            this.convertingPhase = 'uploading'
-          }
-        })
-      } else {
-        this.convertingPhase = 'converting_done'
-      }
-      return;
-    }
-  }
-
-  @action
-  handleSuccess() {
-    if (this.uploadingPhase) {
-      this.uploadingPhase = ''
-    }
-    if (this.convertingPhase) {
-      this.convertingPhase = ''
-    }
-  }
-
-  @action
-  handleFailure() {
-    if (this.uploadingPhase === 'uploading') {
-      this.uploadingPhase = 'upload_failure'
-    }
-    if (this.convertingPhase == 'converting') {
-      this.convertingPhase = 'upload_failure'
-    }
-  }
-
   @computed 
   get loadingType (): string {
     if (!this._boardClient) return 'loading';
@@ -1603,21 +1284,12 @@ export class BoardStore extends ZoomController {
     return '';
   }
 
-
   @action
-  changeArrow(type: CustomMenuItemType) {
-    if (this.room) {
-      const mapping = {
-        [CustomMenuItemType.Arrow]: ApplianceNames.arrow,
-        [CustomMenuItemType.Mark]: ApplianceNames.pencil,
-        [CustomMenuItemType.Laser]: ApplianceNames.laserPointer,
-        [CustomMenuItemType.Pen]: ApplianceNames.straight,
-      }
-      const value = mapping[type]
-      this.room.setMemberState({
-        currentApplianceName: value
-      })
-    }
+  updatePen(value: any) {
+    this.lineSelector = value
+    this.room.setMemberState({
+      currentApplianceName: transLineTool[value] as any
+    })
   }
 
   changePage(idx: number, force?: boolean) {
@@ -1826,57 +1498,10 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools(): ToolItem[] {
-    const defaultTools: ToolItem[] = [
-      {
-        value: 'selection',
-        label: '选择',
-        icon: 'select',
-      },
-      {
-        value: 'text',
-        label: '文本',
-        icon: 'text',
-      },
-      {
-        value: 'eraser',
-        label: '橡皮',
-        icon: 'eraser',
-      },
-      {
-        value: 'color',
-        label: '颜色',
-        icon: 'color',
-      },
-      {
-        value: 'blank-page',
-        label: '新增空白页',
-        icon: 'blank-page',
-      },
-      {
-        value: 'hand',
-        label: '举手',
-        icon: 'hand',
-      },
-      {
-        value: 'cloud',
-        label: '云盘',
-        icon: 'cloud',
-      },
-      {
-        value: 'follow',
-        label: '视角跟随',
-        icon: 'follow',
-      },
-      {
-        value: 'tools',
-        label: '工具箱',
-        icon: 'tools',
-      }
-    ]
     if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return defaultTools
+      return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
     }
-    return defaultTools
+    return allTools
   }
 
   @action
@@ -1927,8 +1552,8 @@ export class BoardStore extends ZoomController {
       b: 0
     }
 
-    this.currentStroke = CustomMenuItemType.Normal
-    this.currentArrow = CustomMenuItemType.Mark
+    // this.currentStroke = CustomMenuItemType.Normal
+    // this.currentArrow = CustomMenuItemType.Mark
     this.currentFontSize = BoardFrontSizeType.size12
   }
 
@@ -2048,7 +1673,6 @@ export class BoardStore extends ZoomController {
 
   @action
   zoomBoard(type: string) {
-    console.log('zoomBoard ', type)
     // 白板全屏
     if (this.userRole === EduRoleTypeEnum.teacher) {
       this.setFullScreen(type === 'fullscreen')
@@ -2118,7 +1742,6 @@ export class BoardStore extends ZoomController {
       })
       const globalState = this.room.state.globalState as any
       const materialList = get(globalState, 'materialList', [])
-      // const resourceUuids = this
       const newList = materialList.filter((e: any) => !resourceUuids.includes(e.resourceUuid))
       this.room.setGlobalState({
         materialList: newList
@@ -2148,7 +1771,6 @@ export class BoardStore extends ZoomController {
 
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
-    console.log("imageInfo", imageInfo)
     await netlessInsertImageOperation(this.room, {
       uuid: imageInfo.uuid,
       file: imageInfo.file,
@@ -2190,19 +1812,15 @@ export class BoardStore extends ZoomController {
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid)
       }
-      console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
       const putCourseFileType = ["ppt", "word","pdf"]
       if (putCourseFileType.includes(resource.type)) {
         await this.putCourseResource(uuid)
-        console.log(`打开文件成功,文件类型${resource.type}`)
       }
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
-        console.log("打开音视频成功")
       }  
       if (["pic"].includes(resource.type)) {
         await this.putImage(resource.url)
-        console.log("打开图片成功")
       }
     } catch (err) {
       throw err

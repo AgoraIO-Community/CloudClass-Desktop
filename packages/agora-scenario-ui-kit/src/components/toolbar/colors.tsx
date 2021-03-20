@@ -52,7 +52,6 @@ export const Colors: FC<ColorsProps> = ({
     </div>
   );
   return (
-    <Tooltip title={label} placement="bottom">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -62,6 +61,5 @@ export const Colors: FC<ColorsProps> = ({
         placement="right">
         <Icon type="color" color={activeColor} />
       </Popover>
-    </Tooltip>
   );
 };
