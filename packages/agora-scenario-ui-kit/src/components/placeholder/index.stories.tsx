@@ -22,18 +22,21 @@ export const Docs = ({ placeholderDesc }: DocsProps) => (
             <Placeholder
                 placeholderDesc={placeholderDesc}
                 placeholderType="cameraBroken"
+                backgroundColor='#F9F9FC'
             />
         </div>
         <div className="mt-4">
             <Placeholder
                 placeholderDesc={placeholderDesc}
                 placeholderType="cameraClose"
+                backgroundColor='#F9F9FC'
             />
         </div>
         <div className="mt-4">
             <Placeholder
                 placeholderDesc={placeholderDesc}
                 placeholderType="noBody"
+                backgroundColor='#F9F9FC'
             />
         </div>
         <div className="mt-4">

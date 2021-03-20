@@ -56,6 +56,7 @@ export const Docs: FC<ChatProps> = (props) => {
         onText={(val) => setText(val)}
         onSend={() => setText('')}
         closeIcon={<Icon type="close"/>}
+        onClickChatMin={() => {console.log('click chat min')}}
       />
     </div>
   );

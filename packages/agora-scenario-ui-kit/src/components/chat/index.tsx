@@ -47,6 +47,8 @@ export interface ChatProps {
    * 点击发送按钮的回调
    */
   onSend: () => void;
+
+  onClickChatMin: () => void;
 }
 
 export const Chat: FC<ChatProps> = ({
@@ -61,6 +63,7 @@ export const Chat: FC<ChatProps> = ({
   onCanChattingChange,
   onText,
   onSend,
+  onClickChatMin,
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
 
@@ -78,6 +81,7 @@ export const Chat: FC<ChatProps> = ({
       {minimize ? (
         <ChatMin
           unreadCount={unreadCount}
+          onClick={onClickChatMin}
         />
       ) : (
         <div className="chat-panel">

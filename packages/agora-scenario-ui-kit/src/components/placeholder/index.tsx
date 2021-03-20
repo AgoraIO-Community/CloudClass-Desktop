@@ -21,11 +21,13 @@ const placeholderImgDict = {
 export interface PlaceholderProps extends BaseProps {
   placeholderDesc?: string;
   placeholderType?: PlaceholderType;
+  backgroundColor?: string;
 }
 
 export const Placeholder: FC<PlaceholderProps> = ({
   placeholderDesc = "",
   placeholderType = "emptyHistory",
+  backgroundColor = '#fff',
   className,
   ...restProps
 }) => {
@@ -34,7 +36,7 @@ export const Placeholder: FC<PlaceholderProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} {...restProps}>
+    <div className={cls} {...restProps} style={{backgroundColor}}>
       <div>
         <img src={placeholderImgDict[placeholderType]} alt="no messages" />
       </div>
