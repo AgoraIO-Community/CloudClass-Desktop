@@ -44,6 +44,7 @@
   height: 75%;
   padding-bottom: 18px;
   overflow-y: scroll;
+  width: 100%;
   position: absolute;
 }
 

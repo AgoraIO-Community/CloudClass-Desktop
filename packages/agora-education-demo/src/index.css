@@ -12,21 +12,29 @@ html, body, #root {
   z-index: 0;
 }
 
-
 .edu-room .layout {
   position: relative;
 }
 
-.edu-room .layout-aside {
+.edu-room .tabs {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.layout-aside-normal {
   max-width: 300px;
   min-width: 300px;
   flex: 1;
   position: relative;
 }
 
-.fullscreen .chat-panel {
+.layout-aside.layout-aside-fullscreen {
   position: absolute;
   bottom: 0;
-  height: 60%;
-  width: 100%;
+  right: 0;
+  border: none;
+  width: auto;
+  margin: 10px;
+  height: auto;
 }
