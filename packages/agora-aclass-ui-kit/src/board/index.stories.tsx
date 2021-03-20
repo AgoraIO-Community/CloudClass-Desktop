@@ -231,7 +231,7 @@ export const EducationBoard = (props: any) => {
         height: props.height,
         position: 'relative',
         boxSizing: 'border-box'
-      }}>
+      }} borderless={false}>
         <ControlMenu
           style={{
             position: 'absolute',

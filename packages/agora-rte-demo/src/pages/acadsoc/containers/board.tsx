@@ -464,14 +464,39 @@ export const EducationBoard = observer((props: any) => {
     <div className={classes.boardBoxContainer}>
       {showCourseMenuItem ? <CourseWareMenuContainer /> : null}
       <Board style={{
-        width: props.width,
+        width: "auto",
         height: props.height,
         position: 'relative',
         boxSizing: 'border-box',
         background: 'white',
-        marginTop: boardStore.roleIsTeacher ? '39px' : '0',
-      }}>
+        marginTop: boardStore.roleIsTeacher ? 49 : boardStore.isFullScreen ? 0 : 10,
+        marginBottom: !boardStore.isFullScreen ? (boardStore.aClassHasPermission ? 49 : 10) : 0,
+        marginLeft: boardStore.isFullScreen ? 0 : 10
+      }} borderless={boardStore.isFullScreen}>
+        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 
+        <Tool
+          activeItem={currentActiveToolItem}
+          drawerComponent={<DrawerPopover />}
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
+          fontComponent={<FontPopover />}
+          headerTitle={props.toolbarName}
+          style={{
+            top: props.toolY,
+            left: props.toolX,
+            zIndex: 10,
+            position: 'absolute'
+          }}
+          items={
+            getBoardItemsBy(appStore.roomInfo.userRole)
+          }
+          onClick={onClickTool}
+        /> : null}
+          {props.children ? props.children : null}
+      </Board>
+      {boardStore.aClassHasPermission ? 
         <ZoomController
           style={{
             position: 'absolute',
@@ -513,29 +538,6 @@ export const EducationBoard = observer((props: any) => {
             boardStore.moveCamera()
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
-        {boardStore.aClassHasPermission ? 
-        <Tool
-          activeItem={currentActiveToolItem}
-          drawerComponent={<DrawerPopover />}
-          strokeComponent={<StrokePopover />}
-          colorComponent={<ColorPopover />}
-          uploadComponent={<UploadFilePopover />}
-          fontComponent={<FontPopover />}
-          headerTitle={props.toolbarName}
-          style={{
-            top: props.toolY,
-            left: props.toolX,
-            zIndex: 10,
-            position: 'absolute'
-          }}
-          items={
-            getBoardItemsBy(appStore.roomInfo.userRole)
-          }
-          onClick={onClickTool}
-        /> : null}
-          {props.children ? props.children : null}
-      </Board>
     </div>
   )
 })

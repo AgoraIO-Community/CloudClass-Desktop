@@ -1134,7 +1134,8 @@ export class BoardStore {
         avatar: "",
         cursorName: this.appStore.acadsocStore.roomInfo.userName,
       },
-      isAssistant: this.appStore.acadsocStore.isAssistant
+      isAssistant: this.appStore.acadsocStore.isAssistant,
+      disableNewPencil: true
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
