@@ -3,6 +3,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
+import { Slider } from '~components/slider'
 
 const defaultColors = [
   '#ffffff',
@@ -38,6 +39,9 @@ export const Colors: FC<ColorsProps> = ({
   };
   const content = (
     <div className={`expand-tools colors`}>
+      <Slider
+        style={{width: '100%'}}
+      />
       {colors.map((color) => (
         <div
           key={color}
