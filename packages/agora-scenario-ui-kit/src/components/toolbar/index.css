@@ -43,6 +43,12 @@
   color: #7b88a0;
 }
 
+.tool .triangle-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .tool .expandable {
   @apply absolute;
   bottom: 0;

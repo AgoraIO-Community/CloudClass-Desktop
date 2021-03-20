@@ -37,7 +37,7 @@ export const Pens: FC<PensProps> = ({
                     className="expand-tool pen"
                 >
                     <Icon type={pen as any} />
-                    <div className={activePen === pen ? "active-pen-div" : ""} style={{width: 3, height: 3}}></div>
+                    <div className={activePen === pen ? "active-pen-div" : ""} style={{ width: 3, height: 3 }}></div>
                 </div>
             ))}
         </div>
@@ -51,7 +51,10 @@ export const Pens: FC<PensProps> = ({
                 trigger="click"
                 content={content}
                 placement="right">
-                <Icon type={activePen as any}/>
+                <div className="tool">
+                    <Icon type={activePen as any} />
+                    <Icon type="triangle-down" className="triangle-icon" />
+                </div>
             </Popover>
         </Tooltip>
     );

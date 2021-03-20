@@ -60,7 +60,10 @@ export const Colors: FC<ColorsProps> = ({
         trigger="click"
         content={content}
         placement="right">
-        <Icon type="color" color={activeColor} />
+        <div className="tool">
+          <Icon type="color" color={activeColor} />
+          <Icon type="triangle-down" className="triangle-icon"/>
+        </div>  
       </Popover>
     </Tooltip>
   );
