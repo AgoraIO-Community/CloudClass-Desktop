@@ -6,7 +6,7 @@ import './index.css';
 
 export interface ChatMinProps extends BaseProps {
     unreadCount?: number;
-    onClick?: (e: any) => void;
+    onClick: () => void | Promise<void>;
 }
 
 export const ChatMin: FC<ChatMinProps> = ({

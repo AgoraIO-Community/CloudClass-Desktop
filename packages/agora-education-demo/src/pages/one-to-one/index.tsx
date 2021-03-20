@@ -9,15 +9,19 @@ import { DialogContainer } from '../common-containers/dialog'
 import { LoadingContainer } from '../common-containers/loading'
 import { NavigationBar } from '../common-containers/nav'
 import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/video-player'
+import classnames from 'classnames';
 import './1v1.style.css'
 
 const use1v1Store = () => {
-
   const roomStore = useRoomStore()
-
+  const boardStore = useBoardStore()
   useEffectOnce(() => {
     roomStore.join()
   })
+
+  return {
+    isFullScreen: boardStore.isFullScreen
+  }
 }
 
 const VideoList = observer(() => {
@@ -32,13 +36,22 @@ const VideoList = observer(() => {
   )
 })
 
-export const OneToOne = () => {
+export const OneToOne = observer(() => {
+  const store = use1v1Store()
 
-  use1v1Store()
+  const cls = classnames({
+    'edu-room': 1,
+  })
+
+  const className = store.isFullScreen ? 'fullscreen' : 'normal'
+
+  const fullscreenCls = classnames({
+    [`layout-aside-${className}`]: 1,
+  })
 
   return (
     <Layout
-      className="edu-room"
+      className={cls}
       direction="col"
       style={{
         height: '100vh'
@@ -49,7 +62,7 @@ export const OneToOne = () => {
         <Content>
           <WhiteboardContainer />
         </Content>
-        <Aside>
+        <Aside className={fullscreenCls}>
           <VideoList />
           <RoomChat />
         </Aside>
@@ -58,4 +71,4 @@ export const OneToOne = () => {
       <LoadingContainer />
     </Layout>
   )
-}
+})
