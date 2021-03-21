@@ -945,7 +945,6 @@ export class BoardStore {
     }
 
     this.ready = true
-    this.pptAutoFullScreen()
 
     // 老师
     if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -979,6 +978,9 @@ export class BoardStore {
     this.updateLocalSceneState()
     this.updateSceneItems()
     this.updateCourseWareList()
+
+    this.pptAutoFullScreen()
+    this.moveCamera()
   }
 
   pptAutoFullScreen() {
