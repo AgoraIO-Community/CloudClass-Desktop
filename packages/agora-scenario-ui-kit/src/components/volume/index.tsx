@@ -8,7 +8,7 @@ export interface VolumeProps extends BaseProps {
     activeColor?: string;
     width?: number;
     height?: number;
-    currentVolumn?: number;
+    currentVolume?: number;
     maxLength: number;
 }
 
@@ -17,7 +17,7 @@ export const Volume: FC<VolumeProps> = ({
     activeColor = '#357BF6',
     width = 3,
     height = 12,
-    currentVolumn = 0,
+    currentVolume: currentVolume = 0,
     maxLength = 20,
     className,
     ...restProps
@@ -33,7 +33,7 @@ export const Volume: FC<VolumeProps> = ({
                     <div key={index} className={'volume-item'} style={{
                         width,
                         height,
-                        backgroundColor: (index < currentVolumn) ? activeColor : backgroundColor
+                        backgroundColor: (index < currentVolume) ? activeColor : backgroundColor
                     }}>
                         {item}
                     </div>

@@ -51,3 +51,11 @@ html, body, #root {
 .agora-board-resources input[type=file] {
   display: none;
 }
+
+.mirror canvas{
+  transform: scaleX(1) !important;
+}
+
+.mirror video{
+  transform: scaleX(1) !important;
+}

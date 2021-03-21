@@ -1,14 +1,13 @@
 import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Progress, Inline, Row, CheckBox, Table, TableHeader, formatFileSize } from 'agora-scenario-ui-kit'
+import { Button, Col, IconBox, Progress, Inline, Row, CheckBox, Table, TableHeader, formatFileSize, t } from 'agora-scenario-ui-kit'
 import React, {useCallback, useMemo, useState} from 'react'
 import { useBoardStore } from '@/hooks'
 import { agoraCaches } from '@/utils/web-download.file'
-import { useI18nContext } from '@/utils/utils'
 import dayjs from 'dayjs'
 
 export const UploadContainer = observer(() => {
 
-  const {t} = useI18nContext()
+  // const {t} = useI18nContext()
 
   const boardStore = useBoardStore()
 

@@ -1,13 +1,10 @@
 import { useBoardStore } from '@/hooks'
-import { useI18nContext } from '@/utils/utils'
-import { Col, IconBox, Inline, Row, Table, TableHeader, formatFileSize } from 'agora-scenario-ui-kit'
+import { Col, IconBox, Inline, Row, Table, TableHeader, t } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useEffect } from 'react'
 
 export const StorageContainer = observer(() => {
-
-  const {t} = useI18nContext()
 
   const boardStore = useBoardStore()
 

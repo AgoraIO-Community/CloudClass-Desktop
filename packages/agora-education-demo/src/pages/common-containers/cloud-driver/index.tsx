@@ -1,7 +1,6 @@
 import { useBoardStore } from '@/hooks'
-import { useI18nContext } from '@/utils/utils'
 import { EduLogger } from 'agora-rte-sdk'
-import { Icon, Tabs, TabPane, Row, Button, CloudDisk } from 'agora-scenario-ui-kit'
+import { Icon, Tabs, TabPane, Row, Button, CloudDisk, t } from 'agora-scenario-ui-kit'
 import MD5 from 'js-md5'
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -24,8 +23,6 @@ const calcUploadFilesMd5 = async (file: File) => {
 }
 
 export const CloudDriverContainer = observer((props: any) => {
-
-  const {t} = useI18nContext()
 
   const boardStore = useBoardStore()
 

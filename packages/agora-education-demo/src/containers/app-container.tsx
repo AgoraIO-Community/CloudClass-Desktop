@@ -5,8 +5,8 @@ import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { Provider } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import { I18nProvider, registerWorker, useStorageSW } from '@/utils/utils';
-import { makeI18nProvider } from 'agora-scenario-ui-kit';
+import { registerWorker, useStorageSW } from '@/utils/utils';
+import {I18nProvider, language$, useI18nContext} from 'agora-scenario-ui-kit'
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -25,6 +25,8 @@ export interface RoomContainerProps extends RouteContainerProps {
 type AppContainerComponentProps = Omit<AppContainerProps, 'defaultStore'>
 
 export const RouteContainer = (props: RouteContainerProps) => {
+
+  useI18nContext()
 
   const routes = props.routes
     .filter((path: string) => routesMap[path])
@@ -54,9 +56,8 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useStorageSW()
 
-  useEffect(() => {
-    console.log('props.routes', props.routes)
-  }, [])
+  //@ts-ignore
+  window.language$ = language$
 
   return (
     <Provider store={props.store}>
@@ -71,7 +72,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
 export const AppContainer = (props: AppContainerProps) => {
 
-  useStorageSW()
+  // useStorageSW()
 
   return (
     <Provider store={props.store}>

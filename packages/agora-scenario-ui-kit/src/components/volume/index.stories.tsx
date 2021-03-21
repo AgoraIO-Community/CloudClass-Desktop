@@ -10,16 +10,16 @@ const meta: Meta = {
 type DocsProps = {
     width: number;
     height: number;
-    currentVolumn: number,
+    currentVolume: number,
     maxLength: number;
 }
 
-export const Docs = ({width, height, currentVolumn, maxLength}: DocsProps) => (
+export const Docs = ({width, height, currentVolume, maxLength}: DocsProps) => (
     <div className="mt-4">
         <Volume
             width={width}
             height={height}
-            currentVolumn={currentVolumn}
+            currentVolume={currentVolume}
             maxLength={maxLength}
         />
     </div>

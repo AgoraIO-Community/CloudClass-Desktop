@@ -78,7 +78,7 @@ export const HomePage = observer(() => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
         homeStore.setLaunchConfig({
           rtmUid: userUuid,
-          pretest: false,
+          pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           translateLanguage: "auto",

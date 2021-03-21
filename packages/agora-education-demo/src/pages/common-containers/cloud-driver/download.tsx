@@ -1,17 +1,14 @@
 import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Progress, Inline, Row, Table, TableHeader, formatFileSize } from 'agora-scenario-ui-kit'
+import { Button, Col, IconBox, Progress, Inline, Row, Table, TableHeader, formatFileSize, t } from 'agora-scenario-ui-kit'
 import React, { useEffect } from 'react'
 import { useBoardStore } from '@/hooks'
 import { agoraCaches } from '@/utils/web-download.file'
-import { useI18nContext } from '@/utils/utils'
 import { get } from 'lodash'
 import { StorageCourseWareItem } from '@/stores/storage'
 
 export const DownloadContainer = observer(() => {
 
   const boardStore = useBoardStore()
-
-  const {t} = useI18nContext()
 
   const itemList = boardStore.downloadList.filter((it: StorageCourseWareItem) => it.taskUuid)
 
