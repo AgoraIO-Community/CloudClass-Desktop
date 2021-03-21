@@ -9,7 +9,7 @@
 .home-page {
   width: 100vw;
   height: 100vh;
-  background: #F9F9FC;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,9 +29,16 @@
   justify-content: center;
 }
 
-.home-form .table-row-item {
+.home-form .table-row-item.home-row-item {
   width: 280px;
   background-color: #F9F9FC;
+  font-size: 14px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.home-form .table-row-item.home-row-item label span {
+  color: #586376;
 }
 
 .home-form .select {
@@ -42,15 +49,33 @@
   border-style: none !important;
 }
 
+
 .home-form input {
   width: 211px;
   height: 40px;
   line-height: 20px;
   font-size: 14px;
-  @apply outline-white;
+  /* @apply outline-white; */
   /* border-radius: 4px; */
   /* border: 1px solid #C4C4DC; */
   padding-left: 15px;
   padding-right: 15px;
   background-color: #F9F9FC;
+}
+
+.home-form input {
+  height: 40px;
+  line-height: 20px;
+  font-size: 14px;
+  /* @apply outline-white; */
+  /* border-radius: 4px; */
+  /* border: 1px solid #C4C4DC; */
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #F9F9FC;
+}
+
+.home-form input::placeholder,
+.home-form .rc-select-selection-placeholder {
+  color: #7B88A0;
 }
