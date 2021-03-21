@@ -34,12 +34,10 @@ export const NavigationBar: React.FC<any> = observer(() => {
     }
   }, [navigationState.isStarted])
 
-  const onClick = (type: string) => {
-    console.log(' nav ', type)
-  }
-
   return (
     <BizHeader
+      classStatus={'before'}
+      clockTime={Date.now()}
       isStarted={navigationState.isStarted}
       title={navigationState.title}
       signalQuality={navigationState.signalQuality}

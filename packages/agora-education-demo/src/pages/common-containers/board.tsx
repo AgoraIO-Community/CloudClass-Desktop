@@ -2,7 +2,8 @@ import { useBoardStore, useUIStore,  } from '@/hooks'
 import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
 import { ToolItem } from 'agora-scenario-ui-kit/lib/components/toolbar/tool'
 import { observer } from 'mobx-react'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { CloudDiskContainer } from './cloud-driver'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
@@ -54,6 +55,9 @@ export const allTools: ToolItem[] = [
     value: 'cloud',
     label: '云盘',
     icon: 'cloud',
+    component: () => {
+      return <CloudDiskContainer />
+    }
   },
   {
     value: 'follow',
@@ -141,7 +145,6 @@ const TabsContainer = observer(() => {
   const handleChange = (resourceName: string) => {
     boardStore.changeSceneItem(resourceName)
   }
-
   return (
     <Tabs activeKey={boardStore.activeSceneName} type="editable-card"
       onChange={handleChange}>

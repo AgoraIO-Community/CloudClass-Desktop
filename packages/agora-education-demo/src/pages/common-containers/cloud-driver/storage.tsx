@@ -1,35 +1,47 @@
 import { useBoardStore } from '@/hooks'
-import { Col, IconBox, Inline, Row, Table, TableHeader } from 'agora-scenario-ui-kit'
-import { formatFileSize } from 'agora-scenario-ui-kit/lib/utilities'
-import { size } from 'lodash'
+import { useI18nContext } from '@/utils/utils'
+import { Col, IconBox, Inline, Row, Table, TableHeader, formatFileSize } from 'agora-scenario-ui-kit'
+import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 
-export const Storage = observer(() => {
+export const StorageContainer = observer(() => {
+
+  const {t} = useI18nContext()
 
   const boardStore = useBoardStore()
 
-  const itemList = boardStore.resourcesList
+  const onResourceClick = async (resourceUuid: string) => {
+    await boardStore.putSceneByResourceUuid(resourceUuid)
+  }
+
+  const itemList = boardStore.personalResources
+
+  useEffect(() => {
+    boardStore.refreshState()
+  }, [boardStore])
 
   return (
     <Table>
     <TableHeader>
-      <Col>文件</Col>
-      <Col>大小</Col>
-      <Col>修改时间</Col>
+      <Col>{t('cloud.fileName')}</Col>
+      <Col>{t('cloud.size')}</Col>
+      <Col>{t('cloud.updatedAt')}</Col>
     </TableHeader>
     <Table className="table-container">
-      {itemList.map(({ name, date, type, size }: any, idx: number) =>
+      {itemList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
         <Row height={10} border={1} key={idx} >
-          <Col>
+          <Col style={{cursor: 'pointer'}} onClick={() => {
+            onResourceClick(id)
+          }}>
             <IconBox iconType={type} style={{ marginRight: '6px' }} />
             <Inline color="#191919">{name}</Inline>
           </Col>
           <Col>
-            <Inline color="#586376">{formatFileSize(size)}</Inline>
+            <Inline color="#586376">{size}</Inline>
           </Col>
           <Col>
-            <Inline color="#586376">{date}</Inline>
+            <Inline color="#586376">{dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss")}</Inline>
           </Col>
         </Row>
       )}

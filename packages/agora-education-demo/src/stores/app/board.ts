@@ -10,15 +10,16 @@ import { OSSConfig } from '@/utils/helper';
 import { BizLogger, fetchNetlessImageByUrl, transLineTool, mapToolBar, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
-import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
+import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
 import { ToolItem } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
-import { get, isEmpty, omit, uniqBy } from 'lodash';
-import { action, computed, observable, runInAction } from 'mobx';
+import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import {PensContainer} from '../../pages/common-containers/pens'
 import {ColorsContainer} from '../../pages/common-containers/colors'
 import { allTools } from '@/pages/common-containers/board';
+import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -334,22 +335,6 @@ export class BoardStore extends ZoomController {
   sceneList: any[] = []
 
   controller: any = undefined
-
-  async startDownload(taskUuid: string) {
-    try {
-      this.downloading = true
-      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
-        this.preloadingProgress = progress
-        this.controller = controller
-      })
-      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.downloading = false
-    } catch (err) {
-      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.downloading = false
-    }
-  }
 
   @observable
   _resourcesList: any[] = []
@@ -679,34 +664,6 @@ export class BoardStore extends ZoomController {
     this.ready = true
     this.pptAutoFullScreen()
 
-    // 老师
-    if (this.userRole === EduRoleTypeEnum.teacher) {
-      // 判断第一次登陆
-      if (!this.teacherLogged()) {
-        this.teacherFirstJoin()
-        EduLogger.info("老师第一次加入白板")
-        await this.fetchRoomScenes()
-      } else {
-        EduLogger.info("老师再次加入白板")
-      }
-    }
-    // 学生
-    if (this.isStudent()) {
-      // 判断第一次登陆
-      if (!this.studentLogged()) {
-        EduLogger.info("学生第一次加入白板")
-        this.studentFirstJoin()
-        await this.fetchRoomScenes()
-      } else {
-        EduLogger.info("学生再次加入白板")
-      }
-    }
-    if (!this.lockBoard) {
-      EduLogger.info("白板尚未锁定")
-    } else {
-      EduLogger.info("白板已经锁定")
-    }
-
     this.updateLocalResourceList()
     this.updateLocalSceneState()
     this.updateSceneItems()
@@ -998,15 +955,15 @@ export class BoardStore extends ZoomController {
   }
 
   teacherFirstJoin() {
-    this.resetBoardScenes()
-    this.enroll()
-    this.lockAClassBoard()
-    this.syncLocalPersonalCourseWareList()
+    // this.resetBoardScenes()
+    // this.enroll()
+    // this.lockAClassBoard()
+    // this.syncLocalPersonalCourseWareList()
   }
 
   studentFirstJoin() {
     // this.resetBoardScenes()
-    this.studentEnroll()
+    // this.studentEnroll()
   }
 
   resetBoardScenes() {
@@ -1498,9 +1455,9 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools(): ToolItem[] {
-    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
-    }
+    // if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+    //   return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+    // }
     return allTools
   }
 
@@ -1819,7 +1776,7 @@ export class BoardStore extends ZoomController {
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
       }  
-      if (["pic"].includes(resource.type)) {
+      if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)
       }
     } catch (err) {
@@ -1837,7 +1794,7 @@ export class BoardStore extends ZoomController {
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
-      let res =await this.appStore.uploadService.handleUpload({
+      let res = await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
@@ -1903,6 +1860,143 @@ export class BoardStore extends ZoomController {
   @computed
   get allResources() {
     return this.publicResources.concat(this.personalResources)
+  }
+
+  @computed
+  get totalProgress(): number {
+    return +(this.courseWareList.filter((e => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100)).length  / this.courseWareList.length).toFixed(2) * 100
+  }
+
+  @observable
+  progressMap: Record<string, number> = {}
+
+  async destroy () {
+    this.progressMap = {}
+  }
+
+  @observable
+  downloadList: StorageCourseWareItem[] = []
+
+  // @computed
+  // get downloadList(): StorageCourseWareItem[] {
+  //   return this._downloadList.map((item: StorageCourseWareItem) => ({
+  //     ...item,
+  //     progress: get(this.progressMap, `${item.taskUuid}`, 0) / 100
+  //   }))
+  // }
+
+  async refreshState() {
+    const newCourseWareList: any = [...this.allResources]
+    for (let i = 0; i < newCourseWareList.length; i++) {
+      const item = newCourseWareList[i]
+      const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+      item.progress = res === true ? 100 : 0
+      this.progressMap[item.taskUuid] = item.progress
+      item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+    }
+    this.downloadList = newCourseWareList
+  }
+
+  updateDownloadById (taskUuid: string, props: Partial<StorageCourseWareItem>) {
+    const list = this.downloadList
+    const idx = list.findIndex((item: StorageCourseWareItem) => item.taskUuid === taskUuid)
+    const item = list[idx]
+    Object.assign(item, props)
+    const newList = cloneDeep(list)
+    this.downloadList = newList
+  }
+
+  async internalDownload(taskUuid: string) {
+    const isCached = await agoraCaches.hasTaskUUID(taskUuid)
+    if (isCached) {
+      EduLogger.info(`文件已缓存.... taskUuid: ${taskUuid}`)
+      return
+    }
+    try {
+      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
+      this.updateDownloadById(taskUuid, {
+        download: true
+      })
+      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+        const newProgress = get(this.progressMap, `${taskUuid}`, 0)
+        if (progress >= newProgress) {
+          const info: any = {
+            progress,
+          }
+          if (info.progress === 100) {
+            Object.assign(info, {
+              download: true
+            })
+          }
+
+          this.updateDownloadById(taskUuid, info)
+          this.progressMap[taskUuid] = progress
+        }
+        this.controller = controller
+      })
+      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
+    }
+  }
+
+  async startDownload(taskUuid: string) {
+    try {
+      await this.internalDownload(taskUuid)
+      await this.refreshState()
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  // TODO: need handle service worker request abort
+  async cancelDownload(taskUuid: string) {
+    try {
+      if (this.controller) {
+        this.controller.abort()
+        this.controller = undefined
+        this.updateDownloadById(taskUuid, {
+          download: false,
+          progress: 0
+        })
+      }
+      await this.refreshState()
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  async deleteSingle(taskUuid: string) {
+    try {
+      await agoraCaches.deleteTaskUUID(taskUuid)
+      await this.refreshState()
+      EduLogger.info(`删除完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      EduLogger.info(`删除失败.... taskUuid: ${taskUuid}`)
+    }
+  }
+
+  async deleteAllCache() {
+    try {
+      await agoraCaches.clearAllCache()
+      await this.refreshState()
+      EduLogger.info('删除全部缓存完成....')
+    } catch (err) {
+      EduLogger.info(`删除全部缓存失败....: ${err}`)
+    }
+  }
+
+  async downloadAll() {
+    try {
+      const courseItem = this.courseWareList
+      for (let i = 0; i < courseItem.length; i++) {
+        await this.startDownload(courseItem[i].taskUuid)
+      }
+      await this.refreshState()
+      EduLogger.info(`全部下载成功....`)
+    } catch (err) {
+      EduLogger.info(`全部下载失败....: ${err}`)
+    }
   }
 }
 

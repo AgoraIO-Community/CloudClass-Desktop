@@ -47,3 +47,7 @@ html, body, #root {
   align-items: center;
   flex-direction: column;
 }
+
+.agora-board-resources input[type=file] {
+  display: none;
+}

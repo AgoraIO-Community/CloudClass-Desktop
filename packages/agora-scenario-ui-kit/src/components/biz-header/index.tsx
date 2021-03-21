@@ -49,6 +49,20 @@ export interface BizHeaderProps {
    * 系统相关信息
    */
   monitor: MonitorInfo;
+
+  /**
+   * 课程状态
+   */
+  classStatus: 'before' | 'starting' | 'ended';
+
+  /**
+   * 计时
+   */
+  clockTime: number;
+
+  /**
+   * 
+   */
   onClick: (itemType: string) => void;
 }
 
@@ -56,6 +70,8 @@ export const BizHeader: FC<BizHeaderProps> = ({
   isStarted = false,
   signalQuality,
   title,
+  classStatus,
+  clockTime,
   monitor,
   onClick
 }) => {
@@ -75,13 +91,9 @@ export const BizHeader: FC<BizHeaderProps> = ({
         </Popover>
         <div className="biz-header-title-wrap">
           <div className="biz-header-title">{title}</div>
-          <div>
-            <Button
-              type={isStarted ? 'danger' : 'primary'}
-              onClick={() => onClick('courseControl')}
-            >
-              {isStarted ? '下课' : '上课'}
-            </Button>
+          <div className="biz-header-title">
+            <span>{classStatus}</span>
+            <span>{clockTime}</span>
           </div>
         </div>
         <div className="header-actions">

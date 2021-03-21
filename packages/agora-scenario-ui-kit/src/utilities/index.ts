@@ -1,4 +1,5 @@
 import React from 'react';
+import {get} from 'lodash';
 
 export type BaseElementProps = {
   id: string
@@ -21,16 +22,44 @@ export type I18nLanguage =
 export const translate = (lang: I18nLanguage, str: string) => {
   const textMap: Record<I18nLanguage, any> = {
     'zh': {
+      'cloud': {
+        'fileName': '文件名字',
+        'size': '大小',
+        'progress': '进度条',
+        'updatedAt': '修改时间',
+        'publicResources': '公共资源',
+        'personalResources': '我的资源',
+        'downloadResources': '下载资源',
+        'upload': '上传',
+        'delete': '删除',
+        'download': '下载',
+        'downloading': '下载中',
+        'pause': '暂停'
+      },
       'message': '消息',
       'zh': '中文'
     },
     'en': {
       'message': 'message',
-      'en': 'English'
+      'en': 'English',
+      'cloud': {
+        'fileName': 'file name',
+        'size': 'size',
+        'progress': 'progress',
+        'updatedAt': 'updated at',
+        'publicResources': 'Public Resources',
+        'personalResources': 'Personal Resources',
+        'downloadResources': 'Download Resources',
+        'upload': 'Upload',
+        'delete': 'Delete',
+        'download': 'Download',
+        'downloading': 'Downloading',
+        'pause': 'Pause',
+      },
     }
   }
 
-  return textMap[lang][str]
+  return get(textMap[lang], str, '')
 }
 
 export const makeContainer = (name: string) => {

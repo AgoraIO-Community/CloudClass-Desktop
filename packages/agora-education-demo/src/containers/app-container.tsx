@@ -5,7 +5,8 @@ import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { Provider } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import { registerWorker, useStorageSW } from '@/utils/utils';
+import { I18nProvider, registerWorker, useStorageSW } from '@/utils/utils';
+import { makeI18nProvider } from 'agora-scenario-ui-kit';
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -59,9 +60,11 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <Router>
-        <RouteContainer routes={props.routes} mainPath={props.mainPath} />
-      </Router>
+      <I18nProvider>
+        <Router>
+          <RouteContainer routes={props.routes} mainPath={props.mainPath} />
+        </Router>
+      </I18nProvider>
     </Provider>
   )
 }
@@ -72,9 +75,11 @@ export const AppContainer = (props: AppContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <HashRouter>
-        <RouteContainer routes={props.routes} />
-      </HashRouter>
+      <I18nProvider>
+        <HashRouter>
+          <RouteContainer routes={props.routes} />
+        </HashRouter>
+      </I18nProvider>
     </Provider>
   )
 }
