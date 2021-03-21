@@ -558,10 +558,17 @@ export class BoardStore {
     try {
       this.currentTaskUuid = taskUuid
       const cacheInfo = this.cacheMap.get(taskUuid)
-      if (cacheInfo && cacheInfo.cached) {
+      if (cacheInfo) {
         return
       }
-      this.cancelDownloading()
+
+      this.cacheMap.set(taskUuid, {
+        progress: 0,
+        cached: false,
+        skip: false,
+      })
+
+      // this.cancelDownloading()
       // if (cancelDownloading)
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
@@ -945,7 +952,6 @@ export class BoardStore {
     }
 
     this.ready = true
-    this.pptAutoFullScreen()
 
     // 老师
     if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -979,6 +985,10 @@ export class BoardStore {
     this.updateLocalSceneState()
     this.updateSceneItems()
     this.updateCourseWareList()
+
+    this.autoFetchDynamicTask()
+    this.pptAutoFullScreen()
+    this.moveCamera()
   }
 
   pptAutoFullScreen() {
@@ -2387,9 +2397,11 @@ export class BoardStore {
     if (this.currentTaskUuid) {
       const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
       if (cacheInfo && cacheInfo.skip !== true && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+        let progress = get(cacheInfo, 'progress', 0)
+        console.log(progress)
         return {
           type: 'downloading',
-          text: t("whiteboard.downloading", {reason: cacheInfo?.progress})
+          text: t("whiteboard.downloading", {reason: progress})
         }
       }
     }

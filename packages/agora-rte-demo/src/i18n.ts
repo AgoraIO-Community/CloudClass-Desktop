@@ -18,7 +18,7 @@ export const t = (name: string, options?: any): string => {
   }
 
   if (!isEmpty(options)) {
-    if (options.reason && content.match(/\{.+\}/)) {
+    if (!(options.reason === null || options.reason === undefined) && content.match(/\{.+\}/)) {
       content = content.replace(/\{.+\}/, options.reason);
     }
   }
