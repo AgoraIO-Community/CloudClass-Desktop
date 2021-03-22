@@ -7,6 +7,18 @@
   font-size: 13px;
 }
 
+.ag-calendar-header-btn-groups {
+  position: absolute;
+  right: 10px;
+  color: #565656;
+}
+
+.ag-calendar-header-btn-groups .rotated {
+  transform: rotateZ(90deg);
+  display:inline-block;
+  margin-left: 10px;
+}
+
 .react-datepicker.ag-calendar {
   border: 0;
 }
@@ -71,11 +83,17 @@
   color: #586376;
 }
 
-.ag-calendar-container .ag-calendar-time-item>button:focus {
+
+.ag-calendar-container .ag-calendar-time-item>button.selected {
   box-shadow: 0 0 0pt 1pt #357BF6;
   outline: none;
   border-radius: 3px;
   margin: 0 2px;
+  padding: 2px 2px;
+}
+
+.ag-calendar-container .ag-calendar-time-item>button:focus {
+  outline: none;
 }
 
 .ag-calendar-container .ag-calendar-ampm-select .ag-calendar-time-item{
@@ -108,7 +126,9 @@
 }
 
 .ag-calendar .react-datepicker__day--selected,
-.ag-calendar .react-datepicker__day--selected:hover{
+.ag-calendar .react-datepicker__day--selected:hover,
+.ag-calendar .react-datepicker__day--keyboard-selected,
+.ag-calendar .react-datepicker__day--keyboard-selected:hover{
   background-color: #357BF6;
   border-radius: 100%;
   border: 0;
@@ -131,6 +151,22 @@
 .ag-calendar .react-datepicker__day:focus,
 .ag-calendar .react-datepicker__day--selected:focus{
   outline: none;
+}
+
+.ag-calendar .ag-calendar-date {
+  border-radius: 100%;
+  border: 0;
+}
+
+.ag-calendar .ag-calendar-date.selected {
+  background-color: #357BF6;
+  border-radius: 100%;
+  border: 0;
+  color: #FFFFFF;
+}
+
+.ag-calendar .ag-calendar-date.out-scoped {
+  color: #eee;
 }
 
 .ag-calendar .react-datepicker__header{
