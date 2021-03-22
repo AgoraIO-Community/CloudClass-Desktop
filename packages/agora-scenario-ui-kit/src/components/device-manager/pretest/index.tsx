@@ -7,8 +7,9 @@ import { Icon } from '~components/icon'
 import { Volume } from '~components/volume'
 import { CheckBox } from '~components/table'
 import { Button } from '~components/button';
-import {t} from '~components/i18n';
+// import {t} from '~components/i18n';
 import './index.css';
+import { useTranslation } from '~components/i18n';
 
 const { Option } = Select
 
@@ -62,6 +63,8 @@ export const Pretest: FC<PretestProps> = ({
     onChangeAudioVolume = (deviceType, value) => {},
     ...restProps
 }) => {
+
+    const { t } = useTranslation();
 
     const [disable, setDisable] = useState<boolean>(false)
 

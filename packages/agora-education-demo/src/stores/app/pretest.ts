@@ -645,6 +645,27 @@ export class PretestStore {
     }
   }
 
+  async changeSpeaker(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeTestSpeakerVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeTestMicrophoneVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+
+  async changeSpeakerVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeMicrophoneVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
   @action
   async changeMicrophone(deviceId: string) {
     if (deviceId === AgoraMediaDeviceEnum.Default) {

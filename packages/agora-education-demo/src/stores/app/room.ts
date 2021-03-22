@@ -710,7 +710,7 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
-      this.appStore.boardStore.aClassInit({
+      this.appStore.boardStore.init({
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {

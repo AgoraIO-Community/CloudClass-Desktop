@@ -40,7 +40,7 @@ const ChildrenWrap = () => {
             cameraList={cameraList}
             cameraId={cameraId}
             microphoneList={microphoneList}
-            micorophoneId={microphoneId}
+            microphoneId={microphoneId}
             speakerList={speakerList}
             speakerId={speakerId}
             microphoneVolume={microphoneVolume}
@@ -79,7 +79,7 @@ const SettingContainer = () => {
                         microphoneList={microphoneList}
                         speakerList={speakerList}
                         cameraId={cameraList[0].deviceId}
-                        micorophoneId={microphoneList[0].deviceId}
+                        microphoneId={microphoneList[0].deviceId}
                         speakerId={speakerList[0].deviceId}
                         hasMicrophoneVolume={hasMicrophoneVolume}
                         hasSpeakerVolume={hasSpeakerVolume}

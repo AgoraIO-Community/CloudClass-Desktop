@@ -5,8 +5,8 @@ import { Header } from '~components/layout';
 import { Popover } from '~components/popover';
 import { SignalContent } from './signal-content';
 import './index.css';
-import { t } from '~components/i18n';
 import { Inline } from '~components';
+import { useTranslation } from 'react-i18next';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
@@ -73,15 +73,6 @@ export const BizHeader: FC<BizHeaderProps> = ({
   monitor,
   onClick
 }) => {
-
-  const getClassText = (classStatus: BizClassStatus) => {
-    const textMap = {
-      'pre-class': t('course.pre_class'),
-      'in-class': t('course.in_class'),
-      'end-class': t('course.end_class'),
-    }
-    return textMap[classStatus]
-  }
 
   return (
     <>

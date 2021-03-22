@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
 import { Exit } from './dialog'
+import { SettingContainer } from './setting'
 
 export const NavigationBar: React.FC<any> = observer(() => {
 
@@ -24,7 +25,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
       case 'setting': {
-        console.log('setting')
+        uiStore.setVisibleSetting(true)
         break
       }
       case 'courseControl': {
@@ -32,9 +33,10 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
     }
-  }, [navigationState.isStarted])
+  }, [navigationState.isStarted, uiStore])
 
   return (
+    <>
     <BizHeader
       classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
@@ -48,5 +50,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
       }}
       onClick={handleClick}
     />
+    <SettingContainer />
+    </>
   )
 })

@@ -27,6 +27,7 @@ export interface ColorsProps extends ToolItem {
   colorSliderDefault?: number;
   colorSliderStep?: number;
   onClick?: (value: string) => void;
+  onSliderChange?: (value: any) => void;
 }
 
 export const Colors: FC<ColorsProps> = ({
@@ -38,6 +39,7 @@ export const Colors: FC<ColorsProps> = ({
   colorSliderDefault = 50,
   colorSliderStep = 1,
   onClick,
+  onSliderChange
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const handleClick = (color: string) => {
@@ -52,6 +54,7 @@ export const Colors: FC<ColorsProps> = ({
         min={colorSliderMin}
         max={colorSliderMax}
         step={colorSliderStep}
+        onChange={onSliderChange}
       />
       {colors.map((color) => (
         <div

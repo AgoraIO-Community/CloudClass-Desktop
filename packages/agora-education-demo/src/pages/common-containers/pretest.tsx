@@ -62,8 +62,17 @@ export const usePretestContext = () => {
             }
         }
     }, [pretestStore])
-    const onChangeAudioVolume = useCallback(async () => {
-
+    const onChangeAudioVolume = useCallback(async (deviceType: string, value: any) => {
+        switch (deviceType) {
+            case 'speaker': {
+                await pretestStore.changeTestSpeakerVolume(value)
+                break;
+            }
+            case 'microphone': {
+                await pretestStore.changeTestMicrophoneVolume(value)
+                break;
+            }
+        }
     }, [pretestStore])
     const onSelectMirror = useCallback((evt: any) => {
         setMirror(!isMirror)

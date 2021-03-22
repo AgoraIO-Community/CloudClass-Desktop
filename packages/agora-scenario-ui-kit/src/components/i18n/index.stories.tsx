@@ -1,13 +1,11 @@
 import { Meta } from '@storybook/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '~components';
-import { makeI18nProvider } from '.';
+import { I18nProvider, useTranslation } from '~components/i18n'
 
 const meta: Meta = {
   title: 'Components/I18n',
 };
-
-const {I18nProvider, useI18nContext} = makeI18nProvider("zh")
 
 export type CloudStorageProps = {
   width: number,
@@ -16,14 +14,23 @@ export type CloudStorageProps = {
 
 const Text = ({text}: any) => {
 
-  const i18n = useI18nContext()
+  const {i18n, t} = useTranslation()
+
+  //@ts-ignore
+  window.i18n = i18n
+
+  //@ts-ignore
+  window.t = t
+
+  const [lang, setLanguage] = useState<string>('zh')
   
   return (
     <div className="flex flex-1 items-center gap-10">
-      <div className="w-20">{i18n.t(text)}</div>
+      <div className="w-20">{t(text)}</div>
       <Button onClick={() => {
-        i18n.changeLanguage(i18n.lang === 'zh' ? 'en' : 'zh')
-      }}>{i18n.t(i18n.lang)}</Button>
+        setLanguage(lang === 'zh' ? 'en' : 'zh')
+        i18n.changeLanguage(lang === 'zh' ? 'en' : 'zh')
+      }}>{t('zh')}</Button>
     </div>
   )
 }
