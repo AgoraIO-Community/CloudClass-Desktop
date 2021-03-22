@@ -67,6 +67,7 @@ const transformMaterialItem = (item: CourseWareItem): MaterialItem => {
 
 interface CacheInfo {
   progress: number,
+  downloading: boolean,
   cached: boolean,
   skip: boolean
 }
@@ -558,7 +559,7 @@ export class BoardStore {
     try {
       this.currentTaskUuid = taskUuid
       const cacheInfo = this.cacheMap.get(taskUuid)
-      if (cacheInfo) {
+      if (cacheInfo && cacheInfo.downloading) {
         return
       }
 
@@ -566,6 +567,7 @@ export class BoardStore {
         progress: 0,
         cached: false,
         skip: false,
+        downloading: true
       })
 
       // this.cancelDownloading()
@@ -589,6 +591,7 @@ export class BoardStore {
           progress: newProgress,
           cached: newProgress === 100,
           skip: false,
+          downloading: true
         })
       })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
@@ -896,7 +899,8 @@ export class BoardStore {
         this.cacheMap.set(item.taskUuid, {
           progress: res === true ? 100 : 0,
           cached: res,
-          skip: skip
+          skip: skip,
+          downloading: false
         })
       }
     }
