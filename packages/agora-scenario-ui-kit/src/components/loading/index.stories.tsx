@@ -37,7 +37,7 @@ export const Docs = () => (
                     hasLoadingGif={false}
                     loadingText="课件加载中，请稍候…"
                     hasProgress
-                    currentProgress={0}
+                    currentProgress={70}
                     footer={[<Button type="secondary">跳过</Button>]}
                 ></Loading>
             </Card>
@@ -48,7 +48,7 @@ export const Docs = () => (
                     hasLoadingGif
                     loadingText="课件加载中，请稍候…"
                     hasProgress
-                    currentProgress={0.7}
+                    currentProgress={99}
                     footer={[<Button type="secondary">跳过</Button>, <Button>确定</Button>]}
                 ></Loading>
             </Card>
@@ -67,14 +67,14 @@ export const Docs = () => (
                                 fileName: 'pdf文件',
                                 fileSize: '2.4M',
                                 uploadComplete: false,
-                                currentProgress: .5,
+                                currentProgress: 10,
                             },
                             {
                                 iconType: 'format-pdf',
                                 fileName: 'pdf文件',
                                 fileSize: '2.4M',
                                 uploadComplete: false,
-                                currentProgress: .5,
+                                currentProgress: 90,
                             }
                         ]
                     }
