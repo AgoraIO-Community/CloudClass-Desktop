@@ -129,3 +129,59 @@
   background-color: #357bf6;
   margin-bottom: 4px;
 }
+
+.container {
+  overflow: hidden;
+  width: 915px;
+  position: absolute;
+}
+
+.video-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.video-container::-webkit-scrollbar {
+  width: 0;
+}
+
+.videoItem {
+  width: 300px;
+  height: 168px;
+  margin-right: 5px;
+}
+
+.left-container {
+  color: #FFFFFF;
+  width: 30px;
+  height: 168px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  position: absolute;
+  z-index: 999;
+  cursor: pointer;
+}
+
+
+.right-container {
+  color: #FFFFFF;
+  width: 30px;
+  height: 168px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  position: absolute;
+  right: 0;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.offset {
+  position: absolute;
+  top: 45%;
+  left: 40%;
+  transition: translate(45%, 40%);
+}
