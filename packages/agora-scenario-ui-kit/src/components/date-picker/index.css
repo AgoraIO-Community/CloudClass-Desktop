@@ -71,6 +71,12 @@
   color: #586376;
 }
 
+.ag-calendar-container .ag-calendar-time-item>button:focus {
+  box-shadow: inset 0 0 0pt 1pt red;
+  outline: none;
+  border-radius: 3px;
+}
+
 .ag-calendar-container .ag-calendar-ampm-select .ag-calendar-time-item{
   height: 33px;
 }

@@ -52,7 +52,7 @@ export const DatePicker: FC<DatePickerProps> = ({
       />
       <div className="ag-calendar-time-select-container">
         <div className="ag-calendar-hour-select ag-calendar-time-select">
-          {[...Array(12).keys()].map(idx => <div className="ag-calendar-time-item">{`${idx}`.padStart(2, '0')}</div>)}
+          {[...Array(12).keys()].map(idx => <li className="ag-calendar-time-item"><button className="w-full">{`${idx+1}`.padStart(2, '0')}</button></li>)}
         </div>
         <div className="ag-calendar-minutes-select ag-calendar-time-select">
           {[...Array(60).keys()].map(idx => <div className="ag-calendar-time-item">{`${idx}`.padStart(2, '0')}</div>)}
