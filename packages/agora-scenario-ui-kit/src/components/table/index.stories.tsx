@@ -8,7 +8,7 @@ import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
 import { Placeholder } from '~components/placeholder'
-// import { Loading } from '~components/loading'
+import { Loading } from '~components/loading'
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -114,7 +114,7 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
               </Col>
             </Row>
           )
-        ) : <Placeholder placeholderType="noFile"/>}
+        ) : <Placeholder placeholderType="noFile" />}
 
       </Table>
     </Table>
@@ -171,8 +171,8 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
               </Row>
             </Col>
           </Row>
-        )) : <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字"/>}
-        
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字" />}
+
       </Table>
     </Table>
   )
@@ -248,8 +248,8 @@ const CheckList = ({ size, progress }: UploadListProps) => {
               <Inline color="#586376">{date}</Inline>
             </Col>
           </Row>
-        )) : <Placeholder placeholderType="noFile" placeholderDesc="没有文件"/>}
-        
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="没有文件" />}
+
       </Table>
     </Table>
   )
@@ -283,11 +283,43 @@ export const CourseWareManager = ({
         <TabPane tab="公共资源" key="1">
           <CloudStorage size={1} />
         </TabPane>
-        <TabPane tab="我的资源" key="2">
+        <TabPane tab="我的资源" key="2" style={{position: 'relative'}}> 
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
           </Row>
+          <Modal
+            title="上传"
+            width={450}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <Loading
+              hasLoadingGif={false}
+              uploadItemList={
+                [
+                  {
+                    iconType: 'format-pdf',
+                    fileName: 'pdf文件33333333',
+                    fileSize: '1.3M',
+                    uploadComplete: false,
+                    currentProgress: 50
+                  },
+                  {
+                    iconType: 'format-ppt',
+                    fileName: 'ppt文件',
+                    fileSize: '1.3M',
+                    uploadComplete: false,
+                    currentProgress: 50
+                  }
+                ]
+              }
+            />
+          </Modal>
           <CheckList size={1} progress={20} />
         </TabPane>
         <TabPane tab="下载课件" key="3">
