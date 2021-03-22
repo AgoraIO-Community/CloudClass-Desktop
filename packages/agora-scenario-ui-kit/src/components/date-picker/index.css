@@ -72,9 +72,10 @@
 }
 
 .ag-calendar-container .ag-calendar-time-item>button:focus {
-  box-shadow: inset 0 0 0pt 1pt red;
+  box-shadow: 0 0 0pt 1pt #357BF6;
   outline: none;
   border-radius: 3px;
+  margin: 0 2px;
 }
 
 .ag-calendar-container .ag-calendar-ampm-select .ag-calendar-time-item{

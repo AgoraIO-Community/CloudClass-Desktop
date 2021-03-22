@@ -24,7 +24,14 @@ export const DatePicker: FC<DatePickerProps> = ({
   });
   const [startDate, setStartDate] = useState(new Date());
   const [isOpen, setOpen] = useState(false);
+  const [selectedHour, setSelectedHour] = useState(1)
+  const [selectedMinute, setSelectedMinute] = useState(0)
+  const [selectedAMPM, setSelectedAMPM] = useState(0)
 
+
+  const onSelectHour = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    evt.currentTarget.id
+  }
 
   return (
     <div className="ag-calendar-container">
@@ -52,7 +59,7 @@ export const DatePicker: FC<DatePickerProps> = ({
       />
       <div className="ag-calendar-time-select-container">
         <div className="ag-calendar-hour-select ag-calendar-time-select">
-          {[...Array(12).keys()].map(idx => <li className="ag-calendar-time-item"><button className="w-full">{`${idx+1}`.padStart(2, '0')}</button></li>)}
+          {[...Array(12).keys()].map(idx => <li className="ag-calendar-time-item"><button className="w-full" onClick={onSelectHour}>{`${idx+1}`.padStart(2, '0')}</button></li>)}
         </div>
         <div className="ag-calendar-minutes-select ag-calendar-time-select">
           {[...Array(60).keys()].map(idx => <div className="ag-calendar-time-item">{`${idx}`.padStart(2, '0')}</div>)}
