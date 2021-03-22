@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChatBoard, ChatMessageList ,ChatMessage as IChatViewMessage} from 'agora-aclass-ui-kit'
 import dayjs from 'dayjs'
 import { ChatMessage } from '@/utils/types';
-import { useAcadsocRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hooks'
+import { useRoomStore, useSceneStore,useAppStore,useUIStore } from '@/hooks'
 import { t } from '@/i18n';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { debounce } from '@/utils/utils';
@@ -19,7 +19,7 @@ const shouldDisable = (role: EduRoleTypeEnum, isMuted: boolean) => {
 export const ChatView = observer(() => {
   const [nextId, setNextID] = useState('')
   const uiStore = useUIStore()
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
   // const [storeMessageList, setStoreMessageList] = useState<ChatMessage[]>([])
   const [newMessage, setMessages] = useState<ChatMessageList>([])
@@ -29,7 +29,7 @@ export const ChatView = observer(() => {
 
   // let sendTimer = new Date().getTime()
   const resendMessage = async (message: any) => {
-    const { roomChatMessages } = acadsocStore
+    const { roomChatMessages } = roomStore
     const viewList = newMessage;
     const viewListIndex = newMessage.findIndex((item) => item.messagesId === message.messagesId)
     viewList.splice(viewListIndex, 1)
@@ -38,10 +38,10 @@ export const ChatView = observer(() => {
     await sendMessage(message.chatText)
     const retryIndex = roomChatMessages.findIndex((item) => item.ts === message.messagesId)
     storeChatList.splice(retryIndex, 1)
-    acadsocStore.setMessageList(storeChatList)
+    roomStore.setMessageList(storeChatList)
   }
   const transformationMessage = (messageList?: ChatMessage[]) => {
-    const { roomChatMessages } = acadsocStore
+    const { roomChatMessages } = roomStore
     // setStoreMessageList(roomChatMessages)
     const list = messageList || roomChatMessages
     const message: ChatMessageList = list.map((messageItem) => {
@@ -66,7 +66,7 @@ export const ChatView = observer(() => {
     let isSuccess:boolean = true
     let translateContent:any = ''
     try {
-      translateContent = await acadsocStore.getTranslationContent(message.chatText)
+      translateContent = await roomStore.getTranslationContent(message.chatText)
     } catch (err) {
       isSuccess = false
     }
@@ -77,7 +77,7 @@ export const ChatView = observer(() => {
   }
   const fetchMessage = async () => {
     setIsFetchHistory(false)
-    const res = nextId !== 'last' && await acadsocStore.getHistoryChatMessage({ nextId, sort: 0 })
+    const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
 
     setNextID(get(res, 'nextId', 'last'))
   }
@@ -93,7 +93,7 @@ export const ChatView = observer(() => {
     //   return
     // }
     const chatMessage: ChatMessageList = [{
-      userName: acadsocStore.roomInfo.userName,
+      userName: roomStore.roomInfo.userName,
       messagesId: +Date.now(),
       id: current.toString(),
       sendTime: dayjs().format('HH:mm'),
@@ -105,19 +105,19 @@ export const ChatView = observer(() => {
     }]
     // sendTimer = current;
     setMessages(newMessage.concat(chatMessage))
-    const data = await acadsocStore.sendMessage(message)
-    acadsocStore.addChatMessage(data)
+    const data = await roomStore.sendMessage(message)
+    roomStore.addChatMessage(data)
   }
 
   const chatMinimize = () => {
-    let t: any = acadsocStore.minimizeView.find((item) => item.type === 'chat' )
+    let t: any = roomStore.minimizeView.find((item) => item.type === 'chat' )
     t.isHidden = true
-    acadsocStore.unwind.push(t)
-    acadsocStore.isBespread = false
+    roomStore.unwind.push(t)
+    roomStore.isBespread = false
   }
   const isCanMute = () => {
     const canMuteChatUser = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant]
-    return canMuteChatUser.includes(acadsocStore.appStore.roomInfo.userRole)
+    return canMuteChatUser.includes(roomStore.appStore.roomInfo.userRole)
   }
   const onClickBannedButton = useCallback(async () => {
     if (isCanMute()) {
@@ -127,14 +127,14 @@ export const ChatView = observer(() => {
         await sceneStore.unmuteChat()
       }
     }
-  }, [sceneStore.mutedChat, acadsocStore.appStore.roomInfo])
+  }, [sceneStore.mutedChat, roomStore.appStore.roomInfo])
 
   useEffect(() => {
-    if (acadsocStore.roomInfo.userUuid && acadsocStore.joined) {
+    if (roomStore.roomInfo.userUuid && roomStore.joined) {
       isFetchHistory && fetchMessage()
     }
     setMessages(transformationMessage())
-  }, [acadsocStore.roomChatMessages.length, acadsocStore.joined])
+  }, [roomStore.roomChatMessages.length, roomStore.joined])
   const appStore=useAppStore()
   return (
     <ChatBoard

@@ -1,7 +1,7 @@
 import { INavigationItem, Navigation, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useSceneStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
+import { useRoomStore, useSceneStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
@@ -13,10 +13,10 @@ import { controller } from '@/edu-sdk/controller'
 import { AgoraEduEvent } from '@/edu-sdk/declare'
 
 const StartViewBox = observer(() => {
-  const acadsocStore = useAcadsocRoomStore()
-  const startTime: string = acadsocStore.classTimeText
+  const roomStore = useRoomStore()
+  const startTime: string = roomStore.classTimeText
   return (
-    <StartView text={startTime} isEnd={acadsocStore.isClassroomDelayed}/>
+    <StartView text={startTime} isEnd={roomStore.isClassroomDelayed}/>
   )
 })
 
@@ -28,7 +28,7 @@ const AssistantMenu = observer(() => {
     return 3
   }
   const mediaStore = useMediaStore()
-  const acadsocRoomStore = useAcadsocRoomStore()
+  const acadsocRoomStore = useRoomStore()
   const userList = mediaStore.signalStatus;
   const remoteUsers: ISignalStatus[] = userList.filter((item) => item.userUuid !== acadsocRoomStore.userUuid).map((item) => {
     const receiveDelay = parseInt(item.receiveDelay, 10)
@@ -54,7 +54,7 @@ const AssistantMenu = observer(() => {
 
 export const Nav = observer(() => {
 
-  const acadsocRoomStore = useAcadsocRoomStore()
+  const acadsocRoomStore = useRoomStore()
 
   const userRole = get(acadsocRoomStore, 'roomInfo.userRole', 1)
   const assistantView = {
@@ -134,7 +134,7 @@ const onCustomerService = async () => {
 type IStatusBar = INavigationItem[]
 
 const SignalBarContainer = observer(() => {
-  const roomStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
 
   return (
     <SignalBar level={roomStore.signalLevel}></SignalBar>
@@ -144,7 +144,7 @@ const SignalBarContainer = observer(() => {
 const ActionBarContainer = observer(() => {
   const uiStore = useUIStore()
 
-  const roomStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
 
   const handleSetting = useCallback(() => {
     if (uiStore.aclassVisible) {
@@ -192,7 +192,7 @@ const actionBar: IStatusBar = [{
   renderItem: () => {
 
     const history = useHistory()
-    const acadsocRoomStore = useAcadsocRoomStore()
+    const acadsocRoomStore = useRoomStore()
     const appStore = useAppStore()
 
     const onExitRoom = () => {

@@ -4,3 +4,58 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
 }
+
+.rtc-video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.edu-room .layout {
+  position: relative;
+}
+
+.edu-room .tabs {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.layout-aside-normal {
+  max-width: 300px;
+  min-width: 300px;
+  flex: 1;
+  position: relative;
+}
+
+.layout-aside.layout-aside-fullscreen {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: none;
+  width: auto;
+  margin: 10px;
+  height: auto;
+}
+
+.screen-share-player-container {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+}
+
+.agora-board-resources input[type=file] {
+  display: none;
+}
+
+.mirror canvas{
+  transform: scaleX(1) !important;
+}
+
+.mirror video{
+  transform: scaleX(1) !important;
+}

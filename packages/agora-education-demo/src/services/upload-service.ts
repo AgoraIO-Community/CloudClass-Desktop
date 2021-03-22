@@ -11,28 +11,9 @@ import { CourseWareItem } from "@/edu-sdk";
 import { get } from "lodash";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types";
 import { fileSizeConversionUnit } from "@/utils/utils";
+import { FormatIconType } from "agora-scenario-ui-kit";
 
-const formatExt = (ext: string) => {
-  const typeMapper = {
-      ppt: 'ppt',
-      pptm: 'ppt',
-      pptx: 'ppt',
-      
-      docx: 'word',
-      doc: 'word',
-      
-      xlsx: 'excel',
-      xls: 'excel',
-      csv: 'excel',
-      
-      pdf: 'pdf',
-      // video audio txt pic
-  }
-  return typeMapper[ext]
-}
-
-
-export const mapFileType = (type: string): string => {
+export const mapFileType = (type: string): FormatIconType => {
   if (type.match(/ppt|pptx|pptx/i)) {
     return 'ppt'
   }
@@ -49,18 +30,14 @@ export const mapFileType = (type: string): string => {
     return 'audio'
   }
 
-  if (type.match(/txt/i)) {
-    return 'txt'
-  }
-
   if (type.match(/gif|png|jpeg|jpg|bmp/i)) {
-    return 'pic'
+    return 'image'
   }
   if (type.match(/pdf/i)) {
     return 'pdf'
   }
 
-  return 'txt'
+  return 'excel'
 }
 
 type MaterialDataResource = {
@@ -68,12 +45,12 @@ type MaterialDataResource = {
   name: string,
   ext: string,
   type: string,
-  calories: string | number,
+  size: string | number,
   taskUuid: string,
   taskProgress: any,
   url: string,
   convertedPercentage?: number,
-  fat: number,
+  updateTime: number,
   scenes?: any[]
 }
 
@@ -84,12 +61,12 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       name: data.resourceName,
       ext: data.ext,
       type: mapFileType(data.ext),
-      calories: fileSizeConversionUnit(data.size) || 0,
+      size: fileSizeConversionUnit(data.size) || 0,
       url: data.url,
       taskUuid: '',
       taskProgress: null,
       convertedPercentage: 100,
-      fat: data.updateTime,
+      updateTime: data.updateTime,
     }
   }
   return {
@@ -97,12 +74,12 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
     name: data.resourceName,
     ext: data.ext,
     type: mapFileType(data.ext),
-    calories: fileSizeConversionUnit(data.size) || 0,
+    size: fileSizeConversionUnit(data.size) || 0,
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
     url: data.url,
     convertedPercentage: data.taskProgress!.convertedPercentage,
-    fat: data.updateTime,
+    updateTime: data.updateTime,
     scenes: data.scenes,
   }
 }

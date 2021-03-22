@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { observer } from 'mobx-react'
 import styles from './style.module.scss'
-import { useAcadsocRoomStore, useSceneStore } from '@/hooks'
+import { useRoomStore, useSceneStore } from '@/hooks'
 import { debounce } from '@/utils/utils';
 
 export const MinimizeTeacher = observer(() => {
 
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
 
   const bindUnwind = (type:string) => {
-    let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
+    let t: any = roomStore.minimizeView.find((item) => item.type === type )
     t.isHidden = false
-    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    acadsocStore.unwind.splice(i, 1)
-    if(acadsocStore.unwind.length === 0) {
-      acadsocStore.isBespread = true
+    let i = roomStore.unwind.findIndex((item: any) => item.type === type )
+    roomStore.unwind.splice(i, 1)
+    if(roomStore.unwind.length === 0) {
+      roomStore.isBespread = true
     }
   }
 
@@ -36,25 +36,25 @@ export const MinimizeTeacher = observer(() => {
 
 export const MinimizeStudent = observer(() => {
 
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const sceneStore = useSceneStore()
 
   const studentViewRef = useRef<any>()
 
   useEffect(() => {
-    acadsocStore.trophyFlyout.endPosition = {
+    roomStore.trophyFlyout.endPosition = {
       x: studentViewRef.current?.getBoundingClientRect().left + 120,
       y: studentViewRef.current?.getBoundingClientRect().top 
     }
-  }, [acadsocStore.windowWidth, acadsocStore.windowHeight, acadsocStore.trophyFlyout.minimizeTrigger])
+  }, [roomStore.windowWidth, roomStore.windowHeight, roomStore.trophyFlyout.minimizeTrigger])
 
   const bindUnwind = (type:string) => {
-    let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
+    let t: any = roomStore.minimizeView.find((item) => item.type === type )
     t.isHidden = false
-    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    acadsocStore.unwind.splice(i, 1)
-    if(acadsocStore.unwind.length === 0) {
-      acadsocStore.isBespread = true
+    let i = roomStore.unwind.findIndex((item: any) => item.type === type )
+    roomStore.unwind.splice(i, 1)
+    if(roomStore.unwind.length === 0) {
+      roomStore.isBespread = true
     }
   }
 
@@ -79,16 +79,16 @@ export interface ChatProps {
 
 export const MinimizeChat = observer((props: ChatProps) => {
 
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
 
   const bindUnwind = (type:string) => {
-    let t: any = acadsocStore.minimizeView.find((item) => item.type === type )
+    let t: any = roomStore.minimizeView.find((item) => item.type === type )
     t.isHidden = false
-    acadsocStore.resetUnreadMessageCount()
-    let i = acadsocStore.unwind.findIndex((item: any) => item.type === type )
-    acadsocStore.unwind.splice(i, 1)
-    if(acadsocStore.unwind.length === 0) {
-      acadsocStore.isBespread = true
+    roomStore.resetUnreadMessageCount()
+    let i = roomStore.unwind.findIndex((item: any) => item.type === type )
+    roomStore.unwind.splice(i, 1)
+    if(roomStore.unwind.length === 0) {
+      roomStore.isBespread = true
     }
   }
 
@@ -96,9 +96,9 @@ export const MinimizeChat = observer((props: ChatProps) => {
     <div className={styles.chatContainer}>
       <div className={styles.teacherContainer}>
         <div className={styles.mainIcon}></div>
-          <span className={styles.name}>{acadsocStore.minimizeView[2].content}</span>
+          <span className={styles.name}>{roomStore.minimizeView[2].content}</span>
         {
-          acadsocStore.unreadMessageCount > 0 ?
+          roomStore.unreadMessageCount > 0 ?
           <div className={styles.unreadContainer}>
             <span className={styles.count}>{props.unread}</span>
           </div>

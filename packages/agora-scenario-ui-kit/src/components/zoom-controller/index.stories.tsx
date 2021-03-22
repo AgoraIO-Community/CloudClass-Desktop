@@ -15,13 +15,13 @@ type DocsType = {
 
 export const Docs = ({ zoomValue, currentPage, totalPage }: DocsType) => (
     <>
-        <div>
+        <div className="mt-20">
             <ZoomController
                 zoomValue={zoomValue}
                 currentPage={currentPage}
                 totalPage={totalPage}
                 clickHandler={e => {
-                    console.log('user', e.target)
+                    console.log('zoom item type ', e)
                 }}
             />
         </div>

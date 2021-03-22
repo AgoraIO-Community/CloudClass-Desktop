@@ -31,8 +31,8 @@ export const Docs = () => {
           <div>下载课件</div>
         </TabPane>
       </Tabs>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <Tabs type="editable-card">
         <TabPane
           tab={
@@ -53,6 +53,36 @@ export const Docs = () => {
           <div>PPT课件制作规范</div>
         </TabPane>
         <TabPane tab="如何制作课件" key="2">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 3" key="3">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 4" key="4">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 5" key="5">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 6" key="6">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 7" key="7">
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+          <div>如何制作课件</div>
+        </TabPane>
+        <TabPane tab="如何制作课件 8" key="8">
           <div>如何制作课件</div>
           <div>如何制作课件</div>
           <div>如何制作课件</div>

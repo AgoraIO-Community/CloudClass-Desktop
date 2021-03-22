@@ -73,12 +73,9 @@ export class AgoraCaches {
             if (request.url.indexOf(uuid) !== -1) {
                 await cache.delete(request);
                 this.downloadList.delete(uuid)
-                if (this.agoraCaches) {
-                    
-                }
             }
         }
-        this.agoraCaches = null;
+        // this.agoraCaches = null;
     }
 
     public clearAllCache = async () => {

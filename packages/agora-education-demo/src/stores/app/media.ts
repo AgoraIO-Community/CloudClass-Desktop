@@ -257,7 +257,7 @@ export class MediaStore {
       if (this.appStore.uiStore.isElectron) {
         this.totalVolume = Number((totalVolume / 255).toFixed(3))
       } else {
-        this.totalVolume = totalVolume;
+        this.totalVolume = totalVolume * 100;
       }
     })
     this.mediaService.on('volume-indication', (evt: any) => {

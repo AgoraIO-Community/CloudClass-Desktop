@@ -1,4 +1,3 @@
-import { Modal } from 'agora-scenario-ui-kit';
 import {
   EduLogger,
   UserRenderer,
@@ -30,6 +29,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum, ChatMessage} from '@/types';
 import { filterChatText } from '@/utils/utils';
+import { Button, Modal, Toast } from 'agora-scenario-ui-kit';
+import { KickEnd, RoomEnd } from '@/pages/common-containers/dialog';
 
 dayjs.extend(duration)
 
@@ -121,10 +122,10 @@ export type EduMediaStream = {
   local: boolean
   audio: boolean
   video: boolean
-  showControls: boolean
+  hideControl: boolean
 }
 
-export class AcadsocRoomStore extends SimpleInterval {
+export class RoomStore extends SimpleInterval {
 
   static resolutions: any[] = [
     {
@@ -197,11 +198,19 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   roomChatMessages: ChatMessage[] = []
 
-  @observable
-  unreadMessageCount: number = 0
+  @computed
+  get chatMessageList(): any[] {
+    return this.roomChatMessages.map((item: ChatMessage, key: number) => ({
+      id: `${item.id}${item.ts}${key}`,
+      uid: item.id,
+      username: `${item.account}`,
+      timestamp: item.ts,
+      content: item.text,
+    }))
+  }
 
   @observable
-  messages: any[] = []
+  unreadMessageCount: number = 0
 
   @observable
   joined: boolean = false
@@ -333,37 +342,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
-  @observable
-  minimizeView: MinimizeType[] = [
-    {
-      id: 'teacher'+Math.ceil(Math.random()*10),
-      type: 'teacher',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'student'+Math.ceil(Math.random()*10),
-      type: 'student',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'chat'+Math.ceil(Math.random()*10),
-      type: 'chat',
-      content: 'Chat',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 212,
-    },
-  ]
-
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
   appStore!: AppStore;
@@ -384,7 +362,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
-    this.messages = []
     this.joined = false
     this.roomJoined = false
     this.time = 0
@@ -445,7 +422,11 @@ export class AcadsocRoomStore extends SimpleInterval {
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_send_chat'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       return{
@@ -460,9 +441,11 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
   }
   
-  @action setMessageList(messageList: ChatMessage[]) {
+  @action
+  setMessageList(messageList: ChatMessage[]) {
     this.roomChatMessages = messageList
   }
+
   @action
   async getHistoryChatMessage(data: {
     nextId: string,
@@ -510,7 +493,11 @@ export class AcadsocRoomStore extends SimpleInterval {
         // this.appStore.params.translateLanguage
       })
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_translate_chat'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_translate_chat'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -528,7 +515,11 @@ export class AcadsocRoomStore extends SimpleInterval {
         }]
       })
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_send_reward'))
+      Toast.show({
+        type: 'error',
+        text: t('toast.failed_to_send_reward'),
+        duration: 1.5,
+      })
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -554,9 +545,17 @@ export class AcadsocRoomStore extends SimpleInterval {
     // 判断是否等于上一次的值 相同则不更新
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
-        this.appStore.uiStore.addToast(t('toast.chat_disable'))
+        Toast.show({
+          type: 'error',
+          text: t('toast.chat_disable'),
+          duration: 1.5,
+        })
       } else {
-        this.appStore.uiStore.addToast(t('toast.chat_enable'))
+        Toast.show({
+          type: 'error',
+          text: t('toast.chat_enable'),
+          duration: 1.5,
+        })
       }
     } 
     this.isStudentChatAllowed = isStudentChatAllowed
@@ -573,7 +572,11 @@ export class AcadsocRoomStore extends SimpleInterval {
           [5, 3, 1].forEach(min => {
             let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+              Toast.show({
+                type: 'error',
+                text: t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
+                duration: 1.5,
+              })
             }
           })
           break;
@@ -581,14 +584,22 @@ export class AcadsocRoomStore extends SimpleInterval {
           [5, 1].forEach(min => {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+              Toast.show({
+                type: 'error',
+                text: t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
+                duration: 1.5,
+              })
             }
           })
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
+            Toast.show({
+              type: 'error',
+              text: t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
+              duration: 1.5,
+            })
           }
           if(durationToClose < 0) {
             // close
@@ -705,7 +716,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
+        this.appStore.isNotInvisible && Toast.show({
+          type: 'error',
+          text: t('toast.failed_to_join_board'),
+          duration: 1.5,
+        })
       })
       this.appStore.uiStore.stopLoading()
 
@@ -766,6 +781,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
+          this.sceneStore.streamList = roomManager.getFullStreamList()
           if (!this.sceneStore.joiningRTC) {
             return 
           }
@@ -968,11 +984,6 @@ export class AcadsocRoomStore extends SimpleInterval {
           sender: false
         })
         console.log(' room-chat-message ', JSON.stringify(evt))
-         const minimizeView = this.minimizeView.find((item) => item.type === 'chat' )
-        if (minimizeView?.isHidden) { this.unreadMessageCount = this.unreadMessageCount + 1 }
-        else {
-          this.unreadMessageCount = 0
-        }
         BizLogger.info('room-chat-message', evt)
       })
       const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
@@ -1086,7 +1097,13 @@ export class AcadsocRoomStore extends SimpleInterval {
             }
           }
         } catch (err) {
-          this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.media_method_call_failed') + `: ${err.message}`)
+          if (this.appStore.isNotInvisible) {
+            Toast.show({
+              text: (t('toast.media_method_call_failed') + `: ${err.message}`),
+              type: 'error',
+              duration: 1.5
+            })
+          }
           const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
         }
@@ -1123,21 +1140,14 @@ export class AcadsocRoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      // dialogManager.show({
-      //   text: t(`error.class_end`),
-      //   showConfirm: true,
-      //   showCancel: false,
-      //   confirmText: t('aclass.confirm.yes'),
-      //   visible: true,
-      //   cancelText: t('aclass.confirm.no'),
-      //   onConfirm: async () => {
-      //     await this.appStore.destroyRoom()
-      //   },
-      //   onClose: () => {
-      //   }
-      // })
+      this.appStore.uiStore.addDialog(RoomEnd)
     } else if(state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
+      const text = t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)})
+      Toast.show({
+        type: 'error',
+        text: text,
+        duration: 1.5
+      })
     }
   }
 
@@ -1178,7 +1188,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       } catch (err) {
         BizLogger.error(`${err}`)
       }
-      this.appStore.uiStore.addToast(t('toast.successfully_left_the_business_channel'))
+      // this.appStore.uiStore.addToast(t('toast.successfully_left_the_business_channel'))
       this.delInterval('timer')
       this.reset()
       this.appStore.uiStore.updateCurSeqId(0)
@@ -1193,24 +1203,23 @@ export class AcadsocRoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
-        // dialogManager.confirm({
+        this.appStore.uiStore.addDialog(KickEnd)
+        // Modal.show({
         //   title: t(`aclass.notice`),
-        //   text: t(`toast.kick`),
-        //   showConfirm: true,
-        //   showCancel: true,
-        //   confirmText: t('aclass.confirm.yes'),
-        //   visible: true,
-        //   cancelText: t('aclass.confirm.no'),
-        //   onConfirm: async () => {
+        //   children: t(`toast.kick`),
+        //   footer: [
+        //     <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
+        //     <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
+        //   ],
+        //   onOk: async () => {
         //     await this.appStore.destroyRoom()
-        //   },
-        //   onClose: () => {
         //   }
         // })
         break;
       }
       case QuickTypeEnum.End: {
-        // dialogManager.confirm({
+        this.appStore.uiStore.addDialog(RoomEnd)
+        // Modal.confirm({
         //   title: t(`aclass.class_end`),
         //   text: t(`aclass.leave_room`),
         //   showConfirm: true,
@@ -1289,5 +1298,18 @@ export class AcadsocRoomStore extends SimpleInterval {
       }
     }
     return duration.format(formatItems.join(' '))
+  }
+
+  @computed
+  get navigationState() {
+    return {
+      cpuUsage: 0,
+      isStarted: !!this.sceneStore.classState,
+      title: this.sceneStore.roomInfo.roomName,
+      signalQuality: this.appStore.mediaStore.networkQuality as any,
+      networkLatency: +this.appStore.mediaStore.delay,
+      networkQuality: this.appStore.mediaStore.networkQuality,
+      packetLostRate: 0,
+    }
   }
 }

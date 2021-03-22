@@ -7,6 +7,7 @@ import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/tabl
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
+import { Placeholder } from '~components/placeholder'
 import { Loading } from '~components/loading'
 
 const meta: Meta = {
@@ -87,6 +88,8 @@ export type CloudStorageProps = {
 export const CloudStorage = ({ size }: CloudStorageProps) => {
 
   const itemList = resizeList(list, size)
+  itemList.length = 0;
+  // console.log(itemList)
 
   return (
     <Table>
@@ -96,20 +99,23 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
         <Col>修改时间</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.map(({ name, progress, date, type }: any, idx: number) =>
-          <Row height={10} border={1} key={idx} >
-            <Col>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
-            </Col>
-            <Col>
-              <Inline color="#586376">{formatFileSize(size)}</Inline>
-            </Col>
-            <Col>
-              <Inline color="#586376">{date}</Inline>
-            </Col>
-          </Row>
-        )}
+        {itemList.length ? (
+          itemList.map(({ name, progress, date, type }: any, idx: number) =>
+            <Row height={10} border={1} key={idx} >
+              <Col>
+                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <Inline color="#191919">{name}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{formatFileSize(size)}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{date}</Inline>
+              </Col>
+            </Row>
+          )
+        ) : <Placeholder placeholderType="noFile" />}
+
       </Table>
     </Table>
   )
@@ -135,6 +141,8 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
 
   const itemList = resizeList(list, size)
 
+  itemList.length = 0;
+
   return (
     <Table>
       <TableHeader>
@@ -143,7 +151,7 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
         <Col>操作</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.map(({ name, progress, type }: any, idx: number) =>
+        {itemList.length ? (itemList.map(({ name, progress, type }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
@@ -163,7 +171,8 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
               </Row>
             </Col>
           </Row>
-        )}
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字" />}
+
       </Table>
     </Table>
   )
@@ -204,6 +213,8 @@ const CheckList = ({ size, progress }: UploadListProps) => {
     }
   }, [items, updateItems])
 
+  // items.length = 0;
+
   return (
     <Table>
       <TableHeader>
@@ -216,7 +227,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
         <Col>修改时间</Col>
       </TableHeader>
       <Table className="table-container">
-        {items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
+        {items.length ? (items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col width={9}>
               <CheckBox className="checkbox" onClick={(evt: any) => {
@@ -237,7 +248,8 @@ const CheckList = ({ size, progress }: UploadListProps) => {
               <Inline color="#586376">{date}</Inline>
             </Col>
           </Row>
-        )}
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="没有文件" />}
+
       </Table>
     </Table>
   )
@@ -262,36 +274,6 @@ export const CourseWareManager = ({
     console.log('change Key', activeKey)
   }
 
-  const showUpload = () => {
-    Modal.show({
-      title: '上传',
-      width: 450,
-      children: (
-        <Loading
-          hasLoadingGif={false}
-          uploadItemList={
-            [
-              {
-                iconType: 'format-pdf',
-                fileName: 'pdf文件',
-                fileSize: '2.4M',
-                uploadComplete: false,
-                currentProgress: .5,
-              },
-              {
-                iconType: 'format-pdf',
-                fileName: 'pdf文件',
-                fileSize: '2.4M',
-                uploadComplete: false,
-                currentProgress: .5,
-              }
-            ]
-          }
-        />
-      )
-    })
-  }
-
   return (
     <div className="agora-board-resources">
       <div className="btn-pin">
@@ -301,11 +283,43 @@ export const CourseWareManager = ({
         <TabPane tab="公共资源" key="1">
           <CloudStorage size={1} />
         </TabPane>
-        <TabPane tab="我的资源" key="2">
+        <TabPane tab="我的资源" key="2" style={{position: 'relative'}}> 
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
           </Row>
+          <Modal
+            title="上传"
+            width={450}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <Loading
+              hasLoadingGif={false}
+              uploadItemList={
+                [
+                  {
+                    iconType: 'format-pdf',
+                    fileName: 'pdf文件33333333',
+                    fileSize: '1.3M',
+                    uploadComplete: false,
+                    currentProgress: 50
+                  },
+                  {
+                    iconType: 'format-ppt',
+                    fileName: 'ppt文件',
+                    fileSize: '1.3M',
+                    uploadComplete: false,
+                    currentProgress: 50
+                  }
+                ]
+              }
+            />
+          </Modal>
           <CheckList size={1} progress={20} />
         </TabPane>
         <TabPane tab="下载课件" key="3">

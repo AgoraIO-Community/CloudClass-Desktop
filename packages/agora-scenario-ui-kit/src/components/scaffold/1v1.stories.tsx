@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react'
-import React, { useState } from 'react'
-import { VideoPlayer, Chat, Toolbar } from '~components'
+import React, {useState} from 'react'
+import { VideoPlayer, Chat, Toolbar, ToolItem, Pens, Colors } from '~components'
 import { BizHeader } from '~components/biz-header'
 import { Aside, Content, Layout } from '~components/layout'
 import { ZoomController } from '~components/zoom-controller'
@@ -13,9 +13,94 @@ export default {
   title: 'Scaffold/1v1',
 }
 
+export const PensContainer = () => {
+  const [lineSelector, updateSelector] = useState<string>('pen')
+  return (
+    <Pens
+      value='pen'
+      label='画笔'
+      icon='pen'
+      activePen={lineSelector}
+      onClick={(pen: any) => updateSelector(pen)}
+    />
+  )
+}
+
+export const ColorsContainer = () => {
+  const [activeColor, setActiveColor] = useState<string>('#000000')
+  return (
+    <Colors
+      value='color'
+      label='颜色'
+      icon='color'
+      activeColor={activeColor}
+      onClick={(color) => setActiveColor(color)}
+    />
+  )
+}
+
+const allTools: ToolItem[] = [
+  {
+    value: 'selection',
+    label: '选择',
+    icon: 'select',
+  },
+  {
+    value: 'pen',
+    label: '画笔',
+    icon: 'pen',
+    component: () => {
+      return <PensContainer />
+    }
+  },
+  {
+    value: 'text',
+    label: '文本',
+    icon: 'text',
+  },
+  {
+    value: 'eraser',
+    label: '橡皮',
+    icon: 'eraser',
+  },
+  {
+    value: 'color',
+    label: '颜色',
+    icon: 'color',
+    component: () => {
+      return <ColorsContainer />
+    }
+  },
+  {
+    value: 'blank-page',
+    label: '新增空白页',
+    icon: 'blank-page',
+  },
+  {
+    value: 'hand',
+    label: '手抓工具',
+    icon: 'hand',
+  },
+  {
+    value: 'cloud',
+    label: '云盘',
+    icon: 'cloud',
+  },
+  {
+    value: 'follow',
+    label: '视角跟随',
+    icon: 'follow',
+  },
+  {
+    value: 'tools',
+    label: '工具箱',
+    icon: 'tools',
+  }
+]
+
 const ChatContainer: React.FC<any> = () => {
 
-  const [text, setText] = useState<string>()
+  const [text, setText] = useState<string>('')
   return (
     <Chat
       onCanChattingChange={(evt: any) => {
@@ -56,7 +141,7 @@ const ChatContainer: React.FC<any> = () => {
         }
       ]}
       chatText={text}
-      onText={(val) => setText(val)}
+      onText={(val: any) => setText(val)}
       onSend={() => setText('')}
     />
   )
@@ -89,7 +174,7 @@ const WhiteboardContainer = () => {
     <div className="whiteboard" id="netless-board">
       <Button>show loading</Button>
       <div className='toolbar-position'>
-        <Toolbar className="toolbar-biz" />
+        <Toolbar tools={allTools} className="toolbar-biz" />
       </div>
       <Card width={258} height={113} className="card-loading-position">
         <Loading hasLoadingGif={false} loadingText="课件加载中，请稍候…" hasProgress></Loading>
@@ -102,7 +187,7 @@ const WhiteboardContainer = () => {
         zoomValue={zoomValue}
         currentPage={currentPage}
         totalPage={totalPage}
-        clickHandler={e => {
+        clickHandler={(e: any) => {
           console.log('user', e.target)
         }}
       />
@@ -138,12 +223,16 @@ export const OneToOne: Story<any> = () => {
             onMicClick={async (uid: any) => {
 
             }}
+            onOffPodiumClick={async () => {
+
+            }}
             onWhiteboardClick={async (uid: any) => {
 
             }}
             onSendStar={async (uid: any) => {
 
             }}
+            controlPlacement={'left'}
             placeholder={
               <img
                 src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
@@ -176,6 +265,10 @@ export const OneToOne: Story<any> = () => {
             onSendStar={async (uid: any) => {
 
             }}
+            onOffPodiumClick={async () => {
+
+            }}
+            controlPlacement={'left'}
             placeholder={
               <img
                 src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"

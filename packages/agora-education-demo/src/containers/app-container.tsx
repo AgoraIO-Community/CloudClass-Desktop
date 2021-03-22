@@ -5,6 +5,8 @@ import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { Provider } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { registerWorker, useStorageSW } from '@/utils/utils';
+import {I18nProvider, language$, useI18nContext} from 'agora-scenario-ui-kit'
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -23,6 +25,8 @@ export interface RoomContainerProps extends RouteContainerProps {
 type AppContainerComponentProps = Omit<AppContainerProps, 'defaultStore'>
 
 export const RouteContainer = (props: RouteContainerProps) => {
+
+  useI18nContext()
 
   const routes = props.routes
     .filter((path: string) => routesMap[path])
@@ -50,44 +54,33 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  useStorageSW()
+
+  //@ts-ignore
+  window.language$ = language$
 
   return (
     <Provider store={props.store}>
-      <Router>
-        <RouteContainer routes={props.routes} mainPath={props.mainPath} />
-      </Router>
+      <I18nProvider>
+        <Router>
+          <RouteContainer routes={props.routes} mainPath={props.mainPath} />
+        </Router>
+      </I18nProvider>
     </Provider>
   )
 }
 
 export const AppContainer = (props: AppContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  // useStorageSW()
 
   return (
     <Provider store={props.store}>
-      <HashRouter>
-        <RouteContainer routes={props.routes} />
-      </HashRouter>
+      <I18nProvider>
+        <HashRouter>
+          <RouteContainer routes={props.routes} />
+        </HashRouter>
+      </I18nProvider>
     </Provider>
   )
 }

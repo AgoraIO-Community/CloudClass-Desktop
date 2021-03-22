@@ -1,4 +1,6 @@
 import React from 'react';
+import {get} from 'lodash';
+import {config} from './translate/config'
 
 export type BaseElementProps = {
   id: string
@@ -19,18 +21,9 @@ export type I18nLanguage =
   | 'en'
 
 export const translate = (lang: I18nLanguage, str: string) => {
-  const textMap: Record<I18nLanguage, any> = {
-    'zh': {
-      'message': '消息',
-      'zh': '中文'
-    },
-    'en': {
-      'message': 'message',
-      'en': 'English'
-    }
-  }
+  const textMap: Record<I18nLanguage, any> = config
 
-  return textMap[lang][str]
+  return get(textMap[lang], str, '')
 }
 
 export const makeContainer = (name: string) => {

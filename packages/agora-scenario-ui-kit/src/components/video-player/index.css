@@ -5,6 +5,7 @@
   background: #000;
   border-radius: 4px;
   color: #fff;
+  overflow: hidden;
 }
 
 .top-right-info {

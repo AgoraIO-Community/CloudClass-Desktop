@@ -18,7 +18,7 @@ import { get, isEmpty } from 'lodash';
 import { action, autorun, computed, observable, runInAction, toJS } from 'mobx';
 import uuidv4 from 'uuid/v4';
 import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
-import { AcadsocRoomStore } from './acadsoc-room';
+import { RoomStore } from './room';
 import { BoardStore } from './board';
 import { HomeStore } from './home';
 import { MediaStore } from './media';
@@ -92,7 +92,7 @@ export class AppStore implements ClassRoomAbstractStore {
   boardStore!: BoardStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
-  acadsocStore!: AcadsocRoomStore;
+  roomStore!: RoomStore;
   pretestStore!: PretestStore;
   homeStore!: HomeStore;
 
@@ -215,8 +215,8 @@ export class AppStore implements ClassRoomAbstractStore {
   constructor(params: AppStoreInitParams) {
     this.params = params
     console.log("[ID] appStore ### ", this.id)
-    console.log(" roomInfoParams ", params.roomInfoParams)
-    console.log(" config >>> params: ", {...this.params})
+    // console.log(" roomInfoParams ", params.roomInfoParams)
+    // console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
     if (platform === 'electron') {
@@ -298,7 +298,7 @@ export class AppStore implements ClassRoomAbstractStore {
     }
 
     this.pretestStore = new PretestStore(this)
-    this.acadsocStore = new AcadsocRoomStore(this)
+    this.roomStore = new RoomStore(this)
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.homeStore = new HomeStore(this)
@@ -622,7 +622,7 @@ export class AppStore implements ClassRoomAbstractStore {
   @action
   async releaseRoom() {
     try {
-      await this.acadsocStore.leave()
+      await this.roomStore.leave()
       reportService.stopHB()
       this.resetStates()
     } catch (err) {
@@ -640,9 +640,8 @@ export class AppStore implements ClassRoomAbstractStore {
     await controller.appController.destroy()
   }
 }
-export * from './acadsoc-room';
 export { BoardStore } from './board';
 export { HomeStore } from './home';
 export { PretestStore } from './pretest';
 export { UIStore } from './ui';
-
+export { RoomStore } from './room';

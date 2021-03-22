@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import styles from './style.module.scss'
 import { Nav } from './containers/nav'
 import { BoardView } from './containers/board'
-import { useAcadsocRoomStore, useAppStore, useUIStore, useBoardStore } from '@/hooks'
+import { useRoomStore, useAppStore, useUIStore, useBoardStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { Loading } from '@/components/loading'
 import { AutoplayToast } from '@/components/autoplay-toast'
@@ -21,7 +21,7 @@ export const AcadsocOneToOne = observer(() => {
   const history = useHistory()
   const appStore = useAppStore()
   const uiStore = useUIStore()
-  const acadsocStore = useAcadsocRoomStore()
+  const roomStore = useRoomStore()
   const boardStore = useBoardStore()
 
   const handleJoinFail = async (err:GenericError) => {
@@ -53,13 +53,13 @@ export const AcadsocOneToOne = observer(() => {
       history.push('/')
       return
     }
-    acadsocStore.setHistory(history)
+    roomStore.setHistory(history)
     // REPORT
     reportService.startTick('joinRoom', 'end')
-    acadsocStore.join().then(() => {
+    roomStore.join().then(() => {
       reportService.reportElapse('joinRoom', 'end', {result: true})
     }).catch(e => {
-      console.log(" acadsocStore#join ", e)
+      console.log(" roomStore#join ", e)
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})
       handleJoinFail(e)
     })

@@ -35,7 +35,7 @@ const ChildrenWrap = () => {
         'microphone': setMicrophoneVolume,
         'speaker': setSpeakerVolume,
     }
-    return  (
+    return (
         <Setting
             cameraList={cameraList}
             cameraId={cameraId}
@@ -51,20 +51,28 @@ const ChildrenWrap = () => {
             }}
             onChangeAudioVolume={(deviceType, value) => {
                 console.log(deviceType, value)
-                changeAudioVolumeFnDict[deviceType](value) 
+                changeAudioVolumeFnDict[deviceType](value)
             }}
         />
     )
 }
 
-export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => {
+const SettingContainer = () => {
+    const [visible, setVisible] = useState<boolean>(true)
+    const hasMicrophoneVolume = true;
+    const hasSpeakerVolume = true;
+    function hideModal () {
+        setVisible(false)
+    }
     return (
-        <>
-            <div className="mt-4">
+        <div className="fixed-container">
+            {visible ? (
                 <Modal
                     title="设备选择"
                     width={360}
-                    footer={[<Button>确定</Button>]}
+                    footer={[<Button action="ok">确定</Button>]}
+                    onCancel={hideModal}
+                    onOk={hideModal}
                 >
                     <Setting
                         cameraList={cameraList}
@@ -77,6 +85,16 @@ export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => {
                         hasSpeakerVolume={hasSpeakerVolume}
                     />
                 </Modal>
+            ) : ""}
+        </div>
+    )
+}
+
+export const Docs = ({ hasMicrophoneVolume, hasSpeakerVolume }: DocsProps) => {
+    return (
+        <>
+            <div className="mt-4">
+                <SettingContainer/>
             </div>
             <div className="mt-4">
                 <Button onClick={() => {

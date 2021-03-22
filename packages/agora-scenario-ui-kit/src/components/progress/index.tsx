@@ -2,6 +2,7 @@
 import classnames from 'classnames'
 import React from 'react'
 import { BaseProps } from '~components/interface/base-props'
+import './index.css'
 
 export type ProgressType =
   | 'download'
@@ -29,7 +30,7 @@ export const Progress: React.FC<ProgressProps> = ({
     [`bg-${type}-fg`]: 1,
   })
 
-  const progressWidth = progress * 100
+  const progressWidth = progress
 
   return (
     <div className={cls} style={{

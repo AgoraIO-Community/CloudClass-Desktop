@@ -41,7 +41,7 @@ const ChildrenWrap = () => {
             cameraList={cameraList}
             cameraId={cameraId}
             microphoneList={microphoneList}
-            micorophoneId={microphoneId}
+            microphoneId={microphoneId}
             speakerList={speakerList}
             speakerId={speakerId}
             microphoneVolume={microphoneVolume}
@@ -61,26 +61,45 @@ const ChildrenWrap = () => {
     )
 }
 
+const PretestContainer = () => {
+    const [visible, setVisible] = useState<boolean>(true)
+    const isNative = true;
+    const cameraError = false;
+    const microphoneError = false;
+    function hideModal () {
+        setVisible(false)
+    }
+    return (
+        <div className="fixed-container">
+            {visible ? (
+                <Modal
+                    title={'设备检测'}
+                    width={720}
+                    footer={[<Button action="ok">完成检测</Button>]}
+                    onOk={hideModal}
+                    onCancel={hideModal}
+                >
+                    <Pretest
+                        cameraList={cameraList}
+                        cameraId={cameraList[0].deviceId}
+                        microphoneList={microphoneList}
+                        microphoneId={microphoneList[0].deviceId}
+                        speakerList={speakerList}
+                        speakerId={speakerList[0].deviceId}
+                        isNative={isNative}
+                        cameraError={cameraError}
+                        microphoneError={microphoneError}
+                    />
+                </Modal>
+            ) : ""}
+        </div>
+    )
+}
+
 export const Docs = ({ isNative, cameraError, microphoneError }: DocsProps) => (
     <>
         <div className="mt-4">
-            <Modal
-                title={'设备检测'}
-                width={720}
-                footer={[<Button>完成检测</Button>]}
-            >
-                <Pretest
-                    cameraList={cameraList}
-                    cameraId={cameraList[0].deviceId}
-                    microphoneList={microphoneList}
-                    micorophoneId={microphoneList[0].deviceId}
-                    speakerList={speakerList}
-                    speakerId={speakerList[0].deviceId}
-                    isNative={isNative}
-                    cameraError={cameraError}
-                    microphoneError={microphoneError}
-                />
-            </Modal>
+            <PretestContainer />
         </div>
         <div className="mt-4">
             <Button onClick={() => {

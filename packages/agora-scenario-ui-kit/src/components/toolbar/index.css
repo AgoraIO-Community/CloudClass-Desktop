@@ -1,5 +1,6 @@
 .toolbar {
   width: 42px;
+  background-color: white;
 }
 
 .toolbar.opened {
@@ -41,6 +42,12 @@
   line-height: 1;
   margin-bottom: 10px;
   color: #7b88a0;
+}
+
+.tool .triangle-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .tool .expandable {
@@ -115,4 +122,32 @@
 
 .expand-tools-popover .popover-inner-content {
   padding: 9px 10px;
+}
+
+.expand-tool .active-pen-div {
+  background: #868F9F;
+}
+
+.expand-tools.tool-cabinet {
+  max-width: 300px;
+}
+
+.expand-tools .cabinet-item {
+  width: 100px;
+  height: 78px;
+  color: #7B88A0;
+  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+}
+
+.expand-tools .cabinet-item:hover {
+  color: #191919;
+  background-color: #F9F9FC;
+}
+
+.customize-dialog-popover .popover-inner-content {
+  padding-left: 10px;
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
