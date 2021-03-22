@@ -15,6 +15,7 @@ export interface ModalProps extends BaseProps {
     closable?: boolean;
     /** 底部内容 */
     footer?: React.ReactNode[];
+    style?: any;
     /** 点击确定回调 */
     onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
@@ -35,6 +36,7 @@ export const Modal: ModalType = ({
     title = 'modal title',
     closable = true,
     footer,
+    style,
     onOk = (e: React.MouseEvent<HTMLElement>) => { console.log('ok') },
     onCancel = (e: React.MouseEvent<HTMLElement>) => { console.log('cancel') },
     children,
@@ -64,7 +66,7 @@ export const Modal: ModalType = ({
     })
     
     return (
-        <div className={cls} {...restProps} style={{ width }}>
+        <div className={cls} {...restProps} style={{ ...style, width }}>
             <div className="modal-title">
                 <div className="modal-title-text">
                     {title}
