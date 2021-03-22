@@ -7,6 +7,7 @@ import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/tabl
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
+import { Placeholder } from '~components/placeholder'
 // import { Loading } from '~components/loading'
 
 const meta: Meta = {
@@ -87,6 +88,8 @@ export type CloudStorageProps = {
 export const CloudStorage = ({ size }: CloudStorageProps) => {
 
   const itemList = resizeList(list, size)
+  itemList.length = 0;
+  // console.log(itemList)
 
   return (
     <Table>
@@ -96,20 +99,23 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
         <Col>修改时间</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.map(({ name, progress, date, type }: any, idx: number) =>
-          <Row height={10} border={1} key={idx} >
-            <Col>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
-            </Col>
-            <Col>
-              <Inline color="#586376">{formatFileSize(size)}</Inline>
-            </Col>
-            <Col>
-              <Inline color="#586376">{date}</Inline>
-            </Col>
-          </Row>
-        )}
+        {itemList.length ? (
+          itemList.map(({ name, progress, date, type }: any, idx: number) =>
+            <Row height={10} border={1} key={idx} >
+              <Col>
+                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <Inline color="#191919">{name}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{formatFileSize(size)}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{date}</Inline>
+              </Col>
+            </Row>
+          )
+        ) : <Placeholder placeholderType="noFile"/>}
+
       </Table>
     </Table>
   )
@@ -135,6 +141,8 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
 
   const itemList = resizeList(list, size)
 
+  itemList.length = 0;
+
   return (
     <Table>
       <TableHeader>
@@ -143,7 +151,7 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
         <Col>操作</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.map(({ name, progress, type }: any, idx: number) =>
+        {itemList.length ? (itemList.map(({ name, progress, type }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
@@ -163,7 +171,8 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
               </Row>
             </Col>
           </Row>
-        )}
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字"/>}
+        
       </Table>
     </Table>
   )
@@ -204,6 +213,8 @@ const CheckList = ({ size, progress }: UploadListProps) => {
     }
   }, [items, updateItems])
 
+  // items.length = 0;
+
   return (
     <Table>
       <TableHeader>
@@ -216,7 +227,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
         <Col>修改时间</Col>
       </TableHeader>
       <Table className="table-container">
-        {items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
+        {items.length ? (items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col width={9}>
               <CheckBox className="checkbox" onClick={(evt: any) => {
@@ -237,7 +248,8 @@ const CheckList = ({ size, progress }: UploadListProps) => {
               <Inline color="#586376">{date}</Inline>
             </Col>
           </Row>
-        )}
+        )) : <Placeholder placeholderType="noFile" placeholderDesc="没有文件"/>}
+        
       </Table>
     </Table>
   )
