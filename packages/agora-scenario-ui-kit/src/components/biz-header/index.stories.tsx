@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
-import { Meta } from '@storybook/react';
-import { BizHeader, BizHeaderProps, MonitorInfo } from '.';
+import React, { FC } from 'react'
+import { Meta } from '@storybook/react'
+import { BizHeader, BizHeaderProps, MonitorInfo } from '.'
+import dayjs from 'dayjs'
 
 const monitor: MonitorInfo = {
   cpuUsage: 20,
@@ -30,9 +31,11 @@ const meta: Meta = {
   args: {
     signalQuality: 'excellent',
     isStarted: false,
+    classStatusText: 'pre-class 22:11',
     title: '一对一课堂',
     monitor,
     devices,
+    // formatTime: dayjs(+Date.now()).format("mm:ss")
   },
 };
 

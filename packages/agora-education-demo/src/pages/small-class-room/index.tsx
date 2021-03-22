@@ -5,11 +5,45 @@ import { NavigationBar } from '../common-containers/nav'
 import { VideoPlayerTeacher, VideoPlayerStudent } from '../common-containers/video-player'
 import { RoomChat } from '../common-containers/chat'
 import './small.style.css'
+import { useRoomStore, useBoardStore } from '@/hooks'
+import { useEffectOnce } from '@/hooks/utils'
+import { observer } from 'mobx-react'
+import { DialogContainer } from '../common-containers/dialog'
+import { LoadingContainer } from '../common-containers/loading'
+import { ScreenSharePlayerContainer } from '../common-containers/screen-share-player'
+import classnames from 'classnames';
 
-export const SmallClassRoom = () => {
+const useMidStore = () => {
+  const roomStore = useRoomStore()
+  const boardStore = useBoardStore()
+  useEffectOnce(() => {
+    roomStore.join()
+  })
+
+  return {
+    isFullScreen: boardStore.isFullScreen
+  }
+}
+
+export const SmallClassRoom = observer(() => {
+
+  const store = useMidStore()
+
+  console.log('small class')
+
+  const cls = classnames({
+    'edu-room': 1,
+  })
+
+  const className = store.isFullScreen ? 'fullscreen' : 'normal'
+
+  const fullscreenCls = classnames({
+    [`layout-aside-${className}`]: 1,
+  })
 
   return (
     <Layout
+      className={cls}
       direction="col"
       style={{
         height: '100vh'
@@ -18,13 +52,16 @@ export const SmallClassRoom = () => {
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
         <Content>
+          <ScreenSharePlayerContainer />
           <WhiteboardContainer />
         </Content>
-        <Aside>
+        <Aside className={fullscreenCls}>
           <VideoPlayerTeacher/>
           <RoomChat />
         </Aside>
       </Layout>
+      <DialogContainer />
+      <LoadingContainer />
     </Layout>
-  )  
-}
+  )
+})

@@ -1,5 +1,6 @@
 import { useRoomStore, useUIStore } from '@/hooks'
 import { BizHeader, Modal, Button } from 'agora-scenario-ui-kit'
+import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
 import { Exit } from './dialog'
@@ -13,7 +14,6 @@ export const NavigationBar: React.FC<any> = observer(() => {
   const uiStore = useUIStore()
 
   const handleClick = useCallback(async (type: string) => {
-    console.log(' nav handleClick ', type)
     switch (type) {
       case 'exit': {
         uiStore.addDialog(Exit)
@@ -36,8 +36,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
 
   return (
     <BizHeader
-      classStatus={'before'}
-      clockTime={Date.now()}
+      classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
       title={navigationState.title}
       signalQuality={navigationState.signalQuality}

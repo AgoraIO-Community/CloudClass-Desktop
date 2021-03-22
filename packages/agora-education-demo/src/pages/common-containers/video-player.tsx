@@ -19,7 +19,7 @@ type VideoContainerContext = {
   onWhiteboardClick: VideoAction 
 }
 
-const use1v1VideoContext = (): VideoContainerContext => {
+const useVideoControlContext = (): VideoContainerContext => {
 
   const sceneStore = useSceneStore()
   const teacherStream = sceneStore.teacherStream
@@ -81,7 +81,7 @@ const use1v1VideoContext = (): VideoContainerContext => {
 
 export const VideoPlayerTeacher = observer(() => {
 
-  const {teacherStream: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = use1v1VideoContext()
+  const {teacherStream: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = useVideoControlContext()
 
   return (
     <VideoPlayer
@@ -127,7 +127,7 @@ export const VideoPlayerTeacher = observer(() => {
 
 export const VideoPlayerStudent = observer(() => {
 
-  const {firstStudent: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = use1v1VideoContext()
+  const {firstStudent: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = useVideoControlContext()
   
   return (
     <VideoPlayer
@@ -169,5 +169,12 @@ export const VideoPlayerStudent = observer(() => {
         : null
       }
     </VideoPlayer>
+  )
+})
+
+export const VideoMarqueeStudentList = observer(() => {
+  return (
+    <></>
+    // <VideoPlayer />
   )
 })

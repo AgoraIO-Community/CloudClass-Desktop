@@ -1310,6 +1310,7 @@ export class RoomStore extends SimpleInterval {
       networkLatency: +this.appStore.mediaStore.delay,
       networkQuality: this.appStore.mediaStore.networkQuality,
       packetLostRate: 0,
+      classTimeText: this.classTimeText,
     }
   }
 }

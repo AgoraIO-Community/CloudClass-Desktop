@@ -1,5 +1,26 @@
 export const config = {
   'zh': {
+    'course': {
+      'pre_class': '课前',
+      'in_class': '已上课',
+      'end_class': '课程已结束',
+    },
+    'scaffold': {
+      'pencil': '画笔',
+      'laser_pointer': '激光笔',
+      'straight': '直线',
+      'circle': '圆圈',
+      'rectangle': '矩形',
+      'selector': '选择',
+      'eraser': '橡皮擦',
+      'color': '颜色',
+      'blank-page': '新增一页',
+      'move': '移动工具',
+      'follow': '跟随模式',
+      'un-follow': '解除跟随',
+      'screen_share': '屏幕共享',
+      'stop_screen_share': '停止共享',
+    },
     'cloud': {
       'fileName': '文件名字',
       'size': '大小',
@@ -34,9 +55,52 @@ export const config = {
       'finishTest': '完成'
     },
     'message': '消息',
-    'zh': '中文'
+    'zh': '中文',
+    'nav': {
+      'delay': '延迟: ',
+      'network': '网络: ',
+      'cpu': 'CPU: ',
+      'class_end': '课程结束',
+      'class_start': '课程开始',
+      'back': '返回',
+      'to_start_in': '距离上课还有：',
+      'started_elapse': '已开始上课：',
+      'hours': '小时',
+      'minutes': '分',
+      'seconds': '秒',
+      'short': {
+        'hours': '小时',
+        'minutes': '分钟',
+        'seconds': '秒',
+      },
+      'signal_good': '优',
+      'signal_weak': '良',
+      'signal_bad': '差',
+      'signal_unknown': '未知',
+    },
   },
   'en': {
+    'course': {
+      'pre_class': 'Pre Class',
+      'in_class': 'In Class',
+      'end_class': 'End Class',
+    },
+    'scaffold': {
+      'pencil': 'Pencil',
+      'laser_pointer': 'Laser pointer',
+      'straight': 'straight',
+      'circle': 'circle',
+      'rectangle': 'rectangle',
+      'selector': 'selector',
+      'eraser': 'eraser',
+      'color': 'color',
+      'blank-page': 'add page',
+      'move': 'move',
+      'follow': 'Follow',
+      'un-follow': 'UnFollow',
+      'screen_share': 'Screen Share',
+      'stop_screen_share': 'Stop Screen Share',
+    },
     'message': 'message',
     'en': 'English',
     'cloud': {
@@ -71,6 +135,28 @@ export const config = {
     'pretest': {
       'title': 'Device Test',
       'finishTest': 'Finish'
+    },
+    'nav': {
+      'delay': 'Delay: ',
+      'network': 'Network: ',
+      'cpu': 'CPU: ',
+      'class_end': 'Class end',
+      'class_start': 'Class start',
+      'back': 'Back',
+      'to_start_in': 'To start in: ',
+      'started_elapse': 'Started: ',
+      'hours': 'hours',
+      'minutes': 'minutes',
+      'seconds': 'seconds',
+      'short': {
+        'hours': 'hrs',
+        'minutes': 'mins',
+        'seconds': 'secs',
+      },
+      'signal_good': 'Good',
+      'signal_weak': 'Weak',
+      'signal_bad': 'Bad',
+      'signal_unknown': 'Unknown',
     },
   }
 }

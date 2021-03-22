@@ -113,7 +113,7 @@ export const Pretest: FC<PretestProps> = ({
                         </span>
                     </div>
                     <Select 
-                        defaultValue={cameraId}
+                        value={cameraId}
                         onChange={async value => {
                             await onChangeDevice('camera', value)
                         }}
@@ -129,7 +129,7 @@ export const Pretest: FC<PretestProps> = ({
                         <span className="device-title-text">{t('media.microphone')}</span>
                     </div>
                     <Select 
-                        defaultValue={microphoneId}
+                        value={microphoneId}
                         onChange={async value => {
                             await onChangeDevice('microphone', value)
                         }}
@@ -166,7 +166,7 @@ export const Pretest: FC<PretestProps> = ({
                     {isNative ? (
                         <>
                             <Select 
-                                defaultValue={speakerId}
+                                value={speakerId}
                                 onChange={async value => {
                                     await onChangeDevice('speaker', value)
                                 }}

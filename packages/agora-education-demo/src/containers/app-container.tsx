@@ -72,8 +72,6 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
 export const AppContainer = (props: AppContainerProps) => {
 
-  // useStorageSW()
-
   return (
     <Provider store={props.store}>
       <I18nProvider>

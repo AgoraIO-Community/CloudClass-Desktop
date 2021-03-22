@@ -10,8 +10,12 @@
   @apply flex items-center divide-x;
 }
 
+.biz-subtitle .line:first-child{
+  padding-right: 8px;
+}
+
 .biz-header-title-wrap > div {
-  padding: 0 10px;
+  padding: 0 19px;
   border-color: #d2d2e2;
 }
 

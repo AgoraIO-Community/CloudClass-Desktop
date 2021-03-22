@@ -381,6 +381,12 @@ export const Docs = () => (
       </div>
       <div>register</div>
     </div>
+    <div className="p-4 w-40 text-center">
+      <div>
+        <Icon type="laser-pointer" />
+      </div>
+      <div>laser-pointer</div>
+    </div>
   </div>
 );
 

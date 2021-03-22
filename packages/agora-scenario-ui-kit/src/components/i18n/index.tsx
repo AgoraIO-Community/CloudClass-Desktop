@@ -27,9 +27,9 @@ export const makeI18nProvider = (defaultLanguage: I18nLanguage) => {
             updateLang(state) 
           }
         })
-        return () => {
-          language$.unsubscribe()
-        }
+        // return () => {
+        //   language$.unsubscribe()
+        // }
       }, [updateLang])
       const t = React.useCallback((text: string) => {
         return translate(lang, text)
