@@ -7,12 +7,12 @@ import 'react-datepicker/dist/react-datepicker.min.css'
 import dayjs from 'dayjs'
 import { Icon } from '~components';
 
-export interface DatePickerProps extends BaseProps {
+export interface CalendarProps extends BaseProps {
   inputClassName?: string
   calendarClassName?: string
 }
 
-export const DatePicker: FC<DatePickerProps> = ({
+export const Calendar: FC<CalendarProps> = ({
   inputClassName,
   calendarClassName,
   ...restProps
@@ -23,10 +23,12 @@ export const DatePicker: FC<DatePickerProps> = ({
   const calendarcls = classnames({
     [`${calendarClassName}`]: !!calendarClassName,
   });
-  const [startDate, setStartDate] = useState(new Date());
+  let today = new Date()
+  const [startDate, setStartDate] = useState(today);
   const [isOpen, setOpen] = useState(false);
-  const [selectedHour, setSelectedHour] = useState(1)
-  const [selectedMinute, setSelectedMinute] = useState(0)
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().month())
+  const [selectedHour, setSelectedHour] = useState(dayjs(today).hour())
+  const [selectedMinute, setSelectedMinute] = useState(dayjs(today).minute())
   const [selectedAMPM, setSelectedAMPM] = useState(0)
 
 
@@ -49,7 +51,12 @@ export const DatePicker: FC<DatePickerProps> = ({
     <div className="ag-calendar-container">
       <RcDatePicker
         selected={startDate}
-        onChange={date => setStartDate(date)}
+        onChange={date => {
+          let d: Date = date as Date
+          setSelectedMonth(dayjs(d).month())
+          setStartDate(d)
+        }}
+        onMonthChange={(date:Date) => setSelectedMonth(dayjs(date).month())}
         // showTimeSelect
         className={inputcls}
         calendarClassName={calendarcls}
@@ -80,6 +87,7 @@ export const DatePicker: FC<DatePickerProps> = ({
             return d1.date() === d2.date() && d1.month() === d2.month() && d1.year() === d2.year()
           }
 
+          (d.month() !== selectedMonth) && classes.push('out-scoped')
           equalDate(d, dayjs(startDate)) && classes.push('selected')
           equalDate(d, today) && classes.push('today')
 

@@ -17,6 +17,7 @@
   transform: rotateZ(90deg);
   display:inline-block;
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .react-datepicker.ag-calendar {
@@ -129,10 +130,9 @@
 .ag-calendar .react-datepicker__day--selected:hover,
 .ag-calendar .react-datepicker__day--keyboard-selected,
 .ag-calendar .react-datepicker__day--keyboard-selected:hover{
-  background-color: #357BF6;
+  background-color: transparent;
   border-radius: 100%;
   border: 0;
-  color: #FFFFFF;
 }
 
 .ag-calendar .react-datepicker__day--selected.react-datepicker__day--today,
@@ -166,7 +166,7 @@
 }
 
 .ag-calendar .ag-calendar-date.out-scoped {
-  color: #eee;
+  color: #BDBDCA;
 }
 
 .ag-calendar .react-datepicker__header{
