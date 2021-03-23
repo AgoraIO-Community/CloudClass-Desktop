@@ -591,27 +591,28 @@ export class AcadsocRoomStore extends SimpleInterval {
 
       switch(this.sceneStore.classState){
         case EduClassroomStateEnum.beforeStart:
+          let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
-            let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
               this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
             }
           })
           break;
         case EduClassroomStateEnum.start:
+          let dDurationToEnd = dayjs.duration(durationToEnd);
           [5, 1].forEach(min => {
-            let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
             }
           })
+          if(dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
+            this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
+          }
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
-          } else if(dDurationToClose.minutes() === 0 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
           }
           if(durationToClose < 0) {
             // close
