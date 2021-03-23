@@ -29,7 +29,7 @@ export const Loading: FC<LoadingProps> = ({
     hasLoadingGif = true,
     loadingText = "",
     hasProgress = false,
-    currentProgress = 0.5,
+    currentProgress = 50,
     footer = [],
     uploadItemList = [],
     className,
@@ -46,7 +46,7 @@ export const Loading: FC<LoadingProps> = ({
             {hasProgress ? (
                 <div className="loading-progress">
                     <Progress width={160} type="download" progress={currentProgress}/>
-                    <span className="loading-progress-number">{currentProgress * 100}%</span>
+                    <span className="loading-progress-number">{currentProgress}%</span>
                 </div>
             ) : ""}
             {(uploadItemList && uploadItemList.length) ? (
@@ -71,7 +71,7 @@ export const Loading: FC<LoadingProps> = ({
                                 ) : (
                                     <div className="loading-progress">
                                         <Progress width={60} type="download" progress={item.currentProgress as number}/>
-                                        <span className="upload-pending-text">{currentProgress * 100}%</span>
+                                        <span className="upload-pending-text">{item.currentProgress}%</span>
                                     </div>
                                 )}
                             </div>

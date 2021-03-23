@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Progress, Inline, Row, Table, TableHeader, formatFileSize, t } from 'agora-scenario-ui-kit'
+import { Button, Col, IconBox, Progress, Inline, Row, Table, TableHeader, formatFileSize, t, Placeholder } from 'agora-scenario-ui-kit'
 import React, { useEffect } from 'react'
 import { useBoardStore } from '@/hooks'
 import { agoraCaches } from '@/utils/web-download.file'
@@ -21,7 +21,7 @@ export const DownloadContainer = observer(() => {
         <Col>{t('cloud.updatedAt')}</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
+        {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
           <Row height={10} border={1} key={`${id}${idx}`}>
             <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
@@ -50,7 +50,7 @@ export const DownloadContainer = observer(() => {
               </Row>
             </Col>
           </Row>
-        )}
+        ) : <Placeholder placeholderType="noFile"/>}
       </Table>
     </Table>
   )
