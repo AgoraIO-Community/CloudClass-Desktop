@@ -675,7 +675,7 @@ export class BoardStore extends ZoomController {
 
   updateActiveMap () {
     // golable state
-    this.activeMap['follow'] = (get(this.room.state.globalState, 'follow', 0) === 1)
+    this.activeMap['follow'] = !!get(this.room.state.globalState, 'follow', 0)
   }
 
   pptAutoFullScreen() {
@@ -814,8 +814,9 @@ export class BoardStore extends ZoomController {
       }
       if (state.globalState) {
         this.updateCourseWareList()
+        this.updateActiveMap()
         // TODO: 监听follow的逻辑
-        if (this.roleIsTeacher && state.globalState.follow === 1) {
+        if (this.roleIsTeacher && !!state.globalState.follow) {
           this.boardClient.followMode(ViewMode.Broadcaster)
         } else {
           this.boardClient.followMode(ViewMode.Freedom)
