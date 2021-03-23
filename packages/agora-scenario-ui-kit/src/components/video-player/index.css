@@ -2,7 +2,7 @@
   @apply relative flex items-center justify-center;
   height: 168px;
   width: 300px;
-  background: #000;
+  background: transparent;
   border-radius: 4px;
   color: #fff;
   overflow: hidden;
@@ -131,10 +131,14 @@
   margin-bottom: 4px;
 }
 
-.container {
-  overflow: hidden;
-  width: 915px;
-  position: absolute;
+.show-scroll .scroll-btn {
+  opacity: 1 !important;
+  visibility: unset !important;
+}
+
+.video-container .scroll-btn {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .video-container {
@@ -150,7 +154,7 @@
   width: 0;
 }
 
-.videoItem {
+.video-item {
   width: 300px;
   height: 168px;
   margin-right: 5px;
@@ -181,8 +185,10 @@
 }
 
 .offset {
+  display: flex;
   position: absolute;
-  top: 45%;
-  left: 40%;
-  transition: translate(45%, 40%);
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }

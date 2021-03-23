@@ -1,11 +1,13 @@
 import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
-import { VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import { CameraPlaceHolder } from '~components';
 
 const meta: Meta = {
   title: 'Components/VideoPlayer',
   component: VideoPlayer,
   args: {
+    size: 10,
     username: 'Lily True',
     stars: 5,
     micEnabled: true,
@@ -35,43 +37,40 @@ export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
   );
 };
 
-export const DocsSmall: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
-  const stuList = ['stu1', 'stu2', 'stu3', 'stu4', 'stu5']
-  const videoItemRef = useRef<any>()
-  const videoContainerRef = useRef<any>()
-  
-  const offsetVideo = (direction: string) => {
-    let videoWidth = videoItemRef.current.offsetWidth + 5
-    if(direction === 'left') {
-      videoContainerRef.current.scrollLeft -= videoWidth
-    }
-    if(direction === 'right') {
-      videoContainerRef.current.scrollLeft += videoWidth
-    }
-  }
+const student = {
+  isHost: true,
+  username: 'Lily True',
+  stars: 5,
+  micEnabled: true,
+  whiteboardGranted: true,
+  cameraEnabled: true,
+  micVolume: 0.95,
+  controlPlacement: 'bottom',
+  placeholder: (
+    <CameraPlaceHolder />
+    // <img
+    //   src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
+    //   alt="placeholder"
+    //   style={{
+    //     display: 'inline-block',
+    //     maxHeight: '100%',
+    //     maxWidth: '100%',
+    //     borderRadius: 4,
+    //   }}
+    // />
+  ),
+}
 
+export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, size, ...restProps }) => {
+
+  const list = [...'.'.repeat(size)].map((_, i: number) => ({
+    ...student,
+    username: `${i}-${student.username}`,
+  })) as any
+    
   return (
-    <>
-      <div className="container">
-        <div className="video-container" ref={videoContainerRef}>
-          <div className="left-container" onClick={() => {offsetVideo('left')}}>
-          <span className="offset">{"<"}</span> 
-          </div>
-          {
-            stuList.map((item: string) => {
-              return (
-                <div className="videoItem" key={item} ref={videoItemRef}>
-                  <VideoPlayer {...restProps} username={item}>{children}</VideoPlayer>
-                </div>
-              )
-            })
-          }
-          <div className="right-container" onClick={() => {offsetVideo('right')}}>
-            <span className="offset">{">"}</span> 
-          </div>
-        </div>
-      </div>
-    </>
+    <VideoMarqueeList videoList={list}>
+    </VideoMarqueeList>
   )
 }
 

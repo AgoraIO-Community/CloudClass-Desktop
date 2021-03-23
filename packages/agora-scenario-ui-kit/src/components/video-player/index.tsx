@@ -1,10 +1,11 @@
-import React, { FC, ReactNode, useRef } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
+import { entries } from 'lodash';
 
 export interface VideoPlayerProps extends BaseProps {
   /**
@@ -191,37 +192,89 @@ export interface VideoMarqueeListProps {
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({videoList}) => {
 
-  const videoItemRef = useRef<any>()
-  const videoContainerRef = useRef<any>()
-  
-  const offsetVideo = (direction: string) => {
-    let videoWidth = videoItemRef.current.offsetWidth + 5
+  const videoContainerRef = useRef<HTMLDivElement | null>(null)
+
+  const scroll = useCallback((direction: 'left' | 'right') => {
+    const videoContainer = videoContainerRef.current
+    if (!videoContainer) return
+    const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement
+    if (!videoDOM) return
+    const offsetWidth = videoDOM.offsetWidth
     if(direction === 'left') {
-      videoContainerRef.current.scrollLeft -= videoWidth
+      videoContainer.scrollLeft -= offsetWidth
     }
     if(direction === 'right') {
-      videoContainerRef.current.scrollLeft += videoWidth
+      videoContainer.scrollLeft += offsetWidth
     }
-  
+  }, [videoContainerRef.current])
+
+  const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
+    const targetOffsetWidth = target.offsetWidth
+    const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item')
+    if (videoItems && videoItems[0]) {
+      const contentOffsetWidth = videoItems[0].offsetWidth * videoItems.length
+      return contentOffsetWidth > targetOffsetWidth
+    }
+    return false
   }
-  return (
-    <div className="container">
-      <div className="video-container" ref={videoContainerRef}>
-        <div className="left-container" onClick={() => {offsetVideo('left')}}>
-        <span className="offset">{"<"}</span> 
-        </div>
-        {
-          videoList.map((videoItem: VideoPlayerProps, idx: number) => {
-            return (
-              <div className="videoItem" key={idx} ref={videoItemRef}>
-                <VideoPlayer {...videoItem}></VideoPlayer>
-              </div>
-            )
-          })
+
+  const mountDOM = useCallback((dom: HTMLDivElement | null) => {
+    if (dom) {
+      videoContainerRef.current = dom
+
+      if (videoContainerRef.current) {
+        const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
+        if (satisfied) {
+          videoContainerRef.current.classList.add('show-scroll')
+        } else {
+          videoContainerRef.current.classList.remove('show-scroll')
         }
-        <div className="right-container" onClick={() => {offsetVideo('right')}}>
-          <span className="offset">{">"}</span> 
-        </div>
+      }
+      const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+        const current = entries[0]
+        const target = current.target as HTMLDivElement
+        if (target) {
+          const satisfied = checkTargetScrollElementSatisfied(target)
+          if (satisfied) {
+            target.classList.add('show-scroll')
+          } else {
+            target.classList.remove('show-scroll')
+          }
+        }
+      })
+      observer.observe(dom)
+    }
+  }, [])
+
+  const attachVideoItem = useCallback(() => {
+    if (videoContainerRef.current) {
+      const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
+      if (satisfied) {
+        videoContainerRef.current.classList.add('show-scroll')
+      } else {
+        videoContainerRef.current.classList.remove('show-scroll')
+      }
+    }
+  }, [videoContainerRef.current])
+
+  return (
+    <div className="video-container" ref={mountDOM}>
+      <div className="left-container scroll-btn" onClick={() => {scroll('left')}}>
+      <span className="offset">
+        <Icon type="backward"></Icon>
+      </span> 
+      </div>
+      {
+        videoList.map((videoItem: VideoPlayerProps, idx: number) => 
+          <div className="video-item" key={idx} ref={attachVideoItem}>
+            <VideoPlayer {...videoItem}></VideoPlayer>
+          </div>
+        )
+      }
+      <div className="right-container scroll-btn" onClick={() => {scroll('right')}}>
+        <span className="offset">
+          <Icon type="forward"></Icon>
+        </span> 
       </div>
     </div>
   )

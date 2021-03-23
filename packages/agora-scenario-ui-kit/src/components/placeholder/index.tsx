@@ -44,3 +44,16 @@ export const Placeholder: FC<PlaceholderProps> = ({
     </div>
   )
 };
+
+export const CameraPlaceHolder: React.FC<any> = ({children, className}: {children: any, className: string}) => {
+  const cls = classnames({
+    [`camera-placeholder`]: 1,
+    [`${className}`]: !!className,
+  });
+
+  return (
+    <div className={cls}>
+      {children}
+    </div>
+  )
+}
