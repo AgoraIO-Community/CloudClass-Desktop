@@ -1,5 +1,5 @@
 import React from 'react';
-import {get} from 'lodash';
+import {get, isEmpty} from 'lodash';
 import {config} from './translate/config'
 
 export type BaseElementProps = {
@@ -20,10 +20,19 @@ export type I18nLanguage =
   | 'zh'
   | 'en'
 
-export const translate = (lang: I18nLanguage, str: string) => {
+export const translate = (lang: I18nLanguage, str: string, options?: any) => {
   const textMap: Record<I18nLanguage, any> = config
+  let result = get(textMap[lang], str, null)
+  if (result === null) {
+    console.warn(`[UI-KIT-WARN] translate: '${str}', isEmpty`)
+  }
 
-  return get(textMap[lang], str, '')
+  if (!isEmpty(options)) {
+    if (options.reason && result.match(/\{.+\}/)) {
+      result = result.replace(/\{.+\}/, options.reason);
+    }
+  }
+  return result as string
 }
 
 export const makeContainer = (name: string) => {

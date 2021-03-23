@@ -1,7 +1,7 @@
 import { useAppStore, useBoardStore, useRoomStore, useUIStore } from '@/hooks'
 import { BoardStore } from '@/stores/app'
 import { DialogType } from '@/stores/app/ui'
-import { Button, Modal } from 'agora-scenario-ui-kit'
+import { Button, Modal, t } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
@@ -21,8 +21,8 @@ export const OpenShareScreen = observer(({id, resourceName}: {id: string, resour
 
   const ButtonGroup = useCallback(() => {
     return [
-      <Button type={'secondary'} action="cancel">取消</Button>,
-      <Button type={'primary'} action="ok">确认</Button>,
+      <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+      <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
     ]
   }, [])
 
@@ -32,7 +32,7 @@ export const OpenShareScreen = observer(({id, resourceName}: {id: string, resour
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title="屏幕共享"
+      title={t('toast.screen_share')}
     >
       <ScreenShareContainer/>
     </Modal>
@@ -55,18 +55,19 @@ export const CloseConfirm = observer(({id, resourceName}: {id: string, resourceN
 
   const ButtonGroup = useCallback(() => {
     return [
-      <Button type={'secondary'} action="cancel">取消</Button>,
-      <Button type={'primary'} action="ok">确认</Button>,
+      <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+      <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
     ]
   }, [])
 
   return (
     <Modal
-    onOk={onOK}
-    onCancel={onCancel}
-    footer={ButtonGroup()}
-    title="关闭当前PPT">
-    <p>你确定要离开关闭吗？</p>
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title={t('toast.close_ppt')}
+    >
+      <p>{t('toast.sure_close_ppt')}</p>
     </Modal>
   )
 })
@@ -89,17 +90,16 @@ export const KickEnd = observer((id: string) => {
 
   const ButtonGroup = useCallback(() => {
     return [
-      <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">取消</Button>,
-      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">确认</Button>,
+      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{t('toast.confirm')}</Button>,
     ]
   }, [isStarted])
   return (
     <Modal
-    onOk={onOK}
-    onCancel={onCancel}
-    footer={ButtonGroup()}
-    title="下课确认">
-    <p>你确定要离开教室吗？</p>
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title={t('toast.kick_by_teacher')}>
+    <p>{t('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -129,8 +129,8 @@ export const RoomEnd = observer((id: string) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title="下课确认">
-    <p>你确定要离开教室吗？</p>
+      title={t('toast.end_class')}>
+    <p>{t('toast.quit_from_room')}</p>
     </Modal>
   )
 })
@@ -162,8 +162,8 @@ export const Exit = observer((id: string) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title="下课确认">
-    <p>你确定要离开教室吗？</p>
+      title={t('toast.quit_room')}>
+    <p>{t('toast.quit_room')}</p>
     </Modal>
   )
 })

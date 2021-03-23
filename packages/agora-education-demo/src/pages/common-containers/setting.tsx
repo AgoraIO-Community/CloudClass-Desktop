@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Setting, Modal, Button, t, useI18nContext } from 'agora-scenario-ui-kit'
+import { Setting, Modal, Button, useI18nContext } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import { useAppStore, usePretestStore, useUIStore } from '@/hooks'
 import { RendererPlayer } from '../common-comps/renderer-player'
 import { useHistory } from 'react-router-dom'
 
 export const useSettingContext = () => {
+
+    const {t} = useI18nContext()
 
     const pretestStore = usePretestStore()
     const uiStore = useUIStore()
@@ -31,8 +33,6 @@ export const useSettingContext = () => {
             }
         }
     }, [pretestStore])
-
-    useI18nContext()
 
     useEffect(() => {
         const uninstall = pretestStore.onDeviceTestError(({type, error}) => {
@@ -86,6 +86,7 @@ export const useSettingContext = () => {
     const VideoPreviewPlayer = useCallback(() => {
         return (
             <RendererPlayer
+                className="camera-placeholder"
                 style={{width: 320, height: 216}}
                 mirror={isMirror}
                 key={cameraId}
@@ -130,6 +131,7 @@ export const useSettingContext = () => {
         hideSetting,
         handleOk,
         onChangeDevice,
+        t,
     }
 }
 
@@ -147,7 +149,8 @@ export const SettingContainer = observer(() => {
         microphoneId,
         isNative,
         onChangeDevice,
-        onChangeAudioVolume
+        onChangeAudioVolume,
+        t
     } = useSettingContext()
 
     return (

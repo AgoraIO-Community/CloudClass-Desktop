@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { Button } from '~components';
-import { I18nProvider, useTranslation } from '~components/i18n'
+import { I18nProvider, useI18nContext } from '~components/i18n'
 
 const meta: Meta = {
   title: 'Components/I18n',
@@ -14,7 +14,7 @@ export type CloudStorageProps = {
 
 const Text = ({text}: any) => {
 
-  const {i18n, t} = useTranslation()
+  const {i18n, t} = useI18nContext()
 
   //@ts-ignore
   window.i18n = i18n

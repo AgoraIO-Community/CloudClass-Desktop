@@ -8,3 +8,43 @@
   font-weight: 400;
   color: #7d8798;
 }
+
+.camera-placeholder {
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+}
+
+
+.camera-placeholder::before {
+  content: ' ';
+  background-image: url('./assets/camera-close.png');
+  background-position: center;
+  background-color: #ECECF1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+}
+
+.camera-broken-placeholder {
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+}
+
+
+.camera-broken-placeholder::before {
+  content: ' ';
+  background-image: url('./assets/camera-broken.png');
+  background-position: center;
+  background-color: #ECECF1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+}

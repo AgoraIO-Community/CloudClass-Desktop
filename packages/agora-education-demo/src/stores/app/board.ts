@@ -338,7 +338,7 @@ export class BoardStore extends ZoomController {
   @observable
   _boardItem: any = {
     file: {
-      name: t('aclass.board_name'),
+      name: t('tool.board_name'),
       type: 'board',
     },
     currentPage: 0,
@@ -539,7 +539,7 @@ export class BoardStore extends ZoomController {
       if (!resourceName || resourceName === "init" || resourceName === "/init" || resourceName === "/") {
         this._boardItem = {
           file: {
-            name: t('aclass.board_name'),
+            name: t('tool.board_name'),
             type: 'board',
           },
           currentPage: resource.index,

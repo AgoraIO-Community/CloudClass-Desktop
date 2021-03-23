@@ -1,6 +1,6 @@
 import { useBoardStore } from '@/hooks'
 import { EduLogger } from 'agora-rte-sdk'
-import { Icon, Tabs, TabPane, Row, Button, CloudDisk, t, Modal, Loading, Toast } from 'agora-scenario-ui-kit'
+import { Icon, Tabs, TabPane, Row, Button, CloudDisk, t, Modal, Loading, Toast, useI18nContext,  formatFileSize } from 'agora-scenario-ui-kit'
 import MD5 from 'js-md5'
 import { observer } from 'mobx-react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -9,7 +9,6 @@ import { DownloadContainer } from './download'
 import { StorageContainer } from './storage'
 import { UploadContainer } from './upload'
 import { mapFileType } from '../../../services/upload-service'
-import { formatFileSize } from 'agora-scenario-ui-kit'
 import {BehaviorSubject} from 'rxjs'
 
 const calcUploadFilesMd5 = async (file: File) => {
@@ -231,12 +230,14 @@ export const CloudDiskContainer = observer(() => {
 
   const boardStore = useBoardStore()
 
+  const {t} = useI18nContext()
+
   const currentActive = boardStore.selector
 
   return (
     <CloudDisk
       value='cloud'
-      label='网盘'
+      label={t('scaffold.cloud_storage')}
       icon='cloud'
       isActive={currentActive === 'cloud'}
     >

@@ -1,15 +1,14 @@
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
-import { Select } from '~components/select'
-import { Slider } from '~components/slider'
-import { Icon } from '~components/icon'
-import { Volume } from '~components/volume'
-import { CheckBox } from '~components/table'
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '~components/button';
-// import {t} from '~components/i18n';
+import { t } from '~components/i18n';
+import { Icon } from '~components/icon';
+import { BaseProps } from '~components/interface/base-props';
+import { Select } from '~components/select';
+import { Slider } from '~components/slider';
+import { CheckBox } from '~components/table';
+import { Volume } from '~components/volume';
 import './index.css';
-import { useTranslation } from '~components/i18n';
 
 const { Option } = Select
 
@@ -40,7 +39,7 @@ export interface PretestProps extends BaseProps {
     videoComponent?: React.ReactElement
 }
 
-export const Pretest: FC<PretestProps> = ({
+export const Pretest: React.FC<PretestProps> = ({
     isMirror = true,
     cameraList = [],
     cameraId,
@@ -63,8 +62,6 @@ export const Pretest: FC<PretestProps> = ({
     onChangeAudioVolume = (deviceType, value) => {},
     ...restProps
 }) => {
-
-    const { t } = useTranslation();
 
     const [disable, setDisable] = useState<boolean>(false)
 

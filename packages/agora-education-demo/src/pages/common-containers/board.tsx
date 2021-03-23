@@ -86,7 +86,7 @@ export type WhiteBoardState = {
 
 const useWhiteboardState = () => {
   const boardStore = useBoardStore()
-  const {lang} = useI18nContext()
+  useI18nContext()
 
   const boardRef = useRef<HTMLDivElement | null>(null)
 
@@ -134,7 +134,7 @@ const useWhiteboardState = () => {
     isFullScreen: boardStore.isFullScreen,
     currentSelector: boardStore.currentSelector,
     tools: boardStore.tools,
-    lang,
+
   }
 }
 
@@ -189,7 +189,6 @@ export const WhiteboardContainer = observer(() => {
     mountToDOM,
     currentSelector,
     tools,
-    lang
   } = useWhiteboardState()
 
   return (
@@ -200,7 +199,7 @@ export const WhiteboardContainer = observer(() => {
       }
       <TabsContainer />
       <div className='toolbar-position'>
-        <Toolbar key={lang} active={currentSelector} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
+        <Toolbar active={currentSelector} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
       </div>
       <ZoomController
         className='zoom-position'

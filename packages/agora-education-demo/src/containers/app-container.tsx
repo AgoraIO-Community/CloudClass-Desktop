@@ -1,12 +1,12 @@
 import { RoomParameters } from '@/edu-sdk/declare';
 import { AppRouteComponent, routesMap } from '@/router';
-import { BizPageRouter } from '@/types';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
+import { BizPageRouter } from '@/types';
+import { useStorageSW } from '@/utils/utils';
+import { I18nProvider } from 'agora-scenario-ui-kit';
 import { Provider } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import { registerWorker, useStorageSW } from '@/utils/utils';
-import {I18nProvider, language$, useI18nContext} from 'agora-scenario-ui-kit'
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -25,8 +25,6 @@ export interface RoomContainerProps extends RouteContainerProps {
 type AppContainerComponentProps = Omit<AppContainerProps, 'defaultStore'>
 
 export const RouteContainer = (props: RouteContainerProps) => {
-
-  useI18nContext()
 
   const routes = props.routes
     .filter((path: string) => routesMap[path])
@@ -56,12 +54,9 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useStorageSW()
 
-  //@ts-ignore
-  window.language$ = language$
-
   return (
     <Provider store={props.store}>
-      <I18nProvider>
+      <I18nProvider value={props.store.params.language}>
         <Router>
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
@@ -74,11 +69,11 @@ export const AppContainer = (props: AppContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <I18nProvider>
+      {/* <I18nProvider> */}
         <HashRouter>
           <RouteContainer routes={props.routes} />
         </HashRouter>
-      </I18nProvider>
+      {/* </I18nProvider> */}
     </Provider>
   )
 }
