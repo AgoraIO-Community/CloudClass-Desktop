@@ -13,7 +13,7 @@ export type AppRouteComponent = {
   component: React.FC<any>
 }
 
-export const roomTypes = {
+export const roomPath = {
   [EduRoomTypeEnum.Room1v1Class]: {
     path: BizPagePath.OneToOnePath,
   },
@@ -23,7 +23,7 @@ export const roomTypes = {
 }
 
 export const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
-  const room = roomTypes[roomType]
+  const room = roomPath[roomType]
   if (!room) {
     return BizPagePath.OneToOnePath
   }
