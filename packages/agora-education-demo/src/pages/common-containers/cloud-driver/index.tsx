@@ -87,6 +87,14 @@ export const CloudDriverContainer = observer((props: any) => {
 
   const handleUpload = async (evt: any) => {
 
+    setUploadFileInfo({
+      iconType: '',
+      fileName: '',
+      fileSize: '',
+      uploadComplete: false,
+    })
+    setCurrentProgress(0)
+
     const file = evt.target.files[0]
     const md5 = await calcUploadFilesMd5(file)
     const resourceUuid = MD5(`${md5}`)
@@ -112,21 +120,17 @@ export const CloudDriverContainer = observer((props: any) => {
         const parent = Math.floor(progress * 100)
         setCurrentProgress(parent)
 
-        console.log({isTransFile, isLastProgress, parent})
+        if (isTransFile) {
+          setUploadFileInfo({
+            ...uploadFileInfo,
+            fileName: name,
+            uploadComplete: true,
+          })
+        }
 
         if (isLastProgress && parent === 100) {
           showToastFn()
         }
-
-        // if (isLastProgress && parent == 100) {
-        //   prepareToast('success', t('disk.uploadSuccess'))
-        //   setTimeout(() => {
-        //     showToast(() => {setIsUploadFile(false)})
-        //   }, 1000)
-        // }
-        // if (cancelFileList.includes(resourceUuid) && progress === 100) {
-        //   await boardStore.removeMaterialList([file.fileID])
-        // }
       },
       pptConverter: boardStore.boardClient.client.pptConverter(boardStore.room.roomToken)
     }
