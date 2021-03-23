@@ -1,4 +1,4 @@
-import React, { EventHandler, FC, forwardRef, SyntheticEvent, useState } from 'react';
+import React, { EventHandler, FC, forwardRef, SyntheticEvent, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import './index.css';
@@ -30,6 +30,8 @@ export const Calendar: FC<CalendarProps> = ({
   const [selectedHour, setSelectedHour] = useState(dayjs(today).hour())
   const [selectedMinute, setSelectedMinute] = useState(dayjs(today).minute())
   const [selectedAMPM, setSelectedAMPM] = useState(0)
+  const hourRef = useRef(null)
+  const minuteRef = useRef(null)
 
 
   const onSelectHour = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -46,6 +48,11 @@ export const Calendar: FC<CalendarProps> = ({
     let ampm = Number(evt.currentTarget.dataset.ampm || "0")
     setSelectedAMPM(ampm)
   }
+
+  useEffect(() => {
+    hourRef && hourRef.current.scrollIntoView()
+    minuteRef && minuteRef.current.scrollIntoView()
+  }, [])
 
   return (
     <div className="ag-calendar-container">
@@ -97,26 +104,19 @@ export const Calendar: FC<CalendarProps> = ({
       />
       <div className="ag-calendar-time-select-container">
         <div className="ag-calendar-hour-select ag-calendar-time-select">
-          {[...Array(12).keys()].map(idx => 
+          {[...Array(24).keys()].map(idx => 
             <li className="ag-calendar-time-item">
-              <button data-hour={idx+1} className={(selectedHour === idx + 1) ? "selected w-full" : "w-full"} onClick={onSelectHour}>{`${idx+1}`.padStart(2, '0')}</button>
+              <button data-hour={idx} ref={(selectedHour === idx) ? hourRef : null} className={(selectedHour === idx) ? "selected w-full" : "w-full"} onClick={onSelectHour}>{`${idx}`.padStart(2, '0')}</button>
             </li>
           )}
         </div>
         <div className="ag-calendar-minutes-select ag-calendar-time-select">
           {[...Array(60).keys()].map(idx => 
             <li className="ag-calendar-time-item">
-              <button data-minute={idx} className={(selectedMinute === idx) ? "selected w-full" : "w-full"} onClick={onSelectMinute}>{`${idx}`.padStart(2, '0')}</button>
+              <button data-minute={idx} ref={(selectedMinute === idx) ? minuteRef : null} className={(selectedMinute === idx) ? "selected w-full" : "w-full"} onClick={onSelectMinute}>{`${idx}`.padStart(2, '0')}</button>
             </li>
           )}
         </div>
-      </div>
-      <div className="ag-calendar-ampm-select ag-calendar-time-select">
-        {[...Array(2).keys()].map(idx => 
-          <li className="ag-calendar-time-item">
-            <button data-ampm={idx} className={(selectedAMPM === idx) ? "selected w-full" : "w-full"} onClick={onSelectAMPM}>{idx === 0 ? '上午' : '下午'}</button>
-          </li>
-        )}
       </div>
     </div>
     

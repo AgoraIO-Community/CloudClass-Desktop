@@ -26,7 +26,7 @@
 
 .ag-calendar-container {
   box-shadow: 2px 2px 7px 1px rgba(0,0,0,0.2);
-  width: 390px;
+  width: 350px;
   /* height: auto; */
   overflow: hidden;
   position: relative;
@@ -52,7 +52,7 @@
   width: 100px;
   padding: 10px 0;
   border-radius: 7px;
-  right: 55px;
+  right: 5px;
   display: flex;
   justify-content: space-around;
 }
