@@ -4,6 +4,7 @@ import { WhiteboardContainer } from '../common-containers/board'
 import { NavigationBar } from '../common-containers/nav'
 import { VideoPlayerTeacher, VideoPlayerStudent } from '../common-containers/video-player'
 import { RoomChat } from '../common-containers/chat'
+import { HandsUpContainer } from '../common-containers/hands-up'
 import './small.style.css'
 import { useRoomStore, useBoardStore } from '@/hooks'
 import { useEffectOnce } from '@/hooks/utils'
@@ -54,6 +55,10 @@ export const SmallClassRoom = observer(() => {
         <Content>
           <ScreenSharePlayerContainer />
           <WhiteboardContainer />
+          <div className="lower-right-container">
+            <HandsUpContainer/>
+            
+          </div>
         </Content>
         <Aside className={fullscreenCls}>
           <VideoPlayerTeacher/>
