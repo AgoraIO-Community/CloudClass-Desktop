@@ -1,10 +1,10 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Calendar } from '~components/calendar';
+import { DatePicker } from '~components/date-picker';
 
 const meta: Meta = {
-  title: 'Components/Calendar',
-  component: Calendar,
+  title: 'Components/DatePicker',
+  component: DatePicker,
 };
 
 type DocsProps = {
@@ -13,7 +13,7 @@ type DocsProps = {
 export const Docs = ({}: DocsProps) => (
   <>
     <div>
-      <Calendar></Calendar>
+      <DatePicker/>
     </div>
   </>
 );

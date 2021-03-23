@@ -8,28 +8,29 @@ import dayjs from 'dayjs'
 import { Icon } from '~components';
 
 export interface CalendarProps extends BaseProps {
-  inputClassName?: string
-  calendarClassName?: string
+  className?: string
+  date?: Date
+  onChange?: (date:Date) => any
 }
 
 export const Calendar: FC<CalendarProps> = ({
-  inputClassName,
-  calendarClassName,
+  className,
+  date,
+  onChange,
   ...restProps
 }) => {
-  const inputcls = classnames({
-    [`${inputClassName}`]: !!inputClassName,
-  });
   const calendarcls = classnames({
-    [`${calendarClassName}`]: !!calendarClassName,
+    ['ag-calendar']: 1
   });
+  const cls = classnames({
+    [`${className}`]: !!className,
+    ['ag-calendar-container']: 1
+  })
   let today = new Date()
-  const [startDate, setStartDate] = useState(today);
-  const [isOpen, setOpen] = useState(false);
+  const [startDate, setStartDate] = useState(date || today);
   const [selectedMonth, setSelectedMonth] = useState(dayjs().month())
   const [selectedHour, setSelectedHour] = useState(dayjs(today).hour())
   const [selectedMinute, setSelectedMinute] = useState(dayjs(today).minute())
-  const [selectedAMPM, setSelectedAMPM] = useState(0)
   const hourRef = useRef(null)
   const minuteRef = useRef(null)
 
@@ -37,16 +38,18 @@ export const Calendar: FC<CalendarProps> = ({
   const onSelectHour = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     let hour = Number(evt.currentTarget.dataset.hour || "1")
     setSelectedHour(hour)
+    onChange && onChange(constructResult(startDate, hour, selectedMinute))
   }
 
   const onSelectMinute = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     let minute = Number(evt.currentTarget.dataset.minute || "0")
     setSelectedMinute(minute)
+    onChange && onChange(constructResult(startDate, selectedHour, minute))
   }
 
-  const onSelectAMPM = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    let ampm = Number(evt.currentTarget.dataset.ampm || "0")
-    setSelectedAMPM(ampm)
+  const constructResult = (date:Date, hour: number, minute: number) => {
+    let d = dayjs(date)
+    return new Date(d.year(), d.month(), d.date(), hour, minute)
   }
 
   useEffect(() => {
@@ -55,17 +58,17 @@ export const Calendar: FC<CalendarProps> = ({
   }, [])
 
   return (
-    <div className="ag-calendar-container">
+    <div className={cls}>
       <RcDatePicker
         selected={startDate}
         onChange={date => {
           let d: Date = date as Date
           setSelectedMonth(dayjs(d).month())
           setStartDate(d)
+          onChange && onChange(constructResult(d, selectedHour, selectedMinute))
         }}
         onMonthChange={(date:Date) => setSelectedMonth(dayjs(date).month())}
         // showTimeSelect
-        className={inputcls}
         calendarClassName={calendarcls}
         inline={true}
         renderCustomHeader={({
