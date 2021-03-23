@@ -89,14 +89,13 @@ export enum EduRoleTypeEnum {
 /**
  * 教育SDK房间枚举
  * Room1v1Class = 1，1v1
- * RoomSmallClass = 2，小班课
- * RoomBigClass = 3，大班课
+ * RoomSmallClass = 4，小班课
  */
 export enum EduRoomTypeEnum {
   Room1v1Class = 0,
-  RoomSmallClass = 1,
-  RoomBigClass = 2,
-  RoomAcadosc = 3
+  RoomSmallClass = 4,
+  // RoomBigClass = 2,
+  // RoomAcadosc = 3
 }
 
 /**

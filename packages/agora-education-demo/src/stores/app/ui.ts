@@ -117,11 +117,19 @@ export class UIStore {
     this.chatMinimize = !this.chatMinimize
   }
 
+  @observable
+  visibleSetting: boolean = false
+
+  setVisibleSetting(v: boolean) { 
+    this.visibleSetting = v
+  }
+
   @action.bound
   reset() {
     this.loading = false
     this.boardLoading = false
     this.chatMinimize = false
+    this.visibleSetting = false
     this.resetStateQueue()
   }
 

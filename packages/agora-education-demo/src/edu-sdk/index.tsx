@@ -1,17 +1,18 @@
 import '@/index.css';
-import 'agora-scenario-ui-kit/lib/style.css';
 // import { ReplayRoom } from "@/monolithic/replay-room"
 import { LiveRoom } from "@/monolithic/live-room";
+import { getLiveRoomPath } from '@/router';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { AppStore } from "@/stores/app";
+import { BizPagePath } from '@/types';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import 'agora-scenario-ui-kit/lib/style.css';
 import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
-import { roomTypes } from '@/router';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -211,15 +212,14 @@ export class AgoraEduSDK {
       })
       const data = await eduSDKApi.getConfig()
 
-      let mainPath = roomTypes[option.roomType]?.path || '/classroom/1v1'
+      let mainPath = getLiveRoomPath(option.roomType)
       console.log('mainPath ', mainPath)
-      // let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
       let roomPath = mainPath
 
       console.log("main Path", mainPath, " room Path", roomPath)
 
       if (option.pretest) {
-        mainPath = '/pretest'
+        mainPath = BizPagePath.PretestPagePath
       }
 
       const store = new AppStore({

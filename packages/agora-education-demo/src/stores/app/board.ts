@@ -1,24 +1,20 @@
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
-import { PPTProgressPhase } from '@/edu-sdk/declare';
-import { t } from '@/i18n';
 import { BoardClient } from '@/modules/board/client';
 import { EnumBoardState } from '@/modules/services/board-api';
+import { allTools } from '@/pages/common-containers/board';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
 import { OSSConfig } from '@/utils/helper';
-import { BizLogger, fetchNetlessImageByUrl, transLineTool, mapToolBar, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transToolBar, ZoomController } from '@/utils/utils';
+import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transLineTool, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
-import { ToolItem } from 'agora-scenario-ui-kit';
+import { ToolItem, t } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
 import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
-import {PensContainer} from '../../pages/common-containers/pens'
-import {ColorsContainer} from '../../pages/common-containers/colors'
-import { allTools } from '@/pages/common-containers/board';
 import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
@@ -270,8 +266,8 @@ export class BoardStore extends ZoomController {
     boardToken: string
   }) {
       await this.join({
-        uuid: info.boardId,
-        roomToken: info.boardToken,
+        boardId: info.boardId,
+        boardToken: info.boardToken,
         role: this.userRole,
         isWritable: true,
         disableDeviceInputs: true,
@@ -615,9 +611,14 @@ export class BoardStore extends ZoomController {
 
   // TODO: aclass board init
   @action
-  async aClassInit(info: {
+  async join(info: {
+    role: EduRoleTypeEnum,
+    isWritable: boolean,
     boardId: string,
-    boardToken: string
+    boardToken: string,
+    disableDeviceInputs: boolean,
+    disableCameraTransform: boolean,
+    disableAutoResize: boolean
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
@@ -786,9 +787,9 @@ export class BoardStore extends ZoomController {
         }
       }
       if (state.memberState) {
-        this.currentStroke = this.getCurrentStroke(state.memberState)
-        this.currentArrow = this.getCurrentArrow(state.memberState)
-        this.currentFontSize = this.getCurrentFontSize(state.memberState)
+        this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
+        // this.currentArrow = this.getCurrentArrow(state.memberState)
+        // this.currentFontSize = this.getCurrentFontSize(state.memberState)
       }
       if (state.zoomScale) {
         runInAction(() => {
@@ -860,76 +861,6 @@ export class BoardStore extends ZoomController {
       return true
     }
     return false
-  }
-
-  @action
-  async join(params: any) {
-    const {role, ...data} = params
-    const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
-    this.boardClient.on('onPhaseChanged', (state: any) => {
-      if (state === 'disconnected') {
-        this.online = false
-      }
-    })
-    this.boardClient.on('onMemberStateChanged', (state: any) => {
-    })
-    this.boardClient.on('onRoomStateChanged', (state: any) => {
-      if (state.broadcastState?.broadcasterId === undefined) {
-        if (this.room) {
-          this.room.scalePptToFit()
-        }
-      }
-      if (state.memberState) {
-        this.currentStroke = this.getCurrentStroke(state.memberState)
-        this.currentArrow = this.getCurrentArrow(state.memberState)
-        this.currentFontSize = this.getCurrentFontSize(state.memberState)
-      }
-      if (state.zoomScale) {
-        runInAction(() => {
-          this.scale = state.zoomScale
-        })
-      }
-      if (state.sceneState || state.globalState) {
-        this.updateSceneItems()
-      }
-      if (state.globalState) {
-        this.updateBoardState()
-      }
-    })
-    BizLogger.info("[breakout board] join", data)
-    const cursorAdapter = new CursorTool(); //新版鼠标追踪
-    await this.boardClient.join({
-      ...data,
-      cursorAdapter,
-      userPayload: {
-        userId: this.appStore.roomStore.roomInfo.userUuid,
-        avatar: ""
-      }
-    })
-    this.strokeColor = {
-      r: 252,
-      g: 58,
-      b: 63
-    }
-    BizLogger.info("[breakout board] after join", data)
-    this.online = true
-    // this.updateSceneItems()
-    this.room.bindHtmlElement(null)
-    const resizeCallback = () => {
-      if (this.online && this.room && this.room.isWritable) {
-        this.room.moveCamera({centerX: 0, centerY: 0});
-        this.room.refreshViewSize();
-      }
-    }
-    this.resizeCallback = resizeCallback
-    window.addEventListener('resize', this.resizeCallback)
-    this.updateSceneItems()
-
-    this.lockBoard = this.getCurrentLock(this.room.state) as any
-    if (this.appStore.userRole === EduRoleTypeEnum.student) {
-      this.room.disableDeviceInputs = this.lockBoard
-    }
   }
 
   // lock阿卡索的白板
@@ -1048,6 +979,18 @@ export class BoardStore extends ZoomController {
   @observable
   lineSelector: string = 'pen'
 
+  @observable
+  laserPoint: boolean = false
+
+  @action
+  setLaserPoint() {
+    if (this.room) {
+      this.room.setMemberState({
+        currentApplianceName: ApplianceNames.laserPointer
+      })
+    }
+  }
+
   @action
   setTool(tool: string) {
     this.selector = tool
@@ -1080,19 +1023,16 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @observable
+  currentStrokeWidth: number = 0
+
   @action
   changeStroke(value: any) {
-    // if (this.room) {
-    //   const mapping = {
-    //     [CustomMenuItemType.Thin]: 4,
-    //     [CustomMenuItemType.Small]: 8,
-    //     [CustomMenuItemType.Normal]: 12,
-    //     [CustomMenuItemType.Large]: 18,
-    //   }
-    //   this.room.setMemberState({
-    //     strokeWidth: mapping[value],
-    //   })
-    // }
+    if (this.room) {
+      this.room.setMemberState({
+        strokeWidth: value,
+      })
+    }
   }
 
   rgbToHexColor(r: number, g: number, b: number): string {
@@ -1141,17 +1081,7 @@ export class BoardStore extends ZoomController {
   currentStroke: string = ''
 
   getCurrentStroke(memberState: MemberState) {
-    // const mapping = {
-    //   [4]: CustomMenuItemType.Thin,
-    //   [8]: CustomMenuItemType.Small,
-    //   [12]: CustomMenuItemType.Normal,
-    //   [18]: CustomMenuItemType.Large,
-    // }
-    // const value = mapping[memberState.strokeWidth]
-    // if (value) {
-    //   return value
-    // }
-    return ''
+    return memberState.strokeWidth
   }
 
   @observable
@@ -1675,7 +1605,7 @@ export class BoardStore extends ZoomController {
       return t("whiteboard.loading")
     }
     if (this.preloadingProgress !== -1) {
-      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+      // return t("whiteboard.downloading", {reason: this.preloadingProgress})
     }
 
     return ''

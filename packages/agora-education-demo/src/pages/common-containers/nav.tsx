@@ -1,8 +1,10 @@
 import { useRoomStore, useUIStore } from '@/hooks'
 import { BizHeader, Modal, Button } from 'agora-scenario-ui-kit'
+import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
 import { Exit } from './dialog'
+import { SettingContainer } from './setting'
 
 export const NavigationBar: React.FC<any> = observer(() => {
 
@@ -13,7 +15,6 @@ export const NavigationBar: React.FC<any> = observer(() => {
   const uiStore = useUIStore()
 
   const handleClick = useCallback(async (type: string) => {
-    console.log(' nav handleClick ', type)
     switch (type) {
       case 'exit': {
         uiStore.addDialog(Exit)
@@ -24,7 +25,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
       case 'setting': {
-        console.log('setting')
+        uiStore.setVisibleSetting(true)
         break
       }
       case 'courseControl': {
@@ -32,12 +33,12 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
     }
-  }, [navigationState.isStarted])
+  }, [navigationState.isStarted, uiStore])
 
   return (
+    <>
     <BizHeader
-      classStatus={'before'}
-      clockTime={Date.now()}
+      classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
       title={navigationState.title}
       signalQuality={navigationState.signalQuality}
@@ -49,5 +50,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
       }}
       onClick={handleClick}
     />
+    <SettingContainer />
+    </>
   )
 })

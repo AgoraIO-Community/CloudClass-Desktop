@@ -24,6 +24,7 @@ export const usePretestContext = () => {
                 setMicrophoneError(error)
             }
         })
+        // TODO: need pipe
         pretestStore.init({video: true, audio: true})
         pretestStore.openTestCamera()
         pretestStore.openTestMicrophone()
@@ -61,8 +62,17 @@ export const usePretestContext = () => {
             }
         }
     }, [pretestStore])
-    const onChangeAudioVolume = useCallback(async () => {
-
+    const onChangeAudioVolume = useCallback(async (deviceType: string, value: any) => {
+        switch (deviceType) {
+            case 'speaker': {
+                await pretestStore.changeTestSpeakerVolume(value)
+                break;
+            }
+            case 'microphone': {
+                await pretestStore.changeTestMicrophoneVolume(value)
+                break;
+            }
+        }
     }, [pretestStore])
     const onSelectMirror = useCallback((evt: any) => {
         setMirror(!isMirror)
@@ -72,7 +82,7 @@ export const usePretestContext = () => {
     const VideoPreviewPlayer = useCallback(() => {
         return (
             <RendererPlayer
-                style={{width: 320, height: 320}}
+                style={{width: 320, height: 216}}
                 mirror={isMirror}
                 key={cameraId}
                 id="stream-player"
@@ -87,8 +97,10 @@ export const usePretestContext = () => {
     const appStore = useAppStore()
 
     const handleOk = useCallback(() => {
-        history.push(appStore.params.roomPath!)
-    }, [history, appStore])
+        const roomPath = appStore.params.roomPath!
+        console.log('history path ', roomPath)
+        history.push(roomPath)
+    }, [history, appStore.params.roomPath])
 
     return {
         title: t('pretest.title'),

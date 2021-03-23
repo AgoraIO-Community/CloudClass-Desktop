@@ -61,4 +61,5 @@ export type IconTypes =
   | 'checked'
   | 'register'
   | 'kick-out'
-  | 'red-caution';
+  | 'red-caution'
+  | 'laser-pointer';

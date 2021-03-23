@@ -20,8 +20,9 @@ export enum BizPageRouter {
 
 export enum BizPagePath {
   OneToOnePath = '/classroom/1v1',
-  SmallClassPath = '/classroom/small-class',
-  BigClassPath = '/classroom/big-class'
+  SmallClassPath = '/classroom/small',
+  BigClassPath = '/classroom/big',
+  PretestPagePath = '/pretest',
 }
 
 export type NetlessTaskProgress = {

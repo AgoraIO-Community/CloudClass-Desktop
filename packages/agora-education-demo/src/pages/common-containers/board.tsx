@@ -1,5 +1,5 @@
 import { useBoardStore, useUIStore,  } from '@/hooks'
-import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType, t, useI18nContext } from 'agora-scenario-ui-kit'
 import { ToolItem } from 'agora-scenario-ui-kit/lib/components/toolbar/tool'
 import { observer } from 'mobx-react'
 import React, { useCallback, useEffect, useRef } from 'react'
@@ -12,12 +12,12 @@ import { ToolCabinetContainer } from './tool-cabinet'
 export const allTools: ToolItem[] = [
   {
     value: 'selection',
-    label: '选择',
+    label: t('scaffold.selector'),
     icon: 'select',
   },
   {
     value: 'pen',
-    label: '画笔',
+    label: t('scaffold.pencil'),
     icon: 'pen',
     component: () => {
       return <PensContainer />
@@ -25,17 +25,17 @@ export const allTools: ToolItem[] = [
   },
   {
     value: 'text',
-    label: '文本',
+    label: t('scaffold.text'),
     icon: 'text',
   },
   {
     value: 'eraser',
-    label: '橡皮',
+    label: t('scaffold.eraser'),
     icon: 'eraser',
   },
   {
     value: 'color',
-    label: '颜色',
+    label: t('scaffold.color'),
     icon: 'color',
     component: () => {
       return <ColorsContainer />
@@ -43,17 +43,17 @@ export const allTools: ToolItem[] = [
   },
   {
     value: 'blank-page',
-    label: '新增空白页',
+    label: t('scaffold.blank_page'),
     icon: 'blank-page',
   },
   {
     value: 'hand',
-    label: '手抓工具',
+    label: t('scaffold.move'),
     icon: 'hand',
   },
   {
     value: 'cloud',
-    label: '云盘',
+    label: t('scaffold.cloud_storage'),
     icon: 'cloud',
     component: () => {
       return <CloudDiskContainer />
@@ -61,12 +61,12 @@ export const allTools: ToolItem[] = [
   },
   {
     value: 'follow',
-    label: '视角跟随',
+    label: t('scaffold.follow'),
     icon: 'follow',
   },
   {
     value: 'tools',
-    label: '工具箱',
+    label: t('scaffold.tools'),
     icon: 'tools',
     component: () => {
       return <ToolCabinetContainer/>
@@ -86,6 +86,7 @@ export type WhiteBoardState = {
 
 const useWhiteboardState = () => {
   const boardStore = useBoardStore()
+  const {lang} = useI18nContext()
 
   const boardRef = useRef<HTMLDivElement | null>(null)
 
@@ -133,6 +134,7 @@ const useWhiteboardState = () => {
     isFullScreen: boardStore.isFullScreen,
     currentSelector: boardStore.currentSelector,
     tools: boardStore.tools,
+    lang,
   }
 }
 
@@ -186,7 +188,8 @@ export const WhiteboardContainer = observer(() => {
     ready,
     mountToDOM,
     currentSelector,
-    tools
+    tools,
+    lang
   } = useWhiteboardState()
 
   return (
@@ -197,7 +200,7 @@ export const WhiteboardContainer = observer(() => {
       }
       <TabsContainer />
       <div className='toolbar-position'>
-        <Toolbar active={currentSelector} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
+        <Toolbar key={lang} active={currentSelector} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
       </div>
       <ZoomController
         className='zoom-position'

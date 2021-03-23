@@ -12,6 +12,7 @@ import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/vid
 import classnames from 'classnames';
 import './1v1.style.css'
 import { ScreenSharePlayerContainer } from '../common-containers/screen-share-player'
+import { SettingContainer } from '../common-containers/setting'
 
 const use1v1Store = () => {
   const roomStore = useRoomStore()

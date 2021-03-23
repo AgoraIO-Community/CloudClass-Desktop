@@ -7,8 +7,9 @@ import { Icon } from '~components/icon'
 import { Volume } from '~components/volume'
 import { CheckBox } from '~components/table'
 import { Button } from '~components/button';
-import {t} from '~components/i18n';
+// import {t} from '~components/i18n';
 import './index.css';
+import { useTranslation } from '~components/i18n';
 
 const { Option } = Select
 
@@ -63,6 +64,8 @@ export const Pretest: FC<PretestProps> = ({
     ...restProps
 }) => {
 
+    const { t } = useTranslation();
+
     const [disable, setDisable] = useState<boolean>(false)
 
     const [level, setLevel] = useState<number>(0)
@@ -113,7 +116,7 @@ export const Pretest: FC<PretestProps> = ({
                         </span>
                     </div>
                     <Select 
-                        defaultValue={cameraId}
+                        value={cameraId}
                         onChange={async value => {
                             await onChangeDevice('camera', value)
                         }}
@@ -129,7 +132,7 @@ export const Pretest: FC<PretestProps> = ({
                         <span className="device-title-text">{t('media.microphone')}</span>
                     </div>
                     <Select 
-                        defaultValue={microphoneId}
+                        value={microphoneId}
                         onChange={async value => {
                             await onChangeDevice('microphone', value)
                         }}
@@ -166,7 +169,7 @@ export const Pretest: FC<PretestProps> = ({
                     {isNative ? (
                         <>
                             <Select 
-                                defaultValue={speakerId}
+                                value={speakerId}
                                 onChange={async value => {
                                     await onChangeDevice('speaker', value)
                                 }}
