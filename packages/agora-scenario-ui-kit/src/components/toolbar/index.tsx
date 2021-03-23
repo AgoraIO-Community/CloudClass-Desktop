@@ -21,6 +21,7 @@ export type { ToolItem } from './tool';
 export interface ToolbarProps extends BaseProps {
   tools: ToolItem[];
   active?: string;
+  activeMap?: Record<string, boolean>;
   defaultOpened?: boolean;
   onClick?: (value: string) => Promise<unknown>;
   onOpenedChange?: (opened: boolean) => void;
@@ -38,6 +39,7 @@ export const Toolbar: FC<ToolbarProps> = ({
   style,
   tools,
   active,
+  activeMap = {},
   defaultOpened = true,
   onOpenedChange,
   onClick,
@@ -76,7 +78,7 @@ export const Toolbar: FC<ToolbarProps> = ({
             value={value}
             {...restProps}
             onClick={onClick}
-            isActive={active === value}
+            isActive={active === value || activeMap[value]}
           />
         ))}
       </div>

@@ -1399,6 +1399,7 @@ export class BoardStore extends ZoomController {
       this.controller.abort()
       this.controller = undefined
     }
+    this.activeMap = {}
     // this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
@@ -1928,6 +1929,9 @@ export class BoardStore extends ZoomController {
       EduLogger.info(`全部下载失败....: ${err}`)
     }
   }
+
+  @observable
+  activeMap: Record<string, boolean> = {}
 }
 
 export type HandleUploadType = {

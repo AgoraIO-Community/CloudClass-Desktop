@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Icon } from '~components/icon'
 import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk, ToolCabinet } from '~components/toolbar';
+import { clone } from 'lodash';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -11,6 +12,16 @@ const meta: Meta = {
 export const Docs: FC<ToolbarProps> = (props) => {
   const [activeColor, updateColor]= useState<string>('#7ed321')
   const [pen, updatePen]= useState<string>('pen')
+
+  const [activeMap, updateMap] = useState<Record<string, boolean>>({})
+
+  const handleClick = React.useCallback(async (type: string) => {
+    const bool = activeMap[type]
+    updateMap({
+      ...activeMap,
+      [`${type}`]: !bool
+    })
+  }, [activeMap, updateMap])
   const tools: ToolItem[] = [
     {
       value: 'selection',
@@ -115,7 +126,7 @@ export const Docs: FC<ToolbarProps> = (props) => {
       }
     },
   ];
-  return <Toolbar {...props} tools={tools}></Toolbar>;
+  return <Toolbar {...props} onClick={handleClick} activeMap={activeMap} tools={tools}></Toolbar>;
 };
 
 export default meta;
