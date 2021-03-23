@@ -112,20 +112,11 @@ export const CloudDriverContainer = observer((props: any) => {
         const { progress, isTransFile = false, isLastProgress = false } = evt;
         const parent = Math.floor(progress * 100)
         setCurrentProgress(parent)
-        if (isLastProgress && parent == 100) {
-          if (isTransFile) {
-            // 转换文件，需要转化成功后show toast
-            setUploadFileInfo({
-              ...uploadFileInfo,
-              uploadComplete: true,
-            })
-            if (progress === 1) {
-              showToastFn()
-            }
-          } else {
-            // 非转换文件，直接show toast
-            showToastFn();
-          }
+
+        console.log({isTransFile, isLastProgress, parent})
+
+        if (isLastProgress && parent === 100) {
+          showToastFn()
         }
 
         // if (isLastProgress && parent == 100) {
@@ -166,7 +157,7 @@ export const CloudDriverContainer = observer((props: any) => {
     await boardStore.removeMaterialList(checkList$.getValue())
   }
 
-  console.log(' driver props ', props)
+  // console.log(' driver props ', props)
 
   useEffect(() => {
     if (activeKey === '2') {
@@ -211,7 +202,6 @@ export const CloudDriverContainer = observer((props: any) => {
                   left: '50%',
                   transform: 'translate(-50%, -50%)'
                 }}
-                showMask={true}
                 onCancel={() => { setShowUploadModal(false) }}
               >
                 <Loading
