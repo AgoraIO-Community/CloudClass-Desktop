@@ -669,6 +669,13 @@ export class BoardStore extends ZoomController {
     this.updateLocalSceneState()
     this.updateSceneItems()
     this.updateCourseWareList()
+    // TODO 更新activeMap
+    this.updateActiveMap();
+  }
+
+  updateActiveMap () {
+    // golable state
+    this.activeMap['follow'] = (get(this.room.state.globalState, 'follow', 0) === 1)
   }
 
   pptAutoFullScreen() {
@@ -807,6 +814,12 @@ export class BoardStore extends ZoomController {
       }
       if (state.globalState) {
         this.updateCourseWareList()
+        // TODO: 监听follow的逻辑
+        if (this.roleIsTeacher && state.globalState.follow === 1) {
+          this.boardClient.followMode(ViewMode.Broadcaster)
+        } else {
+          this.boardClient.followMode(ViewMode.Freedom)
+        }
       }
     })
     BizLogger.info("[breakout board] join", data)
@@ -1020,6 +1033,12 @@ export class BoardStore extends ZoomController {
         room.setSceneIndex(newIndex)
       }
       return
+    }
+
+    if (tool === 'follow') {
+      // TODO: 左侧菜单点击切换逻辑，纯处理active
+      const resultNumber = this.activeMap['follow'] ? 1 : 0;
+      this.setFollow(resultNumber)
     }
   }
 

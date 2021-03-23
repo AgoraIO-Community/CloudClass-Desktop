@@ -129,9 +129,9 @@ export class BoardClient extends EventEmitter {
     })
   }
 
-  followMode() {
+  followMode(mode: ViewMode) {
     if (this.room && !this.disconnected) {
-      this.room.setViewMode(ViewMode.Broadcaster)
+      this.room.setViewMode(mode)
     }
   }
 
