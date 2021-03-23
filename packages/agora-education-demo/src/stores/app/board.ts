@@ -1,24 +1,21 @@
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
-import { PPTProgressPhase } from '@/edu-sdk/declare';
-import { t } from '@/i18n';
 import { BoardClient } from '@/modules/board/client';
 import { EnumBoardState } from '@/modules/services/board-api';
+import { allTools } from '@/pages/common-containers/board';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
 import { OSSConfig } from '@/utils/helper';
-import { BizLogger, fetchNetlessImageByUrl, transLineTool, mapToolBar, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transToolBar, ZoomController } from '@/utils/utils';
+import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transLineTool, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
-import { EduLogger, EduRoleTypeEnum, EduUser } from 'agora-rte-sdk';
-import { ToolItem } from 'agora-scenario-ui-kit';
+import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
+import { ToolItem, t } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
-import { get, isEmpty, omit, uniqBy } from 'lodash';
+import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
-import {PensContainer} from '../../pages/common-containers/pens'
-import {ColorsContainer} from '../../pages/common-containers/colors'
-import { allTools } from '@/pages/common-containers/board';
+import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -269,8 +266,8 @@ export class BoardStore extends ZoomController {
     boardToken: string
   }) {
       await this.join({
-        uuid: info.boardId,
-        roomToken: info.boardToken,
+        boardId: info.boardId,
+        boardToken: info.boardToken,
         role: this.userRole,
         isWritable: true,
         disableDeviceInputs: true,
@@ -334,22 +331,6 @@ export class BoardStore extends ZoomController {
   sceneList: any[] = []
 
   controller: any = undefined
-
-  async startDownload(taskUuid: string) {
-    try {
-      this.downloading = true
-      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
-        this.preloadingProgress = progress
-        this.controller = controller
-      })
-      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.downloading = false
-    } catch (err) {
-      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.downloading = false
-    }
-  }
 
   @observable
   _resourcesList: any[] = []
@@ -630,9 +611,14 @@ export class BoardStore extends ZoomController {
 
   // TODO: aclass board init
   @action
-  async aClassInit(info: {
+  async join(info: {
+    role: EduRoleTypeEnum,
+    isWritable: boolean,
     boardId: string,
-    boardToken: string
+    boardToken: string,
+    disableDeviceInputs: boolean,
+    disableCameraTransform: boolean,
+    disableAutoResize: boolean
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
@@ -678,34 +664,6 @@ export class BoardStore extends ZoomController {
 
     this.ready = true
     this.pptAutoFullScreen()
-
-    // 老师
-    if (this.userRole === EduRoleTypeEnum.teacher) {
-      // 判断第一次登陆
-      if (!this.teacherLogged()) {
-        this.teacherFirstJoin()
-        EduLogger.info("老师第一次加入白板")
-        await this.fetchRoomScenes()
-      } else {
-        EduLogger.info("老师再次加入白板")
-      }
-    }
-    // 学生
-    if (this.isStudent()) {
-      // 判断第一次登陆
-      if (!this.studentLogged()) {
-        EduLogger.info("学生第一次加入白板")
-        this.studentFirstJoin()
-        await this.fetchRoomScenes()
-      } else {
-        EduLogger.info("学生再次加入白板")
-      }
-    }
-    if (!this.lockBoard) {
-      EduLogger.info("白板尚未锁定")
-    } else {
-      EduLogger.info("白板已经锁定")
-    }
 
     this.updateLocalResourceList()
     this.updateLocalSceneState()
@@ -829,9 +787,9 @@ export class BoardStore extends ZoomController {
         }
       }
       if (state.memberState) {
-        this.currentStroke = this.getCurrentStroke(state.memberState)
-        this.currentArrow = this.getCurrentArrow(state.memberState)
-        this.currentFontSize = this.getCurrentFontSize(state.memberState)
+        this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
+        // this.currentArrow = this.getCurrentArrow(state.memberState)
+        // this.currentFontSize = this.getCurrentFontSize(state.memberState)
       }
       if (state.zoomScale) {
         runInAction(() => {
@@ -905,76 +863,6 @@ export class BoardStore extends ZoomController {
     return false
   }
 
-  @action
-  async join(params: any) {
-    const {role, ...data} = params
-    const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
-    this.boardClient.on('onPhaseChanged', (state: any) => {
-      if (state === 'disconnected') {
-        this.online = false
-      }
-    })
-    this.boardClient.on('onMemberStateChanged', (state: any) => {
-    })
-    this.boardClient.on('onRoomStateChanged', (state: any) => {
-      if (state.broadcastState?.broadcasterId === undefined) {
-        if (this.room) {
-          this.room.scalePptToFit()
-        }
-      }
-      if (state.memberState) {
-        this.currentStroke = this.getCurrentStroke(state.memberState)
-        this.currentArrow = this.getCurrentArrow(state.memberState)
-        this.currentFontSize = this.getCurrentFontSize(state.memberState)
-      }
-      if (state.zoomScale) {
-        runInAction(() => {
-          this.scale = state.zoomScale
-        })
-      }
-      if (state.sceneState || state.globalState) {
-        this.updateSceneItems()
-      }
-      if (state.globalState) {
-        this.updateBoardState()
-      }
-    })
-    BizLogger.info("[breakout board] join", data)
-    const cursorAdapter = new CursorTool(); //新版鼠标追踪
-    await this.boardClient.join({
-      ...data,
-      cursorAdapter,
-      userPayload: {
-        userId: this.appStore.roomStore.roomInfo.userUuid,
-        avatar: ""
-      }
-    })
-    this.strokeColor = {
-      r: 252,
-      g: 58,
-      b: 63
-    }
-    BizLogger.info("[breakout board] after join", data)
-    this.online = true
-    // this.updateSceneItems()
-    this.room.bindHtmlElement(null)
-    const resizeCallback = () => {
-      if (this.online && this.room && this.room.isWritable) {
-        this.room.moveCamera({centerX: 0, centerY: 0});
-        this.room.refreshViewSize();
-      }
-    }
-    this.resizeCallback = resizeCallback
-    window.addEventListener('resize', this.resizeCallback)
-    this.updateSceneItems()
-
-    this.lockBoard = this.getCurrentLock(this.room.state) as any
-    if (this.appStore.userRole === EduRoleTypeEnum.student) {
-      this.room.disableDeviceInputs = this.lockBoard
-    }
-  }
-
   // lock阿卡索的白板
   lockAClassBoard() {
     this.room.setGlobalState({
@@ -998,15 +886,15 @@ export class BoardStore extends ZoomController {
   }
 
   teacherFirstJoin() {
-    this.resetBoardScenes()
-    this.enroll()
-    this.lockAClassBoard()
-    this.syncLocalPersonalCourseWareList()
+    // this.resetBoardScenes()
+    // this.enroll()
+    // this.lockAClassBoard()
+    // this.syncLocalPersonalCourseWareList()
   }
 
   studentFirstJoin() {
     // this.resetBoardScenes()
-    this.studentEnroll()
+    // this.studentEnroll()
   }
 
   resetBoardScenes() {
@@ -1091,6 +979,18 @@ export class BoardStore extends ZoomController {
   @observable
   lineSelector: string = 'pen'
 
+  @observable
+  laserPoint: boolean = false
+
+  @action
+  setLaserPoint() {
+    if (this.room) {
+      this.room.setMemberState({
+        currentApplianceName: ApplianceNames.laserPointer
+      })
+    }
+  }
+
   @action
   setTool(tool: string) {
     this.selector = tool
@@ -1123,19 +1023,16 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @observable
+  currentStrokeWidth: number = 0
+
   @action
   changeStroke(value: any) {
-    // if (this.room) {
-    //   const mapping = {
-    //     [CustomMenuItemType.Thin]: 4,
-    //     [CustomMenuItemType.Small]: 8,
-    //     [CustomMenuItemType.Normal]: 12,
-    //     [CustomMenuItemType.Large]: 18,
-    //   }
-    //   this.room.setMemberState({
-    //     strokeWidth: mapping[value],
-    //   })
-    // }
+    if (this.room) {
+      this.room.setMemberState({
+        strokeWidth: value,
+      })
+    }
   }
 
   rgbToHexColor(r: number, g: number, b: number): string {
@@ -1184,17 +1081,7 @@ export class BoardStore extends ZoomController {
   currentStroke: string = ''
 
   getCurrentStroke(memberState: MemberState) {
-    // const mapping = {
-    //   [4]: CustomMenuItemType.Thin,
-    //   [8]: CustomMenuItemType.Small,
-    //   [12]: CustomMenuItemType.Normal,
-    //   [18]: CustomMenuItemType.Large,
-    // }
-    // const value = mapping[memberState.strokeWidth]
-    // if (value) {
-    //   return value
-    // }
-    return ''
+    return memberState.strokeWidth
   }
 
   @observable
@@ -1498,9 +1385,9 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools(): ToolItem[] {
-    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
-    }
+    // if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+    //   return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+    // }
     return allTools
   }
 
@@ -1718,7 +1605,7 @@ export class BoardStore extends ZoomController {
       return t("whiteboard.loading")
     }
     if (this.preloadingProgress !== -1) {
-      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+      // return t("whiteboard.downloading", {reason: this.preloadingProgress})
     }
 
     return ''
@@ -1819,7 +1706,7 @@ export class BoardStore extends ZoomController {
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
       }  
-      if (["pic"].includes(resource.type)) {
+      if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)
       }
     } catch (err) {
@@ -1837,7 +1724,7 @@ export class BoardStore extends ZoomController {
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
-      let res =await this.appStore.uploadService.handleUpload({
+      let res = await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
@@ -1903,6 +1790,143 @@ export class BoardStore extends ZoomController {
   @computed
   get allResources() {
     return this.publicResources.concat(this.personalResources)
+  }
+
+  @computed
+  get totalProgress(): number {
+    return +(this.courseWareList.filter((e => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100)).length  / this.courseWareList.length).toFixed(2) * 100
+  }
+
+  @observable
+  progressMap: Record<string, number> = {}
+
+  async destroy () {
+    this.progressMap = {}
+  }
+
+  @observable
+  downloadList: StorageCourseWareItem[] = []
+
+  // @computed
+  // get downloadList(): StorageCourseWareItem[] {
+  //   return this._downloadList.map((item: StorageCourseWareItem) => ({
+  //     ...item,
+  //     progress: get(this.progressMap, `${item.taskUuid}`, 0) / 100
+  //   }))
+  // }
+
+  async refreshState() {
+    const newCourseWareList: any = [...this.allResources]
+    for (let i = 0; i < newCourseWareList.length; i++) {
+      const item = newCourseWareList[i]
+      const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+      item.progress = res === true ? 100 : 0
+      this.progressMap[item.taskUuid] = item.progress
+      item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached
+    }
+    this.downloadList = newCourseWareList
+  }
+
+  updateDownloadById (taskUuid: string, props: Partial<StorageCourseWareItem>) {
+    const list = this.downloadList
+    const idx = list.findIndex((item: StorageCourseWareItem) => item.taskUuid === taskUuid)
+    const item = list[idx]
+    Object.assign(item, props)
+    const newList = cloneDeep(list)
+    this.downloadList = newList
+  }
+
+  async internalDownload(taskUuid: string) {
+    const isCached = await agoraCaches.hasTaskUUID(taskUuid)
+    if (isCached) {
+      EduLogger.info(`文件已缓存.... taskUuid: ${taskUuid}`)
+      return
+    }
+    try {
+      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
+      this.updateDownloadById(taskUuid, {
+        download: true
+      })
+      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+        const newProgress = get(this.progressMap, `${taskUuid}`, 0)
+        if (progress >= newProgress) {
+          const info: any = {
+            progress,
+          }
+          if (info.progress === 100) {
+            Object.assign(info, {
+              download: true
+            })
+          }
+
+          this.updateDownloadById(taskUuid, info)
+          this.progressMap[taskUuid] = progress
+        }
+        this.controller = controller
+      })
+      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`)
+    }
+  }
+
+  async startDownload(taskUuid: string) {
+    try {
+      await this.internalDownload(taskUuid)
+      await this.refreshState()
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  // TODO: need handle service worker request abort
+  async cancelDownload(taskUuid: string) {
+    try {
+      if (this.controller) {
+        this.controller.abort()
+        this.controller = undefined
+        this.updateDownloadById(taskUuid, {
+          download: false,
+          progress: 0
+        })
+      }
+      await this.refreshState()
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  async deleteSingle(taskUuid: string) {
+    try {
+      await agoraCaches.deleteTaskUUID(taskUuid)
+      await this.refreshState()
+      EduLogger.info(`删除完成.... taskUuid: ${taskUuid}`)
+    } catch (err) {
+      EduLogger.info(`删除失败.... taskUuid: ${taskUuid}`)
+    }
+  }
+
+  async deleteAllCache() {
+    try {
+      await agoraCaches.clearAllCache()
+      await this.refreshState()
+      EduLogger.info('删除全部缓存完成....')
+    } catch (err) {
+      EduLogger.info(`删除全部缓存失败....: ${err}`)
+    }
+  }
+
+  async downloadAll() {
+    try {
+      const courseItem = this.courseWareList
+      for (let i = 0; i < courseItem.length; i++) {
+        await this.startDownload(courseItem[i].taskUuid)
+      }
+      await this.refreshState()
+      EduLogger.info(`全部下载成功....`)
+    } catch (err) {
+      EduLogger.info(`全部下载失败....: ${err}`)
+    }
   }
 }
 

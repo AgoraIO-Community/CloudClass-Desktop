@@ -17,8 +17,8 @@ window.agoraCaches = agoraCaches
 
 const transformStorageCourseWares = (item: CourseWareItem): StorageCourseWareItem => {
   return {
-    calories: `${item.size}`,
-    fat: `${Date.now()}`,
+    size: `${item.size}`,
+    updateTime: `${Date.now()}`,
     resourceUuid: item.resourceUuid,
     resourceName: item.resourceName,
     taskUuid: item.taskUuid!,
@@ -31,14 +31,15 @@ const transformStorageCourseWares = (item: CourseWareItem): StorageCourseWareIte
 export type StorageFileType = string
 
 export type StorageCourseWareItem = {
-  calories: string,
-  fat: string,
+  size: string,
+  updateTime: string,
   progress: number,
   resourceName: string,
   resourceUuid: string,
   taskUuid: string,
   status: DownloadFileStatus,
-  type: StorageFileType
+  type: StorageFileType,
+  download?: boolean
 }
 
 export type DownloadListWareItem = {

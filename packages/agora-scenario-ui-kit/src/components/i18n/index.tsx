@@ -1,30 +1,36 @@
 import React from 'react'
-import { I18nLanguage, makeContainer, translate } from '~utilities'
+import i18n from "i18next";
+import { initReactI18next, I18nextProvider } from "react-i18next";
+import { config } from '~utilities/translate/config';
 
-type I18nContextType = {
-  t: (str: string) => string,
-  lang: I18nLanguage,
-  changeLanguage: (lang: I18nLanguage) => void,
+const resources = {
+  cn: {
+    translation: config['zh'],
+  },
+  en: {
+    translation: config['en'],
+  },
+};
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: "en",
+
+    keySeparator: false, // we do not use keys in form messages.welcome
+
+    interpolation: {
+      escapeValue: false // react already safes from xss
+    }
+  });
+
+export const I18nProvider = ({children}: {children: React.ReactChild}) => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      {children}
+    </I18nextProvider>
+  )
 }
 
-export const makeI18nProvider = (lang: I18nLanguage) => {
-  const {
-    Provider,
-    useContext: useI18nContext
-  } = makeContainer('I18n')
-
-  return {
-    I18nProvider: ({children}: any) => {
-      const [i18nConfig, updateI18nConfig] = React.useState<I18nLanguage>(lang)
-      const t = React.useCallback((text: string) => {
-        return translate(i18nConfig, text)
-      }, [i18nConfig])
-      return (
-        <Provider value={{t, lang: i18nConfig, changeLanguage: (text: I18nLanguage) => updateI18nConfig(text)}}>
-          {children}
-        </Provider>
-      )
-    },
-    useI18nContext: () => useI18nContext<I18nContextType>()
-  }
-}
+export { useTranslation } from 'react-i18next'

@@ -7,6 +7,7 @@ export interface TableBaseProps extends BaseProps {
   className?: string,
   children?: any,
   align?: 'center' | 'start' | 'end' | 'between' | 'around' | 'evenly'
+  onClick?: (evt: any) => Promise<void> | void;
 }
 
 export interface TableProps extends TableBaseProps {}

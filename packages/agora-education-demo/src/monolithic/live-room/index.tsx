@@ -6,6 +6,7 @@ import React from 'react'
 
 const routes: BizPageRouter[] = [
   // BizPageRouter.LaunchPage,
+  BizPageRouter.PretestPage,
   BizPageRouter.Setting,
   BizPageRouter.OneToOne,
   BizPageRouter.OneToOneIncognito,

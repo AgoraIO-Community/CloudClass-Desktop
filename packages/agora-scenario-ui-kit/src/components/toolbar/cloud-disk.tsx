@@ -1,29 +1,40 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-import { CourseWareManager } from '~components/table/index.stories'
 
-export interface CloudDiskProps extends ToolItem { }
+export interface CloudDiskProps extends ToolItem {
+    label: string,
+    children?: React.ReactElement
+}
 
 export const CloudDisk: FC<CloudDiskProps> = ({
-    label
+    label,
+    children
 }) => {
+    const [show, updateShow] = useState<boolean>(true)
     const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
-    const content = (
+
+    const actionClose = useCallback(() => {
+        setPopoverVisible(false)
+    }, [updateShow, show])
+
+    const Content = () => (
         <div className={`expand-tools cloud-disk`}>
-            <CourseWareManager/>
+            {children ? React.cloneElement(children, {actionClose}, null) : null}
         </div>
     )
     return (
         <Tooltip title={label} placement="bottom">
             <Popover
                 visible={popoverVisible}
-                onVisibleChange={(visible) => setPopoverVisible(visible)}
-                overlayClassName="expand-tools-popover"
+                onVisibleChange={(visible) => {
+                    setPopoverVisible(visible)
+                }}
+                overlayClassName="customize-dialog-popover"
                 trigger="click"
-                content={content}
+                content={<Content />}
                 placement="right">
                 <div className="tool">
                     <Icon type="cloud" />

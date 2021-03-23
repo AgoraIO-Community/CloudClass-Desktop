@@ -16,7 +16,7 @@ export interface SettingProps extends BaseProps {
     cameraList?: DeviceProps[]; // 摄像头设备数组
     cameraId?: string; // 选中的摄像头Id
     microphoneList?: DeviceProps[]; // 麦克风设备数组
-    micorophoneId?: string; // 选中的麦克风Id
+    microphoneId?: string; // 选中的麦克风Id
     speakerList?: DeviceProps[]; // 扬声器设备数组
     speakerId?: string; // 选中的扬声器Id
     hasMicrophoneVolume?: boolean; // 是否有麦克风音量slider
@@ -31,7 +31,7 @@ export const Setting: FC<SettingProps> = ({
     cameraList = [],
     cameraId,
     microphoneList = [],
-    micorophoneId,
+    microphoneId,
     speakerList = [],
     speakerId,
     hasMicrophoneVolume = true,
@@ -63,7 +63,7 @@ export const Setting: FC<SettingProps> = ({
             <div className="device-choose">
                 <div className="device-title">麦克风</div>
                 <Select 
-                    defaultValue={micorophoneId}
+                    defaultValue={microphoneId}
                     onChange={async value => {
                         await onChangeDevice('microphone', value)
                     }}

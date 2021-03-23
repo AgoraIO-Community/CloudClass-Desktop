@@ -5,6 +5,8 @@ import { Header } from '~components/layout';
 import { Popover } from '~components/popover';
 import { SignalContent } from './signal-content';
 import './index.css';
+import { Inline } from '~components';
+import { useTranslation } from 'react-i18next';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
@@ -32,6 +34,8 @@ export interface MonitorInfo {
   packetLostRate: number;
 }
 
+export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
+
 export interface BizHeaderProps {
   /**
    * 课程是否开始
@@ -49,6 +53,15 @@ export interface BizHeaderProps {
    * 系统相关信息
    */
   monitor: MonitorInfo;
+
+  /**
+   * 课程状态
+   */
+  classStatusText: string;
+
+  /**
+   * 
+   */
   onClick: (itemType: string) => void;
 }
 
@@ -56,9 +69,11 @@ export const BizHeader: FC<BizHeaderProps> = ({
   isStarted = false,
   signalQuality,
   title,
+  classStatusText,
   monitor,
   onClick
 }) => {
+
   return (
     <>
       <Header className="biz-header">
@@ -75,13 +90,9 @@ export const BizHeader: FC<BizHeaderProps> = ({
         </Popover>
         <div className="biz-header-title-wrap">
           <div className="biz-header-title">{title}</div>
-          <div>
-            <Button
-              type={isStarted ? 'danger' : 'primary'}
-              onClick={() => onClick('courseControl')}
-            >
-              {isStarted ? '下课' : '上课'}
-            </Button>
+          <div className="biz-header-title biz-subtitle">
+            <Inline color="#677386">{classStatusText}</Inline>
+            {/* <Inline color="#677386">{formatTime}</Inline> */}
           </div>
         </div>
         <div className="header-actions">

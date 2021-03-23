@@ -150,6 +150,7 @@ const ChatContainer: React.FC<any> = () => {
 const BizHeaderContainer: React.FC<any> = () => {
   return (
     <BizHeader
+      classStatusText='课前 22:22'
       isStarted={true}
       title="声网云课堂"
       signalQuality='unknown'

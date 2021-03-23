@@ -41,7 +41,7 @@ const ChildrenWrap = () => {
             cameraList={cameraList}
             cameraId={cameraId}
             microphoneList={microphoneList}
-            micorophoneId={microphoneId}
+            microphoneId={microphoneId}
             speakerList={speakerList}
             speakerId={speakerId}
             microphoneVolume={microphoneVolume}
@@ -83,7 +83,7 @@ const PretestContainer = () => {
                         cameraList={cameraList}
                         cameraId={cameraList[0].deviceId}
                         microphoneList={microphoneList}
-                        micorophoneId={microphoneList[0].deviceId}
+                        microphoneId={microphoneList[0].deviceId}
                         speakerList={speakerList}
                         speakerId={speakerList[0].deviceId}
                         isNative={isNative}

@@ -710,7 +710,7 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
-      this.appStore.boardStore.aClassInit({
+      this.appStore.boardStore.init({
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
       }).catch((err) => {
@@ -1310,6 +1310,7 @@ export class RoomStore extends SimpleInterval {
       networkLatency: +this.appStore.mediaStore.delay,
       networkQuality: this.appStore.mediaStore.networkQuality,
       packetLostRate: 0,
+      classTimeText: this.classTimeText,
     }
   }
 }

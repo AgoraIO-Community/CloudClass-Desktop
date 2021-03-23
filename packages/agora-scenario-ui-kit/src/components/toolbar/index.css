@@ -143,3 +143,11 @@
   color: #191919;
   background-color: #F9F9FC;
 }
+
+.customize-dialog-popover .popover-inner-content {
+  padding-left: 10px;
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  padding: 0;
+}

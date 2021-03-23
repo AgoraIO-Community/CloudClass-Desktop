@@ -1,9 +1,10 @@
 import { AppStore } from '@/stores/app/index';
 import { AgoraMediaDeviceEnum } from '@/types';
 import { getDeviceLabelFromStorage, GlobalStorage } from '@/utils/utils';
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduLogger, LocalUserRenderer, MediaService } from 'agora-rte-sdk';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduLogger, LocalUserRenderer, MediaService, GenericErrorWrapper } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { BehaviorSubject } from 'rxjs';
 import uuidv4 from 'uuid/v4';
 
 export class PretestStore {
@@ -134,6 +135,11 @@ export class PretestStore {
     return this.mediaService.getPlaybackVolume()
   }
 
+  @computed
+  get microphoneLevel() {
+    return this.appStore.mediaStore.totalVolume
+  }
+
   @observable
   _playbackVolume: number = 0
 
@@ -165,10 +171,23 @@ export class PretestStore {
 
   id: string = uuidv4()
 
+  error$!: BehaviorSubject<{type: 'video' | 'audio', error: boolean}>
+
   constructor(appStore: AppStore) {
     console.log("[ID] pretestStore ### ", this.id)
     this.appStore = appStore
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange.bind(this))
+  }
+
+  onDeviceTestError(cb: (evt: {type: 'video' | 'audio', error: boolean}) => void) {
+    this.error$ = new BehaviorSubject<{type: 'video' | 'audio', error: boolean}>({} as any)
+    this.error$.subscribe({
+      next: (value: any) => cb(value)
+    })
+    return () => {
+      this.error$.complete()
+      this.error$ = null as any
+    }
   }
 
   getDeviceItem(list: any[], queryDevice: {type: string, value: string, targetField: string}) {
@@ -292,6 +311,12 @@ export class PretestStore {
     }
   }
 
+  @observable
+  cameraError?: string = ''
+
+  @observable
+  microphoneError?: string = ''
+
   get mediaService(): MediaService {
     return this.appStore.eduManager.mediaService as MediaService;
   }
@@ -310,16 +335,22 @@ export class PretestStore {
 
   @action
   async openTestCamera() {
-    const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-    await this.mediaService.openTestCamera({
-      deviceId,
-      encoderConfig: {
-        ...this.appStore.sceneStore.videoEncoderConfiguration
-      }
-    })
-    this._cameraRenderer = this.mediaService.cameraTestRenderer
-    this.cameraLabel = this.mediaService.getTestCameraLabel()
-    this._cameraId = this.cameraId
+    try {
+      const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
+      await this.mediaService.openTestCamera({
+        deviceId,
+        encoderConfig: {
+          ...this.appStore.sceneStore.videoEncoderConfiguration
+        }
+      })
+      this._cameraRenderer = this.mediaService.cameraTestRenderer
+      this.cameraLabel = this.mediaService.getTestCameraLabel()
+      this._cameraId = this.cameraId
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.error$ && this.error$.next({type: 'video', error: true})
+      throw error
+    }
     // this.appStore.deviceInfo.cameraName = this.cameraLabel
   }
 
@@ -331,40 +362,52 @@ export class PretestStore {
 
   @action
   async changeTestCamera(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Default) {
-      await this.mediaService.closeTestCamera()
-      this._cameraRenderer = undefined
-      this._cameraId = deviceId
-      this.cameraLabel = ''
-    } else {
-      if (this.cameraRenderer) {
-        if (this.appStore.isElectron) {
-          await this.mediaService.changeTestCamera(deviceId)
-          this._cameraRenderer = this.mediaService.cameraRenderer
-        } else {
-          await this.mediaService.changeTestCamera(deviceId)
-        }
+    try {
+      if (deviceId === AgoraMediaDeviceEnum.Default) {
+        await this.mediaService.closeTestCamera()
+        this._cameraRenderer = undefined
+        this._cameraId = deviceId
+        this.cameraLabel = ''
       } else {
-        await this.mediaService.openTestCamera({
-          deviceId,
-          encoderConfig: {
-            ...this.appStore.sceneStore.videoEncoderConfiguration
+        if (this.cameraRenderer) {
+          if (this.appStore.isElectron) {
+            await this.mediaService.changeTestCamera(deviceId)
+            this._cameraRenderer = this.mediaService.cameraRenderer
+          } else {
+            await this.mediaService.changeTestCamera(deviceId)
           }
-        })
+        } else {
+          await this.mediaService.openTestCamera({
+            deviceId,
+            encoderConfig: {
+              ...this.appStore.sceneStore.videoEncoderConfiguration
+            }
+          })
+        }
+        this.updateTestCameraLabel()
       }
-      this.updateTestCameraLabel()
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.error$ && this.error$.next({type: 'video', error: true})
+      throw error
     }
   }
 
   @action
   async openTestMicrophone() {
-    const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
-    await this.mediaService.openTestMicrophone({deviceId})
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTestTrack
+    try {
+      const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
+      await this.mediaService.openTestMicrophone({deviceId})
+      if (this.isWeb) {
+        this._microphoneTrack = this.web.microphoneTestTrack
+      }
+      this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
+      this._microphoneId = this.microphoneId
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.error$ && this.error$.next({type: 'audio', error: true})
+      throw error
     }
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this._microphoneId = this.microphoneId
   }
 
   @action
@@ -399,17 +442,24 @@ export class PretestStore {
 
   @action
   async changeTestMicrophone(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Default) {
-      await this.mediaService.closeTestMicrophone()
-      if (this.isWeb) {
-        this._microphoneTrack = undefined
+    try {
+      if (deviceId === AgoraMediaDeviceEnum.Default) {
+        await this.mediaService.closeTestMicrophone()
+        if (this.isWeb) {
+          this._microphoneTrack = undefined
+        }
+        this._microphoneId = deviceId
+        this.microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: this._microphoneId, targetField: 'label'})
+        return
+      } else {
+        await this.mediaService.changeTestMicrophone(deviceId)
+        this.updateTestMicrophoneLabel()
       }
-      this._microphoneId = deviceId
-      this.microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: this._microphoneId, targetField: 'label'})
-      return
-    } else {
-      await this.mediaService.changeTestMicrophone(deviceId)
-      this.updateTestMicrophoneLabel()
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.error$ && this.error$.next({type: 'audio', error: true})
+      // PretestStore.errCallback(error, 'audio')
+      throw error
     }
   }
 
@@ -593,6 +643,27 @@ export class PretestStore {
       await this.changeElectronTestSpeaker(deviceId)
       return
     }
+  }
+
+  async changeSpeaker(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeTestSpeakerVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeTestMicrophoneVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+
+  async changeSpeakerVolume(value: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  async changeMicrophoneVolume(value: any) {
+    throw new Error('Method not implemented.');
   }
 
   @action

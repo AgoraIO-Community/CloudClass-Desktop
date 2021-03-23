@@ -2,7 +2,7 @@ import { useHomeStore } from '@/hooks'
 import { homeApi } from '@/services/home-api'
 import { storage } from '@/utils/utils'
 import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk'
-import { Home } from 'agora-scenario-ui-kit'
+import { Home, language$ } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useMemo, useState } from 'react'
@@ -17,6 +17,7 @@ export const HomePage = observer(() => {
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(3000)
+  // const [lang, setL]
 
   const role = useMemo(() => {
     const roles = {
@@ -78,11 +79,11 @@ export const HomePage = observer(() => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
         homeStore.setLaunchConfig({
           rtmUid: userUuid,
-          pretest: false,
+          pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           translateLanguage: "auto",
-          language: 'zh',
+          language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
           roomUuid: roomId,

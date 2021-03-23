@@ -1,10 +1,12 @@
-import { ToolCabinet, Icon } from 'agora-scenario-ui-kit'
+import { ToolCabinet, Icon, t } from 'agora-scenario-ui-kit'
 import React from 'react'
-import { OpenShareScreen } from './dialog'
-import { useSceneStore } from '@/hooks'
+import { useBoardStore, useSceneStore } from '@/hooks'
 
 export const ToolCabinetContainer = () => {
     const sceneStore = useSceneStore()
+
+    const boardStore = useBoardStore()
+
     return (
         <ToolCabinet
             value='tools'
@@ -13,18 +15,24 @@ export const ToolCabinetContainer = () => {
             cabinetList={[
                 {
                     id: 'screenShare',
-                    icon: <Icon type="tools" />,
-                    name: '屏幕共享'
+                    icon: <Icon type="share-screen" />,
+                    name: t('tools.screen_share')
                 },
                 {
                     id: 'laserPoint',
-                    icon: <Icon type="tools" />,
-                    name: '激光笔'
+                    icon: <Icon type="laser-pointer" />,
+                    name: t('tools.laser_pointer')
                 },
             ]}
             onClick={async id => {
-                if (id === 'screenShare') {
-                    await sceneStore.startOrStopSharing()
+                switch (id) {
+                    case 'screenShare': {
+                        await sceneStore.startOrStopSharing();
+                        break;
+                    }
+                    case 'laserPoint': {
+                        await boardStore.setLaserPoint()
+                    }
                 }
             }}
         />

@@ -19,10 +19,15 @@ export const roomTypes = {
   },
   [EduRoomTypeEnum.RoomSmallClass]: {
     path: BizPagePath.SmallClassPath,
-  },
-  [EduRoomTypeEnum.RoomBigClass]: {
-    path: BizPagePath.BigClassPath,
   }
+}
+
+export const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
+  const room = roomTypes[roomType]
+  if (!room) {
+    return BizPagePath.OneToOnePath
+  }
+  return room.path
 }
 
 // TODO: need fix tsx
@@ -30,10 +35,6 @@ const PageSFC = (Component: React.FC<any>) => {
   return <Component />
 }
 export const routesMap: Record<string, AppRouteComponent> = {
-  // [BizPageRouter.Setting]: {
-  //   path: '/setting',
-  //   component: () => PageSFC(SettingPage)
-  // },
   // 一对一
   [BizPageRouter.OneToOne]: {
     path: '/classroom/1v1',

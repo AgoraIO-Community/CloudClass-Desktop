@@ -6,6 +6,7 @@ import { isEmpty } from "lodash"
 import { useEffect } from "react"
 import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./web-download.file"
+import { I18nProvider, useI18nContext } from 'agora-scenario-ui-kit';
 
 export type AppStorage = Storage | MemoryStorage
 
@@ -452,7 +453,7 @@ export const registerWorker = (workerPath: string) => {
   }
   
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(workerPath).then(function (reg) {
+    navigator.serviceWorker.register(workerPath).then(function (reg: ServiceWorkerRegistration) {
       if (reg.waiting) {
         emitUpdate()
         return

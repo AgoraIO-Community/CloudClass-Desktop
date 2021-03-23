@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
 import { VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
@@ -34,5 +34,45 @@ export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
     </div>
   );
 };
+
+export const DocsSmall: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
+  const stuList = ['stu1', 'stu2', 'stu3', 'stu4', 'stu5']
+  const videoItemRef = useRef<any>()
+  const videoContainerRef = useRef<any>()
+  
+  const offsetVideo = (direction: string) => {
+    let videoWidth = videoItemRef.current.offsetWidth + 5
+    if(direction === 'left') {
+      videoContainerRef.current.scrollLeft -= videoWidth
+    }
+    if(direction === 'right') {
+      videoContainerRef.current.scrollLeft += videoWidth
+    }
+  }
+
+  return (
+    <>
+      <div className="container">
+        <div className="video-container" ref={videoContainerRef}>
+          <div className="left-container" onClick={() => {offsetVideo('left')}}>
+          <span className="offset">{"<"}</span> 
+          </div>
+          {
+            stuList.map((item: string) => {
+              return (
+                <div className="videoItem" key={item} ref={videoItemRef}>
+                  <VideoPlayer {...restProps} username={item}>{children}</VideoPlayer>
+                </div>
+              )
+            })
+          }
+          <div className="right-container" onClick={() => {offsetVideo('right')}}>
+            <span className="offset">{">"}</span> 
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
 export default meta;
