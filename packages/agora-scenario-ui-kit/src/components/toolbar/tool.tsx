@@ -4,7 +4,7 @@ import { Tooltip } from '~components/tooltip';
 
 export interface ToolItem {
   value: string;
-  label: string;
+  label: any;
   icon: IconTypes;
   isActive?: boolean;
   // render?: (tool: ToolItem) => ReactNode;

@@ -6,6 +6,7 @@ import { Button } from '~components/button';
 import { Message } from './interface';
 import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min'
+import { t } from '~components/i18n';
 
 export interface ChatProps {
   /**
@@ -88,7 +89,7 @@ export const Chat: FC<ChatProps> = ({
       ) : (
         <div className="chat-panel">
           <div className="chat-header">
-            <span className="chat-header-title">消息</span>
+            <span className="chat-header-title">{t('message')}</span>
             <span>
               {isHost ? (
                 <Icon
@@ -106,14 +107,14 @@ export const Chat: FC<ChatProps> = ({
             <div className="chat-notice">
               <span>
                 <Icon type="red-caution" />
-                <span>已开启学生禁言</span>
+                <span>{t('placeholder.enable_chat_muted')}</span>
               </span>
             </div>
           ) : null}
           <div className="chat-history">
             {!messages || messages.length === 0 ? (
               <Placeholder 
-                placeholderDesc="还没有消息"
+                placeholderDesc={t('placeholder.empty_chat')}
               />
             ) : (
               messages.map((message) => (
@@ -130,14 +131,14 @@ export const Chat: FC<ChatProps> = ({
               value={chatText}
               rows={1}
               className="chat-texting-message"
-              placeholder="请输入消息"
+              placeholder={t('placeholder.input_message')}
               disabled={!isHost && !canChatting}
               onChange={(e) => onText(e.currentTarget.value)}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
             <Button disabled={!isHost && !canChatting} onClick={onSend}>
-              发送
+              {t('send')}
             </Button>
           </div>
         </div>

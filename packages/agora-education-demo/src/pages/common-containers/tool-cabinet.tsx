@@ -10,18 +10,18 @@ export const ToolCabinetContainer = () => {
     return (
         <ToolCabinet
             value='tools'
-            label='工具箱'
+            label={t('scaffold.tools')}
             icon='tools'
             cabinetList={[
                 {
                     id: 'screenShare',
                     icon: <Icon type="share-screen" />,
-                    name: t('tools.screen_share')
+                    name: t('scaffold.screen_share')
                 },
                 {
                     id: 'laserPoint',
                     icon: <Icon type="laser-pointer" />,
-                    name: t('tools.laser_pointer')
+                    name: t('scaffold.laser_pointer')
                 },
             ]}
             onClick={async id => {

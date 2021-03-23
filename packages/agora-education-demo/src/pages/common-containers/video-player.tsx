@@ -97,16 +97,17 @@ export const VideoPlayerTeacher = observer(() => {
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
       placeholder={
-        <img
-          src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
-          alt="placeholder"
-          style={{
-            display: 'inline-block',
-            maxHeight: '100%',
-            maxWidth: '100%',
-            borderRadius: 4,
-          }}
-        />
+        <div className="camera-placeholder" />
+        // <img
+        //   src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
+        //   alt="placeholder"
+        //   style={{
+        //     display: 'inline-block',
+        //     maxHeight: '100%',
+        //     maxWidth: '100%',
+        //     borderRadius: 4,
+        //   }}
+        // />
       }
       controlPlacement={'left'}
       onOffPodiumClick={
@@ -143,16 +144,7 @@ export const VideoPlayerStudent = observer(() => {
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
       placeholder={
-        <img
-          src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
-          alt="placeholder"
-          style={{
-            display: 'inline-block',
-            maxHeight: '100%',
-            maxWidth: '100%',
-            borderRadius: 4,
-          }}
-        />
+        <div className="camera-placeholder" />
       }
       controlPlacement={'left'}
       onOffPodiumClick={

@@ -1,36 +1,28 @@
-import {
-  EduLogger,
-  UserRenderer,
-  EduAudioSourceType,
-  EduTextMessage,
-  EduSceneType,
-  EduRoleTypeEnum,
-  GenericErrorWrapper,
-  EduUser,
-  EduStream,
-  EduRoleType,
-  EduVideoSourceType,
-} from 'agora-rte-sdk';
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import uuidv4 from 'uuid/v4';
-import { SimpleInterval } from '@/stores/mixin/simple-interval';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { RoomApi } from '@/services/room-api';
-import { AppStore } from '@/stores/app/index';
-import { observable, computed, action, runInAction, reaction, IReactionDisposer } from 'mobx';
-import { t } from '@/i18n';
-import { BizLogger } from '@/utils/utils';
-import { get } from 'lodash';
-import { EduClassroomStateEnum } from '@/stores/app/scene';
-import { UploadService } from '@/services/upload-service';
-import { reportService } from '@/services/report-service';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration'
-import { QuickTypeEnum, ChatMessage} from '@/types';
-import { filterChatText } from '@/utils/utils';
-import { Button, Modal, Toast } from 'agora-scenario-ui-kit';
 import { KickEnd, RoomEnd } from '@/pages/common-containers/dialog';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { reportService } from '@/services/report-service';
+import { RoomApi } from '@/services/room-api';
+import { UploadService } from '@/services/upload-service';
+import { AppStore } from '@/stores/app/index';
+import { EduClassroomStateEnum } from '@/stores/app/scene';
+import { SimpleInterval } from '@/stores/mixin/simple-interval';
+import { ChatMessage, QuickTypeEnum } from '@/types';
+import { BizLogger, filterChatText } from '@/utils/utils';
+import {
+  EduAudioSourceType, EduLogger,
+  EduRoleType, EduRoleTypeEnum, EduSceneType,
+  EduStream, EduTextMessage,
+  EduUser,
+  EduVideoSourceType, GenericErrorWrapper, UserRenderer
+} from 'agora-rte-sdk';
+import { t, Toast, transI18n } from 'agora-scenario-ui-kit';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import { get } from 'lodash';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import uuidv4 from 'uuid/v4';
 
 dayjs.extend(duration)
 
@@ -269,21 +261,21 @@ export class RoomStore extends SimpleInterval {
   get classTimeText() {
     let timeText = ""
     const duration = this.classTimeDuration
-    const placeholder = `-- ${t('nav.short.minutes')} -- ${t('nav.short.seconds')}`
+    const placeholder = `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`
 
     // duration is always >= 0, if it's smaller than 0, display placeholder
     if(duration < 0) {
-      timeText = `${t('nav.to_start_in')}${placeholder}`
+      timeText = `${transI18n('nav.to_start_in')}${placeholder}`
       return timeText
     }
 
     switch(this.sceneStore.classState){
       case EduClassroomStateEnum.beforeStart: 
-        timeText = `${t('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+        timeText = `${transI18n('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         break;
       case EduClassroomStateEnum.start:
       case EduClassroomStateEnum.end:
-        timeText = `${t('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+        timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         break;
     }
     return timeText

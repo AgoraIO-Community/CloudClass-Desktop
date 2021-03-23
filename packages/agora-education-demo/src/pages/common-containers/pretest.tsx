@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Pretest, Modal, Button, t, useI18nContext } from 'agora-scenario-ui-kit'
-import { observer } from 'mobx-react'
 import { useAppStore, usePretestStore } from '@/hooks'
-import { RendererPlayer } from '../common-comps/renderer-player'
+import { Button, Modal, Pretest, useI18nContext } from 'agora-scenario-ui-kit'
+import { observer } from 'mobx-react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
+import { RendererPlayer } from '../common-comps/renderer-player'
 
 export const usePretestContext = () => {
+
+    const {t} = useI18nContext()
 
     const pretestStore = usePretestStore()
 
     const [cameraError, setCameraError] = useState<boolean>(false)
     const [microphoneError, setMicrophoneError] = useState<boolean>(false)
     const [isMirror, setMirror] = useState<boolean>(false)
-
-    useI18nContext()
 
     useEffect(() => {
         const uninstall = pretestStore.onDeviceTestError(({type, error}) => {
@@ -82,6 +82,7 @@ export const usePretestContext = () => {
     const VideoPreviewPlayer = useCallback(() => {
         return (
             <RendererPlayer
+                className="camera-placeholder"
                 style={{width: 320, height: 216}}
                 mirror={isMirror}
                 key={cameraId}

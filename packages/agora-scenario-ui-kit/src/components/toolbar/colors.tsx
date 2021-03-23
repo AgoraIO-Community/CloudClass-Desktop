@@ -3,6 +3,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { ToolItem } from './tool';
 import { Slider } from '~components/slider'
+import { Tooltip } from '~components/tooltip';
 
 const defaultColors = [
   '#ffffff',
@@ -70,6 +71,7 @@ export const Colors: FC<ColorsProps> = ({
     </div>
   );
   return (
+    <Tooltip title={label} placement="bottom">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -82,5 +84,6 @@ export const Colors: FC<ColorsProps> = ({
           <Icon type="triangle-down" className="triangle-icon"/>
         </div>  
       </Popover>
+    </Tooltip>
   );
 };

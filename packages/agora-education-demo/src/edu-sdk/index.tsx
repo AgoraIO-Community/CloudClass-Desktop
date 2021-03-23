@@ -58,7 +58,7 @@ const sdkConfig: SDKConfig = {
   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
 }
 
-export type LanguageEnum = "" | "en" | "zh"
+export type LanguageEnum = "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar" 
 
 export type ConvertedFile = {

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
@@ -181,6 +181,48 @@ export const VideoPlaceHolder = () => {
   return (
     <div className="placeholder-video">
       <img src="" alt=""/>
+    </div>
+  )
+}
+
+export interface VideoMarqueeListProps {
+  videoList: VideoPlayerProps[]
+}
+
+export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({videoList}) => {
+
+  const videoItemRef = useRef<any>()
+  const videoContainerRef = useRef<any>()
+  
+  const offsetVideo = (direction: string) => {
+    let videoWidth = videoItemRef.current.offsetWidth + 5
+    if(direction === 'left') {
+      videoContainerRef.current.scrollLeft -= videoWidth
+    }
+    if(direction === 'right') {
+      videoContainerRef.current.scrollLeft += videoWidth
+    }
+  
+  }
+  return (
+    <div className="container">
+      <div className="video-container" ref={videoContainerRef}>
+        <div className="left-container" onClick={() => {offsetVideo('left')}}>
+        <span className="offset">{"<"}</span> 
+        </div>
+        {
+          videoList.map((videoItem: VideoPlayerProps, idx: number) => {
+            return (
+              <div className="videoItem" key={idx} ref={videoItemRef}>
+                <VideoPlayer {...videoItem}></VideoPlayer>
+              </div>
+            )
+          })
+        }
+        <div className="right-container" onClick={() => {offsetVideo('right')}}>
+          <span className="offset">{">"}</span> 
+        </div>
+      </div>
     </div>
   )
 }

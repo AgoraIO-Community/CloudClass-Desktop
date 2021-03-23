@@ -6,7 +6,6 @@ import { Popover } from '~components/popover';
 import { SignalContent } from './signal-content';
 import './index.css';
 import { Inline } from '~components';
-import { useTranslation } from 'react-i18next';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',

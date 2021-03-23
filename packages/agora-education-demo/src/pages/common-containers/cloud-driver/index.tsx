@@ -1,6 +1,6 @@
 import { useBoardStore } from '@/hooks'
 import { EduLogger } from 'agora-rte-sdk'
-import { Icon, Tabs, TabPane, Row, Button, CloudDisk, t } from 'agora-scenario-ui-kit'
+import { Icon, Tabs, TabPane, Row, Button, CloudDisk, t, useI18nContext } from 'agora-scenario-ui-kit'
 import MD5 from 'js-md5'
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -45,7 +45,6 @@ export const CloudDriverContainer = observer((props: any) => {
     const resourceUuid = MD5(`${md5}`)
     const name = file.name.split(".")[0]
     const ext = file.name.split(".").pop()
-    // hideToast()
     const supportedFileTypes = ['bmp','jpg','png','gif','pdf','pptx','mp3','mp4','doc','docx']
 
     const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
@@ -84,7 +83,7 @@ export const CloudDriverContainer = observer((props: any) => {
   }
 
   const handleDelete = () => {
-
+    
   }
 
   console.log(' driver props ', props)
@@ -137,12 +136,14 @@ export const CloudDiskContainer = observer(() => {
 
   const boardStore = useBoardStore()
 
+  const {t} = useI18nContext()
+
   const currentActive = boardStore.selector
 
   return (
     <CloudDisk
       value='cloud'
-      label='网盘'
+      label={t('scaffold.cloud_storage')}
       icon='cloud'
       isActive={currentActive === 'cloud'}
     >
