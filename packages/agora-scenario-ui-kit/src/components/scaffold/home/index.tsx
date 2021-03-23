@@ -3,6 +3,7 @@ import { Button } from '~components/button'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
+import { DatePicker } from '~components/date-picker'
 import './index.css'
 
 const {Option}: any = Select
@@ -18,6 +19,7 @@ export interface HomeProps {
   onChangeScenario: (value: any) => void,
   onChangeText: (type: string, value: string) => void,
   onChangeDuration: (value: number) => void,
+  onChangeStartDate: (date: Date) => void,
   onClick: () => void | Promise<void>
 }
 
@@ -32,13 +34,14 @@ export const Home: React.FC<HomeProps> = ({
   onChangeScenario,
   onChangeText,
   onChangeDuration,
+  onChangeStartDate,
   onClick
 }: HomeProps) => {
 
   return (
     <Layout className="home-page">
       <Layout className="facade" direction="row">
-        <Table className="placeholder-gray-700 bg-gray-700 w-5"></Table>
+        <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
           <Row className="home-row-item">
             <Col>
@@ -95,7 +98,8 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-            <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+            {/* <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" /> */}
+              <DatePicker className="home-datepicker" onChange={onChangeStartDate}/>
             </Col>
           </Row>
           <Button className="mt-4" type="primary" size="lg" onClick={onClick}>创建教室</Button>

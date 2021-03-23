@@ -4,6 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import './index.css';
 import { Calendar } from '~components/calendar'
 import { Popover } from '~components/popover'
+import { Icon } from '~components/icon';
 import dayjs from 'dayjs'
 
 export interface DatePickerProps extends BaseProps {
@@ -35,7 +36,10 @@ export const DatePicker: FC<DatePickerProps> = ({
       placement="bottom"
       content={<Calendar selectedDate={today} onChange={onChangeDateTime}/>}
     >
-      <div className={cls}>{dayjs(selectedDate).format('YYYY/MM/DD HH:mm')}</div>
+      <div className={cls}>
+        <span>{dayjs(selectedDate).format('YYYY/MM/DD HH:mm')}</span>
+        <Icon type="red-caution" />
+      </div>
     </Popover>
   );
 };

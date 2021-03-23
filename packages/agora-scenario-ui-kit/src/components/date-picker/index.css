@@ -1,3 +1,8 @@
 .ag-date-picker {
-  display:inline-block;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  justify-content: space-between;
+  cursor: pointer;
 }

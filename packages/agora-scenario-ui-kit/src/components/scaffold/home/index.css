@@ -15,6 +15,10 @@
   justify-content: center;
 }
 
+.home-bg {
+  background-image: url('./assets/bg.png');
+}
+
 .facade .table-flex-container {
   width: 380px;
   height: 500px;
@@ -78,4 +82,9 @@
 .home-form input::placeholder,
 .home-form .rc-select-selection-placeholder {
   color: #7B88A0;
+}
+
+.home-form .home-datepicker {
+  padding-left: 15px;
+  color: ##7B88A0;
 }
