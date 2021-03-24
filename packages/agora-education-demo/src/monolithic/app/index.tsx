@@ -8,6 +8,7 @@ const routes: BizPageRouter[] = [
   BizPageRouter.LaunchPage,
   BizPageRouter.OneToOne,
   BizPageRouter.OneToOneIncognito,
+  BizPageRouter.Incognito,
   BizPageRouter.SmallClass,
   BizPageRouter.SmallClassIncognito,
   BizPageRouter.TestHomePage,
