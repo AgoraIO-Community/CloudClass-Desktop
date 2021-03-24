@@ -3,6 +3,7 @@ import { Chat, useI18nContext } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import { useBoardStore, useRoomStore, useSceneStore, useUIStore } from '@/hooks'
 import { get } from 'lodash'
+import { I18nProvider } from 'agora-scenario-ui-kit'
 
 export const useChatContext = () => {
   const boardStore = useBoardStore()
@@ -49,13 +50,13 @@ export const useChatContext = () => {
 
   useEffect(() => {
     if (boardStore.isFullScreen) {
-      uiStore.chatMinimize = true
+      uiStore.chatCollapse = false
     } else {
-      uiStore.chatMinimize = false
+      uiStore.chatCollapse = true
     }
   }, [boardStore.isFullScreen, uiStore])
 
-  const onClickMiniChat = useCallback(() => {
+  const onChangeCollapse = useCallback(() => {
     uiStore.toggleChatMinimize()
   }, [uiStore])
 
@@ -74,8 +75,8 @@ export const useChatContext = () => {
     isHost: sceneStore.isHost,
     handleSendText,
     onCanChattingChange,
-    onClickMiniChat,
-    minimize: uiStore.chatMinimize,
+    onChangeCollapse,
+    minimize: uiStore.chatCollapse,
     handleScrollTop
   }
 }
@@ -86,21 +87,23 @@ export const RoomChat: React.FC<any> = observer(() => {
     meUid, minimize, isHost,
     messageList, canChatting, text,
     onChangeText, handleSendText,
-    onCanChattingChange, onClickMiniChat
+    onCanChattingChange, onChangeCollapse
   } = useChatContext()
 
   return (
-    <Chat
-      // minimize={minimize}
-      onClickMiniChat={onClickMiniChat}
-      onCanChattingChange={onCanChattingChange}
-      canChatting={canChatting}
-      isHost={isHost}
-      uid={meUid}
-      messages={messageList}
-      chatText={text}
-      onText={onChangeText}
-      onSend={handleSendText}
-    />
+    <I18nProvider>
+      <Chat
+        collapse={minimize}
+        onCanChattingChange={onCanChattingChange}
+        canChatting={canChatting}
+        isHost={isHost}
+        uid={meUid}
+        messages={messageList}
+        chatText={text}
+        onText={onChangeText}
+        onSend={handleSendText}
+        onCollapse={onChangeCollapse}
+      />
+    </I18nProvider>
   )
 })

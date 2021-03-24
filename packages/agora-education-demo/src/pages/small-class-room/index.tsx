@@ -54,9 +54,7 @@ export const SmallClassRoom = observer(() => {
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
         <Content className="column">
-          <div className="video-marquee-pin">
-            <VideoMarqueeStudentContainer />
-          </div>
+          <VideoMarqueeStudentContainer />
           <div className="board-box">
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />

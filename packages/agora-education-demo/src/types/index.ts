@@ -7,6 +7,8 @@ export declare type ListenerCallbackType<T> = [T] extends [(...args: infer U) =>
   : [T];
 
 
+
+
 export enum BizPageRouter {
   Setting = 'setting',
   OneToOne = '1v1',
@@ -16,7 +18,7 @@ export enum BizPageRouter {
   LaunchPage = 'launch',
   PretestPage = 'pretest',
   TestHomePage = 'test_home',
-  Incognito = 'incognito'
+  Incognito = "Incognito"
 }
 
 export enum BizPagePath {

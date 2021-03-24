@@ -1059,15 +1059,23 @@ export class RoomStore extends SimpleInterval {
   
       const localStreamData = roomManager.data.localStreamData
 
-      const canPublishRTC = (localStreamData: any): boolean => {
+      const canPublishRTC = (localStreamData: any, sceneType: any): boolean => {
         const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student]
-        if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
-          return true
+        if (sceneType === 0) {
+          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+            return true
+          }
+        }
+        if (sceneType === 4) {
+          const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
+          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+            return true
+          }
         }
         return false
       }
   
-      if (canPublishRTC(localStreamData)) {
+      if (canPublishRTC(localStreamData, sceneType)) {
   
         const localStreamData = roomManager.data.localStreamData
   
@@ -1327,29 +1335,34 @@ export class RoomStore extends SimpleInterval {
   }
 
   handleCause(cause: CauseResponder<HandsUpDataTypes>) {
-    console.log('[hands-up] >>>>>>> ', JSON.stringify(cause))
+    console.log('[hands-up] ###### ', JSON.stringify(cause))
     if (cause.cmd === 501) {
       const data = cause.data
       const process = data.processUuid
       if (process === 'handsUp') {
         switch(data.actionType) {
           case CoVideoActionType.studentHandsUp: {
+            this.appStore.uiStore.addToast(transI18n("co_video.received_student_hands_up"), 'success')
             console.log('学生举手')
             break;
           }
           case CoVideoActionType.teacherAccept: {
+            this.appStore.uiStore.addToast(transI18n("co_video.received_teacher_accepted"), 'success')
             console.log('老师同意')
             break;
           }
           case CoVideoActionType.teacherRefuse: {
+            this.appStore.uiStore.addToast(transI18n("co_video.received_teacher_refused"), 'warning')
             console.log('拒绝')
             break;
           }
           case CoVideoActionType.studentCancel: {
+            this.appStore.uiStore.addToast(transI18n("co_video.received_student_cancel"), 'error')
             console.log('学生取消')
             break;
           }
           case CoVideoActionType.teacherReplayTimeout: {
+            this.appStore.uiStore.addToast(transI18n("co_video.received_message_timeout"), 'error')
             console.log('超时')
             break;
           }

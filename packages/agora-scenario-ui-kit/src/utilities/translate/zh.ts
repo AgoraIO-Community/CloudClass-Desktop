@@ -5,6 +5,13 @@ export const zh = {
     'end_class': '课程已结束',
   },
   'hands_up': '举手',
+  'co_video': {
+    'received_student_hands_up': '学生举手消息',
+    'received_teacher_accepted': '收到老师同意的消息',
+    'received_teacher_refused': '收到老师拒绝的消息',
+    'received_student_cancel': '收到老师取消的消息',
+    'received_message_timeout': '消息未响应，请重新尝试',
+  },
   'placeholder': {
     'empty_chat': '还没有消息',
     'enable_chat_muted': '已开启学生禁言',

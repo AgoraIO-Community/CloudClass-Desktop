@@ -241,13 +241,17 @@ export const VideoMarqueeStudentContainer = observer(() => {
     onOffPodiumClick,
   } = useVideoControlContext()
   return (
-    <VideoMarqueeList
-      videoStreamList={videoStreamList}
-      onCameraClick={onCameraClick}
-      onMicClick={onMicClick}
-      onSendStar={onSendStar}
-      onWhiteboardClick={onWhiteboardClick}
-      onOffPodiumClick={onOffPodiumClick}
-    />
+    videoStreamList.length ? 
+      <div className="video-marquee-pin">
+        <VideoMarqueeList
+          videoStreamList={videoStreamList}
+          onCameraClick={onCameraClick}
+          onMicClick={onMicClick}
+          onSendStar={onSendStar}
+          onWhiteboardClick={onWhiteboardClick}
+          onOffPodiumClick={onOffPodiumClick}
+        />
+      </div>
+    : null
   )
 })

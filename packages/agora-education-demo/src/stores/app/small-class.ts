@@ -35,7 +35,6 @@ export class SmallClassStore {
     return this.coVideoUsers.includes(meUid)
   }
 
-
   @computed
   get coVideoUsers() {
     const userList = get(this.roomStore, 'roomProperties.coVideo.users', [])

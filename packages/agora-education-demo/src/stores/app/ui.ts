@@ -73,7 +73,7 @@ export class UIStore {
   toastQueue: ToastType[] = []
 
   @observable
-  chatMinimize: boolean = false
+  chatCollapse: boolean = true
 
   appStore: AppStore;
 
@@ -116,7 +116,7 @@ export class UIStore {
   }
 
   toggleChatMinimize() {
-    this.chatMinimize = !this.chatMinimize
+    this.chatCollapse = !this.chatCollapse
   }
 
   @observable
@@ -130,7 +130,7 @@ export class UIStore {
   reset() {
     this.loading = false
     this.boardLoading = false
-    this.chatMinimize = false
+    this.chatCollapse = false
     this.visibleSetting = false
     this.resetStateQueue()
   }

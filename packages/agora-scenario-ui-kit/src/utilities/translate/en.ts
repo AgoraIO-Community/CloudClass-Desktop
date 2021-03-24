@@ -5,6 +5,13 @@ export const en = {
     'end_class': 'End Class',
   },
   'hands_up': 'Hands Up',
+  'co_video': {
+    'received_student_hands_up': 'Hands Up ',
+    'received_teacher_accepted': 'Teacher Accepted',
+    'received_teacher_refused': 'Teacher Refused',
+    'received_student_cancel': 'Teacher Canceled',
+    'received_message_timeout': 'No Responder, Try again',
+  },
   'signal': {
     'delay': 'Delay',
     'lose': 'Lose',
