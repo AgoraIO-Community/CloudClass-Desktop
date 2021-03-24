@@ -1,8 +1,9 @@
 import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Icon } from '~components/icon'
-import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk, ToolCabinet } from '~components/toolbar';
+import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk, ToolCabinet, UserList } from '~components/toolbar';
 import { clone } from 'lodash';
+import { list } from '~utilities';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -125,6 +126,31 @@ export const Docs: FC<ToolbarProps> = (props) => {
         )
       }
     },
+    {
+      value: 'register',
+      label: '用户列表',
+      icon: 'register',
+      component: () => {
+        return (
+          <UserList
+            value='register'
+            label='用户列表'
+            icon='register' 
+            teacherName="Peter"
+            dataSource={list(10).map((i: number) => ({
+              uid: i,
+              name: 'Lily True',
+              onPodium: false,
+              whiteboardGranted: true,
+              cameraEnabled: false,
+              micEnabled: true,
+              stars: 2,
+              canTriggerAction: true,
+            }))}
+          />
+        )
+      }
+    }
   ];
   return <Toolbar {...props} onClick={handleClick} activeMap={activeMap} tools={tools}></Toolbar>;
 };
