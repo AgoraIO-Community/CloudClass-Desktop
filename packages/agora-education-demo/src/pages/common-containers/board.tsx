@@ -7,6 +7,7 @@ import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
 import { ToolCabinetContainer } from './tool-cabinet'
+import { UserListContainer } from './user-list'
 
 export const allTools: ToolItem[] = [
   {
@@ -69,6 +70,14 @@ export const allTools: ToolItem[] = [
     icon: 'tools',
     component: () => {
       return <ToolCabinetContainer/>
+    }
+  },
+  {
+    value: 'register',
+    label: t('scaffold.user_list'),
+    icon: 'register',
+    component: () => {
+      return <UserListContainer/>
     }
   }
 ]
