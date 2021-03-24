@@ -210,6 +210,73 @@ export class EduSDKApi extends ApiBase {
     })
     return res.data
   }
+
+  async allowHandsUp(params: {
+    roomUuid: string,
+    state: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/${params.state}`,
+      method: 'PUT',
+    })
+    return res.data
+  }
+
+  async startHandsUp(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/progress`,
+      method: 'POST',
+      data: {
+        toUserUuid: params.toUserUuid,
+      }
+    })
+    return res.data
+  }
+
+  async cancelHandsUp(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/progress`,
+      method: 'DELETE',
+      data: {
+        toUserUuid: params.toUserUuid,
+      }
+    })
+    return res.data
+  }
+
+  async acceptHandsUp(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance`,
+      method: 'POST',
+      data: {
+        toUserUuid: params.toUserUuid,
+      }
+    })
+    return res.data
+  }
+
+  async refuseHandsUp(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/progress`,
+      method: 'DELETE',
+      data: {
+        toUserUuid: params.toUserUuid,
+      }
+    })
+    return res.data
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({
