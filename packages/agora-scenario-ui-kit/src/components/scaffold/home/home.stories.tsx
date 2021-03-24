@@ -51,7 +51,7 @@ export const HomePage = () => {
       onChangeDuration={(v: number) => {
         setDuration(v)
       }}
-      onChangeStartDate={onChangeStartDate}
+      onChangeDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}

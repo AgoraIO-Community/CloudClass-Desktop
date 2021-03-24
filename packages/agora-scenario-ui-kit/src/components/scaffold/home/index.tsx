@@ -99,7 +99,7 @@ export const Home: React.FC<HomeProps> = ({
             </Col>
             <Col>
             {/* <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" /> */}
-              <DatePicker className="home-datepicker" onChange={onChangeStartDate}/>
+              <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/>
             </Col>
           </Row>
           <Button className="mt-4" type="primary" size="lg" onClick={onClick}>创建教室</Button>

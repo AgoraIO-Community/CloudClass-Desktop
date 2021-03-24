@@ -9,10 +9,12 @@ import dayjs from 'dayjs'
 
 export interface DatePickerProps extends BaseProps {
   className?: string
+  onChangeDate?: (date:Date) => void
 }
 
 export const DatePicker: FC<DatePickerProps> = ({
   className,
+  onChangeDate,
   ...restProps
 }) => {
   let today = new Date()
@@ -25,6 +27,7 @@ export const DatePicker: FC<DatePickerProps> = ({
 
   const onChangeDateTime = (date:Date) => {
     setSelectedDate(date)
+    onChangeDate && onChangeDate(date)
   }
 
   return (
