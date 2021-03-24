@@ -43,15 +43,8 @@ export class AgoraRecordApi extends ApiBase {
       method: 'POST',
       data: {
         "recordingConfig": {
-          "maxIdleTime": 900
+          "maxIdleTime": 900,
         },
-        // "storageConfig": {
-        //     "accessKey": "",
-        //     "region": "",
-        //     "bucket": "",
-        //     "secretKey": "",
-        //     "vendor": ""
-        // }
       }
     })
     return {

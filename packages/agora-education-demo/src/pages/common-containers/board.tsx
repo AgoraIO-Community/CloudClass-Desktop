@@ -1,6 +1,5 @@
-import { useBoardStore, useUIStore,  } from '@/hooks'
-import { Icon, TabPane, Tabs, Toolbar, ZoomController, ZoomItemType, t, useI18nContext } from 'agora-scenario-ui-kit'
-import { ToolItem } from 'agora-scenario-ui-kit/lib/components/toolbar/tool'
+import { useBoardStore, useUIStore } from '@/hooks'
+import { Icon, t, TabPane, Tabs, Toolbar, ToolItem, useI18nContext, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { CloudDiskContainer } from './cloud-driver'
@@ -99,6 +98,9 @@ const useWhiteboardState = () => {
   }, [boardRef.current, boardStore])
 
   const handleToolBarChange = async (type: string) => {
+
+    console.log('type>>>>handleToolBarChange ', type)
+
     boardStore.setTool(type)
   }
 

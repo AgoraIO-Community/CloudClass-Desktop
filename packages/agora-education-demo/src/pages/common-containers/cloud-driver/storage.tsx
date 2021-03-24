@@ -32,7 +32,7 @@ export const StorageContainer = observer(() => {
             onResourceClick(id)
           }}>
             <IconBox iconType={type} style={{ marginRight: '6px' }} />
-            <Inline color="#191919">{name}</Inline>
+            <Inline className="filename" color="#191919">{name}</Inline>
           </Col>
           <Col>
             <Inline color="#586376">{size}</Inline>

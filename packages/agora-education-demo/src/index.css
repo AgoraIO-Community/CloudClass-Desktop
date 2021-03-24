@@ -12,6 +12,11 @@ html, body, #root {
   z-index: 0;
 }
 
+.edu-room .video-player {
+  border: 2px solid white;
+  margin-top: -2px;
+}
+
 .edu-room .layout {
   position: relative;
 }
@@ -46,6 +51,7 @@ html, body, #root {
   height: 100%;
   align-items: center;
   flex-direction: column;
+  z-index: 2;
 }
 
 .agora-board-resources input[type=file] {
@@ -62,4 +68,8 @@ html, body, #root {
 
 #netless {
   z-index: 0;
+}
+
+.filename {
+  max-width: 90px;
 }

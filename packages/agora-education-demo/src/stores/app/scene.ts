@@ -1004,7 +1004,7 @@ export class SceneStore extends SimpleInterval {
       }
     }
     return {
-      placeHolderType: 'left',
+      placeHolderType: 'loading',
       text: t(`placeholder.teacher_Left`)
     }
   }
@@ -1025,7 +1025,7 @@ export class SceneStore extends SimpleInterval {
       }
     }
     return {
-      placeHolderType: 'left',
+      placeHolderType: 'loading',
       text: t(`placeholder.student_Left`)
     }
   }

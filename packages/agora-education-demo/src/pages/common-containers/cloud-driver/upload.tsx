@@ -86,7 +86,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
             </Col>
             <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
+              <Inline className="filename" color="#191919">{name}</Inline>
             </Col>
             <Col>
               <Inline color="#586376">{size}</Inline>

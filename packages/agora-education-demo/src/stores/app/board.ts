@@ -674,8 +674,10 @@ export class BoardStore extends ZoomController {
   }
 
   updateActiveMap () {
-    // golable state
-    this.activeMap['follow'] = !!get(this.room.state.globalState, 'follow', 0)
+    this.activeMap = {
+      ...this.activeMap,
+      ['follow']: !!get(this.room.state.globalState, 'follow', 0)
+    }
   }
 
   pptAutoFullScreen() {
@@ -817,13 +819,13 @@ export class BoardStore extends ZoomController {
         this.updateActiveMap()
         const followFlag = !!state.globalState.follow
         // TODO: 监听follow的逻辑
-        if( this.roleIsTeacher ) {
+        if(this.roleIsTeacher) {
           if (followFlag) {
             this.boardClient.followMode(ViewMode.Broadcaster)
           } else {
             this.boardClient.followMode(ViewMode.Freedom)
           }
-        } else if ( this.roleIsStudent ) {
+        } else if (this.roleIsStudent) {
           if (followFlag) {
             this.boardClient.followMode(ViewMode.Follower)
           }
@@ -1021,10 +1023,23 @@ export class BoardStore extends ZoomController {
   @action
   setTool(tool: string) {
 
+    console.log('tool ', tool)
+
     if (tool === 'follow') {
       // TODO: 左侧菜单点击切换逻辑，纯处理active
       const resultNumber = !this.activeMap['follow'] ? 1 : 0
       this.room.setGlobalState({follow: resultNumber})
+      return
+    }
+
+    if (tool === 'blank-page') {
+      const room = this.room
+      if (room.isWritable) {
+        room.setScenePath('/init')
+        const newIndex = room.state.sceneState.scenes.length
+        room.putScenes("/", [{name: `${newIndex}`}], newIndex)
+        room.setSceneIndex(newIndex)
+      }
       return
     }
 
@@ -1042,18 +1057,6 @@ export class BoardStore extends ZoomController {
       this.room.setMemberState({
         currentApplianceName: appliance
       })
-      return
-    }
-
-    if (tool === 'blank-page') {
-      const room = this.room
-      if (room.isWritable) {
-        room.setScenePath('/init')
-        const newIndex = room.state.sceneState.scenes.length
-        room.putScenes("/", [{name: `${newIndex}`}], newIndex)
-        // room.putScenes(currentPath, [{}], newIndex)
-        room.setSceneIndex(newIndex)
-      }
       return
     }
   }
@@ -1081,7 +1084,6 @@ export class BoardStore extends ZoomController {
 
   @action
   changeHexColor(colorHex: string) {
-    console.log('colorHex', colorHex)
     const r = parseInt(colorHex.slice(1, 3), 16);
     const g = parseInt(colorHex.slice(3, 5), 16);
     const b = parseInt(colorHex.slice(5, 7), 16);

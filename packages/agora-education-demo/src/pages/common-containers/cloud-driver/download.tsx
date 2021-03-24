@@ -25,7 +25,7 @@ export const DownloadContainer = observer(() => {
           <Row height={10} border={1} key={`${id}${idx}`}>
             <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
+              <Inline className="filename" color="#191919">{name}</Inline>
             </Col>
             <Col>
               <Inline color="#586376">{size}</Inline>

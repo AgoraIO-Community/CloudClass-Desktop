@@ -37,9 +37,9 @@ export const ColorsContainer = observer(() => {
       label={t('scaffold.color')}
       icon='color'
       colorSliderMin={1}
-      colorSliderMax={100}
+      colorSliderMax={31}
       colorSliderDefault={strokeWidth}
-      colorSliderStep={1}
+      colorSliderStep={0.3}
       onSliderChange={changeStroke}
       activeColor={activeColor}
       onClick={changeHexColor}
