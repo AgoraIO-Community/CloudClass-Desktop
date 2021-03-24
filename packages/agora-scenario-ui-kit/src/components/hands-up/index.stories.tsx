@@ -1,10 +1,12 @@
-import React, {useState, useEffect} from 'react'
 import { Meta } from '@storybook/react';
-import { HandsUp, HandsUpState, StudentHandsUp, StudentsHandsUpList } from '~components/hands-up'
+import React, { useCallback, useEffect, useState } from 'react';
+import { HandsUpManager, HandsUpSender, HandsUpState, StudentHandsUp, StudentsHandsUpList } from '~components/hands-up';
+import { I18nProvider } from '~components/i18n';
+import { StudentInfo } from './types';
 
 const meta: Meta = {
     title: 'Components/HandsUp',
-    component: HandsUp,
+    component: HandsUpManager,
     argTypes: {
         handsUpState: {
             control: {
@@ -19,47 +21,65 @@ type DocsProps = {
     handsUpState: HandsUpState;
 }
 
-export const Docs = ({ handsUpState }: DocsProps) => {
-    let [animStart, setAnimStart] = useState<boolean>(false)
-    useEffect(() => {
-        let flag = handsUpState === 'received'
-        if (flag) {
-            setAnimStart(flag)
-            setTimeout(() => {
-                setAnimStart(false)
-            }, 1500)
+export const Docs = ({handsUpState, animStart}: any) => {
+
+    const [list, updateList] = useState<StudentInfo[]>([...'.'.repeat(5)].map((_, idx: number) => ({
+        userName: `${idx}_name`,
+        userUuid: `${idx}`,
+        coVideo: false,
+    })))
+
+    const handleUpdateList = useCallback((type: string, info: StudentInfo) => {
+        if (type === 'confirm') {
+            updateList(
+                list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid)
+            )
         }
-    }, [handsUpState])
+
+        if (type === 'cancel') {
+            updateList(
+                list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid)
+            )
+        }
+    }, [list, updateList])
+
     return (
-        <>
-            <div className="mt-4">
-                <HandsUp
+        <div className="flex justify-center items-center m-screen h-screen">
+            <I18nProvider>
+                <HandsUpManager
+                    unreadCount={9}
                     state={handsUpState}
-                    animStart={animStart}
+                    onClick={handleUpdateList}
+                    studentList={list}
                 />
-            </div>
-            <div className="mt-4">
-                <StudentHandsUp
-                    student={{
-                        id: '1',
-                        name: 'Peter'
-                    }}
-                />
-            </div>
-            <div className="mt-4">
-                <StudentsHandsUpList
-                    students={[...'.'.repeat(100)].map((item, index) => ({
-                        id: 'student' + (index + 1),
-                        name: 'student' + (index + 1),
-                    }))}
-                />
-            </div>
-        </>
+            </I18nProvider>
+        </div>
     )
 }
 
 Docs.args = {
-    handsUpState: 'default'
+    handsUpState: 'default',
+    animStart: false
+}
+
+export const StudentHandUp = () => {
+
+    const [isActive, setActive] = useState<boolean>(false)
+
+    return (
+        <div className="flex justify-center items-center m-screen h-screen">
+            <I18nProvider>
+                <HandsUpSender
+                  isActive={isActive}
+                  onClick={() => setActive(!isActive)}
+                />
+            </I18nProvider>
+        </div>
+    )
+}
+
+StudentHandUp.args = {
+    isActive: false,
 }
 
 export default meta;

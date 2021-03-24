@@ -43,3 +43,27 @@
     font-size: 14px;
     color: #586376;
 }
+
+
+.students-hands-up .hands-up-card {
+    min-height: 37px !important;
+    height: auto !important;
+    width: 210px !important;
+    max-height: 150px !important;
+}
+
+.hands-up .unread-count {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #F04C36;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

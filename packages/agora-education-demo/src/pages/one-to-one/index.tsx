@@ -1,18 +1,17 @@
-import { useBoardStore, useRoomStore, useUIStore } from '@/hooks'
+import { useBoardStore, useRoomStore } from '@/hooks'
 import { useEffectOnce } from '@/hooks/utils'
-import { Aside, Card, Content, Layout, Loading } from 'agora-scenario-ui-kit'
+import { Aside, Content, Layout } from 'agora-scenario-ui-kit'
+import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { WhiteboardContainer } from '../common-containers/board'
 import { RoomChat } from '../common-containers/chat'
 import { DialogContainer } from '../common-containers/dialog'
 import { LoadingContainer } from '../common-containers/loading'
 import { NavigationBar } from '../common-containers/nav'
-import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/video-player'
-import classnames from 'classnames';
-import './1v1.style.css'
 import { ScreenSharePlayerContainer } from '../common-containers/screen-share-player'
-import { SettingContainer } from '../common-containers/setting'
+import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/video-player'
+import './1v1.style.css'
 
 const use1v1Store = () => {
   const roomStore = useRoomStore()
@@ -32,8 +31,8 @@ const VideoList = observer(() => {
   return (
     !boardStore.isFullScreen ?
     <>
-      <VideoPlayerTeacher/>
-      <VideoPlayerStudent/>
+      <VideoPlayerTeacher />
+      <VideoPlayerStudent controlPlacement="left" />
     </> : null
   )
 })

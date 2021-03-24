@@ -44,7 +44,7 @@ export const ZoomController: FC<ZoomControllerProps> = ({
                     <Icon type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
                 </Tooltip>
                 :
-                <Tooltip title={t('tool.reducation')} placement="top">
+                <Tooltip title={t('tool.reduction')} placement="top">
                     <Icon type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
                 </Tooltip>
             }

@@ -6,10 +6,7 @@ import { Popover } from '~components/popover';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 
-export interface VideoPlayerProps extends BaseProps {
-  /**
-   * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
-   */
+export interface BaseVideoPlayerProps {
   isHost?: boolean;
   /**
    * 用户的唯一标识
@@ -27,6 +24,10 @@ export interface VideoPlayerProps extends BaseProps {
    * 是否你展示全体下讲台，默认 false
    */
   hideOffPodium?: boolean;
+  /**
+   * 是否展示star，默认 false
+   */
+  hideStars?: boolean;
   /**
    * hover 时控制条 展示的位置
    */
@@ -55,6 +56,14 @@ export interface VideoPlayerProps extends BaseProps {
    * 是否授权操作白板
    */
   whiteboardGranted?: boolean;
+}
+
+type VideoPlayerType = BaseVideoPlayerProps & BaseProps
+
+export interface VideoPlayerProps extends VideoPlayerType {
+  /**
+   * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
+   */
   /**
    * 点击摄像头的按钮时的回调
    */
@@ -83,15 +92,16 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   className,
   placeholder,
   controlPlacement,
-  hideControl,
   stars = 0,
-  isHost,
   username,
   micEnabled,
   micVolume,
   cameraEnabled,
   whiteboardGranted,
-  hideOffPodium,
+  isHost = false,
+  hideControl = false,
+  hideOffPodium = false,
+  hideStars = false,
   onCameraClick,
   onMicClick,
   onOffPodiumClick,
@@ -128,11 +138,11 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             />
           )}
           <Icon
-            className={cameraEnabled ? '' : 'yellow'}
+            className={whiteboardGranted ? 'yellow': ''}
             type="whiteboard"
             onClick={() => onWhiteboardClick(uid)}
           />
-          <Icon type="star-outline" onClick={() => onSendStar(uid)} />
+          {hideStars ? null : <Icon type="star-outline" onClick={() => onSendStar(uid)} />}
         </>
       ) : null}
     </div>
@@ -185,11 +195,46 @@ export const VideoPlaceHolder = () => {
   )
 }
 
+export type VideoItemProps = Omit<VideoPlayerProps, 
+  | 'onCameraClick'
+  | 'onMicClick'
+  | 'onOffPodiumClick'
+  | 'onWhiteboardClick'
+  | 'onSendStar'
+>
+
 export interface VideoMarqueeListProps {
-  videoList: VideoPlayerProps[]
+  videoStreamList: BaseVideoPlayerProps[],
+  /**
+  * 点击摄像头的按钮时的回调
+  */
+  onCameraClick: (uid: string | number) => Promise<any>;
+  /**
+  * 点击麦克风按钮时的回调
+  */
+  onMicClick: (uid: string | number) => Promise<any>;
+  /**
+  * 全体下讲台
+  */
+  onOffPodiumClick: (uid: string | number) => Promise<any>;
+  /**
+  * 点击白板操作授权按钮时的回调
+  */
+  onWhiteboardClick: (uid: string | number) => Promise<any>;
+  /**
+  * 发送星星给学生
+  */
+  onSendStar: (uid: string | number) => Promise<any>;
 }
 
-export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({videoList}) => {
+export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
+  videoStreamList,
+  onCameraClick,
+  onMicClick,
+  onOffPodiumClick,
+  onWhiteboardClick,
+  onSendStar
+}) => {
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null)
 
@@ -264,9 +309,16 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({videoList}) =
       </span> 
       </div>
       {
-        videoList.map((videoItem: VideoPlayerProps, idx: number) => 
+        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => 
           <div className="video-item" key={idx} ref={attachVideoItem}>
-            <VideoPlayer {...videoItem}></VideoPlayer>
+            <VideoPlayer
+              {...videoStream}
+              onCameraClick={onCameraClick}
+              onMicClick={onMicClick}
+              onOffPodiumClick={onOffPodiumClick}
+              onWhiteboardClick={onWhiteboardClick}
+              onSendStar={onSendStar}
+              ></VideoPlayer>
           </div>
         )
       }

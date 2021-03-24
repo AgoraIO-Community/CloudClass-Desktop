@@ -777,9 +777,7 @@ export class BoardStore extends ZoomController {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
         this.isFullScreen = get(state, 'globalState.isFullScreen', false)
-        if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
-          this.enableStatus = get(state, 'globalState.granted', 'disable')
-        }
+        this.updateBoardState()
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
             this.room.disableDeviceInputs = true
@@ -797,8 +795,6 @@ export class BoardStore extends ZoomController {
       }
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
-        // this.currentArrow = this.getCurrentArrow(state.memberState)
-        // this.currentFontSize = this.getCurrentFontSize(state.memberState)
       }
       if (state.zoomScale) {
         runInAction(() => {
@@ -1422,9 +1418,9 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools(): ToolItem[] {
-    // if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-    //   return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
-    // }
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+    }
     return allTools
   }
 
@@ -1500,12 +1496,18 @@ export class BoardStore extends ZoomController {
 
   @action
   async grantUserPermission(userUuid: string) {
-    await this.boardService.updateBoardUserState(userUuid, EnumBoardState.grantPermission)
+    if (this.boardClient) {
+      this.boardClient.grantPermission(userUuid)
+    }
+    // await this.boardService.updateBoardUserState(userUuid, EnumBoardState.grantPermission)
   }
 
   @action
   async revokeUserPermission(userUuid: string) {
-    await this.boardService.updateBoardUserState(userUuid, EnumBoardState.revokePermission)
+    if (this.boardClient) {
+      this.boardClient.revokePermission(userUuid)
+    }
+    // await this.boardService.updateBoardUserState(userUuid, EnumBoardState.revokePermission)
   }
 
   get userRole () {

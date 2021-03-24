@@ -21,7 +21,8 @@
 }
 
 .layout-aside {
-  @apply flex flex-col border-l border-gray-100 h-full w-72;
+  @apply flex flex-col border-l border-gray-100 h-full;
   /* width: 19rem; */
+  min-width: 18rem;
   @apply overflow-hidden;
 }

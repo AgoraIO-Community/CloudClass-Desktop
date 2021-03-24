@@ -66,10 +66,13 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
   const list = [...'.'.repeat(size)].map((_, i: number) => ({
     ...student,
     username: `${i}-${student.username}`,
-  })) as any
+    children: (<></>)
+  })) as any[]
     
   return (
-    <VideoMarqueeList videoList={list}>
+
+    //@ts-ignore
+    <VideoMarqueeList videoStreamList={list}>
     </VideoMarqueeList>
   )
 }

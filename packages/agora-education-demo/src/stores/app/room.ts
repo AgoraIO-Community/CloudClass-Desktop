@@ -1,3 +1,4 @@
+import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { KickEnd, RoomEnd } from '@/pages/common-containers/dialog';
@@ -23,6 +24,7 @@ import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import uuidv4 from 'uuid/v4';
+import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
 
 dayjs.extend(duration)
 
@@ -105,18 +107,6 @@ export const networkQualities: {[key: string]: string} = {
   'down': 'network-bad',
   'unknown': 'network-normal',
 }
-
-export type EduMediaStream = {
-  streamUuid: string
-  userUuid: string
-  renderer?: UserRenderer
-  account: string
-  local: boolean
-  audio: boolean
-  video: boolean
-  hideControl: boolean
-}
-
 export class RoomStore extends SimpleInterval {
 
   static resolutions: any[] = [
@@ -342,9 +332,14 @@ export class RoomStore extends SimpleInterval {
     return this.appStore.sceneStore
   }
 
+  smallClassStore: SmallClassStore;
+
+  coVideoUsers: Record<string, any> = {};
+
   constructor(appStore: AppStore) {
     super()
     this.appStore = appStore
+    this.smallClassStore = new SmallClassStore(this)
   }
 
   @action
@@ -357,6 +352,7 @@ export class RoomStore extends SimpleInterval {
     this.joined = false
     this.roomJoined = false
     this.time = 0
+    this.coVideoUsers = {}
     this.classroomSchedule = undefined
     this.disposers.forEach(disposer => disposer())
     clearTimeout(this.timer)
@@ -631,17 +627,38 @@ export class RoomStore extends SimpleInterval {
     return this.appStore.eduManager
   }
 
-  getStudentConfig() {
+  getSessionConfig(): {sceneType: number, userRole: string} {
+    const userRole = this.roomInfo.userRole
     const roomType = +this.roomInfo.roomType
-    if (roomType === 2 || roomType === 4) {
+
+    if (userRole === EduRoleTypeEnum.student) {
+      const studentRoleConfig = {
+        [EduSceneType.Scene1v1]: 'broadcaster',
+        [EduSceneType.SceneMedium]: 'audience'
+      }
       return {
-        sceneType: EduSceneType.SceneLarge,
-        userRole: 'audience'
+        sceneType: roomType,
+        userRole: studentRoleConfig[roomType]
       }
     }
+
+    if (userRole === EduRoleTypeEnum.teacher) {
+      return {
+        sceneType: roomType,
+        userRole: 'host'
+      }
+    }
+
+    if (userRole === EduRoleTypeEnum.assistant) {
+      return {
+        sceneType: roomType,
+        userRole: 'assistant'
+      }
+    }
+    
     return {
       sceneType: roomType,
-      userRole: 'broadcaster'
+      userRole: 'invisible'
     }
   }
 
@@ -915,6 +932,9 @@ export class RoomStore extends SimpleInterval {
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
+
+          cause && this.handleCause(cause)
+
           this.roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
         
@@ -978,10 +998,10 @@ export class RoomStore extends SimpleInterval {
         console.log(' room-chat-message ', JSON.stringify(evt))
         BizLogger.info('room-chat-message', evt)
       })
-      const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
-      const { sceneType } = this.getStudentConfig()
+      // const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
+      const { sceneType, userRole } = this.getSessionConfig()
       await roomManager.join({
-        userRole: EduRoleType[userRole],
+        userRole: userRole,
         roomUuid,
         userName: `${this.roomInfo.userName}`,
         userUuid: `${this.userUuid}`,
@@ -1303,6 +1323,38 @@ export class RoomStore extends SimpleInterval {
       networkQuality: this.appStore.mediaStore.networkQuality,
       packetLostRate: 0,
       classTimeText: this.classTimeText,
+    }
+  }
+
+  handleCause(cause: CauseResponder<HandsUpDataTypes>) {
+    console.log('[hands-up] >>>>>>> ', JSON.stringify(cause))
+    if (cause.cmd === 501) {
+      const data = cause.data
+      const process = data.processUuid
+      if (process === 'handsUp') {
+        switch(data.actionType) {
+          case CoVideoActionType.studentHandsUp: {
+            console.log('学生举手')
+            break;
+          }
+          case CoVideoActionType.teacherAccept: {
+            console.log('老师同意')
+            break;
+          }
+          case CoVideoActionType.teacherRefuse: {
+            console.log('拒绝')
+            break;
+          }
+          case CoVideoActionType.studentCancel: {
+            console.log('学生取消')
+            break;
+          }
+          case CoVideoActionType.teacherReplayTimeout: {
+            console.log('超时')
+            break;
+          }
+        }
+      }
     }
   }
 }

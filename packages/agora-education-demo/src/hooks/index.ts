@@ -1,3 +1,4 @@
+import { SmallClassStore } from './../stores/app/small-class';
 import {
   RoomStore,
   AppStore,
@@ -37,6 +38,11 @@ export const useSceneStore = (): SceneStore => {
 export const useRoomStore = (): RoomStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.roomStore
+}
+
+export const useSmallClassStore = (): SmallClassStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.roomStore.smallClassStore
 }
 
 export const useUIStore = (): UIStore => {

@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { VideoPlayer, CameraPlaceHolder } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import { useSceneStore } from '@/hooks'
+import { useBoardStore, useSceneStore } from '@/hooks'
 import { RendererPlayer } from '../common-comps/renderer-player'
 import { EduMediaStream } from '@/stores/app/scene'
 import { EduRoleTypeEnum, EduStream } from 'agora-rte-sdk'
 import { get } from 'lodash'
+import { VideoMarqueeList } from 'agora-scenario-ui-kit'
 
 type VideoAction = (uid: any) => Promise<any>
 
@@ -13,17 +14,29 @@ type VideoContainerContext = {
   teacherStream: EduMediaStream,
   studentStreams: EduMediaStream[],
   firstStudent: EduMediaStream,
+  videoStreamList: any[],
   onCameraClick: VideoAction,
   onMicClick: VideoAction,
   onSendStar: VideoAction,
-  onWhiteboardClick: VideoAction 
+  sceneVideoConfig: {
+    hideOffPodium: boolean,
+    isHost: boolean,
+  },
+  onWhiteboardClick: VideoAction,
+  onOffPodiumClick: VideoAction
 }
 
 const useVideoControlContext = (): VideoContainerContext => {
 
   const sceneStore = useSceneStore()
+  const boardStore = useBoardStore()
+  const isHost = sceneStore.isHost
   const teacherStream = sceneStore.teacherStream
   const studentStreams = sceneStore.studentStreams
+
+  const firstStudent = studentStreams[0]
+
+  const sceneVideoConfig = sceneStore.sceneVideoConfig
 
   const userRole = sceneStore.roomInfo.userRole
 
@@ -56,40 +69,103 @@ const useVideoControlContext = (): VideoContainerContext => {
   }, [userRole, sceneStore])
 
   const onWhiteboardClick = useCallback(async (userUuid: any) => {
-    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
-    if (targetStream) {
-      const isLocal = sceneStore.roomInfo.userUuid === userUuid
-      if (targetStream.hasAudio) {
-        await sceneStore.revokeBoard(userUuid, isLocal)
+    const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)
+    if (isHost) {
+      if (targetUser) {
+        await boardStore.revokeUserPermission(userUuid)
       } else {
-        await sceneStore.grantBoard(userUuid, isLocal)
+        await boardStore.grantUserPermission(userUuid)
       }
     }
-  }, [userRole, sceneStore])
+  }, [isHost, boardStore])
+
+  const videoStreamList = useMemo(() => {
+
+    //@ts-ignore TODO: student stream empty workaround need fix design
+    if (firstStudent && firstStudent.defaultStream === true) {
+      return []
+    }
+
+    return studentStreams.map((stream: EduMediaStream) => ({
+      isHost: isHost,
+      hideOffPodium: sceneVideoConfig.hideOffPodium,
+      username: stream.account,
+      stars: stream.stars,
+      uid: stream.userUuid,
+      micEnabled: stream.audio,
+      cameraEnabled: stream.video,
+      whiteboardGranted: stream.whiteboardGranted,
+      micVolume: stream.micVolume,
+      controlPlacement: 'bottom',
+      hideControl: stream.hideControl,
+      children: (
+        <>
+        <CameraPlaceHolder state={stream.holderState} />
+        {
+          stream.renderer && stream.video ?
+          <RendererPlayer
+            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
+          />
+          : null
+        }
+        </>
+      )
+    }))
+  }, [
+    firstStudent,
+    studentStreams,
+    sceneVideoConfig.hideOffPodium,
+    sceneVideoConfig.isHost
+  ])
+
+  const onOffPodiumClick = useCallback(async (userUuid: any) => {
+    // const sceneStore = sceneStore.grantUsers.find((uid: string) => uid === userUuid)
+    if (isHost) {
+      // if (targetUser) {
+      //   await sceneStore.revokeUserPermission(userUuid)
+      // } else {
+      //   await sceneStore.grantUserPermission(userUuid)
+      // }
+    }
+  }, [isHost, sceneStore])
 
   return {
     teacherStream,
-    firstStudent: studentStreams[0],
+    firstStudent,
     studentStreams,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
+    onOffPodiumClick,
+    sceneVideoConfig,
+    videoStreamList,
   }
 }
 
 
 export const VideoPlayerTeacher = observer(() => {
 
-  const {teacherStream: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = useVideoControlContext()
+  const {
+    teacherStream: userStream,
+    onCameraClick,
+    onMicClick,
+    onSendStar,
+    onWhiteboardClick,
+    onOffPodiumClick,
+    sceneVideoConfig
+  } = useVideoControlContext()
 
   return (
     <VideoPlayer
+      isHost={sceneVideoConfig.isHost}
+      hideOffPodium={sceneVideoConfig.hideOffPodium}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
+      hideControl={userStream.hideControl}
       whiteboardGranted={userStream.whiteboardGranted}
       micVolume={userStream.micVolume}
       onCameraClick={onCameraClick}
@@ -97,11 +173,7 @@ export const VideoPlayerTeacher = observer(() => {
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
       controlPlacement={'left'}
-      onOffPodiumClick={
-        async (uid: any) => {
-
-        }
-      }
+      onOffPodiumClick={onOffPodiumClick}
     >
       <CameraPlaceHolder state={userStream.holderState} />
       {
@@ -114,12 +186,24 @@ export const VideoPlayerTeacher = observer(() => {
     </VideoPlayer>)
 })
 
-export const VideoPlayerStudent = observer(() => {
+export type VideoProps = {
+  controlPlacement: 'left' | 'bottom'
+}
 
-  const {firstStudent: userStream, onCameraClick, onMicClick, onSendStar, onWhiteboardClick } = useVideoControlContext()
+export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement}) => {
+
+  const {
+    firstStudent: userStream,
+    onCameraClick, onMicClick,
+    onSendStar, onWhiteboardClick,
+    sceneVideoConfig,
+    onOffPodiumClick,
+  } = useVideoControlContext()
   
   return (
     <VideoPlayer
+      isHost={sceneVideoConfig.isHost}
+      hideOffPodium={sceneVideoConfig.hideOffPodium}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
@@ -127,19 +211,13 @@ export const VideoPlayerStudent = observer(() => {
       cameraEnabled={userStream.video}
       whiteboardGranted={userStream.whiteboardGranted}
       micVolume={userStream.micVolume}
+      hideControl={userStream.hideControl}
       onCameraClick={onCameraClick}
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
-      // placeholder={
-      //   <div className="camera-placeholder" />
-      // }
-      controlPlacement={'left'}
-      onOffPodiumClick={
-        async (uid: any) => {
-
-        }
-      }
+      onOffPodiumClick={onOffPodiumClick}
+      controlPlacement={controlPlacement}
     >
       <CameraPlaceHolder state={userStream.holderState} />
       {
@@ -153,9 +231,23 @@ export const VideoPlayerStudent = observer(() => {
   )
 })
 
-export const VideoMarqueeStudentList = observer(() => {
+export const VideoMarqueeStudentContainer = observer(() => {
+  const {
+    videoStreamList,
+    onCameraClick,
+    onMicClick,
+    onSendStar,
+    onWhiteboardClick,
+    onOffPodiumClick,
+  } = useVideoControlContext()
   return (
-    <></>
-    // <VideoPlayer />
+    <VideoMarqueeList
+      videoStreamList={videoStreamList}
+      onCameraClick={onCameraClick}
+      onMicClick={onMicClick}
+      onSendStar={onSendStar}
+      onWhiteboardClick={onWhiteboardClick}
+      onOffPodiumClick={onOffPodiumClick}
+    />
   )
 })

@@ -1211,6 +1211,29 @@ export class SceneStore extends SimpleInterval {
     } as any
   }
 
+  @computed
+  get sceneVideoConfig() {
+    const roomType = get(this.roomInfo, 'roomType', 1)
+
+    const userRole = get(this.roomInfo, 'userRole', EduRoleTypeEnum.invisible)
+
+    const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
+
+    const config = {
+      hideOffPodium: roomType === 4 ? true : false,
+      isHost: isHost,
+    }
+
+    return config
+  }
+
+
+  @computed
+  get sceneType() {
+    const roomType = get(this.roomInfo, 'roomType', 1)
+    return roomType
+  }
+
   private getUserBy(userUuid: string): EduUser {
     return this.userList.find((it: EduUser) => it.userUuid === userUuid) as EduUser
   }
@@ -1304,6 +1327,7 @@ export class SceneStore extends SimpleInterval {
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
+          whiteboardGranted: false,
         } as any)
         return acc;
       }
@@ -1344,6 +1368,7 @@ export class SceneStore extends SimpleInterval {
       placeHolderText: this.defaultStudentPlaceholder.text,
       placeHolderType: this.defaultStudentPlaceholder.placeHolderType,
       volumeLevel: 0,
+      defaultStream: true
     } as any]
   }
 

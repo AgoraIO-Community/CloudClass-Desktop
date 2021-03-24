@@ -25,7 +25,7 @@
   margin: auto;
 }
 
-.lower-right-container {
+.pin-right {
   position: absolute;
   right: 20px;
   bottom: 7px;

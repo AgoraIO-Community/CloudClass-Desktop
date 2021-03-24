@@ -73,3 +73,32 @@ html, body, #root {
 .filename {
   max-width: 90px;
 }
+
+.video-marquee-pin {
+  position: absolute;
+  height: 165px;
+  width: 100%;
+}
+
+.video-marquee-pin ~ .board-box {
+  margin-top: 165px;
+}
+
+.board-box {
+  margin-top: 165px;
+  position: relative;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreen .video-player {
+  display: none;
+}
+
+
+.fullscreen .video-marquee-pin ~ .board-box {
+  margin-top: 0px;
+}

@@ -4,6 +4,7 @@ export const en = {
     'in_class': 'In Class',
     'end_class': 'End Class',
   },
+  'hands_up': 'Hands Up',
   'signal': {
     'delay': 'Delay',
     'lose': 'Lose',

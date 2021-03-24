@@ -4,6 +4,7 @@ export const zh = {
     'in_class': '已上课',
     'end_class': '课程已结束',
   },
+  'hands_up': '举手',
   'placeholder': {
     'empty_chat': '还没有消息',
     'enable_chat_muted': '已开启学生禁言',

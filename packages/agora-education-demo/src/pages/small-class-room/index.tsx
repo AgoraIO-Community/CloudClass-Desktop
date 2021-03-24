@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Aside, Content, Layout } from 'agora-scenario-ui-kit'
 import { WhiteboardContainer } from '../common-containers/board'
 import { NavigationBar } from '../common-containers/nav'
-import { VideoPlayerTeacher, VideoPlayerStudent } from '../common-containers/video-player'
+import { VideoPlayerTeacher, VideoPlayerStudent, VideoMarqueeStudentContainer } from '../common-containers/video-player'
 import { RoomChat } from '../common-containers/chat'
 import { HandsUpContainer } from '../common-containers/hands-up'
 import './small.style.css'
@@ -34,13 +34,14 @@ export const SmallClassRoom = observer(() => {
 
   const cls = classnames({
     'edu-room': 1,
+    'fullscreen': !!store.isFullScreen
   })
 
-  const className = store.isFullScreen ? 'fullscreen' : 'normal'
+  // const className = store.isFullScreen ? 'fullscreen' : 'normal'
 
-  const fullscreenCls = classnames({
-    [`layout-aside-${className}`]: 1,
-  })
+  // const fullscreenCls = classnames({
+  //   [`layout-aside-${className}`]: 1,
+  // })
 
   return (
     <Layout
@@ -52,15 +53,19 @@ export const SmallClassRoom = observer(() => {
     >
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
-        <Content>
-          <ScreenSharePlayerContainer />
-          <WhiteboardContainer />
-          <div className="lower-right-container">
+        <Content className="column">
+          <div className="video-marquee-pin">
+            <VideoMarqueeStudentContainer />
+          </div>
+          <div className="board-box">
+            <ScreenSharePlayerContainer />
+            <WhiteboardContainer />
+          </div>
+          <div className="pin-right">
             <HandsUpContainer/>
-            
           </div>
         </Content>
-        <Aside className={fullscreenCls}>
+        <Aside>
           <VideoPlayerTeacher/>
           <RoomChat />
         </Aside>
