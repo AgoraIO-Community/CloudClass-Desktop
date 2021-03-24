@@ -91,7 +91,7 @@ export const RoomChat: React.FC<any> = observer(() => {
 
   return (
     <Chat
-      // minimize={minimize}
+      minimize={minimize}
       onClickMiniChat={onClickMiniChat}
       onCanChattingChange={onCanChattingChange}
       canChatting={canChatting}
