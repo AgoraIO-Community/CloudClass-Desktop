@@ -1,6 +1,7 @@
 import { RoomParameters } from '@/edu-sdk/declare';
 import { AppRouteComponent, routesMap } from '@/router';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
+import { ToastContainer } from '@/pages/common-containers/toast'
 import { BizPageRouter } from '@/types';
 import { useStorageSW } from '@/utils/utils';
 import { I18nProvider } from 'agora-scenario-ui-kit';
@@ -33,19 +34,23 @@ export const RouteContainer = (props: RouteContainerProps) => {
     return acc
   }, [])
   return (
-    <Switch>
-    {
-      routes.map((item, index) => (
-        <Route key={index} path={item.path} component={item.component} />
-      ))
-    }
-    {
-      props.mainPath ? 
-      <Route exact path="/">
-        <Redirect to={`${props.mainPath}`} />
-      </Route> : null
-    }
-    </Switch>
+    <>
+      <Switch>
+      {
+        routes.map((item, index) => (
+          <Route key={index} path={item.path} component={item.component} />
+        ))
+      }
+      {
+        props.mainPath ? 
+        <Route exact path="/">
+          <Redirect to={`${props.mainPath}`} />
+        </Route> : null
+      }
+
+      </Switch>
+      <ToastContainer/>
+    </>
   )
 }
 

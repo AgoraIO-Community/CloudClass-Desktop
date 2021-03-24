@@ -7,6 +7,7 @@ import { platform } from '@/utils/utils';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
 import { getLanguage, t } from '@/i18n';
 import { isEmpty } from 'lodash';
+import { ToastCategory } from 'agora-scenario-ui-kit'
 interface NoticeMessage {
   type: string
   message: string
@@ -28,7 +29,8 @@ export type DialogType = {
 
 export type ToastType = {
   id: string,
-  desc: string
+  desc: string,
+  type?: ToastCategory
 }
 export class UIStore {
 
@@ -89,9 +91,9 @@ export class UIStore {
     }
   }
 
-  addToast(desc: string) {
+  addToast(desc: string, type?: ToastCategory) {
     const id = uuidv4()
-    this.toastQueue.push({id, desc})
+    this.toastQueue.push({id, desc, type})
     return id
   }
 
