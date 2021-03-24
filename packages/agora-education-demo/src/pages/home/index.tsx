@@ -16,7 +16,8 @@ export const HomePage = observer(() => {
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
-  const [duration, setDuration] = useState<number>(3000)
+  const [duration, setDuration] = useState<number>(30000)
+  const [startDate, setStartDate] = useState<Date>(new Date())
   // const [lang, setL]
 
   const role = useMemo(() => {
@@ -72,8 +73,8 @@ export const HomePage = observer(() => {
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
-      onChangeDuration={(v: number) => {
-        setDuration(v)
+      onChangeStartDate={(date: Date) => {
+        setStartDate(date)
       }}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
@@ -91,7 +92,7 @@ export const HomePage = observer(() => {
           roomName: `test${roomId}`,
           userName: userName,
           roleType: role,
-          startTime: +dayjs(Date.now()),
+          startTime: +startDate,
           duration: duration,
         })
         history.push('/launch')
