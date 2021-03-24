@@ -566,7 +566,7 @@ export class RoomStore extends SimpleInterval {
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
               Toast.show({
                 type: 'error',
-                text: t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
+                text: transI18n('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
                 duration: 1.5,
               })
             }
@@ -578,7 +578,7 @@ export class RoomStore extends SimpleInterval {
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               Toast.show({
                 type: 'error',
-                text: t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
+                text: transI18n('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
                 duration: 1.5,
               })
             }
@@ -589,7 +589,7 @@ export class RoomStore extends SimpleInterval {
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             Toast.show({
               type: 'error',
-              text: t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
+              text: transI18n('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
               duration: 1.5,
             })
           }

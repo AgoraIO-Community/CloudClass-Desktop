@@ -13,6 +13,7 @@ export const HomePage = () => {
   const [role, setRole] = useState<string>('')
   const [scenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(3000)
+  const [startDate, setStartDate] = useState<Date>(new Date())
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -32,6 +33,10 @@ export const HomePage = () => {
     caller && caller(value)
   }
 
+  const onChangeStartDate = (date: Date) => {
+    setStartDate(date)
+  }
+
   return (
     <Home
       version="1.2.0"
@@ -46,6 +51,7 @@ export const HomePage = () => {
       onChangeDuration={(v: number) => {
         setDuration(v)
       }}
+      onChangeDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}

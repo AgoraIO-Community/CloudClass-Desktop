@@ -51,7 +51,7 @@ module.exports = {
         'secondary': '#357BF6',
         'secondary-hover': '#639AFA',
         'secondary-active': '#2663D0',
-        'ghost': '#677386',
+        'ghost': '#677386'
       },
     },
     fontFamily: {
