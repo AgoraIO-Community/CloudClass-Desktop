@@ -6,12 +6,11 @@ import { Icon } from '~components/icon'
 import { CSSTransition } from 'react-transition-group'
 import './index.css';
 
-enum HandsUpState {
-    Default = 'default',
-    Received = 'received',
-    Stalled = 'stalled',
-    Active = 'active',
-}
+export type HandsUpState =
+    | 'default'
+    | 'received'
+    | 'stalled'
+    | 'active'
 
 const stateColorDict: Record<string, string> = {
     default: '#7B88A0',
@@ -27,7 +26,7 @@ export interface BaseHandsUpProps extends BaseProps {
 }
 
 export interface HandsUpProps extends BaseHandsUpProps {
-    state?: string;
+    state?: HandsUpState;
     current?: number;
     total?: number;
     animStart?: boolean;
@@ -38,7 +37,7 @@ export const HandsUp: FC<HandsUpProps> = ({
     width = 108,
     height = 52,
     borderRadius = 20,
-    state = HandsUpState.Default,
+    state = 'default',
     current = 0,
     total = 22,
     animStart = false,
@@ -62,7 +61,7 @@ export const HandsUp: FC<HandsUpProps> = ({
                     height={height}
                     borderRadius={borderRadius}
                 >
-                    <Icon type={state === HandsUpState.Default ? 'hands-up-student' : 'hands-up'} color={stateColorDict[state]} />
+                    <Icon type={state === 'default' ? 'hands-up-student' : 'hands-up'} color={stateColorDict[state]} />
                     <span style={{ marginLeft: 10 }}>{current} / {total}</span>
                 </Card>
             </CSSTransition>
@@ -77,6 +76,8 @@ interface Student {
 
 export interface StudentHandsUpProps extends BaseHandsUpProps {
     student?: Student;
+    state?: string;
+    onClick: () => void | Promise<void>;
 }
 
 export const StudentHandsUp: FC<StudentHandsUpProps> = ({
@@ -85,6 +86,7 @@ export const StudentHandsUp: FC<StudentHandsUpProps> = ({
     height = 40,
     borderRadius = 20,
     className,
+    state = 'default',
     ...restProps
 }) => {
     const cls = classnames({

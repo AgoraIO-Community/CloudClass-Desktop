@@ -5,7 +5,7 @@ import { observer } from 'mobx-react'
 
 export const HandsUpContainer = observer(() => {
 
-    const [stuHandsUpstate, setStuHandsUpstate] = useState<'default'|'handsUp'>('default')
+    const [stuHandsUpstate, setStuHandsUpstate] = useState<string>('default')
 
     const handleStuHandsUp = () => {
         if(stuHandsUpstate === 'handsUp') {
