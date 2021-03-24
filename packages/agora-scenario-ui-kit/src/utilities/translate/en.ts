@@ -135,7 +135,8 @@ export const en = {
     'stop_screen_share': 'Stop Screen Share',
     'cloud_storage': 'Cloud Storage',
     'text': 'Text',
-    'tools': 'Tools'
+    'tools': 'Tools',
+    'user_list': 'User List'
   },
   'message': 'message',
   'en': 'English',

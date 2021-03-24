@@ -135,7 +135,8 @@ export const zh = {
     'stop_screen_share': '停止共享',
     'cloud_storage': '云盘',
     'text': '文本',
-    'tools': '工具栏'
+    'tools': '工具栏',
+    'user_list': '用户列表'
   },
   'cloud': {
     'fileName': '文件名字',
