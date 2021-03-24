@@ -1020,6 +1020,14 @@ export class BoardStore extends ZoomController {
 
   @action
   setTool(tool: string) {
+
+    if (tool === 'follow') {
+      // TODO: 左侧菜单点击切换逻辑，纯处理active
+      const resultNumber = !this.activeMap['follow'] ? 1 : 0
+      this.room.setGlobalState({follow: resultNumber})
+      return
+    }
+
     this.selector = tool
 
     if (!this.room || !this.room.isWritable) return
@@ -1047,12 +1055,6 @@ export class BoardStore extends ZoomController {
         room.setSceneIndex(newIndex)
       }
       return
-    }
-
-    if (tool === 'follow') {
-      // TODO: 左侧菜单点击切换逻辑，纯处理active
-      const resultNumber = !this.activeMap['follow'] ? 1 : 0
-      this.room.setGlobalState({follow: resultNumber})
     }
   }
 
