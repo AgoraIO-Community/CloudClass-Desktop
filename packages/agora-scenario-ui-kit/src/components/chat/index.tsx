@@ -6,7 +6,7 @@ import { Button } from '~components/button';
 import { Message } from './interface';
 import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min'
-import { t } from '~components/i18n';
+import { t, transI18n } from '~components/i18n';
 
 export interface ChatProps {
   /**
@@ -89,7 +89,7 @@ export const Chat: FC<ChatProps> = ({
       ) : (
         <div className="chat-panel">
           <div className="chat-header">
-            <span className="chat-header-title">{t('message')}</span>
+            <span className="chat-header-title">{transI18n('message')}</span>
             <span>
               {isHost ? (
                 <Icon
@@ -131,7 +131,7 @@ export const Chat: FC<ChatProps> = ({
               value={chatText}
               rows={1}
               className="chat-texting-message"
-              placeholder={t('placeholder.input_message')}
+              placeholder={transI18n('placeholder.input_message')}
               disabled={!isHost && !canChatting}
               onChange={(e) => onText(e.currentTarget.value)}
               onFocus={handleFocus}

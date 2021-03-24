@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Chat } from 'agora-scenario-ui-kit'
+import { Chat, useI18nContext } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import { useBoardStore, useRoomStore, useSceneStore, useUIStore } from '@/hooks'
 import { get } from 'lodash'

@@ -66,6 +66,7 @@ export type EduMediaStream = {
   whiteboardGranted: boolean,
   micVolume: number,
   stars: number,
+  holderState: 'loading' | 'muted' | 'broken'
 }
 
 export class SceneStore extends SimpleInterval {
@@ -998,7 +999,7 @@ export class SceneStore extends SimpleInterval {
     }
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
-        placeHolderType: 'noEnter',
+        placeHolderType: 'loading',
         text: t(`placeholder.teacher_noEnter`)
       }
     }
@@ -1032,7 +1033,7 @@ export class SceneStore extends SimpleInterval {
   getLocalPlaceHolderProps() {
     if (this.openingCamera === true) {
       return {
-        placeHolderType: 'openingCamera',
+        placeHolderType: 'loading',
         text: t('placeholder.openingCamera')
       }
     }
@@ -1053,7 +1054,7 @@ export class SceneStore extends SimpleInterval {
 
     if ((this.cameraEduStream && !!this.cameraEduStream.hasVideo === false)) {
       return {
-        placeHolderType: 'closedCamera',
+        placeHolderType: 'muted',
         text: t('placeholder.closedCamera')
       }
     }
@@ -1064,7 +1065,7 @@ export class SceneStore extends SimpleInterval {
       && !!this.cameraEduStream.hasVideo === true) {
       if (isFreeze) {
         return {
-          placeHolderType: 'noAvailableCamera',
+          placeHolderType: 'broken',
           text: t('placeholder.noAvailableCamera')
         }
       }
@@ -1095,7 +1096,7 @@ export class SceneStore extends SimpleInterval {
 
     if (!!stream.hasVideo === false) {
       return {
-        placeHolderType: 'closedCamera',
+        placeHolderType: 'muted',
         text: t('placeholder.closedCamera')
       }
     }
@@ -1103,7 +1104,7 @@ export class SceneStore extends SimpleInterval {
     const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
     if (isFreeze) {
       return {
-        placeHolderType: 'noAvailableCamera',
+        placeHolderType: 'broken',
         text: t('placeholder.noAvailableCamera')
       }
     }
@@ -1167,7 +1168,7 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream?.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         hideControl: this.canControl(this.appStore.userUuid),
-        placeHolderType: placeHolderType,
+        holderState: placeHolderType,
         placeHolderText: text,
         whiteboardGranted: true,
         micVolume: this.localVolume,
@@ -1189,7 +1190,7 @@ export class SceneStore extends SimpleInterval {
         audio: teacherStream.hasAudio,
         renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
         hideControl: this.canControl(user.userUuid),
-        placeHolderType: props.placeHolderType,
+        holderState: props.placeHolderType,
         placeHolderText: props.text,
         whiteboardGranted: true,
         volumeLevel: volumeLevel,
@@ -1205,7 +1206,7 @@ export class SceneStore extends SimpleInterval {
       renderer: undefined,
       hideControl: false,
       placeHolderText: this.defaultTeacherPlaceholder.text,
-      placeHolderType: this.defaultTeacherPlaceholder.placeHolderType,
+      holderState: this.defaultTeacherPlaceholder.placeHolderType,
       volumeLevel: 0,
     } as any
   }

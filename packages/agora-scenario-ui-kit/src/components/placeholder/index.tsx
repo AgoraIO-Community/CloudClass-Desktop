@@ -45,9 +45,19 @@ export const Placeholder: FC<PlaceholderProps> = ({
   )
 };
 
-export const CameraPlaceHolder: React.FC<any> = ({children, className}: {children: any, className: string}) => {
+export interface CameraPlaceHolderProps extends BaseProps {
+  state?: 'loading' | 'broken' | 'muted',
+  children?: React.ReactNode;
+}
+
+export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
+  children,
+  state = 'loading',
+  className,
+}) => {
   const cls = classnames({
     [`camera-placeholder`]: 1,
+    [`camera-${state}-placeholder`]: !!state,
     [`${className}`]: !!className,
   });
 

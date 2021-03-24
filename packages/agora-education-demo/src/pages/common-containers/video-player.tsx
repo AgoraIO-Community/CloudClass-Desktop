@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { VideoPlayer } from 'agora-scenario-ui-kit'
+import { VideoPlayer, CameraPlaceHolder } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import { useSceneStore } from '@/hooks'
 import { RendererPlayer } from '../common-comps/renderer-player'
@@ -96,19 +96,6 @@ export const VideoPlayerTeacher = observer(() => {
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
-      placeholder={
-        <div className="camera-placeholder" />
-        // <img
-        //   src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
-        //   alt="placeholder"
-        //   style={{
-        //     display: 'inline-block',
-        //     maxHeight: '100%',
-        //     maxWidth: '100%',
-        //     borderRadius: 4,
-        //   }}
-        // />
-      }
       controlPlacement={'left'}
       onOffPodiumClick={
         async (uid: any) => {
@@ -116,6 +103,7 @@ export const VideoPlayerTeacher = observer(() => {
         }
       }
     >
+      <CameraPlaceHolder state={userStream.holderState} />
       {
         userStream.renderer && userStream.video ?
         <RendererPlayer
@@ -143,9 +131,9 @@ export const VideoPlayerStudent = observer(() => {
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
-      placeholder={
-        <div className="camera-placeholder" />
-      }
+      // placeholder={
+      //   <div className="camera-placeholder" />
+      // }
       controlPlacement={'left'}
       onOffPodiumClick={
         async (uid: any) => {
@@ -153,6 +141,7 @@ export const VideoPlayerStudent = observer(() => {
         }
       }
     >
+      <CameraPlaceHolder state={userStream.holderState} />
       {
         userStream.renderer && userStream.video ?
         <RendererPlayer

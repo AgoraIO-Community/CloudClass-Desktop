@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Chat, ChatProps } from '~components/chat';
 import { Icon } from '~components/icon'
+import { I18nProvider } from '~components/i18n';
 
 const meta: Meta = {
   title: 'Components/Chat',
@@ -49,16 +50,18 @@ const meta: Meta = {
 export const Docs: FC<ChatProps> = (props) => {
   const [text, setText] = useState<string>();
   return (
-    <div className="p-5"  style={{display: 'flex', height: 500, width: 400, backgroundColor: props.minimize ? '#fff' : '#000'}}>
-      <Chat
-        {...props}
-        chatText={text}
-        onText={(val) => setText(val)}
-        onSend={() => setText('')}
-        closeIcon={<Icon type="close"/>}
-        onClickMiniChat={() => {console.log('click chat min')}}
-      />
-    </div>
+    <I18nProvider>
+      <div className="p-5"  style={{display: 'flex', height: 500, width: 400, backgroundColor: props.minimize ? '#fff' : '#000'}}>
+        <Chat
+          {...props}
+          chatText={text}
+          onText={(val) => setText(val)}
+          onSend={() => setText('')}
+          closeIcon={<Icon type="close"/>}
+          onClickMiniChat={() => {console.log('click chat min')}}
+        />
+      </div>
+    </I18nProvider>
   );
 };
 
