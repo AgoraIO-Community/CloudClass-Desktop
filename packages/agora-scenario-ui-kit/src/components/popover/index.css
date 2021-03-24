@@ -205,3 +205,21 @@
   margin-right: 8px;
   margin-left: 0;
 }
+
+.raw-popover {
+  padding: 0;
+}
+
+.raw-popover > .popover-content > .popover-arrow {
+  display: none;
+}
+
+.raw-popover > .popover-content > .popover-inner {
+  background: transparent;
+  border-radius: none;
+  box-shadow: none;
+}
+
+.raw-popover > .popover-content > .popover-inner > .popover-inner-content {
+  padding: 0;
+}
