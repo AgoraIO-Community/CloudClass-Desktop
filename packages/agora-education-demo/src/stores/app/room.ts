@@ -1264,12 +1264,12 @@ export class RoomStore extends SimpleInterval {
     let duration = dayjs.duration(milliseconds);
     let formatItems:string[] = []
 
-    let hours_text = duration.hours() === 0 ? '' : `HH [${t('nav.hours')}]`;
-    let mins_text = duration.minutes() === 0 ? '' : `mm [${t('nav.minutes')}]`;
-    let seconds_text = duration.seconds() === 0 ? '' : `ss [${t('nav.seconds')}]`;
-    let short_hours_text = `HH [${t('nav.short.hours')}]`;
-    let short_mins_text = `mm [${t('nav.short.minutes')}]`;
-    let short_seconds_text = `ss [${t('nav.short.seconds')}]`;
+    let hours_text = duration.hours() === 0 ? '' : `HH [${transI18n('nav.hours')}]`;
+    let mins_text = duration.minutes() === 0 ? '' : `mm [${transI18n('nav.minutes')}]`;
+    let seconds_text = duration.seconds() === 0 ? '' : `ss [${transI18n('nav.seconds')}]`;
+    let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
+    let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
+    let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
     if(mode === TimeFormatType.Timeboard) {
       // always display all time segment
       if(seconds < 60 * 60) {

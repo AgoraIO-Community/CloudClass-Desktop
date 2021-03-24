@@ -159,7 +159,7 @@ export const SettingContainer = observer(() => {
             <Modal
                 title={title}
                 width={360}
-                footer={[<Button action="ok">{t('room.confirm')}</Button>]}
+                footer={[<Button action="ok">{t('toast.confirm')}</Button>]}
                 onCancel={hideSetting}
                 onOk={hideSetting}
             >

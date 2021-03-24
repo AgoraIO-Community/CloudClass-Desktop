@@ -82,7 +82,7 @@ export const usePretestContext = () => {
     const VideoPreviewPlayer = useCallback(() => {
         return (
             <RendererPlayer
-                className="camera-placeholder"
+                className="camera-placeholder camera-muted-placeholder"
                 style={{width: 320, height: 216}}
                 mirror={isMirror}
                 key={cameraId}
