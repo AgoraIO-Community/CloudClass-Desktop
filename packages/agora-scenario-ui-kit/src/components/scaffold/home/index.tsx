@@ -3,6 +3,7 @@ import { Button } from '~components/button'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
+import { DatePicker } from '~components/date-picker'
 import './index.css'
 
 const {Option}: any = Select
@@ -18,6 +19,7 @@ export interface HomeProps {
   onChangeScenario: (value: any) => void,
   onChangeText: (type: string, value: string) => void,
   onChangeDuration: (value: number) => void,
+  onChangeStartDate: (date: Date) => void,
   onClick: () => void | Promise<void>
 }
 
@@ -32,42 +34,56 @@ export const Home: React.FC<HomeProps> = ({
   onChangeScenario,
   onChangeText,
   onChangeDuration,
+  onChangeStartDate,
   onClick
 }: HomeProps) => {
 
   return (
     <Layout className="home-page">
       <Layout className="facade" direction="row">
-        <Table className="placeholder-gray-700 bg-gray-700 w-5"></Table>
+        <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
-          <Row>
+          <Row className="home-row-item">
             <Col>
               <label htmlFor="roomId">
-                <span className="text-gray-700">房间ID</span>
+                <span>房间</span>
               </label>
             </Col>
             <Col>
-              <input id="roomId" type="text" className="mt-1 block w-full" value={roomId} onChange={(evt) => onChangeText('roomId', evt.currentTarget.value)} placeholder="" />
+              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeText('roomId', evt.currentTarget.value)} placeholder="请输入房间名" />
             </Col>
           </Row>
-          <Row>
+          <Row className="home-row-item">
             <Col>
               <label htmlFor="userName">
-                <span className="text-gray-700">用户名</span>
+                <span>昵称</span>
               </label>
             </Col>
             <Col>
-              <input id="userName" type="text" className="mt-1 block w-full" value={userName} onChange={(evt) => onChangeText('userName', evt.currentTarget.value)} placeholder="" />
+              <input id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeText('userName', evt.currentTarget.value)} placeholder="请输入昵称" />
             </Col>
           </Row>
-          <Row>
+          <Row className="home-row-item">
             <Col>
-              <label htmlFor="role">
-                <span className="text-gray-700">角色</span>
+              <label htmlFor="userName">
+                <span>类型</span>
               </label>
             </Col>
             <Col>
-              <Select id="role" value={role} onChange={onChangeRole}>
+              <Select id="scenario" value={scenario || undefined} onChange={onChangeScenario} placeholder={'请选择课堂类型'}>
+                <Option value="1v1">1v1</Option>
+                <Option value="mid-class">中班课</Option>
+              </Select>
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <label htmlFor="role">
+                <span>角色</span>
+              </label>
+            </Col>
+            <Col>
+              <Select id="role" value={role || undefined} onChange={onChangeRole} placeholder={'请选择你的角色'}>
                 <Option value="teacher">老师</Option>
                 <Option value="student">学生</Option>
                 <Option value="assistant">助教</Option>
@@ -75,30 +91,18 @@ export const Home: React.FC<HomeProps> = ({
               </Select>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <label htmlFor="scenario">
-                <span className="text-gray-700">场景</span>
-              </label>
-            </Col>
-            <Col>
-              <Select id="scenario" value={scenario} onChange={onChangeScenario}>
-                <Option value="1v1">1v1</Option>
-                <Option value="mid-class">中班课</Option>
-              </Select>
-            </Col>
-          </Row>
-          <Row>
+          <Row className="home-row-item">
             <Col>
               <label htmlFor="duration">
-                <span className="text-gray-700">时间</span>
+                <span>时间</span>
               </label>
             </Col>
             <Col>
-            <input id="duration" type="number" className="mt-1 block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+            {/* <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" /> */}
+              <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/>
             </Col>
           </Row>
-          <Button type="primary" size="lg" onClick={onClick}>创建教室</Button>
+          <Button className="mt-4" type="primary" size="lg" onClick={onClick}>创建教室</Button>
           <Row className="text-center">
             version: {version}
           </Row>
