@@ -669,6 +669,13 @@ export class BoardStore extends ZoomController {
     this.updateLocalSceneState()
     this.updateSceneItems()
     this.updateCourseWareList()
+    // TODO 更新activeMap
+    this.updateActiveMap();
+  }
+
+  updateActiveMap () {
+    // golable state
+    this.activeMap['follow'] = !!get(this.room.state.globalState, 'follow', 0)
   }
 
   pptAutoFullScreen() {
@@ -807,6 +814,21 @@ export class BoardStore extends ZoomController {
       }
       if (state.globalState) {
         this.updateCourseWareList()
+        this.updateActiveMap()
+        const followFlag = !!state.globalState.follow
+        // TODO: 监听follow的逻辑
+        if( this.roleIsTeacher ) {
+          if (followFlag) {
+            this.boardClient.followMode(ViewMode.Broadcaster)
+          } else {
+            this.boardClient.followMode(ViewMode.Freedom)
+          }
+        } else if ( this.roleIsStudent ) {
+          if (followFlag) {
+            this.boardClient.followMode(ViewMode.Follower)
+          }
+        }
+        // TODO: 其他角色逻辑
       }
     })
     BizLogger.info("[breakout board] join", data)
@@ -846,6 +868,11 @@ export class BoardStore extends ZoomController {
   @computed
   get roleIsTeacher(): boolean {
     return this.isTeacher()
+  }
+
+  @computed
+  get roleIsStudent(): boolean {
+    return this.isStudent()
   }
 
   isTeacher(): boolean {
@@ -993,6 +1020,14 @@ export class BoardStore extends ZoomController {
 
   @action
   setTool(tool: string) {
+
+    if (tool === 'follow') {
+      // TODO: 左侧菜单点击切换逻辑，纯处理active
+      const resultNumber = !this.activeMap['follow'] ? 1 : 0
+      this.room.setGlobalState({follow: resultNumber})
+      return
+    }
+
     this.selector = tool
 
     if (!this.room || !this.room.isWritable) return
