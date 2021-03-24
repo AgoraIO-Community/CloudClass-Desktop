@@ -38,7 +38,7 @@ export const Home: React.FC<HomeProps> = ({
 
   return (
     <Layout className="home-page">
-      <Layout className="facade" direction="row">
+      <Layout style={{boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)'}} className="facade" direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
           <Row className="home-row-item">

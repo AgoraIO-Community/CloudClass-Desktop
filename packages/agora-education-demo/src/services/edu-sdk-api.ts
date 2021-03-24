@@ -102,11 +102,16 @@ export class EduSDKApi extends ApiBase {
 
   async updateRecordingState(params: {
     roomUuid: string,
-    state: number
+    state: number,
+    url?: string,
   }) {
+    // todo 调服务器，url为方法传入对象的key url
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/records/states/${params.state}`,
-      method: 'PUT'
+      method: 'PUT',
+      data: {
+        url: params.url
+      }
     })
     return res.data
   }

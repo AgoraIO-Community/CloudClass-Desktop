@@ -15,7 +15,8 @@ export enum BizPageRouter {
   SmallClassIncognito = 'small_incognito',
   LaunchPage = 'launch',
   PretestPage = 'pretest',
-  TestHomePage = 'test_home'
+  TestHomePage = 'test_home',
+  Incognito = 'incognito'
 }
 
 export enum BizPagePath {

@@ -3,6 +3,7 @@ import { SmallClassRoom } from '@/pages/small-class-room';
 import { SettingPage } from '@/pages/setting';
 import { HomePage } from '@/pages/home';
 import { LaunchPage } from '@/pages/launch';
+import { IncognitoPage } from '@/pages/incognito'
 import { PretestPage } from '@/pages/pretest';
 import React from 'react';
 import { BizPagePath, BizPageRouter } from '@/types';
@@ -56,6 +57,11 @@ export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage)
+  },
+  // 隐身模式，录屏功能
+  [BizPageRouter.Incognito]: {
+    path: '/incognito',
+    component: () => PageSFC(IncognitoPage)
   },
   [BizPageRouter.PretestPage]: {
     path: '/pretest',
