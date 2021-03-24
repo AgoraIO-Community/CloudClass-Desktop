@@ -815,12 +815,20 @@ export class BoardStore extends ZoomController {
       if (state.globalState) {
         this.updateCourseWareList()
         this.updateActiveMap()
+        const followFlag = !!state.globalState.follow
         // TODO: 监听follow的逻辑
-        if (this.roleIsTeacher && !!state.globalState.follow) {
-          this.boardClient.followMode(ViewMode.Broadcaster)
-        } else {
-          this.boardClient.followMode(ViewMode.Freedom)
+        if( this.roleIsTeacher ) {
+          if (followFlag) {
+            this.boardClient.followMode(ViewMode.Broadcaster)
+          } else {
+            this.boardClient.followMode(ViewMode.Freedom)
+          }
+        } else if ( this.roleIsStudent ) {
+          if (followFlag) {
+            this.boardClient.followMode(ViewMode.Follower)
+          }
         }
+        // TODO: 其他角色逻辑
       }
     })
     BizLogger.info("[breakout board] join", data)
@@ -860,6 +868,11 @@ export class BoardStore extends ZoomController {
   @computed
   get roleIsTeacher(): boolean {
     return this.isTeacher()
+  }
+
+  @computed
+  get roleIsStudent(): boolean {
+    return this.isStudent()
   }
 
   isTeacher(): boolean {
@@ -1039,7 +1052,7 @@ export class BoardStore extends ZoomController {
     if (tool === 'follow') {
       // TODO: 左侧菜单点击切换逻辑，纯处理active
       const resultNumber = this.activeMap['follow'] ? 1 : 0;
-      this.setFollow(resultNumber)
+      this.room.setGlobalState({follow: resultNumber})
     }
   }
 
