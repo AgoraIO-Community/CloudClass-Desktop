@@ -28,6 +28,7 @@ export const en = {
     'api_login_failured': 'Join Failured, Reason: {reason}',
     'confirm': 'Confirm',
     'cancel': 'Cancel',
+    'leave_room': 'Leave Classroom',
     'quit_room': 'Are you sure to exit the classroom?',
     'kick': 'kicked',
     'login_failure': 'login failure',

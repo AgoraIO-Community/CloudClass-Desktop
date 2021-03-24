@@ -28,6 +28,7 @@ export const zh = {
     'api_login_failured': '房间加入失败, 原因: {reason}',
     'confirm': '确定',
     'cancel': '取消',
+    'leave_room': '离开教室',
     'quit_room': '确定退出课程吗？',
     'kick': '其他端登录，被踢出房间',
     'login_failure': '登录房间失败',

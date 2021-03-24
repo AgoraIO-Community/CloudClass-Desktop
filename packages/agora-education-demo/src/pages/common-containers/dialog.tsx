@@ -120,8 +120,8 @@ export const RoomEnd = observer((id: string) => {
 
   const ButtonGroup = useCallback(() => {
     return [
-      <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">取消</Button>,
-      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">确认</Button>,
+      <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{t('toast.confirm')}</Button>,
     ]
   }, [isStarted])
   return (
@@ -153,8 +153,8 @@ export const Exit = observer((id: string) => {
 
   const ButtonGroup = useCallback(() => {
     return [
-      <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">取消</Button>,
-      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">确认</Button>,
+      <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+      <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{t('toast.confirm')}</Button>,
     ]
   }, [isStarted])
   return (
@@ -162,7 +162,7 @@ export const Exit = observer((id: string) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title={t('toast.quit_room')}>
+      title={t('toast.leave_room')}>
     <p>{t('toast.quit_room')}</p>
     </Modal>
   )
