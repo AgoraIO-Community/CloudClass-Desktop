@@ -5,6 +5,7 @@ import { Pretest } from '~components/device-manager/pretest'
 import { Button } from '~components/button'
 import { changeLanguage$, I18nProvider } from '~components';
 import { useI18nContext, withI18n } from '~components/i18n';
+import { CameraPlaceHolder } from '~components/placeholder';
 
 const meta: Meta = {
     title: 'Components/Pretest',
@@ -24,8 +25,15 @@ const speakerList = [...'.'.repeat(3)].map((item, index) => ({ label: '扬声器
 
 const VideoPreviewPlayer = () => {
     return (
-        <div className="camera-placeholder" style={{width: 320, height: 180, borderRadius: 4, overflow: 'hidden'}}>
-        </div>
+        <CameraPlaceHolder
+            state="muted"
+            style={{
+                width: 320,
+                height: 180,
+                borderRadius: 4,
+                overflow: 'hidden'
+            }}
+        />
     )
 }
 

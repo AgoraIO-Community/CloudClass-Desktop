@@ -18,7 +18,6 @@ export interface HomeProps {
   onChangeRole: (value: any) => void,
   onChangeScenario: (value: any) => void,
   onChangeText: (type: string, value: string) => void,
-  onChangeDuration: (value: number) => void,
   onChangeStartDate: (date: Date) => void,
   onClick: () => void | Promise<void>
 }
@@ -33,7 +32,6 @@ export const Home: React.FC<HomeProps> = ({
   onChangeRole,
   onChangeScenario,
   onChangeText,
-  onChangeDuration,
   onChangeStartDate,
   onClick
 }: HomeProps) => {

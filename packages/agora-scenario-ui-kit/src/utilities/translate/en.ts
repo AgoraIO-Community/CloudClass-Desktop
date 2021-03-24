@@ -4,6 +4,12 @@ export const en = {
     'in_class': 'In Class',
     'end_class': 'End Class',
   },
+  'signal': {
+    'delay': 'Delay',
+    'lose': 'Lose',
+    'status': 'Status',
+    'CPU': 'CPU',
+  },
   'placeholder': {
     'empty_chat': 'Empty Message',
     'enable_chat_muted': 'Student Chat Muted',

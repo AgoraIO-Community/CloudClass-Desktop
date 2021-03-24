@@ -9,6 +9,12 @@ export const zh = {
     'enable_chat_muted': '已开启学生禁言',
     'input_message': '请输入消息',
   },
+  'signal': {
+    'delay': '网络延迟',
+    'lose': '丢包率',
+    'status': '网络状态',
+    'CPU': 'CPU',
+  },
   'toast': {
     'screen_share': '屏幕共享',
     'close_ppt': '关闭当前课件',
