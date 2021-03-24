@@ -10,13 +10,15 @@ import { Icon } from '~components';
 export interface CalendarProps extends BaseProps {
   className?: string
   date?: Date
-  onChange?: (date:Date) => any
+  onChange?: (date:Date) => any,
+  selectedDate?: Date,
 }
 
 export const Calendar: FC<CalendarProps> = ({
   className,
   date,
   onChange,
+  selectedDate,
   ...restProps
 }) => {
   const calendarcls = classnames({
@@ -31,8 +33,8 @@ export const Calendar: FC<CalendarProps> = ({
   const [selectedMonth, setSelectedMonth] = useState(dayjs().month())
   const [selectedHour, setSelectedHour] = useState(dayjs(today).hour())
   const [selectedMinute, setSelectedMinute] = useState(dayjs(today).minute())
-  const hourRef = useRef(null)
-  const minuteRef = useRef(null)
+  const hourRef = useRef<HTMLButtonElement | null>(null)
+  const minuteRef = useRef<HTMLButtonElement | null>(null)
 
 
   const onSelectHour = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -53,9 +55,9 @@ export const Calendar: FC<CalendarProps> = ({
   }
 
   useEffect(() => {
-    hourRef && hourRef.current.scrollIntoView()
-    minuteRef && minuteRef.current.scrollIntoView()
-  }, [])
+    hourRef.current && hourRef.current.scrollIntoView()
+    minuteRef.current && minuteRef.current.scrollIntoView()
+  }, [hourRef, minuteRef])
 
   return (
     <div className={cls}>

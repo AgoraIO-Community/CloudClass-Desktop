@@ -48,10 +48,7 @@ export const HomePage = () => {
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
-      onChangeDuration={(v: number) => {
-        setDuration(v)
-      }}
-      onChangeDate={onChangeStartDate}
+      onChangeStartDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}
