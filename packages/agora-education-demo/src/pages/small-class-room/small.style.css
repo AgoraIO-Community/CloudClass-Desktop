@@ -24,3 +24,9 @@
   right: 0;
   margin: auto;
 }
+
+.lower-right-container {
+  position: absolute;
+  right: 20px;
+  bottom: 7px;
+}

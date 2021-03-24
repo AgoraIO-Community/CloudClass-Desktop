@@ -151,3 +151,7 @@
   background: transparent;
   padding: 0;
 }
+
+.customize-dialog-popover > .popover-content > .popover-arrow {
+  display: none;
+}

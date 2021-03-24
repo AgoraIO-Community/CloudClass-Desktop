@@ -5,7 +5,6 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
-import { entries } from 'lodash';
 
 export interface VideoPlayerProps extends BaseProps {
   /**
