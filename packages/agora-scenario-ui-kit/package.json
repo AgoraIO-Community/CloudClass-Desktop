@@ -60,6 +60,7 @@
     "vite": "2.0.5"
   },
   "dependencies": {
+    "@popperjs/core": "^2.9.1",
     "@types/react-transition-group": "^4.4.1",
     "classnames": "2.2.6",
     "rc-notification": "4.4.0",
