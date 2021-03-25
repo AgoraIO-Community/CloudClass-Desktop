@@ -1360,7 +1360,6 @@ export class BoardStore {
         return
       }
       case 'next_page': {
-        console.log('next page')
         const scenes = get(this.room.state, 'sceneState.scenes', [])
         const sceneIndex = get(this.room.state, 'sceneState.index', 0)
         const currentScene = scenes[sceneIndex]
@@ -1373,7 +1372,6 @@ export class BoardStore {
         return
       }
       case 'prev_page' : {
-        console.log('prev page')
         const scenes = get(this.room.state, 'sceneState.scenes', [])
         const sceneIndex = get(this.room.state, 'sceneState.index', 0)
         const currentScene = scenes[sceneIndex]
