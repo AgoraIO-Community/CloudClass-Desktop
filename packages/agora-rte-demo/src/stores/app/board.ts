@@ -1360,10 +1360,28 @@ export class BoardStore {
         return
       }
       case 'next_page': {
+        console.log('next page')
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptNextStep()
+          return
+        }
         this.changePage(room.state.sceneState.index + 1)
         return
       }
       case 'prev_page' : {
+        console.log('prev page')
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptPreviousStep()
+          return
+        }
         this.changePage(room.state.sceneState.index - 1)
         return
       }
