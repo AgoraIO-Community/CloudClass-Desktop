@@ -13,9 +13,9 @@ export const Invisible = observer(() => {
   const homeStore = useHomeStore()
   const roomRef = useRef<any>()
   const setRoomInfo = async () => {
-    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience', userName = 'audience', duration = 1000,appId }: any = useAudienceParams()
-    const uid = `audience${userRole}`
-    const { rtmToken } = await homeApi.login(uid)
+    const { userUuid, userRole = 0, roomType = 0, roomUuid, roomName = 'audience', userName = 'audience', duration = 1000, appId, rtmToken }: any = useAudienceParams()
+    // const uid = `audience${userRole}`
+    // const { rtmToken } = await homeApi.login(uid)
     AgoraEduSDK.config({
       appId: appId || `${REACT_APP_AGORA_APP_ID}`,
     })

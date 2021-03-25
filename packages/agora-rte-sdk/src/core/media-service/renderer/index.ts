@@ -207,6 +207,8 @@ export class LocalUserRenderer extends UserRenderer {
         releaseCanvasContext(this.el)
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined
+        //@ts-ignore
+        this.electron.client.setupLocalVideo(null)
       }
       if (isPreview) {
         this.electron.client.setClientRole(2)
@@ -290,6 +292,8 @@ export class RemoteUserRenderer extends UserRenderer {
         releaseCanvasContext(this.el)
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined
+        //@ts-ignore
+        this.electron.client.setupRemoteVideo(null, this.uid)
       }
       if (this.electron.client.hasOwnProperty('destroyRender')) {
         //@ts-ignore

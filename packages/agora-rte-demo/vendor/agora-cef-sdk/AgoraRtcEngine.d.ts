@@ -5471,14 +5471,14 @@ export declare namespace AgoraRtcEngine {
      *
      * @param canvas
      */
-    function setupLocalVideo(canvas: HTMLCanvasElement): void;
+    function setupLocalVideo(canvas?: HTMLCanvasElement): void;
     /**
      * TODO
      *
      * @param canvas
      * @param uid
      */
-    function setupRemoteVideo(canvas: HTMLCanvasElement, uid: number): void;
+    function setupRemoteVideo(canvas?: HTMLCanvasElement, uid?: number): void;
     /**
      * Starts the local video preview before joining the channel.
      *
