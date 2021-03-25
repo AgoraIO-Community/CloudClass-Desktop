@@ -1,4 +1,5 @@
 import { useBoardStore } from '@/hooks'
+import { useStorageContext } from '@/ui-components/hooks'
 import { Col, IconBox, Inline, Row, Table, TableHeader, t, Placeholder } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
@@ -6,17 +7,7 @@ import React, { useEffect } from 'react'
 
 export const StorageContainer = observer(() => {
 
-  const boardStore = useBoardStore()
-
-  const onResourceClick = async (resourceUuid: string) => {
-    await boardStore.putSceneByResourceUuid(resourceUuid)
-  }
-
-  const itemList = boardStore.personalResources
-
-  useEffect(() => {
-    boardStore.refreshState()
-  }, [boardStore])
+  const {itemList, onResourceClick} = useStorageContext()
 
   return (
     <Table>

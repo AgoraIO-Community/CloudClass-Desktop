@@ -1,7 +1,7 @@
 import { RoomParameters } from '@/edu-sdk/declare';
 import { AppRouteComponent, routesMap } from '@/router';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
-import { ToastContainer } from '@/pages/common-containers/toast'
+import { ToastContainer } from '@/ui-components/common-containers/toast'
 import { BizPageRouter } from '@/types';
 import { useStorageSW } from '@/utils/utils';
 import { I18nProvider } from 'agora-scenario-ui-kit';

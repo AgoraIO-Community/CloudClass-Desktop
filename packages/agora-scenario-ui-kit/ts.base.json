@@ -11,9 +11,11 @@
     "emitDeclarationOnly": true,
     "paths": {
       "~components": ["./src/components"],
+      "~scaffold": ["./src/scaffold"],
       "~styles": ["./src/styles"],
       "~utilities": ["./src/utilities"],
       "~components/*": ["./src/components/*"],
+      "~scaffold/*": ["./src/scaffold/*"],
       "~styles/*": ["./src/styles/*"],
       "~utilities/*": ["./src/utilities/*"]
     }

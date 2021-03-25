@@ -1,7 +1,7 @@
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
 import { BoardClient } from '@/modules/board/client';
 import { EnumBoardState } from '@/modules/services/board-api';
-import { allTools } from '@/pages/common-containers/board';
+import { allTools } from '@/ui-components/common-containers/board';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';

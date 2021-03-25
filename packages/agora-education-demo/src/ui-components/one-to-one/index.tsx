@@ -11,19 +11,8 @@ import { LoadingContainer } from '../common-containers/loading'
 import { NavigationBar } from '../common-containers/nav'
 import { ScreenSharePlayerContainer } from '../common-containers/screen-share-player'
 import { VideoPlayerStudent, VideoPlayerTeacher } from '../common-containers/video-player'
+import { use1v1Store } from '../hooks'
 import './1v1.style.css'
-
-const use1v1Store = () => {
-  const roomStore = useRoomStore()
-  const boardStore = useBoardStore()
-  useEffectOnce(() => {
-    roomStore.join()
-  })
-
-  return {
-    isFullScreen: boardStore.isFullScreen
-  }
-}
 
 const VideoList = observer(() => {
   const boardStore = useBoardStore()

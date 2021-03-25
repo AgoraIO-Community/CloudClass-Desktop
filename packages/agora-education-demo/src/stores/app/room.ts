@@ -1,7 +1,7 @@
 import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { KickEnd, RoomEnd } from '@/pages/common-containers/dialog';
+import { KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { reportService } from '@/services/report-service';
 import { RoomApi } from '@/services/room-api';

@@ -1,7 +1,8 @@
 import { useBoardStore, useUIStore } from '@/hooks'
 import { Icon, t, TabPane, Tabs, Toolbar, ToolItem, useI18nContext, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
+import { useWhiteboardState } from '../hooks'
 import { CloudDiskContainer } from './cloud-driver'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
@@ -90,63 +91,6 @@ export type WhiteBoardState = {
   items: ToolItem[],
   handleToolBarChange: (evt: any) => Promise<any> | any,
   handleZoomControllerChange: (e: any) => Promise<any> | any,
-}
-
-const useWhiteboardState = () => {
-  const boardStore = useBoardStore()
-  useI18nContext()
-
-  const boardRef = useRef<HTMLDivElement | null>(null)
-
-  const mountToDOM = useCallback((dom: any) => {
-    if (dom) {
-      boardStore.mount(dom)
-    } else {
-      boardStore.unmount()
-    }
-  }, [boardRef.current, boardStore])
-
-  const handleToolBarChange = async (type: string) => {
-
-    console.log('type>>>>handleToolBarChange ', type)
-
-    boardStore.setTool(type)
-  }
-
-  const handleZoomControllerChange = async (type: ZoomItemType) => {
-    const toolbarMap: Record<ZoomItemType, CallableFunction> = {
-      'max': () => {
-        boardStore.zoomBoard('fullscreen')
-      },
-      'min': () => {
-        boardStore.zoomBoard('fullscreenExit')
-      },
-      'zoom-out': () => {
-        boardStore.setZoomScale('out')
-      },
-      'zoom-in': () => {
-        boardStore.setZoomScale('in')
-      },
-      'forward': () => boardStore.changeFooterMenu('next_page'),
-      'backward': () => boardStore.changeFooterMenu('prev_page'),
-    }
-    toolbarMap[type] && toolbarMap[type]()
-  }
-
-  return {
-    zoomValue: boardStore.zoomValue,
-    currentPage: boardStore.currentPage,
-    totalPage: boardStore.totalPage,
-    courseWareList: [],
-    handleToolBarChange,
-    handleZoomControllerChange,
-    ready: boardStore.ready,
-    mountToDOM,
-    isFullScreen: boardStore.isFullScreen,
-    currentSelector: boardStore.currentSelector,
-    tools: boardStore.tools,
-    activeMap: boardStore.activeMap,
-  }
 }
 
 const TabsContainer = observer(() => {

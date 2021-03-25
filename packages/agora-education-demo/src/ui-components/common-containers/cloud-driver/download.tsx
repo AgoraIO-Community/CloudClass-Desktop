@@ -1,16 +1,17 @@
-import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Progress, Inline, Row, Table, TableHeader, formatFileSize, t, Placeholder } from 'agora-scenario-ui-kit'
-import React, { useEffect } from 'react'
 import { useBoardStore } from '@/hooks'
-import { agoraCaches } from '@/utils/web-download.file'
-import { get } from 'lodash'
+import { useDownloadContext } from '@/ui-components/hooks'
 import { StorageCourseWareItem } from '@/stores/storage'
+import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
+import { observer } from 'mobx-react'
+import React from 'react'
 
 export const DownloadContainer = observer(() => {
 
-  const boardStore = useBoardStore()
-
-  const itemList = boardStore.downloadList.filter((it: StorageCourseWareItem) => it.taskUuid)
+  const {
+    startDownload,
+    deleteDownload,
+    itemList,
+  } = useDownloadContext()
 
   return (
     <Table>
@@ -38,15 +39,13 @@ export const DownloadContainer = observer(() => {
               <Row className="btn-group no-padding" gap={10}>
                 {
                   !download ? 
-                  <Button type="secondary" disabled={progress === 100} onClick={async () => {
-                    await boardStore.startDownload(taskUuid)
+                  <Button type="secondary" disabled={progress === 100} action="download" onClick={async () => {
+                    await startDownload(taskUuid)
                   }}>{!download ? t('cloud.download') : t('cloud.downloading')}</Button>
                 : 
                   <Button type="secondary" disabled={progress === 100}>{t('cloud.downloading')}</Button>
                 }
-                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={async () => {
-                  await boardStore.deleteSingle(taskUuid)
-                }}>{t('cloud.delete')}</Button>
+                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{t('cloud.delete')}</Button>
               </Row>
             </Col>
           </Row>

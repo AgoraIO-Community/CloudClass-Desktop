@@ -1,11 +1,9 @@
-import { ToolCabinet, Icon, t } from 'agora-scenario-ui-kit'
+import { Icon, t, ToolCabinet } from 'agora-scenario-ui-kit'
 import React from 'react'
-import { useBoardStore, useSceneStore } from '@/hooks'
+import { useToolCabinetContext } from '../hooks'
 
 export const ToolCabinetContainer = () => {
-    const sceneStore = useSceneStore()
-
-    const boardStore = useBoardStore()
+    const {onClick} = useToolCabinetContext()
 
     return (
         <ToolCabinet
@@ -24,17 +22,7 @@ export const ToolCabinetContainer = () => {
                     name: t('scaffold.laser_pointer')
                 },
             ]}
-            onClick={async id => {
-                switch (id) {
-                    case 'screenShare': {
-                        await sceneStore.startOrStopSharing();
-                        break;
-                    }
-                    case 'laserPoint': {
-                        await boardStore.setLaserPoint()
-                    }
-                }
-            }}
+            onClick={onClick}
         />
     )
 }

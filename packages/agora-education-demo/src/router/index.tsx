@@ -1,10 +1,10 @@
-import { OneToOne } from '@/pages/one-to-one';
-import { SmallClassRoom } from '@/pages/small-class-room';
-import { SettingPage } from '@/pages/setting';
-import { HomePage } from '@/pages/home';
-import { LaunchPage } from '@/pages/launch';
-import { IncognitoPage } from '@/pages/incognito'
-import { PretestPage } from '@/pages/pretest';
+import { OneToOne } from '@/ui-components/one-to-one';
+import { SmallClassRoom } from '@/ui-components/small-class-room';
+import { SettingPage } from '@/ui-components/setting';
+import { HomePage } from '@/ui-components/home';
+import { LaunchPage } from '@/ui-components/launch';
+import { IncognitoPage } from '@/ui-components/incognito'
+import { PretestPage } from '@/ui-components/pretest';
 import React from 'react';
 import { BizPagePath, BizPageRouter } from '@/types';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';

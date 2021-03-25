@@ -2,23 +2,8 @@ import { useBoardStore } from '@/hooks'
 import { Colors, t, useI18nContext } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
+import { useColorContext } from '../hooks'
 
-const useColorContext = () => {
-  const boardStore = useBoardStore()
-
-  const activeColor = boardStore.currentColor
-  const strokeWidth = boardStore.currentStrokeWidth
-  return {
-    activeColor,
-    strokeWidth,
-    changeStroke: (width: any) => {
-      boardStore.changeStroke(width)
-    },
-    changeHexColor: (color: any) => {
-      boardStore.changeHexColor(color)
-    }
-  }
-}
 
 export const ColorsContainer = observer(() => {
 

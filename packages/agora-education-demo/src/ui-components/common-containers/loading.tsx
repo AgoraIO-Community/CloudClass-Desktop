@@ -2,12 +2,13 @@ import { useRoomStore, useUIStore } from '@/hooks'
 import { Card, Loading } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
+import { useLoadingContext } from '../hooks'
 
 export const LoadingContainer = observer(() => {
 
-  const uiStore = useUIStore()
+  const {loading} = useLoadingContext()
 
-  return uiStore.loading ? <PageLoading /> : null
+  return loading ? <PageLoading /> : null
 })
 
 const PageLoading = () => {
