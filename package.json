@@ -33,7 +33,7 @@
     "build:aclass-ui-kit": "lerna exec --scope=agora-aclass-ui-kit npm run build",
     "build:ui-kit": "lerna exec --scope=agora-scenario-ui-kit npm run build",
     "build:demo": "lerna exec --scope=agora-rte-demo npm run build",
-    "run:demo": "lerna exec --scope=agora-rte-demo npm run dev",
+    "run:demo": "lerna exec --scope=agora-education-demo npm run dev",
     "run:demo:electron": "lerna exec --scope=agora-rte-demo npm run electron",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

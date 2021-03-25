@@ -16,6 +16,10 @@ export const OneToOnePage = () => {
     [`layout-aside-${className}`]: 1,
   })
 
+  const handleClick = (itemType: string) => {
+    
+  }
+
   return (
     <Layout
       className={cls}
@@ -25,11 +29,11 @@ export const OneToOnePage = () => {
       }}
     >
       <BizHeader
-        classStatusText={}
-        isStarted={}
-        title={}
-        signalQuality={}
-        monitor={}
+        classStatusText={""}
+        isStarted={false}
+        title={"test"}
+        signalQuality={'excellent'}
+        monitor={{cpuUsage:0, networkLatency: 0, networkQuality:'excellent', packetLostRate:0}}
         onClick={handleClick}
       />
     </Layout>
