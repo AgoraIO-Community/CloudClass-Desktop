@@ -599,21 +599,24 @@ export class AcadsocRoomStore extends SimpleInterval {
           })
           break;
         case EduClassroomStateEnum.start:
-          let dDurationToEnd = dayjs.duration(durationToEnd);
-          [5, 1].forEach(min => {
-            if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+          // let dDurationToEnd = dayjs.duration(durationToEnd);
+          // [5, 1].forEach(min => {
+          //   if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
+          //     this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+          //   }
+          // })
+          // if(dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
+          //   this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
+          // }
+          // break;
+        case EduClassroomStateEnum.end:
+          let dDurationToClose = dayjs.duration(durationToClose);
+          [5, 3, 1].forEach(min => {
+            if(dDurationToClose.minutes() === min && dDurationToClose.seconds() === 0) {
+              BizLogger.info(`notification class-end ${dDurationToClose.minutes()} min`)
+              this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
             }
           })
-          if(dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
-            this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
-          }
-          break;
-        case EduClassroomStateEnum.end:
-          let dDurationToClose = dayjs.duration(durationToClose)
-          if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
-          }
           if(durationToClose < 0) {
             // close
             this.sceneStore.classState = EduClassroomStateEnum.close
