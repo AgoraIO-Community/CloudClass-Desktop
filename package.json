@@ -27,7 +27,7 @@
     "pack:sdk": "run-s build:sdk build:ui-kit build:classroom:sdk",
     "pack:electron:mac": "lerna exec --scope=agora-rte-demo npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-rte-demo npm run pack:win",
-    "build:classroom:sdk": "lerna exec --scope=agora-rte-demo npm run pack:npm",
+    "build:classroom:sdk": "lerna exec --scope=agora-education-demo npm run pack:npm",
     "build:dev:sdk": "lerna exec --scope=agora-rte-sdk npm run build:dev:js",
     "build:sdk": "lerna exec --scope=agora-rte-sdk npm run build",
     "build:aclass-ui-kit": "lerna exec --scope=agora-aclass-ui-kit npm run build",
