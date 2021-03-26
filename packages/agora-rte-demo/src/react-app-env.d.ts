@@ -124,4 +124,6 @@ declare module "@netless/zip" {
   export = content;
 }
 
+declare module 'agora-cef-sdk'
+
 declare var zip: any;

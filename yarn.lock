@@ -3247,10 +3247,10 @@
   dependencies:
     video.js "^7.8.4"
 
-"@netless/cursor-tool@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npm.taobao.org/@netless/cursor-tool/download/@netless/cursor-tool-0.0.5.tgz#7ca47501cb656b3e623ade37462bf2d38450f6f2"
-  integrity sha1-fKR1Actlaz5iOt43Rivy04RQ9vI=
+"@netless/cursor-tool@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.npm.taobao.org/@netless/cursor-tool/download/@netless/cursor-tool-0.0.7.tgz#bab2ef0e68130ddd76008fc66fdb1d119c67707e"
+  integrity sha1-urLvDmgTDd12AI/Gb9sdEZxncH4=
 
 "@netless/fetch-progress@0.0.1":
   version "0.0.1"
@@ -25064,10 +25064,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.4:
-  version "2.12.4"
-  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.4.tgz#c435c39c7fcb7e8b5098f517bac6440981794816"
-  integrity sha1-xDXDnH/LfotQmPUXusZECYF5SBY=
+white-web-sdk@2.12.5:
+  version "2.12.5"
+  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.5.tgz#6df5ab57cba402eeba1049bdaf78a37b96ff2a81"
+  integrity sha1-bfWrV8ukAu66EEm9r3ije5b/KoE=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
