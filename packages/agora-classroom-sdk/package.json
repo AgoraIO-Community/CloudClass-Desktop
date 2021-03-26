@@ -220,7 +220,6 @@
     "@tailwindcss/forms": "^0.2.1",
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",
-    "agora-cef-sdk": "file:./vendor/agora-cef-sdk",
     "agora-electron-sdk": "education290",
     "agora-rte-sdk": "1.0.0",
     "agora-scenario-ui-kit": "1.0.0",
