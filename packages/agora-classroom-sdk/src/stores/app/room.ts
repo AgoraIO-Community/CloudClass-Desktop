@@ -13,10 +13,10 @@ import { ChatMessage, QuickTypeEnum } from '@/types';
 import { BizLogger, filterChatText } from '@/utils/utils';
 import {
   EduAudioSourceType, EduLogger,
-  EduRoleType, EduRoleTypeEnum, EduSceneType,
+  EduRoleTypeEnum, EduSceneType,
   EduStream, EduTextMessage,
   EduUser,
-  EduVideoSourceType, GenericErrorWrapper, UserRenderer
+  EduVideoSourceType, GenericErrorWrapper
 } from 'agora-rte-sdk';
 import { t, Toast, transI18n } from 'agora-scenario-ui-kit';
 import dayjs from 'dayjs';
@@ -24,7 +24,7 @@ import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4} from 'uuid';
-import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../../types';
+import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
 
 dayjs.extend(duration)
 

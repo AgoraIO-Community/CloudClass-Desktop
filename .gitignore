@@ -12,7 +12,6 @@ dist
 *.*~
 pkgs/
 es
-types
 lib
 *.zip
 es
