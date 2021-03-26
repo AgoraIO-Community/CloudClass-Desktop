@@ -1,9 +1,9 @@
 {
-  "name": "agora-education-demo",
+  "name": "agora-classroom-sdk",
   "version": "1.2.0",
   "private": true,
   "homepage": ".",
-  "main": "./src/index.tsx",
+  "main": "dist/edu_sdk.bundle.js",
   "babel": {
     "presets": [
       "babel-preset-react-app"

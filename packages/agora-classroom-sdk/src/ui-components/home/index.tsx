@@ -87,7 +87,7 @@ export const HomePage = observer(() => {
           language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
-          roomUuid: roomId,
+          roomUuid: `${roomId}${scenario}`,
           roomType: scenario,
           roomName: `test${roomId}`,
           userName: userName,
