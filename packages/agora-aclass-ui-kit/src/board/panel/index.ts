@@ -1,6 +1,0 @@
-export * from './slider'
-export * from './palette'
-export * from './upload'
-export * from './background'
-export * from './font-size-panel'
-export * from './custom-item-menu'
