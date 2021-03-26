@@ -16,13 +16,13 @@ import {
 } from 'agora-rte-sdk';
 import { get, isEmpty } from 'lodash';
 import { action, autorun, computed, observable, runInAction, toJS } from 'mobx';
-import uuidv4 from 'uuid/v4';
+import {v4 as uuidv4} from 'uuid';
 import { CourseWareItem, CourseWareList } from './../../edu-sdk/index';
-import { RoomStore } from './room';
 import { BoardStore } from './board';
 import { HomeStore } from './home';
 import { MediaStore } from './media';
 import { PretestStore } from './pretest';
+import { RoomStore } from './room';
 import { SceneStore } from './scene';
 import { UIStore } from './ui';
 
@@ -645,5 +645,5 @@ export class AppStore implements ClassRoomAbstractStore {
 export { BoardStore } from './board';
 export { HomeStore } from './home';
 export { PretestStore } from './pretest';
-export { UIStore } from './ui';
 export { RoomStore } from './room';
+export { UIStore } from './ui';

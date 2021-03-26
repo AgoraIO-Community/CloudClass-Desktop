@@ -1,17 +1,12 @@
-import { EduLogger, EduRoomType, GenericErrorWrapper } from "agora-rte-sdk";
-import { BizLogger } from "@/utils/utils";
-import { ApiBase, ApiBaseInitializerParams } from "./base";
-import OSS from "ali-oss";
-import { MultipartUploadResult } from 'ali-oss';
-import uuidv4 from 'uuid/v4';
-import { Room, PPT, PPTKind, ApplianceNames, LegacyPPTConverter } from 'white-web-sdk';
-import MD5 from 'js-md5';
-import { resolveFileInfo } from '@/utils/helper';
 import { CourseWareItem } from "@/edu-sdk";
-import { get } from "lodash";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types";
 import { fileSizeConversionUnit } from "@/utils/utils";
+import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
 import { FormatIconType } from "agora-scenario-ui-kit";
+import OSS, { MultipartUploadResult } from "ali-oss";
+import { get } from "lodash";
+import { LegacyPPTConverter } from 'white-web-sdk';
+import { ApiBase, ApiBaseInitializerParams } from "./base";
 
 export const mapFileType = (type: string): FormatIconType => {
   if (type.match(/ppt|pptx|pptx/i)) {

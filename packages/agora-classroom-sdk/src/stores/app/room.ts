@@ -23,8 +23,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import uuidv4 from 'uuid/v4';
-import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
+import { v4 as uuidv4} from 'uuid';
+import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../../types';
 
 dayjs.extend(duration)
 

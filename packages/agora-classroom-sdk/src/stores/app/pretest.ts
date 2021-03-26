@@ -5,7 +5,7 @@ import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduLogger, LocalUserRender
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { BehaviorSubject } from 'rxjs';
-import uuidv4 from 'uuid/v4';
+import {v4 as uuidv4} from 'uuid';
 
 export class PretestStore {
   static resolutions: any[] = [

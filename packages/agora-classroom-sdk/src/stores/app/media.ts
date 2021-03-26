@@ -1,4 +1,4 @@
-import uuidv4 from 'uuid/v4';
+import {v4 as uuidv4} from 'uuid';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
