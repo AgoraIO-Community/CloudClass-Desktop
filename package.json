@@ -35,6 +35,7 @@
     "build:demo": "lerna exec --scope=agora-rte-demo npm run build",
     "run:demo": "lerna exec --scope=agora-education-demo npm run dev",
     "run:demo:electron": "lerna exec --scope=agora-rte-demo npm run electron",
+    "run:apaas": "lerna exec --scope=agora-apaas-demo npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

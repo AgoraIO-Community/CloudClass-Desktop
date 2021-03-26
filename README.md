@@ -22,4 +22,10 @@ cp .env.example packages/agora-education-demo/.env
 yarn dev
 ```
 
+## build classroom sdk
+```bash
+yarn build:ui-kit
+yarn build:classroom:sdk
+```
+
 + [Electron QuickStart](./packages/agora-electron-edu-demo/README.md)
