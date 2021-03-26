@@ -5223,9 +5223,6 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-"agora-cef-sdk@file:./packages/agora-classroom-sdk/vendor/agora-cef-sdk":
-  version "3.1.1"
-
 agora-electron-sdk@education290:
   version "2.9.0-rc.107-build.1307"
   resolved "https://registry.npm.taobao.org/agora-electron-sdk/download/agora-electron-sdk-2.9.0-rc.107-build.1307.tgz?cache=0&sync_timestamp=1615804270942&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fagora-electron-sdk%2Fdownload%2Fagora-electron-sdk-2.9.0-rc.107-build.1307.tgz#d61f1122f20e8974c4a13150e0ceddf729d95057"
