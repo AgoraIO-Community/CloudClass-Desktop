@@ -23,8 +23,8 @@ export const IncognitoPage = observer(() => {
     roleType,
     roomType,
     roomName,
-    listener,
-    pretest,
+    // listener,
+    // pretest = false,
     rtmUid,
     rtmToken,
     language,
@@ -44,7 +44,7 @@ export const IncognitoPage = observer(() => {
       roomRef.current = await AgoraEduSDK.launch(dom, {
         // userUuid: '666', // 用户uuid
         // userName: 'liyang dalao', // 用户昵称
-        // roomUuid: '555555',
+        // roomUuid: '621621',
         // roleType: 0,
         // roomType: 0,
         // roomName: '1',
@@ -63,7 +63,7 @@ export const IncognitoPage = observer(() => {
         roleType,
         roomType,
         roomName,
-        pretest,
+        pretest: false,
         rtmUid,
         rtmToken,
         language,

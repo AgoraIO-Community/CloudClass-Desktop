@@ -52,7 +52,8 @@ export type AppStoreConfigParams = {
     accessKey: string,
     secretKey: string,
     endpoint: string,
-  }
+  },
+  recordUrl: string
 }
 
 export type AppStoreInitParams = {
@@ -340,6 +341,7 @@ export class AppStore implements ClassRoomAbstractStore {
         sdkDomain: this.params.config.sdkDomain,
         rtmUid: this.params.config.rtmUid,
         rtmToken: this.params.config.rtmToken,
+        recordUrl: this.params.config.recordUrl
       },
       mainPath: this.params.mainPath,
       roomPath: this.params.roomPath,

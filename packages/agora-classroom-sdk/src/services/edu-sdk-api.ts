@@ -16,7 +16,8 @@ type ConfigResult = {
       secretKey: string,
       endpoint: string
     }
-  }
+  },
+  recordUrl: string
 }
 
 type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>
