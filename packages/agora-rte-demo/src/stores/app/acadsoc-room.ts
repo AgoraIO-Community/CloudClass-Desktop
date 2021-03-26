@@ -1136,9 +1136,28 @@ export class AcadsocRoomStore extends SimpleInterval {
       // this.appStore.uiStore.stopLoading()
       this.joined = true
       this.roomJoined = true
+      // TODO: report device
+      eduSDKApi.reportCameraState({
+        roomUuid: roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        state: +this.appStore.mediaStore.device
+      }).catch((err) => {
+        BizLogger.info(`[demo]  login phase action in report native device camera state failed, reason: ${err}`)
+      }).then(() => {
+        BizLogger.info(`[CAMERA] report camera device not working`)
+      })
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
+      eduSDKApi.reportCameraState({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        state: +this.appStore.mediaStore.device
+      }).catch((err) => {
+        BizLogger.info(`[demo] login phase action in report native device camera state failed, reason: ${err}`)
+      }).then(() => {
+        BizLogger.info(`[CAMERA] report camera device not working`)
+      })
       throw GenericErrorWrapper(err)
     }
   }
