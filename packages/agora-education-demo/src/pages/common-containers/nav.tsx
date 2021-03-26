@@ -1,12 +1,13 @@
-import { useRoomStore, useUIStore } from '@/hooks'
+import { useAppStore, useRoomStore, useUIStore } from '@/hooks'
 import { BizHeader, Modal, Button } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
 import { Exit } from './dialog'
 import { SettingContainer } from './setting'
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { homeApi } from '@/services/home-api'
+import { EduRoleTypeEnum, GenericErrorWrapper } from 'agora-rte-sdk'
+import { eduSDKApi } from '@/services/edu-sdk-api'
 
 export const NavigationBar: React.FC<any> = observer(() => {
 
@@ -16,6 +17,8 @@ export const NavigationBar: React.FC<any> = observer(() => {
 
   const uiStore = useUIStore()
 
+  const appStore = useAppStore()
+
   const handleClick = useCallback(async (type: string) => {
     switch (type) {
       case 'exit': {
@@ -23,33 +26,43 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
       case 'record': {
-        console.log('record')
-        console.log(roomStore, roomStore.roomInfo.roomType)
+        const roomUuid = roomStore.roomInfo.roomUuid
+        const tokenRule = `${roomUuid}-record-${Date.now()}`
+        // 生成token home-api login
+        const { rtmToken, userUuid } = await homeApi.login(tokenRule)
         const urlParams = {
-          userUuid: '', // 用户uuid
-          userName: 'string', // 用户昵称
-          roomUuid: roomStore.roomInfo.roomUuid, // 房间uuid
+          userUuid, // 用户uuid
+          userName: 'agora incognito', // 用户昵称
+          roomUuid, // 房间uuid
           roleType: EduRoleTypeEnum.invisible, // 角色
           roomType: roomStore.roomInfo.roomType, // 房间类型
-          roomName: 'string', // 房间名称
-          listener: 'ListenerCallback', // launch状态 todo 在页面中处理
+          roomName: roomStore.roomInfo.roomName, // 房间名称x
+          // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
           pretest: false, // 开启设备检测
-          rtmUid: 'string',
-          rtmToken: 'string', // rtmToken
-          language: 'LanguageEnum', // 国际化
-          startTime: 'number', // 房间开始时间
-          duration: 'number', // 课程时长
-          recordUrl: 'string' // 回放页地址
+          rtmUid: userUuid,
+          rtmToken, // rtmToken
+          language: appStore.params.language, // 国际化
+          startTime: appStore.params.startTime, // 房间开始时间
+          duration: appStore.params.duration, // 课程时长
+          recordUrl: appStore.params.config.recordUrl, // 回放页地址
+          appId: appStore.params.config.agoraAppId,
+          userRole: EduRoleTypeEnum.invisible
+        }
+        if (!urlParams.recordUrl) {
+          // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
+          urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
+          // throw GenericErrorWrapper()
+          // return;
         }
         const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
-        const url = `https://xxxx?${urlParamsStr}`
-        console.log({url}) 
+        const url = `${urlParams.recordUrl}?${urlParamsStr}`
+        console.log({urlParams, url}) 
         // todo fetch 
-        // await eduSDKApi.updateRecordingState({
-        //   roomUuid: '',
-        //   state: 1,
-        //   url
-        // })
+        await eduSDKApi.updateRecordingState({
+          roomUuid,
+          state: 1,
+          url
+        })
         break
       }
       case 'setting': {

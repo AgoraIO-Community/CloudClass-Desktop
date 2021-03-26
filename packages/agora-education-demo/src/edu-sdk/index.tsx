@@ -6,7 +6,7 @@ import { eduSDKApi } from '@/services/edu-sdk-api';
 import { AppStore } from "@/stores/app";
 import { BizPagePath } from '@/types';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
-import 'agora-scenario-ui-kit/lib/style.css';
+// import 'agora-scenario-ui-kit/lib/style.css';
 import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
@@ -241,6 +241,7 @@ export class AgoraEduSDK {
           },
           rtmUid: option.userUuid,
           rtmToken: option.rtmToken,
+          recordUrl: data.recordUrl
         },
         language: option.language,
         translateLanguage: option.translateLanguage,

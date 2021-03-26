@@ -39,6 +39,7 @@ ReactDOM.render(
       rtmToken: '',
       rtmUid: '',
       courseWareList: [],
+      recordUrl: ''
     }}
   />,
   document.getElementById('root')
