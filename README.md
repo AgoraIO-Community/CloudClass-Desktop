@@ -12,7 +12,7 @@ yarn bootstrap
 ## config
 ```bash
 # copy config template to agora-rte-demo project
-cp .env.example packages/agora-education-demo/.env
+cp .env.example packages/agora-classroom-sdk/.env
 
 # fill the config with your agora.io development environment
 ```
