@@ -4,6 +4,17 @@ export const en = {
     'in_class': 'In Class',
     'end_class': 'End Class',
   },
+  'roster': {
+    'teacher_name': 'Teacher：',
+    'user_list': 'User List',
+    'student_name': 'Name',
+    'student_co_video': 'CoVideo',
+    'board_state': 'Board',
+    'camera_state': 'Camera',
+    'microphone_state': 'Microphone',
+    'reward': 'Reward',
+    'kick': 'Kick'
+  },
   'hands_up': 'Hands Up',
   'co_video': {
     'received_student_hands_up': 'Hands Up ',

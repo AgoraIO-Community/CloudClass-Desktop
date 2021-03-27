@@ -169,14 +169,11 @@ export class BoardClient extends EventEmitter {
   revokePermission(userUuid: string) {
     if (this.room && !this.disconnected) {
       const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
-      let index = grantUsers.findIndex((it: string) => it === userUuid)
-      if (index !== -1) {
-        grantUsers.splice(index, 1)
-        this.room.setGlobalState({
-          grantUsers: grantUsers
-        })
-        BizLogger.info('[board] grantUsers ', JSON.stringify(grantUsers))
-      }
+      let newIds = grantUsers.filter((uid: string) => uid !== userUuid)
+      this.room.setGlobalState({
+        grantUsers: newIds
+      })
+      BizLogger.info('[board] grantUsers ', JSON.stringify(grantUsers))
     }
   }
 

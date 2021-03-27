@@ -14,18 +14,18 @@ export const RoomChat: React.FC<any> = observer(() => {
 
   return (
     <I18nProvider>
-      <Chat
-        collapse={minimize}
-        onCanChattingChange={onCanChattingChange}
-        canChatting={canChatting}
-        isHost={isHost}
-        uid={meUid}
-        messages={messageList}
-        chatText={text}
-        onText={onChangeText}
-        onSend={handleSendText}
-        onCollapse={onChangeCollapse}
-      />
+    <Chat
+      collapse={minimize}
+      onCanChattingChange={onCanChattingChange}
+      canChatting={canChatting}
+      isHost={isHost}
+      uid={meUid}
+      messages={messageList}
+      chatText={text}
+      onText={onChangeText}
+      onCollapse={onChangeCollapse}
+      onSend={handleSendText}
+    />
     </I18nProvider>
   )
 })

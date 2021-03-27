@@ -145,7 +145,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
               cameraEnabled: false,
               micEnabled: true,
               stars: 2,
-              canTriggerAction: true,
             }))}
           />
         )

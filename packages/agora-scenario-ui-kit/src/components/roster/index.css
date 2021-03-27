@@ -34,6 +34,18 @@
   font-size: 22px;
 }
 
+.roster-table .muted {
+  color: #f04c36;
+}
+
+.roster-table .un-muted {
+  color: #0073ff;
+}
+
+.roster-table .disabled {
+  color: #979797 !important;
+}
+
 .roster-table .on-podium,
 .roster-table .whiteboard-granted,
 .roster-table .camera-enabled,
@@ -46,7 +58,7 @@
   color: #f04c36;
 }
 
-.roster-table .whiteboard-ungranted {
+.roster-table .whiteboard-no_granted {
   color: #bdbdca;
 }
 
@@ -69,6 +81,8 @@
   background-color: #e7e7f3;
 }
 
-.roster-table .action {
-  @apply cursor-pointer;
+.roster-table .inline-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

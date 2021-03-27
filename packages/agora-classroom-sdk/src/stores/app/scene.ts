@@ -6,7 +6,7 @@ import { RoomApi } from '@/services/room-api';
 import { AppStore } from '@/stores/app/index';
 import { BizLogger } from '@/utils/utils';
 import { Mutex } from '@/utils/mutex';
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduUserData, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
 import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -1167,7 +1167,7 @@ export class SceneStore extends SimpleInterval {
         video: this.cameraEduStream?.hasVideo,
         audio: this.cameraEduStream?.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
-        hideControl: this.canControl(this.appStore.userUuid),
+        hideControl: this.hideControl(this.appStore.userUuid),
         holderState: placeHolderType,
         placeHolderText: text,
         whiteboardGranted: true,
@@ -1189,7 +1189,7 @@ export class SceneStore extends SimpleInterval {
         video: teacherStream.hasVideo,
         audio: teacherStream.hasAudio,
         renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
-        hideControl: this.canControl(user.userUuid),
+        hideControl: this.hideControl(user.userUuid),
         holderState: props.placeHolderType,
         placeHolderText: props.text,
         whiteboardGranted: true,
@@ -1220,7 +1220,7 @@ export class SceneStore extends SimpleInterval {
     const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
 
     const config = {
-      hideOffPodium: roomType === 4 ? true : false,
+      hideOffPodium: roomType === 1 ? true : false,
       isHost: isHost,
     }
 
@@ -1323,7 +1323,7 @@ export class SceneStore extends SimpleInterval {
           video: stream.hasVideo,
           audio: stream.hasAudio,
           renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer,
-          hideControl: this.canControl(user.userUuid),
+          hideControl: this.hideControl(user.userUuid),
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
@@ -1347,7 +1347,7 @@ export class SceneStore extends SimpleInterval {
         video: this.cameraEduStream.hasVideo,
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
-        hideControl: this.canControl(this.appStore.userUuid),
+        hideControl: this.hideControl(this.appStore.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         volumeLevel: this.localVolume,
@@ -1437,8 +1437,16 @@ export class SceneStore extends SimpleInterval {
    * @note only teacher or myself return true
    * @param userUuid string
    */
-  canControl(userUuid: string): boolean {
-    return this.roomInfo.userRole !== EduRoleTypeEnum.student || this.userUuid === userUuid
+  hideControl(userUuid: string): boolean {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+      return false
+    }
+
+    if (this.userUuid === userUuid) {
+      return false
+    }
+
+    return true
   }
 
   async closeStream(userUuid: string, isLocal: boolean) {
@@ -1631,6 +1639,18 @@ export class SceneStore extends SimpleInterval {
       this.recordId = ''
     } catch (err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_end_recording') + `, ${err.message}`)
+    }
+  }
+
+  @action
+  async revokeCoVideo(userUuid: string) {
+    try {
+      await eduSDKApi.revokeCoVideo({
+        roomUuid: this.roomInfo.roomUuid,
+        toUserUuid: userUuid
+      })
+    } catch (err) {
+      this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
     }
   }
 }

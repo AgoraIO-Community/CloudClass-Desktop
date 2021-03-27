@@ -145,6 +145,8 @@ export const WhiteboardContainer = observer(() => {
     currentSelector,
     activeMap,
     tools,
+    hasBoardPermission,
+    showTab
   } = useWhiteboardState()
 
   return (
@@ -153,18 +155,19 @@ export const WhiteboardContainer = observer(() => {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
       }
-      <TabsContainer />
-      <div className='toolbar-position'>
+      {showTab ? 
+      <TabsContainer /> : null}
+      {hasBoardPermission ? <div className='toolbar-position'>
         <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
-      </div>
-      <ZoomController
+      </div> : null}
+      {hasBoardPermission ? <ZoomController
         className='zoom-position'
         zoomValue={zoomValue}
         currentPage={currentPage}
         totalPage={totalPage}
         maximum={!isFullScreen}
         clickHandler={handleZoomControllerChange}
-      />
+      /> : null}
     </div>
   )
 })

@@ -67,3 +67,9 @@
     align-items: center;
     justify-content: center;
 }
+
+.hands-box-line {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}

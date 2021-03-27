@@ -1,4 +1,5 @@
 import React, { FC, ReactNode } from 'react';
+import { t } from '~components/i18n';
 import { Modal, ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
@@ -14,15 +15,24 @@ export type ActionTypes =
   | 'kick-out'
   | string;
 
+export enum MediaDeviceState {
+  not_available = 0,
+  available = 1
+}
 export interface Profile {
   uid: string | number;
   name: string;
   onPodium: boolean;
+  canCoVideo: boolean;
   whiteboardGranted: boolean;
+  canGrantBoard: boolean;
   cameraEnabled: boolean;
   micEnabled: boolean;
+  cameraDevice: boolean;
+  micDevice: boolean;
   stars: number;
-  canTriggerAction?: boolean;
+  onlineState: boolean;
+  disabled: boolean;
 }
 
 export interface Column {
@@ -49,6 +59,10 @@ export interface RosterProps extends ModalProps {
    * col 点击的回调，是否可以点击，取决于 column 中配置 action 与否和 dataSource 数据中配置 canTriggerAction
    */
   onClick?: (action: ActionTypes, uid: string | number) => void;
+  /**
+   * onClose
+   */
+  onClose?: () => void;
 }
 
 export const Roster: FC<RosterProps> = ({
@@ -56,17 +70,19 @@ export const Roster: FC<RosterProps> = ({
   columns = defaultColumns,
   dataSource,
   onClick,
+  onClose,
   ...modalProps
 }) => {
   return (
     <Modal
       className="roster-modal"
       width={606}
-      title="人员列表"
+      title={t('roster.user_list')}
+      onCancel={onClose}
       {...modalProps}>
       <div className="roster-wrap">
         <div className="roster-header">
-          <label>教师姓名: </label>
+          <label>{t('roster.teacher_name')}</label>
           {teacherName}
         </div>
         <Table className="roster-table">
@@ -77,15 +93,15 @@ export const Roster: FC<RosterProps> = ({
           </TableHeader>
           <Table className="table-container">
             {dataSource?.map((data) => (
-              <Row key={data.uid}>
+              <Row className='border-bottom-width-1' key={data.uid}>
                 {columns.map((col) => (
                   <Col key={col.key}>
                     <span
                       className={
-                        col.action && data.canTriggerAction ? 'action' : ''
+                        !!data.disabled === false ? 'action' : ''
                       }
                       onClick={
-                        col.action && data.canTriggerAction
+                        !!data.disabled === false
                           ? () =>
                               col.action &&
                               onClick &&

@@ -62,3 +62,18 @@ export type RefuseMessageData = Pick<CauseData['data'],
 | 'processUuid'
 | 'removeProgress'
 >
+
+export type RosterUserInfo = {
+  name: string,
+  uid: string,
+  onlineState: boolean,
+  micDevice: boolean,
+  cameraDevice: boolean,
+  cameraEnabled: boolean,
+  micEnabled: boolean,
+  whiteboardGranted: boolean,
+  canCoVideo: boolean,
+  canGrantBoard: boolean,
+  stars: number,
+  disabled: boolean
+}

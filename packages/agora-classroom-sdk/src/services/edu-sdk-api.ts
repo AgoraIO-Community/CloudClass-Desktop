@@ -65,6 +65,7 @@ export class EduSDKApi extends ApiBase {
     roomUuid: string,
     roomName: string,
     roomType: number,
+    userName: string,
     userUuid: string,
     role: number,
     startTime?: number,
@@ -80,6 +81,7 @@ export class EduSDKApi extends ApiBase {
         roomType: params.roomType,
         role: params.role,
         startTime: params.startTime,
+        userName: params.userName,
         duration: params.duration,
       }
     })
@@ -242,6 +244,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async dismissHandsUp(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance`,
+      method: 'DELETE',
+    })
+    return res.data
+  }
+
   async cancelHandsUp(params: {
     roomUuid: string,
     toUserUuid: string,
@@ -283,6 +296,38 @@ export class EduSDKApi extends ApiBase {
     })
     return res.data
   }
+
+  async revokeCoVideo(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance`,
+      method: 'DELETE',
+      data: {
+        toUserUuid: params.toUserUuid,
+      }
+    })
+    return res.data
+  }
+
+  async kick(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.toUserUuid}/exit`,
+      method: 'POST',
+      data: {
+        dirty: {
+          state: 1,
+          duration: 600,
+        }
+      }
+    })
+    return res.data
+  }
+
 }
 
 export const eduSDKApi = new EduSDKApi({

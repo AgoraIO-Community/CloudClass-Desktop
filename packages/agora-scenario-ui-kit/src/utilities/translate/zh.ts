@@ -4,6 +4,17 @@ export const zh = {
     'in_class': '已上课',
     'end_class': '课程已结束',
   },
+  'roster': {
+    'teacher_name': '教师姓名：',
+    'user_list': '人员列表',
+    'student_name': '学生姓名',
+    'student_co_video': '学生上下台',
+    'board_state': '学生授权',
+    'camera_state': '摄像头',
+    'microphone_state': '麦克风',
+    'reward': '奖励',
+    'kick': '踢人'
+  },
   'hands_up': '举手',
   'co_video': {
     'received_student_hands_up': '学生举手消息',

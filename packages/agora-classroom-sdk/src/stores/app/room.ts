@@ -396,9 +396,9 @@ export class RoomStore extends SimpleInterval {
 
       if (this.isTeacher || this.isAssistant) {
         const sensitiveWords = get(result, 'sensitiveWords', [])
-        if (sensitiveWords.length) {
-          this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
-        }
+        // if (sensitiveWords.length) {
+        //   this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
+        // }
       }
 
       return {
@@ -702,6 +702,7 @@ export class RoomStore extends SimpleInterval {
         roomUuid,
         roomName: `${this.roomInfo.roomName}`,
         roomType: +this.roomInfo.roomType as number,
+        userName: this.roomInfo.userName,
         userUuid: this.roomInfo.userUuid,
         role: this.roomInfo.userRole,
         startTime: startTime,  // 单位：毫秒

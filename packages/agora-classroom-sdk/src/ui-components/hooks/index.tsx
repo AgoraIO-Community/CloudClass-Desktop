@@ -156,13 +156,116 @@ export const useVideoControlContext = (): VideoContainerContext => {
   ])
 
   const onOffPodiumClick = useCallback(async (userUuid: any) => {
-    // const sceneStore = sceneStore.grantUsers.find((uid: string) => uid === userUuid)
     if (isHost) {
-      // if (targetUser) {
-      //   await sceneStore.revokeUserPermission(userUuid)
-      // } else {
-      //   await sceneStore.grantUserPermission(userUuid)
-      // }
+      await sceneStore.revokeCoVideo(userUuid)
+    }
+  }, [isHost, sceneStore])
+
+  return {
+    teacherStream,
+    firstStudent,
+    studentStreams,
+    onCameraClick,
+    onMicClick,
+    onSendStar,
+    onWhiteboardClick,
+    onOffPodiumClick,
+    sceneVideoConfig,
+    videoStreamList,
+  }
+}
+
+export const useSmallClassVideoControlContext = (): VideoContainerContext => {
+
+  const sceneStore = useSceneStore()
+  const boardStore = useBoardStore()
+  const smallClassStore = useSmallClassStore()
+  const isHost = sceneStore.isHost
+  const teacherStream = sceneStore.teacherStream
+  const studentStreams = smallClassStore.studentStreams
+
+  const firstStudent = studentStreams[0]
+
+  const sceneVideoConfig = sceneStore.sceneVideoConfig
+
+  const userRole = sceneStore.roomInfo.userRole
+
+  const onCameraClick = useCallback(async (userUuid: any) => {
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (targetStream.hasVideo) {
+        await sceneStore.muteVideo(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteVideo(userUuid, isLocal)
+      }
+    }
+  }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
+
+  const onMicClick = useCallback(async (userUuid: any) => {
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (targetStream.hasAudio) {
+        await sceneStore.muteAudio(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteAudio(userUuid, isLocal)
+      }
+    }
+  }, [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid])
+
+  const onSendStar = useCallback(async (uid: any) => {
+    await smallClassStore.sendReward(uid)
+  }, [userRole, smallClassStore])
+
+  const onWhiteboardClick = useCallback(async (userUuid: any) => {
+    const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid)
+    if (isHost) {
+      if (targetUser) {
+        await boardStore.revokeUserPermission(userUuid)
+      } else {
+        await boardStore.grantUserPermission(userUuid)
+      }
+    }
+  }, [isHost, boardStore])
+
+  const videoStreamList = useMemo(() => {
+
+    return studentStreams.map((stream: EduMediaStream) => ({
+      isHost: isHost,
+      hideOffPodium: sceneVideoConfig.hideOffPodium,
+      username: stream.account,
+      stars: stream.stars,
+      uid: stream.userUuid,
+      micEnabled: stream.audio,
+      cameraEnabled: stream.video,
+      whiteboardGranted: stream.whiteboardGranted,
+      micVolume: stream.micVolume,
+      controlPlacement: 'bottom',
+      hideControl: stream.hideControl,
+      children: (
+        <>
+        <CameraPlaceHolder state={stream.holderState} />
+        {
+          stream.renderer && stream.video ?
+          <RendererPlayer
+            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
+          />
+          : null
+        }
+        </>
+      )
+      }))
+  }, [
+    firstStudent,
+    studentStreams,
+    sceneVideoConfig.hideOffPodium,
+    sceneVideoConfig.isHost
+  ])
+
+  const onOffPodiumClick = useCallback(async (userUuid: any) => {
+    if (isHost) {
+      await sceneStore.revokeCoVideo(userUuid)
     }
   }, [isHost, sceneStore])
 
@@ -1109,6 +1212,7 @@ export const use1v1Store = () => {
 
 export const useWhiteboardState = () => {
   const boardStore = useBoardStore()
+  const roomStore = useRoomStore()
   useI18nContext()
 
   const boardRef = useRef<HTMLDivElement | null>(null)
@@ -1161,6 +1265,8 @@ export const useWhiteboardState = () => {
     currentSelector: boardStore.currentSelector,
     tools: boardStore.tools,
     activeMap: boardStore.activeMap,
+    hasBoardPermission: boardStore.hasPermission,
+    showTab: roomStore.roomInfo.userRole === EduRoleTypeEnum.student ? false : true
   }
 }
 
@@ -1178,5 +1284,24 @@ export const useDownloadContext = () => {
     deleteDownload: async (taskUuid: string) => {
       await boardStore.deleteSingle(taskUuid)
     }
+  }
+}
+
+export const useUserListContext = () => {
+
+  const smallClassStore = useSmallClassStore()
+
+  const teacherName = smallClassStore.teacherName
+
+  const rosterUserList = smallClassStore.rosterUserList
+
+  const onClick = useCallback(async (actionType: any, uid: any) => {
+      await smallClassStore.handleRosterClick(actionType, uid)
+  }, [smallClassStore])
+
+  return {
+    dataSource: rosterUserList,
+    teacherName,
+    onClick
   }
 }

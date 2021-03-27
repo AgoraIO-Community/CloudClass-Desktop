@@ -2,7 +2,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from 'agora-scenario
 import { observer } from 'mobx-react'
 import React from 'react'
 import { RendererPlayer } from '../common-comps/renderer-player'
-import { useVideoControlContext } from '../hooks'
+import { useVideoControlContext, useSmallClassVideoControlContext } from '../hooks'
 
 export const VideoPlayerTeacher = observer(() => {
 
@@ -19,7 +19,9 @@ export const VideoPlayerTeacher = observer(() => {
   return (
     <VideoPlayer
       isHost={sceneVideoConfig.isHost}
-      hideOffPodium={sceneVideoConfig.hideOffPodium}
+      hideOffPodium={true}
+      //@ts-ignore
+      hideWhiteboardGranted={true}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
@@ -99,7 +101,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-  } = useVideoControlContext()
+  } = useSmallClassVideoControlContext()
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">

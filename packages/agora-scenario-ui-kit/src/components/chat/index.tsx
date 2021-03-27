@@ -89,7 +89,7 @@ export const Chat: FC<ChatProps> = ({
           <span>
             {isHost ? (
               <Icon
-                onClick={() => onCanChattingChange(!canChatting)}
+                onClick={() => onCanChattingChange(!!canChatting)}
                 className="chat-header-message-state"
                 type={canChatting ? 'message-on' : 'message-off'}
               />

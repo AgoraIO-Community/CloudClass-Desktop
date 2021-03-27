@@ -1,29 +1,21 @@
 import { useBoardStore } from '@/hooks'
-import { useI18nContext, UserList } from 'agora-scenario-ui-kit'
+import { t, useI18nContext, UserList } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
+import { useUserListContext } from '../hooks'
 
 export const UserListContainer = observer(() => {
 
-    const { t } = useI18nContext()
-    const boardStore = useBoardStore()
+    const {dataSource, teacherName, onClick} = useUserListContext()
 
     return (
         <UserList
             value='register'
             label={t('scaffold.user_list')}
             icon='register'
-            teacherName="Peter"
-            dataSource={[...'.'.repeat(100)].map((item, i: number) => ({
-                uid: i,
-                name: 'Lily True ' + (i + 1),
-                onPodium: false,
-                whiteboardGranted: true,
-                cameraEnabled: false,
-                micEnabled: true,
-                stars: 2,
-                canTriggerAction: true,
-            }))}
+            teacherName={teacherName}
+            dataSource={dataSource}
+            onClick={onClick}
         />
     )
 })

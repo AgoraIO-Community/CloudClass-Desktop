@@ -10,12 +10,11 @@ export interface CloudDiskProps extends ToolItem {
 }
 
 export const CloudDisk: FC<CloudDiskProps> = ({ label, children }) => {
-  const [show, updateShow] = useState<boolean>(true);
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
 
   const actionClose = useCallback(() => {
     setPopoverVisible(false);
-  }, [updateShow, show]);
+  }, []);
 
   const Content = useCallback(
     () => (

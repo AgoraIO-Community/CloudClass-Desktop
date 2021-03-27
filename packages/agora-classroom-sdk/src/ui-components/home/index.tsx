@@ -38,7 +38,7 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const uid = `${roomId}${userName}${role}`
+  const uid = `${userName}${role}`
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -87,7 +87,7 @@ export const HomePage = observer(() => {
           language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
-          roomUuid: `${roomId}${scenario}`,
+          roomUuid: `test${roomId}${scenario}`,
           roomType: scenario,
           roomName: `test${roomId}`,
           userName: userName,

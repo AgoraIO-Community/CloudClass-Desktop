@@ -135,6 +135,7 @@
     "@types/axios": "0.14.0",
     "@types/classnames": "^2.2.11",
     "@types/deep-diff": "1.0.0",
+    "@types/extract-zip": "^1.6.2",
     "@types/jest": "24.0.19",
     "@types/joi": "14.3.4",
     "@types/lodash": "4.14.145",

@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { Card, Icon, Popover, t, Tooltip } from "~components";
 import { BaseHandsUpProps, HandsUpState, StudentInfo } from "./types";
@@ -40,18 +40,13 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
     [`${className}`]: !!className,
   });
 
+  const handleClick = () => {
+
+  }
+
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
-  const handleClick = useCallback(() => {
-    setPopoverVisible(!popoverVisible)
-  }, [popoverVisible])
 
-  const ref = useRef<boolean>(false)
-
-  useEffect(() => {
-    ref.current = popoverVisible
-  }, [ref, popoverVisible])
-
-  const coVideoList = studentList.filter((student: StudentInfo) => student.coVideo)
+  const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo)
 
   const content = useCallback(() => {
     return (<StudentsHandsUpList
@@ -61,12 +56,6 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   }, [coVideoList, onClick])
 
   const coVideoSize = studentList.filter((student: StudentInfo) => !!student.coVideo).length
-
-  useEffect(() => {
-    if (!studentList.length) {
-      ref.current && setPopoverVisible(false)
-    }
-  }, [ref, setPopoverVisible, studentList.length])
 
   return (
     <div className={cls} {...restProps}>
@@ -81,7 +70,6 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           borderRadius={borderRadius}
         >
           {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""}
-          <Icon onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
           <Popover
             visible={popoverVisible}
             onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -89,7 +77,10 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
             trigger="click"
             content={content}
             placement="top">
-            <span style={{ marginLeft: 10 }}>{coVideoSize} / {studentList.length}</span>
+            <div className="hands-box-line">
+              <Icon onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
+              <span style={{ marginLeft: 10 }}>{coVideoSize} / {studentList.length}</span>
+            </div>
           </Popover>
         </Card>
       </CSSTransition>

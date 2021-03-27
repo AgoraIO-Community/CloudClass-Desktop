@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
 import { ActionTypes, Roster, RosterProps } from '~components/roster';
 import { list } from '~utilities';
+import { I18nProvider } from '~components/i18n';
 
 const meta: Meta = {
   title: 'Components/Roster',
@@ -18,11 +19,22 @@ const meta: Meta = {
       cameraEnabled: false,
       micEnabled: true,
       stars: 2,
-      canTriggerAction: true,
+      disabled: i === 0 ? false : true,
+      micDevice: true,
+      cameraDevice: true,
+      onlineState: true,
+      canCoVideo: true,
+      canGrantBoard: true,
     })),
   }
 };
 
-export const Docs: FC<RosterProps> = (props) => <Roster {...props} />;
+export const Docs: FC<RosterProps> = (props) => {
+  return (
+    <I18nProvider>
+      <Roster {...props} />
+    </I18nProvider>
+  )
+};
 
 export default meta;

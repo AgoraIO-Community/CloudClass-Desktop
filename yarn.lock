@@ -4051,6 +4051,11 @@
   resolved "https://registry.npm.taobao.org/@types/estree/download/@types/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha1-4Xfmme4bjCLSMXTKqnQiZEOJUJ8=
 
+"@types/extract-zip@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.npm.taobao.org/@types/extract-zip/download/@types/extract-zip-1.6.2.tgz#5c7eb441c41136167a42b88b64051e6260c29e86"
+  integrity sha1-XH60QcQRNhZ6QriLZAUeYmDCnoY=
+
 "@types/flat-cache@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/@types/flat-cache/download/@types/flat-cache-2.0.0.tgz?cache=0&sync_timestamp=1613378648419&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fflat-cache%2Fdownload%2F%40types%2Fflat-cache-2.0.0.tgz#64e5d3b426c392b603a208a55bdcc7d920ce6e57"
