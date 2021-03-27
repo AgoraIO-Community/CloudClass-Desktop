@@ -60,7 +60,7 @@ export class SmallClassStore {
           placeHolderText: props.text,
           volumeLevel: volumeLevel,
           stars: +get(this.studentsMap, `${acceptedUser.userUuid}.reward`, 0),
-          whiteboardGranted: false,
+          whiteboardGranted: get(this.appStore.boardStore.grantUsers, `${acceptedUser.userUuid}`),
         })
       }
       return acc
@@ -84,6 +84,7 @@ export class SmallClassStore {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         stars: +get(this.studentsMap, `${this.roomInfo.userUuid}.reward`, 0),
+        whiteboardGranted: get(this.appStore.boardStore.grantUsers, `${this.appStore.userUuid}`),
         volumeLevel: this.sceneStore.localVolume,
       } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
