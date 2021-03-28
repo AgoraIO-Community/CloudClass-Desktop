@@ -72,6 +72,7 @@ export type CourseWareUploadResult = {
 
 export enum QuickTypeEnum { 
   Kick = "kick",
+  Kicked = "kicked",
   End = "end"
 }
 

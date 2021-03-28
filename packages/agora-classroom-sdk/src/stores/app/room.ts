@@ -1,7 +1,7 @@
 import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
+import { KickedEnd, KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { reportService } from '@/services/report-service';
 import { RoomApi } from '@/services/room-api';
@@ -749,7 +749,18 @@ export class RoomStore extends SimpleInterval {
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
         this.sceneStore.userList = roomManager.getFullUserList()
-        BizLogger.info("local-user-updated", evt)
+        BizLogger.info("ode", evt)
+      })
+      roomManager.on('local-user-removed', async (evt: any) => {
+        await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
+          BizLogger.info("ode", evt)
+          const {user, type} = evt
+          if (user.userUuid === this.roomInfo.userUuid && type === 2) {
+            await this.appStore.releaseRoom()
+            this.appStore.uiStore.addToast('kicked', 'error')
+            this.noticeQuitRoomWith(QuickTypeEnum.Kicked)
+          }
+        })
       })
       // 本地流移除
       roomManager.on('local-stream-removed', async (evt: any) => {
@@ -1212,35 +1223,14 @@ export class RoomStore extends SimpleInterval {
     switch(quickType) {
       case QuickTypeEnum.Kick: {
         this.appStore.uiStore.addDialog(KickEnd)
-        // Modal.show({
-        //   title: t(`aclass.notice`),
-        //   children: t(`toast.kick`),
-        //   footer: [
-        //     <Button type="ghost" action='ok'>{t('aclass.confirm.yes')}</Button>,
-        //     <Button type="primary" action='cancel'>{t('aclass.confirm.no')}</Button>
-        //   ],
-        //   onOk: async () => {
-        //     await this.appStore.destroyRoom()
-        //   }
-        // })
         break;
       }
       case QuickTypeEnum.End: {
         this.appStore.uiStore.addDialog(RoomEnd)
-        // Modal.confirm({
-        //   title: t(`aclass.class_end`),
-        //   text: t(`aclass.leave_room`),
-        //   showConfirm: true,
-        //   showCancel: true,
-        //   confirmText: t('aclass.confirm.yes'),
-        //   visible: true,
-        //   cancelText: t('aclass.confirm.no'),
-        //   onConfirm: async () => {
-        //     await this.appStore.destroyRoom()
-        //   },
-        //   onClose: () => {
-        //   }
-        // })
+        break;
+      }
+      case QuickTypeEnum.Kicked: {
+        this.appStore.uiStore.addDialog(KickedEnd)
         break;
       }
     }

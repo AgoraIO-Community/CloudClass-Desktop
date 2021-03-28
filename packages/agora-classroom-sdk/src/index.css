@@ -104,7 +104,7 @@ html, body, #root {
   display: none;
 }
 
-.fullscreen .small-class-chat {
+.small-class-chat {
   bottom: 8px;
   right: 11px;
 }

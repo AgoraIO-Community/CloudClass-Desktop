@@ -67,6 +67,7 @@ export type RosterUserInfo = {
   name: string,
   uid: string,
   onlineState: boolean,
+  onPodium: boolean,
   micDevice: boolean,
   cameraDevice: boolean,
   cameraEnabled: boolean,

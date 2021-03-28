@@ -1171,6 +1171,7 @@ export const useExitContext = (id: string) => {
 
 export const useKickEndContext = (id: string) => {
   const roomStore = useRoomStore()
+  const appStore = useAppStore()
 
   const navigationState = roomStore.navigationState
 
@@ -1178,10 +1179,12 @@ export const useKickEndContext = (id: string) => {
   const isStarted = navigationState.isStarted
 
   const onOK = async () => {
+    await appStore.destroyRoom()
     uiStore.removeDialog(id)
   }
 
-  const onCancel = () => {
+  const onCancel = async () => {
+    await appStore.destroyRoom()
     uiStore.removeDialog(id)
   }
 

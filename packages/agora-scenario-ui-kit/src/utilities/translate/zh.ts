@@ -35,6 +35,7 @@ export const zh = {
     'CPU': 'CPU',
   },
   'toast': {
+    'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
     'close_ppt': '关闭当前课件',
     'sure_close_ppt': '你确定要关闭吗？',

@@ -57,6 +57,25 @@ export const KickEnd = observer((id: string) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
+      title={t('toast.kick_by_other_side')}>
+    <p>{t('toast.quit_from_room')}</p>
+    </Modal>
+  )
+})
+
+export const KickedEnd = observer((id: string) => {
+
+  const {
+    onOK,
+    onCancel,
+    ButtonGroup
+  } = useKickEndContext(id)
+
+  return (
+    <Modal
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
       title={t('toast.kick_by_teacher')}>
     <p>{t('toast.quit_from_room')}</p>
     </Modal>

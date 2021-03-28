@@ -35,6 +35,7 @@ export const en = {
     'input_message': 'Please Input Message',
   },
   'toast': {
+    'kick_by_other_side': 'Kick by other client',
     'screen_share': 'Screen Share',
     'close_ppt': 'Close CourseWare',
     'sure_close_ppt': 'Are you sure to close?',

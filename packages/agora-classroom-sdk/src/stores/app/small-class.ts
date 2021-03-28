@@ -270,10 +270,11 @@ export class SmallClassStore {
       name: user.userName,
       uid: user.userUuid,
       onlineState: true,
+      onPodium: this.acceptedUserList.find((it: any) => it.userUuid === user.userUuid) ? true : false,
       micDevice: !!get(user, 'userProperties.microphone', 0),
       cameraDevice: !!get(user, 'userProperties.camera', 0),
-      cameraEnabled: !!get(stream, 'hasVideo', 0),
-      micEnabled: !!get(stream, 'hasAudio', 0),
+      cameraEnabled: !!get(stream, 'video', 0),
+      micEnabled: !!get(stream, 'audio', 0),
       whiteboardGranted: this.appStore.boardStore.grantUsers.includes(user.userUuid),
       // whiteboardGranted: !!get,
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
@@ -295,15 +296,16 @@ export class SmallClassStore {
     return {
       uid: localUserUuid,
       name: this.roomInfo.userName,
-      onlineState: false,
+      onPodium: this.acceptedUserList.find((it: any) => it.userUuid === localUserUuid) ? true : false,
+      onlineState: true,
       micDevice: false,
       cameraDevice: false,
-      cameraEnabled: false,
-      micEnabled: false,
+      cameraEnabled: !!get(this.sceneStore, 'cameraEduStream.hasVideo',0),
+      micEnabled: !!get(this.sceneStore, 'cameraEduStream.hasAudio',0),
       whiteboardGranted: false,
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole),
       stars: 0,
-      disabled: [EduRoleTypeEnum.student].includes(this.roomInfo.userRole) ? true : false,
+      disabled: false,
     }
   }
 
@@ -344,10 +346,15 @@ export class SmallClassStore {
 
     switch (actionType) {
       case 'podium': {
-        if (user) {
-          await this.teacherAcceptHandsUp(user.uid)
+        if (user.onPodium) {
+          // if (this.roomInfo.userUuid === user.uid && this.roomInfo.userRole === EduRoleTypeEnum.student) {
+          //   await this.revokeCoVideo
+          // }
+          if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+            await this.revokeCoVideo(user.uid)
+          }
         } else {
-          await this.revokeCoVideo(user.uid)
+          await this.teacherAcceptHandsUp(user.uid)
         }
         break;
       }
