@@ -78,8 +78,8 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
             content={content}
             placement="top">
             <div className="hands-box-line">
-              <Icon onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
-              <span style={{ marginLeft: 10 }}>{coVideoSize} / {studentList.length}</span>
+              <Icon size={28} onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
+              <span className={'hands-apply-inline-box'}>{coVideoSize} / {studentList.length}</span>
             </div>
           </Popover>
         </Card>

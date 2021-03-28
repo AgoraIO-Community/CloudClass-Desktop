@@ -5,6 +5,11 @@
     @apply box-border flex justify-between items-center;
 }
 
+.hands-apply-inline-box {
+    font-size: 12px;
+    margin-left: 10px;
+}
+
 .students-hands-up .card {
     @apply block overflow-y-scroll;
 }

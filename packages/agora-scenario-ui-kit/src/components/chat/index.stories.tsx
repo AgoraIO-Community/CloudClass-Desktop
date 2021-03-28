@@ -109,7 +109,7 @@ export const Docs: FC<ChatProps> = (props) => {
               setText('')
             }
             }
-            closeIcon={<Icon type="min" />}
+            closeIcon={<Icon type="close" />}
             onClickMiniChat={() => {
               console.log('click chat min');
             }}
