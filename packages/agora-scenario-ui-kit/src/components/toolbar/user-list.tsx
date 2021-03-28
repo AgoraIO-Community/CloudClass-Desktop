@@ -10,6 +10,7 @@ export interface UserListProps extends ToolItem {
     columns?: any;
     dataSource?: any;
     onClick?: any;
+    role?: 'assistant' | 'teacher' | 'student' | 'invisible';
 }
 
 export const UserList: FC<UserListProps> = ({
@@ -17,6 +18,7 @@ export const UserList: FC<UserListProps> = ({
     teacherName,
     columns,
     dataSource,
+    role = 'invisible',
     onClick
 }) => {
     const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
@@ -29,6 +31,7 @@ export const UserList: FC<UserListProps> = ({
         () => (
             <div className={`expand-tools user-list`}>
                 <Roster
+                    role={role}
                     teacherName={teacherName}
                     columns={columns}
                     dataSource={dataSource}

@@ -1260,19 +1260,40 @@ export class SceneStore extends SimpleInterval {
     } else {
       return this.streamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
         const teacher = this.userList.find((user: EduUser) => user.role === 'host')
-        if (!teacher || stream.userInfo.userUuid !== teacher.userUuid || stream.videoSourceType !== EduVideoSourceType.screen) {
+        if (stream.videoSourceType !== EduVideoSourceType.screen 
+          || !teacher 
+          || stream.userInfo.userUuid !== teacher.userUuid) {
           return acc;
         } else {
-          acc.push({
-            local: false,
-            account: '',
-            userUuid: stream.userInfo.userUuid,
-            streamUuid: stream.streamUuid,
-            video: stream.hasVideo,
-            audio: stream.hasAudio,
-            renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer,
-            hideControl: false
-          } as any)
+          if (this.userUuid === stream.userInfo.userUuid) {
+            if (this.screenEduStream) {
+              acc.push({
+                local: true,
+                account: '',
+                stars: 0,
+                userUuid: this.screenEduStream.userInfo.userUuid as string,
+                streamUuid: this.screenEduStream.streamUuid,
+                video: this.screenEduStream.hasVideo,
+                audio: this.screenEduStream.hasAudio,
+                renderer: this._screenVideoRenderer as LocalUserRenderer,
+                hideControl: false
+              } as any)
+              return acc;
+            } else {
+              return acc
+            }
+          } else {
+            acc.push({
+              local: false,
+              account: '',
+              userUuid: stream.userInfo.userUuid,
+              streamUuid: stream.streamUuid,
+              video: stream.hasVideo,
+              audio: stream.hasAudio,
+              renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer,
+              hideControl: false
+            } as any)
+          }
         }
         return acc;
       }, [])[0]

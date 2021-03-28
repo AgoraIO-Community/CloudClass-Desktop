@@ -100,7 +100,7 @@ export const Pretest: React.FC<PretestProps> = ({
                 <div className="device-choose">
                     <div className="device-title">
                         <span className="device-title-text">{t('media.camera')}</span>
-                        <span>
+                        <span className="device-mirror-box">
                             <CheckBox 
                                 style={{width: 12, height: 12}} 
                                 checked={isMirror}

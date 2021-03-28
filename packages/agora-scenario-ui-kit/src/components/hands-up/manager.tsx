@@ -24,7 +24,7 @@ export interface HandsUpManagerProps extends BaseHandsUpProps {
 
 export const HandsUpManager: FC<HandsUpManagerProps> = ({
   width = 108,
-  height = 52,
+  height = 41,
   borderRadius = 20,
   state = 'default',
   animStart = false,

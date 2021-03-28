@@ -6,10 +6,11 @@ import { useUserListContext } from '../hooks'
 
 export const UserListContainer = observer(() => {
 
-    const {dataSource, teacherName, onClick} = useUserListContext()
+    const {dataSource, teacherName, onClick, role} = useUserListContext()
 
     return (
         <UserList
+            role={role as any}
             value='register'
             label={t('scaffold.user_list')}
             icon='register'

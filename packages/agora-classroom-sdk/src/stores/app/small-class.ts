@@ -17,6 +17,27 @@ export class SmallClassStore {
     this.appStore = roomStore.appStore;
   }
 
+  roleToString(role: EduRoleTypeEnum) {
+    switch(role) {
+      case EduRoleTypeEnum.assistant: {
+        return 'assistant'
+      }
+      case EduRoleTypeEnum.teacher: {
+        return 'teacher'
+      }
+      case EduRoleTypeEnum.student: {
+        return 'student'
+      }
+      default: {
+        return 'invisible'
+      }
+    }
+  }
+
+  @computed
+  get role() {
+    return this.roleToString(this.appStore.userRole)
+  }
 
   @computed
   get teacherInfo(): EduUser | undefined {
@@ -36,7 +57,7 @@ export class SmallClassStore {
   @computed
   get teacherName() {
     const teacherUid = Object.keys(this.teachers)[0]
-    return get(this.teachers, `${teacherUid}.${name}`, '')
+    return get(this.teachers, `${teacherUid}.name`, '')
   }
 
   @computed
@@ -123,6 +144,19 @@ export class SmallClassStore {
   }
 
   @computed
+  get acceptedUserList() {
+    const userList = get(this.roomStore.sceneStore, 'userList', [])
+    const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.accepted', [])
+    const ids = progressList.map((e: any) => e.userUuid)
+    return userList.filter(({userUuid}: EduUser) => ids.includes(userUuid))
+    .map(({userUuid, userName}: EduUser) => ({
+      userUuid,
+      userName,
+      coVideo: false,
+    }))
+  }
+
+  @computed
   get applyCoVideoUserList() {
     const userList = get(this.roomStore.sceneStore, 'userList', [])
     const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.progress', [])
@@ -183,6 +217,12 @@ export class SmallClassStore {
     })
   }
 
+  async studentCancelHandsUp() {
+    await eduSDKApi.cancelHandsUp({
+      roomUuid: this.roomUuid,
+    })
+  }
+
   async studentDismissHandsUp(teacherUuid: string) {
     await eduSDKApi.dismissHandsUp({
       roomUuid: this.roomUuid,
@@ -195,6 +235,19 @@ export class SmallClassStore {
       roomUuid: this.roomUuid,
       toUserUuid: userUuid
     })
+  }
+
+  async revokeCoVideo(userUuid: string) {
+    if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
+      await eduSDKApi.revokeCoVideo({
+        roomUuid: this.roomUuid,
+      })
+    } else {
+      await eduSDKApi.revokeCoVideo({
+        roomUuid: this.roomUuid,
+        toUserUuid: userUuid
+      })
+    }
   }
 
   async teacherRejectHandsUp(userUuid: string) {
@@ -291,7 +344,11 @@ export class SmallClassStore {
 
     switch (actionType) {
       case 'podium': {
-        // await 
+        if (user) {
+          await this.teacherAcceptHandsUp(user.uid)
+        } else {
+          await this.revokeCoVideo(user.uid)
+        }
         break;
       }
       case 'whiteboard': {
@@ -336,4 +393,18 @@ export class SmallClassStore {
     }
   }
   
+  @computed
+  get handsUpState() {
+    const accepted = this.acceptedUserList.find((it: any) => it.userUuid === this.roomInfo.userUuid)
+    if (accepted) {
+      return 'co-video'
+    }
+
+    const applied = this.applyCoVideoUserList.find((it: any) => it.userUuid === this.roomInfo.userUuid)
+    if (applied) {
+      return 'apply'
+    }
+
+    return 'default'
+  }
 }

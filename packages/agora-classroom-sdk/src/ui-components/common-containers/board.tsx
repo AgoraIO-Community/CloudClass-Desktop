@@ -146,7 +146,9 @@ export const WhiteboardContainer = observer(() => {
     activeMap,
     tools,
     hasBoardPermission,
-    showTab
+    showTab,
+    showToolBar,
+    showZoomControl,
   } = useWhiteboardState()
 
   return (
@@ -157,10 +159,10 @@ export const WhiteboardContainer = observer(() => {
       }
       {showTab ? 
       <TabsContainer /> : null}
-      {hasBoardPermission ? <div className='toolbar-position'>
+      {showToolBar ? <div className='toolbar-position'>
         <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
       </div> : null}
-      {hasBoardPermission ? <ZoomController
+      {showZoomControl ? <ZoomController
         className='zoom-position'
         zoomValue={zoomValue}
         currentPage={currentPage}

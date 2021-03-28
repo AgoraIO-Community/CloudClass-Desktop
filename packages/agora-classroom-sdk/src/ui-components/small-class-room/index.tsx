@@ -30,18 +30,10 @@ export const SmallClassRoom = observer(() => {
 
   const store = useMidStore()
 
-  console.log('small class')
-
   const cls = classnames({
     'edu-room': 1,
     'fullscreen': !!store.isFullScreen
   })
-
-  // const className = store.isFullScreen ? 'fullscreen' : 'normal'
-
-  // const fullscreenCls = classnames({
-  //   [`layout-aside-${className}`]: 1,
-  // })
 
   return (
     <Layout

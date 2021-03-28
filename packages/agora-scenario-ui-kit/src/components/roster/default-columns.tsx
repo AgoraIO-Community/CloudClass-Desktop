@@ -162,6 +162,7 @@ export const defaultColumns: Column[] = [
     key: 'kickOut',
     name: t('roster.kick'),
     action: 'kick-out',
+    visibleRoles: ['assistant', 'teacher'],
     // FIXME: 不能点击时的样式
     render: (_, profile) => {
       return (

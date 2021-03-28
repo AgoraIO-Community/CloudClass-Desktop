@@ -47,9 +47,30 @@ const meta: Meta = {
   },
 };
 
+let count  = 10
+
 export const Docs: FC<ChatProps> = (props) => {
   const [text, setText] = useState<string>();
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
+
+
+  const [messages, updateMessages] = useState<any[]>([])
+
+  const newMessageList = () => {
+    if (!count) return []
+    --count
+
+    return [
+      ...'.'.repeat(4)
+    ].map((_, idx: number) => ({
+      id: `${idx}${Date.now()}`,
+      uid: `1`,
+      username: 'test',
+      timestamp: +Date.now(),
+      content: `test-${+Date.now()}-refreshed`
+    }))
+  }
+
   return (
     <I18nProvider>
       <div className="h-screen w-screen bg-black">
@@ -62,7 +83,13 @@ export const Docs: FC<ChatProps> = (props) => {
           }}>
           <Chat
             {...props}
+            messages={messages}
             collapse={collapse}
+            onPullFresh={() => {
+              updateMessages([...newMessageList().concat(
+                ...messages
+              )])
+            }}
             onCollapse={() => {
               setCollapse(!collapse);
             }}
@@ -70,8 +97,19 @@ export const Docs: FC<ChatProps> = (props) => {
             left="40%"
             chatText={text}
             onText={(val) => setText(val)}
-            onSend={() => setText('')}
-            closeIcon={<Icon type="close" />}
+            onSend={
+              () => {
+                updateMessages([...messages.concat({
+                id: Date.now(),
+                uid: `1`,
+                username: 'test',
+                timestamp: +Date.now(),
+                content: text
+              })])
+              setText('')
+            }
+            }
+            closeIcon={<Icon type="min" />}
             onClickMiniChat={() => {
               console.log('click chat min');
             }}

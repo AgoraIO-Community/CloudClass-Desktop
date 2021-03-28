@@ -15,12 +15,12 @@
 
 .bottom-left-info {
   @apply absolute bottom-0 left-0 flex items-end;
-  padding: 8px;
+  padding: 0 8px;
 }
 
 .bottom-right-info {
   @apply absolute bottom-0 right-0;
-  padding: 8px;
+  padding: 0 8px;
 }
 
 .stars {
@@ -48,6 +48,8 @@
   @apply text-white font-medium;
   font-size: 12px;
   margin-bottom: 5px;
+  letter-spacing: -0.41px;
+  text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
 }
 
 .whiteboard-state {

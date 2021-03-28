@@ -11,6 +11,7 @@ const meta: Meta = {
     onClick: (action: ActionTypes, uid: string | number) =>
     console.log(action, uid),
     teacherName: 'Lily Chou',
+    role: 'teacher',
     dataSource: list(10).map((i: number) => ({
       uid: i,
       name: 'Lily True',

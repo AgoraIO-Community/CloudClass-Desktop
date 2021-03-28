@@ -18,7 +18,7 @@ export const VideoPlayerTeacher = observer(() => {
 
   return (
     <VideoPlayer
-      isHost={sceneVideoConfig.isHost}
+      isHost={false}
       hideOffPodium={true}
       //@ts-ignore
       hideWhiteboardGranted={true}

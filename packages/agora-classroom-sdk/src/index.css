@@ -95,10 +95,19 @@ html, body, #root {
   flex-direction: column;
 }
 
+.fullscreen .layout-aside {
+  border: none;
+  min-width: 35px;
+}
+
 .fullscreen .video-player {
   display: none;
 }
 
+.fullscreen .small-class-chat {
+  bottom: 8px;
+  right: 11px;
+}
 
 .fullscreen .video-marquee-pin ~ .board-box {
   margin-top: 0px;

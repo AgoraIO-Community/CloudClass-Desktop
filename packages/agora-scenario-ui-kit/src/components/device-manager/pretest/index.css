@@ -2,6 +2,16 @@
     @apply flex justify-center;
 }
 
+.device-mirror-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pretest .select {
+    font-size: 13px;
+}
+
 .pretest .pretest-right {
     margin-left: 40px;
 }

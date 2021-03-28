@@ -26,11 +26,11 @@ export const HandsUpManagerContainer = observer(() => {
 
 export const HandsUpReceiverContainer = observer(() => {
 
-    const {isCoVideo, handleClick} = useHandsUpSender()
+    const {handsUpState, handleClick} = useHandsUpSender()
 
     return (
         <HandsUpSender
-            isActive={isCoVideo}
+            state={handsUpState}
             onClick={handleClick}
         />
     )

@@ -39,6 +39,7 @@ export interface Column {
   key: string;
   name: string;
   action?: ActionTypes;
+  visibleRoles?: string[];
   render?: (text: string, profile: Profile) => ReactNode;
 }
 
@@ -56,6 +57,10 @@ export interface RosterProps extends ModalProps {
    */
   dataSource?: Profile[];
   /**
+   * 当前用户角色
+   */
+  role: 'student' | 'teacher' | 'assistant' | 'invisible';
+  /**
    * col 点击的回调，是否可以点击，取决于 column 中配置 action 与否和 dataSource 数据中配置 canTriggerAction
    */
   onClick?: (action: ActionTypes, uid: string | number) => void;
@@ -71,8 +76,12 @@ export const Roster: FC<RosterProps> = ({
   dataSource,
   onClick,
   onClose,
+  role,
   ...modalProps
 }) => {
+
+  const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
+
   return (
     <Modal
       className="roster-modal"
@@ -87,14 +96,14 @@ export const Roster: FC<RosterProps> = ({
         </div>
         <Table className="roster-table">
           <TableHeader>
-            {columns.map((col) => (
+            {cols.map((col) => (
               <Col key={col.key}>{col.name}</Col>
             ))}
           </TableHeader>
           <Table className="table-container">
             {dataSource?.map((data) => (
               <Row className='border-bottom-width-1' key={data.uid}>
-                {columns.map((col) => (
+                {cols.map((col) => (
                   <Col key={col.key}>
                     <span
                       className={

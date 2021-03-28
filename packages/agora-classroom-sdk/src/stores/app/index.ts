@@ -291,7 +291,6 @@ export class AppStore implements ClassRoomAbstractStore {
       EduManager.enableDebugLog(true);
     }
 
-    this.mediaStore = new MediaStore(this)
     this.uiStore = new UIStore(this)
 
     if (language) {
@@ -303,6 +302,8 @@ export class AppStore implements ClassRoomAbstractStore {
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.homeStore = new HomeStore(this)
+    this.mediaStore = new MediaStore(this)
+
     this._screenVideoRenderer = undefined
   }
 

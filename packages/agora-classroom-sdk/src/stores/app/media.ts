@@ -282,10 +282,11 @@ export class MediaStore {
     reaction(() => JSON.stringify([
       this.appStore.roomInfo.roomUuid,
       this.appStore.roomInfo.userUuid,
-      this.device
+      this.device,
+      this.appStore.roomStore.roomJoined,
     ]), (data: string) => {
-      const [roomUuid, userUuid, device] = JSON.parse(data)
-      if (roomUuid && userUuid) {
+      const [roomUuid, userUuid, device, roomJoined] = JSON.parse(data)
+      if (roomJoined && roomUuid && userUuid) {
         eduSDKApi.reportCameraState({
           roomUuid: roomUuid,
           userUuid: userUuid,

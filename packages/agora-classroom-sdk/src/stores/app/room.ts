@@ -410,11 +410,10 @@ export class RoomStore extends SimpleInterval {
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
-      Toast.show({
-        type: 'error',
-        text: t('toast.failed_to_send_chat'),
-        duration: 1.5,
-      })
+      this.appStore.uiStore.addToast(
+        transI18n('toast.failed_to_send_chat'),
+        'error'
+      )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       return{
@@ -481,11 +480,10 @@ export class RoomStore extends SimpleInterval {
         // this.appStore.params.translateLanguage
       })
     } catch (err) {
-      Toast.show({
-        type: 'error',
-        text: t('toast.failed_to_translate_chat'),
-        duration: 1.5,
-      })
+      this.appStore.uiStore.addToast(
+        transI18n('toast.failed_to_translate_chat'),
+        'error'
+      )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -503,11 +501,10 @@ export class RoomStore extends SimpleInterval {
         }]
       })
     } catch (err) {
-      Toast.show({
-        type: 'error',
-        text: t('toast.failed_to_send_reward'),
-        duration: 1.5,
-      })
+      this.appStore.uiStore.addToast(
+        transI18n('toast.failed_to_send_reward'),
+        'error'
+      )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -533,17 +530,15 @@ export class RoomStore extends SimpleInterval {
     // 判断是否等于上一次的值 相同则不更新
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
-        Toast.show({
-          type: 'error',
-          text: t('toast.chat_disable'),
-          duration: 1.5,
-        })
+        this.appStore.uiStore.addToast(
+          transI18n('toast.chat_disable'),
+          'error'
+        )
       } else {
-        Toast.show({
-          type: 'error',
-          text: t('toast.chat_enable'),
-          duration: 1.5,
-        })
+        this.appStore.uiStore.addToast(
+          transI18n('toast.chat_enable'),
+          'error'
+        )
       }
     } 
     this.isStudentChatAllowed = isStudentChatAllowed
@@ -560,11 +555,10 @@ export class RoomStore extends SimpleInterval {
           [5, 3, 1].forEach(min => {
             let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
-              Toast.show({
-                type: 'error',
-                text: transI18n('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
-                duration: 1.5,
-              })
+              this.appStore.uiStore.addToast(
+                transI18n('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
+                'error'
+              )
             }
           })
           break;
@@ -572,22 +566,20 @@ export class RoomStore extends SimpleInterval {
           [5, 1].forEach(min => {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              Toast.show({
-                type: 'error',
-                text: transI18n('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
-                duration: 1.5,
-              })
+              this.appStore.uiStore.addToast(
+                transI18n('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
+                'error'
+              )
             }
           })
           break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            Toast.show({
-              type: 'error',
-              text: transI18n('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
-              duration: 1.5,
-            })
+            this.appStore.uiStore.addToast(
+              transI18n('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
+              'error'
+            )
           }
           if(durationToClose < 0) {
             // close
@@ -726,11 +718,10 @@ export class RoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && Toast.show({
-          type: 'error',
-          text: t('toast.failed_to_join_board'),
-          duration: 1.5,
-        })
+        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(
+          transI18n('toast.failed_to_join_board'),
+          'error'
+        )
       })
       this.appStore.uiStore.stopLoading()
 
@@ -1119,11 +1110,10 @@ export class RoomStore extends SimpleInterval {
           }
         } catch (err) {
           if (this.appStore.isNotInvisible) {
-            Toast.show({
-              text: (t('toast.media_method_call_failed') + `: ${err.message}`),
-              type: 'error',
-              duration: 1.5
-            })
+            this.appStore.uiStore.addToast(
+              (transI18n('toast.media_method_call_failed') + `: ${err.message}`),
+              'error'
+            )
           }
           const error = GenericErrorWrapper(err)
           BizLogger.warn(`${error}`)
@@ -1144,7 +1134,6 @@ export class RoomStore extends SimpleInterval {
           this.sceneStore.sharing = false
         }
       }
-      // this.appStore.uiStore.stopLoading()
       this.joined = true
       this.roomJoined = true
     } catch (err) {
@@ -1163,12 +1152,10 @@ export class RoomStore extends SimpleInterval {
       }
       this.appStore.uiStore.addDialog(RoomEnd)
     } else if(state === EduClassroomStateEnum.end) {
-      const text = t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)})
-      Toast.show({
-        type: 'error',
-        text: text,
-        duration: 1.5
-      })
+      this.appStore.uiStore.addToast(
+        transI18n('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}),
+        'error'
+      )
     }
   }
 

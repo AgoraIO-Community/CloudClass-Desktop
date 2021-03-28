@@ -257,14 +257,14 @@ export class EduSDKApi extends ApiBase {
 
   async cancelHandsUp(params: {
     roomUuid: string,
-    toUserUuid: string,
+    toUserUuid?: string,
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/processes/handsUp/progress`,
       method: 'DELETE',
-      data: {
+      data: params.toUserUuid ? {
         toUserUuid: params.toUserUuid,
-      }
+      } : null
     })
     return res.data
   }
@@ -299,14 +299,14 @@ export class EduSDKApi extends ApiBase {
 
   async revokeCoVideo(params: {
     roomUuid: string,
-    toUserUuid: string,
+    toUserUuid?: string,
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance`,
       method: 'DELETE',
-      data: {
+      data: params.toUserUuid ? {
         toUserUuid: params.toUserUuid,
-      }
+      } : null
     })
     return res.data
   }

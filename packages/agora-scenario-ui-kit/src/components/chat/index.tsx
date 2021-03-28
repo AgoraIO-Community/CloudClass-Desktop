@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Placeholder } from '~components/placeholder';
 import './index.css';
@@ -34,7 +34,11 @@ export interface ChatProps extends AffixProps {
   closeIcon?: React.ReactElement;
 
   unreadCount?: number;
+  /**
+   * 刷新聊天消息列表
+   */
 
+  onPullFresh: () => Promise<void> | void;
   /**
    *  禁言状态改变的回调
    */
@@ -54,7 +58,7 @@ export interface ChatProps extends AffixProps {
 }
 
 export const Chat: FC<ChatProps> = ({
-  messages,
+  messages = [],
   canChatting,
   uid,
   isHost,
@@ -65,6 +69,7 @@ export const Chat: FC<ChatProps> = ({
   onText,
   onSend,
   onCollapse,
+  onPullFresh,
   ...resetProps
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
@@ -78,6 +83,41 @@ export const Chat: FC<ChatProps> = ({
     setFocused(false);
   };
 
+  const chatHistoryRef = useRef<HTMLDivElement | null>(null)
+
+  const handleScrollDown = (current: HTMLDivElement) => {
+    current.scrollTop = current.scrollHeight;
+  }
+
+  const currentHeight = useRef<number>(0)
+
+  const scrollDirection = useRef<string>('bottom')
+
+  const handleScroll = (event: any) => {
+    const {target} = event
+    if (target?.scrollTop === 0) {
+      onPullFresh && onPullFresh()
+      currentHeight.current = target.scrollHeight
+      scrollDirection.current = 'top'
+    }
+  }
+
+  const handleSend = async () => {
+    await onSend()
+    scrollDirection.current = 'bottom'
+  }
+
+
+  useEffect(() => {
+    if (scrollDirection.current === 'bottom') {
+      chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
+    }
+    if (scrollDirection.current === 'top' && chatHistoryRef.current) {
+      const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
+      chatHistoryRef.current.scrollTo(0, position)
+    }
+  }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
+
   return (
     <Affix
       {...resetProps}
@@ -89,6 +129,7 @@ export const Chat: FC<ChatProps> = ({
           <span>
             {isHost ? (
               <Icon
+                hover={true}
                 onClick={() => onCanChattingChange(!!canChatting)}
                 className="chat-header-message-state"
                 type={canChatting ? 'message-on' : 'message-off'}
@@ -107,7 +148,7 @@ export const Chat: FC<ChatProps> = ({
             </span>
           </div>
         ) : null}
-        <div className="chat-history">
+        <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
           {!messages || messages.length === 0 ? (
             <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
           ) : (
@@ -131,7 +172,7 @@ export const Chat: FC<ChatProps> = ({
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-          <Button disabled={!isHost && !canChatting} onClick={onSend}>
+          <Button disabled={!isHost && !canChatting} onClick={handleSend}>
             {t('send')}
           </Button>
         </div>

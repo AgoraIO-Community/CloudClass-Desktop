@@ -3,7 +3,7 @@ import { useEffectOnce } from "@/hooks/utils"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
-import { EduLogger, EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
+import { EduLogger, EduRoleTypeEnum, EduSceneType, EduStream } from "agora-rte-sdk"
 import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, useI18nContext, ZoomItemType } from "agora-scenario-ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
@@ -299,6 +299,17 @@ export const useChatContext = () => {
     }
   }, [isMounted])
 
+  const handleClickMinimize = useCallback(() => {
+
+  }, [])
+
+  const refreshMessageList = useCallback(async () => {
+    const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
+    if (isMounted.current) {
+      setNextID(get(res, 'nextId', 'last'))
+    }
+  }, [nextId, setNextID, isMounted.current])
+
   const fetchMessage = async () => {
     const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
     isMounted.current && setNextID(get(res, 'nextId', 'last'))
@@ -338,10 +349,6 @@ export const useChatContext = () => {
     uiStore.toggleChatMinimize()
   }, [uiStore])
 
-  const handleScrollTop = useCallback(() => {
-
-  }, [uiStore])
-
   return {
     meUid: roomStore.roomInfo.userUuid,
     messageList: roomStore.chatMessageList,
@@ -355,7 +362,8 @@ export const useChatContext = () => {
     onCanChattingChange,
     onChangeCollapse,
     minimize: uiStore.chatCollapse,
-    handleScrollTop
+    refreshMessageList,
+    handleClickMinimize
   }
 }
 
@@ -1004,18 +1012,19 @@ export const useHandsUpSender = () => {
 
   const teacherUuid = smallClass.teacherUuid
 
-  const isCoVideo = smallClass.isCoVideo
+  const handsUpState = smallClass.handsUpState as any
 
   const handleClick = useCallback(async () => {
-      if (isCoVideo) {
-          await smallClass.studentDismissHandsUp(teacherUuid)
-      } else {
-          await smallClass.studentHandsUp(teacherUuid)
+      if (handsUpState === 'default') {
+        await smallClass.studentHandsUp(teacherUuid)
       }
-  }, [isCoVideo, smallClass, teacherUuid])
+      if (handsUpState === 'apply') {
+        await smallClass.studentCancelHandsUp()
+      }
+  }, [handsUpState, smallClass, teacherUuid])
 
   return {
-    isCoVideo,
+    handsUpState,
     handleClick
   }
 }
@@ -1252,6 +1261,19 @@ export const useWhiteboardState = () => {
     toolbarMap[type] && toolbarMap[type]()
   }
 
+  const [showToolBar, showZoomControl] = useMemo(() => {
+    if (roomStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      return [true, true]
+    }
+    if (roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      if (roomStore.roomInfo.roomType === EduSceneType.SceneMedium) {
+        return [true, boardStore.hasPermission]
+      }
+    }
+
+    return [false, false]
+  }, [roomStore.roomInfo.roomType, boardStore.hasPermission, roomStore.roomInfo.userRole])
+
   return {
     zoomValue: boardStore.zoomValue,
     currentPage: boardStore.currentPage,
@@ -1266,6 +1288,8 @@ export const useWhiteboardState = () => {
     tools: boardStore.tools,
     activeMap: boardStore.activeMap,
     hasBoardPermission: boardStore.hasPermission,
+    showToolBar,
+    showZoomControl,
     showTab: roomStore.roomInfo.userRole === EduRoleTypeEnum.student ? false : true
   }
 }
@@ -1292,9 +1316,8 @@ export const useUserListContext = () => {
   const smallClassStore = useSmallClassStore()
 
   const teacherName = smallClassStore.teacherName
-
+  const role = smallClassStore.role
   const rosterUserList = smallClassStore.rosterUserList
-
   const onClick = useCallback(async (actionType: any, uid: any) => {
       await smallClassStore.handleRosterClick(actionType, uid)
   }, [smallClassStore])
@@ -1302,6 +1325,7 @@ export const useUserListContext = () => {
   return {
     dataSource: rosterUserList,
     teacherName,
-    onClick
+    onClick,
+    role
   }
 }

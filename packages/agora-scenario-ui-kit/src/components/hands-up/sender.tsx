@@ -4,13 +4,19 @@ import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
 
 export interface HandsUpSenderProps extends BaseProps {
-  isActive?: boolean,
+  state?: 'default' | 'apply' | 'co-video';
   onClick: () => Promise<void> | void;
 }
 
-export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, isActive}) => {
+export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'default'}) => {
 
-  const color = isActive ? "#0073FF" : "#7B88A0"
+  const mapping = {
+    'default': "#7B88A0",
+    'apply': "#0073FF",
+    'co-video': "#666666"
+  }
+
+  const color = mapping[state || 'default']
 
   return (
     <Card

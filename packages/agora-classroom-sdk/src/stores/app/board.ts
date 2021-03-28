@@ -1417,11 +1417,20 @@ export class BoardStore extends ZoomController {
   uploadingProgress: number = 0
 
   @computed
-  get tools(): ToolItem[] {
-    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+  get tools() {
+    if (this.appStore.roomInfo.roomType === 0) {
+      if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools', 'register'].includes(item.value))  
+      }
+      return allTools.filter((item: ToolItem) => item.label === 'register')
     }
-    return allTools
+    if (this.appStore.roomInfo.roomType === 4) {
+      if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+      }
+      return allTools
+    }
+    return []
   }
 
   @action

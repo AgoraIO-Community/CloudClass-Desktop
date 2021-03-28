@@ -64,14 +64,14 @@ Docs.args = {
 
 export const StudentHandUp = () => {
 
-    const [isActive, setActive] = useState<boolean>(false)
+    const [state, setActive] = useState<any>('default')
 
     return (
         <div className="flex justify-center items-center m-screen h-screen">
             <I18nProvider>
                 <HandsUpSender
-                  isActive={isActive}
-                  onClick={() => setActive(!isActive)}
+                state={state}
+                onClick={() => setActive('apply')}
                 />
             </I18nProvider>
         </div>
