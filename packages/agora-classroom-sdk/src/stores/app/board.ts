@@ -1422,7 +1422,7 @@ export class BoardStore extends ZoomController {
       if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools', 'register'].includes(item.value))  
       }
-      return allTools.filter((item: ToolItem) => item.label === 'register')
+      return allTools.filter((item: ToolItem) => item.value === 'register')
     }
     if (this.appStore.roomInfo.roomType === 4) {
       if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
