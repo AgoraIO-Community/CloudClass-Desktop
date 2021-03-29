@@ -160,7 +160,7 @@ export const WhiteboardContainer = observer(() => {
       {showTab ? 
       <TabsContainer /> : null}
       {showToolBar ? <div className='toolbar-position'>
-        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
+        <Toolbar active={currentSelector} activeMap={activeMap} tools={allTools} onClick={handleToolBarChange} className="toolbar-biz" />
       </div> : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'
