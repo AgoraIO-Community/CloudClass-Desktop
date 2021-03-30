@@ -394,12 +394,15 @@ export class PretestStore {
   }
 
   @action
-  async openTestMicrophone() {
+  async openTestMicrophone(payload: {enableRecording: boolean}) {
     try {
       const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
       await this.mediaService.openTestMicrophone({deviceId})
       if (this.isWeb) {
         this._microphoneTrack = this.web.microphoneTestTrack
+      }
+      if (this.isElectron) {
+        payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
       this._microphoneId = this.microphoneId
@@ -412,6 +415,9 @@ export class PretestStore {
 
   @action
   closeTestMicrophone() {
+    if (this.isElectron) {
+      this.mediaService.electron.client.stopAudioRecordingDeviceTest()
+    }
     this.mediaService.closeTestMicrophone()
     this.resetMicrophoneTrack()
   }
@@ -602,6 +608,9 @@ export class PretestStore {
     if (this.isWeb) {
       this._microphoneTrack = this.web.microphoneTrack
     }
+    // if (this.isElectron) {
+    //   this.mediaService.electron.client.stopAudioRecordingDeviceTest()
+    // }
     this.microphoneLabel = this.mediaService.getMicrophoneLabel()
     // this.appStore.deviceInfo.microphoneName = this.microphoneLabel
     this._microphoneId = this.microphoneId
@@ -659,11 +668,15 @@ export class PretestStore {
 
 
   async changeSpeakerVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if (this.mediaService.isElectron) {
+      this.mediaService.electron.client.adjustPlaybackSignalVolume(value)
+    }
   }
 
   async changeMicrophoneVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if (this.mediaService.isElectron) {
+      this.mediaService.electron.client.adjustRecordingSignalVolume(value)
+    }
   }
 
   @action

@@ -15,6 +15,10 @@
 .chat-message-username {
   font-size: 12px;
   color: #586376;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
 }
 
 .chat-message-content {

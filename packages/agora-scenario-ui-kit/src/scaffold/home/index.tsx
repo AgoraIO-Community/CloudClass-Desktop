@@ -10,7 +10,9 @@ const {Option}: any = Select
 
 export interface HomeProps {
   roomId: string,
+  userId: string,
   userName: string,
+  roomName: string,
   role: string,
   scenario: string,
   duration: number,
@@ -19,12 +21,15 @@ export interface HomeProps {
   onChangeScenario: (value: any) => void,
   onChangeText: (type: string, value: string) => void,
   onChangeStartDate: (date: Date) => void,
+  onChangeDuration: (value: number) => void,
   onClick: () => void | Promise<void>
 }
 
 export const Home: React.FC<HomeProps> = ({
   roomId,
+  userId,
   userName,
+  roomName,
   role,
   scenario,
   duration,
@@ -33,6 +38,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeScenario,
   onChangeText,
   onChangeStartDate,
+  onChangeDuration,
   onClick
 }: HomeProps) => {
 
@@ -44,11 +50,31 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <label htmlFor="roomId">
+                <span>roomId</span>
+              </label>
+            </Col>
+            <Col>
+              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeText('roomId', evt.currentTarget.value)} placeholder="请输入roomId" />
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <label htmlFor="userId">
+                <span>userId</span>
+              </label>
+            </Col>
+            <Col>
+              <input id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeText('userId', evt.currentTarget.value)} placeholder="请输入userId" />
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <label htmlFor="roomName">
                 <span>房间</span>
               </label>
             </Col>
             <Col>
-              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeText('roomId', evt.currentTarget.value)} placeholder="请输入房间名" />
+              <input id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeText('roomName', evt.currentTarget.value)} placeholder="请输入房间名" />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -96,8 +122,8 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-            {/* <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" /> */}
-              <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/>
+            <input id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+              {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
             </Col>
           </Row>
           <Button className="mt-4" type="primary" size="lg" onClick={onClick}>创建教室</Button>

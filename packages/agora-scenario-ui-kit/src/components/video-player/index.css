@@ -48,8 +48,12 @@
   @apply text-white font-medium;
   font-size: 12px;
   margin-bottom: 5px;
-  letter-spacing: -0.41px;
+  /* letter-spacing: -0.41px; */
   text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
 }
 
 .whiteboard-state {
@@ -65,9 +69,9 @@
   border-radius: 18px;
   padding: 16px 10px;
 }
-.video-player-tools.host {
+/* .video-player-tools.host {
   height: 168px;
-}
+} */
 
 .video-player-tools > .iconfont {
   @apply cursor-pointer box-content;
@@ -193,4 +197,8 @@
   justify-content: center;
   height: 100%;
   width: 100%;
+}
+
+.no_granted {
+  color: #bdbdca;
 }

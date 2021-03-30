@@ -79,9 +79,9 @@ export class SmallClassStore {
           hideControl: this.sceneStore.hideControl(user.userUuid),
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
-          volumeLevel: volumeLevel,
+          micVolume: volumeLevel,
           stars: +get(this.studentsMap, `${acceptedUser.userUuid}.reward`, 0),
-          whiteboardGranted: get(this.appStore.boardStore.grantUsers, `${acceptedUser.userUuid}`),
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${acceptedUser.userUuid}`),
         })
       }
       return acc
@@ -105,8 +105,8 @@ export class SmallClassStore {
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
         stars: +get(this.studentsMap, `${this.roomInfo.userUuid}.reward`, 0),
-        whiteboardGranted: get(this.appStore.boardStore.grantUsers, `${this.appStore.userUuid}`),
-        volumeLevel: this.sceneStore.localVolume,
+        whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
+        micVolume: this.sceneStore.localVolume,
       } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -275,7 +275,7 @@ export class SmallClassStore {
       cameraDevice: !!get(user, 'userProperties.camera', 0),
       cameraEnabled: !!get(stream, 'video', 0),
       micEnabled: !!get(stream, 'audio', 0),
-      whiteboardGranted: this.appStore.boardStore.grantUsers.includes(user.userUuid),
+      whiteboardGranted: this.appStore.boardStore.checkUserPermission(user.userUuid),
       // whiteboardGranted: !!get,
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),

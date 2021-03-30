@@ -23,9 +23,9 @@ const transformConvertedListToScenes = (taskProgress: any) => {
       name: `${index+1}`,
       componentCount: 1,
       ppt: {
-        width: item.width,
-        height: item.height,
-        src: item.conversionFileUrl
+        width: item.ppt.width,
+        height: item.ppt.height,
+        src: item.ppt.src,
       }
     }))
   }
@@ -278,7 +278,7 @@ export class BoardStore extends ZoomController {
       const follow = get(this.room.state.globalState, 'follow', 0)
       const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
       this.grantUsers = grantUsers
-      const boardUser = this.grantUsers.includes(this.localUserUuid)
+      const boardUser = this.checkUserPermission(this.localUserUuid)
       if (boardUser) {
         this._grantPermission = true
       }
@@ -319,9 +319,9 @@ export class BoardStore extends ZoomController {
       name: `${index + 1}`,
       componentCount: 1,
       ppt: {
-        width: item.width,
-        height: item.height,
-        src: item.conversionFileUrl,
+        width: item.ppt.width,
+        height: item.ppt.height,
+        src: item.ppt.src,
       }
     } as SceneDefinition))
   }
@@ -985,10 +985,26 @@ export class BoardStore extends ZoomController {
         return
       }
       case 'next_page': {
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptNextStep()
+          return
+        }
         this.changePage(room.state.sceneState.index + 1)
         return
       }
       case 'prev_page' : {
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptPreviousStep()
+          return
+        }
         this.changePage(room.state.sceneState.index - 1)
         return
       }
@@ -1183,18 +1199,18 @@ export class BoardStore extends ZoomController {
     // this.scale = scale
   }
 
-  @action
-  async toggleLockBoard() {
-    if (this.boardClient && this.room) {
-      if (this.follow) {
-        this.boardClient.cancelFollow()
-        this.room.setViewMode(ViewMode.Freedom)
-      } else {
-        this.boardClient.startFollow()
-        this.room.setViewMode(ViewMode.Broadcaster)
-      }
-    }
-  }
+  // @action
+  // async toggleLockBoard() {
+  //   if (this.boardClient && this.room) {
+  //     if (this.follow) {
+  //       this.boardClient.cancelFollow()
+  //       this.room.setViewMode(ViewMode.Freedom)
+  //     } else {
+  //       this.boardClient.startFollow()
+  //       this.room.setViewMode(ViewMode.Broadcaster)
+  //     }
+  //   }
+  // }
 
   @computed 
   get loadingType (): string {
@@ -1419,13 +1435,13 @@ export class BoardStore extends ZoomController {
   @computed
   get tools() {
     if (this.appStore.roomInfo.roomType === 0) {
-      if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools', 'register'].includes(item.value))  
       }
-      return allTools.filter((item: ToolItem) => item.value === 'register')
+      return allTools.filter((item: ToolItem) => item.value !== 'register')
     }
     if (this.appStore.roomInfo.roomType === 4) {
-      if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
       }
       return allTools
@@ -1535,21 +1551,8 @@ export class BoardStore extends ZoomController {
   lockBoard: boolean = true
 
   @computed
-  get aClassHasPermission(): boolean {
-    // 老师默认可以操作白板
-    if (this.userRole === EduRoleTypeEnum.teacher || this.userRole === EduRoleTypeEnum.assistant || this.userRole === EduRoleTypeEnum.invisible) {
-      return true
-    }
-    if (this.lockBoard) {
-      return false
-    }
-    return true
-  }
-
-
-  @computed
   get hasPermission(): boolean {
-    if (this.userRole === EduRoleTypeEnum.teacher || this.roomType === 0) {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
       return true
     }
     return this._grantPermission as boolean

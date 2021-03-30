@@ -87,6 +87,11 @@ export class EduManager extends EventEmitter {
         sdkDomain: this.config.sdkDomain
       }
     )
+    reportService.updateRtmConfig({
+      rtmToken: this.config.rtmToken,
+      rtmUid: this.config.rtmUid,
+    })
+    reportService.setAppId(this.config.appId)
   }
 
   updateRtmConfig(info: {

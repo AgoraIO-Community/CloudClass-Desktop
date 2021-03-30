@@ -138,7 +138,7 @@ export class BoardClient extends EventEmitter {
   startFollow() {
     if (this.room && !this.disconnected) {
       this.room.setGlobalState({
-        follow: 1
+        follow: true
       })
       BizLogger.info('[board] set start follow')
     }
@@ -147,7 +147,7 @@ export class BoardClient extends EventEmitter {
   cancelFollow() {
     if (this.room && !this.disconnected) {
       this.room.setGlobalState({
-        follow: 0
+        follow: false
       })
       BizLogger.info('[board] set cancel follow')
     }

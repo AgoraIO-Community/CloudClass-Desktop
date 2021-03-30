@@ -96,17 +96,17 @@ export class LocalUserRenderer extends UserRenderer {
         this.videoTrack.play(dom)
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
         
-        let videoElement = dom.getElementsByTagName('video')[0] as any
-        this.fpsTimer = setInterval(() => {
-          let frames = videoElement.getVideoPlaybackQuality().totalVideoFrames
-          this.renderFrameRate = frames - this.previousFrame
-          this.previousFrame = frames
-          if(this.renderFrameRate === 0) {
-            this.freezeCount++
-          } else {
-            this.freezeCount = 0
-          }
-        }, 1000)
+        // let videoElement = dom.getElementsByTagName('video')[0] as any
+        // this.fpsTimer = setInterval(() => {
+        //   let frames = videoElement.getVideoPlaybackQuality().totalVideoFrames
+        //   this.renderFrameRate = frames - this.previousFrame
+        //   this.previousFrame = frames
+        //   if(this.renderFrameRate === 0) {
+        //     this.freezeCount++
+        //   } else {
+        //     this.freezeCount = 0
+        //   }
+        // }, 1000)
       }
     }
     if (this.isElectron) {
@@ -269,6 +269,7 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
+      this.electron.client.stopAudioRecordingDeviceTest()
       if (this.el) {
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined

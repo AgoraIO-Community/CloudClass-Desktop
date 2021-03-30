@@ -15,6 +15,7 @@ const type = os.type()
 // Module to control application life.
 const {app, Menu, netLog} = electron;
 
+// app.allowRendererProcessReuse = false;
 // Menu template
 const isMac = platform === 'darwin'
 

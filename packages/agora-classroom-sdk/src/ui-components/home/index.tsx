@@ -13,6 +13,8 @@ export const HomePage = observer(() => {
   const homeStore = useHomeStore()
 
   const [roomId, setRoomId] = useState<string>('')
+  const [userId, setUserId] = useState<string>('')
+  const [roomName, setRoomName] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
@@ -38,7 +40,7 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const uid = `${userName}${role}`
+  const uid = `${userId}${role}`
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -50,7 +52,9 @@ export const HomePage = observer(() => {
 
   const text: Record<string, CallableFunction> = {
     'roomId': setRoomId,
-    'userName': setUserName
+    'userName': setUserName,
+    'roomName': setRoomName,
+    'userId': setUserId,
   }
 
   const onChange = (type: string, value: string) => {
@@ -66,6 +70,8 @@ export const HomePage = observer(() => {
     <Home
       version="1.2.0"
       roomId={roomId}
+      userId={userId}
+      roomName={roomName}
       userName={userName}
       role={userRole}
       scenario={curScenario}
@@ -75,6 +81,9 @@ export const HomePage = observer(() => {
       onChangeText={onChange}
       onChangeStartDate={(date: Date) => {
         setStartDate(date)
+      }}
+      onChangeDuration={(duration: number) => {
+        setDuration(duration)
       }}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
@@ -87,9 +96,9 @@ export const HomePage = observer(() => {
           language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
-          roomUuid: `${roomId}${scenario}`,
+          roomUuid: `${roomId}`,
           roomType: scenario,
-          roomName: `${roomId}${scenario}`,
+          roomName: `${roomName}`,
           userName: userName,
           roleType: role,
           startTime: +startDate,

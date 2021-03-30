@@ -20,8 +20,7 @@ export const VideoPlayerTeacher = observer(() => {
     <VideoPlayer
       isHost={false}
       hideOffPodium={true}
-      //@ts-ignore
-      hideWhiteboardGranted={true}
+      // hideBoardGranted={true}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
@@ -29,6 +28,7 @@ export const VideoPlayerTeacher = observer(() => {
       cameraEnabled={userStream.video}
       hideControl={userStream.hideControl}
       whiteboardGranted={userStream.whiteboardGranted}
+      hideStars={true}
       micVolume={userStream.micVolume}
       onCameraClick={onCameraClick}
       onMicClick={onMicClick}
@@ -65,13 +65,14 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
   return (
     <VideoPlayer
       isHost={sceneVideoConfig.isHost}
-      hideOffPodium={sceneVideoConfig.hideOffPodium}
+      hideOffPodium={true}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
       whiteboardGranted={userStream.whiteboardGranted}
+      hideStars={true}
       micVolume={userStream.micVolume}
       hideControl={userStream.hideControl}
       onCameraClick={onCameraClick}
