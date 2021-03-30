@@ -140,7 +140,6 @@ export const EduWhiteBoard = observer(() => {
           boardStore.skipTask()
         }} ></Progress> : null
       }
-      <BrushToast position={{ 'position': 'absolute' }} isShowBrushToast={enableStatus !== 'disable'} text={enableStatus ? t('aclass.board.brushEnabled') : t('aclass.board.brushDisabled')} disableIcon={!enableStatus} />
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null

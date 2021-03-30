@@ -1102,7 +1102,11 @@ export class BoardStore {
         this.lockBoard = this.getCurrentLock(state) as any
         this.updateFullScreen(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
-          this.enableStatus = get(state, 'globalState.granted', 'disable')
+          const enableStatus = get(state, 'globalState.granted', 'disable')
+          if(this.enableStatus !== enableStatus) {
+            this.enableStatus = enableStatus
+            this.appStore.uiStore.addBrushToast(new Date().getTime(), enableStatus === 'disable' ? false : enableStatus )
+          }
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {

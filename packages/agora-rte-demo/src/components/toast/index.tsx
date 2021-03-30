@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useHomeUIStore, useUIStore } from '@/hooks';
 import { BizLogger } from '@/utils/biz-logger';
+import { t } from '@/i18n';
+import { BrushToast } from 'agora-aclass-ui-kit';
 
 export interface SnackbarMessage {
   message: string;
@@ -47,6 +49,11 @@ interface ToastProps {
   closeToast: CallableFunction
 }
 
+interface BrushToastProps {
+  isBrushEnabled: boolean
+  closeToast: CallableFunction
+}
+
 export const ToastMessage = (props: ToastProps) => {
 
   useTimeout(() => {
@@ -61,6 +68,35 @@ export const ToastMessage = (props: ToastProps) => {
     </div>
   )
 }
+
+export const BrushToastMessage = (props: BrushToastProps) => {
+  useTimeout(() => {
+    props && props.closeToast()
+  }, 1500)
+
+  return (
+    <BrushToast isShowBrushToast={true} text={props.isBrushEnabled ? t('aclass.board.brushEnabled') : t('aclass.board.brushDisabled')} disableIcon={!props.isBrushEnabled} />
+  )
+}
+
+export const BrushToastContent = observer(() => {
+  const uiStore = useUIStore()
+
+  return (
+    <div className="notice-message-container">
+      {uiStore.brushToastQueue.map((item: {ts: number, enabled: boolean}, idx: number) => 
+        <BrushToastMessage
+          isBrushEnabled={item.enabled}
+          key={`${idx}${item.ts}`}
+          closeToast={() => {
+            uiStore.removeBrushToast(item.ts)
+            BizLogger.info("close brush Toast", item.enabled)
+          }}
+        />
+      )}
+    </div>
+  )
+})
 
 
 export const AcadsocToastMessage = (props: ToastProps) => {
