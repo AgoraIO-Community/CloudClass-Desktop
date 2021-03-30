@@ -1,6 +1,6 @@
-import { ApiBase, ApiBaseInitializerParams } from '@/services/base';
-import { get } from "lodash";
+import { ApiBase } from '@/services/base';
 import { GenericErrorWrapper } from "agora-rte-sdk";
+import { get } from "lodash";
 
 
 export enum EnumBoardState {
