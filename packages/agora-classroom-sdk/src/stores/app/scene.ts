@@ -12,6 +12,7 @@ import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
+import { OpenShareScreen } from "@/ui-components/common-containers/dialog";
 
 
 const delay = 2000
@@ -362,7 +363,14 @@ export class SceneStore extends SimpleInterval {
         runInAction(() => {
           // TODO: addDialog
           this.customScreenShareWindowVisible = true
-          this.customScreenShareItems = items
+          this.customScreenShareItems = items.map((item: any) => ({
+            ...item,
+            title: item.name,
+            id: item.windowId,
+          }))
+          // if (items.length) {
+          //   this.appStore.uiStore.addDialog(OpenShareScreen)
+          // }
         })
       }).catch(err => {
         BizLogger.warn('show screen share window with items', err)
@@ -573,16 +581,18 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  // TODO: need refactor
   waitFor(fn: () => boolean, timeout: number, checkinterval: number) {
-    return new Promise<void>(async (resolve, reject) => {
-      for(let i = 0; i < timeout; i += checkinterval) {
-        await (() => new Promise((resolve) => {setTimeout(resolve, checkinterval)}))()
-        if(fn()){
-          return resolve()
-        }
-      }
-      return reject(GenericErrorWrapper(new Error('operation timeout')))
-    })
+    return Promise.resolve()
+    // return new Promise<void>(async (resolve, reject) => {
+    //   for(let i = 0; i < timeout; i += checkinterval) {
+    //     await (() => new Promise((resolve) => {setTimeout(resolve, checkinterval)}))()
+    //     if(fn()){
+    //       return resolve()
+    //     }
+    //   }
+    //   return reject(GenericErrorWrapper(new Error('operation timeout')))
+    // })
   }
 
   @action
@@ -1122,7 +1132,7 @@ export class SceneStore extends SimpleInterval {
     if (isLocal) {
       return this.localVolume
     }
-    const level = this.appStore.mediaStore.speakers[streamUuid] || 0
+    const level = this.appStore.mediaStore.speakers[`${streamUuid}`] || 0
     if (this.appStore.isElectron) {
       return this.fixNativeVolume(level)
     }
@@ -1194,7 +1204,7 @@ export class SceneStore extends SimpleInterval {
         holderState: props.placeHolderType,
         placeHolderText: props.text,
         whiteboardGranted: true,
-        volumeLevel: volumeLevel,
+        micVolume: volumeLevel,
       } as any
     }
     return {
@@ -1205,10 +1215,10 @@ export class SceneStore extends SimpleInterval {
       video: false,
       audio: false,
       renderer: undefined,
-      hideControl: false,
+      hideControl: true,
       placeHolderText: this.defaultTeacherPlaceholder.text,
       holderState: this.defaultTeacherPlaceholder.placeHolderType,
-      volumeLevel: 0,
+      micVolume: 0,
     } as any
   }
 
@@ -1348,8 +1358,8 @@ export class SceneStore extends SimpleInterval {
           hideControl: this.hideControl(user.userUuid),
           placeHolderType: props.placeHolderType,
           placeHolderText: props.text,
-          volumeLevel: volumeLevel,
-          whiteboardGranted: false,
+          micVolume: volumeLevel,
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
         } as any)
         return acc;
       }
@@ -1372,7 +1382,8 @@ export class SceneStore extends SimpleInterval {
         hideControl: this.hideControl(this.appStore.userUuid),
         placeHolderType: props.placeHolderType,
         placeHolderText: props.text,
-        volumeLevel: this.localVolume,
+        micVolume: this.localVolume,
+        whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
       } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -1386,10 +1397,11 @@ export class SceneStore extends SimpleInterval {
       video: false,
       audio: false,
       renderer: undefined,
-      hideControl: false,
+      hideControl: true,
       placeHolderText: this.defaultStudentPlaceholder.text,
       placeHolderType: this.defaultStudentPlaceholder.placeHolderType,
-      volumeLevel: 0,
+      micVolume: 0,
+      whiteboardGranted: false,
       defaultStream: true
     } as any]
   }

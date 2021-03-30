@@ -36,9 +36,11 @@ export const useToolCabinetContext = () => {
       switch (id) {
         case 'screenShare': {
             await sceneStore.startOrStopSharing()
+            return
         }
         case 'laserPoint': {
             await boardStore.setLaserPoint()
+            return
         }
       }
     }
@@ -408,7 +410,8 @@ export const useSettingContext = () => {
       // TODO: need pipe
       pretestStore.init({video: true, audio: true})
       pretestStore.openTestCamera()
-      pretestStore.openTestMicrophone()
+      // TODO: don't use enable recording, it will cause noise 
+      pretestStore.openTestMicrophone({enableRecording: false})
       return () => {
           pretestStore.closeTestCamera()
           pretestStore.closeTestMicrophone()
@@ -497,6 +500,15 @@ export const useSettingContext = () => {
   }
 }
 
+export const useNativeScreenShareWindowContext = () => {
+
+  const {customScreenShareItems} = useSceneStore()
+
+  return {
+    windowItems: customScreenShareItems
+  }
+}
+
 export const useScreenSharePlayerContext = () => {
   const sceneStore = useSceneStore()
   const screenShareStream = sceneStore.screenShareStream;
@@ -533,7 +545,7 @@ export const usePretestContext = () => {
       // TODO: need pipe
       pretestStore.init({video: true, audio: true})
       pretestStore.openTestCamera()
-      pretestStore.openTestMicrophone()
+      pretestStore.openTestMicrophone({enableRecording: true})
       return () => {
           pretestStore.closeTestCamera()
           pretestStore.closeTestMicrophone()
@@ -606,8 +618,10 @@ export const usePretestContext = () => {
   const handleOk = useCallback(() => {
       const roomPath = appStore.params.roomPath!
       console.log('history path ', roomPath)
+      pretestStore.closeTestCamera()
+      pretestStore.closeTestMicrophone()
       history.push(roomPath)
-  }, [history, appStore.params.roomPath])
+  }, [history, appStore.params.roomPath, pretestStore])
 
   return {
       title: t('pretest.title'),
@@ -1265,13 +1279,11 @@ export const useWhiteboardState = () => {
   }
 
   const [showToolBar, showZoomControl] = useMemo(() => {
-    if (roomStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomStore.roomInfo.userRole)) {
       return [true, true]
     }
     if (roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      if (roomStore.roomInfo.roomType === EduSceneType.SceneMedium) {
-        return [true, boardStore.hasPermission]
-      }
+      return [boardStore.hasPermission, boardStore.hasPermission]
     }
 
     return [false, false]

@@ -1331,13 +1331,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       throw 'electron not support openTestMicrophone'
     }
     await this.openMicrophone(option)
-    //TODO: cef api
-    if (this._cefClient) {
-      //@ts-ignore
-      this.client.audioDeviceManager.startRecordingDeviceTest(300)
-    } else {
-      this.client.startAudioRecordingDeviceTest(300)
-    }
+    // const res = this.client.startAudioRecordingDeviceTest(300)
+    // EduLogger.info('openTestMicrophone startAudioRecordingDeviceTest: ',  res)
   }
   
   async changeTestResolution(config: any): Promise<any> {
@@ -1351,6 +1346,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (this.joined) {
       throw 'electron not support closeTestMicrophone'
     }
+    // const res = this.client.stopAudioRecordingDeviceTest()
+    // EduLogger.info('closeTestMicrophone stopAudioRecordingDeviceTest: ',  res)
     this.closeMicrophone()
   }
   

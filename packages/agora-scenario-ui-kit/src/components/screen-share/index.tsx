@@ -11,6 +11,7 @@ type WindowTitle = string | number;
 interface WindowItem {
     id?: WindowId;
     title?: WindowTitle;
+    image?: string;
 }
 
 export interface ScreenShareProps extends BaseProps {
@@ -53,7 +54,9 @@ export const ScreenShare: FC<ScreenShareProps> = ({
                             onActiveItem(item.id!)
                         }}
                     >
-                        <div className="program-item-img"></div>
+                        <div className="program-item-img">
+                            {item.image ? <img src={item.image} alt=""/> : null}
+                        </div>
                         <div className="program-item-title">
                             {item.id === currentActiveId  ? ( <Icon type="checked" size={16} color={'#357BF6'}/>) : ""}
                             <div className="title-text">{item.title}</div>

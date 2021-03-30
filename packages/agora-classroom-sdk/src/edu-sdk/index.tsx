@@ -64,6 +64,11 @@ export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" |
 export type ConvertedFile = {
   width: number,
   height: number,
+  ppt: {
+    width: number,
+    src: string,
+    height: number
+  },
   conversionFileUrl: string,
 }
 

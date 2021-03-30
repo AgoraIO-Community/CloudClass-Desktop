@@ -56,6 +56,10 @@ export interface BaseVideoPlayerProps {
    * 是否授权操作白板
    */
   whiteboardGranted?: boolean;
+  /**
+   * 隐藏白板控制按钮
+   */
+  hideBoardGranted?: boolean;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -102,6 +106,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideControl = false,
   hideOffPodium = false,
   hideStars = false,
+  hideBoardGranted = false,
   onCameraClick,
   onMicClick,
   onOffPodiumClick,
@@ -137,11 +142,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               onClick={() => onOffPodiumClick(uid)}
             />
           )}
+          {hideBoardGranted ? null :
           <Icon
-            className={whiteboardGranted ? 'yellow': ''}
+            className={whiteboardGranted ? 'no_granted': ''}
             type="whiteboard"
             onClick={() => onWhiteboardClick(uid)}
-          />
+          /> 
+          }
           {hideStars ? null : <Icon type="star-outline" onClick={() => onSendStar(uid)} />}
         </>
       ) : null}
