@@ -11,7 +11,7 @@ export const ToastContainer = observer(() => {
     <div style={{justifyContent: 'center', display: 'flex'}}>
       {toastQueue.map((value: ToastType, idx: number) => 
         <Toast
-          style={{position:'absolute', top: 50}}
+          style={{position:'absolute', top: (50 * (idx + 1))}}
           key={`${value.id}`}
           type={value.type}
           closeToast={() => {

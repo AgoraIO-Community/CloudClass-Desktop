@@ -100,8 +100,7 @@ export class UIStore {
   }
 
   removeToast(id: string) {
-    const idx = this.toastQueue.findIndex((item: ToastType) => item.id !== id)
-    this.toastQueue.splice(idx, 1)
+    this.toastQueue = this.toastQueue.filter(item => item.id != id);
     return id;
   }
 
