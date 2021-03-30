@@ -5,9 +5,11 @@ import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
 import { platform } from '@/utils/utils';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
-import { getLanguage, t } from '@/i18n';
+import { t } from "@/i18n/index";
 import { isEmpty } from 'lodash';
 import { ToastCategory } from 'agora-scenario-ui-kit'
+
+
 interface NoticeMessage {
   type: string
   message: string

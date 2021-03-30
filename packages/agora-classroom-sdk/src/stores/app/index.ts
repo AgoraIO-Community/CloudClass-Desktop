@@ -1,6 +1,6 @@
 import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
-import { t } from '@/i18n';
+import { t } from '@/i18n/index';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -25,6 +25,7 @@ import { PretestStore } from './pretest';
 import { RoomStore } from './room';
 import { SceneStore } from './scene';
 import { UIStore } from './ui';
+
 
 type RoomInfoParams = {
   roomName: string,

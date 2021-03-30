@@ -1,4 +1,4 @@
-import { t } from '@/i18n';
+import { t } from "@/i18n/index";
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -12,6 +12,7 @@ import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
+
 
 const delay = 2000
 

@@ -2,7 +2,7 @@ import { getIntlError } from "@/services/intl-error-helper";
 import { AgoraFetch } from "../utils/fetch";
 import OSS from "ali-oss";
 import md5 from "js-md5";
-import { t } from "@/i18n";
+import {t} from '@/i18n/index'; 
 import { get } from "lodash";
 import { UAParser } from 'ua-parser-js';
 import { GenericErrorWrapper } from "agora-rte-sdk";

@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
-import { t } from '@/i18n';
+import { t } from "@/i18n/index";
 import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/utils';

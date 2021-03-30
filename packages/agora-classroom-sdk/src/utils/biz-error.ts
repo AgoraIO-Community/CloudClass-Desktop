@@ -1,4 +1,5 @@
-import { t } from "@/i18n";
+import { t } from "@/i18n/index";
+
 
 const ExceptionMapping = {
     "20410100": t('error.class_end'),

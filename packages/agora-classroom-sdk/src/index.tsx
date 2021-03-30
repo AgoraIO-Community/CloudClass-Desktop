@@ -8,6 +8,10 @@ import { EduManager } from 'agora-rte-sdk';
 import { AgoraEduSDK } from '@/edu-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { GlobalStorage } from '@/utils/utils';
+
+// 国际化
+import '@/i18n/index'
+
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";
 
@@ -15,6 +19,8 @@ import { stopReportingRuntimeErrors } from "react-error-overlay";
 if (process.env.NODE_ENV === "development") {
   stopReportingRuntimeErrors(); // disables error overlays
 }
+
+
 
 GlobalStorage.useSessionStorage()
 //@ts-ignore
