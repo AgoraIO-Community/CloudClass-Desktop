@@ -26,13 +26,13 @@ import { createRef } from 'react';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: any, index: number) => ({
-      name: `${item.name || index+1}`,
+    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+      name: `${index+1}`,
       componentCount: 1,
       ppt: {
-        width: item.ppt && item.ppt.width,
-        height: item.ppt && item.ppt.height,
-        src: item.ppt && item.ppt.src
+        width: item.width,
+        height: item.height,
+        src: item.conversionFileUrl
       }
     }))
   }
