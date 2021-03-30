@@ -9,8 +9,5 @@ export const reportsMap = {
       sid: payload.sessionId
     })
     reportService.reportEC('joinRoom', 'start')
-  },
-  '': (payload: any) => {
-
   }
 }

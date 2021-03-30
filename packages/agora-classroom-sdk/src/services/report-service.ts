@@ -24,9 +24,9 @@ type ReportPointParams = {
         platform: "web" | "electron"
         version: string,
         appId: string,
-        rid: string,
-        uid: string,
-        sid?: string,
+        // rid: string,
+        // uid: string,
+        // sid?: string,
         event?: string,
         category?: string,
         result?: string,
@@ -74,14 +74,18 @@ export class ReportService extends ApiBase {
     }
 
     guardParams() {
-        if (!!this.sid && !!this.rid && !!this.appId && !!this.rtmUid) {
+        if (!!this.appId && !!this.rtmUid) {
             return true
         }
-        throw GenericErrorWrapper(new Error(`missing params: sid: ${this.sid}, rid: ${this.rid}, appId: ${this.appId}, uid: ${this.rtmUid}`))
+        throw GenericErrorWrapper(new Error(`missing params: appId: ${this.appId}, uid: ${this.rtmUid}`))
     }
 
     updateConnectionState(state:string) {
         this.connectionState = state
+    }
+
+    setAppId(appId: string) {
+        this.appId = appId
     }
 
     buildBaseParams(ctype: string, src: string, m:string, metric: ReportPointMetricParams, optional: ReportPointOptionalParams, event?:string, category?: string):ReportParams {
@@ -96,9 +100,9 @@ export class ReportService extends ApiBase {
                     platform: this.platform,
                     version: this.version,
                     appId: this.appId,
-                    rid: this.rid,
-                    uid: this.rtmUid,
-                    sid: this.sid,
+                    // rid: this.rid,
+                    // uid: this.rtmUid,
+                    // sid: this.sid,
                     event,
                     category,
                     result: result === undefined ? undefined : `${+result}`,
@@ -122,6 +126,10 @@ export class ReportService extends ApiBase {
         return this.buildBaseParams('flexibleClass', 'apaas', 'online_user', {count:1}, {})
     }
 
+    get apiPath() {
+        return this.prefix.replace('%app_id%', this.appId)
+    }
+
     async request (params: {
         method: string,
         data: ReportParams,
@@ -135,7 +143,9 @@ export class ReportService extends ApiBase {
         const opts: any = {
           method,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-agora-token': this.rtmToken,
+            'x-agora-uid': this.rtmUid,
           }
         }
         if (data) {
@@ -143,7 +153,7 @@ export class ReportService extends ApiBase {
         }
         
         let resp: any;
-        resp = await HttpClient(`${this.prefix}${path}`, opts);
+        resp = await HttpClient(`${this.apiPath}${path}`, opts);
         if (resp.code !== "0") {
           throw GenericErrorWrapper({message: resp.message || resp.msg})
         }
@@ -220,7 +230,7 @@ export class ReportService extends ApiBase {
 }
 
 export const reportService = new ReportService({
-  sdkDomain: 'https://api-test.agora.io',
+  sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
   appId: '',
   rtmToken: '',
   rtmUid: ''
