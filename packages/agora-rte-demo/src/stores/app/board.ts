@@ -942,6 +942,12 @@ export class BoardStore {
       this.room.disableCameraTransform = true
     }
 
+    // if student, set tool to pencil when auth to use whiteboard
+    if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
+      this.setTool('pencil')
+      this.currentActiveToolItem = 'pencil'
+    }
+
     if (this.online && this.room) {
       await this.room.setWritable(true)
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
@@ -1097,11 +1103,6 @@ export class BoardStore {
         this.updateFullScreen(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           this.enableStatus = get(state, 'globalState.granted', 'disable')
-          // if student, set tool to pencil when auth to use whiteboard
-          if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && this.enableStatus){
-            this.setTool('pencil')
-            this.currentActiveToolItem = 'pencil'
-          }
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
