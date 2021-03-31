@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
+import { Tooltip } from '~components/tooltip'
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 
@@ -60,6 +61,8 @@ export interface BaseVideoPlayerProps {
    * 隐藏白板控制按钮
    */
   hideBoardGranted?: boolean;
+
+  placement?: any;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -107,6 +110,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
+  placement = 'bottom',
   onCameraClick,
   onMicClick,
   onOffPodiumClick,
@@ -124,32 +128,44 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Icon
-        className={micEnabled ? '' : 'red'}
-        type={micEnabled ? 'microphone-on' : 'microphone-off'}
-        onClick={() => onMicClick(uid)}
-      />
-      <Icon
-        className={cameraEnabled ? '' : 'red'}
-        type={cameraEnabled ? 'camera' : 'camera-off'}
-        onClick={() => onCameraClick(uid)}
-      />
+      <Tooltip title={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'} placement={placement}>
+        <Icon
+          className={micEnabled ? '' : 'red'}
+          type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
+          onClick={() => onMicClick(uid)}
+        />
+      </Tooltip>
+      <Tooltip title={cameraEnabled ? 'camera' : 'camera-off'} placement={placement}>
+        <Icon
+          className={cameraEnabled ? '' : 'red'}
+          type={cameraEnabled ? 'camera' : 'camera-off'}
+          onClick={() => onCameraClick(uid)}
+        />
+      </Tooltip>
       {isHost ? (
         <>
           {hideOffPodium ? null : (
-            <Icon
-              type="invite-to-podium"
-              onClick={() => onOffPodiumClick(uid)}
-            />
+            <Tooltip title="invite-to-podium" placement={placement}>
+              <Icon
+                type="invite-to-podium"
+                onClick={() => onOffPodiumClick(uid)}
+              />
+            </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Icon
-            className={whiteboardGranted ? 'no_granted': ''}
-            type="whiteboard"
-            onClick={() => onWhiteboardClick(uid)}
-          /> 
+          <Tooltip title={whiteboardGranted ? 'no_granted': 'granted'} placement={placement}>
+            <Icon
+              className={whiteboardGranted ? 'no_granted': ''}
+              type="whiteboard"
+              onClick={() => onWhiteboardClick(uid)}
+            /> 
+          </Tooltip>
           }
-          {hideStars ? null : <Icon type="star-outline" onClick={() => onSendStar(uid)} />}
+          {hideStars ? null : (
+            <Tooltip title="star" placement={placement}>
+              <Icon type="star-outline" onClick={() => onSendStar(uid)} />
+            </Tooltip>
+          )}
         </>
       ) : null}
     </div>
