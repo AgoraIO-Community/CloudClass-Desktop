@@ -3,6 +3,14 @@ export const en = {
     'pre_class': 'Pre Class',
     'in_class': 'In Class',
     'end_class': 'End Class',
+    'join_failed': 'Join Failure',
+  },
+  'device': {
+    'camera': 'Camera',
+    'speaker': 'Speaker',
+    'microphone': 'Microphone',
+    'microphone_volume': 'Microphone Volume',
+    'speaker_volume': 'Speaker Volume',
   },
   'roster': {
     'teacher_name': 'Teacher：',

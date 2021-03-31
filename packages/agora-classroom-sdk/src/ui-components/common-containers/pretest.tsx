@@ -1,4 +1,4 @@
-import { Button, Modal, Pretest } from 'agora-scenario-ui-kit'
+import { Button, Modal, Pretest, t } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import {usePretestContext} from '../hooks'
@@ -10,8 +10,8 @@ export const PretestContainer = observer(() => {
         microphoneList,
         isNative,
         speakerList,
-        title,
-        finish,
+        // title,
+        // finish,
         cameraId,
         microphoneId,
         speakerId,
@@ -29,9 +29,9 @@ export const PretestContainer = observer(() => {
     return (
         <div className="fixed-container">
             <Modal
-                title={title}
+                title={t('pretest.title')}
                 width={720}
-                footer={[<Button action="ok">{finish}</Button>]}
+                footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
                 onOk={handleOk}
                 onCancel={() => {}}
             >

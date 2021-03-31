@@ -4,6 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select'
 import { Slider } from '~components/slider'
 import './index.css';
+import { t } from '~components/i18n';
 
 const { Option } = Select
 
@@ -50,7 +51,7 @@ export const Setting: FC<SettingProps> = ({
     return (
         <div className={cls} {...restProps}>
             <div className="device-choose">
-                <div className="device-title">摄像头</div>
+                <div className="device-title">{t('device.camera')}</div>
                 <Select 
                     defaultValue={cameraId}
                     onChange={async value => {
@@ -61,7 +62,7 @@ export const Setting: FC<SettingProps> = ({
                 </Select>
             </div>
             <div className="device-choose">
-                <div className="device-title">麦克风</div>
+                <div className="device-title">{t('device.microphone')}</div>
                 <Select 
                     defaultValue={microphoneId}
                     onChange={async value => {
@@ -74,7 +75,7 @@ export const Setting: FC<SettingProps> = ({
                 hasMicrophoneVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">音量</span>
+                            <span className="device-text">{t('device.microphone_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -91,7 +92,7 @@ export const Setting: FC<SettingProps> = ({
 
             </div>
             <div className="device-choose">
-                <div className="device-title">扬声器</div>
+                <div className="device-title">{t('device.speaker')}</div>
                 <Select
                     defaultValue={speakerId}
                     onChange={async value => {
@@ -104,7 +105,7 @@ export const Setting: FC<SettingProps> = ({
                     hasSpeakerVolume ? 
                     (
                         <div className="device-volume">
-                            <span className="device-text">音量</span>
+                            <span className="device-text">{t('device.speaker_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
