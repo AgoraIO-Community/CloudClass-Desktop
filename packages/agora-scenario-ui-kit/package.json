@@ -64,6 +64,7 @@
   "dependencies": {
     "@types/react-transition-group": "^4.4.1",
     "classnames": "2.2.6",
+    "i18next": "^20.1.0",
     "rc-notification": "4.4.0",
     "rc-select": "12.1.6",
     "rc-slider": "9.7.1",
@@ -71,6 +72,7 @@
     "rc-tooltip": "5.1.0",
     "rc-trigger": "5.2.3",
     "rc-util": "5.8.1",
+    "react-i18next": "^11.8.12",
     "react-transition-group": "^4.4.1"
   },
   "browserslist": {

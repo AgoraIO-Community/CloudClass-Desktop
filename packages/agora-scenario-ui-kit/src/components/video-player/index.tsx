@@ -6,6 +6,7 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
+import { useTranslation } from 'react-i18next';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -117,6 +118,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onWhiteboardClick,
   onSendStar,
 }) => {
+  const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
     [`${className}`]: !!className,
@@ -128,14 +130,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'} placement={placement}>
+      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
         <Icon
           className={micEnabled ? '' : 'red'}
           type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
           onClick={() => onMicClick(uid)}
         />
       </Tooltip>
-      <Tooltip title={cameraEnabled ? 'camera' : 'camera-off'} placement={placement}>
+      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
         <Icon
           className={cameraEnabled ? '' : 'red'}
           type={cameraEnabled ? 'camera' : 'camera-off'}
@@ -145,7 +147,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       {isHost ? (
         <>
           {hideOffPodium ? null : (
-            <Tooltip title="invite-to-podium" placement={placement}>
+            <Tooltip title={t('Down Platform')} placement={placement}>
               <Icon
                 type="invite-to-podium"
                 onClick={() => onOffPodiumClick(uid)}
@@ -153,7 +155,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Tooltip title={whiteboardGranted ? 'no_granted': 'granted'} placement={placement}>
+          <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
             <Icon
               className={whiteboardGranted ? 'no_granted': ''}
               type="whiteboard"
@@ -162,7 +164,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           </Tooltip>
           }
           {hideStars ? null : (
-            <Tooltip title="star" placement={placement}>
+            <Tooltip title={t('Star')} placement={placement}>
               <Icon type="star-outline" onClick={() => onSendStar(uid)} />
             </Tooltip>
           )}
