@@ -202,3 +202,11 @@
 .no_granted {
   color: #bdbdca;
 }
+
+.video-player-tools .iconfont::before{
+  border-radius: 50%;
+} 
+
+.video-player-tools .iconfont:hover::before {
+  background-color: #f0f0f7;
+}
