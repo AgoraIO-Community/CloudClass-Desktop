@@ -1,9 +1,7 @@
-import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Icon } from '~components/icon'
-import { Toolbar, ToolbarProps, Colors, ToolItem, Pens, CloudDisk, ToolCabinet, UserList } from '~components/toolbar';
-import { clone } from 'lodash';
-import { list } from '~utilities';
+import React, { FC, useState } from 'react';
+import { Icon } from '~components/icon';
+import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem, UserList } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -14,15 +12,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
   const [activeColor, updateColor]= useState<string>('#7ed321')
   const [pen, updatePen]= useState<string>('pen')
 
-  const [activeMap, updateMap] = useState<Record<string, boolean>>({})
+  const [activeItem, updateActiveItem] = useState<string>('')
 
   const handleClick = React.useCallback(async (type: string) => {
-    const bool = activeMap[type]
-    updateMap({
-      ...activeMap,
-      [`${type}`]: !bool
-    })
-  }, [activeMap, updateMap])
+    updateActiveItem(type)
+  }, [updateActiveItem])
   const tools: ToolItem[] = [
     {
       value: 'selection',
@@ -135,23 +129,15 @@ export const Docs: FC<ToolbarProps> = (props) => {
           <UserList
             value='register'
             label='用户列表'
-            icon='register' 
-            teacherName="Peter"
-            dataSource={list(10).map((i: number) => ({
-              uid: i,
-              name: 'Lily True',
-              onPodium: false,
-              whiteboardGranted: true,
-              cameraEnabled: false,
-              micEnabled: true,
-              stars: 2,
-            }))}
+            icon='register'
+            onClick={() => {
+            }} 
           />
         )
       }
     }
   ];
-  return <Toolbar {...props} onClick={handleClick} activeMap={activeMap} tools={tools}></Toolbar>;
+  return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>;
 };
 
 export default meta;

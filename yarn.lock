@@ -12076,13 +12076,6 @@ hyphenate-style-name@^1.0.2:
   resolved "https://registry.npm.taobao.org/hyphenate-style-name/download/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
   integrity sha1-aRh5r44iCupXUOiCfbTvYqVONh0=
 
-i18next@^19.9.2:
-  version "19.9.2"
-  resolved "https://registry.npm.taobao.org/i18next/download/i18next-19.9.2.tgz#ea5a124416e3c5ab85fddca2c8e3c3669a8da397"
-  integrity sha1-6loSRBbjxauF/dyiyOPDZpqNo5c=
-  dependencies:
-    "@babel/runtime" "^7.12.0"
-
 i18next@^20.1.0:
   version "20.1.0"
   resolved "https://registry.npm.taobao.org/i18next/download/i18next-20.1.0.tgz#397dce9ad230ea822f487dc62d6128df5b678456"
@@ -18614,7 +18607,7 @@ react-hotkeys@2.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-i18next@^11.8.10, react-i18next@^11.8.11:
+react-i18next@^11.8.11, react-i18next@^11.8.12:
   version "11.8.12"
   resolved "https://registry.npm.taobao.org/react-i18next/download/react-i18next-11.8.12.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-i18next%2Fdownload%2Freact-i18next-11.8.12.tgz#6a9f57277062fb6a6129cad4db5e6198d5c60b58"
   integrity sha1-ap9XJ3Bi+2phKcrU215hmNXGC1g=

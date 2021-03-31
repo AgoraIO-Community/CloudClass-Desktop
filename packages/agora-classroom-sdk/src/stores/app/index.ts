@@ -1,6 +1,6 @@
+import { transI18n } from 'agora-scenario-ui-kit';
 import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
-import { t } from '@/i18n/index';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -452,7 +452,7 @@ export class AppStore implements ClassRoomAbstractStore {
       }
       this.sharing = false
     } catch(err) {
-      this.uiStore.addToast(t('toast.failed_to_end_screen_sharing') + `${err.message}`)
+      this.uiStore.addToast(transI18n('toast.failed_to_end_screen_sharing') + `${err.message}`)
     } finally {
       this.waitingShare = false
     }
@@ -487,9 +487,9 @@ export class AppStore implements ClassRoomAbstractStore {
         this.mediaService.screenRenderer.stop()
         this.mediaService.screenRenderer = undefined
         this._screenVideoRenderer = undefined
-        this.uiStore.addToast(t('toast.failed_to_initiate_screen_sharing_to_remote') + `${err.message}`)
+        this.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing_to_remote') + `${err.message}`)
       } else {
-        this.uiStore.addToast(t('toast.failed_to_enable_screen_sharing') + `${err.message}`)
+        this.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing') + `${err.message}`)
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
       const error = GenericErrorWrapper(err)
@@ -591,7 +591,7 @@ export class AppStore implements ClassRoomAbstractStore {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.uiStore.addToast(t('create_screen_share_failed'))
+        this.uiStore.addToast(transI18n('create_screen_share_failed'))
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -605,7 +605,7 @@ export class AppStore implements ClassRoomAbstractStore {
       //   await this.mediaService.stopScreenShare()
       // }
       this.waitingShare = false
-      this.uiStore.addToast(t('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
+      this.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
       // throw err
     }
   }

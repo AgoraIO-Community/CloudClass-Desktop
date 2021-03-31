@@ -1,10 +1,51 @@
 import { DialogType } from '@/stores/app/ui'
+import { BusinessExceptions } from '@/utils/biz-error'
+import { GenericError } from 'agora-rte-sdk'
 import { Modal, t } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext } from '../hooks'
+import { Trans } from 'react-i18next'
+import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext } from '../hooks'
 import { ScreenShareContainer } from './screen-share'
+import { UserListContainer } from './user-list'
+
+export const GenericErrorDialog = observer(({id, error}: {id: string, error: GenericError}) => {
+  const {
+    onOK,
+    onCancel,
+    ButtonGroup
+  } = useErrorContext(id)
+  return (
+    <Modal
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title={"加入失败"}
+    >
+      <Trans>{BusinessExceptions.getReadableText(error.errCode)}</Trans>
+    </Modal>
+  )
+})
+
+export const UserListDialog = observer(({id}: {id: string}) => {
+  const {
+    onOK,
+    onCancel,
+    ButtonGroup
+  } = useOpenDialogContext(id)
+  return (
+    <Modal
+      width={662}
+      onOk={onOK}
+      onCancel={onCancel}
+      footer={ButtonGroup()}
+      title={t('toast.screen_share')}
+    >
+      <UserListContainer/>
+    </Modal>
+  )
+})
 
 export const OpenShareScreen = observer(({id, resourceName}: {id: string, resourceName: string}) => {
 

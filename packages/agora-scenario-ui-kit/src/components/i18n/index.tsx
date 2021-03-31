@@ -1,86 +1,143 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { BehaviorSubject } from 'rxjs';
-import { I18nLanguage, makeContainer, translate } from '~utilities';
-import { useTranslation } from 'react-i18next';
-
-const {
-  Context,
-  useContext,
-  Provider,
-} = makeContainer('i18n')
-
-const defaultLanguage = 'en'
-
-export const changeLanguage$ = new BehaviorSubject<I18nLanguage>(defaultLanguage)
-
-export type I18nContextType = {
-  lang: I18nLanguage,
-  t: (text: string, options?: any) => any,
-  changeLanguage: (lang: I18nLanguage) => void
-}
-
-export const I18nContext = Context
-export const useI18nContext = () => useContext<I18nContextType>()
-
-export const transI18n = (text: string, options?: any) => translate(changeLanguage$.getValue(), text, options)
-
-// export const t: (text: string, options?: any) => any = (text: string, options?: any) => {
-//   return (
-//     React.createElement(TranslateMessage, {text, options}, [])
-//   )
-// }
+import React from 'react';
+import i18n from "i18next";
+import { isEmpty } from "lodash";
+import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
+import { en } from '~utilities/translate/en';
+import { zh } from '~utilities/translate/zh';
 
 export const t = (text: string) => {
-  const {t: translate} = useTranslation()
+  const { t: translate } = useTranslation()
   return translate(text)
 }
 
-export const I18nProvider = ({children, value = defaultLanguage}: {children: React.ReactNode, value?: I18nLanguage}) => {
-  const ref = useRef<BehaviorSubject<I18nLanguage>>(new BehaviorSubject<I18nLanguage>(value))
-
-  useEffect(() => {
-    ref.current.subscribe({
-      next: (value: I18nLanguage) => {
-        changeLanguage$.next(value)
-        updateLang(value)
-      }
-    })
-    return () => {
-      ref.current.complete()
+// the translations
+// (tip move them in a JSON file and import them)
+const resources = {
+  en: {
+    translation: {
+      "Close Microphone": "close microphone",
+      "Open Microphone": "open microphone",
+      "Close Camera": "close camera",
+      "Open Camera": "open camera",
+      "Down Platform": "down platform",
+      "Close Whiteboard": "close whiteboard",
+      "Open Whiteboard": "open whiteboard",
+      "Star": 'star',
+      ...en
     }
-  }, [ref, value])
+  },
+  zh: {
+    translation: {
+      "Close Microphone": "禁用麦克风",
+      "Open Microphone": "开启麦克风",
+      "Close Camera": "禁用摄像头",
+      "Open Camera": "开启摄像头",
+      "Down Platform": "下台",
+      "Close Whiteboard": "取消授权白板",
+      "Open Whiteboard": "授权白板",
+      "Star": '奖励',
+      ...zh
+    }
+  }
+};
 
-  const [lang, updateLang] = useState<I18nLanguage>(ref.current.getValue())
-  const trans = useCallback((text: string, options?: any) => {
-    return translate(lang, text, options)
-  }, [lang])
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: "en",
 
-  const changeLanguage = (lang: I18nLanguage) => {
-    ref.current
-      .next(lang)
+    // keySeparator: false, // we do not use keys in form messages.welcome
+
+    interpolation: {
+      escapeValue: false // react already safes from xss
+    }
+  });
+
+export const changeLanguage = (language: string) => {
+  i18n.changeLanguage(language)
+}
+
+//@ts-ignore
+window.changeLanguage = changeLanguage
+
+export class MemoryStorage {
+  constructor(
+    private readonly _storage = new Map<string, string>()
+  ) {
   }
 
+  getItem(name: string) {
+    return this._storage.get(name)
+  }
+
+  setItem(name: string, value: string) {
+    this._storage.set(name, value)
+  }
+
+  removeItem(name: string) {
+    this._storage.delete(name)
+  }
+}
+export class CustomStorage {
+
+  private storage: any;
+
+  languageKey: string = 'demo_language'
+
+  constructor() {
+    this.storage = new MemoryStorage();
+  }
+
+  useSessionStorage() {
+    this.storage = window.sessionStorage
+  }
+
+  read(key: string): any {
+    try {
+      let json = JSON.parse(this.storage.getItem(key) as string);
+      return json
+    } catch(_) {
+      return this.storage.getItem(key);
+    }
+  }
+
+  save(key: string, val: any) {
+    this.storage.setItem(key, JSON.stringify(val));
+  }
+
+  clear(key: string) {
+    this.storage.removeItem(key);
+  }
+
+  setLanguage(lang: string) {
+    this.save(this.languageKey, lang)
+  }
+
+  getLanguage() {
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
+    return language;
+  }
+}
+
+export const storage = new CustomStorage()
+
+export const getLanguage = () => storage.getLanguage().match(/zh/) ? 'zh' : 'en'
+
+export const transI18n = (text: string, options?: any) => {
+  let content = i18n.t(text)
+  if (!isEmpty(options)) {
+    if (options.reason && content.match(/\{.+\}/)) {
+      content = content.replace(/\{.+\}/, options.reason);
+    }
+  }
+  return content
+}
+
+export const I18nProvider = ({children}: any) => {
   return (
-    <Provider value={{lang, t: trans, changeLanguage}}>
+    <I18nextProvider i18n={i18n}>
       {children}
-    </Provider>
-  )
-}
-
-export const withI18n = <T,>(WrappedComponent: React.FC<T>) => {
-  return (props: T) => (
-    <I18nProvider>
-      <WrappedComponent {...props} />
-    </I18nProvider>
-  )
-}
-
-export const TranslateMessage: React.FC<any> = ({text, options}: {text: string, options?: any}) => {
-  const {t} = useI18nContext()
-
-  return (
-    <>
-    {t(text, options)}
-    </>
+    </I18nextProvider>
   )
 }
