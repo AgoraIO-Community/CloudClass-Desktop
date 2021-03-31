@@ -31,7 +31,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
         </Col>
         <Col>{t('cloud.fileName')}</Col>
         <Col>{t('cloud.size')}</Col>
-        <Col>{t('cloud.updatedAt')}</Col>
+        <Col>{t('cloud.operation')}</Col>
       </TableHeader>
       <Table className="table-container">
         {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>

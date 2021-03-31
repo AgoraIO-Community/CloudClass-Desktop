@@ -165,7 +165,7 @@ export const en = {
     'fileName': 'file name',
     'size': 'size',
     'progress': 'progress',
-    'updatedAt': 'updated at',
+    'operation': 'operation',
     'publicResources': 'Public Resources',
     'personalResources': 'Personal Resources',
     'downloadResources': 'Download Resources',
