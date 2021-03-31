@@ -1,5 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { en } from '~utilities/translate/en'
+import { zh } from '~utilities/translate/zh'
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -13,7 +15,8 @@ const resources = {
       "Down Platform": "down platform",
       "Close Whiteboard": "close whiteboard",
       "Open Whiteboard": "open whiteboard",
-      "Star": 'star'
+      "Star": 'star',
+      ...en
     }
   },
   zh: {
@@ -25,10 +28,12 @@ const resources = {
       "Down Platform": "下台",
       "Close Whiteboard": "取消授权白板",
       "Open Whiteboard": "授权白板",
-      "Star": '奖励'
+      "Star": '奖励',
+      ...zh
     }
   }
 };
+console.log(resources)
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -36,7 +41,7 @@ i18n
     resources,
     lng: "en",
 
-    keySeparator: false, // we do not use keys in form messages.welcome
+    // keySeparator: false, // we do not use keys in form messages.welcome
 
     interpolation: {
       escapeValue: false // react already safes from xss

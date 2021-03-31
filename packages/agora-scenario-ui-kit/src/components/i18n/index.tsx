@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 import { I18nLanguage, makeContainer, translate } from '~utilities';
+import { useTranslation } from 'react-i18next';
 
 const {
   Context,
@@ -23,10 +24,15 @@ export const useI18nContext = () => useContext<I18nContextType>()
 
 export const transI18n = (text: string, options?: any) => translate(changeLanguage$.getValue(), text, options)
 
-export const t: (text: string, options?: any) => any = (text: string, options?: any) => {
-  return (
-    React.createElement(TranslateMessage, {text, options}, [])
-  )
+// export const t: (text: string, options?: any) => any = (text: string, options?: any) => {
+//   return (
+//     React.createElement(TranslateMessage, {text, options}, [])
+//   )
+// }
+
+export const t = (text: string) => {
+  const {t: translate} = useTranslation()
+  return translate(text)
 }
 
 export const I18nProvider = ({children, value = defaultLanguage}: {children: React.ReactNode, value?: I18nLanguage}) => {
