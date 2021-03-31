@@ -66,6 +66,7 @@ export type EduMediaStream = {
   hideControl: boolean,
   whiteboardGranted: boolean,
   micVolume: number,
+  placement: string,
   stars: number,
   holderState: 'loading' | 'muted' | 'broken'
 }
