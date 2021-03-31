@@ -97,7 +97,7 @@ export const Roster: FC<RosterProps> = ({
         <Table className="roster-table">
           <TableHeader>
             {cols.map((col) => (
-              <Col key={col.key}>{col.name}</Col>
+              <Col key={col.key}>{t(col.name)}</Col>
             ))}
           </TableHeader>
           <Table className="table-container">

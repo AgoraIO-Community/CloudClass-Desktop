@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Setting, Modal, Button, useI18nContext } from 'agora-scenario-ui-kit'
+import { Button, Modal, Setting } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import { useAppStore, usePretestStore, useUIStore } from '@/hooks'
-import { RendererPlayer } from '../common-comps/renderer-player'
-import { useHistory } from 'react-router-dom'
+import React from 'react'
 import { useSettingContext } from '../hooks'
 
 export const SettingContainer = observer(() => {

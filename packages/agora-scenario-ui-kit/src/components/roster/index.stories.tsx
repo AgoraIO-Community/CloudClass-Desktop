@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
+import React, { FC } from 'react';
 import { ActionTypes, Roster, RosterProps } from '~components/roster';
 import { list } from '~utilities';
-import { I18nProvider } from '~components/i18n';
 
 const meta: Meta = {
   title: 'Components/Roster',
@@ -32,9 +31,7 @@ const meta: Meta = {
 
 export const Docs: FC<RosterProps> = (props) => {
   return (
-    <I18nProvider>
-      <Roster {...props} />
-    </I18nProvider>
+    <Roster {...props} />
   )
 };
 

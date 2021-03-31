@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Modal } from '~components/modal'
-import { Pretest } from '~components/device-manager/pretest'
-import { Button } from '~components/button'
-import { changeLanguage$, I18nProvider } from '~components';
-import { useI18nContext, withI18n } from '~components/i18n';
+import React, { useState } from 'react';
+import { Button } from '~components/button';
+import { Pretest } from '~components/device-manager/pretest';
+import { Modal } from '~components/modal';
 import { CameraPlaceHolder } from '~components/placeholder';
 
 const meta: Meta = {
@@ -119,7 +117,7 @@ const PretestContainer = () => {
 }
 
 export const Docs = ({ lang, isNative, cameraError, microphoneError }: DocsProps) => (
-    <I18nProvider value={lang}>
+    <>
         <div className="mt-4">
             <PretestContainer />
         </div>
@@ -130,14 +128,12 @@ export const Docs = ({ lang, isNative, cameraError, microphoneError }: DocsProps
                     width: 720,
                     footer: [<Button action="ok">完成检测</Button>],
                     children: (
-                        <I18nProvider>
                             <ChildrenWrap />
-                        </I18nProvider>
                     )
                 })
             }}>show pretest</Button>
         </div>
-    </I18nProvider>
+    </>
 )
 
 Docs.args = {

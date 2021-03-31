@@ -1,8 +1,8 @@
 import { RoomParameters } from '@/edu-sdk/declare';
 import { AppRouteComponent, routesMap } from '@/router';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
-import { ToastContainer } from '@/ui-components/common-containers/toast'
 import { BizPageRouter } from '@/types';
+import { ToastContainer } from '@/ui-components/common-containers/toast';
 import { useStorageSW } from '@/utils/utils';
 import { I18nProvider } from 'agora-scenario-ui-kit';
 import { Provider } from 'mobx-react';
@@ -60,7 +60,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <I18nProvider value={props.store.params.language}>
+      <I18nProvider>
         <Router>
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
@@ -73,11 +73,9 @@ export const AppContainer = (props: AppContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      {/* <I18nProvider> */}
-        <HashRouter>
-          <RouteContainer routes={props.routes} />
-        </HashRouter>
-      {/* </I18nProvider> */}
+      <HashRouter>
+        <RouteContainer routes={props.routes} />
+      </HashRouter>
     </Provider>
   )
 }
