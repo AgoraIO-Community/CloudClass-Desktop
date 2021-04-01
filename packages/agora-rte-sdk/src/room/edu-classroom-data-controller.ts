@@ -1,27 +1,20 @@
-import { isPatchProperty, noBlankChars, transformPatchPropertyKeys } from './../utils/syntax';
-import { CauseType } from './../core/services/edu-api';
-import { MessageSerializer } from './../core/rtm/message-serializer';
-import {v4 as uuidv4} from 'uuid';
+import { diff } from 'deep-diff';
+import { cloneDeep, get, isEmpty, pick, setWith } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
+import { EduLogger } from '../core/logger';
 import {
-  EduStreamData,
-  EduUserData,
-  EduClassroomAttrs,
-  EduRoomAttrs,
-  EduVideoSourceType,
-  EduUserAttrs,
   EduAudioSourceType,
-  EduUser,
-  EduChannelMessageCmdType,
-  EduClassroomStateType,
-  EduTextMessage,
-  EduStreamAction,
-  EduCustomMessage,
-  EduStream 
+  EduChannelMessageCmdType, EduClassroomAttrs,
+  EduRoomAttrs,
+  EduStream, EduStreamData,
+  EduTextMessage, EduUserAttrs, EduUserData,
+  EduVideoSourceType
 } from '../interfaces';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
-import { EduLogger } from '../core/logger';
-import { get, set, isEmpty, pick, cloneDeep } from 'lodash';
-import { diff } from 'deep-diff';
+import { MessageSerializer } from './../core/rtm/message-serializer';
+import { CauseType } from './../core/services/edu-api';
+import { isPatchProperty, noBlankChars } from './../utils/syntax';
+
 
 enum DataEnumType {
   users = 1,
@@ -1272,7 +1265,8 @@ export class EduClassroomDataController {
 
     // update patch key properties
     patchProperties.forEach((patchKeyPath) => {
-      set(curState, patchKeyPath, roomProperties[patchKeyPath])
+      console.log('#### roomProperties setWith.forEach', patchKeyPath)
+      setWith(curState, patchKeyPath, roomProperties[patchKeyPath])
     })
 
     const normalProperties = pick(roomProperties, normalKeys)
@@ -1289,17 +1283,21 @@ export class EduClassroomDataController {
     this.fire('classroom-property-updated', this.classroom, cause)
   }
 
-  setRoomBatchProperties(roomProperties: any, cause?: CauseType) {
-    const mergeRoomProperties = (properties: any, changeProperties: any) => {
-      let newProperties = cloneDeep(properties)
-      for (let key in changeProperties) {
-        set(newProperties, key, changeProperties[key])
+  setRoomBatchProperties(newProperties: any, cause?: CauseType) {
+    const mergeRoomProperties = (properties: any, changedProperties: any) => {
+      // let newProperties = properties
+      for (let key of Object.keys(changedProperties)) {
+        console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties)
+        setWith(properties, key, changedProperties[key])
       }
-      return newProperties
+      console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
+      console.log(" #### newProperties", JSON.stringify(newProperties))
+      console.log(" #### changeProperties", JSON.stringify(changedProperties))
+      return properties
     }
 
-    const prevState = this._roomProperties
-    const curState = mergeRoomProperties(prevState, roomProperties)
+    const prevState = cloneDeep(this._roomProperties)
+    const curState = mergeRoomProperties(prevState, newProperties)
 
     this._roomProperties = curState
     EduLogger.info(">>> setRoomBatchProperties ", curState)

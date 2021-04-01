@@ -13,6 +13,20 @@ import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, c
 import { controller, EduSDKInternalStateEnum } from './controller';
 import { StorageStore } from '@/stores/storage';
 import { StorageDisk } from '@/monolithic/disk';
+import AgoraRTM from 'agora-rtm-sdk';
+//@ts-ignore
+// import { stopReportingRuntimeErrors } from "react-error-overlay";
+
+
+function stop() {
+  // stopReportingRuntimeErrors(); // disables error overlays
+  //@ts-ignore
+  AgoraRTM.setParameter('DISABLE_MESSAGE_COMPRESSION')
+
+  console.log('stop reporting runtime errors')
+}
+
+stop()
 export interface AliOSSBucket {
   key: string
   secret: string

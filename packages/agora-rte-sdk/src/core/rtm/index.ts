@@ -17,8 +17,9 @@ import { reportService } from '../services/report-service';
 //@ts-ignore
 AgoraRTM.setParameter('DISABLE_MESSAGE_COMPRESSION')
 
-// const logFilter = ENABLE_LOG ? AgoraRTM.LOG_FILTER_DEBUG : AgoraRTM.LOG_FILTER_OFF;
-const logFilter = AgoraRTM.LOG_FILTER_OFF
+//@ts-ignore
+const logFilter = AgoraRTM.LOG_FILTER_DEBUG;
+// const logFilter = AgoraRTM.LOG_FILTER_OFF
 
 export enum StepPhase {
   isFinished = 1
