@@ -1,7 +1,7 @@
 import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { KickedEnd, KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
+import { GenericErrorDialog, KickedEnd, KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { reportService } from '@/services/report-service';
 import { RoomApi } from '@/services/room-api';
@@ -18,13 +18,14 @@ import {
   EduUser,
   EduVideoSourceType, GenericErrorWrapper
 } from 'agora-rte-sdk';
-import { t, Toast, transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from 'agora-scenario-ui-kit';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4} from 'uuid';
 import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
+import { report } from 'process';
 
 dayjs.extend(duration)
 
@@ -729,7 +730,7 @@ export class RoomStore extends SimpleInterval {
       this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
-          this.appStore.uiStore.addToast(t('toast.classroom_remote_join'))
+          this.appStore.uiStore.addToast(transI18n('toast.classroom_remote_join'))
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
         reportService.updateConnectionState(newState)
@@ -1150,7 +1151,15 @@ export class RoomStore extends SimpleInterval {
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
-      throw GenericErrorWrapper(err)
+      try {
+        await this.appStore.destroy()
+      } catch (err) {
+        EduLogger.info(" appStore.destroyRoom ", err.message)
+      }
+      const error = GenericErrorWrapper(err)
+      reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${error.message}`})
+      this.appStore.uiStore.addDialog(GenericErrorDialog, {error})
+      throw error
     }
   }
 

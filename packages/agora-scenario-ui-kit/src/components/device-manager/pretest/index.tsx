@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~components/button';
 import { t } from '~components/i18n';
 import { Icon } from '~components/icon';
@@ -105,7 +106,6 @@ export const Pretest: React.FC<PretestProps> = ({
                                 style={{width: 12, height: 12}} 
                                 checked={isMirror}
                                 onChange={(e: any) => {
-                                    console.log('isMirror', e.target.checked)
                                     onSelectMirror(e.target.checked)
                                 }}
                             /> 

@@ -3,17 +3,23 @@ import { useEffectOnce } from "@/hooks/utils"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
-import { EduLogger, EduRoleTypeEnum, EduSceneType, EduStream } from "agora-rte-sdk"
-import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, useI18nContext, ZoomItemType } from "agora-scenario-ui-kit"
+import { EduLogger, EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
+import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t } from "agora-scenario-ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+// import { useTranslation } from "react-i18next"
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
 import { RendererPlayer } from "../common-comps/renderer-player"
 import { calcUploadFilesMd5, uploadFileInfoProps } from "../common-containers/cloud-driver"
 import { Exit } from "../common-containers/dialog"
+
+// export const useI18n = () => {
+//   const {t} = useTranslation()
+//   return {t}
+// }
 
 export const useToastContext = () => {
   const uiStore = useUIStore()
@@ -244,6 +250,7 @@ export const useSmallClassVideoControlContext = (): VideoContainerContext => {
       whiteboardGranted: stream.whiteboardGranted,
       micVolume: stream.micVolume,
       controlPlacement: 'bottom',
+      placement: 'bottom',
       hideControl: stream.hideControl,
       children: (
         <>
@@ -369,10 +376,7 @@ export const useChatContext = () => {
   }
 }
 
-export const useSettingContext = () => {
-
-  const {t} = useI18nContext()
-
+export const useSettingContext = (id: any) => {
   const pretestStore = usePretestStore()
   const uiStore = useUIStore()
   const {visibleSetting} = uiStore
@@ -462,27 +466,20 @@ export const useSettingContext = () => {
       )
   }, [cameraRenderer, cameraId, isMirror])
 
-  const history = useHistory()
-
-  const appStore = useAppStore()
-
   const handleOk = useCallback(() => {
-      // const roomPath = appStore.params.roomPath!
-      // history.push(roomPath)
-  }, [history])
+      uiStore.removeDialog(id)
+  }, [id, uiStore])
 
-  const hideSetting = useCallback(() => {
-      uiStore.setVisibleSetting(false)
-  }, [visibleSetting, uiStore])
+  const handleCancel = useCallback(() => {
+    uiStore.removeDialog(id)
+  }, [id, uiStore])
 
   return {
       visibleSetting,
       isNative: false,
-      title: t('pretest.title'),
       cameraList,
       microphoneList,
       speakerList,
-      finish: t('pretest.finishTest'),
       cameraId,
       microphoneId,
       speakerId,
@@ -493,10 +490,9 @@ export const useSettingContext = () => {
       VideoPreviewPlayer,
       microphoneLevel,
       isMirror,
-      hideSetting,
       handleOk,
+      handleCancel,
       onChangeDevice,
-      t,
   }
 }
 
@@ -524,8 +520,6 @@ export const useScreenSharePlayerContext = () => {
 }
 
 export const usePretestContext = () => {
-
-  const {t} = useI18nContext()
 
   const pretestStore = usePretestStore()
 
@@ -624,12 +618,10 @@ export const usePretestContext = () => {
   }, [history, appStore.params.roomPath, pretestStore])
 
   return {
-      title: t('pretest.title'),
       cameraList,
       microphoneList,
       speakerList,
       isNative: false,
-      finish: t('pretest.finishTest'),
       cameraId,
       microphoneId,
       speakerId,
@@ -647,14 +639,14 @@ export const usePretestContext = () => {
 
 export const usePenContext = () => {
   const boardStore = useBoardStore()
-  const {t} = useI18nContext()
-
   const lineSelector = boardStore.lineSelector
 
   return {
-    t,
     lineSelector,
+    currentSelector: boardStore.currentSelector,
+    isActive: boardStore.boardPenIsActive,
     onClick: (pen: any) => {
+      boardStore.setTool(pen)
       boardStore.updatePen(pen)
     }
   }
@@ -915,7 +907,7 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
 
   const isSelectAll: any = useMemo(() => {
     const selected = items.filter((item: any) => !!item.checked)
-    return selected.length === items.length ? true : false
+    return items.length > 0 && selected.length === items.length ? true : false
   }, [items, checkMap])
 
   const handleSelectAll = useCallback((evt: any) => {
@@ -990,6 +982,7 @@ export const useColorContext = () => {
       boardStore.changeStroke(width)
     },
     changeHexColor: (color: any) => {
+      boardStore.setTool('color')
       boardStore.changeHexColor(color)
     }
   }
@@ -1068,6 +1061,31 @@ export const useHandsUpManager = () => {
   }
 }
 
+export const useErrorContext = (id: string) => {
+  const uiStore = useUIStore()
+  const appStore = useAppStore()
+
+  const onOK = async () => {
+    uiStore.removeDialog(id)
+    await appStore.destroyRoom()
+  }
+
+  const onCancel = () => {
+    uiStore.removeDialog(id)
+  }
+
+  const ButtonGroup = useCallback(() => {
+    return [
+      <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+    ]
+  }, [t])
+  
+  return {
+    onOK,
+    onCancel,
+    ButtonGroup
+  }
+}
 
 
 export const useOpenDialogContext = (id: string) => {
@@ -1127,7 +1145,7 @@ export const useCloseConfirmContext = (id: string, resourceName: string) => {
 
 export const useRoomEndContext = (id: string) => {
   const roomStore = useRoomStore()
-
+  // const {t} = useTranslation()
   const uiStore = useUIStore()
   const isStarted = roomStore.navigationState.isStarted
 
@@ -1156,6 +1174,7 @@ export const useRoomEndContext = (id: string) => {
 export const useExitContext = (id: string) => {
   const roomStore = useRoomStore()
   const appStore = useAppStore()
+  // const {t} = useTranslation()
 
   const uiStore = useUIStore()
   const isStarted = roomStore.navigationState.isStarted
@@ -1186,6 +1205,7 @@ export const useExitContext = (id: string) => {
 export const useKickEndContext = (id: string) => {
   const roomStore = useRoomStore()
   const appStore = useAppStore()
+  // const {t} = useTranslation()
 
   const navigationState = roomStore.navigationState
 
@@ -1239,7 +1259,6 @@ export const use1v1Store = () => {
 export const useWhiteboardState = () => {
   const boardStore = useBoardStore()
   const roomStore = useRoomStore()
-  useI18nContext()
 
   const boardRef = useRef<HTMLDivElement | null>(null)
 
@@ -1252,9 +1271,6 @@ export const useWhiteboardState = () => {
   }, [boardRef.current, boardStore])
 
   const handleToolBarChange = async (type: string) => {
-
-    console.log('type>>>>handleToolBarChange ', type)
-
     boardStore.setTool(type)
   }
 

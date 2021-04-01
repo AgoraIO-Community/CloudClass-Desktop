@@ -35,6 +35,7 @@ export const VideoPlayerTeacher = observer(() => {
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
       controlPlacement={'left'}
+      placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
     >
       <CameraPlaceHolder state={userStream.holderState} />
@@ -81,6 +82,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       onSendStar={onSendStar}
       onOffPodiumClick={onOffPodiumClick}
       controlPlacement={controlPlacement}
+      placement={controlPlacement}
     >
       <CameraPlaceHolder state={userStream.holderState} />
       {

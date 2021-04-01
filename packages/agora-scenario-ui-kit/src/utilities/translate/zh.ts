@@ -3,6 +3,14 @@ export const zh = {
     'pre_class': '课前',
     'in_class': '已上课',
     'end_class': '课程已结束',
+    'join_failed': '加入失败',
+  },
+  'device': {
+    'camera': '摄像头',
+    'microphone': '麦克风',
+    'speaker': '扬声器',
+    'microphone_volume': '麦克风音量',
+    'speaker_volume': '扬声器音量',
   },
   'roster': {
     'teacher_name': '教师姓名：',

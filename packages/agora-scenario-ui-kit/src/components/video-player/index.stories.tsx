@@ -1,9 +1,9 @@
-import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
-import { Button } from '~components/button'
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import React, { FC } from 'react';
 import { CameraPlaceHolder } from '~components';
-import {changeLanguage} from '../../i18n'
+import { Button } from '~components/button';
+import { changeLanguage } from '~components/i18n';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
 const meta: Meta = {
   title: 'Components/VideoPlayer',

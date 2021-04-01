@@ -5,6 +5,7 @@
   flex: 1;
   border-radius: 4px;
   min-width: 300px;
+  @apply border-l border-gray-100;
 }
 
 .chat-header {

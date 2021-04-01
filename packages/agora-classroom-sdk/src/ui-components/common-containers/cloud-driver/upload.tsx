@@ -1,10 +1,8 @@
-import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Progress, Inline, Row, CheckBox, Table, TableHeader, formatFileSize, t, Placeholder } from 'agora-scenario-ui-kit'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import { useBoardStore } from '@/hooks'
-import { agoraCaches } from '@/utils/web-download.file'
-import dayjs from 'dayjs'
 import { useUploadContext } from '@/ui-components/hooks'
+import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
+import dayjs from 'dayjs'
+import { observer } from 'mobx-react'
+import React from 'react'
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void

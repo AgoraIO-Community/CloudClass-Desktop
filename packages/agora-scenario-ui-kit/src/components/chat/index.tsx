@@ -1,13 +1,13 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Affix, AffixProps } from '~components/affix';
+import { Button } from '~components/button';
 import { Icon } from '~components/icon';
 import { Placeholder } from '~components/placeholder';
-import './index.css';
-import { Button } from '~components/button';
-import { Message } from './interface';
 import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
-import { t, transI18n } from '~components/i18n';
-import { Affix, AffixProps } from '~components/affix';
+import './index.css';
+import { Message } from './interface';
 
 export interface ChatProps extends AffixProps {
   /**
@@ -72,6 +72,9 @@ export const Chat: FC<ChatProps> = ({
   onPullFresh,
   ...resetProps
 }) => {
+
+  const {t} = useTranslation()
+
   const [focused, setFocused] = useState<boolean>(false);
 
   const handleFocus = () => setFocused(true);
@@ -125,7 +128,7 @@ export const Chat: FC<ChatProps> = ({
       content={<ChatMin unreadCount={unreadCount} />}>
       <div className="chat-panel">
         <div className="chat-header">
-          <span className="chat-header-title">{transI18n('message')}</span>
+          <span className="chat-header-title">{t('message')}</span>
           <span>
             {isHost ? (
               <Icon
@@ -166,7 +169,7 @@ export const Chat: FC<ChatProps> = ({
             value={chatText}
             rows={1}
             className="chat-texting-message"
-            placeholder={transI18n('placeholder.input_message')}
+            placeholder={t('placeholder.input_message')}
             disabled={!isHost && !canChatting}
             onChange={(e) => onText(e.currentTarget.value)}
             onFocus={handleFocus}

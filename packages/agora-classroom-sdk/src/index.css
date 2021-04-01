@@ -40,9 +40,6 @@ html, body, #root {
   bottom: 0;
   right: 0;
   border: none;
-  width: auto;
-  margin: 10px;
-  height: auto;
 }
 
 .screen-share-player-container {

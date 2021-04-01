@@ -10,7 +10,7 @@ import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netless
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
-import { ToolItem, t } from 'agora-scenario-ui-kit';
+import { ToolItem, t, transI18n } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
 import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -260,6 +260,16 @@ export class BoardStore extends ZoomController {
     return this.appStore.userUuid
   }
 
+  @computed
+  get boardPenIsActive() {
+    return [
+      'pen',
+      'square',
+      'circle',
+      'line'
+    ].includes(this.currentSelector)
+  }
+
   @action
   async init(info: {
     boardId: string,
@@ -338,7 +348,7 @@ export class BoardStore extends ZoomController {
   @observable
   _boardItem: any = {
     file: {
-      name: t('tool.board_name'),
+      name: transI18n('tool.board_name'),
       type: 'board',
     },
     currentPage: 0,
@@ -539,7 +549,7 @@ export class BoardStore extends ZoomController {
       if (!resourceName || resourceName === "init" || resourceName === "/init" || resourceName === "/") {
         this._boardItem = {
           file: {
-            name: t('tool.board_name'),
+            name: transI18n('tool.board_name'),
             type: 'board',
           },
           currentPage: resource.index,
@@ -714,10 +724,10 @@ export class BoardStore extends ZoomController {
     if (isTeacher) {
       if (this.online && this.room) {
         if (this.follow === FollowState.Follow) {
-          this.appStore.uiStore.addToast(t('toast.open_whiteboard_follow'))
+          this.appStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
           this.room.setViewMode(ViewMode.Broadcaster)
         } else {
-          this.appStore.uiStore.addToast(t('toast.close_whiteboard_follow'))
+          this.appStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
           this.room.setViewMode(ViewMode.Freedom)
         }
       }
@@ -839,6 +849,7 @@ export class BoardStore extends ZoomController {
         avatar: "",
         cursorName: this.appStore.roomStore.roomInfo.userName,
       },
+      floatBar: true,
       isAssistant: this.appStore.roomStore.isAssistant
     })
     cursorAdapter.setRoom(this.boardClient.room)
@@ -1032,44 +1043,52 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @observable
+  shape: string = 'pencil';
+
   @action
   setTool(tool: string) {
-
-    console.log('tool ', tool)
-
-    if (tool === 'follow') {
-      // TODO: 左侧菜单点击切换逻辑，纯处理active
-      const resultNumber = !this.activeMap['follow'] ? 1 : 0
-      this.room.setGlobalState({follow: resultNumber})
-      return
-    }
-
-    if (tool === 'blank-page') {
-      const room = this.room
-      if (room.isWritable) {
-        room.setScenePath('/init')
-        const newIndex = room.state.sceneState.scenes.length
-        room.putScenes("/", [{name: `${newIndex}`}], newIndex)
-        room.setSceneIndex(newIndex)
-      }
-      return
-    }
-
-    this.selector = tool
-
     if (!this.room || !this.room.isWritable) return
 
-    const appliance = transToolBar[tool]
-    if (appliance) {
-      const lineTool = transLineTool[tool]
-      if (lineTool) {
-        this.lineSelector = tool
+    switch(tool) {
+      case 'follow': {
+        // TODO: 左侧菜单点击切换逻辑，纯处理active
+        const resultNumber = !this.activeMap['follow'] ? 1 : 0
+        this.room.setGlobalState({follow: resultNumber})
+        return
       }
-      console.log('appliance', appliance)
-      this.room.setMemberState({
-        currentApplianceName: appliance
-      })
-      return
+      case 'blank-page': {
+        const room = this.room
+        if (room.isWritable) {
+          room.setScenePath('/init')
+          const newIndex = room.state.sceneState.scenes.length
+          room.putScenes("/", [{name: `${newIndex}`}], newIndex)
+          room.setSceneIndex(newIndex)
+        }
+        return
+      }
+      case 'pen':
+      case 'square':
+      case 'circle':
+      case 'line': 
+      case 'selection': 
+      case 'text':
+      case 'hand':
+      case 'eraser':
+      case 'color':
+      {
+        const appliance = transToolBar[tool]
+        if (appliance) {
+          if (transLineTool[tool]) {
+            this.lineSelector = transLineTool[tool]
+          }
+          this.room.setMemberState({
+            currentApplianceName: appliance
+          })
+        }
+        this.selector = tool
+        break
+      }
     }
   }
 
@@ -1293,9 +1312,9 @@ export class BoardStore extends ZoomController {
       // this.follow = follow
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.follow) {
-          this.appStore.uiStore.addToast(t('toast.whiteboard_lock'))
+          this.appStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
         } else {
-          this.appStore.uiStore.addToast(t('toast.whiteboard_unlock'))
+          this.appStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
         }
       }
     }
@@ -1303,10 +1322,10 @@ export class BoardStore extends ZoomController {
     this.grantUsers = get(this.room.state.globalState, 'grantUsers', [])
     const grantUsers = this.grantUsers
     if (grantUsers && Array.isArray(grantUsers)) {
-      const hasPermission = grantUsers.includes(this.localUserUuid) || this.roomType === 0 ? true : false
+      const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.uiStore.addToast(t(notice))
+        this.appStore.uiStore.addToast(transI18n(notice))
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1568,7 +1587,7 @@ export class BoardStore extends ZoomController {
       this.boardClient.grantPermission(userUuid)
       this.appStore.uiStore.addToast(`授权白板成功`)
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_authorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.addToast(transI18n('toast.failed_to_authorize_whiteboard') + `${err.message}`)
     }
   }
 
@@ -1578,7 +1597,7 @@ export class BoardStore extends ZoomController {
       this.boardClient.revokePermission(userUuid)
       this.appStore.uiStore.addToast(`取消授权白板成功`)
     } catch (err) {
-      this.appStore.uiStore.addToast(t('toast.failed_to_deauthorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.addToast(transI18n('toast.failed_to_deauthorize_whiteboard') + `${err.message}`)
     }
   }
 
@@ -1654,10 +1673,10 @@ export class BoardStore extends ZoomController {
   @computed
   get loadingStatus() {
     if (!this.ready) {
-      return t("whiteboard.loading")
+      return transI18n("whiteboard.loading")
     }
     if (this.preloadingProgress !== -1) {
-      // return t("whiteboard.downloading", {reason: this.preloadingProgress})
+      // return transI18n("whiteboard.downloading", {reason: this.preloadingProgress})
     }
 
     return ''

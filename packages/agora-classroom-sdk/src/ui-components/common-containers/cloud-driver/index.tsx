@@ -1,6 +1,6 @@
 import { useBoardStore } from '@/hooks'
 import { useCloudDriverContext } from '@/ui-components/hooks'
-import { Button, CloudDisk, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast, useI18nContext } from 'agora-scenario-ui-kit'
+import { Button, CloudDisk, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast } from 'agora-scenario-ui-kit'
 import MD5 from 'js-md5'
 import { observer } from 'mobx-react'
 import React from 'react'
@@ -106,8 +106,6 @@ export const CloudDriverContainer = observer((props: any) => {
 export const CloudDiskContainer = observer(() => {
 
   const boardStore = useBoardStore()
-
-  const {t} = useI18nContext()
 
   const currentActive = boardStore.selector
 
