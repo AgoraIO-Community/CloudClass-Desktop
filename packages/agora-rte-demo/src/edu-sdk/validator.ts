@@ -77,10 +77,6 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError(`${option.language} language is not supported`)
   }
 
-  if (!isString(option.translateLanguage)) {
-    throw new AgoraSDKError('translateLanguage parameter should be string')
-  }
-
   if (!option.listener) {
     throw new AgoraSDKError('listener parameter is invalid cannot be empty')
   }

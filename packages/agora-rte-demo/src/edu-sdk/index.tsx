@@ -106,7 +106,6 @@ export type LaunchOption = {
   rtmUid: string
   rtmToken: string, // rtmToken
   language: LanguageEnum, // 国际化
-  translateLanguage: TranslateEnum, // 翻译语言
   startTime: number, // 房间开始时间
   duration: number, // 课程时长
   courseWareList: CourseWareList, // 课件列表
@@ -256,7 +255,6 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
         },
         language: option.language,
-        translateLanguage: option.translateLanguage,
         startTime: option.startTime,
         duration: option.duration,
         roomInfoParams: {
