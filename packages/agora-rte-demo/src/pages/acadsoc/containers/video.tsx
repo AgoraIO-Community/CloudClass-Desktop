@@ -222,7 +222,7 @@ export const StudentVideo = observer(() => {
   
   const trophyNumber = useMemo(() => {
     return acadsocStore.getRewardByUid(userStream.userUuid)
-  }, [acadsocStore.getRewardByUid, userStream.userUuid, acadsocStore.studentsReward])
+  }, [acadsocStore.getRewardByUid, userStream.userUuid, JSON.stringify(acadsocStore.studentsReward)])
 
   return (
     <div ref={studentViewRef} style={{marginBottom: '10px', height: '100%', width:'100%', display: 'flex'}}>
