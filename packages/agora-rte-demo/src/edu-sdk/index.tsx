@@ -1,32 +1,16 @@
-import { SceneDefinition } from 'white-web-sdk';
-import '@/index.scss'
-import 'promise-polyfill/src/polyfill'
-import React from 'react'
-// import { ReplayRoom } from "@/monolithic/replay-room"
-import { LiveRoom } from "@/monolithic/live-room"
-import { GenericErrorWrapper, EduRoleTypeEnum, EduRoomTypeEnum  } from "agora-rte-sdk"
-import { AppStore } from "@/stores/app"
-import { unmountComponentAtNode } from "react-dom"
-import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare"
-import { eduSDKApi } from '@/services/edu-sdk-api'
-import { AgoraSDKError, checkConfigParams, checkDiskParams, checkLaunchOption, checkReplayOption, checkDiskOption } from './validator'
-import { controller, EduSDKInternalStateEnum } from './controller';
-import { StorageStore } from '@/stores/storage';
+import '@/index.scss';
 import { StorageDisk } from '@/monolithic/disk';
-import AgoraRTM from 'agora-rtm-sdk';
-//@ts-ignore
-// import { stopReportingRuntimeErrors } from "react-error-overlay";
-
-
-function stop() {
-  // stopReportingRuntimeErrors(); // disables error overlays
-  //@ts-ignore
-  AgoraRTM.setParameter('DISABLE_MESSAGE_COMPRESSION')
-
-  console.log('stop reporting runtime errors')
-}
-
-stop()
+import { LiveRoom } from "@/monolithic/live-room";
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore } from "@/stores/app";
+import { StorageStore } from '@/stores/storage';
+import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import 'promise-polyfill/src/polyfill';
+import React from 'react';
+import { SceneDefinition } from 'white-web-sdk';
+import { controller } from './controller';
+import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
+import { checkConfigParams, checkDiskOption, checkLaunchOption, checkReplayOption } from './validator';
 export interface AliOSSBucket {
   key: string
   secret: string

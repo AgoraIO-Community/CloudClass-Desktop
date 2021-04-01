@@ -1,12 +1,12 @@
-import uuidv4 from 'uuid/v4';
-import { AppStore } from '@/stores/app';
-import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
-import { observable, action, computed, reaction } from 'mobx';
-import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore } from '@/stores/app';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
-import { eduSDKApi } from '@/services/edu-sdk-api';
+import { EduLogger, LocalUserRenderer } from 'agora-rte-sdk';
+import { debounce, uniq } from 'lodash';
+import { action, computed, observable, reaction } from 'mobx';
+import uuidv4 from 'uuid/v4';
 
 const delay = 2000
 
