@@ -258,7 +258,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get roomReward() {
-    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 6}})
   }
 
   @computed
@@ -934,8 +934,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          this.roomProperties = get(classroom, 'roomProperties')
+          const roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
+
+          EduLogger.info(" roomProperties ", JSON.stringify(roomProperties), " cause", cause)
+          this.roomProperties = roomProperties
         
           const record = get(classroom, 'roomProperties.record')
           if (record) {
