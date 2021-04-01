@@ -23,7 +23,6 @@ export const Invisible = observer(() => {
       rtmUid: userUuid,
       pretest: false,
       courseWareList: [],
-      translateLanguage: ("auto" as TranslateEnum),
       language: ('en' as LanguageEnum),
       userUuid,
       rtmToken,
