@@ -89,6 +89,9 @@ export class UIStore {
   acadsocToastQueue: string[] = []
 
   @observable
+  brushToastQueue: {ts:number, enabled:boolean}[] = []
+
+  @observable
   autoplayToast: boolean = false
 
   @observable
@@ -172,6 +175,16 @@ export class UIStore {
     if (idx !== -1) {
       this.acadsocToastQueue.splice(idx, 1)
     }
+  }
+
+  @action
+  addBrushToast(ts: number, enabled: boolean) {
+    this.brushToastQueue.push({ts, enabled})
+  }
+
+  @action
+  removeBrushToast(ts: number) {
+    this.brushToastQueue = this.brushToastQueue.filter(item => ts === item.ts)
   }
 
   @action
