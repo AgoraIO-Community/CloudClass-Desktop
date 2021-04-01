@@ -1,30 +1,37 @@
-import { t } from '@/i18n';
-import { EduBoardService } from '@/modules/board/edu-board-service';
-import { EduRecordService } from '@/modules/record/edu-record-service';
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import { reportService } from '@/services/report-service';
-import { UploadService } from '@/services/upload-service';
-import { AppStore } from '@/stores/app/index';
-import { EduClassroomStateEnum } from '@/stores/app/scene';
-import { QuickTypeEnum } from '@/types/global';
-import { BizLogger } from '@/utils/biz-logger';
-import { ChatMessage } from '@/utils/types';
-import { filterChatText } from '@/utils/utils';
 import { dialogManager } from 'agora-aclass-ui-kit';
 import {
-  EduAudioSourceType, EduLogger,
-  EduRoleType, EduRoleTypeEnum, EduSceneType,
-  EduStream, EduTextMessage,
+  EduLogger,
+  PeerInviteEnum,
+  UserRenderer,
+  EduAudioSourceType,
+  EduTextMessage,
+  EduSceneType,
+  EduRoleTypeEnum,
+  GenericErrorWrapper,
   EduUser,
-  EduVideoSourceType, GenericErrorWrapper, UserRenderer
+  EduStream,
+  EduRoleType,
+  EduVideoSourceType,
 } from 'agora-rte-sdk';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import { get } from 'lodash';
-import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import { eduSDKApi } from '@/services/edu-sdk-api';
 import uuidv4 from 'uuid/v4';
-import { RoomApi } from '../../services/room-api';
 import { SimpleInterval } from '../mixin/simple-interval';
+import { EduBoardService } from '@/modules/board/edu-board-service';
+import { EduRecordService } from '@/modules/record/edu-record-service';
+import { RoomApi } from '../../services/room-api';
+import { AppStore } from '@/stores/app/index';
+import { observable, computed, action, runInAction, reaction, IReactionDisposer } from 'mobx';
+import { ChatMessage } from '@/utils/types';
+import { t } from '@/i18n';
+import { BizLogger } from '@/utils/biz-logger';
+import { get } from 'lodash';
+import {EduClassroomStateEnum, SceneVideoConfiguration} from '@/stores/app/scene';
+import { UploadService } from '@/services/upload-service';
+import { reportService } from '@/services/report-service';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration'
+import { QuickTypeEnum } from '@/types/global';
+import { filterChatText } from '@/utils/utils';
 
 dayjs.extend(duration)
 
@@ -251,7 +258,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get roomReward() {
-    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 6}})
   }
 
   @computed
@@ -389,9 +396,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   constructor(appStore: AppStore) {
     super()
     this.appStore = appStore
-    reaction(() => this.roomProperties, (data: any) => {
-      console.log('##### roomProperties #### ', JSON.stringify(data))
-    })
   }
 
   @action
@@ -930,8 +934,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          this.roomProperties = get(classroom, 'roomProperties')
+          const roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
+
+          EduLogger.info(" roomProperties ", JSON.stringify(roomProperties), " cause", cause)
+          this.roomProperties = roomProperties
         
           const record = get(classroom, 'roomProperties.record')
           if (record) {
@@ -1191,10 +1198,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @action
   getRewardByUid(uid: string): number {
-    // const student = this.studentsReward[`${uid}`]
-    // const reward: number = student && student.reward ? student.reward : 0
-    // return reward
-    return 0
+    return get(this.studentsReward, `${uid}.reward`, 0)
   }
   
   @action
