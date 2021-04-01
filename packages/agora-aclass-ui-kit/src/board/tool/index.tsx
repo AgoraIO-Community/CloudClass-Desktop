@@ -64,7 +64,7 @@ const getPopoverComponent = (props: ToolProps, type?: PopoverComponentType) => {
 export const Tool: React.FC<ToolProps> = (props) => {
 
   const classes = useStyles()
-  const [activeItem, setActiveItem] = React.useState<string>(props.activeItem || '')
+  // const [activeItem, setActiveItem] = React.useState<string>(props.activeItem || '')
 
   return (
     <div style={
@@ -84,7 +84,7 @@ export const Tool: React.FC<ToolProps> = (props) => {
       </Typography>
       {props.items.map(({iconTooltipText, toolTip, btnStyle, iconStyle, itemName, iconUrl, popoverType}: IToolItem, index: number) => (
         <ToolButton key={index}
-          active={activeItem === itemName}
+          active={props.activeItem === itemName}
           activeStyles={{
             backgroundColor: '#D7AA1E'
           }}
@@ -121,7 +121,6 @@ export const Tool: React.FC<ToolProps> = (props) => {
           popoverComponent={getPopoverComponent(props, popoverType)}
           onClick={() => {
             props.onClick(itemName)
-            setActiveItem(itemName)
           }}/>
       ))}
     </div>

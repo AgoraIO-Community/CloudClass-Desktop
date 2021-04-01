@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AcadsocToast, Toast, ToastMessage } from '@/components/toast';
+import { AcadsocToast, BrushToastContent, Toast, ToastMessage } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { observer, Provider } from 'mobx-react';
@@ -65,6 +65,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
         <Router>
           <Toast />
           <AcadsocToast />
+          <BrushToastContent />
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>

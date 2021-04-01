@@ -89,6 +89,9 @@ export class UIStore {
   acadsocToastQueue: string[] = []
 
   @observable
+  brushToastQueue: {ts:number, enabled:boolean}[] = []
+
+  @observable
   autoplayToast: boolean = false
 
   @observable
@@ -171,6 +174,19 @@ export class UIStore {
     const idx = this.acadsocToastQueue.findIndex((it: any) => (it === message))
     if (idx !== -1) {
       this.acadsocToastQueue.splice(idx, 1)
+    }
+  }
+
+  @action
+  addBrushToast(ts: number, enabled: boolean) {
+    this.brushToastQueue.push({ts, enabled})
+  }
+
+  @action
+  removeBrushToast(ts: number) {
+    const idx = this.brushToastQueue.findIndex((it: any) => (it.ts === ts))
+    if (idx !== -1) {
+      this.brushToastQueue.splice(idx, 1)
     }
   }
 

@@ -26,15 +26,18 @@ import { createRef } from 'react';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
-      name: `${index+1}`,
-      componentCount: 1,
-      ppt: {
-        width: item.width,
-        height: item.height,
-        src: item.conversionFileUrl
+    return taskProgress.convertedFileList.map((item: any, index: number) => {
+      let ppt = item.ppt || {}
+      return {
+        name: `${item.name || index+1}`,
+        componentCount: 1,
+        ppt: {
+          width: ppt.width,
+          height: ppt.height,
+          src: ppt.src
+        }
       }
-    }))
+    })
   }
   return []
 }
@@ -939,6 +942,12 @@ export class BoardStore {
       this.room.disableCameraTransform = true
     }
 
+    // if student, set tool to pencil when auth to use whiteboard
+    if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
+      this.setTool('pencil')
+      this.currentActiveToolItem = 'pencil'
+    }
+
     if (this.online && this.room) {
       await this.room.setWritable(true)
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
@@ -1093,11 +1102,10 @@ export class BoardStore {
         this.lockBoard = this.getCurrentLock(state) as any
         this.updateFullScreen(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
-          this.enableStatus = get(state, 'globalState.granted', 'disable')
-          // if student, set tool to pencil when auth to use whiteboard
-          if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && this.enableStatus){
-            this.setTool('pencil')
-            this.currentActiveToolItem = 'pencil'
+          const enableStatus = get(state, 'globalState.granted', 'disable')
+          if(this.enableStatus !== enableStatus) {
+            this.enableStatus = enableStatus
+            this.appStore.uiStore.addBrushToast(new Date().getTime(), enableStatus === 'disable' ? false : enableStatus )
           }
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
