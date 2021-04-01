@@ -19,7 +19,7 @@ export const DownloadContainer = observer(() => {
         <Col>{t('cloud.fileName')}</Col>
         <Col>{t('cloud.size')}</Col>
         <Col>{t('cloud.progress')}</Col>
-        <Col>{t('cloud.updatedAt')}</Col>
+        <Col>{t('cloud.operation')}</Col>
       </TableHeader>
       <Table className="table-container">
         {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>

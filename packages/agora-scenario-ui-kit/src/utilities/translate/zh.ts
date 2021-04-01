@@ -171,7 +171,7 @@ export const zh = {
     'fileName': '文件名字',
     'size': '大小',
     'progress': '进度条',
-    'updatedAt': '修改时间',
+    'operation': '操作',
     'publicResources': '公共资源',
     'personalResources': '我的资源',
     'downloadResources': '下载资源',
