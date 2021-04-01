@@ -18,7 +18,7 @@ export const HomePage = observer(() => {
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
-  const [duration, setDuration] = useState<number>(30000)
+  const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   // const [lang, setL]
 
@@ -102,7 +102,7 @@ export const HomePage = observer(() => {
           userName: userName,
           roleType: role,
           startTime: +startDate,
-          duration: duration,
+          duration: duration * 60,
         })
         history.push('/launch')
       }}
