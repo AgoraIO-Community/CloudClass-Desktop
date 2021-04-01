@@ -8,11 +8,14 @@ import { GenericErrorWrapper } from '../utils/generic-error';
 import { reportService } from '../services/report-service';
 
 //@ts-ignore
-AgoraRTM.setParameter({ 
-  RECONNECTING_AP_INTERVAL: 2000,
-  RECONNECTING_AP_NUM: 1,
-  DISABLE_MESSAGE_COMPRESSION: true
-})
+// AgoraRTM.setParameter({ 
+//   RECONNECTING_AP_INTERVAL: 2000,
+//   RECONNECTING_AP_NUM: 1,
+//   DISABLE_MESSAGE_COMPRESSION: true
+// })
+
+//@ts-ignore
+AgoraRTM.setParameter('DISABLE_MESSAGE_COMPRESSION')
 
 // const logFilter = ENABLE_LOG ? AgoraRTM.LOG_FILTER_DEBUG : AgoraRTM.LOG_FILTER_OFF;
 const logFilter = AgoraRTM.LOG_FILTER_OFF
