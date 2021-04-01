@@ -153,9 +153,6 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
-  lock: boolean = false
-
-  @observable
   showUpload: boolean = false;
 
   @observable
@@ -302,14 +299,12 @@ export class BoardStore extends ZoomController {
             this.room.setViewMode(ViewMode.Broadcaster)
             this.room.disableCameraTransform = true
             this.room.disableDeviceInputs = true
-            this.lock = true
           }
           if (this.follow === FollowState.Freedom) {
             // await this.setWritable(true)
             this.room.setViewMode(ViewMode.Freedom)
             this.room.disableCameraTransform = false
             this.room.disableDeviceInputs = false
-            this.lock = false
           }
         }
       } else {
@@ -712,12 +707,6 @@ export class BoardStore extends ZoomController {
   @action
   setFollow(v: number) {
     this.follow = v
-
-    if (this.follow === FollowState.Follow) {
-      this.lock = true
-    } else {
-      this.lock = false
-    }
 
     const isTeacher = this.userRole === EduRoleTypeEnum.teacher
 
@@ -1215,21 +1204,7 @@ export class BoardStore extends ZoomController {
       this.room.moveCamera({scale})
     }
     this.scale = this.room.state.zoomScale
-    // this.scale = scale
   }
-
-  // @action
-  // async toggleLockBoard() {
-  //   if (this.boardClient && this.room) {
-  //     if (this.follow) {
-  //       this.boardClient.cancelFollow()
-  //       this.room.setViewMode(ViewMode.Freedom)
-  //     } else {
-  //       this.boardClient.startFollow()
-  //       this.room.setViewMode(ViewMode.Broadcaster)
-  //     }
-  //   }
-  // }
 
   @computed 
   get loadingType (): string {
@@ -1533,7 +1508,6 @@ export class BoardStore extends ZoomController {
     if (this.online && this.room) {
       await this.room.setWritable(v)
 
-      if (this.lock) return
       this.room.disableDeviceInputs = !v
     }
   }
