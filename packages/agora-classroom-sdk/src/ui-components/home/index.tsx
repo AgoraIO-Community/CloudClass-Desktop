@@ -91,7 +91,6 @@ export const HomePage = observer(() => {
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
-          translateLanguage: "auto",
           language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
