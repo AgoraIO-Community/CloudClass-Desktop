@@ -168,14 +168,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <Icon type="star-outline" onClick={() => onSendStar(uid)} />
             </Tooltip>
           )}
-          {hideBoardGranted ? null :
-          <Icon
-            className={whiteboardGranted ? 'no_granted': ''}
-            type="whiteboard"
-            onClick={() => onWhiteboardClick(uid)}
-          /> 
-          }
-          {hideStars ? null : <Icon type="star-outline" onClick={() => onSendStar(uid)} />}
         </>
       ) : null}
     </div>
