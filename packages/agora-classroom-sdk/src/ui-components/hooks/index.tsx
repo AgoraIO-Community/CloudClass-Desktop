@@ -1151,8 +1151,8 @@ export const useRoomEndContext = (id: string) => {
   const isStarted = roomStore.navigationState.isStarted
 
   const onOK = async () => {
-    uiStore.removeDialog(id)
     await appStore.destroyRoom()
+    uiStore.removeDialog(id)
   }
 
   const onCancel = () => {
