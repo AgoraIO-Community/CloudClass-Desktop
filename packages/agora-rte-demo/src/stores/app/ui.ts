@@ -184,10 +184,7 @@ export class UIStore {
 
   @action
   removeBrushToast(ts: number) {
-    const idx = this.brushToastQueue.findIndex((it: any) => (it.ts === ts))
-    if (idx !== -1) {
-      this.brushToastQueue.splice(idx, 1)
-    }
+    this.brushToastQueue = this.brushToastQueue.filter(item => ts === item.ts)
   }
 
   @action
