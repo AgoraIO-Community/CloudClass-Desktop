@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
@@ -72,11 +72,14 @@ const student = {
 
 export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, size, ...restProps }) => {
 
-  const list = [...'.'.repeat(size)].map((_, i: number) => ({
+  const list_ = [...'.'.repeat(size)].map((_, i: number) => ({
     ...student,
     username: `${i}-${student.username}`,
+    uid: `uuid-${i}`,
     children: (<></>)
   })) as any[]
+
+  const [list, setList] = useState(list_)
     
   return (
     //@ts-ignore
@@ -87,7 +90,21 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
       <Button onClick={() => {
         changeLanguage('en')
       }}>英文</Button>
-      <VideoMarqueeList videoStreamList={list}>
+      <VideoMarqueeList videoStreamList={list} onSendStar={(uid, ) => {
+        return new Promise((resolve) => {
+          // console.log('send star', uid)
+          list.forEach(item => {
+            if (item.uid === uid) {
+              item.stars += 1
+            }
+          })
+          // console.log(list)
+          setList([
+            ...list
+          ])
+          resolve('send star')
+        })
+      }}>
       </VideoMarqueeList>
     </>
   )
