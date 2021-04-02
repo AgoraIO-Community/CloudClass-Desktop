@@ -1,5 +1,5 @@
 import { useBoardStore, useUIStore } from '@/hooks'
-import { Icon, t, TabPane, Tabs, Toolbar, ToolItem, ZoomController } from 'agora-scenario-ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, ZoomController } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useWhiteboardState } from '../hooks'
@@ -58,11 +58,6 @@ export const allTools: ToolItem[] = [
     component: () => {
       return <CloudDiskContainer />
     }
-  },
-  {
-    value: 'follow',
-    label: 'scaffold.follow',
-    icon: 'follow',
   },
   {
     value: 'tools',

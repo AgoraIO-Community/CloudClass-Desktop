@@ -6,14 +6,10 @@ import { useScreenSharePlayerContext } from '../hooks';
 export const ScreenShareContainer = observer(() => {
 
     const windowItems: any[] = []
-    // const {
-    // windowItems
-    // } = useScreenSharePlayerContext
     // TODO: 子标题待确认
     const subTitle = 'screen share sub-title';
     const [windowId, setWindowId] = useState<string>('')
     return (
-
         <ScreenShare
             onActiveItem={(id: any) => {
                 setWindowId(id)

@@ -118,7 +118,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <label htmlFor="duration">
-                <span>时间</span>
+                <span>时间(分钟)</span>
               </label>
             </Col>
             <Col>

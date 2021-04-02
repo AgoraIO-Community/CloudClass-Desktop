@@ -102,8 +102,8 @@
     "test": "react-app-rewired test --env=jsdom",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
-    "pack:mac": "npm run electron:build && electron-builder --mac",
-    "pack:win": "npm run electron:build && electron-builder --win",
+    "pack:mac": "cross-env ELECTRON_PROD_URL=https://webdemo.agora.io/main_land npm run electron:build && electron-builder --mac",
+    "pack:win": "cross-env ELECTRON_PROD_URL=https://webdemo.agora.io/main_land npm run electron:build && electron-builder --win",
     "pack:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "doc": "typedoc --o"
   },
