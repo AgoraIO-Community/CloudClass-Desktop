@@ -159,7 +159,10 @@ const ActionBarContainer = observer(() => {
       name: 'sos',
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
-      },
+        controller.appController.uploadLog()
+          .then(console.log)
+          .catch(console.warn)
+        },
     },
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService',

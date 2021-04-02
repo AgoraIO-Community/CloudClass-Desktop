@@ -82,6 +82,10 @@ export class StorageStore implements ClassRoomAbstractStore {
     })
     this.language = params.language
   }
+  
+  async uploadLog() {
+
+  }
 
   async refreshState() {
     const newCourseWareList = [...this._courseWareList]

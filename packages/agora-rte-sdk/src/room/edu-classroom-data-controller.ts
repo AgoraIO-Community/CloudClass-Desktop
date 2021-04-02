@@ -1296,8 +1296,6 @@ export class EduClassroomDataController {
         const newObject = transformDotStrToObject(key, changedProperties[key]) as any
 
         merge(properties, newObject)
-      //  Object.assign(properties, newObject)
-        // }
         console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
       }
       console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')

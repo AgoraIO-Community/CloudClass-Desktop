@@ -235,6 +235,11 @@ export class AppStore implements ClassRoomAbstractStore {
     this.customScreenShareItems = []
   }
 
+  async uploadLog() {
+    const roomUuid = this.roomInfo.roomUuid
+    await EduManager.uploadLog(roomUuid)
+  }
+
   id: string = uuidv4()
 
   constructor(params: AppStoreInitParams) {
