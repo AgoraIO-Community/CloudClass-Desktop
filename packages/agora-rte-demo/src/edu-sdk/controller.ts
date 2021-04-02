@@ -21,6 +21,8 @@ export abstract class ClassRoomAbstractStore {
   }
 
   destroy!: () => Promise<any>;
+
+  uploadLog!: () => Promise<any>;
 }
 
 export class ClassRoom<T extends ClassRoomAbstractStore> {
@@ -39,7 +41,6 @@ export class ClassRoom<T extends ClassRoomAbstractStore> {
 }
 
 export class EduSDKController<T extends ClassRoomAbstractStore> {
-
   private room!: ClassRoom<T>;
   private _store?: T;
   private dom!: Element;
@@ -103,6 +104,11 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     this._store = undefined
     this.callback(AgoraEduEvent.destroyed)
   }
+
+  async uploadLog() {
+    await this.store.uploadLog()
+  }
+
 }
 
 export class MainController {
