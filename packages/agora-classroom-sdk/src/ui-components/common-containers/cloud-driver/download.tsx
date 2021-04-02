@@ -1,7 +1,7 @@
 import { useBoardStore } from '@/hooks'
 import { useDownloadContext } from '@/ui-components/hooks'
 import { StorageCourseWareItem } from '@/stores/storage'
-import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
+import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader, transI18n } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 
@@ -41,7 +41,7 @@ export const DownloadContainer = observer(() => {
                   !download ? 
                   <Button type="secondary" disabled={progress === 100} action="download" onClick={async () => {
                     await startDownload(taskUuid)
-                  }}>{!download ? t('cloud.download') : t('cloud.downloading')}</Button>
+                  }}>{!download ? <span>{transI18n('cloud.download')}</span> : <span>{transI18n('cloud.downloading')}</span>}</Button>
                 : 
                   <Button type="secondary" disabled={progress === 100}>{t('cloud.downloading')}</Button>
                 }
