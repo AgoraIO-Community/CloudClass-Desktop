@@ -105,6 +105,18 @@ export const Chat: FC<ChatProps> = ({
     }
   }
 
+  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if(event.key === 'Enter') {
+      if(event.ctrlKey) {
+        event.currentTarget.value += '\n'
+      } else if(!event.shiftKey && !event.altKey) {
+        // send message if enter is hit
+        event.preventDefault()
+        await handleSend()
+      }
+    }
+  }
+
   const handleSend = async () => {
     await onSend()
     scrollDirection.current = 'bottom'
@@ -174,6 +186,7 @@ export const Chat: FC<ChatProps> = ({
             onChange={(e) => onText(e.currentTarget.value)}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onKeyPress={handleKeypress}
           />
           <Button disabled={!isHost && !canChatting} onClick={handleSend}>
             {t('send')}

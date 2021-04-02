@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
@@ -7,6 +7,7 @@ import { Tooltip } from '~components/tooltip'
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
+import { SvgaPlayer } from '~components/svga-player'
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -94,6 +95,10 @@ export interface VideoPlayerProps extends VideoPlayerType {
   onSendStar: (uid: string | number) => Promise<any>;
 }
 
+interface AnimSvga {
+  id: number
+}
+
 export const VideoPlayer: FC<VideoPlayerProps> = ({
   uid,
   children,
@@ -118,6 +123,23 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onWhiteboardClick,
   onSendStar,
 }) => {
+  const [animList, setAnimList] = useState<AnimSvga[]>([])
+  const prevStar = useRef<number>(stars)
+  const animListCb = useCallback(() => {
+    setAnimList([
+      ...animList,
+      {
+        id: Date.now(),
+      }
+    ])
+  }, [animList, setAnimList])
+  useEffect(() => {
+    // console.log('stars change', stars, prevStar.current)
+    if (stars > prevStar.current) {
+      animListCb()
+    }
+    prevStar.current = stars;
+  }, [stars, animListCb])
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
@@ -165,7 +187,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon type="star-outline" onClick={() => onSendStar(uid)} />
+              <Icon type="star-outline" onClick={() => {
+                // setShowRewardAnim(true)
+                onSendStar(uid)
+              }} />
             </Tooltip>
           )}
         </>
@@ -183,6 +208,18 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       <div className={cls}>
         {children ? children : null}
         {placeholder ? <>{placeholder}</> : null}
+        {animList.length ? (
+          animList.map((item) => (
+            <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
+              <SvgaPlayer 
+                type="reward" 
+                width={200} 
+                height={200}
+                audio="reward"
+              />
+            </div>
+          ))
+        ) : ""}
         <div className="top-right-info">
           {stars > 0 ? (
             <>
@@ -342,7 +379,13 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}
               onWhiteboardClick={onWhiteboardClick}
-              onSendStar={onSendStar}
+              onSendStar={() => {
+                return new Promise((resolve) => {
+                  // console.log(videoStream)
+                  onSendStar(videoStream.uid)
+                  resolve(videoStream)
+                })
+              }}
               ></VideoPlayer>
           </div>
         )
