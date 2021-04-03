@@ -27,14 +27,24 @@ export enum LocalVideoErrorEnum {
   SCREEN_CAPTURE_WINDOW_CLOSED = 12
 }
 
+// const networkQualityLevel = [
+//   'unknown',
+//   'excellent',
+//   'good',
+//   'poor',
+//   'bad',
+//   'very bad',
+//   'down',
+// ]
+
 const networkQualityLevel = [
   'unknown',
   'excellent',
   'good',
-  'poor',
   'bad',
-  'very bad',
-  'down',
+  'bad',
+  'bad',
+  'bad',
 ]
 
 const networkQualities: { [key: string]: string } = {

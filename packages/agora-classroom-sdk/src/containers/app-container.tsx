@@ -60,7 +60,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   return (
     <Provider store={props.store}>
-      <I18nProvider>
+      <I18nProvider language={props.store.params.language}>
         <Router>
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>

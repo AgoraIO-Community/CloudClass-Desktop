@@ -171,7 +171,7 @@ export const Chat: FC<ChatProps> = ({
               <ChatMessage
                 key={message.id}
                 {...message}
-                isOwn={uid === message.uid}
+                isOwn={message.isOwn}
               />
             ))
           )}

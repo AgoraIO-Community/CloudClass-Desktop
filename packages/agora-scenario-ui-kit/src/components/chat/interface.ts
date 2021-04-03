@@ -4,4 +4,5 @@ export interface Message {
   username: string;
   timestamp: number;
   content: string;
+  isOwn: boolean;
 }

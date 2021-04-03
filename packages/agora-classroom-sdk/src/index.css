@@ -13,6 +13,17 @@ html, body, #root {
   z-index: 0;
 }
 
+.rtc-screen-share {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.rtc-screen-share video{
+  object-fit: contain !important;
+}
+
 .edu-room .video-player {
   border: 2px solid white;
   margin-top: -2px;

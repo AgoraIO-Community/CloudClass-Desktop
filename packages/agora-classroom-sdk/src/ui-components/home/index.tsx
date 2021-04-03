@@ -1,3 +1,4 @@
+import { LanguageEnum } from '@/edu-sdk'
 import { useHomeStore } from '@/hooks'
 import { homeApi } from '@/services/home-api'
 import { storage } from '@/utils/utils'
@@ -19,7 +20,11 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  // const [lang, setL]
+  const [language, setLanguage] = useState<string>('zh')
+
+  const onChangeLanguage = (language: string) => {
+    setLanguage(language)
+  }
 
   const role = useMemo(() => {
     const roles = {
@@ -56,9 +61,20 @@ export const HomePage = observer(() => {
     'userId': setUserId,
   }
 
-  const onChange = (type: string, value: string) => {
-    const caller = text[type]
-    caller && caller(value)
+  const onChangeRoomId = (newValue: string) => {
+    text['roomId'](newValue)
+  }
+
+  const onChangeUserId = (newValue: string) => {
+    text['userId'](newValue)
+  }
+
+  const onChangeRoomName = (newValue: string) => {
+    text['roomName'](newValue)
+  }
+
+  const onChangeUserName = (newValue: string) => {
+    text['userName'](newValue)
   }
 
   const history = useHistory()
@@ -77,13 +93,18 @@ export const HomePage = observer(() => {
       duration={duration}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
-      onChangeText={onChange}
+      onChangeRoomId={onChangeRoomId}
+      onChangeUserId={onChangeUserId}
+      onChangeRoomName={onChangeRoomName}
+      onChangeUserName={onChangeUserName}
       onChangeStartDate={(date: Date) => {
         setStartDate(date)
       }}
       onChangeDuration={(duration: number) => {
         setDuration(duration)
       }}
+      language={language}
+      onChangeLanguage={onChangeLanguage}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
         homeStore.setLaunchConfig({
@@ -92,7 +113,7 @@ export const HomePage = observer(() => {
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           translateLanguage: "auto",
-          language: 'en',
+          language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,
           roomUuid: `${roomId}`,

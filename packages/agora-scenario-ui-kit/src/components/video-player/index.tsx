@@ -230,7 +230,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            <VolumeIndicator volume={micVolume} />
+            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
             <Icon
               className={micStateCls}
               type={micEnabled ? 'microphone-on' : 'microphone-off'}

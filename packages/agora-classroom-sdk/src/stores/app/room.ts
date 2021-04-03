@@ -188,6 +188,7 @@ export class RoomStore extends SimpleInterval {
       uid: item.id,
       username: `${item.account}`,
       timestamp: item.ts,
+      isOwn: item.sender,
       content: item.text,
     }))
   }
@@ -445,21 +446,17 @@ export class RoomStore extends SimpleInterval {
         userUuid: this.roomInfo.userUuid,
         data
       })
+      console.log(">>>> historyMesssage", JSON.stringify(historyMessage))
       historyMessage.list.map((item:any)=>{
-        const text = filterChatText(this.roomInfo.userRole, {
-          fromUser: item.fromUser,
-          message: item.message,
-          sensitiveWords: get(item, 'sensitiveWords', [])
-        } as any)
         this.roomChatMessages.unshift({
-          text: text,
+          text: item.message,
           ts:item.sendTime,
           id:item.sequences,
           fromRoomUuid:item.fromUser.userUuid,
           userName:item.fromUser.userName,
           role:item.fromUser.role,
           sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-          account:item.fromUser.userUuid
+          account:item.fromUser.userName
         } as ChatMessage)
         
       })
@@ -990,14 +987,14 @@ export class RoomStore extends SimpleInterval {
 
         const fromUser = message.fromUser
 
-        const chatMessage = filterChatText(this.roomInfo.userRole, message)
+        const chatMessage = message.message
         
         this.addChatMessage({
           id: fromUser.userUuid,
           ts: message.timestamp,
           text: chatMessage,
           account: fromUser.userName,
-          sender: false
+          isOwn: false
         })
         console.log(' room-chat-message ', JSON.stringify(evt))
         BizLogger.info('room-chat-message', evt)

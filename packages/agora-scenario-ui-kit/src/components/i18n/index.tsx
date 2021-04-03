@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import i18n from "i18next";
 import { isEmpty } from "lodash";
 import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
@@ -134,7 +134,17 @@ export const transI18n = (text: string, options?: any) => {
   return content
 }
 
-export const I18nProvider = ({children}: any) => {
+type I18nProvider = {
+  children: React.ReactChild,
+  language: string
+}
+
+export const I18nProvider: React.FC<I18nProvider> = ({children, language}) => {
+
+  useEffect(() => {
+    i18n.changeLanguage(language)
+  }, [language])
+  
   return (
     <I18nextProvider i18n={i18n}>
       {children}

@@ -1320,7 +1320,10 @@ export class SceneStore extends SimpleInterval {
   }
 
   fixWebVolume(volume: number) {
-    return +(volume / 100).toFixed(2)
+    if (volume > 0.01 && volume < 1) {
+      return Math.min(+volume * 10, 0.8)
+    }
+    return Math.min(+(volume / 100).toFixed(2), 0.8)
   }
 
   @computed
