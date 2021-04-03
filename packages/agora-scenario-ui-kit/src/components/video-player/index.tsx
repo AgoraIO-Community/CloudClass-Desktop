@@ -64,6 +64,8 @@ export interface BaseVideoPlayerProps {
    */
   hideBoardGranted?: boolean;
 
+  isPodium?: boolean;
+
   placement?: any;
 }
 
@@ -116,6 +118,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
+  isPodium,
   placement = 'bottom',
   onCameraClick,
   onMicClick,
@@ -172,6 +175,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             <Tooltip title={t('Down Platform')} placement={placement}>
               <Icon
                 type="invite-to-podium"
+                className={isPodium ? 'no_podium' : 'podium'}
                 onClick={() => onOffPodiumClick(uid)}
               />
             </Tooltip>
@@ -179,7 +183,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideBoardGranted ? null :
           <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
             <Icon
-              className={whiteboardGranted ? 'no_granted': ''}
+              className={whiteboardGranted ? 'no_granted': 'granted'}
               type="whiteboard"
               onClick={() => onWhiteboardClick(uid)}
             /> 
@@ -187,10 +191,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon type="star-outline" onClick={() => {
-                // setShowRewardAnim(true)
-                onSendStar(uid)
-              }} />
+              <Icon 
+                type="star-outline" 
+                onClick={() => {
+                  onSendStar(uid)
+                }} 
+              />
             </Tooltip>
           )}
         </>
@@ -375,10 +381,31 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
+              onCameraClick={() => {
+                return new Promise((resolve) => {
+                  onCameraClick(videoStream.uid)
+                  resolve(videoStream)
+                })
+              }}
+              onMicClick={() => {
+                return new Promise((resolve) => {
+                  onMicClick(videoStream.uid)
+                  resolve(videoStream)
+                })
+              }}
+              onOffPodiumClick={() => {
+                return new Promise((resolve) => {
+                  console.log(videoStream.isPodium)
+                  onOffPodiumClick(videoStream.uid)
+                  resolve(videoStream)
+                })
+              }}
+              onWhiteboardClick={() => {
+                return new Promise((resolve) => {
+                  onWhiteboardClick(videoStream.uid)
+                  resolve(videoStream)
+                })
+              }}
               onSendStar={() => {
                 return new Promise((resolve) => {
                   // console.log(videoStream)

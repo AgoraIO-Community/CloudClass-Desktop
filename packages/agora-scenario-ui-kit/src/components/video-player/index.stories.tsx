@@ -76,6 +76,10 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
     ...student,
     username: `${i}-${student.username}`,
     uid: `uuid-${i}`,
+    micEnabled: false,
+    cameraEnabled: false,
+    whiteboardGranted: true,
+    isPodium: true,
     children: (<></>)
   })) as any[]
 
@@ -90,21 +94,48 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
       <Button onClick={() => {
         changeLanguage('en')
       }}>英文</Button>
-      <VideoMarqueeList videoStreamList={list} onSendStar={(uid, ) => {
-        return new Promise((resolve) => {
-          // console.log('send star', uid)
-          list.forEach(item => {
-            if (item.uid === uid) {
-              item.stars += 1
-            }
+      <VideoMarqueeList 
+        videoStreamList={list}
+        onSendStar={(uid) => {
+          return new Promise((resolve) => {
+            // console.log('send star', uid)
+            list.forEach(item => {
+              if (item.uid === uid) {
+                item.stars += 1
+              }
+            })
+            // console.log(list)
+            setList([
+              ...list
+            ])
+            resolve('send star')
           })
-          // console.log(list)
-          setList([
-            ...list
-          ])
-          resolve('send star')
-        })
-      }}>
+        }}
+        onCameraClick={(uid) => {
+          return new Promise((resolve) => {
+            console.log('camera click', uid)
+            resolve('')
+          })
+        }}
+        onMicClick={(uid) => {
+          return new Promise((resolve) => {
+            console.log('mic click', uid)
+            resolve('')
+          })
+        }}
+        onOffPodiumClick={(uid) => {
+          return new Promise((resolve) => {
+            console.log('podium click', uid)
+            resolve('')
+          })
+        }}
+        onWhiteboardClick={(uid) => {
+          return new Promise((resolve) => {
+            console.log('whiteboard click', uid)
+            resolve('')
+          })
+        }}
+      >
       </VideoMarqueeList>
     </>
   )

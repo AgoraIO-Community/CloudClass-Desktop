@@ -199,8 +199,8 @@
   width: 100%;
 }
 
-.no_granted {
-  color: #bdbdca;
+.no_granted, .no_podium {
+  color: #bdbdca !important;
 }
 
 .video-player-tools .iconfont::before{
