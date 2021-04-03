@@ -12,6 +12,8 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
 import {transI18n} from 'agora-scenario-ui-kit';
+import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
+import { CustomBtoa } from '@/utils/helper';
 
 
 const delay = 2000
@@ -367,10 +369,12 @@ export class SceneStore extends SimpleInterval {
             ...item,
             title: item.name,
             id: item.windowId,
+            image: item.image,
+            // image: CustomBtoa(item.image),
           }))
-          // if (items.length) {
-          //   this.appStore.uiStore.addDialog(OpenShareScreen)
-          // }
+          if (items.length) {
+            this.appStore.uiStore.addDialog(OpenShareScreen)
+          }
         })
       }).catch(err => {
         BizLogger.warn('show screen share window with items', err)

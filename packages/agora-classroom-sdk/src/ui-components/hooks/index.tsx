@@ -1090,10 +1090,18 @@ export const useErrorContext = (id: string) => {
 
 export const useOpenDialogContext = (id: string) => {
 
-
   const uiStore = useUIStore()
 
+  const [windowId, setWindowId] = useState<string>('')
+
+  const onConfirm = useCallback(async () => {
+    await sceneStore.startNativeScreenShareBy(+windowId)
+  }, [windowId])
+
+  const sceneStore = useSceneStore()
+
   const onOK = async () => {
+    await onConfirm()
     uiStore.removeDialog(id)
   }
 
@@ -1111,7 +1119,9 @@ export const useOpenDialogContext = (id: string) => {
   return {
     onOK,
     onCancel,
-    ButtonGroup
+    ButtonGroup,
+    setWindowId,
+    windowId,
   }
 }
 
@@ -1358,5 +1368,16 @@ export const useUserListContext = () => {
     teacherName,
     onClick,
     role
+  }
+}
+
+export const useScreenShareContext = () => {
+
+  const sceneStore = useSceneStore()
+  const windowItems = sceneStore.customScreenShareItems
+
+  return {
+    subTitle: 'screen sharing',
+    windowItems,
   }
 }

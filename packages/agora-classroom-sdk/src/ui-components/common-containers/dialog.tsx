@@ -59,7 +59,9 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
   const {
     onOK,
     onCancel,
-    ButtonGroup
+    ButtonGroup,
+    setWindowId,
+    windowId,
   } = useOpenDialogContext(id)
   return (
     <Modal
@@ -69,7 +71,10 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
       footer={ButtonGroup()}
       title={t('toast.screen_share')}
     >
-      <ScreenShareContainer />
+      <ScreenShareContainer
+        windowId={windowId}
+        setWindowId={setWindowId}
+      />
     </Modal>
   )
 })
