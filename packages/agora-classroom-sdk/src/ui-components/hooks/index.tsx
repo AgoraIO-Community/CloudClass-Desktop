@@ -8,18 +8,12 @@ import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t
 import MD5 from "js-md5"
 import { get } from "lodash"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-// import { useTranslation } from "react-i18next"
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
 import { RendererPlayer } from "../common-comps/renderer-player"
 import { calcUploadFilesMd5, uploadFileInfoProps } from "../common-containers/cloud-driver"
 import { Exit } from "../common-containers/dialog"
-
-// export const useI18n = () => {
-//   const {t} = useTranslation()
-//   return {t}
-// }
 
 export const useToastContext = () => {
   const uiStore = useUIStore()
@@ -65,9 +59,11 @@ export type VideoContainerContext = {
   onSendStar: VideoAction,
   sceneVideoConfig: {
     hideOffPodium: boolean,
+    hideOffAllPodium: boolean,
     isHost: boolean,
   },
   onWhiteboardClick: VideoAction,
+  onOffAllPodiumClick?: () => any,
   onOffPodiumClick: VideoAction
 }
 
@@ -169,6 +165,12 @@ export const useVideoControlContext = (): VideoContainerContext => {
     }
   }, [isHost, sceneStore])
 
+  const onOffAllPodiumClick = useCallback(async () => {
+    if (isHost) {
+      await sceneStore.revokeAllCoVideo()
+    }
+  }, [isHost, sceneStore])
+
   return {
     teacherStream,
     firstStudent,
@@ -180,6 +182,7 @@ export const useVideoControlContext = (): VideoContainerContext => {
     onOffPodiumClick,
     sceneVideoConfig,
     videoStreamList,
+    onOffAllPodiumClick,
   }
 }
 
@@ -850,8 +853,6 @@ export const useCloudDriverContext = (props: any) => {
   const handleDelete = async () => {
     await boardStore.removeMaterialList(checkList$.getValue())
   }
-
-  // console.log(' driver props ', props)
 
   useEffect(() => {
     if (activeKey === '2') {

@@ -311,6 +311,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  // TODD: 非申请流程下台
+  async revokeAllCoVideo(params: {
+    roomUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance/all`,
+      method: 'DELETE',
+    })
+    return res.data
+  }
+
   async kick(params: {
     roomUuid: string,
     toUserUuid: string,

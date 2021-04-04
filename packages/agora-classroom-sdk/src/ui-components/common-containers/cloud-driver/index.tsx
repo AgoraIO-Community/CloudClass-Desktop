@@ -1,6 +1,6 @@
 import { useBoardStore } from '@/hooks'
 import { useCloudDriverContext } from '@/ui-components/hooks'
-import { Button, CloudDisk, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast } from 'agora-scenario-ui-kit'
+import { Button, CloudDisk, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast, transI18n } from 'agora-scenario-ui-kit'
 import MD5 from 'js-md5'
 import { observer } from 'mobx-react'
 import React from 'react'
@@ -66,11 +66,10 @@ export const CloudDriverContainer = observer((props: any) => {
               {t('cloud.upload')}
             </Button>
             <Button type="ghost" onClick={handleDelete}>{t('cloud.delete')}</Button>
-            {showUploadToast ? (<Toast style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>上传成功</Toast>) : ''}
+            {showUploadToast ? (<Toast style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
             {showUploadModal ? (
-
               <Modal
-                title="上传"
+                title={transI18n('cloud.upload')}
                 width={450}
                 style={{
                   position: 'absolute',

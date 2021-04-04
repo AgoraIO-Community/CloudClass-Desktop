@@ -1236,6 +1236,7 @@ export class SceneStore extends SimpleInterval {
 
     const config = {
       hideOffPodium: roomType === 1 ? true : false,
+      hideOffAllPodium: roomType === 1 ? true : false,
       isHost: isHost,
     }
 
@@ -1691,6 +1692,16 @@ export class SceneStore extends SimpleInterval {
         toUserUuid: userUuid
       })
     } catch (err) {
+      this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
+    }
+  }
+
+  async revokeAllCoVideo() {
+    try {
+      await eduSDKApi.revokeAllCoVideo({
+        roomUuid: this.roomInfo.roomUuid
+      })
+    } catch(err) {
       this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
     }
   }

@@ -179,7 +179,8 @@ export const zh = {
     'delete': '删除',
     'download': '下载',
     'downloading': '下载中',
-    'pause': '暂停'
+    'pause': '暂停',
+    'upload_success': '上传成功',
   },
   'media': {
     'camera': '摄像头',

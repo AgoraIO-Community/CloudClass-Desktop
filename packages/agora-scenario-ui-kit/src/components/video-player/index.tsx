@@ -24,6 +24,10 @@ export interface BaseVideoPlayerProps {
    */
   hideControl?: boolean;
   /**
+   * 是否展示全体下台，默认 false
+   */
+  hideOffAllPodium?: boolean;
+  /**
    * 是否你展示全体下讲台，默认 false
    */
   hideOffPodium?: boolean;
@@ -84,6 +88,10 @@ export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 全体下讲台
    */
+  onOffAllPodiumClick?: () => Promise<any>;
+  /**
+   * 下讲台
+   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
    * 点击白板操作授权按钮时的回调
@@ -113,12 +121,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   whiteboardGranted,
   isHost = false,
   hideControl = false,
+  hideOffAllPodium = true,
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
   placement = 'bottom',
   onCameraClick,
   onMicClick,
+  onOffAllPodiumClick = () => console.log("on clear podiums"),
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
@@ -168,8 +178,16 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       </Tooltip>
       {isHost ? (
         <>
+          {hideOffAllPodium ? null : (
+            <Tooltip title={t('Clear Podiums')} placement={placement}>
+              <Icon
+                type="invite-to-podium"
+                onClick={() => onOffAllPodiumClick()}
+              />
+            </Tooltip>
+          )}
           {hideOffPodium ? null : (
-            <Tooltip title={t('Down Platform')} placement={placement}>
+            <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
                 type="invite-to-podium"
                 onClick={() => onOffPodiumClick(uid)}
@@ -276,7 +294,7 @@ export interface VideoMarqueeListProps {
   */
   onMicClick: (uid: string | number) => Promise<any>;
   /**
-  * 全体下讲台
+  * 下讲台
   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
