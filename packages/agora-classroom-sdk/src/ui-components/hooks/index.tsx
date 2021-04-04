@@ -957,7 +957,7 @@ export const useStorageContext = () => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
   }
 
-  const itemList = boardStore.personalResources
+  const itemList = boardStore.allResources
 
   useEffect(() => {
     boardStore.refreshState()
@@ -1157,9 +1157,11 @@ export const useRoomEndContext = (id: string) => {
   const roomStore = useRoomStore()
   // const {t} = useTranslation()
   const uiStore = useUIStore()
+  const appStore = useAppStore()
   const isStarted = roomStore.navigationState.isStarted
 
   const onOK = async () => {
+    await appStore.destroyRoom()
     uiStore.removeDialog(id)
   }
 

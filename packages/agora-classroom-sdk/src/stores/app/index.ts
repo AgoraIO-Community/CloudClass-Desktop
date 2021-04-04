@@ -61,7 +61,6 @@ export type AppStoreInitParams = {
   roomInfoParams?: RoomInfoParams,
   config: AppStoreConfigParams,
   language: LanguageEnum,
-  translateLanguage: TranslateEnum,
   startTime?: number,
   duration?: number,
   pretest?: boolean,
@@ -331,7 +330,6 @@ export class AppStore implements ClassRoomAbstractStore {
         ...this.params.roomInfoParams
       },
       language: this.params.language,
-      translateLanguage: this.params.translateLanguage,
       startTime: this.params.startTime,
       duration: this.params.duration,
       config: {

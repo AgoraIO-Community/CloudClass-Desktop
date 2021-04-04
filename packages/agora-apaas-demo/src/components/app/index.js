@@ -22,7 +22,6 @@ export default class App {
           roomName: "demo-class",
           pretest: false,
           language: "en",
-          translateLanguage: "auto",
           startTime: new Date().getTime(),
           duration: 60 * 30,
           courseWareList: [],

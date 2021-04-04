@@ -1275,13 +1275,19 @@ export class BoardStore extends ZoomController {
   @computed
   get tools() {
     if (this.appStore.roomInfo.roomType === 0) {
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'follow', 'tools', 'register'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools', 'register'].includes(item.value))  
       }
       return allTools.filter((item: ToolItem) => item.value !== 'register')
     }
     if (this.appStore.roomInfo.roomType === 4) {
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'follow', 'tools', 'register'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
       }
       return allTools
@@ -1322,7 +1328,7 @@ export class BoardStore extends ZoomController {
     this.uploadPhase = ''
     this.convertingPhase = ''
     this.permission = 0
-    this.follow = 0
+    this.follow = false
     this.grantUsers = []
     this._grantPermission = false
     this.ready = false
