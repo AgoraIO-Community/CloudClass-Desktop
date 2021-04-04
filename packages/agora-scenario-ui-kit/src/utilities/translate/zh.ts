@@ -1,4 +1,9 @@
 export const zh = {
+  'role': {
+    'teacher': '老师',
+    'student': '学生',
+    'assistant': '助教',
+  },
   'course': {
     'pre_class': '课前',
     'in_class': '已上课',
@@ -26,6 +31,12 @@ export const zh = {
   },
   'hands_up': '举手',
   'co_video': {
+    'remote_open_camera': '{reason} 打开了你的摄像头',
+    'remote_open_microphone': '{reason} 打开了你的麦克风',
+    'remote_grant_board': '{reason} 授权了你的白板',
+    'remote_close_camera': '{reason} 关闭了你的摄像头',
+    'remote_close_microphone': '{reason} 关闭了你的麦克风',
+    'remote_revoke_board': '{reason} 收回了你的白板',
     'received_student_hands_up': '学生举手消息',
     'received_teacher_accepted': '收到老师同意的消息',
     'received_teacher_refused': '收到老师拒绝的消息',
@@ -50,7 +61,6 @@ export const zh = {
     'sure_close_ppt': '你确定要关闭吗？',
     'end_class': '课程已结束',
     'quit_from_room': '离开教室',
-    'warning_sensitive_words': '请注意：您的对话内容包含敏感词（例如：联系方式或金钱），这可能违反培训协议和阿卡索的其他相关规定。',
     'kick_by_teacher': '被老师踢出',
     'upload_log_failure': '上传日志失败，错误类型：{reason}, 详情参考开发者工具',
     'show_log_id': `请提供你的日志ID: {no}`,

@@ -368,7 +368,7 @@ export const useChatContext = () => {
     onChangeText: (textValue: any) => {
       setText(textValue)
     },
-    canChatting: !sceneStore.isMuted,
+    canChatting: sceneStore.canChatting,
     isHost: sceneStore.isHost,
     handleSendText,
     onCanChattingChange,

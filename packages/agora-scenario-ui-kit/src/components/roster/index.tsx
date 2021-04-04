@@ -1,5 +1,6 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useCallback } from 'react';
 import { t } from '~components/i18n';
+import { Icon } from '~components/icon';
 import { Modal, ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
@@ -69,7 +70,6 @@ export interface RosterProps extends ModalProps {
    */
   onClose?: () => void;
 }
-
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
@@ -82,14 +82,17 @@ export const Roster: FC<RosterProps> = ({
 
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  return (
-    <Modal
-      className="roster-modal"
-      width={606}
-      title={t('roster.user_list')}
-      onCancel={onClose}
-      {...modalProps}>
-      <div className="roster-wrap">
+  const RosterContent = useCallback((props: any) => (
+    <div className="agora-board-resources roster-wrap">
+      <div className="btn-pin">
+        <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+          props.onClose()
+        }}></Icon>
+      </div>
+      <div className="main-title">
+        {props.title}
+      </div>
+      <div>
         <div className="roster-header">
           <label>{t('roster.teacher_name')}</label>
           {teacherName}
@@ -128,6 +131,17 @@ export const Roster: FC<RosterProps> = ({
           </Table>
         </Table>
       </div>
+    </div>
+  ), [teacherName,columns,dataSource,onClick,onClose,role,])
+
+  return (
+    <Modal
+      className="roster-modal"
+      width={606}
+      component={
+        <RosterContent title={t('roster.user_list')} onClose={onClose} />
+      }
+      {...modalProps}>
     </Modal>
   );
 };

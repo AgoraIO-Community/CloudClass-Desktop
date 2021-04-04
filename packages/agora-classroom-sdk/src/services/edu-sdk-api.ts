@@ -166,24 +166,6 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
-  // acadsoc
-  async translateChat(params: {
-    content: string,
-    from?: string,
-    to?: string,
-  }) {
-    const res = await this.fetch({
-      full_url: `${this.sdkDomain}/edu/acadsoc/apps/${this.appId}/v1/translation`,
-      method: 'POST',
-      data: {
-        content: params.content,
-        from: params.from ? params.from : 'auto',
-        to: params.to ? params.to : 'auto',
-      }
-    })
-    return res.data
-  }
-
   async sendRewards(params: {
     roomUuid: string,
     rewards: Array<{

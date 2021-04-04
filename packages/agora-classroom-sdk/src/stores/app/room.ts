@@ -1,3 +1,4 @@
+import { OperatorUser } from './../../../../agora-rte-sdk/src/room/types';
 import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
@@ -38,7 +39,7 @@ enum TimeFormatType {
   Message
 }
 
-type AcadsocRoomProperties = {
+type RoomProperties = {
   board: {
     info: {
       boardAppId: string,
@@ -91,7 +92,7 @@ type ClassroomScheduleType = {
   closeDelay: number
 }
 
-export enum acadsocRoomPropertiesChangeCause {
+export enum RoomPropertiesChangeCause {
   studentRewardStateChanged = 1101, // 单个人的奖励发生
 }
 
@@ -126,6 +127,13 @@ export class RoomStore extends SimpleInterval {
   ]
 
   history: any
+  @observable
+  operator: any = {
+    userUuid: '',
+    role: '',
+    userName: '',
+    action: ''
+  };
 
   setHistory(history: any) {
     this.history = history
@@ -156,7 +164,7 @@ export class RoomStore extends SimpleInterval {
   }
 
   @observable
-  roomProperties: AcadsocRoomProperties = {
+  roomProperties: RoomProperties = {
     board: {
       info: {
         boardAppId: '',
@@ -301,9 +309,6 @@ export class RoomStore extends SimpleInterval {
   timer: any = null
 
   @observable
-  showTrophyAnimation: boolean = false
-
-  @observable
   trophyNumber: number = 0
 
   @computed
@@ -342,6 +347,33 @@ export class RoomStore extends SimpleInterval {
     super()
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
+    reaction(() => JSON.stringify(
+      [this.sceneStore?._cameraEduStream?.hasVideo ?? false,
+       this.roomInfo?.userRole ?? 'invisible',
+       this.operator.role,
+       this.operator.action,
+      ]), (data: string) => {
+        const [hasVideo, userRole, role, action] = JSON.parse(data)
+        if (['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+          const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+          const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
+          this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+        }
+    })
+
+    reaction(() => JSON.stringify(
+      [this.sceneStore?._cameraEduStream?.hasAudio ?? false,
+        this.roomInfo?.userRole ?? 'invisible',
+       this.operator.role,
+       this.operator.action,
+      ]), (data: string) => {
+        const [hasAudio, userRole, role, action] = JSON.parse(data)
+        if (['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+          const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+          const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
+          this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+        }
+    })
   }
 
   @action
@@ -398,9 +430,6 @@ export class RoomStore extends SimpleInterval {
 
       if (this.isTeacher || this.isAssistant) {
         const sensitiveWords = get(result, 'sensitiveWords', [])
-        // if (sensitiveWords.length) {
-        //   this.appStore.uiStore.addToast(t('toast.warning_sensitive_words'))
-        // }
       }
 
       return {
@@ -467,26 +496,6 @@ export class RoomStore extends SimpleInterval {
       BizLogger.warn(`${error}`)
     }
   }
-
-  @action 
-  async getTranslationContent(content: string) {
-    try {
-      return await eduSDKApi.translateChat({
-        content: content,
-        from: 'auto',
-        to: 'auto',
-        // this.appStore.params.translateLanguage
-      })
-    } catch (err) {
-      this.appStore.uiStore.addToast(
-        transI18n('toast.failed_to_translate_chat'),
-        'error'
-      )
-      const error = GenericErrorWrapper(err)
-      BizLogger.warn(`${error}`)
-    }
-  }
-  
   // 奖杯
   @action
   async sendReward(userUuid: string, reward: number) {
@@ -707,7 +716,7 @@ export class RoomStore extends SimpleInterval {
       }
       this.tickClassroom()
 
-      this.sceneStore.isMuted = checkInResult.muteChat
+      this.sceneStore.canChatting = checkInResult.muteChat ? false : true
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
       this.appStore.boardStore.init({
@@ -790,6 +799,8 @@ export class RoomStore extends SimpleInterval {
       // })
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
+        const {operator, data} = evt
+        console.log("#### local-stream-updated", JSON.stringify(operator), data)
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           this.sceneStore.streamList = roomManager.getFullStreamList()
           if (!this.sceneStore.joiningRTC) {
@@ -805,31 +816,52 @@ export class RoomStore extends SimpleInterval {
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             if (localStream && localStream.state !== 0) {
               BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC)
-              this.sceneStore._cameraEduStream = localStream.stream
-              // await this.sceneStore.prepareCamera()
-              // await this.sceneStore.prepareMicrophone()
+              if (this.sceneStore._cameraEduStream) {
+                if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
+                  console.log("### [demo] localStream.stream.hasVideo ", localStream.stream.hasVideo, "this.sceneStore._cameraEduStream.hasVideo ", this.sceneStore._cameraEduStream.hasVideo)
+                  this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo
+                  this.operator = {
+                    ...operator,
+                    action: 'video'
+                  }
+                }
+                if (!!localStream.stream.hasAudio !== !!this.sceneStore._cameraEduStream.hasAudio) {
+                  console.log("### [demo] localStream.stream.hasAudio ", localStream.stream.hasAudio, "this.sceneStore._cameraEduStream.hasAudio ", this.sceneStore._cameraEduStream.hasAudio)
+                  this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio
+                  this.operator = {
+                    ...operator,
+                    action: 'audio'
+                  }
+                }
+              } else {
+                this.sceneStore._cameraEduStream = localStream.stream
+                this.operator = {
+                  ...operator,
+                  action: 'all'
+                }
+              }
               BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
               if (this.sceneStore.joiningRTC) {
-                // if (this.sceneStore._hasCamera) {
                 if (this.sceneStore.cameraEduStream.hasVideo) {
+
                   await this.sceneStore.openCamera(this.videoEncoderConfiguration)
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after openCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 } else {
+
                   await this.sceneStore.closeCamera()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 }
-                // }
                 // if (this.sceneStore._hasMicrophone) {
                   if (this.sceneStore.cameraEduStream.hasAudio) {
                     BizLogger.info('open microphone')
                     await this.sceneStore.openMicrophone()
+
                     BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} after openMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                   } else {
                     BizLogger.info('close local-stream-updated microphone')
                     await this.sceneStore.closeMicrophone()
                     BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                   }
-                // }
               }
             } else {
               BizLogger.info("reset camera edu stream", JSON.stringify(localStream), localStream && localStream.state)
@@ -931,7 +963,9 @@ export class RoomStore extends SimpleInterval {
       // this.eduManager.on('user-message', async (evt: any) => {
       // })
       // 教室更新
-      roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
+      roomManager.on('classroom-property-updated', async (evt: any) => {
+        console.log('evt', evt)
+        const {classroom, cause, operator} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
 
           cause && this.handleCause(cause)
@@ -974,11 +1008,10 @@ export class RoomStore extends SimpleInterval {
               this.delInterval('timer')
             }
           }
-          this.sceneStore.isMuted = !classroom.roomStatus.isStudentChatAllowed
-          // acadsoc
-          const isStudentChatAllowed = classroom.roomStatus.isStudentChatAllowed
+          const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
+          console.log('## isStudentChatAllowed , ',  isStudentChatAllowed, classroom)
+          this.sceneStore.canChatting = isStudentChatAllowed
           this.chatIsBanned(isStudentChatAllowed)
-          this.showTrophyAnimation = cause && cause.cmd === acadsocRoomPropertiesChangeCause.studentRewardStateChanged
         })
       })
       roomManager.on('room-chat-message', (evt: any) => {
@@ -1050,7 +1083,7 @@ export class RoomStore extends SimpleInterval {
           this.appStore.updateTime(+get(roomInfo, 'roomStatus.startTime', 0))
         }, ms)
       }
-      // this.sceneStore.isMuted = !roomInfo.roomStatus.isStudentChatAllowed
+      // this.sceneStore.canChatting = !roomInfo.roomStatus.isStudentChatAllowed
   
       await this.sceneStore.joinRTC({
         uid: +mainStream.streamUuid,

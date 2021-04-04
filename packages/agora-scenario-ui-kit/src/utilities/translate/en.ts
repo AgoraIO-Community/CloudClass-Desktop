@@ -1,4 +1,9 @@
 export const en = {
+  'role': {
+    'teacher': 'Teacher',
+    'student': 'Student',
+    'assistant': 'Assistant',
+  },
   'course': {
     'pre_class': 'Pre Class',
     'in_class': 'In Class',
@@ -26,6 +31,12 @@ export const en = {
   },
   'hands_up': 'Hands Up',
   'co_video': {
+    'remote_open_camera': '{reason} Open your camera',
+    'remote_open_microphone': '{reason} Open your microphone',
+    'remote_grant_board': '{reason} Grant your board',
+    'remote_close_camera': '{reason} Close your Camera',
+    'remote_close_microphone': '{reason} Close your Microphone',
+    'remote_revoke_board': '{reason} Revoke your board',
     'received_student_hands_up': 'Hands Up ',
     'received_teacher_accepted': 'Teacher Accepted',
     'received_teacher_refused': 'Teacher Refused',
@@ -50,7 +61,6 @@ export const en = {
     'sure_close_ppt': 'Are you sure to close?',
     'end_class': 'End Class',
     'quit_from_room': 'Leave Class Room',
-    'warning_sensitive_words': 'Please note that your conversation with sensitive words（eg: contact information or money) , which may violate the training kit and other relevant regulations of Acadsoc.',
     'kick_by_teacher': 'Kicked by teacher',
     'upload_log_failure': 'Upload Log Failure，ErrorName: {reason}，see more details in devtool',
     'show_log_id': `Report your log ID: {reason}`,

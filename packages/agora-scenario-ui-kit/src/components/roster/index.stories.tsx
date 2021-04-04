@@ -2,15 +2,16 @@ import { Meta } from '@storybook/react';
 import React, { FC } from 'react';
 import { ActionTypes, Roster, RosterProps } from '~components/roster';
 import { list } from '~utilities';
+import { defaultColumns } from './default-columns';
 
 const meta: Meta = {
   title: 'Components/Roster',
   component: Roster,
   args: {
-    onClick: (action: ActionTypes, uid: string | number) =>
-    console.log(action, uid),
+    onClick: (action: ActionTypes, uid: string | number) => console.log(action, uid),
     teacherName: 'Lily Chou',
     role: 'teacher',
+    columns: defaultColumns,
     dataSource: list(10).map((i: number) => ({
       uid: i,
       name: 'Lily True',

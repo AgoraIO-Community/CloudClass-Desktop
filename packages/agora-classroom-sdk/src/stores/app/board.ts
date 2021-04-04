@@ -700,15 +700,6 @@ export class BoardStore extends ZoomController {
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
         this.room.disableDeviceInputs = false
       }
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-        if (this.lockBoard) {
-          this.room.disableDeviceInputs = true
-          this.room.disableCameraTransform = true
-        } else {
-          this.room.disableDeviceInputs = false
-          this.room.disableCameraTransform = false
-        }
-      }
     }
 
     this.ready = true
@@ -802,15 +793,15 @@ export class BoardStore extends ZoomController {
         // 判断锁定白板
         this.isFullScreen = state.globalState?.isFullScreen ?? false
         this.updateBoardState(state.globalState)
-        if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-          if (this.lockBoard) {
-            this.room.disableDeviceInputs = true
-            this.room.disableCameraTransform = true
-          } else {
-            this.room.disableDeviceInputs = false
-            this.room.disableCameraTransform = false
-          }
-        }
+        // if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+        //   if (this.lockBoard) {
+        //     this.room.disableDeviceInputs = true
+        //     this.room.disableCameraTransform = true
+        //   } else {
+        //     this.room.disableDeviceInputs = false
+        //     this.room.disableCameraTransform = false
+        //   }
+        // }
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
@@ -1324,7 +1315,6 @@ export class BoardStore extends ZoomController {
     this.fileLoading = false
     this.uploadingProgress = 0
     this.folder = ''
-    this.lockBoard = true
     this.scenes = []
     this.sceneList = []
     this.currentPage = 0
@@ -1402,9 +1392,6 @@ export class BoardStore extends ZoomController {
   get boardService() {
     return this.appStore.boardService
   }
-
-  @observable
-  lockBoard: boolean = true
 
   @computed
   get hasPermission(): boolean {
