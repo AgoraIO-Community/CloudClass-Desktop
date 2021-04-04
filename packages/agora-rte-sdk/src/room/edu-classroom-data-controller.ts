@@ -20,16 +20,15 @@ import {
 } from '../interfaces';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
 import { EduLogger } from '../core/logger';
-import { get, set, isEmpty, pick, cloneDeep, merge } from 'lodash';
+import { get, set, isEmpty, pick, cloneDeep, merge, assign, setWith } from 'lodash';
 import { diff } from 'deep-diff';
 
 const transformDotStrToObject = (pathStr: string, value: any) => pathStr
     .split(".")
     .reverse()
-    //@ts-ignore
-    .reduce((acc: any, cv: any, index: number) => ({
-        [cv]: index === 1 && value ? {[acc]: value} : acc
-    }))
+    .reduce((acc: any, path: any, index: number) => ({
+        [path]: index === 0 ? value : acc
+    }), {})
 
 enum DataEnumType {
   users = 1,
@@ -1301,9 +1300,15 @@ export class EduClassroomDataController {
   setRoomBatchProperties(newProperties: any, cause?: CauseType) {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
-        const newObject = transformDotStrToObject(key, changedProperties[key]) as any
-        merge(properties, newObject)
-        console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
+        // TODO: refactor use memory pool
+        setWith(properties, key, changedProperties[key])
+        // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
+        // const value = changedProperties[key]
+        // merge(properties, newObject)
+        // if (Array.isArray(value)) {
+        //   assign(properties, newObject)
+        // }
+        // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
       }
       console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
       console.log('### properties ', properties)
