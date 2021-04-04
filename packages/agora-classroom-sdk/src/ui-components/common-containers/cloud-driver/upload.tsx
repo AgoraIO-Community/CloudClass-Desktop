@@ -14,9 +14,6 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
     changeChecked,
     handleSelectAll,
     hasSelected,
-    setCheckMap,
-    checkMap,
-    boardStore,
     items,
     isSelectAll,
   } = useUploadContext(handleUpdateCheckedItems)

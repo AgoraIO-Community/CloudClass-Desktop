@@ -1,4 +1,5 @@
 import { useBoardStore, useUIStore } from '@/hooks'
+import { Resource } from '@/stores/app/board'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, ZoomController } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
@@ -90,15 +91,15 @@ const TabsContainer = observer(() => {
   const uiStore = useUIStore()
   const resourcesList = boardStore.resourcesList
 
-  const handleChange = (resourceName: string) => {
-    boardStore.changeSceneItem(resourceName)
+  const handleChange = (resourceUuid: string) => {
+    boardStore.changeSceneItem(resourceUuid)
   }
   return (
     <Tabs activeKey={boardStore.activeSceneName} type="editable-card"
       onChange={handleChange}>
-      {resourcesList.map((item: any, key: number) => (
+      {resourcesList.map((item: Resource, key: number) => (
         <TabPane
-          key={item.resourceName}
+          key={item.resourceUuid}
           tab={
             <>
               {key === 0 && <Icon type="whiteboard" />}
@@ -109,7 +110,7 @@ const TabsContainer = observer(() => {
             <Icon type="close"
               onClick={() => {
                 uiStore.addDialog(CloseConfirm, {
-                  resourceName: item.resourceName,
+                  resourceUuid: item.resourceUuid,
                 })
               }}
             ></Icon>

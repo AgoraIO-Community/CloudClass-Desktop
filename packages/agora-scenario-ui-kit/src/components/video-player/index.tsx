@@ -206,7 +206,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
               <Icon type="star-outline" onClick={() => {
-                // setShowRewardAnim(true)
                 onSendStar(uid)
               }} />
             </Tooltip>
@@ -397,12 +396,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}
               onWhiteboardClick={onWhiteboardClick}
-              onSendStar={() => {
-                return new Promise((resolve) => {
-                  // console.log(videoStream)
-                  onSendStar(videoStream.uid)
-                  resolve(videoStream)
-                })
+              onSendStar={async () => {
+                await onSendStar(videoStream.uid)
               }}
               ></VideoPlayer>
           </div>

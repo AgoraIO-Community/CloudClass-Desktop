@@ -1125,13 +1125,13 @@ export const useOpenDialogContext = (id: string) => {
   }
 }
 
-export const useCloseConfirmContext = (id: string, resourceName: string) => {
+export const useCloseConfirmContext = (id: string, resourceUuid: string) => {
 
   const uiStore = useUIStore()
   const boardStore = useBoardStore()
 
   const onOK = async () => {
-    boardStore.closeMaterial(resourceName)
+    boardStore.closeMaterial(resourceUuid)
     uiStore.removeDialog(id)
   }
 

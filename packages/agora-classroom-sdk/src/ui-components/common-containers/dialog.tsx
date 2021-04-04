@@ -79,12 +79,12 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
   )
 })
 
-export const CloseConfirm = observer(({ id, resourceName }: { id: string, resourceName: string }) => {
+export const CloseConfirm = observer(({ id, resourceUuid }: { id: string, resourceUuid: string }) => {
   const {
     onOK,
     onCancel,
     ButtonGroup
-  } = useCloseConfirmContext(id, resourceName)
+  } = useCloseConfirmContext(id, resourceUuid)
   return (
     <Modal
       onOk={onOK}
