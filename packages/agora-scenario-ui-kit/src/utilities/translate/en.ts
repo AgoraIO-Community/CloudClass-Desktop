@@ -4,6 +4,7 @@ export const en = {
     'in_class': 'In Class',
     'end_class': 'End Class',
     'join_failed': 'Join Failure',
+    'screen_sharing': 'Screen Sharing',
   },
   'device': {
     'camera': 'Camera',

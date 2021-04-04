@@ -4,6 +4,7 @@ export const zh = {
     'in_class': '已上课',
     'end_class': '课程已结束',
     'join_failed': '加入失败',
+    'screen_sharing': '屏幕共享',
   },
   'device': {
     'camera': '摄像头',

@@ -4,7 +4,7 @@ import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
 import { EduLogger, EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
-import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t } from "agora-scenario-ui-kit"
+import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t, transI18n } from "agora-scenario-ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -900,7 +900,6 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
       checked: !!checkMap[it.id]
     }))
   },[boardStore.personalResources.length, JSON.stringify(checkMap)])
-  // const [items, updateItems] = React.useState<any[]>(boardStore.personalResources)
 
   const hasSelected: any = useMemo(() => {
     return !!items.find((item: any) => !!item.checked)
@@ -1378,7 +1377,7 @@ export const useScreenShareContext = () => {
   const windowItems = sceneStore.customScreenShareItems
 
   return {
-    subTitle: 'screen sharing',
+    subTitle: transI18n('course.screen_sharing'),
     windowItems,
   }
 }
