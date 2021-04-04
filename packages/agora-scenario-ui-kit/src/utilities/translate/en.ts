@@ -65,8 +65,14 @@ export const en = {
     'canceled_screen_share': 'Canceled screen sharing',
     'screen_sharing_failed': 'Screen sharing failed, reason: {reason}',
     'recording_failed': 'Start cloud recording failed, reason: {reason}',
-    'start_recording': 'Start cloud recording success',
-    'stop_recording': 'Stop cloud recording success',
+    'start_recording': {
+      'title': 'Start Recording',
+      'body': 'Are you sure to start recording the classroom?'
+    },
+    'stop_recording': {
+      'title': 'Stop Recording',
+      'body': 'Are you sure to stop recording the classroom?'
+    },
     'recording_too_short': 'Recording too short, at least 15 seconds',
     'rtm_login_failed': 'login failure, please check your network',
     'rtm_login_failed_reason': 'login failure, reason: {reason}',

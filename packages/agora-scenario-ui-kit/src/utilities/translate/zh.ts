@@ -65,8 +65,14 @@ export const zh = {
     'canceled_screen_share': '已取消屏幕共享',
     'screen_sharing_failed': '屏幕分享失败, 原因：{reason}',
     'recording_failed': '开启云录制失败, 原因：{reason}',
-    'start_recording': '开始云录制',
-    'stop_recording': '结束云录制',
+    'start_recording': {
+      'title': '录制提示',
+      'body': '你确定要开始录制吗?'
+    },
+    'stop_recording': {
+      'title': '停止录制',
+      'body': '你确定要停止录制吗?'
+    },
     'recording_too_short': '录制太短，至少15秒',
     'rtm_login_failed': '房间登录失败, 请检查网络设置',
     'rtm_login_failed_reason': '房间登录失败, 原因： {reason}',

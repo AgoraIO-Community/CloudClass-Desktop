@@ -1,12 +1,13 @@
+import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
 import { GenericError } from 'agora-rte-sdk'
-import { Modal, t, Button, Setting } from 'agora-scenario-ui-kit'
+import { Modal, t, Button, Setting, transI18n } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { Trans } from 'react-i18next'
-import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext } from '../hooks'
+import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext, useRecordingContext } from '../hooks'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
@@ -160,6 +161,32 @@ export const Exit = observer((id: string) => {
       footer={ButtonGroup()}
       title={t('toast.leave_room')}>
       <p>{t('toast.quit_room')}</p>
+    </Modal>
+  )
+})
+
+export const Record = observer(({id, starting}:{id:string, starting: boolean}) => {
+  const uiStore = useUIStore()
+  const {
+    onStartRecording,
+    onStopRecording
+  } = useRecordingContext()
+  return (
+    <Modal
+      onOk={() => {
+        uiStore.removeDialog(id)
+        starting ? onStartRecording() : onStopRecording()
+      }}
+      onCancel={() => {
+        uiStore.removeDialog(id)
+      }}
+      footer={[
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
+      ]}
+      title={starting ? transI18n('toast.start_recording.title') : transI18n('toast.stop_recording.title')}
+    >
+      <p>{starting ? transI18n('toast.start_recording.body') : transI18n('toast.stop_recording.body')}</p>
     </Modal>
   )
 })
