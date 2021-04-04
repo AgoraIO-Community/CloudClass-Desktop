@@ -1,3 +1,4 @@
+import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
 import { GenericError } from 'agora-rte-sdk'
@@ -7,6 +8,7 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext } from '../hooks'
+import { CloudDriverContainer } from './cloud-driver'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
@@ -14,6 +16,15 @@ import { UserListContainer } from './user-list'
 export const SettingDialog = observer(({ id }: { id: string }) => {
   return (
     <SettingContainer id={id} />
+  )
+})
+
+export const CloudDriverDialog = observer(({ id }: { id: string }) => {
+  const uiStore = useUIStore()
+  return (
+    <CloudDriverContainer onClose={() => {
+      uiStore.removeDialog(id)
+    }}/>
   )
 })
 
@@ -36,21 +47,11 @@ export const GenericErrorDialog = observer(({ id, error }: { id: string, error: 
 })
 
 export const UserListDialog = observer(({ id }: { id: string }) => {
-  const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useOpenDialogContext(id)
+  const uiStore = useUIStore()
   return (
-    <Modal
-      width={662}
-      onOk={onOK}
-      onCancel={onCancel}
-      footer={ButtonGroup()}
-      title={t('toast.screen_share')}
-    >
-      <UserListContainer />
-    </Modal>
+    <UserListContainer onClose={() => {
+      uiStore.removeDialog(id)
+    }}/>
   )
 })
 

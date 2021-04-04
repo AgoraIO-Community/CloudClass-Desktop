@@ -13,6 +13,10 @@
   height: 100%;
 }
 
+.roster-wrap .table-header {
+  margin: 0;
+}
+
 .roster-header {
   font-size: 13px;
   color: #191919;

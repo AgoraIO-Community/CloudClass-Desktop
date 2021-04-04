@@ -63,6 +63,12 @@ html, body, #root {
   z-index: 2;
 }
 
+.agora-board-resources .tabs {
+  position: inherit;
+  top: 0;
+  left: 0;
+}
+
 .agora-board-resources input[type=file] {
   display: none;
 }

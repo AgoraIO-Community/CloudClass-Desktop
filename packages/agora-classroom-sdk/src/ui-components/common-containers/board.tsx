@@ -4,7 +4,6 @@ import { Icon, TabPane, Tabs, Toolbar, ToolItem, ZoomController } from 'agora-sc
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useWhiteboardState } from '../hooks'
-import { CloudDiskContainer } from './cloud-driver'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
@@ -56,9 +55,9 @@ export const allTools: ToolItem[] = [
     value: 'cloud',
     label: 'scaffold.cloud_storage',
     icon: 'cloud',
-    component: () => {
-      return <CloudDiskContainer />
-    }
+    // component: () => {
+    //   return <CloudDiskContainer />
+    // }
   },
   {
     value: 'tools',

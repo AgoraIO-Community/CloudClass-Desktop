@@ -416,12 +416,12 @@ export const useSettingContext = (id: any) => {
       })
       // TODO: need pipe
       pretestStore.init({video: true, audio: true})
-      pretestStore.openTestCamera()
+      // pretestStore.openTestCamera()
       // TODO: don't use enable recording, it will cause noise 
-      pretestStore.openTestMicrophone({enableRecording: false})
+      // pretestStore.openTestMicrophone({enableRecording: false})
       return () => {
-          pretestStore.closeTestCamera()
-          pretestStore.closeTestMicrophone()
+          // pretestStore.closeTestCamera()
+          // pretestStore.closeTestMicrophone()
           uninstall()
       }
   }, [setCameraError, setMicrophoneError])
@@ -729,6 +729,10 @@ export const useCloudDriverContext = (props: any) => {
 
   const boardStore = useBoardStore()
 
+  const onResourceClick = async (resourceUuid: string) => {
+    await boardStore.putSceneByResourceUuid(resourceUuid)
+  }
+
   const checkList$ = new BehaviorSubject<string[]>([])
 
   const [checkedList, updateList] = useState<string[]>([])
@@ -880,6 +884,7 @@ export const useCloudDriverContext = (props: any) => {
     activeKey,
     handleChange,
     onCancel,
+    onResourceClick,
   }
 
 }
@@ -938,6 +943,10 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
     }
   }, [items, checkMap])
 
+  const onResourceClick = async (resourceUuid: string) => {
+    await boardStore.putSceneByResourceUuid(resourceUuid)
+  }
+
   return {
     changeChecked,
     handleSelectAll,
@@ -947,6 +956,7 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
     boardStore,
     items,
     isSelectAll,
+    onResourceClick,
   }
 }
 
@@ -957,7 +967,7 @@ export const useStorageContext = () => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
   }
 
-  const itemList = boardStore.personalResources
+  const itemList = boardStore.allResources
 
   useEffect(() => {
     boardStore.refreshState()
@@ -1157,9 +1167,11 @@ export const useRoomEndContext = (id: string) => {
   const roomStore = useRoomStore()
   // const {t} = useTranslation()
   const uiStore = useUIStore()
+  const appStore = useAppStore()
   const isStarted = roomStore.navigationState.isStarted
 
   const onOK = async () => {
+    await appStore.destroyRoom()
     uiStore.removeDialog(id)
   }
 
@@ -1341,8 +1353,13 @@ export const useDownloadContext = () => {
 
   const itemList = boardStore.downloadList.filter((it: StorageCourseWareItem) => it.taskUuid)
 
+  const onResourceClick = useCallback(async(id: string) => {
+    await boardStore.putSceneByResourceUuid(id)
+  }, [boardStore])
+
   return {
     itemList,
+    onResourceClick,
     startDownload: async (taskUuid: string) => {
       await boardStore.startDownload(taskUuid)
     },
