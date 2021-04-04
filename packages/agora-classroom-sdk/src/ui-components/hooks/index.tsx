@@ -1,5 +1,7 @@
 import { useAppStore, useBoardStore, usePretestStore, useRoomStore, useSceneStore, useSmallClassStore, useUIStore } from "@/hooks"
 import { useEffectOnce } from "@/hooks/utils"
+import { eduSDKApi } from "@/services/edu-sdk-api"
+import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
@@ -1360,5 +1362,65 @@ export const useUserListContext = () => {
     teacherName,
     onClick,
     role
+  }
+}
+
+export const useRecordingContext = () => {
+  const sceneStore = useSceneStore()
+  const roomStore = useRoomStore()
+  const appStore = useAppStore()
+
+  const onStartRecording = async () => {
+    const roomUuid = roomStore.roomInfo.roomUuid
+    const tokenRule = `${roomUuid}-record-${Date.now()}`
+    // 生成token home-api login
+    const { rtmToken, userUuid } = await homeApi.login(tokenRule)
+    const urlParams = {
+      userUuid, // 用户uuid
+      userName: 'agora incognito', // 用户昵称
+      roomUuid, // 房间uuid
+      roleType: EduRoleTypeEnum.invisible, // 角色
+      roomType: roomStore.roomInfo.roomType, // 房间类型
+      roomName: roomStore.roomInfo.roomName, // 房间名称x
+      // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
+      pretest: false, // 开启设备检测
+      rtmUid: userUuid,
+      rtmToken, // rtmToken
+      language: appStore.params.language, // 国际化
+      startTime: appStore.params.startTime, // 房间开始时间
+      duration: appStore.params.duration, // 课程时长
+      recordUrl: appStore.params.config.recordUrl, // 回放页地址
+      appId: appStore.params.config.agoraAppId,
+      userRole: EduRoleTypeEnum.invisible
+    }
+    if (!urlParams.recordUrl) {
+      // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
+      urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
+      // throw GenericErrorWrapper()
+      // return;
+    }
+    const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
+    const url = `${urlParams.recordUrl}?${urlParamsStr}`
+    console.log({urlParams, url}) 
+    // todo fetch 
+    await eduSDKApi.updateRecordingState({
+      roomUuid,
+      state: 1,
+      url
+    })
+  }
+
+  const onStopRecording = async () => {
+    const roomUuid = roomStore.roomInfo.roomUuid
+    await eduSDKApi.updateRecordingState({
+      roomUuid,
+      state: 0
+    })
+  }
+
+  return {
+    isRecording: sceneStore.isRecording,
+    onStartRecording,
+    onStopRecording
   }
 }

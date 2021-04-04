@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { Button } from '~components';
-import { t, changeLanguage } from '~components/i18n'
+import { t, changeLanguage, transI18n } from '~components/i18n'
 
 const meta: Meta = {
   title: 'Components/I18n',
@@ -22,6 +22,7 @@ const Text = ({text}: any) => {
         setLanguage(lang === 'zh' ? 'en' : 'zh')
         changeLanguage(lang === 'zh' ? 'en' : 'zh')
       }}>{t('zh')}</Button>
+      <div>{transI18n('error.unknown', {errCode: '123', message: 'test'})}</div>
     </div>
   )
 }
