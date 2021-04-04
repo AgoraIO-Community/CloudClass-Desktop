@@ -100,7 +100,7 @@ export class UIStore {
   }
 
   addDialog(component: any, props?: any) {
-    const id = props.id ? props.id : uuidv4()
+    const id = (props && props.id) ? props.id : uuidv4()
     this.dialogQueue.push({id, component, props})
     return id
   }

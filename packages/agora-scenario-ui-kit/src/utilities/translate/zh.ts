@@ -42,6 +42,15 @@ export const zh = {
     'status': '网络状态',
     'CPU': 'CPU',
   },
+  'error': {
+    'not_found': '页面找不到',
+    'components': {
+      'paramsEmpty': '参数：{reason}不能为空',
+    },
+    'class_end': '课程已结束，请点击确定离开教室',
+    'unknown': '发生未知错误，错误代码: {errCode}, 信息: {message}',
+    'room_is_full': '当前房间已满，请点击确认离开教室',
+  },
   'toast': {
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
@@ -67,11 +76,13 @@ export const zh = {
     'recording_failed': '开启云录制失败, 原因：{reason}',
     'start_recording': {
       'title': '录制提示',
-      'body': '你确定要开始录制吗?'
+      'body': '你确定要开始录制吗?',
+      'success': '录制开启成功'
     },
     'stop_recording': {
       'title': '停止录制',
-      'body': '你确定要停止录制吗?'
+      'body': '你确定要停止录制吗?',
+      'success': '录制停止成功'
     },
     'recording_too_short': '录制太短，至少15秒',
     'rtm_login_failed': '房间登录失败, 请检查网络设置',

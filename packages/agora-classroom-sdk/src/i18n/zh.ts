@@ -226,7 +226,7 @@ const zhCN: any = {
       'paramsEmpty': '参数：{reason}不能为空',
     },
     'class_end': '课程已结束，请点击确定离开教室',
-    'unknown': '发生未知错误，请点击确认离开教室',
+    'unknown': '发生未知错误，错误代码: {{errCode}}, 信息: {{message}}',
     'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'whiteboard': {
