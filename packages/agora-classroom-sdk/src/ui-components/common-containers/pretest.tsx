@@ -36,7 +36,7 @@ export const PretestContainer = observer(() => {
                 onCancel={() => {}}
             >
                 <Pretest
-                    speakerTestUrl={"https://webdemo.agora.io/test_audio.mp3"}
+                    speakerTestUrl={"https://webdemo.agora.io/pretest_audio.mp3"}
                     microphoneLevel={microphoneLevel}
                     isMirror={isMirror}
                     onChangeDevice={onChangeDevice}

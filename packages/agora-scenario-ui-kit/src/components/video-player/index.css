@@ -200,7 +200,7 @@
 }
 
 .no_granted {
-  color: #bdbdca;
+  color: #bdbdca !important;
 }
 
 .video-player-tools .iconfont::before{

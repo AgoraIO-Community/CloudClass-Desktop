@@ -12,6 +12,8 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
 import {transI18n} from 'agora-scenario-ui-kit';
+import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
+import { CustomBtoa } from '@/utils/helper';
 
 
 const delay = 2000
@@ -186,7 +188,7 @@ export class SceneStore extends SimpleInterval {
   recording: boolean = false
 
   @observable
-  isMuted: boolean = false
+  canChatting: boolean = true
 
   _roomManager?: EduClassroomManager = undefined;
 
@@ -234,7 +236,7 @@ export class SceneStore extends SimpleInterval {
     this.joiningRTC = false
     this.recordId = ''
     this.recording = false  
-    this.isMuted = false
+    this.canChatting = true
     this._roomManager = undefined
   }
 
@@ -367,10 +369,12 @@ export class SceneStore extends SimpleInterval {
             ...item,
             title: item.name,
             id: item.windowId,
+            image: item.image,
+            // image: CustomBtoa(item.image),
           }))
-          // if (items.length) {
-          //   this.appStore.uiStore.addDialog(OpenShareScreen)
-          // }
+          if (items.length) {
+            this.appStore.uiStore.addDialog(OpenShareScreen)
+          }
         })
       }).catch(err => {
         BizLogger.warn('show screen share window with items', err)
@@ -1232,6 +1236,7 @@ export class SceneStore extends SimpleInterval {
 
     const config = {
       hideOffPodium: roomType === 1 ? true : false,
+      hideOffAllPodium: roomType === 1 ? true : false,
       isHost: isHost,
     }
 
@@ -1320,7 +1325,10 @@ export class SceneStore extends SimpleInterval {
   }
 
   fixWebVolume(volume: number) {
-    return +(volume / 100).toFixed(2)
+    if (volume > 0.01 && volume < 1) {
+      return Math.min(+volume * 10, 0.8)
+    }
+    return Math.min(+(volume / 100).toFixed(2), 0.8)
   }
 
   @computed
@@ -1439,8 +1447,8 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get mutedChat(): boolean {
-    if (this.isMuted !== undefined) {
-      return this.isMuted
+    if (this.canChatting !== undefined) {
+      return this.canChatting
     }
     const classroom = this.roomManager?.getClassroomInfo()
     if (classroom && classroom.roomStatus) {
@@ -1455,7 +1463,7 @@ export class SceneStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       muteChat: 1
     })
-    this.isMuted = true
+    this.canChatting = true
   }
 
   @action
@@ -1464,7 +1472,7 @@ export class SceneStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       muteChat: 0
     })
-    this.isMuted = false
+    this.canChatting = false
   }
 
   /**
@@ -1684,6 +1692,16 @@ export class SceneStore extends SimpleInterval {
         toUserUuid: userUuid
       })
     } catch (err) {
+      this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
+    }
+  }
+
+  async revokeAllCoVideo() {
+    try {
+      await eduSDKApi.revokeAllCoVideo({
+        roomUuid: this.roomInfo.roomUuid
+      })
+    } catch(err) {
       this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
     }
   }

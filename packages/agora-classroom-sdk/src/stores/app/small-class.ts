@@ -1,3 +1,5 @@
+import { transI18n } from 'agora-scenario-ui-kit';
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from './../../services/edu-sdk-api';
 import { AppStore } from '@/stores/app';
 import { RoomStore } from './room';
@@ -6,6 +8,8 @@ import { get } from 'lodash';
 import { EduStream, EduUser, EduVideoSourceType, EduRoleTypeEnum, RemoteUserRenderer, LocalUserRenderer } from 'agora-rte-sdk';
 import { RosterUserInfo } from '../types';
 import { EduMediaStream } from './scene';
+import { KickDialog } from '@/ui-components/common-containers/dialog';
+import { BusinessExceptions } from '@/utils/biz-error';
 export class SmallClassStore {
 
   private roomStore: RoomStore;
@@ -211,10 +215,17 @@ export class SmallClassStore {
   }
 
   async studentHandsUp(teacherUuid: string) {
-    await eduSDKApi.startHandsUp({
-      roomUuid: this.roomUuid,
-      toUserUuid: teacherUuid
-    })
+    try {
+      await eduSDKApi.startHandsUp({
+        roomUuid: this.roomUuid,
+        toUserUuid: teacherUuid
+      })
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      console.log('studentHandsUp err', error)
+      throw error;
+    }
   }
 
   async studentCancelHandsUp() {
@@ -231,10 +242,17 @@ export class SmallClassStore {
   }
 
   async teacherAcceptHandsUp(userUuid: string) {
-    await eduSDKApi.acceptHandsUp({
-      roomUuid: this.roomUuid,
-      toUserUuid: userUuid
-    })
+    try {
+      await eduSDKApi.acceptHandsUp({
+        roomUuid: this.roomUuid,
+        toUserUuid: userUuid
+      })
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      console.log('teacherAcceptHandsUp err', error)
+      throw error;
+    }
   }
 
   async revokeCoVideo(userUuid: string) {
@@ -265,7 +283,7 @@ export class SmallClassStore {
   }
 
 
-  transformRosterUserInfo (user: EduUser, stream: EduStream, role: EduRoleTypeEnum): RosterUserInfo {
+  transformRosterUserInfo (user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): RosterUserInfo {
     return {
       name: user.userName,
       uid: user.userUuid,
@@ -273,8 +291,8 @@ export class SmallClassStore {
       onPodium: this.acceptedUserList.find((it: any) => it.userUuid === user.userUuid) ? true : false,
       micDevice: !!get(user, 'userProperties.microphone', 0),
       cameraDevice: !!get(user, 'userProperties.camera', 0),
-      cameraEnabled: !!get(stream, 'video', 0),
-      micEnabled: !!get(stream, 'audio', 0),
+      cameraEnabled: stream?.hasVideo ?? false,
+      micEnabled: stream?.hasAudio ?? false,
       whiteboardGranted: this.appStore.boardStore.checkUserPermission(user.userUuid),
       // whiteboardGranted: !!get,
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
@@ -291,7 +309,7 @@ export class SmallClassStore {
     if (user) {
       const stream = this.roomStore.sceneStore
         .streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-      return this.transformRosterUserInfo(user, stream!, this.roomInfo.userRole)
+      return this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
     }
     return {
       uid: localUserUuid,
@@ -317,7 +335,8 @@ export class SmallClassStore {
       .filter((user: EduUser) => !['host', 'assistant'].includes(user.role) && user.userUuid !== localUserUuid)
       .reduce((acc: any[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-        const rosterUser = this.transformRosterUserInfo(user, stream!, this.roomInfo.userRole)
+        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
+        console.log('#### rosterUser ', JSON.stringify(rosterUser) , ' streamList ', JSON.stringify(this.roomStore.sceneStore.streamList))
         acc.push(rosterUser)
         return acc
       }, [])
@@ -391,10 +410,7 @@ export class SmallClassStore {
         break;
       }
       case 'kick-out': {
-        await eduSDKApi.kick({
-          roomUuid: this.roomInfo.roomUuid,
-          toUserUuid: uid
-        })
+        this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
         break;
       }
     }

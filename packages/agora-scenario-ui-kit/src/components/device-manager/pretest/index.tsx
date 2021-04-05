@@ -70,6 +70,17 @@ export const Pretest: React.FC<PretestProps> = ({
 
     const timer = useRef<any>(null)
 
+    const audioElementRef = useRef<HTMLAudioElement | null>(null)
+
+    useEffect(() => {
+        return () => {
+            if (audioElementRef.current) {
+                audioElementRef.current.pause()
+            }
+        }
+    }, [audioElementRef])
+
+
     const handleTestSpeakerClick = () => {
         const audioElement = new Audio(speakerTestUrl);
         audioElement.onended = () => {
@@ -78,6 +89,7 @@ export const Pretest: React.FC<PretestProps> = ({
             timer.current && window.clearInterval(timer.current)
         }
         audioElement.play()
+        audioElementRef.current = audioElement
         if (!isNative) {
             timer.current = window.setInterval(() => {
                 setLevel(audioElement.volume * 100)

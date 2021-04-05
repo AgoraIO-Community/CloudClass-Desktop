@@ -166,24 +166,6 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
-  // acadsoc
-  async translateChat(params: {
-    content: string,
-    from?: string,
-    to?: string,
-  }) {
-    const res = await this.fetch({
-      full_url: `${this.sdkDomain}/edu/acadsoc/apps/${this.appId}/v1/translation`,
-      method: 'POST',
-      data: {
-        content: params.content,
-        from: params.from ? params.from : 'auto',
-        to: params.to ? params.to : 'auto',
-      }
-    })
-    return res.data
-  }
-
   async sendRewards(params: {
     roomUuid: string,
     rewards: Array<{
@@ -311,7 +293,35 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
-  async kick(params: {
+  // TODD: 非申请流程下台
+  async revokeAllCoVideo(params: {
+    roomUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/processes/handsUp/acceptance/all`,
+      method: 'DELETE',
+    })
+    return res.data
+  }
+
+  async kickOutOnce(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.toUserUuid}/exit`,
+      method: 'POST',
+      data: {
+        dirty: {
+          state: 1,
+          duration: 0,
+        }
+      }
+    })
+    return res.data
+  }
+
+  async kickOutBan(params: {
     roomUuid: string,
     toUserUuid: string,
   }) {

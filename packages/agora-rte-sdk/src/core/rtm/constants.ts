@@ -8,3 +8,32 @@ export const RtmLogLevel = [
   //@ts-ignore
   AgoraRTM.LOG_FILTER_DEBUG
 ]
+
+export type InternalStreamData = {
+  streamUuid: string,
+  streamName: string,
+  videoSourceType: number,
+  audioSourceType: number,
+  videoState: number,
+  audioState: number,
+  userUuid: string,
+  userName: string,
+  role: string
+}
+
+export type RawUserData = {
+  userUuid: string,
+  userName: string,
+  role: string,
+  muteChat: number,
+  userProperties: object,
+  streamUuid: string,
+  updateTime: number,
+  state: number,
+  type: number
+}
+export type UsersStreamData = {
+  onlineUsers: RawUserData[],
+  offlineUsers: RawUserData[],
+  streams: InternalStreamData[]
+}

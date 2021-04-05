@@ -106,9 +106,7 @@ export class UIStore {
   }
 
   removeDialog(id: string) {
-    const idx = this.dialogQueue.findIndex((item: DialogType) => item.id !== id)
-    this.dialogQueue.splice(idx, 1)
-    return id;
+    this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
   }
 
   toggleChatMinimize() {
