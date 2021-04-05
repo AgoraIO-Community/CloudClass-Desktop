@@ -517,6 +517,20 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  async kickOutOnce(userUuid: string, roomUuid: string) {
+    await eduSDKApi.kickOutOnce({
+      roomUuid,
+      toUserUuid: userUuid
+    })
+  }
+
+  async kickOutBan(userUuid: string, roomUuid: string) {
+    await eduSDKApi.kickOutBan({
+      roomUuid,
+      toUserUuid: userUuid
+    })
+  }
+
   @action
   tickClassroom() {
     // update time
@@ -760,9 +774,9 @@ export class RoomStore extends SimpleInterval {
       })
       roomManager.on('local-user-removed', async (evt: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          BizLogger.info("ode", evt)
+          BizLogger.info("local-user-removed ", evt)
           const {user, type} = evt
-          if (user.userUuid === this.roomInfo.userUuid && type === 2) {
+          if (user.user.userUuid === this.roomInfo.userUuid && type === 2) {
             await this.appStore.releaseRoom()
             this.appStore.uiStore.addToast('kicked', 'error')
             this.noticeQuitRoomWith(QuickTypeEnum.Kicked)

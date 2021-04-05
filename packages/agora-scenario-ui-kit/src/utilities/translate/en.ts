@@ -4,6 +4,13 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
+  'kick': {
+    'kick_out_student': 'Kick Out',
+  },
+  'radio': {
+    'kicked_once': 'Kick out room this time',
+    'ban': 'Banned',
+  },
   'course': {
     'pre_class': 'Pre Class',
     'in_class': 'In Class',

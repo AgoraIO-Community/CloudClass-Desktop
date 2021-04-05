@@ -15,6 +15,24 @@ import { RendererPlayer } from "../common-comps/renderer-player"
 import { calcUploadFilesMd5, uploadFileInfoProps } from "../common-containers/cloud-driver"
 import { Exit } from "../common-containers/dialog"
 
+export const useKickDialogContext = () => {
+
+  const roomStore = useRoomStore()
+
+  const kickOutOnce = async (userUuid: string, roomUuid: string) => {
+    await roomStore.kickOutOnce(userUuid, roomUuid)
+  }
+
+  const kickOutBan = async (userUuid: string, roomUuid: string) => {
+    await roomStore.kickOutBan(userUuid, roomUuid)
+  }
+
+  return {
+    kickOutOnce,
+    kickOutBan
+  }
+}
+
 export const useToastContext = () => {
   const uiStore = useUIStore()
   return {

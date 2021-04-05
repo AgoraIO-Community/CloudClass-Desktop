@@ -2,20 +2,61 @@ import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
 import { GenericError } from 'agora-rte-sdk'
-import { Modal, t, Button, Setting } from 'agora-scenario-ui-kit'
+import { Modal, t, Button, Setting, transI18n } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext } from '../hooks'
+import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext, useKickDialogContext } from '../hooks'
 import { CloudDriverContainer } from './cloud-driver'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
 
-export const KickDialog = observer(({id, userUuid, roomUuid}: {id: string, userUuid: string, roomUuid: string}) => {
+export const KickDialog = observer(({ id, userUuid, roomUuid }: { id: string, userUuid: string, roomUuid: string }) => {
+
+  const uiStore = useUIStore()
+
+  const [type, setType] = useState<string>('kicked_once')
+  const {kickOutOnce, kickOutBan} = useKickDialogContext()
+
+  const onOK = useCallback(async () => {
+    if (type === 'kicked_once') {
+      await kickOutOnce(userUuid, roomUuid)
+      uiStore.removeDialog(id)
+    }
+    if (type === 'kicked_ban') {
+      await kickOutBan(userUuid, roomUuid)
+      uiStore.removeDialog(id)
+    }
+  }, [type, id, userUuid, roomUuid, kickOutOnce, kickOutBan])
+
   return (
-    <div></div>
+    <Modal
+      width={300}
+      title={transI18n('kick.kick_out_student')}
+      onOk={onOK}
+      onCancel={() => {
+        uiStore.removeDialog(id)
+      }}
+      footer={
+        [
+          <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+          <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        ]
+      }
+    >
+      <div className="radio-container">
+        <label className="customize-radio">
+          <input type="radio" name="kickType" value="kicked_once" checked={type === 'kicked_once'} onChange={() => setType('kicked_once')} />
+          <span className="ml-2">{transI18n('radio.kicked_once')}</span>
+        </label>
+        <label className="customize-radio">
+          <input type="radio" name="kickType" value="kicked_ban" onChange={() => setType('kicked_ban')} />
+          <span className="ml-2">{transI18n('radio.ban')}</span>
+        </label>
+      </div>
+    </Modal>
   )
 })
 
@@ -30,7 +71,7 @@ export const CloudDriverDialog = observer(({ id }: { id: string }) => {
   return (
     <CloudDriverContainer onClose={() => {
       uiStore.removeDialog(id)
-    }}/>
+    }} />
   )
 })
 
@@ -57,7 +98,7 @@ export const UserListDialog = observer(({ id }: { id: string }) => {
   return (
     <UserListContainer onClose={() => {
       uiStore.removeDialog(id)
-    }}/>
+    }} />
   )
 })
 

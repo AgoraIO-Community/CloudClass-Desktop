@@ -304,7 +304,24 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
-  async kick(params: {
+  async kickOutOnce(params: {
+    roomUuid: string,
+    toUserUuid: string,
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.toUserUuid}/exit`,
+      method: 'POST',
+      data: {
+        dirty: {
+          state: 1,
+          duration: 0,
+        }
+      }
+    })
+    return res.data
+  }
+
+  async kickOutBan(params: {
     roomUuid: string,
     toUserUuid: string,
   }) {

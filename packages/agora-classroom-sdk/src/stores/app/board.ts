@@ -524,9 +524,9 @@ export class BoardStore extends ZoomController {
     const currentSceneState = this.room.state.sceneState
     const resourceUuid = this.getResourcePath(currentSceneState.contextPath)
 
-    const roomScenes = this.globalState?.roomScenes
+    const roomScenes = this.globalState?.roomScenes ?? {}
 
-    const resourceName = roomScenes[resourceUuid]?.resourceName
+    const resourceName = roomScenes[resourceUuid]?.resourceName ?? 'init'
 
     this.room.setGlobalState({
       currentSceneInfo: {

@@ -4,6 +4,13 @@ export const zh = {
     'student': '学生',
     'assistant': '助教',
   },
+  'kick': {
+    'kick_out_student': '移出学生',
+  },
+  'radio': {
+    'kicked_once': '仅移出教室一次',
+    'ban': '禁止再次进入教室',
+  },
   'course': {
     'pre_class': '课前',
     'in_class': '已上课',

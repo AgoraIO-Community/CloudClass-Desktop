@@ -150,7 +150,7 @@ export const Chat: FC<ChatProps> = ({
                 type={canChatting ? 'message-on' : 'message-off'}
               />
             ) : null}
-            <span onClick={() => onCollapse && onCollapse()}>
+            <span style={{cursor: 'pointer'}} onClick={() => onCollapse && onCollapse()}>
               {closeIcon && closeIcon}
             </span>
           </span>

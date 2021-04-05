@@ -8,6 +8,7 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
+import {v4 as uuidv4} from 'uuid';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -104,7 +105,7 @@ export interface VideoPlayerProps extends VideoPlayerType {
 }
 
 interface AnimSvga {
-  id: number
+  id: string
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
@@ -139,10 +140,17 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     setAnimList([
       ...animList,
       {
-        id: Date.now(),
+        id: uuidv4(),
       }
     ])
   }, [animList, setAnimList])
+
+  const onClose = useCallback((id) => {
+    setAnimList(
+      [...animList.filter((it: any) => it.id !== id)]
+    )
+  }, [animList, setAnimList])
+
   useEffect(() => {
     // console.log('stars change', stars, prevStar.current)
     if (stars > prevStar.current) {
@@ -233,6 +241,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 width={200} 
                 height={200}
                 audio="reward"
+                duration={2000}
+                onClose={() => onClose(item.id)}
               />
             </div>
           ))
