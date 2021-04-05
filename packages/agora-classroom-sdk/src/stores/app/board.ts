@@ -348,7 +348,6 @@ export class BoardStore extends ZoomController {
       } else {
         await this.setWritable(this._grantPermission as boolean)
       }
-      this.ready = true
   }
 
   loadScene(data: any[]): SceneDefinition[] {
@@ -696,8 +695,8 @@ export class BoardStore extends ZoomController {
     }
 
     if (this.online && this.room) {
-      await this.room.setWritable(true)
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+        await this.room.setWritable(true)
         this.room.disableDeviceInputs = false
       }
     }
@@ -711,6 +710,7 @@ export class BoardStore extends ZoomController {
 
     this.updateLocalResourceList()
     this.updateLocalSceneState()
+    this.updatePageHistory()
     // this.updateSceneItems()
   }
 
@@ -733,36 +733,36 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  @action
-  setFollow(v: boolean) {
-    this.follow = v
+  // @action
+  // setFollow(v: boolean) {
+  //   this.follow = v
 
-    const isTeacher = this.userRole === EduRoleTypeEnum.teacher
+  //   const isTeacher = this.userRole === EduRoleTypeEnum.teacher
 
-    if (isTeacher) {
-      if (this.online && this.room) {
-        if (this.follow === true) {
-          this.appStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
-          this.room.setViewMode(ViewMode.Broadcaster)
-        } else {
-          this.appStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
-          this.room.setViewMode(ViewMode.Freedom)
-        }
-      }
-    } else {
-      if (this.online && this.room) {
-        if (this.follow === true) {
-          this.room.disableCameraTransform = true
-          this.room.setViewMode(ViewMode.Follower)
-          this.room.disableDeviceInputs = true
-        } else {
-          this.room.disableCameraTransform = false
-          this.room.setViewMode(ViewMode.Freedom)
-          this.room.disableDeviceInputs = false
-        }
-      }
-    }
-  }
+  //   if (isTeacher) {
+  //     if (this.online && this.room) {
+  //       if (this.follow === true) {
+  //         this.appStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
+  //         this.room.setViewMode(ViewMode.Broadcaster)
+  //       } else {
+  //         this.appStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
+  //         this.room.setViewMode(ViewMode.Freedom)
+  //       }
+  //     }
+  //   } else {
+  //     if (this.online && this.room) {
+  //       if (this.follow === true) {
+  //         this.room.disableCameraTransform = true
+  //         this.room.setViewMode(ViewMode.Follower)
+  //         this.room.disableDeviceInputs = true
+  //       } else {
+  //         this.room.disableCameraTransform = false
+  //         this.room.setViewMode(ViewMode.Freedom)
+  //         this.room.disableDeviceInputs = false
+  //       }
+  //     }
+  //   }
+  // }
 
   @action
   setGrantPermission(v: boolean) {
@@ -793,15 +793,6 @@ export class BoardStore extends ZoomController {
         // 判断锁定白板
         this.isFullScreen = state.globalState?.isFullScreen ?? false
         this.updateBoardState(state.globalState)
-        // if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-        //   if (this.lockBoard) {
-        //     this.room.disableDeviceInputs = true
-        //     this.room.disableCameraTransform = true
-        //   } else {
-        //     this.room.disableDeviceInputs = false
-        //     this.room.disableCameraTransform = false
-        //   }
-        // }
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
@@ -862,6 +853,11 @@ export class BoardStore extends ZoomController {
       g: 58,
       b: 63
     }
+    this.room.setMemberState({
+      currentApplianceName: ApplianceNames.pencil,
+      strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
+    })
+    this.selector = 'pen'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -1195,17 +1191,17 @@ export class BoardStore extends ZoomController {
 
   @action
   updateBoardState(globalState: CustomizeGlobalState) {
-    const follow = globalState?.follow ?? false
-    if (follow !== this.follow) {
-      this.setFollow(follow)
-      if (this.userRole === EduRoleTypeEnum.student) {
-        if (this.follow) {
-          this.appStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
-        } else {
-          this.appStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
-        }
-      }
-    }
+    // const follow = globalState?.follow ?? false
+    // if (follow !== this.follow) {
+    //   this.setFollow(follow)
+    //   if (this.userRole === EduRoleTypeEnum.student) {
+    //     if (this.follow) {
+    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
+    //     } else {
+    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
+    //     }
+    //   }
+    // }
 
     this.grantUsers = globalState?.grantUsers ?? []
     const grantUsers = this.grantUsers
@@ -1345,8 +1341,6 @@ export class BoardStore extends ZoomController {
       b: 0
     }
 
-    // this.currentStroke = CustomMenuItemType.Normal
-    // this.currentArrow = CustomMenuItemType.Mark
     this.currentFontSize = BoardFrontSizeType.size12
   }
 

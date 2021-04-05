@@ -64,7 +64,8 @@ export const zh = {
   },
   'error': {
     'not_found': '页面找不到',
-    'co_video_limit': '超出连麦人数限制',
+    'apply_co_video_limit': '举手超出连麦人数限制',
+    'send_co_video_limit': '点名超出连麦人数限制',
     'components': {
       'paramsEmpty': '参数：{reason}不能为空',
     },

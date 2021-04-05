@@ -12,7 +12,11 @@ import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
 
-export const KickDialog = observer(({ id, userUuid, roomUuid }: { id: string, userUuid: string, roomUuid: string }) => {
+export type BaseDialogProps = {
+  id: string
+}
+
+export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
 
   const uiStore = useUIStore()
 
@@ -59,13 +63,13 @@ export const KickDialog = observer(({ id, userUuid, roomUuid }: { id: string, us
   )
 })
 
-export const SettingDialog = observer(({ id }: { id: string }) => {
+export const SettingDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   return (
     <SettingContainer id={id} />
   )
 })
 
-export const CloudDriverDialog = observer(({ id }: { id: string }) => {
+export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   const uiStore = useUIStore()
   return (
     <CloudDriverContainer onClose={() => {
@@ -74,7 +78,7 @@ export const CloudDriverDialog = observer(({ id }: { id: string }) => {
   )
 })
 
-export const GenericErrorDialog = observer(({ id, error }: { id: string, error: GenericError }) => {
+export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericError }> = observer(({ id, error }) => {
   const {
     onOK,
     onCancel,
@@ -94,7 +98,7 @@ export const GenericErrorDialog = observer(({ id, error }: { id: string, error: 
   )
 })
 
-export const UserListDialog = observer(({ id }: { id: string }) => {
+export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   const uiStore = useUIStore()
   return (
     <UserListContainer onClose={() => {
@@ -103,7 +107,7 @@ export const UserListDialog = observer(({ id }: { id: string }) => {
   )
 })
 
-export const OpenShareScreen = observer(({ id, resourceName }: { id: string, resourceName: string }) => {
+export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   const {
     onOK,
@@ -128,7 +132,7 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
   )
 })
 
-export const CloseConfirm = observer(({ id, resourceUuid }: { id: string, resourceUuid: string }) => {
+export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> = observer(({ id, resourceUuid }) => {
   const {
     onOK,
     onCancel,
@@ -146,7 +150,7 @@ export const CloseConfirm = observer(({ id, resourceUuid }: { id: string, resour
   )
 })
 
-export const KickEnd = observer((id: string) => {
+export const KickEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
     onOK,
@@ -165,7 +169,7 @@ export const KickEnd = observer((id: string) => {
   )
 })
 
-export const KickedEnd = observer((id: string) => {
+export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
     onOK,
@@ -184,7 +188,7 @@ export const KickedEnd = observer((id: string) => {
   )
 })
 
-export const RoomEnd = observer((id: string) => {
+export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
     onOK,
@@ -203,7 +207,7 @@ export const RoomEnd = observer((id: string) => {
   )
 })
 
-export const Exit = observer((id: string) => {
+export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const { onOK, onCancel, ButtonGroup } = useExitContext(id)
 
@@ -218,7 +222,7 @@ export const Exit = observer((id: string) => {
   )
 })
 
-export const Record = observer(({id, starting}:{id:string, starting: boolean}) => {
+export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
   const uiStore = useUIStore()
   const {
     onStartRecording,
@@ -251,7 +255,7 @@ export const Record = observer(({id, starting}:{id:string, starting: boolean}) =
 })
 
 
-export const DialogContainer: React.FC<any> = observer(() => {
+export const DialogContainer: React.FC<void> = observer(() => {
 
   const { dialogQueue } = useDialogContext()
 
