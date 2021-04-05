@@ -198,6 +198,7 @@ export class RoomStore extends SimpleInterval {
       timestamp: item.ts,
       isOwn: item.sender,
       content: item.text,
+      role: item.role
     }))
   }
 
@@ -675,6 +676,17 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  getRoleEnumValue(userRole: string):EduRoleTypeEnum {
+    if(userRole === 'invisible') {
+      return EduRoleTypeEnum.invisible
+    } else if(userRole === 'assistant') {
+      return EduRoleTypeEnum.assistant
+    } else if(userRole === 'teacher') {
+      return EduRoleTypeEnum.teacher
+    }
+    return EduRoleTypeEnum.student
+  }
+
   joinRoom() {
     
   }
@@ -1039,6 +1051,7 @@ export class RoomStore extends SimpleInterval {
           ts: message.timestamp,
           text: chatMessage,
           account: fromUser.userName,
+          role: `${this.getRoleEnumValue(fromUser.role)}`,
           isOwn: false
         })
         BizLogger.info('room-chat-message', evt)
