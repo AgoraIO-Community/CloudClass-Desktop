@@ -44,7 +44,6 @@ const WindowContainer = ({
                     currentActiveId={windowId}
                     screenShareTitle={'subTitle'}
                     windowItems={windowItems}
-                    onConfirm={() => { }}
                 ></ScreenShare>
             </div>
             <div className='modal-footer'>
@@ -95,7 +94,6 @@ const ScreenShareContainer = () => {
                             currentActiveId={windowId}
                             screenShareTitle={subTitle}
                             windowItems={windowItems}
-                            onConfirm={() => {}}
                         ></ScreenShare>
                     </Modal>
                 </>
@@ -131,7 +129,6 @@ export const Docs = ({ programCount }: DocsProps) => {
                         currentActiveId={windowId}
                         screenShareTitle={subTitle}
                         windowItems={windowItems}
-                        onConfirm={() => {}}
                     ></ScreenShare>
                 </Modal> */}
                 <ScreenShareContainer />

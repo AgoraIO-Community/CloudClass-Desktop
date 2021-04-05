@@ -263,7 +263,6 @@ export class AgoraEduSDK {
         roomPath: roomPath,
         pretest: option.pretest,
       })
-      // stores.set("app", store)
       controller.appController.create(store, <LiveRoom store={store} />, dom, option.listener)
       //@ts-ignore
       window.globalStore = controller.appController.store

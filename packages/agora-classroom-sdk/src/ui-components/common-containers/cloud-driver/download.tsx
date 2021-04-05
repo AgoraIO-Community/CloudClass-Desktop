@@ -11,6 +11,7 @@ export const DownloadContainer = observer(() => {
     startDownload,
     deleteDownload,
     itemList,
+    onResourceClick,
   } = useDownloadContext()
 
   return (
@@ -24,7 +25,9 @@ export const DownloadContainer = observer(() => {
       <Table className="table-container">
         {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
           <Row height={10} border={1} key={`${id}${idx}`}>
-            <Col>
+            <Col style={{cursor: 'pointer'}} onClick={() => {
+              onResourceClick(id)
+            }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>

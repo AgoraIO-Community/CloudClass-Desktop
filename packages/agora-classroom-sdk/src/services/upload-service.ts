@@ -269,14 +269,15 @@ export class UploadService extends ApiBase {
     return res.data
   }
 
-  async getFileInQueryMateria(payload: {
+  async getFileInQueryMaterial(payload: {
     roomUuid: string,
     resourceName: string
   }) {
-  return await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
-    }
+    return await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
+  }
+
   async handleUpload(payload: HandleUploadType) {
-    const queryResult = await this.getFileInQueryMateria(payload)
+    const queryResult = await this.getFileInQueryMaterial(payload)
     if (queryResult.success) {
       EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({

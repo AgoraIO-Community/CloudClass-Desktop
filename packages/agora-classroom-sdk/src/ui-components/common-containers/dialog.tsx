@@ -2,18 +2,75 @@ import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
-import { Modal, t, Button, transI18n } from 'agora-scenario-ui-kit'
+import { Button, Modal, t, transI18n } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import React from 'react'
-import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext, useRecordingContext } from '../hooks'
+import React, { useCallback, useState } from 'react'
+import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext } from '../hooks'
+import { CloudDriverContainer } from './cloud-driver'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
 
+export const KickDialog = observer(({ id, userUuid, roomUuid }: { id: string, userUuid: string, roomUuid: string }) => {
+
+  const uiStore = useUIStore()
+
+  const [type, setType] = useState<string>('kicked_once')
+  const {kickOutOnce, kickOutBan} = useKickDialogContext()
+
+  const onOK = useCallback(async () => {
+    if (type === 'kicked_once') {
+      await kickOutOnce(userUuid, roomUuid)
+      uiStore.removeDialog(id)
+    }
+    if (type === 'kicked_ban') {
+      await kickOutBan(userUuid, roomUuid)
+      uiStore.removeDialog(id)
+    }
+  }, [type, id, userUuid, roomUuid, kickOutOnce, kickOutBan])
+
+  return (
+    <Modal
+      width={300}
+      title={transI18n('kick.kick_out_student')}
+      onOk={onOK}
+      onCancel={() => {
+        uiStore.removeDialog(id)
+      }}
+      footer={
+        [
+          <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+          <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+        ]
+      }
+    >
+      <div className="radio-container">
+        <label className="customize-radio">
+          <input type="radio" name="kickType" value="kicked_once" checked={type === 'kicked_once'} onChange={() => setType('kicked_once')} />
+          <span className="ml-2">{transI18n('radio.kicked_once')}</span>
+        </label>
+        <label className="customize-radio">
+          <input type="radio" name="kickType" value="kicked_ban" onChange={() => setType('kicked_ban')} />
+          <span className="ml-2">{transI18n('radio.ban')}</span>
+        </label>
+      </div>
+    </Modal>
+  )
+})
+
 export const SettingDialog = observer(({ id }: { id: string }) => {
   return (
     <SettingContainer id={id} />
+  )
+})
+
+export const CloudDriverDialog = observer(({ id }: { id: string }) => {
+  const uiStore = useUIStore()
+  return (
+    <CloudDriverContainer onClose={() => {
+      uiStore.removeDialog(id)
+    }} />
   )
 })
 
@@ -38,21 +95,11 @@ export const GenericErrorDialog = observer(({ id, error }: { id: string, error: 
 })
 
 export const UserListDialog = observer(({ id }: { id: string }) => {
-  const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useOpenDialogContext(id)
+  const uiStore = useUIStore()
   return (
-    <Modal
-      width={662}
-      onOk={onOK}
-      onCancel={onCancel}
-      footer={ButtonGroup()}
-      title={t('toast.screen_share')}
-    >
-      <UserListContainer />
-    </Modal>
+    <UserListContainer onClose={() => {
+      uiStore.removeDialog(id)
+    }} />
   )
 })
 
@@ -61,7 +108,9 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
   const {
     onOK,
     onCancel,
-    ButtonGroup
+    ButtonGroup,
+    setWindowId,
+    windowId,
   } = useOpenDialogContext(id)
   return (
     <Modal
@@ -71,17 +120,20 @@ export const OpenShareScreen = observer(({ id, resourceName }: { id: string, res
       footer={ButtonGroup()}
       title={t('toast.screen_share')}
     >
-      <ScreenShareContainer />
+      <ScreenShareContainer
+        windowId={windowId}
+        setWindowId={setWindowId}
+      />
     </Modal>
   )
 })
 
-export const CloseConfirm = observer(({ id, resourceName }: { id: string, resourceName: string }) => {
+export const CloseConfirm = observer(({ id, resourceUuid }: { id: string, resourceUuid: string }) => {
   const {
     onOK,
     onCancel,
     ButtonGroup
-  } = useCloseConfirmContext(id, resourceName)
+  } = useCloseConfirmContext(id, resourceUuid)
   return (
     <Modal
       onOk={onOK}

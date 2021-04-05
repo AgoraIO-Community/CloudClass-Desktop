@@ -14,11 +14,9 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
     changeChecked,
     handleSelectAll,
     hasSelected,
-    setCheckMap,
-    checkMap,
-    boardStore,
     items,
     isSelectAll,
+    onResourceClick,
   } = useUploadContext(handleUpdateCheckedItems)
 
   return (
@@ -39,7 +37,9 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
                 changeChecked(id, evt.currentTarget.checked)
               }} checked={checked}></CheckBox>
             </Col>
-            <Col>
+            <Col style={{cursor: 'pointer'}} onClick={() => {
+              onResourceClick(id)
+            }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>

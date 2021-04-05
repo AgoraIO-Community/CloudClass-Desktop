@@ -9,19 +9,19 @@ const getCameraState = (profile: Profile) => {
 
   let hover: boolean = false
 
-  if (!!profile.onlineState !== true || !!profile.cameraDevice === false || !!profile.disabled === true) {
+  if (!!profile.onlineState !== true ||
+      // !!profile.cameraDevice === false ||
+      !!profile.disabled === true) {
     hover = false
   } else {
     hover = true
   }
 
-  console.log("hover ", hover, profile)
-
   // const hover = !!profile.onlineState || profile.disabled === false || !!profile.cameraDevice === true 
 
-  const type = !!profile.cameraEnabled === true || !!profile.cameraDevice === true ? 'camera' : defaultType
+  const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
 
-  const className = !!profile.cameraEnabled === true || !!profile.cameraDevice === true ? 'un-muted' : 'muted'
+  const className = !!profile.cameraEnabled === true ? 'un-muted' : 'muted'
 
   return {
     hover,
@@ -35,15 +35,17 @@ const getMicrophoneState = (profile: Profile): any => {
 
   let hover: boolean = false
 
-  if (!!profile.onlineState !== true || !!profile.micDevice === false || !!profile.disabled === true) {
+  if (!!profile.onlineState !== true ||
+    // !!profile.micDevice === false ||
+     !!profile.disabled === true) {
     hover = false
   } else {
     hover = true
   }
 
-  const type = !!profile.micEnabled === true || !!profile.micDevice === true ? 'microphone-on-outline' : defaultType
+  const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
 
-  const className = !!profile.micEnabled === true || !!profile.micDevice === true ? 'un-muted' : 'muted'
+  const className = !!profile.micEnabled === true ? 'un-muted' : 'muted'
 
   return {
     hover,
