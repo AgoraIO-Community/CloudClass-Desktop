@@ -420,11 +420,11 @@ export const useSettingContext = (id: any) => {
   const onChangeDevice = useCallback(async (deviceType: string, value: any) => {
       switch (deviceType) {
           case 'camera': {
-              await pretestStore.changeTestCamera(value)
+              await pretestStore.changeCamera(value)
               break;
           }
           case 'microphone': {
-              await pretestStore.changeTestMicrophone(value)
+              await pretestStore.changeMicrophone(value)
               break;
           }
           case 'speaker': {
@@ -1225,7 +1225,6 @@ export const useRoomEndContext = (id: string) => {
 export const useExitContext = (id: string) => {
   const roomStore = useRoomStore()
   const appStore = useAppStore()
-  // const {t} = useTranslation()
 
   const uiStore = useUIStore()
   const isStarted = roomStore.navigationState.isStarted
@@ -1233,10 +1232,12 @@ export const useExitContext = (id: string) => {
   const onOK = async () => {
     await appStore.destroyRoom()
     uiStore.removeDialog(id)
+    console.log('id', id)
   }
 
   const onCancel = () => {
     uiStore.removeDialog(id)
+    console.log('id', id)
   }
 
   const ButtonGroup = useCallback(() => {

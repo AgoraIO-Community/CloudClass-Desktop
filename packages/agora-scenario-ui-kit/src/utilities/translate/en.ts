@@ -64,7 +64,8 @@ export const en = {
   },
   'error': {
     'not_found': 'Page Not Found',
-    'co_video_limit': 'CoVideo Limit',
+    'apply_co_video_limit': 'Apply co-video over maximum',
+    'send_co_video_limit': 'Roll call co-video over maximum',
     'components': {
       'paramsEmpty': 'params：{reason} can`t be empty',
     },
