@@ -46,7 +46,7 @@ export const DownloadContainer = observer(() => {
                     await startDownload(taskUuid)
                   }}>{!download ? <span>{transI18n('cloud.download')}</span> : <span>{transI18n('cloud.downloading')}</span>}</Button>
                 : 
-                  <Button type="secondary" disabled={progress === 100}>{t('cloud.downloading')}</Button>
+                  <Button type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
                 }
                 <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{t('cloud.delete')}</Button>
               </Row>

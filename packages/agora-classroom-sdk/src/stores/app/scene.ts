@@ -3,17 +3,16 @@ import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { RoomApi } from '@/services/room-api';
 import { AppStore } from '@/stores/app/index';
-import { BizLogger } from '@/utils/utils';
+import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
 import { Mutex } from '@/utils/mutex';
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduUserData, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
+import { BizLogger } from '@/utils/utils';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { transI18n } from 'agora-scenario-ui-kit';
 import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
-import {transI18n} from 'agora-scenario-ui-kit';
-import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
-import { CustomBtoa } from '@/utils/helper';
 
 
 const delay = 2000
