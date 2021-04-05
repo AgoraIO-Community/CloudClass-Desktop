@@ -4,6 +4,11 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
+  'error': {
+    'class_end': 'Course End',
+    'room_is_full': 'Room is full',
+    'co_video_limit': 'CoVideo Limit',
+  },
   'kick': {
     'kick_out_student': 'Kick Out',
   },

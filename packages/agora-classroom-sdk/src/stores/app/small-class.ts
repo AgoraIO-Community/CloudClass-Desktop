@@ -1,3 +1,5 @@
+import { transI18n } from 'agora-scenario-ui-kit';
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from './../../services/edu-sdk-api';
 import { AppStore } from '@/stores/app';
 import { RoomStore } from './room';
@@ -7,6 +9,7 @@ import { EduStream, EduUser, EduVideoSourceType, EduRoleTypeEnum, RemoteUserRend
 import { RosterUserInfo } from '../types';
 import { EduMediaStream } from './scene';
 import { KickDialog } from '@/ui-components/common-containers/dialog';
+import { BusinessExceptions } from '@/utils/biz-error';
 export class SmallClassStore {
 
   private roomStore: RoomStore;
@@ -212,10 +215,17 @@ export class SmallClassStore {
   }
 
   async studentHandsUp(teacherUuid: string) {
-    await eduSDKApi.startHandsUp({
-      roomUuid: this.roomUuid,
-      toUserUuid: teacherUuid
-    })
+    try {
+      await eduSDKApi.startHandsUp({
+        roomUuid: this.roomUuid,
+        toUserUuid: teacherUuid
+      })
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      console.log('studentHandsUp err', error)
+      throw error;
+    }
   }
 
   async studentCancelHandsUp() {
@@ -232,10 +242,17 @@ export class SmallClassStore {
   }
 
   async teacherAcceptHandsUp(userUuid: string) {
-    await eduSDKApi.acceptHandsUp({
-      roomUuid: this.roomUuid,
-      toUserUuid: userUuid
-    })
+    try {
+      await eduSDKApi.acceptHandsUp({
+        roomUuid: this.roomUuid,
+        toUserUuid: userUuid
+      })
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      console.log('teacherAcceptHandsUp err', error)
+      throw error;
+    }
   }
 
   async revokeCoVideo(userUuid: string) {

@@ -4,6 +4,11 @@ export const zh = {
     'student': '学生',
     'assistant': '助教',
   },
+  'error': {
+    'class_end': '课程已结束',
+    'room_is_full': '房间已满',
+    'co_video_limit': '超出连麦人数限制',
+  },
   'kick': {
     'kick_out_student': '移出学生',
   },
