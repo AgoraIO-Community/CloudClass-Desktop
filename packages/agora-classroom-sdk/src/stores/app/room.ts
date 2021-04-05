@@ -1020,6 +1020,7 @@ export class RoomStore extends SimpleInterval {
             }
           }
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
+          console.log('## isStudentChatAllowed , ',  isStudentChatAllowed, classroom)
           this.sceneStore.canChatting = isStudentChatAllowed
           this.chatIsBanned(isStudentChatAllowed)
         })
