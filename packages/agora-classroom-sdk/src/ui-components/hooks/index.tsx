@@ -1,14 +1,15 @@
 import { useAppStore, useBoardStore, usePretestStore, useRoomStore, useSceneStore, useSmallClassStore, useUIStore } from "@/hooks"
 import { useEffectOnce } from "@/hooks/utils"
+import { eduSDKApi } from "@/services/edu-sdk-api"
+import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
 import { EduLogger, EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
-import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t } from "agora-scenario-ui-kit"
+import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t, transI18n } from "agora-scenario-ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-// import { useTranslation } from "react-i18next"
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
@@ -16,10 +17,32 @@ import { RendererPlayer } from "../common-comps/renderer-player"
 import { calcUploadFilesMd5, uploadFileInfoProps } from "../common-containers/cloud-driver"
 import { Exit } from "../common-containers/dialog"
 
-// export const useI18n = () => {
-//   const {t} = useTranslation()
-//   return {t}
-// }
+export const useScreenShareContext = () => {
+  const sceneStore = useSceneStore()
+  const windowItems = sceneStore.customScreenShareItems
+  return {
+    subTitle: transI18n('screen_share'),
+    windowItems,
+  }
+}
+
+export const useKickDialogContext = () => {
+
+  const roomStore = useRoomStore()
+
+  const kickOutOnce = async (userUuid: string, roomUuid: string) => {
+    await roomStore.kickOutOnce(userUuid, roomUuid)
+  }
+
+  const kickOutBan = async (userUuid: string, roomUuid: string) => {
+    await roomStore.kickOutBan(userUuid, roomUuid)
+  }
+
+  return {
+    kickOutOnce,
+    kickOutBan
+  }
+}
 
 export const useToastContext = () => {
   const uiStore = useUIStore()
@@ -65,9 +88,11 @@ export type VideoContainerContext = {
   onSendStar: VideoAction,
   sceneVideoConfig: {
     hideOffPodium: boolean,
+    hideOffAllPodium: boolean,
     isHost: boolean,
   },
   onWhiteboardClick: VideoAction,
+  onOffAllPodiumClick?: () => any,
   onOffPodiumClick: VideoAction
 }
 
@@ -169,6 +194,12 @@ export const useVideoControlContext = (): VideoContainerContext => {
     }
   }, [isHost, sceneStore])
 
+  const onOffAllPodiumClick = useCallback(async () => {
+    if (isHost) {
+      await sceneStore.revokeAllCoVideo()
+    }
+  }, [isHost, sceneStore])
+
   return {
     teacherStream,
     firstStudent,
@@ -180,6 +211,7 @@ export const useVideoControlContext = (): VideoContainerContext => {
     onOffPodiumClick,
     sceneVideoConfig,
     videoStreamList,
+    onOffAllPodiumClick,
   }
 }
 
@@ -365,7 +397,7 @@ export const useChatContext = () => {
     onChangeText: (textValue: any) => {
       setText(textValue)
     },
-    canChatting: !sceneStore.isMuted,
+    canChatting: sceneStore.canChatting,
     isHost: sceneStore.isHost,
     handleSendText,
     onCanChattingChange,
@@ -413,12 +445,12 @@ export const useSettingContext = (id: any) => {
       })
       // TODO: need pipe
       pretestStore.init({video: true, audio: true})
-      pretestStore.openTestCamera()
+      // pretestStore.openTestCamera()
       // TODO: don't use enable recording, it will cause noise 
-      pretestStore.openTestMicrophone({enableRecording: false})
+      // pretestStore.openTestMicrophone({enableRecording: false})
       return () => {
-          pretestStore.closeTestCamera()
-          pretestStore.closeTestMicrophone()
+          // pretestStore.closeTestCamera()
+          // pretestStore.closeTestMicrophone()
           uninstall()
       }
   }, [setCameraError, setMicrophoneError])
@@ -726,6 +758,10 @@ export const useCloudDriverContext = (props: any) => {
 
   const boardStore = useBoardStore()
 
+  const onResourceClick = async (resourceUuid: string) => {
+    await boardStore.putSceneByResourceUuid(resourceUuid)
+  }
+
   const checkList$ = new BehaviorSubject<string[]>([])
 
   const [checkedList, updateList] = useState<string[]>([])
@@ -851,8 +887,6 @@ export const useCloudDriverContext = (props: any) => {
     await boardStore.removeMaterialList(checkList$.getValue())
   }
 
-  // console.log(' driver props ', props)
-
   useEffect(() => {
     if (activeKey === '2') {
       boardStore.refreshState()
@@ -879,6 +913,7 @@ export const useCloudDriverContext = (props: any) => {
     activeKey,
     handleChange,
     onCancel,
+    onResourceClick,
   }
 
 }
@@ -899,7 +934,6 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
       checked: !!checkMap[it.id]
     }))
   },[boardStore.personalResources.length, JSON.stringify(checkMap)])
-  // const [items, updateItems] = React.useState<any[]>(boardStore.personalResources)
 
   const hasSelected: any = useMemo(() => {
     return !!items.find((item: any) => !!item.checked)
@@ -938,6 +972,10 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
     }
   }, [items, checkMap])
 
+  const onResourceClick = async (resourceUuid: string) => {
+    await boardStore.putSceneByResourceUuid(resourceUuid)
+  }
+
   return {
     changeChecked,
     handleSelectAll,
@@ -947,6 +985,7 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
     boardStore,
     items,
     isSelectAll,
+    onResourceClick,
   }
 }
 
@@ -957,7 +996,7 @@ export const useStorageContext = () => {
     await boardStore.putSceneByResourceUuid(resourceUuid)
   }
 
-  const itemList = boardStore.personalResources
+  const itemList = boardStore.allResources
 
   useEffect(() => {
     boardStore.refreshState()
@@ -1090,10 +1129,18 @@ export const useErrorContext = (id: string) => {
 
 export const useOpenDialogContext = (id: string) => {
 
-
   const uiStore = useUIStore()
 
+  const [windowId, setWindowId] = useState<string>('')
+
+  const onConfirm = useCallback(async () => {
+    await sceneStore.startNativeScreenShareBy(+windowId)
+  }, [windowId])
+
+  const sceneStore = useSceneStore()
+
   const onOK = async () => {
+    await onConfirm()
     uiStore.removeDialog(id)
   }
 
@@ -1111,17 +1158,19 @@ export const useOpenDialogContext = (id: string) => {
   return {
     onOK,
     onCancel,
-    ButtonGroup
+    ButtonGroup,
+    setWindowId,
+    windowId,
   }
 }
 
-export const useCloseConfirmContext = (id: string, resourceName: string) => {
+export const useCloseConfirmContext = (id: string, resourceUuid: string) => {
 
   const uiStore = useUIStore()
   const boardStore = useBoardStore()
 
   const onOK = async () => {
-    boardStore.closeMaterial(resourceName)
+    boardStore.closeMaterial(resourceUuid)
     uiStore.removeDialog(id)
   }
 
@@ -1333,8 +1382,13 @@ export const useDownloadContext = () => {
 
   const itemList = boardStore.downloadList.filter((it: StorageCourseWareItem) => it.taskUuid)
 
+  const onResourceClick = useCallback(async(id: string) => {
+    await boardStore.putSceneByResourceUuid(id)
+  }, [boardStore])
+
   return {
     itemList,
+    onResourceClick,
     startDownload: async (taskUuid: string) => {
       await boardStore.startDownload(taskUuid)
     },
@@ -1360,5 +1414,65 @@ export const useUserListContext = () => {
     teacherName,
     onClick,
     role
+  }
+}
+
+export const useRecordingContext = () => {
+  const sceneStore = useSceneStore()
+  const roomStore = useRoomStore()
+  const appStore = useAppStore()
+
+  const onStartRecording = async () => {
+    const roomUuid = roomStore.roomInfo.roomUuid
+    const tokenRule = `${roomUuid}-record-${Date.now()}`
+    // 生成token home-api login
+    const { rtmToken, userUuid } = await homeApi.login(tokenRule)
+    const urlParams = {
+      userUuid, // 用户uuid
+      userName: 'agora incognito', // 用户昵称
+      roomUuid, // 房间uuid
+      roleType: EduRoleTypeEnum.invisible, // 角色
+      roomType: roomStore.roomInfo.roomType, // 房间类型
+      roomName: roomStore.roomInfo.roomName, // 房间名称x
+      // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
+      pretest: false, // 开启设备检测
+      rtmUid: userUuid,
+      rtmToken, // rtmToken
+      language: appStore.params.language, // 国际化
+      startTime: appStore.params.startTime, // 房间开始时间
+      duration: appStore.params.duration, // 课程时长
+      recordUrl: appStore.params.config.recordUrl, // 回放页地址
+      appId: appStore.params.config.agoraAppId,
+      userRole: EduRoleTypeEnum.invisible
+    }
+    if (!urlParams.recordUrl) {
+      // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
+      urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
+      // throw GenericErrorWrapper()
+      // return;
+    }
+    const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
+    const url = `${urlParams.recordUrl}?${urlParamsStr}`
+    console.log({urlParams, url}) 
+    // todo fetch 
+    await eduSDKApi.updateRecordingState({
+      roomUuid,
+      state: 1,
+      url
+    })
+  }
+
+  const onStopRecording = async () => {
+    const roomUuid = roomStore.roomInfo.roomUuid
+    await eduSDKApi.updateRecordingState({
+      roomUuid,
+      state: 0
+    })
+  }
+
+  return {
+    isRecording: sceneStore.isRecording,
+    onStartRecording,
+    onStopRecording
   }
 }

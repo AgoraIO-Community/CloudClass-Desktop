@@ -8,6 +8,7 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
+import {v4 as uuidv4} from 'uuid';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -23,6 +24,10 @@ export interface BaseVideoPlayerProps {
    * 是否现实控制条
    */
   hideControl?: boolean;
+  /**
+   * 是否展示全体下台，默认 false
+   */
+  hideOffAllPodium?: boolean;
   /**
    * 是否你展示全体下讲台，默认 false
    */
@@ -86,6 +91,10 @@ export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 全体下讲台
    */
+  onOffAllPodiumClick?: () => Promise<any>;
+  /**
+   * 下讲台
+   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
    * 点击白板操作授权按钮时的回调
@@ -98,7 +107,7 @@ export interface VideoPlayerProps extends VideoPlayerType {
 }
 
 interface AnimSvga {
-  id: number
+  id: string
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
@@ -115,6 +124,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   whiteboardGranted,
   isHost = false,
   hideControl = false,
+  hideOffAllPodium = true,
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
@@ -122,6 +132,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   placement = 'bottom',
   onCameraClick,
   onMicClick,
+  onOffAllPodiumClick = () => console.log("on clear podiums"),
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
@@ -132,10 +143,17 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     setAnimList([
       ...animList,
       {
-        id: Date.now(),
+        id: uuidv4(),
       }
     ])
   }, [animList, setAnimList])
+
+  const onClose = useCallback((id) => {
+    setAnimList(
+      [...animList.filter((it: any) => it.id !== id)]
+    )
+  }, [animList, setAnimList])
+
   useEffect(() => {
     // console.log('stars change', stars, prevStar.current)
     if (stars > prevStar.current) {
@@ -171,8 +189,16 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       </Tooltip>
       {isHost ? (
         <>
+          {hideOffAllPodium ? null : (
+            <Tooltip title={t('Clear Podiums')} placement={placement}>
+              <Icon
+                type="invite-to-podium"
+                onClick={() => onOffAllPodiumClick()}
+              />
+            </Tooltip>
+          )}
           {hideOffPodium ? null : (
-            <Tooltip title={t('Down Platform')} placement={placement}>
+            <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
                 type="invite-to-podium"
                 className={isPodium ? 'no_podium' : 'podium'}
@@ -222,6 +248,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 width={200} 
                 height={200}
                 audio="reward"
+                duration={2000}
+                onClose={() => onClose(item.id)}
               />
             </div>
           ))
@@ -236,7 +264,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            <VolumeIndicator volume={micVolume} />
+            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
             <Icon
               className={micStateCls}
               type={micEnabled ? 'microphone-on' : 'microphone-off'}
@@ -282,7 +310,7 @@ export interface VideoMarqueeListProps {
   */
   onMicClick: (uid: string | number) => Promise<any>;
   /**
-  * 全体下讲台
+  * 下讲台
   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
@@ -381,37 +409,12 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
-              onCameraClick={() => {
-                return new Promise((resolve) => {
-                  onCameraClick(videoStream.uid)
-                  resolve(videoStream)
-                })
-              }}
-              onMicClick={() => {
-                return new Promise((resolve) => {
-                  onMicClick(videoStream.uid)
-                  resolve(videoStream)
-                })
-              }}
-              onOffPodiumClick={() => {
-                return new Promise((resolve) => {
-                  console.log(videoStream.isPodium)
-                  onOffPodiumClick(videoStream.uid)
-                  resolve(videoStream)
-                })
-              }}
-              onWhiteboardClick={() => {
-                return new Promise((resolve) => {
-                  onWhiteboardClick(videoStream.uid)
-                  resolve(videoStream)
-                })
-              }}
-              onSendStar={() => {
-                return new Promise((resolve) => {
-                  // console.log(videoStream)
-                  onSendStar(videoStream.uid)
-                  resolve(videoStream)
-                })
+              onCameraClick={onCameraClick}
+              onMicClick={onMicClick}
+              onOffPodiumClick={onOffPodiumClick}
+              onWhiteboardClick={onWhiteboardClick}
+              onSendStar={async () => {
+                await onSendStar(videoStream.uid)
               }}
               ></VideoPlayer>
           </div>

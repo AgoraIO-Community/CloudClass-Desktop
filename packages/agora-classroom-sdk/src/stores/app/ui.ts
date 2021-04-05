@@ -100,15 +100,13 @@ export class UIStore {
   }
 
   addDialog(component: any, props?: any) {
-    const id = uuidv4()
+    const id = (props && props.id) ? props.id : uuidv4()
     this.dialogQueue.push({id, component, props})
     return id
   }
 
   removeDialog(id: string) {
-    const idx = this.dialogQueue.findIndex((item: DialogType) => item.id !== id)
-    this.dialogQueue.splice(idx, 1)
-    return id;
+    this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
   }
 
   toggleChatMinimize() {

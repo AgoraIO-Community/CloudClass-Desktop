@@ -41,6 +41,10 @@ export interface BizHeaderProps {
    */
   isStarted?: boolean;
   /**
+   * 课程是否正在录制
+   */
+  isRecording: boolean
+  /**
    * 课程 title
    */
   title: string;
@@ -66,6 +70,7 @@ export interface BizHeaderProps {
 
 export const BizHeader: FC<BizHeaderProps> = ({
   isStarted = false,
+  isRecording = false,
   signalQuality,
   title,
   classStatusText,
@@ -95,7 +100,8 @@ export const BizHeader: FC<BizHeaderProps> = ({
           </div>
         </div>
         <div className="header-actions">
-          <Icon type="record" size={24} onClick={() => onClick('record')} />
+          {/* TODO recording icon replacement */}
+          <Icon type={isRecording ? "circle" : "record"} size={24} onClick={() => onClick('record')} />
           <Icon type="set" size={24} onClick={() => onClick('setting')}  />
           <Icon type="exit" size={24} onClick={() => onClick('exit')} />
         </div>

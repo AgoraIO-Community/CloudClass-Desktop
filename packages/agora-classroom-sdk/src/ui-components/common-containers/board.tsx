@@ -1,9 +1,9 @@
 import { useBoardStore, useUIStore } from '@/hooks'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, ZoomController } from 'agora-scenario-ui-kit'
+import { Resource } from '@/stores/app/board'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useWhiteboardState } from '../hooks'
-import { CloudDiskContainer } from './cloud-driver'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
@@ -55,9 +55,9 @@ export const allTools: ToolItem[] = [
     value: 'cloud',
     label: 'scaffold.cloud_storage',
     icon: 'cloud',
-    component: () => {
-      return <CloudDiskContainer />
-    }
+    // component: () => {
+    //   return <CloudDiskContainer />
+    // }
   },
   {
     value: 'tools',
@@ -90,26 +90,26 @@ const TabsContainer = observer(() => {
   const uiStore = useUIStore()
   const resourcesList = boardStore.resourcesList
 
-  const handleChange = (resourceName: string) => {
-    boardStore.changeSceneItem(resourceName)
+  const handleChange = (resourceUuid: string) => {
+    boardStore.changeSceneItem(resourceUuid)
   }
   return (
     <Tabs activeKey={boardStore.activeSceneName} type="editable-card"
       onChange={handleChange}>
-      {resourcesList.map((item: any, key: number) => (
+      {resourcesList.map((item: Resource, key: number) => (
         <TabPane
-          key={item.resourceName}
+          key={item.resourceUuid}
           tab={
             <>
               {key === 0 && <Icon type="whiteboard" />}
-              {item.file.name}
+              {key === 0 ? transI18n("tool.board_name") : item.file.name}
             </>
           }
           closeIcon={
             <Icon type="close"
               onClick={() => {
                 uiStore.addDialog(CloseConfirm, {
-                  resourceName: item.resourceName,
+                  resourceUuid: item.resourceUuid,
                 })
               }}
             ></Icon>

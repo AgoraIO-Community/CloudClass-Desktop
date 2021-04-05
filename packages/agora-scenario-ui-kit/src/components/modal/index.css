@@ -6,6 +6,39 @@
     @apply box-border bg-white;
 }
 
+.radio-container {
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 75px;
+}
+
+.customize-radio {
+    font-size: 13px;
+    color: #191919;
+    display: flex;
+    justify-content: center;
+    @apply items-center inline-flex justify-center;
+}
+
+.customize-radio {
+    margin-top: 13px;
+}
+
+.customize-radio input[type=radio] {
+    height: 14px;
+    color: #586376 !important;
+}
+
+.customize-radio input[type=radio] ~ span {
+    color: #586376 !important;
+}
+
+.customize-radio input[type=radio]:checked ~ span {
+    color: #191919 !important;
+}
+
 .rc-notification-mask {
     height: 100%;
     width: 100%;
