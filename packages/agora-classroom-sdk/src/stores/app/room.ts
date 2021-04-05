@@ -968,7 +968,7 @@ export class RoomStore extends SimpleInterval {
         const {classroom, cause, operator} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
 
-          cause && this.handleCause(cause)
+          cause && this.handleCause(cause, operator)
 
           this.roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
@@ -1351,10 +1351,10 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  handleCause(cause: CauseResponder<HandsUpDataTypes>) {
+  handleCause(cause: CauseResponder<HandsUpDataTypes>, operator: OperatorUser) {
     console.log('[hands-up] ###### ', JSON.stringify(cause))
     if (cause.cmd === 501) {
-      const data = cause.data
+      const data = cause.data as any
       const process = data.processUuid
       if (process === 'handsUp') {
         switch(data.actionType) {
@@ -1364,8 +1364,12 @@ export class RoomStore extends SimpleInterval {
             break;
           }
           case CoVideoActionType.teacherAccept: {
-            this.appStore.uiStore.addToast(transI18n("co_video.received_teacher_accepted"), 'success')
-            console.log('老师同意')
+            if (data.addAccepted) {
+              const exists = data.addAccepted.find((it: any) => it.userUuid === this.roomInfo.userUuid)
+              if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
+                exists && this.appStore.uiStore.addToast(transI18n('co_video.teacher_accept_co_video'))
+              }
+            }
             break;
           }
           case CoVideoActionType.teacherRefuse: {

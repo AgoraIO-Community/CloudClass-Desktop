@@ -13,6 +13,12 @@ import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
 import { UserListContainer } from './user-list'
 
+export const KickDialog = observer(({id, userUuid, roomUuid}: {id: string, userUuid: string, roomUuid: string}) => {
+  return (
+    <div></div>
+  )
+})
+
 export const SettingDialog = observer(({ id }: { id: string }) => {
   return (
     <SettingContainer id={id} />

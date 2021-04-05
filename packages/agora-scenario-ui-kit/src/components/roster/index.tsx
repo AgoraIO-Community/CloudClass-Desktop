@@ -1,9 +1,10 @@
 import React, { FC, ReactNode, useCallback } from 'react';
-import { t } from '~components/i18n';
+import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { Modal, ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
+import Draggable from 'react-draggable';
 import './index.css';
 
 export { defaultColumns } from './default-columns';
@@ -45,6 +46,7 @@ export interface Column {
 }
 
 export interface RosterProps extends ModalProps {
+  isDraggable?: boolean;
   /**
    * 老师姓名
    */
@@ -75,73 +77,68 @@ export const Roster: FC<RosterProps> = ({
   columns = defaultColumns,
   dataSource,
   onClick,
-  onClose,
+  onClose = () => console.log("onClose"),
   role,
-  ...modalProps
+  title,
+  isDraggable = true
 }) => {
-
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  const RosterContent = useCallback((props: any) => (
-    <div className="agora-board-resources roster-wrap">
-      <div className="btn-pin">
-        <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
-          props.onClose()
-        }}></Icon>
-      </div>
-      <div className="main-title">
-        {props.title}
-      </div>
-      <div>
-        <div className="roster-header">
-          <label>{t('roster.teacher_name')}</label>
-          {teacherName}
-        </div>
-        <Table className="roster-table">
-          <TableHeader>
-            {cols.map((col) => (
-              <Col key={col.key}>{t(col.name)}</Col>
-            ))}
-          </TableHeader>
-          <Table className="table-container">
-            {dataSource?.map((data) => (
-              <Row className='border-bottom-width-1' key={data.uid}>
-                {cols.map((col) => (
-                  <Col key={col.key}>
-                    <span
-                      className={
-                        !!data.disabled === false ? 'action' : ''
-                      }
-                      onClick={
-                        !!data.disabled === false
-                          ? () =>
-                              col.action &&
-                              onClick &&
-                              onClick(col.action, data.uid)
-                          : undefined
-                      }>
-                      {col.render
-                        ? col.render((data as any)[col.key], data)
-                        : (data as any)[col.key]}
-                    </span>
-                  </Col>
-                ))}
-              </Row>
-            ))}
-          </Table>
-        </Table>
-      </div>
-    </div>
-  ), [teacherName,columns,dataSource,onClick,onClose,role,])
+  const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
+    return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
+  }, [isDraggable])
 
   return (
-    <Modal
-      className="roster-modal"
-      width={606}
-      component={
-        <RosterContent title={t('roster.user_list')} onClose={onClose} />
-      }
-      {...modalProps}>
-    </Modal>
+    <DraggableContainer>
+      <div className="agora-board-resources roster-wrap">
+        <div className="btn-pin">
+          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+            onClose()
+          }}></Icon>
+        </div>
+        <div className="main-title">
+          {title ?? transI18n('roster.user_list')}
+        </div>
+        <div>
+          <div className="roster-header">
+            <label>{t('roster.teacher_name')}</label>
+            {teacherName}
+          </div>
+          <Table className="roster-table">
+            <TableHeader>
+              {cols.map((col) => (
+                <Col key={col.key}>{t(col.name)}</Col>
+              ))}
+            </TableHeader>
+            <Table className="table-container">
+              {dataSource?.map((data) => (
+                <Row className='border-bottom-width-1' key={data.uid}>
+                  {cols.map((col) => (
+                    <Col key={col.key}>
+                      <span
+                        className={
+                          !!data.disabled === false ? 'action' : ''
+                        }
+                        onClick={
+                          !!data.disabled === false
+                            ? () =>
+                                col.action &&
+                                onClick &&
+                                onClick(col.action, data.uid)
+                            : undefined
+                        }>
+                        {col.render
+                          ? col.render((data as any)[col.key], data)
+                          : (data as any)[col.key]}
+                      </span>
+                    </Col>
+                  ))}
+                </Row>
+              ))}
+            </Table>
+          </Table>
+        </div>
+      </div>
+    </DraggableContainer>
   );
 };

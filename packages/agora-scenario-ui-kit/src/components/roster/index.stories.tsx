@@ -1,6 +1,6 @@
-import { Meta } from '@storybook/react';
-import React, { FC } from 'react';
-import { ActionTypes, Roster, RosterProps } from '~components/roster';
+import { Meta, Story } from '@storybook/react';
+import React, { FC, useCallback, useState } from 'react';
+import { ActionTypes, Profile, Roster, RosterProps } from '~components/roster';
 import { list } from '~utilities';
 import { defaultColumns } from './default-columns';
 
@@ -30,10 +30,47 @@ const meta: Meta = {
   }
 };
 
-export const Docs: FC<RosterProps> = (props) => {
+export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
+
+  const [list, updateList] = useState<Profile[]>(dataSource!)
+
+  const handleClick = useCallback((action: string, uid: any) => {
+    const newList = list.map((item) => (
+      item.uid === uid ? {...item, ...handleActionState(item, action)} : {...item}
+    ))
+    updateList(newList)
+  }, [list, updateList])
+
+  const handleActionState = (item: Profile, action: string) => {
+    switch (action) {
+      case 'podium': {
+        item.onPodium = !item.onPodium
+        break;
+      }
+      case 'whiteboard': {
+        item.whiteboardGranted = !item.whiteboardGranted
+        break;
+      }
+      case 'camera': {
+        item.cameraEnabled = !item.cameraEnabled
+        console.log('cameraEnable', item)
+        break;
+      }
+      case 'mic': {
+        item.micEnabled = !item.micEnabled
+        break;
+      }
+    }
+    return item
+  }
+
   return (
-    <Roster {...props} />
+    <Roster dataSource={list} {...restProps} onClick={handleClick} />
   )
 };
+
+Docs.parameters = {
+  layout: 'fullscreen'
+}
 
 export default meta;

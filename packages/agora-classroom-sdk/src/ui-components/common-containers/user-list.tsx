@@ -13,14 +13,13 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     const { dataSource, teacherName, onClick, role } = useUserListContext()
 
     return (
-        <Draggable>
-            <Roster
-                role={role as any}
-                teacherName={teacherName}
-                dataSource={dataSource}
-                onClick={onClick}
-                onClose={props.onClose}
-            />
-        </Draggable>
+        <Roster
+            isDraggable={true}
+            role={role as any}
+            teacherName={teacherName}
+            dataSource={dataSource}
+            onClick={onClick}
+            onClose={props.onClose}
+        />
     )
 })
