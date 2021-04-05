@@ -79,7 +79,7 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
     micEnabled: false,
     cameraEnabled: false,
     whiteboardGranted: true,
-    isPodium: true,
+    isOnPodium: true,
     children: (<></>)
   })) as any[]
 

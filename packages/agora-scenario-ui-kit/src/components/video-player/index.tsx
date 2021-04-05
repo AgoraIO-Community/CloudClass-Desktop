@@ -69,7 +69,7 @@ export interface BaseVideoPlayerProps {
    */
   hideBoardGranted?: boolean;
 
-  isPodium?: boolean;
+  isOnPodium?: boolean;
 
   placement?: any;
 }
@@ -128,7 +128,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
-  isPodium,
+  isOnPodium,
   placement = 'bottom',
   onCameraClick,
   onMicClick,
@@ -201,7 +201,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
                 type="invite-to-podium"
-                className={isPodium ? 'no_podium' : 'podium'}
+                className={isOnPodium ? 'no_podium' : 'podium'}
                 onClick={() => onOffPodiumClick(uid)}
               />
             </Tooltip>
