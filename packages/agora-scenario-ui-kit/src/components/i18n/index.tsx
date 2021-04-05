@@ -129,9 +129,12 @@ export const getLanguage = () => storage.getLanguage().match(/zh/) ? 'zh' : 'en'
 export const transI18n = (text: string, options?: any) => {
   let content = i18n.t(text)
   if (!isEmpty(options)) {
-    if (options.reason && content.match(/\{.+\}/)) {
-      content = content.replace(/\{.+\}/, options.reason);
-    }
+    // if (options.reason && content.match(/\{.+\}/)) {
+    //   content = content.replace(/\{.+\}/, options.reason);
+    // }
+    Object.keys(options).forEach(k => {
+      content = content.replace(`{${k}}`, options[k])
+    })
   }
   return content
 }

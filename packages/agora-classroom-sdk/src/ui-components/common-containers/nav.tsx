@@ -5,8 +5,10 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { BizHeader } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
-import { Exit } from './dialog'
+import { useRecordingContext } from '../hooks'
+import { Exit, Record } from './dialog'
 import { SettingContainer } from './setting'
+import {v4 as uuidv4} from 'uuid';
 
 export const NavigationBar: React.FC<any> = observer(() => {
 
@@ -16,7 +18,9 @@ export const NavigationBar: React.FC<any> = observer(() => {
 
   const uiStore = useUIStore()
 
-  const appStore = useAppStore()
+  const {
+    isRecording
+  } = useRecordingContext()
 
   const handleClick = useCallback(async (type: string) => {
     switch (type) {
@@ -25,43 +29,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
       case 'record': {
-        const roomUuid = roomStore.roomInfo.roomUuid
-        const tokenRule = `${roomUuid}-record-${Date.now()}`
-        // 生成token home-api login
-        const { rtmToken, userUuid } = await homeApi.login(tokenRule)
-        const urlParams = {
-          userUuid, // 用户uuid
-          userName: 'agora incognito', // 用户昵称
-          roomUuid, // 房间uuid
-          roleType: EduRoleTypeEnum.invisible, // 角色
-          roomType: roomStore.roomInfo.roomType, // 房间类型
-          roomName: roomStore.roomInfo.roomName, // 房间名称x
-          // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
-          pretest: false, // 开启设备检测
-          rtmUid: userUuid,
-          rtmToken, // rtmToken
-          language: appStore.params.language, // 国际化
-          startTime: appStore.params.startTime, // 房间开始时间
-          duration: appStore.params.duration, // 课程时长
-          recordUrl: appStore.params.config.recordUrl, // 回放页地址
-          appId: appStore.params.config.agoraAppId,
-          userRole: EduRoleTypeEnum.invisible
-        }
-        if (!urlParams.recordUrl) {
-          // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
-          urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
-          // throw GenericErrorWrapper()
-          // return;
-        }
-        const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
-        const url = `${urlParams.recordUrl}?${urlParamsStr}`
-        console.log({urlParams, url}) 
-        // todo fetch 
-        await eduSDKApi.updateRecordingState({
-          roomUuid,
-          state: 1,
-          url
-        })
+        uiStore.addDialog(Record, {id: uuidv4(), starting: !isRecording})
         break
       }
       case 'setting': {
@@ -74,12 +42,13 @@ export const NavigationBar: React.FC<any> = observer(() => {
         break
       }
     }
-  }, [navigationState.isStarted, uiStore])
+  }, [navigationState.isStarted, uiStore, isRecording])
 
   return (
     <BizHeader
       classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
+      isRecording={isRecording}
       title={navigationState.title}
       signalQuality={navigationState.signalQuality}
       monitor={{

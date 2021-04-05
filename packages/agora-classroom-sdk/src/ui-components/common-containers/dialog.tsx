@@ -1,13 +1,12 @@
 import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
-import { GenericError } from 'agora-rte-sdk'
-import { Modal, t, Button, Setting, transI18n } from 'agora-scenario-ui-kit'
+import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
+import { Button, Modal, t, transI18n } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
-import { Trans } from 'react-i18next'
-import { useCloseConfirmContext, useDialogContext, useExitContext, useKickEndContext, useOpenDialogContext, useRoomEndContext, useErrorContext, useSettingContext, useKickDialogContext } from '../hooks'
+import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext } from '../hooks'
 import { CloudDriverContainer } from './cloud-driver'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
@@ -81,6 +80,8 @@ export const GenericErrorDialog = observer(({ id, error }: { id: string, error: 
     onCancel,
     ButtonGroup
   } = useErrorContext(id)
+
+  const {errCode='', message=''} = GenericErrorWrapper(error)
   return (
     <Modal
       onOk={onOK}
@@ -88,7 +89,7 @@ export const GenericErrorDialog = observer(({ id, error }: { id: string, error: 
       footer={ButtonGroup()}
       title={t('course.join_failed')}
     >
-      <Trans>{BusinessExceptions.getReadableText(error.errCode)}</Trans>
+      {transI18n(BusinessExceptions.getReadableText(errCode), {errCode, message})}
     </Modal>
   )
 })
@@ -213,6 +214,38 @@ export const Exit = observer((id: string) => {
       footer={ButtonGroup()}
       title={t('toast.leave_room')}>
       <p>{t('toast.quit_room')}</p>
+    </Modal>
+  )
+})
+
+export const Record = observer(({id, starting}:{id:string, starting: boolean}) => {
+  const uiStore = useUIStore()
+  const {
+    onStartRecording,
+    onStopRecording
+  } = useRecordingContext()
+  return (
+    <Modal
+      onOk={async () => {
+        uiStore.removeDialog(id)
+        try {
+          await (starting ? onStartRecording() : onStopRecording())
+          uiStore.addToast(transI18n(starting?'toast.start_recording.success':'toast.stop_recording.success'))
+        }catch(err) {
+          const {errCode='', message=''} = GenericErrorWrapper(err)
+          uiStore.addToast(transI18n(BusinessExceptions.getReadableText(err.errCode), {errCode, message}), 'error')
+        }
+      }}
+      onCancel={() => {
+        uiStore.removeDialog(id)
+      }}
+      footer={[
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
+      ]}
+      title={starting ? transI18n('toast.start_recording.title') : transI18n('toast.stop_recording.title')}
+    >
+      <p>{starting ? transI18n('toast.start_recording.body') : transI18n('toast.stop_recording.body')}</p>
     </Modal>
   )
 })

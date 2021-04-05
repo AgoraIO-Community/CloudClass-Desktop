@@ -4,11 +4,7 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
-  'error': {
-    'class_end': 'Course End',
-    'room_is_full': 'Room is full',
-    'co_video_limit': 'CoVideo Limit',
-  },
+  'screen_share': 'Screen Share',
   'kick': {
     'kick_out_student': 'Kick Out',
   },
@@ -66,6 +62,16 @@ export const en = {
     'enable_chat_muted': 'Student Chat Muted',
     'input_message': 'Please Input Message',
   },
+  'error': {
+    'not_found': 'Page Not Found',
+    'co_video_limit': 'CoVideo Limit',
+    'components': {
+      'paramsEmpty': 'params：{reason} can`t be empty',
+    },
+    'class_end': 'The classroom is end.',
+    'unknown': 'Unknown error occured. Code: {errCode} Details: {message}',
+    'room_is_full': 'The room is full',
+  },
   'toast': {
     'kick_by_other_side': 'Kick by other client',
     'screen_share': 'Screen Share',
@@ -88,8 +94,16 @@ export const en = {
     'canceled_screen_share': 'Canceled screen sharing',
     'screen_sharing_failed': 'Screen sharing failed, reason: {reason}',
     'recording_failed': 'Start cloud recording failed, reason: {reason}',
-    'start_recording': 'Start cloud recording success',
-    'stop_recording': 'Stop cloud recording success',
+    'start_recording': {
+      'title': 'Start Recording',
+      'body': 'Are you sure to start recording the classroom?',
+      'success': 'Recording successfully started'
+    },
+    'stop_recording': {
+      'title': 'Stop Recording',
+      'body': 'Are you sure to stop recording the classroom?',
+      'success': 'Recording successfully stopped'
+    },
     'recording_too_short': 'Recording too short, at least 15 seconds',
     'rtm_login_failed': 'login failure, please check your network',
     'rtm_login_failed_reason': 'login failure, reason: {reason}',

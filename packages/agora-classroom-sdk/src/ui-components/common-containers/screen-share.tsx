@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { IconButton, Icon, Modal, Button, ScreenShare } from 'agora-scenario-ui-kit'
+import { ScreenShare } from 'agora-scenario-ui-kit';
 import { observer } from 'mobx-react';
-import { useScreenShareContext, useScreenSharePlayerContext } from '../hooks';
+import React from 'react';
+import { useScreenShareContext } from '../hooks';
 
 export type ScreenShareContainerProps = {
     windowId: string,
