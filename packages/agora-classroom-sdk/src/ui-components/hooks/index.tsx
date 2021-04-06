@@ -886,7 +886,9 @@ export const useCloudDriverContext = (props: any) => {
   }
 
   const handleDelete = async () => {
-    await boardStore.removeMaterialList(checkList$.getValue())
+    await boardStore.cancelUpload();
+    await boardStore.removeMaterialList(checkList$.getValue());
+    setShowUploadModal(false);
   }
 
   useEffect(() => {

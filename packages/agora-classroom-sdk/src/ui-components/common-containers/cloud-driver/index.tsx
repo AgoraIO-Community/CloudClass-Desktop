@@ -29,7 +29,8 @@ export interface uploadFileInfoProps {
 }
 
 export type CloudDriveContainerProps = {
-  onClose: () => void
+  onClose: () => void,
+  onDelete?: (fileName: string) => void;
 }
 
 
@@ -50,6 +51,12 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     captureCheckedItems,
   } = useCloudDriverContext(props)
 
+  const handleClick = (id: string, type: string) => {
+    if (type === 'delete') {
+      handleDelete();
+    }
+  };
+
   return (
     <Draggable>
       <div className="agora-board-resources">
@@ -64,7 +71,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
           </TabPane>
           <TabPane tab={t('cloud.personalResources')} key="2">
             <Row className="btn-group margin-gap">
-              <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
+              <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
                 onChange={handleUpload} type="file">
               </input>
               <Button type="primary" onClick={triggerUpload}>
@@ -85,6 +92,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
                   onCancel={() => { setShowUploadModal(false) }}
                 >
                   <Loading
+                    onClick={handleClick}
                     hasLoadingGif={false}
                     uploadItemList={
                       [
