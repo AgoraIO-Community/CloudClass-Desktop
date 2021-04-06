@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Toast, ToastMessage } from '@/components/toast';
+import { AcadsocToast, BrushToastContent, Toast, ToastMessage } from '@/components/toast';
 import { routesMap, AppRouteComponent } from '@/pages';
 import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { observer, Provider } from 'mobx-react';
@@ -7,7 +7,9 @@ import { Route, HashRouter, Switch, Redirect, MemoryRouter as Router } from 'rea
 import ThemeContainer from '../containers/theme-container';
 import { RoomParameters } from '@/edu-sdk/declare';
 import { BizLogger } from '@/utils/biz-logger';
-import { useHomeUIStore } from '@/hooks';
+import { useBoardStore, useHomeUIStore } from '@/hooks';
+import { workerPath } from '@/edu-sdk/controller';
+import { useStorageSW } from '@/utils/utils';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -55,41 +57,22 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
+  useStorageSW(workerPath)
 
   return (
     <Provider store={props.store}>
       <ThemeContainer>
         <Router>
           <Toast />
+          <AcadsocToast />
+          <BrushToastContent />
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>
     </Provider>
   )
 }
-
 export const AppContainer = (props: AppContainerProps) => {
-
-  useEffect(() => {
-    if (navigator.serviceWorker && navigator.serviceWorker.register) {
-      navigator.serviceWorker.register('./worker.js').then(function(registration) {
-        console.log("registration finish")
-      }).catch(function(error) {
-        console.log('An error happened during installing the service worker:');
-        console.log(error.message)
-      })
-    }
-  }, [])
 
   const AppToast = observer(() => {
 

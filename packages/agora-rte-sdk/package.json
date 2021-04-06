@@ -64,7 +64,8 @@
   },
   "dependencies": {
     "agora-rtc-sdk-ng": "file:../agora-rtc-sdk-ng",
-    "agora-rtm-sdk": "1.4.2"
+    "agora-rtm-sdk": "1.4.2",
+    "lodash": "4.17.21"
   },
   "peerDependencies": {
     "agora-electron-sdk": "education290"

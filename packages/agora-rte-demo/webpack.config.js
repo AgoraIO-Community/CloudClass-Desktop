@@ -5,6 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
 
 const config = require('dotenv').config().parsed
 
@@ -127,6 +128,11 @@ module.exports = {
           // limit: 1024
         }
       },
+      // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
+      {
+        test: /\.js$/,
+        loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+      }
     ],
   },
   optimization: {
@@ -187,6 +193,22 @@ module.exports = {
           'webpack.config.js',
         ],
       }
+    }),
+    new InjectManifest({
+      // injectionPoint: '__WB_MANIFEST',
+      // importWorkboxFrom: 'local',
+      // importsDirectory: path.join(__dirname, 'public'),
+      swSrc: path.join(__dirname, './src/sw/service-worker.ts'),
+      // swSrc: path.join(process.cwd(), '/src/sw/index.worker.js'),
+      swDest: 'serviceWorker.js',
+      include: [],
+      exclude: [
+        /\.map$/,
+        /manifest$/,
+        /\.htaccess$/,
+        /service-worker\.js$/,
+        /sw\.js$/,
+      ],
     })
   ],
 };

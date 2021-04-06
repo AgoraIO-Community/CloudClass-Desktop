@@ -16,7 +16,7 @@
 
   .rightFrame {
     width: 520px;
-    height: 384px;
+    height: 404px;
     border-radius: 15px;
     // padding: 0px 20px 20px;
     color: #ffffff;
@@ -142,9 +142,18 @@
   cursor: pointer;
 }
 
+.pretestWarning {
+  color: red;
+  text-align: left;
+  top: 64px;
+  position: absolute;
+  left: 116px;
+  font-size: 12px;
+}
+
 .detectPosition {
   position: absolute;
-  top: 73px;
+  top: 93px;
   left: 115px;
 }
 
@@ -179,6 +188,12 @@
   border-radius: 10px;
   border: 1px solid rgb(0, 37, 145);
   overflow: hidden;
+}
+
+.rendererPlaceholderNoVideo {
+  canvas {
+    display: none;
+  }
 }
 
 .placeholder {

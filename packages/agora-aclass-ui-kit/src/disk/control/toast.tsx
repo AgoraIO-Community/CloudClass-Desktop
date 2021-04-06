@@ -55,20 +55,7 @@ const DiskToast = (props: DiskToastProps) => {
   const classes = useStyles()
   const onClose = props.onClose ? props.onClose : noop
   const classKey = classes[props.toastType]
-  const [openToast,setOpenToast]=useState(props.onOpenToast)
 
-  useEffect(() => {
-    let timeoutId: any;
-    if (props.onOpenToast && !timeoutId) {
-      timeoutId = setTimeout(() => {
-        setOpenToast(false)
-      }, 2000);
-    }
-    setOpenToast(props.onOpenToast)
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [props.onOpenToast])
   const ToastMessage = () => {
     return (
       <div className={classes.messageBox}>
@@ -81,7 +68,7 @@ const DiskToast = (props: DiskToastProps) => {
     <Snackbar
       className={classes.root}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      open={openToast}
+      open={props.onOpenToast}
       key={props.message}
     >
       <SnackbarContent

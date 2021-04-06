@@ -5,6 +5,7 @@ import { PretestHeader, VideoDetect, AudioDetect, SpeakerDetect, TestReport, Pre
 import { useAppStore, usePretestStore } from '@/hooks'
 import { t } from '@/i18n'
 import { useHistory, useLocation } from 'react-router-dom'
+import { LocalVideoStreamState } from '@/stores/app/media'
 
 export interface PretestComponentProps {
   onClickMenu?: (type: string) => any,
@@ -184,6 +185,7 @@ export const PretestContainer: React.FC<PretestComponentProps> = observer((props
             cameraId={pretestStore.cameraId}
             value={pretestStore.cameraId}
             renderer={pretestStore.cameraRenderer}
+            hideVideo={[0,3].includes(appStore.mediaStore.localVideoState)}
             label={t("aclass.device.camera")}
             detectText={t("aclass.device.videoDetectText")}
             yesText={t("aclass.device.yes")}

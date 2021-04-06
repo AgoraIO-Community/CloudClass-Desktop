@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const zhCN: any = {
   "aclass": {
+    "skip": "跳过",
     "downloadPage": "下载页面",
     "home": {
       "material_list": "更新课件列表",
@@ -325,7 +326,7 @@ const zhCN: any = {
     'time_interval_between_start': `距离上课开始还有: {reason}`,
     'time_interval_between_end': `课程还有 {reason} 结束`,
     'class_is_end': `下课咯，教室还有 {reason} 关闭`,
-    'time_interval_between_close': `教室还有 {reason} 分钟关闭`,
+    'time_interval_between_close': `教室还有 {reason} 关闭`,
     'reward_limit': '奖杯已全部发完',
     'chat_disable': '禁言模式开启',
     'chat_enable': '禁言模式关闭',
@@ -345,6 +346,7 @@ const zhCN: any = {
     'loading': '加载中...',
     'openingCamera': '正在打开摄像头',
     'closingCamera': '正在关闭摄像头',
+    'preparingRemoteVideo': '正在加载远端视频',
   },
   'chat': {
     'placeholder': '说点什么...',
@@ -366,6 +368,8 @@ const zhCN: any = {
     'is_hear': '音乐播放中，您是否可以听到音乐？',
     'click_play': '点击播放后开始检测扬声器',
     'test_microphone': '对麦克风说些什么，检测麦克风是否正常',
+    'camera_hint': '如无法看到，可以点这里↑切换摄像头设备',
+    'mic_hint': '如无法听到，可以点这里↑切换麦克风设备'
   },
   'nav': {
     'delay': '延迟: ',

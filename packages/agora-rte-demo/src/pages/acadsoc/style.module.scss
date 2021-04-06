@@ -16,7 +16,7 @@
 .mainContainer {
   display: flex;
   flex: 1;
-  margin: 10px;
+  margin: 0;
 }
 
 .rightContainer {
@@ -25,6 +25,7 @@
   min-width: 268px;
   flex: 1;
   margin-left: 10px;
+  margin-right: 10px;
   position: relative;
   z-index: 3;
 }
@@ -42,7 +43,6 @@
   }
   .rightContainer {
     position: absolute;
-    margin: 10px;
     height: 90%;
     right: 0;
   }

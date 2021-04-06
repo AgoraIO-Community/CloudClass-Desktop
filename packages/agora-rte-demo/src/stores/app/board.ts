@@ -22,23 +22,39 @@ import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { reportService } from '@/services/report-service';
+import { createRef } from 'react';
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
-      name: `${index+1}`,
-      componentCount: 1,
-      ppt: {
-        width: item.width,
-        height: item.height,
-        src: item.conversionFileUrl
+    return taskProgress.convertedFileList.map((item: any, index: number) => {
+      let ppt = item.ppt || {}
+      return {
+        name: `${item.name || index+1}`,
+        componentCount: 1,
+        ppt: {
+          width: ppt.width,
+          height: ppt.height,
+          src: ppt.src
+        }
       }
-    }))
+    })
   }
   return []
 }
 
-const transformMaterialList = (item: CourseWareItem) => {
+type MaterialItem = {
+    ext: string,
+    resourceName: string,
+    resourceUuid: string,
+    scenes: any[],
+    size: number,
+    taskProgress: any,
+    taskUuid: string,
+    updateTime: number,
+    url: string,
+}
+
+const transformMaterialItem = (item: CourseWareItem): MaterialItem => {
   return {
     ext: item.ext,
     resourceName: item.resourceName,
@@ -50,6 +66,13 @@ const transformMaterialList = (item: CourseWareItem) => {
     updateTime: item.updateTime,
     url: item.url
   }
+}
+
+interface CacheInfo {
+  progress: number,
+  downloading: boolean,
+  cached: boolean,
+  skip: boolean
 }
 
 export enum BoardPencilSize {
@@ -156,12 +179,12 @@ export class BoardStore {
     toolTip: true,
     iconTooltipText: t('tool.eraser'),
   },
-  {
-    itemName: 'palette',
-    toolTip: true,
-    popoverType: 'color',
-    iconTooltipText: t('tool.color_picker'),
-  },
+  // {
+  //   itemName: 'palette',
+  //   toolTip: true,
+  //   popoverType: 'color',
+  //   iconTooltipText: t('tool.color_picker'),
+  // },
   {
     itemName: 'new-page',
     toolTip: true,
@@ -522,39 +545,58 @@ export class BoardStore {
 
   controller: any = undefined
 
+  @observable
+  cacheMap = new Map<string, CacheInfo>()
+
+  cancelDownloading() {
+    if (this.controller) {
+      this.controller.abort()
+      this.controller = undefined
+      this.downloading = false
+      this.cacheMap.delete(this.currentTaskUuid)
+      this.preloadingProgress = -1
+    }
+  }
+
   async startDownload(taskUuid: string) {
-    const isWeb = this.appStore.isElectron ? false : true
     try {
+      this.currentTaskUuid = taskUuid
+      const cacheInfo = this.cacheMap.get(taskUuid)
+      if (cacheInfo && cacheInfo.downloading) {
+        return
+      }
+
+      this.cacheMap.set(taskUuid, {
+        progress: 0,
+        cached: false,
+        skip: false,
+        downloading: true
+      })
+
+      // this.cancelDownloading()
+      // if (cancelDownloading)
       this.downloading = true
       EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
-      // if (isWeb) {
-        await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
-          this.preloadingProgress = progress
-          this.controller = controller
+      await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+        this.preloadingProgress = progress
+        this.controller = controller
+        const cacheInfo = this.cacheMap.get(taskUuid)
+
+        const currentProgress = get(cacheInfo, 'progress', 0)
+        const skip = get(cacheInfo, 'skip', false)
+        if (skip) {
+          return
+        }
+
+        const newProgress = Math.max(currentProgress, progress)
+
+        this.cacheMap.set(taskUuid, {
+          progress: newProgress,
+          cached: newProgress === 100,
+          skip: false,
+          downloading: true
         })
-      // } else {
-      //   const controller = new AbortController();
-      //   this.controller = controller
-      //   const resourcesHost = "convertcdn.netless.link";
-      //   const signal = controller.signal;
-      //   const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-      //   const res = await fetch(zipUrl, {
-      //       method: "get",
-      //       signal: signal,
-      //   }).then(fetchProgress({
-      //       onProgress: (progress: any) => {
-      //         if (progress.hasOwnProperty('percentage')) {
-      //           this.preloadingProgress = get(progress, 'percentage')
-      //         }
-      //       },
-      //   }));
-      //   if (res.status !== 200) {
-      //     throw GenericErrorWrapper({
-      //       code: res.status,
-      //       message: `download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`
-      //     })
-      //   }
-      // }
+      })
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
       this.downloading = false
     } catch (err) {
@@ -604,7 +646,11 @@ export class BoardStore {
           this.room.setScenePath(`/${currentPage}`)
         }
       } else {
-        this.room.setScenePath(`${targetPath}/${currentPage+1}`)
+        const targetResource = this.allResources.find((item => item.name === resourceName))
+        if (targetResource) {
+          const scenePath = targetResource!.scenes![currentPage].name
+          this.room.setScenePath(`${targetPath}/${scenePath}`)
+        }
       }
     }
 
@@ -705,13 +751,13 @@ export class BoardStore {
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
+    const globalState = this.room.state.globalState as any
+    const materialList = get(globalState, 'materialList', []) as MaterialItem[]
     const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
-    if (isRootDir) {
-      const globalState = (this.room.state.globalState as any)
-      const taskUuidList = get(globalState, 'dynamicTaskUuidList', [])
-      const pptItem = taskUuidList.find((it: any) => it.resourceName === resourceName)
-      if (pptItem) {
-        await this.startDownload(pptItem.taskUuid)
+    if (!isRootDir) {
+      const item = materialList.find((item: MaterialItem) => item.resourceName === resourceName)
+      if (item && item.taskUuid) {
+        await this.startDownload(item.taskUuid)
       }
     }
   }
@@ -845,6 +891,24 @@ export class BoardStore {
     }
   }
 
+  async refreshState() {
+    const courseWareList = this.allResources.filter((item) => item.taskUuid)
+    for (let i = 0; i < courseWareList.length; i++) {
+      const item = courseWareList[i]
+      if (item) {
+        const res = await agoraCaches.hasTaskUUID(item.taskUuid)
+        const cacheInfo = this.cacheMap.get(item.taskUuid)
+        const skip = get(cacheInfo, 'skip', false)
+        this.cacheMap.set(item.taskUuid, {
+          progress: res === true ? 100 : 0,
+          cached: res,
+          skip: skip,
+          downloading: false
+        })
+      }
+    }
+  }
+
   // TODO: aclass board init
   @action
   async aClassInit(info: {
@@ -863,6 +927,7 @@ export class BoardStore {
         disableCameraTransform: true,
         disableAutoResize: false
       })
+      await this.refreshState()
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})
@@ -875,6 +940,12 @@ export class BoardStore {
       this.room.disableCameraTransform = false
     } else {
       this.room.disableCameraTransform = true
+    }
+
+    // if student, set tool to pencil when auth to use whiteboard
+    if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
+      this.setTool('pencil')
+      this.currentActiveToolItem = 'pencil'
     }
 
     if (this.online && this.room) {
@@ -894,7 +965,6 @@ export class BoardStore {
     }
 
     this.ready = true
-    this.pptAutoFullScreen()
 
     // 老师
     if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -928,6 +998,10 @@ export class BoardStore {
     this.updateLocalSceneState()
     this.updateSceneItems()
     this.updateCourseWareList()
+
+    this.autoFetchDynamicTask()
+    this.pptAutoFullScreen()
+    this.moveCamera()
   }
 
   pptAutoFullScreen() {
@@ -1027,8 +1101,12 @@ export class BoardStore {
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
         this.updateFullScreen(state.globalState.isFullScreen)
-        if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole) && !this.loading) {
-          this.enableStatus = get(state, 'globalState.granted', 'disable')
+        if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
+          const enableStatus = get(state, 'globalState.granted', 'disable')
+          if(this.enableStatus !== enableStatus) {
+            this.enableStatus = enableStatus
+            this.appStore.uiStore.addBrushToast(new Date().getTime(), enableStatus === 'disable' ? false : enableStatus )
+          }
         }
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
           if (this.lockBoard) {
@@ -1077,8 +1155,10 @@ export class BoardStore {
         userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
         cursorName: this.appStore.acadsocStore.roomInfo.userName,
+        disappearCursor: this.appStore.acadsocStore.isAssistant
       },
-      isAssistant: this.appStore.acadsocStore.isAssistant
+      isAssistant: this.appStore.acadsocStore.isAssistant,
+      disableNewPencil: false
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -1210,7 +1290,7 @@ export class BoardStore {
 
   syncLocalPersonalCourseWareList() {
     this.room.setGlobalState({
-      materialList: this.internalResources.map(transformMaterialList)
+      materialList: this.internalResources.map(transformMaterialItem)
     })
   }
 
@@ -1289,10 +1369,26 @@ export class BoardStore {
         return
       }
       case 'next_page': {
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptNextStep()
+          return
+        }
         this.changePage(room.state.sceneState.index + 1)
         return
       }
       case 'prev_page' : {
+        const scenes = get(this.room.state, 'sceneState.scenes', [])
+        const sceneIndex = get(this.room.state, 'sceneState.index', 0)
+        const currentScene = scenes[sceneIndex]
+        const isPPT = get(currentScene, 'ppt', false)
+        if (isPPT) {
+          this.room.pptPreviousStep()
+          return
+        }
         this.changePage(room.state.sceneState.index - 1)
         return
       }
@@ -2099,6 +2195,7 @@ export class BoardStore {
       this.controller.abort()
       this.controller = undefined
     }
+    this.cacheMap = new Map<string, CacheInfo>()
     // this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
@@ -2299,19 +2396,43 @@ export class BoardStore {
     if (!this.ready) {
       return 'preparing'
     }
-    if (this.preloading) {
-      return true
-    }
+    return this.loadingStatus
   }
 
+  @observable
+  currentTaskUuid: string = ''
+
+  
+  skipTask() {
+    const taskUuid = this.currentTaskUuid
+    if (taskUuid) {
+      const cacheInfo = this.cacheMap.get(taskUuid)
+      if (cacheInfo) {
+        cacheInfo.skip = true
+        this.cacheMap.set(taskUuid, cacheInfo)
+      }
+    }
+  }
 
   @computed
   get loadingStatus() {
     if (!this.ready) {
-      return t("whiteboard.loading")
+      return {
+        type: 'preparing',
+        text: t("whiteboard.loading")
+      }
     }
-    if (this.preloadingProgress !== -1) {
-      return t("whiteboard.downloading", {reason: this.preloadingProgress})
+
+    if (this.currentTaskUuid) {
+      const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
+      if (cacheInfo && cacheInfo.skip !== true && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+        let progress = get(cacheInfo, 'progress', 0)
+        console.log(progress)
+        return {
+          type: 'downloading',
+          text: t("whiteboard.downloading", {reason: progress})
+        }
+      }
     }
 
     return ''

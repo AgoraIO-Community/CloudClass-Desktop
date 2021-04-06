@@ -90,8 +90,6 @@ export class MediaService extends EventEmitter implements IMediaService {
       if (userIndex !== -1) {
         const userRenderer = this.remoteUsersRenderer[userIndex]
         this.remoteUsersRenderer = this.remoteUsersRenderer.filter((it: any) => it !== userRenderer)
-        EduLogger.info(`[agora-apaas] [internal] [renderers] remoteUsersRenderer ${JSON.stringify(this.remoteUsersRenderer)} `)
-        // this.remoteUsersRenderer.splice(userIndex, 1)
         this.fire('user-unpublished', {
           user,
           remoteUserRender: userRenderer
@@ -465,7 +463,6 @@ export class MediaService extends EventEmitter implements IMediaService {
         }
       }
       this.remoteUsersRenderer = []
-      EduLogger.info(`[agora-apaas] [internal] [renderers] remoteUsersRenderer ${JSON.stringify(this.remoteUsersRenderer)} `)
       EduLogger.info("remove remote users renderer success")
     }
   }

@@ -3,6 +3,7 @@ const build_version = BUILD_VERSION ? BUILD_VERSION : '0.0.1';
 
 const en = {
   "aclass": {
+    "skip": "Skip",
     "downloadPage": "Download Page",
     "home": {
       "material_list": "Update Material List",
@@ -112,6 +113,7 @@ const en = {
     'loading': 'Loading...',
     'openingCamera': 'Opening Camera',
     'closingCamera': 'Closing Camera',
+    'preparingRemoteVideo': 'Preparing Remote Video',
   },
   "unknown": "[unknown]: ",
   "from_room": "[Room]: ",
@@ -366,8 +368,9 @@ const en = {
     'yes': 'Yes',
     'is_hear': 'Can you hear the music while the music is playing?',
     'click_play': 'Start to detect speakers after clicking play',
-    'test_microphone': 'What to say to the microphone, check if the microphone is normal'
-    
+    'test_microphone': 'What to say to the microphone, check if the microphone is normal',
+    'camera_hint': 'If you can\'t see the preview, try ↑ to switch the camera',
+    'mic_hint': 'If you can\'t see the preview, try ↑ to switch the microphone'
   },
   'nav': {
     'delay': 'Delay: ',

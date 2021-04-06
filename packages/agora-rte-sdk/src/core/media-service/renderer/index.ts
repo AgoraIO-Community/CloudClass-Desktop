@@ -7,6 +7,20 @@ import {v4 as uuidv4} from 'uuid';
 
 type SourceType = 'default' | 'screen';
 
+function releaseCanvasContext(canvas: HTMLCanvasElement) {
+  try {
+    if (canvas) {
+      const gl: any = canvas.getContext('webgl', { preserveDrawingBuffer: true }) || canvas.getContext('experimental-webgl') ;
+      if (gl) {
+        gl.getExtension('WEBGL_lose_context').loseContext();
+        console.log('gl release ######')
+      }
+    }
+  } catch (err) {
+    console.warn('releaseCanvasContext webgl error', err)
+  }
+}
+
 export interface IMediaRenderer {
   context: MediaService;
   _playing: boolean;
@@ -119,7 +133,8 @@ export class LocalUserRenderer extends UserRenderer {
             const oldEl = dom.getElementsByTagName('canvas') as any
             if (oldEl) {
               const items = [...oldEl]
-              items.forEach((item: any) => {
+              items.forEach((item: HTMLCanvasElement) => {
+                releaseCanvasContext(item)
                 if (item.id && item.id.match(/^agoraLocal/i)) {
                   item.innerHTML = ''
                 }
@@ -189,8 +204,11 @@ export class LocalUserRenderer extends UserRenderer {
     if (this.isElectron && this.sourceType === 'default') {
       this.electron.client.stopPreview()
       if (this.el) {
+        releaseCanvasContext(this.el)
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined
+        //@ts-ignore
+        this.electron.client.setupLocalVideo(null)
       }
       if (isPreview) {
         this.electron.client.setClientRole(2)
@@ -230,8 +248,9 @@ export class RemoteUserRenderer extends UserRenderer {
           const oldEl = dom.getElementsByTagName('canvas') as any
           if (oldEl) {
             const items = [...oldEl]
-            items.forEach((item: any) => {
+            items.forEach((item: HTMLCanvasElement) => {
               if (item.id && item.id.match(/^agoraRemote/i)) {
+                releaseCanvasContext(item)
                 item.innerHTML = ''
               }
             })
@@ -270,8 +289,11 @@ export class RemoteUserRenderer extends UserRenderer {
     }
     if (this.isElectron) {
       if (this.el) {
+        releaseCanvasContext(this.el)
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined
+        //@ts-ignore
+        this.electron.client.setupRemoteVideo(null, this.uid)
       }
       if (this.electron.client.hasOwnProperty('destroyRender')) {
         //@ts-ignore

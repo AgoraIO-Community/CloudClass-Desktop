@@ -36,10 +36,10 @@ interface CustomGlobalUtils {
   RTMRestful: RTMRestful
   EduLogger: EduLogger
   file: File
+  __WB_MANIFEST: Array<PrecacheEntry|string>
 }
 
-declare interface Window extends CustomGlobalUtils {
-
+declare interface Window extends CustomGlobalUtils {  
 }
 
 interface RtmTextMessage {
@@ -123,5 +123,7 @@ declare module "@netless/zip" {
   const content: any;
   export = content;
 }
+
+declare module 'agora-cef-sdk'
 
 declare var zip: any;

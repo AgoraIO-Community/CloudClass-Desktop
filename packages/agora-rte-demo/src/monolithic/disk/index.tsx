@@ -7,6 +7,9 @@ import { noop } from 'lodash'
 // import DownloadDisk from '@/components/download-disk/index'
 import { useStorageStore } from '@/hooks'
 import { DownloadDiskTable } from '@/components/download-disk/download-disk-table'
+import { workerPath } from '@/edu-sdk/controller';
+import { useEffect } from 'react'
+import { useStorageSW } from '@/utils/utils'
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'disk',
@@ -58,6 +61,8 @@ const DownloadDiskContainer = observer(() => {
 const DiskContainer = observer((props: any) => {
 
   const storageStore = useStorageStore()
+
+  useStorageSW(workerPath)
 
   return (
     <div>

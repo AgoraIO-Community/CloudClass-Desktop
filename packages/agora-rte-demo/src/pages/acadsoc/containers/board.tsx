@@ -133,9 +133,13 @@ export const EduWhiteBoard = observer(() => {
       moveCameraText={t('tool.reset')}
     >
       {
-        isLoading ? <Progress title={loadingStatus}></Progress> : null
+        loadingStatus ? <Progress
+        title={loadingStatus.text}
+        showSkip={loadingStatus.type === 'downloading'}
+        onSkip={() => {
+          boardStore.skipTask()
+        }} ></Progress> : null
       }
-      <BrushToast position={{ 'position': 'absolute' }} isShowBrushToast={enableStatus !== 'disable'} text={enableStatus ? t('aclass.board.brushEnabled') : t('aclass.board.brushDisabled')} disableIcon={!enableStatus} />
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
@@ -459,14 +463,39 @@ export const EducationBoard = observer((props: any) => {
     <div className={classes.boardBoxContainer}>
       {showCourseMenuItem ? <CourseWareMenuContainer /> : null}
       <Board style={{
-        width: props.width,
+        width: "auto",
         height: props.height,
         position: 'relative',
         boxSizing: 'border-box',
         background: 'white',
-        marginTop: boardStore.roleIsTeacher ? '39px' : '0',
-      }}>
+        marginTop: boardStore.roleIsTeacher ? 49 : boardStore.isFullScreen ? 0 : 10,
+        marginBottom: !boardStore.isFullScreen ? (boardStore.aClassHasPermission ? 49 : 10) : 0,
+        marginLeft: boardStore.isFullScreen ? 0 : 10
+      }} borderless={boardStore.isFullScreen}>
+        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 
+        <Tool
+          activeItem={currentActiveToolItem}
+          drawerComponent={<DrawerPopover />}
+          strokeComponent={<StrokePopover />}
+          colorComponent={<ColorPopover />}
+          uploadComponent={<UploadFilePopover />}
+          fontComponent={<FontPopover />}
+          headerTitle={props.toolbarName}
+          style={{
+            top: props.toolY,
+            left: props.toolX,
+            zIndex: 10,
+            position: 'absolute'
+          }}
+          items={
+            getBoardItemsBy(appStore.roomInfo.userRole)
+          }
+          onClick={onClickTool}
+        /> : null}
+          {props.children ? props.children : null}
+      </Board>
+      {boardStore.aClassHasPermission ? 
         <ZoomController
           style={{
             position: 'absolute',
@@ -508,29 +537,6 @@ export const EducationBoard = observer((props: any) => {
             boardStore.moveCamera()
           }}
         /> : null}
-        {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
-        {boardStore.aClassHasPermission ? 
-        <Tool
-          activeItem={currentActiveToolItem}
-          drawerComponent={<DrawerPopover />}
-          strokeComponent={<StrokePopover />}
-          colorComponent={<ColorPopover />}
-          uploadComponent={<UploadFilePopover />}
-          fontComponent={<FontPopover />}
-          headerTitle={props.toolbarName}
-          style={{
-            top: props.toolY,
-            left: props.toolX,
-            zIndex: 10,
-            position: 'absolute'
-          }}
-          items={
-            getBoardItemsBy(appStore.roomInfo.userRole)
-          }
-          onClick={onClickTool}
-        /> : null}
-          {props.children ? props.children : null}
-      </Board>
     </div>
   )
 })

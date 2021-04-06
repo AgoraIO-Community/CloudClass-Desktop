@@ -20,6 +20,7 @@ export const RightContainer = observer(() => {
       setRightContainerHeight(t)
       acadsocStore.windowWidth = window.innerWidth
       acadsocStore.windowHeight = window.innerHeight
+      acadsocStore.rightContainerHeight = t
     }
     window.addEventListener('resize', onResize)
     onResize()
@@ -77,7 +78,7 @@ export const RightContainer = observer(() => {
     let count = acadsocStore.unwind.length
     let chatBottomMargin
     if (count === 0) {
-      chatBottomMargin = 0
+      chatBottomMargin = 10
     } else if (count === 1) {
       chatBottomMargin = 100
     } else {

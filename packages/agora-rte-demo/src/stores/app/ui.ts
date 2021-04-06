@@ -86,6 +86,12 @@ export class UIStore {
   toastQueue: string[] = []
 
   @observable
+  acadsocToastQueue: string[] = []
+
+  @observable
+  brushToastQueue: {ts:number, enabled:boolean}[] = []
+
+  @observable
   autoplayToast: boolean = false
 
   @observable
@@ -125,6 +131,7 @@ export class UIStore {
     this.dialog = undefined
     this.settingDialog = false
     this.toastQueue  = []
+    this.acadsocToastQueue = []
     this.autoplayToast = false
     this.lastSeqId = 0
     this.curSeqId = 0
@@ -155,6 +162,29 @@ export class UIStore {
     if (idx !== -1) {
       this.toastQueue.splice(idx, 1)
     }
+  }
+
+  @action
+  addAcadsocToast(message: string) {
+    this.acadsocToastQueue.push(message)
+  }
+
+  @action
+  removeAcadsocToast(message: string) {
+    const idx = this.acadsocToastQueue.findIndex((it: any) => (it === message))
+    if (idx !== -1) {
+      this.acadsocToastQueue.splice(idx, 1)
+    }
+  }
+
+  @action
+  addBrushToast(ts: number, enabled: boolean) {
+    this.brushToastQueue.push({ts, enabled})
+  }
+
+  @action
+  removeBrushToast(ts: number) {
+    this.brushToastQueue = this.brushToastQueue.filter(item => ts === item.ts)
   }
 
   @action

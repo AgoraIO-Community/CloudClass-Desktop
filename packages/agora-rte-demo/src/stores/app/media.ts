@@ -1,12 +1,12 @@
-import uuidv4 from 'uuid/v4';
-import { AppStore } from '@/stores/app';
-import { debounce, uniq } from 'lodash';
 import { t } from '@/i18n';
-import { observable, action, computed, reaction } from 'mobx';
-import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore } from '@/stores/app';
 import { BizLogger } from '@/utils/biz-logger';
 import { dialogManager } from 'agora-aclass-ui-kit';
-import { eduSDKApi } from '@/services/edu-sdk-api';
+import { EduLogger, LocalUserRenderer } from 'agora-rte-sdk';
+import { debounce, uniq } from 'lodash';
+import { action, computed, observable, reaction } from 'mobx';
+import uuidv4 from 'uuid/v4';
 
 const delay = 2000
 
@@ -210,6 +210,8 @@ export class MediaStore {
       EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       this.rendererOutputFrameRate[`${uid}`] = 0
+      this.rendererOutputFreezeCount[`${uid}`] = 0
+      this.rendererFirstFrameRendered[`${uid}`] = false
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
@@ -217,6 +219,8 @@ export class MediaStore {
       EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       delete this.rendererOutputFrameRate[`${uid}`]
+      delete this.rendererOutputFreezeCount[`${uid}`]
+      delete this.rendererFirstFrameRendered[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -243,10 +247,11 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
       const {state, msg} = evt
-      if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
-          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
-        this.localVideoState = state
-      }
+      // if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
+      //     LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
+      //   this.localVideoState = state
+      // }
+      this.localVideoState = state
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
@@ -271,6 +276,12 @@ export class MediaStore {
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
         this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
+        if(evt.stats.decoderOutputFrameRate === 0 ){
+          this.rendererOutputFreezeCount[`${evt.user.uid}`]++
+        } else if(evt.stats.decoderOutputFrameRate > 0) {
+          this.rendererOutputFreezeCount[`${evt.user.uid}`] = 0
+          this.rendererFirstFrameRendered[`${evt.user.uid}`] = true
+        }
         BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
       }
     })
@@ -303,8 +314,14 @@ export class MediaStore {
 
   @observable
   rendererOutputFrameRate: Record<number, number> = {
-    0: 1
+    0: 0
   }
+
+  @observable
+  rendererOutputFreezeCount: Record<number, number> = {}
+  
+  @observable
+  rendererFirstFrameRendered: Record<number, boolean> = {}
 
   @observable
   networkQuality: string = 'unknown'
@@ -323,8 +340,10 @@ export class MediaStore {
     this.totalVolume = 0
     this.speakers = {}
     this.rendererOutputFrameRate = {
-      0: 1
+      0: 0
     }
+    this.rendererOutputFreezeCount = {}
+    this.rendererFirstFrameRendered = {}
   }
 
   @observable

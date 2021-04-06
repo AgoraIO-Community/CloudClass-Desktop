@@ -152,13 +152,17 @@ export interface CameraPreviewProps {
   renderer?: any
   previewPlaceText: string
   id: string
-  cameraId: any
+  cameraId: any,
+  hideVideo: boolean
 }
 
 export const CameraPreview: React.FC<CameraPreviewProps> = (props) => {
+  let parentClasses = props.hideVideo
+     ? [styles.rendererPlaceholderNoVideo, styles.rendererPlaceholder]
+     : [styles.rendererPlaceholder]
   return (
     <RendererPlayer
-      className={styles.rendererPlaceholder}
+      className={parentClasses.join(" ")}
       key={props.renderer && props.renderer.videoTrack ? props.renderer.videoTrack.getTrackId() : props.cameraId}
       track={props.renderer}
       id={props.id}
@@ -188,7 +192,8 @@ export interface PretestMediaDetectBaseProps {
 
 export interface PretestVideoDetectProps extends PretestMediaDetectBaseProps {
   renderer?: any,
-  cameraId: any,
+  cameraId: any
+  hideVideo: boolean
   // disableBtnGroup: boolean
 }
 
@@ -219,12 +224,14 @@ export const VideoDetect: React.FC<PretestVideoDetectProps> = (props) => {
         onChange={props.onChange}
         list={props.list}
       /> */}
+      <div className={styles.pretestWarning}>{t('device.camera_hint')}</div>
       <div className={styles.detectPosition}>
         <CameraPreview
           cameraId={props.cameraId}
           id={'camera'}
           previewPlaceText={t('aclass.device.keep')}
           renderer={props.renderer}
+          hideVideo={props.hideVideo}
         />
       </div>
       <BottomButtonGroup
@@ -308,6 +315,7 @@ export const AudioDetect: React.FC<PretestAudioDetectProps> = (props) => {
           position: 'relative',
         }}
       />
+      <div className={styles.pretestWarning}>{t('device.mic_hint')}</div>
       <div className={styles.positionVolume}>
         <MicWave
           currentVolume={volume}

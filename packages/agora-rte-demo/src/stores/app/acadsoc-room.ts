@@ -224,6 +224,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   windowHeight: number = 0
 
   @observable
+  rightContainerHeight: number = 0
+
+  @observable
   trophyFlyout: TrophyType = {
     minimizeTrigger: false,
     startPosition: {
@@ -255,7 +258,7 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @computed
   get roomReward() {
-    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 0}})
+    return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 6}})
   }
 
   @computed
@@ -279,6 +282,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         timeText = `${t('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         break;
     }
+    console.log(timeText)
     return timeText
   }
 
@@ -335,36 +339,51 @@ export class AcadsocRoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
-  @observable
-  minimizeView: MinimizeType[] = [
-    {
-      id: 'teacher'+Math.ceil(Math.random()*10),
-      type: 'teacher',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'student'+Math.ceil(Math.random()*10),
-      type: 'student',
-      content: '',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 194,
-    },
-    {
-      id: 'chat'+Math.ceil(Math.random()*10),
-      type: 'chat',
-      content: 'Chat',
-      isHidden: false,
-      animation: '',
-      zIndex: 0,
-      height: 212,
-    },
-  ]
+  @computed
+  get videoViewHeight(): number {
+    if(this.rightContainerHeight < 600 ) {
+      return 144
+    } else if(this.rightContainerHeight < 700) {
+      return 164
+    }
+    return 184
+  }
+  teacherVideoId: string = 'teacher'+Math.ceil(Math.random()*10)
+  studentVideoId: string = 'student'+Math.ceil(Math.random()*10)
+  chatId: string = 'chat'+Math.ceil(Math.random()*10)
+
+  @computed
+  get minimizeView() : MinimizeType[]{ 
+    return [
+      {
+        id: this.teacherVideoId,
+        type: 'teacher',
+        content: '',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: this.videoViewHeight,
+      },
+      {
+        id: this.studentVideoId,
+        type: 'student',
+        content: '',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: this.videoViewHeight,
+      },
+      {
+        id: this.chatId,
+        type: 'chat',
+        content: 'Chat',
+        isHidden: false,
+        animation: '',
+        zIndex: 0,
+        height: 212,
+      },
+    ]
+  }
 
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
@@ -572,26 +591,32 @@ export class AcadsocRoomStore extends SimpleInterval {
 
       switch(this.sceneStore.classState){
         case EduClassroomStateEnum.beforeStart:
+          let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
-            let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
+              this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}))
             }
           })
           break;
         case EduClassroomStateEnum.start:
-          [5, 1].forEach(min => {
-            let dDurationToEnd = dayjs.duration(durationToEnd)
-            if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.addToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+          // let dDurationToEnd = dayjs.duration(durationToEnd);
+          // [5, 1].forEach(min => {
+          //   if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
+          //     this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
+          //   }
+          // })
+          // if(dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
+          //   this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
+          // }
+          // break;
+        case EduClassroomStateEnum.end:
+          let dDurationToClose = dayjs.duration(durationToClose);
+          [5, 3, 1].forEach(min => {
+            if(dDurationToClose.minutes() === min && dDurationToClose.seconds() === 0) {
+              BizLogger.info(`notification class-end ${dDurationToClose.minutes()} min`)
+              this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
             }
           })
-          break;
-        case EduClassroomStateEnum.end:
-          let dDurationToClose = dayjs.duration(durationToClose)
-          if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.addToast(t('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}))
-          }
           if(durationToClose < 0) {
             // close
             this.sceneStore.classState = EduClassroomStateEnum.close
@@ -909,8 +934,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       // 教室更新
       roomManager.on('classroom-property-updated', async (classroom: any, cause: any) => {
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          this.roomProperties = get(classroom, 'roomProperties')
+          const roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
+
+          EduLogger.info(" roomProperties ", JSON.stringify(roomProperties), " cause", cause)
+          this.roomProperties = roomProperties
         
           const record = get(classroom, 'roomProperties.record')
           if (record) {
@@ -1111,9 +1139,28 @@ export class AcadsocRoomStore extends SimpleInterval {
       // this.appStore.uiStore.stopLoading()
       this.joined = true
       this.roomJoined = true
+      // TODO: report device
+      eduSDKApi.reportCameraState({
+        roomUuid: roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        state: +this.appStore.mediaStore.device
+      }).catch((err) => {
+        BizLogger.info(`[demo]  login phase action in report native device camera state failed, reason: ${err}`)
+      }).then(() => {
+        BizLogger.info(`[CAMERA] report camera device not working`)
+      })
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
+      eduSDKApi.reportCameraState({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        state: +this.appStore.mediaStore.device
+      }).catch((err) => {
+        BizLogger.info(`[demo] login phase action in report native device camera state failed, reason: ${err}`)
+      }).then(() => {
+        BizLogger.info(`[CAMERA] report camera device not working`)
+      })
       throw GenericErrorWrapper(err)
     }
   }
@@ -1138,8 +1185,6 @@ export class AcadsocRoomStore extends SimpleInterval {
         onClose: () => {
         }
       })
-    } else if(state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.addToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
     }
   }
 
@@ -1265,9 +1310,10 @@ export class AcadsocRoomStore extends SimpleInterval {
     let duration = dayjs.duration(milliseconds);
     let formatItems:string[] = []
 
-    let hours_text = duration.hours() === 0 ? '' : `HH [${t('nav.hours')}]`;
-    let mins_text = duration.minutes() === 0 ? '' : `mm [${t('nav.minutes')}]`;
-    let seconds_text = duration.seconds() === 0 ? '' : `ss [${t('nav.seconds')}]`;
+    let hours_text = duration.hours() === 0 ? '' : `{{H}} [${t('nav.hours')}]`;
+    let mins_text = duration.minutes() === 0 ? '' : 
+            duration.seconds() === 0 ? `{{m}} [${t('nav.short.minutes')}]` : `{{m}} [${t('nav.minutes')}]`;
+    let seconds_text = duration.seconds() === 0 ? '' : `{{s}} [${t('nav.seconds')}]`;
     let short_hours_text = `HH [${t('nav.short.hours')}]`;
     let short_mins_text = `mm [${t('nav.short.minutes')}]`;
     let short_seconds_text = `ss [${t('nav.short.seconds')}]`;

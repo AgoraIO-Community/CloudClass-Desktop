@@ -65,7 +65,7 @@ export const Nav = observer(() => {
   const classMessageView = {
     isComponent: false,
     componentKey: "classID",
-    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomUuid', '')}`
+    text: `ClassID：${get(acadsocRoomStore, 'roomInfo.roomName', '')}`
   }
 
   const statusBar = [
@@ -159,7 +159,10 @@ const ActionBarContainer = observer(() => {
       name: 'sos',
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
-      },
+        controller.appController.uploadLog()
+          .then(console.log)
+          .catch(console.warn)
+        },
     },
     { name: 'refresh', clickEvent: onRefresh },
     { name: 'customerService',
