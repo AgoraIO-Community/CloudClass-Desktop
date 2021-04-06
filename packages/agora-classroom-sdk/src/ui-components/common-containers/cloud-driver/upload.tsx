@@ -1,8 +1,10 @@
-import { useUploadContext } from '@/ui-components/hooks'
-import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
-import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
-import React from 'react'
+import { Button, Col, IconBox, Progress, Inline, Row, CheckBox, Table, TableHeader, formatFileSize, t, Placeholder } from 'agora-scenario-ui-kit'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import { useBoardStore } from '@/hooks'
+import { agoraCaches } from '@/utils/web-download.file'
+import dayjs from 'dayjs'
+import { useUploadContext } from '@/ui-components/hooks'
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void
@@ -14,9 +16,11 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
     changeChecked,
     handleSelectAll,
     hasSelected,
+    setCheckMap,
+    checkMap,
+    boardStore,
     items,
     isSelectAll,
-    onResourceClick,
   } = useUploadContext(handleUpdateCheckedItems)
 
   return (
@@ -27,7 +31,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
         </Col>
         <Col>{t('cloud.fileName')}</Col>
         <Col>{t('cloud.size')}</Col>
-        <Col>{t('cloud.operation')}</Col>
+        <Col>{t('cloud.updatedAt')}</Col>
       </TableHeader>
       <Table className="table-container">
         {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>
@@ -37,9 +41,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
                 changeChecked(id, evt.currentTarget.checked)
               }} checked={checked}></CheckBox>
             </Col>
-            <Col style={{cursor: 'pointer'}} onClick={() => {
-              onResourceClick(id)
-            }}>
+            <Col>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>

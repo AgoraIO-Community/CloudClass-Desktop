@@ -5,11 +5,10 @@ import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
 import { DatePicker } from '~components/date-picker'
 import './index.css'
-import { HomeModule, OnChangeEvents } from '~utilities/types'
 
 const {Option}: any = Select
 
-export interface HomeAttributes {
+export interface HomeProps {
   roomId: string,
   userId: string,
   userName: string,
@@ -18,10 +17,11 @@ export interface HomeAttributes {
   scenario: string,
   duration: number,
   version: string,
-  language: string,
-}
-
-export interface HomeProps extends HomeModule<HomeAttributes> {
+  onChangeRole: (value: any) => void,
+  onChangeScenario: (value: any) => void,
+  onChangeText: (type: string, value: string) => void,
+  onChangeStartDate: (date: Date) => void,
+  onChangeDuration: (value: number) => void,
   onClick: () => void | Promise<void>
 }
 
@@ -34,17 +34,13 @@ export const Home: React.FC<HomeProps> = ({
   scenario,
   duration,
   version,
-  language,
   onChangeRole,
   onChangeScenario,
-  onChangeLanguage,
+  onChangeText,
+  onChangeStartDate,
   onChangeDuration,
-  onChangeRoomId,
-  onChangeUserId,
-  onChangeUserName,
-  onChangeRoomName,
   onClick
-}) => {
+}: HomeProps) => {
 
   return (
     <Layout className="home-page">
@@ -58,7 +54,7 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder="请输入roomId" />
+              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeText('roomId', evt.currentTarget.value)} placeholder="请输入roomId" />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -68,7 +64,7 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder="请输入userId" />
+              <input id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeText('userId', evt.currentTarget.value)} placeholder="请输入userId" />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -78,7 +74,7 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}  placeholder="请输入房间名" />
+              <input id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeText('roomName', evt.currentTarget.value)} placeholder="请输入房间名" />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -88,7 +84,7 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)}  placeholder="请输入昵称" />
+              <input id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeText('userName', evt.currentTarget.value)} placeholder="请输入昵称" />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -122,20 +118,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <label htmlFor="duration">
-                <span>语言</span>
-              </label>
-            </Col>
-            <Col>
-              <Select id="language" value={language} onChange={onChangeLanguage} placeholder={'请选择语言'}>
-                <Option value="zh">中文</Option>
-                <Option value="en">English</Option>
-              </Select>
-            </Col>
-          </Row>
-          <Row className="home-row-item">
-            <Col>
-              <label htmlFor="duration">
-                <span>时间(分钟)</span>
+                <span>时间</span>
               </label>
             </Col>
             <Col>

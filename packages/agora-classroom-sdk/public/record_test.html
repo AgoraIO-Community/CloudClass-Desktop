@@ -60,7 +60,8 @@
     duration,
     recordUrl,
     appId,
-    userRole
+    userRole,
+    translateLanguage
   } = useParams(window.location)
 
   // const options = paramsObject
@@ -88,6 +89,7 @@
         recordUrl,
         appId,
         userRole,
+        translateLanguage: String(translateLanguage),
         courseWareList: [],
         listener: (evt, args) => {
           console.log("evt", evt, args);

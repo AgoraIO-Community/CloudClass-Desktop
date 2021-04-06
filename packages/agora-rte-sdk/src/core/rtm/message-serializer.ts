@@ -1,8 +1,7 @@
 import { get } from "lodash"
-import { EduCustomMessage, EduStreamData, EduTextMessage, EduUserData } from "../../interfaces"
+import { EduStreamData, EduCustomMessage, EduTextMessage, EduUserData } from "../../interfaces"
 import { EduLogger } from "../logger"
 import { GenericErrorWrapper } from "../utils/generic-error"
-import { RawUserData, UsersStreamData } from "./constants"
 
 export class MessageSerializer {
 
@@ -96,12 +95,11 @@ export class MessageSerializer {
     return true
   }
 
-  static getUsersStreams(_data: unknown) {
-    const data = _data as UsersStreamData
+  static getUsersStreams(data: any) {
     EduLogger.info("[serializer] getUserStreams: ", data)
     let eduStreams: EduStreamData[] = [];
-    const rawOnlineUsers = data?.onlineUsers ?? []
-      .reduce((acc: unknown[], it: RawUserData) => {
+    const rawOnlineUsers = get(data, 'onlineUsers', [])
+      .reduce((acc: any, it: any) => {
         acc.push({
           userUuid: it.userUuid,
           userName: it.userName,
@@ -136,9 +134,8 @@ export class MessageSerializer {
         return acc
       }, [])
 
-      const rawOfflineUsers = data?.offlineUsers ?? []
-      // const rawOfflineUsers = get(data, 'offlineUsers', [])
-      .reduce((acc: unknown[], it: RawUserData) => {
+      const rawOfflineUsers = get(data, 'offlineUsers', [])
+      .reduce((acc: any, it: any) => {
         acc.push({
           userUuid: it.userUuid,
           userName: it.userName,

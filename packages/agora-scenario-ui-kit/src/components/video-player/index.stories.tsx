@@ -1,9 +1,8 @@
+import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
-import { CameraPlaceHolder } from '~components';
-import { Button } from '~components/button';
-import { changeLanguage } from '~components/i18n';
 import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import { CameraPlaceHolder } from '~components';
+import { Button } from '~components/button'
 
 const meta: Meta = {
   title: 'Components/VideoPlayer',
@@ -32,15 +31,8 @@ const meta: Meta = {
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
-  
   return (
     <div className="m-10">
-      <Button onClick={() => {
-        changeLanguage('zh')
-      }}>中文</Button>
-      <Button onClick={() => {
-        changeLanguage('en')
-      }}>英文</Button>
       <VideoPlayer {...restProps}>{children}</VideoPlayer>
     </div>
   );
@@ -86,14 +78,9 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
   const [list, setList] = useState(list_)
     
   return (
+
     //@ts-ignore
     <>
-      <Button onClick={() => {
-        changeLanguage('zh')
-      }}>中文</Button>
-      <Button onClick={() => {
-        changeLanguage('en')
-      }}>英文</Button>
       <VideoMarqueeList 
         videoStreamList={list}
         onSendStar={(uid) => {

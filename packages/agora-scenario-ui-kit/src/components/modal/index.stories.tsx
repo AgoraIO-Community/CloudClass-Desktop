@@ -1,9 +1,8 @@
+import React from 'react'
 import { Meta } from '@storybook/react';
-import React, { useState } from 'react';
-import { Button } from '~components/button';
-import { transI18n } from '~components/i18n';
-import { Icon } from '~components/icon';
-import { Modal } from '~components/modal';
+import { Modal } from '~components/modal'
+import { Icon } from '~components/icon'
+import { Button } from '~components/button'
 
 const meta: Meta = {
     title: 'Components/Modal',
@@ -14,7 +13,7 @@ type DocsProps = {
     title: string
 }
 
-function asyncOkFunction(e: any): Promise<void> {
+function asyncOkFunction (e: any): Promise<void> {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve()
@@ -80,7 +79,7 @@ export const Docs = ({ title }: DocsProps) => (
                         <Button action="ok">ok</Button>
                     ],
                     onOk: asyncOkFunction,
-                    onCancel: () => { console.log('cancel') },
+                    onCancel: () => {console.log('cancel')},
                     children: (
                         <>
                             <Icon type="red-caution" color="#F04C36" size={50} />
@@ -97,38 +96,6 @@ export const Docs = ({ title }: DocsProps) => (
 
 Docs.args = {
     title: 'Modal Title'
-}
-
-export const KickStudents = () => {
-
-    const [value, setValue] = useState<string>('')
-
-    return (
-    <Modal
-        width={300}
-        title={"移出学生"}
-        onOk={() => {
-            console.log(value)
-        }}
-        footer={
-            [
-                <Button type="secondary" action="cancel">取消</Button>,
-                <Button action="ok">确定</Button>
-            ]
-        }
-    >
-        <div className="radio-container">
-            <label className="customize-radio">
-                <input type="radio" name="kickType" value="kicked_once" onClick={() => setValue('kicked_once')}/>
-                <span className="ml-2">{transI18n('radio.kicked_once')}</span>
-            </label>
-            <label className="customize-radio">
-                <input type="radio" name="kickType" value="kicked_ban" onClick={() => setValue('kicked_ban')}/>
-                <span className="ml-2">{transI18n('radio.ban')}</span>
-            </label>
-        </div>
-    </Modal>
-    )
 }
 
 export default meta;

@@ -1,10 +1,11 @@
 import {v4 as uuidv4} from 'uuid';
 import { AppStore } from '@/stores/app';
 import { debounce, uniq } from 'lodash';
+import { t } from "@/i18n/index";
 import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/utils';
-import { Modal, transI18n } from 'agora-scenario-ui-kit';
+import { Modal } from 'agora-scenario-ui-kit';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
@@ -27,24 +28,14 @@ export enum LocalVideoErrorEnum {
   SCREEN_CAPTURE_WINDOW_CLOSED = 12
 }
 
-// const networkQualityLevel = [
-//   'unknown',
-//   'excellent',
-//   'good',
-//   'poor',
-//   'bad',
-//   'very bad',
-//   'down',
-// ]
-
 const networkQualityLevel = [
   'unknown',
   'excellent',
   'good',
+  'poor',
   'bad',
-  'bad',
-  'bad',
-  'bad',
+  'very bad',
+  'down',
 ]
 
 const networkQualities: { [key: string]: string } = {
@@ -167,16 +158,16 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       if (appStore.isNotInvisible) {
-        this.appStore.uiStore.addToast(transI18n('toast.audio_equipment_has_changed'))
+        this.appStore.uiStore.addToast(t('toast.audio_equipment_has_changed'))
         // Modal.show({
-        //   title: transI18n('aclass.device.audio_failed'),
-        //   // text: transI18n('aclass.device.audio_failed'),
+        //   title: t('aclass.device.audio_failed'),
+        //   // text: t('aclass.device.audio_failed'),
 
         //   showConfirm: true,
         //   showCancel: true,
-        //   confirmText: transI18n('aclass.device.reload'),
+        //   confirmText: t('aclass.device.reload'),
         //   visible: true,
-        //   cancelText: transI18n('aclass.device.cancel'),
+        //   cancelText: t('aclass.device.cancel'),
         //   onConfirm: () => {
         //     window.location.reload()
         //   },
@@ -191,20 +182,20 @@ export class MediaStore {
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
       // appStore.isNotInvisible &&  dialogManager.show({
-      //   title: transI18n('aclass.device.video_failed'),
-      //   text: transI18n('aclass.device.video_failed'),
+      //   title: t('aclass.device.video_failed'),
+      //   text: t('aclass.device.video_failed'),
       //   showConfirm: true,
       //   showCancel: true,
-      //   confirmText: transI18n('aclass.device.reload'),
+      //   confirmText: t('aclass.device.reload'),
       //   visible: true,
-      //   cancelText: transI18n('aclass.device.cancel'),
+      //   cancelText: t('aclass.device.cancel'),
       //   onConfirm: () => {
       //     window.location.reload()
       //   },
       //   onCancel: () => {
       //   }
       // })
-      this.appStore.uiStore.addToast(transI18n('toast.video_equipment_has_changed'))
+      this.appStore.uiStore.addToast(t('toast.video_equipment_has_changed'))
       // await this.appStore.deviceStore.init({ video: true })
       await this.appStore.pretestStore.init({ video: true})
     }, delay))

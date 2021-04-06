@@ -1,8 +1,7 @@
 import classnames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '~components/button';
-import { t, transI18n } from '~components/i18n';
+import { t } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select';
@@ -70,17 +69,6 @@ export const Pretest: React.FC<PretestProps> = ({
 
     const timer = useRef<any>(null)
 
-    const audioElementRef = useRef<HTMLAudioElement | null>(null)
-
-    useEffect(() => {
-        return () => {
-            if (audioElementRef.current) {
-                audioElementRef.current.pause()
-            }
-        }
-    }, [audioElementRef])
-
-
     const handleTestSpeakerClick = () => {
         const audioElement = new Audio(speakerTestUrl);
         audioElement.onended = () => {
@@ -89,7 +77,6 @@ export const Pretest: React.FC<PretestProps> = ({
             timer.current && window.clearInterval(timer.current)
         }
         audioElement.play()
-        audioElementRef.current = audioElement
         if (!isNative) {
             timer.current = window.setInterval(() => {
                 setLevel(audioElement.volume * 100)
@@ -118,6 +105,7 @@ export const Pretest: React.FC<PretestProps> = ({
                                 style={{width: 12, height: 12}} 
                                 checked={isMirror}
                                 onChange={(e: any) => {
+                                    console.log('isMirror', e.target.checked)
                                     onSelectMirror(e.target.checked)
                                 }}
                             /> 
@@ -150,7 +138,7 @@ export const Pretest: React.FC<PretestProps> = ({
                     </Select>
                     {isNative ? (
                         <div className="device-volume">
-                            <span className="device-text">{transI18n('media.microphone_volume')}</span>
+                            <span className="device-text">{t('media.microphone_volume')}</span>
                             <Slider
                                 min={0}
                                 max={100}
@@ -213,13 +201,13 @@ export const Pretest: React.FC<PretestProps> = ({
                     {cameraError ? (
                         <div className="error-info">
                             <Icon type="camera-off" color="#BDBDCA"/>
-                            <span className="error-info-desc">{transI18n('media.camera_error')}</span>
+                            <span className="error-info-desc">{t('media.camera_error')}</span>
                         </div>
                     ) : ""}
                     {microphoneError ? (
                         <div className="error-info">
                             <Icon type="microphone-off-outline" color="#BDBDCA"/>
-                            <span className="error-info-desc">{transI18n('media.microphone_error')}</span>
+                            <span className="error-info-desc">{t('media.microphone_error')}</span>
                         </div>
                     ) : ""}
                 </div>

@@ -1,4 +1,5 @@
-import { Colors, t } from 'agora-scenario-ui-kit'
+import { useBoardStore } from '@/hooks'
+import { Colors, t, useI18nContext } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useColorContext } from '../hooks'
@@ -12,6 +13,8 @@ export const ColorsContainer = observer(() => {
     changeHexColor,
     changeStroke
   } = useColorContext()
+
+  const {t} = useI18nContext()
 
   return (
     <Colors

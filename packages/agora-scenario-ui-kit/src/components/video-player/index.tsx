@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon } from '~components/icon';
@@ -6,9 +6,6 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
-import { useTranslation } from 'react-i18next';
-import { SvgaPlayer } from '~components/svga-player'
-import {v4 as uuidv4} from 'uuid';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -24,10 +21,6 @@ export interface BaseVideoPlayerProps {
    * 是否现实控制条
    */
   hideControl?: boolean;
-  /**
-   * 是否展示全体下台，默认 false
-   */
-  hideOffAllPodium?: boolean;
   /**
    * 是否你展示全体下讲台，默认 false
    */
@@ -91,10 +84,6 @@ export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 全体下讲台
    */
-  onOffAllPodiumClick?: () => Promise<any>;
-  /**
-   * 下讲台
-   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
    * 点击白板操作授权按钮时的回调
@@ -104,10 +93,6 @@ export interface VideoPlayerProps extends VideoPlayerType {
    * 发送星星给学生
    */
   onSendStar: (uid: string | number) => Promise<any>;
-}
-
-interface AnimSvga {
-  id: string
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
@@ -124,7 +109,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   whiteboardGranted,
   isHost = false,
   hideControl = false,
-  hideOffAllPodium = true,
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
@@ -132,36 +116,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   placement = 'bottom',
   onCameraClick,
   onMicClick,
-  onOffAllPodiumClick = () => console.log("on clear podiums"),
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
 }) => {
-  const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const prevStar = useRef<number>(stars)
-  const animListCb = useCallback(() => {
-    setAnimList([
-      ...animList,
-      {
-        id: uuidv4(),
-      }
-    ])
-  }, [animList, setAnimList])
-
-  const onClose = useCallback((id) => {
-    setAnimList(
-      [...animList.filter((it: any) => it.id !== id)]
-    )
-  }, [animList, setAnimList])
-
-  useEffect(() => {
-    // console.log('stars change', stars, prevStar.current)
-    if (stars > prevStar.current) {
-      animListCb()
-    }
-    prevStar.current = stars;
-  }, [stars, animListCb])
-  const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
     [`${className}`]: !!className,
@@ -173,30 +131,18 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
-        <Icon
-          className={micEnabled ? '' : 'red'}
-          type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
-          onClick={() => onMicClick(uid)}
-        />
-      </Tooltip>
-      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
-        <Icon
-          className={cameraEnabled ? '' : 'red'}
-          type={cameraEnabled ? 'camera' : 'camera-off'}
-          onClick={() => onCameraClick(uid)}
-        />
-      </Tooltip>
+      <Icon
+        className={micEnabled ? '' : 'red'}
+        type={micEnabled ? 'microphone-on' : 'microphone-off'}
+        onClick={() => onMicClick(uid)}
+      />
+      <Icon
+        className={cameraEnabled ? '' : 'red'}
+        type={cameraEnabled ? 'camera' : 'camera-off'}
+        onClick={() => onCameraClick(uid)}
+      />
       {isHost ? (
         <>
-          {hideOffAllPodium ? null : (
-            <Tooltip title={t('Clear Podiums')} placement={placement}>
-              <Icon
-                type="invite-to-podium"
-                onClick={() => onOffAllPodiumClick()}
-              />
-            </Tooltip>
-          )}
           {hideOffPodium ? null : (
             <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
@@ -240,20 +186,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       <div className={cls}>
         {children ? children : null}
         {placeholder ? <>{placeholder}</> : null}
-        {animList.length ? (
-          animList.map((item) => (
-            <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
-              <SvgaPlayer 
-                type="reward" 
-                width={200} 
-                height={200}
-                audio="reward"
-                duration={2000}
-                onClose={() => onClose(item.id)}
-              />
-            </div>
-          ))
-        ) : ""}
         <div className="top-right-info">
           {stars > 0 ? (
             <>
@@ -264,7 +196,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
+            <VolumeIndicator volume={micVolume} />
             <Icon
               className={micStateCls}
               type={micEnabled ? 'microphone-on' : 'microphone-off'}
@@ -310,7 +242,7 @@ export interface VideoMarqueeListProps {
   */
   onMicClick: (uid: string | number) => Promise<any>;
   /**
-  * 下讲台
+  * 全体下讲台
   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
@@ -413,9 +345,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}
               onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(videoStream.uid)
-              }}
+              onSendStar={onSendStar}
               ></VideoPlayer>
           </div>
         )
