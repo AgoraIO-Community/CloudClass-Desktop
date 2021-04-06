@@ -65,6 +65,10 @@ export interface BaseVideoPlayerProps {
    */
   whiteboardGranted?: boolean;
   /**
+   * 是否可点击上下台
+   */
+  canHoverHideOffAllPodium?: boolean;
+  /**
    * 隐藏白板控制按钮
    */
   hideBoardGranted?: boolean;
@@ -127,6 +131,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideStars = false,
   hideBoardGranted = false,
   placement = 'bottom',
+  canHoverHideOffAllPodium = false,
   onCameraClick,
   onMicClick,
   onOffAllPodiumClick = () => console.log("on clear podiums"),
@@ -189,6 +194,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideOffAllPodium ? null : (
             <Tooltip title={t('Clear Podiums')} placement={placement}>
               <Icon
+                hover={canHoverHideOffAllPodium}
                 type="invite-to-podium"
                 onClick={() => onOffAllPodiumClick()}
               />
@@ -205,7 +211,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideBoardGranted ? null :
           <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
             <Icon
-              className={whiteboardGranted ? 'no_granted': ''}
+              className={whiteboardGranted ? '': 'no_granted'}
               type="whiteboard"
               onClick={() => onWhiteboardClick(uid)}
             /> 

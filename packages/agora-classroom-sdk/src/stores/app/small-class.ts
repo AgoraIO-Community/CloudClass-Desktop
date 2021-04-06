@@ -193,7 +193,6 @@ export class SmallClassStore {
   }
 
   async sendReward(uid: string) {
-    const reward = +get(this.studentsMap, `${uid}.reward`, 0)
     await eduSDKApi.sendRewards({
       roomUuid: this.roomInfo.roomUuid,
       rewards: [{
@@ -222,7 +221,7 @@ export class SmallClassStore {
       })
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      this.appStore.uiStore.addToast(transI18n(...BusinessExceptions.getErrorInfo(error)))
       console.log('studentHandsUp err', error)
       throw error;
     }
@@ -249,7 +248,7 @@ export class SmallClassStore {
       })
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      this.appStore.uiStore.addToast(transI18n(...BusinessExceptions.getErrorInfo(error)))
       console.log('teacherAcceptHandsUp err', error)
       throw error;
     }
@@ -328,15 +327,26 @@ export class SmallClassStore {
   }
 
   @computed
+  get studentInfoList() {
+    return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
+      const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
+      if (user) {
+        acc.push(user)
+      } else {
+        acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
+      }
+      return acc;
+    }, [])
+  }
+
+  @computed
   get rosterUserList() {
     const localUserUuid = this.roomStore.roomInfo.userUuid    
-
-    const userList = this.roomStore.sceneStore.userList
-      .filter((user: EduUser) => !['host', 'assistant'].includes(user.role) && user.userUuid !== localUserUuid)
+    const userList = this.studentInfoList
+      .filter((user: EduUser) => user.userUuid !== localUserUuid)
       .reduce((acc: any[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
         const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
-        console.log('#### rosterUser ', JSON.stringify(rosterUser) , ' streamList ', JSON.stringify(this.roomStore.sceneStore.streamList))
         acc.push(rosterUser)
         return acc
       }, [])

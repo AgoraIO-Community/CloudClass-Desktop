@@ -14,7 +14,7 @@ export const StorageContainer = observer(() => {
     <TableHeader>
       <Col>{transI18n('cloud.fileName')}</Col>
       <Col>{transI18n('cloud.size')}</Col>
-      <Col>{transI18n('cloud.operation')}</Col>
+      <Col>{transI18n('cloud.updated_at')}</Col>
     </TableHeader>
     <Table className="table-container">
       {itemList.length ? itemList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>

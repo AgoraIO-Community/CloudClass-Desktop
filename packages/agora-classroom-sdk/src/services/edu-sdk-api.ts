@@ -113,7 +113,11 @@ export class EduSDKApi extends ApiBase {
       url: `/v2/rooms/${params.roomUuid}/records/states/${params.state}`,
       method: 'PUT',
       data: {
-        url: params.url
+        mode: 'web',
+        webRecordConfig: {
+          url: params.url
+        },
+        backupCount: 1
       }
     })
     return res.data

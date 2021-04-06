@@ -63,6 +63,7 @@ export const en = {
     'input_message': 'Please Input Message',
   },
   'error': {
+    'conflict': 'Hands Up Conflict',
     'not_found': 'Page Not Found',
     'apply_co_video_limit': 'Apply co-video over maximum',
     'send_co_video_limit': 'Roll call co-video over maximum',
@@ -211,6 +212,7 @@ export const en = {
     'fileName': 'file name',
     'size': 'size',
     'progress': 'progress',
+    'updated_at': 'updated at',
     'operation': 'operation',
     'publicResources': 'Public Resources',
     'personalResources': 'Personal Resources',

@@ -221,6 +221,7 @@ const zhCN: any = {
     'picType': 'gif png jpeg jpg bmp',
   },
   'error': {
+    'conflict': '举手已经重复',
     'not_found': '页面找不到',
     'components': {
       'paramsEmpty': '参数：{reason}不能为空',

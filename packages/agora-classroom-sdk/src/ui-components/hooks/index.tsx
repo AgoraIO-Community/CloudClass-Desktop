@@ -86,6 +86,7 @@ export type VideoContainerContext = {
   onCameraClick: VideoAction,
   onMicClick: VideoAction,
   onSendStar: VideoAction,
+  canHoverHideOffAllPodium: boolean,
   sceneVideoConfig: {
     hideOffPodium: boolean,
     hideOffAllPodium: boolean,
@@ -96,10 +97,28 @@ export type VideoContainerContext = {
   onOffPodiumClick: VideoAction
 }
 
+export type VideoMarqueeListContext = {
+  teacherStream: EduMediaStream,
+  firstStudent: EduMediaStream,
+  studentStreams: EduMediaStream[],
+  onCameraClick: VideoAction,
+  onMicClick: VideoAction,
+  onSendStar: VideoAction,
+  onWhiteboardClick: VideoAction,
+  onOffPodiumClick: VideoAction
+  sceneVideoConfig: {
+    hideOffPodium: boolean,
+    hideOffAllPodium: boolean,
+    isHost: boolean,
+  },
+  videoStreamList: any[],
+}
+
 export const useVideoControlContext = (): VideoContainerContext => {
 
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
+  const smallClassStore = useSmallClassStore()
   const isHost = sceneStore.isHost
   const teacherStream = sceneStore.teacherStream
   const studentStreams = sceneStore.studentStreams
@@ -194,11 +213,14 @@ export const useVideoControlContext = (): VideoContainerContext => {
     }
   }, [isHost, sceneStore])
 
+  const acceptedUserList = smallClassStore.acceptedList
+
   const onOffAllPodiumClick = useCallback(async () => {
-    if (isHost) {
+    if (isHost && acceptedUserList.length) {
       await sceneStore.revokeAllCoVideo()
     }
-  }, [isHost, sceneStore])
+  }, [isHost, sceneStore, acceptedUserList])
+
 
   return {
     teacherStream,
@@ -212,10 +234,11 @@ export const useVideoControlContext = (): VideoContainerContext => {
     sceneVideoConfig,
     videoStreamList,
     onOffAllPodiumClick,
+    canHoverHideOffAllPodium: !!acceptedUserList.length as any
   }
 }
 
-export const useSmallClassVideoControlContext = (): VideoContainerContext => {
+export const useSmallClassVideoControlContext = (): VideoMarqueeListContext => {
 
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
@@ -284,6 +307,7 @@ export const useSmallClassVideoControlContext = (): VideoContainerContext => {
       controlPlacement: 'bottom',
       placement: 'bottom',
       hideControl: stream.hideControl,
+      canHoverHideOffAllPodium: true,
       children: (
         <>
         <CameraPlaceHolder state={stream.holderState} />
@@ -1192,6 +1216,18 @@ export const useCloseConfirmContext = (id: string, resourceUuid: string) => {
   }
 }
 
+export const useRoomEndNoticeContext = (id: string) => {
+  const appStore = useAppStore()
+
+  const handleConfirm = async () => {
+    await appStore.destroyRoom()
+  }
+  
+  return {
+    handleConfirm
+  }
+}
+
 export const useRoomEndContext = (id: string) => {
   const roomStore = useRoomStore()
   // const {t} = useTranslation()
@@ -1350,12 +1386,16 @@ export const useWhiteboardState = () => {
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomStore.roomInfo.userRole)) {
       return [true, true]
     }
-    if (roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+    if (roomStore.roomInfo.roomType === 0 && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
       return [boardStore.hasPermission, boardStore.hasPermission]
     }
 
+    if (roomStore.roomInfo.roomType === 4 && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, boardStore.hasPermission]
+    }
+
     return [false, false]
-  }, [roomStore.roomInfo.roomType, boardStore.hasPermission, roomStore.roomInfo.userRole])
+  }, [roomStore.roomInfo.roomType, boardStore.hasPermission, roomStore.roomInfo.userRole, roomStore.roomInfo.roomType])
 
   return {
     zoomValue: boardStore.zoomValue,
