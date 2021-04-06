@@ -8,11 +8,12 @@ import { RTMWrapper } from './../core/rtm/index';
 import { MediaService } from '../core/media-service';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
 import { AgoraEduApi } from '../core/services/edu-api';
-import { EduConfiguration } from '../interfaces';
+import { EduConfiguration,IUploadProps } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { GenericErrorWrapper } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
 import { reportService } from '../core/services/report-service';
+
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -28,6 +29,9 @@ const internalEduManagerConfig: {
   appId: "",
   sdkDomain: ""
 }
+
+
+
 export class EduManager extends EventEmitter {
   // recommend use enable true
   private static enable: boolean = true
@@ -134,8 +138,8 @@ export class EduManager extends EventEmitter {
     this.isElectron = true
   }
   
-  static async uploadLog(roomUuid: string): Promise<any> {
-    return await EduLogger.enableUpload(roomUuid, this.isElectron)
+  static async uploadLog(props:IUploadProps): Promise<any> {
+    return await EduLogger.enableUpload(props, this.isElectron)
   }
 
   private async prepareLogin(userUuid: string) {

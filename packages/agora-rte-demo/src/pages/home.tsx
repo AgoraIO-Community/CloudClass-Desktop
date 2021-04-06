@@ -129,11 +129,11 @@ export const HomePage = observer(() => {
   const handleUpload = async (evt: any) => {
     try {
       setLock(true)
-      const id = await EduManager.uploadLog('0')
-      uiStore.showDialog({
-        type: 'feedLog',
-        message: `id: ${id}`
-      })
+      // const id = await EduManager.uploadLog('0')
+      // uiStore.showDialog({
+      //   type: 'feedLog',
+      //   message: `id: ${id}`
+      // })
       setLock(false)
     } catch (err) {
       uiStore.addToast(t('upload_log_failed'))

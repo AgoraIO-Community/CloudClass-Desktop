@@ -106,7 +106,8 @@ const onCustomerService = async () => {
     // if (current.lock) return
     try {
       // current.lock = true
-      const id = await EduManager.uploadLog('test')
+      // const id = await EduManager.uploadLog('test')
+      const id = 0
       dialogManager.confirm({
         title: t(`aclass.upload_log_success`),
         text: `id: ${id}`,
