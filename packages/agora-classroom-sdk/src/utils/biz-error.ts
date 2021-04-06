@@ -6,7 +6,6 @@ const ExceptionMapping = {
     "20403001": 'error.room_is_full',
     "30429460": 'error.apply_co_video_limit',
     "30429461": 'error.send_co_video_limit',
-    // "30409460": 'error.conflict',
 }
 
 export class BusinessExceptions {
