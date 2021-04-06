@@ -974,11 +974,9 @@ export class RoomStore extends SimpleInterval {
           return null
         }
       }
-      // this.eduManager.on('user-message', async (evt: any) => {
-      // })
       // 教室更新
       roomManager.on('classroom-property-updated', async (evt: any) => {
-        console.log('evt', evt)
+        console.log('## classroom-property-updated', evt)
         const {classroom, cause, operator} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
 
@@ -1003,7 +1001,6 @@ export class RoomStore extends SimpleInterval {
                 //   sender: false
                 // })
                 this.sceneStore.recordState = false
-                // this.sceneStore.recordId = ''
               }
             }
           }
@@ -1018,7 +1015,7 @@ export class RoomStore extends SimpleInterval {
               }, ms)
             } else {
               this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0)
-              BizLogger.info("end timeer", this.sceneStore.startTime)
+              BizLogger.info("end time", this.sceneStore.startTime)
               this.delInterval('timer')
             }
           }
@@ -1030,6 +1027,7 @@ export class RoomStore extends SimpleInterval {
       })
       roomManager.on('room-chat-message', (evt: any) => {
         const {textMessage} = evt;
+        console.log('### room-chat-message ', evt)
         const message = textMessage as EduTextMessage
 
         const fromUser = message.fromUser
@@ -1043,10 +1041,8 @@ export class RoomStore extends SimpleInterval {
           account: fromUser.userName,
           isOwn: false
         })
-        console.log(' room-chat-message ', JSON.stringify(evt))
         BizLogger.info('room-chat-message', evt)
       })
-      // const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
       const { sceneType, userRole } = this.getSessionConfig()
       await roomManager.join({
         userRole: userRole,

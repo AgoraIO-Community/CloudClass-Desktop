@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
-import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem, UserList } from '~components/toolbar';
+import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -124,17 +124,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
       value: 'register',
       label: '用户列表',
       icon: 'register',
-      component: () => {
-        return (
-          <UserList
-            value='register'
-            label='用户列表'
-            icon='register'
-            onClick={() => {
-            }} 
-          />
-        )
-      }
     }
   ];
   return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>;
