@@ -69,6 +69,8 @@ export interface BaseVideoPlayerProps {
    */
   hideBoardGranted?: boolean;
 
+  isOnPodium?: boolean;
+
   placement?: any;
 }
 
@@ -126,6 +128,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
+  isOnPodium,
   placement = 'bottom',
   onCameraClick,
   onMicClick,
@@ -198,6 +201,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
                 type="invite-to-podium"
+                className={isOnPodium ? 'no_podium' : 'podium'}
                 onClick={() => onOffPodiumClick(uid)}
               />
             </Tooltip>
@@ -205,7 +209,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideBoardGranted ? null :
           <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
             <Icon
-              className={whiteboardGranted ? 'no_granted': ''}
+              className={whiteboardGranted ? 'no_granted': 'granted'}
               type="whiteboard"
               onClick={() => onWhiteboardClick(uid)}
             /> 
@@ -213,9 +217,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon type="star-outline" onClick={() => {
-                onSendStar(uid)
-              }} />
+              <Icon 
+                type="star-outline" 
+                onClick={() => {
+                  onSendStar(uid)
+                }} 
+              />
             </Tooltip>
           )}
         </>
