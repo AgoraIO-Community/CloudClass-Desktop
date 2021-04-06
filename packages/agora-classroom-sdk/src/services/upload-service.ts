@@ -1,57 +1,55 @@
-import { CourseWareItem } from '@/edu-sdk';
-import { CourseWareUploadResult, CreateMaterialParams } from '@/types';
-import { fileSizeConversionUnit } from '@/utils/utils';
-import { EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
-import { FormatIconType } from 'agora-scenario-ui-kit';
-import OSS, { MultipartUploadResult } from 'ali-oss';
-import { get } from 'lodash';
+import { CourseWareItem } from "@/edu-sdk";
+import { CourseWareUploadResult, CreateMaterialParams } from "@/types";
+import { fileSizeConversionUnit } from "@/utils/utils";
+import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
+import { FormatIconType } from "agora-scenario-ui-kit";
+import OSS, { MultipartUploadResult } from "ali-oss";
+import { get } from "lodash";
 import { LegacyPPTConverter } from 'white-web-sdk';
-import { ApiBase, ApiBaseInitializerParams } from './base';
+import { ApiBase, ApiBaseInitializerParams } from "./base";
 
 export const mapFileType = (type: string): FormatIconType => {
   if (type.match(/ppt|pptx|pptx/i)) {
-    return 'ppt';
+    return 'ppt'
   }
   if (type.match(/doc|docx/i)) {
-    return 'word';
+    return 'word'
   }
   if (type.match(/xls|xlsx/i)) {
-    return 'excel';
+    return 'excel'
   }
   if (type.match(/mp4/i)) {
-    return 'video';
+    return 'video'
   }
   if (type.match(/mp3/i)) {
-    return 'audio';
+    return 'audio'
   }
 
   if (type.match(/gif|png|jpeg|jpg|bmp/i)) {
-    return 'image';
+    return 'image'
   }
   if (type.match(/pdf/i)) {
-    return 'pdf';
+    return 'pdf'
   }
 
-  return 'excel';
-};
+  return 'excel'
+}
 
 type MaterialDataResource = {
-  id: string;
-  name: string;
-  ext: string;
-  type: string;
-  size: string | number;
-  taskUuid: string;
-  taskProgress: any;
-  url: string;
-  convertedPercentage?: number;
-  updateTime: number;
-  scenes?: any[];
-};
+  id: string,
+  name: string,
+  ext: string,
+  type: string,
+  size: string | number,
+  taskUuid: string,
+  taskProgress: any,
+  url: string,
+  convertedPercentage?: number,
+  updateTime: number,
+  scenes?: any[]
+}
 
-export const transDataToResource = (
-  data: CourseWareItem,
-): MaterialDataResource => {
+export const transDataToResource = (data: CourseWareItem): MaterialDataResource => {
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
@@ -64,7 +62,7 @@ export const transDataToResource = (
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
-    };
+    }
   }
   return {
     id: data.resourceUuid,
@@ -78,118 +76,102 @@ export const transDataToResource = (
     convertedPercentage: data.taskProgress!.convertedPercentage,
     updateTime: data.updateTime,
     scenes: data.scenes,
-  };
-};
+  }
+}
 
 export interface UploadServiceResult {
-  success: boolean;
-  data: any;
-  message: string;
+  success: boolean,
+  data: any,
+  message: string
 }
 
 export type UploadConversionType = {
-  type: string;
-  preview: boolean;
-  scale: number;
-  outputFormat: string;
-};
+  type: string,
+  preview: boolean,
+  scale: number,
+  outputFormat: string
+}
 
 export type FetchStsTokenResult = {
-  bucketName: string;
-  callbackBody: string;
-  callbackContentType: string;
-  ossKey: string;
-  accessKeyId: string;
-  accessKeySecret: string;
-  securityToken: string;
-  ossEndpoint: string;
-};
+  bucketName: string,
+  callbackBody: string,
+  callbackContentType: string,
+  ossKey: string,
+  accessKeyId: string,
+  accessKeySecret: string,
+  securityToken: string,
+  ossEndpoint: string,
+}
 
 export type HandleUploadType = {
-  file: File;
-  fileSize: number;
-  resourceUuid: string;
-  resourceName: string;
-  userUuid: string;
-  roomUuid: string;
-  ext: string;
-  conversion: any;
-  converting: boolean;
-  kind: any;
-  pptConverter: LegacyPPTConverter;
-  pptResult?: any;
-  onProgress: (evt: {
-    phase: string;
-    progress: number;
-    isTransFile?: boolean;
-    isLastProgress?: boolean;
-  }) => any;
-};
+  file: File,
+  fileSize: number,
+  resourceUuid: string,
+  resourceName: string,
+  userUuid: string,
+  roomUuid: string,
+  ext: string,
+  conversion: any,
+  converting: boolean,
+  kind: any,
+  pptConverter: LegacyPPTConverter,
+  pptResult?: any,
+  onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
+}
+
 
 export class UploadService extends ApiBase {
   ossClient: OSS | null;
-  abortCheckpoint: {
-    name?: string;
-    uploadId?: string;
-  };
+  abortCheckpoint:{
+    name?:string,
+    uploadId?:string
+  }
   constructor(params: ApiBaseInitializerParams) {
-    super(params);
-    this.ossClient = null;
+    super(params)
+    this.ossClient = null
     this.abortCheckpoint = {
       name: '',
-      uploadId: '',
-    };
-    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+      uploadId: ''
+    }
+    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
   }
 
   // 查询服务端是否已经存在课件
-  async queryMaterial(params: {
-    name: string;
-    roomUuid: string;
-  }): Promise<UploadServiceResult> {
+  async queryMaterial(params: {name: string, roomUuid: string}): Promise<UploadServiceResult> {
+
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'GET',
-    });
+    })
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message,
-      });
+        message: res.message
+      })
     }
 
-    const files = res.data;
+    const files = res.data
     const file = files.find((fileItem: any) => {
-      return fileItem.resourceName === params.name;
-    });
+      return fileItem.resourceName === params.name
+    })
 
     if (file) {
       return {
         success: true,
         data: file,
-        message: 'found',
-      };
+        message: 'found'
+      }
     }
 
     return {
       success: false,
       data: null,
-      message: 'not_found',
-    };
+      message: 'not_found'
+    }
   }
 
-  async fetchStsToken(params: {
-    resourceUuid: string;
-    roomUuid: string;
-    resourceName: string;
-    ext: string;
-    conversion: UploadConversionType;
-    fileSize: number;
-  }) {
+  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}/sts`,
       method: 'PUT',
@@ -197,25 +179,23 @@ export class UploadService extends ApiBase {
         resourceName: params.resourceName,
         ext: params.ext,
         conversion: params.conversion,
-        size: params.fileSize,
-      },
-    });
+        size: params.fileSize
+      }
+    })
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message,
-      });
+        message: res.message
+      })
     }
     return {
       success: true,
-      data: res.data as FetchStsTokenResult,
-    };
+      data: res.data as FetchStsTokenResult
+    }
   }
 
   // 服务端创建课件，并申请stsToken
-  async createMaterial(
-    params: CreateMaterialParams,
-  ): Promise<UploadServiceResult> {
+  async createMaterial(params: CreateMaterialParams): Promise<UploadServiceResult> {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
@@ -227,87 +207,85 @@ export class UploadService extends ApiBase {
         taskToken: params.taskToken,
         taskProgress: params.taskProgress,
         size: params.size,
-      },
-    });
+      }
+    })
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message,
-      });
+        message: res.message
+      })
     }
 
-    const data = res.data;
+    const data = res.data
 
     if (data) {
       return {
         success: true,
         data: data,
-        message: 'found',
-      };
+        message: 'found'
+      }
     }
 
     return {
       success: false,
       data: null,
-      message: 'not_found',
-    };
+      message: 'not_found'
+    }
   }
 
   async fetchPublicResources(roomUuid: string) {
     const res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/resources`,
       method: 'GET',
-    });
+    })
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.msg || res.message,
-      });
+        message: res.msg || res.message
+      })
     }
 
     // const resources = res.data.map(transDataToResource)
 
-    return res.data;
+    return res.data
   }
 
   async fetchPersonResources(roomUuid: string, userUuid: string) {
     const res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/resources`,
       method: 'GET',
-    });
+    })
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.msg || res.message,
-      });
+        message: res.msg || res.message
+      })
     }
     // const resources = res.data.map(transDataToResource)
 
-    return res.data;
+    return res.data
   }
 
-  async getFileInQueryMateria(payload: {
-    roomUuid: string;
-    resourceName: string;
+  async getFileInQueryMaterial(payload: {
+    roomUuid: string,
+    resourceName: string
   }) {
-    return await this.queryMaterial({
-      name: payload.resourceName,
-      roomUuid: payload.roomUuid,
-    });
+    return await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
   }
+
   async handleUpload(payload: HandleUploadType) {
-    const queryResult = await this.getFileInQueryMateria(payload);
+    const queryResult = await this.getFileInQueryMaterial(payload)
     if (queryResult.success) {
-      EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`);
+      EduLogger.info(`查询到课件: ${JSON.stringify(queryResult.data)}`)
       payload.onProgress({
         phase: 'finish',
         progress: 1,
-        isLastProgress: true,
-      });
-      return queryResult.data;
+        isLastProgress:true
+      })
+      return queryResult.data
     }
 
     const fetchResult = await this.fetchStsToken({
@@ -318,10 +296,10 @@ export class UploadService extends ApiBase {
       ext: payload.ext,
       conversion: payload.conversion,
       fileSize: payload.fileSize,
-    });
+    })
 
-    const ossConfig = fetchResult.data;
-    const key = ossConfig.ossKey;
+    const ossConfig = fetchResult.data
+    const key = ossConfig.ossKey
     this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
       accessKeySecret: `${ossConfig.accessKeySecret}`,
@@ -329,11 +307,11 @@ export class UploadService extends ApiBase {
       endpoint: `${ossConfig.ossEndpoint}`,
       secure: true,
       stsToken: ossConfig.securityToken,
-    });
+    })
 
-    const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody);
-
-    const resourceUuid = fetchCallbackBody.resourceUuid;
+    const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
+    
+    const resourceUuid = fetchCallbackBody.resourceUuid
 
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
@@ -343,18 +321,17 @@ export class UploadService extends ApiBase {
         (...args: any) => {
           payload.onProgress({
             phase: 'finish',
-            progress: args[1],
-          });
+            progress: args[1]
+          })
         },
         {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           // userUuid: payload.userUuid,
-          appId: this.appId,
-        },
-      );
-      const pptConverter = payload.pptConverter;
+          appId: this.appId
+        })
+      const pptConverter = payload.pptConverter
       const taskResult: any = await pptConverter.convert({
         url: uploadResult.ossURL,
         kind: payload.kind,
@@ -363,15 +340,15 @@ export class UploadService extends ApiBase {
             phase: 'finish',
             progress: args[0],
             isTransFile: true,
-          });
+          })
         },
-      });
+      })
       payload.onProgress({
         phase: 'finish',
         progress: 1,
         isTransFile: true,
-        isLastProgress: true,
-      });
+        isLastProgress: true
+      })
 
       let materialResult = await this.createMaterial({
         taskUuid: taskResult.uuid,
@@ -387,9 +364,9 @@ export class UploadService extends ApiBase {
           totalPageSize: taskResult.scenes.length,
           convertedPageSize: taskResult.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: taskResult.scenes,
-        },
-      });
+          convertedFileList: taskResult.scenes
+        }
+      })
       return {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
@@ -401,31 +378,30 @@ export class UploadService extends ApiBase {
           totalPageSize: taskResult.scenes.length,
           convertedPageSize: taskResult.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: taskResult.scenes,
+          convertedFileList: taskResult.scenes
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: taskResult.uuid,
-      };
+      }
     } else {
       const uploadResult = await this.addFileToOss(
-        this.ossClient,
+       this.ossClient,
         key,
         payload.file,
         (...args: any[]) => {
           payload.onProgress({
             phase: 'finish',
-            progress: args[1],
-            isLastProgress: true,
-          });
+            progress:args[1],
+            isLastProgress:true
+          })
         },
         {
           callbackBody: ossConfig.callbackBody,
           contentType: ossConfig.callbackContentType,
           roomUuid: payload.roomUuid,
           userUuid: payload.userUuid,
-          appId: this.appId,
-        },
-      );
+          appId: this.appId
+        })
 
       const result: CourseWareUploadResult = {
         resourceUuid: resourceUuid,
@@ -434,68 +410,58 @@ export class UploadService extends ApiBase {
         size: fetchCallbackBody.size,
         url: uploadResult.ossURL,
         updateTime: uploadResult.updateTime,
-      };
-      return result;
+      }
+      return result
     }
   }
-  cancelFileUpload() {
+   cancelFileUpload() {
     // const { name = '', uploadId = '' } = this.abortCheckpoint
     // this.ossClient?.abortMultipartUpload(name, uploadId);
-    this.ossClient && (this.ossClient as any).cancel();
-    console.log('error click cancel', (this.ossClient as any)?.cancel());
+    (this.ossClient as any).cancel()
+    console.log('error click cancel', (this.ossClient as any)?.cancel())
   }
 
-  async addFileToOss(
-    ossClient: OSS,
-    key: string,
-    file: File,
-    onProgress: CallableFunction,
-    ossParams: any,
-  ) {
-    const prefix =
-      `${REACT_APP_AGORA_APP_SDK_DOMAIN}` ===
-      `https://api-solutions-dev.bj2.agoralab.co`
-        ? `https://api-solutions-dev.bj2.agoralab.co`
-        : `https://api-solutions.agoralab.co`;
+  async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
+
+    const prefix = `${REACT_APP_AGORA_APP_SDK_DOMAIN}` === `https://api-solutions-dev.bj2.agoralab.co` ? `https://api-solutions-dev.bj2.agoralab.co` : `https://api-solutions.agoralab.co`
     // TODO: 生产环境需要更替地址
-    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`;
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 
-    try {
-      const res: MultipartUploadResult = await ossClient.multipartUpload(
-        key,
-        file,
-        {
-          progress: (p, cpt, res) => {
-            this.abortCheckpoint = cpt;
-            if (onProgress) {
-              onProgress(PPTProgressPhase.Uploading, p);
-            }
-          },
-          callback: {
-            // TODO: upload-service.ts
-            // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
-            url: callbackUrl,
-            body: ossParams.callbackBody,
-            contentType: ossParams.contentType,
-          },
+    try{
+    const res: MultipartUploadResult = await ossClient.multipartUpload(
+      key,
+      file,
+      {
+        progress: (p, cpt, res) => {
+          this.abortCheckpoint = cpt
+          if (onProgress) {
+            onProgress(PPTProgressPhase.Uploading, p);
+          }
         },
-      );
-      if (res.res.status === 200) {
-        const data = get(res.data, 'data', {});
-        return {
-          ossURL: ossClient.generateObjectUrl(key),
-          ...data,
-        };
-      } else {
-        throw new Error(`upload to ali oss error, status is ${res.res.status}`);
+        callback: {
+          // TODO: upload-service.ts
+          // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+          url: callbackUrl,
+          body: ossParams.callbackBody,
+          contentType: ossParams.contentType,
+        }
+      });
+    if (res.res.status === 200) {
+      const data = get(res.data, 'data', {})
+      return {
+        ossURL: ossClient.generateObjectUrl(key),
+        ...data
       }
-    } catch (err) {
-      console.log('error', err);
+    } else {
+      throw new Error(`upload to ali oss error, status is ${res.res.status}`);
     }
-  }
+  }catch (err) {
+      console.log('error', err)
+    }
+}
 
   async fetchImageInfo(file: File, x: number, y: number) {
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       const image = new Image();
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -513,21 +479,14 @@ export class UploadService extends ApiBase {
           resolve(imageFile);
         };
       };
-    });
+    })
   }
 
   private getImageSize(imageInnerSize: imageSize): imageSize {
-    const windowSize: imageSize = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-    const widthHeightProportion: number =
-      imageInnerSize.width / imageInnerSize.height;
+    const windowSize: imageSize = {width: window.innerWidth, height: window.innerHeight};
+    const widthHeightProportion: number = imageInnerSize.width / imageInnerSize.height;
     const maxSize: number = 960;
-    if (
-      (imageInnerSize.width > maxSize && windowSize.width > maxSize) ||
-      (imageInnerSize.height > maxSize && windowSize.height > maxSize)
-    ) {
+    if ((imageInnerSize.width > maxSize && windowSize.width > maxSize) || (imageInnerSize.height > maxSize && windowSize.height > maxSize)) {
       if (widthHeightProportion > 1) {
         return {
           width: maxSize,
@@ -540,10 +499,7 @@ export class UploadService extends ApiBase {
         };
       }
     } else {
-      if (
-        imageInnerSize.width > windowSize.width ||
-        imageInnerSize.height > windowSize.height
-      ) {
+      if (imageInnerSize.width > windowSize.width || imageInnerSize.height > windowSize.height) {
         if (widthHeightProportion > 1) {
           return {
             width: windowSize.width,
@@ -564,46 +520,43 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async removeMaterials(params: {
-    resourceUuids: string[];
-    roomUuid: string;
-    userUuid: string;
-  }) {
+  async removeMaterials(params: {resourceUuids: string[], roomUuid: string, userUuid: string}) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'DELETE',
       data: {
-        resourceUuids: params.resourceUuids,
-      },
-    });
+        resourceUuids: params.resourceUuids
+      }
+    })
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message,
-      });
+        message: res.message
+      })
     }
-    return res.data;
+    return res.data
   }
+
 }
 
 export type imageSize = {
-  width: number;
-  height: number;
+  width: number
+  height: number
 };
 
 export type PPTDataType = {
-  active: boolean;
-  pptType: PPTType;
-  id: string;
-  data: any;
-  cover?: any;
+    active: boolean
+    pptType: PPTType
+    id: string
+    data: any
+    cover?: any
 };
 
 export enum PPTType {
-  dynamic = 'dynamic',
-  static = 'static',
-  init = 'init',
+    dynamic = "dynamic",
+    static = "static",
+    init = "init",
 }
 export type NetlessImageFile = {
   width: number;
@@ -614,14 +567,11 @@ export type NetlessImageFile = {
 };
 
 export type TaskType = {
-  uuid: string;
-  imageFile: NetlessImageFile;
+  uuid: string,
+  imageFile: NetlessImageFile
 };
 
-export type PPTProgressListener = (
-  phase: PPTProgressPhase,
-  percent: number,
-) => void;
+export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
 
 export enum PPTProgressPhase {
   Uploading,

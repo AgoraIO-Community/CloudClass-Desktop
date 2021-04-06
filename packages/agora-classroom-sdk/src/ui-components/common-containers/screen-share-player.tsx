@@ -17,7 +17,11 @@ export const ScreenSharePlayerContainer = observer(() => {
             {
                   screenShareStream.renderer ?
                     <RendererPlayer
-                        key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''} track={screenShareStream.renderer} id={screenShareStream.streamUuid} className="rtc-video"
+                        fitMode={true}
+                        key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''}
+                        track={screenShareStream.renderer}
+                        id={screenShareStream.streamUuid}
+                        className="rtc-screen-share"
                     />
                     : null
             }

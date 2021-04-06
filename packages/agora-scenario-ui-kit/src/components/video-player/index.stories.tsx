@@ -1,8 +1,9 @@
-import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import React, { FC, useState } from 'react';
 import { CameraPlaceHolder } from '~components';
-import { Button } from '~components/button'
+import { Button } from '~components/button';
+import { changeLanguage } from '~components/i18n';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
 const meta: Meta = {
   title: 'Components/VideoPlayer',
@@ -31,8 +32,15 @@ const meta: Meta = {
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
+  
   return (
     <div className="m-10">
+      <Button onClick={() => {
+        changeLanguage('zh')
+      }}>中文</Button>
+      <Button onClick={() => {
+        changeLanguage('en')
+      }}>英文</Button>
       <VideoPlayer {...restProps}>{children}</VideoPlayer>
     </div>
   );
@@ -78,51 +86,29 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
   const [list, setList] = useState(list_)
     
   return (
-
     //@ts-ignore
     <>
-      <VideoMarqueeList 
-        videoStreamList={list}
-        onSendStar={(uid) => {
-          return new Promise((resolve) => {
-            // console.log('send star', uid)
-            list.forEach(item => {
-              if (item.uid === uid) {
-                item.stars += 1
-              }
-            })
-            // console.log(list)
-            setList([
-              ...list
-            ])
-            resolve('send star')
+      <Button onClick={() => {
+        changeLanguage('zh')
+      }}>中文</Button>
+      <Button onClick={() => {
+        changeLanguage('en')
+      }}>英文</Button>
+      <VideoMarqueeList videoStreamList={list} onSendStar={(uid, ) => {
+        return new Promise((resolve) => {
+          // console.log('send star', uid)
+          list.forEach(item => {
+            if (item.uid === uid) {
+              item.stars += 1
+            }
           })
-        }}
-        onCameraClick={(uid) => {
-          return new Promise((resolve) => {
-            console.log('camera click', uid)
-            resolve('')
-          })
-        }}
-        onMicClick={(uid) => {
-          return new Promise((resolve) => {
-            console.log('mic click', uid)
-            resolve('')
-          })
-        }}
-        onOffPodiumClick={(uid) => {
-          return new Promise((resolve) => {
-            console.log('podium click', uid)
-            resolve('')
-          })
-        }}
-        onWhiteboardClick={(uid) => {
-          return new Promise((resolve) => {
-            console.log('whiteboard click', uid)
-            resolve('')
-          })
-        }}
-      >
+          // console.log(list)
+          setList([
+            ...list
+          ])
+          resolve('send star')
+        })
+      }}>
       </VideoMarqueeList>
     </>
   )

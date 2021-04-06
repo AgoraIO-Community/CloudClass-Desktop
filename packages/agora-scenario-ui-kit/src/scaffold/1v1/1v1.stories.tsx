@@ -151,6 +151,7 @@ const BizHeaderContainer: React.FC<any> = () => {
   return (
     <BizHeader
       classStatusText='课前 22:22'
+      isRecording={true}
       isStarted={true}
       title="声网云课堂"
       signalQuality='unknown'

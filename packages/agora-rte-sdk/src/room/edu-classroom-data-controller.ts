@@ -1,27 +1,28 @@
-import { isPatchProperty, noBlankChars, transformPatchPropertyKeys } from './../utils/syntax';
-import { CauseType } from './../core/services/edu-api';
-import { MessageSerializer } from './../core/rtm/message-serializer';
-import {v4 as uuidv4} from 'uuid';
+import { diff } from 'deep-diff';
+import { cloneDeep, get, isEmpty, pick, set, setWith } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
+import { EduLogger } from '../core/logger';
 import {
-  EduStreamData,
-  EduUserData,
-  EduClassroomAttrs,
-  EduRoomAttrs,
-  EduVideoSourceType,
-  EduUserAttrs,
   EduAudioSourceType,
-  EduUser,
-  EduChannelMessageCmdType,
-  EduClassroomStateType,
-  EduTextMessage,
-  EduStreamAction,
-  EduCustomMessage,
-  EduStream 
+  EduChannelMessageCmdType, EduClassroomAttrs,
+  EduRoomAttrs,
+  EduStream, EduStreamData,
+  EduTextMessage, EduUserAttrs, EduUserData,
+  EduVideoSourceType
 } from '../interfaces';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
-import { EduLogger } from '../core/logger';
-import { get, set, isEmpty, pick, cloneDeep } from 'lodash';
-import { diff } from 'deep-diff';
+import { MessageSerializer } from './../core/rtm/message-serializer';
+import { CauseType } from './../core/services/edu-api';
+import { isPatchProperty, noBlankChars } from './../utils/syntax';
+import { EduClassroomManagerEventHandlers, LocalStreamType, SingleParameter } from './types';
+import { OperatorUser } from './types';
+
+const transformDotStrToObject = (pathStr: string, value: any) => pathStr
+    .split(".")
+    .reverse()
+    .reduce((acc: any, path: any, index: number) => ({
+        [path]: index === 0 ? value : acc
+    }), {})
 
 enum DataEnumType {
   users = 1,
@@ -114,6 +115,16 @@ export class EduClassroomDataController {
   //     await this.syncFullSequence()
   //   }
   // }
+
+  fire<EventName extends keyof EduClassroomManagerEventHandlers>(
+    eventName: EventName,
+    parameter: SingleParameter<EduClassroomManagerEventHandlers[EventName]>
+  ): void {
+    if (eventName === 'local-user-removed') {
+      console.log(" fire # local-user-removed ", JSON.stringify(parameter))
+    }
+    this.roomManager.emit(eventName, parameter)
+  }
 
   public syncingData: boolean = false
 
@@ -258,13 +269,15 @@ export class EduClassroomDataController {
             offlineStreams,
           } = MessageSerializer.getUsersStreams(data)
 
+          const operator = data?.operator ?? {}
+          
           EduLogger.info(`[${this._id}] before [${seqId}]#updateUsersStreams: `, data)
           EduLogger.info(`[${this._id}] before [${seqId}]#updateUsersStreams: `,             onlineUsers,
           offlineUsers,
           onlineStreams,
           offlineStreams,)
-          this.updateUserList(onlineUsers, offlineUsers, seqId)
-          this.updateStreamList(onlineStreams, offlineStreams, null, seqId)
+          this.updateUserList(onlineUsers, offlineUsers, operator, seqId)
+          this.updateStreamList(onlineStreams, offlineStreams, operator, seqId)
 
           EduLogger.info(`[${this._id}] after [${seqId}]#updateUsersStreams: `, data)
           EduLogger.info(`[${this._id}] after [${seqId}]#updateUsersStreams: userList, streamList,`, this._userList, this._streamList)
@@ -340,24 +353,26 @@ export class EduClassroomDataController {
         }
 
         case EduChannelMessageCmdType.roomPropertiesStateChanged: {
-          this.setRoomProperties(data.changeProperties, data.cause)
+          this.setRoomProperties(data.changeProperties, data.cause, data.operator)
           break;
         }
 
         case EduChannelMessageCmdType.roomPropertiesBatchUpdated: {
           // this.updateBatchRoomProperties(data.changeProperties, data.cause)
-          this.setRoomBatchProperties(data.changeProperties, data.cause)
+          this.setRoomBatchProperties(data.changeProperties, data.cause, data.operator)
           break;
         }
 
         // room chat message
         case EduChannelMessageCmdType.roomChatState: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+          const operator: OperatorUser = data?.operator ?? {}
           if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
               EduLogger.info(`EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`)
               this.fire('room-chat-message', {
-                textMessage
+                textMessage,
+                operator
               })
             }
           }
@@ -367,9 +382,11 @@ export class EduClassroomDataController {
         // custom message
         case EduChannelMessageCmdType.customMessage: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+          const operator: OperatorUser = data?.operator ?? {}
           if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             this.fire('room-message', {
-              textMessage
+              textMessage,
+              operator
             })
           }
           break;
@@ -519,14 +536,15 @@ export class EduClassroomDataController {
     if (this.localUser) {
       this.localUser.updateUser(user)
       this.fire('local-user-updated', {
-        user: this._localUser
+        user: this._localUser!,
+        operator: {} as OperatorUser,
       })
       EduLogger.info(`EDU-STATE EduDataController: [${this._id}] upsert local user ${user.userUuid}`, this.localUser,  `id: ${this._id}`)
     } else {
       this.localUser = new EduUserData(user)
       if (this.localUser.state) {
         this.fire('local-user-added', {
-          user: this._localUser
+          user: this._localUser!
         })
         EduLogger.info(`EDU-STATE EduDataController: [${this._id}] added local user ${user.userUuid}`, this.localUser)
       }
@@ -594,7 +612,7 @@ export class EduClassroomDataController {
     return this.localUserUuid === userUuid
   }
 
-  addStreams(rawStreams: EduStreamData[], seqId?: number) {
+  addStreams(rawStreams: EduStreamData[], operator: OperatorUser, seqId?: number) {
     const cachedUserIds: string[] = this._userList.map((it: EduUserData) => it.user.userUuid).concat([this.localUserUuid])
     const streams = rawStreams.filter((it: EduStreamData) => cachedUserIds.includes(it.stream.userInfo.userUuid))
     EduLogger.info(`[${this._id}] before [${seqId}]#addStreams: `, ' user List ', this._userList, ' stream List ', this._streamList, ' streams ', streams)
@@ -607,15 +625,16 @@ export class EduClassroomDataController {
         if (this.streamIsOffline(newItem)) {
           // 删除stream
           EduLogger.info(`EDU-STATE addStreams: [${this._id}] streamIsOffline: `, newItem, targetStream)
-          this._streamList.splice(targetIdx, 1)
+          this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== targetStream.stream.streamUuid)
+          // this._streamList.splice(targetIdx, 1)
           // update local
           if (this.isLocalStreams(targetStream.stream)) {
             EduLogger.info(`EDU-STATE addStreams: [${this._id}] before [${seqId}]#addStreams: `, this._userList, this._streamList, ' targetStream ', targetStream, ' newItem ', newItem)
-            this.removeLocalStream(targetStream.stream.streamUuid, `addStreams[${seqId}]`)
+            this.removeLocalStream(targetStream.stream.streamUuid, operator, `addStreams[${seqId}]`)
           } else {
             // sync remote user
             // if (!this.roomManager.syncingData) {
-            this.fire('remote-stream-removed', {stream: newItem.stream})
+            this.fire('remote-stream-removed', {stream: newItem.stream, operator})
             // }
           }
         } else {
@@ -624,13 +643,13 @@ export class EduClassroomDataController {
           this._streamList[targetIdx] = newItem;
           if (this.isLocalStreams(targetStream.stream)) {
             if (this.isScreenShare(targetStream.stream.streamUuid)) {
-              this.upsertLocalStream('screen', newItem, seqId)
+              this.upsertLocalStream('screen', newItem, operator, seqId)
             }
             if (this.isMainStream(targetStream.stream.streamUuid)) {
-              this.upsertLocalStream('main', newItem, seqId)
+              this.upsertLocalStream('main', newItem, operator, seqId)
             }
           } else {
-            this.fire('remote-stream-updated', {stream: newItem.stream})
+            this.fire('remote-stream-updated', {stream: newItem.stream, operator})
           }
         }
       }
@@ -640,13 +659,13 @@ export class EduClassroomDataController {
         this._streamList.push(newItem)
         if (this.isLocalStreams(newItem.stream)) {
           if (this.isScreenShare(newItem.stream.streamUuid)) {
-            this.upsertLocalStream('screen', newItem, seqId)
+            this.upsertLocalStream('screen', newItem, operator, seqId)
           }
           if (this.isMainStream(newItem.stream.streamUuid)) {
-            this.upsertLocalStream('main', newItem, seqId)
+            this.upsertLocalStream('main', newItem, operator, seqId)
           }
         } else {
-          this.fire('remote-stream-added', {stream: newItem.stream})
+          this.fire('remote-stream-added', {stream: newItem.stream, operator})
         }
       }
     }
@@ -669,15 +688,10 @@ export class EduClassroomDataController {
   }
 
   removeTargetStream(targetStream: EduStreamData) {
-    const targetIndex = this._streamList
-    .findIndex((it: EduStreamData) => 
-      it.stream.streamUuid === targetStream.stream.streamUuid)
-    if (targetIndex !== -1) {
-      this._streamList.splice(targetIndex, 1)
-    }
+    this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== targetStream.stream.streamUuid)
   }
 
-  removeLocalStream(streamUuid: string, seqId?: any): void {
+  removeLocalStream(streamUuid: string, operator: OperatorUser, seqId?: any): void {
     EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeLocalStream remove after, streamUuid `, streamUuid)
     let type = 'main'
     if (this.isMainStream(streamUuid)) {
@@ -718,6 +732,7 @@ export class EduClassroomDataController {
           this.fire('local-stream-removed', {
             stream: mainStream.stream,
             type: 'main',
+            operator,
             seqId
           })
         }
@@ -751,7 +766,9 @@ export class EduClassroomDataController {
           // })
           this.fire('local-stream-removed', {
             stream: screenStream.stream,
-            type: 'screen'
+            type: 'screen',
+            operator,
+            seqId
           })
         }
         break;
@@ -759,7 +776,7 @@ export class EduClassroomDataController {
     }
   }
 
-  removeStreams(streams: EduStreamData[], seqId?: number) {   
+  removeStreams(streams: EduStreamData[], operator: OperatorUser, seqId?: number) {   
     EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] before removeStreams in target: `,  ' streams ', streams, ' _userList ', this._userList, ' _streamList ', this._streamList) 
     for (let newItem of streams) {
       const newStream = newItem.stream
@@ -769,13 +786,17 @@ export class EduClassroomDataController {
       if (targetStream) {
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams in condition, streamUuid`, targetStream.stream.streamUuid, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams))
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams`, newItem)
-        this._streamList.splice(targetIdx, 1)
+        this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== targetStream.stream.streamUuid)
+        // this._streamList.splice(targetIdx, 1)
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams remove after, streamUuid`, targetStream, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams), this.isLocalStreams(targetStream.stream))
         if (this.isLocalStreams(targetStream.stream)) {
           EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] before removeLocalStream, streamUuid`, targetStream, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams), this.isLocalStreams(targetStream.stream))
-          this.removeLocalStream(targetStream.stream.streamUuid, `removeStreams[${seqId}]`)
+          this.removeLocalStream(targetStream.stream.streamUuid, operator, `removeStreams[${seqId}]`)
         } else {
-          this.fire('remote-stream-removed', {stream: newItem.stream})
+          this.fire('remote-stream-removed', {
+            stream: newItem.stream,
+            operator: operator
+          })
         }
       }
     }
@@ -789,7 +810,7 @@ export class EduClassroomDataController {
     return stream.state === 0
   }
 
-  addUserList(list: EduUserData[], seqId?: number) {
+  addUserList(list: EduUserData[], operator: OperatorUser, seqId?: number) {
     for (let newTargetItem of list) {
       const idx = this._userList.findIndex((it: EduUserData) => it.user.userUuid === newTargetItem.user.userUuid)
       const target = this._userList[idx]
@@ -797,8 +818,9 @@ export class EduClassroomDataController {
       if (target) {
         if (this.userIsOffline(newTargetItem)) {
           EduLogger.info("[EDU-STATE] remove user in addUserList before", JSON.stringify(list))
-          this._userList.splice(idx, 1)
-          this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === newTargetItem.user.userUuid), seqId)
+          this._userList = this._userList.filter((it) => it.user.userUuid === target.user.userUuid)
+          // this._userList.splice(idx, 1)
+          this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === newTargetItem.user.userUuid), operator, seqId)
           EduLogger.info("[EDU-STATE] remove user in addUserList after ", JSON.stringify(newTargetItem))
           this.setRoomStatus({
             onlineUsersCount: MessageSerializer.onlineUsersCount({
@@ -808,9 +830,9 @@ export class EduClassroomDataController {
 
           if (this.isLocalUser(target.user.userUuid)) {
             this.localUser.updateState(0)
-            this.fire('local-user-removed', {user: newTargetItem.user, type: newTargetItem.type})
+            this.fire('local-user-removed', {user: newTargetItem, type: newTargetItem.type, operator})
           } else {
-            this.fire('remote-user-removed', {user: newTargetItem.user})
+            this.fire('remote-user-removed', {user: newTargetItem, operator})
           }
         } else {
           this._userList[idx] = newTargetItem
@@ -829,9 +851,9 @@ export class EduClassroomDataController {
               updateTime: newTargetItem.ts,
               rtmToken: newTargetItem.hasOwnProperty('rtmToken') ? newTargetItem.rtmToken : this.localUser.rtmToken
             })
-            this.fire('local-user-updated', {user: newTargetItem.user})
+            this.fire('local-user-updated', {user: newTargetItem, operator})
           } else {
-            this.fire('remote-user-updated', {user: newTargetItem.user})
+            this.fire('remote-user-updated', {user: newTargetItem, operator})
           }
         }
       }
@@ -852,15 +874,15 @@ export class EduClassroomDataController {
             updateTime: newTargetItem.ts,
             rtmToken: newTargetItem.hasOwnProperty('rtmToken') ? newTargetItem.rtmToken : this.localUser.rtmToken
           })
-          this.fire('local-user-updated', {user: newTargetItem.user})
+          this.fire('local-user-updated', {user: newTargetItem, operator})
         } else {
-          this.fire('remote-user-added', {user: newTargetItem.user})
+          this.fire('remote-user-added', {user: newTargetItem, operator})
         }
       }
     }
   }
 
-  removeUserList(list: EduUserData[], seqId?: number) {
+  removeUserList(list: EduUserData[], operator: OperatorUser, seqId?: number) {
     EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeUserList: `, JSON.stringify(list), 'userList: ', this._userList, ', streamList: ', this._streamList)
     for (let targetItem of list) {
       const idx = this._userList.findIndex((it: EduUserData) => it.user.userUuid === targetItem.user.userUuid)
@@ -868,7 +890,8 @@ export class EduClassroomDataController {
       // remove user in list
       if (target) {
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] `, target)
-        this._userList.splice(idx, 1)
+        this._userList = this._userList.filter((it) => it.user.userUuid === target.user.userUuid)
+        // this._userList.splice(idx, 1)
 
         this.setRoomStatus({
           onlineUsersCount: MessageSerializer.onlineUsersCount({
@@ -876,14 +899,14 @@ export class EduClassroomDataController {
           })
         })
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] before removeUserList in target: `, ' isLocalUser', this.isLocalUser(targetItem.user.userUuid), ' list: ', JSON.stringify(list))
-        this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === targetItem.user.userUuid), seqId)
+        this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === targetItem.user.userUuid), operator, seqId)
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] after removeUserList in target: `, '  targetItem ', targetItem, ' userList ', this._userList)
         if (this.isLocalUser(targetItem.user.userUuid)) {
           this.localUser.updateState(0)
-          this.fire('local-user-removed', {user: targetItem.user, type: targetItem.type})
+          this.fire('local-user-removed', {user: targetItem, type: targetItem.type, operator})
         } else {
           // if (!this.roomManager.syncingData) {
-            this.fire('remote-user-removed', {user: targetItem.user})
+            this.fire('remote-user-removed', {user: targetItem, operator})
           // }
         }
       }
@@ -912,102 +935,103 @@ export class EduClassroomDataController {
     }
   }
 
-  updateUserList(onlineUsers: EduUserData[], offlineUsers: EduUserData[], seqId?: number) {
+  updateUserList(onlineUsers: EduUserData[], offlineUsers: EduUserData[], operatorUser: OperatorUser, seqId?: number) {
     EduLogger.info(`[${this._id}] before [${seqId}]#updateUserList: `, this._userList, this._streamList)
-    this.addUserList(onlineUsers, seqId)
-    this.removeUserList(offlineUsers, seqId)
+    this.addUserList(onlineUsers, operatorUser, seqId)
+    this.removeUserList(offlineUsers, operatorUser, seqId)
     EduLogger.info(`[${this._id}] after [${seqId}]#updateUserList: `, this._userList, this._streamList)
   }
 
-  updateStreamList(onlineStreams: EduStreamData[], offlineUsers: EduStreamData[], operatorUser: any, seqId?: number) {
+  updateStreamList(onlineStreams: EduStreamData[], offlineUsers: EduStreamData[], operatorUser: OperatorUser, seqId?: number) {
     EduLogger.info(`[${this._id}] before [${seqId}]#updateStreamList: `, this._userList, this._streamList)
-    this.addStreams(onlineStreams, seqId)
-    this.removeStreams(offlineUsers, seqId)
+    this.addStreams(onlineStreams, operatorUser, seqId)
+    this.removeStreams(offlineUsers, operatorUser, seqId)
     EduLogger.info(`[${this._id}] after [${seqId}]#updateStreamList: `, this._userList, this._streamList)
   }
 
-  updateUser(newTarget: EduUserData, seqId?: number) {
-    EduLogger.info(`EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, this._userList)
-    EduLogger.info(`EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, newTarget)
-    const idx = this._userList.findIndex((it: EduUserData) => it.user.userUuid === newTarget.user.userUuid)
-    const targetItem = this._userList[idx]
-    if (targetItem) {
-      if (targetItem.state === 0) {
-        this._userList.splice(idx, 1)
-        EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, this._userList)
-        EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, newTarget)
-        EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, targetItem)
-        this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === targetItem.user.userUuid), seqId)
+  // updateUser(newTarget: EduUserData, operator: OperatorUser, seqId?: number) {
+  //   EduLogger.info(`EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, this._userList)
+  //   EduLogger.info(`EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, newTarget)
+  //   const idx = this._userList.findIndex((it: EduUserData) => it.user.userUuid === newTarget.user.userUuid)
+  //   const targetItem = this._userList[idx]
+  //   if (targetItem) {
+  //     if (targetItem.state === 0) {
+  //       this._userList = this._userList.filter((it) => it.user.userUuid === targetItem.user.userUuid)
+  //       // this._userList.splice(idx, 1)
+  //       EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, this._userList)
+  //       EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, newTarget)
+  //       EduLogger.info(`removeStreams, EDU-STATE: [${this._id}] updateUser, ${[seqId]}`, targetItem)
+  //       this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === targetItem.user.userUuid), operator, seqId)
 
-        this.setRoomStatus({
-          onlineUsersCount: MessageSerializer.onlineUsersCount({
-            users: this._userList
-          })
-        })
+  //       this.setRoomStatus({
+  //         onlineUsersCount: MessageSerializer.onlineUsersCount({
+  //           users: this._userList
+  //         })
+  //       })
 
-        if (this.isLocalUser(targetItem.user.userUuid)) {
-          EduLogger.info(`isLocalUser, EDU-STATE: [${this._id}] updateUser, ${[seqId]}, local-user-remove`, targetItem)
-          this.localUser.updateState(0)
-          this.fire('local-user-removed', {
-            user: targetItem.user,
-            type: targetItem.type
-          })
-        } else {
-          // if (!this.roomManager.syncingData) {
-            this.fire("remote-user-removed", {
-              user: targetItem.user
-            })
-          // }
-        }
-      } else {
-        this._userList[idx] = newTarget
+  //       if (this.isLocalUser(targetItem.user.userUuid)) {
+  //         EduLogger.info(`isLocalUser, EDU-STATE: [${this._id}] updateUser, ${[seqId]}, local-user-remove`, targetItem)
+  //         this.localUser.updateState(0)
+  //         this.fire('local-user-removed', {
+  //           user: targetItem.user,
+  //           type: targetItem.type
+  //         })
+  //       } else {
+  //         // if (!this.roomManager.syncingData) {
+  //           this.fire("remote-user-removed", {
+  //             user: targetItem.user
+  //           })
+  //         // }
+  //       }
+  //     } else {
+  //       this._userList[idx] = newTarget
 
-        this.setRoomStatus({
-          onlineUsersCount: MessageSerializer.onlineUsersCount({
-            users: this._userList
-          })
-        })
+  //       this.setRoomStatus({
+  //         onlineUsersCount: MessageSerializer.onlineUsersCount({
+  //           users: this._userList
+  //         })
+  //       })
 
-        if (this.isLocalUser(newTarget.user.userUuid)) {
-          this.localUser.updateUser({
-            ...this.localUser.user,
-            ...newTarget.user,
-            updateTime: newTarget.ts,
-            rtmToken: newTarget.hasOwnProperty('rtmToken') ? newTarget.rtmToken : this.localUser.rtmToken
-          })
-          this.fire('local-user-updated', {
-            user: newTarget.user
-          })
-        } else {
-          // if (!this.roomManager.syncingData) {
-          this.fire("remote-user-updated", {
-            user: newTarget.user
-          })
-          // }
-        }
-      }
-    } else {
-      this._userList.push(newTarget)
+  //       if (this.isLocalUser(newTarget.user.userUuid)) {
+  //         this.localUser.updateUser({
+  //           ...this.localUser.user,
+  //           ...newTarget.user,
+  //           updateTime: newTarget.ts,
+  //           rtmToken: newTarget.hasOwnProperty('rtmToken') ? newTarget.rtmToken : this.localUser.rtmToken
+  //         })
+  //         this.fire('local-user-updated', {
+  //           user: newTarget.user
+  //         })
+  //       } else {
+  //         // if (!this.roomManager.syncingData) {
+  //         this.fire("remote-user-updated", {
+  //           user: newTarget.user
+  //         })
+  //         // }
+  //       }
+  //     }
+  //   } else {
+  //     this._userList.push(newTarget)
 
-      this.setRoomStatus({
-        onlineUsersCount: MessageSerializer.onlineUsersCount({
-          users: this._userList
-        })
-      })
+  //     this.setRoomStatus({
+  //       onlineUsersCount: MessageSerializer.onlineUsersCount({
+  //         users: this._userList
+  //       })
+  //     })
 
-      if (this.isLocalUser(newTarget.user.userUuid)) {
-        this.fire('local-user-updated', {
-          user: newTarget.user
-        })
-      } else {
-        // if (!this.roomManager.syncingData) {
-        this.fire("remote-user-added", {
-          user: newTarget.user
-        })
-        // }
-      }
-    }
-  }
+  //     if (this.isLocalUser(newTarget.user.userUuid)) {
+  //       this.fire('local-user-updated', {
+  //         user: newTarget.user
+  //       })
+  //     } else {
+  //       // if (!this.roomManager.syncingData) {
+  //       this.fire("remote-user-added", {
+  //         user: newTarget.user
+  //       })
+  //       // }
+  //     }
+  //   }
+  // }
 
   // private get roomPrevTime(): number {
   //   if (this._classroom.time) {
@@ -1034,8 +1058,8 @@ export class EduClassroomDataController {
     }
   }
 
-  upsertLocalStream(type: string, data: EduStreamData, seqId?: any) {
-    EduLogger.info(`[EDU-STATE] upsertLocalStream: [${seqId}] type: ${type}, data: ${JSON.stringify(data)}`)
+  upsertLocalStream(type: 'main' | 'screen', data: EduStreamData, operator: OperatorUser, seqId?: any) {
+    EduLogger.info(`[EDU-STATE] upsertLocalStream: [${seqId}] type: ${type}, data: ${JSON.stringify(data)}, operator: ${JSON.stringify(operator)}`)
     if (type === 'main') {
       const mainStream = this._cachedLocalStreams['main'] as EduStreamData
       EduLogger.info("mainStream  ", mainStream)
@@ -1045,6 +1069,7 @@ export class EduClassroomDataController {
         this.fire('local-stream-updated', {
           data: this._cachedLocalStreams['main'],
           type: 'main',
+          operator,
           seqId
         })
       } else {
@@ -1068,7 +1093,8 @@ export class EduClassroomDataController {
         this.upsertTargetStream(this._cachedLocalStreams['main'])
         this.fire('local-stream-updated', {
           data: this._cachedLocalStreams['main'],
-          type: 'main'
+          type: 'main',
+          operator,
         })
       }
     }
@@ -1080,7 +1106,8 @@ export class EduClassroomDataController {
         this.upsertTargetStream(screenStream)
         this.fire('local-stream-updated', {
           data: this._cachedLocalStreams[type],
-          type: 'screen'
+          type: 'screen',
+          operator,
         })
       } else {
         const newStream = new EduStreamData({
@@ -1103,7 +1130,8 @@ export class EduClassroomDataController {
         this.upsertTargetStream(screenStream)
         this.fire('local-stream-updated', {
           data: this._cachedLocalStreams[type],
-          type: 'screen'
+          type: 'screen',
+          operator,
         })
       }
     }
@@ -1197,12 +1225,12 @@ export class EduClassroomDataController {
     return this._roomStatus;
   }
 
-  fire(evtName: string, ...args: any[]) {
-    if (evtName === 'local-user-removed') {
-      console.log(" fire # local-user-removed ", JSON.stringify([...args]))
-    }
-    this.roomManager.emit(evtName, ...args)
-  }
+  // fire(evtName: string, ...args: any[]) {
+  //   if (evtName === 'local-user-removed') {
+  //     console.log(" fire # local-user-removed ", JSON.stringify([...args]))
+  //   }
+  //   this.roomManager.emit(evtName, ...args)
+  // }
 
   setRoomInfo(state: any) {
     const prevState = this._roomInfo
@@ -1215,9 +1243,12 @@ export class EduClassroomDataController {
     EduLogger.info("roomInfo ", curState)
     
     this._roomInfo = curState
-    if (diff(prevState, curState)) {
-      this.fire('classroom-property-updated', this.classroom)
-    }
+    // if (diff(prevState, curState)) {
+    this.fire('classroom-property-updated', {
+      classroom: this.classroom,
+      operator: {} as OperatorUser,
+    })
+    // }
   }
 
   setRoomStatus(state: any, cause?: CauseType) {
@@ -1231,11 +1262,15 @@ export class EduClassroomDataController {
     this._roomStatus = curState
     EduLogger.info("### setRoomStatus ", state)
     if (diff(prevState, curState)) {
-      this.fire('classroom-property-updated', this.classroom, cause)
+      this.fire('classroom-property-updated', {
+        classroom: this.classroom,
+        operator: {} as OperatorUser,
+        cause
+      })
     }
   }
 
-  setRoomProperties(roomProperties: any, cause?: CauseType) {
+  setRoomProperties(roomProperties: any, operator?: OperatorUser, cause?: CauseType) {
     const prevState = this._roomProperties
 
     const curState = {
@@ -1245,9 +1280,13 @@ export class EduClassroomDataController {
     
     this._roomProperties = curState
     EduLogger.info("### setRoomProperties ", curState)
-    if (diff(prevState, curState)) {
-      this.fire('classroom-property-updated', this.classroom, cause)
-    }
+    // if (diff(prevState, curState)) {
+    this.fire('classroom-property-updated', {
+      classroom: this.classroom,
+      operator: operator!,
+      cause
+    })
+    // }
   }
 
   updateBatchRoomProperties(roomProperties: any, cause?: CauseType) {
@@ -1286,26 +1325,44 @@ export class EduClassroomDataController {
     this._roomProperties = curState
     EduLogger.info("### setRoomProperties ", curState)
     // if (diff(prevState, curState)) {
-    this.fire('classroom-property-updated', this.classroom, cause)
+    this.fire('classroom-property-updated', {
+      classroom: this.classroom,
+      operator: {} as OperatorUser,
+      cause
+    })
+    // }
   }
 
-  setRoomBatchProperties(roomProperties: any, cause?: CauseType) {
-    const mergeRoomProperties = (properties: any, changeProperties: any) => {
-      let newProperties = cloneDeep(properties)
-      for (let key in changeProperties) {
-        set(newProperties, key, changeProperties[key])
+  setRoomBatchProperties(newProperties: any, operator?: OperatorUser, cause?: CauseType) {
+    const mergeRoomProperties = (properties: any, changedProperties: any) => {
+      for (let key of Object.keys(changedProperties)) {
+        // TODO: refactor use memory pool
+        setWith(properties, key, changedProperties[key])
+        // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
+        // const value = changedProperties[key]
+        // merge(properties, newObject)
+        // if (Array.isArray(value)) {
+        //   assign(properties, newObject)
+        // }
+        // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
       }
-      return newProperties
+      console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
+      console.log('### properties ', properties)
+      console.log(" #### newProperties", JSON.stringify(newProperties))
+      console.log(" #### changeProperties", JSON.stringify(changedProperties))
+      return properties
     }
 
-    const prevState = this._roomProperties
-    const curState = mergeRoomProperties(prevState, roomProperties)
+    const prevState = cloneDeep(this._roomProperties)
+    const curState = mergeRoomProperties(prevState, newProperties)
 
     this._roomProperties = curState
     EduLogger.info(">>> setRoomBatchProperties ", curState)
-    if (diff(prevState, curState)) {
-      this.fire('classroom-property-updated', this.classroom, cause)
-    }
+    this.fire('classroom-property-updated', {
+      classroom: this.classroom,
+      operator: operator!,
+      cause
+    })
   }
 
   private _localUserData?: EduUserData
@@ -1325,6 +1382,10 @@ export class EduClassroomDataController {
       'main': {
         streamUuid: mainStreamUuid,
         rtcToken: mainRtcToken,
+      },
+      'screen': {
+        streamUuid: '',
+        rtcToken: '',
       }
     }
     if (roomData) {
@@ -1371,7 +1432,7 @@ export class EduClassroomDataController {
           },
           state: state
         })
-        this.upsertLocalStream(key, tmpStreamData)
+        this.upsertLocalStream(key as LocalStreamType, tmpStreamData, {} as OperatorUser)
       }
     }
   }
@@ -1385,7 +1446,8 @@ export class EduClassroomDataController {
         prevState.updateUser(user)
       }
       this.fire('local-user-updated', {
-        user: this.localUserData
+        user: this.localUserData,
+        operator: {} as OperatorUser,
       })
     }
   }
@@ -1435,143 +1497,143 @@ export class EduClassroomDataController {
       }
       const onlineUsers = users.filter((it: EduUserData) => it.state !== 0)
       const offlineUsers = users.filter((it: EduUserData) => it.state === 0)
-      this.updateUserList(onlineUsers, offlineUsers)
+      this.updateUserList(onlineUsers, offlineUsers, {} as OperatorUser)
       const onlineStreams = streams.filter((it: EduStreamData) => it.state !== 0)
       const offlineStreams = streams.filter((it: EduStreamData) => it.state === 0)
-      this.updateStreamList(onlineStreams, offlineStreams, null as any)
+      this.updateStreamList(onlineStreams, offlineStreams, {} as any)
     }
   }
 
-  setRemoteOnlineUsers(users: EduUserData[]) {
-    const prevState = this._users
-    if (!prevState.length) {
-      this._users = prevState.concat(users)
-      if (this._users.length) {
-        this.fire('remote-user-added', {
-          users: this._users
-        })
-      }
-      return
-    }
+  // setRemoteOnlineUsers(users: EduUserData[]) {
+  //   const prevState = this._users
+  //   if (!prevState.length) {
+  //     this._users = prevState.concat(users)
+  //     if (this._users.length) {
+  //       this.fire('remote-user-added', {
+  //         users: this._users
+  //       })
+  //     }
+  //     return
+  //   }
 
-    if (diff(prevState, users)) {
-      const newState = prevState.reduce((acc: EduUserData[], it: any) => {
-        const newUserValue = users.find((t: EduUserData) => t.user.userUuid === it.user.userUuid)
-        if (newUserValue) {
-          const user = {
-            ...it,
-            ...newUserValue
-          }
-          acc.push(user)
-        } else {
-          acc.push(it)
-        }
-        return acc
-      }, [])
-      this._users = newState
-      if (this._users.length) {
-        this.fire('remote-user-updated', {
-          users: newState
-        })
-      }
-    }
-  }
+  //   if (diff(prevState, users)) {
+  //     const newState = prevState.reduce((acc: EduUserData[], it: any) => {
+  //       const newUserValue = users.find((t: EduUserData) => t.user.userUuid === it.user.userUuid)
+  //       if (newUserValue) {
+  //         const user = {
+  //           ...it,
+  //           ...newUserValue
+  //         }
+  //         acc.push(user)
+  //       } else {
+  //         acc.push(it)
+  //       }
+  //       return acc
+  //     }, [])
+  //     this._users = newState
+  //     if (this._users.length) {
+  //       this.fire('remote-user-updated', {
+  //         users: newState
+  //       })
+  //     }
+  //   }
+  // }
 
-  setRemoteOfflineUsers(ids: string[]) {
-    if (ids.length) {
-      const offlineUsers = this._users
-      .filter((it: EduUserData) => 
-        ids.includes(it.user.userUuid))
-      this._users = this._users
-        .filter((it: any) => !ids.includes(it.userUuid))
+  // setRemoteOfflineUsers(ids: string[]) {
+  //   if (ids.length) {
+  //     const offlineUsers = this._users
+  //     .filter((it: EduUserData) => 
+  //       ids.includes(it.user.userUuid))
+  //     this._users = this._users
+  //       .filter((it: any) => !ids.includes(it.userUuid))
 
-      const offlineStreams = this._streams
-        .filter((it: EduStreamData) => ids.includes(it.stream.userInfo.userUuid))
-      this._streams = this._streams
-        .filter((it: EduStreamData) => !ids.includes(it.stream.userInfo.userUuid))
-      if (offlineStreams) {
-        this.fire('remote-stream-removed', {
-          streams: offlineStreams
-        })
-      }
-      this.fire('remote-user-removed', {
-        users: offlineUsers
-      })
-    }
-  }
+  //     const offlineStreams = this._streams
+  //       .filter((it: EduStreamData) => ids.includes(it.stream.userInfo.userUuid))
+  //     this._streams = this._streams
+  //       .filter((it: EduStreamData) => !ids.includes(it.stream.userInfo.userUuid))
+  //     if (offlineStreams) {
+  //       this.fire('remote-stream-removed', {
+  //         streams: offlineStreams
+  //       })
+  //     }
+  //     this.fire('remote-user-removed', {
+  //       users: offlineUsers
+  //     })
+  //   }
+  // }
 
-  setRemoteUsers(newUsers: EduUserData[]) {
-    const onlineUsers = newUsers.filter((it: any) => it.state !== 0)
-    const offlineUserIds = newUsers
-      .filter((it: any) => it.state === 0)
-      .map((it: any) => it.user.userUuid)
-    this.setRemoteOnlineUsers(onlineUsers)
-    this.setRemoteOfflineUsers(offlineUserIds)
-  }
+  // setRemoteOnlineStreams(streams: EduStreamData[]) {
+  //   if (!streams.length) {
+  //     return;
+  //   }
+  //   const prevState = this._streams
+  //   if (!prevState.length) {
+  //     this._streams = prevState.concat(streams)
+  //     if (this._streams.length) {
+  //       this.fire('remote-stream-added', {
+  //         streams: this._streams
+  //       })
+  //     }
+  //     return
+  //   }
 
-  setRemoteOnlineStreams(streams: EduStreamData[]) {
-    if (!streams.length) {
-      return;
-    }
-    const prevState = this._streams
-    if (!prevState.length) {
-      this._streams = prevState.concat(streams)
-      if (this._streams.length) {
-        this.fire('remote-stream-added', {
-          streams: this._streams
-        })
-      }
-      return
-    }
+  //   if (diff(prevState, streams)) {
+  //     const updatedStreams: EduStreamData[] = []
+  //     const newState = prevState.reduce((acc: EduStreamData[], it: EduStreamData) => {
+  //       const newStreamValue = streams.find((t: any) => t.stream.streamUuid === it.stream.streamUuid)
+  //       if (newStreamValue) {
+  //         // const stream = {
+  //         //   ...it,
+  //         //   ...newStreamValue
+  //         // }
+  //         it.update(newStreamValue as any)
+  //         updatedStreams.push(it)
+  //         acc.push(it)
+  //       } else {
+  //         acc.push(it)
+  //       }
+  //       return acc
+  //     }, [])
+  //     this._streams = newState
+  //     EduLogger.info("setRemoteStreams 1301 ", this._streams, streams)
+  //     if (this._streams.length) {
+  //       this.fire('remote-stream-updated', {
+  //         streams: updatedStreams
+  //       })
+  //     }
+  //   }
+  // }
 
-    if (diff(prevState, streams)) {
-      const updatedStreams: EduStreamData[] = []
-      const newState = prevState.reduce((acc: EduStreamData[], it: EduStreamData) => {
-        const newStreamValue = streams.find((t: any) => t.stream.streamUuid === it.stream.streamUuid)
-        if (newStreamValue) {
-          // const stream = {
-          //   ...it,
-          //   ...newStreamValue
-          // }
-          it.update(newStreamValue as any)
-          updatedStreams.push(it)
-          acc.push(it)
-        } else {
-          acc.push(it)
-        }
-        return acc
-      }, [])
-      this._streams = newState
-      EduLogger.info("setRemoteStreams 1301 ", this._streams, streams)
-      if (this._streams.length) {
-        this.fire('remote-stream-updated', {
-          streams: updatedStreams
-        })
-      }
-    }
-  }
+  // setRemoteOfflineStreams(ids: string[]) {
+  //   if (!ids.length) {
+  //     return
+  //   }
+  //   const offlineStreams = this._streams
+  //     .filter((it: EduStreamData) => 
+  //       ids.includes(it.stream.streamUuid))
 
-  setRemoteOfflineStreams(ids: string[]) {
-    if (!ids.length) {
-      return
-    }
-    const offlineStreams = this._streams
-      .filter((it: EduStreamData) => 
-        ids.includes(it.stream.streamUuid))
+  //   if (offlineStreams.length) {
+  //     this._streams = this._streams
+  //       .filter((it: EduStreamData) => !ids.includes(it.stream.streamUuid))        
+  //     this.fire('remote-stream-removed', {
+  //       streams: offlineStreams
+  //     })
+  //   }
+  // }
 
-    if (offlineStreams.length) {
-      this._streams = this._streams
-        .filter((it: EduStreamData) => !ids.includes(it.stream.streamUuid))        
-      this.fire('remote-stream-removed', {
-        streams: offlineStreams
-      })
-    }
-  }
+  // setRemoteStreams(newStreams: EduStreamData[]) {
+  //   const onlineStreams = newStreams.filter((it: EduStreamData) => it.state !== 0)
+  //   const offlineIds = newStreams.filter((it: EduStreamData) => it.state === 0).map((it: EduStreamData) => it.stream.streamUuid)
+  //   this.setRemoteOnlineStreams(onlineStreams)
+  //   this.setRemoteOfflineStreams(offlineIds)
+  // }
 
-  setRemoteStreams(newStreams: EduStreamData[]) {
-    const onlineStreams = newStreams.filter((it: EduStreamData) => it.state !== 0)
-    const offlineIds = newStreams.filter((it: EduStreamData) => it.state === 0).map((it: EduStreamData) => it.stream.streamUuid)
-    this.setRemoteOnlineStreams(onlineStreams)
-    this.setRemoteOfflineStreams(offlineIds)
-  }
+  // setRemoteUsers(newUsers: EduUserData[]) {
+  //   const onlineUsers = newUsers.filter((it: any) => it.state !== 0)
+  //   const offlineUserIds = newUsers
+  //     .filter((it: any) => it.state === 0)
+  //     .map((it: any) => it.user.userUuid)
+  //   this.setRemoteOnlineUsers(onlineUsers)
+  //   this.setRemoteOfflineUsers(offlineUserIds)
+  // }
 }

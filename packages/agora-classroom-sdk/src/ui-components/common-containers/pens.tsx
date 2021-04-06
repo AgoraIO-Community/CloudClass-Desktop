@@ -1,13 +1,12 @@
-import { useBoardStore } from '@/hooks'
-import { Pens, useI18nContext } from 'agora-scenario-ui-kit'
+import { Pens, t } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { usePenContext } from '../hooks'
 
-export const PensContainer = observer(() => {
+export const PensContainer = observer((props: any) => {
   const {
-    t,
     lineSelector,
+    isActive,
     onClick
   } = usePenContext()
   
@@ -18,6 +17,7 @@ export const PensContainer = observer(() => {
       icon='pen'
       activePen={lineSelector}
       onClick={onClick}
+      isActive={isActive}
     />
   )
 })
