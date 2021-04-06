@@ -28,6 +28,12 @@
     width: 320px;
 }
 
+.select .rc-select-selection-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .select-dropdown {
     width: 100%;
     background: #FFFFFF;
@@ -56,6 +62,9 @@
     font-size: 14px;
     font-weight: 400;
     color: #586376;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .select-dropdown .rc-select-item-option:hover {

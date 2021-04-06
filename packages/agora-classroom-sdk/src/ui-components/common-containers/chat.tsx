@@ -10,7 +10,8 @@ export const RoomChat: React.FC<any> = observer(() => {
     messageList, canChatting, text,
     onChangeText, handleSendText,
     onCanChattingChange, onChangeCollapse,
-    refreshMessageList, handleClickMinimize
+    refreshMessageList, handleClickMinimize,
+    unreadMessageCount
   } = useChatContext()
 
   return (
@@ -28,6 +29,7 @@ export const RoomChat: React.FC<any> = observer(() => {
       onSend={handleSendText}
       closeIcon={isHost ? <Icon type="close" onClick={handleClickMinimize} /> : <></>}
       onPullFresh={refreshMessageList}
+      unreadCount={unreadMessageCount}
     />
   )
 })

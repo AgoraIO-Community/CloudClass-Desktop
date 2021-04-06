@@ -380,9 +380,9 @@ export const useChatContext = () => {
 
   useEffect(() => {
     if (boardStore.isFullScreen) {
-      uiStore.chatCollapse = false
-    } else {
       uiStore.chatCollapse = true
+    } else {
+      uiStore.chatCollapse = false
     }
   }, [boardStore.isFullScreen, uiStore])
 
@@ -393,6 +393,7 @@ export const useChatContext = () => {
   return {
     meUid: roomStore.roomInfo.userUuid,
     messageList: roomStore.chatMessageList,
+    unreadMessageCount: roomStore.unreadMessageCount,
     text,
     onChangeText: (textValue: any) => {
       setText(textValue)
@@ -850,6 +851,7 @@ export const useCloudDriverContext = (props: any) => {
         if (isTransFile) {
           setUploadFileInfo({
             ...uploadFileInfo,
+            iconType: 'format-' + mapFileType(ext),
             fileName: name,
             uploadComplete: true,
           })
