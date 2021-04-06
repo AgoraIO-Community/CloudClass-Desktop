@@ -1,4 +1,4 @@
-import { Chat, Icon } from 'agora-scenario-ui-kit'
+import { Chat, I18nProvider, Icon } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useChatContext } from '../hooks'
@@ -14,6 +14,7 @@ export const RoomChat: React.FC<any> = observer(() => {
   } = useChatContext()
 
   return (
+    <I18nProvider>
     <Chat
       className="small-class-chat"
       collapse={minimize}
@@ -29,5 +30,6 @@ export const RoomChat: React.FC<any> = observer(() => {
       closeIcon={isHost ? <Icon type="close" onClick={handleClickMinimize} /> : <></>}
       onPullFresh={refreshMessageList}
     />
+    </I18nProvider>
   )
 })

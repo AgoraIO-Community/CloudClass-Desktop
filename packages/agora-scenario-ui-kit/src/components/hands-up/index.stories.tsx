@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/react';
-import React, { useCallback, useState } from 'react';
-import { HandsUpManager, HandsUpSender, HandsUpState } from '~components/hands-up';
+import React, { useCallback, useEffect, useState } from 'react';
+import { HandsUpManager, HandsUpSender, HandsUpState, StudentHandsUp, StudentsHandsUpList } from '~components/hands-up';
+import { I18nProvider } from '~components/i18n';
 import { StudentInfo } from './types';
 
 const meta: Meta = {
@@ -44,12 +45,14 @@ export const Docs = ({handsUpState, animStart}: any) => {
 
     return (
         <div className="flex justify-center items-center m-screen h-screen">
-            <HandsUpManager
-                unreadCount={9}
-                state={handsUpState}
-                onClick={handleUpdateList}
-                studentList={list}
-            />
+            <I18nProvider>
+                <HandsUpManager
+                    unreadCount={9}
+                    state={handsUpState}
+                    onClick={handleUpdateList}
+                    studentList={list}
+                />
+            </I18nProvider>
         </div>
     )
 }
@@ -65,10 +68,12 @@ export const StudentHandUp = () => {
 
     return (
         <div className="flex justify-center items-center m-screen h-screen">
-            <HandsUpSender
-            state={state}
-            onClick={() => setActive('apply')}
-            />
+            <I18nProvider>
+                <HandsUpSender
+                state={state}
+                onClick={() => setActive('apply')}
+                />
+            </I18nProvider>
         </div>
     )
 }

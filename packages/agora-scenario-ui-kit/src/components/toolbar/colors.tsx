@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { ToolItem } from './tool';
@@ -47,8 +47,8 @@ export const Colors: FC<ColorsProps> = ({
     setPopoverVisible(!popoverVisible);
     onClick && onClick(color);
   };
-  const content = useCallback(() => 
-    (<div className={`expand-tools colors`}>
+  const content = (
+    <div className={`expand-tools colors`}>
       <Slider
         style={{width: '100%'}}
         defaultValue={colorSliderDefault}
@@ -69,7 +69,7 @@ export const Colors: FC<ColorsProps> = ({
         </div>
       ))}
     </div>
-  ), [colors, activeColor]);
+  );
   return (
     <Tooltip title={label} placement="bottom">
       <Popover

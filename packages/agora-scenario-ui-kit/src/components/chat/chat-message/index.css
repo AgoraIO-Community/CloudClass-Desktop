@@ -5,15 +5,11 @@
 }
 
 .chat-message-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  text-align: right;
 }
 
 .chat-message-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  text-align: left;
 }
 
 .chat-message-username {
@@ -26,6 +22,7 @@
 }
 
 .chat-message-content {
+  @apply inline-block;
   min-height: 38px;
   border-radius: 4px;
   padding: 9px 10px;

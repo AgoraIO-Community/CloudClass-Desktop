@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
+import { BatchStreamAttribute, CauseType, EduStreamAttribute } from '../core/services/edu-api';
 import { EduLogger } from '../core/logger/index';
-import { AgoraEduApi, BatchStreamAttribute, CauseType, EduStreamAttribute } from '../core/services/edu-api';
-import { DeleteStreamType, EduAudioSourceType, EduCourseState, EduRenderConfig, EduStream, EduStreamData, EduUser, EduVideoSourceType, StreamType } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
-import { OperatorUser } from './../room/types';
+import { EventEmitter } from 'events';
+import { EduStreamData, StreamType, DeleteStreamType, EduVideoConfig, EduRoleType, EduVideoSourceType, EduAudioSourceType, EduCourseState, EduRenderConfig, EduStream, EduUser, EduSubscribeOptions, EduStreamConfig } from '../interfaces';
+import { AgoraEduApi } from '../core/services/edu-api';
 
 export interface EduModelViewOption {
   dom: HTMLElement
@@ -117,7 +117,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       },
       updateTime: res.ts,
     })
-    this.data.upsertLocalStream('main', screenStreamData, {} as OperatorUser)
+    this.data.upsertLocalStream('main', screenStreamData)
     return {
       streamUuid: res.streamUuid,
       rtcToken: res.rtcToken
@@ -131,7 +131,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       streamUuid: stream.streamUuid
     })
     EduLogger.info('[EDU-STATE] unpublish stream remove local stream, streamUuid: ', stream.streamUuid)
-    this.data.removeLocalStream(stream.streamUuid, {} as OperatorUser)
+    this.data.removeLocalStream(stream.streamUuid)
   }
 
   async sendRoomMessage(message: string) {
@@ -247,7 +247,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         },
         updateTime: ts
       })
-      this.data.upsertLocalStream('screen', screenStreamData, {} as OperatorUser)
+      this.data.upsertLocalStream('screen', screenStreamData)
     } else {
       const stream: EduStreamData = new EduStreamData({
         state: 1,
@@ -278,7 +278,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       stream.setRtcToken(rtcToken)
       stream.updateStreamUuid(streamUuid)
       stream.updateTime(ts)
-      this.data.upsertLocalStream('screen', stream, {} as OperatorUser)
+      this.data.upsertLocalStream('screen', stream)
     }
   }
 
@@ -286,7 +286,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
     if (this.screenStream) {
       await this.apiService.stopShareScreen(this.roomUuid, this.screenStream.stream.streamUuid, this.data.localUser.user.userUuid)
       EduLogger.info('[EDU-STATE] unpublish stream remove local screen stream, streamUuid: ', this.screenStream.stream.streamUuid)
-      this.data.removeLocalStream(this.screenStream.stream.streamUuid, {} as OperatorUser)
+      this.data.removeLocalStream(this.screenStream.stream.streamUuid)
     }
   }
 

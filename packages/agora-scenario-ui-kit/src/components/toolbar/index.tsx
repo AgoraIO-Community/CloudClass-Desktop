@@ -16,6 +16,8 @@ export { CloudDisk } from './cloud-disk'
 
 export { ToolCabinet } from './tool-cabinet'
 
+export { UserList } from './user-list'
+
 export type { ToolItem } from './tool';
 
 export interface ToolbarProps extends BaseProps {
@@ -23,7 +25,7 @@ export interface ToolbarProps extends BaseProps {
   active?: string;
   activeMap?: Record<string, boolean>;
   defaultOpened?: boolean;
-  onClick?: (value: string) => unknown;
+  onClick?: (value: string) => Promise<unknown>;
   onOpenedChange?: (opened: boolean) => void;
 }
 
