@@ -460,6 +460,10 @@ export class AppStore implements ClassRoomAbstractStore {
       rtmToken: this.params.config.rtmToken,
       rtmUid: this.params.config.rtmUid,
     })
+    reportService.updateRtmConfig({
+      rtmToken: this.params.config.rtmToken,
+      rtmUid: this.params.config.rtmUid
+    })
   }
 
   @action
