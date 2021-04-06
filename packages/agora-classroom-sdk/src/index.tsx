@@ -2,15 +2,11 @@ import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from '@/monolithic/app';
-import TagManager from 'react-gtm-module';
 import { isElectron } from '@/utils/utils';
 import { EduManager } from 'agora-rte-sdk';
 import { AgoraEduSDK } from '@/edu-sdk';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { GlobalStorage } from '@/utils/utils';
-
-// 国际化
-import '@/i18n/index'
 
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";

@@ -1,8 +1,30 @@
 export const en = {
+  'role': {
+    'teacher': 'Teacher',
+    'student': 'Student',
+    'assistant': 'Assistant',
+  },
+  'screen_share': 'Screen Share',
+  'kick': {
+    'kick_out_student': 'Kick Out',
+  },
+  'radio': {
+    'kicked_once': 'Kick out room this time',
+    'ban': 'Banned',
+  },
   'course': {
     'pre_class': 'Pre Class',
     'in_class': 'In Class',
     'end_class': 'End Class',
+    'join_failed': 'Join Failure',
+    'screen_sharing': 'Screen Sharing',
+  },
+  'device': {
+    'camera': 'Camera',
+    'speaker': 'Speaker',
+    'microphone': 'Microphone',
+    'microphone_volume': 'Microphone Volume',
+    'speaker_volume': 'Speaker Volume',
   },
   'roster': {
     'teacher_name': 'Teacher：',
@@ -17,6 +39,12 @@ export const en = {
   },
   'hands_up': 'Hands Up',
   'co_video': {
+    'remote_open_camera': '{reason} Open your camera',
+    'remote_open_microphone': '{reason} Open your microphone',
+    'remote_grant_board': '{reason} Grant your board',
+    'remote_close_camera': '{reason} Close your Camera',
+    'remote_close_microphone': '{reason} Close your Microphone',
+    'remote_revoke_board': '{reason} Revoke your board',
     'received_student_hands_up': 'Hands Up ',
     'received_teacher_accepted': 'Teacher Accepted',
     'received_teacher_refused': 'Teacher Refused',
@@ -34,6 +62,17 @@ export const en = {
     'enable_chat_muted': 'Student Chat Muted',
     'input_message': 'Please Input Message',
   },
+  'error': {
+    'not_found': 'Page Not Found',
+    'apply_co_video_limit': 'Apply co-video over maximum',
+    'send_co_video_limit': 'Roll call co-video over maximum',
+    'components': {
+      'paramsEmpty': 'params：{reason} can`t be empty',
+    },
+    'class_end': 'The classroom is end.',
+    'unknown': 'Unknown error occured. Code: {errCode} Details: {message}',
+    'room_is_full': 'The room is full',
+  },
   'toast': {
     'kick_by_other_side': 'Kick by other client',
     'screen_share': 'Screen Share',
@@ -41,7 +80,6 @@ export const en = {
     'sure_close_ppt': 'Are you sure to close?',
     'end_class': 'End Class',
     'quit_from_room': 'Leave Class Room',
-    'warning_sensitive_words': 'Please note that your conversation with sensitive words（eg: contact information or money) , which may violate the training kit and other relevant regulations of Acadsoc.',
     'kick_by_teacher': 'Kicked by teacher',
     'upload_log_failure': 'Upload Log Failure，ErrorName: {reason}，see more details in devtool',
     'show_log_id': `Report your log ID: {reason}`,
@@ -57,8 +95,16 @@ export const en = {
     'canceled_screen_share': 'Canceled screen sharing',
     'screen_sharing_failed': 'Screen sharing failed, reason: {reason}',
     'recording_failed': 'Start cloud recording failed, reason: {reason}',
-    'start_recording': 'Start cloud recording success',
-    'stop_recording': 'Stop cloud recording success',
+    'start_recording': {
+      'title': 'Start Recording',
+      'body': 'Are you sure to start recording the classroom?',
+      'success': 'Recording successfully started'
+    },
+    'stop_recording': {
+      'title': 'Stop Recording',
+      'body': 'Are you sure to stop recording the classroom?',
+      'success': 'Recording successfully stopped'
+    },
     'recording_too_short': 'Recording too short, at least 15 seconds',
     'rtm_login_failed': 'login failure, please check your network',
     'rtm_login_failed_reason': 'login failure, reason: {reason}',
@@ -165,7 +211,7 @@ export const en = {
     'fileName': 'file name',
     'size': 'size',
     'progress': 'progress',
-    'updatedAt': 'updated at',
+    'operation': 'operation',
     'publicResources': 'Public Resources',
     'personalResources': 'Personal Resources',
     'downloadResources': 'Download Resources',
@@ -174,6 +220,7 @@ export const en = {
     'download': 'Download',
     'downloading': 'Downloading',
     'pause': 'Pause',
+    'upload_success': 'Upload Success',
   },
   'media': {
     'camera': 'Camera',

@@ -1,22 +1,25 @@
-import { useBoardStore } from '@/hooks'
-import { t, useI18nContext, UserList } from 'agora-scenario-ui-kit'
-import { observer } from 'mobx-react'
-import React from 'react'
-import { useUserListContext } from '../hooks'
+import { Roster } from 'agora-scenario-ui-kit';
+import { observer } from 'mobx-react';
+import React from 'react';
+import Draggable from 'react-draggable';
+import { useUserListContext } from '../hooks';
 
-export const UserListContainer = observer(() => {
+export type UserListContainerProps = {
+    onClose: () => void
+}
 
-    const {dataSource, teacherName, onClick, role} = useUserListContext()
+export const UserListContainer: React.FC<UserListContainerProps> = observer((props) => {
+
+    const { dataSource, teacherName, onClick, role } = useUserListContext()
 
     return (
-        <UserList
+        <Roster
+            isDraggable={true}
             role={role as any}
-            value='register'
-            label={t('scaffold.user_list')}
-            icon='register'
             teacherName={teacherName}
             dataSource={dataSource}
             onClick={onClick}
+            onClose={props.onClose}
         />
     )
 })

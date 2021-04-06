@@ -104,6 +104,10 @@
   color: #7b88a0;
 }
 
+.expand-tool > .active {
+  color: #357bf6;
+}
+
 .expand-tool > .active-indicator {
   @apply rounded-full;
   width: 3px;
@@ -124,7 +128,7 @@
   padding: 9px 10px;
 }
 
-.expand-tool .active-pen-div {
+.expand-tool .current-pen {
   background: #868F9F;
 }
 

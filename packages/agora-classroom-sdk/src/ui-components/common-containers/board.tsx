@@ -1,73 +1,67 @@
 import { useBoardStore, useUIStore } from '@/hooks'
-import { Icon, t, TabPane, Tabs, Toolbar, ToolItem, useI18nContext, ZoomController, ZoomItemType } from 'agora-scenario-ui-kit'
+import { Resource } from '@/stores/app/board'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
-import React, { useCallback, useRef } from 'react'
+import React from 'react'
 import { useWhiteboardState } from '../hooks'
-import { CloudDiskContainer } from './cloud-driver'
 import { ColorsContainer } from './colors'
 import { CloseConfirm } from './dialog'
 import { PensContainer } from './pens'
 import { ToolCabinetContainer } from './tool-cabinet'
-import { UserListContainer } from './user-list'
 
 export const allTools: ToolItem[] = [
   {
     value: 'selection',
-    label: t('scaffold.selector'),
+    label: 'scaffold.selector',
     icon: 'select',
   },
   {
     value: 'pen',
-    label: t('scaffold.pencil'),
+    label: 'scaffold.pencil',
     icon: 'pen',
-    component: () => {
-      return <PensContainer />
+    component: (props: any) => {
+      return <PensContainer {...props}/>
     }
   },
   {
     value: 'text',
-    label: t('scaffold.text'),
+    label: 'scaffold.text',
     icon: 'text',
   },
   {
     value: 'eraser',
-    label: t('scaffold.eraser'),
+    label: 'scaffold.eraser',
     icon: 'eraser',
   },
   {
     value: 'color',
-    label: t('scaffold.color'),
+    label: 'scaffold.color',
     icon: 'color',
-    component: () => {
-      return <ColorsContainer />
+    component: (props: any) => {
+      return <ColorsContainer {...props}/>
     }
   },
   {
     value: 'blank-page',
-    label: t('scaffold.blank_page'),
+    label: 'scaffold.blank_page',
     icon: 'blank-page',
   },
   {
     value: 'hand',
-    label: t('scaffold.move'),
+    label: 'scaffold.move',
     icon: 'hand',
   },
   {
     value: 'cloud',
-    label: t('scaffold.cloud_storage'),
+    label: 'scaffold.cloud_storage',
     icon: 'cloud',
-    component: () => {
-      return <CloudDiskContainer />
-    }
-  },
-  {
-    value: 'follow',
-    label: t('scaffold.follow'),
-    icon: 'follow',
+    // component: () => {
+    //   return <CloudDiskContainer />
+    // }
   },
   {
     value: 'tools',
-    label: t('scaffold.tools'),
+    label: 'scaffold.tools',
     icon: 'tools',
     component: () => {
       return <ToolCabinetContainer/>
@@ -75,11 +69,8 @@ export const allTools: ToolItem[] = [
   },
   {
     value: 'register',
-    label: t('scaffold.user_list'),
+    label: 'scaffold.user_list',
     icon: 'register',
-    component: () => {
-      return <UserListContainer/>
-    }
   }
 ]
 
@@ -99,26 +90,26 @@ const TabsContainer = observer(() => {
   const uiStore = useUIStore()
   const resourcesList = boardStore.resourcesList
 
-  const handleChange = (resourceName: string) => {
-    boardStore.changeSceneItem(resourceName)
+  const handleChange = (resourceUuid: string) => {
+    boardStore.changeSceneItem(resourceUuid)
   }
   return (
     <Tabs activeKey={boardStore.activeSceneName} type="editable-card"
       onChange={handleChange}>
-      {resourcesList.map((item: any, key: number) => (
+      {resourcesList.map((item: Resource, key: number) => (
         <TabPane
-          key={item.resourceName}
+          key={item.resourceUuid}
           tab={
             <>
               {key === 0 && <Icon type="whiteboard" />}
-              {item.file.name}
+              {key === 0 ? transI18n("tool.board_name") : item.file.name}
             </>
           }
           closeIcon={
             <Icon type="close"
               onClick={() => {
                 uiStore.addDialog(CloseConfirm, {
-                  resourceName: item.resourceName,
+                  resourceUuid: item.resourceUuid,
                 })
               }}
             ></Icon>
@@ -145,7 +136,6 @@ export const WhiteboardContainer = observer(() => {
     currentSelector,
     activeMap,
     tools,
-    hasBoardPermission,
     showTab,
     showToolBar,
     showZoomControl,
