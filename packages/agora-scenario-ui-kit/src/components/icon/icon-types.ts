@@ -62,4 +62,5 @@ export type IconTypes =
   | 'register'
   | 'kick-out'
   | 'red-caution'
-  | 'laser-pointer';
+  | 'laser-pointer'
+  | 'recording';

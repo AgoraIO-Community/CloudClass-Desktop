@@ -4388,20 +4388,6 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-beautiful-dnd@13.0.0":
-  version "13.0.0"
-  resolved "https://registry.npm.taobao.org/@types/react-beautiful-dnd/download/@types/react-beautiful-dnd-13.0.0.tgz#e60d3d965312fcf1516894af92dc3e9249587db4"
-  integrity sha1-5g09llMS/PFRaJSvktw+kklYfbQ=
-  dependencies:
-    "@types/react" "*"
-
-"@types/react-color@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.npm.taobao.org/@types/react-color/download/@types/react-color-3.0.1.tgz#5433e2f503ea0e0831cbc6fd0c20f8157d93add0"
-  integrity sha1-VDPi9QPqDggxy8b9DCD4FX2TrdA=
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-color@^3.0.1":
   version "3.0.4"
   resolved "https://registry.npm.taobao.org/@types/react-color/download/@types/react-color-3.0.4.tgz#c63daf012ad067ac0127bdd86725f079d02082bd"
@@ -18479,18 +18465,6 @@ react-beautiful-dnd@13.0.0:
     redux "^4.0.4"
     use-memo-one "^1.1.1"
 
-react-color@2.17.3:
-  version "2.17.3"
-  resolved "https://registry.npm.taobao.org/react-color/download/react-color-2.17.3.tgz?cache=0&sync_timestamp=1603861902861&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-color%2Fdownload%2Freact-color-2.17.3.tgz#b8556d744f95193468c7061d2aa19180118d4a48"
-  integrity sha1-uFVtdE+VGTRoxwYdKqGRgBGNSkg=
-  dependencies:
-    "@icons/material" "^0.2.4"
-    lodash "^4.17.11"
-    material-colors "^1.2.1"
-    prop-types "^15.5.10"
-    reactcss "^1.2.0"
-    tinycolor2 "^1.4.1"
-
 react-color@^2.17.0:
   version "2.19.3"
   resolved "https://registry.npm.taobao.org/react-color/download/react-color-2.19.3.tgz?cache=0&sync_timestamp=1603861902861&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-color%2Fdownload%2Freact-color-2.19.3.tgz#ec6c6b4568312a3c6a18420ab0472e146aa5683d"
@@ -18639,7 +18613,7 @@ react-draggable@4.2.0:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-draggable@^4.0.3, react-draggable@^4.4.3:
+react-draggable@4.4.3, react-draggable@^4.0.3:
   version "4.4.3"
   resolved "https://registry.npm.taobao.org/react-draggable/download/react-draggable-4.4.3.tgz#0727f2cae5813e36b0e4962bf11b2f9ef2b406f3"
   integrity sha1-ByfyyuWBPjaw5JYr8RsvnvK0BvM=

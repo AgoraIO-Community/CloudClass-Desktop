@@ -101,7 +101,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
         </div>
         <div className="header-actions">
           {/* TODO recording icon replacement */}
-          <Icon type={isRecording ? "circle" : "record"} size={24} onClick={() => onClick('record')} />
+          <Icon type={isRecording ? "recording" : "record"} color={isRecording?'#2962F4':undefined} size={24} onClick={() => onClick('record')} />
           <Icon type="set" size={24} onClick={() => onClick('setting')}  />
           <Icon type="exit" size={24} onClick={() => onClick('exit')} />
         </div>
