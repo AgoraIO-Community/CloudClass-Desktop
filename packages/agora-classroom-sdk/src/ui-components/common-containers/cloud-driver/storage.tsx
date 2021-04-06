@@ -1,6 +1,6 @@
 import { useBoardStore } from '@/hooks'
 import { useStorageContext } from '@/ui-components/hooks'
-import { Col, IconBox, Inline, Row, Table, TableHeader, t, Placeholder } from 'agora-scenario-ui-kit'
+import { Col, IconBox, Inline, Row, Table, TableHeader, t, Placeholder, transI18n } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useEffect } from 'react'
@@ -12,9 +12,9 @@ export const StorageContainer = observer(() => {
   return (
     <Table>
     <TableHeader>
-      <Col>{t('cloud.fileName')}</Col>
-      <Col>{t('cloud.size')}</Col>
-      <Col>{t('cloud.operation')}</Col>
+      <Col>{transI18n('cloud.fileName')}</Col>
+      <Col>{transI18n('cloud.size')}</Col>
+      <Col>{transI18n('cloud.operation')}</Col>
     </TableHeader>
     <Table className="table-container">
       {itemList.length ? itemList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>

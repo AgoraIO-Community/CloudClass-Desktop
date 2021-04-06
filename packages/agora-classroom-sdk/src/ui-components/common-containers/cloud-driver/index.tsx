@@ -99,7 +99,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
             </Row>
             <UploadContainer handleUpdateCheckedItems={captureCheckedItems} />
           </TabPane>
-          <TabPane tab={t('cloud.downloadResources')} key="3">
+          <TabPane tab={transI18n('cloud.downloadResources')} key="3">
             <DownloadContainer />
           </TabPane>
         </Tabs>

@@ -1227,15 +1227,13 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get sceneVideoConfig() {
-    const roomType = get(this.roomInfo, 'roomType', 1)
-
-    const userRole = get(this.roomInfo, 'userRole', EduRoleTypeEnum.invisible)
-
+    const roomType = this.roomInfo?.roomType ?? 1
+    const userRole = this.roomInfo?.userRole ?? EduRoleTypeEnum.invisible
     const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
 
     const config = {
-      hideOffPodium: roomType === 1 ? true : false,
-      hideOffAllPodium: roomType === 1 ? true : false,
+      hideOffPodium: roomType === 0 ? true : false,
+      hideOffAllPodium: roomType === 0 ? true : false,
       isHost: isHost,
     }
 
