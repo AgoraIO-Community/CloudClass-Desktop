@@ -4,6 +4,7 @@ import Dexie from "dexie";
 import LogWorker from 'worker-loader?inline=true&fallback=false!./log.worker';
 import { EduLogLevel } from "./interfaces";
 import { LogUpload } from "../services/log-upload";
+import {IUploadProps} from '../../interfaces'
 
 const flat = (arr: any[]) => {
   return arr.reduce((arr, elem) => arr.concat(elem), []);
@@ -121,13 +122,13 @@ export class EduLogger {
     window.console = console;
   }
 
-  static async uploadElectronLog(roomId: any) {
+  static async uploadElectronLog(props:IUploadProps) {
     //@ts-ignore
     if (window.doGzip) {
       //@ts-ignore
       let file = await window.doGzip();
       const res = await this.logUploader.uploadZipLogFile(
-        roomId,
+        props,
         file
       )
       return res;
@@ -139,14 +140,14 @@ export class EduLogger {
     return +Date.now()
   }
 
-  static async enableUpload(roomUuid: string, isElectron: boolean) {
+  static async enableUpload(props:IUploadProps, isElectron: boolean) {
     const ids = [];
     // Upload Electron log
     if (isElectron) {
-      ids.push(await this.uploadElectronLog(roomUuid))
+      ids.push(await this.uploadElectronLog(props))
     }
     // Web upload log
-    ids.push(await this.uploadLog(roomUuid))
+    ids.push(await this.uploadLog(props))
     return ids.join("#")
   }
 
@@ -154,8 +155,8 @@ export class EduLogger {
 
   }
 
-  static async uploadLog(roomId: string) {
-    console.log('[LOG] [upload] roomId: ', roomId)
+  static async uploadLog(props:IUploadProps) {
+    console.log('[LOG] [upload] roomId: ', props.roomUuid)
     let logs: any[] = []
     await db.logs.each((e: any) => logs.push(e))
     const logsStr = logs
@@ -168,7 +169,7 @@ export class EduLogger {
     const file = new File([logsStr], `${now}`)
     
     let res: any = await this.logUploader.uploadLogFile(
-      roomId,
+      props,
       file,
     )
 

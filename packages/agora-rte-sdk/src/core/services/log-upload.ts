@@ -4,6 +4,7 @@ import md5 from "js-md5";
 import { get } from "lodash";
 import { UAParser } from 'ua-parser-js';
 import { GenericErrorWrapper } from "../utils/generic-error";
+import {IUploadProps} from '../../interfaces'
 
 const UA = new UAParser();
 const parser = UA.getResult()
@@ -59,10 +60,7 @@ export class LogUpload {
     this.appID = params.appId
   }
   
-  async fetchStsToken(roomId: string, fileExt: string) {
-
-    const _roomId = roomId ? roomId : 0
-
+  async fetchStsToken(props: IUploadProps, fileExt: string) {
     let timestamp = new Date().getTime()
     let body = {
       appId: this.appID,
@@ -72,7 +70,12 @@ export class LogUpload {
       fileExt: fileExt,
       platform: platform,
       tag: {
-        roomId: _roomId,
+        roomUuid: props.roomUuid,
+        roomName: props.roomName,
+        roomType: props.roomType,
+        userUuid: props.userUuid,
+        userName: props.userName,
+        role: props.role
       },
     }
 
@@ -102,15 +105,15 @@ export class LogUpload {
   }
 
   async uploadZipLogFile(
-    roomId: string,
+    props:IUploadProps,
     file: any
   ) {
-    const res = await this.uploadToOss(roomId, file, 'zip')
+    const res = await this.uploadToOss(props, file, 'zip')
     return res;
   }
 
   //TODO: only work in agora cef platform
-  private async uploadCefLogFile(roomId: string) {
+  private async uploadCefLogFile(props:IUploadProps) {
     // if (window.getCachePath) {
     //   await new Promise((resolve) => {
     //     window.getCachePath((path: string) => {
@@ -122,22 +125,22 @@ export class LogUpload {
     let resp = await fetch('https://convertcdn.netless.link/agorasdk.log');
     const blob = await resp.blob()
     const contentType = blob.type
-    const fileName = `${roomId}-cef.log`
+    const fileName = `${props.roomUuid}-cef.log`
     const file = new File([blob], fileName, {type: contentType})
-    await this.uploadToOss(roomId, file, 'log')
+    await this.uploadToOss(props, file, 'log')
   }
 
   // upload log
   async uploadLogFile(
-    roomId: string,
+    props:IUploadProps,
     file: any
   ) {
-    const res = await this.uploadToOss(roomId, file, 'log')
-    await this.uploadCefLogFile(roomId)
+    const res = await this.uploadToOss(props, file, 'log')
+    await this.uploadCefLogFile(props)
     return res;
   }
 
-  async uploadToOss(roomId: string, file: any, ext: string) {
+  async uploadToOss(props:IUploadProps, file: any, ext: string) {
     let {
       bucketName,
       callbackBody,
@@ -146,7 +149,7 @@ export class LogUpload {
       accessKeySecret,
       securityToken,
       ossKey
-    } = await this.fetchStsToken(roomId, ext);
+    } = await this.fetchStsToken(props, ext);
     const ossParams = {
       bucketName,
       callbackBody,

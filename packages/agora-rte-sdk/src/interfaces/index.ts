@@ -867,3 +867,12 @@ export interface IEduClassroomManager {
   // joinClassroom(config: EduClassroomSubscribeOption): Promise<EduUserService>;
   leaveClassroom(): Promise<any>
 }
+
+export interface IUploadProps {
+  roomUuid:string,
+  roomName:string,
+  roomType:number,
+  userName:string,
+  userUuid:string,
+  role:EduRoleTypeEnum
+}

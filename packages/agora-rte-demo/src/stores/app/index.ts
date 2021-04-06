@@ -236,8 +236,16 @@ export class AppStore implements ClassRoomAbstractStore {
   }
 
   async uploadLog() {
-    const roomUuid = this.roomInfo.roomUuid
-    await EduManager.uploadLog(roomUuid)
+    const  {roomUuid,roomName,roomType,} = this.roomInfo
+    const {userName,userUuid,roleType:role} = this.homeStore.launchOption
+    await EduManager.uploadLog({
+      roomUuid,
+      roomName,
+      roomType,
+      userName,
+      userUuid,
+      role
+    })
   }
 
   id: string = uuidv4()
