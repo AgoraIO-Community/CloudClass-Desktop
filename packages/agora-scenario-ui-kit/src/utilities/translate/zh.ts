@@ -1,8 +1,30 @@
 export const zh = {
+  'role': {
+    'teacher': '老师',
+    'student': '学生',
+    'assistant': '助教',
+  },
+  'screen_share': '屏幕共享',
+  'kick': {
+    'kick_out_student': '移出学生',
+  },
+  'radio': {
+    'kicked_once': '仅移出教室一次',
+    'ban': '禁止再次进入教室',
+  },
   'course': {
     'pre_class': '课前',
     'in_class': '已上课',
     'end_class': '课程已结束',
+    'join_failed': '加入失败',
+    'screen_sharing': '屏幕共享',
+  },
+  'device': {
+    'camera': '摄像头',
+    'microphone': '麦克风',
+    'speaker': '扬声器',
+    'microphone_volume': '麦克风音量',
+    'speaker_volume': '扬声器音量',
   },
   'roster': {
     'teacher_name': '教师姓名：',
@@ -17,6 +39,12 @@ export const zh = {
   },
   'hands_up': '举手',
   'co_video': {
+    'remote_open_camera': '{reason} 打开了你的摄像头',
+    'remote_open_microphone': '{reason} 打开了你的麦克风',
+    'remote_grant_board': '{reason} 授权了你的白板',
+    'remote_close_camera': '{reason} 关闭了你的摄像头',
+    'remote_close_microphone': '{reason} 关闭了你的麦克风',
+    'remote_revoke_board': '{reason} 收回了你的白板',
     'received_student_hands_up': '学生举手消息',
     'received_teacher_accepted': '收到老师同意的消息',
     'received_teacher_refused': '收到老师拒绝的消息',
@@ -34,6 +62,17 @@ export const zh = {
     'status': '网络状态',
     'CPU': 'CPU',
   },
+  'error': {
+    'not_found': '页面找不到',
+    'apply_co_video_limit': '举手超出连麦人数限制',
+    'send_co_video_limit': '点名超出连麦人数限制',
+    'components': {
+      'paramsEmpty': '参数：{reason}不能为空',
+    },
+    'class_end': '课程已结束，请点击确定离开教室',
+    'unknown': '发生未知错误，错误代码: {errCode}, 信息: {message}',
+    'room_is_full': '当前房间已满，请点击确认离开教室',
+  },
   'toast': {
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
@@ -41,7 +80,6 @@ export const zh = {
     'sure_close_ppt': '你确定要关闭吗？',
     'end_class': '课程已结束',
     'quit_from_room': '离开教室',
-    'warning_sensitive_words': '请注意：您的对话内容包含敏感词（例如：联系方式或金钱），这可能违反培训协议和阿卡索的其他相关规定。',
     'kick_by_teacher': '被老师踢出',
     'upload_log_failure': '上传日志失败，错误类型：{reason}, 详情参考开发者工具',
     'show_log_id': `请提供你的日志ID: {no}`,
@@ -57,8 +95,16 @@ export const zh = {
     'canceled_screen_share': '已取消屏幕共享',
     'screen_sharing_failed': '屏幕分享失败, 原因：{reason}',
     'recording_failed': '开启云录制失败, 原因：{reason}',
-    'start_recording': '开始云录制',
-    'stop_recording': '结束云录制',
+    'start_recording': {
+      'title': '录制提示',
+      'body': '你确定要开始录制吗?',
+      'success': '录制开启成功'
+    },
+    'stop_recording': {
+      'title': '停止录制',
+      'body': '你确定要停止录制吗?',
+      'success': '录制停止成功'
+    },
     'recording_too_short': '录制太短，至少15秒',
     'rtm_login_failed': '房间登录失败, 请检查网络设置',
     'rtm_login_failed_reason': '房间登录失败, 原因： {reason}',
@@ -163,7 +209,7 @@ export const zh = {
     'fileName': '文件名字',
     'size': '大小',
     'progress': '进度条',
-    'updatedAt': '修改时间',
+    'operation': '操作',
     'publicResources': '公共资源',
     'personalResources': '我的资源',
     'downloadResources': '下载资源',
@@ -171,7 +217,8 @@ export const zh = {
     'delete': '删除',
     'download': '下载',
     'downloading': '下载中',
-    'pause': '暂停'
+    'pause': '暂停',
+    'upload_success': '上传成功',
   },
   'media': {
     'camera': '摄像头',

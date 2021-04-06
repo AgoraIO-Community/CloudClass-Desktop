@@ -13,14 +13,14 @@ export const VideoPlayerTeacher = observer(() => {
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
+    onOffAllPodiumClick,
     sceneVideoConfig
   } = useVideoControlContext()
 
   return (
     <VideoPlayer
-      isHost={false}
+      isHost={sceneVideoConfig.isHost}
       hideOffPodium={true}
-      // hideBoardGranted={true}
       username={userStream.account}
       stars={userStream.stars}
       uid={userStream.userUuid}
@@ -28,13 +28,17 @@ export const VideoPlayerTeacher = observer(() => {
       cameraEnabled={userStream.video}
       hideControl={userStream.hideControl}
       whiteboardGranted={userStream.whiteboardGranted}
+      hideBoardGranted={true}
       hideStars={true}
       micVolume={userStream.micVolume}
+      hideOffAllPodium={sceneVideoConfig.hideOffAllPodium}
+      onOffAllPodiumClick={onOffAllPodiumClick!}
       onCameraClick={onCameraClick}
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
       controlPlacement={'left'}
+      placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
     >
       <CameraPlaceHolder state={userStream.holderState} />
@@ -81,6 +85,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       onSendStar={onSendStar}
       onOffPodiumClick={onOffPodiumClick}
       controlPlacement={controlPlacement}
+      placement={controlPlacement}
     >
       <CameraPlaceHolder state={userStream.holderState} />
       {

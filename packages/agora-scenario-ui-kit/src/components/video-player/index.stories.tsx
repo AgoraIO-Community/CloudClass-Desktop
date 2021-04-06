@@ -1,7 +1,9 @@
-import React, { FC, useState, useRef } from 'react';
 import { Meta } from '@storybook/react';
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import React, { FC, useState } from 'react';
 import { CameraPlaceHolder } from '~components';
+import { Button } from '~components/button';
+import { changeLanguage } from '~components/i18n';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
 const meta: Meta = {
   title: 'Components/VideoPlayer',
@@ -30,8 +32,15 @@ const meta: Meta = {
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
+  
   return (
     <div className="m-10">
+      <Button onClick={() => {
+        changeLanguage('zh')
+      }}>中文</Button>
+      <Button onClick={() => {
+        changeLanguage('en')
+      }}>英文</Button>
       <VideoPlayer {...restProps}>{children}</VideoPlayer>
     </div>
   );
@@ -63,17 +72,41 @@ const student = {
 
 export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, size, ...restProps }) => {
 
-  const list = [...'.'.repeat(size)].map((_, i: number) => ({
+  const list_ = [...'.'.repeat(size)].map((_, i: number) => ({
     ...student,
     username: `${i}-${student.username}`,
+    uid: `uuid-${i}`,
     children: (<></>)
   })) as any[]
+
+  const [list, setList] = useState(list_)
     
   return (
-
     //@ts-ignore
-    <VideoMarqueeList videoStreamList={list}>
-    </VideoMarqueeList>
+    <>
+      <Button onClick={() => {
+        changeLanguage('zh')
+      }}>中文</Button>
+      <Button onClick={() => {
+        changeLanguage('en')
+      }}>英文</Button>
+      <VideoMarqueeList videoStreamList={list} onSendStar={(uid, ) => {
+        return new Promise((resolve) => {
+          // console.log('send star', uid)
+          list.forEach(item => {
+            if (item.uid === uid) {
+              item.stars += 1
+            }
+          })
+          // console.log(list)
+          setList([
+            ...list
+          ])
+          resolve('send star')
+        })
+      }}>
+      </VideoMarqueeList>
+    </>
   )
 }
 

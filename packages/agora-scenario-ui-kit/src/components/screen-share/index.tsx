@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
 import classnames from 'classnames';
+import React, { FC } from 'react';
+import { Icon } from '~components/icon';
 import { BaseProps } from '~components/interface/base-props';
-import { Icon } from '~components/icon'
 import './index.css';
-import { useUnMount } from '~utilities/hooks';
 
 type WindowId = string | number;
 type WindowTitle = string | number;
@@ -19,11 +18,8 @@ export interface ScreenShareProps extends BaseProps {
     scrollHeight?: number;
     windowItems?: WindowItem[];
     onActiveItem: (id: WindowId) => void;
-    onConfirm: ConfirmCallback;
     currentActiveId: WindowId;
 }
-
-type ConfirmCallback = (evt: any) => void
 
 export const ScreenShare: FC<ScreenShareProps> = ({
     screenShareTitle,
@@ -32,14 +28,11 @@ export const ScreenShare: FC<ScreenShareProps> = ({
     className,
     currentActiveId,
     onActiveItem,
-    onConfirm = (evt: any) => console.log('index', evt),
 }) => {
     const cls = classnames({
         [`screen-share sub-title`]: 1,
         [`${className}`]: !!className,
     });
-
-    useUnMount(() => onConfirm(currentActiveId))
 
     return (
         <>
@@ -54,8 +47,7 @@ export const ScreenShare: FC<ScreenShareProps> = ({
                             onActiveItem(item.id!)
                         }}
                     >
-                        <div className="program-item-img">
-                            {item.image ? <img src={item.image} alt=""/> : null}
+                        <div className="program-item-img" style={item.image ? {backgroundImage: `url(data:image/png;base64,${item.image})`} : {}}>
                         </div>
                         <div className="program-item-title">
                             {item.id === currentActiveId  ? ( <Icon type="checked" size={16} color={'#357BF6'}/>) : ""}

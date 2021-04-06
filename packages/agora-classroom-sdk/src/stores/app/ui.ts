@@ -1,13 +1,8 @@
-import { isElectron } from './../../utils/utils';
-import { v4 as uuidv4 } from 'uuid';
-import { GlobalStorage } from '@/utils/utils';
-import { observable, action, computed } from 'mobx';
-import { AppStore } from '.';
-import { platform } from '@/utils/utils';
-import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
-import { t } from "@/i18n/index";
+import { ToastCategory } from 'agora-scenario-ui-kit';
 import { isEmpty } from 'lodash';
-import { ToastCategory } from 'agora-scenario-ui-kit'
+import { action, computed, observable } from 'mobx';
+import { v4 as uuidv4 } from 'uuid';
+import { AppStore } from '.';
 
 
 interface NoticeMessage {
@@ -105,15 +100,13 @@ export class UIStore {
   }
 
   addDialog(component: any, props?: any) {
-    const id = uuidv4()
+    const id = (props && props.id) ? props.id : uuidv4()
     this.dialogQueue.push({id, component, props})
     return id
   }
 
   removeDialog(id: string) {
-    const idx = this.dialogQueue.findIndex((item: DialogType) => item.id !== id)
-    this.dialogQueue.splice(idx, 1)
-    return id;
+    this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
   }
 
   toggleChatMinimize() {

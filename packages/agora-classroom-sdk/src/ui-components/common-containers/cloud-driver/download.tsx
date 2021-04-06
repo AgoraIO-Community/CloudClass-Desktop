@@ -1,7 +1,7 @@
 import { useBoardStore } from '@/hooks'
 import { useDownloadContext } from '@/ui-components/hooks'
 import { StorageCourseWareItem } from '@/stores/storage'
-import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
+import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader, transI18n } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 
@@ -11,6 +11,7 @@ export const DownloadContainer = observer(() => {
     startDownload,
     deleteDownload,
     itemList,
+    onResourceClick,
   } = useDownloadContext()
 
   return (
@@ -19,12 +20,14 @@ export const DownloadContainer = observer(() => {
         <Col>{t('cloud.fileName')}</Col>
         <Col>{t('cloud.size')}</Col>
         <Col>{t('cloud.progress')}</Col>
-        <Col>{t('cloud.updatedAt')}</Col>
+        <Col>{t('cloud.operation')}</Col>
       </TableHeader>
       <Table className="table-container">
         {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
           <Row height={10} border={1} key={`${id}${idx}`}>
-            <Col>
+            <Col style={{cursor: 'pointer'}} onClick={() => {
+              onResourceClick(id)
+            }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>
@@ -41,9 +44,9 @@ export const DownloadContainer = observer(() => {
                   !download ? 
                   <Button type="secondary" disabled={progress === 100} action="download" onClick={async () => {
                     await startDownload(taskUuid)
-                  }}>{!download ? t('cloud.download') : t('cloud.downloading')}</Button>
+                  }}>{!download ? <span>{transI18n('cloud.download')}</span> : <span>{transI18n('cloud.downloading')}</span>}</Button>
                 : 
-                  <Button type="secondary" disabled={progress === 100}>{t('cloud.downloading')}</Button>
+                  <Button type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
                 }
                 <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{t('cloud.delete')}</Button>
               </Row>

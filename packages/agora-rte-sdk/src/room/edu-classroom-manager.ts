@@ -5,6 +5,7 @@ import { EduLogger } from '../core/logger';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { EventEmitter } from 'events';
 import { EduManager } from "../manager";
+import { OperatorUser, EduClassroomManagerEventHandlers, ListenerCallbackType } from './types';
 import { 
   EduStreamData,
   EduUserData,
@@ -23,8 +24,7 @@ export type EduClassroomInitParams = {
   apiService: AgoraEduApi
   // rtcProvider: any
 }
-
-export class EduClassroomManager extends EventEmitter {
+export class EduClassroomManager {
 
   private _roomUuid: string
 
@@ -34,10 +34,11 @@ export class EduClassroomManager extends EventEmitter {
   private _apiService?: AgoraEduApi
   private _userService?: EduUserService
   private _rtmObserver?: EventEmitter
+
+  private bus: EventEmitter;
   // private _mediaService?: MediaService
 
   constructor(payload: EduClassroomInitParams) {
-    super()
     this.eduManager = payload.eduManager
     this.rawRoomUuid = payload.roomUuid
     this._roomUuid = payload.roomUuid
@@ -45,8 +46,38 @@ export class EduClassroomManager extends EventEmitter {
     this._apiService = payload.apiService
     this._userService = undefined
     this._rtmObserver = undefined
+    this.bus = new EventEmitter()
     // reportService.initReportParams()
     // this._mediaService = new MediaService(payload.rtcProvider)
+  }
+
+  on<EventName extends keyof EduClassroomManagerEventHandlers>(
+    eventName: EventName,
+    listener: (
+      args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>
+    ) => any
+  ): void {
+    this.bus.on(eventName, listener)
+  }
+
+  off<EventName extends keyof EduClassroomManagerEventHandlers>(
+    eventName: EventName,
+    listener: (
+      args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>
+    ) => any
+  ): void {
+    this.bus.off(eventName, listener)
+  }
+
+  removeAllEventListener(): void {
+    this.bus.removeAllListeners()
+  }
+
+  emit(
+    eventName: string,
+    args: any
+  ): void {
+    this.bus.emit(eventName, args)
   }
 
   public get syncingData(): boolean {
