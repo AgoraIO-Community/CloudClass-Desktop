@@ -77,7 +77,10 @@ const en = {
       "microphoneTestFailed": "Microphone not work",
       "speakerTestFailed": "Speaker not work",
       "cancel": "Cancel",
-      "reload": "Reload"
+      "reload": "Reload",
+      "camera_loading": "Camera Loading",
+      "camera_muted": "Camera Muted",
+      "camera_broken": "Camera Broken"
     }
   },
   "extension": {

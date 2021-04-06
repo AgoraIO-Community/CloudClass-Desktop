@@ -9,7 +9,7 @@ const meta: Meta = {
 }
 
 const optionData = [...'.'.repeat(10)].map((item, index) => ({
-    value: index,
+    value: index + "test".repeat(100)
 }))
 
 export const Docs = () => (

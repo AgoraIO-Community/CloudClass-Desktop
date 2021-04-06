@@ -1,6 +1,6 @@
 import { ToastCategory } from 'agora-scenario-ui-kit';
 import { isEmpty } from 'lodash';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { AppStore } from '.';
 
@@ -70,12 +70,21 @@ export class UIStore {
   toastQueue: ToastType[] = []
 
   @observable
-  chatCollapse: boolean = true
+  chatCollapse: boolean = false
 
   appStore: AppStore;
 
   constructor(appStore: AppStore) {
     this.appStore = appStore
+    reaction(() => JSON.stringify([
+      this.chatCollapse
+    ]) , (data: string) => {
+      const [chatCollapse] = JSON.parse(data)
+      if (!chatCollapse) {
+        // 已经缩小的chat组件，点击后需要清空消息数
+        this.appStore.roomStore.resetUnreadMessageCount()
+      }
+    })
   }
 
   resetStateQueue() {

@@ -65,6 +65,7 @@ export const Chat: FC<ChatProps> = ({
   chatText,
   closeIcon,
   unreadCount = 0,
+  collapse = false,
   onCanChattingChange,
   onText,
   onSend,
@@ -137,7 +138,9 @@ export const Chat: FC<ChatProps> = ({
     <Affix
       {...resetProps}
       onCollapse={onCollapse}
-      content={<ChatMin unreadCount={unreadCount} />}>
+      collapse={collapse}
+      content={<ChatMin unreadCount={unreadCount} 
+      />}>
       <div className="chat-panel">
         <div className="chat-header">
           <span className="chat-header-title">{t('message')}</span>
