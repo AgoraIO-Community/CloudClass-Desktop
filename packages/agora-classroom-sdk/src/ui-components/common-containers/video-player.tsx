@@ -1,4 +1,4 @@
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from 'agora-scenario-ui-kit'
+import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer, transI18n } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { RendererPlayer } from '../common-comps/renderer-player'
@@ -43,13 +43,14 @@ export const VideoPlayerTeacher = observer(() => {
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
     >
-      <CameraPlaceHolder state={userStream.holderState} />
       {
         userStream.renderer && userStream.video ?
         <RendererPlayer
           key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
         />
-        : null
+        : (
+          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
+        )
       }
     </VideoPlayer>)
 })
@@ -89,13 +90,14 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       controlPlacement={controlPlacement}
       placement={controlPlacement}
     >
-      <CameraPlaceHolder state={userStream.holderState} />
       {
         userStream.renderer && userStream.video ?
         <RendererPlayer
           key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
         />
-        : null
+        : (
+          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
+        )
       }
     </VideoPlayer>
   )

@@ -126,3 +126,16 @@ html, body, #root {
 .fullscreen .video-marquee-pin ~ .board-box {
   margin-top: 0px;
 }
+
+.placeholder-desc {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7d8798;
+  left: 0;
+  right: 0;
+  bottom: 15px;
+  margin: auto;
+  text-align: center;
+  z-index: 999;
+}

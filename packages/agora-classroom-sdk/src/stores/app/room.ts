@@ -654,6 +654,11 @@ export class RoomStore extends SimpleInterval {
     this.unreadMessageCount = 0
   }
 
+  @action
+  incrementUnreadMessageCount(){
+    this.unreadMessageCount++
+  }
+
   @computed
   get delay(): string {
     return `${this.appStore.mediaStore.delay}`
@@ -1086,6 +1091,9 @@ export class RoomStore extends SimpleInterval {
           role: `${this.getRoleEnumValue(fromUser.role)}`,
           isOwn: false
         })
+        if (this.appStore.uiStore.chatCollapse) {
+          this.incrementUnreadMessageCount()
+        }
         BizLogger.info('room-chat-message', evt)
       })
       const { sceneType, userRole } = this.getSessionConfig()

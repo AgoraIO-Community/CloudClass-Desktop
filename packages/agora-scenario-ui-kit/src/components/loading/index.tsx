@@ -23,6 +23,7 @@ export interface LoadingProps extends BaseProps {
     currentProgress?: number; // 当hasProgress为true时生效
     footer?: React.ReactNode[];
     uploadItemList?: UploadItem[];
+    onClick?: (id: string, type: 'delete' | 'click') => void;
 }
 
 export const Loading: FC<LoadingProps> = ({
@@ -33,6 +34,7 @@ export const Loading: FC<LoadingProps> = ({
     footer = [],
     uploadItemList = [],
     className,
+    onClick,
     ...restProps
 }) => {
     const cls = classnames({
@@ -76,7 +78,9 @@ export const Loading: FC<LoadingProps> = ({
                                 )}
                             </div>
                             <div>
-                                <Icon type="delete" color="#273D75" style={{marginLeft: 60}}/>
+                                <Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
+                                    onClick && onClick(index.toString(), 'delete')
+                              }/>
                             </div>
                         </div>
                     ))}

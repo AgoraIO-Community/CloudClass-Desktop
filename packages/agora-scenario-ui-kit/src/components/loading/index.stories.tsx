@@ -4,6 +4,7 @@ import { Card } from '~components/card';
 import { Loading } from '~components/loading';
 import { Button } from '~components/button'
 import { Modal } from '~components/modal'
+import { action } from '@storybook/addon-actions';
 
 const meta: Meta = {
     title: 'Components/Loading',
@@ -87,6 +88,7 @@ export const Docs = () => (
                 width={450}
             >
                 <Loading
+                    onClick = {action('onClick')}
                     hasLoadingGif={false}
                     uploadItemList={
                         [

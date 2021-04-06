@@ -22,7 +22,7 @@ export const Affix: FC<AffixProps> = ({
 }) => {
   return (
     <>
-      {collapse ? (
+      {!collapse ? (
         children
       ) : (
         <div
