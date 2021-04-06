@@ -24,9 +24,6 @@ type ReportPointParams = {
         platform: "web" | "electron"
         version: string,
         appId: string,
-        rid: string,
-        uid: string,
-        sid?: string,
         event?: string,
         category?: string,
         result?: string,
@@ -96,9 +93,6 @@ export class ReportService extends ApiBase {
                     platform: this.platform,
                     version: this.version,
                     appId: this.appId,
-                    rid: this.rid,
-                    uid: this.rtmUid,
-                    sid: this.sid,
                     event,
                     category,
                     result: result === undefined ? undefined : `${+result}`,
@@ -135,7 +129,9 @@ export class ReportService extends ApiBase {
         const opts: any = {
           method,
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-agora-token': this.rtmToken,
+            'x-agora-uid': this.rtmUid
           }
         }
         if (data) {
@@ -156,7 +152,7 @@ export class ReportService extends ApiBase {
             return
         }
         const res = await this.request({
-            path: `/v1/report`,
+            path: `/cn/v1.0/projects/${this.appId}/app-dev-report/v1/report`,
             method: 'POST',
             data: this.buildHBParams()
         })
@@ -168,7 +164,7 @@ export class ReportService extends ApiBase {
             return
         }
         const res = await this.request({
-            path: `/v1/report`,
+            path: `/cn/v1.0/projects/${this.appId}/app-dev-report/v1/report`,
             method: 'POST',
             data: this.buildEventParams(event, category, metric, optional || {})
         })

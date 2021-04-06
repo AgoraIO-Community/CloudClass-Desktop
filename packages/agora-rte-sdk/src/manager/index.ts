@@ -99,6 +99,10 @@ export class EduManager extends EventEmitter {
       rtmUid: this.config.rtmUid,
       rtmToken: this.config.rtmToken
     })
+    reportService.updateRtmConfig({
+      rtmUid: this.config.rtmUid,
+      rtmToken: this.config.rtmToken
+    })
   }
 
   private get rtmWrapper(): RTMWrapper {
