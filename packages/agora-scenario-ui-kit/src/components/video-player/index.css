@@ -200,22 +200,5 @@
 }
 
 .no_granted {
-  color: #bdbdca !important;
-}
-
-.video-player-tools .iconfont::before{
-  border-radius: 50%;
-} 
-
-.video-player-tools .iconfont:hover::before {
-  background-color: #f0f0f7;
-}
-
-.center-reward {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
+  color: #bdbdca;
 }

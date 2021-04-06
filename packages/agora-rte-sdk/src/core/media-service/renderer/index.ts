@@ -1,9 +1,9 @@
-import { ITrack } from 'agora-rtc-sdk-ng';
-import { v4 as uuidv4 } from 'uuid';
+import { EduLogger } from './../../logger/index';
+import { ILocalVideoTrack, ITrack } from 'agora-rtc-sdk-ng';
+import { AgoraWebRtcWrapper } from "../web";
 import { AgoraElectronRTCWrapper } from "../electron";
 import { MediaService } from '../index';
-import { AgoraWebRtcWrapper } from "../web";
-import { EduLogger } from './../../logger/index';
+import {v4 as uuidv4} from 'uuid';
 
 type SourceType = 'default' | 'screen';
 
@@ -94,15 +94,80 @@ export class LocalUserRenderer extends UserRenderer {
     if (this.isWeb) {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
+        console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
+        
+        // let videoElement = dom.getElementsByTagName('video')[0] as any
+        // this.fpsTimer = setInterval(() => {
+        //   let frames = videoElement.getVideoPlaybackQuality().totalVideoFrames
+        //   this.renderFrameRate = frames - this.previousFrame
+        //   this.previousFrame = frames
+        //   if(this.renderFrameRate === 0) {
+        //     this.freezeCount++
+        //   } else {
+        //     this.freezeCount = 0
+        //   }
+        // }, 1000)
       }
     }
     if (this.isElectron) {
       // @ts-ignore
       if (this.sourceType === 'default') {
         // TODO: cef
-        this.electron.client.setupLocalVideo(dom)
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 0);
+        // remove canvas
+        if (this.electron._cefClient) {
+          // Promise.resolve((async () => {
+            const oldEl = dom.getElementsByTagName('canvas') as any
+            if (oldEl) {
+              const items = [...oldEl]
+              items.forEach((item: any) => {
+                if (item.id && item.id.match(/^agoraLocal/i)) {
+                  item.innerHTML = ''
+                }
+              })
+            }
+
+            this.fpsTimer = setInterval(() => {
+              let fps = 0
+              // @ts-ignore
+              if(window.bufferMap && window.bufferMap[0]){
+                // @ts-ignore
+                fps = window.bufferMap[0].fps || 0
+              }
+
+              this.renderFrameRate = fps
+              if(fps === 0) {
+                this.freezeCount++
+              } else {
+                this.freezeCount = 0
+              }
+            }, 1000)
+
+            this.el = document.createElement('canvas')
+            this.el.id = `agoraLocal-${this.uid}`
+            this.el.style.position = 'absolute'
+            this.el.style.height = '100%'
+            this.el.style.width = '100%'
+            this.el.style.objectFit = 'cover'
+            this.el.style.transform = 'rotateY(180deg) scale(1.0)'
+            // this.el.style.visibility = 'visible'
+            // this.el.style.visibility = 'visible'
+            // Object.assign(this.el.style, {
+            //   width: '100%',
+            //   height: '100%',
+            //   visibility: 'visible',
+            //   display: 'flex',
+            //   ['objectFit']: 'cover',
+            //   'transform': 'rotateY(180deg)',
+            // })
+            dom.appendChild(this.el)
+            this.electron.client.setupLocalVideo(this.el)
+            //@ts-ignore
+            this.electron.client.setLocalRenderMode(3);
+        } else {
+          this.electron.client.setupLocalVideo(dom)
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 0);
+        }
       } else {
         this.electron.client.setupLocalVideoSource(dom)
         //@ts-ignore
@@ -159,13 +224,39 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
-      this.electron.client.setupRemoteVideo(+this.uid, dom, this.channel)
-      if (!fit) {
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 0, this.channel);
+      if (this.electron._cefClient) {
+        // remove canvas
+        // Promise.resolve((async () => {
+          const oldEl = dom.getElementsByTagName('canvas') as any
+          if (oldEl) {
+            const items = [...oldEl]
+            items.forEach((item: any) => {
+              if (item.id && item.id.match(/^agoraRemote/i)) {
+                item.innerHTML = ''
+              }
+            })
+          }
+          this.el = document.createElement('canvas')
+          this.el.id = `agoraRemote-${this.uid}`
+          this.el.style.position = 'absolute'
+          this.el.style.height = '100%'
+          this.el.style.width = '100%'
+          this.el.style.objectFit = 'cover'
+          this.el.style.transform = 'rotateY(180deg) scale(1.0)'
+          dom.appendChild(this.el)
+          //@ts-ignore
+          this.electron.client.setupRemoteVideo(this.el, +this.uid)
+
       } else {
-        //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+        // this.electron.client.subscribe(+this.uid, dom,)
+        this.electron.client.setupRemoteVideo(+this.uid, dom, this.channel)
+        if (!fit) {
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 0, this.channel);
+        } else {
+          //@ts-ignore
+          this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+        }
       }
     }
     this._playing = true

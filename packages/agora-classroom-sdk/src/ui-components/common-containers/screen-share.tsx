@@ -1,27 +1,27 @@
-import { ScreenShare } from 'agora-scenario-ui-kit';
+import React, { useState } from 'react'
+import { IconButton, Icon, Modal, Button, ScreenShare } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react';
-import React from 'react';
-import { useScreenShareContext } from '../hooks';
+import { useScreenSharePlayerContext } from '../hooks';
 
-export type ScreenShareContainerProps = {
-    windowId: string,
-    setWindowId: (newValue: string) => void,
-}
+export const ScreenShareContainer = observer(() => {
 
-export const ScreenShareContainer: React.FC<ScreenShareContainerProps> = observer((props) => {
-    const {
-        windowItems,
-        subTitle,
-    } = useScreenShareContext()
-    
+    const windowItems: any[] = []
+    // const {
+    // windowItems
+    // } = useScreenSharePlayerContext
+    // TODO: 子标题待确认
+    const subTitle = 'screen share sub-title';
+    const [windowId, setWindowId] = useState<string>('')
     return (
+
         <ScreenShare
             onActiveItem={(id: any) => {
-                props.setWindowId(id)
+                setWindowId(id)
             }}
-            currentActiveId={props.windowId}
+            currentActiveId={windowId}
             screenShareTitle={subTitle}
             windowItems={windowItems}
+            onConfirm={() => { }}
         ></ScreenShare>
     )
 })

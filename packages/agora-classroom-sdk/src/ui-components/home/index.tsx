@@ -1,9 +1,9 @@
-import { LanguageEnum } from '@/edu-sdk'
 import { useHomeStore } from '@/hooks'
 import { homeApi } from '@/services/home-api'
 import { storage } from '@/utils/utils'
 import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk'
 import { Home } from 'agora-scenario-ui-kit'
+import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React, { useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -18,13 +18,9 @@ export const HomePage = observer(() => {
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
-  const [duration, setDuration] = useState<number>(30)
+  const [duration, setDuration] = useState<number>(30000)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>('zh')
-
-  const onChangeLanguage = (language: string) => {
-    setLanguage(language)
-  }
+  // const [lang, setL]
 
   const role = useMemo(() => {
     const roles = {
@@ -61,20 +57,9 @@ export const HomePage = observer(() => {
     'userId': setUserId,
   }
 
-  const onChangeRoomId = (newValue: string) => {
-    text['roomId'](newValue)
-  }
-
-  const onChangeUserId = (newValue: string) => {
-    text['userId'](newValue)
-  }
-
-  const onChangeRoomName = (newValue: string) => {
-    text['roomName'](newValue)
-  }
-
-  const onChangeUserName = (newValue: string) => {
-    text['userName'](newValue)
+  const onChange = (type: string, value: string) => {
+    const caller = text[type]
+    caller && caller(value)
   }
 
   const history = useHistory()
@@ -93,18 +78,13 @@ export const HomePage = observer(() => {
       duration={duration}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
-      onChangeRoomId={onChangeRoomId}
-      onChangeUserId={onChangeUserId}
-      onChangeRoomName={onChangeRoomName}
-      onChangeUserName={onChangeUserName}
+      onChangeText={onChange}
       onChangeStartDate={(date: Date) => {
         setStartDate(date)
       }}
       onChangeDuration={(duration: number) => {
         setDuration(duration)
       }}
-      language={language}
-      onChangeLanguage={onChangeLanguage}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
         homeStore.setLaunchConfig({
@@ -112,7 +92,8 @@ export const HomePage = observer(() => {
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
-          language: language as LanguageEnum,
+          translateLanguage: "auto",
+          language: 'en',
           userUuid: `${userUuid}`,
           rtmToken,
           roomUuid: `${roomId}`,
@@ -121,7 +102,7 @@ export const HomePage = observer(() => {
           userName: userName,
           roleType: role,
           startTime: +startDate,
-          duration: duration * 60,
+          duration: duration,
         })
         history.push('/launch')
       }}

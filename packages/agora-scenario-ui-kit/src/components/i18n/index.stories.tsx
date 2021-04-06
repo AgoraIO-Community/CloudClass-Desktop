@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
 import { Button } from '~components';
-import { t, changeLanguage, transI18n } from '~components/i18n'
+import { I18nProvider, useI18nContext } from '~components/i18n'
 
 const meta: Meta = {
   title: 'Components/I18n',
@@ -13,6 +13,15 @@ export type CloudStorageProps = {
 }
 
 const Text = ({text}: any) => {
+
+  const {i18n, t} = useI18nContext()
+
+  //@ts-ignore
+  window.i18n = i18n
+
+  //@ts-ignore
+  window.t = t
+
   const [lang, setLanguage] = useState<string>('zh')
   
   return (
@@ -20,16 +29,17 @@ const Text = ({text}: any) => {
       <div className="w-20">{t(text)}</div>
       <Button onClick={() => {
         setLanguage(lang === 'zh' ? 'en' : 'zh')
-        changeLanguage(lang === 'zh' ? 'en' : 'zh')
+        i18n.changeLanguage(lang === 'zh' ? 'en' : 'zh')
       }}>{t('zh')}</Button>
-      <div>{transI18n('error.unknown', {errCode: '123', message: 'test'})}</div>
     </div>
   )
 }
 
 export const CloudStorage = ({width, size}: CloudStorageProps) => {
   return(
-    <Text text="message"></Text>
+    <I18nProvider>
+      <Text text="message"></Text>
+    </I18nProvider>
   )
 }
 

@@ -5,5 +5,4 @@ export interface Message {
   role: string;
   timestamp: number;
   content: string;
-  isOwn: boolean;
 }

@@ -1,13 +1,13 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Affix, AffixProps } from '~components/affix';
-import { Button } from '~components/button';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Placeholder } from '~components/placeholder';
+import './index.css';
+import { Button } from '~components/button';
+import { Message } from './interface';
 import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
-import './index.css';
-import { Message } from './interface';
+import { t, transI18n } from '~components/i18n';
+import { Affix, AffixProps } from '~components/affix';
 
 export interface ChatProps extends AffixProps {
   /**
@@ -72,9 +72,6 @@ export const Chat: FC<ChatProps> = ({
   onPullFresh,
   ...resetProps
 }) => {
-
-  const {t} = useTranslation()
-
   const [focused, setFocused] = useState<boolean>(false);
 
   const handleFocus = () => setFocused(true);
@@ -105,18 +102,6 @@ export const Chat: FC<ChatProps> = ({
     }
   }
 
-  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if(event.key === 'Enter') {
-      if(event.ctrlKey) {
-        event.currentTarget.value += '\n'
-      } else if(!event.shiftKey && !event.altKey) {
-        // send message if enter is hit
-        event.preventDefault()
-        await handleSend()
-      }
-    }
-  }
-
   const handleSend = async () => {
     await onSend()
     scrollDirection.current = 'bottom'
@@ -140,7 +125,7 @@ export const Chat: FC<ChatProps> = ({
       content={<ChatMin unreadCount={unreadCount} />}>
       <div className="chat-panel">
         <div className="chat-header">
-          <span className="chat-header-title">{t('message')}</span>
+          <span className="chat-header-title">{transI18n('message')}</span>
           <span>
             {isHost ? (
               <Icon
@@ -150,7 +135,7 @@ export const Chat: FC<ChatProps> = ({
                 type={canChatting ? 'message-on' : 'message-off'}
               />
             ) : null}
-            <span style={{cursor: 'pointer'}} onClick={() => onCollapse && onCollapse()}>
+            <span onClick={() => onCollapse && onCollapse()}>
               {closeIcon && closeIcon}
             </span>
           </span>
@@ -171,7 +156,7 @@ export const Chat: FC<ChatProps> = ({
               <ChatMessage
                 key={message.id}
                 {...message}
-                isOwn={message.isOwn}
+                isOwn={uid === message.uid}
               />
             ))
           )}
@@ -181,12 +166,11 @@ export const Chat: FC<ChatProps> = ({
             value={chatText}
             rows={1}
             className="chat-texting-message"
-            placeholder={t('placeholder.input_message')}
+            placeholder={transI18n('placeholder.input_message')}
             disabled={!isHost && !canChatting}
             onChange={(e) => onText(e.currentTarget.value)}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            onKeyPress={handleKeypress}
           />
           <Button disabled={!isHost && !canChatting} onClick={handleSend}>
             {t('send')}

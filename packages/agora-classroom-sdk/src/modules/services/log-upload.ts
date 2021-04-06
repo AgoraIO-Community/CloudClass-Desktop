@@ -2,6 +2,7 @@ import { getIntlError } from "@/services/intl-error-helper";
 import { AgoraFetch } from "../utils/fetch";
 import OSS from "ali-oss";
 import md5 from "js-md5";
+import {t} from '@/i18n/index'; 
 import { get } from "lodash";
 import { UAParser } from 'ua-parser-js';
 import { GenericErrorWrapper } from "agora-rte-sdk";
@@ -66,7 +67,7 @@ export class LogUpload {
     let timestamp = new Date().getTime()
     let body = {
       appId: this.appID,
-      appVersion: 'version',
+      appVersion: t('build_version'),
       deviceName: parser.os.name,
       deviceVersion: parser.os.version,
       fileExt: fileExt,

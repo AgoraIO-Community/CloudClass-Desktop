@@ -1307,32 +1307,28 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   async openTestCamera(option?: CameraOption): Promise<any> {
     if (this.joined) {
-      EduLogger.warn('joined mode not support openTestCamera')
-      return
+      throw 'electron not support openTestCamera'
     }
     await this.openCamera(option)
   }
   
   closeTestCamera() {
     if (this.joined) {
-      EduLogger.warn('joined mode not support closeTestCamera')
-      return
+      throw 'electron not support closeTestCamera'
     }
     this.closeCamera()
   }
   
   async changeTestCamera(deviceId: string): Promise<any> {
     if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestCamera')
-      return
+      throw 'electron not support changeTestCamera'
     }
     await this.changeCamera(deviceId)
   }
   
   async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
     if (this.joined) {
-      EduLogger.warn('joined mode not support openTestMicrophone')
-      return
+      throw 'electron not support openTestMicrophone'
     }
     await this.openMicrophone(option)
     // const res = this.client.startAudioRecordingDeviceTest(300)
@@ -1341,16 +1337,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   
   async changeTestResolution(config: any): Promise<any> {
     if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestResolution')
-      return
+      throw 'electron not support changeTestResolution'
     }
     await this.changeResolution(config)
   }
   
   closeTestMicrophone() {
     if (this.joined) {
-      EduLogger.warn('joined mode not support closeTestMicrophone')
-      return
+      throw 'electron not support closeTestMicrophone'
     }
     // const res = this.client.stopAudioRecordingDeviceTest()
     // EduLogger.info('closeTestMicrophone stopAudioRecordingDeviceTest: ',  res)
@@ -1359,8 +1353,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   
   async changeTestMicrophone(deviceId: string): Promise<any> {
     if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestMicrophone')
-      return
+      throw 'electron not support changeTestMicrophone'
     }
     await this.changeMicrophone(deviceId)
   }

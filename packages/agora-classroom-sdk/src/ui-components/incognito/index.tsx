@@ -70,6 +70,7 @@ export const IncognitoPage = observer(() => {
         startTime,
         duration,
         recordUrl,
+        translateLanguage: '',
         courseWareList: [],
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)

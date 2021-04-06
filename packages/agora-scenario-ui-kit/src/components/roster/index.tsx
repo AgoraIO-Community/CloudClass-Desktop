@@ -1,10 +1,8 @@
-import React, { FC, ReactNode, useCallback } from 'react';
-import { t, transI18n } from '~components/i18n';
-import { Icon } from '~components/icon';
+import React, { FC, ReactNode } from 'react';
+import { t } from '~components/i18n';
 import { Modal, ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
-import Draggable from 'react-draggable';
 import './index.css';
 
 export { defaultColumns } from './default-columns';
@@ -46,7 +44,6 @@ export interface Column {
 }
 
 export interface RosterProps extends ModalProps {
-  isDraggable?: boolean;
   /**
    * 老师姓名
    */
@@ -72,73 +69,65 @@ export interface RosterProps extends ModalProps {
    */
   onClose?: () => void;
 }
+
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
   dataSource,
   onClick,
-  onClose = () => console.log("onClose"),
+  onClose,
   role,
-  title,
-  isDraggable = true
+  ...modalProps
 }) => {
+
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
-    return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
-  }, [isDraggable])
-
   return (
-    <DraggableContainer>
-      <div className="agora-board-resources roster-wrap">
-        <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
-            onClose()
-          }}></Icon>
+    <Modal
+      className="roster-modal"
+      width={606}
+      title={t('roster.user_list')}
+      onCancel={onClose}
+      {...modalProps}>
+      <div className="roster-wrap">
+        <div className="roster-header">
+          <label>{t('roster.teacher_name')}</label>
+          {teacherName}
         </div>
-        <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
-        </div>
-        <div>
-          <div className="roster-header">
-            <label>{t('roster.teacher_name')}</label>
-            {teacherName}
-          </div>
-          <Table className="roster-table">
-            <TableHeader>
-              {cols.map((col) => (
-                <Col key={col.key}>{t(col.name)}</Col>
-              ))}
-            </TableHeader>
-            <Table className="table-container">
-              {dataSource?.map((data) => (
-                <Row className='border-bottom-width-1' key={data.uid}>
-                  {cols.map((col) => (
-                    <Col key={col.key}>
-                      <span
-                        className={
-                          !!data.disabled === false ? 'action' : ''
-                        }
-                        onClick={
-                          !!data.disabled === false
-                            ? () =>
-                                col.action &&
-                                onClick &&
-                                onClick(col.action, data.uid)
-                            : undefined
-                        }>
-                        {col.render
-                          ? col.render((data as any)[col.key], data)
-                          : (data as any)[col.key]}
-                      </span>
-                    </Col>
-                  ))}
-                </Row>
-              ))}
-            </Table>
+        <Table className="roster-table">
+          <TableHeader>
+            {cols.map((col) => (
+              <Col key={col.key}>{col.name}</Col>
+            ))}
+          </TableHeader>
+          <Table className="table-container">
+            {dataSource?.map((data) => (
+              <Row className='border-bottom-width-1' key={data.uid}>
+                {cols.map((col) => (
+                  <Col key={col.key}>
+                    <span
+                      className={
+                        !!data.disabled === false ? 'action' : ''
+                      }
+                      onClick={
+                        !!data.disabled === false
+                          ? () =>
+                              col.action &&
+                              onClick &&
+                              onClick(col.action, data.uid)
+                          : undefined
+                      }>
+                      {col.render
+                        ? col.render((data as any)[col.key], data)
+                        : (data as any)[col.key]}
+                    </span>
+                  </Col>
+                ))}
+              </Row>
+            ))}
           </Table>
-        </div>
+        </Table>
       </div>
-    </DraggableContainer>
+    </Modal>
   );
 };
