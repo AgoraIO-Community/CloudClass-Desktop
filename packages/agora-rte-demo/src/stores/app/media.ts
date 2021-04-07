@@ -278,8 +278,10 @@ export class MediaStore {
         this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
         if(evt.stats.decoderOutputFrameRate === 0 ){
           this.rendererOutputFreezeCount[`${evt.user.uid}`]++
+          this.rendererOutputFreezeCount[`${evt.user.uid}`] === 3 && BizLogger.info(`freezeCount eq 3 ${evt.user.uid}`)
         } else if(evt.stats.decoderOutputFrameRate > 0) {
           this.rendererOutputFreezeCount[`${evt.user.uid}`] = 0
+          BizLogger.info(`freezeCount clear ${evt.user.uid}`)
           this.rendererFirstFrameRendered[`${evt.user.uid}`] = true
         }
         BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
