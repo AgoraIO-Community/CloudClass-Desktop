@@ -1328,14 +1328,11 @@ export class SceneStore extends SimpleInterval {
   }
 
   fixWebVolume(volume: number) {
-    console.log('### web volume ', volume)
     if (volume > 0.01 && volume < 1) {
       const v = Math.min(+volume * 10, 0.8)
-      console.log('### web volume: volume > 0.01 && volume < 1 ', v)
       return v
     }
     const v = Math.min(+(volume / 100).toFixed(2), 0.8)
-    console.log('### web volume: Math.min(+(volume / 100).toFixed(2), 0.8) ', v)
     return v
   }
 

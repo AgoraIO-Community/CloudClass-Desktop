@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useCallback } from 'react';
 import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
-import { Modal, ModalProps } from '~components/modal';
+import { ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
@@ -102,7 +102,7 @@ export const Roster: FC<RosterProps> = ({
         <div>
           <div className="roster-header">
             <label>{t('roster.teacher_name')}</label>
-            {teacherName}
+            <span className="roster-username">{teacherName}</span>
           </div>
           <Table className="roster-table">
             <TableHeader>
@@ -112,12 +112,12 @@ export const Roster: FC<RosterProps> = ({
             </TableHeader>
             <Table className="table-container">
               {dataSource?.map((data) => (
-                <Row className='border-bottom-width-1' key={data.uid}>
-                  {cols.map((col) => (
+                <Row className={'border-bottom-width-1'} key={data.uid}>
+                  {cols.map((col, idx: number) => (
                     <Col key={col.key}>
                       <span
                         className={
-                          !!data.disabled === false ? 'action' : ''
+                          `${idx === 0 ? 'roster-username' : ''}${!!data.disabled === false ? 'action' : ''}`
                         }
                         onClick={
                           !!data.disabled === false

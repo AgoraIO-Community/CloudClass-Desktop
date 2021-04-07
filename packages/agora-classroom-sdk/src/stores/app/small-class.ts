@@ -174,6 +174,11 @@ export class SmallClassStore {
   }
 
   @computed
+  get acceptedIds() {
+    return this.acceptedList.map((it: any) => it.userUuid)
+  }
+
+  @computed
   get acceptedCoVideoUserList() {
     const userList = get(this.roomStore.sceneStore, 'userList', [])
     const acceptedList = this.acceptedList
@@ -275,6 +280,20 @@ export class SmallClassStore {
     // })
   }
 
+  checkDisable(user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): boolean {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+      return false
+    }
+
+    if (role === EduRoleTypeEnum.student 
+        && this.appStore.roomInfo.userUuid === user.userUuid
+        && this.acceptedIds.includes(user.userUuid)
+      ) {
+      return false
+    }
+    return true
+  }
+
 
   transformRosterUserInfo (user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): RosterUserInfo {
     return {
@@ -291,7 +310,8 @@ export class SmallClassStore {
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       stars: +get(this.studentsMap, `${user.userUuid}.reward`, 0),
-      disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
+      disabled: this.checkDisable(user, role, stream)
+      // disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
     }
   }
 
@@ -370,22 +390,23 @@ export class SmallClassStore {
     switch (actionType) {
       case 'podium': {
         if (user.onPodium) {
-          // if (this.roomInfo.userUuid === user.uid && this.roomInfo.userRole === EduRoleTypeEnum.student) {
-          //   await this.revokeCoVideo
-          // }
           if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
             await this.revokeCoVideo(user.uid)
           }
         } else {
-          await this.teacherAcceptHandsUp(user.uid)
+          if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+            await this.teacherAcceptHandsUp(user.uid)
+          }
         }
         break;
       }
       case 'whiteboard': {
-        if (user.whiteboardGranted) {
-          await this.appStore.boardStore.revokeBoardPermission(uid)
-        } else {
-          await this.appStore.boardStore.grantBoardPermission(uid)
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+          if (user.whiteboardGranted) {
+            await this.appStore.boardStore.revokeBoardPermission(uid)
+          } else {
+            await this.appStore.boardStore.grantBoardPermission(uid)
+          }
         }
         break;
       }
@@ -414,7 +435,9 @@ export class SmallClassStore {
         break;
       }
       case 'kick-out': {
-        this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+          this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+        }
         break;
       }
     }
