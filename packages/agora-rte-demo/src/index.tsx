@@ -26,10 +26,10 @@ if (isElectron) {
   EduManager.useElectron()
 }
 
-eduSDKApi.updateConfig({
-  sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-  appId: `${REACT_APP_AGORA_APP_ID}`,
-})
+// eduSDKApi.updateConfig({
+//   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+//   appId: `${REACT_APP_AGORA_APP_ID}`,
+// })
 
 // AgoraEduSDK.config({
 //   appId: `${REACT_APP_AGORA_APP_ID}`,
@@ -53,9 +53,10 @@ eduSDKApi.updateConfig({
 ReactDOM.render(
   <App
     appConfig={{
-      agoraAppId: `${REACT_APP_AGORA_APP_ID}`,
-      agoraNetlessAppId: `${REACT_APP_NETLESS_APP_ID}`,
-      sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+      agoraAppId: '',
+      agoraNetlessAppId: '',
+      sdkDomain: '',
+      reportDomain: '',
       enableLog: true,
       rtmToken: '',
       rtmUid: '',

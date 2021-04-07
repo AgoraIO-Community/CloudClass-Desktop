@@ -31,6 +31,7 @@ export const LaunchPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
+      AgoraEduSDK.setParameters(JSON.stringify({"edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co"}))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
       })

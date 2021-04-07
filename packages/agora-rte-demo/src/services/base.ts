@@ -1,5 +1,6 @@
 import { GenericErrorWrapper } from "agora-rte-sdk";
 import { HttpClient } from "@/modules/utils/http-client";
+import { globalConfigs } from "@/utils/configs";
 
 export interface AgoraFetchParams {
   url?: string
@@ -38,8 +39,11 @@ export abstract class ApiBase {
   protected prefix!: string
 
   constructor(params: ApiBaseInitializerParams) {
-    this.appId = params.appId
-    this.sdkDomain = params.sdkDomain
+    // this.appId = params.appId
+    // this.sdkDomain = params.sdkDomain
+    // unify sdkDomain for all services
+    this.appId = globalConfigs.appId
+    this.sdkDomain = globalConfigs.sdkDomain
     this.rtmToken = params.rtmToken
     this.rtmUid = params.rtmUid
   }

@@ -2,6 +2,7 @@ import { ApiBase, ApiBaseInitializerParams } from "./base";
 import md5 from "js-md5";
 import { GenericErrorWrapper } from "agora-rte-sdk";
 import { HttpClient } from "@/modules/utils/http-client";
+import { globalConfigs } from "@/utils/configs";
 
 type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>
 
@@ -55,6 +56,7 @@ export class ReportService extends ApiBase {
 
     constructor(params: ApiBaseInitializerParams) {
         super(params)
+        this.sdkDomain = params.sdkDomain
         this.prefix = `${this.sdkDomain}`
     }
 
@@ -216,7 +218,7 @@ export class ReportService extends ApiBase {
 }
 
 export const reportService = new ReportService({
-  sdkDomain: 'https://api-test.agora.io',
+  sdkDomain: globalConfigs.reportDomain,
   appId: '',
   rtmToken: '',
   rtmUid: ''

@@ -176,6 +176,7 @@ export interface EduConfiguration {
   logDirectoryPath: string;
   codec?: string
   sdkDomain?: string
+  reportDomain?: string
   rtmUid: string
   rtmToken: string
 }
