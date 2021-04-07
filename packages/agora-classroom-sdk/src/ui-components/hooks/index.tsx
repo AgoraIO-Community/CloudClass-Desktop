@@ -5,8 +5,8 @@ import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
-import { EduLogger, EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
-import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, ZoomItemType, t, transI18n } from "agora-scenario-ui-kit"
+import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sdk"
+import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, transI18n, ZoomItemType } from "agora-scenario-ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -1390,11 +1390,11 @@ export const useWhiteboardState = () => {
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomStore.roomInfo.userRole)) {
       return [true, true]
     }
-    if (roomStore.roomInfo.roomType === 0 && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [boardStore.hasPermission, boardStore.hasPermission]
+    if (roomStore.roomInfo.roomType === EduRoomType.SceneType1v1 && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, boardStore.hasPermission]
     }
 
-    if (roomStore.roomInfo.roomType === 4 && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+    if (roomStore.roomInfo.roomType === EduRoomType.SceneTypeMiddleClass && roomStore.roomInfo.userRole === EduRoleTypeEnum.student) {
       return [true, boardStore.hasPermission]
     }
 

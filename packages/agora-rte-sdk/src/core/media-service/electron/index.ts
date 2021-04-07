@@ -243,6 +243,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   microphoneList: any[] = []
 
   _subClient: Record<string, any>;
+  _localAudioStats: {
+    audioLossRate: number
+  };
+  _localVideoStats: {
+    videoLossRate: number
+  };
   _remoteVideoStats: Record<number, any>;
   _remoteAudioStats: Record<number, any>;
   _cefClient: any;
@@ -250,6 +256,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   get deviceList(): any[] {
     return this.cameraList.concat(this.microphoneList)
   }
+
+  cpuUsage: number = 0
+  gatewayRtt: number = 0
 
   constructor(options: ElectronWrapperInitOption) {
     super();
@@ -268,6 +277,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this._subClient = {}
     this._remoteVideoStats = {}
     this._remoteAudioStats = {}
+    this._localVideoStats = {
+      videoLossRate: 0
+    }
+    this._localAudioStats = {
+      audioLossRate: 0
+    }
     //@ts-ignore
     this.client = options.AgoraRtcEngine
     let ret = -1
@@ -294,7 +309,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableVideo()
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
-    this.client.enableAudioVolumeIndication(1000, 3, true)
+    this.client.enableAudioVolumeIndication(300, 3, true)
     // this.client.setVideoProfile(20)
 
     const resolutionConfig = options.resolution
@@ -414,6 +429,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.localUid = undefined
     this.channel = undefined
     this.subscribedList = []
+    this.cpuUsage = 0
+    this.gatewayRtt = 0
     this.releaseSubChannels()
   }
 
@@ -428,7 +445,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (['user-unpublished', 'user-published'].includes(eventName)) {
       EduLogger.info(`[agora-apaas] ${eventName} ${JSON.stringify(args)}`)
     }
-    // EduLogger.info(eventName, ...args)
     this.emit(eventName, ...args)
   }
 
@@ -498,6 +514,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
+        cpuUsage: this.cpuUsage,
+        rtt: this.gatewayRtt,
+        localPacketLoss: {
+          audioStats: this._localAudioStats,
+          videoStats: this._localVideoStats
+        },
         remotePacketLoss:{
           audioStats: this._remoteAudioStats,
           videoStats: this._remoteVideoStats
@@ -597,7 +619,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('rtcStats', (evt: any) => {
+      this.cpuUsage = evt.cpuTotalUsage
+      this.gatewayRtt = evt.gatewayRtt
       this.fire('rtcStats', evt)
+    })
+    this.client.on('localAudioStats', (evt: any) => {
+      this._localAudioStats = {
+        audioLossRate: evt.txPacketLossRate ?? 0,
+      }
+    })
+    this.client.on('localVideoStats', (evt: any) => {
+      this._localVideoStats = {
+        videoLossRate: evt.txPacketLossRate ?? 0,
+      }
     })
     this.client.on('remoteVideoStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
@@ -658,6 +692,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
+        cpuUsage: this.cpuUsage,
+        localPacketLoss: {
+          audioStats: this._localAudioStats,
+          videoStats: this._localVideoStats
+        },
         remotePacketLoss:{
           audioStats: this._remoteAudioStats,
           videoStats: this._remoteVideoStats
@@ -837,6 +876,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('RtcStats', (evt: any) => {
+      // only electron
+      this.cpuUsage = evt.cpuTotalUsage
       this.fire('rtcStats', evt)
     })
   }

@@ -31,6 +31,8 @@ export const zh = {
     'user_list': '人员列表',
     'student_name': '学生姓名',
     'student_co_video': '学生上下台',
+    'close_student_co_video': '学生下台',
+    'open_student_co_video': '学生上台',
     'board_state': '学生授权',
     'camera_state': '摄像头',
     'microphone_state': '麦克风',

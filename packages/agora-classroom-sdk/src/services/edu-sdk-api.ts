@@ -342,6 +342,23 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async startShareScreen(roomId: string, userUuid: string) {
+    const state = 1
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/${state}`,
+      method: 'POST',
+    })
+    return res.data;
+  }
+
+  async stopShareScreen(roomId: string, userUuid: string) {
+    const state = 0
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/${state}`,
+      method: 'POST',
+    })
+    return res.data;
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({

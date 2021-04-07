@@ -9,6 +9,11 @@ import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000
 
+type LocalPacketLoss = {
+  audioStats: { audioLossRate: number },
+  videoStats: { videoLossRate: number }
+}
+
 export enum LocalVideoStreamState {
   LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
   LOCAL_VIDEO_STREAM_STATE_CAPTURING = 1,
@@ -73,6 +78,9 @@ export class MediaStore {
   }
 
   @observable
+  cpuUsage: number = 0
+
+  @observable
   localVideoState: LocalVideoStreamState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
 
   @observable
@@ -82,6 +90,27 @@ export class MediaStore {
   get delay(): string {
     return `${this._delay}`
   }
+
+  @observable
+  localPacketLoss: LocalPacketLoss = {
+    audioStats: {
+      audioLossRate: 0
+    },
+    videoStats: {
+      videoLossRate: 0
+    }
+  }
+
+  @action
+  updateNetworkPacketLostRate(localPacketLoss: unknown) {
+    this.localPacketLoss = localPacketLoss as LocalPacketLoss
+  }
+
+  @computed
+  get localPacketLostRate() {
+    return Math.max(this.localPacketLoss.audioStats.audioLossRate, this.localPacketLoss.videoStats.videoLossRate)
+  }
+
 
   @action
   updateSignalStatusWithRemoteUser(mixSignalStatus: any[]) {
@@ -214,10 +243,6 @@ export class MediaStore {
         this.appStore.uiStore.showAutoplayNotification()
       }
     })
-    this.mediaService.on('watch-rtt', (evt: any) => {
-      // console.log(`media-service: ${this.mediaService._id}`)
-      this._delay = evt.RTT
-    })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
@@ -247,8 +272,16 @@ export class MediaStore {
       //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
       // }
       this.updateNetworkQuality(qualityStr || defaultQuality)
-      const { remotePacketLoss: { audioStats, videoStats } } = evt;
+      const {
+        remotePacketLoss: { audioStats, videoStats },
+        localPacketLoss
+      } = evt;
       const mixSignalStatus = this.remoteMaxPacketLoss(audioStats, videoStats);
+      if (evt.hasOwnProperty('cpuUsage')) {
+        this.cpuUsage = evt.cpuUsage
+      }
+      this._delay = evt.rtt
+      this.updateNetworkPacketLostRate(localPacketLoss)
       this.updateSignalStatusWithRemoteUser(this.userSignalStatus(mixSignalStatus))
     })
     this.mediaService.on('connection-state-change', (evt: any) => {
@@ -329,6 +362,7 @@ export class MediaStore {
   }
 
   reset() {
+    this.cpuUsage = 0
     this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
     EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`)

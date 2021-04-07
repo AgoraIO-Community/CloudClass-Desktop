@@ -6,11 +6,12 @@ import { AppStore } from '@/stores/app/index';
 import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
 import { Mutex } from '@/utils/mutex';
 import { BizLogger } from '@/utils/utils';
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduSceneType, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
 import { transI18n } from 'agora-scenario-ui-kit';
 import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
+import { EduRoomType } from 'agora-rte-sdk';
 import { SimpleInterval } from './../mixin/simple-interval';
 import { LocalVideoStreamState } from './media';
 
@@ -386,6 +387,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @computed
   get roomUuid(): string {
     return this.appStore.roomInfo.roomUuid
   }
@@ -395,6 +397,7 @@ export class SceneStore extends SimpleInterval {
     try {
       this.waitingShare = true
       await this.roomManager?.userService.startShareScreen()
+      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -763,6 +766,7 @@ export class SceneStore extends SimpleInterval {
       }
       if (this._screenEduStream) {
         await this.roomManager?.userService.stopShareScreen()
+        // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
         this._screenEduStream = undefined
       }
       this.sharing = false
@@ -782,6 +786,7 @@ export class SceneStore extends SimpleInterval {
         encoderConfig: '720p'
       })
       await this.roomManager?.userService.startShareScreen()
+      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -845,6 +850,7 @@ export class SceneStore extends SimpleInterval {
   async stopNativeSharing() {
     if (this.screenEduStream) {
       await this.roomManager?.userService.stopShareScreen()
+      // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
       this._screenEduStream = undefined
     }
     if (this._screenVideoRenderer) {
@@ -892,7 +898,7 @@ export class SceneStore extends SimpleInterval {
 
   isBigClassStudent(): boolean {
     const userRole = this.roomInfo.userRole
-    return +this.roomInfo.roomType === 2 && userRole === EduRoleTypeEnum.student
+    return +this.roomInfo.roomType === EduRoomType.SceneTypeBigClass && userRole === EduRoleTypeEnum.student
   }
 
   get eduManager() {
@@ -901,9 +907,9 @@ export class SceneStore extends SimpleInterval {
 
   getStudentConfig() {
     const roomType = +this.roomInfo.roomType
-    if (roomType === 2 || roomType === 4) {
+    if (roomType === EduRoomType.SceneTypeBigClass || roomType === EduRoomType.SceneTypeMiddleClass) {
       return {
-        sceneType: EduSceneType.SceneLarge,
+        sceneType: roomType,
         userRole: 'audience'
       }
     }
@@ -1232,8 +1238,8 @@ export class SceneStore extends SimpleInterval {
     const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
 
     const config = {
-      hideOffPodium: roomType === 0 ? true : false,
-      hideOffAllPodium: roomType === 0 ? true : false,
+      hideOffPodium: roomType === EduRoomType.SceneType1v1 ? true : false,
+      hideOffAllPodium: roomType === EduRoomType.SceneType1v1 ? true : false,
       isHost: isHost,
     }
 
@@ -1322,10 +1328,15 @@ export class SceneStore extends SimpleInterval {
   }
 
   fixWebVolume(volume: number) {
+    console.log('### web volume ', volume)
     if (volume > 0.01 && volume < 1) {
-      return Math.min(+volume * 10, 0.8)
+      const v = Math.min(+volume * 10, 0.8)
+      console.log('### web volume: volume > 0.01 && volume < 1 ', v)
+      return v
     }
-    return Math.min(+(volume / 100).toFixed(2), 0.8)
+    const v = Math.min(+(volume / 100).toFixed(2), 0.8)
+    console.log('### web volume: Math.min(+(volume / 100).toFixed(2), 0.8) ', v)
+    return v
   }
 
   @computed

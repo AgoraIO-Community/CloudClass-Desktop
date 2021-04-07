@@ -31,6 +31,8 @@ export const en = {
     'user_list': 'User List',
     'student_name': 'Name',
     'student_co_video': 'CoVideo',
+    'close_student_co_video': '{{teacher}}, Close Student CoVideo',
+    'open_student_co_video': '{{teacher}}, Open Student CoVideo',
     'board_state': 'Board',
     'camera_state': 'Camera',
     'microphone_state': 'Microphone',

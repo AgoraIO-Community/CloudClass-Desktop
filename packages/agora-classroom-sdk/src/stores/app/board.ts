@@ -1,19 +1,18 @@
-import { CloudDriverDialog, UserListDialog } from './../../ui-components/common-containers/dialog';
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
 import { BoardClient } from '@/modules/board/client';
-import { EnumBoardState } from '@/modules/services/board-api';
-import { allTools } from '@/ui-components/common-containers/board';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
+import { allTools } from '@/ui-components/common-containers/board';
+import { CloudDriverDialog, UserListDialog } from '@/ui-components/common-containers/dialog';
 import { OSSConfig } from '@/utils/helper';
 import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transLineTool, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
-import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
-import { ToolItem, t, transI18n } from 'agora-scenario-ui-kit';
+import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
+import { ToolItem, transI18n } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
-import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
+import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
@@ -1250,23 +1249,31 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools() {
-    if (this.appStore.roomInfo.roomType === 0) {
-      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+    const {userRole, roomType} = this.appStore.roomInfo
+    if (roomType === EduRoomType.SceneType1v1) {
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'tools', 'register'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools', 'register'].includes(item.value))  
       }
-      return allTools.filter((item: ToolItem) => item.value !== 'register')
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        if (this.hasPermission) {
+          return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+        } else {
+          return []
+        }
+      }
+      return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
     }
-    if (this.appStore.roomInfo.roomType === 4) {
-      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+    if (roomType === EduRoomType.SceneTypeMiddleClass) {
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return allTools.filter((item: ToolItem) => !['tools'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
           return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
