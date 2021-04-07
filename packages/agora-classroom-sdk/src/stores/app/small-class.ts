@@ -54,14 +54,8 @@ export class SmallClassStore {
   }
 
   @computed
-  get teachers() {
-    return get(this.roomStore, 'roomProperties.teachers', {})
-  }
-
-  @computed
   get teacherName() {
-    const teacherUid = Object.keys(this.teachers)[0]
-    return get(this.teachers, `${teacherUid}.name`, '')
+    return this.teacherInfo?.userName ?? 'teacher' 
   }
 
   @computed
@@ -221,7 +215,7 @@ export class SmallClassStore {
       })
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(...BusinessExceptions.getErrorInfo(error)))
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
       console.log('studentHandsUp err', error)
       throw error;
     }
@@ -248,7 +242,7 @@ export class SmallClassStore {
       })
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(...BusinessExceptions.getErrorInfo(error)))
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
       console.log('teacherAcceptHandsUp err', error)
       throw error;
     }

@@ -396,8 +396,8 @@ export class SceneStore extends SimpleInterval {
   async startNativeScreenShareBy(windowId: number) {
     try {
       this.waitingShare = true
-      await this.roomManager?.userService.startShareScreen()
-      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
+      // await this.roomManager?.userService.startShareScreen()
+      await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -765,8 +765,8 @@ export class SceneStore extends SimpleInterval {
         this._screenVideoRenderer = undefined
       }
       if (this._screenEduStream) {
-        await this.roomManager?.userService.stopShareScreen()
-        // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
+        // await this.roomManager?.userService.stopShareScreen()
+        await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
         this._screenEduStream = undefined
       }
       this.sharing = false
@@ -785,8 +785,8 @@ export class SceneStore extends SimpleInterval {
         shareAudio: 'auto',
         encoderConfig: '720p'
       })
-      await this.roomManager?.userService.startShareScreen()
-      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
+      // await this.roomManager?.userService.startShareScreen()
+      await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -849,8 +849,8 @@ export class SceneStore extends SimpleInterval {
   @action
   async stopNativeSharing() {
     if (this.screenEduStream) {
-      await this.roomManager?.userService.stopShareScreen()
-      // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
+      // await this.roomManager?.userService.stopShareScreen()
+      await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
       this._screenEduStream = undefined
     }
     if (this._screenVideoRenderer) {

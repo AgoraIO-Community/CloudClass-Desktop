@@ -1,5 +1,5 @@
-import { GenericErrorWrapper } from 'agora-rte-sdk';
-import { GenericError } from './../../../agora-rte-sdk/src/core/utils/generic-error';
+import { transI18n } from 'agora-scenario-ui-kit';
+import { GenericError } from 'agora-rte-sdk';
 
 const ExceptionMapping = {
     "20410100": 'error.class_end',
@@ -16,11 +16,11 @@ export class BusinessExceptions {
         return 'error.unknown'
     }
 
-    static getErrorInfo(err: GenericError): any {
+    static getErrorText(err: GenericError): string {
         const result = this.getReadableText(err.errCode)
         if (result === 'error.unknown') {
-            return [result, {errCode: err.errCode, message: err.message}]
+            return transI18n(result, {errCode: err.errCode, message: err.message})
         }
-        return [result]
+        return transI18n(result)
     }
 }

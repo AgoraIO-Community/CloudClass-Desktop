@@ -91,7 +91,7 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
       footer={ButtonGroup()}
       title={t('course.join_failed')}
     >
-      {transI18n(...BusinessExceptions.getErrorInfo(error))}
+      {BusinessExceptions.getErrorText(error)}
     </Modal>
   )
 })
@@ -253,10 +253,10 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         uiStore.removeDialog(id)
         try {
           await (starting ? onStartRecording() : onStopRecording())
-          uiStore.addToast(transI18n(starting?'toast.start_recording.success':'toast.stop_recording.success'))
+          uiStore.addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
         }catch(err) {
           const wrapperError = GenericErrorWrapper(err)
-          uiStore.addToast(transI18n(...BusinessExceptions.getErrorInfo(wrapperError)), 'error')
+          uiStore.addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
         }
       }}
       onCancel={() => {
