@@ -11,6 +11,7 @@ import { SceneDefinition } from 'white-web-sdk';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
 import { checkConfigParams, checkDiskOption, checkLaunchOption, checkReplayOption } from './validator';
+import {globalConfigs} from '@/utils/configs'
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -36,7 +37,9 @@ export interface ApplicationConfigParameters {
 
 type SDKConfig = {
   configParams: AgoraEduSDKConfigParams
-  sdkDomain: string
+  sdkDomain: string,
+  reportDomain: string
+  logDomain: string
 }
 
 const sdkConfig: SDKConfig = {
@@ -53,7 +56,9 @@ const sdkConfig: SDKConfig = {
     // whiteboardAppId: '',
     // rtmUid: '',
   },
-  sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+  sdkDomain: 'https://api.agora.io',
+  reportDomain: 'https://api.agora.io',
+  logDomain: 'https://api-solutions.agoralab.co'
 }
 
 export type LanguageEnum = "" | "en" | "zh"
@@ -180,15 +185,39 @@ export class AgoraEduSDK {
     this._list = list
   }
 
+  static setParameters(params: string) {
+    try {
+      let json = JSON.parse(params)
+      if(json["edu.apiUrl"]) {
+        sdkConfig.sdkDomain = json["edu.apiUrl"]
+      } 
+      if(json["edu.reportUrl"]) {
+        sdkConfig.reportDomain = json["edu.reportUrl"]
+      } 
+      if(json["edu.logUrl"]) {
+        sdkConfig.logDomain = json["edu.logUrl"]
+      }
+      console.info(`setParameters ${params}`)
+    }catch(e) {
+      console.error(`parse private params failed ${params}`)
+    }
+  }
+
   static config (params: AgoraEduSDKConfigParams) {
 
     checkConfigParams(params);
 
     Object.assign(sdkConfig.configParams, params)
     eduSDKApi.updateConfig({
-      sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+      sdkDomain: sdkConfig.sdkDomain,
       appId: sdkConfig.configParams.appId,
     })
+
+    // globalConfigs should only be copied here
+    globalConfigs.reportDomain = sdkConfig.reportDomain
+    globalConfigs.sdkDomain = sdkConfig.sdkDomain
+    globalConfigs.logDomain = sdkConfig.logDomain
+    globalConfigs.appId = sdkConfig.configParams.appId
   }
 
   static _launchTime = 0
@@ -241,6 +270,7 @@ export class AgoraEduSDK {
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,
           sdkDomain: sdkConfig.sdkDomain,
+          reportDomain: sdkConfig.reportDomain,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
           cachePath: sdkConfig.configParams.cachePath,

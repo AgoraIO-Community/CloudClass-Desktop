@@ -28,8 +28,8 @@ export class HomeApi extends ApiBase {
 }
 
 export const homeApi = new HomeApi({
-  sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-  appId: `${REACT_APP_AGORA_APP_ID}`,
+  sdkDomain: ``,
+  appId: ``,
   rtmToken: '',
   rtmUid: ''
 })

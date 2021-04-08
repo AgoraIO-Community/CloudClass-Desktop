@@ -25177,10 +25177,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.7:
-  version "2.12.7"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.12.7.tgz#a3d4c0624559b23374b6a725f6164b7d2221afa8"
-  integrity sha512-+BxeU6pA/XMHAMa7DPR/Nfv2j6obt3XfhRLlj8s3pGs3eaCLU7iFyBKrld6JfyIo4i4qk5JpfKjIm1DYNVeKYw==
+white-web-sdk@2.12.8:
+  version "2.12.8"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.12.8.tgz#d1612f150fb93a11db7a682b50d786d88e36d85d"
+  integrity sha512-48jjajXR35mBTYFJJTuDImQAHMg4JRqRXF7DcofQGW6Gmdw5soarInbs35TdA8vFkXIv8qumN+vUKTXXDig1eA==
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"

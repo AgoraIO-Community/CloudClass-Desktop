@@ -56,6 +56,7 @@ export type AppStoreConfigParams = {
   // agoraRestFullToken: string
   enableLog: boolean
   sdkDomain: string
+  reportDomain: string
   rtmUid: string
   rtmToken: string
   courseWareList: CourseWareList
@@ -282,6 +283,7 @@ export class AppStore implements ClassRoomAbstractStore {
           agoraRtc: AgoraCEF.AgoraRtcEngine,
           // agoraRtc: window,
           sdkDomain: config.sdkDomain,
+          reportDomain: config.reportDomain
         })
       } else {
         this.eduManager = new EduManager({
@@ -295,6 +297,7 @@ export class AppStore implements ClassRoomAbstractStore {
           agoraRtc: window.rtcEngine,
           // agoraRtc: window,
           sdkDomain: config.sdkDomain,
+          reportDomain: config.reportDomain
         })
       }
     } else {
@@ -307,6 +310,7 @@ export class AppStore implements ClassRoomAbstractStore {
         logDirectoryPath: config.cachePath || '',
         codec: 'vp8',
         sdkDomain: config.sdkDomain,
+        reportDomain: config.reportDomain
       })
     }
 
@@ -403,6 +407,7 @@ export class AppStore implements ClassRoomAbstractStore {
         // agoraRestFullToken: this.params.config.agoraRestFullToken,
         enableLog: true,
         sdkDomain: this.params.config.sdkDomain,
+        reportDomain: this.params.config.reportDomain,
         rtmUid: this.params.config.rtmUid,
         rtmToken: this.params.config.rtmToken,
       },

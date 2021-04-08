@@ -92,6 +92,12 @@ export class ReportService extends ApiBase {
         this.connectionState = state
     }
 
+    updateConfig(params: ConfigParams) {
+        this.appId = params.appId
+        this.sdkDomain = params.sdkDomain
+        this.prefix = `${this.sdkDomain}`
+      }
+
     buildBaseParams(ctype: string, src: string, m:string, metric: ReportPointMetricParams, optional: ReportPointOptionalParams, event?:string, category?: string):ReportParams {
         const ts = new Date().getTime()
         const sign = md5(`src=${src}&ts=${ts}`)

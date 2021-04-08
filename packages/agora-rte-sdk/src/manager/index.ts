@@ -84,6 +84,10 @@ export class EduManager extends EventEmitter {
         sdkDomain: `${this.config.sdkDomain}`
       }
     )
+    reportService.updateConfig({
+      appId: this.config.appId,
+      sdkDomain: `${this.config.reportDomain}`
+    })
     Object.assign(
       internalEduManagerConfig,
       {

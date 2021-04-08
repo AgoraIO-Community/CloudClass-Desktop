@@ -12,7 +12,7 @@ export class EduBoardService {
       rtmUid: params.rtmUid,
       rtmToken: params.rtmToken,
       appId: params.appId,
-      sdkDomain: params.sdkDomain,
+      sdkDomain: params.sdkDomain
     })
   }
 
