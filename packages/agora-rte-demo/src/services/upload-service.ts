@@ -11,6 +11,7 @@ import { CourseWareItem } from "@/edu-sdk";
 import { get } from "lodash";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types/global";
 import { fileSizeConversionUnit } from "@/utils/utils";
+import { globalConfigs } from "@/utils/configs";
 
 const formatExt = (ext: string) => {
   const typeMapper = {
@@ -450,7 +451,7 @@ export class UploadService extends ApiBase {
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
 
-    const prefix = `${REACT_APP_AGORA_APP_SDK_DOMAIN}` === `https://api-solutions-dev.bj2.agoralab.co` ? `https://api-solutions-dev.bj2.agoralab.co` : `https://api-solutions.agoralab.co`
+    const prefix = `${globalConfigs.logDomain}`
     // TODO: 生产环境需要更替地址
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 

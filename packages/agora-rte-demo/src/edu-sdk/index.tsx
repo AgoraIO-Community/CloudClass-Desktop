@@ -39,6 +39,7 @@ type SDKConfig = {
   configParams: AgoraEduSDKConfigParams
   sdkDomain: string,
   reportDomain: string
+  logDomain: string
 }
 
 const sdkConfig: SDKConfig = {
@@ -56,7 +57,8 @@ const sdkConfig: SDKConfig = {
     // rtmUid: '',
   },
   sdkDomain: 'https://api.agora.io',
-  reportDomain: 'https://api.agora.io'
+  reportDomain: 'https://api.agora.io',
+  logDomain: 'https://api-solutions.agoralab.co'
 }
 
 export type LanguageEnum = "" | "en" | "zh"
@@ -188,8 +190,12 @@ export class AgoraEduSDK {
       let json = JSON.parse(params)
       if(json["edu.apiUrl"]) {
         sdkConfig.sdkDomain = json["edu.apiUrl"]
-      } else if(json["edu.reportUrl"]) {
+      } 
+      if(json["edu.reportUrl"]) {
         sdkConfig.reportDomain = json["edu.reportUrl"]
+      } 
+      if(json["edu.logUrl"]) {
+        sdkConfig.logDomain = json["edu.logUrl"]
       }
       console.info(`setParameters ${params}`)
     }catch(e) {
@@ -206,8 +212,11 @@ export class AgoraEduSDK {
       sdkDomain: sdkConfig.sdkDomain,
       appId: sdkConfig.configParams.appId,
     })
+
+    // globalConfigs should only be copied here
     globalConfigs.reportDomain = sdkConfig.reportDomain
     globalConfigs.sdkDomain = sdkConfig.sdkDomain
+    globalConfigs.logDomain = sdkConfig.logDomain
     globalConfigs.appId = sdkConfig.configParams.appId
   }
 
