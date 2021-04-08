@@ -43,6 +43,7 @@ export const NavigationBar: React.FC<any> = observer(() => {
 
   return (
     <BizHeader
+      isNative={navigationState.isNative}
       classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
       isRecording={isRecording}

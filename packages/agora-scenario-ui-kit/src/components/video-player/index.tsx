@@ -278,7 +278,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           <span className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
-          {isHost === true && whiteboardGranted ? (
+          {whiteboardGranted ? (
             <Icon className="whiteboard-state" type="whiteboard" />
           ) : null}
         </div>

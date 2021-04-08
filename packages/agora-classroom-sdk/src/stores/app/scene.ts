@@ -1,3 +1,4 @@
+import { BusinessExceptions } from '@/utils/biz-error';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -978,10 +979,12 @@ export class SceneStore extends SimpleInterval {
       } catch (err) {
         BizLogger.warn(`${err}`)
       }
-      this.appStore.uiStore.addToast(transI18n('toast.leave_rtc_channel'))
+      console.log('toast.leave_rtc_channel')
+      // this.appStore.uiStore.addToast(transI18n('toast.leave_rtc_channel'))
       this.appStore.reset()
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_leave_rtc'))
+      console.log('toast.failed_to_leave_rtc')
+      // this.appStore.uiStore.addToast(transI18n('toast.failed_to_leave_rtc'))
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -1697,7 +1700,8 @@ export class SceneStore extends SimpleInterval {
         toUserUuid: userUuid
       })
     } catch (err) {
-      this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(BusinessExceptions.getErrorText(error))
     }
   }
 
@@ -1707,7 +1711,8 @@ export class SceneStore extends SimpleInterval {
         roomUuid: this.roomInfo.roomUuid
       })
     } catch(err) {
-      this.appStore.uiStore.addToast(`Err ` +  `, ${err.message}`)
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.addToast(BusinessExceptions.getErrorText(error))
     }
   }
 }
