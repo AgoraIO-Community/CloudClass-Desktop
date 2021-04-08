@@ -3,7 +3,7 @@
 }
 
 .roster-username {
-  @apply text-white font-medium;
+  @apply font-medium;
   font-size: 12px;
   margin-bottom: 5px;
   overflow: hidden;

@@ -1445,8 +1445,10 @@ export const useDownloadContext = () => {
 
 export const useUserListContext = () => {
 
+  const appStore = useAppStore()
   const smallClassStore = useSmallClassStore()
 
+  const localUserUuid = appStore.roomInfo.userUuid
   const teacherName = smallClassStore.teacherName
   const role = smallClassStore.role
   const rosterUserList = smallClassStore.rosterUserList
@@ -1458,7 +1460,8 @@ export const useUserListContext = () => {
     dataSource: rosterUserList,
     teacherName,
     onClick,
-    role
+    role,
+    localUserUuid
   }
 }
 

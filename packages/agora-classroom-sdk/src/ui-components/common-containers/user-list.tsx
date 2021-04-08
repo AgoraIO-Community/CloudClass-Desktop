@@ -10,11 +10,12 @@ export type UserListContainerProps = {
 
 export const UserListContainer: React.FC<UserListContainerProps> = observer((props) => {
 
-    const { dataSource, teacherName, onClick, role } = useUserListContext()
+    const { dataSource, teacherName, onClick, role, localUserUuid } = useUserListContext()
 
     return (
         <Roster
             isDraggable={true}
+            localUserUuid={localUserUuid}
             role={role as any}
             teacherName={teacherName}
             dataSource={dataSource}
