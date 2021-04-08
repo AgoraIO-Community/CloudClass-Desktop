@@ -17,6 +17,10 @@ export type FireTrackEndedAction = {
   tag: string,
   trackId: string
 }
+
+type AgoraWebSDK = IAgoraRTC & {
+  setParameter: (key: 'AUDIO_SOURCE_AVG_VOLUME_DURATION' | 'AUDIO_VOLUME_INDICATION_INTERVAL', value: number) => void
+};
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   _client?: IAgoraRTCClient;
@@ -25,7 +29,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   _screenClient?: IAgoraRTCClient;
 
-  agoraWebSdk!: IAgoraRTC;
+  agoraWebSdk!: AgoraWebSDK;
 
   deviceList: any[] = []
 
@@ -62,9 +66,18 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   private hasCamera?: boolean
   private hasMicrophone?: boolean
 
+  _localAudioStats: {
+    audioLossRate: number
+  };
+  _localVideoStats: {
+    videoLossRate: number
+  };
+
   constructor(options: WebRtcWrapperInitOption) {
     super();
-    this.agoraWebSdk = options.agoraWebSdk
+    this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK
+    this.agoraWebSdk.setParameter("AUDIO_SOURCE_AVG_VOLUME_DURATION", 300)
+    this.agoraWebSdk.setParameter("AUDIO_VOLUME_INDICATION_INTERVAL", 300)
     this.clientConfig = options.webConfig
     this.appId = options.appId
     this.joined = false;
@@ -73,7 +86,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.hasCamera = undefined;
     this.hasMicrophone = undefined;
     this._subClient = {}
-    // this.init()
+    this._localAudioStats = {
+      audioLossRate: 0
+    }
+    this._localVideoStats = {
+      videoLossRate: 0
+    }
   }
 
   clearAllInterval() {
@@ -229,7 +247,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
       const localVideoStats = this.client.getLocalVideoStats()
-      // console.log("network quality ", videoStats, localVideoStats)
       this.fire('localVideoStats', {
         stats: {
           encoderOutputFrameRate: localVideoStats.captureFrameRate,
@@ -252,6 +269,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
+        localPacketLoss: {
+          audioStats: this._localAudioStats,
+          videoStats: this._localVideoStats
+        },
         remotePacketLoss:{
           audioStats,
           videoStats
@@ -343,7 +364,14 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
+      const localAudioStats = this.client.getLocalAudioStats()
       const localVideoStats = this.client.getLocalVideoStats()
+      this._localAudioStats = {
+        audioLossRate: localAudioStats.sendPacketsLost
+      }
+      this._localVideoStats = {
+        videoLossRate: localVideoStats.sendPacketsLost
+      }
       // console.log("network quality ", videoStats, localVideoStats)
       this.fire('localVideoStats', {
         stats: {
@@ -364,23 +392,22 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           })
         }
       }
+      const stats = client.getRTCStats()
       this.fire('network-quality', {
         downlinkNetworkQuality: evt.downlinkNetworkQuality,
         uplinkNetworkQuality: evt.uplinkNetworkQuality,
         channel: channelName,
+        rtt: stats.RTT,
+        localPacketLoss: {
+          audioStats: this._localAudioStats,
+          videoStats: this._localVideoStats
+        },
         remotePacketLoss:{
           audioStats,
           videoStats
         }
       })
     })
-    this.addInterval(() => {
-      const stats = client.getRTCStats()
-      this.fire('watch-rtt', {
-        RTT: stats.RTT,
-        channel: channelName
-      })
-    }, `watch-rtt-${channelName}`, null, 300)
     client.on('volume-indicator', (result: AgoraWebVolumeResult[]) => {
       let totalVolume = 0
       const speakers = result.map((result: AgoraWebVolumeResult) => {
@@ -442,6 +469,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     await this.stopScreenShare()
     await this.client.leave()
     this.joined = false
+    this._localAudioStats = {
+      audioLossRate: 0
+    }
+    this._localVideoStats = {
+      videoLossRate: 0
+    }
   }
 
   private closeMediaTrack(track: ILocalTrack) {

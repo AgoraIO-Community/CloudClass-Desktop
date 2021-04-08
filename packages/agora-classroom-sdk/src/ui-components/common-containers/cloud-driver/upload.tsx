@@ -1,5 +1,5 @@
 import { useUploadContext } from '@/ui-components/hooks'
-import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader } from 'agora-scenario-ui-kit'
+import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader, transI18n } from 'agora-scenario-ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import React from 'react'
@@ -25,9 +25,9 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
         <Col width={9}>
           <CheckBox checked={isSelectAll} indeterminate={isSelectAll ? false : hasSelected} onClick={handleSelectAll}></CheckBox>
         </Col>
-        <Col>{t('cloud.fileName')}</Col>
-        <Col>{t('cloud.size')}</Col>
-        <Col>{t('cloud.operation')}</Col>
+        <Col>{transI18n('cloud.fileName')}</Col>
+        <Col>{transI18n('cloud.size')}</Col>
+        <Col>{transI18n('cloud.updated_at')}</Col>
       </TableHeader>
       <Table className="table-container">
         {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>

@@ -113,7 +113,11 @@ export class EduSDKApi extends ApiBase {
       url: `/v2/rooms/${params.roomUuid}/records/states/${params.state}`,
       method: 'PUT',
       data: {
-        url: params.url
+        mode: 'web',
+        webRecordConfig: {
+          url: params.url
+        },
+        backupCount: 1
       }
     })
     return res.data
@@ -338,6 +342,23 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async startShareScreen(roomId: string, userUuid: string) {
+    const state = 1
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/${state}`,
+      method: 'POST',
+    })
+    return res.data;
+  }
+
+  async stopShareScreen(roomId: string, userUuid: string) {
+    const state = 0
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/${state}`,
+      method: 'POST',
+    })
+    return res.data;
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({

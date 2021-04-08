@@ -54,14 +54,8 @@ export class SmallClassStore {
   }
 
   @computed
-  get teachers() {
-    return get(this.roomStore, 'roomProperties.teachers', {})
-  }
-
-  @computed
   get teacherName() {
-    const teacherUid = Object.keys(this.teachers)[0]
-    return get(this.teachers, `${teacherUid}.name`, '')
+    return this.teacherInfo?.userName ?? 'teacher' 
   }
 
   @computed
@@ -180,6 +174,11 @@ export class SmallClassStore {
   }
 
   @computed
+  get acceptedIds() {
+    return this.acceptedList.map((it: any) => it.userUuid)
+  }
+
+  @computed
   get acceptedCoVideoUserList() {
     const userList = get(this.roomStore.sceneStore, 'userList', [])
     const acceptedList = this.acceptedList
@@ -193,7 +192,6 @@ export class SmallClassStore {
   }
 
   async sendReward(uid: string) {
-    const reward = +get(this.studentsMap, `${uid}.reward`, 0)
     await eduSDKApi.sendRewards({
       roomUuid: this.roomInfo.roomUuid,
       rewards: [{
@@ -222,7 +220,7 @@ export class SmallClassStore {
       })
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
       console.log('studentHandsUp err', error)
       throw error;
     }
@@ -249,7 +247,7 @@ export class SmallClassStore {
       })
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getReadableText(error.errCode)))
+      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
       console.log('teacherAcceptHandsUp err', error)
       throw error;
     }
@@ -282,6 +280,20 @@ export class SmallClassStore {
     // })
   }
 
+  checkDisable(user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): boolean {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+      return false
+    }
+
+    if (role === EduRoleTypeEnum.student 
+        && this.appStore.roomInfo.userUuid === user.userUuid
+        && this.acceptedIds.includes(user.userUuid)
+      ) {
+      return false
+    }
+    return true
+  }
+
 
   transformRosterUserInfo (user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): RosterUserInfo {
     return {
@@ -298,7 +310,8 @@ export class SmallClassStore {
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       stars: +get(this.studentsMap, `${user.userUuid}.reward`, 0),
-      disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
+      disabled: this.checkDisable(user, role, stream)
+      // disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
     }
   }
 
@@ -328,15 +341,28 @@ export class SmallClassStore {
   }
 
   @computed
+  get studentInfoList() {
+    return this.roomStore.sceneStore.userList
+    // return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
+    //   const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
+    //   if (user) {
+    //     acc.push(user)
+    //   } else {
+    //     acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
+    //   }
+    //   return acc;
+    // }, [])
+  }
+
+  @computed
   get rosterUserList() {
     const localUserUuid = this.roomStore.roomInfo.userUuid    
-
-    const userList = this.roomStore.sceneStore.userList
-      .filter((user: EduUser) => !['host', 'assistant'].includes(user.role) && user.userUuid !== localUserUuid)
+    const userList = this.studentInfoList
+      .filter((user: EduUser) => ['audience'].includes(user.role))
+      .filter((user: EduUser) => user.userUuid !== localUserUuid)
       .reduce((acc: any[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
         const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
-        console.log('#### rosterUser ', JSON.stringify(rosterUser) , ' streamList ', JSON.stringify(this.roomStore.sceneStore.streamList))
         acc.push(rosterUser)
         return acc
       }, [])
@@ -366,22 +392,23 @@ export class SmallClassStore {
     switch (actionType) {
       case 'podium': {
         if (user.onPodium) {
-          // if (this.roomInfo.userUuid === user.uid && this.roomInfo.userRole === EduRoleTypeEnum.student) {
-          //   await this.revokeCoVideo
-          // }
           if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
             await this.revokeCoVideo(user.uid)
           }
         } else {
-          await this.teacherAcceptHandsUp(user.uid)
+          if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+            await this.teacherAcceptHandsUp(user.uid)
+          }
         }
         break;
       }
       case 'whiteboard': {
-        if (user.whiteboardGranted) {
-          await this.appStore.boardStore.revokeBoardPermission(uid)
-        } else {
-          await this.appStore.boardStore.grantBoardPermission(uid)
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+          if (user.whiteboardGranted) {
+            await this.appStore.boardStore.revokeBoardPermission(uid)
+          } else {
+            await this.appStore.boardStore.grantBoardPermission(uid)
+          }
         }
         break;
       }
@@ -410,7 +437,9 @@ export class SmallClassStore {
         break;
       }
       case 'kick-out': {
-        this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+          this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+        }
         break;
       }
     }

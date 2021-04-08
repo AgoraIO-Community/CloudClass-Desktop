@@ -1,5 +1,5 @@
-import { EduRoomType } from "agora-rte-sdk";
 import { BizLogger } from "@/utils/utils";
+import { EduRoomType } from "agora-rte-sdk";
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 
 export interface QueryRoomResponseData {

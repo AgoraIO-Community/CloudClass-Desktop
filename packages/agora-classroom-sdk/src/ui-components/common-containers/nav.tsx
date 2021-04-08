@@ -1,14 +1,11 @@
-import { useAppStore, useRoomStore, useUIStore } from '@/hooks'
-import { eduSDKApi } from '@/services/edu-sdk-api'
-import { homeApi } from '@/services/home-api'
-import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { useRoomStore, useUIStore } from '@/hooks'
 import { BizHeader } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React, { useCallback } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { useRecordingContext } from '../hooks'
 import { Exit, Record } from './dialog'
 import { SettingContainer } from './setting'
-import {v4 as uuidv4} from 'uuid';
 
 export const NavigationBar: React.FC<any> = observer(() => {
 

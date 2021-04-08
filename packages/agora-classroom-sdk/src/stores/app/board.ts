@@ -1,19 +1,18 @@
-import { CloudDriverDialog, UserListDialog } from './../../ui-components/common-containers/dialog';
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
 import { BoardClient } from '@/modules/board/client';
-import { EnumBoardState } from '@/modules/services/board-api';
-import { allTools } from '@/ui-components/common-containers/board';
 import { reportService } from '@/services/report-service';
 import { transDataToResource } from '@/services/upload-service';
 import { AppStore } from '@/stores/app';
+import { allTools } from '@/ui-components/common-containers/board';
+import { CloudDriverDialog, UserListDialog } from '@/ui-components/common-containers/dialog';
 import { OSSConfig } from '@/utils/helper';
 import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transLineTool, transToolBar, ZoomController } from '@/utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
-import { EduLogger, EduRoleTypeEnum, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
-import { ToolItem, t, transI18n } from 'agora-scenario-ui-kit';
+import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
+import { ToolItem, transI18n } from 'agora-scenario-ui-kit';
 import OSS from 'ali-oss';
-import { cloneDeep, get, isEmpty, omit, uniqBy } from 'lodash';
+import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
@@ -326,23 +325,6 @@ export class BoardStore extends ZoomController {
       this.follow = follow
       this.isFullScreen = isFullScreen
       // 默认只有老师不用禁止跟随
-      if (this.userRole !== EduRoleTypeEnum.teacher) {
-        if (this.boardClient.room && this.boardClient.room.isWritable) {
-          if (this.follow === true) {
-            this.room.setViewMode(ViewMode.Broadcaster)
-            this.room.disableCameraTransform = true
-            this.room.disableDeviceInputs = true
-          }
-          if (this.follow === false) {
-            this.room.setViewMode(ViewMode.Freedom)
-            this.room.disableCameraTransform = false
-            this.room.disableDeviceInputs = false
-          }
-        }
-      } else {
-        this.room.disableCameraTransform = false
-      }
-
       if (this.hasPermission) {
         await this.setWritable(true)
       } else {
@@ -688,6 +670,7 @@ export class BoardStore extends ZoomController {
     }
     // 默认只有老师不用禁止跟随
     if (this.userRole === EduRoleTypeEnum.teacher) {
+      console.log('setView Mode', this.userRole)
       this.room.setViewMode(ViewMode.Broadcaster)
       this.room.disableCameraTransform = false
     } else {
@@ -818,20 +801,19 @@ export class BoardStore extends ZoomController {
       }
       if (state.globalState) {
         this.updateCourseWareList()
-        const followFlag = !!state.globalState.follow
-        // TODO: 监听follow的逻辑
-        if(this.roleIsTeacher) {
-          if (followFlag) {
-            this.boardClient.followMode(ViewMode.Broadcaster)
-          } else {
-            this.boardClient.followMode(ViewMode.Freedom)
-          }
-        } else if (this.roleIsStudent) {
-          if (followFlag) {
-            this.boardClient.followMode(ViewMode.Follower)
-          }
-        }
-        // TODO: 其他角色逻辑
+        // const followFlag = !!state.globalState.follow
+        // // TODO: 监听follow的逻辑
+        // if(this.roleIsTeacher) {
+        //   if (followFlag) {
+        //     this.boardClient.followMode(ViewMode.Broadcaster)
+        //   } else {
+        //     this.boardClient.followMode(ViewMode.Freedom)
+        //   }
+        // } else if (this.roleIsStudent) {
+        //   if (followFlag) {
+        //     this.boardClient.followMode(ViewMode.Follower)
+        //   }
+        // }
       }
     })
     BizLogger.info("[breakout board] join", data)
@@ -980,15 +962,9 @@ export class BoardStore extends ZoomController {
 
   @action
   setTool(tool: string) {
-    if (!this.room || !this.room.isWritable) return
+    if (!this.room) return
 
     switch(tool) {
-      // case 'follow': {
-      //   // TODO: 左侧菜单点击切换逻辑，纯处理active
-      //   const resultNumber = !this.activeMap['follow'] ? 1 : 0
-      //   this.room.setGlobalState({follow: resultNumber})
-      //   return
-      // }
       case 'blank-page': {
         const room = this.room
         if (room.isWritable) {
@@ -1009,16 +985,19 @@ export class BoardStore extends ZoomController {
       case 'eraser':
       case 'color':
       {
-        const appliance = transToolBar[tool]
-        if (appliance) {
-          if (transLineTool[tool]) {
-            this.lineSelector = transLineTool[tool]
+        const room = this.room
+        if (room.isWritable) {
+          const appliance = transToolBar[tool]
+          if (appliance) {
+            if (transLineTool[tool]) {
+              this.lineSelector = transLineTool[tool]
+            }
+            this.room.setMemberState({
+              currentApplianceName: appliance
+            })
           }
-          this.room.setMemberState({
-            currentApplianceName: appliance
-          })
+          this.selector = tool
         }
-        this.selector = tool
         break
       }
       case 'cloud': {
@@ -1270,21 +1249,36 @@ export class BoardStore extends ZoomController {
 
   @computed
   get tools() {
-    if (this.appStore.roomInfo.roomType === 0) {
-      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'follow', 'tools', 'register'].includes(item.value))
+    const {userRole, roomType} = this.appStore.roomInfo
+    if (roomType === EduRoomType.SceneType1v1) {
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'tools', 'register'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools', 'register'].includes(item.value))  
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools', 'register'].includes(item.value))  
       }
-      return allTools.filter((item: ToolItem) => item.value !== 'register')
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        if (this.hasPermission) {
+          return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+        } else {
+          return []
+        }
+      }
+      return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
     }
-    if (this.appStore.roomInfo.roomType === 4) {
-      if ([EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'follow', 'tools', 'register'].includes(item.value))
+    if (roomType === EduRoomType.SceneTypeMiddleClass) {
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+        return allTools.filter((item: ToolItem) => !['tools'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'follow', 'tools'].includes(item.value))
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
+        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        if (this.hasPermission) {
+          return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+        } else {
+          return allTools.filter((item: ToolItem) => ['register'].includes(item.value))
+        }
       }
       return allTools
     }
