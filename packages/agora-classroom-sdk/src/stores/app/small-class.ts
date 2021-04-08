@@ -342,21 +342,23 @@ export class SmallClassStore {
 
   @computed
   get studentInfoList() {
-    return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
-      const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
-      if (user) {
-        acc.push(user)
-      } else {
-        acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
-      }
-      return acc;
-    }, [])
+    return this.roomStore.sceneStore.userList
+    // return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
+    //   const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
+    //   if (user) {
+    //     acc.push(user)
+    //   } else {
+    //     acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
+    //   }
+    //   return acc;
+    // }, [])
   }
 
   @computed
   get rosterUserList() {
     const localUserUuid = this.roomStore.roomInfo.userUuid    
     const userList = this.studentInfoList
+      .filter((user: EduUser) => ['audience'].includes(user.role))
       .filter((user: EduUser) => user.userUuid !== localUserUuid)
       .reduce((acc: any[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
