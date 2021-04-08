@@ -1158,10 +1158,10 @@ export class SceneStore extends SimpleInterval {
 
   queryVideoFrameIsNotFrozen (uid: number): boolean {
     const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
-    if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
-      return false
-    }
     if (isLocal) {
+      if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+        return false
+      }
       // const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
       // return frameRate > 0
       const freezeCount = this.cameraRenderer?.freezeCount || 0
