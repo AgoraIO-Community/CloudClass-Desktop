@@ -2,7 +2,7 @@
   "name": "agora-rte-sdk",
   "version": "1.0.0",
   "description": "> TODO: description",
-  "author": "matrixbirds <yooobuntu@gmail.com>",
+  "author": "agora",
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
   "license": "ISC",
   "main": "lib/index.js",
@@ -67,6 +67,6 @@
     "agora-rtm-sdk": "1.4.2"
   },
   "peerDependencies": {
-    "agora-electron-sdk": "education290"
+    "agora-electron-sdk": "apaas"
   }
 }

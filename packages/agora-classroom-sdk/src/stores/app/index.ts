@@ -131,14 +131,14 @@ export class AppStore implements ClassRoomAbstractStore {
   deviceInfo!: DeviceInfo
 
   private load() {
-    const storage = GlobalStorage.read('agora_edu_room')
-    if (storage || !isEmpty(storage)) {
-      this.roomInfo = storage.roomInfo
-      this.updateRtmInfo({
-        rtmUid: this.roomInfo.rtmUid,
-        rtmToken: this.roomInfo.rtmToken,
-      })
-    } else {
+    // const storage = GlobalStorage.read('agora_edu_room')
+    // if (storage || !isEmpty(storage)) {
+    //   this.roomInfo = storage.roomInfo
+    //   this.updateRtmInfo({
+    //     rtmUid: this.roomInfo.rtmUid,
+    //     rtmToken: this.roomInfo.rtmToken,
+    //   })
+    // } else {
       this.roomInfo = {
         roomName: "",
         roomUuid: "",
@@ -149,7 +149,7 @@ export class AppStore implements ClassRoomAbstractStore {
         rtmUid: "",
         rtmToken: "",
       }
-    }
+    // }
   }
 
   @observable

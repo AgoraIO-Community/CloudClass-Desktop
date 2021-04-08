@@ -36,6 +36,7 @@
     "build:aclass-ui-kit": "lerna exec --scope=agora-aclass-ui-kit npm run build",
     "build:ui-kit": "lerna exec --scope=agora-scenario-ui-kit npm run build",
     "build:demo": "lerna exec --scope=agora-classroom-sdk npm run build",
+    "run:build:sdk": "run-s build:sdk build:ui-kit",
     "run:demo": "lerna exec --scope=agora-classroom-sdk npm run dev",
     "run:demo:electron": "lerna exec --scope=agora-classroom-sdk npm run electron",
     "run:apaas": "lerna exec --scope=agora-apaas-demo npm run dev",

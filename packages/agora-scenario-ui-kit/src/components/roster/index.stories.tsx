@@ -12,21 +12,23 @@ const meta: Meta = {
     teacherName: 'Lily Chou',
     role: 'teacher',
     columns: defaultColumns,
-    dataSource: list(10).map((i: number) => ({
-      uid: i,
-      name: 'Lily True',
-      onPodium: false,
-      whiteboardGranted: true,
-      cameraEnabled: false,
-      micEnabled: true,
-      stars: 2,
-      disabled: i === 0 ? false : true,
-      micDevice: true,
-      cameraDevice: true,
-      onlineState: true,
-      canCoVideo: true,
-      canGrantBoard: true,
-    })),
+    localUserUuid: 'webzzz2',
+    dataSource: JSON.parse('[{"uid":"webzzz2","name":"webzzz","onPodium":false,"onlineState":true,"micDevice":false,"cameraDevice":false,"cameraEnabled":true,"micEnabled":false,"whiteboardGranted":false,"canGrantBoard":false,"stars":0},{"name":"maczzz","uid":"maczzz2","onlineState":true,"onPodium":false,"micDevice":false,"cameraDevice":false,"cameraEnabled":false,"micEnabled":false,"whiteboardGranted":false,"canCoVideo":false,"canGrantBoard":false,"stars":34},{"name":"winzzz","uid":"winzzz2","onlineState":true,"onPodium":true,"micDevice":false,"cameraDevice":false,"cameraEnabled":true,"micEnabled":false,"whiteboardGranted":false,"canCoVideo":false,"canGrantBoard":false,"stars":3}]')
+    // dataSource: list(10).map((i: number) => ({
+    //   uid: i,
+    //   name: 'Lily True',
+    //   onPodium: false,
+    //   whiteboardGranted: true,
+    //   cameraEnabled: false,
+    //   micEnabled: true,
+    //   stars: 2,
+    //   disabled: i === 0 ? false : true,
+    //   micDevice: true,
+    //   cameraDevice: true,
+    //   onlineState: true,
+    //   canCoVideo: true,
+    //   canGrantBoard: true,
+    // })),
   }
 };
 

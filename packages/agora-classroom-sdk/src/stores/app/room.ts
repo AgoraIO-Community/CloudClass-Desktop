@@ -1,8 +1,5 @@
-import { OperatorUser } from './../../../../agora-rte-sdk/src/room/types';
-import { SmallClassStore } from './small-class';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
-import { GenericErrorDialog, KickedEnd, KickEnd, RoomEnd } from '@/ui-components/common-containers/dialog';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { reportService } from '@/services/report-service';
 import { RoomApi } from '@/services/room-api';
@@ -11,10 +8,11 @@ import { AppStore } from '@/stores/app/index';
 import { EduClassroomStateEnum } from '@/stores/app/scene';
 import { SimpleInterval } from '@/stores/mixin/simple-interval';
 import { ChatMessage, QuickTypeEnum } from '@/types';
-import { BizLogger, filterChatText } from '@/utils/utils';
+import { GenericErrorDialog, KickedEnd, KickEnd, RoomEndNotice } from '@/ui-components/common-containers/dialog';
+import { BizLogger } from '@/utils/utils';
 import {
   EduAudioSourceType, EduLogger,
-  EduRoleTypeEnum, EduSceneType,
+  EduRoleTypeEnum, EduRoomType, EduSceneType,
   EduStream, EduTextMessage,
   EduUser,
   EduVideoSourceType, GenericErrorWrapper
@@ -24,9 +22,10 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
-import { report } from 'process';
+import { OperatorUser } from './../../../../agora-rte-sdk/src/room/types';
+import { SmallClassStore } from './small-class';
 
 dayjs.extend(duration)
 
@@ -127,12 +126,14 @@ export class RoomStore extends SimpleInterval {
   ]
 
   history: any
+
   @observable
   operator: any = {
     userUuid: '',
     role: '',
     userName: '',
-    action: ''
+    action: '',
+    cmd: 0
   };
 
   setHistory(history: any) {
@@ -349,30 +350,64 @@ export class RoomStore extends SimpleInterval {
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
     reaction(() => JSON.stringify(
-      [this.sceneStore?._cameraEduStream?.hasVideo ?? false,
-       this.roomInfo?.userRole ?? 'invisible',
-       this.operator.role,
-       this.operator.action,
-      ]), (data: string) => {
-        const [hasVideo, userRole, role, action] = JSON.parse(data)
-        if (['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-          const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-          const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-          this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+      {
+        hasVideo: this.sceneStore?._cameraEduStream?.hasVideo ?? false,
+        userRole: this.roomInfo?.userRole ?? 'invisible',
+        userUuid: this.roomInfo?.userUuid ?? '',
+        role: this.operator.role,
+        action: this.operator.action,
+        roomType: this.roomInfo?.roomType ?? -1,
+        cmd: this.operator.cmd,
+        acceptedList: this.smallClassStore.acceptedList.map((it: any) => it.userUuid)
+      }), (data: string) => {
+        console.log('## reaction video', data)
+        const {hasVideo, userRole, userUuid, role, action, cmd, roomType, acceptedList} = JSON.parse(data)
+        if (roomType === -1 || !userUuid) return
+        if (roomType === EduRoomType.SceneTypeMiddleClass && acceptedList.includes(userUuid)) {
+          if (cmd !== 501 && ['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+            const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
+            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+          }
+          return
+        }
+        if (roomType === EduRoomType.SceneType1v1) {
+          if (['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+            const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
+            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+          }
         }
     })
 
     reaction(() => JSON.stringify(
-      [this.sceneStore?._cameraEduStream?.hasAudio ?? false,
-        this.roomInfo?.userRole ?? 'invisible',
-       this.operator.role,
-       this.operator.action,
-      ]), (data: string) => {
-        const [hasAudio, userRole, role, action] = JSON.parse(data)
-        if (['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-          const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-          const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-          this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+      {
+        hasAudio: this.sceneStore?._cameraEduStream?.hasAudio ?? false,
+        userRole: this.roomInfo?.userRole ?? 'invisible',
+        userUuid: this.roomInfo?.userUuid ?? '',
+        role: this.operator.role,
+        action: this.operator.action,
+        roomType: this.roomInfo?.roomType ?? -1,
+        cmd: this.operator.cmd,
+        acceptedList: this.smallClassStore.acceptedList.map((it: any) => it.userUuid)
+      }), (data: string) => {
+        console.log('## reaction audio', data)
+        const {hasAudio, userRole, userUuid, role, action, cmd, roomType, acceptedList} = JSON.parse(data)
+        if (roomType === -1 || !userUuid) return
+        if (roomType === EduRoomType.SceneTypeMiddleClass && acceptedList.includes(userUuid)) {
+          if (cmd !== 501 && ['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+            const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
+            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+          }
+          return
+        }
+        if (roomType === EduRoomType.SceneType1v1) {
+          if (['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
+            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
+            const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
+            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+          }
         }
     })
   }
@@ -634,7 +669,7 @@ export class RoomStore extends SimpleInterval {
 
   isBigClassStudent(): boolean {
     const userRole = this.roomInfo.userRole
-    return +this.roomInfo.roomType === 2 && userRole === EduRoleTypeEnum.student
+    return +this.roomInfo.roomType === EduRoomType.SceneTypeBigClass && userRole === EduRoleTypeEnum.student
   }
   
 
@@ -802,6 +837,7 @@ export class RoomStore extends SimpleInterval {
       })
       // 本地流移除
       roomManager.on('local-stream-removed', async (evt: any) => {
+        const {operator, data, cause} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           if (!this.sceneStore.joiningRTC) {
             return 
@@ -813,6 +849,14 @@ export class RoomStore extends SimpleInterval {
               this.sceneStore._cameraEduStream = undefined
               await this.sceneStore.closeCamera()
               await this.sceneStore.closeMicrophone()
+              if (cause && cause.cmd === 501) {
+                const roleMap = {
+                  'host': transI18n('role.teacher'),
+                  'assistant': transI18n('role.assistant')
+                }
+                const role = roleMap[operator.userRole] ?? 'unknown'
+                this.appStore.uiStore.addToast(transI18n(`roster.close_student_co_video`, {teacher: role}))
+              }
               BizLogger.info(`[demo] tag: ${tag}, [${Date.now()}], main stream closed local-stream-removed, `, JSON.stringify(evt))
             }
             BizLogger.info("[demo] local-stream-removed emit done", evt)
@@ -823,15 +867,9 @@ export class RoomStore extends SimpleInterval {
           }
         })
       })
-      // 本地流加入
-      // roomManager.on('local-stream-added', (evt: any) => {
-      //   this.streamList = roomManager.getFullStreamList()
-      //   BizLogger.info("local-stream-added", evt)
-      // })
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
-        const {operator, data} = evt
-        console.log("#### local-stream-updated", JSON.stringify(operator), data)
+        const {operator, data, cause} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
           this.sceneStore.streamList = roomManager.getFullStreamList()
           if (!this.sceneStore.joiningRTC) {
@@ -846,6 +884,14 @@ export class RoomStore extends SimpleInterval {
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             if (localStream && localStream.state !== 0) {
+              if (cause && cause.cmd === 501) {
+                const roleMap = {
+                  'host': transI18n('role.teacher'),
+                  'assistant': transI18n('role.assistant')
+                }
+                const role = roleMap[operator.userRole] ?? 'unknown'
+                this.appStore.uiStore.addToast(transI18n(`roster.open_student_co_video`, {teacher: role}))
+              }
               BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC)
               if (this.sceneStore._cameraEduStream) {
                 if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
@@ -853,6 +899,7 @@ export class RoomStore extends SimpleInterval {
                   this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo
                   this.operator = {
                     ...operator,
+                    cmd: cause?.cmd ?? 0,
                     action: 'video'
                   }
                 }
@@ -861,6 +908,7 @@ export class RoomStore extends SimpleInterval {
                   this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio
                   this.operator = {
                     ...operator,
+                    cmd: cause?.cmd ?? 0,
                     action: 'audio'
                   }
                 }
@@ -868,6 +916,7 @@ export class RoomStore extends SimpleInterval {
                 this.sceneStore._cameraEduStream = localStream.stream
                 this.operator = {
                   ...operator,
+                  cmd: cause?.cmd ?? 0,
                   action: 'all'
                 }
               }
@@ -1231,7 +1280,7 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      this.appStore.uiStore.addDialog(RoomEnd)
+      this.appStore.uiStore.addDialog(RoomEndNotice)
     } else if(state === EduClassroomStateEnum.end) {
       this.appStore.uiStore.addToast(
         transI18n('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}),
@@ -1296,7 +1345,7 @@ export class RoomStore extends SimpleInterval {
         break;
       }
       case QuickTypeEnum.End: {
-        this.appStore.uiStore.addDialog(RoomEnd)
+        this.appStore.uiStore.addDialog(RoomEndNotice)
         break;
       }
       case QuickTypeEnum.Kicked: {
@@ -1371,13 +1420,13 @@ export class RoomStore extends SimpleInterval {
   @computed
   get navigationState() {
     return {
-      cpuUsage: 0,
+      cpuUsage: this.appStore.mediaStore.cpuUsage,
       isStarted: !!this.sceneStore.classState,
       title: this.sceneStore.roomInfo.roomName,
       signalQuality: this.appStore.mediaStore.networkQuality as any,
       networkLatency: +this.appStore.mediaStore.delay,
       networkQuality: this.appStore.mediaStore.networkQuality,
-      packetLostRate: 0,
+      packetLostRate: this.appStore.mediaStore.localPacketLostRate,
       classTimeText: this.classTimeText,
     }
   }

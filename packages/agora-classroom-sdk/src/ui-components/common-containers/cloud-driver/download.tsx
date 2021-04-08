@@ -17,10 +17,10 @@ export const DownloadContainer = observer(() => {
   return (
     <Table>
       <TableHeader>
-        <Col>{t('cloud.fileName')}</Col>
-        <Col>{t('cloud.size')}</Col>
-        <Col>{t('cloud.progress')}</Col>
-        <Col>{t('cloud.operation')}</Col>
+        <Col>{transI18n('cloud.fileName')}</Col>
+        <Col>{transI18n('cloud.size')}</Col>
+        <Col>{transI18n('cloud.progress')}</Col>
+        <Col>{transI18n('cloud.operation')}</Col>
       </TableHeader>
       <Table className="table-container">
         {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
@@ -48,7 +48,7 @@ export const DownloadContainer = observer(() => {
                 : 
                   <Button type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
                 }
-                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{t('cloud.delete')}</Button>
+                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{transI18n('cloud.delete')}</Button>
               </Row>
             </Col>
           </Row>

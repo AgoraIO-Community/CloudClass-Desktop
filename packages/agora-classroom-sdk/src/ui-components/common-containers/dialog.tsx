@@ -6,7 +6,7 @@ import { Button, Modal, t, transI18n } from 'agora-scenario-ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
-import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext } from '../hooks'
+import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '../hooks'
 import { CloudDriverContainer } from './cloud-driver'
 import { ScreenShareContainer } from './screen-share'
 import { SettingContainer } from './setting'
@@ -84,16 +84,14 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
     onCancel,
     ButtonGroup
   } = useErrorContext(id)
-
-  const {errCode='', message=''} = GenericErrorWrapper(error)
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title={t('course.join_failed')}
+      title={BusinessExceptions.getErrorTitle(error)}
     >
-      {transI18n(BusinessExceptions.getReadableText(errCode), {errCode, message})}
+      {BusinessExceptions.getErrorText(error)}
     </Modal>
   )
 })
@@ -188,6 +186,27 @@ export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
   )
 })
 
+export const RoomEndNotice: React.FC<BaseDialogProps> = observer(({id}) => {
+  const uiStore = useUIStore()
+  const {
+    handleConfirm,
+  } = useRoomEndNoticeContext(id)
+
+  return (
+    <Modal
+      onOk={async () => {
+        await handleConfirm()
+        uiStore.removeDialog(id)
+      }}
+      footer={[
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
+      ]}
+      title={t('toast.end_class')}>
+      <p>{t('toast.quit_from_room')}</p>
+    </Modal>
+  )
+})
+
 export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
@@ -234,10 +253,10 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         uiStore.removeDialog(id)
         try {
           await (starting ? onStartRecording() : onStopRecording())
-          uiStore.addToast(transI18n(starting?'toast.start_recording.success':'toast.stop_recording.success'))
+          uiStore.addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
         }catch(err) {
-          const {errCode='', message=''} = GenericErrorWrapper(err)
-          uiStore.addToast(transI18n(BusinessExceptions.getReadableText(err.errCode), {errCode, message}), 'error')
+          const wrapperError = GenericErrorWrapper(err)
+          uiStore.addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
         }
       }}
       onCancel={() => {

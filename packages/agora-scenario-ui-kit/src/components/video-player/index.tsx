@@ -9,6 +9,7 @@ import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
 import {v4 as uuidv4} from 'uuid';
+import { usePrevious } from '~utilities/hooks';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -64,6 +65,10 @@ export interface BaseVideoPlayerProps {
    * 是否授权操作白板
    */
   whiteboardGranted?: boolean;
+  /**
+   * 是否可点击上下台
+   */
+  canHoverHideOffAllPodium?: boolean;
   /**
    * 隐藏白板控制按钮
    */
@@ -130,6 +135,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideBoardGranted = false,
   isOnPodium,
   placement = 'bottom',
+  canHoverHideOffAllPodium = false,
   onCameraClick,
   onMicClick,
   onOffAllPodiumClick = () => console.log("on clear podiums"),
@@ -138,7 +144,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onSendStar,
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const prevStar = useRef<number>(stars)
+  const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
   const animListCb = useCallback(() => {
     setAnimList([
       ...animList,
@@ -155,12 +161,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   }, [animList, setAnimList])
 
   useEffect(() => {
-    // console.log('stars change', stars, prevStar.current)
-    if (stars > prevStar.current) {
+    if (`${uid}` === `${previousState.uid}` && +stars > +previousState.stars) {
       animListCb()
     }
-    prevStar.current = stars;
-  }, [stars, animListCb])
+  }, [stars, previousState.uid, previousState.stars, animListCb])
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
@@ -192,6 +196,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideOffAllPodium ? null : (
             <Tooltip title={t('Clear Podiums')} placement={placement}>
               <Icon
+                hover={canHoverHideOffAllPodium}
                 type="invite-to-podium"
                 onClick={() => onOffAllPodiumClick()}
               />
@@ -209,7 +214,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideBoardGranted ? null :
           <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
             <Icon
-              className={whiteboardGranted ? 'no_granted': 'granted'}
+              className={whiteboardGranted ? '': 'no_granted'}
               type="whiteboard"
               onClick={() => onWhiteboardClick(uid)}
             /> 
@@ -273,7 +278,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           <span className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
-          {whiteboardGranted ? (
+          {isHost === true && whiteboardGranted ? (
             <Icon className="whiteboard-state" type="whiteboard" />
           ) : null}
         </div>

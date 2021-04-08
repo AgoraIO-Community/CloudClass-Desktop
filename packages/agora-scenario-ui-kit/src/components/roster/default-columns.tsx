@@ -6,17 +6,6 @@ import { Column, Profile } from '~components/roster';
 
 const getCameraState = (profile: Profile) => {
   const defaultType = 'camera-off'
-
-  let hover: boolean = false
-
-  if (!!profile.onlineState !== true ||
-      // !!profile.cameraDevice === false ||
-      !!profile.disabled === true) {
-    hover = false
-  } else {
-    hover = true
-  }
-
   // const hover = !!profile.onlineState || profile.disabled === false || !!profile.cameraDevice === true 
 
   const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
@@ -24,7 +13,6 @@ const getCameraState = (profile: Profile) => {
   const className = !!profile.cameraEnabled === true ? 'un-muted' : 'muted'
 
   return {
-    hover,
     type: type as IconTypes,
     className: className
   }
@@ -33,22 +21,11 @@ const getCameraState = (profile: Profile) => {
 const getMicrophoneState = (profile: Profile): any => {
   const defaultType = 'microphone-off-outline'
 
-  let hover: boolean = false
-
-  if (!!profile.onlineState !== true ||
-    // !!profile.micDevice === false ||
-     !!profile.disabled === true) {
-    hover = false
-  } else {
-    hover = true
-  }
-
   const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
 
   const className = !!profile.micEnabled === true ? 'un-muted' : 'muted'
 
   return {
-    hover,
     type: type as IconTypes,
     className: className
   }
@@ -63,14 +40,13 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_, profile) => {
+    render: (_, profile, hover) => {
       const cls = classnames({
         [`${!!profile.onPodium ? 'on' : 'off'}-podium`]: 1,
-        [`disabled`]: profile.disabled,
       })
       return (
         <Icon
-          hover={!!profile.canCoVideo === true}
+          hover={hover}
           className={cls}
           type="on-podium"
         />
@@ -81,14 +57,13 @@ export const defaultColumns: Column[] = [
     key: 'whiteboardGranted',
     name: 'roster.board_state',
     action: 'whiteboard',
-    render: (_, profile) => {
+    render: (_, profile, hover) => {
       const cls = classnames({
         [`whiteboard-${!!profile.whiteboardGranted ? 'granted' : 'no_granted'}`]: 1,
-        [`disabled`]: profile.disabled
       })
       return (
         <Icon
-          hover={!!profile.canGrantBoard === true}
+          hover={hover}
           className={cls}
           type="whiteboard"
         />
@@ -99,16 +74,15 @@ export const defaultColumns: Column[] = [
     key: 'cameraEnabled',
     name: 'roster.camera_state',
     action: 'camera',
-    render: (_, profile) => {
+    render: (_, profile, hover) => {
       const {
         className,
-        hover,
         type,
       } = getCameraState(profile)
 
       const cls = classnames({
         [`${className}`]: 1,
-        [`disabled`]: profile.disabled
+        // [`disabled`]: profile.disabled
       })
       return (
         <Icon
@@ -123,16 +97,15 @@ export const defaultColumns: Column[] = [
     key: 'micEnabled',
     name: 'roster.microphone_state',
     action: 'mic',
-    render: (_, profile) => {
+    render: (_, profile, hover) => {
       const {
         className,
-        hover,
         type,
       } = getMicrophoneState(profile)
 
       const cls = classnames({
         [`${className}`]: 1,
-        [`disabled`]: profile.disabled
+        // [`disabled`]: profile.disabled
       })
       return (
         <Icon
@@ -146,10 +119,9 @@ export const defaultColumns: Column[] = [
   {
     key: 'stars',
     name: 'roster.reward',
-    render: (text, profile: Profile) => {
+    render: (text, profile: Profile, hover) => {
       const cls = classnames({
         'inline-flex': 1,
-        [`disabled`]: profile.disabled
       })
 
       return (
@@ -166,10 +138,10 @@ export const defaultColumns: Column[] = [
     action: 'kick-out',
     visibleRoles: ['assistant', 'teacher'],
     // FIXME: 不能点击时的样式
-    render: (_, profile) => {
+    render: (_, profile, hover) => {
       return (
         <span className="kick-out">
-          <Icon hover={true} type="exit" />
+          <Icon hover={hover} type="exit" />
         </span>
       )
     },

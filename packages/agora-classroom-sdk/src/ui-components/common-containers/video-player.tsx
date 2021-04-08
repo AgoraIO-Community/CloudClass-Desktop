@@ -14,7 +14,8 @@ export const VideoPlayerTeacher = observer(() => {
     onWhiteboardClick,
     onOffPodiumClick,
     onOffAllPodiumClick,
-    sceneVideoConfig
+    sceneVideoConfig,
+    canHoverHideOffAllPodium
   } = useVideoControlContext()
 
   return (
@@ -32,6 +33,7 @@ export const VideoPlayerTeacher = observer(() => {
       hideStars={true}
       micVolume={userStream.micVolume}
       hideOffAllPodium={sceneVideoConfig.hideOffAllPodium}
+      canHoverHideOffAllPodium={canHoverHideOffAllPodium}
       onOffAllPodiumClick={onOffAllPodiumClick!}
       onCameraClick={onCameraClick}
       onMicClick={onMicClick}

@@ -5284,10 +5284,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-agora-electron-sdk@education290:
-  version "2.9.0-rc.107-build.1307"
-  resolved "https://registry.npm.taobao.org/agora-electron-sdk/download/agora-electron-sdk-2.9.0-rc.107-build.1307.tgz?cache=0&sync_timestamp=1616567154809&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fagora-electron-sdk%2Fdownload%2Fagora-electron-sdk-2.9.0-rc.107-build.1307.tgz#d61f1122f20e8974c4a13150e0ceddf729d95057"
-  integrity sha1-1h8RIvIOiXTEoTFQ4M7d9ynZUFc=
+agora-electron-sdk@apaas:
+  version "2.9.107-rc.136"
+  resolved "https://registry.npm.taobao.org/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.136.tgz#38b42dab1131874a949cef686d753cb576db4a29"
+  integrity sha1-OLQtqxExh0qUnO9obXU8tXbbSik=
   dependencies:
     bluebird "^3.7.1"
     download "^7.1.0"
@@ -23347,10 +23347,10 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.5:
-  version "2.12.5"
-  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.5.tgz#6df5ab57cba402eeba1049bdaf78a37b96ff2a81"
-  integrity sha1-bfWrV8ukAu66EEm9r3ije5b/KoE=
+white-web-sdk@2.12.8:
+  version "2.12.8"
+  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.8.tgz#d1612f150fb93a11db7a682b50d786d88e36d85d"
+  integrity sha1-0WEvFQ+5OhHbemgrUNeG2I422F0=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"

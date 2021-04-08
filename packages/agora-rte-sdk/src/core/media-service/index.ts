@@ -63,9 +63,6 @@ export class MediaService extends EventEmitter implements IMediaService {
         appId: rtcProvider.appId
       })
     }
-    this.sdkWrapper.on('watch-rtt', (evt: any) => {
-      this.fire('watch-rtt', evt)
-    })
     this.sdkWrapper.on('network-quality', (quality: any) => {
       this.fire('network-quality', quality)
     })
