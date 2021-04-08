@@ -130,7 +130,7 @@ export const transI18n = (text: string, options?: any) => {
   let content = i18n.t(text)
   if (!isEmpty(options)) {
     Object.keys(options).forEach(k => {
-      content = content.replace(`{${k}}`, options[k])
+      content = content.replace(`{${k}}`, options[k] || "")
     })
   }
   return content

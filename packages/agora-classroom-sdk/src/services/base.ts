@@ -94,8 +94,14 @@ export abstract class ApiBase {
     } else {
       resp = await HttpClient(`${this.prefix}${url}`, opts);
     }
+    
     if (resp.code !== 0) {
-      throw GenericErrorWrapper({message: resp.message || resp.msg}, {errCode: `${resp.code}`})
+      if(resp.code === undefined) {
+        // code is not available when server is not properly return response
+        throw GenericErrorWrapper({message: resp.error})
+      } else {
+        throw GenericErrorWrapper({message: resp.message || resp.msg}, {errCode: `${resp.code}`})
+      }
     }
     return resp
   }
