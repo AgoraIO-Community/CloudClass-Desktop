@@ -830,7 +830,7 @@ export class RoomStore extends SimpleInterval {
           const {user, type} = evt
           if (user.user.userUuid === this.roomInfo.userUuid && type === 2) {
             await this.appStore.releaseRoom()
-            this.appStore.uiStore.addToast('kicked', 'error')
+            this.appStore.uiStore.addToast(transI18n('toast.kick_by_teacher'), 'error')
             this.noticeQuitRoomWith(QuickTypeEnum.Kicked)
           }
         })
@@ -1428,6 +1428,7 @@ export class RoomStore extends SimpleInterval {
       networkQuality: this.appStore.mediaStore.networkQuality,
       packetLostRate: this.appStore.mediaStore.localPacketLostRate,
       classTimeText: this.classTimeText,
+      isNative: this.appStore.isElectron,
     }
   }
 

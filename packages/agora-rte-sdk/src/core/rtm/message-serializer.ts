@@ -2,7 +2,7 @@ import { get } from "lodash"
 import { EduCustomMessage, EduStreamData, EduTextMessage, EduUserData } from "../../interfaces"
 import { EduLogger } from "../logger"
 import { GenericErrorWrapper } from "../utils/generic-error"
-import { RawUserData, UsersStreamData } from "./constants"
+import { EduStreamRawData, RawUserData, UsersStreamData } from "./constants"
 
 export class MessageSerializer {
 
@@ -28,7 +28,7 @@ export class MessageSerializer {
       role: get(data, 'operator.role'),
     }
   }
-  
+
   static getFromUser(data: any) {
     return {
       userUuid: get(data, 'fromUser.userUuid') as string,
@@ -36,7 +36,7 @@ export class MessageSerializer {
       role: get(data, 'fromUser.role') as any,
     }
   }
-  
+
   static getEduCustomMessage(data: any): EduCustomMessage {
     return {
       fromUser: this.getFromUser(data),
@@ -44,24 +44,24 @@ export class MessageSerializer {
       timestamp: get(data, 'ts'),
     }
   }
-  
+
   static getEduTextMessage(data: any): EduTextMessage {
     return {
       fromUser: this.getFromUser(data),
       type: get(data, 'type'),
       message: get(data, 'message'),
       sensitiveWords: get(data, 'sensitiveWords', []),
-      timestamp: get(data, 'ts') || get(data,'sendTime'),
+      timestamp: get(data, 'ts') || get(data, 'sendTime'),
     }
   }
-  
+
   static getRoomInfo(data: any): any {
     return {
       roomInfo: get(data, 'roomInfo'),
       roomState: get(data, 'roomState')
     }
   }
-  
+
   static getUserStream(data: any): any {
     return {
       step: get(data, 'step'),
@@ -86,7 +86,7 @@ export class MessageSerializer {
   static onlineUsersCount(data: any) {
     return get(data.users, 'length', 0)
   }
-  
+
   static isStudentChatAllowed(data: any) {
     const audience = get(data, 'muteChat.audience')
     const broadcaster = get(data, 'muteChat.broadcaster')
@@ -96,11 +96,17 @@ export class MessageSerializer {
     return true
   }
 
+  static extractStreamsFromUser(_data: unknown) {
+    const data = _data as EduStreamRawData<RawUserData>
+    return data?.streams ?? []
+  }
+
   static getUsersStreams(_data: unknown) {
     const data = _data as UsersStreamData
     EduLogger.info("[serializer] getUserStreams: ", data)
     let eduStreams: EduStreamData[] = [];
-    const rawOnlineUsers = data?.onlineUsers ?? []
+    const dataOnlineUsers = data?.onlineUsers ?? []
+    const rawOnlineUsers = dataOnlineUsers
       .reduce((acc: unknown[], it: RawUserData) => {
         acc.push({
           userUuid: it.userUuid,
@@ -114,7 +120,9 @@ export class MessageSerializer {
           type: it.type,
         })
 
-        const rawStreams = get(it, 'streams', [])
+        const rawStreams = this.extractStreamsFromUser(it)
+
+        EduLogger.info("[serializer] getUsersStreams, extractRawStreams: ", JSON.stringify(rawStreams))
 
         const tmpStreams = rawStreams.map((stream: any) => ({
           streamUuid: stream.streamUuid,
@@ -136,8 +144,8 @@ export class MessageSerializer {
         return acc
       }, [])
 
-      const rawOfflineUsers = data?.offlineUsers ?? []
-      // const rawOfflineUsers = get(data, 'offlineUsers', [])
+    const dataOfflineUsers = data?.offlineUsers ?? []
+    const rawOfflineUsers = dataOfflineUsers
       .reduce((acc: unknown[], it: RawUserData) => {
         acc.push({
           userUuid: it.userUuid,
@@ -151,7 +159,9 @@ export class MessageSerializer {
           type: it.type,
         })
 
-        const rawStreams = get(it, 'streams', [])
+        const rawStreams = this.extractStreamsFromUser(it)
+
+        EduLogger.info("[serializer] rawOfflineUsers getUsersStreams, extractRawStreams: ", JSON.stringify(rawStreams))
 
         const tmpStreams = rawStreams.map((stream: any) => ({
           streamUuid: stream.streamUuid,
@@ -182,7 +192,7 @@ export class MessageSerializer {
 
     EduLogger.info("[EduUsersStreams] onlineStreams: ", onlineStreams)
     EduLogger.info("[EduUsersStreams] offlineStreams: ", offlineStreams)
-    
+
     return {
       onlineUsers: onlineUsers,
       onlineStreams: onlineStreams,
@@ -190,7 +200,7 @@ export class MessageSerializer {
       offlineStreams: offlineStreams,
     }
   }
-  
+
   static getUsers(data: any) {
     const onlineUsers = EduUserData
       .fromArray(
@@ -223,7 +233,7 @@ export class MessageSerializer {
       offlineUsers: offlineUsers,
     }
   }
-  
+
   static getChangedUser(data: any): EduUserData {
     const attrs = {
       userUuid: get(data, 'userUuid'),
@@ -237,11 +247,11 @@ export class MessageSerializer {
     }
     return new EduUserData(attrs)
   }
-  
+
   static getAction(data: any) {
     return get(data, 'action')
   }
-  
+
   static getStreams(data: any): EduStreamData[] {
     const eduStream = new EduStreamData({
       streamUuid: get(data, 'streamUuid') as string,
@@ -274,17 +284,17 @@ export class MessageSerializer {
       return acc
     }, acc)
   }
-  
+
   static getFollowMode(data: any) {
     return +get(data, 'followMode') as number
   }
-  
+
   static getBoardUsersState(data: any) {
     return data.reduce((acc: any, user: any) => {
       if (user.userUuid) {
-        acc.push(user) 
+        acc.push(user)
       }
       return acc
-    },[])
+    }, [])
   }
 }

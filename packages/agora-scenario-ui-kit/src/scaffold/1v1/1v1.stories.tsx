@@ -150,6 +150,7 @@ const ChatContainer: React.FC<any> = () => {
 const BizHeaderContainer: React.FC<any> = () => {
   return (
     <BizHeader
+      isNative={true}
       classStatusText='课前 22:22'
       isRecording={true}
       isStarted={true}

@@ -1,27 +1,32 @@
 import React, { FC } from 'react';
+import { transI18n } from '~components/i18n';
 import { MonitorInfo } from '.';
 
-export const SignalContent: FC<MonitorInfo> = (monitor) => (
+export type SignalContentProps = MonitorInfo & {
+  isNative: boolean
+}
+
+export const SignalContent: FC<SignalContentProps> = (monitor) => (
   <>
     <div className="biz-signal-content-row">
       <span className="biz-col padding-right-27">
-        <label>网络延迟:&nbsp;</label>
+        <label>{transI18n('signal.delay')}:&nbsp;</label>
         <span>{monitor.networkLatency}ms</span>
       </span>
       <span className="biz-col">
-        <label>丢包率:&nbsp;</label>
+        <label>{transI18n('signal.lose')}:&nbsp;</label>
         <span>{monitor.packetLostRate}%</span>
       </span>
     </div>
     <div className="biz-signal-content-row margin-top-9">
       <span className="biz-col padding-right-27">
-        <label>网络状态:&nbsp;</label>
+        <label>{transI18n('signal.status')}:&nbsp;</label>
         <span>{monitor.networkQuality}</span>
       </span>
-      <span className="biz-col">
-        <label>CPU:&nbsp;</label>
+      {monitor.isNative ? <span className="biz-col">
+        <label>{transI18n('signal.CPU')}:&nbsp;</label>
         <span>{monitor.cpuUsage}%</span>
-      </span>
+      </span> : null}
     </div>
   </>
 );

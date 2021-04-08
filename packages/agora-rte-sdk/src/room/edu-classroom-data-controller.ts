@@ -234,7 +234,7 @@ export class EduClassroomDataController {
           this.setRoomStatus(MessageSerializer.roomStatus(data.roomState), {})
           this.setRoomProperties(data.roomProperties)
           this.setRawUsers(data.users)
-          EduLogger.info(`[${this._id}] [${seqId}] set latest currentId, seqId: `)
+          EduLogger.info(`[initState] [${this._id}] [${seqId}] set latest currentId, seqId: `)
           break;
         }
         // classroom-property-updated
@@ -246,16 +246,16 @@ export class EduClassroomDataController {
             courseState: data.state,
             startTime: data.startTime,
           }, data.cause)
-          EduLogger.info(`[${this._id}] [${seqId}]#setRoomStatus: `, data)
+          EduLogger.info(`[courseState] [${this._id}] [${seqId}]#setRoomStatus: `, data)
           break;
         }
 
         case EduChannelMessageCmdType.roomMediaState: {
-          EduLogger.info(`[${this._id}] before [${seqId}]#setRoomStatus: `, data)
+          EduLogger.info(`[roomMediaState] [${this._id}] before [${seqId}]#setRoomStatus: `, data)
           this.setRoomStatus({
             isStudentChatAllowed: MessageSerializer.isStudentChatAllowed(data),
           }, data.cause)
-          EduLogger.info(`[${this._id}] after [${seqId}]#setRoomStatus: `, data)
+          EduLogger.info(`[roomMediaState] [${this._id}] after [${seqId}]#setRoomStatus: `, data)
           break;
         }
         // room user list changed
@@ -273,34 +273,35 @@ export class EduClassroomDataController {
 
           const operator = data?.operator ?? {}
           
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateUsersStreams: `, data)
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateUsersStreams: `,             onlineUsers,
-          offlineUsers,
-          onlineStreams,
-          offlineStreams,)
+          EduLogger.info(`[userListChanged] [${this._id}] before [${seqId}]#updateUsersStreams:  rawData `, data)
+          EduLogger.info(`[userListChanged] [${this._id}] before [${seqId}]#updateUsersStreams:  serializedData`,
+            'onlineUsers ', onlineUsers,
+            'offlineUsers ', offlineUsers,
+            'onlineStreams ', onlineStreams,
+            'offlineStreams ', offlineStreams)
           this.updateUserList(onlineUsers, offlineUsers, operator, cause, seqId)
           this.updateStreamList(onlineStreams, offlineStreams, operator, cause, seqId)
 
-          EduLogger.info(`[${this._id}] after [${seqId}]#updateUsersStreams: `, data)
-          EduLogger.info(`[${this._id}] after [${seqId}]#updateUsersStreams: userList, streamList,`, this._userList, this._streamList)
+          EduLogger.info(`[userListChanged] [${this._id}] after [${seqId}]#updateUsersStreams: userList, `, this._userList, ' streamList ', this._streamList)
           break;
         }
         // users-updated
         case EduChannelMessageCmdType.userStateUpdated: {
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateUserState: `, JSON.stringify(data))
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateUserState: `)
+          EduLogger.info(`[userStateUpdated] [${this._id}] before [${seqId}]#updateUserState: `, JSON.stringify(data))
           const user = MessageSerializer.getChangedUser(data)
           this.updateUserState(user)
 
-          EduLogger.info(`[${this._id}] after [${seqId}]#updateUserState: `, data)
-          EduLogger.info(`[${this._id}] after [${seqId}]#updateUserState: `, user)
+          EduLogger.info(`[userStateUpdated] [${this._id}] after [${seqId}]#updateUserState: `, data)
+          EduLogger.info(`[userStateUpdated] [${this._id}] after [${seqId}]#updateUserState: `, user)
           break;
         }
         // userListBatchUpdated
         case EduChannelMessageCmdType.userListBatchUpdated: {
-          EduLogger.info(`[${this._id}] before [${seqId}]#userListBatchUpdated: `, JSON.stringify(data))
+          EduLogger.info(`[userListBatchUpdated] [${this._id}] before [${seqId}]#userListBatchUpdated: `, JSON.stringify(data))
           const user = MessageSerializer.getChangedUser(data)
+          EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
           this.updateUserState(user)
+          EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
           // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, data)
           // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, user)
           break;
@@ -314,10 +315,10 @@ export class EduClassroomDataController {
 
           const onlineStreams = streams.filter((it: EduStreamData) => it.state !== 0)
           const offlineStreams = streams.filter((it: EduStreamData) => it.state === 0)
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateStreamList: data`, data)
-          EduLogger.info(`[${this._id}] before [${seqId}]#updateStreamList: onlineStreams`, onlineStreams,  ' offlineStreams', onlineStreams, ' operatorUser', operatorUser)
+          EduLogger.info(`[streamListChanged] [${this._id}] before [${seqId}]#updateStreamList: data`, data)
+          EduLogger.info(`[streamListChanged] [${this._id}] before [${seqId}]#updateStreamList: onlineStreams `, onlineStreams,  ' offlineStreams ', offlineStreams, ' operatorUser ', operatorUser)
           this.updateStreamList(onlineStreams, offlineStreams, operatorUser, cause, seqId)
-          EduLogger.info(`[${this._id}] after [${seqId}]#updateUsersStreams: userList, streamList,`, this._userList, this._streamList)
+          EduLogger.info(`[streamListChanged] [${this._id}] after [${seqId}]#updateUsersStreams: userList, `, this._userList , ` streamList `, this._streamList)
           break;
         }
 
@@ -613,8 +614,7 @@ export class EduClassroomDataController {
         if (this.streamIsOffline(newItem)) {
           // 删除stream
           EduLogger.info(`EDU-STATE addStreams: [${this._id}] streamIsOffline: `, newItem, targetStream)
-          this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== targetStream.stream.streamUuid)
-          // this._streamList.splice(targetIdx, 1)
+          this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== newItem.stream.streamUuid)
           // update local
           if (this.isLocalStreams(targetStream.stream)) {
             EduLogger.info(`EDU-STATE addStreams: [${this._id}] before [${seqId}]#addStreams: `, this._userList, this._streamList, ' targetStream ', targetStream, ' newItem ', newItem)
@@ -776,8 +776,7 @@ export class EduClassroomDataController {
       if (targetStream) {
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams in condition, streamUuid`, targetStream.stream.streamUuid, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams))
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams`, newItem)
-        this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== targetStream.stream.streamUuid)
-        // this._streamList.splice(targetIdx, 1)
+        this._streamList = this._streamList.filter((it) => it.stream.streamUuid !== newItem.stream.streamUuid)
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] removeStreams remove after, streamUuid`, targetStream, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams), this.isLocalStreams(targetStream.stream))
         if (this.isLocalStreams(targetStream.stream)) {
           EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] before removeLocalStream, streamUuid`, targetStream, " newItem", JSON.stringify(newItem), ' streams', JSON.stringify(streams), this.isLocalStreams(targetStream.stream))
@@ -809,8 +808,7 @@ export class EduClassroomDataController {
       if (target) {
         if (this.userIsOffline(newTargetItem)) {
           EduLogger.info("[EDU-STATE] remove user in addUserList before", JSON.stringify(list))
-          this._userList = this._userList.filter((it) => it.user.userUuid === target.user.userUuid)
-          // this._userList.splice(idx, 1)
+          this._userList = this._userList.filter((it) => it.user.userUuid === newTargetItem.user.userUuid)
           this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === newTargetItem.user.userUuid), operator, cause, seqId)
           EduLogger.info("[EDU-STATE] remove user in addUserList after ", JSON.stringify(newTargetItem))
           this.setRoomStatus({
@@ -881,8 +879,7 @@ export class EduClassroomDataController {
       // remove user in list
       if (target) {
         EduLogger.info(`[EDU-STATE] [${this._id}] seqId: [${seqId}] `, target)
-        this._userList = this._userList.filter((it) => it.user.userUuid === target.user.userUuid)
-        // this._userList.splice(idx, 1)
+        this._userList = this._userList.filter((it) => it.user.userUuid !== targetItem.user.userUuid)
 
         this.setRoomStatus({
           onlineUsersCount: MessageSerializer.onlineUsersCount({

@@ -37,6 +37,10 @@ export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
 
 export interface BizHeaderProps {
   /**
+   * 是否是原生
+   */
+  isNative: boolean;
+  /**
    * 课程是否开始
    */
   isStarted?: boolean;
@@ -71,6 +75,7 @@ export interface BizHeaderProps {
 export const BizHeader: FC<BizHeaderProps> = ({
   isStarted = false,
   isRecording = false,
+  isNative = false,
   signalQuality,
   title,
   classStatusText,
@@ -82,7 +87,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
     <>
       <Header className="biz-header">
         <Popover
-          content={<SignalContent {...monitor} />}
+          content={<SignalContent {...monitor} isNative={isNative} />}
           placement="bottomLeft">
           <div className={`biz-signal-quality ${signalQuality}`}>
             <Icon

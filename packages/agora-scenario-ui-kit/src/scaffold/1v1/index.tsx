@@ -29,6 +29,7 @@ export const OneToOnePage = () => {
       }}
     >
       <BizHeader
+        isNative={true}
         isRecording={false}
         classStatusText={""}
         isStarted={false}

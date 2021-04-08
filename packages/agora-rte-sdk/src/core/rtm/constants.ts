@@ -1,3 +1,4 @@
+import { EduStream } from './../../interfaces/index';
 import AgoraRTM from 'agora-rtm-sdk'
 
 export const RtmLogLevel = [
@@ -20,6 +21,8 @@ export type InternalStreamData = {
   userName: string,
   role: string
 }
+
+export type EduStreamRawData<Type> = Type & {streams: EduStream[]}
 
 export type RawUserData = {
   userUuid: string,
