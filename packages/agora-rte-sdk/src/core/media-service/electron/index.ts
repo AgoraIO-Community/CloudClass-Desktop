@@ -877,7 +877,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('RtcStats', (evt: any) => {
       // only electron
-      this.cpuUsage = evt.cpuTotalUsage
+      this.cpuUsage = evt.cpuAppUsage
       this.fire('rtcStats', evt)
     })
   }

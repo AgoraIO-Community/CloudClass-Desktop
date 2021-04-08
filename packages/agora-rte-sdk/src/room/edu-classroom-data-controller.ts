@@ -809,7 +809,7 @@ export class EduClassroomDataController {
       if (target) {
         if (this.userIsOffline(newTargetItem)) {
           EduLogger.info("[EDU-STATE] remove user in addUserList before", JSON.stringify(list))
-          this._userList = this._userList.filter((it) => it.user.userUuid === target.user.userUuid)
+          this._userList = this._userList.filter((it) => it.user.userUuid === newTargetItem.user.userUuid)
           // this._userList.splice(idx, 1)
           this.removeStreams(this._streamList.filter((it: EduStreamData) => it.stream.userInfo.userUuid === newTargetItem.user.userUuid), operator, cause, seqId)
           EduLogger.info("[EDU-STATE] remove user in addUserList after ", JSON.stringify(newTargetItem))
