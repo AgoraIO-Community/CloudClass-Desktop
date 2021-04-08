@@ -119,6 +119,7 @@ html, body, #root {
 }
 
 .small-class-chat {
+  position: absolute;
   bottom: 8px;
   right: 11px;
 }

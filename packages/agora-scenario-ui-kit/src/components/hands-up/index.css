@@ -24,27 +24,8 @@
     position: relative;
 }
 
-.received-card-enter {
-    left: 50px;
-    opacity: 0;
-}
-
-.received-card-enter-active {
-    left: 0px;
-    opacity: 1;
-    transition: 1500ms;
-}
-
-.received-card-enter .iconfont {
-    transform: rotate(45deg);
-}
-
-.received-card-enter-active .iconfont{
-    transform: rotate(0deg);
-    transition: 1500ms;
-}
-
-.student-box .student-name, .student-item .student-name {
+.student-box .student-name,
+.student-item .student-name {
     font-size: 14px;
     color: #586376;
 }
@@ -77,4 +58,51 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+}
+
+
+.received-card-enter {
+    animation: move-card 0.8s 0.2s ease-in-out;
+}
+.received-card-enter .icon-hands-up {
+    animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out;
+}
+
+@keyframes move-card{
+    0% {
+        transform: translateX(0px);
+    }
+    25% {
+        transform: translateX(7px);
+    }
+    50% {
+        transform: translateX(-3px);
+    }
+    75% {
+        transform: translateX(3px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes hand-move{
+    0% {
+        transform: translateY(10px) rotate(0deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+@keyframes hand-shake {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(30deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }

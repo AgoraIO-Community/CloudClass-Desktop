@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Meta } from '@storybook/react';
 import { Toast } from '~components/toast';
 import { Button } from '~components/button'
@@ -24,7 +24,9 @@ type DocsProps = {
   toastType: any,
 }
 
-export const Docs = ({success, error, warning, toastText, toastType = 'success'}: DocsProps) => (
+export const Docs = ({success, error, warning, toastText, toastType = 'success'}: DocsProps) => {
+  const [visible, setVisible] = useState(true)
+  return (
   <>
     <div>
       <Toast>{success}</Toast>
@@ -33,7 +35,14 @@ export const Docs = ({success, error, warning, toastText, toastType = 'success'}
       <Toast type="error">{error}</Toast>
     </div>
     <div className="mt-4">
-      <Toast type="warning">{warning}</Toast>
+      {visible ? (<Toast 
+        type="warning"
+        closeToast={() => {
+          setVisible(false)
+        }}
+        canStop={true}
+      >{warning}</Toast>) : ""}
+      
     </div>
     <div className="mt-4">
       <Button size="lg" onClick={() => {
@@ -59,7 +68,7 @@ export const Docs = ({success, error, warning, toastText, toastType = 'success'}
       }}>show toast - user define</Button>
     </div>
   </>
-);
+)};
 
 Docs.args = {
   success: 'success',
