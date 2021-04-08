@@ -65,6 +65,8 @@ export const en = {
     'input_message': 'Please Input Message',
   },
   'error': {
+    'banned': 'Forbidden',
+    'cannot_join': 'You have been forbidden to enter this classroom!',
     'conflict': 'Hands Up Conflict',
     'not_found': 'Page Not Found',
     'apply_co_video_limit': 'Apply co-video over maximum',

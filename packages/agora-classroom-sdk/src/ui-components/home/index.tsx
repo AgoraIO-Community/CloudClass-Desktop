@@ -44,7 +44,7 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const uid = `${userId}${role}`
+  const uid = `${userId}`
 
   const onChangeRole = (value: string) => {
     setRole(value)

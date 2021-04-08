@@ -9,6 +9,7 @@ import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
 import {v4 as uuidv4} from 'uuid';
+import { usePrevious } from '~utilities/hooks';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -143,7 +144,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onSendStar,
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const prevStar = useRef<number>(stars)
+  const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
   const animListCb = useCallback(() => {
     setAnimList([
       ...animList,
@@ -160,12 +161,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   }, [animList, setAnimList])
 
   useEffect(() => {
-    // console.log('stars change', stars, prevStar.current)
-    if (stars > prevStar.current) {
+    if (`${uid}` === `${previousState.uid}` && +stars > +previousState.stars) {
       animListCb()
     }
-    prevStar.current = stars;
-  }, [stars, animListCb])
+  }, [stars, previousState.uid, previousState.stars, animListCb])
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,

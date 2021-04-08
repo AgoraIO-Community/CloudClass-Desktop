@@ -66,18 +66,18 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
           }}></Icon>
         </div>
         <Tabs activeKey={activeKey} onChange={handleChange}>
-          <TabPane tab={t('cloud.publicResources')} key="1">
+          <TabPane tab={transI18n('cloud.publicResources')} key="1">
             <StorageContainer />
           </TabPane>
-          <TabPane tab={t('cloud.personalResources')} key="2">
+          <TabPane tab={transI18n('cloud.personalResources')} key="2">
             <Row className="btn-group margin-gap">
               <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
                 onChange={handleUpload} type="file">
               </input>
               <Button type="primary" onClick={triggerUpload}>
-                {t('cloud.upload')}
+                {transI18n('cloud.upload')}
               </Button>
-              <Button type="ghost" onClick={handleDelete}>{t('cloud.delete')}</Button>
+              <Button type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
               {showUploadToast ? (<Toast style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
               {showUploadModal ? (
                 <Modal

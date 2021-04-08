@@ -6,6 +6,7 @@ const ExceptionMapping = {
     "20403001": 'error.room_is_full',
     "30429460": 'error.apply_co_video_limit',
     "30429461": 'error.send_co_video_limit',
+    "30403100": 'error.cannot_join'
 }
 
 export class BusinessExceptions {
@@ -22,5 +23,12 @@ export class BusinessExceptions {
             return transI18n(result, {errCode: err.errCode, message: err.message})
         }
         return transI18n(result)
+    }
+
+    static getErrorTitle(err: GenericError): string {
+        if (err.errCode === "30403100") {
+            return transI18n('error.banned')
+        }
+        return transI18n('course.join_failed')
     }
 }

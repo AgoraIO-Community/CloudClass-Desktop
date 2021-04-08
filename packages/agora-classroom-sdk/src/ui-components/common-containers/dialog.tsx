@@ -89,7 +89,7 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
       onOk={onOK}
       onCancel={onCancel}
       footer={ButtonGroup()}
-      title={t('course.join_failed')}
+      title={BusinessExceptions.getErrorTitle(error)}
     >
       {BusinessExceptions.getErrorText(error)}
     </Modal>

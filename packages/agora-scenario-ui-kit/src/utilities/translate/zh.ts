@@ -65,6 +65,8 @@ export const zh = {
     'CPU': 'CPU',
   },
   'error': {
+    'banned': '禁止进入',
+    'cannot_join': '你已被禁止进入这个教室！',
     'not_found': '页面找不到',
     'apply_co_video_limit': '举手超出连麦人数限制',
     'send_co_video_limit': '点名超出连麦人数限制',

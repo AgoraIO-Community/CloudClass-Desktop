@@ -58,3 +58,14 @@ export const useAudioPlayer = (url: string) => {
     audioRef.current = audioElement
   }, [audioRef])
 }
+
+export const usePrevious = <Type>(value: Type) => {
+
+  const previousValue = useRef<Type>(value)
+
+  useEffect(() => {
+    previousValue.current = value
+  }, [value])
+
+  return previousValue.current
+}
