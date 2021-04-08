@@ -28,7 +28,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   borderRadius = 20,
   state = 'default',
   animStart = false,
-  timeout = 1500,
+  timeout = 1000,
   unreadCount = 0,
   className,
   studentList = [],
@@ -69,7 +69,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           height={height}
           borderRadius={borderRadius}
         >
-          {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""}
+          {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
           <Popover
             visible={popoverVisible}
             onVisibleChange={(visible) => setPopoverVisible(visible)}

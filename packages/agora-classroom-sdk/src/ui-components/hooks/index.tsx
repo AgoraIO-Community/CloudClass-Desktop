@@ -365,6 +365,7 @@ export const useChatContext = () => {
   const [text, setText] = useState<string>('')
 
   const handleSendText = useCallback(async (): Promise<void> => {
+    if (!text.trim()) return;
     const message = await roomStore.sendMessage(text)
     roomStore.addChatMessage(message)
     setText('')

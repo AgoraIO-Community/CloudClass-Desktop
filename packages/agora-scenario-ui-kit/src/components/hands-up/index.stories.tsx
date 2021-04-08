@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { HandsUpManager, HandsUpSender, HandsUpState } from '~components/hands-up';
 import { StudentInfo } from './types';
 
@@ -22,6 +22,8 @@ type DocsProps = {
 
 export const Docs = ({handsUpState, animStart}: any) => {
 
+    const [inProp, setInProp] = useState(false);
+
     const [list, updateList] = useState<StudentInfo[]>([...'.'.repeat(5)].map((_, idx: number) => ({
         userName: `${idx}_name`,
         userUuid: `${idx}`,
@@ -42,6 +44,14 @@ export const Docs = ({handsUpState, animStart}: any) => {
         }
     }, [list, updateList])
 
+    
+    
+    useEffect(() => {
+        let animFlag = handsUpState === 'received';
+        console.log(animFlag)
+        setInProp(animFlag)
+    }, [handsUpState])
+
     return (
         <div className="flex justify-center items-center m-screen h-screen">
             <HandsUpManager
@@ -49,6 +59,7 @@ export const Docs = ({handsUpState, animStart}: any) => {
                 state={handsUpState}
                 onClick={handleUpdateList}
                 studentList={list}
+                animStart={inProp}
             />
         </div>
     )
