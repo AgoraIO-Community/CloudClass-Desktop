@@ -1,4 +1,9 @@
+import { CauseType } from "../core/services/edu-api";
 import { EduStream, EduTextMessage, EduUserData } from "../interfaces";
+
+
+export const defaultOperatorUser = {} as OperatorUser
+export const defaultCause = {} as CauseType
 
 export type OperatorUser = {
   role: 'host' | 'audience' | 'broadcaster' | 'system' | string,
@@ -23,22 +28,22 @@ export interface EduClassroomManagerEventHandlers {
   /**
    * local user added event
    */
-  'local-user-added': (evt: {user: EduUserData}) => void,
+  'local-user-added': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
   /**
    * local user updated event
    */
-  'local-user-updated': (evt: {user: EduUserData, operator: OperatorUser}) => void,
-  'local-user-removed': (evt: {user: EduUserData, type: number, operator: OperatorUser}) => void,
+  'local-user-updated': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
+  'local-user-removed': (evt: {user: EduUserData, type: number, operator: OperatorUser, cause: CauseType}) => void,
   // 'local-stream-added': (evt: any) => void,
-  'local-stream-removed': (evt: {stream: any, type: 'main' | 'screen', operator: OperatorUser, seqId?: string}) => void,
-  'local-stream-updated': (evt: {data: any, type: 'main' | 'screen', operator: OperatorUser, seqId?: string}) => void,
-  'remote-stream-added': (evt: {stream: EduStream, operator: OperatorUser}) => void,
-  'remote-stream-removed': (evt: {stream: EduStream, operator: OperatorUser}) => void,
-  'remote-stream-updated': (evt: {stream: EduStream, operator: OperatorUser}) => void,
-  'remote-user-added': (evt: {user: EduUserData, operator: OperatorUser}) => void,
-  'remote-user-removed': (evt: {user: EduUserData, operator: OperatorUser}) => void,
-  'remote-user-updated': (evt: {user: EduUserData, operator: OperatorUser}) => void,
-  'classroom-property-updated': (evt: {classroom: ClassRoomProperties, operator: OperatorUser, cause?: object}) => void,
+  'local-stream-removed': (evt: {stream: any, type: 'main' | 'screen', operator: OperatorUser, cause: CauseType, seqId?: string}) => void,
+  'local-stream-updated': (evt: {data: any, type: 'main' | 'screen', operator: OperatorUser, cause: CauseType, seqId?: string}) => void,
+  'remote-stream-added': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-stream-removed': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-stream-updated': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-user-added': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-user-removed': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-user-updated': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
+  'classroom-property-updated': (evt: {classroom: ClassRoomProperties, operator: OperatorUser, cause: CauseType}) => void,
   /**
    * room chat message event
    */

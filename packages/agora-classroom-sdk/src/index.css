@@ -18,6 +18,7 @@ html, body, #root {
   height: 100%;
   position: absolute;
   z-index: 0;
+  background: black;
 }
 
 .rtc-screen-share video{
@@ -86,7 +87,14 @@ html, body, #root {
 }
 
 .filename {
-  max-width: 90px;
+  @apply text-white font-medium;
+  font-size: 12px;
+  margin-bottom: 5px;
+  /* text-shadow: 0 1px 2px rgb(13 29 61 / 80%); */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
 }
 
 .video-marquee-pin {

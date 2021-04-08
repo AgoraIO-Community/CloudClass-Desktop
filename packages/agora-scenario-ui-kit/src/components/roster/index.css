@@ -2,6 +2,16 @@
   padding: 0 1px;
 }
 
+.roster-username {
+  @apply font-medium;
+  font-size: 12px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
+}
+
 .reward {
   display: inline-flex;
   justify-content: center;

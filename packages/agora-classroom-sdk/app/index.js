@@ -65,7 +65,7 @@ async function createWindow() {
 
     const prodUrl = process.env.ELECTRON_PROD_URL
     
-    const startUrl = prodUrl ? prodUrl : (process.env.ELECTRON_START_URL || 
+    const startUrl = (process.env.ELECTRON_START_URL || 
     `file://${path.resolve(
       __dirname,
       '../../app.asar/build'
