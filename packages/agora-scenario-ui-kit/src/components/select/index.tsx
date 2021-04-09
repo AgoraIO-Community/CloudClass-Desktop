@@ -11,6 +11,7 @@ export interface SelectProps extends BaseProps {
     listHeight?: number;
     size?: 'large' | 'middle' | 'small';
     onChange?: (value: string) => void;
+    onSelect?: (value: string) => void;
 }
 
 type SelectType = FC<SelectProps> & {
@@ -24,6 +25,7 @@ export const Select: SelectType = ({
     listHeight,
     size = 'middle',
     onChange = value => { console.log('change', value) },
+    onSelect = value => { console.log('change', value) },
     className,
     ...restProps
 }) => {
@@ -41,6 +43,7 @@ export const Select: SelectType = ({
             listHeight={listHeight}
             showArrow
             onChange={onChange}
+            onSelect={onSelect}
             {...restProps}
         />
     )

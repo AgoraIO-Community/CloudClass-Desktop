@@ -26,6 +26,7 @@ export interface SettingProps extends BaseProps {
     speakerVolume?: number; // 扬声器音量
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
+    onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
 }
 
 export const Setting: FC<SettingProps> = ({
@@ -41,6 +42,7 @@ export const Setting: FC<SettingProps> = ({
     speakerVolume = 50,
     onChangeDevice = (deviceType, value) => {},
     onChangeAudioVolume = (deviceType, value) => {},
+    onSelectDevice = (deviceType, value) => {},
     className,
     ...restProps
 }) => {
@@ -57,6 +59,9 @@ export const Setting: FC<SettingProps> = ({
                     onChange={async value => {
                         await onChangeDevice('camera', value)
                     }}
+                    onSelect={async value => {
+                        await onSelectDevice('camera', value)
+                    }}
                 >
                     {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
@@ -67,6 +72,9 @@ export const Setting: FC<SettingProps> = ({
                     defaultValue={microphoneId}
                     onChange={async value => {
                         await onChangeDevice('microphone', value)
+                    }}
+                    onSelect={async value => {
+                        await onSelectDevice('microphone', value)
                     }}
                 >
                     {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
@@ -97,6 +105,9 @@ export const Setting: FC<SettingProps> = ({
                     defaultValue={speakerId}
                     onChange={async value => {
                         await onChangeDevice('speaker', value)
+                    }}
+                    onSelect={async value => {
+                        await onSelectDevice('speaker', value)
                     }}
                 >
                     {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
