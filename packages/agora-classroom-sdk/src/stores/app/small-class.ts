@@ -39,6 +39,16 @@ export class SmallClassStore {
   }
 
   @computed
+  get onlineUserCount () {
+    return this.sceneStore.userList.filter((it) => ['audience'].includes(it.role)).length
+  }
+
+  @computed
+  get processUserCount () {
+    return this.applyCoVideoUserList.length
+  }
+
+  @computed
   get role() {
     return this.roleToString(this.appStore.userRole)
   }
@@ -124,7 +134,7 @@ export class SmallClassStore {
   @computed
   get isCoVideo(): boolean {
     const meUid = this.roomInfo.userUuid
-    return this.acceptedList.find((it: any) => it.userUuid=== meUid)
+    return !!this.acceptedList.find((it: any) => it.userUuid=== meUid)
   }
 
   @computed

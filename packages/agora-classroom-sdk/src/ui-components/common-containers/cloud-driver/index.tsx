@@ -1,8 +1,10 @@
+import { useUIStore } from '@/hooks';
 import { useCloudDriverContext } from '@/ui-components/hooks';
 import { Button, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast, transI18n } from 'agora-scenario-ui-kit';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React from 'react';
+import { useEffect } from 'react';
 import Draggable from 'react-draggable';
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
@@ -51,6 +53,10 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     captureCheckedItems,
   } = useCloudDriverContext(props)
 
+  const uiStore = useUIStore()
+
+  const checked = uiStore.checked
+
   const handleClick = (id: string, type: string) => {
     if (type === 'delete') {
       handleDelete();
@@ -77,8 +83,8 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
               <Button type="primary" onClick={triggerUpload}>
                 {transI18n('cloud.upload')}
               </Button>
-              <Button type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
-              {showUploadToast ? (<Toast style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
+              <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
+              {showUploadToast ? (<Toast closeToast={()=>{}} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
               {showUploadModal ? (
                 <Modal
                   title={transI18n('cloud.upload')}
@@ -89,6 +95,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
                     left: '50%',
                     transform: 'translate(-50%, -50%)'
                   }}
+                  closable={false}
                   onCancel={() => { setShowUploadModal(false) }}
                 >
                   <Loading

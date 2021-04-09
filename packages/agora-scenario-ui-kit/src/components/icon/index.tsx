@@ -1,7 +1,8 @@
-import React, { EventHandler, FC, SyntheticEvent } from 'react';
+import React, { EventHandler, FC, ReactEventHandler, SyntheticEvent } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
+import IconWhiteboard from '~components/icon/assets/icon-whiteboard.svg';
 import './index.css';
 import './style.css';
 
@@ -78,4 +79,19 @@ export const IconBox: FC<IconBoxProps> = ({
   return (
     <Icon style={style} color={color} type={type} {...restProps}></Icon>
   )
+}
+
+export type SvgIconProps = {
+  onClick?: ReactEventHandler<any>
+}
+
+export const SvgGrantBoardIcon: React.FC<SvgIconProps> = (restProps) => {
+  const cls = classnames({
+    [`svg-icon`]: true
+  });
+  return (
+    <i className={cls} {...restProps} >
+      <img src={IconWhiteboard} alt=""/>
+    </i>
+  );
 }

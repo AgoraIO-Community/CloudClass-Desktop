@@ -55,6 +55,8 @@ export const Docs = ({handsUpState, animStart}: any) => {
     return (
         <div className="flex justify-center items-center m-screen h-screen">
             <HandsUpManager
+                processUserCount={0}
+                onlineUserCount={10}
                 unreadCount={9}
                 state={handsUpState}
                 onClick={handleUpdateList}

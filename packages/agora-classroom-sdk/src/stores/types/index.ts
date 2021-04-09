@@ -1,3 +1,5 @@
+import { StringMap } from "i18next"
+
 export type ProgressUserInfo = {
   userUuid: string,
   ts: number
@@ -9,6 +11,19 @@ export enum CoVideoActionType {
   teacherRefuse = 3,
   studentCancel = 4,
   teacherReplayTimeout = 7,
+}
+
+export type CauseOperator = {
+  cmd: number,
+  data: {
+    processUuid: string,
+    addProgress: ProgressUserInfo[],
+    addAccepted: ProgressUserInfo[],
+    removeProgress: ProgressUserInfo[],
+    removeAccepted: ProgressUserInfo[],
+    actionType: CoVideoActionType,
+    cmd: number
+  }
 }
 
 export type CauseData = {
