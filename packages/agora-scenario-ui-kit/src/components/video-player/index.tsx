@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
-import { Icon } from '~components/icon';
+import { Icon, SvgGrantBoardIcon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
@@ -278,8 +278,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           <span className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
-          {isHost === true && whiteboardGranted ? (
-            <Icon className="whiteboard-state" type="whiteboard" />
+          {whiteboardGranted ? (
+            <SvgGrantBoardIcon />
           ) : null}
         </div>
       </div>

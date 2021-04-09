@@ -34,6 +34,8 @@ export { AgoraWebRtcWrapper } from './core/media-service/web/index';
 
 export type { LocalUserRenderer, UserRenderer, RemoteUserRenderer } from './core/media-service/renderer/index';
 export type { EduClassroomManager } from './room/edu-classroom-manager';
+export type { OperatorUser } from './room/types';
+
 export type {
   EduConfiguration,
   EduTextMessage,

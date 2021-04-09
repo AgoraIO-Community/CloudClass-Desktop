@@ -302,8 +302,6 @@ export class EduClassroomDataController {
           EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
           this.updateUserState(user)
           EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
-          // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, data)
-          // EduLogger.info(`[${this._id}] after [${seqId}]#userListBatchUpdated: `, user)
           break;
         }
 

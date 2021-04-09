@@ -1,4 +1,3 @@
-import { useRoomStore, useUIStore } from '@/hooks'
 import { Card, Loading } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'

@@ -19,7 +19,9 @@ export interface HandsUpManagerProps extends BaseHandsUpProps {
   timeout?: number;
   onClick: HandleUpClick;
   unreadCount?: number;
-  studentList: StudentInfo[]
+  studentList: StudentInfo[];
+  processUserCount: number;
+  onlineUserCount: number;
 }
 
 export const HandsUpManager: FC<HandsUpManagerProps> = ({
@@ -32,6 +34,8 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   unreadCount = 0,
   className,
   studentList = [],
+  onlineUserCount = 0,
+  processUserCount = 0,
   onClick,
   ...restProps
 }) => {
@@ -55,8 +59,6 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
     />)
   }, [coVideoList, onClick])
 
-  const coVideoSize = studentList.filter((student: StudentInfo) => !!student.coVideo).length
-
   return (
     <div className={cls} {...restProps}>
       <CSSTransition
@@ -79,7 +81,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
             placement="top">
             <div className="hands-box-line">
               <Icon size={28} onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
-              <span className={'hands-apply-inline-box'}>{coVideoSize} / {studentList.length}</span>
+              <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
           </Popover>
         </Card>

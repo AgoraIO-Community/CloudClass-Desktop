@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Icon } from '~components/icon';
+import { Icon, SvgGrantBoardIcon } from '~components/icon';
 
 const meta: Meta = {
   title: 'Components/Icon',
@@ -392,6 +392,14 @@ export const Docs = () => (
         <Icon type="recording" />
       </div>
       <div>recording</div>
+    </div>
+    <div className="p-4 w-40 text-center">
+      <div>
+        <SvgGrantBoardIcon onClick={() => {
+          console.log('board icon')
+        }} />
+      </div>
+      <div>svg grant board icon</div>
     </div>
   </div>
 );

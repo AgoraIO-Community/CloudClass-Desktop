@@ -72,6 +72,9 @@ export class UIStore {
   @observable
   chatCollapse: boolean = false
 
+  @observable
+  checked: boolean = false;
+
   appStore: AppStore;
 
   constructor(appStore: AppStore) {
@@ -135,6 +138,7 @@ export class UIStore {
     this.boardLoading = false
     this.chatCollapse = false
     this.visibleSetting = false
+    this.checked = false
     this.resetStateQueue()
   }
 

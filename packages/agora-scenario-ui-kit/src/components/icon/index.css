@@ -270,3 +270,7 @@
 .icon-recording:before {
   content: "\e60f";
 }
+
+.svg-icon {
+  display: inline-flex;
+}
