@@ -37,6 +37,7 @@ export interface PretestProps extends BaseProps {
     onSelectMirror?: (isMirror: boolean) => void;
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
+    onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
     videoComponent?: React.ReactElement
 }
 
@@ -61,6 +62,7 @@ export const Pretest: React.FC<PretestProps> = ({
     onSelectMirror = (isMirror) => {},
     onChangeDevice = (deviceType, value) => {},
     onChangeAudioVolume = (deviceType, value) => {},
+    onSelectDevice = (deviceType, value) => {},
     ...restProps
 }) => {
 
@@ -129,6 +131,9 @@ export const Pretest: React.FC<PretestProps> = ({
                         onChange={async value => {
                             await onChangeDevice('camera', value)
                         }}
+                        onSelect={async value => {
+                            await onSelectDevice('camera', value)
+                        }}
                     >
                         {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
@@ -144,6 +149,9 @@ export const Pretest: React.FC<PretestProps> = ({
                         value={microphoneId}
                         onChange={async value => {
                             await onChangeDevice('microphone', value)
+                        }}
+                        onSelect={async value => {
+                            await onSelectDevice('microphone', value)
                         }}
                     >
                         {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
@@ -181,6 +189,9 @@ export const Pretest: React.FC<PretestProps> = ({
                                 value={speakerId}
                                 onChange={async value => {
                                     await onChangeDevice('speaker', value)
+                                }}
+                                onSelect={async value => {
+                                    await onSelectDevice('speaker', value)
                                 }}
                             >
                                 {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
