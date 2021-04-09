@@ -1259,7 +1259,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+          return allTools.filter((item: ToolItem) => !['cloud', 'tools','register'].includes(item.value))
         } else {
           return []
         }
