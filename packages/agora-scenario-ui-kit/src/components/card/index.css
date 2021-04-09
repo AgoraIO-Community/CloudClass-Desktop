@@ -1,0 +1,5 @@
+.card {
+    background: #FFFFFF;
+    box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+    @apply flex justify-center items-center;
+}

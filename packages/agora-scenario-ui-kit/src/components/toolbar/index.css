@@ -1,0 +1,161 @@
+.toolbar {
+  width: 42px;
+  background-color: white;
+}
+
+.toolbar.opened {
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 21px;
+}
+
+.toolbar .menu {
+  @apply flex justify-center items-center cursor-pointer;
+  margin-bottom: 18px;
+}
+
+.toolbar .menu.fold {
+  width: 42px;
+  height: 42px;
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 0px 21px 21px 0px;
+}
+
+.toolbar .menu.unfold {
+  width: 42px;
+  height: 42px;
+  box-shadow: none;
+  border-radius: none;
+}
+
+.toolbar > .tools {
+  @apply hidden;
+}
+
+.toolbar.opened > .tools {
+  @apply flex flex-col items-center;
+}
+
+.tool {
+  @apply cursor-pointer text-center relative;
+  height: 28px;
+  width: 29px;
+  line-height: 1;
+  margin-bottom: 10px;
+  color: #7b88a0;
+}
+
+.tool .triangle-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tool .expandable {
+  @apply absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 24px;
+  color: #7b88a0;
+}
+
+.active {
+  color: #357bf6;
+}
+
+.tool.expand,
+.tool:hover {
+  @apply rounded-full;
+  background: #f0f0f7;
+}
+
+.tool > .iconfont {
+  font-size: 28px;
+}
+
+.expand-tools {
+  @apply flex flex-row items-center flex-wrap;
+}
+
+.expand-tools.colors {
+  width: 140px;
+}
+
+.expand-tool {
+  @apply flex flex-col items-center  cursor-pointer;
+  margin-right: 8px;
+}
+
+.expand-tool.color {
+  @apply flex justify-center items-center rounded-full;
+  height: 22px;
+  width: 22px;
+  border: 1px solid #e1e1ea;
+  margin: 6px;
+}
+
+.expand-tool.color > .circle {
+  @apply rounded-full;
+  height: 18px;
+  width: 18px;
+}
+
+.expand-tool > .iconfont {
+  font-size: 26px;
+  color: #7b88a0;
+}
+
+.expand-tool > .active {
+  color: #357bf6;
+}
+
+.expand-tool > .active-indicator {
+  @apply rounded-full;
+  width: 3px;
+  height: 3px;
+  background: #868f9f;
+}
+
+.expand-tool.toolkit {
+  margin-right: 0px;
+}
+
+.expand-tool > .label {
+  color: #7b88a0;
+  font-size: 12px;
+}
+
+.expand-tools-popover .popover-inner-content {
+  padding: 9px 10px;
+}
+
+.expand-tool .current-pen {
+  background: #868F9F;
+}
+
+.expand-tools.tool-cabinet {
+  max-width: 300px;
+}
+
+.expand-tools .cabinet-item {
+  width: 100px;
+  height: 78px;
+  color: #7B88A0;
+  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+}
+
+.expand-tools .cabinet-item:hover {
+  color: #191919;
+  background-color: #F9F9FC;
+}
+
+.customize-dialog-popover .popover-inner-content {
+  padding-left: 10px;
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.customize-dialog-popover > .popover-content > .popover-arrow {
+  display: none;
+}
