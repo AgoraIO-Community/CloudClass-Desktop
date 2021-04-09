@@ -166,6 +166,11 @@ export class PretestStore {
     return this.appStore.mediaStore.totalVolume
   }
 
+  @computed
+  get isCameraOpen () {
+    return !!this.appStore.sceneStore.cameraRenderer
+  }
+
   appStore: AppStore;
 
 
@@ -578,11 +583,12 @@ export class PretestStore {
       this._cameraId = deviceId
       this.cameraLabel = ''
     } else {
-      if (this.cameraRenderer) {
+      let sceneCameraRenderer = this.appStore.sceneStore._cameraRenderer
+      if (sceneCameraRenderer) {
         if (this.appStore.isElectron) {
-          this.cameraRenderer.stop()
+          sceneCameraRenderer.stop()
           await this.mediaService.changeCamera(deviceId)
-          this._cameraRenderer = this.mediaService.cameraRenderer
+          sceneCameraRenderer = this.mediaService.cameraRenderer
         } else {
           await this.mediaService.changeCamera(deviceId)
         }
@@ -594,7 +600,7 @@ export class PretestStore {
           }
         })
       }
-      this._cameraRenderer = this.mediaService.cameraRenderer
+      sceneCameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this._cameraId = this.cameraId
       // this.appStore.deviceInfo.cameraName = this.cameraLabel
