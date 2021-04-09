@@ -978,13 +978,13 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultTeacherPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.uiStore.loading || (this.appStore.boardStore && !this.appStore.boardStore.ready)) {
       return {
         placeHolderType: 'loading',
         text: t(`placeholder.loading`)
       }
     }
-    if (this.classState === EduClassroomStateEnum.beforeStart) {
+    if (!this.appStore.boardStore.teacherLogged()) {
       return {
         placeHolderType: 'noEnter',
         text: t(`placeholder.teacher_noEnter`)
@@ -998,14 +998,14 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultStudentPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.uiStore.loading || (this.appStore.boardStore && !this.appStore.boardStore.ready)) {
       return {
         placeHolderType: 'loading',
         text: t(`placeholder.loading`)
       }
     }
     // if (this.classState)
-    if (this.classState === EduClassroomStateEnum.beforeStart) {
+    if (this.appStore.boardStore.studentLogged()) {
       return {
         placeHolderType: 'noEnter',
         text: t(`placeholder.student_noEnter`)
