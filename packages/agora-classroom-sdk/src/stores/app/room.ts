@@ -996,7 +996,7 @@ export class RoomStore extends SimpleInterval {
         const {classroom, cause, operator} = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
 
-          cause && this.handleCause(cause, operator)
+          cause && this.handleCause(operator)
 
           this.roomProperties = get(classroom, 'roomProperties')
           const newClassState = get(classroom, 'roomStatus.courseState')
@@ -1382,7 +1382,7 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  handleCause(cause: CauseResponder<HandsUpDataTypes>, operator: unknown) {
+  handleCause(operator: unknown) {
     const actionOperator = operator as CauseOperator
     const {cmd, data} = actionOperator
     console.log('[hands-up] ###### ', JSON.stringify({cmd, data}))

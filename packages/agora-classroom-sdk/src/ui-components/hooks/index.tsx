@@ -3,6 +3,7 @@ import { useEffectOnce } from "@/hooks/utils"
 import { eduSDKApi } from "@/services/edu-sdk-api"
 import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
+import { UIStore } from "@/stores/app"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sdk"
@@ -951,6 +952,8 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
 
   const boardStore = useBoardStore()
 
+  const uiStore = useUIStore()
+
   const [checkMap, setCheckMap] = useState<Record<string, any>>({})
 
   useEffect(() => {
@@ -967,6 +970,10 @@ export const useUploadContext = (handleUpdateCheckedItems: CallableFunction) => 
   const hasSelected: any = useMemo(() => {
     return !!items.find((item: any) => !!item.checked)
   }, [items, checkMap])
+
+  useEffect(() => {
+    uiStore.checked = hasSelected
+  }, [hasSelected])
 
   const isSelectAll: any = useMemo(() => {
     const selected = items.filter((item: any) => !!item.checked)
