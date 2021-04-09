@@ -1,3 +1,4 @@
+import { ProgressUserInfo } from './../types/index';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
 import { eduSDKApi } from '@/services/edu-sdk-api';
@@ -23,8 +24,8 @@ import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
-import { OperatorUser } from './../../../../agora-rte-sdk/src/room/types';
+import { CauseOperator, CauseResponder, CoVideoActionType, HandsUpDataTypes } from '../types';
+import { OperatorUser } from 'agora-rte-sdk';
 import { SmallClassStore } from './small-class';
 
 dayjs.extend(duration)
@@ -349,67 +350,6 @@ export class RoomStore extends SimpleInterval {
     super()
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
-    reaction(() => JSON.stringify(
-      {
-        hasVideo: this.sceneStore?._cameraEduStream?.hasVideo ?? false,
-        userRole: this.roomInfo?.userRole ?? 'invisible',
-        userUuid: this.roomInfo?.userUuid ?? '',
-        role: this.operator.role,
-        action: this.operator.action,
-        roomType: this.roomInfo?.roomType ?? -1,
-        cmd: this.operator.cmd,
-        acceptedList: this.smallClassStore.acceptedList.map((it: any) => it.userUuid)
-      }), (data: string) => {
-        console.log('## reaction video', data)
-        const {hasVideo, userRole, userUuid, role, action, cmd, roomType, acceptedList} = JSON.parse(data)
-        if (roomType === -1 || !userUuid) return
-        if (roomType === EduRoomType.SceneTypeMiddleClass && acceptedList.includes(userUuid)) {
-          if (cmd !== 501 && ['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-            const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
-          }
-          return
-        }
-        if (roomType === EduRoomType.SceneType1v1) {
-          if (['video', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-            const operation = hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
-          }
-        }
-    })
-
-    reaction(() => JSON.stringify(
-      {
-        hasAudio: this.sceneStore?._cameraEduStream?.hasAudio ?? false,
-        userRole: this.roomInfo?.userRole ?? 'invisible',
-        userUuid: this.roomInfo?.userUuid ?? '',
-        role: this.operator.role,
-        action: this.operator.action,
-        roomType: this.roomInfo?.roomType ?? -1,
-        cmd: this.operator.cmd,
-        acceptedList: this.smallClassStore.acceptedList.map((it: any) => it.userUuid)
-      }), (data: string) => {
-        console.log('## reaction audio', data)
-        const {hasAudio, userRole, userUuid, role, action, cmd, roomType, acceptedList} = JSON.parse(data)
-        if (roomType === -1 || !userUuid) return
-        if (roomType === EduRoomType.SceneTypeMiddleClass && acceptedList.includes(userUuid)) {
-          if (cmd !== 501 && ['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-            const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
-          }
-          return
-        }
-        if (roomType === EduRoomType.SceneType1v1) {
-          if (['audio', 'all'].includes(action) && userRole === EduRoleTypeEnum.student && role === 'host' || role === 'assistant') {
-            const i18nRole = role === 'host' ? 'teacher' : 'assistant'
-            const operation = hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-            this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
-          }
-        }
-    })
   }
 
   @action
@@ -511,7 +451,6 @@ export class RoomStore extends SimpleInterval {
         userUuid: this.roomInfo.userUuid,
         data
       })
-      console.log(">>>> historyMesssage", JSON.stringify(historyMessage))
       historyMessage.list.map((item:any)=>{
         this.roomChatMessages.unshift({
           text: item.message,
@@ -716,7 +655,7 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  getRoleEnumValue(userRole: string):EduRoleTypeEnum {
+  getRoleEnumValue(userRole: string): EduRoleTypeEnum {
     if(userRole === 'invisible') {
       return EduRoleTypeEnum.invisible
     } else if(userRole === 'assistant') {
@@ -883,8 +822,9 @@ export class RoomStore extends SimpleInterval {
             }
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
+            const causeCmd = cause?.cmd ?? 0
             if (localStream && localStream.state !== 0) {
-              if (cause && cause.cmd === 501) {
+              if (causeCmd === 501) {
                 const roleMap = {
                   'host': transI18n('role.teacher'),
                   'assistant': transI18n('role.assistant')
@@ -897,28 +837,38 @@ export class RoomStore extends SimpleInterval {
                 if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
                   console.log("### [demo] localStream.stream.hasVideo ", localStream.stream.hasVideo, "this.sceneStore._cameraEduStream.hasVideo ", this.sceneStore._cameraEduStream.hasVideo)
                   this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo
-                  this.operator = {
-                    ...operator,
-                    cmd: cause?.cmd ?? 0,
-                    action: 'video'
+                  if (causeCmd !== 501) {
+                    const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
+                    const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
+                    this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
                   }
+                  // this.operator = {
+                  //   ...operator,
+                  //   cmd: cause?.cmd ?? 0,
+                  //   action: 'video'
+                  // }
                 }
                 if (!!localStream.stream.hasAudio !== !!this.sceneStore._cameraEduStream.hasAudio) {
                   console.log("### [demo] localStream.stream.hasAudio ", localStream.stream.hasAudio, "this.sceneStore._cameraEduStream.hasAudio ", this.sceneStore._cameraEduStream.hasAudio)
                   this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio
-                  this.operator = {
-                    ...operator,
-                    cmd: cause?.cmd ?? 0,
-                    action: 'audio'
+                  if (causeCmd !== 501) {
+                    const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
+                    const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
+                    this.appStore.uiStore.addToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
                   }
+                  // this.operator = {
+                  //   ...operator,
+                  //   cmd: cause?.cmd ?? 0,
+                  //   action: 'audio'
+                  // }
                 }
               } else {
                 this.sceneStore._cameraEduStream = localStream.stream
-                this.operator = {
-                  ...operator,
-                  cmd: cause?.cmd ?? 0,
-                  action: 'all'
-                }
+                // this.operator = {
+                //   ...operator,
+                //   cmd: cause?.cmd ?? 0,
+                //   action: 'all'
+                // }
               }
               BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
               if (this.sceneStore.joiningRTC) {
@@ -1432,42 +1382,52 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  handleCause(cause: CauseResponder<HandsUpDataTypes>, operator: OperatorUser) {
-    console.log('[hands-up] ###### ', JSON.stringify(cause))
-    if (cause.cmd === 501) {
-      const data = cause.data as any
+  handleCause(cause: CauseResponder<HandsUpDataTypes>, operator: unknown) {
+    const actionOperator = operator as CauseOperator
+    const {cmd, data} = actionOperator
+    console.log('[hands-up] ###### ', JSON.stringify({cmd, data}))
+    if (cmd === 501) {
       const process = data.processUuid
       if (process === 'handsUp') {
         switch(data.actionType) {
           case CoVideoActionType.studentHandsUp: {
-            this.appStore.uiStore.addToast(transI18n("co_video.received_student_hands_up"), 'success')
+            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+              this.appStore.uiStore.addToast(transI18n("co_video.received_student_hands_up"), 'success')
+            }
             console.log('学生举手')
             break;
           }
-          case CoVideoActionType.teacherAccept: {
-            if (data.addAccepted) {
-              const exists = data.addAccepted.find((it: any) => it.userUuid === this.roomInfo.userUuid)
-              if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-                exists && this.appStore.uiStore.addToast(transI18n('co_video.teacher_accept_co_video'))
+          // case CoVideoActionType.teacherAccept: {
+          //   if (data.addAccepted) {
+          //     const exists = data.addAccepted.find((it: any) => it.userUuid === this.roomInfo.userUuid)
+          //     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
+          //       exists && this.appStore.uiStore.addToast(transI18n('co_video.teacher_accept_co_video'))
+          //     }
+          //   }
+          //   break;
+          // }
+          case CoVideoActionType.teacherRefuse: {
+            if ([EduRoleTypeEnum.student].includes(this.roomInfo.userRole)) {
+              const includedRemoveProgress: ProgressUserInfo[] = data?.removeProgress ?? []
+              if (includedRemoveProgress.find((it) => it.userUuid === this.roomInfo.userUuid)) {
+                this.appStore.uiStore.addToast(transI18n("co_video.received_teacher_refused"), 'warning')
               }
             }
-            break;
-          }
-          case CoVideoActionType.teacherRefuse: {
-            this.appStore.uiStore.addToast(transI18n("co_video.received_teacher_refused"), 'warning')
-            console.log('拒绝')
+            console.log('老师拒绝')
             break;
           }
           case CoVideoActionType.studentCancel: {
-            this.appStore.uiStore.addToast(transI18n("co_video.received_student_cancel"), 'error')
+            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+              this.appStore.uiStore.addToast(transI18n("co_video.received_student_cancel"), 'error')
+            }
             console.log('学生取消')
             break;
           }
-          case CoVideoActionType.teacherReplayTimeout: {
-            this.appStore.uiStore.addToast(transI18n("co_video.received_message_timeout"), 'error')
-            console.log('超时')
-            break;
-          }
+          // case CoVideoActionType.teacherReplayTimeout: {
+          //   this.appStore.uiStore.addToast(transI18n("co_video.received_message_timeout"), 'error')
+          //   console.log('超时')
+          //   break;
+          // }
         }
       }
     }

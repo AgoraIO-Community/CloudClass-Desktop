@@ -1122,10 +1122,16 @@ export const useHandsUpManager = () => {
       }
   }, [coVideoUsers, smallClassStore])
 
+  const onlineUserCount = smallClassStore.onlineUserCount;
+
+  const processUserCount = smallClassStore.processUserCount;
+
   return {
     handsUpState,
     handleUpdateList,
-    coVideoUsers
+    coVideoUsers,
+    onlineUserCount,
+    processUserCount
   }
 }
 

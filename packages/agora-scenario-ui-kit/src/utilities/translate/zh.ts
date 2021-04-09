@@ -47,7 +47,7 @@ export const zh = {
     'remote_close_camera': '摄像头已关闭',
     'remote_close_microphone': '你暂时不能发言了',
     'remote_revoke_board': '你现在无权使用白板了',
-    'received_student_hands_up': '学生举手消息',
+    'received_student_hands_up': '有一条学生举手消息',
     'received_teacher_accepted': '收到老师同意的消息',
     'received_teacher_refused': '收到老师拒绝的消息',
     'received_student_cancel': '收到老师取消的消息',

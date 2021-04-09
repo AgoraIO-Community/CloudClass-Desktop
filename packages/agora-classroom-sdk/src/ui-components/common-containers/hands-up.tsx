@@ -10,11 +10,15 @@ export const HandsUpManagerContainer = observer(() => {
     const {
         handsUpState,
         handleUpdateList,
-        coVideoUsers
+        coVideoUsers,
+        onlineUserCount,
+        processUserCount,
     } = useHandsUpManager()
 
     return (
         <HandsUpManager
+            processUserCount={processUserCount}
+            onlineUserCount={onlineUserCount}
             unreadCount={0}
             state={handsUpState}
             onClick={handleUpdateList}
