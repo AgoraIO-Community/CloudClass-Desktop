@@ -1005,7 +1005,7 @@ export class SceneStore extends SimpleInterval {
       }
     }
     // if (this.classState)
-    if (this.appStore.boardStore.studentLogged()) {
+    if (!this.appStore.boardStore.studentLogged()) {
       return {
         placeHolderType: 'noEnter',
         text: t(`placeholder.student_noEnter`)
