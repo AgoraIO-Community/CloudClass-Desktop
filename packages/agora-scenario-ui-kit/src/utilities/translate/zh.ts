@@ -293,4 +293,28 @@ export const zh = {
     'reset': '居中',
   },
   'send': '发送',
+  'home': {
+    'roomId': 'roomId',
+    'roomId_placeholder': '请输入roomId',
+    'userId': 'userId',
+    'userId_placeholder': '请输入userId',
+    'roomName': '房间',
+    'roomName_placeholder': '请输入房间名',
+    'nickName': '昵称',
+    'nickName_placeholder': '请输入昵称',
+    'roomType': '类型',
+    'roomType_placeholder': '请选择课堂类型',
+    'roomType_1v1': '1v1',
+    'roomType_interactiveSmallClass': '互动小班',
+    'role': '角色',
+    'role_placeholder': '请选择你的角色',
+    'role_teacher': '老师',
+    'role_student': '学生',
+    'role_assistant': '助教',
+    'role_audience': '观众',
+    'language': '语言',
+    'language_placeholder': '请选择语言',
+    'duration': '时间(分钟)',
+    'enter_classroom': '加入课堂'
+  }
 }

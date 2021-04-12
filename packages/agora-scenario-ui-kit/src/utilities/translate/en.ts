@@ -294,4 +294,28 @@ export const en = {
     'signal_unknown': 'Unknown',
   },
   'send': 'Send',
+  'home': {
+    'roomId': 'roomId',
+    'roomId_placeholder': 'please input roomId',
+    'userId': 'userId',
+    'userId_placeholder': 'please input userId',
+    'roomName': 'Room Name',
+    'roomName_placeholder': 'please input room name',
+    'nickName': 'Nick Name',
+    'nickName_placeholder': 'please input nick name',
+    'roomType': 'Room Type',
+    'roomType_placeholder': 'please choose room type',
+    'roomType_1v1': '1v1',
+    'roomType_interactiveSmallClass': 'interactive Small Class',
+    'role': 'Role',
+    'role_placeholder': 'please choose role',
+    'role_teacher': 'teacher',
+    'role_student': 'student',
+    'role_assistant': 'assistant',
+    'role_audience': 'audience',
+    'language': 'Language',
+    'language_placeholder': 'please choose language',
+    'duration': 'Duration(minutes)',
+    'enter_classroom': 'Enter Classroom'
+  }
 }
