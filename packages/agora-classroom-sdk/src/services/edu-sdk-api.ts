@@ -317,7 +317,7 @@ export class EduSDKApi extends ApiBase {
       method: 'POST',
       data: {
         dirty: {
-          state: 1,
+          state: 0,
           duration: 0,
         }
       }
