@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>shouquan-actived2</title>
+    <title>视频区-授权icon-开启状态</title>
     <defs>
         <filter x="-22.5%" y="-20.8%" width="145.0%" height="141.5%" filterUnits="objectBoundingBox" id="filter-1">
             <feOffset dx="0.4" dy="0.4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
@@ -13,8 +13,8 @@
         </filter>
     </defs>
     <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="灵动课堂Guide-图标和图片（补充）" transform="translate(-601.000000, -204.000000)">
-            <g id="shouquan-actived2" transform="translate(601.000000, 204.000000)">
+        <g id="灵动课堂Guide-图标和图片（补充）" transform="translate(-597.000000, -204.000000)">
+            <g id="视频区-授权icon-开启状态" transform="translate(597.000000, 204.000000)">
                 <rect id="矩形" x="0" y="0" width="18" height="18"></rect>
                 <g id="授权（视频区icon）" filter="url(#filter-1)" transform="translate(3.000000, 2.500000)" fill="#FFF500" fill-rule="nonzero">
                     <g id="皇冠3备份">

@@ -44,6 +44,7 @@ export interface Profile {
   micDevice: boolean;
   stars: number;
   onlineState: boolean;
+  userType?: 'teacher' | 'student';
 }
 
 export interface Column {

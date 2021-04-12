@@ -58,15 +58,14 @@ export const defaultColumns: Column[] = [
     name: 'roster.board_state',
     action: 'whiteboard',
     render: (_, profile, hover) => {
+      console.warn(profile)
       const cls = classnames({
+        'whiteboard-granted-svg': 1,
         [`whiteboard-${!!profile.whiteboardGranted ? 'granted' : 'no_granted'}`]: 1,
+        [`student-${!!profile.whiteboardGranted ? 'granted' : 'no_granted'}`]: profile.userType === 'student'
       })
       return (
-        <Icon
-          hover={hover}
-          className={cls}
-          type="whiteboard"
-        />
+        <div className={cls}></div>
       )
     },
   },
