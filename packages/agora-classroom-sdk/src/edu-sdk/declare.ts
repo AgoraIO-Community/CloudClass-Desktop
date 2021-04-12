@@ -2,6 +2,13 @@ import { LaunchOption, ReplayOption } from './index';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { AppStore } from '@/stores/app';
 
+export type AgoraRegion = Uppercase<AgoraRegionString>
+
+export type AgoraRegionString = 
+  | 'cn'
+  | 'ap'
+  | 'ns'
+
 export type RoomConfigProps<T> = {
   store: T
 }

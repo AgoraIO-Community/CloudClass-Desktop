@@ -1,3 +1,4 @@
+import { AgoraRegion } from './../../edu-sdk/declare';
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
 import { BoardClient } from '@/modules/board/client';
 import { reportService } from '@/services/report-service';
@@ -818,6 +819,16 @@ export class BoardStore extends ZoomController {
     })
     BizLogger.info("[breakout board] join", data)
     const cursorAdapter = new CursorTool(); //新版鼠标追踪
+
+    const regionMap = {
+      'AP': 'sg',
+      'CN': 'cn-hz',
+      'EU': 'gb-lon',
+      'NS': 'us-sv',
+    } as const
+
+    const region = regionMap[this.appStore.params.config.region!] ?? undefined
+
     await this.boardClient.join({
       ...data,
       cursorAdapter,
@@ -827,7 +838,8 @@ export class BoardStore extends ZoomController {
         cursorName: this.appStore.roomStore.roomInfo.userName,
       },
       floatBar: true,
-      isAssistant: this.appStore.roomStore.isAssistant
+      isAssistant: this.appStore.roomStore.isAssistant,
+      region,
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {

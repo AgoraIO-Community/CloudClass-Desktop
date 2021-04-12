@@ -316,6 +316,8 @@ export const en = {
     'language': 'Language',
     'language_placeholder': 'please choose language',
     'duration': 'Duration(minutes)',
-    'enter_classroom': 'Enter Classroom'
+    'enter_classroom': 'Enter Classroom',
+    'region_placeholder': 'please choose region',
+    'region': 'Region',
   }
 }

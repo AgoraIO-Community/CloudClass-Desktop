@@ -1,4 +1,5 @@
 import { LanguageEnum } from '@/edu-sdk'
+import {AgoraRegion} from '@/edu-sdk/declare'
 import { useHomeStore } from '@/hooks'
 import { homeApi } from '@/services/home-api'
 import { storage } from '@/utils/utils'
@@ -6,7 +7,9 @@ import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk'
 import { Home, changeLanguage } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
+import i18n from 'i18next'
 
 export const HomePage = observer(() => {
 
@@ -18,9 +21,10 @@ export const HomePage = observer(() => {
   const [userName, setUserName] = useState<string>('')
   const [userRole, setRole] = useState<string>('')
   const [curScenario, setScenario] = useState<string>('')
+  const [region, setRegion] = useState<AgoraRegion>('NS')
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>('zh')
+  const [language, setLanguage] = useState<string>('en')
 
   const onChangeLanguage = (language: string) => {
     console.warn(language)
@@ -93,6 +97,7 @@ export const HomePage = observer(() => {
       role={userRole}
       scenario={curScenario}
       duration={duration}
+      region={region as string}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeRoomId={onChangeRoomId}
@@ -101,6 +106,9 @@ export const HomePage = observer(() => {
       onChangeUserName={onChangeUserName}
       onChangeStartDate={(date: Date) => {
         setStartDate(date)
+      }}
+      onChangeRegion={(region: unknown) => {
+        setRegion(region as AgoraRegion)
       }}
       onChangeDuration={(duration: number) => {
         setDuration(duration)

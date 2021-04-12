@@ -11,7 +11,7 @@ import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
 import { controller } from './controller';
-import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
+import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
 export interface AliOSSBucket {
   key: string
@@ -116,8 +116,9 @@ export type LaunchOption = {
   startTime: number, // 房间开始时间
   duration: number, // 课程时长
   courseWareList: CourseWareList, // 课件列表
-  personalCourseWareList?: CourseWareList // 个人课件列表
-  recordUrl?: string // 回放页地址
+  personalCourseWareList?: CourseWareList, // 个人课件列表
+  recordUrl?: string, // 回放页地址
+  region?: AgoraRegion
 }
 
 export type ReplayOption = {
@@ -233,6 +234,7 @@ export class AgoraEduSDK {
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,
           sdkDomain: sdkConfig.sdkDomain,
+          region: option.region,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
           oss: {

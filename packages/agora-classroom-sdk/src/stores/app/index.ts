@@ -25,6 +25,7 @@ import { PretestStore } from './pretest';
 import { RoomStore } from './room';
 import { SceneStore } from './scene';
 import { UIStore } from './ui';
+import { AgoraRegion } from '@/edu-sdk/declare';
 
 
 type RoomInfoParams = {
@@ -45,6 +46,7 @@ export type AppStoreConfigParams = {
   rtmUid: string,
   rtmToken: string,
   courseWareList: CourseWareList,
+  region?: AgoraRegion,
   personalCourseWareList?: CourseWareList,
   oss?: {
     region: string,
@@ -220,6 +222,10 @@ export class AppStore implements ClassRoomAbstractStore {
     // console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
+    const sdkDomain = config.sdkDomain
+
+    // const sdkDomain = config.sdkDomain.replace('%region%', this.params.config.region ?? 'cn')
+
     if (platform === 'electron') {
       this.eduManager = new EduManager({
         appId: config.agoraAppId,
@@ -231,7 +237,7 @@ export class AppStore implements ClassRoomAbstractStore {
         // @ts-ignore
         agoraRtc: window.rtcEngine,
         // agoraRtc: window,
-        sdkDomain: config.sdkDomain,
+        sdkDomain: sdkDomain,
       })
     } else {
       this.eduManager = new EduManager({
@@ -242,7 +248,7 @@ export class AppStore implements ClassRoomAbstractStore {
         logLevel: '' as any,
         logDirectoryPath: '',
         codec: 'vp8',
-        sdkDomain: config.sdkDomain,
+        sdkDomain: sdkDomain,
       })
     }
 

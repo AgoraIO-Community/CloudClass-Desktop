@@ -315,6 +315,8 @@ export const zh = {
     'language': '语言',
     'language_placeholder': '请选择语言',
     'duration': '时间(分钟)',
-    'enter_classroom': '加入课堂'
+    'enter_classroom': '加入课堂',
+    'region_placeholder': '请选择区域',
+    'region': '区域',
   }
 }
