@@ -44,7 +44,6 @@ export interface Profile {
   micDevice: boolean;
   stars: number;
   onlineState: boolean;
-  userType?: 'teacher' | 'student';
 }
 
 export interface Column {
@@ -52,7 +51,7 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, hover: boolean) => ReactNode;
+  render?: (text: string, profile: Profile, hover: boolean, userType?: string) => ReactNode;
 }
 
 type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
@@ -78,6 +77,10 @@ export interface RosterProps extends ModalProps {
    * 当前用户角色
    */
   role: ProfileRole;
+  /**
+   * 老师端或学生端人员列表标记
+   */
+  userType?: 'teacher' | 'student';
   /**
    * col 点击的回调，是否可以点击，取决于 column 中配置 action 与否和 dataSource 数据中配置 canTriggerAction
    */
@@ -126,7 +129,8 @@ export const Roster: FC<RosterProps> = ({
   role,
   localUserUuid,
   title,
-  isDraggable = true
+  isDraggable = true,
+  userType = 'teacher'
 }) => {
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
@@ -174,7 +178,7 @@ export const Roster: FC<RosterProps> = ({
                             : undefined
                         }>
                         {col.render
-                          ? col.render((data as any)[col.key], data, canHover(role, localUserUuid, data, col))
+                          ? col.render((data as any)[col.key], data, canHover(role, localUserUuid, data, col), userType)
                           : (data as any)[col.key]}
                       </span>
                     </Col>
