@@ -7,6 +7,7 @@ import './index.css';
 
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
+import { transI18n } from '~components/i18n';
 
 interface UploadItem {
     iconType?: string;
@@ -68,7 +69,7 @@ export const Loading: FC<LoadingProps> = ({
                                 {item.uploadComplete ? (
                                     <div className="loading-progress">
                                         <img src={circleLoadingGif} alt="upload success gif" width="20" height="20"/>
-                                        <span className="upload-success-text">转换中</span>
+                                        <span className="upload-success-text">{transI18n('whiteboard.converting')}</span>
                                     </div>
                                 ) : (
                                     <div className="loading-progress">

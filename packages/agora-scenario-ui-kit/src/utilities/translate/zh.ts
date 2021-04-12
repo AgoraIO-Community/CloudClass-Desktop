@@ -4,6 +4,9 @@ export const zh = {
     'student': '学生',
     'assistant': '助教',
   },
+  'whiteboard': {
+    'converting': '转换中',
+  },
   'screen_share': '屏幕共享',
   'kick': {
     'kick_out_student': '移出学生',

@@ -1,4 +1,4 @@
-import { AgoraRegion } from './../../edu-sdk/declare';
+import { AgoraRegion, regionMap } from './../../edu-sdk/declare';
 import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
 import { BoardClient } from '@/modules/board/client';
 import { reportService } from '@/services/report-service';
@@ -175,6 +175,7 @@ export class BoardStore extends ZoomController {
 
   @observable
   showFolder: boolean = false;
+  boardRegion: string;
 
   @action
   closeFolder() {
@@ -304,8 +305,10 @@ export class BoardStore extends ZoomController {
   @action
   async init(info: {
     boardId: string,
-    boardToken: string
+    boardToken: string,
+    boardRegion: string,
   }) {
+      this.boardRegion = info.boardRegion
       await this.join({
         boardId: info.boardId,
         boardToken: info.boardToken,
@@ -820,14 +823,10 @@ export class BoardStore extends ZoomController {
     BizLogger.info("[breakout board] join", data)
     const cursorAdapter = new CursorTool(); //新版鼠标追踪
 
-    const regionMap = {
-      'AP': 'sg',
-      'CN': 'cn-hz',
-      'EU': 'gb-lon',
-      'NS': 'us-sv',
-    } as const
+    const region = this.boardRegion ?? undefined
 
-    const region = regionMap[this.appStore.params.config.region!] ?? undefined
+    console.log('boardRegion : ', this.boardRegion, ' region ', region)
+    // const region = regionMap[this.appStore.params.config.region!] ?? undefined
 
     await this.boardClient.join({
       ...data,

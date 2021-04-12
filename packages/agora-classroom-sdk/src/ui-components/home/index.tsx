@@ -132,6 +132,7 @@ export const HomePage = observer(() => {
           roleType: role,
           startTime: +startDate,
           duration: duration * 60,
+          region
         })
         history.push('/launch')
       }}

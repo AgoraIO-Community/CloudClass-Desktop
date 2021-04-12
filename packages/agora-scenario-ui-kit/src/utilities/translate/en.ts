@@ -4,6 +4,9 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
+  'whiteboard': {
+    'converting': 'Converting',
+  },
   'screen_share': 'Screen Share',
   'kick': {
     'kick_out_student': 'Kick Out',

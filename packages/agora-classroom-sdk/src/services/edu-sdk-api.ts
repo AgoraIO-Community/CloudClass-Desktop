@@ -1,3 +1,4 @@
+import { AgoraRegion } from './../edu-sdk/declare';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import { HttpClient } from "@/modules/utils/http-client";
 import { reportService } from "./report-service";
@@ -70,6 +71,7 @@ export class EduSDKApi extends ApiBase {
     role: number,
     startTime?: number,
     duration?: number,
+    region?: string
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'http', 'preflight')
@@ -83,6 +85,7 @@ export class EduSDKApi extends ApiBase {
         startTime: params.startTime,
         userName: params.userName,
         duration: params.duration,
+        boardRegion: params.region
       }
     })
     res.data.ts = res.ts

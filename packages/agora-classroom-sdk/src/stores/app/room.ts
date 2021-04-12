@@ -1,3 +1,4 @@
+import { regionMap } from './../../edu-sdk/declare';
 import { ProgressUserInfo } from './../types/index';
 import { EduBoardService } from '@/modules/board/edu-board-service';
 import { EduRecordService } from '@/modules/record/edu-record-service';
@@ -701,6 +702,8 @@ export class RoomStore extends SimpleInterval {
         sid: this.eduManager.sessionId
       })
       reportService.reportEC('joinRoom', 'start')
+
+      const region = regionMap[this.appStore.params.config.region!] ?? 'cn-hz'
       
       let checkInResult = await eduSDKApi.checkIn({
         roomUuid,
@@ -711,6 +714,7 @@ export class RoomStore extends SimpleInterval {
         role: this.roomInfo.userRole,
         startTime: startTime,  // 单位：毫秒
         duration: duration,    // 秒
+        region: region
       })
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
@@ -727,6 +731,7 @@ export class RoomStore extends SimpleInterval {
       this.appStore.boardStore.init({
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
+        boardRegion: checkInResult.board.boardRegion,
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)

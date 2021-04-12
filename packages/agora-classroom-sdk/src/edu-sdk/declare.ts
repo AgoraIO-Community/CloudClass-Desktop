@@ -4,6 +4,13 @@ import { AppStore } from '@/stores/app';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>
 
+export const regionMap = {
+  'AP': 'sg',
+  'CN': 'cn-hz',
+  'EU': 'gb-lon',
+  'NS': 'us-sv',
+} as const
+
 export type AgoraRegionString = 
   | 'cn'
   | 'ap'
