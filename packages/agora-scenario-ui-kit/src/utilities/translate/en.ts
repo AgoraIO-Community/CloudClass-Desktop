@@ -268,6 +268,7 @@ export const en = {
   },
   'pretest': {
     'title': 'Device Test',
+    'settingTitle': 'Device Setting',
     'finishTest': 'Finish'
   },
   'nav': {

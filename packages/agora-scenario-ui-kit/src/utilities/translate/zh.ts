@@ -242,6 +242,7 @@ export const zh = {
   },
   'pretest': {
     'title': '设备检测',
+    'settingTitle': '设备设置',
     'finishTest': '完成'
   },
   'message': '消息',
