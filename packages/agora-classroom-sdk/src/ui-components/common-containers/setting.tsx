@@ -21,7 +21,7 @@ export const SettingContainer = observer(({id}: any) => {
 
     return (
         <Modal
-            title={t('pretest.title')}
+            title={t('pretest.settingTitle')}
             width={360}
             footer={[<Button action="ok">{t('toast.confirm')}</Button>]}
             onCancel={handleCancel}
