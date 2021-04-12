@@ -3,7 +3,7 @@ import { useHomeStore } from '@/hooks'
 import { homeApi } from '@/services/home-api'
 import { storage } from '@/utils/utils'
 import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk'
-import { Home } from 'agora-scenario-ui-kit'
+import { Home, changeLanguage } from 'agora-scenario-ui-kit'
 import { observer } from 'mobx-react'
 import React, { useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
@@ -23,6 +23,8 @@ export const HomePage = observer(() => {
   const [language, setLanguage] = useState<string>('zh')
 
   const onChangeLanguage = (language: string) => {
+    console.warn(language)
+    changeLanguage(language)
     setLanguage(language)
   }
 
