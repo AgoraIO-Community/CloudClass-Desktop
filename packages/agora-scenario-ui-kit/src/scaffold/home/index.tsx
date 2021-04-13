@@ -161,7 +161,7 @@ export const Home: React.FC<HomeProps> = ({
               {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
             </Col>
           </Row>
-          <Button className="mt-4" type="primary" size="lg" onClick={onClick}>{t('home.enter_classroom')}</Button>
+          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName)}>{t('home.enter_classroom')}</Button>
           <Row className="text-center">
             version: {version}
           </Row>

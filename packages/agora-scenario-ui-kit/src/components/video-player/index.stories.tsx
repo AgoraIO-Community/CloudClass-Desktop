@@ -41,7 +41,7 @@ export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
       <Button onClick={() => {
         changeLanguage('en')
       }}>英文</Button>
-      <VideoPlayer {...restProps}>{children}</VideoPlayer>
+      <VideoPlayer {...restProps} userType="teacher">{children}</VideoPlayer>
     </div>
   );
 };

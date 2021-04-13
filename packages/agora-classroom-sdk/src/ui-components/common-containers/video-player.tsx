@@ -42,6 +42,7 @@ export const VideoPlayerTeacher = observer(() => {
       controlPlacement={'left'}
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
+      userType={'teacher'}
     >
       {
         userStream.renderer && userStream.video ?
