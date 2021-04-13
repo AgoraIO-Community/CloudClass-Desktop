@@ -219,3 +219,26 @@
   right: 0;
   margin: auto;
 }
+
+.video-granted, .video-no_granted {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 8px;
+  background: url('../icon/assets/svg/video-granted-active.svg') no-repeat center / 22px 22px;
+}
+
+.video-granted:hover, .video-no_granted:hover {
+  background-color: #f0f0f7;
+}
+
+.video-no_granted {
+  background-image: url('../icon/assets/svg/video-granted-default.svg')
+}
+
+.bottom-right-granted {
+  width: 22px;
+  height: 22px;
+  background: url('../icon/assets/svg/granted-active-icon.svg') no-repeat center / 22px 22px;
+}

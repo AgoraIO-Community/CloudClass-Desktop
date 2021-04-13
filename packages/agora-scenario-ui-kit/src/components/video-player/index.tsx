@@ -77,6 +77,8 @@ export interface BaseVideoPlayerProps {
   isOnPodium?: boolean;
 
   placement?: any;
+
+  userType?: 'student' | 'teacher';
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -136,6 +138,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   isOnPodium,
   placement = 'bottom',
   canHoverHideOffAllPodium = false,
+  userType = 'student',
   onCameraClick,
   onMicClick,
   onOffAllPodiumClick = () => console.log("on clear podiums"),
@@ -213,11 +216,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           )}
           {hideBoardGranted ? null :
           <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
-            <Icon
-              className={whiteboardGranted ? '': 'no_granted'}
-              type="whiteboard"
-              onClick={() => onWhiteboardClick(uid)}
-            /> 
+            <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
           </Tooltip>
           }
           {hideStars ? null : (
@@ -278,8 +277,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           <span className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
-          {whiteboardGranted ? (
-            <SvgGrantBoardIcon />
+          {(whiteboardGranted && userType === 'student') ? (
+            <div className="bottom-right-granted"></div>
           ) : null}
         </div>
       </div>
