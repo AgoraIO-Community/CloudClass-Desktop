@@ -67,7 +67,7 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
   }
 
   return (
-    <Roster dataSource={list} {...restProps} onClick={handleClick} />
+    <Roster dataSource={list} {...restProps} onClick={handleClick} userType="student"/>
   )
 };
 

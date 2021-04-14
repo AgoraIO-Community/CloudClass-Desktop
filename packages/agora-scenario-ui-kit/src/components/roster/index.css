@@ -81,20 +81,54 @@
   color: #979797 !important;
 }
 
-.roster-table .on-podium,
-.roster-table .whiteboard-granted,
 .roster-table .camera-enabled,
 .roster-table .mic-enabled {
   color: #0073ff;
 }
 
-.roster-table .camera-disabled,
-.roster-table .mic-disabled {
-  color: #f04c36;
+.whiteboard-granted-svg, .podium-svg {
+  width: 22px;
+  height: 22px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+}
+
+.roster-table .whiteboard-granted {
+  background-image: url('../icon/assets/svg/teacher-granted-active.svg');
 }
 
 .roster-table .whiteboard-no_granted {
-  color: #bdbdca;
+  background-image: url('../icon/assets/svg/teacher-granted-default.svg');
+}
+
+.roster-table .student-granted {
+  background-image: url('../icon/assets/svg/student-granted-active.svg');
+}
+
+.roster-table .student-no_granted {
+  background-image: url('../icon/assets/svg/student-granted-default.svg');
+}
+
+.roster-table .on-podium {
+  background-image: url('../icon/assets/svg/teacher-on-podium.svg');
+}
+
+.roster-table .off-podium {
+  background-image: url('../icon/assets/svg/teacher-off-podium.svg');
+}
+
+.roster-table .student-on-podium {
+  background-image: url('../icon/assets/svg/student-on-podium.svg');
+}
+
+.roster-table .student-off-podium {
+  background-image: url('../icon/assets/svg/student-off-podium.svg');
+}
+
+.roster-table .camera-disabled,
+.roster-table .mic-disabled {
+  color: #f04c36;
 }
 
 .roster-table .star {

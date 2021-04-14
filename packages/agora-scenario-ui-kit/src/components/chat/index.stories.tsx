@@ -111,6 +111,7 @@ export const Docs: FC<ChatProps> = (props) => {
           onClickMiniChat={() => {
             console.log('click chat min');
           }}
+          canChatting={false}
         />
       </div>
     </div>

@@ -146,12 +146,16 @@ export const Chat: FC<ChatProps> = ({
           <span className="chat-header-title">{t('message')}</span>
           <span>
             {isHost ? (
-              <Icon
-                hover={true}
+              <span 
                 onClick={() => onCanChattingChange(!!canChatting)}
-                className="chat-header-message-state"
-                type={canChatting ? 'message-on' : 'message-off'}
-              />
+              >
+                {canChatting ? (<Icon
+                  hover={true}
+                  className="chat-header-message-state"
+                  type='message-on'
+                />) : (<i className="no-discussion-svg"></i>)}
+                
+              </span>
             ) : null}
             <span style={{cursor: 'pointer'}} onClick={() => onCollapse && onCollapse()}>
               {closeIcon && closeIcon}
@@ -182,7 +186,6 @@ export const Chat: FC<ChatProps> = ({
         <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
           <textarea
             value={chatText}
-            rows={1}
             className="chat-texting-message"
             placeholder={t('placeholder.input_message')}
             disabled={!isHost && !canChatting}

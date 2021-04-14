@@ -67,7 +67,9 @@
 }
 
 .chat-texting > textarea {
-  @apply resize-none w-full;
+  @apply w-full outline-none border-none resize-none;
+  height: 50px;
+  transition: .5s;
 }
 
 .chat-texting.focus > textarea {
@@ -87,4 +89,14 @@
 .chat-texting-message:active,
 .chat-texting-message:focus {
   @apply outline-none;
+}
+
+.no-discussion-svg {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: url('../icon/assets/svg/icon-nodiscussion.svg') no-repeat center / 24px 24px;
+  cursor: pointer;
 }

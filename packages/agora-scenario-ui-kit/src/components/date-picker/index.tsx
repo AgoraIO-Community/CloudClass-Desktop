@@ -6,6 +6,7 @@ import { Calendar } from '~components/calendar'
 import { Popover } from '~components/popover'
 import { Icon } from '~components/icon';
 import dayjs from 'dayjs'
+import iconCalendarSvg from '~components/icon/assets/svg/icon-calendar.svg'
 
 export interface DatePickerProps extends BaseProps {
   className?: string
@@ -41,7 +42,7 @@ export const DatePicker: FC<DatePickerProps> = ({
     >
       <div className={cls}>
         <span>{dayjs(selectedDate).format('YYYY/MM/DD HH:mm')}</span>
-        <Icon type="red-caution" />
+        <img src={iconCalendarSvg} width={20} height={20}/>
       </div>
     </Popover>
   );
