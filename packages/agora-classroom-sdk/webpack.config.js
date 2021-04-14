@@ -30,6 +30,13 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js", ".scss", ".css"],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
+      '~components': path.resolve(__dirname, 'src/ui-kit/components'),
+      '~styles': path.resolve(__dirname, 'src/ui-kit/styles'),
+      '~utilities': path.resolve(__dirname, 'src/ui-kit/utilities'),
+      '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
+      '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
+      '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
     }
   },
   module: {

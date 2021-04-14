@@ -2,10 +2,10 @@ import { CourseWareItem } from "@/edu-sdk";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types";
 import { fileSizeConversionUnit } from "@/utils/utils";
 import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
-import { FormatIconType } from "agora-scenario-ui-kit";
+import { FormatIconType } from "~ui-kit";
 import OSS, { MultipartUploadResult } from "ali-oss";
 import { get } from "lodash";
-import { LegacyPPTConverter } from 'white-web-sdk';
+import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 
 export const mapFileType = (type: string): FormatIconType => {
@@ -114,7 +114,6 @@ export type HandleUploadType = {
   conversion: any,
   converting: boolean,
   kind: any,
-  pptConverter: LegacyPPTConverter,
   pptResult?: any,
   onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
 }
@@ -134,6 +133,13 @@ export class UploadService extends ApiBase {
       uploadId: ''
     }
     this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
+  }
+
+  region: string = 'cn-hz'
+
+  setRegion(region: string) {
+    EduLogger.info(`upload-service set region ${region}`)
+    this.region = region
   }
 
   // 查询服务端是否已经存在课件
@@ -171,15 +177,16 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, conversion: UploadConversionType, fileSize: number}) {
+  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, fileSize: number, conversion?: UploadConversionType}) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}/sts`,
       method: 'PUT',
       data: {
         resourceName: params.resourceName,
         ext: params.ext,
-        conversion: params.conversion,
-        size: params.fileSize
+        // conversion: params.conversion,
+        size: params.fileSize,
+        conversion: params.conversion ?? undefined,
       }
     })
     if (res.code !== 0) {
@@ -294,8 +301,14 @@ export class UploadService extends ApiBase {
       resourceName: payload.resourceName,
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
-      conversion: payload.conversion,
+      // conversion: payload.conversion,
       fileSize: payload.fileSize,
+      conversion: payload.converting ? {
+        type: payload.ext === 'pptx' ? 'dynamic' : 'static',
+        preview: false,
+        scale: 1.2,
+        outputFormat: 'png',
+      } : undefined,
     })
 
     const ossConfig = fetchResult.data
@@ -312,6 +325,10 @@ export class UploadService extends ApiBase {
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     const resourceUuid = fetchCallbackBody.resourceUuid
+    // const taskUuid = fetchCallbackBody.taskUuid
+    // const taskToken = fetchCallbackBody.taskToken
+
+    // console.log('fetchCallbackBody ', fetchCallbackBody)
 
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
@@ -331,18 +348,44 @@ export class UploadService extends ApiBase {
           // userUuid: payload.userUuid,
           appId: this.appId
         })
-      const pptConverter = payload.pptConverter
-      const taskResult: any = await pptConverter.convert({
-        url: uploadResult.ossURL,
+
+      console.log('uploadResult', uploadResult)
+
+      const resp = createPPTTask({
+        uuid: uploadResult.taskUuid,
         kind: payload.kind,
-        onProgressUpdated: (...args: any[]) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress: args[0],
-            isTransFile: true,
-          })
-        },
+        taskToken: uploadResult.taskToken,
+        region: this.region,
+        callbacks: {
+          onProgressUpdated: progress => {
+            console.log(' onProgressUpdated ', progress)
+              payload.onProgress({
+                phase: 'finish',
+                progress: progress.convertedPercentage,
+                isTransFile: true,
+              })
+            },
+            onTaskFail: () => {
+              console.log(' onTaskFail ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+            onTaskSuccess: () => {
+              console.log(' onTaskSuccess ')
+              payload.onProgress({
+                phase: 'finish',
+                progress: 1,
+                isTransFile: true,
+              })
+            },
+        }
       })
+
+      const ppt = await resp.checkUtilGet();
+
       payload.onProgress({
         phase: 'finish',
         progress: 1,
@@ -351,20 +394,20 @@ export class UploadService extends ApiBase {
       })
 
       let materialResult = await this.createMaterial({
-        taskUuid: taskResult.uuid,
+        taskUuid: ppt.uuid,
         url: uploadResult.ossURL,
         roomUuid: payload.roomUuid,
         // userUuid: payload.userUuid,
         resourceName: payload.resourceName,
         resourceUuid,
-        taskToken: taskResult.roomToken,
-        ext: taskResult.ext,
+        taskToken: uploadResult.taskToken,
+        ext: payload.ext,
         size: uploadResult.size,
         taskProgress: {
-          totalPageSize: taskResult.scenes.length,
-          convertedPageSize: taskResult.scenes.length,
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: taskResult.scenes
+          convertedFileList: ppt.scenes
         }
       })
       return {
@@ -373,15 +416,15 @@ export class UploadService extends ApiBase {
         ext: uploadResult.ext,
         size: fetchCallbackBody.size,
         url: uploadResult.ossURL,
-        scenes: taskResult.scenes,
+        scenes: ppt.scenes,
         taskProgress: {
-          totalPageSize: taskResult.scenes.length,
-          convertedPageSize: taskResult.scenes.length,
+          totalPageSize: ppt.scenes.length,
+          convertedPageSize: ppt.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: taskResult.scenes
+          convertedFileList: ppt.scenes
         },
         updateTime: materialResult.data.updateTime,
-        taskUuid: taskResult.uuid,
+        taskUuid: uploadResult.taskUuid,
       }
     } else {
       const uploadResult = await this.addFileToOss(
@@ -447,7 +490,9 @@ export class UploadService extends ApiBase {
         }
       });
     if (res.res.status === 200) {
-      const data = get(res.data, 'data', {})
+      const data = (res as any).data?.data ?? {}
+      console.log('upload res data ', data)
+      // const data = get(res.data, 'data', {})
       return {
         ossURL: ossClient.generateObjectUrl(key),
         ...data

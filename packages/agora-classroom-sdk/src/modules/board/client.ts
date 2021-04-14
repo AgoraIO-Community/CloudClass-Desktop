@@ -46,8 +46,8 @@ export class BoardClient extends EventEmitter {
   init () {
     this.client = new WhiteWebSdk({
         // 其他参数
-      invisiblePlugins: [IframeBridge],
-      wrappedComponents: [IframeWrapper],
+      // invisiblePlugins: [IframeBridge],
+      // wrappedComponents: [IframeWrapper],
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,

@@ -1,4 +1,4 @@
-import { ToastCategory } from 'agora-scenario-ui-kit';
+import { ToastCategory } from '~ui-kit';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';

@@ -4,7 +4,7 @@ import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '@/utils/utils';
-import { Modal, transI18n } from 'agora-scenario-ui-kit';
+import { Modal, transI18n } from '~ui-kit';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 
 const delay = 2000

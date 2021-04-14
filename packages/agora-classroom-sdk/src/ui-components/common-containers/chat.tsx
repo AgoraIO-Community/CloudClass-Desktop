@@ -1,4 +1,4 @@
-import { Chat, Icon } from 'agora-scenario-ui-kit'
+import { Chat, Icon } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useChatContext } from '../hooks'

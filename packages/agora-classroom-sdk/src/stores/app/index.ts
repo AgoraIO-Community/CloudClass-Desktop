@@ -1,4 +1,4 @@
-import { transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from '~ui-kit';
 import { LanguageEnum, TranslateEnum } from '@/edu-sdk';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
 import { EduBoardService } from '@/modules/board/edu-board-service';
@@ -26,6 +26,7 @@ import { RoomStore } from './room';
 import { SceneStore } from './scene';
 import { UIStore } from './ui';
 import { AgoraRegion } from '@/edu-sdk/declare';
+import { ChatStore } from './chat';
 
 
 type RoomInfoParams = {
@@ -98,6 +99,7 @@ export class AppStore implements ClassRoomAbstractStore {
   roomStore!: RoomStore;
   pretestStore!: PretestStore;
   homeStore!: HomeStore;
+  chatStore!: ChatStore;
 
   eduManager!: EduManager;
 

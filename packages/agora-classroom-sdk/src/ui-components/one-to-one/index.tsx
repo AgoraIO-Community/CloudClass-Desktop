@@ -1,6 +1,6 @@
 import { useBoardStore, useRoomStore } from '@/hooks'
 import { useEffectOnce } from '@/hooks/utils'
-import { Aside, Content, Layout } from 'agora-scenario-ui-kit'
+import { Aside, Content, Layout } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React from 'react'

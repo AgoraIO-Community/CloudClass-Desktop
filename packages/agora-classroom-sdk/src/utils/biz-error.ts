@@ -1,4 +1,4 @@
-import { transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from '~ui-kit';
 import { GenericError } from 'agora-rte-sdk';
 
 const ExceptionMapping = {

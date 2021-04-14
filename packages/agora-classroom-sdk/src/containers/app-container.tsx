@@ -4,7 +4,7 @@ import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
 import { BizPageRouter } from '@/types';
 import { ToastContainer } from '@/ui-components/common-containers/toast';
 import { useStorageSW } from '@/utils/utils';
-import { I18nProvider } from 'agora-scenario-ui-kit';
+import { I18nProvider } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import React from 'react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';

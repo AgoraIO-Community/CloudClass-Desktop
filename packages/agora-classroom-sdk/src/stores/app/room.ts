@@ -19,7 +19,7 @@ import {
   EduUser,
   EduVideoSourceType, GenericErrorWrapper
 } from 'agora-rte-sdk';
-import { transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from '~ui-kit';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
@@ -1084,9 +1084,12 @@ export class RoomStore extends SimpleInterval {
         appId: this.appStore.params.config.agoraAppId,
         rtmToken: this.appStore.params.config.rtmToken,
         rtmUid: this.appStore.params.config.rtmUid,
+        // region: this.appStore.params.config.region
         // roomUuid: roomManager.roomUuid,
         // userToken: roomManager.userToken,
       })
+
+      this.appStore._uploadService.setRegion(region)
 
       this.appStore._boardService = new EduBoardService({
         prefix: '',

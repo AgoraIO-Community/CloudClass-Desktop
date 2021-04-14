@@ -9,7 +9,7 @@ import { Mutex } from '@/utils/mutex';
 import { BizLogger } from '@/utils/utils';
 import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
-import { transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from '~ui-kit';
 import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduRoomType } from 'agora-rte-sdk';

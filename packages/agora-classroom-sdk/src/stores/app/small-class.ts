@@ -1,4 +1,4 @@
-import { transI18n } from 'agora-scenario-ui-kit';
+import { transI18n } from '~ui-kit';
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from './../../services/edu-sdk-api';
 import { AppStore } from '@/stores/app';

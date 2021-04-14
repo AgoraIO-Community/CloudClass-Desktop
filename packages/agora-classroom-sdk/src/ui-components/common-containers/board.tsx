@@ -1,6 +1,6 @@
 import { useBoardStore, useUIStore } from '@/hooks'
 import { Resource } from '@/stores/app/board'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from 'agora-scenario-ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { useWhiteboardState } from '../hooks'

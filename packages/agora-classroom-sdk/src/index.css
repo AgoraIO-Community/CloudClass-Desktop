@@ -1,4 +1,4 @@
-@import '~agora-scenario-ui-kit/lib/style.css';
+@import './ui-kit/styles/global.css';
 
 html, body, #root {
   width: 100%;

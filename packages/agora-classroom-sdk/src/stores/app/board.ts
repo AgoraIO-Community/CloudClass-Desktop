@@ -11,7 +11,7 @@ import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netless
 import { agoraCaches } from '@/utils/web-download.file';
 import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
-import { ToolItem, transI18n } from 'agora-scenario-ui-kit';
+import { ToolItem, transI18n } from '~ui-kit';
 import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -176,7 +176,7 @@ export class BoardStore extends ZoomController {
 
   @observable
   showFolder: boolean = false;
-  boardRegion: string;
+  boardRegion: string = '';
 
   @action
   closeFolder() {
@@ -332,17 +332,17 @@ export class BoardStore extends ZoomController {
       // 默认只有老师不用禁止跟随
       if (this.hasPermission) {
         await this.setWritable(true)
-        let bridge = this.room.getInvisiblePlugin(IframeBridge.kind)
-        if (!bridge) {
-            bridge = await IframeBridge.insert({
-                room: this.room, // room 实例
-                url: "https://demo-h5.netless.group/dist2020/#/pag1",
-                // url: "example.com", // iframe 的地址
-                width: 1280, // 课件的宽, 单位 px
-                height: 720, // 课件的高, 单位 px
-                displaySceneDir: "/example" // 自定义 h5 课件绑定的 scene 目录，切换到其他目录，课件会自动隐藏，注意，此目录需要用户在白板中自行创建
-            })
-        }
+        // let bridge = this.room.getInvisiblePlugin(IframeBridge.kind)
+        // if (!bridge) {
+        //     bridge = await IframeBridge.insert({
+        //         room: this.room, // room 实例
+        //         url: "https://demo-h5.netless.group/dist2020/#/pag1",
+        //         // url: "example.com", // iframe 的地址
+        //         width: 1280, // 课件的宽, 单位 px
+        //         height: 720, // 课件的高, 单位 px
+        //         displaySceneDir: "/example" // 自定义 h5 课件绑定的 scene 目录，切换到其他目录，课件会自动隐藏，注意，此目录需要用户在白板中自行创建
+        //     })
+        // }
       } else {
         await this.setWritable(this._grantPermission as boolean)
       }

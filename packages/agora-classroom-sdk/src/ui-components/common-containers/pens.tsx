@@ -1,4 +1,4 @@
-import { Pens, t } from 'agora-scenario-ui-kit'
+import { Pens, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { usePenContext } from '../hooks'
