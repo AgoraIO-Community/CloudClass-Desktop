@@ -4,6 +4,7 @@ import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
 import { BizLogger } from '@/utils/utils';
+import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
 
 export interface SceneFile {
   name: string
@@ -44,6 +45,9 @@ export class BoardClient extends EventEmitter {
   
   init () {
     this.client = new WhiteWebSdk({
+        // 其他参数
+      invisiblePlugins: [IframeBridge],
+      wrappedComponents: [IframeWrapper],
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,

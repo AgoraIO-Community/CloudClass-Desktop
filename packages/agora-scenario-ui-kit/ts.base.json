@@ -15,12 +15,6 @@
       "~styles": ["./src/styles"],
       "~utilities": ["./src/utilities"],
       "~components/*": ["./src/components/*"],
-      "~capabilities": ["./src/capabilities"],
-      "~capabilities/*": ["./src/capabilities/*"],
-      "~capabilities/container": ["./src/capabilities/container"],
-      "~capabilities/container/*": ["./src/capabilities/container/*"],
-      "~capabilities/hooks": ["./src/capabilities/hooks"],
-      "~capabilities/hooks/*": ["./src/capabilities/hooks/*"],
       "~scaffold/*": ["./src/scaffold/*"],
       "~styles/*": ["./src/styles/*"],
       "~utilities/*": ["./src/utilities/*"]

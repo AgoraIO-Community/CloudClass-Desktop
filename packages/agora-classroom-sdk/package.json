@@ -215,6 +215,7 @@
   },
   "dependencies": {
     "@netless/fetch-progress": "0.0.1",
+    "@netless/iframe-bridge": "^2.0.13",
     "@tailwindcss/forms": "^0.2.1",
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",

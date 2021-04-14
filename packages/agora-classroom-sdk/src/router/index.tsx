@@ -1,6 +1,6 @@
 import { BizPagePath, BizPageRouter } from '@/types';
 import { HomePage } from '@/ui-components/home';
-import { IncognitoPage } from '@/ui-components/incognito';
+// import { IncognitoPage } from '@/ui-components/incognito';
 import { LaunchPage } from '@/ui-components/launch';
 import { OneToOne } from '@/ui-components/one-to-one';
 import { PretestPage } from '@/ui-components/pretest';
@@ -41,10 +41,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
     component: () => PageSFC(OneToOne)
   },
   // 观众端
-  [BizPageRouter.OneToOneIncognito]: {
-    path: '/incognito/1v1',
-    component: () => PageSFC(OneToOne)
-  },
+  // [BizPageRouter.OneToOneIncognito]: {
+  //   path: '/incognito/1v1',
+  //   component: () => PageSFC(OneToOne)
+  // },
   [BizPageRouter.SmallClass]: {
     path: '/classroom/small',
     component: () => PageSFC(SmallClassRoom)
@@ -58,10 +58,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
     component: () => PageSFC(LaunchPage)
   },
   // 隐身模式，录屏功能
-  [BizPageRouter.Incognito]: {
-    path: '/incognito',
-    component: () => PageSFC(IncognitoPage)
-  },
+  // [BizPageRouter.Incognito]: {
+  //   path: '/incognito',
+  //   component: () => PageSFC(IncognitoPage)
+  // },
   [BizPageRouter.PretestPage]: {
     path: '/pretest',
     component: () => PageSFC(PretestPage)

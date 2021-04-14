@@ -17,6 +17,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { DownloadFileStatus, StorageCourseWareItem } from '../storage';
+import {IframeBridge} from '@netless/iframe-bridge'
 
 export type CustomizeGlobalState = {
   materialList: CourseWareItem[];
@@ -331,6 +332,17 @@ export class BoardStore extends ZoomController {
       // 默认只有老师不用禁止跟随
       if (this.hasPermission) {
         await this.setWritable(true)
+        let bridge = this.room.getInvisiblePlugin(IframeBridge.kind)
+        if (!bridge) {
+            bridge = await IframeBridge.insert({
+                room: this.room, // room 实例
+                url: "https://demo-h5.netless.group/dist2020/#/pag1",
+                // url: "example.com", // iframe 的地址
+                width: 1280, // 课件的宽, 单位 px
+                height: 720, // 课件的高, 单位 px
+                displaySceneDir: "/example" // 自定义 h5 课件绑定的 scene 目录，切换到其他目录，课件会自动隐藏，注意，此目录需要用户在白板中自行创建
+            })
+        }
       } else {
         await this.setWritable(this._grantPermission as boolean)
       }

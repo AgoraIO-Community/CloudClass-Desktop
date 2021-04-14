@@ -144,9 +144,9 @@ export const Home: React.FC<HomeProps> = ({
             </Col>
             <Col>
               <Select id="region" value={region} onChange={onChangeRegion} placeholder={t('home.region_placeholder')}>
-                <Option value="zh">CN</Option>
-                <Option value="ns">NS</Option>
-                <Option value="ap">AP</Option>
+                <Option value="CN">CN</Option>
+                <Option value="NS">NA</Option>
+                <Option value="AP">AP</Option>
               </Select>
             </Col>
           </Row>

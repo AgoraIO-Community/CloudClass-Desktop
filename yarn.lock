@@ -2764,6 +2764,14 @@
   resolved "https://registry.npm.taobao.org/@netless/fetch-progress/download/@netless/fetch-progress-0.0.1.tgz#e4cc415b92f5acc610b6dd533947e40af39915ec"
   integrity sha1-5MxBW5L1rMYQtt1TOUfkCvOZFew=
 
+"@netless/iframe-bridge@^2.0.13":
+  version "2.0.13"
+  resolved "https://registry.npm.taobao.org/@netless/iframe-bridge/download/@netless/iframe-bridge-2.0.13.tgz#c74cf807e9261427e1b561c371bf06cf8ec14ae7"
+  integrity sha1-x0z4B+kmFCfhtWHDcb8Gz47BSuc=
+  dependencies:
+    eventemitter2 "^6.4.3"
+    react "^16.13.1"
+
 "@netless/react-seek-slider@1.0.4":
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
@@ -10155,6 +10163,11 @@ event-loop-spinner@^2.0.0, event-loop-spinner@^2.1.0:
   integrity sha1-dfUB1YUQXG1X8XQHOzmvG2s6FWc=
   dependencies:
     tslib "^2.1.0"
+
+eventemitter2@^6.4.3:
+  version "6.4.4"
+  resolved "https://registry.npm.taobao.org/eventemitter2/download/eventemitter2-6.4.4.tgz?cache=0&sync_timestamp=1614192525412&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter2%2Fdownload%2Feventemitter2-6.4.4.tgz#aa96e8275c4dbeb017a5d0e03780c65612a1202b"
+  integrity sha1-qpboJ1xNvrAXpdDgN4DGVhKhICs=
 
 eventemitter3@^3.1.0:
   version "3.1.2"
@@ -18820,20 +18833,10 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
-react-dom@16.13.1:
+react-dom@16.13.1, react-dom@^16.8.0:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.13.1.tgz?cache=0&sync_timestamp=1617984918964&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-dom%2Fdownload%2Freact-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
   integrity sha1-wb03MxoEhsB47lTEdAcgmTsuDn8=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.19.1"
-
-react-dom@^16.8.0:
-  version "16.14.0"
-  resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.14.0.tgz?cache=0&sync_timestamp=1617984918964&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-dom%2Fdownload%2Freact-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
-  integrity sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -19140,19 +19143,10 @@ react-use@13.24.0:
     ts-easing "^0.2.0"
     tslib "^1.10.0"
 
-react@16.13.1:
+react@16.13.1, react@^16.13.1, react@^16.8.0:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react/download/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha1-LoGIIvGpdDEiwGPWQQ2FweOv5I4=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
-react@^16.8.0:
-  version "16.14.0"
-  resolved "https://registry.npm.taobao.org/react/download/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"

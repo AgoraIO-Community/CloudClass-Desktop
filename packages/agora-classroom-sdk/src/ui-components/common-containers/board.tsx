@@ -102,7 +102,7 @@ const TabsContainer = observer(() => {
           tab={
             <>
               {key === 0 && <Icon type="whiteboard" />}
-              {key === 0 ? transI18n("tool.board_name") : item.file.name}
+              {key === 0 ? transI18n("tool.board_name") : item?.file?.name ?? 'ppt'}
             </>
           }
           closeIcon={
