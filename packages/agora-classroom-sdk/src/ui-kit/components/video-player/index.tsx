@@ -1,4 +1,5 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon, SvgGrantBoardIcon } from '~components/icon';

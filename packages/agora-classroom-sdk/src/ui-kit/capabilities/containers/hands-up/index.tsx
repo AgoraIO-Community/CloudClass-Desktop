@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useSceneStore, useSmallClassStore } from '@/hooks';

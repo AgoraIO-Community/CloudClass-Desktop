@@ -1,6 +1,6 @@
 import type { IMediaRenderer } from 'agora-rte-sdk'
 import classnames from 'classnames'
-import React from 'react'
+import * as React from 'react';
 import { useRendererPlayer } from '~utilities/hooks'
 
 export interface RendererPlayerProps {

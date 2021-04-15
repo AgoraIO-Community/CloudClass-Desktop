@@ -3,7 +3,7 @@ import { useCloudDriverContext } from '@/ui-components/hooks';
 import { Button, Icon, Loading, Modal, Row, t, TabPane, Tabs, Toast, transI18n } from '~ui-kit';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
-import React from 'react';
+import * as React from 'react';
 import { useEffect } from 'react';
 import Draggable from 'react-draggable';
 import { DownloadContainer } from './download';

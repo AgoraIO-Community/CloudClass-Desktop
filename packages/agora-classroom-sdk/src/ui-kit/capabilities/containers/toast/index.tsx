@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react'
-import React from 'react'
 import { Toast } from '~ui-kit'
 import { useUIStore } from '@/hooks'
 import { ToastType } from '@/stores/app/ui'

@@ -3,7 +3,6 @@ import { useDownloadContext } from '@/ui-components/hooks'
 import { StorageCourseWareItem } from '@/stores/storage'
 import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, t, Table, TableHeader, transI18n } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
 
 export const DownloadContainer = observer(() => {
 

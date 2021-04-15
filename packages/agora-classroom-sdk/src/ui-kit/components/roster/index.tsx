@@ -1,4 +1,5 @@
-import React, { FC, ReactNode, useCallback } from 'react';
+import { FC, ReactNode, useCallback } from 'react';
+import * as React from 'react';
 import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { ModalProps } from '~components/modal';

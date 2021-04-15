@@ -4,7 +4,7 @@ import { AgoraEduEvent } from '@/edu-sdk/declare'
 import { useHomeStore } from '@/hooks'
 import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
-import React, { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 
 //@ts-ignore

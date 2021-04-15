@@ -1,6 +1,5 @@
 import { useSceneStore } from '@/hooks'
 import { observer } from 'mobx-react'
-import React from 'react'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { IconButton, Icon } from '~ui-kit'
 import { useScreenSharePlayerContext } from '~capabilities/hooks'

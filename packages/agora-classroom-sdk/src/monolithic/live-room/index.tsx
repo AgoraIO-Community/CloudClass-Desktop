@@ -2,7 +2,6 @@ import { RoomContainer } from '@/containers/app-container'
 import { RoomConfigProps } from '@/edu-sdk/declare'
 import { BizPageRouter } from '@/types'
 import { AppStore } from '@/stores/app'
-import React from 'react'
 
 const routes: BizPageRouter[] = [
   // BizPageRouter.LaunchPage,

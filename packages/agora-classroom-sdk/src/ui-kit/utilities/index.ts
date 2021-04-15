@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {get, isEmpty} from 'lodash';
 import {config} from './translate/config'
 

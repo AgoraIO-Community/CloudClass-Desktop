@@ -2,7 +2,7 @@ import { useUploadContext } from '@/ui-components/hooks'
 import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader, transI18n } from '~ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
-import React from 'react'
+import * as React from 'react';
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void

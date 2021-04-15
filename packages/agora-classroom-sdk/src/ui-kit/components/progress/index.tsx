@@ -1,6 +1,6 @@
 
 import classnames from 'classnames'
-import React from 'react'
+import * as React from 'react';
 import { BaseProps } from '~components/interface/base-props'
 import './index.css'
 

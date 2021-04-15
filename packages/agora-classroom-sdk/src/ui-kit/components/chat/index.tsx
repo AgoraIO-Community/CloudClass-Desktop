@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '~components/affix';
 import { Button } from '~components/button';

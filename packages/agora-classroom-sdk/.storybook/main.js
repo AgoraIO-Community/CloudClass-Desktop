@@ -73,7 +73,13 @@ module.exports = {
       '~capabilities/containers': path.resolve(__dirname, '../src/ui-kit/capabilities/containers'),
       '~capabilities/hooks': path.resolve(__dirname, '../src/ui-kit/capabilities/hooks'),
     }
+  
+    config.resolve.modules = [
+      path.resolve(__dirname, '../', 'node_modules'),
+      'node_modules',
+    ];
 
+    config.resolve.extensions.push('.ts', '.tsx');
     return config
   }
 }

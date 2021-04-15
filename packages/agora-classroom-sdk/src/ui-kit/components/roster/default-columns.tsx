@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-import React from 'react';
 import { t } from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Column, Profile } from '~components/roster';

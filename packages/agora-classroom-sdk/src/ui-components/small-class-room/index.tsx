@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { Aside, Content, Layout } from '~ui-kit'
 import { WhiteboardContainer } from '../common-containers/board'
 import { NavigationBar } from '../common-containers/nav'

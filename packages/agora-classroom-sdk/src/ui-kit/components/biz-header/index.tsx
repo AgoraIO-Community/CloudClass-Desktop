@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Button } from '~components/button';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';

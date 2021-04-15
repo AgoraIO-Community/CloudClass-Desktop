@@ -6,7 +6,7 @@ import { OneToOne } from '@/ui-components/one-to-one';
 import { PretestPage } from '@/ui-components/pretest';
 import { SmallClassRoom } from '@/ui-components/small-class-room';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';
-import React from 'react';
+import * as React from 'react';
 
 export type AppRouteComponent = {
   path: string

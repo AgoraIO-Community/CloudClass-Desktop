@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react';
 import { Meta } from '@storybook/react'
 import { BizHeader, BizHeaderProps, MonitorInfo } from '.'
 import dayjs from 'dayjs'

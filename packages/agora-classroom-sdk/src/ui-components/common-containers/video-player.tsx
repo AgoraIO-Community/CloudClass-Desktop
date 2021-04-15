@@ -1,6 +1,6 @@
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer, transI18n } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
+import * as React from 'react';
 import { RendererPlayer } from '../common-comps/renderer-player'
 import { useVideoControlContext, useSmallClassVideoControlContext } from '../hooks'
 

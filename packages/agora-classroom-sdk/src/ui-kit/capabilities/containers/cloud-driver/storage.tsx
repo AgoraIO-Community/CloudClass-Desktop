@@ -3,7 +3,7 @@ import { useStorageContext } from '@/ui-components/hooks'
 import { Col, IconBox, Inline, Row, Table, TableHeader, t, Placeholder, transI18n } from '~ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 
 export const StorageContainer = observer(() => {
 

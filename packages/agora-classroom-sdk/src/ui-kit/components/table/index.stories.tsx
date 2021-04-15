@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import * as React from 'react';
 import { Button, Modal } from '~components';
 import { Icon, IconBox } from '~components/icon';
 import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';

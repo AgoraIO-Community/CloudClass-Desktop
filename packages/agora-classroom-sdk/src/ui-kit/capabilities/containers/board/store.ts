@@ -2,7 +2,7 @@ import {Message} from '~components/chat/interface'
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
 
-export type RoomChatModel = {
+export type WhiteBoardModel = {
   uid: string;
   collapse: boolean;
   canChatting: boolean;
@@ -12,7 +12,7 @@ export type RoomChatModel = {
   unreadCount: number;
 }
 
-const defaultModel: RoomChatModel = {
+const defaultModel: WhiteBoardModel = {
   uid: '',
   collapse: false,
   canChatting: false,
@@ -22,17 +22,17 @@ const defaultModel: RoomChatModel = {
   unreadCount: 0,
 }
 
-export interface ChatTraits {
+export interface WhiteBoardModelTraits {
   handleSendText(): Promise<void>
   refreshMessageList(): Promise<void>
   toggleMinimize(): Promise<void>
 }
 
-type ChatUIKitModule = UIKitBaseModule<RoomChatModel, ChatTraits>
+type ChatUIKitModule = UIKitBaseModule<WhiteBoardModel, WhiteBoardModelTraits>
 
-export abstract class RoomChatUIKitStore extends BaseStore<RoomChatModel> implements ChatUIKitModule {
+export abstract class RoomChatUIKitStore extends BaseStore<WhiteBoardModel> implements ChatUIKitModule {
 
-  constructor(payload: RoomChatModel = defaultModel) {
+  constructor(payload: WhiteBoardModel = defaultModel) {
     super(payload)
   }
   
@@ -62,34 +62,6 @@ export abstract class RoomChatUIKitStore extends BaseStore<RoomChatModel> implem
 
   get uid(): string {
     return this.attributes.uid
-  }
-
-  setUid (newValue: string) {
-    this.attributes.uid = newValue
-  }
-  toggleCollapse() {
-    this.setCollapse(!this.attributes.collapse)
-  }
-  setCollapse (newValue: boolean) {
-    this.attributes.collapse = newValue
-  }
-  setCanChatting (newValue: boolean) {
-    this.attributes.canChatting = newValue
-  }
-  setIsHost (newValue: boolean) {
-    this.attributes.isHost = newValue
-  }
-  setMessages (newValue: Message[]) {
-    this.attributes.messages = newValue
-  }
-  addMessages (msg: Message) {
-    this.attributes.messages.push(msg)
-  }
-  setChatText (newValue: string) {
-    this.attributes.chatText = newValue
-  }
-  setUnreadCount (newValue: number) {
-    this.attributes.unreadCount = newValue
   }
 
   abstract handleSendText(): Promise<void>

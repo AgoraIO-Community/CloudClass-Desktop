@@ -5,7 +5,8 @@ import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import { Button, Modal, t, transI18n } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react';
+import * as React from 'react';
 import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
 import { CloudDriverContainer } from '~capabilities/containers/cloud-driver'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'

@@ -8,7 +8,6 @@ import { BizPagePath } from '@/types';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 // import '~ui-kit/lib/style.css';
 import 'promise-polyfill/src/polyfill';
-import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
@@ -59,7 +58,7 @@ const sdkConfig: SDKConfig = {
 }
 
 export type LanguageEnum = "en" | "zh"
-export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar" 
+export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
 
 export type ConvertedFile = {
   width: number,

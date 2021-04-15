@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { Chat, ChatProps } from '~components/chat';
 import { Icon } from '~components/icon';
 

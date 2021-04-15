@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Modal } from '~components/modal'
 import { Setting } from '~components/device-manager/setting'

@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react';
-import React, { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { ActionTypes, Profile, Roster, RosterProps } from '~components/roster';
 import { list } from '~utilities';
 import { defaultColumns } from './default-columns';

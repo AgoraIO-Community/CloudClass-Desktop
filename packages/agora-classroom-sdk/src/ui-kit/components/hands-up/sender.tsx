@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react';
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'

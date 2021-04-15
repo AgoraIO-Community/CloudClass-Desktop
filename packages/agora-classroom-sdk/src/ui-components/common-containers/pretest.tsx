@@ -1,6 +1,5 @@
 import { Button, Modal, Pretest, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
 import {usePretestContext} from '../hooks'
 
 export const PretestContainer = observer(() => {

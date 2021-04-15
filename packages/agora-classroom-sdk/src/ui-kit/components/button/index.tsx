@@ -1,4 +1,4 @@
-import React, { EventHandler, FC, SyntheticEvent } from 'react';
+import { EventHandler, FC, SyntheticEvent } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import './index.css';

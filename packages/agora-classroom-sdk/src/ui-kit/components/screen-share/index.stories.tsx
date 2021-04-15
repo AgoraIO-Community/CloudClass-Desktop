@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { Meta } from '@storybook/react';
 import { ScreenShare } from '~components/screen-share'
 import { Button } from '~components/button'

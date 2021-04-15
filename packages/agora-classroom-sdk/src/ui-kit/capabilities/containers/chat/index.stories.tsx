@@ -1,7 +1,7 @@
 import { SceneStore } from '@/stores/app/scene'
 import { Aside } from '@/ui-kit/components'
 import { Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { RoomChat } from '.'
 import { RoomChatModel, RoomChatUIKitStore } from './store'
 

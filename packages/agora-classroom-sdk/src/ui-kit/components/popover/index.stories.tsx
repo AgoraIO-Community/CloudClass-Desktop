@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Meta } from '@storybook/react';
 import { Button } from '~components/button';
 import { Popover, PopoverProps } from '~components/popover';

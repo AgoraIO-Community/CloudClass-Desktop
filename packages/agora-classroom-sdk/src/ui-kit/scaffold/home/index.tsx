@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react';
 import { Button } from '~components/button'
 import { t } from '~components/i18n'
 import { Layout } from '~components/layout'

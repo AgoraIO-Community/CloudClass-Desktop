@@ -1,7 +1,8 @@
 import { useRoomStore, useUIStore } from '@/hooks'
 import { BizHeader } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react';
+import * as React from 'react';
 import { v4 as uuidv4 } from 'uuid'
 import { useRecordingContext } from '../hooks'
 import { Exit, Record } from './dialog'

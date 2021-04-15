@@ -1,6 +1,6 @@
 import { Chat, Icon } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
+import * as React from 'react';
 import { useChatContext } from '../hooks'
 
 export const RoomChat: React.FC<any> = observer(() => {

@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
+import * as React from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';

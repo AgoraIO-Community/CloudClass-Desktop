@@ -1,6 +1,5 @@
 import { Pens, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React from 'react'
 import { usePenContext } from '../hooks'
 
 export const PensContainer = observer((props: any) => {

@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';

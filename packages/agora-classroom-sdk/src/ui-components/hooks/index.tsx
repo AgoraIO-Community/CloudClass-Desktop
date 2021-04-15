@@ -10,7 +10,7 @@ import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sd
 import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, transI18n, ZoomItemType } from "~ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
@@ -370,14 +370,14 @@ export const useChatContext = () => {
   }, [])
 
   const refreshMessageList = useCallback(async () => {
-    const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
+    const res = nextId !== 'last' && (await roomStore.getHistoryChatMessage({ nextId, sort: 0 }))
     if (isMounted.current) {
       setNextID(get(res, 'nextId', 'last'))
     }
   }, [nextId, setNextID, isMounted.current])
 
   const fetchMessage = async () => {
-    const res = nextId !== 'last' && await roomStore.getHistoryChatMessage({ nextId, sort: 0 })
+    const res = nextId !== 'last' && (await roomStore.getHistoryChatMessage({ nextId, sort: 0 }))
     isMounted.current && setNextID(get(res, 'nextId', 'last'))
   }
 

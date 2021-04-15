@@ -10,7 +10,7 @@ import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sd
 import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, transI18n, ZoomItemType } from "~ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"

@@ -1,5 +1,6 @@
 import { Story } from '@storybook/react'
-import React, {useState} from 'react'
+import { useState } from 'react';
+import * as React from 'react';
 import { VideoPlayer, Chat, Toolbar, ToolItem, Pens, Colors } from '~components'
 import { BizHeader } from '~components/biz-header'
 import { Aside, Content, Layout } from '~components/layout'
