@@ -1,6 +1,7 @@
 import { SceneStore } from '@/stores/app/scene'
 import { Aside } from '@/ui-kit/components'
 import { Story } from '@storybook/react'
+import { makeAutoObservable } from 'mobx';
 import { useState } from 'react';
 import { RoomChat } from '.'
 import { RoomChatModel, RoomChatUIKitStore } from './store'
@@ -13,6 +14,7 @@ class RoomChatMockStore extends RoomChatUIKitStore {
 
   constructor(payload: RoomChatModel = defaultModel) {
     super(payload)
+    makeAutoObservable(this)
   }
 
   async handleSendText(): Promise<void> {

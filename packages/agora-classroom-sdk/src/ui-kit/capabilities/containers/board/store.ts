@@ -1,72 +1,100 @@
-import {Message} from '~components/chat/interface'
+import { ZoomItemType } from '~ui-kit';
+import { makeAutoObservable } from 'mobx';
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
+import { ToolItem } from '~ui-kit';
 
-export type WhiteBoardModel = {
-  uid: string;
-  collapse: boolean;
-  canChatting: boolean;
-  isHost: boolean;
-  messages: Message[];
-  chatText: string;
-  unreadCount: number;
+export type Resource = {
+  file: {
+    name: string,
+    type: string,
+  },
+  resourceName: string,
+  resourceUuid: string,
+  taskUuid: string,
+  currentPage: number,
+  totalPage: number,
+  scenePath: string,
+  show: boolean,
 }
 
-const defaultModel: WhiteBoardModel = {
-  uid: '',
-  collapse: false,
-  canChatting: false,
-  isHost: false,
-  messages: [],
-  chatText: '',
-  unreadCount: 0,
+export type WhiteBoardModel = {
+  zoomValue: number,
+  currentPage: number,
+  totalPage: number,
+  items: ToolItem[],
+  isFullScreen: boolean,
+  tabList: Resource[],
+  ready: boolean,
+  currentSelector: string,
+  activeMap: Record<string, boolean>,
+  showTab: boolean,
+  showToolBar: boolean,
+  showZoomControl: boolean,
+}
+
+export const defaultBoardState: WhiteBoardModel = {
+  zoomValue: 0,
+  currentPage: 0,
+  totalPage: 0,
+  items: [],
+  isFullScreen: false,
+  tabList: [],
+  ready: false,
+  currentSelector: 'selector',
+  activeMap: {},
+  showTab: false,
+  showToolBar: false,
+  showZoomControl: false,
 }
 
 export interface WhiteBoardModelTraits {
-  handleSendText(): Promise<void>
-  refreshMessageList(): Promise<void>
-  toggleMinimize(): Promise<void>
+  handleZoomControllerChange(type: ZoomItemType): unknown;
+  mount(dom: HTMLElement | null): void;
+  unmount(): void;
 }
 
 type ChatUIKitModule = UIKitBaseModule<WhiteBoardModel, WhiteBoardModelTraits>
 
-export abstract class RoomChatUIKitStore extends BaseStore<WhiteBoardModel> implements ChatUIKitModule {
-
-  constructor(payload: WhiteBoardModel = defaultModel) {
-    super(payload)
+export abstract class WhiteboardUIKitStore extends BaseStore<WhiteBoardModel> implements ChatUIKitModule {  
+  get zoomValue() {
+    return this.attributes.zoomValue
   }
-  
-  get collapse() {
-    return this.attributes.collapse
+  get currentPage() {
+    return this.attributes.currentPage
+  }
+  get totalPage() {
+    return this.attributes.totalPage
+  }
+  get items() {
+    return this.attributes.items
+  }
+  get isFullScreen() {
+    return this.attributes.isFullScreen
+  }
+  get tabList() {
+    return this.attributes.tabList
+  }
+  get ready() {
+    return this.attributes.ready
+  }
+  get currentSelector() {
+    return this.attributes.currentSelector
+  }
+  get activeMap() {
+    return this.attributes.activeMap
+  }
+  get showTab() {
+    return this.attributes.showTab
+  }
+  get showToolBar() {
+    return this.attributes.showToolBar
+  }
+  get showZoomControl() {
+    return this.attributes.showZoomControl
   }
 
-  get canChatting() {
-    return this.attributes.canChatting
-  }
-
-  get isHost() {
-    return this.attributes.isHost
-  }
-
-  get messages(){
-    return this.attributes.messages
-  }
-
-  get chatText() {
-    return this.attributes.chatText
-  }
-
-  get unreadCount() {
-    return this.attributes.unreadCount
-  }
-
-  get uid(): string {
-    return this.attributes.uid
-  }
-
-  abstract handleSendText(): Promise<void>
-
-  abstract refreshMessageList(): Promise<void>
-
-  abstract toggleMinimize(): Promise<void>
+  abstract handleZoomControllerChange(type: ZoomItemType): unknown;
+  abstract mount(dom: HTMLElement | null): void;
+  abstract unmount(): void;
 }

@@ -7,6 +7,10 @@ import { ColorsContainer } from '~capabilities/containers/colors'
 import { CloseConfirm } from '~capabilities/containers/dialog'
 import { PensContainer } from '~capabilities/containers/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/tool-cabinet'
+import { BaseContainerProps } from '../../types'
+import { WhiteboardUIKitStore } from './store'
+import { useCallback } from 'react'
+import { ZoomItemType } from '@/ui-kit/components'
 
 export const allTools: ToolItem[] = [
   {
@@ -121,24 +125,55 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer = observer(() => {
+export const WhiteboardContainer: React.FC<BaseContainerProps<WhiteboardUIKitStore>> = observer(({store}) => {
 
   const {
     zoomValue,
     currentPage,
     totalPage,
     isFullScreen,
-    handleToolBarChange,
-    handleZoomControllerChange,
     ready,
-    mountToDOM,
     currentSelector,
     activeMap,
-    tools,
+    items: tools,
     showTab,
     showToolBar,
     showZoomControl,
-  } = useWhiteboardState()
+  } = store
+
+  async function handleZoomControllerChange(type: ZoomItemType) {
+    store.handleZoomControllerChange(type)
+  }
+
+  const mountToDOM = useCallback((dom: any) => {
+    if (dom) {
+      store.mount(dom)
+    } else {
+      store.unmount()
+    }
+  }, [store])
+
+  function handleToolBarChange() {
+
+  }
+
+
+  // const {
+  //   zoomValue,
+  //   currentPage,
+  //   totalPage,
+  //   isFullScreen,
+  //   handleToolBarChange,
+  //   handleZoomControllerChange,
+  //   ready,
+  //   mountToDOM,
+  //   currentSelector,
+  //   activeMap,
+  //   tools,
+  //   showTab,
+  //   showToolBar,
+  //   showZoomControl,
+  // } = useWhiteboardState()
 
   return (
     <div className="whiteboard">
