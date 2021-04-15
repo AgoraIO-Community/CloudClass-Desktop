@@ -1,5 +1,4 @@
 import classnames from 'classnames'
-import React from 'react'
 import { BizHeader } from '~components/biz-header'
 import { Layout } from '~components/layout'
 
@@ -8,9 +7,7 @@ export const OneToOnePage = () => {
     'edu-room': 1,
   })
 
-  const className = '1'
-
-  // const className = store.isFullScreen ? 'fullscreen' : 'normal'
+  const className = 'normal'
 
   const fullscreenCls = classnames({
     [`layout-aside-${className}`]: 1,

@@ -1,7 +1,5 @@
-import { networkQualities } from './../../../../stores/app/room';
-import { string } from 'joi';
 import { UIKitBaseModule } from '~capabilities/types';
-import { BaseStore } from '../../stores/base';
+import { BaseStore } from '~capabilities/stores/base';
 
 export type NavigationBarModel = {
   isNative: boolean,
@@ -13,6 +11,7 @@ export type NavigationBarModel = {
   networkLatency: number,
   networkQuality: string,
   cpuUsage: number,
+  packetLostRate: number,
 }
 
 const defaultModel: NavigationBarModel = {
@@ -25,27 +24,50 @@ const defaultModel: NavigationBarModel = {
   networkLatency: 0,
   networkQuality: 'unknown',
   cpuUsage: 0,
+  packetLostRate: 0,
 }
 
 export interface NavigationBarTraits {
-  handleSendText(): Promise<void>
-  refreshMessageList(): Promise<void>
-  toggleMinimize(): Promise<void>
+  showDialog(type: 'exit' | 'record' | 'setting'): void
 }
 
 
 export abstract class NavigationBarUIKitStore
   extends BaseStore<NavigationBarModel>
-  implements UIKitBaseModule<
-    NavigationBarModel, 
-    NavigationBarTraits
-  > {
+  implements UIKitBaseModule<NavigationBarModel, NavigationBarTraits> {
   constructor(payload: NavigationBarModel = defaultModel) {
     super(payload)
   }
-  abstract handleSendText(): Promise<void>
 
-  abstract refreshMessageList(): Promise<void>
-
-  abstract toggleMinimize(): Promise<void>
+  get packetLostRate(): number {
+    return this.attributes.packetLostRate;
+  }
+  get isNative(): boolean {
+    return this.attributes.isNative
+  }
+  get classStatusText(): string {
+    return this.attributes.classStatusText
+  }
+  get isStarted(): boolean {
+    return this.attributes.isStarted
+  }
+  get isRecording(): boolean {
+    return this.attributes.isRecording
+  }
+  get title(): string {
+    return this.attributes.title
+  }
+  get signalQuality(): any {
+    return this.attributes.signalQuality
+  }
+  get networkLatency(): number {
+    return this.attributes.networkLatency
+  }
+  get networkQuality(): string {
+    return this.attributes.networkQuality
+  }
+  get cpuUsage(): number {
+    return this.attributes.cpuUsage
+  }
+  abstract showDialog(type: 'exit' | 'record' | 'setting' | string): void
 }

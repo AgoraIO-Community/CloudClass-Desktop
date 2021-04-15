@@ -1,3 +1,5 @@
+import { SceneStore } from '@/stores/app/scene'
+import { Aside } from '@/ui-kit/components'
 import { Story } from '@storybook/react'
 import React, { useState } from 'react'
 import { RoomChat } from '.'
@@ -8,8 +10,13 @@ export default {
 }
 
 class RoomChatMockStore extends RoomChatUIKitStore {
-  handleSendText(): Promise<void> {
-    throw new Error('Method not implemented.')
+
+  constructor(payload: RoomChatModel = defaultModel) {
+    super(payload)
+  }
+
+  async handleSendText(): Promise<void> {
+    
   }
   refreshMessageList(): Promise<void> {
     throw new Error('Method not implemented.')
@@ -34,6 +41,8 @@ export const RoomChatStory: Story<RoomChatModel> = () => {
   const [store] = useState<RoomChatMockStore>(() => new RoomChatMockStore(defaultModel))
 
   return (
-    <RoomChat store={store}></RoomChat>
+    <Aside className='layout-aside-normal'>
+      <RoomChat store={store}></RoomChat>
+    </Aside>
   )
 }

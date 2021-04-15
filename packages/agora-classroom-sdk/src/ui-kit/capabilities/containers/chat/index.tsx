@@ -1,8 +1,8 @@
 import { Chat, Icon } from '~components'
-import { get } from 'lodash'
 import { observer } from 'mobx-react'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { RoomChatUIKitStore } from './store'
+import { BaseContainerProps } from '../../types'
 
 const useRoomChat = (store: RoomChatUIKitStore) => {
 
@@ -42,10 +42,6 @@ const useRoomChat = (store: RoomChatUIKitStore) => {
     },
     unreadMessageCount: store.unreadCount,
   }
-}
-
-export type BaseContainerProps<Type> = {
-  store: Type
 }
 
 export const RoomChat: React.FC<BaseContainerProps<RoomChatUIKitStore>> = observer(({store}) => {

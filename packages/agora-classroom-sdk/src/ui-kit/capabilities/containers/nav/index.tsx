@@ -1,59 +1,27 @@
-import { useRoomStore, useUIStore } from '@/hooks'
-import { BizHeader } from '~ui-kit'
 import { observer } from 'mobx-react'
-import React, { useCallback } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import { useRecordingContext } from '~capabilities/hooks'
-import { Exit, Record } from '~capabilities/containers/dialog'
-import { SettingContainer } from '~capabilities/containers/setting'
+import { BizHeader } from '~ui-kit'
+import { BaseContainerProps } from '../../types'
+import { NavigationBarUIKitStore } from './store'
 
-export const NavigationBar: React.FC<any> = observer(() => {
+export const NavigationBar: React.FC<BaseContainerProps<NavigationBarUIKitStore>> = observer(({store}) => {
 
-  const roomStore = useRoomStore()
-
-  const navigationState = roomStore.navigationState
-
-  const uiStore = useUIStore()
-
-  const {
-    isRecording
-  } = useRecordingContext()
-
-  const handleClick = useCallback(async (type: string) => {
-    switch (type) {
-      case 'exit': {
-        uiStore.addDialog(Exit)
-        break
-      }
-      case 'record': {
-        uiStore.addDialog(Record, {id: uuidv4(), starting: !isRecording})
-        break
-      }
-      case 'setting': {
-        uiStore.addDialog(SettingContainer)
-        // uiStore.setVisibleSetting(true)
-        break
-      }
-      case 'courseControl': {
-        console.log('courseControl')
-        break
-      }
-    }
-  }, [navigationState.isStarted, uiStore, isRecording])
+  function handleClick (type: string) {
+    store.showDialog(type)
+  }
 
   return (
     <BizHeader
-      isNative={navigationState.isNative}
-      classStatusText={navigationState.classTimeText}
-      isStarted={navigationState.isStarted}
-      isRecording={isRecording}
-      title={navigationState.title}
-      signalQuality={navigationState.signalQuality}
+      isNative={store.isNative}
+      classStatusText={store.classStatusText}
+      isStarted={store.isStarted}
+      isRecording={store.isRecording}
+      title={store.title}
+      signalQuality={store.signalQuality}
       monitor={{
-        cpuUsage: navigationState.cpuUsage,
-        networkLatency: navigationState.networkLatency,
-        networkQuality: navigationState.networkQuality,
-        packetLostRate: navigationState.packetLostRate,
+        cpuUsage: store.cpuUsage,
+        networkLatency: store.networkLatency,
+        networkQuality: store.networkQuality,
+        packetLostRate: store.packetLostRate,
       }}
       onClick={handleClick}
     />

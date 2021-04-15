@@ -17,8 +17,33 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/preset-create-react-app"
   ],
+  babel: async (options) => {
+    return {
+      ...options,
+    };
+  },
   webpackFinal: async (config) => {
     config = disableEsLint(config);
+    config.module.rules.push({
+      test: /\.(ts|tsx)$/,
+      loader: require.resolve('babel-loader'),
+      options: {
+        babelrc: false,
+        presets: [
+          '@babel/preset-typescript',
+          [
+            '@babel/preset-react', 
+            {
+              runtime: 'automatic',
+            },
+          ],
+        ],
+        plugins: [
+          ['@babel/plugin-proposal-nullish-coalescing-operator'],
+          ['@babel/plugin-proposal-optional-chaining'],
+        ],
+      },
+    });
     config.module.rules.push({
       test: /\.css$/,
       use: [
@@ -39,10 +64,14 @@ module.exports = {
     })
     config.resolve.alias = {
       ...config.resolve.alias,
-      "~utilities": path.resolve(__dirname, '../src/ui-kit/utilities/'),
-      "~components": path.resolve(__dirname, '../src/ui-kit/components/'),
-      "~styles": path.resolve(__dirname, '../src/ui-kit/styles/'),
-      "~capabilities": path.resolve(__dirname, '../src/ui-kit/capabilities'),
+      ['@']: path.resolve(__dirname, '../src'),
+      '~ui-kit': path.resolve(__dirname, '../src/ui-kit'),
+      '~components': path.resolve(__dirname, '../src/ui-kit/components'),
+      '~styles': path.resolve(__dirname, '../src/ui-kit/styles'),
+      '~utilities': path.resolve(__dirname, '../src/ui-kit/utilities'),
+      '~capabilities': path.resolve(__dirname, '../src/ui-kit/capabilities'),
+      '~capabilities/containers': path.resolve(__dirname, '../src/ui-kit/capabilities/containers'),
+      '~capabilities/hooks': path.resolve(__dirname, '../src/ui-kit/capabilities/hooks'),
     }
 
     return config
