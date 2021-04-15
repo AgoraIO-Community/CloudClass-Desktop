@@ -1,7 +1,7 @@
 import { Colors, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { useColorContext } from '../hooks'
+import { useColorContext } from '~capabilities/hooks'
 
 
 export const ColorsContainer = observer(() => {

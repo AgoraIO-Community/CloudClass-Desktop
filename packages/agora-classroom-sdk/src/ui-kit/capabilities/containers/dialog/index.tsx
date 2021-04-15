@@ -6,11 +6,11 @@ import { Button, Modal, t, transI18n } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
-import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '../hooks'
-import { CloudDriverContainer } from './cloud-driver'
-import { ScreenShareContainer } from './screen-share'
-import { SettingContainer } from './setting'
-import { UserListContainer } from './user-list'
+import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
+import { CloudDriverContainer } from '~capabilities/containers/cloud-driver'
+import { ScreenShareContainer } from '~capabilities/containers/screen-share'
+import { SettingContainer } from '~capabilities/containers/setting'
+import { UserListContainer } from '~capabilities/containers/user-list'
 
 export type BaseDialogProps = {
   id: string

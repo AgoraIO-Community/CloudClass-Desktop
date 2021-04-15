@@ -92,29 +92,26 @@ export const HomePage = observer(() => {
       version="1.1.0"
       roomId={roomId}
       userId={userId}
-      roomName={roomName}
       userName={userName}
-      role={userRole}
-      scenario={curScenario}
+      roomName={roomName}
+      role={role}
+      scenario={scenario}
       duration={duration}
-      region={region as string}
+      language={language}
+      region={region}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
+      onChangeLanguage={onChangeLanguage}
       onChangeRoomId={onChangeRoomId}
       onChangeUserId={onChangeUserId}
-      onChangeRoomName={onChangeRoomName}
       onChangeUserName={onChangeUserName}
-      onChangeStartDate={(date: Date) => {
-        setStartDate(date)
-      }}
+      onChangeRoomName={onChangeRoomName}
       onChangeRegion={(region: unknown) => {
         setRegion(region as AgoraRegion)
       }}
       onChangeDuration={(duration: number) => {
         setDuration(duration)
       }}
-      language={language}
-      onChangeLanguage={onChangeLanguage}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
         homeStore.setLaunchConfig({

@@ -37,6 +37,10 @@ export const HomePage = () => {
     setStartDate(date)
   }
 
+  const onChangeDuration = (duration: number) => {
+    setDuration(duration)
+  }
+
   return (
     <Home
       version="1.2.0"
@@ -48,7 +52,8 @@ export const HomePage = () => {
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
-      onChangeStartDate={onChangeStartDate}
+      onChangeDuration={onChangeDuration}
+      // onChangeStartDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}

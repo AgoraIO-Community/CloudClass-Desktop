@@ -1,12 +1,11 @@
 import React from 'react'
 import { Button } from '~components/button'
+import { t } from '~components/i18n'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
-import { DatePicker } from '~components/date-picker'
-import { t } from '~components/i18n'
+import { HomeModule } from '~utilities/types'
 import './index.css'
-import { HomeModule, OnChangeEvents } from '~utilities/types'
 
 const {Option}: any = Select
 
@@ -23,11 +22,12 @@ export interface HomeAttributes {
   region: string,
 }
 
-export interface HomeProps extends HomeModule<HomeAttributes> {
+export interface HomeProps extends HomeModule<Exclude<HomeAttributes, 'version'>> {
   onClick: () => void | Promise<void>
+  version: string
 }
 
-export const Home: React.FC<HomeProps> = ({
+export const Home: React.FC<any> = ({
   roomId,
   userId,
   userName,

@@ -1,9 +1,9 @@
 import { useSceneStore } from '@/hooks'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { RendererPlayer } from '../common-comps/renderer-player'
+import { RendererPlayer } from '~utilities/renderer-player'
 import { IconButton, Icon } from '~ui-kit'
-import { useScreenSharePlayerContext } from '../hooks'
+import { useScreenSharePlayerContext } from '~capabilities/hooks'
 
 export const ScreenSharePlayerContainer = observer(() => {
     const {

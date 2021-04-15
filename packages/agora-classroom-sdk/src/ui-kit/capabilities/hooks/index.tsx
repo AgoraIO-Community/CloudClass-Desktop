@@ -14,9 +14,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
-import { RendererPlayer } from "../common-comps/renderer-player"
-import { calcUploadFilesMd5, uploadFileInfoProps } from "../common-containers/cloud-driver"
-import { Exit } from "../common-containers/dialog"
+import { RendererPlayer } from "~utilities/renderer-player"
+import { calcUploadFilesMd5, uploadFileInfoProps } from "~capabilities/containers/cloud-driver"
+import { Exit } from "~capabilities/containers/dialog"
 
 export const useScreenShareContext = () => {
   const sceneStore = useSceneStore()

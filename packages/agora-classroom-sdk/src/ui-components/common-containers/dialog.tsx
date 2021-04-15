@@ -274,7 +274,7 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 })
 
 
-export const DialogContainer: React.FC<void> = observer(() => {
+export const DialogContainer: React.FC<{}> = observer(() => {
 
   const { dialogQueue } = useDialogContext()
 

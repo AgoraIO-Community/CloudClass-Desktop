@@ -4,9 +4,7 @@ import { observer } from 'mobx-react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { RoomChatUIKitStore } from './store'
 
-const useRoomChat = (storeFactory: () => RoomChatUIKitStore) => {
-
-  const [store] = useState<RoomChatUIKitStore>(() => storeFactory())
+const useRoomChat = (store: RoomChatUIKitStore) => {
 
   const {
     isHost,
@@ -42,16 +40,16 @@ const useRoomChat = (storeFactory: () => RoomChatUIKitStore) => {
     handleClickMinimize: async () => {
       await store.toggleMinimize()
     },
-    unreadMessageCount: 0,
+    unreadMessageCount: store.unreadCount,
   }
 }
 
 export type BaseContainerProps<Type> = {
-  factory: () => Type
+  store: Type
 }
 
-export const RoomChat: React.FC<BaseContainerProps<RoomChatUIKitStore>> = observer(({factory}) => {
-  const ctx = useRoomChat(factory)
+export const RoomChat: React.FC<BaseContainerProps<RoomChatUIKitStore>> = observer(({store}) => {
+  const ctx = useRoomChat(store)
 
   return (
     <Chat

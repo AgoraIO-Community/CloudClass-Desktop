@@ -31,6 +31,7 @@ export interface ChatTraits {
 type ChatUIKitModule = UIKitBaseModule<RoomChatModel, ChatTraits>
 
 export abstract class RoomChatUIKitStore extends BaseStore<RoomChatModel> implements ChatUIKitModule {
+
   constructor(payload: RoomChatModel = defaultModel) {
     super(payload)
   }

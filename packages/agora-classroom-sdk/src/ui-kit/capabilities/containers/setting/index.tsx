@@ -1,7 +1,7 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { useSettingContext } from '../hooks'
+import { useSettingContext } from '~capabilities/hooks'
 
 export const SettingContainer = observer(({id}: any) => {
 

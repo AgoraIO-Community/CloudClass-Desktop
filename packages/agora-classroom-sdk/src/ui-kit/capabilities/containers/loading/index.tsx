@@ -1,7 +1,7 @@
 import { Card, Loading } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { useLoadingContext } from '../hooks'
+import { useLoadingContext } from '~capabilities/hooks'
 
 export const LoadingContainer = observer(() => {
 

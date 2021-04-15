@@ -3,7 +3,7 @@ import React from 'react'
 import { Toast } from '~ui-kit'
 import { useUIStore } from '@/hooks'
 import { ToastType } from '@/stores/app/ui'
-import { useToastContext } from '../hooks'
+import { useToastContext } from '~capabilities/hooks'
 
 export const ToastContainer = observer(() => {
   const {toastQueue, removeToast} = useToastContext()

@@ -3,7 +3,7 @@ import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useSceneStore, useSmallClassStore } from '@/hooks';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
-import { useHandsUpContext, useHandsUpManager, useHandsUpSender } from '../hooks';
+import { useHandsUpContext, useHandsUpManager, useHandsUpSender } from '~capabilities/hooks';
 
 export const HandsUpManagerContainer = observer(() => {
 

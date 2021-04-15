@@ -3,11 +3,11 @@ import { Resource } from '@/stores/app/board'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { observer } from 'mobx-react'
 import React from 'react'
-import { useWhiteboardState } from '../../hooks'
-import { ColorsContainer } from '../colors'
-import { CloseConfirm } from '../dialog'
-import { PensContainer } from '../pens'
-import { ToolCabinetContainer } from '../tool-cabinet'
+import { useWhiteboardState } from '~capabilities/hooks'
+import { ColorsContainer } from '~capabilities/containers/colors'
+import { CloseConfirm } from '~capabilities/containers/dialog'
+import { PensContainer } from '~capabilities/containers/pens'
+import { ToolCabinetContainer } from '~capabilities/containers/tool-cabinet'
 
 export const allTools: ToolItem[] = [
   {

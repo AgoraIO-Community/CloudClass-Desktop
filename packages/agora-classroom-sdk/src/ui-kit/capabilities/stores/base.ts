@@ -1,23 +1,16 @@
-import { observable } from "mobx"
-
-export abstract class UIKitModel<T> {
-
-  attributes!: T
-
-  constructor(attributes: T) {
-    this.updateAttributes(attributes)
-  }
-
-  protected updateAttributes(attributes: Partial<T>) {
-    this.attributes = {
-      ...this.attributes,
-      ...attributes
+export abstract class BaseStore<ModelType> {
+    attributes: ModelType
+    constructor(payload: ModelType) {
+      this.attributes = payload
     }
-  }
+    setAttributes(payload: ModelType) {
+      this.attributes = payload
+    }
 }
 
-export abstract class UIKitStore {
+// type Constructor<T = {}> = new (...args: any[]) => T;
+// export const ExtendBaseStore = <ModelType extends Constructor>(BaseClass: ModelType) => {
+//   return class BizStore extends BaseClass {
 
-}
-
-export function mixinStore()
+//   };
+// }

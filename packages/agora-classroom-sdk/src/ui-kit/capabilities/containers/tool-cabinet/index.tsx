@@ -1,6 +1,6 @@
 import { Icon, t, ToolCabinet } from '~ui-kit'
 import React from 'react'
-import { useToolCabinetContext } from '../hooks'
+import { useToolCabinetContext } from '~capabilities/hooks'
 
 export const ToolCabinetContainer = () => {
     const {onClick} = useToolCabinetContext()
