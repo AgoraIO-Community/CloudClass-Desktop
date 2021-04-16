@@ -3,13 +3,11 @@ import { observer } from 'mobx-react'
 import {PretestContainer} from '~capabilities/containers/pretest'
 import { useUIKitStore } from '../../hooks/infra'
 
-export const PretestScenarioPage = observer(() => {
-
-  const core = useCoreContext()
+export const PretestScenarioPage = () => {
 
   const uiKitStore = useUIKitStore()
 
   return (
     <PretestContainer store={uiKitStore.pretestStore} />
   )
-})
+}

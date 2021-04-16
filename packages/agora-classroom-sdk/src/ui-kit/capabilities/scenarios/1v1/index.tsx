@@ -14,8 +14,6 @@ import './style.css'
 
 export const OneToOneScenario = observer(() => {
 
-  const storyFactory = useStoryFactory()
-
   const uiKitStore = useUIKitStore()
 
   const cls = classnames({

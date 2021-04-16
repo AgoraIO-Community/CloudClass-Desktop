@@ -146,8 +146,6 @@ export const PretestContainer = observer(({store}: {store: PretestUIStore}) => {
         handleOk,
     } = usePretestContext(store)
 
-    console.log('cameraList', store.cameraList)
-
     return (
         <div className="fixed-container">
             <Modal
