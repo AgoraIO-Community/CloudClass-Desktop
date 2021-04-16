@@ -83,6 +83,10 @@ module.exports = {
       'node_modules',
     ];
 
+    config.plugins = config.plugins.filter(
+      (plugin) => plugin.constructor.name !== "ESLintWebpackPlugin",
+    );
+
     config.resolve.extensions.push('.ts', '.tsx', '.js');
     return config
   }
