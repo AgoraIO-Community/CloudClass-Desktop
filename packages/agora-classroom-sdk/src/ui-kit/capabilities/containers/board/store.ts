@@ -1,4 +1,4 @@
-import { SceneStore } from '~core';
+import { AppStore as CoreAppStore } from '~core';
 import { ZoomItemType } from '~ui-kit';
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
@@ -101,26 +101,26 @@ export abstract class WhiteboardUIKitStore extends BaseStore<WhiteBoardModel> im
 
 export class WhiteboardStore extends WhiteboardUIKitStore {
 
-  static createFactory(sceneStore: SceneStore) {
+  static createFactory(appStore: CoreAppStore) {
     const store = new WhiteboardStore(model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
   handleZoomControllerChange(type: ZoomItemType) {
-    if (this.sceneStore) {
-      this.sceneStore.boardStore
+    if (this.appStore) {
+      this.appStore.boardStore
     }
   }
   
   mount(dom: HTMLElement | null): void {
     if (dom) {
-      this.sceneStore.boardStore.mount(dom)      
+      this.appStore.boardStore.mount(dom)      
     }
   }
 
   unmount(): void {
-    this.sceneStore.boardStore.unmount()
+    this.appStore.boardStore.unmount()
   }
 
 }

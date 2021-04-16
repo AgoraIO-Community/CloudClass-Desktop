@@ -8,7 +8,7 @@ import { I18nProvider } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import {CoreProvider} from '~core/hooks'
-import { SceneStore } from '@/core';
+import { AppStore as CoreAppStore } from '~core';
 import { useState } from 'react';
 import { UIKitProvider } from '~capabilities/hooks/uikit-provider';
 
@@ -62,13 +62,13 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useStorageSW()
 
-  const [store] = useState<SceneStore>(() => new SceneStore(props.store.params))
+  const [store] = useState<CoreAppStore>(() => new CoreAppStore(props.store.params))
 
   return (
     <Provider store={props.store}>
       <I18nProvider language={props.store.params.language}>
         <CoreProvider store={store}>
-          <UIKitProvider sceneStore={store}>
+          <UIKitProvider appStore={store}>
             <Router>
               <RouteContainer routes={props.routes} mainPath={props.mainPath} />
             </Router>

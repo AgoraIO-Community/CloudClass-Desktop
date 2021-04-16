@@ -2,7 +2,7 @@ import { Pens, t } from '~components'
 import { observer } from 'mobx-react'
 import { Capability, UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '~capabilities/stores/base';
-import { SceneStore } from '~core';
+import { AppStore as CoreAppStore } from '~core';
 
 export type PenModel = {
   lineSelector: string,
@@ -34,17 +34,17 @@ export abstract class PenUIKitStore extends BaseStore<PenModel> implements PenUI
 
 export class PenStore extends PenUIKitStore {
 
-  static createFactory(sceneStore: SceneStore, payload?: PenModel) {
+  static createFactory(appStore: CoreAppStore, payload?: PenModel) {
     const store = new PenStore(payload ?? model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
   switchColor(type: string) {
-    this.sceneStore.boardStore.changeHexColor(type)
+    this.appStore.boardStore.changeHexColor(type)
   }
   switchStroke(width: number) {
-    this.sceneStore.boardStore.changeStroke(width)
+    this.appStore.boardStore.changeStroke(width)
   }
 }
 

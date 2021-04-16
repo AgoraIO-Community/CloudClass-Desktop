@@ -7,7 +7,7 @@ export const PretestScenarioPage = observer(() => {
 
   const core = useCoreContext()
 
-  const uiKitStore = useUIKitStore(core)
+  const uiKitStore = useUIKitStore()
 
   return (
     <PretestContainer store={uiKitStore.pretestStore} />

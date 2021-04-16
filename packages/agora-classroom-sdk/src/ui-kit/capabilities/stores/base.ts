@@ -1,11 +1,11 @@
-import { SceneStore } from '~core';
+import { AppStore as CoreAppStore } from '~core';
 export abstract class BaseStore<ModelType> {
     attributes: ModelType
-    sceneStore!: SceneStore
+    appStore!: CoreAppStore
     constructor(payload: ModelType)
-    constructor(payload: ModelType, sceneStore?: SceneStore) {
-      if (typeof sceneStore !== 'undefined') {
-        this.bind(sceneStore)
+    constructor(payload: ModelType, appStore?: CoreAppStore) {
+      if (typeof appStore !== 'undefined') {
+        this.bind(appStore)
       }
       this.attributes = payload
     }
@@ -14,7 +14,7 @@ export abstract class BaseStore<ModelType> {
       this.attributes = payload
     }
     
-    bind(store: SceneStore) {
-      this.sceneStore = store
+    bind(store: CoreAppStore) {
+      this.appStore = store
     }
 }

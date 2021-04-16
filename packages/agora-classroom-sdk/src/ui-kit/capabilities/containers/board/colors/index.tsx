@@ -2,7 +2,7 @@ import { Colors, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { BaseStore } from '~capabilities/stores/base'
 import { Capability, UIKitBaseModule } from '~capabilities/types'
-import { SceneStore } from '@/core'
+import { AppStore as CoreAppStore } from '@/core'
 
 export type ColorModel = {
   color: string,
@@ -34,17 +34,17 @@ export abstract class ColorUIKitStore extends BaseStore<ColorModel> implements C
 
 export class ColorStore extends ColorUIKitStore {
 
-  static createFactory(sceneStore: SceneStore, payload?: ColorModel) {
+  static createFactory(appStore: CoreAppStore, payload?: ColorModel) {
     const store = new ColorStore(payload ?? model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
   switchColor(type: string) {
-    this.sceneStore.boardStore.changeHexColor(type)
+    this.appStore.boardStore.changeHexColor(type)
   }
   switchStroke(width: number) {
-    this.sceneStore.boardStore.changeStroke(width)
+    this.appStore.boardStore.changeStroke(width)
   }
 }
 

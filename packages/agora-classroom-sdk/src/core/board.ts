@@ -1,22 +1,22 @@
-import { CourseWareItem, ConvertedFile } from "@/edu-sdk"
-import { BoardClient } from "@/modules/board/client"
-import { reportService } from "@/services/report-service"
-import { transDataToResource } from "@/services/upload-service"
-import { StorageCourseWareItem, DownloadFileStatus } from "@/stores/storage"
-import { allTools } from "@/ui-components/common-containers/board"
-import { CloudDriverDialog, UserListDialog } from "@/ui-components/common-containers/dialog"
-import { transI18n, ToolItem } from "@/ui-kit"
-import { OSSConfig } from "@/utils/helper"
-import { BizLogger, transToolBar, transLineTool, fetchNetlessImageByUrl, netlessInsertImageOperation, netlessInsertVideoOperation, netlessInsertAudioOperation } from "@/utils/utils"
-import { agoraCaches } from "@/utils/web-download.file"
-import { CursorTool } from "@netless/cursor-tool"
-import { EduUser, EduRoleTypeEnum, EduLogger, EduRoomType, GenericErrorWrapper } from "agora-rte-sdk"
-import OSS from "ali-oss"
-import { uniqBy, isEmpty, cloneDeep } from "lodash"
-import { observable, action, computed, runInAction } from "mobx"
-import { Room, SceneDefinition, ViewMode, AnimationMode, ApplianceNames, MemberState } from "white-web-sdk"
-import { SceneStore } from "./scene"
-import {ZoomController} from './zoom';
+import { ConvertedFile, CourseWareItem } from '@/edu-sdk';
+import { BoardClient } from '@/modules/board/client';
+import { reportService } from '@/services/report-service';
+import { transDataToResource } from '@/services/upload-service';
+import { AppStore as CoreAppStore } from '~core';
+import { allTools } from '@/ui-components/common-containers/board';
+import { CloudDriverDialog, UserListDialog } from '@/ui-components/common-containers/dialog';
+import { OSSConfig } from '@/utils/helper';
+import { BizLogger, fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation, transLineTool, transToolBar, ZoomController } from '@/utils/utils';
+import { agoraCaches } from '@/utils/web-download.file';
+import { CursorTool } from '@netless/cursor-tool';
+import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
+import { ToolItem, transI18n } from '~ui-kit';
+import OSS from 'ali-oss';
+import { cloneDeep, isEmpty, uniqBy } from 'lodash';
+import { action, computed, observable, runInAction } from 'mobx';
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+import { DownloadFileStatus, StorageCourseWareItem } from '@/stores/storage';
+import {IframeBridge} from '@netless/iframe-bridge'
 
 export type CustomizeGlobalState = {
   materialList: CourseWareItem[];
@@ -152,70 +152,86 @@ export enum DownloadStatus {
 export class BoardStore extends ZoomController {
   scenes: any[] = []
 
+  @observable
   loading: boolean = false
 
+  @observable
   converting: boolean = false
 
+  @observable
   currentPage: number = 0
 
+  @observable
   totalPage: number = 0
 
+  @observable
   currentScene: any = '/init'
 
+  @observable
   hasBoardPermission: number = 0
 
+  @observable
   selector: string = '';
 
+  @observable
   showFolder: boolean = false;
   boardRegion: string = '';
 
+  @action
   closeFolder() {
     this.showFolder = false
   }
 
+  @action
   openFolder() {
     this.showFolder = true
   }
 
+  @observable
   showUpload: boolean = false;
 
+  @observable
   showExtension: boolean = false;
 
+  @observable
   activeFooterItem: string = ''
 
+  @observable
   uuid: string = '';
 
+  @observable
   roomToken: string = '';
 
+  @observable
   sceneItems: SceneItem[] = [];
 
-  
+  @observable
   activeScenePath: string = '/init'
 
-  
+  @observable
   ready: boolean = false
 
-  
+  @observable
   follow: boolean = false
 
-  
+  @observable
   grantUsers: any[] = []
 
-  
+  @observable
   permission: number = 0
 
   menuTitle: string = '课件目录'
 
-  
+  @observable
   isFullScreen: boolean = false
 
-  
+  @observable
   enableStatus: string|boolean = 'disable'
 
-  
+  @observable
   downloading: boolean = false
 
-  
+  @action
   changeScenePath(path: string) {
     this.activeScenePath = path
     if (this.online && this.room) {
@@ -223,26 +239,26 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  sceneStore!: SceneStore
+  appStore!: CoreAppStore
 
-  
+  @observable
   _boardClient?: BoardClient = undefined
 
-  
+  @computed
   get boardClient(): BoardClient {
     return this._boardClient as BoardClient;
   }
 
   ossClient!: OSS
 
-  
+  @observable
   folder: string = ''
 
-  constructor(sceneStore: SceneStore) {
+  constructor(appStore: CoreAppStore) {
     super(0);
-    this.sceneStore = sceneStore
+    this.appStore = appStore
     this._boardClient = undefined
-    const ossConfig = this.sceneStore?.params?.config?.oss
+    const ossConfig = this.appStore?.params?.config?.oss
     if (ossConfig) {
       this.ossClient = new OSS({
         "accessKeyId": `${ossConfig.accessKey}`,
@@ -264,25 +280,19 @@ export class BoardStore extends ZoomController {
   }
 
   get localUser(): EduUser {
-    return this.sceneStore.roomManager?.localUser?.user ?? {
-      userUuid: '',
-      userName: '',
-      role: 'audience',
-      isChatAllowed: false,
-      userProperties: {},
-    } as EduUser
+    return this.appStore.roomStore.roomManager.localUser.user
   }
 
-  
+  @computed
   get activeSceneName(): string {
     return this.resourcesList[this.activeIndex]?.resourceUuid ?? ''
   }
 
   get localUserUuid() {
-    return this.sceneStore.userUuid
+    return this.appStore.userUuid
   }
 
-  
+  @computed
   get boardPenIsActive() {
     return [
       'pen',
@@ -292,7 +302,7 @@ export class BoardStore extends ZoomController {
     ].includes(this.currentSelector)
   }
 
-  
+  @action
   async init(info: {
     boardId: string,
     boardToken: string,
@@ -350,15 +360,15 @@ export class BoardStore extends ZoomController {
   }
 
 
-  
+  @observable
   sceneList: any[] = []
 
   controller: any = undefined
 
-  
+  @observable
   _resourcesList: Resource[] = []
 
-  
+  @observable
   _boardItem: Resource = {
     file: {
       name: 'board',
@@ -373,7 +383,7 @@ export class BoardStore extends ZoomController {
     show: true
   }
 
-  
+  @computed
   get resourcesList(): Resource[] {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
@@ -458,7 +468,7 @@ export class BoardStore extends ZoomController {
     return str.split('/')[1]
   }
 
-  
+  @computed
   get activeIndex(): number {
     const idx = this.resourcesList.findIndex((it) => {
       if (it.resourceUuid === this.resourceUuid) return true
@@ -554,10 +564,10 @@ export class BoardStore extends ZoomController {
     this.updatePagination()
   }
 
-  
+  @observable
   currentScenePath: string = ''
 
-  
+  @observable
   resourceUuid: string = 'init'
 
   updateLocalResourceList() {
@@ -612,23 +622,23 @@ export class BoardStore extends ZoomController {
     this._personalResources = globalState.materialList ?? []
   }
 
-  
+  @observable
   courseWareList: any[] = []
 
 
   findFirstPPT() {
-    const list = this.sceneStore.params.config.courseWareList
+    const list = this.appStore.params.config.courseWareList
     const ppt = list.find((it: any) => {})
   }
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
-    const firstCourseWare = this.sceneStore.params.config.courseWareList[0]
+    const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
       return []
     }
     await this.startDownload(`${firstCourseWare.taskUuid}`)
-    // const items = this.sceneStore.params.config.courseWareList
+    // const items = this.appStore.params.config.courseWareList
     if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
       const scenes = firstCourseWare.taskProgress!.convertedFileList
       const resourceName = `${firstCourseWare.resourceName}`
@@ -645,7 +655,7 @@ export class BoardStore extends ZoomController {
   }
 
   // TODO: aclass board init
-  
+  @action
   async join(info: {
     role: EduRoleTypeEnum,
     isWritable: boolean,
@@ -683,7 +693,7 @@ export class BoardStore extends ZoomController {
     }
 
     if (this.online && this.room) {
-      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.sceneStore.roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
         await this.room.setWritable(true)
         this.room.disableDeviceInputs = false
       }
@@ -721,7 +731,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  // 
+  // @action
   // setFollow(v: boolean) {
   //   this.follow = v
 
@@ -730,10 +740,10 @@ export class BoardStore extends ZoomController {
   //   if (isTeacher) {
   //     if (this.online && this.room) {
   //       if (this.follow === true) {
-  //         this.sceneStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
+  //         this.appStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Broadcaster)
   //       } else {
-  //         this.sceneStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
+  //         this.appStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Freedom)
   //       }
   //     }
@@ -752,23 +762,23 @@ export class BoardStore extends ZoomController {
   //   }
   // }
 
-  
+  @action
   setGrantPermission(v: boolean) {
     this._grantPermission = v
     this.setWritable(v)
   }
 
-  
+  @action
   setGrantUsers(args: any[]) {
     this.grantUsers = args
   }
   
 
-  
+  @action
   async aClassJoinBoard(params: any) {
     const {role, ...data} = params
     const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.sceneStore.params.config.agoraNetlessAppId})
+    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
         this.online = false
@@ -827,18 +837,18 @@ export class BoardStore extends ZoomController {
     const region = this.boardRegion ?? undefined
 
     console.log('boardRegion : ', this.boardRegion, ' region ', region)
-    // const region = regionMap[this.sceneStore.params.config.region!] ?? undefined
+    // const region = regionMap[this.appStore.params.config.region!] ?? undefined
 
     await this.boardClient.join({
       ...data,
       cursorAdapter,
       userPayload: {
-        userId: this.sceneStore.roomInfo.userUuid,
+        userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: "",
-        cursorName: this.sceneStore.roomInfo.userName,
+        cursorName: this.appStore.roomStore.roomInfo.userName,
       },
       floatBar: true,
-      isAssistant: this.sceneStore.isAssistant,
+      isAssistant: this.appStore.roomStore.isAssistant,
       region,
     })
     cursorAdapter.setRoom(this.boardClient.room)
@@ -858,26 +868,26 @@ export class BoardStore extends ZoomController {
     this.room.bindHtmlElement(null)
   }
 
-  
+  @computed
   get roleIsTeacher(): boolean {
     return this.isTeacher()
   }
 
-  
+  @computed
   get roleIsStudent(): boolean {
     return this.isStudent()
   }
 
   isTeacher(): boolean {
     const isNeedShowBoardUser = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.invisible]
-    if (isNeedShowBoardUser.includes(this.sceneStore.roomInfo.userRole)) {
+    if (isNeedShowBoardUser.includes(this.appStore.roomInfo.userRole)) {
       return true
     }
     return false
   }
 
   isStudent(): boolean {
-    if (this.sceneStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
       return true
     }
     return false
@@ -900,7 +910,7 @@ export class BoardStore extends ZoomController {
     EduLogger.info("重置白板全局自定义业务分页状态")
   }
 
-  
+  @action
   async leave() {
     if (this.boardClient && this.room) {
       await this.boardClient.destroy()
@@ -909,7 +919,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @action
   changeFooterMenu(itemName: string) {
     this.activeFooterItem = itemName
     const room = this.room
@@ -948,19 +958,19 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @computed
   get currentSelector(): string {
     return this.selector
   }
 
 
-  
+  @observable
   lineSelector: string = 'pen'
 
-  
+  @observable
   laserPoint: boolean = false
 
-  
+  @action
   setLaserPoint() {
     if (this.room) {
       this.room.setMemberState({
@@ -969,10 +979,10 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @observable
   shape: string = 'pencil';
 
-  
+  @action
   setTool(tool: string) {
     if (!this.room) return
 
@@ -1013,20 +1023,20 @@ export class BoardStore extends ZoomController {
         break
       }
       case 'cloud': {
-        // this.sceneStore.uiStore.addDialog(CloudDriverDialog)
+        this.appStore.uiStore.addDialog(CloudDriverDialog)
         break;
       }
       case 'register': {
-        // this.sceneStore.uiStore.addDialog(UserListDialog)
+        this.appStore.uiStore.addDialog(UserListDialog)
         break;
       }
     }
   }
 
-  
+  @observable
   currentStrokeWidth: number = 0
 
-  
+  @action
   changeStroke(value: any) {
     if (this.room) {
       this.room.setMemberState({
@@ -1044,7 +1054,7 @@ export class BoardStore extends ZoomController {
     return `#${computeToHex(r)}${computeToHex(g)}${computeToHex(b)}`
   }
 
-  
+  @action
   changeHexColor(colorHex: string) {
     const r = parseInt(colorHex.slice(1, 3), 16);
     const g = parseInt(colorHex.slice(3, 5), 16);
@@ -1063,27 +1073,27 @@ export class BoardStore extends ZoomController {
   }
 
 
-  
+  @observable
   currentActiveToolItem: string = 'mouse' 
-  // 
+  // @computed
   // getCurrentActiveToolItem(state: ): string {
   //   return BoardStore.toolItems[0].itemName
   // }
 
-  
+  @computed
   get currentColor(): string {
     const {r, g, b} = this.strokeColor
     return this.rgbToHexColor(r, g, b)
   }
 
-  
+  @observable
   currentStroke: string = ''
 
   getCurrentStroke(memberState: MemberState) {
     return memberState.strokeWidth
   }
 
-  
+  @observable
   currentArrow: any = 'pen';
 
   getCurrentArrow(memberState: MemberState) {
@@ -1096,7 +1106,7 @@ export class BoardStore extends ZoomController {
     return mapping[memberState.currentApplianceName]
   }
 
-  
+  @observable
   currentFontSize: BoardFrontSizeType = BoardFrontSizeType.size12
 
   changeFontSize(size: BoardFrontSizeType) {
@@ -1140,7 +1150,7 @@ export class BoardStore extends ZoomController {
     return BoardFrontSizeType.size12
   }
 
-  
+  @action
   updateScale(scale: number) {
     if (this.room && this.online) {
       this.room.moveCamera({scale})
@@ -1148,7 +1158,7 @@ export class BoardStore extends ZoomController {
     this.scale = this.room.state.zoomScale
   }
 
-   
+  @computed 
   get loadingType (): string {
     if (!this._boardClient) return 'loading';
     if (this.converting) return 'converting';
@@ -1156,7 +1166,7 @@ export class BoardStore extends ZoomController {
     return '';
   }
 
-  
+  @action
   updatePen(value: any) {
     this.lineSelector = value
     this.room.setMemberState({
@@ -1180,16 +1190,16 @@ export class BoardStore extends ZoomController {
   }
 
 
-  
+  @action
   updateBoardState(globalState: CustomizeGlobalState) {
     // const follow = globalState?.follow ?? false
     // if (follow !== this.follow) {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.sceneStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
+    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
     //     } else {
-    //       this.sceneStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
+    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1200,7 +1210,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        // this.sceneStore.uiStore.addToast(transI18n(notice))
+        this.appStore.uiStore.addToast(transI18n(notice))
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1209,7 +1219,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @action
   updatePagination() {
     const room = this.room
     if(this.online && room) {
@@ -1218,50 +1228,50 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @observable
   notices: any[] = []
-  
+  @observable
   uploadPhase: string = ''
-  
+  @observable
   convertPhase: string = ''
-  
+  @observable
   isCancel: boolean =false
-  
+  @observable
   uploadingPhase: string = '';
-  
+  @observable
   convertingPhase: string = '';
-  
+  @observable
   scale: number = 1
 
-  
+  @computed
   get zoomValue(): number {
     return Math.ceil(this.scale * 100)
   }
 
-  
+  @observable
   online: boolean = false;
 
-  
+  @observable
   showColorPicker: boolean = false
 
-  
+  @observable
   strokeColor: any = {
     r: 0,
     g: 0,
     b: 0
   }
 
-  
+  @observable
   _grantPermission?: boolean = false
 
-  
+  @observable
   fileLoading: boolean = false
-  
+  @observable
   uploadingProgress: number = 0
 
-  
+  @computed
   get tools() {
-    const {userRole, roomType} = this.sceneStore.roomInfo
+    const {userRole, roomType} = this.appStore.roomInfo
     if (roomType === EduRoomType.SceneType1v1) {
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return allTools.filter((item: ToolItem) => !['blank-page', 'tools', 'register'].includes(item.value))
@@ -1297,7 +1307,7 @@ export class BoardStore extends ZoomController {
     return []
   }
 
-  
+  @action
   reset () {
     this.downloading = false
     if (this.resizeObserver) {
@@ -1365,7 +1375,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @action
   async grantUserPermission(userUuid: string) {
     if (this.boardClient) {
       this.boardClient.grantPermission(userUuid)
@@ -1373,7 +1383,7 @@ export class BoardStore extends ZoomController {
     // await this.boardService.updateBoardUserState(userUuid, EnumBoardState.grantPermission)
   }
 
-  
+  @action
   async revokeUserPermission(userUuid: string) {
     if (this.boardClient) {
       this.boardClient.revokePermission(userUuid)
@@ -1382,18 +1392,18 @@ export class BoardStore extends ZoomController {
   }
 
   get userRole () {
-    return this.sceneStore.userRole
+    return this.appStore.userRole
   }
 
   get roomType (): number {
-    return this.sceneStore.roomType
+    return this.appStore.roomType
   }
 
   get boardService() {
-    return this.sceneStore.boardService
+    return this.appStore.boardService
   }
 
-  
+  @computed
   get hasPermission(): boolean {
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
       return true
@@ -1405,27 +1415,27 @@ export class BoardStore extends ZoomController {
     return this.grantUsers.includes(userUuid)
   }
 
-  
+  @action
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      // this.sceneStore.uiStore.addToast(`授权白板成功`)
+      this.appStore.uiStore.addToast(`授权白板成功`)
     } catch (err) {
-      // this.sceneStore.uiStore.addToast(transI18n('toast.failed_to_authorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.addToast(transI18n('toast.failed_to_authorize_whiteboard') + `${err.message}`)
     }
   }
 
-  
+  @action
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      // this.sceneStore.uiStore.addToast(`取消授权白板成功`)
+      this.appStore.uiStore.addToast(`取消授权白板成功`)
     } catch (err) {
-      // this.sceneStore.uiStore.addToast(transI18n('toast.failed_to_deauthorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.addToast(transI18n('toast.failed_to_deauthorize_whiteboard') + `${err.message}`)
     }
   }
 
-  
+  @observable
   resizeObserver!: ResizeObserver 
 
   mount(dom: any) {
@@ -1453,7 +1463,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @action
   hideExtension() {
     this.showExtension = false
   }
@@ -1468,7 +1478,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @action
   zoomBoard(type: string) {
     // 白板全屏
     if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -1492,13 +1502,13 @@ export class BoardStore extends ZoomController {
     })
   }
 
-  
+  @observable
   preloading: boolean = false
 
-  
+  @observable
   preloadingProgress: number = -1
 
-  
+  @computed
   get isLoading() {
     if (!this.ready) {
       return 'preparing'
@@ -1509,7 +1519,7 @@ export class BoardStore extends ZoomController {
   }
 
 
-  
+  @computed
   get loadingStatus() {
     if (!this.ready) {
       return transI18n("whiteboard.loading")
@@ -1527,10 +1537,10 @@ export class BoardStore extends ZoomController {
 
   async removeMaterialList(resourceUuids: string[]) {
     try {
-      const res = await this.sceneStore.uploadService.removeMaterials({
+      const res = await this.appStore.uploadService.removeMaterials({
         resourceUuids: resourceUuids,
-        roomUuid: this.sceneStore.roomInfo.roomUuid,
-        userUuid: this.sceneStore.roomInfo.userUuid,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
       })
       const materialList = this.globalState?.materialList ?? []
       const newList = materialList.filter((e: any) => !resourceUuids.includes(e.resourceUuid))
@@ -1648,8 +1658,8 @@ export class BoardStore extends ZoomController {
   }
 
   async getFileInQueryMaterial(fileName: string) {
-    return await this.sceneStore.uploadService.getFileInQueryMaterial({
-      roomUuid: this.sceneStore.roomInfo.roomUuid,
+    return await this.appStore.uploadService.getFileInQueryMaterial({
+      roomUuid: this.appStore.roomInfo.roomUuid,
       resourceName:fileName
     })
   }
@@ -1657,10 +1667,10 @@ export class BoardStore extends ZoomController {
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
-      let res = await this.sceneStore.uploadService.handleUpload({
+      let res = await this.appStore.uploadService.handleUpload({
         ...payload,
-        roomUuid: this.sceneStore.roomInfo.roomUuid,
-        userUuid: this.sceneStore.roomInfo.userUuid,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
         onProgress: (evt: any) => {
           payload.onProgress(evt);
         },
@@ -1683,7 +1693,7 @@ export class BoardStore extends ZoomController {
   }
 
   async cancelUpload() {
-    await this.sceneStore.uploadService.cancelFileUpload()
+    await this.appStore.uploadService.cancelFileUpload()
   }
   clearScene() {
     this.room.cleanCurrentScene()
@@ -1701,45 +1711,45 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  
+  @computed
   get publicResources() {
-    return this.sceneStore.params.config.courseWareList.map(transDataToResource)
+    return this.appStore.params.config.courseWareList.map(transDataToResource)
   }
 
-  
+  @computed
   get internalResources(): CourseWareItem[] {
-    return this.sceneStore.params.config.personalCourseWareList ?? []
+    return this.appStore.params.config.personalCourseWareList ?? []
   }
 
-  
+  @observable
   _personalResources: CourseWareItem[] = []
 
-  
+  @computed
   get personalResources() {
     return this._personalResources.map(transDataToResource)
   }
 
-  
+  @computed
   get allResources() {
     return this.publicResources.concat(this.personalResources)
   }
 
-  
+  @computed
   get totalProgress(): number {
     return +(this.courseWareList.filter((e => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100)).length  / this.courseWareList.length).toFixed(2) * 100
   }
 
-  
+  @observable
   progressMap: Record<string, number> = {}
 
   async destroy () {
     this.progressMap = {}
   }
 
-  
+  @observable
   downloadList: StorageCourseWareItem[] = []
 
-  // 
+  // @computed
   // get downloadList(): StorageCourseWareItem[] {
   //   return this._downloadList.map((item: StorageCourseWareItem) => ({
   //     ...item,
@@ -1861,6 +1871,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @observable
   activeMap: Record<string, boolean> = {}
 }
 

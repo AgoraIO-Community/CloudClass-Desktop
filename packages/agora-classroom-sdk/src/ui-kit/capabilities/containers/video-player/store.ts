@@ -1,8 +1,8 @@
-import {Message} from '~components/chat/interface'
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
-import { BaseVideoPlayerProps } from '@/ui-kit/components/video-player';
-import { SceneStore } from '@/core';
+import { AppStore as CoreAppStore } from '~core';
+import { EduMediaStream } from '~core/scene';
+import { EduStream, EduUser } from 'agora-rte-sdk';
 
 export type VideoModel = {
   isHost?: boolean;
@@ -156,57 +156,57 @@ export abstract class VideoUIKitStore extends BaseStore<VideoModel> implements V
 }
 
 export class VideoStore extends VideoUIKitStore {
-  static createFactory(sceneStore: SceneStore): VideoStore {
+  static createFactory(appStore: CoreAppStore): VideoStore {
     const store = new VideoStore(defaultVideoModel)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
   updateVideoState (uid: any) {
-    const stream = this.sceneStore.streamList.find((stream) => stream.userInfo.userUuid === uid)
+    const stream = this.appStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === uid)
     if (stream) {
-      const isLocal = this.sceneStore.localStreamUuid === uid
+      const isLocal = this.appStore.sceneStore.localStreamUuid === uid
       if (!!stream.hasVideo) {
-        return this.sceneStore.muteVideo(uid, isLocal)
+        return this.appStore.sceneStore.muteVideo(uid, isLocal)
       } else {
-        return this.sceneStore.unmuteVideo(uid, isLocal)
+        return this.appStore.sceneStore.unmuteVideo(uid, isLocal)
       }
     }
   }
 
   updateAudioState (uid: any) {
-    const stream = this.sceneStore.streamList.find((stream) => stream.userInfo.userUuid === uid)
+    const stream = this.appStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === uid)
     if (stream) {
-      const isLocal = this.sceneStore.localStreamUuid === uid
+      const isLocal = this.appStore.sceneStore.localStreamUuid === uid
       if (!!stream.hasAudio) {
-        return this.sceneStore.muteAudio(uid, isLocal)
+        return this.appStore.sceneStore.muteAudio(uid, isLocal)
       } else {
-        return this.sceneStore.unmuteAudio(uid, isLocal)
+        return this.appStore.sceneStore.unmuteAudio(uid, isLocal)
       }
     }
   }
 
   sendStar(uid: any) {
-    const user = this.sceneStore.userList.find((user) => user.userUuid === uid)
+    const user = this.appStore.sceneStore.userList.find((user: EduUser) => user.userUuid === uid)
     if (user) {
-      return this.sceneStore.sendReward(user.userUuid, 1)
+      return this.appStore.roomStore.sendReward(user.userUuid, 1)
     }
   }
 
   updateWhiteboardState(uid: any) {
-    const user = this.sceneStore.userList.find((user) => user.userUuid === uid)
+    const user = this.appStore.sceneStore.userList.find((user: EduUser) => user.userUuid === uid)
     if (user) {
-      return this.sceneStore.sendReward(user.userUuid, 1)
+      return this.appStore.roomStore.sendReward(user.userUuid, 1)
     }
   }
 
   setOffAllPodium() {
-    return this.sceneStore.revokeAllCoVideo()
+    return this.appStore.sceneStore.revokeAllCoVideo()
   }
 
   updateOffPodium(uid: any) {
-    const user = this.sceneStore.userList.find((user) => user.userUuid === uid)
+    const user = this.appStore.sceneStore.userList.find((user: EduUser) => user.userUuid === uid)
     if (user) {
-      return this.sceneStore.revokeCoVideo(user.userUuid)
+      return this.appStore.sceneStore.revokeCoVideo(user.userUuid)
     }
   }
   

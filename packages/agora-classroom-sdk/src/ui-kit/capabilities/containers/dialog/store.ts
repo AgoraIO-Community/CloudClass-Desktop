@@ -1,14 +1,14 @@
-import { SceneStore } from "~core";
+import { AppStore as CoreAppStore } from "~core";
 
 export abstract class BaseDialogUIKitStore<T> {
 
-  sceneStore: SceneStore
+  appStore: CoreAppStore
 
   attributes: T
 
   private dialogId: string = ''
-  constructor(sceneStore: SceneStore, attributes: T) {
-    this.sceneStore = sceneStore
+  constructor(appStore: CoreAppStore, attributes: T) {
+    this.appStore = appStore
     this.attributes = attributes
   }
 
@@ -17,7 +17,7 @@ export abstract class BaseDialogUIKitStore<T> {
   }
 
   removeDialog () {
-    this.sceneStore.uiStore.removeDialog(this.dialogId)
+    this.appStore.uiStore.removeDialog(this.dialogId)
   }
 
   abstract onConfirm(): Promise<unknown>;
@@ -30,7 +30,7 @@ type StudentInfo = {
 }
 
 export abstract class KickDialogUIKitStore extends BaseDialogUIKitStore<StudentInfo> {
-  constructor(sceneStore: SceneStore, attributes: StudentInfo) {
-    super(sceneStore, attributes);
+  constructor(appStore: CoreAppStore, attributes: StudentInfo) {
+    super(appStore, attributes);
   }
 }

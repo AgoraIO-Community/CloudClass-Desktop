@@ -16,7 +16,7 @@ export const OneToOneScenario = observer(() => {
 
   const storyFactory = useStoryFactory()
 
-  const uiKitStore = useUIKitStore(storyFactory)
+  const uiKitStore = useUIKitStore()
 
   const cls = classnames({
     'edu-room': 1,

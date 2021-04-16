@@ -1,12 +1,19 @@
-import { eduSDKApi } from "@/services/edu-sdk-api"
-import { AgoraMediaDeviceEnum } from "@/types"
-import { BizLogger, debounce, getDeviceLabelFromStorage, GlobalStorage } from "@/utils/utils"
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduLogger, GenericErrorWrapper, LocalUserRenderer, RemoteUserRenderer } from "agora-rte-sdk"
-import { isEmpty, uniq } from "lodash"
-import { computed, observable, reaction } from "mobx"
-import { BehaviorSubject } from "rxjs"
-import { v4 as uuidv4 } from 'uuid'
-import { SceneStore } from "./scene"
+import {v4 as uuidv4} from 'uuid';
+import { debounce, uniq } from 'lodash';
+import { observable, action, computed, reaction } from 'mobx';
+import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
+import { BizLogger } from '@/utils/utils';
+import { Modal, transI18n } from '~ui-kit';
+import { eduSDKApi } from '@/services/edu-sdk-api';
+import { AppStore as CoreAppStore } from '~core';
+
+
+const delay = 2000
+
+type LocalPacketLoss = {
+  audioStats: { audioLossRate: number },
+  videoStats: { videoLossRate: number }
+}
 
 export enum LocalVideoStreamState {
   LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
@@ -26,6 +33,16 @@ export enum LocalVideoErrorEnum {
   SCREEN_CAPTURE_WINDOW_CLOSED = 12
 }
 
+// const networkQualityLevel = [
+//   'unknown',
+//   'excellent',
+//   'good',
+//   'poor',
+//   'bad',
+//   'very bad',
+//   'down',
+// ]
+
 const networkQualityLevel = [
   'unknown',
   'excellent',
@@ -36,122 +53,29 @@ const networkQualityLevel = [
   'bad',
 ]
 
-type LocalPacketLoss = {
-  audioStats: { audioLossRate: number },
-  videoStats: { videoLossRate: number }
+const networkQualities: { [key: string]: string } = {
+  'excellent': 'network-good',
+  'good': 'network-good',
+  'poor': 'network-normal',
+  'bad': 'network-normal',
+  'very bad': 'network-bad',
+  'down': 'network-bad',
+  'unknown': 'network-bad',
 }
 
-const delay = 300
-
 export class MediaStore {
+
+  @observable
+  autoplay: boolean = false;
+
   @observable
   remoteUsersRenderer: any[] = []
 
   @observable
   signalStatus: any[] = []
-  @observable
-  rendererOutputFrameRate: any
-
-  @observable
-  autoplay: any
-
-  @observable
-  networkQuality: string = 'unknown'
-
-  @observable
-  totalVolume: number = 0
-
-  @observable
-  speakers: any
-
-  @observable
-  _microphoneTrack?: any
-
-  @observable
-  _microphoneTestTrack?: any
-
-  @observable
-  resolution: any
-
-  @observable
-  _cameraRenderer: LocalUserRenderer | undefined
-
-  @observable
-  _testCameraRenderer: LocalUserRenderer | undefined
-
-  @observable
-  _cameraId: string = '';
-
-  @observable
-  _microphoneId: string = '';
 
   get mediaService() {
-    return this.sceneStore.mediaService
-  }
-  
-  @observable
-  _cameraList: any[] = []
-
-  get cameraList(): any[] {
-    return this._cameraList
-      // .concat([{
-      //   deviceId: AgoraMediaDeviceEnum.Default,
-      //   label: '禁用',
-      // }])
-  }
-
-  @observable
-  _microphoneList: any[] = []
-
-  @computed
-  get microphoneList(): any[] {
-    return this._microphoneList
-      // .concat([{
-      //   deviceId: AgoraMediaDeviceEnum.Default,
-      //   label: '禁用',
-      // }])
-  }
-
-  get web(): AgoraWebRtcWrapper {
-    return (this.mediaService.sdkWrapper as AgoraWebRtcWrapper)
-  }
-
-  get isWeb(): boolean {
-    return this.mediaService.sdkWrapper instanceof AgoraWebRtcWrapper
-  }
-
-  get isElectron(): boolean {
-    return this.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper
-  }
-
-  @observable
-  cameraError?: string = ''
-
-  @observable
-  microphoneError?: string = ''
-
-  @observable
-  _speakerList: any[] = []
-  
-  @computed
-  get speakerList(): any[] {
-    return [{
-      label: 'browser default',
-      deviceId: 'web_default'
-    }]
-  }
-
-  init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
-    if (option.video) {
-      this.mediaService.getCameras().then((list: any[]) => {
-        this._cameraList = list
-      })
-    }
-    if (option.audio) {
-      this.mediaService.getMicrophones().then((list: any[]) => {
-        this._microphoneList = list
-      })
-    }
+    return this.appStore.mediaService
   }
 
   @observable
@@ -178,6 +102,7 @@ export class MediaStore {
     }
   }
 
+  @action
   updateNetworkPacketLostRate(localPacketLoss: unknown) {
     this.localPacketLoss = localPacketLoss as LocalPacketLoss
   }
@@ -187,13 +112,14 @@ export class MediaStore {
     return Math.max(this.localPacketLoss.audioStats.audioLossRate, this.localPacketLoss.videoStats.videoLossRate)
   }
 
+
+  @action
   updateSignalStatusWithRemoteUser(mixSignalStatus: any[]) {
     this.signalStatus = mixSignalStatus
   }
-
   private userSignalStatus(mixSignalStatus: any[]) {
     const signalStatus: any[] = []
-    this.sceneStore.streamList.forEach((user: { userInfo?: any; streamUuid?: any }) => {
+    this.appStore.sceneStore.streamList.forEach((user) => {
       const { streamUuid: uid } = user;
       const target = mixSignalStatus.find(x => x.uid === +uid)
       signalStatus.push({
@@ -203,32 +129,6 @@ export class MediaStore {
       })
     })
     return signalStatus
-  }
-
-  @computed
-  get cameraRenderer(): LocalUserRenderer | undefined {
-    return this._cameraRenderer;
-  }
-
-  @computed
-  get isCameraOpen () {
-    return !!this.sceneStore.cameraRenderer
-  }
-
-  resetMicrophoneTrack () {
-    this._microphoneTrack = undefined
-  }
-
-  resetCameraTrack () {
-    this._cameraRenderer = undefined
-  }
-
-  resetTestMicrophoneTrack () {
-    this._microphoneTestTrack = undefined
-  }
-
-  resetTestCameraTrack () {
-    this._testCameraRenderer = undefined
   }
 
   private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
@@ -250,10 +150,11 @@ export class MediaStore {
     })
     return mixSignalStatus;
   }
-  private sceneStore: SceneStore;
+  private appStore: CoreAppStore;
 
   id: string = uuidv4()
 
+  @computed
   get device(): boolean {
     if (this.rendererOutputFrameRate[`${0}`] > 0) {
       return true
@@ -262,68 +163,97 @@ export class MediaStore {
     }
   }
 
-  constructor(sceneStore: SceneStore) {
+  constructor(appStore: CoreAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
-    this.sceneStore = sceneStore
+    this.appStore = appStore
     this.mediaService.on('rtcStats', (evt: any) => {
-      this.sceneStore.updateCpuRate(evt.cpuTotalUsage)
+      this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
     this.mediaService.on('track-ended', (evt: any) => {
-      if (evt.tag === 'cameraTestRenderer' && this._testCameraRenderer) {
-        this._testCameraRenderer?.stop()
-        this.resetTestCameraTrack()
+      if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.cameraRenderer.stop()
+        this.appStore.pretestStore.resetCameraTrack()
       }
-      if (evt.tag === 'cameraRenderer' && this.sceneStore.cameraRenderer) {
-        this.sceneStore.cameraRenderer.stop()
-        this.sceneStore.resetCameraTrack()
+      if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
+        this.appStore.sceneStore.cameraRenderer.stop()
+        this.appStore.sceneStore.resetCameraTrack()
         eduSDKApi.reportCameraState({
-          roomUuid: this.sceneStore.roomInfo.roomUuid,
-          userUuid: this.sceneStore.roomInfo.userUuid,
+          roomUuid: this.appStore.roomInfo.roomUuid,
+          userUuid: this.appStore.roomInfo.userUuid,
           state: 0
         }).catch((err: Error) => {
           BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
         })
       }
 
-      if (evt.tag === 'microphoneTestTrack' && this.cameraRenderer) {
-        this.resetMicrophoneTrack()
+      if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
+        this.appStore.pretestStore.resetMicrophoneTrack()
       }
-      if (evt.tag === 'microphoneTrack' && this.sceneStore._microphoneTrack!) {
-        this.sceneStore.resetMicrophoneTrack()
+      if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
+        this.appStore.sceneStore.resetMicrophoneTrack()
       }
       BizLogger.info("track-ended", evt)
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
-      // if (sceneStore.isNotInvisible) {
-      //   this.sceneStore.uiStore.addToast(transI18n('toast.audio_equipment_has_changed'))
-      // }
+      if (appStore.isNotInvisible) {
+        this.appStore.uiStore.addToast(transI18n('toast.audio_equipment_has_changed'))
+        // Modal.show({
+        //   title: transI18n('aclass.device.audio_failed'),
+        //   // text: transI18n('aclass.device.audio_failed'),
 
-      await this.init({ audio: true})
-      // await this.sceneStore.deviceStore.init({ audio: true })
+        //   showConfirm: true,
+        //   showCancel: true,
+        //   confirmText: transI18n('aclass.device.reload'),
+        //   visible: true,
+        //   cancelText: transI18n('aclass.device.cancel'),
+        //   onConfirm: () => {
+        //     window.location.reload()
+        //   },
+        //   onCancel: () => {
+        //   }
+        // })
+      }
+
+      await this.appStore.pretestStore.init({ audio: true})
+      // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed")
-      // this.sceneStore.uiStore.addToast(transI18n('toast.video_equipment_has_changed'))
-      // await this.sceneStore.deviceStore.init({ video: true })
-      await this.init({ video: true})
+      // appStore.isNotInvisible &&  dialogManager.show({
+      //   title: transI18n('aclass.device.video_failed'),
+      //   text: transI18n('aclass.device.video_failed'),
+      //   showConfirm: true,
+      //   showCancel: true,
+      //   confirmText: transI18n('aclass.device.reload'),
+      //   visible: true,
+      //   cancelText: transI18n('aclass.device.cancel'),
+      //   onConfirm: () => {
+      //     window.location.reload()
+      //   },
+      //   onCancel: () => {
+      //   }
+      // })
+      this.appStore.uiStore.addToast(transI18n('toast.video_equipment_has_changed'))
+      // await this.appStore.deviceStore.init({ video: true })
+      await this.appStore.pretestStore.init({ video: true})
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
         this.autoplay = true
-        // this.sceneStore.uiStore.showAutoplayNotification()
+        this.appStore.uiStore.showAutoplayNotification()
       }
     })
     this.mediaService.on('user-published', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
-      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e: RemoteUserRenderer) => e.uid)}`)
+      EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
-      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e: RemoteUserRenderer)=> e.uid)}`)
+      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
@@ -336,6 +266,12 @@ export class MediaStore {
       let qualityStr = defaultQuality
       let value = Math.max(downlinkNetworkQuality, uplinkNetworkQuality)
       qualityStr = networkQualityLevel[value]
+      // BizLogger.info('[web] network-quality value', value, qualityStr)
+      // if (downlinkNetworkQuality <= uplinkNetworkQuality) {
+      //   qualityStr = networkQualityLevel[downlinkNetworkQuality]
+      // } else {
+      //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
+      // }
       this.updateNetworkQuality(qualityStr || defaultQuality)
       const {
         remotePacketLoss: { audioStats, videoStats },
@@ -361,7 +297,7 @@ export class MediaStore {
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
-      if (this.sceneStore.isElectron) {
+      if (this.appStore.uiStore.isElectron) {
         this.totalVolume = Number((totalVolume / 255).toFixed(3))
       } else {
         this.totalVolume = totalVolume * 100;
@@ -387,10 +323,10 @@ export class MediaStore {
     })
 
     reaction(() => JSON.stringify([
-      this.sceneStore.roomInfo.roomUuid,
-      this.sceneStore.roomInfo.userUuid,
+      this.appStore.roomInfo.roomUuid,
+      this.appStore.roomInfo.userUuid,
       this.device,
-      this.sceneStore.roomJoined,
+      this.appStore.roomStore.roomJoined,
     ]), (data: string) => {
       const [roomUuid, userUuid, device, roomJoined] = JSON.parse(data)
       if (roomJoined && roomUuid && userUuid) {
@@ -406,494 +342,90 @@ export class MediaStore {
       }
     })
   }
+
+  @observable
+  totalVolume: number = 0
   
+  @observable
+  speakers: Record<number, number> = {}
+
+  @observable
+  rendererOutputFrameRate: Record<number, number> = {
+    0: 1
+  }
+
+  @observable
+  networkQuality: string = 'unknown'
+
+  @action
   updateNetworkQuality(v: string) {
     this.networkQuality = v
   }
 
-  error$!: BehaviorSubject<{type: 'video' | 'audio', error: boolean}>
-
-  onDeviceTestError(cb: (evt: {type: 'video' | 'audio', error: boolean}) => void) {
-    this.error$ = new BehaviorSubject<{type: 'video' | 'audio', error: boolean}>({} as any)
-    this.error$.subscribe({
-      next: (value: any) => cb(value)
-    })
-    return () => {
-      this.error$.complete()
-      this.error$ = null as any
+  reset() {
+    this.cpuUsage = 0
+    this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
+    this.remoteUsersRenderer = []
+    EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`)
+    this.networkQuality = 'unknown'
+    this.autoplay = false
+    this.totalVolume = 0
+    this.speakers = {}
+    this.rendererOutputFrameRate = {
+      0: 1
     }
-  }
-
-  getDeviceItem(list: any[], queryDevice: {type: string, value: string, targetField: string}) {
-    const type = `${queryDevice.type}`
-    const targetField = `${queryDevice.targetField}`
-    const _defaultValue = targetField === 'label' ? 'default' : ''
-    const defaultValue = isEmpty(list) ? _defaultValue : list[0][type]
-    const device: any = list.find((it: any) => it[type] === queryDevice.value)
-    const targetLabelValue = device ? device[targetField] : defaultValue
-    return targetLabelValue
-  }
-
-  getVideoDeviceLabelBy(deviceId: string) {
-    return this.getDeviceItem(this.cameraList, {type: 'deviceId', value: deviceId, targetField: 'label'})
-  }
-
-  getAudioDeviceLabelBy(deviceId: string) {
-    return this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: deviceId, targetField: 'label'})
-  }
-
-  @computed
-  get exactCameraId(): string {
-    return this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
-  }
-
-  @computed
-  get exactMicrophoneId(): string {
-    return this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'label'})
-  }
-
-  handleDeviceChange (...args: any[]) {
-    const prevMediaDevice = GlobalStorage.read("mediaDevice") || {}
-
-    const cameraLabel = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'label'})
-    const microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'label'})
-
-    GlobalStorage.save("mediaDevice", {
-      ...prevMediaDevice,
-      cameraLabel: cameraLabel,
-      microphoneLabel: microphoneLabel,
-    })
   }
 
   @observable
-  cameraLabel: string = getDeviceLabelFromStorage('cameraLabel');
+  _microphoneTrack?: any = undefined;
 
   @observable
-  microphoneLabel: string = getDeviceLabelFromStorage('microphoneLabel');
-
-  @computed
-  get cameraId(): string {
-    const defaultValue = AgoraMediaDeviceEnum.Default
-    const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel)
-    if (this.cameraList[idx]) {
-      return this.cameraList[idx].deviceId
-    }
-    return defaultValue
-  }
-
-  @computed
-  get microphoneId(): string {
-    const defaultValue = AgoraMediaDeviceEnum.Default
-    const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel)
-    if (this.microphoneList[idx]) {
-      return this.microphoneList[idx].deviceId
-    }
-    return defaultValue
-  }
-
-  @computed
-  get speakerId(): string {
-    return 'web_default'
-  }
-
-  @computed
-  get playbackVolume(): number {
-    if (this._playbackVolume) {
-      return this._playbackVolume
-    }
-    return this.mediaService.getPlaybackVolume()
-  }
-
-  @computed
-  get microphoneLevel() {
-    return this.totalVolume
-  }
+  _cameraRenderer?: LocalUserRenderer = undefined;
 
   @observable
-  _playbackVolume: number = 0
+  _screenVideoRenderer?: LocalUserRenderer = undefined;
 
-  changePlaybackVolume(volume: number) {
-    this.mediaService.changePlaybackVolume(volume)
-    this._playbackVolume = volume
+  @computed
+  get cameraRenderer(): LocalUserRenderer | undefined {
+    return this._cameraRenderer;
+  }
+  @computed
+  get screenVideoRenderer(): LocalUserRenderer | undefined {
+    return this._screenVideoRenderer;
   }
 
-  async openTestCamera() {
-    try {
-      const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-      await this.mediaService.openTestCamera({
-        deviceId,
-        encoderConfig: {
-          ...this.sceneStore.videoEncoderConfiguration
-        }
-      })
-      this._cameraRenderer = this.mediaService.cameraTestRenderer
-      this.cameraLabel = this.mediaService.getTestCameraLabel()
-      this._cameraId = this.cameraId
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'video', error: true})
-      throw error
-    }
-    // this.sceneStore.deviceInfo.cameraName = this.cameraLabel
-  }
-
-  closeTestCamera() {
-    this.mediaService.closeTestCamera()
-    this.resetCameraTrack()
-  }
-
-  async changeTestCamera(deviceId: string) {
-    try {
-      if (deviceId === AgoraMediaDeviceEnum.Default) {
-        await this.mediaService.closeTestCamera()
-        this._cameraRenderer = undefined
-        this._cameraId = deviceId
-        this.cameraLabel = ''
-      } else {
-        if (this.cameraRenderer) {
-          if (this.sceneStore.isElectron) {
-            await this.mediaService.changeTestCamera(deviceId)
-            this._cameraRenderer = this.mediaService.cameraRenderer
-          } else {
-            await this.mediaService.changeTestCamera(deviceId)
-          }
-        } else {
-          await this.mediaService.openTestCamera({
-            deviceId,
-            encoderConfig: {
-              ...this.sceneStore.videoEncoderConfiguration
-            }
-          })
-        }
-        this.updateTestCameraLabel()
-      }
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'video', error: true})
-      throw error
-    }
-  }
-  
-  async openTestMicrophone(payload: {enableRecording: boolean}) {
-    try {
-      const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
-      await this.mediaService.openTestMicrophone({deviceId})
-      if (this.isWeb) {
-        this._microphoneTrack = this.web.microphoneTestTrack
-      }
-      if (this.isElectron) {
-        payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
-      }
-      this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-      this._microphoneId = this.microphoneId
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'audio', error: true})
-      throw error
-    }
-  }
-
-  closeTestMicrophone() {
-    if (this.isElectron) {
-      this.mediaService.electron.client.stopAudioRecordingDeviceTest()
-    }
-    this.mediaService.closeTestMicrophone()
-    this.resetMicrophoneTrack()
-  }
-
-  updateCameraLabel(label: string) {
-    this.cameraLabel = label
-    this._cameraId = this.cameraId
-  }
-
-  updateMicrophoneLabel(label: string) {
-    this.microphoneLabel = label
-    this._microphoneId = this.microphoneId
-  }
-
-  updateTestMicrophoneLabel() {
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTestTrack
-    }
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this._microphoneId = this.microphoneId
-  }
-
-  updateTestCameraLabel() {
-    this._cameraRenderer = this.mediaService.cameraTestRenderer
-    this.cameraLabel = this.mediaService.getTestCameraLabel()
-    this._cameraId = this.cameraId
-  }
-
-  
-  async changeTestMicrophone(deviceId: string) {
-    try {
-      if (deviceId === AgoraMediaDeviceEnum.Default) {
-        await this.mediaService.closeTestMicrophone()
-        if (this.isWeb) {
-          this._microphoneTrack = undefined
-        }
-        this._microphoneId = deviceId
-        this.microphoneLabel = this.getDeviceItem(this.microphoneList, {type: 'deviceId', value: this._microphoneId, targetField: 'label'})
-        return
-      } else {
-        await this.mediaService.changeTestMicrophone(deviceId)
-        this.updateTestMicrophoneLabel()
-      }
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'audio', error: true})
-      // PretestStore.errCallback(error, 'audio')
-      throw error
-    }
-  }
-
-  get isNative(): boolean { 
-    return !!this.mediaService.isElectron
-  }
-
-  async switchCamera(deviceId: string) {
-    try {
-      if (this.isNative) {
-        await this.changeNativeCamera(deviceId)
-      } else {
-        await this.changeWebCamera(deviceId)
-      }
-    } catch (err) {
-      // this.sceneStore.uiStore.addToast(err)
-    }
-  }
-
-  async changeWebCamera(deviceId: string) {
-    if (this.sceneStore.cameraRenderer) {
-      await this.mediaService.changeCamera(deviceId)
-      const label = this.mediaService.getCameraLabel()
-      this.updateCameraLabel(label)
-    } else {
-      const sceneStore = this.sceneStore
-      const cameraEduStream = sceneStore.cameraEduStream
-      if (!cameraEduStream || !!cameraEduStream.hasVideo === false) {
-        EduLogger.info("userStream has been muted video")
-        const deviceLabel = this.getVideoDeviceLabelBy(deviceId)
-        if (deviceLabel) {
-          this.updateCameraLabel(deviceLabel)
-        }
-        return
-      }
-      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
-      this.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
-      const label = this.mediaService.getCameraLabel()
-      this.updateCameraLabel(label)
-    }
-  }
-
-  async changeWebMicrophone(deviceId: string) {
-    if (this.sceneStore._microphoneTrack) {
-      await this.mediaService.changeMicrophone(deviceId)
-      const label = this.mediaService.getMicrophoneLabel()
-      this.updateMicrophoneLabel(label)
-    } else {
-      const sceneStore = this.sceneStore
-      const cameraEduStream = sceneStore.cameraEduStream
-      if (!cameraEduStream || !!cameraEduStream.hasAudio === false) {
-        EduLogger.info("userStream has been muted audio")
-        const deviceLabel = this.getAudioDeviceLabelBy(deviceId)
-        if (deviceLabel) {
-          this.updateMicrophoneLabel(deviceLabel)
-        }
-        return
-      }
-      await this.mediaService.openMicrophone({deviceId})
-      this.sceneStore._microphoneTrack = this.mediaService.microphoneTrack
-      const label = this.mediaService.getMicrophoneLabel()
-      this.updateMicrophoneLabel(label)
-    }
-  }
-
-  async switchMicrophone(deviceId: string) {
-    try {
-      if (this.isNative) {
-        await this.changeNativeMicrophone(deviceId)
-      } else {
-        await this.changeWebMicrophone(deviceId)
-      }
-    } catch (err) {
-      // this.sceneStore.uiStore.addToast(err)
-    }
-  }
-
-  // TODO: need poc implementation
-  async switchSpeaker(deviceId: string) {
-  }
-
-
-  /// live room camera operator
-  
+  @action
   async openCamera() {
-    const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-    await this.mediaService.openCamera({
-      deviceId,
-      encoderConfig: {
-        ...this.sceneStore.videoEncoderConfiguration
-      }
-    })
-    this._cameraRenderer = this.mediaService.cameraRenderer
-    this.cameraLabel = this.mediaService.getCameraLabel()
-    this._cameraId = this.cameraId
-    // this.sceneStore.deviceInfo.cameraName = this.cameraLabel
+
   }
 
-  
-  closeCamera() {
-    this.mediaService.closeCamera()
-    this.resetCameraTrack()
+  @action
+  async startWebSharing() {
+
   }
 
-  
-  async changeCamera(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Default) {
-      await this.mediaService.closeCamera()
-      this._cameraRenderer = undefined
-      this._cameraId = deviceId
-      this.cameraLabel = ''
-    } else {
-      let sceneCameraRenderer = this.sceneStore._cameraRenderer
-      if (sceneCameraRenderer) {
-        if (this.sceneStore.isElectron) {
-          sceneCameraRenderer.stop()
-          await this.mediaService.changeCamera(deviceId)
-          sceneCameraRenderer = this.mediaService.cameraRenderer
-        } else {
-          await this.mediaService.changeCamera(deviceId)
-        }
-      } else {
-        await this.mediaService.openCamera({
-          deviceId,
-          encoderConfig: {
-            ...this.sceneStore.videoEncoderConfiguration
-          }
-        })
-      }
-      sceneCameraRenderer = this.mediaService.cameraRenderer
-      this.cameraLabel = this.mediaService.getCameraLabel()
-      this._cameraId = this.cameraId
-      // this.sceneStore.deviceInfo.cameraName = this.cameraLabel
-    }
+  @action
+  async stopWebSharing() {
+
   }
 
-  
-  async openMicrophone() {
-    const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
-    await this.mediaService.openMicrophone({deviceId})
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTrack
-    }
-    // if (this.isElectron) {
-    //   this.mediaService.electron.client.stopAudioRecordingDeviceTest()
-    // }
-    this.microphoneLabel = this.mediaService.getMicrophoneLabel()
-    // this.sceneStore.deviceInfo.microphoneName = this.microphoneLabel
-    this._microphoneId = this.microphoneId
+  @action
+  async stopNativeSharing() {
+
   }
 
-  
-  closeMicrophone() {
-    this.mediaService.closeTestMicrophone()
-    this.resetMicrophoneTrack()
+  @action
+  async showScreenShareWindowWithItems() {
+
   }
 
-  
-  async changeNativeCamera(deviceId: string) {
-    EduLogger.info("changeNativeCamera ", deviceId)
-    await this.mediaService.changeCamera(deviceId)
-    this.cameraLabel = this.mediaService.getTestCameraLabel()
-    this._cameraId = this.cameraId
-    EduLogger.info("changeNativeCamera#cameraLabel get camera id: ", this.cameraId, " cameraLabel ", this.cameraLabel)
-  }
+  @action
+  async prepareScreenShare() {
 
-  
-  async changeNativeMicrophone(deviceId: string) {
-    EduLogger.info("changeNativeMicrophone ", deviceId)
-    await this.mediaService.changeMicrophone(deviceId)
-    EduLogger.info("changeNativeMicrophone#changeMicrophone ", deviceId)
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this._microphoneId = this.microphoneId
-    EduLogger.info("changeNativeMicrophone#changeMicrophone _microphoneId: ", this._microphoneId, " microphoneLabel ", this.microphoneLabel)
-  }
-
-  
-  async changeElectronTestSpeaker(deviceId: string) {
-    console.log('device id', deviceId)
-  }
-
-  
-  async changeTestSpeaker(deviceId: string) {
-    if (this.mediaService.isElectron) {
-      await this.changeElectronTestSpeaker(deviceId)
-      return
-    }
-  }
-
-  async changeSpeaker(value: any) {
-    throw new Error('Method not implemented.');
-  }
-
-  async changeTestSpeakerVolume(value: any) {
-    throw new Error('Method not implemented.');
-  }
-
-  async changeTestMicrophoneVolume(value: any) {
-    throw new Error('Method not implemented.');
   }
 
 
-  async changeSpeakerVolume(value: any) {
-    if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.adjustPlaybackSignalVolume(value)
-    }
-  }
-
-  async changeMicrophoneVolume(value: any) {
-    if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.adjustRecordingSignalVolume(value)
-    }
-  }
-
-  
-  async changeMicrophone(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Default) {
-      await this.mediaService.closeMicrophone()
-      if (this.isWeb) {
-        this._microphoneTrack = undefined
-      }
-      this._microphoneId = deviceId
-      this.microphoneLabel = deviceId
-    } else {
-      await this.mediaService.changeMicrophone(deviceId)
-      if (this.isWeb) {
-        this._microphoneTrack = this.web.microphoneTrack
-      }
-      this.microphoneLabel = this.mediaService.getMicrophoneLabel()
-      this.sceneStore.deviceInfo.microphoneName = this.microphoneLabel
-      this._microphoneId = this.microphoneId
-    }
-  }
-  /// live room camera operator
-
-  
-  async changeTestResolution(resolution: any) {
-    await this.mediaService.changeTestResolution(resolution)
-    this.resolution = resolution
-  }
-
-  @computed
-  get speakerLabel(): string {
-    if (this.sceneStore.isElectron) {
-      return this.sceneStore.eduManager.mediaService.getSpeakerLabel()
-    }
-    return '默认'
-  }
-  
+  @action
   resetRoomState() {
     this.remoteUsersRenderer = []
     EduLogger.info(`[agora-apaas] [media#renderers] resetRoomState clear remoteUsersRenderer`)

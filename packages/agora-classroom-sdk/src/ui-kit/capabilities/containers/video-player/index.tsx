@@ -132,7 +132,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 
 export const VideoList = observer(({store}: {store: VideoUIKitStore}) => {
   return (
-    !store.sceneStore.isFullScreen ?
+    !store.appStore.boardStore.isFullScreen ?
     <>
       <VideoPlayerTeacher />
       <VideoPlayerStudent controlPlacement="left" />

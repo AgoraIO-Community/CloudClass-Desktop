@@ -3,7 +3,7 @@ import { BaseStore } from '~capabilities/stores/base';
 import { Exit, Record } from '../dialog';
 import { SettingContainer } from '../setting';
 import { v4 as uuidv4} from 'uuid';
-import { SceneStore } from '~core';
+import { AppStore as CoreAppStore } from '~core';
 
 export type NavigationBarModel = {
   isNative: boolean,
@@ -75,9 +75,9 @@ export abstract class NavigationBarUIKitStore
 
 export class NavigationBarStore extends NavigationBarUIKitStore {
 
-  static createFactory(sceneStore: SceneStore, payload?: NavigationBarModel) {
+  static createFactory(appStore: CoreAppStore, payload?: NavigationBarModel) {
     const store = new NavigationBarStore(payload ?? defaultModel)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
@@ -88,15 +88,15 @@ export class NavigationBarStore extends NavigationBarUIKitStore {
   showDialog(type: string): void {
     switch (type) {
       case 'exit': {
-        this.sceneStore.uiStore.addDialog(Exit)
+        this.appStore.uiStore.addDialog(Exit)
         break;
       }
       case 'record': {
-        this.sceneStore.uiStore.addDialog(Record, {id: uuidv4()})
+        this.appStore.uiStore.addDialog(Record, {id: uuidv4()})
         break;
       }
       case 'setting': {
-        this.sceneStore.uiStore.addDialog(SettingContainer)
+        this.appStore.uiStore.addDialog(SettingContainer)
         break;
       }
     }

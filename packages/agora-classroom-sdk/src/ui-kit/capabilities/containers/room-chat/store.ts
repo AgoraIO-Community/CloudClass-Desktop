@@ -1,7 +1,7 @@
 import {Message} from '~components/chat/interface'
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
-import { SceneStore } from '@/core';
+import { AppStore as CoreAppStore } from '~core';
 import { reaction } from 'mobx';
 
 export type RoomChatModel = {
@@ -117,14 +117,14 @@ export class RoomChatStore extends RoomChatUIKitStore {
     // })
   }
 
-  static createFactory(sceneStore: SceneStore, payload?: RoomChatModel) {
+  static createFactory(appStore: CoreAppStore, payload?: RoomChatModel) {
     const store = new RoomChatStore(payload ?? model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
   handleSendText(): Promise<any> {
-    return this.sceneStore.sendMessage(this.chatText)
+    return this.appStore.roomStore.sendMessage(this.chatText)
   }
 
   refreshMessageList(): Promise<any> {
@@ -134,7 +134,7 @@ export class RoomChatStore extends RoomChatUIKitStore {
   private async fetchMsgList() {
     const nextId = this.nextId
     if (nextId !== 'last') {
-      const res = await this.sceneStore.getHistoryChatMessage({nextId, sort: 0})
+      const res = await this.appStore.roomStore.getHistoryChatMessage({nextId, sort: 0})
       const resNextId = res?.nextId?.last ?? 'last'
       this.attributes.nextId = resNextId
     }

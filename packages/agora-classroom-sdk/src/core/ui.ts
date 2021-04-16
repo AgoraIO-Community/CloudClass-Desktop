@@ -1,8 +1,9 @@
 import { ToastCategory } from '~ui-kit';
 import { isEmpty } from 'lodash';
-import { reaction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import {SceneStore} from './scene';
+import { AppStore } from '.';
+
 
 interface NoticeMessage {
   type: string
@@ -39,15 +40,15 @@ export class UIStore {
     }
   ]
 
-  
+  @computed
   get isElectron(): boolean {
     return false
   }
 
-  
+  @observable
   language: string = 'zh'
 
-  
+  @observable
   setLanguage(language: any) {
     this.language = language
   }
@@ -56,45 +57,35 @@ export class UIStore {
     console.log('showAutoplayNotification')
   }
 
-  
+  @observable
   loading: boolean = false
 
-  
+  @observable
   boardLoading: boolean = false;
 
-  
+  @observable
   dialogQueue: DialogType[] = [] 
 
-  
+  @observable
   toastQueue: ToastType[] = []
 
-  
+  @observable
   chatCollapse: boolean = false
 
-  
+  @observable
   checked: boolean = false;
 
-  sceneStore: SceneStore;
+  appStore: AppStore;
 
-  unreadMessageCount: number = 0;
-
-  resetUnreadMessageCount(){
-    this.unreadMessageCount = 0
-  }
-
-  incrementUnreadMessageCount(){
-    this.unreadMessageCount++
-  }
-
-  constructor(sceneStore: SceneStore) {
-    this.sceneStore = sceneStore
+  constructor(appStore: AppStore) {
+    this.appStore = appStore
     reaction(() => JSON.stringify([
       this.chatCollapse
     ]) , (data: string) => {
       const [chatCollapse] = JSON.parse(data)
       if (!chatCollapse) {
         // 已经缩小的chat组件，点击后需要清空消息数
-        this.resetUnreadMessageCount()
+        this.appStore.roomStore.resetUnreadMessageCount()
       }
     })
   }
@@ -133,13 +124,15 @@ export class UIStore {
   toggleChatMinimize() {
     this.chatCollapse = !this.chatCollapse
   }
-  
+
+  @observable
   visibleSetting: boolean = false
 
   setVisibleSetting(v: boolean) { 
     this.visibleSetting = v
   }
 
+  @action.bound
   reset() {
     this.loading = false
     this.boardLoading = false

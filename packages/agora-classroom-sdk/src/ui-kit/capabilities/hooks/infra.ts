@@ -1,5 +1,5 @@
-import { SceneStore } from "@/core";
-import { createContext, useContext, useState } from "react";
+import { AppStore as CoreAppStore } from "~core";
+import { useContext } from "react";
 import { VideoStore } from '~capabilities/containers/video-player/store';
 import { RoomChatStore } from "@/ui-kit/capabilities/containers/room-chat/store";
 import { NavigationBarStore } from "~capabilities/containers/nav/store";
@@ -17,19 +17,18 @@ export class AppUIKitStore {
   boardStore: WhiteboardStore;
   loadingStore: LoadingStore;
   pretestStore: PretestUIStore;
-  constructor(sceneStore: SceneStore) {
-    this.navBar = NavigationBarStore.createFactory(sceneStore)
-    this.screenShare = ScreenShareStore.createFactory(sceneStore)
-    this.videoList = VideoStore.createFactory(sceneStore)
-    this.roomChat = RoomChatStore.createFactory(sceneStore)
-    this.boardStore = WhiteboardStore.createFactory(sceneStore)
-    this.loadingStore = LoadingStore.createFactory(sceneStore)
-    this.pretestStore = PretestUIStore.createFactory(sceneStore)
+  constructor(appStore: CoreAppStore) {
+    this.navBar = NavigationBarStore.createFactory(appStore)
+    this.screenShare = ScreenShareStore.createFactory(appStore)
+    this.videoList = VideoStore.createFactory(appStore)
+    this.roomChat = RoomChatStore.createFactory(appStore)
+    this.boardStore = WhiteboardStore.createFactory(appStore)
+    this.loadingStore = LoadingStore.createFactory(appStore)
+    this.pretestStore = PretestUIStore.createFactory(appStore)
   }
 }
 
-
-export const useUIKitStore = (sceneStore?: SceneStore) => {
+export const useUIKitStore = () => {
   const context = useContext(UIKitContext)
   return context
 }

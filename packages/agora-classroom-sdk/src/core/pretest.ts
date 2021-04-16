@@ -1,89 +1,13 @@
-import { AppStore } from '@/stores/app/index';
+import { AppStore as CoreAppStore } from '~core';
 import { AgoraMediaDeviceEnum } from '@/types';
-import { BaseStore } from '@/ui-kit/capabilities/stores/base';
-import { UIKitBaseModule } from '@/ui-kit/capabilities/types';
 import { getDeviceLabelFromStorage, GlobalStorage } from '@/utils/utils';
 import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduLogger, LocalUserRenderer, MediaService, GenericErrorWrapper } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { BehaviorSubject } from 'rxjs';
 import {v4 as uuidv4} from 'uuid';
-import { AppStore as CoreAppStore } from '~core';
 
-export type PretestModel = {
-  isNative: boolean,
-  classStatusText: string,
-  isStarted: boolean,
-  isRecording: boolean,
-  title: string,
-  signalQuality: string,
-  networkLatency: number,
-  networkQuality: string,
-  cpuUsage: number,
-  packetLostRate: number,
-}
-
-export const model: PretestModel = {
-  isNative: false,
-  classStatusText: '',
-  isStarted: false,
-  isRecording: false,
-  title: '',
-  signalQuality: 'unknown',
-  networkLatency: 0,
-  networkQuality: 'unknown',
-  cpuUsage: 0,
-  packetLostRate: 0,
-}
-
-export interface PretestTraits {
-  // showDialog(type: 'exit' | 'record' | 'setting'): void
-}
-
-export abstract class PretestUIKitStore
-  extends BaseStore<PretestModel>
-  implements UIKitBaseModule<PretestModel, PretestTraits> {
-
-  get packetLostRate(): number {
-    return this.attributes.packetLostRate;
-  }
-  get isNative(): boolean {
-    return this.attributes.isNative
-  }
-  get classStatusText(): string {
-    return this.attributes.classStatusText
-  }
-  get isStarted(): boolean {
-    return this.attributes.isStarted
-  }
-  get isRecording(): boolean {
-    return this.attributes.isRecording
-  }
-  get title(): string {
-    return this.attributes.title
-  }
-  get signalQuality(): any {
-    return this.attributes.signalQuality
-  }
-  get networkLatency(): number {
-    return this.attributes.networkLatency
-  }
-  get networkQuality(): string {
-    return this.attributes.networkQuality
-  }
-  get cpuUsage(): number {
-    return this.attributes.cpuUsage
-  }
-}
-
-
-export class PretestUIStore extends PretestUIKitStore {
-
-  static createFactory(appStore: CoreAppStore, payload?: PretestModel) {
-    const store = new PretestUIStore(appStore)
-    store.bind(appStore)
-    return store
-  }
+export class PretestStore {
   static resolutions: any[] = [
     {
       name: '480p',
@@ -255,7 +179,6 @@ export class PretestUIStore extends PretestUIKitStore {
   error$!: BehaviorSubject<{type: 'video' | 'audio', error: boolean}>
 
   constructor(appStore: CoreAppStore) {
-    super(model);
     console.log("[ID] pretestStore ### ", this.id)
     this.appStore = appStore
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange.bind(this))
@@ -584,14 +507,14 @@ export class PretestUIStore extends PretestUIKitStore {
         return
       }
       await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
-      this.appStore.mediaStore._cameraRenderer = this.mediaService.cameraRenderer
+      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
       const label = this.mediaService.getCameraLabel()
       this.updateCameraLabel(label)
     }
   }
 
   async changeWebMicrophone(deviceId: string) {
-    if (this.appStore.mediaStore._microphoneTrack) {
+    if (this.appStore.sceneStore._microphoneTrack) {
       await this.mediaService.changeMicrophone(deviceId)
       const label = this.mediaService.getMicrophoneLabel()
       this.updateMicrophoneLabel(label)
@@ -607,7 +530,7 @@ export class PretestUIStore extends PretestUIKitStore {
         return
       }
       await this.mediaService.openMicrophone({deviceId})
-      this.appStore.mediaStore._microphoneTrack = this.mediaService.microphoneTrack
+      this.appStore.sceneStore._microphoneTrack = this.mediaService.microphoneTrack
       const label = this.mediaService.getMicrophoneLabel()
       this.updateMicrophoneLabel(label)
     }
@@ -660,7 +583,7 @@ export class PretestUIStore extends PretestUIKitStore {
       this._cameraId = deviceId
       this.cameraLabel = ''
     } else {
-      let sceneCameraRenderer = this.appStore.mediaStore._cameraRenderer
+      let sceneCameraRenderer = this.appStore.sceneStore._cameraRenderer
       if (sceneCameraRenderer) {
         if (this.appStore.isElectron) {
           sceneCameraRenderer.stop()

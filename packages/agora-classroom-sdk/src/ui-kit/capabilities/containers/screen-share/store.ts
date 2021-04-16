@@ -1,7 +1,8 @@
+import { EduMediaStream } from '~core/scene';
 import { EduStream } from 'agora-rte-sdk';
 import { BaseStore } from '~capabilities/stores/base';
 import { UIKitBaseModule } from '~capabilities/types';
-import { EduMediaStream, SceneStore } from '~core';
+import { AppStore as CoreAppStore } from '~core';
 
 type WindowId = string | number;
 type WindowTitle = string | number;
@@ -56,9 +57,9 @@ export abstract class ScreenShareUIKitStore
 
 export class ScreenShareStore extends ScreenShareUIKitStore {
 
-  static createFactory(sceneStore: SceneStore, payload?: ScreenShareModel) {
+  static createFactory(appStore: CoreAppStore, payload?: ScreenShareModel) {
     const store = new ScreenShareStore(payload ?? model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
@@ -70,7 +71,7 @@ export class ScreenShareStore extends ScreenShareUIKitStore {
   }
 
   async startOrStopSharing() {
-    await this.sceneStore.startOrStopSharing()
+    await this.appStore.sceneStore.startOrStopSharing()
   }
 
   onCancel() {

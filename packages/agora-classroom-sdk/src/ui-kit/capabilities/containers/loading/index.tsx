@@ -1,6 +1,6 @@
 import { Card, Loading } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { SceneStore } from '@/core'
+import { AppStore as CoreAppStore } from '~core'
 import { BaseStore } from '~capabilities/stores/base'
 import { UIKitBaseModule } from '~capabilities/types'
 import { Exit, Record } from '../dialog'
@@ -45,9 +45,9 @@ export abstract class LoadingUIKitStore
 
 export class LoadingStore extends LoadingUIKitStore {
 
-  static createFactory(sceneStore: SceneStore) {
+  static createFactory(appStore: CoreAppStore) {
     const store = new LoadingStore(model)
-    store.bind(sceneStore)
+    store.bind(appStore)
     return store
   }
 
@@ -58,15 +58,15 @@ export class LoadingStore extends LoadingUIKitStore {
   showDialog(type: string): void {
     switch (type) {
       case 'exit': {
-        this.sceneStore.uiStore.addDialog(Exit)
+        this.appStore.uiStore.addDialog(Exit)
         break;
       }
       case 'record': {
-        this.sceneStore.uiStore.addDialog(Record, {id: uuidv4()})
+        this.appStore.uiStore.addDialog(Record, {id: uuidv4()})
         break;
       }
       case 'setting': {
-        this.sceneStore.uiStore.addDialog(SettingContainer)
+        this.appStore.uiStore.addDialog(SettingContainer)
         break;
       }
     }

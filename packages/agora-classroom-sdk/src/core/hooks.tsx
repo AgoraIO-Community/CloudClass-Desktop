@@ -1,19 +1,15 @@
 import { useLocalStore } from 'mobx-react';
 import { ReactChild } from 'react';
 import { createContext, useContext, useState } from "react";
-import { SceneStore } from "./scene";
+import { AppStore as AppCoreStore } from '~core';
 
-export type CoreAppContext = Record<string, SceneStore>
+export type CoreAppContext = Record<string, AppCoreStore>
 
-export const CoreContext = createContext<SceneStore>(null as unknown as SceneStore)
+export const CoreContext = createContext<AppCoreStore>(null as unknown as AppCoreStore)
 
-export const CoreProvider = ({store, children}: {store: SceneStore, children: ReactChild}) => {
-
-  const [localStore, ] = useState(() => store)
-
-  // const localStore = useLocalStore(() => store)
+export const CoreProvider = ({store, children}: {store: AppCoreStore, children: ReactChild}) => {
   return (
-    <CoreContext.Provider value={localStore}>
+    <CoreContext.Provider value={store}>
       {children}
     </CoreContext.Provider>
   )
