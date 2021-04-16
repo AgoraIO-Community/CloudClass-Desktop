@@ -1,14 +1,12 @@
 import { useBoardStore, useUIStore } from '@/hooks'
-import { Resource } from '@/stores/app/board'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { useWhiteboardState } from '~capabilities/hooks'
-import { ColorsContainer } from '~capabilities/containers/colors'
+import { ColorsContainer } from '~capabilities/containers/board/colors'
 import { CloseConfirm } from '~capabilities/containers/dialog'
-import { PensContainer } from '~capabilities/containers/pens'
-import { ToolCabinetContainer } from '~capabilities/containers/tool-cabinet'
+import { PensContainer } from '~capabilities/containers/board/pens'
+import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
 import { BaseContainerProps } from '../../types'
-import { WhiteboardUIKitStore } from './store'
+import { Resource, WhiteboardUIKitStore } from './store'
 import { useCallback } from 'react'
 import { ZoomItemType } from '@/ui-kit/components'
 
@@ -142,7 +140,7 @@ export const WhiteboardContainer: React.FC<BaseContainerProps<WhiteboardUIKitSto
   } = store
 
   async function handleZoomControllerChange(type: ZoomItemType) {
-    store.handleZoomControllerChange(type)
+    await store.handleZoomControllerChange(type)
   }
 
   const mountToDOM = useCallback((dom: any) => {
@@ -156,24 +154,6 @@ export const WhiteboardContainer: React.FC<BaseContainerProps<WhiteboardUIKitSto
   function handleToolBarChange() {
 
   }
-
-
-  // const {
-  //   zoomValue,
-  //   currentPage,
-  //   totalPage,
-  //   isFullScreen,
-  //   handleToolBarChange,
-  //   handleZoomControllerChange,
-  //   ready,
-  //   mountToDOM,
-  //   currentSelector,
-  //   activeMap,
-  //   tools,
-  //   showTab,
-  //   showToolBar,
-  //   showZoomControl,
-  // } = useWhiteboardState()
 
   return (
     <div className="whiteboard">

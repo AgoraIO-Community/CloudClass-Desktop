@@ -1,19 +1,26 @@
+import { ZoomItemType } from "@/ui-kit/components"
 import { Story } from "@storybook/react"
 import { useState } from "react"
-import { defaultBoardState, WhiteBoardModel, WhiteboardUIKitStore } from "./store"
+import { model, WhiteBoardModel, WhiteboardUIKitStore } from "./store"
+import {WhiteboardContainer} from '.'
+import {Content} from '~components/layout'
+
+export default {
+  title: 'Capabilities/Board'
+}
 
 class FakeStore extends WhiteboardUIKitStore {
-  constructor(v: WhiteBoardModel = defaultBoardState) {
+  handleZoomControllerChange(type: ZoomItemType): unknown {
+    throw new Error("Method not implemented.")
+  }
+  mount(dom: HTMLElement | null): void {
+    throw new Error("Method not implemented.")
+  }
+  unmount(): void {
+    throw new Error("Method not implemented.")
+  }
+  constructor(v: WhiteBoardModel = model) {
     super(v)
-  }
-  handleSendText(): Promise<void> {
-    throw new Error("Method not implemented.")
-  }
-  refreshMessageList(): Promise<void> {
-    throw new Error("Method not implemented.")
-  }
-  toggleMinimize(): Promise<void> {
-    throw new Error("Method not implemented.")
   }
 }
 
@@ -22,6 +29,8 @@ export const BoardStory: Story<any> = () => {
   const [store] = useState<WhiteboardUIKitStore>(() => new FakeStore())
 
   return (
-    <WhiteboardContainer store={store} />
+    <Content>
+      <WhiteboardContainer store={store} />
+    </Content>
   )
 }

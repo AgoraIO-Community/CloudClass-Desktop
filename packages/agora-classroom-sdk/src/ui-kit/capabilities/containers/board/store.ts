@@ -1,5 +1,5 @@
+import { SceneStore } from '~core';
 import { ZoomItemType } from '~ui-kit';
-import { makeAutoObservable } from 'mobx';
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
 import { ToolItem } from '~ui-kit';
@@ -33,7 +33,7 @@ export type WhiteBoardModel = {
   showZoomControl: boolean,
 }
 
-export const defaultBoardState: WhiteBoardModel = {
+export const model: WhiteBoardModel = {
   zoomValue: 0,
   currentPage: 0,
   totalPage: 0,
@@ -97,4 +97,30 @@ export abstract class WhiteboardUIKitStore extends BaseStore<WhiteBoardModel> im
   abstract handleZoomControllerChange(type: ZoomItemType): unknown;
   abstract mount(dom: HTMLElement | null): void;
   abstract unmount(): void;
+}
+
+export class WhiteboardStore extends WhiteboardUIKitStore {
+
+  static createFactory(sceneStore: SceneStore) {
+    const store = new WhiteboardStore(model)
+    store.bind(sceneStore)
+    return store
+  }
+
+  handleZoomControllerChange(type: ZoomItemType) {
+    if (this.sceneStore) {
+      this.sceneStore.boardStore
+    }
+  }
+  
+  mount(dom: HTMLElement | null): void {
+    if (dom) {
+      this.sceneStore.boardStore.mount(dom)      
+    }
+  }
+
+  unmount(): void {
+    this.sceneStore.boardStore.unmount()
+  }
+
 }

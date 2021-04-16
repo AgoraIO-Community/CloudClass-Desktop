@@ -1,7 +1,9 @@
 import { observer } from 'mobx-react'
 import { BizHeader } from '~ui-kit'
 import { BaseContainerProps } from '../../types'
-import { NavigationBarUIKitStore } from './store'
+import { Exit, Record } from '../dialog'
+import { NavigationBarModel, NavigationBarUIKitStore } from './store'
+import { SettingContainer } from '@/ui-components/common-containers/setting'
 
 export const NavigationBar: React.FC<BaseContainerProps<NavigationBarUIKitStore>> = observer(({store}) => {
 

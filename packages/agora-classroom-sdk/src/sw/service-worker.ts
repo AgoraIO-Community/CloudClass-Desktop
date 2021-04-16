@@ -5,7 +5,11 @@ import { NetworkFirst, NetworkFirstOptions } from 'workbox-strategies/NetworkFir
 import { registerRoute } from 'workbox-routing/registerRoute';
 import { agoraCaches, CacheResourceType } from '../utils/web-download.file';
 import { StrategyHandler } from 'workbox-strategies/StrategyHandler';
-import { ZipReader, BlobReader, BlobWriter, getMimeType } from '@zip.js/zip.js';
+import { ZipReader, BlobReader, BlobWriter, getMimeType, configure } from '@zip.js/zip.js';
+
+configure({
+  useWebWorkers: false
+})
 
 type ZipFileType = 'dynamicConvert' | 'staticConvert'
 
@@ -19,7 +23,7 @@ const cacheName = 'netless'
 
 const manifest = self.__WB_MANIFEST
 if (manifest) {
-  precacheAndRoute(manifest);
+  precacheAndRoute(manifest as any);
 }
 
 if ('BroadcastChannel' in self) {

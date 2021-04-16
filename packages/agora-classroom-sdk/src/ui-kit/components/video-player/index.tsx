@@ -82,37 +82,39 @@ export interface BaseVideoPlayerProps {
   userType?: 'student' | 'teacher';
 }
 
-type VideoPlayerType = BaseVideoPlayerProps & BaseProps
+type VideoPlayerType = BaseVideoPlayerProps & BaseProps & BaseVideoPlayerMethods
 
-export interface VideoPlayerProps extends VideoPlayerType {
+export type BaseVideoPlayerMethods = {
   /**
    * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
    */
   /**
    * 点击摄像头的按钮时的回调
    */
-  onCameraClick: (uid: string | number) => Promise<any>;
-  /**
-   * 点击麦克风按钮时的回调
-   */
-  onMicClick: (uid: string | number) => Promise<any>;
-  /**
-   * 全体下讲台
-   */
-  onOffAllPodiumClick?: () => Promise<any>;
-  /**
-   * 下讲台
-   */
-  onOffPodiumClick: (uid: string | number) => Promise<any>;
-  /**
-   * 点击白板操作授权按钮时的回调
-   */
-  onWhiteboardClick: (uid: string | number) => Promise<any>;
-  /**
-   * 发送星星给学生
-   */
-  onSendStar: (uid: string | number) => Promise<any>;
+   onCameraClick: (uid: string | number) => Promise<any>;
+   /**
+    * 点击麦克风按钮时的回调
+    */
+   onMicClick: (uid: string | number) => Promise<any>;
+   /**
+    * 全体下讲台
+    */
+   onOffAllPodiumClick?: () => Promise<any>;
+   /**
+    * 下讲台
+    */
+   onOffPodiumClick: (uid: string | number) => Promise<any>;
+   /**
+    * 点击白板操作授权按钮时的回调
+    */
+   onWhiteboardClick: (uid: string | number) => Promise<any>;
+   /**
+    * 发送星星给学生
+    */
+   onSendStar: (uid: string | number) => Promise<any>;
 }
+
+export interface VideoPlayerProps extends VideoPlayerType {}
 
 interface AnimSvga {
   id: string

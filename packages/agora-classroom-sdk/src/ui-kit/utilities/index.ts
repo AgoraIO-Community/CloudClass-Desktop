@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {get, isEmpty} from 'lodash';
-import {config} from './translate/config'
+import { get, isEmpty } from 'lodash';
+import { createElement, useContext, createContext } from 'react';
+import { config } from './translate/config';
 
 export type BaseElementProps = {
   id: string
@@ -37,18 +37,18 @@ export const translate = (lang: I18nLanguage, str: string, options?: any) => {
 
 export const makeContainer = (name: string) => {
 
-  const Context = React.createContext(null as any)
+  const Context = createContext(null as any)
 
   return {
     Context,
     Provider: <T>({children, value}: {children: React.ReactNode, value: T}) => {
       Context.displayName = name
       return (
-        React.createElement(Context.Provider, { value }, children)
+        createElement(Context.Provider, { value }, children)
       )
     },
     useContext: <T>() => {
-      const context = React.useContext<T>(Context)
+      const context = useContext<T>(Context)
       if (!context) {
         throw new Error(`useContext must be used within a ${name}`);
       }

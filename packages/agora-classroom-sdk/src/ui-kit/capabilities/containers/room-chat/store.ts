@@ -1,6 +1,8 @@
 import {Message} from '~components/chat/interface'
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '../../stores/base';
+import { SceneStore } from '@/core';
+import { reaction } from 'mobx';
 
 export type RoomChatModel = {
   uid: string;
@@ -10,9 +12,10 @@ export type RoomChatModel = {
   messages: Message[];
   chatText: string;
   unreadCount: number;
+  nextId: string;
 }
 
-const defaultModel: RoomChatModel = {
+const model: RoomChatModel = {
   uid: '',
   collapse: false,
   canChatting: false,
@@ -20,6 +23,7 @@ const defaultModel: RoomChatModel = {
   messages: [],
   chatText: '',
   unreadCount: 0,
+  nextId: ''
 }
 
 export interface ChatTraits {
@@ -31,6 +35,10 @@ export interface ChatTraits {
 type ChatUIKitModule = UIKitBaseModule<RoomChatModel, ChatTraits>
 
 export abstract class RoomChatUIKitStore extends BaseStore<RoomChatModel> implements ChatUIKitModule {
+
+  get nextId() {
+    return this.attributes.nextId;
+  }
   
   get collapse() {
     return this.attributes.collapse
@@ -88,9 +96,51 @@ export abstract class RoomChatUIKitStore extends BaseStore<RoomChatModel> implem
     this.attributes.unreadCount = newValue
   }
 
-  abstract handleSendText(): Promise<void>
+  abstract handleSendText(): Promise<any>
 
-  abstract refreshMessageList(): Promise<void>
+  abstract refreshMessageList(): Promise<any>
 
-  abstract toggleMinimize(): Promise<void>
+  abstract toggleMinimize(): Promise<any>
+}
+
+export class RoomChatStore extends RoomChatUIKitStore {
+
+  constructor(payload: RoomChatModel) {
+    super(payload)
+    // reaction(() => JSON.stringify({
+    //   joined: this.sceneStore.joined
+    // }), (data: string) => {
+    //   const {joined} = JSON.parse(data)
+    //   if (joined) {
+    //     this.fetchMsgList()
+    //   }
+    // })
+  }
+
+  static createFactory(sceneStore: SceneStore, payload?: RoomChatModel) {
+    const store = new RoomChatStore(payload ?? model)
+    store.bind(sceneStore)
+    return store
+  }
+
+  handleSendText(): Promise<any> {
+    return this.sceneStore.sendMessage(this.chatText)
+  }
+
+  refreshMessageList(): Promise<any> {
+    return this.fetchMsgList()
+  }
+
+  private async fetchMsgList() {
+    const nextId = this.nextId
+    if (nextId !== 'last') {
+      const res = await this.sceneStore.getHistoryChatMessage({nextId, sort: 0})
+      const resNextId = res?.nextId?.last ?? 'last'
+      this.attributes.nextId = resNextId
+    }
+  }
+
+  toggleMinimize(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }

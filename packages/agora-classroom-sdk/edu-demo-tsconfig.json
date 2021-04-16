@@ -3,6 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "~core": ["./src/core"],
+      "~core/*": ["./src/core/*"],
       "~ui-kit": ["./src/ui-kit"],
       "~components": ["./src/ui-kit/components"],
       "~scaffold": ["./src/ui-kit/scaffold"],

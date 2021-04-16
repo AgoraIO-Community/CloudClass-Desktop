@@ -26,7 +26,6 @@ import { RoomStore } from './room';
 import { SceneStore } from './scene';
 import { UIStore } from './ui';
 import { AgoraRegion } from '@/edu-sdk/declare';
-import { ChatStore } from './chat';
 
 
 type RoomInfoParams = {
@@ -99,7 +98,6 @@ export class AppStore implements ClassRoomAbstractStore {
   roomStore!: RoomStore;
   pretestStore!: PretestStore;
   homeStore!: HomeStore;
-  chatStore!: ChatStore;
 
   eduManager!: EduManager;
 

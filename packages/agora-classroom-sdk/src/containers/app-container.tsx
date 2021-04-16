@@ -7,6 +7,11 @@ import { useStorageSW } from '@/utils/utils';
 import { I18nProvider } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import {CoreProvider} from '~core/hooks'
+import { SceneStore } from '@/core';
+import { useState } from 'react';
+import { UIKitProvider } from '~capabilities/hooks/uikit-provider';
+
 export interface RouteContainerProps {
   routes: BizPageRouter[]
   mainPath?: string
@@ -57,12 +62,18 @@ export const RoomContainer = (props: RoomContainerProps) => {
 
   useStorageSW()
 
+  const [store] = useState<SceneStore>(() => new SceneStore(props.store.params))
+
   return (
     <Provider store={props.store}>
       <I18nProvider language={props.store.params.language}>
-        <Router>
-          <RouteContainer routes={props.routes} mainPath={props.mainPath} />
-        </Router>
+        <CoreProvider store={store}>
+          <UIKitProvider sceneStore={store}>
+            <Router>
+              <RouteContainer routes={props.routes} mainPath={props.mainPath} />
+            </Router>
+          </UIKitProvider>
+        </CoreProvider>
       </I18nProvider>
     </Provider>
   )

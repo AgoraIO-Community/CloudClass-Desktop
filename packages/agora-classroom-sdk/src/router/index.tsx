@@ -2,9 +2,11 @@ import { BizPagePath, BizPageRouter } from '@/types';
 import { HomePage } from '@/ui-components/home';
 // import { IncognitoPage } from '@/ui-components/incognito';
 import { LaunchPage } from '@/ui-components/launch';
-import { OneToOne } from '@/ui-components/one-to-one';
-import { PretestPage } from '@/ui-components/pretest';
+// import { OneToOne } from '@/ui-components/one-to-one';
+// import { PretestPage } from '@/ui-components/pretest';
 import { SmallClassRoom } from '@/ui-components/small-class-room';
+import { OneToOneScenario } from '@/ui-kit/capabilities/scenarios/1v1';
+import { PretestScenarioPage } from '@/ui-kit/capabilities/scenarios/pretest';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import * as React from 'react';
 
@@ -38,7 +40,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   // 一对一
   [BizPageRouter.OneToOne]: {
     path: '/classroom/1v1',
-    component: () => PageSFC(OneToOne)
+    component: () => PageSFC(OneToOneScenario)
   },
   // 观众端
   // [BizPageRouter.OneToOneIncognito]: {
@@ -64,7 +66,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   // },
   [BizPageRouter.PretestPage]: {
     path: '/pretest',
-    component: () => PageSFC(PretestPage)
+    component: () => PageSFC(PretestScenarioPage)
   },
   [BizPageRouter.TestHomePage]: {
     path: '/',

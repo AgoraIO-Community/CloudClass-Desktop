@@ -1,10 +1,15 @@
-import { SceneStore } from '@/stores/app/scene';
+import { SceneStore } from '~core';
 export abstract class BaseStore<ModelType> {
     attributes: ModelType
     sceneStore!: SceneStore
-    constructor(payload: ModelType) {
+    constructor(payload: ModelType)
+    constructor(payload: ModelType, sceneStore?: SceneStore) {
+      if (typeof sceneStore !== 'undefined') {
+        this.bind(sceneStore)
+      }
       this.attributes = payload
     }
+
     setAttributes(payload: ModelType) {
       this.attributes = payload
     }
@@ -13,10 +18,3 @@ export abstract class BaseStore<ModelType> {
       this.sceneStore = store
     }
 }
-
-// type Constructor<T = {}> = new (...args: any[]) => T;
-// export const ExtendBaseStore = <ModelType extends Constructor>(BaseClass: ModelType) => {
-//   return class BizStore extends BaseClass {
-
-//   };
-// }

@@ -1,4 +1,3 @@
-import { useUIStore } from '@/hooks'
 import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
@@ -6,19 +5,23 @@ import { Button, Modal, t, transI18n } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useState } from 'react';
-import * as React from 'react';
 import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
-import { CloudDriverContainer } from '~capabilities/containers/cloud-driver'
+import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
-import { UserListContainer } from '~capabilities/containers/user-list'
+import { UserListContainer } from '@/ui-kit/capabilities/containers/board/user-list'
+import { useCoreContext } from '@/core/hooks'
+
+const useUIStore = () => {
+  const core = useCoreContext()
+  return core.uiStore
+}
 
 export type BaseDialogProps = {
   id: string
 }
 
 export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
-
   const uiStore = useUIStore()
 
   const [type, setType] = useState<string>('kicked_once')
@@ -275,7 +278,7 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 })
 
 
-export const DialogContainer: React.FC<void> = observer(() => {
+export const DialogContainer: React.FC<any> = observer(() => {
 
   const { dialogQueue } = useDialogContext()
 

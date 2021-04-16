@@ -1,9 +1,16 @@
-import { useAppStore, useBoardStore, usePretestStore, useRoomStore, useSceneStore, useSmallClassStore, useUIStore } from "@/hooks"
+import {
+  useAppStore,
+  useBoardStore,
+  usePretestStore,
+  useRoomStore,
+  useSceneStore,
+  useSmallClassStore,
+  useUIStore
+} from "@/hooks"
 import { useEffectOnce } from "@/hooks/utils"
 import { eduSDKApi } from "@/services/edu-sdk-api"
 import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
-import { UIStore } from "@/stores/app"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sdk"

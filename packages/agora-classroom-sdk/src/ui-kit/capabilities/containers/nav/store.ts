@@ -1,5 +1,9 @@
 import { UIKitBaseModule } from '~capabilities/types';
 import { BaseStore } from '~capabilities/stores/base';
+import { Exit, Record } from '../dialog';
+import { SettingContainer } from '../setting';
+import { v4 as uuidv4} from 'uuid';
+import { SceneStore } from '~core';
 
 export type NavigationBarModel = {
   isNative: boolean,
@@ -14,7 +18,7 @@ export type NavigationBarModel = {
   packetLostRate: number,
 }
 
-const defaultModel: NavigationBarModel = {
+export const defaultModel: NavigationBarModel = {
   isNative: false,
   classStatusText: '',
   isStarted: false,
@@ -35,9 +39,6 @@ export interface NavigationBarTraits {
 export abstract class NavigationBarUIKitStore
   extends BaseStore<NavigationBarModel>
   implements UIKitBaseModule<NavigationBarModel, NavigationBarTraits> {
-  constructor(payload: NavigationBarModel = defaultModel) {
-    super(payload)
-  }
 
   get packetLostRate(): number {
     return this.attributes.packetLostRate;
@@ -70,4 +71,34 @@ export abstract class NavigationBarUIKitStore
     return this.attributes.cpuUsage
   }
   abstract showDialog(type: 'exit' | 'record' | 'setting' | string): void
+}
+
+export class NavigationBarStore extends NavigationBarUIKitStore {
+
+  static createFactory(sceneStore: SceneStore, payload?: NavigationBarModel) {
+    const store = new NavigationBarStore(payload ?? defaultModel)
+    store.bind(sceneStore)
+    return store
+  }
+
+  constructor(payload: NavigationBarModel = defaultModel) {
+    super(payload)
+  }
+
+  showDialog(type: string): void {
+    switch (type) {
+      case 'exit': {
+        this.sceneStore.uiStore.addDialog(Exit)
+        break;
+      }
+      case 'record': {
+        this.sceneStore.uiStore.addDialog(Record, {id: uuidv4()})
+        break;
+      }
+      case 'setting': {
+        this.sceneStore.uiStore.addDialog(SettingContainer)
+        break;
+      }
+    }
+  }
 }

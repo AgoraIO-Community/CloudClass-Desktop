@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import * as React from 'react';
 import { RendererPlayer } from '~utilities/renderer-player'
 import { useVideoControlContext, useSmallClassVideoControlContext } from '~capabilities/hooks'
+import { VideoUIKitStore } from './store';
 
 export const VideoPlayerTeacher = observer(() => {
 
@@ -126,5 +127,15 @@ export const VideoMarqueeStudentContainer = observer(() => {
         />
       </div>
     : null
+  )
+})
+
+export const VideoList = observer(({store}: {store: VideoUIKitStore}) => {
+  return (
+    !store.sceneStore.isFullScreen ?
+    <>
+      <VideoPlayerTeacher />
+      <VideoPlayerStudent controlPlacement="left" />
+    </> : null
   )
 })

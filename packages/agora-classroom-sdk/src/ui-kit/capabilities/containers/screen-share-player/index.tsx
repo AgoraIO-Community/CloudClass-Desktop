@@ -1,15 +1,21 @@
-import { useSceneStore } from '@/hooks'
 import { observer } from 'mobx-react'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { IconButton, Icon } from '~ui-kit'
-import { useScreenSharePlayerContext } from '~capabilities/hooks'
+import { ScreenShareUIKitStore } from '../screen-share/store'
+import { useCallback } from 'react'
 
-export const ScreenSharePlayerContainer = observer(() => {
+export const ScreenSharePlayerContainer: React.FC<{store: ScreenShareUIKitStore}> = observer((props: any) => {
+    const {store} = props
+
     const {
         screenShareStream,
         screenEduStream,
-        onClick,
-    } = useScreenSharePlayerContext()
+    } = store
+
+    const onClick = useCallback(async () => {
+        await store.startOrStopSharing()
+    }, [store])
+    
     return (
         screenShareStream && <div className="screen-share-player-container">
             {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""}

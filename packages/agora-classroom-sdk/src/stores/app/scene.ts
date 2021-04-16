@@ -8,7 +8,7 @@ import { OpenShareScreen } from '@/ui-components/common-containers/dialog';
 import { Mutex } from '@/utils/mutex';
 import { BizLogger } from '@/utils/utils';
 import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, EduClassroomManager, EduRoleType, EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType, GenericErrorWrapper, LocalUserRenderer, MediaService, PrepareScreenShareParams, RemoteUserRenderer, UserRenderer } from 'agora-rte-sdk';
-import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { CameraOption } from 'agora-rte-sdk';
 import { transI18n } from '~ui-kit';
 import { get } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';

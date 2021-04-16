@@ -12,6 +12,8 @@ const {
   getBabelLoader,
   addPostcssPlugins,
   addWebpackAlias,
+  addDecoratorsLegacy,
+  addBabelPresets,
   // addWebpackTarget,
 } = require('customize-cra')
 const autoprefixer = require('autoprefixer')
@@ -164,13 +166,14 @@ const useOptimizeBabelConfig = () => config => {
     include: [
       path.resolve("src")
     ],
+    exclude: /\.(stories.ts)x?$/i,
     use: [
       'thread-loader', 'cache-loader', getBabelLoader(config).loader,
     ],
     exclude: [
       path.resolve("node_modules"),
       path.resolve("src/sw"),
-    ]
+    ],
   }
 
   for (let _rule of config.module.rules) {
@@ -184,10 +187,19 @@ const useOptimizeBabelConfig = () => config => {
 
 const config = process.env
 
+const removeEslint = () => config => {
+  config.plugins = config.plugins.filter(
+    (plugin) => plugin.constructor.name !== "ESLintWebpackPlugin",
+  );
+  return config;
+}
+
 module.exports = override(
   // useBabelRc(),
   // isElectron && addWebpackTarget('electron-renderer'),
+  addDecoratorsLegacy(),
   disableEsLint(),
+  removeEslint(),
   webWorkerConfig(),
   sourceMap(),
   addWebpackModuleRule({
@@ -196,19 +208,6 @@ module.exports = override(
   }),
   addWebpackExternals(setElectronDeps),
   addStyleLoader(),
-
-  // fixBabelImports("import", [
-  //   {
-  //     libraryName: "@material-ui/core",
-  //     libraryDirectory: "esm",
-  //     camel2DashComponentName: false
-  //   },
-  //   {
-  //     libraryName: "@material-ui/icon",
-  //     libraryDirectory: "esm",
-  //     camel2DashComponentName: false
-  //   }
-  // ]),
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
@@ -251,7 +250,9 @@ module.exports = override(
   ]),
   babelExclude([
     path.resolve("node_modules"),
-    // path.resolve("src/sw")
+    {
+      test: /\.stories.ts?x$/i,
+    }
   ]),
   addWebpackPlugin(
     new HardSourceWebpackPlugin({
@@ -273,22 +274,12 @@ module.exports = override(
       }
     })
   ),
-  // addBundleVisualizer({
-  //   // "analyzerMode": "static",
-  //   // "reportFilename": "report.html"
-  // }, true),
   useSW(),
   fixZipCodecIssue(),
-  // addPostcssPlugins([
-  //   require('tailwindcss'),
-  // ]),
   useOptimizeBabelConfig(),
-  // addPostcssPlugins([
-  //   require('tailwindcss'),
-  //   // require('autoprefixer'),
-  // ]),
   addWebpackAlias({
     ['@']: path.resolve(__dirname, 'src'),
+    '~core': path.resolve(__dirname, 'src/core'),
     '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
     '~components': path.resolve(__dirname, 'src/ui-kit/components'),
     '~styles': path.resolve(__dirname, 'src/ui-kit/styles'),
@@ -297,4 +288,11 @@ module.exports = override(
     '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
     '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
   }),
+  // addBabelPresets(
+  //   [
+  //     "@babel/env",
+  //   ],
+  //   "@babel/preset-typescript",
+  //   "@babel/preset-react"
+  // )
 )
