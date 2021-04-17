@@ -74,6 +74,11 @@ export class UIStore {
   @observable
   checked: boolean = false;
 
+  @action.bound
+  updateChecked(v: boolean) {
+    this.checked =v
+  }
+
   appStore: EduScenarioAppStore;
 
   constructor(appStore: EduScenarioAppStore) {

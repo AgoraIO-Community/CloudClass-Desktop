@@ -1,7 +1,6 @@
 import { GenAppContainer } from '@/containers/app-container'
-import { RoomParameters } from '@/edu-sdk/declare'
 import { BizPageRouter } from '@/types'
-import { AppStoreConfigParams } from '@/stores/app'
+import { AppStoreConfigParams, RoomParameters } from 'agora-edu-sdk'
 
 const routes: BizPageRouter[] = [
   BizPageRouter.LaunchPage,

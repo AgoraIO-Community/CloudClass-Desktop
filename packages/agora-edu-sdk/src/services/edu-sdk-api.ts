@@ -1,5 +1,6 @@
 import { reportService } from "../services/report";
 import { ApiBase, ApiBaseInitializerParams } from "./base";
+import {homeApi} from './home-api'
 
 type ConfigResult = {
   customerId: string,
@@ -32,6 +33,7 @@ export class EduSDKApi extends ApiBase {
     this.appId = params.appId
     this.sdkDomain = params.sdkDomain
     this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
+    homeApi.updateConfig(params)
   }
 
   updateRtmInfo(info: {

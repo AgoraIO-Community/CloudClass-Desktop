@@ -1,42 +1,37 @@
-import { DialogType } from '@/stores/app/ui'
 import { BusinessExceptions } from '@/utils/biz-error'
+import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext } from 'agora-edu-sdk'
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
-import { Button, Modal, t, transI18n } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import { useCallback, useState } from 'react';
-import { useCloseConfirmContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
+import { useCallback, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
+import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
-import { UserListContainer } from '@/ui-kit/capabilities/containers/board/user-list'
-import { useCoreContext } from '~core/context/provider'
+import { Button, Modal, t, transI18n } from '~ui-kit'
 
-const useUIStore = () => {
-  const core = useCoreContext()
-  return core.uiStore
-}
 
 export type BaseDialogProps = {
   id: string
 }
 
 export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
-  const uiStore = useUIStore()
+
+  const {removeDialog} = useGlobalContext()
+  const {roomInfo, kickOutOnce, kickOutBan} = useRoomContext()
 
   const [type, setType] = useState<string>('kicked_once')
-  const {kickOutOnce, kickOutBan} = useKickDialogContext()
 
   const onOK = useCallback(async () => {
     if (type === 'kicked_once') {
-      await kickOutOnce(userUuid, roomUuid)
-      uiStore.removeDialog(id)
+      await kickOutOnce(roomInfo.userUuid, roomInfo.roomUuid)
+      removeDialog(id)
     }
     if (type === 'kicked_ban') {
-      await kickOutBan(userUuid, roomUuid)
-      uiStore.removeDialog(id)
+      await kickOutBan(roomInfo.userUuid, roomInfo.roomUuid)
+      removeDialog(id)
     }
-  }, [type, id, userUuid, roomUuid, kickOutOnce, kickOutBan])
+  }, [type, id, roomInfo.userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan])
 
   return (
     <Modal
@@ -44,7 +39,7 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
       title={transI18n('kick.kick_out_student')}
       onOk={onOK}
       onCancel={() => {
-        uiStore.removeDialog(id)
+        removeDialog(id)
       }}
       footer={
         [
@@ -74,25 +69,36 @@ export const SettingDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 })
 
 export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
-  const uiStore = useUIStore()
+  const {removeDialog} = useGlobalContext()
   return (
     <CloudDriverContainer onClose={() => {
-      uiStore.removeDialog(id)
+      removeDialog(id)
     }} />
   )
 })
 
 export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericError }> = observer(({ id, error }) => {
-  const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useErrorContext(id)
+  const {removeDialog} = useGlobalContext()
+
+  const {destroyRoom} = useRoomContext()
+
+  const onCancel = async () => {
+    removeDialog(id)
+    await destroyRoom()
+  }
+
+  const onOk = async () => {
+    removeDialog(id)
+    await destroyRoom()
+  }
+
   return (
     <Modal
-      onOk={onOK}
+      onOk={onOk}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'primary'} action="ok">{transI18n('toast.confirm')}</Button>,
+      ]}
       title={BusinessExceptions.getErrorTitle(error)}
     >
       {BusinessExceptions.getErrorText(error)}
@@ -101,29 +107,46 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
 })
 
 export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
-  const uiStore = useUIStore()
+  const {removeDialog} = useGlobalContext()
   return (
     <UserListContainer onClose={() => {
-      uiStore.removeDialog(id)
+      removeDialog(id)
     }} />
   )
 })
 
 export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const {
+    startNativeScreenShareBy
+  } = useRoomContext()
 
   const {
-    onOK,
-    onCancel,
-    ButtonGroup,
-    setWindowId,
-    windowId,
-  } = useOpenDialogContext(id)
+    removeDialog
+  } = useGlobalContext()
+
+  const [windowId, setWindowId] = useState<string>('')
+
+  const onConfirm = useCallback(async () => {
+    await startNativeScreenShareBy(+windowId)
+  }, [windowId])
+
+  const onOK = async () => {
+    await onConfirm()
+  }
+
+  const onCancel = () => {
+    removeDialog(id)
+  }
+
   return (
     <Modal
       width={662}
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.screen_share')}
     >
       <ScreenShareContainer
@@ -135,16 +158,28 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 })
 
 export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> = observer(({ id, resourceUuid }) => {
-  const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useCloseConfirmContext(id, resourceUuid)
+
+  const {removeDialog} = useGlobalContext()
+
+  const {closeMaterial} = useBoardContext()
+
+  const onOK = () => {
+    closeMaterial(resourceUuid)
+    removeDialog(id)
+  }
+
+  const onCancel = () => {
+    removeDialog(id)
+  }
+
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.close_ppt')}
     >
       <p>{t('toast.sure_close_ppt')}</p>
@@ -155,16 +190,30 @@ export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> 
 export const KickEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useKickEndContext(id)
+    removeDialog
+  } = useGlobalContext()
+
+  const {
+    destroyRoom
+  } = useRoomContext()
+
+  const onOK = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
+
+  const onCancel = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
 
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.kick_by_other_side')}>
       <p>{t('toast.quit_from_room')}</p>
     </Modal>
@@ -174,16 +223,30 @@ export const KickEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useKickEndContext(id)
+    removeDialog
+  } = useGlobalContext()
+
+  const {
+    destroyRoom
+  } = useRoomContext()
+
+  const onOK = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
+
+  const onCancel = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
 
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.kick_by_teacher')}>
       <p>{t('toast.quit_from_room')}</p>
     </Modal>
@@ -191,16 +254,19 @@ export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const RoomEndNotice: React.FC<BaseDialogProps> = observer(({id}) => {
-  const uiStore = useUIStore()
-  const {
-    handleConfirm,
-  } = useRoomEndNoticeContext(id)
+  const {removeDialog} = useGlobalContext()
+
+  const {destroyRoom} = useRoomContext()
+
+  const handleConfirm = async () => {
+    destroyRoom()
+  }
 
   return (
     <Modal
       onOk={async () => {
         await handleConfirm()
-        uiStore.removeDialog(id)
+        removeDialog(id)
       }}
       footer={[
         <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
@@ -213,17 +279,31 @@ export const RoomEndNotice: React.FC<BaseDialogProps> = observer(({id}) => {
 
 export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
-  const {
-    onOK,
-    onCancel,
-    ButtonGroup
-  } = useRoomEndContext(id)
+  const {navigationState} = useRoomDiagnosisContext()
+
+  const {destroyRoom} = useRoomContext()
+
+  const {removeDialog} = useGlobalContext()
+
+  const isStarted = navigationState.isStarted
+
+  const onOK = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
+
+  const onCancel = () => {
+    removeDialog(id)
+  }
 
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={isStarted ? 'primary' : 'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={!isStarted ? 'primary' : 'secondary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.end_class')}>
       <p>{t('toast.quit_from_room')}</p>
     </Modal>
@@ -232,13 +312,27 @@ export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
 export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 
-  const { onOK, onCancel, ButtonGroup } = useExitContext(id)
+  const {destroyRoom} = useRoomContext()
+
+  const {removeDialog} = useGlobalContext()
+
+  const onOK = async () => {
+    await destroyRoom()
+    removeDialog(id)
+  }
+
+  const onCancel = () => {
+    removeDialog(id)
+  }
 
   return (
     <Modal
       onOk={onOK}
       onCancel={onCancel}
-      footer={ButtonGroup()}
+      footer={[
+        <Button type={'primary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'secondary'} action="ok">{t('toast.confirm')}</Button>,
+      ]}
       title={t('toast.leave_room')}>
       <p>{t('toast.quit_room')}</p>
     </Modal>
@@ -246,25 +340,25 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
-  const uiStore = useUIStore()
+  const { removeDialog, addToast } = useGlobalContext()
   const {
-    onStartRecording,
-    onStopRecording
+    startRecording,
+    stopRecording
   } = useRecordingContext()
   return (
     <Modal
       onOk={async () => {
-        uiStore.removeDialog(id)
+        removeDialog(id)
         try {
-          await (starting ? onStartRecording() : onStopRecording())
-          uiStore.addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
+          await (starting ? startRecording() : stopRecording())
+          addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
         }catch(err) {
           const wrapperError = GenericErrorWrapper(err)
-          uiStore.addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
+          addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
         }
       }}
       onCancel={() => {
-        uiStore.removeDialog(id)
+        removeDialog(id)
       }}
       footer={[
         <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
@@ -277,16 +371,9 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
   )
 })
 
-const useDialogContext = () => {
-  const coreContext = useCoreContext()
-  return {
-    dialogQueue: coreContext.uiStore.dialogQueue
-  }
-}
-
 export const DialogContainer: React.FC<any> = observer(() => {
 
-  const { dialogQueue } = useDialogContext()
+  const { dialogQueue } = useGlobalContext()
 
   const cls = classnames({
     [`rc-mask`]: !!dialogQueue.length,
@@ -295,7 +382,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
   return (
     <div className={cls}>
       {
-        dialogQueue.map(({ id, component: Component, props }: DialogType) => (
+        dialogQueue.map(({ id, component: Component, props }: any) => (
           <div key={id} className="fixed-container">
             <Component {...props} id={id} />
           </div>

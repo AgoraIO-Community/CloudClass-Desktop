@@ -1,7 +1,7 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext } from '~core/context/provider';
+import { useUserListContext } from 'agora-edu-sdk';
 
 export type UserListContainerProps = {
     onClose: () => void

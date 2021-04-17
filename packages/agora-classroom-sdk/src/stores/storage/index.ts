@@ -1,8 +1,7 @@
 import { GlobalStorage } from './../../utils/utils';
 import { agoraCaches } from '@/utils/web-download.file';
-import { ClassRoomAbstractStore, controller } from "@/edu-sdk/controller";
+import { ClassRoomAbstractStore, controller,  CourseWareItem, CourseWareList, LanguageEnum } from "agora-edu-sdk";
 import { computed, observable, reaction } from "mobx";
-import { CourseWareItem, CourseWareList, LanguageEnum } from '@/edu-sdk';
 import { EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
 import fetchProgress from '@netless/fetch-progress';
 

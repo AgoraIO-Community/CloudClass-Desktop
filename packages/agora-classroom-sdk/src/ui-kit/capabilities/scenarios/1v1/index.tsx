@@ -8,12 +8,9 @@ import {DialogContainer} from '~capabilities/containers/dialog'
 import {LoadingContainer} from '~capabilities/containers/loading'
 import {VideoList} from '~capabilities/containers/video-player'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
-import { useUIKitStore } from '~capabilities/hooks/infra'
 import './style.css'
 
 export const OneToOneScenario = observer(() => {
-
-  const uiKitStore = useUIKitStore()
 
   const cls = classnames({
     'edu-room': 1,
@@ -25,8 +22,6 @@ export const OneToOneScenario = observer(() => {
     [`layout-aside-${className}`]: 1,
   })
 
-
-  console.log('scenario uiKitStore', uiKitStore)
 
   return (
     <Layout
@@ -48,7 +43,7 @@ export const OneToOneScenario = observer(() => {
         </Aside>
       </Layout>
       <DialogContainer />
-      <LoadingContainer store={uiKitStore.loadingStore} />
+      <LoadingContainer />
     </Layout>
   )
 })

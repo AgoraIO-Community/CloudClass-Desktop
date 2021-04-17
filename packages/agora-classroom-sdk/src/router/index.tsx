@@ -1,10 +1,9 @@
 import { BizPagePath, BizPageRouter } from '@/types';
-import { HomePage } from '@/ui-components/home';
-// import { IncognitoPage } from '@/ui-components/incognito';
-import { LaunchPage } from '@/ui-components/launch';
+import { HomePage } from '@/utils/debug-page/home';
+import { LaunchPage } from '@/utils/debug-page/launch';
 // import { OneToOne } from '@/ui-components/one-to-one';
 // import { PretestPage } from '@/ui-components/pretest';
-import { SmallClassRoom } from '@/ui-components/small-class-room';
+// import { SmallClassRoom } from '@/ui-components/small-class-room';
 import { OneToOneScenario } from '@/ui-kit/capabilities/scenarios/1v1';
 import { PretestScenarioPage } from '@/ui-kit/capabilities/scenarios/pretest';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';
@@ -47,14 +46,14 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito/1v1',
   //   component: () => PageSFC(OneToOne)
   // },
-  [BizPageRouter.SmallClass]: {
-    path: '/classroom/small',
-    component: () => PageSFC(SmallClassRoom)
-  },
-  [BizPageRouter.SmallClassIncognito]: {
-    path: '/incognito/small',
-    component: () => PageSFC(SmallClassRoom)
-  },
+  // [BizPageRouter.SmallClass]: {
+  //   path: '/classroom/small',
+  //   component: () => PageSFC(SmallClassRoom)
+  // },
+  // [BizPageRouter.SmallClassIncognito]: {
+  //   path: '/incognito/small',
+  //   component: () => PageSFC(SmallClassRoom)
+  // },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage)

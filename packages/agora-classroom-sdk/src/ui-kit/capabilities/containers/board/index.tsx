@@ -8,7 +8,7 @@ import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
 import { CloseConfirm } from '~capabilities/containers/dialog'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
-import { BaseContainerProps } from '../../types'
+import { useEffect } from 'react'
 
 export const allTools: ToolItem[] = [
   {
@@ -149,8 +149,13 @@ export const WhiteboardContainer = observer(() => {
     zoomBoard,
     setZoomScale,
     changeFooterMenu,
-    setTool
+    setTool,
+    installTools
   } = useBoardContext()
+
+  useEffect(() => {
+    installTools(allTools)
+  }, [allTools])
 
   const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
 

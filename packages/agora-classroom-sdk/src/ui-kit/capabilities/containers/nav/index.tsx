@@ -19,7 +19,7 @@ export const NavigationBar = observer(() => {
   return (
     <BizHeader
       isNative={navigationState.isNative}
-      classStatusText={navigationState.classStatusText}
+      classStatusText={navigationState.classTimeText}
       isStarted={navigationState.isStarted}
       isRecording={isRecording}
       title={navigationState.title}

@@ -1,6 +1,6 @@
 import { Colors, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { useBoardContext } from '@/core/context/provider'
+import { useBoardContext } from 'agora-edu-sdk'
 
 export const ColorsContainer = observer(() => {
 

@@ -1,13 +1,11 @@
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer, transI18n } from '~ui-kit'
-import { observer } from 'mobx-react'
+import { EduMediaStream, useGlobalContext, useSmallClassVideoControlContext, useVideoControlContext } from 'agora-edu-sdk';
+import { observer } from 'mobx-react';
 import * as React from 'react';
-import { RendererPlayer } from '~utilities/renderer-player'
-import { useVideoControlContext, useSmallClassVideoControlContext } from '~capabilities/hooks'
-import { VideoUIKitStore } from './store';
-import { useGlobalContext } from 'agora-edu-sdk';
+import { useMemo } from 'react';
+import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
+import { RendererPlayer } from '~utilities/renderer-player';
 
 export const VideoPlayerTeacher = observer(() => {
-
   const {
     teacherStream: userStream,
     onCameraClick,
@@ -17,7 +15,7 @@ export const VideoPlayerTeacher = observer(() => {
     onOffPodiumClick,
     onOffAllPodiumClick,
     sceneVideoConfig,
-    canHoverHideOffAllPodium
+    canHoverHideOffAllPodium,
   } = useVideoControlContext()
 
   return (
@@ -107,14 +105,54 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
 })
 
 export const VideoMarqueeStudentContainer = observer(() => {
+
   const {
-    videoStreamList,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
+    studentStreams,
+    sceneVideoConfig,
+    firstStudent
   } = useSmallClassVideoControlContext()
+
+    const videoStreamList = useMemo(() => {
+
+    return studentStreams.map((stream: EduMediaStream) => ({
+      isHost: sceneVideoConfig.isHost,
+      hideOffPodium: sceneVideoConfig.hideOffPodium,
+      username: stream.account,
+      stars: stream.stars,
+      uid: stream.userUuid,
+      micEnabled: stream.audio,
+      cameraEnabled: stream.video,
+      whiteboardGranted: stream.whiteboardGranted,
+      micVolume: stream.micVolume,
+      controlPlacement: 'bottom' as any,
+      placement: 'bottom' as any,
+      hideControl: stream.hideControl,
+      canHoverHideOffAllPodium: true,
+      children: (
+        <>
+        <CameraPlaceHolder state={stream.holderState} />
+        {
+          stream.renderer && stream.video ?
+          <RendererPlayer
+            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
+          />
+          : null
+        }
+        </>
+      )
+      }))
+  }, [
+    firstStudent,
+    studentStreams,
+    sceneVideoConfig.hideOffPodium,
+    sceneVideoConfig.isHost
+  ])
+
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">

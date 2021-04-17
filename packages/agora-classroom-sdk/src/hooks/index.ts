@@ -1,16 +1,6 @@
-import {
-  AppStore
-} from '@/stores/app';
 import { HomeStore } from '@/stores/app/home';
 import { MobXProviderContext } from 'mobx-react';
 import { useContext } from 'react';
-
-export type appContext = Record<string, AppStore>
-
-export const useAppStore = (): AppStore => {
-  const context = useContext<appContext>(MobXProviderContext);
-  return context.store
-}
 
 export const useHomeStore = (): HomeStore => {
   const context = useContext<HomeContext>(MobXProviderContext)

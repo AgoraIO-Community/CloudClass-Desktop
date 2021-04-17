@@ -11,6 +11,8 @@ type LoginResult = Promise<{
   userUuid: string
 }>
 
+type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>
+
 export class HomeApi extends ApiBase {
   constructor(params: ApiBaseInitializerParams) {
     super(params)
@@ -23,6 +25,12 @@ export class HomeApi extends ApiBase {
       method: 'GET',
     })
     return res.data
+  }
+
+  updateConfig(params: ConfigParams) {
+    this.appId = params.appId
+    this.sdkDomain = params.sdkDomain
+    this.prefix = `${this.sdkDomain}/edu`.replace("%app_id", this.appId)
   }
 }
 

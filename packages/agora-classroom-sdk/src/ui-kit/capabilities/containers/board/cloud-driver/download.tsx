@@ -1,15 +1,19 @@
-import { useDownloadContext } from '@/ui-components/hooks'
+import { useBoardContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react'
 import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, Table, TableHeader, transI18n } from '~ui-kit'
 
 export const DownloadContainer = observer(() => {
 
   const {
+    downloadList,
+    openCloudResource,
     startDownload,
-    deleteDownload,
-    itemList,
-    onResourceClick,
-  } = useDownloadContext()
+    deleteSingle
+  } = useBoardContext()
+
+  const onResourceClick = async (id: string) => {
+    await openCloudResource(id)
+  }
 
   return (
     <Table>
@@ -20,7 +24,7 @@ export const DownloadContainer = observer(() => {
         <Col>{transI18n('cloud.operation')}</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.length ? itemList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
+        {downloadList.length ? downloadList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
           <Row height={10} border={1} key={`${id}${idx}`}>
             <Col style={{cursor: 'pointer'}} onClick={() => {
               onResourceClick(id)
@@ -45,7 +49,7 @@ export const DownloadContainer = observer(() => {
                 : 
                   <Button type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
                 }
-                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteDownload(taskUuid)}>{transI18n('cloud.delete')}</Button>
+                <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteSingle(taskUuid)}>{transI18n('cloud.delete')}</Button>
               </Row>
             </Col>
           </Row>

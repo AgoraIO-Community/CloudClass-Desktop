@@ -1,15 +1,10 @@
-import { Card, Loading } from '~ui-kit'
+import { useGlobalContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react'
-import { AppStore as EduScenarioAppStore } from '~core'
-import { BaseStore } from '~capabilities/stores/base'
-import { UIKitBaseModule } from '~capabilities/types'
-import { Exit, Record } from '../dialog'
-import { SettingContainer } from '../setting'
-import { v4 as uuidv4 } from 'uuid'
+import { Card, Loading } from '~ui-kit'
 
-export const LoadingContainer = observer(({store}: {store: LoadingStore}) => {
+export const LoadingContainer = observer(() => {
 
-  const loading = store.loading
+  const {loading} = useGlobalContext()
 
   return loading ? <PageLoading /> : null
 })
@@ -20,55 +15,4 @@ const PageLoading = () => {
       <Loading></Loading>
     </Card>
   )
-}
-
-export type LoadingModel = {
-  loading: boolean
-}
-
-export const model: LoadingModel = {
-  loading: false
-}
-
-export interface LoadingTraits {
-}
-
-
-export abstract class LoadingUIKitStore
-  extends BaseStore<LoadingModel>
-  implements UIKitBaseModule<LoadingModel, LoadingTraits> {
-
-  get loading() {
-    return this.attributes.loading
-  }
-}
-
-export class LoadingStore extends LoadingUIKitStore {
-
-  static createFactory(appStore: EduScenarioAppStore) {
-    const store = new LoadingStore(model)
-    store.bind(appStore)
-    return store
-  }
-
-  constructor(payload: LoadingModel = model) {
-    super(payload)
-  }
-
-  showDialog(type: string): void {
-    switch (type) {
-      case 'exit': {
-        this.appStore.uiStore.addDialog(Exit)
-        break;
-      }
-      case 'record': {
-        this.appStore.uiStore.addDialog(Record, {id: uuidv4()})
-        break;
-      }
-      case 'setting': {
-        this.appStore.uiStore.addDialog(SettingContainer)
-        break;
-      }
-    }
-  }
 }

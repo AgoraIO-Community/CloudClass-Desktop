@@ -1,23 +1,8 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-// import { useSettingContext } from '~capabilities/hooks'
 import { useMediaContext } from 'agora-edu-sdk'
 
 export const SettingContainer = observer(({id}: any) => {
-
-    // const {
-    //     cameraList,
-    //     microphoneList,
-    //     speakerList,
-    //     handleCancel,
-    //     handleOk,
-    //     cameraId,
-    //     speakerId,
-    //     microphoneId,
-    //     isNative,
-    //     onChangeDevice,
-    //     onChangeAudioVolume,
-    // } = useSettingContext(id)
 
     const {
         cameraList,

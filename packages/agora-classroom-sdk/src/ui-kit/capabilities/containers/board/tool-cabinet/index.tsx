@@ -1,4 +1,4 @@
-import { useBoardContext } from '@/core/context/provider'
+import { useBoardContext } from 'agora-edu-sdk'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 
 export const ToolCabinetContainer = () => {

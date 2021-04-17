@@ -1,8 +1,9 @@
-import { useUploadContext } from '@/ui-components/hooks'
 import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader, transI18n } from '~ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import * as React from 'react';
+import { useCallback } from 'react';
+import { useBoardContext, useGlobalContext } from 'agora-edu-sdk';
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void
@@ -11,13 +12,71 @@ export interface UploadContainerProps {
 export const UploadContainer: React.FC<UploadContainerProps> = observer(({handleUpdateCheckedItems}) => {
 
   const {
-    changeChecked,
-    handleSelectAll,
-    hasSelected,
-    items,
-    isSelectAll,
-    onResourceClick,
-  } = useUploadContext(handleUpdateCheckedItems)
+    openCloudResource,
+    personalResources
+  } = useBoardContext()
+
+  const {
+    updateChecked
+  } = useGlobalContext()
+
+  const [checkMap, setCheckMap] = React.useState<Record<string, any>>({})
+
+  React.useEffect(() => {
+    handleUpdateCheckedItems(Object.keys(checkMap))
+  }, [checkMap, handleUpdateCheckedItems])
+
+  const items = React.useMemo(() => {
+    return personalResources.map((it: any) => ({
+      ...it,
+      checked: !!checkMap[it.id]
+    }))
+  },[personalResources.length, JSON.stringify(checkMap)])
+
+  const hasSelected: any = React.useMemo(() => {
+    return !!items.find((item: any) => !!item.checked)
+  }, [items, checkMap])
+
+  React.useEffect(() => {
+    updateChecked(hasSelected)
+  }, [hasSelected, updateChecked])
+
+  const isSelectAll: any = React.useMemo(() => {
+    const selected = items.filter((item: any) => !!item.checked)
+    return items.length > 0 && selected.length === items.length ? true : false
+  }, [items, checkMap])
+
+  const handleSelectAll = useCallback((evt: any) => {
+    if (isSelectAll) {
+      const ids = items.map((item: any) => ({[`${item.id}`]: 0})).reduce((acc: any, it: any) => ({...acc, ...it}))
+      const v = {
+        ...checkMap,
+        ...ids
+      }
+      setCheckMap(v)
+    } else {
+      const ids = items.map((item: any) => ({[`${item.id}`]: 1})).reduce((acc: any, it: any) => ({...acc, ...it}))
+      const v = {
+        ...checkMap,
+        ...ids
+      }
+      setCheckMap(v)
+    }
+  }, [items, isSelectAll, checkMap])
+
+  const changeChecked = useCallback((id: any, checked: boolean) => {
+    const idx = items.findIndex((item: any) => item.id === id)
+    if (idx >= 0) {
+      setCheckMap({
+        ...checkMap,
+        ...{[`${id}`]: +checked},
+      })
+    }
+  }, [items, checkMap])
+
+  const onResourceClick = async (resourceUuid: string) => {
+    await openCloudResource(resourceUuid)
+  }
 
   return (
     <Table>

@@ -1,6 +1,6 @@
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum} from 'agora-rte-sdk';
+import { useHandsUpContext, useRoomContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react';
-import { useHandsUpContext, useRoomContext } from '~core/context/provider';
 import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit';
 
 export const HandsUpManagerContainer = observer(() => {

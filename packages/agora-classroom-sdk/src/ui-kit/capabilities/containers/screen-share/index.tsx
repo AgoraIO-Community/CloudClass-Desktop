@@ -1,7 +1,7 @@
 import { ScreenShare } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useScreenShareContext } from '~capabilities/hooks';
+import { useScreenShareContext } from 'agora-edu-sdk';
 
 export type ScreenShareContainerProps = {
     windowId: string,
@@ -10,8 +10,7 @@ export type ScreenShareContainerProps = {
 
 export const ScreenShareContainer: React.FC<ScreenShareContainerProps> = observer((props) => {
     const {
-        windowItems,
-        subTitle,
+        nativeAppWindowItems
     } = useScreenShareContext()
     
     return (
@@ -20,8 +19,8 @@ export const ScreenShareContainer: React.FC<ScreenShareContainerProps> = observe
                 props.setWindowId(id)
             }}
             currentActiveId={props.windowId}
-            screenShareTitle={subTitle}
-            windowItems={windowItems}
+            screenShareTitle={"screen share"}
+            windowItems={nativeAppWindowItems}
         ></ScreenShare>
     )
 })

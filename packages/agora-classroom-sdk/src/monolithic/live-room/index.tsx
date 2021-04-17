@@ -1,7 +1,6 @@
 import { RoomContainer } from '@/containers/app-container'
-import { RoomConfigProps } from '@/edu-sdk/declare'
+import { RoomConfigProps } from 'agora-edu-sdk'
 import { BizPageRouter } from '@/types'
-import { AppStore } from '@/stores/app'
 
 const routes: BizPageRouter[] = [
   // BizPageRouter.LaunchPage,
@@ -14,7 +13,7 @@ const routes: BizPageRouter[] = [
   // BizPageRouter.TestHomePage,
 ]
 
-export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
+export const LiveRoom = ({store}: RoomConfigProps<any>) => {
   
   return (
     <RoomContainer

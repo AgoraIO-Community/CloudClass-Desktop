@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
-import { useUIStore } from '@/hooks'
-import { ToastType } from '@/stores/app/ui'
-import { useToastContext } from '~capabilities/hooks'
+import { useGlobalContext } from 'agora-edu-sdk'
+
+type ToastType = any
 
 export const ToastContainer = observer(() => {
-  const {toastQueue, removeToast} = useToastContext()
+  const {toastQueue, removeToast} = useGlobalContext()
   return (
     <div style={{justifyContent: 'center', display: 'flex'}}>
       {toastQueue.map((value: ToastType, idx: number) => 

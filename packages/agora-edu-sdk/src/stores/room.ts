@@ -577,6 +577,7 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   async kickOutOnce(userUuid: string, roomUuid: string) {
     await eduSDKApi.kickOutOnce({
       roomUuid,
@@ -584,6 +585,7 @@ export class RoomStore extends SimpleInterval {
     })
   }
 
+  @action.bound
   async kickOutBan(userUuid: string, roomUuid: string) {
     await eduSDKApi.kickOutBan({
       roomUuid,

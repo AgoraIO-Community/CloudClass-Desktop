@@ -1,15 +1,12 @@
 import { useGlobalContext, usePretestContext } from 'agora-edu-sdk'
-import { controller } from 'agora-edu-sdk/lib/api/controller'
 import { observer } from 'mobx-react'
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { Button, Modal, Pretest, t } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 
 
 export const PretestContainer = observer(() => {
-
-
     const {
         cameraList,
         microphoneList,

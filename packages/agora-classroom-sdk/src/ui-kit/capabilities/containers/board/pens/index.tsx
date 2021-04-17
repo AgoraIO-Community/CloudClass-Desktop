@@ -1,4 +1,4 @@
-import { useBoardContext } from '@/core/context/provider';
+import { useBoardContext } from 'agora-edu-sdk';
 import { observer } from 'mobx-react';
 import { Pens, t } from '~components';
 

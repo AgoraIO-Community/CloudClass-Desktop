@@ -173,10 +173,10 @@ export class AgoraEduSDK {
     checkConfigParams(params);
 
     Object.assign(sdkConfig.configParams, params)
-    eduSDKApi.updateConfig({
-      sdkDomain: `TODO: sdkDomain`,
-      appId: sdkConfig.configParams.appId,
-    })
+    // eduSDKApi.updateConfig({
+    //   sdkDomain: `TODO: sdkDomain`,
+    //   appId: sdkConfig.configParams.appId,
+    // })
   }
 
   static _launchTime = 0
