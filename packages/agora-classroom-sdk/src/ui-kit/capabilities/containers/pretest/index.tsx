@@ -108,7 +108,7 @@ export const PretestContainer = observer(() => {
                     microphoneId={microphoneId}
                     speakerList={speakerList}
                     speakerId={speakerList[0].deviceId}
-                    isNative={isNative}
+                    isNative={false}
                     cameraError={!!cameraError}
                     microphoneError={!!microphoneError}
                     videoComponent={<VideoPreviewPlayer />}

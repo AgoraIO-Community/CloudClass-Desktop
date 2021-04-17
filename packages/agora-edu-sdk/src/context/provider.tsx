@@ -4,13 +4,14 @@ import { StorageCourseWareItem } from "../types"
 import { EduRoleTypeEnum } from "agora-rte-sdk"
 import { createContext, ReactChild, useCallback, useContext, useState } from "react"
 import { AppStoreInitParams, EduScenarioAppStore } from '../stores/index'
+
 import React from 'react'
 
 export type CoreAppContext = Record<string, EduScenarioAppStore>
 
 export const CoreContext = createContext<EduScenarioAppStore>(null as unknown as EduScenarioAppStore)
 
-export const CoreContextProvider = ({params, children}: {params: AppStoreInitParams, children: ReactChild}) => {
+export const CoreContextProvider = ({ params, children }: { params: AppStoreInitParams, children: ReactChild }) => {
 
   const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(params))
 
@@ -40,7 +41,7 @@ const useSmallClassStore = () => useCoreContext().roomStore.smallClassStore
 
 export const useChatContext = () => {
   const core = useCoreContext()
-  const {roomStore, sceneStore, uiStore} = core
+  const { roomStore, sceneStore, uiStore } = core
   return {
     isHost: sceneStore.sceneVideoConfig.isHost,
     getHistoryChatMessage: roomStore.getHistoryChatMessage,
@@ -104,7 +105,7 @@ export const usePretestContext = () => {
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
 
   const installPretest = () => {
-    const removeEffect = pretestStore.onDeviceTestError(({type, error}) => {
+    const removeEffect = pretestStore.onDeviceTestError(({ type, error }) => {
       if (type === 'video') {
         setCameraError(error)
       }
@@ -112,9 +113,9 @@ export const usePretestContext = () => {
         setMicrophoneError(error)
       }
     })
-    pretestStore.init({video: true, audio: true})
+    pretestStore.init({ video: true, audio: true })
     pretestStore.openTestCamera()
-    pretestStore.openTestMicrophone({enableRecording: true})
+    pretestStore.openTestMicrophone({ enableRecording: true })
     return () => {
       pretestStore.closeTestCamera()
       pretestStore.closeTestMicrophone()
@@ -208,9 +209,9 @@ export const useRoomDiagnosisContext = () => {
 }
 
 export const useGlobalContext = () => {
-  const {loading} = useUIStore()
+  const { loading } = useUIStore()
 
-  const {isFullScreen} = useBoardStore()
+  const { isFullScreen } = useBoardStore()
   const appStore = useCoreContext()
 
   const {
@@ -341,7 +342,7 @@ export const useRecordingContext = () => {
 
   const roomStore = useRoomStore()
 
-  async function startRecording () {
+  async function startRecording() {
     const roomUuid = roomStore.roomInfo.roomUuid
     const tokenRule = `${roomUuid}-record-${Date.now()}`
     // 生成token home-api login
@@ -382,7 +383,7 @@ export const useRecordingContext = () => {
     })
   }
 
-  async function stopRecording () {
+  async function stopRecording() {
     await eduSDKApi.updateRecordingState({
       roomUuid,
       state: 0,
@@ -421,5 +422,69 @@ export const useHandsUpContext = () => {
     processUserCount,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
+  }
+}
+
+export const useMediaContext = () => {
+
+  const {
+    removeDialog
+  } = useUIStore()
+
+  const pretestStore = usePretestStore()
+
+  const {
+    cameraList,
+    microphoneList,
+    speakerList,
+    cameraId,
+    microphoneId,
+    speakerId,
+    cameraRenderer,
+    microphoneLevel,
+  } = pretestStore
+
+  const changeDevice = useCallback(async (deviceType: string, value: any) => {
+    switch (deviceType) {
+      case 'camera': {
+        await pretestStore.changeCamera(value)
+        break;
+      }
+      case 'microphone': {
+        await pretestStore.changeMicrophone(value)
+        break;
+      }
+      case 'speaker': {
+        await pretestStore.changeTestSpeaker(value)
+        break;
+      }
+    }
+  }, [pretestStore])
+
+  const changeAudioVolume = useCallback(async (deviceType: string, value: any) => {
+    switch (deviceType) {
+      case 'speaker': {
+        await pretestStore.changeSpeakerVolume(value)
+        break;
+      }
+      case 'microphone': {
+        await pretestStore.changeMicrophoneVolume(value)
+        break;
+      }
+    }
+  }, [pretestStore])
+
+  return {
+    cameraList,
+    microphoneList,
+    speakerList,
+    cameraId,
+    microphoneId,
+    speakerId,
+    cameraRenderer,
+    microphoneLevel,
+    changeDevice,
+    changeAudioVolume,
+    removeDialog
   }
 }
