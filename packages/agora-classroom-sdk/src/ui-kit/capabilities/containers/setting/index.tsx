@@ -1,30 +1,49 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { useSettingContext } from '~capabilities/hooks'
+// import { useSettingContext } from '~capabilities/hooks'
+import { useMediaContext } from 'agora-edu-sdk'
 
 export const SettingContainer = observer(({id}: any) => {
+
+    // const {
+    //     cameraList,
+    //     microphoneList,
+    //     speakerList,
+    //     handleCancel,
+    //     handleOk,
+    //     cameraId,
+    //     speakerId,
+    //     microphoneId,
+    //     isNative,
+    //     onChangeDevice,
+    //     onChangeAudioVolume,
+    // } = useSettingContext(id)
 
     const {
         cameraList,
         microphoneList,
         speakerList,
-        handleCancel,
-        handleOk,
         cameraId,
         speakerId,
         microphoneId,
-        isNative,
-        onChangeDevice,
-        onChangeAudioVolume,
-    } = useSettingContext(id)
+        changeDevice,
+        changeAudioVolume,
+        removeDialog
+    } = useMediaContext()
 
     return (
         <Modal
             title={t('pretest.settingTitle')}
             width={360}
             footer={[<Button action="ok">{t('toast.confirm')}</Button>]}
-            onCancel={handleCancel}
-            onOk={handleOk}
+            onCancel={() => {
+                // uiStore.removeDialog(id)
+                removeDialog(id)
+            }}
+            onOk={() => {
+                // uiStore.removeDialog(id)
+                removeDialog(id)
+            }}
         >
         <Setting
             cameraList={cameraList}
@@ -32,11 +51,11 @@ export const SettingContainer = observer(({id}: any) => {
             speakerList={speakerList}
             cameraId={cameraId}
             microphoneId={microphoneId}
-            onChangeDevice={onChangeDevice}
-            onChangeAudioVolume={onChangeAudioVolume}
             speakerId={speakerId}
-            hasMicrophoneVolume={isNative}
-            hasSpeakerVolume={isNative}
+            onChangeDevice={changeDevice}
+            onChangeAudioVolume={changeAudioVolume}
+            hasMicrophoneVolume={false}
+            hasSpeakerVolume={false}
         />
         </Modal>
     )
