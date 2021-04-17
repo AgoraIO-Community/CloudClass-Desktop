@@ -1,16 +1,12 @@
-import { RoomParameters } from '@/edu-sdk/declare';
-import { AppRouteComponent, routesMap } from '@/router';
-import { AppStore, AppStoreConfigParams, HomeStore } from '@/stores/app';
-import { BizPageRouter } from '@/types';
-import { ToastContainer } from '@/ui-components/common-containers/toast';
-import { useStorageSW } from '@/utils/utils';
-import { I18nProvider } from '~ui-kit';
-import { Provider } from 'mobx-react';
-import { HashRouter, MemoryRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import {CoreProvider} from '~core/hooks'
-import { AppStore as CoreAppStore } from '~core';
-import { useState } from 'react';
-import { UIKitProvider } from '~capabilities/hooks/uikit-provider';
+import { AppRouteComponent, routesMap } from "@/router"
+import { AppStore, AppStoreConfigParams, HomeStore } from "@/stores/app"
+import { BizPageRouter } from "@/types"
+import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
+import { CoreContextProvider, RoomParameters, useStorageSWContext, I18nProvider } from "agora-edu-sdk"
+import { Provider } from "mobx-react"
+import React, { useState } from "react"
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom"
+
 
 export interface RouteContainerProps {
   routes: BizPageRouter[]
@@ -60,20 +56,20 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
-  useStorageSW()
+  useStorageSWContext()
 
-  const [store] = useState<CoreAppStore>(() => new CoreAppStore(props.store.params))
+  const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(props.store.params))
 
   return (
     <Provider store={props.store}>
       <I18nProvider language={props.store.params.language}>
-        <CoreProvider store={store}>
+        <CoreContextProvider>
           <UIKitProvider appStore={store}>
             <Router>
               <RouteContainer routes={props.routes} mainPath={props.mainPath} />
             </Router>
           </UIKitProvider>
-        </CoreProvider>
+        </CoreContextProvider>
       </I18nProvider>
     </Provider>
   )

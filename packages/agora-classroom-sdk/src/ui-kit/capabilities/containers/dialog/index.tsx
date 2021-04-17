@@ -5,12 +5,12 @@ import { Button, Modal, t, transI18n } from '~ui-kit'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useState } from 'react';
-import { useCloseConfirmContext, useDialogContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
+import { useCloseConfirmContext, useErrorContext, useExitContext, useKickDialogContext, useKickEndContext, useOpenDialogContext, useRecordingContext, useRoomEndContext, useRoomEndNoticeContext } from '~capabilities/hooks'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { UserListContainer } from '@/ui-kit/capabilities/containers/board/user-list'
-import { useCoreContext } from '@/core/hooks'
+import { useCoreContext } from '~core/context/provider'
 
 const useUIStore = () => {
   const core = useCoreContext()
@@ -277,6 +277,12 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
   )
 })
 
+const useDialogContext = () => {
+  const coreContext = useCoreContext()
+  return {
+    dialogQueue: coreContext.uiStore.dialogQueue
+  }
+}
 
 export const DialogContainer: React.FC<any> = observer(() => {
 

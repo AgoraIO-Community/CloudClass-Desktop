@@ -1,4 +1,4 @@
-import { AppStore as CoreAppStore } from "~core";
+import { EduScenarioAppStore } from "~core";
 import { useContext } from "react";
 import { VideoStore } from '~capabilities/containers/video-player/store';
 import { RoomChatStore } from "@/ui-kit/capabilities/containers/room-chat/store";
@@ -17,7 +17,7 @@ export class AppUIKitStore {
   boardStore: WhiteboardStore;
   loadingStore: LoadingStore;
   pretestStore: PretestUIStore;
-  constructor(appStore: CoreAppStore) {
+  constructor(appStore: EduScenarioAppStore) {
     this.navBar = NavigationBarStore.createFactory(appStore)
     this.screenShare = ScreenShareStore.createFactory(appStore)
     this.videoList = VideoStore.createFactory(appStore)
@@ -30,5 +30,7 @@ export class AppUIKitStore {
 
 export const useUIKitStore = () => {
   const context = useContext(UIKitContext)
+  //@ts-ignore
+  window.uiKitStore = context
   return context
 }

@@ -1,4 +1,3 @@
-// import { ApiBaseInitializerParams } from './../../packages/packages/agora-edu-app/src/services/base';
 import { ApiBase, ApiBaseInitializerParams } from '@/services/base';
 
 type LoginParams = {

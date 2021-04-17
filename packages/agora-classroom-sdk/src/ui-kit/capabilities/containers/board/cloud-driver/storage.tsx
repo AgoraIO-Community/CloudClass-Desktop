@@ -1,13 +1,11 @@
-import { useBoardStore } from '@/hooks'
-import { useStorageContext } from '@/ui-components/hooks'
-import { Col, IconBox, Inline, Row, Table, TableHeader, t, Placeholder, transI18n } from '~ui-kit'
-import dayjs from 'dayjs'
-import { observer } from 'mobx-react'
-import { useEffect } from 'react';
+import { useBoardContext } from 'agora-edu-sdk';
+import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
+import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
 
 export const StorageContainer = observer(() => {
 
-  const {itemList, onResourceClick} = useStorageContext()
+  const {downloadList, openCloudResource} = useBoardContext()
 
   return (
     <Table>
@@ -17,10 +15,10 @@ export const StorageContainer = observer(() => {
       <Col>{transI18n('cloud.updated_at')}</Col>
     </TableHeader>
     <Table className="table-container">
-      {itemList.length ? itemList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
+      {downloadList.length ? downloadList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
         <Row height={10} border={1} key={idx} >
-          <Col style={{cursor: 'pointer'}} onClick={() => {
-            onResourceClick(id)
+          <Col style={{cursor: 'pointer'}} onClick={async () => {
+            await openCloudResource(id)
           }}>
             <IconBox iconType={type} style={{ marginRight: '6px' }} />
             <Inline className="filename" color="#191919">{name}</Inline>

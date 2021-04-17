@@ -1,9 +1,9 @@
-import { AppStore as CoreAppStore } from '~core';
+import { EduScenarioAppStore } from '~core';
 export abstract class BaseStore<ModelType> {
     attributes: ModelType
-    appStore!: CoreAppStore
+    appStore!: EduScenarioAppStore
     constructor(payload: ModelType)
-    constructor(payload: ModelType, appStore?: CoreAppStore) {
+    constructor(payload: ModelType, appStore?: EduScenarioAppStore) {
       if (typeof appStore !== 'undefined') {
         this.bind(appStore)
       }
@@ -14,7 +14,7 @@ export abstract class BaseStore<ModelType> {
       this.attributes = payload
     }
     
-    bind(store: CoreAppStore) {
+    bind(store: EduScenarioAppStore) {
       this.appStore = store
     }
 }

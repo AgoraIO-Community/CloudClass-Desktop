@@ -1,7 +1,7 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext } from '~capabilities/hooks';
+import { useUserListContext } from '~core/context/provider';
 
 export type UserListContainerProps = {
     onClose: () => void
@@ -9,15 +9,25 @@ export type UserListContainerProps = {
 
 export const UserListContainer: React.FC<UserListContainerProps> = observer((props) => {
 
-    const { dataSource, teacherName, onClick, role, localUserUuid } = useUserListContext()
+    const {
+        localUserUuid,
+        myRole,
+        teacherName,
+        rosterUserList,
+        handleRosterClick,
+    } = useUserListContext()
+
+    const onClick = async (actionType: any, uid: any) => {
+        await handleRosterClick(actionType, uid)
+    }
 
     return (
         <Roster
             isDraggable={true}
             localUserUuid={localUserUuid}
-            role={role as any}
+            role={myRole as any}
             teacherName={teacherName}
-            dataSource={dataSource}
+            dataSource={rosterUserList}
             onClick={onClick}
             onClose={props.onClose}
         />

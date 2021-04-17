@@ -1,29 +1,34 @@
+import { useRecordingContext, useRoomDiagnosisContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react'
 import { BizHeader } from '~ui-kit'
-import { BaseContainerProps } from '../../types'
-import { Exit, Record } from '../dialog'
-import { NavigationBarModel, NavigationBarUIKitStore } from './store'
-import { SettingContainer } from '@/ui-components/common-containers/setting'
 
-export const NavigationBar: React.FC<BaseContainerProps<NavigationBarUIKitStore>> = observer(({store}) => {
+export const NavigationBar = observer(() => {
+
+  const {
+    navigationState
+  } = useRoomDiagnosisContext()
+
+  const {
+    isRecording
+  } = useRecordingContext()
 
   function handleClick (type: string) {
-    store.showDialog(type)
+    // store.showDialog(type)
   }
 
   return (
     <BizHeader
-      isNative={store.isNative}
-      classStatusText={store.classStatusText}
-      isStarted={store.isStarted}
-      isRecording={store.isRecording}
-      title={store.title}
-      signalQuality={store.signalQuality}
+      isNative={navigationState.isNative}
+      classStatusText={navigationState.classStatusText}
+      isStarted={navigationState.isStarted}
+      isRecording={isRecording}
+      title={navigationState.title}
+      signalQuality={navigationState.signalQuality}
       monitor={{
-        cpuUsage: store.cpuUsage,
-        networkLatency: store.networkLatency,
-        networkQuality: store.networkQuality,
-        packetLostRate: store.packetLostRate,
+        cpuUsage: navigationState.cpuUsage,
+        networkLatency: navigationState.networkLatency,
+        networkQuality: navigationState.networkQuality,
+        packetLostRate: navigationState.packetLostRate,
       }}
       onClick={handleClick}
     />

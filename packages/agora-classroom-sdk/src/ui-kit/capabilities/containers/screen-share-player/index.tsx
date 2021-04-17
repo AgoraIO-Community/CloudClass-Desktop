@@ -17,7 +17,7 @@ export const ScreenSharePlayerContainer: React.FC<{store: ScreenShareUIKitStore}
     }, [store])
     
     return (
-        screenShareStream && <div className="screen-share-player-container">
+        screenShareStream ? <div className="screen-share-player-container">
             {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""}
             {
                   screenShareStream.renderer ?
@@ -30,6 +30,6 @@ export const ScreenSharePlayerContainer: React.FC<{store: ScreenShareUIKitStore}
                     />
                     : null
             }
-        </div>
+        </div> : null
     )
 })

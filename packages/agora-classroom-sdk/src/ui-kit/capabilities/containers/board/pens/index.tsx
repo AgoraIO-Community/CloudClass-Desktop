@@ -1,57 +1,19 @@
-import { Pens, t } from '~components'
-import { observer } from 'mobx-react'
-import { Capability, UIKitBaseModule } from '~capabilities/types';
-import { BaseStore } from '~capabilities/stores/base';
-import { AppStore as CoreAppStore } from '~core';
+import { useBoardContext } from '@/core/context/provider';
+import { observer } from 'mobx-react';
+import { Pens, t } from '~components';
 
-export type PenModel = {
-  lineSelector: string,
-  isActive: boolean;
-}
+export const PensContainer = observer(() => {
 
-export const model: PenModel = {
-  lineSelector: 'pen',
-  isActive: false,
-}
+  const {
+    currentSelector,
+    boardPenIsActive,
+    setTool,
+    updatePen
+  } = useBoardContext()
 
-export interface PenTraits {
-  switchSelector(type: string): Promise<void>
-}
-
-type PenUIKitModule = UIKitBaseModule<PenModel, PenTraits>
-
-export abstract class PenUIKitStore extends BaseStore<PenModel> implements PenUIKitModule {
-  switchSelector(type: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  get lineSelector() {
-    return this.attributes.lineSelector;
-  }
-  get isActive() {
-    return this.attributes.isActive;
-  }
-}
-
-export class PenStore extends PenUIKitStore {
-
-  static createFactory(appStore: CoreAppStore, payload?: PenModel) {
-    const store = new PenStore(payload ?? model)
-    store.bind(appStore)
-    return store
-  }
-
-  switchColor(type: string) {
-    this.appStore.boardStore.changeHexColor(type)
-  }
-  switchStroke(width: number) {
-    this.appStore.boardStore.changeStroke(width)
-  }
-}
-
-export const PensContainer: Capability<PenUIKitStore> = observer(({store}) => {
-
-  const onClick = (type: string) => {
-    store.switchSelector(type)
+  const onClick = (pen: any) => {
+    setTool(pen)
+    updatePen(pen)
   }
   
   return (
@@ -59,9 +21,9 @@ export const PensContainer: Capability<PenUIKitStore> = observer(({store}) => {
       value='pen'
       label={t('scaffold.pencil')}
       icon='pen'
-      activePen={store.lineSelector}
+      activePen={currentSelector}
       onClick={onClick}
-      isActive={store.isActive}
+      isActive={boardPenIsActive}
     />
   )
 })

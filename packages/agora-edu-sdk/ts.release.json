@@ -1,0 +1,9 @@
+{
+  "extends": "./ts.base.json",
+  "exclude": ["node_modules", "lib", "./src/**/*.stories.tsx"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "noImplicitAny" :false
+  }
+}

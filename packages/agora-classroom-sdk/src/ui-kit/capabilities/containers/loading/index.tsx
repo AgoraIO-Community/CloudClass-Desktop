@@ -1,6 +1,6 @@
 import { Card, Loading } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { AppStore as CoreAppStore } from '~core'
+import { AppStore as EduScenarioAppStore } from '~core'
 import { BaseStore } from '~capabilities/stores/base'
 import { UIKitBaseModule } from '~capabilities/types'
 import { Exit, Record } from '../dialog'
@@ -45,7 +45,7 @@ export abstract class LoadingUIKitStore
 
 export class LoadingStore extends LoadingUIKitStore {
 
-  static createFactory(appStore: CoreAppStore) {
+  static createFactory(appStore: EduScenarioAppStore) {
     const store = new LoadingStore(model)
     store.bind(appStore)
     return store

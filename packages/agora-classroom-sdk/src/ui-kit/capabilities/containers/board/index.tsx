@@ -1,14 +1,14 @@
-import { useBoardStore, useUIStore } from '@/hooks'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource } from 'agora-edu-sdk'
+import { ZoomItemType } from '@/ui-kit/components'
+import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
+import { useMemo } from 'react'
 import { ColorsContainer } from '~capabilities/containers/board/colors'
-import { CloseConfirm } from '~capabilities/containers/dialog'
 import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
+import { CloseConfirm } from '~capabilities/containers/dialog'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { BaseContainerProps } from '../../types'
-import { Resource, WhiteboardUIKitStore } from './store'
-import { useCallback } from 'react'
-import { ZoomItemType } from '@/ui-kit/components'
 
 export const allTools: ToolItem[] = [
   {
@@ -87,16 +87,19 @@ export type WhiteBoardState = {
 
 const TabsContainer = observer(() => {
 
-  const boardStore = useBoardStore()
-  const uiStore = useUIStore()
-  const resourcesList = boardStore.resourcesList
+  const {
+    resourcesList,
+    changeSceneItem,
+    activeSceneName,
+  } = useBoardContext()
 
-  const handleChange = (resourceUuid: string) => {
-    boardStore.changeSceneItem(resourceUuid)
-  }
+  const {
+    addDialog,
+  } = useGlobalContext()
+
   return (
-    <Tabs activeKey={boardStore.activeSceneName} type="editable-card"
-      onChange={handleChange}>
+    <Tabs activeKey={activeSceneName} type="editable-card"
+      onChange={changeSceneItem}>
       {resourcesList.map((item: Resource, key: number) => (
         <TabPane
           key={item.resourceUuid}
@@ -109,7 +112,7 @@ const TabsContainer = observer(() => {
           closeIcon={
             <Icon type="close"
               onClick={() => {
-                uiStore.addDialog(CloseConfirm, {
+                addDialog(CloseConfirm, {
                   resourceUuid: item.resourceUuid,
                 })
               }}
@@ -123,36 +126,67 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer: React.FC<BaseContainerProps<WhiteboardUIKitStore>> = observer(({store}) => {
+export const WhiteboardContainer = observer(() => {
+
+  const {
+    isFullScreen
+  } = useGlobalContext()
+
+  const {
+    roomInfo
+  } = useRoomContext()
 
   const {
     zoomValue,
     currentPage,
     totalPage,
-    isFullScreen,
     ready,
     currentSelector,
     activeMap,
-    items: tools,
-    showTab,
-    showToolBar,
-    showZoomControl,
-  } = store
+    tools,
+    hasPermission,
+    mountToDOM,
+    zoomBoard,
+    setZoomScale,
+    changeFooterMenu,
+    setTool
+  } = useBoardContext()
 
-  async function handleZoomControllerChange(type: ZoomItemType) {
-    await store.handleZoomControllerChange(type)
-  }
+  const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
 
-  const mountToDOM = useCallback((dom: any) => {
-    if (dom) {
-      store.mount(dom)
-    } else {
-      store.unmount()
+  const [showToolBar, showZoomControl] = useMemo(() => {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+      return [true, true]
     }
-  }, [store])
+    if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, hasPermission]
+    }
 
-  function handleToolBarChange() {
+    if (roomInfo.roomType === EduRoomType.SceneTypeMiddleClass && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, hasPermission]
+    }
 
+    return [false, false]
+  }, [roomInfo.roomType, hasPermission, roomInfo.userRole, roomInfo.roomType])
+
+  const handleZoomControllerChange = async (type: ZoomItemType) => {
+    const toolbarMap: Record<ZoomItemType, CallableFunction> = {
+      'max': () => {
+        zoomBoard('fullscreen')
+      },
+      'min': () => {
+        zoomBoard('fullscreenExit')
+      },
+      'zoom-out': () => {
+        setZoomScale('out')
+      },
+      'zoom-in': () => {
+        setZoomScale('in')
+      },
+      'forward': () => changeFooterMenu('next_page'),
+      'backward': () => changeFooterMenu('prev_page'),
+    }
+    toolbarMap[type] && toolbarMap[type]()
   }
 
   return (
@@ -164,7 +198,7 @@ export const WhiteboardContainer: React.FC<BaseContainerProps<WhiteboardUIKitSto
       {showTab ? 
       <TabsContainer /> : null}
       {showToolBar ? <div className='toolbar-position'>
-        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolBarChange} className="toolbar-biz" />
+        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={setTool} className="toolbar-biz" />
       </div> : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'

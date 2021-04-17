@@ -1,82 +1,38 @@
-import { Button, Modal, Pretest, t } from '~ui-kit'
+import { useGlobalContext, usePretestContext } from 'agora-edu-sdk'
+import { controller } from 'agora-edu-sdk/lib/api/controller'
 import { observer } from 'mobx-react'
-import { PretestUIStore } from './store'
-import { useAppStore } from '@/hooks'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { Button, Modal, Pretest, t } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 
-export const usePretestContext = (pretestStore: PretestUIStore) => {
 
-  
-    const [cameraError, setCameraError] = useState<boolean>(false)
-    const [microphoneError, setMicrophoneError] = useState<boolean>(false)
-    const [isMirror, setMirror] = useState<boolean>(false)
-  
-    useEffect(() => {
-        const uninstall = pretestStore.onDeviceTestError(({type, error}) => {
-            if (type === 'video') {
-                setCameraError(error)
-            }
-            if (type === 'audio') {
-                setMicrophoneError(error)
-            }
-        })
-        // TODO: need pipe
-        pretestStore.init({video: true, audio: true})
-        pretestStore.openTestCamera()
-        pretestStore.openTestMicrophone({enableRecording: true})
-        return () => {
-            pretestStore.closeTestCamera()
-            pretestStore.closeTestMicrophone()
-            uninstall()
-        }
-    }, [setCameraError, setMicrophoneError])
-  
+export const PretestContainer = observer(() => {
+
+
     const {
         cameraList,
         microphoneList,
         speakerList,
+        cameraError,
+        microphoneError,
         cameraId,
         microphoneId,
-        speakerId,
-        cameraRenderer,
+        pretestCameraRenderer,
+        isMirror,
+        setMirror,
         microphoneLevel,
-    } = pretestStore
-  
-    const onChangeDevice = useCallback(async (deviceType: string, value: any) => {
-        switch (deviceType) {
-            case 'camera': {
-                await pretestStore.changeTestCamera(value)
-                break;
-            }
-            case 'microphone': {
-                await pretestStore.changeTestMicrophone(value)
-                break;
-            }
-            case 'speaker': {
-                await pretestStore.changeTestSpeaker(value)
-                break;
-            }
-        }
-    }, [pretestStore])
-    const onChangeAudioVolume = useCallback(async (deviceType: string, value: any) => {
-        switch (deviceType) {
-            case 'speaker': {
-                await pretestStore.changeTestSpeakerVolume(value)
-                break;
-            }
-            case 'microphone': {
-                await pretestStore.changeTestMicrophoneVolume(value)
-                break;
-            }
-        }
-    }, [pretestStore])
-    const onSelectMirror = useCallback((evt: any) => {
-        setMirror(!isMirror)
-    }, [pretestStore, isMirror])
-  
-  
+        changeTestSpeakerVolume,
+        changeTestMicrophoneVolume,
+        installPretest,
+        changeTestCamera,
+        changeTestMicrophone,
+        stopPretestCamera,
+        stopPretestMicrophone,
+    } = usePretestContext()
+
+    useEffect(() => installPretest(), [])
+
     const VideoPreviewPlayer = useCallback(() => {
         return (
             <RendererPlayer
@@ -85,67 +41,49 @@ export const usePretestContext = (pretestStore: PretestUIStore) => {
                 mirror={isMirror}
                 key={cameraId}
                 id="stream-player"
-                track={cameraRenderer}
+                track={pretestCameraRenderer}
                 preview={true}
             />
         )
-    }, [cameraRenderer, cameraId, isMirror])
-  
-    const history = useHistory()
-  
-    const appStore = useAppStore()
-  
-    const handleOk = useCallback(() => {
-        const roomPath = appStore.params.roomPath!
-        console.log('history path ', roomPath)
-        pretestStore.closeTestCamera()
-        pretestStore.closeTestMicrophone()
-        history.push(roomPath)
-    }, [history, appStore.params.roomPath, pretestStore])
-  
-    return {
-        cameraList,
-        microphoneList,
-        speakerList,
-        isNative: false,
-        cameraId,
-        microphoneId,
-        speakerId,
-        onChangeDevice,
-        onChangeAudioVolume,
-        onSelectMirror,
-        cameraError,
-        microphoneError,
-        VideoPreviewPlayer,
-        microphoneLevel,
-        isMirror,
-        handleOk,
+    }, [pretestCameraRenderer, cameraId, isMirror])
+
+    const onChangeDevice = async (type: string, value: any) => {
+        switch (type) {
+            case 'camera': {
+                await changeTestCamera(value)
+                break;
+            }
+            case 'microphone': {
+                await changeTestMicrophone(value)
+                break;
+            }
+        }
     }
-  }
 
-export const PretestContainer = observer(({store}: {store: PretestUIStore}) => {
+    const onChangeAudioVolume = async (type: string, value: any) => {
+        switch(type) {
+            case 'speaker': {
+                await changeTestSpeakerVolume(value)
+                break;
+            }
+            case 'microphone': {
+                await changeTestMicrophoneVolume(value)
+                break;
+            }
+        }
+    }
 
-    const {
-        cameraList,
-        microphoneList,
-        isNative,
-        speakerList,
-        // title,
-        // finish,
-        cameraId,
-        microphoneId,
-        speakerId,
-        onChangeDevice,
-        onChangeAudioVolume,
-        onSelectMirror,
-        cameraError,
-        microphoneError,
-        VideoPreviewPlayer,
-        isMirror,
-        microphoneLevel,
-        handleOk,
-    } = usePretestContext(store)
+    const global = useGlobalContext()
 
+    const history = useHistory()
+
+    const handleOk = () => {
+        stopPretestCamera()
+        stopPretestMicrophone()
+        history.push(global?.params?.roomPath ?? '/classroom/1v1')
+    }
+
+    
     return (
         <div className="fixed-container">
             <Modal
@@ -161,7 +99,9 @@ export const PretestContainer = observer(({store}: {store: PretestUIStore}) => {
                     isMirror={isMirror}
                     onChangeDevice={onChangeDevice}
                     onChangeAudioVolume={onChangeAudioVolume}
-                    onSelectMirror={onSelectMirror}
+                    onSelectMirror={() => {
+                        setMirror(!isMirror)
+                    }}
                     cameraList={cameraList}
                     cameraId={cameraId}
                     microphoneList={microphoneList}

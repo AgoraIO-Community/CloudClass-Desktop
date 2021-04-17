@@ -10,13 +10,29 @@
         "react-app",
         {
           "runtime": "automatic"
-        }
+        },
+        "@babel/preset-env"
       ]
     ],
     "plugins": [
-      ["@babel/plugin-proposal-decorators", { "legacy": true }],
-      ["@babel/plugin-proposal-class-properties", { "loose": true }],
-      ["@babel/plugin-transform-runtime", { "regenerator": true }]
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ],
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
     ]
   },
   "agora_electron": {
@@ -252,6 +268,7 @@
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",
+    "agora-edu-sdk": "^1.0.0",
     "agora-electron-sdk": "apaas",
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",

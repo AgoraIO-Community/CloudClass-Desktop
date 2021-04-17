@@ -1,8 +1,24 @@
+import { useBoardContext } from '@/core/context/provider'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 
-export const ToolCabinetContainer = (props: any) => {
+export const ToolCabinetContainer = () => {
 
-    const {onClick} = props
+    const {
+        startOrStopSharing,
+        setLaserPoint
+    } = useBoardContext()
+
+    const onClick = async (itemType: string) => {
+        switch(itemType) {
+            case 'screenShare': {
+                await startOrStopSharing()
+                break;
+            }
+            case 'laserPoint': {
+                await setLaserPoint()
+            }
+        }
+    }
 
     return (
         <ToolCabinet

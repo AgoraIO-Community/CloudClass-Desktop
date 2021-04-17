@@ -1,62 +1,16 @@
 import { Colors, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { BaseStore } from '~capabilities/stores/base'
-import { Capability, UIKitBaseModule } from '~capabilities/types'
-import { AppStore as CoreAppStore } from '@/core'
+import { useBoardContext } from '@/core/context/provider'
 
-export type ColorModel = {
-  color: string,
-  strokeWidth: number;
-}
+export const ColorsContainer = observer(() => {
 
-export const model: ColorModel = {
-  color: '#999999',
-  strokeWidth: 10,
-}
-
-export interface ColorTraits {
-  switchColor(type: string): unknown
-  switchStroke(width: number): unknown
-}
-
-type ColorUIKitModule = UIKitBaseModule<ColorModel, ColorTraits>
-
-export abstract class ColorUIKitStore extends BaseStore<ColorModel> implements ColorUIKitModule {
-  abstract switchColor(type: string): unknown;
-  abstract switchStroke(width: number): unknown;
-  get color() {
-    return this.attributes.color;
-  }
-  get strokeWidth() {
-    return this.attributes.strokeWidth;
-  }
-}
-
-export class ColorStore extends ColorUIKitStore {
-
-  static createFactory(appStore: CoreAppStore, payload?: ColorModel) {
-    const store = new ColorStore(payload ?? model)
-    store.bind(appStore)
-    return store
-  }
-
-  switchColor(type: string) {
-    this.appStore.boardStore.changeHexColor(type)
-  }
-  switchStroke(width: number) {
-    this.appStore.boardStore.changeStroke(width)
-  }
-}
-
-export const ColorsContainer: Capability<ColorUIKitStore> = observer(({store}) => {
-
-  const changeStroke = (width: number) => {
-    store.switchStroke(width)
-  }
-
-  const changeHexColor = (color: string) => {
-    store.switchColor(color)
-  }
+  const {
+    changeStroke,
+    changeHexColor,
+    setTool,
+    currentColor,
+    currentStrokeWidth
+  } = useBoardContext()
 
   return (
     <Colors
@@ -65,11 +19,14 @@ export const ColorsContainer: Capability<ColorUIKitStore> = observer(({store}) =
       icon='color'
       colorSliderMin={1}
       colorSliderMax={31}
-      colorSliderDefault={store.strokeWidth}
+      colorSliderDefault={currentStrokeWidth}
       colorSliderStep={0.3}
       onSliderChange={changeStroke}
-      activeColor={store.color}
-      onClick={changeHexColor}
+      activeColor={currentColor}
+      onClick={(value: any) => {
+        setTool('color')
+        changeHexColor(value)
+      }}
     />
   )
 })

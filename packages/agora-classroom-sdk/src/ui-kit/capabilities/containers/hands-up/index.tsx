@@ -1,26 +1,38 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit'
-import { observer } from 'mobx-react'
-import { useSceneStore, useSmallClassStore } from '@/hooks';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
-import { useHandsUpContext, useHandsUpManager, useHandsUpSender } from '~capabilities/hooks';
+import { observer } from 'mobx-react';
+import { useHandsUpContext, useRoomContext } from '~core/context/provider';
+import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit';
 
 export const HandsUpManagerContainer = observer(() => {
 
     const {
         handsUpState,
-        handleUpdateList,
-        coVideoUsers,
-        onlineUserCount,
         processUserCount,
-    } = useHandsUpManager()
+        onlineUserCount,
+        coVideoUsers,
+        teacherAcceptHandsUp,
+        teacherRejectHandsUp,
+    } = useHandsUpContext()
+
+    const handleUpdateList = async (type: string, info: StudentInfo) => {
+        switch (type) {
+            case 'confirm': {
+                await teacherAcceptHandsUp(info.userUuid)
+                break;
+            }
+            case 'cancel': {
+                await teacherRejectHandsUp(info.userUuid)
+                break;
+            }
+        }
+    }
 
     return (
         <HandsUpManager
             processUserCount={processUserCount}
             onlineUserCount={onlineUserCount}
             unreadCount={0}
-            state={handsUpState}
+            state={handsUpState as any}
             onClick={handleUpdateList}
             studentList={coVideoUsers}
         />
@@ -30,11 +42,29 @@ export const HandsUpManagerContainer = observer(() => {
 
 export const HandsUpReceiverContainer = observer(() => {
 
-    const {handsUpState, handleClick} = useHandsUpSender()
+    const {
+        handsUpState,
+        studentHandsUp,
+        studentCancelHandsUp,
+        teacherUuid
+    } = useHandsUpContext()
+
+    const handleClick = async () => {
+        switch(handsUpState) {
+            case 'default': {
+                await studentHandsUp(teacherUuid)
+                break;
+            }
+            case 'apply': {
+                await studentCancelHandsUp()
+                break;
+            }
+        }
+    }
 
     return (
         <HandsUpSender
-            state={handsUpState}
+            state={handsUpState as any}
             onClick={handleClick}
         />
     )
@@ -42,7 +72,18 @@ export const HandsUpReceiverContainer = observer(() => {
 
 export const HandsUpContainer = observer(() => {
 
-    const {handsType} = useHandsUpContext()
+    const getHandsType = (role: EduRoleTypeEnum) => {
+        const defaultType = null  
+        const map = {
+            [EduRoleTypeEnum.teacher]: 'manager',
+            [EduRoleTypeEnum.student]: 'receiver',
+        }
+        return map[role] || defaultType
+    }
+
+    const {roomInfo} = useRoomContext()
+
+    const handsType = getHandsType(roomInfo.userRole)
 
     const switchMap = {
         'manager': <HandsUpManagerContainer />,
