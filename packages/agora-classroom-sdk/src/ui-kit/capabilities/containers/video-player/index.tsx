@@ -4,6 +4,7 @@ import * as React from 'react';
 import { RendererPlayer } from '~utilities/renderer-player'
 import { useVideoControlContext, useSmallClassVideoControlContext } from '~capabilities/hooks'
 import { VideoUIKitStore } from './store';
+import { useGlobalContext } from 'agora-edu-sdk';
 
 export const VideoPlayerTeacher = observer(() => {
 
@@ -130,9 +131,14 @@ export const VideoMarqueeStudentContainer = observer(() => {
   )
 })
 
-export const VideoList = observer(({store}: {store: VideoUIKitStore}) => {
+export const VideoList = observer(() => {
+
+  const {
+    isFullScreen
+  } = useGlobalContext()
+
   return (
-    !store.appStore.boardStore.isFullScreen ?
+    !isFullScreen ?
     <>
       <VideoPlayerTeacher />
       <VideoPlayerStudent controlPlacement="left" />

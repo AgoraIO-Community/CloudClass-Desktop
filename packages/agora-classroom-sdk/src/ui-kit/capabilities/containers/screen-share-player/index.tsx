@@ -1,20 +1,20 @@
 import { observer } from 'mobx-react'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { IconButton, Icon } from '~ui-kit'
-import { ScreenShareUIKitStore } from '../screen-share/store'
 import { useCallback } from 'react'
+import { useScreenShareContext } from 'agora-edu-sdk'
 
-export const ScreenSharePlayerContainer: React.FC<{store: ScreenShareUIKitStore}> = observer((props: any) => {
-    const {store} = props
+export const ScreenSharePlayerContainer = observer(() => {
 
     const {
         screenShareStream,
         screenEduStream,
-    } = store
+        startOrStopSharing
+    } = useScreenShareContext()
 
     const onClick = useCallback(async () => {
-        await store.startOrStopSharing()
-    }, [store])
+        await startOrStopSharing()
+    }, [startOrStopSharing])
     
     return (
         screenShareStream ? <div className="screen-share-player-container">

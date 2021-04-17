@@ -5,17 +5,17 @@ import { homeApi } from "@/services/home-api"
 import { mapFileType } from "@/services/upload-service"
 import { EduMediaStream } from "@/stores/app/scene"
 import { StorageCourseWareItem } from "@/stores/storage"
+import { calcUploadFilesMd5, uploadFileInfoProps } from "@/ui-kit/capabilities/containers/board/cloud-driver"
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduStream } from "agora-rte-sdk"
-import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, transI18n, ZoomItemType } from "~ui-kit"
 import MD5 from "js-md5"
 import { get } from "lodash"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { BehaviorSubject } from "rxjs"
 import { PPTKind } from "white-web-sdk"
-import { RendererPlayer } from "~utilities/renderer-player"
-import { calcUploadFilesMd5, uploadFileInfoProps } from "@/ui-kit/capabilities/containers/board/cloud-driver"
 import { Exit } from "~capabilities/containers/dialog"
+import { Button, CameraPlaceHolder, formatFileSize, StudentInfo, t, transI18n, ZoomItemType } from "~ui-kit"
+import { RendererPlayer } from "~utilities/renderer-player"
 
 export const useScreenShareContext = () => {
   const sceneStore = useSceneStore()
@@ -375,7 +375,7 @@ export const useSettingContext = (id: any) => {
   }, [pretestStore])
 
   useEffect(() => {
-      const uninstall = pretestStore.onDeviceTestError(({type, error}) => {
+      const uninstall = pretestStore.onDeviceTestError(({type, error}: any) => {
           if (type === 'video') {
               setCameraError(error)
           }
@@ -500,7 +500,7 @@ export const usePretestContext = () => {
   const [isMirror, setMirror] = useState<boolean>(false)
 
   useEffect(() => {
-      const uninstall = pretestStore.onDeviceTestError(({type, error}) => {
+      const uninstall = pretestStore.onDeviceTestError(({type, error}: any) => {
           if (type === 'video') {
               setCameraError(error)
           }

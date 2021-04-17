@@ -1,7 +1,6 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useCoreContext as useStoryFactory } from '@/core/hooks'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -37,15 +36,15 @@ export const OneToOneScenario = observer(() => {
         height: '100vh'
       }}
     >
-      <NavigationBar store={uiKitStore.navBar} />
+      <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
         <Content>
-          <ScreenSharePlayerContainer store={uiKitStore.screenShare}/>
-          <WhiteboardContainer store={uiKitStore.boardStore}/>
+          <ScreenSharePlayerContainer />
+          <WhiteboardContainer />
         </Content>
         <Aside className={fullscreenCls}>
-          <VideoList store={uiKitStore.videoList} />
-          <RoomChat store={uiKitStore.roomChat} />
+          <VideoList />
+          <RoomChat />
         </Aside>
       </Layout>
       <DialogContainer />
