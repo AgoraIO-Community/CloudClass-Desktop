@@ -50,11 +50,13 @@ export const en = {
     'remote_close_camera': 'Your camera has been turned off',
     'remote_close_microphone': 'Your mic has been turned off',
     'remote_revoke_board': 'You cannot use the whiteboard tools',
-    'received_student_hands_up': 'Hands Up ',
+    'received_student_hands_up': 'A student wants to get on the stage',
     'received_teacher_accepted': 'Teacher Accepted',
     'received_teacher_refused': 'Teacher Refused',
     'received_student_cancel': 'Teacher Canceled',
     'received_message_timeout': 'No Responder, Try again',
+    'hands_up_requsted': 'Your request has been sent',
+    'hands_up_cancelled': 'Your request has been cancelled'
   },
   'signal': {
     'delay': 'Delay',

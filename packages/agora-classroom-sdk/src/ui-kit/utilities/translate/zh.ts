@@ -50,11 +50,13 @@ export const zh = {
     'remote_close_camera': '摄像头已关闭',
     'remote_close_microphone': '你暂时不能发言了',
     'remote_revoke_board': '你现在无权使用白板了',
-    'received_student_hands_up': '有一条学生举手消息',
-    'received_teacher_accepted': '收到老师同意的消息',
-    'received_teacher_refused': '收到老师拒绝的消息',
-    'received_student_cancel': '收到老师取消的消息',
+    'received_student_hands_up': '有学生举手了',
+    'received_teacher_accepted': '老师已同意上台',
+    'received_teacher_refused': '老师拒绝了上台',
+    'received_student_cancel': '学生取消了举手',
     'received_message_timeout': '消息未响应，请重新尝试',
+    'hands_up_requsted': '发送举手申请成功',
+    'hands_up_cancelled': '举手申请已取消'
   },
   'placeholder': {
     'empty_chat': '还没有消息',

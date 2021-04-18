@@ -2,6 +2,8 @@ import { EduRoleTypeEnum} from 'agora-rte-sdk';
 import { useHandsUpContext, useRoomContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo } from '~ui-kit';
+import { useGlobalContext } from 'agora-edu-sdk';
+import { transI18n } from '@/ui-kit/components';
 
 export const HandsUpManagerContainer = observer(() => {
 
@@ -43,6 +45,10 @@ export const HandsUpManagerContainer = observer(() => {
 export const HandsUpReceiverContainer = observer(() => {
 
     const {
+        addToast
+    } = useGlobalContext()
+
+    const {
         handsUpState,
         studentHandsUp,
         studentCancelHandsUp,
@@ -53,10 +59,12 @@ export const HandsUpReceiverContainer = observer(() => {
         switch(handsUpState) {
             case 'default': {
                 await studentHandsUp(teacherUuid)
+                addToast(transI18n('co_video.hands_up_requsted'))
                 break;
             }
             case 'apply': {
                 await studentCancelHandsUp()
+                addToast(transI18n('co_video.hands_up_cancelled'), 'warning')
                 break;
             }
         }

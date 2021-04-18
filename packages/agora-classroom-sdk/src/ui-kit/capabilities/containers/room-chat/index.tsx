@@ -95,9 +95,10 @@ export const RoomChat = observer(() => {
 
   const handleSendText = useCallback(async (): Promise<void> => {
     if (!text.trim()) return;
-    const message = await sendMessage(text)
-    addChatMessage(message)
+    const textMessage = text
     setText('')
+    const message = await sendMessage(textMessage)
+    addChatMessage(message)
   }, [text, setText])
   
   return (
