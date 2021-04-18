@@ -1,11 +1,11 @@
-import { useBoardContext } from 'agora-edu-sdk';
+import { useBoardContext } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
 
 export const StorageContainer = observer(() => {
 
-  const {downloadList, openCloudResource} = useBoardContext()
+  const {publicResources, openCloudResource} = useBoardContext()
 
   return (
     <Table>
@@ -15,7 +15,7 @@ export const StorageContainer = observer(() => {
       <Col>{transI18n('cloud.updated_at')}</Col>
     </TableHeader>
     <Table className="table-container">
-      {downloadList.length ? downloadList.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
+      {publicResources.length ? publicResources.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
         <Row height={10} border={1} key={idx} >
           <Col style={{cursor: 'pointer'}} onClick={async () => {
             await openCloudResource(id)

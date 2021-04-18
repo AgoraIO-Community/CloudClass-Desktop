@@ -1,5 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '~components/affix';
 import { Button } from '~components/button';
@@ -147,12 +146,11 @@ export const Chat: FC<ChatProps> = ({
           <span className="chat-header-title">{t('message')}</span>
           <span>
             {isHost ? (
-              <Icon
-                hover={true}
+              <span 
                 onClick={() => onCanChattingChange(!!canChatting)}
-                className="chat-header-message-state"
-                type={canChatting ? 'message-on' : 'message-off'}
-              />
+              >
+                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
+              </span>
             ) : null}
             <span style={{cursor: 'pointer'}} onClick={() => onCollapse && onCollapse()}>
               {closeIcon && closeIcon}
@@ -183,7 +181,6 @@ export const Chat: FC<ChatProps> = ({
         <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
           <textarea
             value={chatText}
-            rows={1}
             className="chat-texting-message"
             placeholder={t('placeholder.input_message')}
             disabled={!isHost && !canChatting}
@@ -192,7 +189,11 @@ export const Chat: FC<ChatProps> = ({
             onBlur={handleBlur}
             onKeyPress={handleKeypress}
           />
-          <Button disabled={!isHost && !canChatting} onClick={handleSend}>
+          <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
+            position: 'absolute',
+            bottom: 10,
+            right: 10
+          }}>
             {t('send')}
           </Button>
         </div>

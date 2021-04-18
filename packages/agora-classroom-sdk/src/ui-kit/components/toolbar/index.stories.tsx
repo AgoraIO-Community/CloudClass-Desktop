@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { useCallback, FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Icon } from '~components/icon';
 import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
 
@@ -14,7 +14,7 @@ export const Docs: FC<ToolbarProps> = (props) => {
 
   const [activeItem, updateActiveItem] = useState<string>('')
 
-  const handleClick = useCallback(async (type: string) => {
+  const handleClick = React.useCallback(async (type: string) => {
     updateActiveItem(type)
   }, [updateActiveItem])
   const tools: ToolItem[] = [
@@ -126,7 +126,16 @@ export const Docs: FC<ToolbarProps> = (props) => {
       icon: 'register',
     }
   ];
-  return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>;
+  return (
+    <div style={{
+      position: 'absolute',
+      top: '2em',
+      left: '15px',
+      transition: '.5s'
+    }}>
+      <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>
+    </div>
+  )
 };
 
 export default meta;

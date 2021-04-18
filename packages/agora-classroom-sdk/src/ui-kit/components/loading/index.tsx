@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import * as React from 'react';
+import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Progress } from '~components/progress'
@@ -8,7 +7,6 @@ import './index.css';
 
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
-import { transI18n } from '~components/i18n';
 
 interface UploadItem {
     iconType?: string;
@@ -70,7 +68,7 @@ export const Loading: FC<LoadingProps> = ({
                                 {item.uploadComplete ? (
                                     <div className="loading-progress">
                                         <img src={circleLoadingGif} alt="upload success gif" width="20" height="20"/>
-                                        <span className="upload-success-text">{transI18n('whiteboard.converting')}</span>
+                                        <span className="upload-success-text">转换中</span>
                                     </div>
                                 ) : (
                                     <div className="loading-progress">

@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '~components/button';
 import { Pretest } from '~components/device-manager/pretest';
 import { Modal } from '~components/modal';

@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import * as React from 'react';
+import React, { FC } from 'react';
 import './index.css';
 import RcTabs, { TabsProps as RcTabsProps } from 'rc-tabs';
 import { EditableConfig } from 'rc-tabs/lib/interface';

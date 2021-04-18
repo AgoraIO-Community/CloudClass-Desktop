@@ -1,4 +1,4 @@
-import { useBoardContext } from 'agora-edu-sdk'
+import { useBoardContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, Table, TableHeader, transI18n } from '~ui-kit'
 

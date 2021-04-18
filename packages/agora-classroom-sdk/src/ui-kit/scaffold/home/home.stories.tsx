@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react'
 import { Home } from '.'
 
 export default {
@@ -37,10 +37,6 @@ export const HomePage = () => {
     setStartDate(date)
   }
 
-  const onChangeDuration = (duration: number) => {
-    setDuration(duration)
-  }
-
   return (
     <Home
       version="1.1.0"
@@ -52,7 +48,7 @@ export const HomePage = () => {
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
-      onChangeDuration={onChangeDuration}
+      onChangeStartDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}

@@ -1,4 +1,4 @@
-import { useGlobalContext } from 'agora-edu-sdk'
+import { useGlobalContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { Card, Loading } from '~ui-kit'
 

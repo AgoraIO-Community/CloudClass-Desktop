@@ -23538,10 +23538,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.9:
-  version "2.12.9"
-  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.9.tgz#488a475115d019aaa7593f7ee1d8616cb5b9c2cc"
-  integrity sha1-SIpHURXQGaqnWT9+4dhhbLW5wsw=
+white-web-sdk@2.12.12:
+  version "2.12.12"
+  resolved "https://registry.npm.taobao.org/white-web-sdk/download/white-web-sdk-2.12.12.tgz#76e2596bac32e2deb04488fe0a8a2cc1b7c1e071"
+  integrity sha1-duJZa6wy4t6wRIj+CooswbfB4HE=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"

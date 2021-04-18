@@ -4,6 +4,8 @@
   "private": true,
   "homepage": ".",
   "main": "dist/edu_sdk.bundle.js",
+  "typings": "types/edu-sdk.d.ts",
+  "swSrcPath": "./src/infra/sw/service-worker.ts",
   "babel": {
     "presets": [
       [
@@ -155,11 +157,6 @@
     "@babel/preset-env": "7.13.15",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
-    "@netless/combine-player": "1.1.4",
-    "@netless/cursor-tool": "0.0.7",
-    "@netless/react-seek-slider": "1.0.4",
-    "@netless/white-audio-plugin": "1.2.21",
-    "@netless/white-video-plugin": "1.2.21",
     "@open-wc/webpack-import-meta-loader": "0.4.7",
     "@storybook/addon-actions": "6.2.8",
     "@storybook/addon-controls": "6.2.8",
@@ -189,7 +186,6 @@
     "@types/workbox-routing": "4.3.0",
     "@types/workbox-sw": "4.3.1",
     "@vitejs/plugin-react-refresh": "1.3.1",
-    "agora-rte-sdk": "1.0.0",
     "ali-oss": "6.3.1",
     "autoprefixer": "10.2.5",
     "axios": "0.19.2",
@@ -268,7 +264,7 @@
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",
-    "agora-edu-sdk": "^1.0.0",
+    "agora-edu-core": "^1.0.0",
     "agora-electron-sdk": "apaas",
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",
@@ -292,7 +288,6 @@
     "react-i18next": "11.8.12",
     "react-router": "5.2.0",
     "react-transition-group": "4.4.1",
-    "white-web-sdk": "2.12.9",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.1.2"

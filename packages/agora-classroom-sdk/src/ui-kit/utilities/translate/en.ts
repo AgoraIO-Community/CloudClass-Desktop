@@ -58,6 +58,10 @@ export const en = {
     'hands_up_requsted': 'Your request has been sent',
     'hands_up_cancelled': 'Your request has been cancelled'
   },
+  'private_media_chat': {
+    'chat_started': 'Private media chat started',
+    'chat_ended': 'Private media chat ended'
+  },
   'signal': {
     'delay': 'Delay',
     'lose': 'Lose',
@@ -84,6 +88,8 @@ export const en = {
     'room_is_full': 'The room is full',
   },
   'toast': {
+    'granted_board_success': 'Grant Permission success',
+    'revoke_board_success': 'Revoke Permission success',
     'create_screen_share_failed': 'Create screen share failed',
     'kick_by_other_side': 'Kick by other client',
     'screen_share': 'Screen Share',

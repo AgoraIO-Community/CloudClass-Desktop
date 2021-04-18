@@ -16,6 +16,8 @@ import {
 } from '../interfaces';
 import { RTMWrapper } from '../core/rtm';
 import { MessageSerializer } from '../core/rtm/message-serializer';
+import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
+import { AgoraWebRtcWrapper } from '../core/media-service/web';
 
 export type EduClassroomInitParams = {
   eduManager: EduManager
@@ -304,5 +306,14 @@ export class EduClassroomManager {
 
   getStudentList(): EduUser[] {
     return this.studentList;
+  }
+
+  syncStreamCoordinator() {
+    if(this.data) {
+      let sdkWrapper = this.eduManager.mediaService.sdkWrapper
+      if(sdkWrapper instanceof AgoraWebRtcWrapper) {
+        this.data.streamCoordinator = sdkWrapper.streamCoordinator
+      }
+    }
   }
 }

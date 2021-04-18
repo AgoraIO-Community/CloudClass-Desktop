@@ -22,6 +22,10 @@ const path = require('path')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
 
+const packageInfo = require('./package.json')
+
+const swSrcPath = packageInfo.swSrcPath
+
 function findSWPrecachePlugin(element) {
   return element.constructor.name === 'GenerateSW';
 }
@@ -44,7 +48,7 @@ const useSW = () => (config) => {
       // injectionPoint: '__WB_MANIFEST',
       // importWorkboxFrom: 'local',
       // importsDirectory: path.join(__dirname, 'public'),
-      swSrc: path.join(__dirname, './src/sw/service-worker.ts'),
+      swSrc: path.join(__dirname, swSrcPath),
       // swSrc: path.join(process.cwd(), '/src/sw/index.worker.js'),
       swDest: 'serviceWorker.js',
       include: [],
@@ -194,7 +198,7 @@ const removeEslint = () => config => {
   return config;
 }
 
-module.exports = override(
+const webpackConfig = override(
   // useBabelRc(),
   // isElectron && addWebpackTarget('electron-renderer'),
   addDecoratorsLegacy(),
@@ -296,3 +300,5 @@ module.exports = override(
   //   "@babel/preset-react"
   // )
 )
+
+module.exports = webpackConfig

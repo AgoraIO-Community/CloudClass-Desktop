@@ -1,5 +1,4 @@
-import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { Icon, SvgGrantBoardIcon } from '~components/icon';
@@ -77,44 +76,52 @@ export interface BaseVideoPlayerProps {
 
   isOnPodium?: boolean;
 
+  privateCallEnabled?: boolean;
+
   placement?: any;
 
+  /**
+   * 隐藏私密聊天按钮
+   */
+  hidePrivateChat?: boolean;
   userType?: 'student' | 'teacher';
 }
 
-type VideoPlayerType = BaseVideoPlayerProps & BaseProps & BaseVideoPlayerMethods
+type VideoPlayerType = BaseVideoPlayerProps & BaseProps
 
-export type BaseVideoPlayerMethods = {
+export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 是否是主持人，主持人可以操作所有人的摄像头，麦克风，授权白板操作权限，送出星星
    */
   /**
    * 点击摄像头的按钮时的回调
    */
-   onCameraClick: (uid: string | number) => Promise<any>;
-   /**
-    * 点击麦克风按钮时的回调
-    */
-   onMicClick: (uid: string | number) => Promise<any>;
-   /**
-    * 全体下讲台
-    */
-   onOffAllPodiumClick?: () => Promise<any>;
-   /**
-    * 下讲台
-    */
-   onOffPodiumClick: (uid: string | number) => Promise<any>;
-   /**
-    * 点击白板操作授权按钮时的回调
-    */
-   onWhiteboardClick: (uid: string | number) => Promise<any>;
-   /**
-    * 发送星星给学生
-    */
-   onSendStar: (uid: string | number) => Promise<any>;
+  onCameraClick: (uid: string | number) => Promise<any>;
+  /**
+   * 点击麦克风按钮时的回调
+   */
+  onMicClick: (uid: string | number) => Promise<any>;
+  /**
+   * 全体下讲台
+   */
+  onOffAllPodiumClick?: () => Promise<any>;
+  /**
+   * 下讲台
+   */
+  onOffPodiumClick: (uid: string | number) => Promise<any>;
+  /**
+   * 点击白板操作授权按钮时的回调
+   */
+  onWhiteboardClick: (uid: string | number) => Promise<any>;
+  /**
+   * 发送星星给学生
+   */
+  onSendStar: (uid: string | number) => Promise<any>;
+  /**
+   * 私密语音聊天
+   */
+  onPrivateChat?: (uid:string | number) => Promise<any>;
 }
-
-export interface VideoPlayerProps extends VideoPlayerType {}
 
 interface AnimSvga {
   id: string
@@ -138,6 +145,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideOffPodium = false,
   hideStars = false,
   hideBoardGranted = false,
+  privateCallEnabled = false,
   isOnPodium,
   placement = 'bottom',
   canHoverHideOffAllPodium = false,
@@ -148,6 +156,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
+  hidePrivateChat = false,
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
   const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
@@ -232,6 +242,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               />
             </Tooltip>
           )}
+          {hidePrivateChat ? null : (
+            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
+              <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
+                onPrivateChat(uid)
+              }}></div>
+          </Tooltip>
+          )}
         </>
       ) : null}
     </div>
@@ -304,6 +321,7 @@ export type VideoItemProps = Omit<VideoPlayerProps,
   | 'onOffPodiumClick'
   | 'onWhiteboardClick'
   | 'onSendStar'
+  | 'onPrivateChat'
 >
 
 export interface VideoMarqueeListProps {
@@ -328,6 +346,10 @@ export interface VideoMarqueeListProps {
   * 发送星星给学生
   */
   onSendStar: (uid: string | number) => Promise<any>;
+  /**
+   * 开启私密语音聊天
+   */
+  onPrivateChat?: (uid: string | number) => Promise<any>;
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -336,7 +358,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   onMicClick,
   onOffPodiumClick,
   onWhiteboardClick,
-  onSendStar
+  onSendStar,
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null)
@@ -422,6 +445,9 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onWhiteboardClick={onWhiteboardClick}
               onSendStar={async () => {
                 await onSendStar(videoStream.uid)
+              }}
+              onPrivateChat={async () => {
+                await onPrivateChat(videoStream.uid)
               }}
               ></VideoPlayer>
           </div>

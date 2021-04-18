@@ -1,11 +1,12 @@
-import * as React from 'react';
+import React from 'react'
 import { Button } from '~components/button'
-import { t } from '~components/i18n'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
-import { HomeModule } from '~utilities/types'
+import { DatePicker } from '~components/date-picker'
+import { t } from '~components/i18n'
 import './index.css'
+import { HomeModule, OnChangeEvents } from '~utilities/types'
 
 const {Option}: any = Select
 
@@ -17,17 +18,15 @@ export interface HomeAttributes {
   role: string,
   scenario: string,
   duration: number,
-  version: string,
   language: string,
-  region: string,
 }
 
-export interface HomeProps extends HomeModule<Exclude<HomeAttributes, 'version'>> {
-  onClick: () => void | Promise<void>
-  version: string
+export interface HomeProps extends HomeModule<HomeAttributes> {
+  onClick: () => void | Promise<void>;
+  version: string;
 }
 
-export const Home: React.FC<any> = ({
+export const Home: React.FC<HomeProps> = ({
   roomId,
   userId,
   userName,
@@ -37,8 +36,6 @@ export const Home: React.FC<any> = ({
   duration,
   version,
   language,
-  region,
-  onChangeRegion,
   onChangeRole,
   onChangeScenario,
   onChangeLanguage,
@@ -133,20 +130,6 @@ export const Home: React.FC<any> = ({
               <Select id="language" value={language} onChange={onChangeLanguage} placeholder={t('home.language_placeholder')}>
                 <Option value="zh">中文</Option>
                 <Option value="en">English</Option>
-              </Select>
-            </Col>
-          </Row>
-          <Row className="home-row-item">
-            <Col>
-              <label htmlFor="region">
-                <span>{t('home.region')}</span>
-              </label>
-            </Col>
-            <Col>
-              <Select id="region" value={region} onChange={onChangeRegion} placeholder={t('home.region_placeholder')}>
-                <Option value="CN">CN</Option>
-                <Option value="NS">NA</Option>
-                <Option value="AP">AP</Option>
               </Select>
             </Col>
           </Row>

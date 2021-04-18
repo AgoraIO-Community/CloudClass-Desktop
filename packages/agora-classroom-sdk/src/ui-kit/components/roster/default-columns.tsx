@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import React from 'react';
 import { t } from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Column, Profile } from '~components/roster';
@@ -39,22 +40,20 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_, profile, hover) => {
+    render: (_, profile, hover, userType) => {
       const cls = classnames({
+        'podium-svg': 1,
         [`${!!profile.onPodium ? 'on' : 'off'}-podium`]: 1,
+        [`student-${!!profile.onPodium ? 'on' : 'off'}-podium`]: userType === 'student',
       })
       return (
-        <Icon
-          hover={hover}
-          className={cls}
-          type="on-podium"
-        />
+        <div className={cls}></div>
       )
     }
   },
   {
     key: 'whiteboardGranted',
-    name: 'roster.board_state',
+    name: 'roster.granted',
     action: 'whiteboard',
     render: (_, profile, hover, userType) => {
       const cls = classnames({
@@ -82,11 +81,13 @@ export const defaultColumns: Column[] = [
         // [`disabled`]: profile.disabled
       })
       return (
-        <Icon
-          hover={hover}
-          className={cls}
-          type={type}
-        />
+        <span className="camera-enabled">
+          <Icon
+            hover={hover}
+            className={cls}
+            type={type}
+          />
+        </span>
       )
     },
   },
@@ -104,12 +105,15 @@ export const defaultColumns: Column[] = [
         [`${className}`]: 1,
         // [`disabled`]: profile.disabled
       })
+      console.log('mic', hover)
       return (
-        <Icon
-          hover={hover}
-          className={cls}
-          type={type}
-        />
+        <span className="mic-enabled">
+          <Icon
+            hover={hover}
+            className={cls}
+            type={type}
+          />
+        </span>
       )
     },
   },
@@ -136,6 +140,7 @@ export const defaultColumns: Column[] = [
     visibleRoles: ['assistant', 'teacher'],
     // FIXME: 不能点击时的样式
     render: (_, profile, hover) => {
+      console.log('kick', hover)
       return (
         <span className="kick-out">
           <Icon hover={hover} type="exit" />

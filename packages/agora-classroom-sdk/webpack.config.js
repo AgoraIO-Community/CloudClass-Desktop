@@ -9,6 +9,10 @@ const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
 
 const config = require('dotenv').config().parsed
 
+const packageInfo = require('./package.json')
+
+const swSrcPath = packageInfo.swSrcPath
+
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const ModuleFederationPlugin = require("webpack").container
 //   .ModuleFederationPlugin;
@@ -179,7 +183,7 @@ module.exports = {
       // injectionPoint: '__WB_MANIFEST',
       // importWorkboxFrom: 'local',
       // importsDirectory: path.join(__dirname, 'public'),
-      swSrc: path.join(__dirname, './src/sw/service-worker.ts'),
+      swSrc: path.join(__dirname, swSrcPath),
       // swSrc: path.join(process.cwd(), '/src/sw/index.worker.js'),
       swDest: 'serviceWorker.js',
       include: [],

@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '~components';
 import { t, changeLanguage, transI18n } from '~components/i18n'
 

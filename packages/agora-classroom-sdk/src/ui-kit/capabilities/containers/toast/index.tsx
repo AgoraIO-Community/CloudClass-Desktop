@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
-import { useGlobalContext } from 'agora-edu-sdk'
+import { useGlobalContext } from 'agora-edu-core'
 import { useEffect } from 'react'
 import { transI18n } from '@/ui-kit/components'
+import { formatCountDown, TimeFormatType } from '@/infra/utils'
 
 type ToastType = any
 
@@ -38,6 +39,15 @@ export const ToastContainer = observer(() => {
     'error.unknown': (props: any) => toast('error.unknown', props),
     'toast.audio_equipment_has_changed': (props: any) => toast('toast.audio_equipment_has_changed', props),
     'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
+    'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'toast.time_interval_between_close': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'private_media_chat.chat_started': (props: any) => toast('private_media_chat.chat_started', props),
+    'private_media_chat.chat_ended': (props: any) => toast('private_media_chat.chat_ended', props),
+    'co_video.received_student_cancel': (props: any) => toast('co_video.received_student_cancel', props),
+    'co_video.received_teacher_refused': (props: any) => toast('co_video.received_teacher_refused', props),
+    'co_video.received_student_hands_up': (props: any) => toast('co_video.received_student_hands_up', props)
   }
   
 

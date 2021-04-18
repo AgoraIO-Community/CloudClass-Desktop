@@ -1,5 +1,4 @@
-import { cloneElement, forwardRef, isValidElement } from 'react';
-import * as React from 'react';
+import React, { cloneElement, forwardRef, isValidElement } from 'react';
 import RcTooltip from 'rc-tooltip';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';

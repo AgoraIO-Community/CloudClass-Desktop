@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import i18n from "i18next";
 import { isEmpty } from "lodash";
 import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
@@ -25,6 +24,8 @@ const resources = {
       "Close Whiteboard": "close whiteboard",
       "Open Whiteboard": "open whiteboard",
       "Star": 'star',
+      "Open Private Call": "open private call",
+      "Close Private Call": "close private call",
       ...en
     }
   },
@@ -39,6 +40,8 @@ const resources = {
       "Close Whiteboard": "取消授权白板",
       "Open Whiteboard": "授权白板",
       "Star": '奖励',
+      "Open Private Call": "开启私密语音",
+      "Close Private Call": "关闭私密语音",
       ...zh
     }
   }
@@ -149,7 +152,6 @@ export const I18nProvider: React.FC<I18nProvider> = ({children, language}) => {
   }, [language])
   
   return (
-    //@ts-ignore
     <I18nextProvider i18n={i18n}>
       {children}
     </I18nextProvider>

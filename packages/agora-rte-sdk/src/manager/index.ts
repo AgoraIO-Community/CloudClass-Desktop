@@ -13,6 +13,9 @@ import { EduClassroomDataController } from '../room/edu-classroom-data-controlle
 import { GenericErrorWrapper } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
 import { reportService } from '../core/services/report-service';
+import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
+import { get } from 'lodash';
+import { AgoraWebRtcWrapper } from '../core/media-service/web';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -154,6 +157,14 @@ export class EduManager extends EventEmitter {
     return this._rtmConnectionState
   }
 
+  get streamCoordinator(): AgoraWebStreamCoordinator | undefined {
+    let sdkWrapper = this.mediaService.sdkWrapper
+    if(sdkWrapper instanceof AgoraWebRtcWrapper) {
+      return (this.mediaService.sdkWrapper as AgoraWebRtcWrapper).streamCoordinator
+    }
+    return undefined
+  }
+
 
   async login(userUuid: string) {
     try {
@@ -270,6 +281,7 @@ export class EduManager extends EventEmitter {
     })
     this._classroomMap[params.roomUuid] = classroomManager
     this._dataBuffer[params.roomUuid] = new EduClassroomDataController(this._classroomMap[params.roomUuid])
+    classroomManager.syncStreamCoordinator()
     return this._classroomMap[params.roomUuid]
   }
 }

@@ -5,6 +5,7 @@
   flex: 1;
   border-radius: 4px;
   min-width: 300px;
+  margin-left: 2px;
   @apply border-l border-gray-100;
 }
 
@@ -64,10 +65,13 @@
   border: 1px solid #ececf1;
   position: absolute;
   bottom: 0;
+  z-index: 999;
 }
 
 .chat-texting > textarea {
-  @apply resize-none w-full;
+  @apply w-full outline-none border-none resize-none;
+  height: 50px;
+  transition: .3s;
 }
 
 .chat-texting.focus > textarea {
@@ -87,4 +91,18 @@
 .chat-texting-message:active,
 .chat-texting-message:focus {
   @apply outline-none;
+}
+
+.no-discussion-svg, .can-discussion-svg {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: url('../icon/assets/svg/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
+  cursor: pointer;
+}
+
+.can-discussion-svg {
+  background: url('../icon/assets/svg/icon-nodiscussion-default.svg')
 }

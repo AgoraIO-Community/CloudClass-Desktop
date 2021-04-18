@@ -1,4 +1,4 @@
-import { useBoardContext, mapFileType, useGlobalContext } from 'agora-edu-sdk';
+import { useBoardContext, mapFileType, useGlobalContext, PPTKind } from 'agora-edu-core';
 import { EduLogger } from 'agora-rte-sdk';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
@@ -8,7 +8,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Draggable from 'react-draggable';
 import { BehaviorSubject } from 'rxjs';
-import { PPTKind } from 'white-web-sdk';
 import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast, transI18n } from '~ui-kit';
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
@@ -48,6 +47,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     cancelUpload,
     removeMaterialList,
     room,
+    doUpload
   } = useBoardContext()
 
   const {
@@ -176,7 +176,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     })
     setShowUploadModal(true)
     try {
-      await handleUpload(payload)
+      await doUpload(payload)
       fileRef.current!.value = ""
     } catch (e) {
       fileRef.current!.value = ""

@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext } from 'agora-edu-sdk'
+import { useRoomContext, useGlobalContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -11,7 +11,7 @@ import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/co
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
-import { useEffectOnce } from '@/hooks/utils'
+import { useEffectOnce } from '@/infra/hooks/utils'
 
 export const MidClassScenario = observer(() => {
 

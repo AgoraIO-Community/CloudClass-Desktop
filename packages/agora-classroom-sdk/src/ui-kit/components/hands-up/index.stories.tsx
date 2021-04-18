@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { HandsUpManager, HandsUpSender, HandsUpState } from '~components/hands-up';
 import { StudentInfo } from './types';
 

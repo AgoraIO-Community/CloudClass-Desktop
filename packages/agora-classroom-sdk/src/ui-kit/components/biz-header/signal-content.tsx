@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { transI18n } from '~components/i18n';
 import { MonitorInfo } from '.';
 

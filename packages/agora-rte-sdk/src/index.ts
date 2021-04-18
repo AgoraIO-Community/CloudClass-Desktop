@@ -31,7 +31,7 @@ export { EduManager } from './manager/index';
 export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
 export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
 export { AgoraWebRtcWrapper } from './core/media-service/web/index';
-export {CameraOption} from './core/media-service/interfaces';
+export { StreamSubscribeOptions } from './core/media-service/web/coordinator';
 
 export type { LocalUserRenderer, UserRenderer, RemoteUserRenderer } from './core/media-service/renderer/index';
 export type { EduClassroomManager } from './room/edu-classroom-manager';
@@ -73,7 +73,7 @@ export type {
 export type { EduStream, EduUser } from './interfaces';
 export type { EduUserService } from './user/edu-user-service';
 export type { IMediaRenderer } from './core/media-service/renderer'
-export type { StartScreenShareParams, PrepareScreenShareParams } from './core/media-service/interfaces';
+export type { StartScreenShareParams, PrepareScreenShareParams, CameraOption } from './core/media-service/interfaces';
 export type { MediaService } from './core/media-service'
 export type {
   RoomResponseData,

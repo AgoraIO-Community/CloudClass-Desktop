@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
 import { Button } from '~components/button';
 import { Tooltip, TooltipProps } from '~components/tooltip';

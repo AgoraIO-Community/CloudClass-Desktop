@@ -1,4 +1,4 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource } from 'agora-edu-sdk'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource } from 'agora-edu-core'
 import { ZoomItemType } from '@/ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'

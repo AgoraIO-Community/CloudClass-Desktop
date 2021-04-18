@@ -32,8 +32,8 @@ export const zh = {
   'roster': {
     'teacher_name': '教师姓名：',
     'user_list': '人员列表',
-    'student_name': '学生姓名',
-    'student_co_video': '学生上下台',
+    'student_name': '姓名',
+    'student_co_video': '上下台',
     'close_student_co_video': '你已下台，暂时不能进行互动了哦',
     'open_student_co_video': '你已被老师邀请上台，请积极互动哦',
     'board_state': '学生授权',
@@ -57,6 +57,10 @@ export const zh = {
     'received_message_timeout': '消息未响应，请重新尝试',
     'hands_up_requsted': '发送举手申请成功',
     'hands_up_cancelled': '举手申请已取消'
+  },
+  'private_media_chat': {
+    'chat_started': '私密聊天开始',
+    'chat_ended': '私密聊天结束'
   },
   'placeholder': {
     'empty_chat': '还没有消息',
@@ -83,6 +87,8 @@ export const zh = {
     'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'toast': {
+    'granted_board_success': '授权白板成功',
+    'revoke_board_success': '收回白板成功', 
     'create_screen_share_failed': '创建屏幕分享失败',
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
@@ -184,9 +190,9 @@ export const zh = {
     'failed_to_join_board': '加入白板失败',
     'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason}`,
-    'time_interval_between_end': `课程还有 {reason} 结束`,
-    'class_is_end': `下课咯，教室还有 {reason} 关闭`,
-    'time_interval_between_close': `教室还有 {reason} 分钟关闭`,
+    'time_interval_between_end': `课程还有{reason}结束`,
+    'class_is_end': `下课咯，教室还有{reason}关闭`,
+    'time_interval_between_close': `教室还有{reason}关闭`,
     'reward_limit': '奖杯已全部发完',
     'chat_disable': '禁言模式开启',
     'chat_enable': '禁言模式关闭',

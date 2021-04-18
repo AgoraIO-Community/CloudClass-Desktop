@@ -1,5 +1,5 @@
-import { BusinessExceptions } from '@/utils/biz-error'
-import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext } from 'agora-edu-sdk'
+import { BusinessExceptions } from '@/infra/biz-error'
+import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext } from 'agora-edu-core'
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
@@ -340,6 +340,8 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
+
+  console.log('Record isRecording ', starting)
   const { removeDialog, addToast } = useGlobalContext()
   const {
     startRecording,

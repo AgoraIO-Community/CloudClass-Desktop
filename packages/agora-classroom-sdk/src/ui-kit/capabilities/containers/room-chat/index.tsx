@@ -1,7 +1,7 @@
 import { Chat, Icon } from '~components'
 import { observer } from 'mobx-react'
 import * as React from 'react';
-import { useChatContext, useRoomContext } from 'agora-edu-sdk';
+import { useChatContext, useRoomContext } from 'agora-edu-core';
 import { useCallback } from 'react';
 import { get } from 'lodash';
 

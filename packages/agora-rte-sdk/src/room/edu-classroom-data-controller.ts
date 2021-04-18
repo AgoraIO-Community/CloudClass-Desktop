@@ -2,6 +2,7 @@ import { diff } from 'deep-diff';
 import { cloneDeep, get, isEmpty, pick, set, setWith } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { EduLogger } from '../core/logger';
+import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import {
   EduAudioSourceType,
   EduChannelMessageCmdType, EduClassroomAttrs,
@@ -49,6 +50,7 @@ export class EduClassroomDataController {
   private _userList: EduUserData[] = [];
 
   private _localUserUuid: string = ''
+  public streamCoordinator?: AgoraWebStreamCoordinator
 
   setLocalUserUuid(v: string) {
     this._localUserUuid = v
@@ -932,6 +934,10 @@ export class EduClassroomDataController {
     EduLogger.info(`[${this._id}] before [${seqId}]#updateStreamList: `, this._userList, this._streamList)
     this.addStreams(onlineStreams, operatorUser, cause, seqId)
     this.removeStreams(offlineUsers, operatorUser, cause, seqId)
+    if(this.streamCoordinator) {
+      this.streamCoordinator.addEduStreams(onlineStreams)
+      this.streamCoordinator.removeEduStreams(offlineUsers)
+    }
     EduLogger.info(`[${this._id}] after [${seqId}]#updateStreamList: `, this._userList, this._streamList)
   }
 

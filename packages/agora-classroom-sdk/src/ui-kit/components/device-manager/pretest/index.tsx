@@ -1,6 +1,5 @@
 import classnames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
-import * as React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~components/button';
 import { t, transI18n } from '~components/i18n';
@@ -71,6 +70,8 @@ export const Pretest: React.FC<PretestProps> = ({
 
     const [level, setLevel] = useState<number>(0)
 
+    const [testLevel, setTestLevel] = useState<number>(0)
+
     const timer = useRef<any>(null)
 
     const audioElementRef = useRef<HTMLAudioElement | null>(null)
@@ -88,16 +89,20 @@ export const Pretest: React.FC<PretestProps> = ({
         const audioElement = new Audio(speakerTestUrl);
         audioElement.onended = () => {
             setDisable(false)
-            !isNative && setLevel(0)
+            // !isNative && setLevel(0)
+            setTestLevel(0)
             timer.current && window.clearInterval(timer.current)
         }
         audioElement.play()
         audioElementRef.current = audioElement
-        if (!isNative) {
-            timer.current = window.setInterval(() => {
-                setLevel(audioElement.volume * 100)
-            })
-        }
+        // if (!isNative) {
+        //     timer.current = window.setInterval(() => {
+        //         setLevel(audioElement.volume * 100)
+        //     })
+        // }
+        timer.current = window.setInterval(() => {
+            setTestLevel(Math.floor(Math.random() * 34))
+        }, 500)
         setDisable(true)
     }
 
@@ -214,7 +219,8 @@ export const Pretest: React.FC<PretestProps> = ({
                     <div className="device-volume-test">
                         <Icon type="speaker" color="#0073FF"/>
                         <Volume
-                            currentVolume={isNative ? speakerLevel : level}
+                            // currentVolume={isNative ? speakerLevel : level}
+                            currentVolume={testLevel}
                             maxLength={33}
                             style={{marginLeft: 6}}
                         />

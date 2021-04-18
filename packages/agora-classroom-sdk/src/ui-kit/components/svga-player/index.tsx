@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { BaseProps } from '~components/interface/base-props';
 import { useAudioPlayer, useTimeout } from '~utilities/hooks';
 import rewardAudio from './assets/audio/reward.mp3';

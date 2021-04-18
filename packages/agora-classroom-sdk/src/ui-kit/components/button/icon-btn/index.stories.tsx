@@ -1,3 +1,4 @@
+import React from 'react';
 import { Meta } from '@storybook/react';
 import { IconButton } from '~components/button/icon-btn';
 import { Icon } from '~components/icon'

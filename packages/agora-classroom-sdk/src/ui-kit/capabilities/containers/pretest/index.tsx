@@ -1,4 +1,4 @@
-import { useGlobalContext, usePretestContext } from 'agora-edu-sdk'
+import { useGlobalContext, usePretestContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -84,7 +84,7 @@ export const PretestContainer = observer(() => {
     return (
         <div className="fixed-container">
             <Modal
-                title={t('pretest.title')}
+                title={t('pretest.settingTitle')}
                 width={720}
                 footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
                 onOk={handleOk}

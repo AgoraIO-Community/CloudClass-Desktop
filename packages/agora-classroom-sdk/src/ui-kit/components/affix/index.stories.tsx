@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Affix, AffixProps } from '~components/affix';
 import { Icon } from '~components/icon';

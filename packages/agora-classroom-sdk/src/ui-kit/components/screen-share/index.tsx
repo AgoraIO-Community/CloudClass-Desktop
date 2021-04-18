@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { Icon } from '~components/icon';
 import { BaseProps } from '~components/interface/base-props';
 import './index.css';

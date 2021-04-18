@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext } from 'agora-edu-sdk'
+import { useRoomContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -10,7 +10,7 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {VideoList} from '~capabilities/containers/video-player'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
-import { useEffectOnce } from '@/hooks/utils'
+import { useEffectOnce } from '@/infra/hooks/utils'
 
 export const OneToOneScenario = observer(() => {
 

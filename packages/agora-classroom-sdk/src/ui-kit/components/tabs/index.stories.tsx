@@ -1,3 +1,4 @@
+import React from 'react';
 import { Meta } from '@storybook/react';
 import { Tabs, TabPane } from '~components/tabs';
 import { Icon } from '~components/icon';

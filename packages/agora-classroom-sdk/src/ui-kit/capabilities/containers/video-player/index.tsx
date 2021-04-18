@@ -1,4 +1,4 @@
-import { EduMediaStream, useGlobalContext, useSmallClassVideoControlContext, useVideoControlContext } from 'agora-edu-sdk';
+import { EduMediaStream, useGlobalContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -153,6 +153,20 @@ export const VideoMarqueeStudentContainer = observer(() => {
     sceneVideoConfig.isHost
   ])
 
+  const {
+    onStartPrivateChat,
+    onStopPrivateChat,
+    inPrivateConversation
+  } = usePrivateChatContext()
+
+  const onPrivateChat = async (toUuid:string | number) => {
+    if(inPrivateConversation) {
+      await onStopPrivateChat(`${toUuid}`)
+    } else {
+      await onStartPrivateChat(`${toUuid}`)
+    }
+  }
+
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">
@@ -163,6 +177,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
           onSendStar={onSendStar}
           onWhiteboardClick={onWhiteboardClick}
           onOffPodiumClick={onOffPodiumClick}
+          onPrivateChat={onPrivateChat}
         />
       </div>
     : null

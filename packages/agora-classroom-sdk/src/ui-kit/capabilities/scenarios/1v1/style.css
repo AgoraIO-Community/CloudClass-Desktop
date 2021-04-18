@@ -2,6 +2,7 @@
   position: absolute;
   left: 15px;
   top: 5rem;
+  transition: .5s;
 }
 
 .zoom-position {

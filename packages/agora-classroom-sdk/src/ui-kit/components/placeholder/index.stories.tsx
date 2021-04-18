@@ -1,3 +1,4 @@
+import React from 'react'
 import { Meta } from '@storybook/react';
 import { Placeholder } from '~components/placeholder'
 

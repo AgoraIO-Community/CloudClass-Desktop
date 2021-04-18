@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Tool, ToolItem } from './tool';
@@ -46,6 +46,7 @@ export const Toolbar: FC<ToolbarProps> = ({
 }) => {
   const [opened, setOpened] = useState<boolean>(defaultOpened);
   const [menuHover, setMenuHover] = useState<boolean>(false);
+  const toolbarEl = useRef<HTMLDivElement | null>(null)
   const cls = classnames({
     [`toolbar`]: 1,
     [`opened`]: opened,
@@ -53,12 +54,18 @@ export const Toolbar: FC<ToolbarProps> = ({
   });
 
   return (
-    <div className={cls} style={style}>
+    <div className={cls} style={style} ref={toolbarEl}>
       <div
         className={`menu ${opened ? 'unfold' : 'fold'}`}
         onMouseEnter={() => setMenuHover(true)}
         onMouseLeave={() => setMenuHover(false)}
         onClick={() => {
+          // console.log({opened, el: toolbarEl.current})
+          if (opened) {
+            toolbarEl.current && toolbarEl.current.parentElement && (toolbarEl.current.parentElement.style.left = '0px');
+          } else {
+            toolbarEl.current && toolbarEl.current.parentElement && (toolbarEl.current.parentElement.style.left = '15px');
+          }
           setOpened(!opened);
           onOpenedChange && onOpenedChange(!opened);
         }}>

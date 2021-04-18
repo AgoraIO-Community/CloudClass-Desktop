@@ -1,5 +1,4 @@
-import { FC, ReactEventHandler } from 'react';
-import * as React from 'react';
+import React, { FC, ReactEventHandler } from 'react';
 import {t} from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
