@@ -71,7 +71,6 @@ export const NavigationBar = observer(() => {
   }
 
   function handleClick (type: string) {
-    console.log('dialog type', type)
     const showDialog = bizHeaderDialogs[type]
     showDialog && showDialog(type)
   }
@@ -80,18 +79,16 @@ export const NavigationBar = observer(() => {
     const {classState, duration} = liveClassStatus
 
     const stateMap = {
-      'default': `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`,
+      'default': () => `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`,
       'beforeStart': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
       'StartOrEnd': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
     }
 
-    console.log('# stateMap ', stateMap)
-
     if (stateMap[classState]) {
-      return stateMap[classState]
+      return stateMap[classState]()
     }
 
-    return stateMap['default']
+    return stateMap['default']()
   }, [JSON.stringify(liveClassStatus), formatCountDown])
 
   return (

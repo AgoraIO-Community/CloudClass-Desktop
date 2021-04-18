@@ -53,7 +53,6 @@ export const HomePage = () => {
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
       onChangeDuration={onChangeDuration}
-      // onChangeStartDate={onChangeStartDate}
       onClick={() => {
         console.log('click')
       }}
