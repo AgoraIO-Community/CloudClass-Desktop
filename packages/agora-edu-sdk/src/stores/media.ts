@@ -87,8 +87,8 @@ export class MediaStore {
   _delay: number = 0
 
   @computed
-  get delay(): string {
-    return `${this._delay}`
+  get delay(): number {
+    return +this._delay
   }
 
   @observable

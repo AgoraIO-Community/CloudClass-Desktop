@@ -1,4 +1,7 @@
-import { useRecordingContext, useRoomDiagnosisContext, useGlobalContext, useRoomContext } from 'agora-edu-sdk'
+//import { observer } from 'mobx-react'
+//import { BizHeader } from '~ui-kit'
+// import { useRoomContext, useMediaContext, useRecordingContext } from 'agora-edu-sdk'
+import { useRecordingContext, useGlobalContext, useRoomContext, useMediaContext } from 'agora-edu-sdk'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import { useMemo } from 'react'
@@ -47,22 +50,25 @@ const formatCountDown = (time: number, mode: TimeFormatType): string => {
 }
 
 export const NavigationBar = observer(() => {
-
-  const {
-    navigationState
-  } = useRoomDiagnosisContext()
-
   const {
     isRecording
   } = useRecordingContext()
+  const {
+    roomInfo,
+    isCourseStart,
+    liveClassStatus
+  } = useRoomContext()
+  const {
+    isNative,
+    cpuUsage,
+    networkQuality,
+    networkLatency,
+    packetLostRate
+  } = useMediaContext()
 
   const {
     addDialog
   } = useGlobalContext()
-
-  const {
-    liveClassStatus
-  } = useRoomContext()
 
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
@@ -93,17 +99,17 @@ export const NavigationBar = observer(() => {
 
   return (
     <BizHeader
-      isNative={navigationState.isNative}
+      isNative={isNative}
       classStatusText={classStatusText}
-      isStarted={navigationState.isStarted}
+      isStarted={isCourseStart}
       isRecording={isRecording}
-      title={navigationState.title}
-      signalQuality={navigationState.signalQuality}
+      title={roomInfo.roomName}
+      signalQuality={networkQuality as any}
       monitor={{
-        cpuUsage: navigationState.cpuUsage,
-        networkLatency: navigationState.networkLatency,
-        networkQuality: navigationState.networkQuality,
-        packetLostRate: navigationState.packetLostRate,
+        cpuUsage: cpuUsage,
+        networkLatency: networkLatency,
+        networkQuality: networkQuality,
+        packetLostRate: packetLostRate,
       }}
       onClick={handleClick}
     />

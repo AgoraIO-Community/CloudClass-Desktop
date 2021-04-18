@@ -1,47 +1,20 @@
-import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
-import { get } from "lodash"
-import React, { createContext, ReactChild, useCallback, useContext, useState } from 'react'
 import { eduSDKApi } from "../services/edu-sdk-api"
 import { homeApi } from "../services/home-api"
-import { EduScenarioAppStore, RoomStore } from '../stores/index'
-import { AppStoreInitParams } from '../api/declare'
 import { StorageCourseWareItem } from "../types"
+import { get } from "lodash"
 
+import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
+import { useCallback, useState } from "react"
+import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
 
-export type CoreAppContext = Record<string, EduScenarioAppStore>
+export type {
+ CoreAppContext,
+} from './core'
 
-export const CoreContext = createContext<EduScenarioAppStore>(null as unknown as EduScenarioAppStore)
-
-export const CoreContextProvider = ({ params, children, dom, controller = null }: { params: AppStoreInitParams, children: ReactChild, dom: HTMLElement, controller?: any }) => {
-
-  const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(params, dom, controller))
-
-  //@ts-ignore
-  window.globalStore = store
-
-  return (
-    <CoreContext.Provider value={store}>
-      {children}
-    </CoreContext.Provider>
-  )
-}
-
-// 主要 context
-const useCoreContext = () => useContext(CoreContext)
-
-const useBoardStore = () => useCoreContext().boardStore
-
-const useRoomStore = () => useCoreContext().roomStore
-
-const usePretestStore = () => useCoreContext().pretestStore
-
-const useMediaStore = () => useCoreContext().mediaStore
-
-const useUIStore = () => useCoreContext().uiStore
-
-const useSceneStore = () => useCoreContext().sceneStore
-
-const useSmallClassStore = () => useCoreContext().roomStore.smallClassStore
+export {
+  CoreContext,
+  CoreContextProvider
+} from './core'
 
 export const useChatContext = () => {
   const core = useCoreContext()
@@ -177,7 +150,8 @@ export const useRoomContext = () => {
 
   const {
     startNativeScreenShareBy,
-    roomInfo
+    roomInfo,
+    classState
   } = useSceneStore()
 
   const {
@@ -208,6 +182,7 @@ export const useRoomContext = () => {
     handsUpStudentList,
     processUserCount,
     roomInfo,
+    isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
     liveClassStatus
@@ -477,70 +452,6 @@ export const useHandsUpContext = () => {
     processUserCount,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
-  }
-}
-
-export const useMediaContext = () => {
-
-  const {
-    removeDialog
-  } = useUIStore()
-
-  const pretestStore = usePretestStore()
-
-  const {
-    cameraList,
-    microphoneList,
-    speakerList,
-    cameraId,
-    microphoneId,
-    speakerId,
-    cameraRenderer,
-    microphoneLevel,
-  } = pretestStore
-
-  const changeDevice = useCallback(async (deviceType: string, value: any) => {
-    switch (deviceType) {
-      case 'camera': {
-        await pretestStore.changeCamera(value)
-        break;
-      }
-      case 'microphone': {
-        await pretestStore.changeMicrophone(value)
-        break;
-      }
-      case 'speaker': {
-        await pretestStore.changeTestSpeaker(value)
-        break;
-      }
-    }
-  }, [pretestStore])
-
-  const changeAudioVolume = useCallback(async (deviceType: string, value: any) => {
-    switch (deviceType) {
-      case 'speaker': {
-        await pretestStore.changeSpeakerVolume(value)
-        break;
-      }
-      case 'microphone': {
-        await pretestStore.changeMicrophoneVolume(value)
-        break;
-      }
-    }
-  }, [pretestStore])
-
-  return {
-    cameraList,
-    microphoneList,
-    speakerList,
-    cameraId,
-    microphoneId,
-    speakerId,
-    cameraRenderer,
-    microphoneLevel,
-    changeDevice,
-    changeAudioVolume,
-    removeDialog
   }
 }
 
