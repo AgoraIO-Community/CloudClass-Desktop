@@ -1,4 +1,6 @@
 export * from './context/provider'
+// export * from './api/index'
+export * from './context/mediaContext'
 
 export {
   mapFileType
