@@ -392,16 +392,20 @@ export class SceneStore extends SimpleInterval {
             // image: CustomBtoa(item.image),
           }))
           if (items.length) {
+            this.appStore.uiStore.fireDialog('screen-share', {
+              customScreenShareWindowVisible: this.customScreenShareWindowVisible,
+              customScreenShareItems: this.customScreenShareItems,
+            })
             // this.appStore.uiStore.addDialog(OpenShareScreen)
-            this.appStore.uiStore.addDialog(screenComponent)
+            // this.appStore.uiStore.addDialog(screenComponent)
           }
         })
       }).catch(err => {
         BizLogger.warn('show screen share window with items', err)
         if (err.code === 'ELECTRON_PERMISSION_DENIED') {
-          this.appStore.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing_permission_denied'))
+          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
         } else {
-          this.appStore.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing') + ` code: ${err.code}, msg: ${err.message}`)
+          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
         }
       })
     }
@@ -428,7 +432,7 @@ export class SceneStore extends SimpleInterval {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.appStore.uiStore.addToast(transI18n('create_screen_share_failed'))
+        this.appStore.uiStore.fireToast('create_screen_share_failed')
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -439,7 +443,7 @@ export class SceneStore extends SimpleInterval {
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       this.waitingShare = false
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
+      this.appStore.uiStore.fireToast('toast.failed_to_initiate_screen_sharing', {reason: `${err.message}`})
     }
   }
 
@@ -791,7 +795,7 @@ export class SceneStore extends SimpleInterval {
       }
       this.sharing = false
     } catch(err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_end_screen_sharing') + `${err.message}`)
+      this.appStore.uiStore.fireToast('toast.failed_to_end_screen_sharing', {reason: `${err.message}`})
     } finally {
       this.waitingShare = false
     }
@@ -824,12 +828,12 @@ export class SceneStore extends SimpleInterval {
         this.mediaService.screenRenderer.stop()
         this.mediaService.screenRenderer = undefined
         this._screenVideoRenderer = undefined
-        this.appStore.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing_to_remote') + `${err.message}`)
+        this.appStore.uiStore.fireToast('toast.failed_to_initiate_screen_sharing_to_remote', {reason: `${err.message}`})
       } else {
         if (err.code === 'PERMISSION_DENIED') {
-          this.appStore.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing_permission_denied'))
+          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
         } else {
-          this.appStore.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing') + ` code: ${err.code}, msg: ${err.message}`)
+          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
         }
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
@@ -980,7 +984,7 @@ export class SceneStore extends SimpleInterval {
       await this.mediaService.join(args)
       this.joiningRTC = true
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_join_rtc_please_refresh_and_try_again'))
+      this.appStore.uiStore.fireToast('toast.failed_to_join_rtc_please_refresh_and_try_again')
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err
@@ -1006,11 +1010,11 @@ export class SceneStore extends SimpleInterval {
         BizLogger.warn(`${err}`)
       }
       console.log('toast.leave_rtc_channel')
-      // this.appStore.uiStore.addToast(transI18n('toast.leave_rtc_channel'))
+      // this.appStore.uiStore.fireToast('toast.leave_rtc_channel'))
       this.appStore.reset()
     } catch (err) {
       console.log('toast.failed_to_leave_rtc')
-      // this.appStore.uiStore.addToast(transI18n('toast.failed_to_leave_rtc'))
+      // this.appStore.uiStore.fireToast('toast.failed_to_leave_rtc'))
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -1043,18 +1047,18 @@ export class SceneStore extends SimpleInterval {
     if (this.appStore.uiStore.loading) {
       return {
         placeHolderType: 'loading',
-        text: transI18n(`placeholder.loading`)
+        text: `placeholder.loading`
       }
     }
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
         placeHolderType: 'loading',
-        text: transI18n(`placeholder.teacher_noEnter`)
+        text: `placeholder.teacher_noEnter`
       }
     }
     return {
       placeHolderType: 'loading',
-      text: transI18n(`placeholder.teacher_Left`)
+      text: `placeholder.teacher_Left`
     }
   }
 
@@ -1063,19 +1067,19 @@ export class SceneStore extends SimpleInterval {
     if (this.appStore.uiStore.loading) {
       return {
         placeHolderType: 'loading',
-        text: transI18n(`placeholder.loading`)
+        text: `placeholder.loading`
       }
     }
     // if (this.classState)
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
         placeHolderType: 'noEnter',
-        text: transI18n(`placeholder.student_noEnter`)
+        text: `placeholder.student_noEnter`
       }
     }
     return {
       placeHolderType: 'loading',
-      text: transI18n(`placeholder.student_Left`)
+      text: `placeholder.student_Left`
     }
   }
 
@@ -1083,28 +1087,28 @@ export class SceneStore extends SimpleInterval {
     if (this.openingCamera === true) {
       return {
         placeHolderType: 'loading',
-        text: transI18n('placeholder.openingCamera')
+        text: 'placeholder.openingCamera'
       }
     }
 
     if (this.closingCamera === true) {
       return {
         placeHolderType: 'closedCamera',
-        text: transI18n('placeholder.closingCamera')
+        text: 'placeholder.closingCamera'
       }
     }
 
     if (!this.cameraEduStream) {
       return {
         placeHolderType: 'loading',
-        text: transI18n(`placeholder.loading`)
+        text: `placeholder.loading`
       }
     }
 
     if ((this.cameraEduStream && !!this.cameraEduStream.hasVideo === false)) {
       return {
         placeHolderType: 'muted',
-        text: transI18n('placeholder.closedCamera')
+        text: 'placeholder.closedCamera'
       }
     }
 
@@ -1115,7 +1119,7 @@ export class SceneStore extends SimpleInterval {
       if (isFreeze) {
         return {
           placeHolderType: 'broken',
-          text: transI18n('placeholder.noAvailableCamera')
+          text: 'placeholder.noAvailableCamera'
         }
       }
       if (this.cameraRenderer) {
@@ -1127,7 +1131,7 @@ export class SceneStore extends SimpleInterval {
     }
     return {
       placeHolderType: 'loading',
-      text: transI18n(`placeholder.loading`)
+      text: `placeholder.loading`
     }
   }
 
@@ -1146,7 +1150,7 @@ export class SceneStore extends SimpleInterval {
     if (!!stream.hasVideo === false) {
       return {
         placeHolderType: 'muted',
-        text: transI18n('placeholder.closedCamera')
+        text: 'placeholder.closedCamera'
       }
     }
 
@@ -1154,7 +1158,7 @@ export class SceneStore extends SimpleInterval {
     if (isFreeze) {
       return {
         placeHolderType: 'broken',
-        text: transI18n('placeholder.noAvailableCamera')
+        text: 'placeholder.noAvailableCamera'
       }
     }
 
@@ -1457,10 +1461,10 @@ export class SceneStore extends SimpleInterval {
       })
       // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStart)
       // this.classState = true
-      this.appStore.uiStore.addToast(transI18n('toast.course_started_successfully'))
+      this.appStore.uiStore.fireToast('toast.course_started_successfully')
     } catch (err) {
       BizLogger.info(err)
-      this.appStore.uiStore.addToast(transI18n('toast.setting_start_failed'))
+      this.appStore.uiStore.fireToast('toast.setting_start_failed')
     }
   }
 
@@ -1472,10 +1476,10 @@ export class SceneStore extends SimpleInterval {
         state: 2
       })
       // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStop)
-      this.appStore.uiStore.addToast(transI18n('toast.the_course_ends_successfully'))
+      this.appStore.uiStore.fireToast('toast.the_course_ends_successfully')
     } catch (err) {
       BizLogger.info(err)
-      this.appStore.uiStore.addToast(transI18n('toast.setting_ended_failed'))
+      this.appStore.uiStore.fireToast('toast.setting_ended_failed')
     }
   }
 
@@ -1713,9 +1717,9 @@ export class SceneStore extends SimpleInterval {
       })
       // let {recordId} = await this.recordService.startRecording(this.roomUuid)
       // this.recordId = recordId
-      this.appStore.uiStore.addToast(transI18n('toast.start_recording_successfully'))
+      this.appStore.uiStore.fireToast('toast.start_recording_successfully')
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.start_recording_failed') + `, ${err.message}`)
+      this.appStore.uiStore.fireToast('toast.start_recording_failed', {reason: `${err.message}`})
     }
   }
 
@@ -1727,10 +1731,11 @@ export class SceneStore extends SimpleInterval {
         state: 0
       })
       // await this.recordService.stopRecording(this.roomUuid, this.recordId)
-      this.appStore.uiStore.addToast(transI18n('toast.successfully_ended_recording'))
+      this.appStore.uiStore.fireToast('toast.successfully_ended_recording')
       this.recordId = ''
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_end_recording') + `, ${err.message}`)
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.failed_to_end_recording', { reason: `${error}`})
     }
   }
 
@@ -1743,7 +1748,8 @@ export class SceneStore extends SimpleInterval {
       })
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(BusinessExceptions.getErrorText(error))
+      const {result, reason} = BusinessExceptions.getErrorText(error)
+      this.appStore.uiStore.fireToast(result, {reason})
     }
   }
 
@@ -1754,7 +1760,8 @@ export class SceneStore extends SimpleInterval {
       })
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(BusinessExceptions.getErrorText(error))
+      const {result, reason} = BusinessExceptions.getErrorText(error)
+      this.appStore.uiStore.fireToast(result, {reason})
     }
   }
 }

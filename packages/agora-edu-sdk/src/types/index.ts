@@ -1,5 +1,5 @@
 import { SceneDefinition } from "white-web-sdk"
-import { CourseWareItem, LanguageEnum } from "../api"
+import { CourseWareItem, LanguageEnum } from "../api/declare"
 
 export type StorageCourseWareItem = {
   size: string,

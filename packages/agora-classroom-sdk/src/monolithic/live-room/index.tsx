@@ -1,6 +1,8 @@
 import { RoomContainer } from '@/containers/app-container'
-import { RoomConfigProps } from 'agora-edu-sdk'
+import { useGlobalContext } from 'agora-edu-sdk'
 import { BizPageRouter } from '@/types'
+import { observer } from 'mobx-react'
+import './index.css'
 
 const routes: BizPageRouter[] = [
   // BizPageRouter.LaunchPage,
@@ -13,13 +15,16 @@ const routes: BizPageRouter[] = [
   // BizPageRouter.TestHomePage,
 ]
 
-export const LiveRoom = ({store}: RoomConfigProps<any>) => {
+export const LiveRoom = observer(() => {
+
+  const {mainPath, language, params} = useGlobalContext()
   
   return (
     <RoomContainer
-      mainPath={store.params.mainPath}
+      mainPath={mainPath!}
       routes={routes}
-      store={store}
+      language={language}
+      params={params}
     />
   )
-}
+})

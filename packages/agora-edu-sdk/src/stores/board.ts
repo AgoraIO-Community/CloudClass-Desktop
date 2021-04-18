@@ -5,7 +5,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
-import { ConvertedFile, CourseWareItem } from '../api';
+import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from '../stores/index';
@@ -757,10 +757,10 @@ export class BoardStore extends ZoomController {
   //   if (isTeacher) {
   //     if (this.online && this.room) {
   //       if (this.follow === true) {
-  //         this.appStore.uiStore.addToast(transI18n('toast.open_whiteboard_follow'))
+  //         this.appStore.uiStore.fireToast('toast.open_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Broadcaster)
   //       } else {
-  //         this.appStore.uiStore.addToast(transI18n('toast.close_whiteboard_follow'))
+  //         this.appStore.uiStore.fireToast('toast.close_whiteboard_follow'))
   //         this.room.setViewMode(ViewMode.Freedom)
   //       }
   //     }
@@ -1208,9 +1208,9 @@ export class BoardStore extends ZoomController {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_lock'))
+    //       this.appStore.uiStore.fireToast('toast.whiteboard_lock'))
     //     } else {
-    //       this.appStore.uiStore.addToast(transI18n('toast.whiteboard_unlock'))
+    //       this.appStore.uiStore.fireToast('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1221,7 +1221,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.uiStore.addToast(transI18n(notice))
+        this.appStore.uiStore.fireToast(notice)
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1439,9 +1439,9 @@ export class BoardStore extends ZoomController {
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      this.appStore.uiStore.addToast(`授权白板成功`)
+      this.appStore.uiStore.fireToast(`toast.granted_board_success`)
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_authorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1449,15 +1449,16 @@ export class BoardStore extends ZoomController {
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      this.appStore.uiStore.addToast(`取消授权白板成功`)
+      this.appStore.uiStore.fireToast(`toast.revoke_board_success`)
     } catch (err) {
-      this.appStore.uiStore.addToast(transI18n('toast.failed_to_deauthorize_whiteboard') + `${err.message}`)
+      this.appStore.uiStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
   @observable
   resizeObserver!: ResizeObserver 
 
+  @action.bound
   mount(dom: any) {
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
     if (this.boardClient && this.boardClient.room) {
@@ -1473,6 +1474,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   unmount() {
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null)
@@ -1488,6 +1490,7 @@ export class BoardStore extends ZoomController {
     this.showExtension = false
   }
 
+  @action.bound
   setZoomScale(operation: string) {
     if (operation === 'out') {
       const scale = this.moveRuleIndex(-1, this.scale)
@@ -1516,6 +1519,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   setFullScreen(type:boolean){
     this.room.setGlobalState({
       isFullScreen: type
@@ -1542,10 +1546,10 @@ export class BoardStore extends ZoomController {
   @computed
   get loadingStatus() {
     if (!this.ready) {
-      return transI18n("whiteboard.loading")
+      return "whiteboard.loading"
     }
     if (this.preloadingProgress !== -1) {
-      // return transI18n("whiteboard.downloading", {reason: this.preloadingProgress})
+      // return "whiteboard.downloading", {reason: this.preloadingProgress})
     }
 
     return ''
@@ -1555,6 +1559,7 @@ export class BoardStore extends ZoomController {
     return this.room.state.globalState as CustomizeGlobalState
   }
 
+  @action.bound
   async removeMaterialList(resourceUuids: string[]) {
     try {
       const res = await this.appStore.uploadService.removeMaterials({
@@ -1587,6 +1592,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async putCourseResource(resourceUuid: string) {
     const resource: any = this.allResources.find((it: any) => it.id === resourceUuid)
     if (resource) {
@@ -1620,6 +1626,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
     await netlessInsertImageOperation(this.room, {
@@ -1635,6 +1642,7 @@ export class BoardStore extends ZoomController {
     })
   }
 
+  @action.bound
   async putAV(url: string, type: string) {
     console.log("open media ", url, " type", type)
     if (type === 'video') {
@@ -1657,6 +1665,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async putSceneByResourceUuid(uuid: string) {
     try {
       const resource: any = this.allResources.find((resource: any) => resource.id === uuid)
@@ -1678,6 +1687,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async getFileInQueryMaterial(fileName: string) {
     return await this.appStore.uploadService.getFileInQueryMaterial({
       roomUuid: this.appStore.roomInfo.roomUuid,
@@ -1685,6 +1695,7 @@ export class BoardStore extends ZoomController {
     })
   }
 
+  @action.bound
   async handleUpload(payload: any) {    
     try {
       this.fileLoading = true
@@ -1713,13 +1724,17 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async cancelUpload() {
     await this.appStore.uploadService.cancelFileUpload()
   }
+
+  @action.bound
   clearScene() {
     this.room.cleanCurrentScene()
   }
 
+  @action.bound
   moveCamera() {
     if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
       this.room.scalePptToFit()
@@ -1778,6 +1793,7 @@ export class BoardStore extends ZoomController {
   //   }))
   // }
 
+  @action.bound
   async refreshState() {
     const newCourseWareList: any = [...this.allResources]
     for (let i = 0; i < newCourseWareList.length; i++) {
@@ -1790,6 +1806,7 @@ export class BoardStore extends ZoomController {
     this.downloadList = newCourseWareList
   }
 
+  @action.bound
   updateDownloadById (taskUuid: string, props: Partial<StorageCourseWareItem>) {
     const list = this.downloadList
     const idx = list.findIndex((item: StorageCourseWareItem) => item.taskUuid === taskUuid)
@@ -1799,6 +1816,7 @@ export class BoardStore extends ZoomController {
     this.downloadList = newList
   }
 
+  @action.bound
   async internalDownload(taskUuid: string) {
     const isCached = await agoraCaches.hasTaskUUID(taskUuid)
     if (isCached) {
@@ -1844,6 +1862,7 @@ export class BoardStore extends ZoomController {
   }
 
   // TODO: need handle service worker request abort
+  @action.bound
   async cancelDownload(taskUuid: string) {
     try {
       if (this.controller) {
@@ -1871,6 +1890,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async deleteAllCache() {
     try {
       await agoraCaches.clearAllCache()
@@ -1881,6 +1901,7 @@ export class BoardStore extends ZoomController {
     }
   }
 
+  @action.bound
   async downloadAll() {
     try {
       const courseItem = this.courseWareList

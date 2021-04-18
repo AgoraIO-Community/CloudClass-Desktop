@@ -1,4 +1,4 @@
-import { CourseWareItem } from "../api";
+import { CourseWareItem } from "../api/declare";
 import { CourseWareUploadResult, CreateMaterialParams } from "../types";
 import { fileSizeConversionUnit } from "../utilities/kit";
 import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";

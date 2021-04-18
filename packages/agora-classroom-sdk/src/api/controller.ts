@@ -1,6 +1,5 @@
 import { unmountComponentAtNode } from 'react-dom'
 import { AgoraEduEvent } from './declare'
-import { EduScenarioAppStore } from '../stores/index'
 import { render } from 'react-dom'
 import { ReactElement } from 'react'
 
@@ -24,7 +23,7 @@ export abstract class ClassRoomAbstractStore {
 export class ClassRoom<T extends ClassRoomAbstractStore> {
 
   private readonly store!: T
-  private dom!: Element
+  private dom!: HTMLElement
   private readonly controller: EduSDKController<T>
 
   constructor(context: EduSDKController<T>) {
@@ -39,9 +38,9 @@ export class ClassRoom<T extends ClassRoomAbstractStore> {
 export class EduSDKController<T extends ClassRoomAbstractStore> {
 
   private room!: ClassRoom<T>;
-  private _store?: T;
-  private dom!: Element;
+  private dom!: HTMLElement;
   public callback!: EventCallableFunction
+  public _storeDestroy!: CallableFunction
   private _state: EduSDKInternalStateEnum = EduSDKInternalStateEnum.Created
 
   private _lock: boolean = false
@@ -81,12 +80,7 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     return this._state
   }
 
-  get store() {
-    return this._store as T
-  }
-
-  create(store: T, component: ReactElement, dom: Element, callback: EventCallableFunction) {
-    this._store = store
+  create(component: ReactElement, dom: HTMLElement, callback: EventCallableFunction) {
     this.dom = dom
     this.callback = callback
     render(component, this.dom)
@@ -94,11 +88,17 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     this.callback(AgoraEduEvent.ready)
   }
 
+
+  bindStoreDestroy(destroy: CallableFunction) {
+    this._storeDestroy = destroy
+  }
+
   async destroy() {
-    await this.store.destroy()
+    if (this._storeDestroy) {
+      await this._storeDestroy()
+    }
     unmountComponentAtNode(this.dom)
     this._state = EduSDKInternalStateEnum.Destroyed
-    this._store = undefined
     this.callback(AgoraEduEvent.destroyed)
   }
 }
@@ -112,9 +112,6 @@ export class MainController {
   ) {
   }
 
-  createAppStore(store: EduScenarioAppStore, component: ReactElement, dom: Element, callback: EventCallableFunction) {
-    this.appController.create(store, component, dom, callback)
-  }
 
   getAppClassRoom() {
     return this.appController.getClassRoom()

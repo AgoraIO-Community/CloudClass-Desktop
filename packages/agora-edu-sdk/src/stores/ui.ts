@@ -1,3 +1,4 @@
+import { BehaviorSubject } from 'rxjs';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
@@ -81,8 +82,14 @@ export class UIStore {
 
   appStore: EduScenarioAppStore;
 
+  dialog$: BehaviorSubject<any>
+
+  toast$: BehaviorSubject<any>
+
   constructor(appStore: EduScenarioAppStore) {
     this.appStore = appStore
+    this.dialog$ = new BehaviorSubject<any>({})
+    this.toast$ = new BehaviorSubject<any>({})
     reaction(() => JSON.stringify([
       this.chatCollapse
     ]) , (data: string) => {
@@ -106,6 +113,15 @@ export class UIStore {
   }
 
   @action.bound
+  fireToast(eventName: string, props?: any, type?: string) {
+    this.toast$.next({
+      eventName,
+      props,
+      type
+    })
+  }
+
+  @action.bound
   addToast(desc: string, type?: 'success' | 'error' | 'warning') {
     const id = uuidv4()
     this.toastQueue.push({id, desc, type})
@@ -116,6 +132,14 @@ export class UIStore {
   removeToast(id: string) {
     this.toastQueue = this.toastQueue.filter(item => item.id != id);
     return id;
+  }
+
+  @action.bound
+  fireDialog(eventName: string, props?: any) {
+    this.dialog$.next({
+      eventName,
+      props
+    })
   }
 
   @action.bound

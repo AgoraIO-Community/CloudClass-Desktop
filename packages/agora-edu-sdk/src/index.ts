@@ -1,6 +1,4 @@
 export * from './context/provider'
-export * from './api/index'
-export * from './api/controller'
 
 export {
   t,
@@ -16,9 +14,7 @@ export {
   useStorageSWContext
 } from './utilities/kit'
 
-export type {
-  AppStoreConfigParams
-} from './stores/index'
+export * from './api/declare'
 
 export type {
   EduMediaStream

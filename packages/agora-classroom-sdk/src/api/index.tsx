@@ -1,13 +1,14 @@
-import { eduSDKApi } from '../services/edu-sdk-api';
-import { EduScenarioAppStore } from "../stores/index";
+import { getLiveRoomPath } from '@/router/index';
+import { CoreContextProvider, CourseWareList, eduSDKApi } from 'agora-edu-sdk';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
+import { ReactElement } from 'react';
 import { SceneDefinition } from 'white-web-sdk';
+import { LiveRoom } from '../monolithic/live-room';
+import { BizPagePath } from '../types';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
-import { BizPagePath } from '../types';
-import { cloneElement, ReactElement, ReactNode } from 'react';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -15,6 +16,17 @@ export interface AliOSSBucket {
   folder: string
   cdn: string
 }
+
+
+export const scenarioRoomPath = {
+  [EduRoomTypeEnum.Room1v1Class]: {
+    path: BizPagePath.OneToOnePath,
+  },
+  [EduRoomTypeEnum.RoomSmallClass]: {
+    path: BizPagePath.SmallClassPath,
+  }
+}
+
 
 export interface WhiteboardOSSConfig {
   bucket: AliOSSBucket
@@ -55,43 +67,6 @@ const sdkConfig: SDKConfig = {
 
 export type LanguageEnum = "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
-
-export type ConvertedFile = {
-  width: number,
-  height: number,
-  ppt: {
-    width: number,
-    src: string,
-    height: number
-  },
-  conversionFileUrl: string,
-}
-
-export type ConvertedFileList = ConvertedFile[]
-
-export type CourseWareItem = {
-  resourceName: string,
-  resourceUuid: string,
-  ext: string,
-  url: string,
-  conversion: {
-    type: string,
-  },
-  size: number,
-  updateTime: number,
-  scenes: SceneDefinition[],
-  convert?: boolean,
-  taskUuid?: string,
-  taskToken?: string,
-  taskProgress?: {
-    totalPageSize?: number,
-    convertedPageSize?: number,
-    convertedPercentage?: number,
-    convertedFileList: ConvertedFileList
-  }
-}
-
-export type CourseWareList = CourseWareItem[]
 
 /**
  * LaunchOption 接口
@@ -149,10 +124,6 @@ export type DiskOption = {
   courseWareList: AgoraEduCourseWare[]
 }
 
-export type DelegateType = {
-  delegate?: EduScenarioAppStore
-}
-
 const devicePath = '/pretest'
 export class AgoraEduSDK {
 
@@ -170,27 +141,19 @@ export class AgoraEduSDK {
 
   static config (params: AgoraEduSDKConfigParams) {
 
+    console.log('# set config' )
     checkConfigParams(params);
 
     Object.assign(sdkConfig.configParams, params)
-    // eduSDKApi.updateConfig({
-    //   sdkDomain: `TODO: sdkDomain`,
-    //   appId: sdkConfig.configParams.appId,
-    // })
+    eduSDKApi.updateConfig({
+      sdkDomain: `${sdkConfig.configParams.sdkDomain}`,
+      appId: sdkConfig.configParams.appId,
+    })
   }
 
   static _launchTime = 0
 
   static _replayTime = 0
-
-  static _map: Record<string, DelegateType> = {
-    "classroom": {
-      delegate: undefined
-    },
-    "replay": {
-      delegate: undefined
-    }
-  }
 
   private static appNode: ReactElement | null = null
 
@@ -203,7 +166,7 @@ export class AgoraEduSDK {
    * @param dom DOM元素
    * @param option LaunchOption
    */
-  static async launch(dom: Element, option: LaunchOption) {
+  static async launch(dom: HTMLElement, option: LaunchOption) {
     console.log("launch ", dom, " option ", option)
 
     if (controller.appController.hasCalled) {
@@ -220,17 +183,6 @@ export class AgoraEduSDK {
       const data = await eduSDKApi.getConfig()
 
       //@ts-ignore
-      const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
-        //@ts-ignore
-        const room = roomPath[roomType]
-        if (!room) {
-          return BizPagePath.OneToOnePath
-        }
-        return room.path
-      }
-      
-
-      //@ts-ignore
       let mainPath = getLiveRoomPath(option.roomType)
       console.log('mainPath ', mainPath)
       //@ts-ignore
@@ -242,12 +194,12 @@ export class AgoraEduSDK {
         mainPath = BizPagePath.PretestPagePath
       }
 
-      const store = new EduScenarioAppStore({
+      const params = {
         config: {
           agoraAppId: sdkConfig.configParams.appId,
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,
-          sdkDomain: sdkConfig.sdkDomain,
+          sdkDomain: `${sdkConfig.configParams.sdkDomain}`,
           region: option.region,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
@@ -278,8 +230,12 @@ export class AgoraEduSDK {
         mainPath: mainPath,
         roomPath: roomPath,
         pretest: option.pretest,
-      })
-      controller.appController.create(store, cloneElement(this.appNode!, {store: store}, null), dom, option.listener)
+      }
+      controller.appController.create(
+        <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
+            <LiveRoom />
+        </CoreContextProvider>
+      , dom, option.listener)
       //@ts-ignore
       window.globalStore = controller.appController.store
       unlock()
@@ -292,4 +248,4 @@ export class AgoraEduSDK {
   }
 }
 
-export * from './declare'
+export * from './declare';

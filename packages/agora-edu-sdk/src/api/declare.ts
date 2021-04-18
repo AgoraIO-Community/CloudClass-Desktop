@@ -1,4 +1,52 @@
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { SceneDefinition } from 'white-web-sdk';
+
+export type ConvertedFile = {
+  width: number,
+  height: number,
+  ppt: {
+    width: number,
+    src: string,
+    height: number
+  },
+  conversionFileUrl: string,
+}
+
+export type ConvertedFileList = ConvertedFile[]
+
+
+export type CourseWareItem = {
+  resourceName: string,
+  resourceUuid: string,
+  ext: string,
+  url: string,
+  conversion: {
+    type: string,
+  },
+  size: number,
+  updateTime: number,
+  scenes: SceneDefinition[],
+  convert?: boolean,
+  taskUuid?: string,
+  taskToken?: string,
+  taskProgress?: {
+    totalPageSize?: number,
+    convertedPageSize?: number,
+    convertedPercentage?: number,
+    convertedFileList: ConvertedFileList
+  }
+}
+
+export type CourseWareList = CourseWareItem[]
+
+type RoomInfoParams = {
+  roomName: string,
+  roomType: number,
+  roomUuid: string,
+  userName: string,
+  userRole: number,
+  userUuid: string,
+}
 
 export type AgoraRegion = Uppercase<AgoraRegionString>
 
@@ -13,6 +61,61 @@ export type AgoraRegionString =
   | 'cn'
   | 'ap'
   | 'ns'
+
+export type AppStoreConfigParams = {
+  agoraAppId: string,
+  agoraNetlessAppId: string,
+  // agoraRestFullToken: string
+  enableLog: boolean,
+  sdkDomain: string,
+  rtmUid: string,
+  rtmToken: string,
+  courseWareList: CourseWareList,
+  region?: AgoraRegion,
+  personalCourseWareList?: CourseWareList,
+  oss?: {
+    region: string,
+    bucketName: string,
+    folder: string,
+    accessKey: string,
+    secretKey: string,
+    endpoint: string,
+  },
+  recordUrl: string
+}
+
+export type LanguageEnum = "en" | "zh"
+
+export type AppStoreInitParams = {
+  roomInfoParams?: RoomInfoParams,
+  config: AppStoreConfigParams,
+  language: LanguageEnum,
+  startTime?: number,
+  duration?: number,
+  pretest?: boolean,
+  mainPath?: string,
+  roomPath?: string,
+  resetRoomInfo: boolean,
+}
+
+export type RoomInfo = {
+  roomName: string,
+  roomType: number,
+  userName: string,
+  userRole: EduRoleTypeEnum,
+  userUuid: string,
+  roomUuid: string,
+  rtmUid: string,
+  rtmToken: string,
+  groupName?: string,
+  groupUuid?: string,
+}
+
+export type DeviceInfo = {
+  cameraName: string,
+  microphoneName: string,
+}
+
 
 export type RoomConfigProps<T> = {
   store: T

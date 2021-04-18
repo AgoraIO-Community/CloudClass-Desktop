@@ -3,7 +3,8 @@ import { get } from "lodash"
 import React, { createContext, ReactChild, useCallback, useContext, useState } from 'react'
 import { eduSDKApi } from "../services/edu-sdk-api"
 import { homeApi } from "../services/home-api"
-import { AppStoreInitParams, EduScenarioAppStore } from '../stores/index'
+import { EduScenarioAppStore, RoomStore } from '../stores/index'
+import { AppStoreInitParams } from '../api/declare'
 import { StorageCourseWareItem } from "../types"
 
 
@@ -11,9 +12,12 @@ export type CoreAppContext = Record<string, EduScenarioAppStore>
 
 export const CoreContext = createContext<EduScenarioAppStore>(null as unknown as EduScenarioAppStore)
 
-export const CoreContextProvider = ({ params, children }: { params: AppStoreInitParams, children: ReactChild }) => {
+export const CoreContextProvider = ({ params, children, dom, controller = null }: { params: AppStoreInitParams, children: ReactChild, dom: HTMLElement, controller?: any }) => {
 
-  const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(params))
+  const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(params, dom, controller))
+
+  //@ts-ignore
+  window.globalStore = store
 
   return (
     <CoreContext.Provider value={store}>
@@ -190,10 +194,12 @@ export const useRoomContext = () => {
   const {
     kickOutBan,
     kickOutOnce,
+    join
   } = useRoomStore()
 
   return {
     destroyRoom,
+    joinRoom: join,
     removeDialog,
     startNativeScreenShareBy,
     teacherAcceptHandsUp,
@@ -221,16 +227,22 @@ export const useGlobalContext = () => {
   const { isFullScreen } = useBoardStore()
   const appStore = useCoreContext()
 
+  const mainPath = useCoreContext().params.mainPath
+
   const {
     addDialog,
     removeDialog,
     addToast,
+    toast$,
+    fireToast,
     removeToast,
     toastQueue,
     checked,
     loading,
     dialogQueue,
-    updateChecked
+    updateChecked,
+    dialog$,
+    fireDialog
   } = useUIStore()
 
   return {
@@ -238,13 +250,19 @@ export const useGlobalContext = () => {
     isFullScreen,
     addDialog,
     removeDialog,
+    toast$,
+    fireToast,
     addToast,
     checked,
     params: appStore.params,
     dialogQueue,
     removeToast,
     toastQueue,
-    updateChecked
+    updateChecked,
+    mainPath,
+    language: appStore.params.language,
+    dialogEventObserver: dialog$,
+    fireDialog,
   }
 }
 
@@ -254,6 +272,7 @@ export const useBoardContext = () => {
     currentStrokeWidth,
     hasPermission,
     currentSelector,
+    lineSelector,
     activeMap,
     zoomValue,
     currentPage,
@@ -314,6 +333,7 @@ export const useBoardContext = () => {
     currentStrokeWidth,
     hasPermission,
     currentSelector,
+    lineSelector,
     activeMap,
     ready,
     tools,

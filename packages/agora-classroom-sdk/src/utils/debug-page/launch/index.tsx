@@ -1,4 +1,5 @@
-import { AgoraEduSDK, AgoraEduEvent, ClassRoom, ClassRoomAbstractStore, controller } from 'agora-edu-sdk'
+import { AgoraEduSDK, AgoraEduEvent} from '../../../api'
+import {ClassRoom, ClassRoomAbstractStore, controller } from '../../../api/controller'
 import { useHomeStore } from '@/hooks'
 import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
@@ -31,6 +32,7 @@ export const LaunchPage = observer(() => {
     if (dom) {
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
+        sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       })
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,

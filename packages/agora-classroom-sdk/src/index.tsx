@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { App } from '@/monolithic/app';
 import { isElectron } from '@/utils/utils';
 import { EduManager } from 'agora-rte-sdk';
-import { AgoraEduSDK, eduSDKApi } from 'agora-edu-sdk';
+import { eduSDKApi } from 'agora-edu-sdk';
+import {AgoraEduSDK} from './api'
 import { GlobalStorage } from '@/utils/utils';
 import {configure} from 'mobx'
 

@@ -8,23 +8,15 @@ import { OneToOneScenario } from '@/ui-kit/capabilities/scenarios/1v1';
 import { PretestScenarioPage } from '@/ui-kit/capabilities/scenarios/pretest';
 import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import * as React from 'react';
+import { scenarioRoomPath } from '@/api';
 
 export type AppRouteComponent = {
   path: string
   component: React.FC<any>
 }
 
-export const roomPath = {
-  [EduRoomTypeEnum.Room1v1Class]: {
-    path: BizPagePath.OneToOnePath,
-  },
-  [EduRoomTypeEnum.RoomSmallClass]: {
-    path: BizPagePath.SmallClassPath,
-  }
-}
-
 export const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
-  const room = roomPath[roomType]
+  const room = scenarioRoomPath[roomType]
   if (!room) {
     return BizPagePath.OneToOnePath
   }

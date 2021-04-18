@@ -486,7 +486,8 @@ export class PretestStore {
         await this.changeWebCamera(deviceId)
       }
     } catch (err) {
-      this.appStore.uiStore.addToast(err)
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
     }
   }
 
@@ -544,7 +545,8 @@ export class PretestStore {
         await this.changeWebMicrophone(deviceId)
       }
     } catch (err) {
-      this.appStore.uiStore.addToast(err)
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
     }
   }
 

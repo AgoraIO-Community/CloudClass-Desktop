@@ -3,7 +3,7 @@ import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext,
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { UserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
@@ -373,7 +373,26 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 
 export const DialogContainer: React.FC<any> = observer(() => {
 
-  const { dialogQueue } = useGlobalContext()
+  const { dialogQueue, dialogEventObserver, addDialog } = useGlobalContext()
+
+  const dialogMap = {
+    'screen-share': () => addDialog(OpenShareScreen),
+    'kicked-end': () => addDialog(KickedEnd),
+    'room-end-notice': () => addDialog(RoomEndNotice),
+    'kick-end': () => addDialog(KickEnd),
+    'generic-error-dialog': (props: any) => addDialog(GenericErrorDialog, {...props}),
+  }
+
+  useEffect(() => {
+    dialogEventObserver.subscribe((evt: any) => {
+      console.log('dialogEventObserver # dialog ', evt)
+      const dialogOperation = dialogMap[evt.eventName]
+
+      if (dialogOperation) {
+        dialogOperation(evt.props)
+      }
+    })
+  }, [dialogEventObserver])
 
   const cls = classnames({
     [`rc-mask`]: !!dialogQueue.length,

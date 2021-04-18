@@ -5,7 +5,7 @@ import { Pens, t } from '~components';
 export const PensContainer = observer(() => {
 
   const {
-    currentSelector,
+    lineSelector,
     boardPenIsActive,
     setTool,
     updatePen
@@ -21,7 +21,7 @@ export const PensContainer = observer(() => {
       value='pen'
       label={t('scaffold.pencil')}
       icon='pen'
-      activePen={currentSelector}
+      activePen={lineSelector}
       onClick={onClick}
       isActive={boardPenIsActive}
     />

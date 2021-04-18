@@ -1,9 +1,6 @@
 import { EduRoleTypeEnum, EduManager, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, EduClassroomManager, LocalUserRenderer, EduStream, GenericErrorWrapper, PrepareScreenShareParams } from 'agora-rte-sdk'
 import { isEmpty, get } from 'lodash'
 import { observable, action, autorun, toJS, computed, runInAction } from 'mobx'
-import { CourseWareList, LanguageEnum, CourseWareItem } from '../api'
-import { ClassRoomAbstractStore, controller } from '../api/controller'
-import { AgoraRegion } from '../api/declare'
 import { EduBoardService } from '../services/edu-board-service'
 import { EduRecordService } from '../services/edu-record-service'
 import { eduSDKApi } from '../services/edu-sdk-api'
@@ -18,69 +15,10 @@ import { RoomStore } from './room'
 import { SceneStore } from './scene'
 import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
+import { SceneDefinition } from 'white-web-sdk'
+import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
 
-type RoomInfoParams = {
-  roomName: string,
-  roomType: number,
-  roomUuid: string,
-  userName: string,
-  userRole: number,
-  userUuid: string,
-}
-
-export type AppStoreConfigParams = {
-  agoraAppId: string,
-  agoraNetlessAppId: string,
-  // agoraRestFullToken: string
-  enableLog: boolean,
-  sdkDomain: string,
-  rtmUid: string,
-  rtmToken: string,
-  courseWareList: CourseWareList,
-  region?: AgoraRegion,
-  personalCourseWareList?: CourseWareList,
-  oss?: {
-    region: string,
-    bucketName: string,
-    folder: string,
-    accessKey: string,
-    secretKey: string,
-    endpoint: string,
-  },
-  recordUrl: string
-}
-
-export type AppStoreInitParams = {
-  roomInfoParams?: RoomInfoParams,
-  config: AppStoreConfigParams,
-  language: LanguageEnum,
-  startTime?: number,
-  duration?: number,
-  pretest?: boolean,
-  mainPath?: string,
-  roomPath?: string,
-  resetRoomInfo: boolean,
-}
-
-export type RoomInfo = {
-  roomName: string,
-  roomType: number,
-  userName: string,
-  userRole: EduRoleTypeEnum,
-  userUuid: string,
-  roomUuid: string,
-  rtmUid: string,
-  rtmToken: string,
-  groupName?: string,
-  groupUuid?: string,
-}
-
-export type DeviceInfo = {
-  cameraName: string,
-  microphoneName: string,
-}
-
-export class EduScenarioAppStore implements ClassRoomAbstractStore {
+export class EduScenarioAppStore {
   // stores
   uiStore!: UIStore;
   boardStore!: BoardStore;
@@ -185,7 +123,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
   @observable
   customScreenShareItems: any[] = []
 
-  @action
+  @action.bound
   resetStates() {
     this.mediaStore.resetRoomState()
     this.resetRoomInfo()    
@@ -205,14 +143,25 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
 
   id: string = uuidv4()
 
-  constructor(params: AppStoreInitParams) {
+  controller: any;
+
+  private dom: HTMLElement
+
+  constructor(params: AppStoreInitParams, dom: HTMLElement, controller: any) {
     this.params = params
-    console.log("[ID] appStore ### ", this.id)
+    this.dom = dom
+    if (controller) {
+      controller.bindStoreDestroy(this.destroy) 
+      console.log('bind store destroy success')
+      this.controller = controller
+    }
     // console.log(" roomInfoParams ", params.roomInfoParams)
     // console.log(" config >>> params: ", {...this.params})
     const {config, roomInfoParams, language} = this.params
 
     const sdkDomain = config.sdkDomain
+
+    console.log("[ID] appStore ### ", this.id, " config", config)
 
     // const sdkDomain = config.sdkDomain.replace('%region%', this.params.config.region ?? 'cn')
 
@@ -312,7 +261,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     return this.roomInfo.roomType
   }
 
-  @action
+  @action.bound
   resetParams() {
     this.params = {
       roomInfoParams: {
@@ -344,7 +293,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     }
   }
 
-  @action
+  @action.bound
   resetRoomInfo() {
     if (this.params.resetRoomInfo) {
       this.roomInfo = {
@@ -364,7 +313,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     return this.roomInfo.userUuid
   }
 
-  @action
+  @action.bound
   updateCpuRate(rate: number) {
     this.cpuRate = rate
   }
@@ -381,7 +330,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     this.time = 0
   }
 
-  @action
+  @action.bound
   updateDeviceInfo(info: {
     cameraName: string
     microphoneName: string
@@ -390,7 +339,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     this.deviceInfo.microphoneName = info.microphoneName
   }
 
-  @action
+  @action.bound
   updateRtmInfo(info: {
     rtmUid: string
     rtmToken: string
@@ -412,7 +361,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     reportService.setAppId(this.params.config.agoraAppId)
   }
 
-  @action
+  @action.bound
   setRoomInfo(payload: RoomInfo) {
     this.roomInfo = {
       roomName: payload.roomName,
@@ -430,7 +379,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     })
   }
 
-  @action
+  @action.bound
   async stopWebSharing() {
     try {
       this.waitingShare = true
@@ -445,13 +394,13 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
       }
       this.sharing = false
     } catch(err) {
-      this.uiStore.addToast(transI18n('toast.failed_to_end_screen_sharing') + `${err.message}`)
+      this.uiStore.fireToast('toast.failed_to_end_screen_sharing', {reason: `${err.message}`})
     } finally {
       this.waitingShare = false
     }
   }
 
-  @action
+  @action.bound
   async startWebSharing() {
     try {
       this.waitingShare = true
@@ -480,9 +429,9 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
         this.mediaService.screenRenderer.stop()
         this.mediaService.screenRenderer = undefined
         this._screenVideoRenderer = undefined
-        this.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing_to_remote') + `${err.message}`)
+        this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing_to_remote', {reason: `${err.message}`})
       } else {
-        this.uiStore.addToast(transI18n('toast.failed_to_enable_screen_sharing') + `${err.message}`)
+        this.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: `${err.message}`})
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
       const error = GenericErrorWrapper(err)
@@ -510,12 +459,12 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     }
   }
 
-  @action
+  @action.bound
   updateCourseWareList(courseWareList: CourseWareItem[]) {
     this.params.config.courseWareList = courseWareList
   }
 
-  @action
+  @action.bound
   showScreenShareWindowWithItems () {
     if (this.isElectron) {
       this.mediaService.prepareScreenShare().then((items: any) => {
@@ -529,7 +478,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     }
   }
 
-  @action
+  @action.bound
   async resetWebPrepareScreen() {
     if (this.mediaService.screenRenderer) {
       this._screenVideoRenderer = undefined
@@ -537,7 +486,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
   }
 
 
-  @action
+  @action.bound
   async prepareScreenShare(params: PrepareScreenShareParams = {}) {
     const res = await this.mediaService.prepareScreenShare(params)
     if (this.mediaService.screenRenderer) {
@@ -550,7 +499,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     return this._screenEduStream as EduStream
   }
 
-  @action
+  @action.bound
   async stopNativeSharing() {
     if (this.screenEduStream) {
       await this.roomManager?.userService.stopShareScreen()
@@ -568,7 +517,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     this.sharing = false
   }
 
-  @action
+  @action.bound
   async startNativeScreenShareBy(windowId: number) {
     try {
       this.waitingShare = true
@@ -584,7 +533,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.uiStore.addToast(transI18n('create_screen_share_failed'))
+        this.uiStore.fireToast('create_screen_share_failed'))
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -598,12 +547,12 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
       //   await this.mediaService.stopScreenShare()
       // }
       this.waitingShare = false
-      this.uiStore.addToast(transI18n('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
+      this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
       // throw err
     }
   }
 
-  @action
+  @action.bound
   removeScreenShareWindow () {
     if (this.isElectron) {
       this.customScreenShareWindowVisible = false
@@ -611,7 +560,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     }
   }
 
-  @action
+  @action.bound
   reset() {
     this._boardService = undefined
     this._recordService = undefined
@@ -621,7 +570,7 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
     this.removeScreenShareWindow()
   }
 
-  @action
+  @action.bound
   async releaseRoom() {
     try {
       await this.roomStore.leave()
@@ -633,13 +582,14 @@ export class EduScenarioAppStore implements ClassRoomAbstractStore {
       throw exception
     }
   }
+
+  @action.bound
   async destroy() {
     await this.releaseRoom()
   }
 
   async destroyRoom() {
-    // Modal.removeAll()
-    await controller.appController.destroy()
+    await this.controller.appController.destroy()
   }
 }
 export { BoardStore } from './board';

@@ -1,4 +1,4 @@
-import { useRecordingContext, useRoomDiagnosisContext } from 'agora-edu-sdk'
+import { useRecordingContext, useRoomDiagnosisContext, useGlobalContext } from 'agora-edu-sdk'
 import { observer } from 'mobx-react'
 import { BizHeader } from '~ui-kit'
 
@@ -12,7 +12,12 @@ export const NavigationBar = observer(() => {
     isRecording
   } = useRecordingContext()
 
+  const {
+    dialogEventObserver
+  } = useGlobalContext()
+
   function handleClick (type: string) {
+    console.log('dialog type', type)
     // store.showDialog(type)
   }
 

@@ -246,7 +246,8 @@ export class SmallClassStore {
       })
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
+      const {result, reason} = BusinessExceptions.getErrorText(error)
+      this.appStore.uiStore.fireToast(result, {reason})
       console.log('studentHandsUp err', error)
       throw error;
     }
@@ -273,7 +274,8 @@ export class SmallClassStore {
       })
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.addToast(transI18n(BusinessExceptions.getErrorText(error)))
+      const {result, reason} = BusinessExceptions.getErrorText(error)
+      this.appStore.uiStore.fireToast(result, {reason})
       console.log('teacherAcceptHandsUp err', error)
       throw error;
     }
@@ -464,7 +466,7 @@ export class SmallClassStore {
       }
       case 'kick-out': {
         if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
-          // this.appStore.uiStore.addDialog(KickDialog, {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+          this.appStore.uiStore.fireDialog('kick-dialog', {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
         }
         break;
       }

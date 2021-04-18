@@ -1,9 +1,9 @@
 import { AppRouteComponent, routesMap } from "@/router"
 import { HomeStore } from "@/stores/app/home"
-import { AppStoreConfigParams} from 'agora-edu-sdk'
 import { BizPageRouter } from "@/types"
 import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
-import { CoreContextProvider, I18nProvider, RoomParameters, useStorageSWContext } from "agora-edu-sdk"
+import { AppStoreConfigParams, AppStoreInitParams, I18nProvider, useStorageSWContext } from 'agora-edu-sdk'
+import { RoomParameters } from '../api/declare'
 import { Provider } from "mobx-react"
 import { HashRouter, MemoryRouter, Redirect, Route, Switch } from "react-router-dom"
 
@@ -54,22 +54,23 @@ export const RouteContainer = (props: RouteContainerProps) => {
   )
 }
 
-export const RoomContainer = (props: RoomContainerProps) => {
+export type RoomContainerParams = {
+  language: any;
+  params: AppStoreInitParams;
+  routes: BizPageRouter[];
+  mainPath: string;
+}
+
+export const RoomContainer = (props: RoomContainerParams) => {
 
   useStorageSWContext()
 
-  // const [store] = useState<EduScenarioAppStore>(() => new EduScenarioAppStore(props.store.params))
-
   return (
-    <Provider store={props.store}>
-      <I18nProvider language={props.store.params.language}>
-        <CoreContextProvider params={props.store.params}>
-          <MemoryRouter>
-            <RouteContainer routes={props.routes} mainPath={props.mainPath} showToast={true} />
-          </MemoryRouter>
-        </CoreContextProvider>
-      </I18nProvider>
-    </Provider>
+    <I18nProvider language={props.language}>
+      <MemoryRouter>
+        <RouteContainer routes={props.routes} mainPath={props.mainPath} showToast={true} />
+      </MemoryRouter>
+    </I18nProvider>
   )
 }
 

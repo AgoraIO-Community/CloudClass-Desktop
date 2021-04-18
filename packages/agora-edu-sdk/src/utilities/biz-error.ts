@@ -17,18 +17,18 @@ export class BusinessExceptions {
         return 'error.unknown'
     }
 
-    static getErrorText(err: GenericError): string {
+    static getErrorText(err: GenericError): {result: string, reason: any} {
         const result = this.getReadableText(err.errCode)
         if (result === 'error.unknown') {
-            return transI18n(result, {errCode: err.errCode, message: err.message})
+            return {result, reason: {errCode: err.errCode, message: err.message}}
         }
-        return transI18n(result)
+        return {result, reason: ''}
     }
 
     static getErrorTitle(err: GenericError): string {
         if (err.errCode === "30403100") {
-            return transI18n('error.banned')
+            return 'error.banned'
         }
-        return transI18n('course.join_failed')
+        return 'course.join_failed'
     }
 }
