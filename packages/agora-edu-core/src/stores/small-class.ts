@@ -2,7 +2,7 @@ import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
 import { RoomStore } from './room';
-import { computed } from 'mobx';
+import { action, computed } from 'mobx';
 import { get } from 'lodash';
 import { EduStream, EduUser, EduVideoSourceType, EduRoleTypeEnum, RemoteUserRenderer, LocalUserRenderer } from 'agora-rte-sdk';
 import { EduMediaStream } from './scene';
@@ -237,6 +237,7 @@ export class SmallClassStore {
     return studentsMap
   }
 
+  @action.bound
   async studentHandsUp(teacherUuid: string) {
     try {
       await eduSDKApi.startHandsUp({
@@ -252,12 +253,14 @@ export class SmallClassStore {
     }
   }
 
+  @action.bound
   async studentCancelHandsUp() {
     await eduSDKApi.cancelHandsUp({
       roomUuid: this.roomUuid,
     })
   }
 
+  @action.bound
   async studentDismissHandsUp(teacherUuid: string) {
     await eduSDKApi.dismissHandsUp({
       roomUuid: this.roomUuid,
@@ -265,6 +268,7 @@ export class SmallClassStore {
     })
   }
 
+  @action.bound
   async teacherAcceptHandsUp(userUuid: string) {
     try {
       await eduSDKApi.acceptHandsUp({
@@ -280,6 +284,7 @@ export class SmallClassStore {
     }
   }
 
+  @action.bound
   async revokeCoVideo(userUuid: string) {
     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
       await eduSDKApi.revokeCoVideo({
@@ -293,6 +298,7 @@ export class SmallClassStore {
     }
   }
 
+  @action.bound
   async teacherRejectHandsUp(userUuid: string) {
     await eduSDKApi.refuseHandsUp({
       roomUuid: this.roomUuid,
@@ -300,6 +306,7 @@ export class SmallClassStore {
     })
   }
 
+  @action.bound
   async teacherInviteHandsUp(userUuid: string) {
     // await eduSDKApi.({
     //   roomUuid: this.roomUuid,
@@ -404,6 +411,7 @@ export class SmallClassStore {
 
   }
 
+  @action.bound
   async handleRosterClick (actionType: string, uid: string) {
 
     const userList = this.rosterUserList
