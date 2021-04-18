@@ -264,7 +264,7 @@
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",
     "adm-zip": "0.4.14",
-    "agora-edu-core": "^1.0.0",
+    "agora-edu-core": "1.0.0",
     "agora-electron-sdk": "apaas",
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",
