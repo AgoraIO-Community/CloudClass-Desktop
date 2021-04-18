@@ -40,7 +40,7 @@ export type CloudDriveContainerProps = {
 }
 
 
-export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer((props: any) => {
+export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer((id: any) => {
   const {
     openCloudResource,
     setTool,
@@ -51,7 +51,8 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   } = useBoardContext()
 
   const {
-    checked
+    checked,
+    removeDialog
   } = useGlobalContext()
 
   const checkList$ = new BehaviorSubject<string[]>([])
@@ -86,8 +87,9 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   const [currentProgress, setCurrentProgress] = useState<number>(0)
 
   const onCancel = () => {
-    setTool('')
-    props.actionClose()
+    // setTool('')
+    removeDialog(id)
+    // props.actionClose()
   }
 
   const [activeKey, setActiveKey] = useState<string>('1')
@@ -207,7 +209,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
       <div className="agora-board-resources">
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
-            props.onClose()
+            onCancel()
           }}></Icon>
         </div>
         <Tabs activeKey={activeKey} onChange={handleChange}>

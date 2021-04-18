@@ -1,4 +1,3 @@
-import { transI18n } from './i18n';
 import { GenericError } from 'agora-rte-sdk';
 
 const ExceptionMapping = {

@@ -12,7 +12,6 @@ import { EduScenarioAppStore as EduScenarioAppStore } from '../stores/index';
 import { DownloadFileStatus, StorageCourseWareItem } from '../types';
 import { BoardClient } from '../utilities/board-client';
 import { agoraCaches } from '../utilities/cache';
-import { transI18n } from '../utilities/i18n';
 import { BizLogger,
   fetchNetlessImageByUrl,
   netlessInsertAudioOperation,

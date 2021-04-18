@@ -81,6 +81,7 @@ export const zh = {
     'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'toast': {
+    'create_screen_share_failed': '创建屏幕分享失败',
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
     'close_ppt': '关闭当前课件',

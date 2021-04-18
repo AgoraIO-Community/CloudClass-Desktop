@@ -8,7 +8,6 @@ import { EduRecordService } from "../services/edu-record-service"
 import { eduSDKApi } from "../services/edu-sdk-api"
 import { RoomApi } from "../services/room-api"
 import { BusinessExceptions } from "../utilities/biz-error"
-import { transI18n } from "../utilities/i18n"
 import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
@@ -432,7 +431,7 @@ export class SceneStore extends SimpleInterval {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.appStore.uiStore.fireToast('create_screen_share_failed')
+        this.appStore.uiStore.fireToast('toast.create_screen_share_failed')
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -984,7 +983,7 @@ export class SceneStore extends SimpleInterval {
       await this.mediaService.join(args)
       this.joiningRTC = true
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_join_rtc_please_refresh_and_try_again')
+      // this.appStore.uiStore.fireToast('toast.failed_to_join_rtc_please_refresh_and_try_again')
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err

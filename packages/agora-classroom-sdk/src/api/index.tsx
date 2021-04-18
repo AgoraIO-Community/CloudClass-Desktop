@@ -23,7 +23,7 @@ export const scenarioRoomPath = {
     path: BizPagePath.OneToOnePath,
   },
   [EduRoomTypeEnum.RoomSmallClass]: {
-    path: BizPagePath.SmallClassPath,
+    path: BizPagePath.MidClassPath,
   }
 }
 

@@ -82,6 +82,7 @@ export const en = {
     'room_is_full': 'The room is full',
   },
   'toast': {
+    'create_screen_share_failed': 'Create screen share failed',
     'kick_by_other_side': 'Kick by other client',
     'screen_share': 'Screen Share',
     'close_ppt': 'Close CourseWare',

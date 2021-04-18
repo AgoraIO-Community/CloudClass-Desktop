@@ -8,7 +8,6 @@ import { reportService } from "../services/report"
 import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
 import { ChatMessage, QuickTypeEnum } from "../types"
-import { transI18n } from "../utilities/i18n"
 import { BizLogger } from "../utilities/kit"
 import { SimpleInterval, EduClassroomStateEnum } from "./scene"
 import { SmallClassStore } from "./small-class"
@@ -117,11 +116,6 @@ dayjs.extend(duration)
 
 type ProcessType = {
   reward: number,
-}
-
-enum TimeFormatType {
-  Timeboard,
-  Message
 }
 
 type RoomProperties = {
@@ -346,27 +340,39 @@ export class RoomStore extends SimpleInterval {
   }
 
   @computed
-  get classTimeText() {
+  get liveClassStatus() {
     let timeText = ""
     const duration = this.classTimeDuration
-    const placeholder = `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`
+    // const placeholder = `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`
 
     // duration is always >= 0, if it's smaller than 0, display placeholder
     if(duration < 0) {
-      timeText = `${transI18n('nav.to_start_in')}${placeholder}`
-      return timeText
+      return {
+        classState: 'default',
+        duration,
+      }
     }
 
     switch(this.sceneStore.classState){
       case EduClassroomStateEnum.beforeStart: 
-        timeText = `${transI18n('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
-        break;
+        // timeText = `${transI18n('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+        return {
+          classState: 'beforeStart',
+          duration,
+        }
       case EduClassroomStateEnum.start:
       case EduClassroomStateEnum.end:
-        timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
-        break;
+        // timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+        return {
+          classState: 'StartOrEnd',
+          duration,
+        }
     }
-    return timeText
+
+    return {
+      classState: 'default',
+      duration,
+    }
   }
 
   @computed
@@ -503,7 +509,8 @@ export class RoomStore extends SimpleInterval {
       }
     } catch (err) {
       this.appStore.uiStore.fireToast(
-        transI18n('toast.failed_to_send_chat'),
+        'toast.failed_to_send_chat',
+        {},
         'error'
       )
       const error = GenericErrorWrapper(err)
@@ -569,8 +576,7 @@ export class RoomStore extends SimpleInterval {
       })
     } catch (err) {
       this.appStore.uiStore.fireToast(
-        transI18n('toast.failed_to_send_reward'),
-        'error'
+        'toast.failed_to_send_reward',
       )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
@@ -614,13 +620,11 @@ export class RoomStore extends SimpleInterval {
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
         this.appStore.uiStore.fireToast(
-          transI18n('toast.chat_disable'),
-          'error'
+          'toast.chat_disable',
         )
       } else {
         this.appStore.uiStore.fireToast(
-          transI18n('toast.chat_enable'),
-          'error'
+          'toast.chat_enable',
         )
       }
     } 
@@ -640,8 +644,9 @@ export class RoomStore extends SimpleInterval {
             let dDuration = dayjs.duration(duration)
             if(dDuration.minutes() === min && dDuration.seconds() === 0) {
               this.appStore.uiStore.fireToast(
-                transI18n('toast.time_interval_between_start', {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)}),
-                'error'
+                'toast.time_interval_between_start',
+                {reason: duration}
+                // {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)},
               )
             }
           })
@@ -651,8 +656,9 @@ export class RoomStore extends SimpleInterval {
             let dDurationToEnd = dayjs.duration(durationToEnd)
             if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               this.appStore.uiStore.fireToast(
-                transI18n('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}),
-                'error'
+                'toast.time_interval_between_end',
+                {reason: duration}
+                // {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}
               )
             }
           })
@@ -661,8 +667,8 @@ export class RoomStore extends SimpleInterval {
           let dDurationToClose = dayjs.duration(durationToClose)
           if(dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.uiStore.fireToast(
-              transI18n('toast.time_interval_between_close', {reason: this.formatTimeCountdown(durationToClose, TimeFormatType.Message)}),
-              'error'
+              'toast.time_interval_between_close',
+              {reason: durationToClose}
             )
           }
           if(durationToClose < 0) {
@@ -822,10 +828,7 @@ export class RoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.uiStore.fireToast(
-          transI18n('toast.failed_to_join_board'),
-          'error'
-        )
+        this.appStore.isNotInvisible && this.appStore.uiStore.fireToast('toast.failed_to_join_board')
       })
       this.appStore.uiStore.stopLoading()
 
@@ -833,7 +836,7 @@ export class RoomStore extends SimpleInterval {
       this.eduManager.on('ConnectionStateChanged', async ({newState, reason}) => {
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
-          this.appStore.uiStore.fireToast(transI18n('toast.classroom_remote_join'))
+          this.appStore.uiStore.fireToast('toast.classroom_remote_join')
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
         reportService.updateConnectionState(newState)
@@ -861,7 +864,7 @@ export class RoomStore extends SimpleInterval {
           const {user, type} = evt
           if (user.user.userUuid === this.roomInfo.userUuid && type === 2) {
             await this.appStore.releaseRoom()
-            this.appStore.uiStore.fireToast(transI18n('toast.kick_by_teacher'), 'error')
+            this.appStore.uiStore.fireToast('toast.kick_by_teacher')
             this.noticeQuitRoomWith(QuickTypeEnum.Kicked)
           }
         })
@@ -882,11 +885,11 @@ export class RoomStore extends SimpleInterval {
               await this.sceneStore.closeMicrophone()
               if (cause && cause.cmd === 501) {
                 const roleMap = {
-                  'host': transI18n('role.teacher'),
-                  'assistant': transI18n('role.assistant')
+                  'host': 'role.teacher',
+                  'assistant': 'role.assistant'
                 }
                 const role = roleMap[operator.userRole] ?? 'unknown'
-                this.appStore.uiStore.fireToast(transI18n(`roster.close_student_co_video`, {teacher: role}))
+                this.appStore.uiStore.fireToast(`roster.close_student_co_video`, {teacher: role})
               }
               BizLogger.info(`[demo] tag: ${tag}, [${Date.now()}], main stream closed local-stream-removed, `, JSON.stringify(evt))
             }
@@ -918,11 +921,11 @@ export class RoomStore extends SimpleInterval {
             if (localStream && localStream.state !== 0) {
               if (causeCmd === 501) {
                 const roleMap = {
-                  'host': transI18n('role.teacher'),
-                  'assistant': transI18n('role.assistant')
+                  'host': 'role.teacher',
+                  'assistant': 'role.assistant'
                 }
                 const role = roleMap[operator.userRole] ?? 'unknown'
-                this.appStore.uiStore.fireToast(transI18n(`roster.open_student_co_video`, {teacher: role}))
+                this.appStore.uiStore.fireToast(`roster.open_student_co_video`, {teacher: role})
               }
               BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC)
               if (this.sceneStore._cameraEduStream) {
@@ -932,7 +935,7 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-                    this.appStore.uiStore.fireToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+                    this.appStore.uiStore.fireToast(operation, {reason: `role.${i18nRole}`})
                   }
                   // this.operator = {
                   //   ...operator,
@@ -946,7 +949,7 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-                    this.appStore.uiStore.fireToast(transI18n(operation, {reason: transI18n(`role.${i18nRole}`)}))
+                    this.appStore.uiStore.fireToast(operation, {reason: `role.${i18nRole}`})
                   }
                   // this.operator = {
                   //   ...operator,
@@ -1278,8 +1281,8 @@ export class RoomStore extends SimpleInterval {
         } catch (err) {
           if (this.appStore.isNotInvisible) {
             this.appStore.uiStore.fireToast(
-              (transI18n('toast.media_method_call_failed') + `: ${err.message}`),
-              'error'
+              'toast.media_method_call_failed',
+              {reason: `${err.message}`}
             )
           }
           const error = GenericErrorWrapper(err)
@@ -1336,8 +1339,11 @@ export class RoomStore extends SimpleInterval {
       // this.appStore.uiStore.addDialog(RoomEndNotice)
     } else if(state === EduClassroomStateEnum.end) {
       this.appStore.uiStore.fireToast(
-        transI18n('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}),
-        'error'
+        'toast.class_is_end',
+        {
+          scheduler: (this.classroomSchedule?.closeDelay || 0) * 1000,
+        }
+        // {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)},
       )
     }
   }
@@ -1441,38 +1447,38 @@ export class RoomStore extends SimpleInterval {
     return 0
   }
 
-  formatTimeCountdown(milliseconds: number, mode: TimeFormatType):string {
-    let seconds = Math.floor(milliseconds / 1000)
-    let duration = dayjs.duration(milliseconds);
-    let formatItems:string[] = []
+  // formatTimeCountdown(milliseconds: number, mode: TimeFormatType):string {
+  //   let seconds = Math.floor(milliseconds / 1000)
+  //   let duration = dayjs.duration(milliseconds);
+  //   let formatItems:string[] = []
 
-    let hours_text = duration.hours() === 0 ? '' : `HH [${transI18n('nav.hours')}]`;
-    let mins_text = duration.minutes() === 0 ? '' : `mm [${transI18n('nav.minutes')}]`;
-    let seconds_text = duration.seconds() === 0 ? '' : `ss [${transI18n('nav.seconds')}]`;
-    let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
-    let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
-    let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
-    if(mode === TimeFormatType.Timeboard) {
-      // always display all time segment
-      if(seconds < 60 * 60) {
-        // less than a min
-        formatItems = [short_mins_text, short_seconds_text]
-      } else {
-        formatItems = [short_hours_text, short_mins_text, short_seconds_text]
-      }
-    } else {
-      // do not display time segment if it's 0
-      if(seconds < 60) {
-        // less than a min
-        formatItems = [seconds_text]
-      } else if (seconds < 60 * 60) {
-        [mins_text, seconds_text].forEach(item => item && formatItems.push(item))
-      } else {
-        [hours_text, mins_text, seconds_text].forEach(item => item && formatItems.push(item))
-      }
-    }
-    return duration.format(formatItems.join(' '))
-  }
+  //   let hours_text = duration.hours() === 0 ? '' : `HH [${transI18n('nav.hours')}]`;
+  //   let mins_text = duration.minutes() === 0 ? '' : `mm [${transI18n('nav.minutes')}]`;
+  //   let seconds_text = duration.seconds() === 0 ? '' : `ss [${transI18n('nav.seconds')}]`;
+  //   let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
+  //   let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
+  //   let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
+  //   if(mode === TimeFormatType.Timeboard) {
+  //     // always display all time segment
+  //     if(seconds < 60 * 60) {
+  //       // less than a min
+  //       formatItems = [short_mins_text, short_seconds_text]
+  //     } else {
+  //       formatItems = [short_hours_text, short_mins_text, short_seconds_text]
+  //     }
+  //   } else {
+  //     // do not display time segment if it's 0
+  //     if(seconds < 60) {
+  //       // less than a min
+  //       formatItems = [seconds_text]
+  //     } else if (seconds < 60 * 60) {
+  //       [mins_text, seconds_text].forEach(item => item && formatItems.push(item))
+  //     } else {
+  //       [hours_text, mins_text, seconds_text].forEach(item => item && formatItems.push(item))
+  //     }
+  //   }
+  //   return duration.format(formatItems.join(' '))
+  // }
 
   @computed
   get navigationState() {
@@ -1484,7 +1490,7 @@ export class RoomStore extends SimpleInterval {
       networkLatency: +this.appStore.mediaStore.delay,
       networkQuality: this.appStore.mediaStore.networkQuality,
       packetLostRate: this.appStore.mediaStore.localPacketLostRate,
-      classTimeText: this.classTimeText,
+      // classTimeText: this.classTimeText,
       isNative: this.appStore.isElectron,
     }
   }
@@ -1499,7 +1505,7 @@ export class RoomStore extends SimpleInterval {
         switch(data.actionType) {
           case CoVideoActionType.studentHandsUp: {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.uiStore.fireToast(transI18n("co_video.received_student_hands_up"), 'success')
+              this.appStore.uiStore.fireToast("co_video.received_student_hands_up")
             }
             console.log('学生举手')
             break;
@@ -1517,7 +1523,7 @@ export class RoomStore extends SimpleInterval {
             if ([EduRoleTypeEnum.student].includes(this.roomInfo.userRole)) {
               const includedRemoveProgress: ProgressUserInfo[] = data?.removeProgress ?? []
               if (includedRemoveProgress.find((it) => it.userUuid === this.roomInfo.userUuid)) {
-                this.appStore.uiStore.fireToast(transI18n("co_video.received_teacher_refused"), 'warning')
+                this.appStore.uiStore.fireToast("co_video.received_teacher_refused")
               }
             }
             console.log('老师拒绝')
@@ -1525,7 +1531,7 @@ export class RoomStore extends SimpleInterval {
           }
           case CoVideoActionType.studentCancel: {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.uiStore.fireToast(transI18n("co_video.received_student_cancel"), 'error')
+              this.appStore.uiStore.fireToast("co_video.received_student_cancel")
             }
             console.log('学生取消')
             break;

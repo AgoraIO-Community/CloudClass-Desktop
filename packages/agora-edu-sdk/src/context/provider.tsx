@@ -194,7 +194,8 @@ export const useRoomContext = () => {
   const {
     kickOutBan,
     kickOutOnce,
-    join
+    join,
+    liveClassStatus
   } = useRoomStore()
 
   return {
@@ -209,6 +210,7 @@ export const useRoomContext = () => {
     roomInfo,
     kickOutBan,
     kickOutOnce,
+    liveClassStatus
   }
 }
 
@@ -261,6 +263,7 @@ export const useGlobalContext = () => {
     updateChecked,
     mainPath,
     language: appStore.params.language,
+    toastEventObserver: toast$,
     dialogEventObserver: dialog$,
     fireDialog,
   }

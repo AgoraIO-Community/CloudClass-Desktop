@@ -50,7 +50,6 @@
     "mobx": "5.15.4",
     "mobx-react": "6.3.1",
     "react": "17.0.0",
-    "react-i18next": "11.8.12",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
     "white-web-sdk": "2.12.9"

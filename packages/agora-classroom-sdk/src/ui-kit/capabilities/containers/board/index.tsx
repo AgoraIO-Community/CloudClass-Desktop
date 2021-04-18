@@ -6,7 +6,8 @@ import { useMemo } from 'react'
 import { ColorsContainer } from '~capabilities/containers/board/colors'
 import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
-import { CloseConfirm } from '~capabilities/containers/dialog'
+import { CloseConfirm, UserListDialog } from '~capabilities/containers/dialog'
+import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 
@@ -72,6 +73,9 @@ export const allTools: ToolItem[] = [
     value: 'register',
     label: 'scaffold.user_list',
     icon: 'register',
+    // component: () => {
+    //   return <UserListDialog />
+    // }
   }
 ]
 
@@ -129,7 +133,9 @@ const TabsContainer = observer(() => {
 export const WhiteboardContainer = observer(() => {
 
   const {
-    isFullScreen
+    isFullScreen,
+    addDialog,
+    removeDialog
   } = useGlobalContext()
 
   const {
@@ -152,6 +158,22 @@ export const WhiteboardContainer = observer(() => {
     setTool,
     installTools
   } = useBoardContext()
+
+  const handleToolClick = (type: string) => {
+    switch(type) {
+      case 'cloud': {
+        addDialog(CloudDriverContainer)
+        break;
+      }
+      case 'register': {
+        addDialog(UserListDialog)
+        break;
+      }
+      default: {
+        setTool(type)
+      }
+    }
+  }
 
   useEffect(() => {
     installTools(allTools)
@@ -203,7 +225,7 @@ export const WhiteboardContainer = observer(() => {
       {showTab ? 
       <TabsContainer /> : null}
       {showToolBar ? <div className='toolbar-position'>
-        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={setTool} className="toolbar-biz" />
+        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolClick} className="toolbar-biz" />
       </div> : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'

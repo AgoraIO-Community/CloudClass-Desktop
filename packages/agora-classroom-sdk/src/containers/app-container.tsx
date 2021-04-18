@@ -2,7 +2,8 @@ import { AppRouteComponent, routesMap } from "@/router"
 import { HomeStore } from "@/stores/app/home"
 import { BizPageRouter } from "@/types"
 import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
-import { AppStoreConfigParams, AppStoreInitParams, I18nProvider, useStorageSWContext } from 'agora-edu-sdk'
+import { AppStoreConfigParams, AppStoreInitParams, useStorageSWContext } from 'agora-edu-sdk'
+import {I18nProvider} from '~ui-kit'
 import { RoomParameters } from '../api/declare'
 import { Provider } from "mobx-react"
 import { HashRouter, MemoryRouter, Redirect, Route, Switch } from "react-router-dom"

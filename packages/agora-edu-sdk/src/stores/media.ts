@@ -3,7 +3,6 @@ import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
-import { transI18n } from '../utilities/i18n';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from '../stores/index';
 
@@ -197,7 +196,7 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       if (appStore.isNotInvisible) {
-        this.appStore.uiStore.addToast(transI18n('toast.audio_equipment_has_changed'))
+        this.appStore.uiStore.fireToast('toast.audio_equipment_has_changed')
         // Modal.show({
         //   title: transI18n('aclass.device.audio_failed'),
         //   // text: transI18n('aclass.device.audio_failed'),
@@ -234,7 +233,7 @@ export class MediaStore {
       //   onCancel: () => {
       //   }
       // })
-      this.appStore.uiStore.addToast(transI18n('toast.video_equipment_has_changed'))
+      this.appStore.uiStore.fireToast('toast.video_equipment_has_changed')
       // await this.appStore.deviceStore.init({ video: true })
       await this.appStore.pretestStore.init({ video: true})
     }, delay))

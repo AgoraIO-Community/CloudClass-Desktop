@@ -6,7 +6,6 @@ import { EduRecordService } from '../services/edu-record-service'
 import { eduSDKApi } from '../services/edu-sdk-api'
 import { reportService } from '../services/report'
 import { UploadService } from '../services/upload-service'
-import { transI18n } from '../utilities/i18n'
 import { platform, GlobalStorage, BizLogger } from '../utilities/kit'
 import { BoardStore } from './board'
 import { MediaStore } from './media'
@@ -15,7 +14,6 @@ import { RoomStore } from './room'
 import { SceneStore } from './scene'
 import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
-import { SceneDefinition } from 'white-web-sdk'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
 
 export class EduScenarioAppStore {
@@ -533,7 +531,7 @@ export class EduScenarioAppStore {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.uiStore.fireToast('create_screen_share_failed'))
+        this.uiStore.fireToast('toast.create_screen_share_failed')
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -547,7 +545,7 @@ export class EduScenarioAppStore {
       //   await this.mediaService.stopScreenShare()
       // }
       this.waitingShare = false
-      this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing') + `${err.message}`)
+      this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing', {reason: `${err.message}`})
       // throw err
     }
   }
