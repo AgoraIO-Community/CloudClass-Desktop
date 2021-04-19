@@ -1045,18 +1045,18 @@ export class SceneStore extends SimpleInterval {
   get defaultTeacherPlaceholder() {
     if (this.appStore.uiStore.loading) {
       return {
-        placeHolderType: 'loading',
+        holderState: 'loading',
         text: `placeholder.loading`
       }
     }
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
-        placeHolderType: 'loading',
+        holderState: 'loading',
         text: `placeholder.teacher_noEnter`
       }
     }
     return {
-      placeHolderType: 'loading',
+      holderState: 'loading',
       text: `placeholder.teacher_Left`
     }
   }
@@ -1065,19 +1065,19 @@ export class SceneStore extends SimpleInterval {
   get defaultStudentPlaceholder() {
     if (this.appStore.uiStore.loading) {
       return {
-        placeHolderType: 'loading',
+        holderState: 'loading',
         text: `placeholder.loading`
       }
     }
     // if (this.classState)
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
-        placeHolderType: 'noEnter',
+        holderState: 'noEnter',
         text: `placeholder.student_noEnter`
       }
     }
     return {
-      placeHolderType: 'loading',
+      holderState: 'loading',
       text: `placeholder.student_Left`
     }
   }
@@ -1085,28 +1085,28 @@ export class SceneStore extends SimpleInterval {
   getLocalPlaceHolderProps() {
     if (this.openingCamera === true) {
       return {
-        placeHolderType: 'loading',
+        holderState: 'loading',
         text: 'placeholder.openingCamera'
       }
     }
 
     if (this.closingCamera === true) {
       return {
-        placeHolderType: 'closedCamera',
+        holderState: 'closedCamera',
         text: 'placeholder.closingCamera'
       }
     }
 
     if (!this.cameraEduStream) {
       return {
-        placeHolderType: 'loading',
+        holderState: 'loading',
         text: `placeholder.loading`
       }
     }
 
     if ((this.cameraEduStream && !!this.cameraEduStream.hasVideo === false)) {
       return {
-        placeHolderType: 'muted',
+        holderState: 'muted',
         text: 'placeholder.closedCamera'
       }
     }
@@ -1117,19 +1117,19 @@ export class SceneStore extends SimpleInterval {
       && !!this.cameraEduStream.hasVideo === true) {
       if (isFreeze) {
         return {
-          placeHolderType: 'broken',
+          holderState: 'broken',
           text: 'placeholder.noAvailableCamera'
         }
       }
       if (this.cameraRenderer) {
         return {
-          placeHolderType: 'none',
+          holderState: 'none',
           text: ''
         }
       }
     }
     return {
-      placeHolderType: 'loading',
+      holderState: 'loading',
       text: `placeholder.loading`
     }
   }
@@ -1148,7 +1148,7 @@ export class SceneStore extends SimpleInterval {
 
     if (!!stream.hasVideo === false) {
       return {
-        placeHolderType: 'muted',
+        holderState: 'muted',
         text: 'placeholder.closedCamera'
       }
     }
@@ -1156,13 +1156,13 @@ export class SceneStore extends SimpleInterval {
     const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
     if (isFreeze) {
       return {
-        placeHolderType: 'broken',
+        holderState: 'broken',
         text: 'placeholder.noAvailableCamera'
       }
     }
 
     return {
-      placeHolderType: 'none',
+      holderState: 'none',
       text: ''
     }
   }
@@ -1210,7 +1210,7 @@ export class SceneStore extends SimpleInterval {
     // 当本地是老师时
     const localUser = this.localUser
     if (localUser && localUser.userRole === EduRoleTypeEnum.teacher) {
-      const {placeHolderType, text} = this.getLocalPlaceHolderProps()
+      const {holderState, text} = this.getLocalPlaceHolderProps()
       return {
         local: true,
         userUuid: this.appStore.userUuid,
@@ -1220,7 +1220,7 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream?.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         hideControl: this.hideControl(this.appStore.userUuid),
-        holderState: placeHolderType,
+        holderState: holderState,
         placeHolderText: text,
         whiteboardGranted: true,
         micVolume: this.localVolume,
@@ -1242,7 +1242,7 @@ export class SceneStore extends SimpleInterval {
         audio: teacherStream.hasAudio,
         renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +teacherStream.streamUuid) as RemoteUserRenderer,
         hideControl: this.hideControl(user.userUuid),
-        holderState: props.placeHolderType,
+        holderState: props.holderState,
         placeHolderText: props.text,
         whiteboardGranted: true,
         micVolume: volumeLevel,
@@ -1258,7 +1258,7 @@ export class SceneStore extends SimpleInterval {
       renderer: undefined,
       hideControl: true,
       placeHolderText: this.defaultTeacherPlaceholder.text,
-      holderState: this.defaultTeacherPlaceholder.placeHolderType,
+      holderState: this.defaultTeacherPlaceholder.holderState,
       micVolume: 0,
     } as any
   }
@@ -1401,7 +1401,7 @@ export class SceneStore extends SimpleInterval {
           audio: stream.hasAudio,
           renderer: this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid) as RemoteUserRenderer,
           hideControl: this.hideControl(user.userUuid),
-          placeHolderType: props.placeHolderType,
+          holderState: props.holderState,
           placeHolderText: props.text,
           micVolume: volumeLevel,
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
@@ -1425,7 +1425,7 @@ export class SceneStore extends SimpleInterval {
         audio: this.cameraEduStream.hasAudio,
         renderer: this.cameraRenderer as LocalUserRenderer,
         hideControl: this.hideControl(this.appStore.userUuid),
-        placeHolderType: props.placeHolderType,
+        holderState: props.holderState,
         placeHolderText: props.text,
         micVolume: this.localVolume,
         whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
@@ -1444,7 +1444,7 @@ export class SceneStore extends SimpleInterval {
       renderer: undefined,
       hideControl: true,
       placeHolderText: this.defaultStudentPlaceholder.text,
-      placeHolderType: this.defaultStudentPlaceholder.placeHolderType,
+      holderState: this.defaultStudentPlaceholder.holderState,
       micVolume: 0,
       whiteboardGranted: false,
       defaultStream: true
