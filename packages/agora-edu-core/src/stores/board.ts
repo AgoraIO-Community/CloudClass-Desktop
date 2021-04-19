@@ -862,6 +862,7 @@ export class BoardStore extends ZoomController {
         userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: "",
         cursorName: this.appStore.roomStore.roomInfo.userName,
+        disappearCursor: this.appStore.roomStore.isAssistant,
       },
       floatBar: true,
       isAssistant: this.appStore.roomStore.isAssistant,
