@@ -512,8 +512,6 @@ export class RoomStore extends SimpleInterval {
     } catch (err) {
       this.appStore.uiStore.fireToast(
         'toast.failed_to_send_chat',
-        {},
-        'error'
       )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)

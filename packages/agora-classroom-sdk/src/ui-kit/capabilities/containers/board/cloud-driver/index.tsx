@@ -39,7 +39,7 @@ export type CloudDriveContainerProps = {
 }
 
 
-export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer((id: any) => {
+export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer(({id}: any) => {
   const {
     openCloudResource,
     setTool,

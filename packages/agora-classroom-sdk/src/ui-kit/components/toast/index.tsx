@@ -51,6 +51,8 @@ export const Toast: ToastType = ({
     [`${className}`]: !!className,
   });
 
+  console.log('### toast components', type)
+
   const startClose = useCallback(
     () => {
       canStopTimer.current = setTimeout(() => {
