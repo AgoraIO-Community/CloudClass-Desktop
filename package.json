@@ -8,7 +8,8 @@
     "dayjs": "1.10.4",
     "lerna": "3.22.1",
     "npm-run-all": "4.1.5",
-    "typescript": "4.2.3"
+    "typescript": "4.2.3",
+    "just-scripts": "1.5.3"
   },
   "agora_electron": {
     "electron_version": "7.1.2",
@@ -40,7 +41,11 @@
     "run:demo": "lerna exec --scope=agora-classroom-sdk npm run dev",
     "run:demo:electron": "lerna exec --scope=agora-classroom-sdk npm run electron",
     "run:apaas": "lerna exec --scope=agora-apaas-demo npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ci:build:web": "just release:web",
+    "ci:build:electron:win": "just release:electron:win",
+    "ci:build:electron:mac": "just release:electron:mac",
+    "ci:build:classroom:sdk": "just release:classroom:sdk"
   },
   "repository": {
     "type": "git",
