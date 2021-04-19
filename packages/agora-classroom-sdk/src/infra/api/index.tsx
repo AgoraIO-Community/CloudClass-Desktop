@@ -142,11 +142,12 @@ export class AgoraEduSDK {
 
   static config (params: AgoraEduSDKConfigParams) {
 
-    console.log('# set config' )
     checkConfigParams(params);
 
     Object.assign(sdkConfig.configParams, params)
-    eduSDKApi.updateConfig({
+
+    console.log('# set config ', sdkConfig.configParams, ' params ', params)
+    eduSDKApi.updateConfig({ 
       sdkDomain: `${sdkConfig.configParams.sdkDomain}`,
       appId: sdkConfig.configParams.appId,
     })
