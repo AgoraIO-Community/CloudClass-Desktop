@@ -117,11 +117,10 @@ export class UIStore {
   }
 
   @action.bound
-  fireToast(eventName: string, props?: any, type?: string) {
+  fireToast(eventName: string, props?: any) {
     this.toast$.next({
       eventName,
       props,
-      type
     })
   }
 
