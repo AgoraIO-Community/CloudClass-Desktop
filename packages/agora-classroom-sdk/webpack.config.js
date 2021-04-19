@@ -6,6 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const tailwindcss = require('tailwindcss')
 
 const config = require('dotenv').config().parsed
 
@@ -31,7 +33,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".scss", ".css"],
+    extensions: [".ts", ".tsx", ".js", ".css"],
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
@@ -66,8 +68,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        exclude: /\.(module.scss|module.css)$/i,
-        test: /\.(scss|css)$/i,
+        test: /\.css$/i,
         use: [
           {
             loader: 'style-loader',
@@ -76,34 +77,62 @@ module.exports = {
             loader: 'css-loader',
           },
           {
-            loader: 'sass-loader',
-          },
-          {
-            loader: 'thread-loader',
-          }
-        ]
-      },
-      {
-        test: /\.(module.scss|module.css)$/i,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
+            loader: "postcss-loader",
             options: {
-              modules: true,
-              localIdentName: '[hash:base64:6]',
+              postcssOptions: {
+                ident: 'postcss',
+                // config: path.resolve(__dirname, './postcss.config.js')
+                plugins: [
+                  tailwindcss(),
+                  autoprefixer()
+                ]
+              }
             }
           },
           {
-            loader: 'sass-loader',
-          },
-          {
             loader: 'thread-loader',
           }
         ]
       },
+      // {
+      //   test: /\.(module.scss|module.css)$/i,
+      //   use: [
+      //     {
+      //       loader: 'style-loader',
+      //     },
+      //     {
+      //       loader: 'css-loader',
+      //       options: {
+      //         modules: true,
+      //         localIdentName: '[hash:base64:6]',
+      //       }
+      //     },
+      //     {
+      //       loader: "postcss-loader",
+      //       options: {
+      //         postcssOptions: {
+      //           ident: 'postcss',
+      //           plugins: [
+      //             tailwindcss(),
+      //             autoprefixer()
+      //           ]
+      //         }
+      //       }
+      //     },
+      //     // {
+      //     //   loader: 'postcss-loader',
+      //     //   options: {
+      //     //       postcssOptions: {
+      //     //           config: path.join(__dirname, './postcss.config.js'),
+      //     //       },
+      //     //       sourceMap: true,
+      //     //   },
+      //     // },
+      //     {
+      //       loader: 'thread-loader',
+      //     }
+      //   ]
+      // },
       {
         test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         // exclude: /node_modules/,
