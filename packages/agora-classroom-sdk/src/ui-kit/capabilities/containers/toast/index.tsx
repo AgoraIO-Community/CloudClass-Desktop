@@ -12,7 +12,6 @@ export const ToastContainer = observer(() => {
 
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
-
   const toastMap = {
     'toast.granted_board_success': () => toast('toast.granted_board_success'),
     'toast.failed_to_authorize_whiteboard': (props: any) => toast('toast.failed_to_authorize_whiteboard', props),
@@ -41,7 +40,7 @@ export const ToastContainer = observer(() => {
     'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
     'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
-    'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)},'error'),
     'toast.time_interval_between_close': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'private_media_chat.chat_started': (props: any) => toast('private_media_chat.chat_started', props),
     'private_media_chat.chat_ended': (props: any) => toast('private_media_chat.chat_ended', props),
