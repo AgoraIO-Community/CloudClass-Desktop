@@ -60,7 +60,7 @@ export const HandsUpReceiverContainer = observer(() => {
         switch(handsUpState) {
             case 'default': {
                 await studentHandsUp(teacherUuid)
-                addToast(transI18n('co_video.hands_up_requsted'))
+                addToast(transI18n('co_video.hands_up_requsted'), 'success')
                 break;
             }
             case 'apply': {

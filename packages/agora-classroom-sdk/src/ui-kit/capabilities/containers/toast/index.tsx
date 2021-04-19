@@ -10,7 +10,7 @@ type ToastType = any
 export const ToastContainer = observer(() => {
   const {toastQueue, addToast, removeToast, toastEventObserver} = useGlobalContext()
 
-  const toast = (type: string, props?: any) => addToast(transI18n(type), props)
+  const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
 
   const toastMap = {
