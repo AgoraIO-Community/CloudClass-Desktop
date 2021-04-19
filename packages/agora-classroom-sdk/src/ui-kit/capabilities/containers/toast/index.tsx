@@ -59,6 +59,9 @@ export const ToastContainer = observer(() => {
         toastOperation(evt.props)
       }
     })
+    return () => {
+      toastEventObserver.complete()
+    }
   }, [toastEventObserver])
 
   return (

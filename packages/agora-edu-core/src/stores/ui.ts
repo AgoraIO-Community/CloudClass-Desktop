@@ -140,6 +140,7 @@ export class UIStore {
 
   @action.bound
   fireDialog(eventName: string, props?: any) {
+    console.log('fire dialog ', eventName, props)
     this.dialog$.next({
       eventName,
       props

@@ -394,6 +394,9 @@ export const DialogContainer: React.FC<any> = observer(() => {
         dialogOperation(evt.props)
       }
     })
+    return () => {
+      dialogEventObserver.complete()
+    }
   }, [dialogEventObserver])
 
   const cls = classnames({
