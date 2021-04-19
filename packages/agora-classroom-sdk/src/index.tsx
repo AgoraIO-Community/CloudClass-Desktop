@@ -1,12 +1,16 @@
 import 'promise-polyfill/src/polyfill';
-import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from '@/monolithic/app';
-import { isElectron } from '@/utils/utils';
+import { App } from '@/infra/monolithic/app';
+import { isElectron } from '@/infra/utils';
 import { EduManager } from 'agora-rte-sdk';
-import { AgoraEduSDK } from '@/edu-sdk';
-import { eduSDKApi } from '@/services/edu-sdk-api';
-import { GlobalStorage } from '@/utils/utils';
+import { eduSDKApi } from 'agora-edu-core';
+import {AgoraEduSDK} from './infra/api'
+import { GlobalStorage } from '@/infra/utils';
+import {configure} from 'mobx'
+
+configure({
+  isolateGlobalState: true
+})
 
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";

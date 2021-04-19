@@ -2,7 +2,23 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "~core": ["./src/core"],
+      "~core/*": ["./src/core/*"],
+      "~ui-kit": ["./src/ui-kit"],
+      "~components": ["./src/ui-kit/components"],
+      "~scaffold": ["./src/ui-kit/scaffold"],
+      "~styles": ["./src/ui-kit/styles"],
+      "~utilities": ["./src/ui-kit/utilities"],
+      "~utilities/*": ["./src/ui-kit/utilities/*"],
+      "~components/*": ["./src/ui-kit/components/*"],
+      "~scaffold/*": ["./src/ui-kit/scaffold/*"],
+      "~capabilities/*": ["./src/ui-kit/capabilities/*"],
+      "~capabilities": ["./src/ui-kit/capabilities"],
+      "~capabilities/containers": ["./src/ui-kit/capabilities/containers"],
+      "~capabilities/containers/*": ["./src/ui-kit/capabilities/containers/*"],
+      "~capabilities/hooks": ["./src/ui-kit/capabilities/hooks"],
+      "~capabilities/hooks/*": ["./src/ui-kit/capabilities/hooks/*"]
     }
   }
 }

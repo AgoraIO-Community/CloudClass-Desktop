@@ -4,8 +4,8 @@ import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
 import { GenericErrorWrapper } from '../../utils/generic-error';
-import {isEmpty} from 'lodash';
 import { convertUid, paramsConfig } from '../utils';
+import { AgoraWebStreamCoordinator } from './coordinator';
 
 export type AgoraWebVolumeResult = {
   level: number,
@@ -63,6 +63,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   public publishedAudio: boolean = false
   public publishedVideo: boolean = false
+  public streamCoordinator?: AgoraWebStreamCoordinator;
   private hasCamera?: boolean
   private hasMicrophone?: boolean
 
@@ -92,6 +93,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this._localVideoStats = {
       videoLossRate: 0
     }
+    this.streamCoordinator = new AgoraWebStreamCoordinator()
   }
 
   clearAllInterval() {
@@ -151,6 +153,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.videoMuted = false
     this.audioMuted = false
     this.channelName = ''
+    this.streamCoordinator = undefined
   }
 
   get client(): IAgoraRTCClient {
@@ -170,51 +173,63 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   // TODO: not in used, need to refactor
   init () {
     this._client = this.agoraWebSdk.createClient(this.clientConfig)
+    this.streamCoordinator?.updateRtcClient(this._client)
     this.client.on('user-joined', (user) => {
       // this.fire('user-joined', user)
     })
     this.client.on('user-left', (user) => {
       // this.fire('user-left', user)
     })
+    this.streamCoordinator?.on('user-published', async (user, mediaType) => {
+      EduLogger.info("user-published", user)
+      this.fire('user-published', {
+        user,
+        mediaType,
+        channel: this.channelName
+      })
+    })
     this.client.on('user-published', async (user, mediaType) => {
         EduLogger.info("user-published ", user, mediaType)
         if (user.uid !== this.localScreenUid) {
-          if (mediaType === 'audio') {
-            if (!this.audioMuted) {
-              EduLogger.info("subscribeAudio, user", user)
-              await this.client.subscribe(user, 'audio')
-              // this.fire('user-published', {
-              //   user,
-              //   mediaType,
-              //   channel: this.channelName
-              // })
-              if (user.audioTrack) {
-                !user.audioTrack.isPlaying && user.audioTrack.play()
-              }
-            }
-          }
+          // if (mediaType === 'audio') {
+          //   if (!this.audioMuted) {
+          //     EduLogger.info("subscribeAudio, user", user)
+          //     await this.client.subscribe(user, 'audio')
+          //     if (user.audioTrack) {
+          //       !user.audioTrack.isPlaying && user.audioTrack.play()
+          //     }
+          //   }
+          // }
 
-          if (mediaType === 'video') {
-            if (!this.videoMuted) {
-              EduLogger.info("subscribeVideo, user", user)
-              // await this.subscribeVideo(user)
-              await this.client.subscribe(user, 'video')
-              this.fire('user-published', {
-                user,
-                mediaType,
-                channel: this.channelName
-              })
-            }
-          }
+          // if (mediaType === 'video') {
+          //   if (!this.videoMuted) {
+          //     EduLogger.info("subscribeVideo, user", user)
+          //     await this.client.subscribe(user, 'video')
+          //     this.fire('user-published', {
+          //       user,
+          //       mediaType,
+          //       channel: this.channelName
+          //     })
+          //   }
+          // }
+          this.streamCoordinator?.addRtcStream(user, mediaType)
       }
     })
-    this.client.on('user-unpublished', (user, mediaType) => {
-      if (user.uid === this.localScreenUid) return
+    this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
       this.fire('user-unpublished', {
         user,
         mediaType,
         channel: this.channelName,
       })
+    })
+    this.client.on('user-unpublished', (user, mediaType) => {
+      if (user.uid === this.localScreenUid) return
+      // this.fire('user-unpublished', {
+      //   user,
+      //   mediaType,
+      //   channel: this.channelName,
+      // })
+      this.streamCoordinator?.removeRtcStream(user, mediaType)
     })
     // this.client.on('user-info-updated', (uid, msg) => {
     //   this.fire('user-info-updated', {
@@ -300,40 +315,54 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   registerClientByChannelName(channelName: string) {
     const client = this.agoraWebSdk.createClient(this.clientConfig);
+    this.streamCoordinator?.updateRtcClient(client)
     //@ts-ignore
     this.agoraWebSdk.setParameter(paramsConfig)
+    this.streamCoordinator?.on('user-published', async (user, mediaType) => {
+      EduLogger.info("user-published", user)
+      this.fire('user-published', {
+        user,
+        mediaType,
+        channel: this.channelName
+      })
+    })
     client.on('user-published', async (user, mediaType) => {
       EduLogger.info("user-published ", user, mediaType)
       if (user.uid !== this.localScreenUid) {
         if (mediaType === 'audio') {
-          await client.subscribe(user, 'audio')
+          // await client.subscribe(user, 'audio')
+          // if (user.audioTrack) {
+          //   !user.audioTrack.isPlaying && user.audioTrack.play()
+          // }
+          
+        }
+
+        if (mediaType === 'video') {
+          // await client.subscribe(user, 'video')
           // this.fire('user-published', {
           //   user,
           //   mediaType,
           //   channel: channelName
           // })
-          if (user.audioTrack) {
-            !user.audioTrack.isPlaying && user.audioTrack.play()
-          }
         }
-
-        if (mediaType === 'video') {
-          await client.subscribe(user, 'video')
-          this.fire('user-published', {
-            user,
-            mediaType,
-            channel: channelName
-          })
-        }
+        this.streamCoordinator?.addRtcStream(user, mediaType)
       }
     })
-    client.on('user-unpublished', (user, mediaType) => {
-      if (user.uid === this.localScreenUid) return
+    this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
       this.fire('user-unpublished', {
         user,
         mediaType,
-        channel: channelName
+        channel: this.channelName,
       })
+    })
+    client.on('user-unpublished', (user, mediaType) => {
+      if (user.uid === this.localScreenUid) return
+      this.streamCoordinator?.removeRtcStream(user, mediaType)
+      // this.fire('user-unpublished', {
+      //   user,
+      //   mediaType,
+      //   channel: channelName
+      // })
     })
     client.on('token-privilege-did-expire', () => {
       // this.fire('token-privilege-did-expire')

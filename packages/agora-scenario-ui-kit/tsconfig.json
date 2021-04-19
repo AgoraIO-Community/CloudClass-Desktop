@@ -1,9 +1,0 @@
-{
-  "extends": "./ts.base.json",
-  "exclude": ["node_modules", "lib"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-  }
-}

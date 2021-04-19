@@ -9,11 +9,11 @@ export default class App {
 
     setupClassroom() {
       AgoraEduSDK.config({
-        appId: "<Your AppID>",
+        appId: "f488493d1886435f963dfb3d95984fd4",
       })
       AgoraEduSDK.launch(
         document.querySelector(`#${this.elem.id}`), {
-          rtmToken: "<Your RTM Token>",
+          rtmToken: "006f488493d1886435f963dfb3d95984fd4IABITbbeWgBC109/7I9Bnb2neHeib9ORVthUUjblt2rj4gx+f9gAAAAAEAA67mKyJKxeYAEA6AMkrF5g",
           userUuid: "test",
           userName: "teacher",
           roomUuid: "4321",
