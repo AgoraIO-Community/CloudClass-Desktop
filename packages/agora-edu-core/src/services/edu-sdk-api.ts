@@ -122,7 +122,7 @@ export class EduSDKApi extends ApiBase {
         webRecordConfig: {
           url: params.url
         },
-        backupCount: 1
+        backupCount: 0
       }
     })
     return res.data
