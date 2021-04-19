@@ -12,6 +12,7 @@ export const HandsUpManagerContainer = observer(() => {
         processUserCount,
         onlineUserCount,
         coVideoUsers,
+        handsUpStudentList,
         teacherAcceptHandsUp,
         teacherRejectHandsUp,
     } = useHandsUpContext()
@@ -36,7 +37,7 @@ export const HandsUpManagerContainer = observer(() => {
             unreadCount={0}
             state={handsUpState as any}
             onClick={handleUpdateList}
-            studentList={coVideoUsers}
+            studentList={handsUpStudentList}
         />
     )
 })
