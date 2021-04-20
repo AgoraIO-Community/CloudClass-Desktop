@@ -271,7 +271,7 @@ export const zh = {
     'started_elapse': '已开始上课：',
     'ended_elapse': '已经下课：',
     'hours': '小时',
-    'minutes': '分',
+    'minutes': '分钟',
     'seconds': '秒',
     'short': {
       'hours': '小时',
