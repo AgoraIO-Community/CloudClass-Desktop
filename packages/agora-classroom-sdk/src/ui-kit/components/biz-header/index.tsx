@@ -13,7 +13,11 @@ const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   bad: 'bad-signal',
   unknown: 'unknown-signal',
 };
-
+const CLASS_STATUS_TEXT_COLOR : { [key: string]: string } = {
+  'pre-class': '#677386',
+  'in-class': '#677386',
+  'end-class': '#F04C36',
+}
 export interface MonitorInfo {
   /**
    * CPU 使用率, 单位: %
@@ -35,15 +39,16 @@ export interface MonitorInfo {
 
 export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
 
+
 export interface BizHeaderProps {
   /**
    * 是否是原生
    */
   isNative: boolean;
   /**
-   * 课程是否开始
+   * 课程状态
    */
-  isStarted?: boolean;
+   classState: BizClassStatus;
   /**
    * 课程是否正在录制
    */
@@ -62,7 +67,7 @@ export interface BizHeaderProps {
   monitor: MonitorInfo;
 
   /**
-   * 课程状态
+   * 课程文本状态
    */
   classStatusText: string;
 
@@ -73,7 +78,7 @@ export interface BizHeaderProps {
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
-  isStarted = false,
+  classState,
   isRecording = false,
   isNative = false,
   signalQuality,
@@ -100,7 +105,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="biz-header-title-wrap">
           <div className="biz-header-title">{title}</div>
           <div className="biz-header-title biz-subtitle">
-            <Inline color="#677386">{classStatusText}</Inline>
+            <Inline color={CLASS_STATUS_TEXT_COLOR[classState]}>{classStatusText}</Inline>
             {/* <Inline color="#677386">{formatTime}</Inline> */}
           </div>
         </div>

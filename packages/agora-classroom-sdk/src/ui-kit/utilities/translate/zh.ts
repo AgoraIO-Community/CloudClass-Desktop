@@ -268,6 +268,7 @@ export const zh = {
     'back': '返回',
     'to_start_in': '距离上课还有：',
     'started_elapse': '已开始上课：',
+    'ended_elapse': '已经下课：',
     'hours': '小时',
     'minutes': '分',
     'seconds': '秒',

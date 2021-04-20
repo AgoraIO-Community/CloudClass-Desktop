@@ -168,8 +168,17 @@ type TrophyType = {
 }
 
 type ClassroomScheduleType = {
+  /**
+   * 课程开始时刻 单位：ms
+   */
   startTime: number,
+  /**
+   * 课程时长 单位：s
+   */
   duration: number,
+  /**
+   * 课程结束后延迟关闭时长 单位：s
+   */
   closeDelay: number
 }
 
@@ -359,14 +368,18 @@ export class RoomStore extends SimpleInterval {
       case EduClassroomStateEnum.beforeStart:
         // timeText = `${transI18n('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         return {
-          classState: 'beforeStart',
+          classState: 'pre-class',
           duration,
         }
       case EduClassroomStateEnum.start:
+        return {
+          classState: 'in-class',
+          duration,
+        }
       case EduClassroomStateEnum.end:
         // timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         return {
-          classState: 'StartOrEnd',
+          classState: 'end-class',
           duration,
         }
     }
@@ -377,6 +390,9 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  /**
+   * 当前时刻与开课时刻的时间段 单位：ms
+   */
   @computed
   get classTimeDuration(): number {
     let duration = -1
@@ -386,8 +402,10 @@ export class RoomStore extends SimpleInterval {
           duration = Math.max(this.classroomSchedule.startTime - this.calibratedTime, 0)
           break;
         case EduClassroomStateEnum.start:
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0);
+          break;
         case EduClassroomStateEnum.end:
-          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0)
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime - this.classroomSchedule.duration*1000, 0)
           break;
       }
     }

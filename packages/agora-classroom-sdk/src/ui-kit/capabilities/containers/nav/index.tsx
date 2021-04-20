@@ -2,7 +2,7 @@ import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useMemo } from 'react'
-import { BizHeader, transI18n } from '~ui-kit'
+import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
 import { SettingContainer } from '../setting'
 
@@ -12,7 +12,6 @@ export const NavigationBar = observer(() => {
   } = useRecordingContext()
   const {
     roomInfo,
-    isCourseStart,
     liveClassStatus
   } = useRoomContext()
   const {
@@ -43,8 +42,9 @@ export const NavigationBar = observer(() => {
 
     const stateMap = {
       'default': () => `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`,
-      'beforeStart': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
-      'StartOrEnd': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'pre-class': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'in-class': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'end-class': ()=> `${transI18n('nav.ended_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`
     }
 
     if (stateMap[classState]) {
@@ -58,7 +58,7 @@ export const NavigationBar = observer(() => {
     <BizHeader
       isNative={isNative}
       classStatusText={classStatusText}
-      isStarted={isCourseStart}
+      classState={liveClassStatus.classState as BizClassStatus}
       isRecording={isRecording}
       title={roomInfo.roomName}
       signalQuality={networkQuality as any}

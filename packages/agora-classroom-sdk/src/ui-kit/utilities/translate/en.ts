@@ -292,6 +292,7 @@ export const en = {
     'back': 'Back',
     'to_start_in': 'To start in: ',
     'started_elapse': 'Started: ',
+    'ended_elapse': 'Ended: ',
     'hours': 'hours',
     'minutes': 'minutes',
     'seconds': 'seconds',
