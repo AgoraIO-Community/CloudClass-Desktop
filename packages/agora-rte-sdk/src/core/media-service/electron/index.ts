@@ -259,6 +259,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   cpuUsage: number = 0
   gatewayRtt: number = 0
+  lastMileDelay: number = 0
 
   constructor(options: ElectronWrapperInitOption) {
     super();
@@ -431,6 +432,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.subscribedList = []
     this.cpuUsage = 0
     this.gatewayRtt = 0
+    this.lastMileDelay = 0
     this.releaseSubChannels()
   }
 
@@ -515,7 +517,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
         cpuUsage: this.cpuUsage,
-        rtt: this.gatewayRtt,
+        //TODO: delay case need use last mile, not rtt
+        rtt: this.lastMileDelay,
         localPacketLoss: {
           audioStats: this._localAudioStats,
           videoStats: this._localVideoStats
@@ -621,6 +624,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('rtcStats', (evt: any) => {
       this.cpuUsage = evt.cpuTotalUsage
       this.gatewayRtt = evt.gatewayRtt
+      this.lastMileDelay = evt.lastmileDelay
       this.fire('rtcStats', evt)
     })
     this.client.on('localAudioStats', (evt: any) => {
