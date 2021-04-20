@@ -32,6 +32,9 @@
     font-size: 13px;
     color: #191919;
     @apply flex-1;
+    width: 120px;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .loading .loading-file-size {
