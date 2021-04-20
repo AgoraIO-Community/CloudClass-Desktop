@@ -53,7 +53,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'whiteboardGranted',
-    name: 'roster.granted',
+    name: 'roster.authorization',
     action: 'whiteboard',
     render: (_, profile, hover, userType) => {
       const cls = classnames({

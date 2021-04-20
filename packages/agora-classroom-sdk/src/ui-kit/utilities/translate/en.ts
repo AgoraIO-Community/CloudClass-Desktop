@@ -40,7 +40,8 @@ export const en = {
     'camera_state': 'Camera',
     'microphone_state': 'Microphone',
     'reward': 'Reward',
-    'kick': 'Kick'
+    'kick': 'Kick',
+    'authorization': 'Authorization',
   },
   'hands_up': 'Hands Up',
   'co_video': {

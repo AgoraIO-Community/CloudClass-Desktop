@@ -40,7 +40,8 @@ export const zh = {
     'camera_state': '摄像头',
     'microphone_state': '麦克风',
     'reward': '奖励',
-    'kick': '踢人'
+    'kick': '踢人',
+    'authorization': '授权',
   },
   'hands_up': '举手',
   'co_video': {
