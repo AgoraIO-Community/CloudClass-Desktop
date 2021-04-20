@@ -215,7 +215,7 @@ export class AgoraEduSDK {
           },
           rtmUid: option.userUuid,
           rtmToken: option.rtmToken,
-          recordUrl: data.recordUrl
+          recordUrl: option.recordUrl!
         },
         language: option.language,
         startTime: option.startTime,
