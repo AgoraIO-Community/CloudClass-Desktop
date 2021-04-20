@@ -348,16 +348,28 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
     startRecording,
     stopRecording
   } = useRecordingContext()
+
+  const recordingTitle = starting ? 'toast.stop_recording.title' : 'toast.start_recording.title'
+
+  const recordingContent = starting ? 'toast.stop_recording.body' : 'toast.start_recording.body'
+
+  const recordingToast = starting ? 'toast.stop_recording.success' : 'toast.start_recording.success'
+
   return (
     <Modal
       onOk={async () => {
-        removeDialog(id)
         try {
-          await (starting ? startRecording() : stopRecording())
-          addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
+          if (starting) {
+            await stopRecording()
+          } else {
+            await startRecording()
+          }
+          addToast(transI18n(recordingToast))
+          removeDialog(id)
         }catch(err) {
           const wrapperError = GenericErrorWrapper(err)
           addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
+          removeDialog(id)
         }
       }}
       onCancel={() => {
@@ -367,9 +379,9 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
         <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
       ]}
-      title={starting ? transI18n('toast.start_recording.title') : transI18n('toast.stop_recording.title')}
+      title={transI18n(recordingTitle)}
     >
-      <p>{starting ? transI18n('toast.start_recording.body') : transI18n('toast.stop_recording.body')}</p>
+      <p>{transI18n(recordingContent)}</p>
     </Modal>
   )
 })
