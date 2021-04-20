@@ -34,7 +34,7 @@ export const useChatContext = () => {
   }
 }
 
-export const useStreamList = () => {
+export const useStreamListContext = () => {
 
   const sceneStore = useSceneStore()
 
@@ -151,7 +151,11 @@ export const useRoomContext = () => {
   const {
     startNativeScreenShareBy,
     roomInfo,
-    classState
+    classState,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
   } = useSceneStore()
 
   const {
@@ -185,7 +189,11 @@ export const useRoomContext = () => {
     isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
-    liveClassStatus
+    liveClassStatus,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
   }
 }
 
@@ -285,6 +293,8 @@ export const useBoardContext = () => {
     installTools,
     handleUpload,
     publicResources,
+    revokeBoardPermission,
+    grantBoardPermission
   } = useBoardStore()
 
   const {
@@ -342,7 +352,17 @@ export const useBoardContext = () => {
     installTools,
     personalResources,
     publicResources,
+    revokeBoardPermission,
+    grantBoardPermission,
     doUpload: handleUpload
+  }
+}
+
+export const useStreamContext = () => {
+  const {streamList} = useSceneStore()
+
+  return {
+    streamList
   }
 }
 
@@ -356,12 +376,16 @@ export const useUserListContext = () => {
   const rosterUserList = smallClassStore.rosterUserList
   const handleRosterClick = smallClassStore.handleRosterClick
 
+  const {revokeCoVideo, teacherAcceptHandsUp} = smallClassStore
+
   return {
     localUserUuid,
     myRole,
     rosterUserList,
     teacherName,
     handleRosterClick,
+    revokeCoVideo,
+    teacherAcceptHandsUp,
   }
 }
 

@@ -353,8 +353,6 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 
   const recordingContent = starting ? 'toast.stop_recording.body' : 'toast.start_recording.body'
 
-  const recordingToast = starting ? 'toast.stop_recording.success' : 'toast.start_recording.success'
-
   return (
     <Modal
       onOk={async () => {
@@ -364,6 +362,7 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
           } else {
             await startRecording()
           }
+          const recordingToast = starting ? 'toast.stop_recording.success' : 'toast.start_recording.success'
           addToast(transI18n(recordingToast))
           removeDialog(id)
         }catch(err) {
