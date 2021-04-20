@@ -2,7 +2,7 @@ import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
@@ -289,6 +289,18 @@ export class BoardStore extends ZoomController {
       this.folder = demoOssConfig.folder
     }
     this.scale = 0
+    reaction(() => JSON.stringify({ready: this.ready, hasPermission: this.hasPermission, role: this.userRole}), (data: string) => {
+      const {ready, hasPermission, role} = JSON.parse(data)
+      if (ready) {
+        if (role === EduRoleTypeEnum.student) {
+          if (hasPermission) {
+            this.room.setViewMode(ViewMode.Freedom)
+          } else {
+            this.room.setViewMode(ViewMode.Follower)
+          }
+        }
+      }
+    })
   }
 
   get room(): Room {
@@ -1701,7 +1713,7 @@ export class BoardStore extends ZoomController {
     try {
       this.fileLoading = true
       // TODO: need handleUpload return type
-      let res = await this.appStore.uploadService.handleUpload({
+      let res = await this.appStore.uploadService.handleUpload.call(this, {
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,

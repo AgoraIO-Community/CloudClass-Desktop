@@ -387,7 +387,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
 
   useEffect(() => {
     dialogEventObserver.subscribe((evt: any) => {
-      console.log('dialogEventObserver # dialog ', evt)
+      console.log('dialogEventObserver # evt ', evt)
       const dialogOperation = dialogMap[evt.eventName]
 
       if (dialogOperation) {

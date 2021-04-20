@@ -1,6 +1,7 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
+import { useCallback } from 'react'
 import { useMemo } from 'react'
 import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
@@ -26,10 +27,14 @@ export const NavigationBar = observer(() => {
     addDialog
   } = useGlobalContext()
 
+  const addRecordDialog = useCallback(() => {
+    return addDialog(Record, {starting: isRecording})
+  }, [addDialog, Record, isRecording])
+
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
-    'record': () => addDialog(Record, {starting: isRecording}),
+    'record': () => addRecordDialog(),
   }
 
   function handleClick (type: string) {

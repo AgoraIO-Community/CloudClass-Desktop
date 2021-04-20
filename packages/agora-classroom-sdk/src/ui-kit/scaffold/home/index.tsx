@@ -19,6 +19,7 @@ export interface HomeAttributes {
   scenario: string,
   duration: number,
   language: string,
+  region: string,
 }
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
@@ -36,10 +37,12 @@ export const Home: React.FC<HomeProps> = ({
   duration,
   version,
   language,
+  region,
   onChangeRole,
   onChangeScenario,
   onChangeLanguage,
   onChangeDuration,
+  onChangeRegion,
   onChangeRoomId,
   onChangeUserId,
   onChangeUserName,
@@ -130,6 +133,21 @@ export const Home: React.FC<HomeProps> = ({
               <Select id="language" value={language} onChange={onChangeLanguage} placeholder={t('home.language_placeholder')}>
                 <Option value="zh">中文</Option>
                 <Option value="en">English</Option>
+              </Select>
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <label htmlFor="region">
+                <span>{t('home.region')}</span>
+              </label>
+            </Col>
+            <Col>
+              <Select id="region" value={region} onChange={onChangeRegion} placeholder={t('home.region_placeholder')}>
+                <Option value="NS">NA</Option>
+                <Option value="AP">AP</Option>
+                <Option value="CN">CN</Option>
+                <Option value="EU">EU</Option>
               </Select>
             </Col>
           </Row>

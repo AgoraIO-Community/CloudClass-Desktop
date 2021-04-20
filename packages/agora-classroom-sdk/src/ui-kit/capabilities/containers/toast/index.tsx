@@ -52,7 +52,7 @@ export const ToastContainer = observer(() => {
 
   useEffect(() => {
     toastEventObserver.subscribe((evt: any) => {
-      console.log('evt', evt)
+      console.log('toastEventObserver evt', evt)
       const toastOperation = toastMap[evt.eventName]
 
       if (toastOperation) {

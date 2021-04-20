@@ -6,6 +6,7 @@ import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
 import React, { useState, useMemo } from "react"
 import { useHistory } from "react-router"
+import { AgoraRegion } from "@/infra/api"
 
 export const HomePage = observer(() => {
 
@@ -20,6 +21,11 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>('en')
+  const [region, setRegion] = useState<AgoraRegion>('CN')
+
+  const onChangeRegion = (region: string) => {
+    setRegion(region as AgoraRegion)
+  }
 
   const onChangeLanguage = (language: string) => {
     changeLanguage(language)
@@ -31,7 +37,7 @@ export const HomePage = observer(() => {
       'teacher': EduRoleTypeEnum.teacher,
       'assistant': EduRoleTypeEnum.assistant,
       'student': EduRoleTypeEnum.student,
-      'invisible': EduRoleTypeEnum.invisible
+      'incognito': EduRoleTypeEnum.invisible
     }
     return roles[userRole]
   }, [userRole])
@@ -91,6 +97,8 @@ export const HomePage = observer(() => {
       role={userRole}
       scenario={curScenario}
       duration={duration}
+      region={region}
+      onChangeRegion={onChangeRegion}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
       onChangeRoomId={onChangeRoomId}
@@ -121,6 +129,7 @@ export const HomePage = observer(() => {
           userName: userName,
           roleType: role,
           startTime: +startDate,
+          region,
           duration: duration * 60,
         })
         history.push('/launch')

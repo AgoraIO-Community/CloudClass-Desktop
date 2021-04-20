@@ -468,6 +468,7 @@ export class UploadService extends ApiBase {
     // TODO: 生产环境需要更替地址
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 
+    console.log("[agora-edu-core] addFileToOss ", key, " prefix ", prefix, "  callbackUrl ", callbackUrl)
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
@@ -487,6 +488,8 @@ export class UploadService extends ApiBase {
           contentType: ossParams.contentType,
         }
       });
+
+      console.log("[agora-edu-core] res >>>>> ", res)
     if (res.res.status === 200) {
       const data = (res as any).data?.data ?? {}
       console.log('upload res data ', data)
