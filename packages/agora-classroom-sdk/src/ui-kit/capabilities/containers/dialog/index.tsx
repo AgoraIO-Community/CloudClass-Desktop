@@ -132,6 +132,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   const onOK = async () => {
     await onConfirm()
+    removeDialog(id)
   }
 
   const onCancel = () => {
