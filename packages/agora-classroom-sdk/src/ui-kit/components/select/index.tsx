@@ -4,7 +4,6 @@ import { BaseProps } from '~components/interface/base-props';
 import ReactSelect from 'react-select'
 
 import './index.css'
-import { boolean } from 'joi';
 
 export type SelectOption = {
     label: string;
@@ -15,7 +14,7 @@ export interface SelectProps extends BaseProps {
     placeholder?: string;
     options: SelectOption[],
     isSearchable?: boolean,
-    onChange?: (value: string) => void | Promise<void>
+    onChange?: (value: string) => unknown
 }
 
 // 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
@@ -40,7 +39,7 @@ export const Select: FC<SelectProps> = ({
             placeholder={placeholder}
             options={options}
             isSearchable={isSearchable}
-            //@ts-ignore
+            // @ts-ignore
             onChange={(option: SelectOption)  => {
                 onChange && onChange(option.value)
             }}

@@ -179,7 +179,7 @@
     "@types/react-datepicker": "3.1.8",
     "@types/react-dom": "16.9.2",
     "@types/react-router-dom": "5.1.0",
-    "@types/react-select": "^4.0.15",
+    "@types/react-select": "4.0.15",
     "@types/ua-parser-js": "0.7.33",
     "@types/uuid": "3.4.6",
     "@types/video.js": "7.3.4",
