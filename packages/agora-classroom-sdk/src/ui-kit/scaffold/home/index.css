@@ -26,65 +26,23 @@
 }
 
 .home-form {
-  color: #586376;
-  font-size: 14px;
-  gap: 12px;
-  align-items: center;
+  padding-left: 50px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 5px;
 }
-
 .home-form .table-row-item.home-row-item {
   width: 280px;
-  background-color: #F9F9FC;
+  height: 40px;
   font-size: 14px;
   border-radius: 5px;
-  overflow: hidden;
+  background-color: #F9F9FC;
+  /* border: 1px solid black; */
 }
-
-.home-form .table-row-item.home-row-item label span {
-  color: #586376;
+.home-form input{
+  height: 100%;
 }
-
 .home-form .select {
-  width: 211px;
-  height: 40px;
-  border-radius: 4px;
-  border: 1px solid #C4C4DC;
-  border-style: none !important;
-}
-
-
-.home-form input {
-  width: 211px;
-  height: 40px;
-  line-height: 20px;
-  font-size: 14px;
-  /* @apply outline-white; */
-  /* border-radius: 4px; */
-  /* border: 1px solid #C4C4DC; */
-  padding-left: 15px;
-  padding-right: 15px;
-  background-color: #F9F9FC;
-}
-
-.home-form input {
-  height: 40px;
-  line-height: 20px;
-  font-size: 14px;
-  /* @apply outline-white; */
-  /* border-radius: 4px; */
-  /* border: 1px solid #C4C4DC; */
-  padding-left: 15px;
-  padding-right: 15px;
-  background-color: #F9F9FC;
-}
-
-.home-form input::placeholder,
-.home-form .rc-select-selection-placeholder {
-  color: #7B88A0;
-}
-
-.home-form .home-datepicker {
-  padding-left: 15px;
-  color: #7B88A0;
+  flex: 1;
 }
