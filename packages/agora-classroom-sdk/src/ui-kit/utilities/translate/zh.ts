@@ -47,7 +47,7 @@ export const zh = {
     'microphone_state': '麦克风',
     'reward': '奖励',
     'kick': '踢人',
-    'authorization': '授权',
+    'board': '白板',
   },
   'hands_up': '举手',
   'co_video': {

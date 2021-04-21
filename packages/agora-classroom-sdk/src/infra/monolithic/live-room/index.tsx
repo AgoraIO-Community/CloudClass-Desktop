@@ -6,14 +6,11 @@ import {AgoraCSSBasement} from '~ui-kit'
 import './index.css'
 
 const routes: BizPageRouter[] = [
-  // BizPageRouter.LaunchPage,
   BizPageRouter.PretestPage,
   BizPageRouter.Setting,
   BizPageRouter.OneToOne,
-  BizPageRouter.OneToOneIncognito,
   BizPageRouter.MidClass,
-  BizPageRouter.SmallClassIncognito,
-  // BizPageRouter.TestHomePage,
+  BizPageRouter.BigClass,
 ]
 
 export const LiveRoom = observer(() => {

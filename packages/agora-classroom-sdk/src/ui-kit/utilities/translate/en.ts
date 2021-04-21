@@ -47,7 +47,7 @@ export const en = {
     'microphone_state': 'Microphone',
     'reward': 'Reward',
     'kick': 'Kick',
-    'authorization': 'Authorization',
+    'board': 'Board',
   },
   'hands_up': 'Hands Up',
   'co_video': {

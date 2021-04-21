@@ -44,7 +44,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/classroom/mid',
     component: () => PageSFC(MidClassScenario)
   },
-  [BizPageRouter.MidClass]: {
+  [BizPageRouter.BigClass]: {
     path: '/classroom/big',
     component: () => PageSFC(BigClassScenario)
   },
