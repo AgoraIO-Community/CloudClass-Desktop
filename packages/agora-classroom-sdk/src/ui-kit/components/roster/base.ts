@@ -2,7 +2,7 @@ import { IconTypes } from "../icon/icon-types"
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 
-export const canOperate = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
+export const canOperate = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
   if (['assistant', 'teacher'].includes(role)) {
     return true
   }
@@ -18,7 +18,7 @@ export const canOperate = (role: ProfileRole, localUid: string, data: Profile, c
   return false
 }
 
-export const canHover = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
+export const canHover = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
   if (['assistant', 'teacher'].includes(role)) {
     return true
   }

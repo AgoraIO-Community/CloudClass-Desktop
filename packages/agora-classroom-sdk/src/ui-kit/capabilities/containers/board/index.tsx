@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { ColorsContainer } from '~capabilities/containers/board/colors'
 import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
-import { CloseConfirm, UserListDialog } from '~capabilities/containers/dialog'
+import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabilities/containers/dialog'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
@@ -169,6 +169,10 @@ export const WhiteboardContainer = observer(() => {
       }
       case 'register': {
         addDialog(UserListDialog)
+        break;
+      }
+      case 'student_list': {
+        addDialog(StudentUserListDialog)
         break;
       }
       default: {

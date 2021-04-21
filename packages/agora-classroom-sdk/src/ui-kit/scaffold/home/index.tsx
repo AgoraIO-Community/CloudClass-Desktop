@@ -50,6 +50,7 @@ export const Home: React.FC<HomeProps> = ({
   const scenarioOptions = [
     {label: '1v1', value: '1v1'},
     {label: t('home.roomType_interactiveSmallClass'), value: 'mid-class'},
+    {label: t('home.roomType_interactiveBigClass'), value: 'big-class'},
   ]
   const roleOptions = [
     {label: t('home.role_teacher'), value: 'teacher'},

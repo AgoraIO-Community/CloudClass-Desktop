@@ -1,6 +1,7 @@
-import { ActionTypes, Icon, t, transI18n } from '@/ui-kit'
+import { ActionTypes, Icon, Select, t, transI18n } from '@/ui-kit'
 import classnames from 'classnames'
-import React, { ReactNode, useCallback } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
+import { useMemo } from 'react'
 import Draggable from 'react-draggable'
 import { Table, TableHeader, Row, Col } from '~components/table'
 import {canHover, canOperate, ProfileRole, getCameraState, getMicrophoneState} from './base'
@@ -34,8 +35,8 @@ export type StudentRosterColumnKey =
 
 export type StudentRosterProps = {
   isDraggable: boolean;
-  columns: StudentRosterColumn[];
-  title: string;
+  columns?: StudentRosterColumn[];
+  title?: string;
   dataSource?: StudentRosterProfile[];
   teacherName: string;
   localUserUuid: string;
@@ -43,6 +44,7 @@ export type StudentRosterProps = {
   userType?: 'teacher' | 'student';
   onClick?: (action: StudentRosterActionTypes, uid: string | number) => void;
   onClose?: () => void;
+  onChange: (evt: any) => void;
 }
 
 const defaultStudentColumns: StudentRosterColumn[] = [
@@ -128,6 +130,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   userType,
   onClose = () => console.log('onClose'),
   onClick,
+  onChange
 }) => {
 
   const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
@@ -149,8 +152,11 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
         </div>
         <div>
           <div className="roster-header">
-            <label>{t('roster.teacher_name')}</label>
-            <span className="roster-username">{teacherName}</span>
+            <div>
+              <label>{t('roster.teacher_name')}</label>
+              <span className="roster-username">{teacherName}</span>
+            </div>
+            <input type="text" onChange={onChange} />
           </div>
           <Table className="roster-table">
             <TableHeader>

@@ -1306,36 +1306,55 @@ export class BoardStore extends ZoomController {
     const allTools = this.allTools
     const {userRole, roomType} = this.appStore.roomInfo
     if (roomType === EduRoomType.SceneType1v1) {
+      const oneToOneTools = allTools.filter((item: ToolItem) => !['student_list', 'register'].includes(item.value))
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'tools', 'register'].includes(item.value))
+        return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'tools'].includes(item.value))
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools', 'register'].includes(item.value))  
+        return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))  
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return allTools.filter((item: ToolItem) => !['cloud', 'tools', 'register'].includes(item.value))
+          return oneToOneTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
         } else {
           return []
         }
       }
-      return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+      return oneToOneTools
     }
-    if (roomType === EduRoomType.SceneTypeMiddleClass) {
+    if (roomType === EduRoomType.SceneTypeBigClass) {
+      const bigClassTools = allTools.filter((item: ToolItem) => !['register'].includes(item.value))
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['tools'].includes(item.value))
+        return bigClassTools.filter((item: ToolItem) => !['blank-page', 'tools'].includes(item.value))
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+        return bigClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))  
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+          return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
         } else {
-          return allTools.filter((item: ToolItem) => ['register'].includes(item.value))
+          return []
         }
       }
-      return allTools
+      return bigClassTools
+    }
+    if (roomType === EduRoomType.SceneTypeMiddleClass) {
+      const midClassTools = allTools.filter((item: ToolItem) => !['student_list'].includes(item.value))
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+        return midClassTools.filter((item: ToolItem) => !['tools'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
+        return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        if (this.hasPermission) {
+          return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+        } else {
+          return midClassTools.filter((item: ToolItem) => ['register'].includes(item.value))
+        }
+      }
+      return midClassTools
     }
     return []
   }

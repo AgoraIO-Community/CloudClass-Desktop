@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { UserListContainer } from '~capabilities/containers/board/user-list'
+import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
@@ -110,6 +110,15 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   const {removeDialog} = useGlobalContext()
   return (
     <UserListContainer onClose={() => {
+      removeDialog(id)
+    }} />
+  )
+})
+
+export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const {removeDialog} = useGlobalContext()
+  return (
+    <StudentUserListContainer onClose={() => {
       removeDialog(id)
     }} />
   )

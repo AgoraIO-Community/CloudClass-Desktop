@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { ActionTypes, Profile, Roster, RosterProps, StudentRosterProps, StudentRoster } from '~components/roster';
 import { defaultColumns } from './default-columns';
 
@@ -99,8 +99,18 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
     return item
   }
 
+  const [keyword, setKeyword] = useState<string>('')
+
+  const dataList = useMemo(() => {
+    return list.filter((item: any) => item.name.includes(keyword))
+  }, [keyword, list])
+
+  const handleChange = useCallback((evt: any) => {
+    setKeyword(evt.target.value)
+  }, [list, setKeyword])
+
   return (
-    <StudentRoster dataSource={list} {...restProps} onClick={handleClick} userType="student"/>
+    <StudentRoster onChange={handleChange} dataSource={dataList} {...restProps} onClick={handleClick} userType="student"/>
   )
 };
 

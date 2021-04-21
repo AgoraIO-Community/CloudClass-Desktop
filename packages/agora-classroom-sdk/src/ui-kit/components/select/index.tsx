@@ -40,6 +40,7 @@ export const Select: FC<SelectProps> = ({
             placeholder={placeholder}
             options={options}
             isSearchable={isSearchable}
+            //@ts-ignore
             onChange={(option: SelectOption)  => {
                 onChange && onChange(option.value)
             }}
