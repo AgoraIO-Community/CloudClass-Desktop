@@ -15,8 +15,6 @@ import { useEffectOnce } from '@/infra/hooks/utils'
 
 export const MidClassScenario = observer(() => {
 
-  console.log('mid class')
-
   const {joinRoom} = useRoomContext()
 
   const {

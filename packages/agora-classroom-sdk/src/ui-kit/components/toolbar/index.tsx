@@ -60,7 +60,6 @@ export const Toolbar: FC<ToolbarProps> = ({
       className='toolbar-position'
       ref={animContainer}
         onAnimationEnd={() => {
-          // console.log(animContainer.current)
           const animEl = animContainer.current
           if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
             animEl.style.left = '0px'

@@ -3,10 +3,9 @@ import { Button } from '~components/button'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
-import { DatePicker } from '~components/date-picker'
 import { t } from '~components/i18n'
 import './index.css'
-import { HomeModule, OnChangeEvents } from '~utilities/types'
+import { HomeModule } from '~utilities/types'
 
 export interface HomeAttributes {
   roomId: string,
@@ -203,7 +202,7 @@ export const Home: React.FC<HomeProps> = ({
             </Col>
           </Row>
           <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName)}>{t('home.enter_classroom')}</Button>
-          <Row className="text-center">
+          <Row className="text-center home-align-center">
             version: {version}
           </Row>
         </Table>

@@ -416,6 +416,7 @@ export class BoardStore extends ZoomController {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
+  @action.bound
   changeSceneItem(resourceUuid: string) {
     let targetPath = resourceUuid
     if (resourceUuid === "/init" || resourceUuid === "/" || resourceUuid === "init") {
@@ -463,6 +464,7 @@ export class BoardStore extends ZoomController {
   }
 
   // 更新白板
+  @action.bound
   updateBoardSceneItems ({scenes, resourceUuid, resourceName, page, taskUuid}: any, setScene: boolean) {
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
@@ -508,6 +510,7 @@ export class BoardStore extends ZoomController {
     return 0
   }
 
+  @action.bound
   closeMaterial(resourceUuid: string) {
     const currentSceneState = this.room.state.sceneState
     const roomScenes = (this.room.state.globalState as any).roomScenes

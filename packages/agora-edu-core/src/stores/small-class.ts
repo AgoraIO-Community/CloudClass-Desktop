@@ -389,6 +389,25 @@ export class SmallClassStore {
   }
 
   @computed
+  get bigClassUserList() {
+    const localUserUuid = this.roomStore.roomInfo.userUuid    
+    const userList = this.sceneStore.userList
+      .filter((user: EduUser) => ['audience', 'broadcaster'].includes(user.role))
+      .filter((user: EduUser) => user.userUuid !== localUserUuid)
+      .reduce((acc: any[], user: EduUser) => {
+        const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
+        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
+        acc.push(rosterUser)
+        return acc
+      }, [])
+
+    if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [this.localUserRosterInfo].concat(userList)
+    }
+    return userList
+  }
+
+  @computed
   get rosterUserList() {
     const localUserUuid = this.roomStore.roomInfo.userUuid    
     const userList = this.studentInfoList

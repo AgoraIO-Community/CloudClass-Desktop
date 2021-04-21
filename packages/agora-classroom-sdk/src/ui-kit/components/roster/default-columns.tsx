@@ -79,7 +79,6 @@ export const defaultColumns: Column[] = [
         [`${className}`]: 1,
         // [`disabled`]: profile.disabled
       })
-      console.log('mic', hover)
       return (
         <span className="mic-enabled">
           <Icon

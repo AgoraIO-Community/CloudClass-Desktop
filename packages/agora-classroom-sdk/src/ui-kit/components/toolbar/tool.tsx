@@ -2,6 +2,7 @@ import React, { FC, ReactEventHandler } from 'react';
 import {t} from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
+import { Popover } from '../popover';
 
 export interface ToolItem {
   value: string;
@@ -20,7 +21,9 @@ export const Tool: FC<ToolProps> = (props) => {
   return (
     <>
       {Component ? (
-        <Component isActive={isActive} onClick={onClick} />
+        // <Popover placement="right">
+          <Component isActive={isActive} onClick={onClick} />
+        // </Popover>
       ) : (
         <Tooltip title={t(label)} placement="bottom">
           <div

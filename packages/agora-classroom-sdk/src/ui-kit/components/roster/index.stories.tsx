@@ -88,7 +88,6 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
     switch (action) {
       case 'camera': {
         item.cameraEnabled = !item.cameraEnabled
-        console.log('cameraEnable', item)
         break;
       }
       case 'mic': {

@@ -1,10 +1,9 @@
-import { ActionTypes, Icon, Select, t, transI18n } from '@/ui-kit'
+import { ActionTypes, Icon, t, transI18n } from '@/ui-kit'
 import classnames from 'classnames'
-import React, { ReactNode, useCallback, useState } from 'react'
-import { useMemo } from 'react'
+import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
-import { Table, TableHeader, Row, Col } from '~components/table'
-import {canHover, canOperate, ProfileRole, getCameraState, getMicrophoneState} from './base'
+import { Col, Row, Table, TableHeader } from '~components/table'
+import { canHover, canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
@@ -91,7 +90,6 @@ const defaultStudentColumns: StudentRosterColumn[] = [
         [`${className}`]: 1,
         // [`disabled`]: profile.disabled
       })
-      console.log('mic', hover)
       return (
         <span className="mic-enabled">
           <Icon
@@ -148,7 +146,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           }}></Icon>
         </div>
         <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
+          {title ?? transI18n('scaffold.user_list')}
         </div>
         <div>
           <div className="roster-header">

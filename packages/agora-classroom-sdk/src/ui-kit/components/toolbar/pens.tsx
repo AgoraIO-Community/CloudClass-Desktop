@@ -50,7 +50,7 @@ export const Pens: FC<PensProps> = ({
                 visible={popoverVisible}
                 onVisibleChange={(visible) => setPopoverVisible(visible)}
                 overlayClassName="expand-tools-popover"
-                trigger="click"
+                trigger="hover"
                 content={content}
                 placement="right">
                 <div className="tool">

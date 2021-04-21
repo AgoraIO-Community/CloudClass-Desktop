@@ -156,7 +156,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
-  hidePrivateChat = false,
+  hidePrivateChat = true,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
