@@ -1,12 +1,14 @@
 import React, { FC, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
+import { Button } from '~components/button'
 import './index.css';
 
 export interface InputProps extends BaseProps {
     type?: string;
     placeholder?: string;
     prefix?: React.ReactNode;
+    suffix?: React.ReactNode;
     disabled?: boolean;
     value?: string;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -18,11 +20,12 @@ export const Input: FC<InputProps> = ({
     type = "text",
     placeholder = "",
     prefix,
+    suffix,
     disabled = false,
     value = "",
-    onFocus = () => {console.log('focus')},
-    onBlur = () => {console.log('blur')},
-    onChange = () => {console.log('change')},
+    onFocus = () => {},
+    onBlur = () => {},
+    onChange = () => {},
     className,
     ...restProps
 }) => {
@@ -40,7 +43,7 @@ export const Input: FC<InputProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused})}>
+        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-search-wrapper']: cls.includes('input-search')})}>
             {prefix ? (<span className="input-prefix">
                 {prefix}
             </span>) : ""}
@@ -54,6 +57,40 @@ export const Input: FC<InputProps> = ({
                 onChange={onChange}
                 {...restProps}
             />
+            {suffix ? (
+                <span className="input-suffix">
+                    {suffix}
+                </span>
+            ) : ""}
         </span>
+    )
+}
+
+export interface SearchProps extends InputProps {
+    onSearch: (value: string) => void | Promise<void>
+}
+
+export const Search: FC<SearchProps> = ({
+    onSearch,
+    className,
+    ...restProps
+}) => {
+    const [searchStr, setSearchStr] = useState<string>('')
+    const cls = classnames({
+        [`input-search`]: 1,
+        [`${className}`]: !!className,
+    });
+    return (
+        <Input
+            className={cls}
+            {...restProps}
+            value={searchStr}
+            onChange={e => {
+                setSearchStr(e.target.value)
+            }}
+            suffix={<Button onClick={e => {
+                onSearch(searchStr)
+            }}>Search</Button>}
+        />
     )
 }
