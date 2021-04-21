@@ -105,6 +105,7 @@ export const Home: React.FC<HomeProps> = ({
               <Select id="scenario" value={scenario || undefined} onChange={onChangeScenario} placeholder={t('home.roomType_placeholder')}>
                 <Option value="1v1">1v1</Option>
                 <Option value="mid-class">{t('home.roomType_interactiveSmallClass')}</Option>
+                <Option value="big-class">{t('home.roomType_interactiveBigClass')}</Option>
               </Select>
             </Col>
           </Row>

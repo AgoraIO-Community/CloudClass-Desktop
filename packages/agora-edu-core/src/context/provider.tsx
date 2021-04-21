@@ -401,43 +401,10 @@ export const useRecordingContext = () => {
   const roomStore = useRoomStore()
 
   async function startRecording() {
-    const roomUuid = roomStore.roomInfo.roomUuid
-    const tokenRule = `${roomUuid}-record-${Date.now()}`
-    // 生成token home-api login
-    const { rtmToken, userUuid } = await homeApi.login(tokenRule)
-    const urlParams = {
-      userUuid, // 用户uuid
-      userName: 'agora incognito', // 用户昵称
-      roomUuid, // 房间uuid
-      roleType: EduRoleTypeEnum.invisible, // 角色
-      roomType: roomStore.roomInfo.roomType, // 房间类型
-      roomName: roomStore.roomInfo.roomName, // 房间名称x
-      // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
-      pretest: false, // 开启设备检测
-      rtmUid: userUuid,
-      rtmToken, // rtmToken
-      language: appStore.params.language, // 国际化
-      startTime: appStore.params.startTime, // 房间开始时间
-      duration: appStore.params.duration, // 课程时长
-      recordUrl: appStore.params.config.recordUrl, // 回放页地址
-      appId: appStore.params.config.agoraAppId,
-      userRole: EduRoleTypeEnum.invisible
-    }
-
-    // TODO: need design recordUrl
-    if (!urlParams.recordUrl) {
-      // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
-      urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
-      // throw GenericErrorWrapper()
-      // return;
-    }
-    const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
-    const url = `${urlParams.recordUrl}?${urlParamsStr}`
-    // todo fetch 
     await eduSDKApi.updateRecordingState({
       roomUuid,
       state: 1,
-      url
+      url: appStore.params.config.recordUrl
     })
   }
 

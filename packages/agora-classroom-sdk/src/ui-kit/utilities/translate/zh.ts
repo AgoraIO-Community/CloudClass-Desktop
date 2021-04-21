@@ -320,6 +320,7 @@ export const zh = {
     'roomType_placeholder': '请选择课堂类型',
     'roomType_1v1': '1v1',
     'roomType_interactiveSmallClass': '互动小班',
+    'roomType_interactiveBigClass': '互动大班课',
     'role': '角色',
     'role_placeholder': '请选择你的角色',
     'role_teacher': '老师',

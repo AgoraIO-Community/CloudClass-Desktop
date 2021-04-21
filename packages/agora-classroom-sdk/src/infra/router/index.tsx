@@ -10,6 +10,7 @@ import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import * as React from 'react';
 import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '@/ui-kit/capabilities/scenarios/mid-class';
+import {BigClassScenario} from '@/ui-kit/capabilities/scenarios/big-class';
 
 export type AppRouteComponent = {
   path: string
@@ -42,6 +43,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.MidClass]: {
     path: '/classroom/mid',
     component: () => PageSFC(MidClassScenario)
+  },
+  [BizPageRouter.MidClass]: {
+    path: '/classroom/big',
+    component: () => PageSFC(BigClassScenario)
   },
   // [BizPageRouter.SmallClassIncognito]: {
   //   path: '/incognito/small',

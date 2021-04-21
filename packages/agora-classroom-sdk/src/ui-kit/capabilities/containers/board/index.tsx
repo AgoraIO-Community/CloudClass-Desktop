@@ -73,10 +73,7 @@ export const allTools: ToolItem[] = [
     value: 'register',
     label: 'scaffold.user_list',
     icon: 'register',
-    // component: () => {
-    //   return <UserListDialog />
-    // }
-  }
+  },
 ]
 
 export type WhiteBoardState = {

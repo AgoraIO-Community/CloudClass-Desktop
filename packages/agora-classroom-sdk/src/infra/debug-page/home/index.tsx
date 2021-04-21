@@ -45,7 +45,8 @@ export const HomePage = observer(() => {
   const scenario = useMemo(() => {
     const scenes = {
       '1v1': EduSceneType.Scene1v1,
-      'mid-class': EduSceneType.SceneMedium
+      'mid-class': EduSceneType.SceneMedium,
+      'big-class': EduSceneType.SceneLarge,
     }
     return scenes[curScenario]
   }, [curScenario])

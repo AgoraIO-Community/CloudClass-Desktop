@@ -94,7 +94,7 @@ export enum EduRoleTypeEnum {
 export enum EduRoomTypeEnum {
   Room1v1Class = 0,
   RoomSmallClass = 4,
-  // RoomBigClass = 2,
+  RoomBigClass = 2,
   // RoomAcadosc = 3
 }
 

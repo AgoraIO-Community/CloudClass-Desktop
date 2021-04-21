@@ -89,7 +89,7 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError(`${option.roleType}, roleType parameter is invalid`)
   }
 
-  if (![0, 4].includes(option.roomType)) {
+  if (![0, 2, 4].includes(option.roomType)) {
     throw new AgoraSDKError(`${option.roomType}, roomType parameter is invalid`)
   }
 
