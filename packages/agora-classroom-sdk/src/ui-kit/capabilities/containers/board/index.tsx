@@ -74,6 +74,11 @@ export const allTools: ToolItem[] = [
     label: 'scaffold.user_list',
     icon: 'register',
   },
+  {
+    value: 'student_list',
+    label: 'scaffold.student_list',
+    icon: 'register',
+  }
 ]
 
 export type WhiteBoardState = {

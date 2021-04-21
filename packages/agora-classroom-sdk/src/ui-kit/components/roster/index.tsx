@@ -6,8 +6,11 @@ import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
+import { canOperate, canHover, ProfileRole } from './base';
 
 export { defaultColumns } from './default-columns';
+
+export * from './user-list';
 
 export type ActionTypes =
   | 'podium'
@@ -22,7 +25,7 @@ export enum MediaDeviceState {
   available = 1
 }
 
-type ColumnKey = 
+export type ColumnKey = 
   | 'name' 
   | 'onPodium' 
   | 'whiteboardGranted' 
@@ -54,7 +57,7 @@ export interface Column {
   render?: (text: string, profile: Profile, hover: boolean, userType?: string) => ReactNode;
 }
 
-type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
+
 export interface RosterProps extends ModalProps {
   isDraggable?: boolean;
   /**
@@ -89,35 +92,6 @@ export interface RosterProps extends ModalProps {
    * onClose
    */
   onClose?: () => void;
-}
-
-const canOperate = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
-  }
-
-  if (role === 'student' && localUid === data.uid) {
-    // only onPodium is true, student can control self media device
-    if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
-      return true
-    }
-    return false
-  }
-
-  return false
-}
-
-const canHover = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
-  }
-  if (role === 'student' && localUid === data.uid) {
-    if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
-      return true
-    }
-    return false
-  }
-  return false
 }
 
 export const Roster: FC<RosterProps> = ({

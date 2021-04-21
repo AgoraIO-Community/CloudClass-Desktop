@@ -29,6 +29,12 @@ export const en = {
     'microphone_volume': 'Microphone Volume',
     'speaker_volume': 'Speaker Volume',
   },
+  'student': {
+    'student_name': 'Name',
+    'camera': 'Camera',
+    'microphone': 'Microphone',
+    'operation': 'Operation',
+  },
   'roster': {
     'teacher_name': 'Teacher：',
     'user_list': 'User List',

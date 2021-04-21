@@ -44,6 +44,36 @@
   overflow-y: hidden;
 }
 
+.roster-user-list-wrap .main-title {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 12px;
+  font-size: 14px;
+  background: #f9f9fc;
+  border: 0;
+  outline: 0;
+  /* cursor: pointer; */
+  color: #586376;
+  width: 100%;
+  padding-left: 19px;
+}
+
+.roster-user-list-wrap {
+  width: 349px;
+  height: 276px;
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(47,65%,146%,15%);
+  border-radius: 6px;
+  border: 1px solid #e3e3ec;
+  position: relative;
+  overflow-y: hidden;
+}
+
+.roster-user-list-wrap .table-header {
+  color: #7B88A0;
+}
+
 .roster-wrap .table-header {
   margin: 0;
 }

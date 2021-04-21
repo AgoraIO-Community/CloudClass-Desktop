@@ -3,33 +3,7 @@ import React from 'react';
 import { t } from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Column, Profile } from '~components/roster';
-
-const getCameraState = (profile: Profile) => {
-  const defaultType = 'camera-off'
-  // const hover = !!profile.onlineState || profile.disabled === false || !!profile.cameraDevice === true 
-
-  const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
-
-  const className = !!profile.cameraEnabled === true ? 'un-muted' : 'muted'
-
-  return {
-    type: type as IconTypes,
-    className: className
-  }
-}
-
-const getMicrophoneState = (profile: Profile): any => {
-  const defaultType = 'microphone-off-outline'
-
-  const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
-
-  const className = !!profile.micEnabled === true ? 'un-muted' : 'muted'
-
-  return {
-    type: type as IconTypes,
-    className: className
-  }
-}
+import { getCameraState, getMicrophoneState } from './base';
 
 export const defaultColumns: Column[] = [
   {

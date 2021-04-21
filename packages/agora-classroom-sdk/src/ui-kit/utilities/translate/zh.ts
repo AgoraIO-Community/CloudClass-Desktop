@@ -29,6 +29,12 @@ export const zh = {
     'microphone_volume': '麦克风音量',
     'speaker_volume': '扬声器音量',
   },
+  'student': {
+    'student_name': '学生姓名',
+    'camera': '摄像头',
+    'microphone': '麦克风',
+    'operation': '操作',
+  },
   'roster': {
     'teacher_name': '教师姓名：',
     'user_list': '人员列表',
