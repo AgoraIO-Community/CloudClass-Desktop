@@ -159,3 +159,41 @@
 .customize-dialog-popover > .popover-content > .popover-arrow {
   display: none;
 }
+
+.toolbar-position {
+  position: absolute;
+  left: 15px;
+  top: 5rem;
+}
+
+.toolbar-anim-hide {
+  animation: 0.5s toolbarAnimHide linear 1 forwards;
+}
+
+.toolbar-anim-show {
+  animation: 0.5s toolbarAnimShow linear 1 forwards;
+}
+
+@keyframes toolbarAnimHide {
+  0% {
+    left: 15px;
+  }
+  50% {
+    left: -60px;
+  }
+  100% {
+    left: 0px;
+  }
+}
+
+@keyframes toolbarAnimShow {
+  0% {
+    left: 0px;
+  }
+  50% {
+    left: -60px;
+  }
+  100% {
+    left: 15px;
+  }
+}

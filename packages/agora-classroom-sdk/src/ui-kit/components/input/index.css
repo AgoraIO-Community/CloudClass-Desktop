@@ -42,3 +42,13 @@
     width: 100%;
 }
 
+.input-search-wrapper {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.input-search + .input-suffix .btn {
+    border-radius: 0;
+}
+
