@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import { Icon } from '~components/icon';
 import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
 
@@ -126,16 +126,7 @@ export const Docs: FC<ToolbarProps> = (props) => {
       icon: 'register',
     }
   ];
-  return (
-    <div style={{
-      position: 'absolute',
-      top: '2em',
-      left: '15px',
-      transition: '.5s'
-    }}>
-      <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>
-    </div>
-  )
+  return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>
 };
 
 export default meta;
