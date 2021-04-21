@@ -5,9 +5,6 @@ import { Select } from '~components/select'
 import { Slider } from '~components/slider'
 import './index.css';
 import { t } from '~components/i18n';
-
-const { Option } = Select
-
 interface DeviceProps {
     deviceId: string;
     label: string;
@@ -50,34 +47,32 @@ export const Setting: FC<SettingProps> = ({
         [`setting`]: 1,
         [`${className}`]: !!className,
     });
+    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId}))
+    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId}))
     return (
-        <div className={cls} {...restProps}>
+        <div className={cls} {...restProps} style={{width: 318}}>
             <div className="device-choose">
                 <div className="device-title">{t('device.camera')}</div>
                 <Select 
-                    defaultValue={cameraId}
+                    value={cameraId}
                     onChange={async value => {
                         await onChangeDevice('camera', value)
                     }}
-                    onSelect={async value => {
-                        await onSelectDevice('camera', value)
-                    }}
+                    options={cameraOptions}
                 >
-                    {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
             </div>
             <div className="device-choose">
                 <div className="device-title">{t('device.microphone')}</div>
                 <Select 
-                    defaultValue={microphoneId}
+                    value={microphoneId}
                     onChange={async value => {
                         await onChangeDevice('microphone', value)
                     }}
-                    onSelect={async value => {
-                        await onSelectDevice('microphone', value)
-                    }}
+                    options={microphoneOptions}
                 >
-                    {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                    
                 </Select>
                 {
                 hasMicrophoneVolume ? 
@@ -102,15 +97,12 @@ export const Setting: FC<SettingProps> = ({
             <div className="device-choose">
                 <div className="device-title">{t('device.speaker')}</div>
                 <Select
-                    defaultValue={speakerId}
+                    value={speakerId}
                     onChange={async value => {
                         await onChangeDevice('speaker', value)
                     }}
-                    onSelect={async value => {
-                        await onSelectDevice('speaker', value)
-                    }}
+                    options={speakerOptions}
                 >
-                    {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                 </Select>
                 {
                     hasSpeakerVolume ? 

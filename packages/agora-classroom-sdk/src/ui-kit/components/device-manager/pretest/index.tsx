@@ -11,8 +11,6 @@ import { CheckBox } from '~components/table';
 import { Volume } from '~components/volume';
 import './index.css';
 
-const { Option } = Select
-
 interface DeviceProps {
     deviceId: string;
     label: string;
@@ -115,9 +113,13 @@ export const Pretest: React.FC<PretestProps> = ({
         [`${className}`]: !!className,
     })
 
+    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId}))
+    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId}))
+
     return (
         <div className={cls} {...restProps}>
-            <div className="pretest-left">
+            <div className="pretest-left" style={{width: 318}}>
                 <div className="device-choose">
                     <div className="device-title">
                         <span className="device-title-text">{t('media.camera')}</span>
@@ -137,11 +139,8 @@ export const Pretest: React.FC<PretestProps> = ({
                         onChange={async value => {
                             await onChangeDevice('camera', value)
                         }}
-                        onSelect={async value => {
-                            await onSelectDevice('camera', value)
-                        }}
+                        options={cameraOptions}
                     >
-                        {cameraList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                     </Select>
                     {videoComponent && React.cloneElement(videoComponent, {}, null)}
                 </div>
@@ -156,11 +155,9 @@ export const Pretest: React.FC<PretestProps> = ({
                         onChange={async value => {
                             await onChangeDevice('microphone', value)
                         }}
-                        onSelect={async value => {
-                            await onSelectDevice('microphone', value)
-                        }}
+                        options={microphoneOptions}
                     >
-                        {microphoneList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
+                        
                     </Select>
                     {isNative ? (
                         <div className="device-volume">
@@ -196,11 +193,8 @@ export const Pretest: React.FC<PretestProps> = ({
                                 onChange={async value => {
                                     await onChangeDevice('speaker', value)
                                 }}
-                                onSelect={async value => {
-                                    await onSelectDevice('speaker', value)
-                                }}
+                                options={speakerOptions}
                             >
-                                {speakerList.map(item => (<Option key={item.deviceId} value={item.deviceId}>{item.label}</Option>))}
                             </Select>
                             <div className="device-volume">
                                 <span className="device-text">{t('media.volume')}</span>

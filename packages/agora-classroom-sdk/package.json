@@ -290,6 +290,7 @@
     "react-draggable": "4.4.3",
     "react-i18next": "11.8.12",
     "react-router": "5.2.0",
+    "react-select": "4.3.0",
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1",
