@@ -31,7 +31,6 @@ export const RouteContainer = (props: RouteContainerProps) => {
   const routes = props.routes
     .filter((path: string) => routesMap[path])
     .reduce((acc: AppRouteComponent[], item: string) => {
-      console.log('RouteContainer item ', item, acc)
     acc.push(routesMap[item])
     return acc
   }, [])
