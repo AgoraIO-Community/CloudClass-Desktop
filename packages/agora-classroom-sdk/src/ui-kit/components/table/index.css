@@ -1,20 +1,29 @@
 .table-flex-container {
-  @apply flex flex-col;
-  color: #191919;
+  @apply flex;
+  @apply flex-col;
 }
 
 .table-row-item {
-  @apply flex flex-row;
+  @apply flex;
+  @apply flex-row;
   font-size: 13px;
   padding-left: 19px;
 }
 
 .table-col-item {
-  @apply flex flex-1 items-center;
+  @apply flex;
+  @apply flex-1;
+  @apply items-center;
+  font-size: 13px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #7B88A0;
 }
 
 .table-header {
-  @apply flex flex-1 flex-row;
+  @apply flex;
+  @apply flex-1;
+  @apply flex-row;
   font-size: 13px;
   line-height: 18px;
   background-color: #F9F9FC;
@@ -25,7 +34,6 @@
 }
 
 .border-bottom-width-1 {
-  border-top-width: 1px;
   border-bottom-width: 1px;
   @apply border-table-bottom;
   margin: 0px 0px -1px -1px;
@@ -143,8 +151,8 @@ input.indeterminate:indeterminate {
 
 .btn-pin {
   position: absolute;
-  right: 8px;
-  top: 0px;
+  right: 17px;
+  top: 2px;
   display: block;
   color: #A7A7CA;
   z-index: 1;
