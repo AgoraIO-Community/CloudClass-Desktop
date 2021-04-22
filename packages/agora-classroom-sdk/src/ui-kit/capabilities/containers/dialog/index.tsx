@@ -24,14 +24,14 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
 
   const onOK = useCallback(async () => {
     if (type === 'kicked_once') {
-      await kickOutOnce(roomInfo.userUuid, roomInfo.roomUuid)
+      await kickOutOnce(userUuid, roomInfo.roomUuid)
       removeDialog(id)
     }
     if (type === 'kicked_ban') {
-      await kickOutBan(roomInfo.userUuid, roomInfo.roomUuid)
+      await kickOutBan(userUuid, roomInfo.roomUuid)
       removeDialog(id)
     }
-  }, [type, id, roomInfo.userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan])
+  }, [type, id, userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan])
 
   return (
     <Modal
@@ -107,20 +107,45 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
 })
 
 export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+
+  const {
+    setTool,
+    room
+  } = useBoardContext()
+
   const {removeDialog} = useGlobalContext()
+
+  const onCancel = useCallback(() => {
+    if (room) {
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
+    }
+    removeDialog(id)
+  }, [room, removeDialog, setTool])
+
   return (
-    <UserListContainer onClose={() => {
-      removeDialog(id)
-    }} />
+    <UserListContainer onClose={onCancel} />
   )
 })
 
 export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const {
+    setTool,
+    room
+  } = useBoardContext()
+
   const {removeDialog} = useGlobalContext()
+
+  const onCancel = useCallback(() => {
+    if (room) {
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
+    }
+    removeDialog(id)
+  }, [room, removeDialog, setTool])
+
   return (
-    <StudentUserListContainer onClose={() => {
-      removeDialog(id)
-    }} />
+    <StudentUserListContainer onClose={onCancel} />
   )
 })
 

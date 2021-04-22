@@ -154,7 +154,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               <label>{t('roster.teacher_name')}</label>
               <span className="roster-username">{teacherName}</span>
             </div>
-            <input type="text" onChange={onChange} />
+            <input type="text" placeholder={transI18n('scaffold.search_user')} onChange={onChange} />
           </div>
           <Table className="roster-table">
             <TableHeader>

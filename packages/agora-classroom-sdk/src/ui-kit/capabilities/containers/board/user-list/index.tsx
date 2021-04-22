@@ -2,11 +2,12 @@ import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { StudentRoster } from '@/ui-kit/components';
+import { KickDialog } from '../../dialog';
 
 export type UserListContainerProps = {
     onClose: () => void
@@ -100,7 +101,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             }
             case 'kick-out': {
                 if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                    addDialog('kick-dialog', { userUuid: uid, roomUuid: roomInfo.roomUuid })
+                    addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
                 }
                 break;
             }
@@ -123,7 +124,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 export const StudentUserListContainer: React.FC<UserListContainerProps> = observer((props) => {
 
     const {
-        streamList
+        streamList,
+        localStream,
     } = useStreamListContext()
 
     const {
@@ -142,11 +144,53 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         localUserUuid,
         myRole,
         teacherName,
-        rosterUserList,
+        userList,
+        acceptedUserList
     } = useUserListContext()
 
+    function checkDisable(user: any, role: EduRoleTypeEnum): boolean {
+        if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+          return false
+        }
+    
+        if (role === EduRoleTypeEnum.student 
+            && roomInfo.userUuid === user.userUuid
+            && acceptedIds.includes(user.userUuid)
+          ) {
+          return false
+        }
+        return true
+      }
+
+    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean) {
+        return {
+            name: user.userName,
+            uid: user.userUuid,
+            micEnable: stream?.hasAudio ?? false,
+            cameraEnabled: stream?.hasVideo ?? false,
+            onPodium: onPodium,
+            disabled: checkDisable(user, role)
+        }
+    }
+
+    const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
+
+    const lectureClassUserStreamList = useMemo(() => {
+        const remoteStudentList = userList
+            .filter((user: any) => ['audience'].includes(user.role))
+            .filter((user: any) => user.userUuid !== localUserUuid)
+            .reduce((acc: any[], user: any) => {
+                const stream = streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
+                const userInfo = transformRosterUserInfo(user, roomInfo.userRole, stream, acceptedIds.includes(user.userUuid))
+                acc.push(userInfo)
+                return acc
+              }, [])
+
+        return remoteStudentList
+    }, [userList, streamList, acceptedIds, localStream, acceptedUserList])
+
     const onClick = useCallback(async (actionType: any, uid: any) => {
-        const userList = rosterUserList
+        const userList = lectureClassUserStreamList
         const user = userList.find((user: RosterUserInfo) => user.uid === uid)
 
         if (!user) {
@@ -179,12 +223,12 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             }
             case 'kick-out': {
                 if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                    addDialog('kick-dialog', { userUuid: uid, roomUuid: roomInfo.roomUuid })
+                    addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
                 }
                 break;
             }
         }
-    }, [rosterUserList, roomInfo.roomUuid, roomInfo.userRole])
+    }, [lectureClassUserStreamList, roomInfo.roomUuid, roomInfo.userRole])
 
     return (
         <StudentRoster
@@ -192,7 +236,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             localUserUuid={localUserUuid}
             role={myRole as any}
             teacherName={teacherName}
-            dataSource={rosterUserList}
+            dataSource={lectureClassUserStreamList}
             userType={'teacher'}
             onClick={onClick}
             onClose={props.onClose}

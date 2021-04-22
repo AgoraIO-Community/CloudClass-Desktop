@@ -1006,6 +1006,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   setLaserPoint() {
     if (this.room) {
+      this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
       })
@@ -1054,6 +1055,22 @@ export class BoardStore extends ZoomController {
           this.selector = tool
         }
         break
+      }
+      case 'cloud': {
+        this.selector = tool
+        break;
+      }
+      case 'register': {
+        this.selector = tool
+        break;
+      }
+      case 'student_list': {
+        this.selector = tool
+        break;
+      }
+      case 'laser': {
+        this.selector = tool
+        break;
       }
     }
   }
@@ -1305,7 +1322,7 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get tools() {
+  get _tools() {
     const allTools = this.allTools
     const {userRole, roomType} = this.appStore.roomInfo
     if (roomType === EduRoomType.SceneType1v1) {
@@ -1358,6 +1375,15 @@ export class BoardStore extends ZoomController {
         }
       }
       return midClassTools
+    }
+    return []
+  }
+
+  @computed
+  get tools() {
+    if (this._tools) {
+      const isMenuItem = (value: string) => !['cloud', 'tools', 'register', 'student_list'].includes(value)
+      return this._tools.map((item: ToolItem) => ({...item, hover: isMenuItem(item.value) ? this.ready : true}))
     }
     return []
   }

@@ -20,6 +20,10 @@ const defaultColors = [
   '#ffc8e2',
 ];
 
+export const hexToRgbaString = (hex: string, opacity: number): string => {
+  return 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' + parseInt('0x' + hex.slice(3, 5)) + ','
+          + parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')';
+}
 export interface ColorsProps extends ToolItem {
   colors?: string[];
   activeColor?: string;
@@ -29,6 +33,7 @@ export interface ColorsProps extends ToolItem {
   colorSliderStep?: number;
   onClick?: (value: string) => void;
   onSliderChange?: (value: any) => void;
+  hover?: boolean;
 }
 
 export const Colors: FC<ColorsProps> = ({
@@ -39,6 +44,7 @@ export const Colors: FC<ColorsProps> = ({
   colorSliderMax = 100,
   colorSliderDefault = 50,
   colorSliderStep = 1,
+  hover = false,
   onClick,
   onSliderChange
 }) => {
@@ -80,7 +86,10 @@ export const Colors: FC<ColorsProps> = ({
         content={content}
         placement="right">
         <div className="tool">
-          <Icon type="color" color={activeColor} />
+          <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor, 0.5)}`}}>
+            <div className="circle" style={{backgroundColor: activeColor}}></div>
+          </div>
+          {/* <Icon type="circle" hover={hover} color={activeColor} /> */}
           <Icon type="triangle-down" className="triangle-icon"/>
         </div>  
       </Popover>

@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { Button } from '~components/button';
+import { Inline, Tooltip } from '~components';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';
 import { Popover } from '~components/popover';
-import { SignalContent } from './signal-content';
+import { transI18n } from '../i18n';
 import './index.css';
-import { Inline } from '~components';
+import { SignalContent } from './signal-content';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
@@ -75,6 +75,8 @@ export interface BizHeaderProps {
    * 
    */
   onClick: (itemType: string) => void;
+
+  userType?: 'teacher' | 'student'
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
@@ -85,6 +87,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
   title,
   classStatusText,
   monitor,
+  userType = 'student',
   onClick
 }) => {
 
@@ -110,10 +113,16 @@ export const BizHeader: FC<BizHeaderProps> = ({
           </div>
         </div>
         <div className="header-actions">
-          {/* TODO recording icon replacement */}
-          <Icon type={isRecording ? "recording" : "record"} color={isRecording?'#2962F4':undefined} size={24} onClick={() => onClick('record')} />
-          <Icon type="set" size={24} onClick={() => onClick('setting')}  />
-          <Icon type="exit" size={24} onClick={() => onClick('exit')} />
+          {userType === 'teacher' ? 
+          <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
+            <Icon hover={true} type={isRecording ? "recording" : "record"} color={isRecording ? '#2962F4': undefined} size={24} onClick={() => onClick('record')} />
+          </Tooltip> : null}
+          <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
+            <Icon hover={true} type="set" size={24} onClick={() => onClick('setting')}  />
+          </Tooltip>
+          <Tooltip title={transI18n('biz-header.exit')} placement="bottom">
+            <Icon hover={true} type="exit" size={24} onClick={() => onClick('exit')} />
+          </Tooltip>
         </div>
       </Header>
     </>

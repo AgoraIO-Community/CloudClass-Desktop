@@ -1,5 +1,6 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
@@ -15,6 +16,7 @@ export const NavigationBar = observer(() => {
     roomInfo,
     liveClassStatus
   } = useRoomContext()
+
   const {
     isNative,
     cpuUsage,
@@ -59,8 +61,16 @@ export const NavigationBar = observer(() => {
     return stateMap['default']()
   }, [JSON.stringify(liveClassStatus), formatCountDown])
 
+  const userType = useMemo(() => {
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      return 'teacher'
+    }
+    return 'student'
+  }, [roomInfo.userRole])
+
   return (
     <BizHeader
+      userType={userType}
       isNative={isNative}
       classStatusText={classStatusText}
       classState={liveClassStatus.classState as BizClassStatus}

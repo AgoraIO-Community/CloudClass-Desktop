@@ -5,7 +5,8 @@ export const ToolCabinetContainer = () => {
 
     const {
         startOrStopSharing,
-        setLaserPoint
+        setLaserPoint,
+        currentSelector
     } = useBoardContext()
 
     const onClick = async (itemType: string) => {
@@ -14,8 +15,9 @@ export const ToolCabinetContainer = () => {
                 await startOrStopSharing()
                 break;
             }
-            case 'laserPoint': {
-                await setLaserPoint()
+            case 'laser': {
+                setLaserPoint()
+                break;
             }
         }
     }
@@ -32,12 +34,13 @@ export const ToolCabinetContainer = () => {
                     name: t('scaffold.screen_share')
                 },
                 {
-                    id: 'laserPoint',
+                    id: 'laser',
                     icon: <Icon type="laser-pointer" />,
                     name: t('scaffold.laser_pointer')
                 },
             ]}
             onClick={onClick}
+            activeItem={currentSelector}
         />
     )
 }

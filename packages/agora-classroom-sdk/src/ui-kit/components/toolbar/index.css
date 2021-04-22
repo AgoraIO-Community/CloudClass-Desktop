@@ -10,7 +10,6 @@
 
 .toolbar .menu {
   @apply flex justify-center items-center cursor-pointer;
-  margin-bottom: 18px;
 }
 
 .toolbar .menu.fold {
@@ -33,6 +32,23 @@
 
 .toolbar.opened > .tools {
   @apply flex flex-col items-center;
+}
+
+.circle-border {
+  border-radius: 50%;
+  border: 1px solid;
+}
+
+.tool {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tool .circle {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
 }
 
 .tool {
@@ -59,7 +75,7 @@
 }
 
 .active {
-  color: #357bf6;
+  color: #357bf6 !important;
 }
 
 .tool.expand,

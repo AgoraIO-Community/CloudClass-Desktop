@@ -2,7 +2,11 @@ import { useBoardContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { Pens, t } from '~components';
 
-export const PensContainer = observer(() => {
+export type PensContainerProps = {
+  onClick: (pen: string) => void
+}
+
+export const PensContainer = observer((props: PensContainerProps) => {
 
   const {
     lineSelector,
@@ -12,6 +16,7 @@ export const PensContainer = observer(() => {
   } = useBoardContext()
 
   const onClick = (pen: any) => {
+    console.log('pen', pen)
     setTool(pen)
     updatePen(pen)
   }

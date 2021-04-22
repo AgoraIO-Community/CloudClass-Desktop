@@ -24,7 +24,8 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'd
       height={40}
       borderRadius={40}
     >
-      <Icon hover={true} type="hands-up-student" color={color} onClick={onClick} />
+      {/*TODO: fix hover */}
+      <Icon type="hands-up-student" color={color} onClick={onClick} />
     </Card>
   )
 }

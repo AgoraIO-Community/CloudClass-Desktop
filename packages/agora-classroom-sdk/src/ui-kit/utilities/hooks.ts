@@ -116,8 +116,9 @@ export const useRendererPlayer = <T extends HTMLElement>(props: RendererPlayerPr
   }
 
   useEffect(
-    () => onRendererPlayer<T>(ref.current!, props)
-    , [ref, props.track, props.fitMode, props.preview])
+    () => onRendererPlayer<T>(ref.current!, props),
+    [ref, props.track, props.fitMode, props.preview]
+  )
 
   return ref
 }

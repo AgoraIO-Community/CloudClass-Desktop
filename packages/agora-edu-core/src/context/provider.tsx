@@ -50,6 +50,7 @@ export const useStreamListContext = () => {
     muteVideo,
     unmuteVideo,
     streamList,
+    cameraEduStream
   } = sceneStore
 
   const {
@@ -71,6 +72,7 @@ export const useStreamListContext = () => {
     muteVideo,
     unmuteVideo,
     revokeUserPermission,
+    localStream: cameraEduStream,
     grantUserPermission,
   }
 }
@@ -173,10 +175,12 @@ export const useRoomContext = () => {
     kickOutBan,
     kickOutOnce,
     join,
+    sceneType,
     liveClassStatus
   } = useRoomStore()
 
   return {
+    sceneType,
     destroyRoom,
     joinRoom: join,
     removeDialog,
@@ -370,11 +374,15 @@ export const useUserListContext = () => {
   const appStore = useCoreContext()
   const smallClassStore = useSmallClassStore()
 
+  const acceptedUserList = smallClassStore.acceptedList
+
   const localUserUuid = appStore.roomInfo.userUuid
   const teacherName = smallClassStore.teacherName
   const myRole = smallClassStore.role
   const rosterUserList = smallClassStore.rosterUserList
   const handleRosterClick = smallClassStore.handleRosterClick
+
+  const userList = appStore.sceneStore.userList
 
   const {revokeCoVideo, teacherAcceptHandsUp} = smallClassStore
 
@@ -386,6 +394,8 @@ export const useUserListContext = () => {
     handleRosterClick,
     revokeCoVideo,
     teacherAcceptHandsUp,
+    userList,
+    acceptedUserList
   }
 }
 

@@ -27,7 +27,7 @@ export const defaultColumns: Column[] = [
   },
   {
     key: 'whiteboardGranted',
-    name: 'roster.board',
+    name: 'roster.granted',
     action: 'whiteboard',
     render: (_, profile, hover, userType) => {
       const cls = classnames({

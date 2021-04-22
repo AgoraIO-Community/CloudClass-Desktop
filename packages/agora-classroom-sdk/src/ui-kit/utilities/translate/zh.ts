@@ -47,7 +47,7 @@ export const zh = {
     'microphone_state': '麦克风',
     'reward': '奖励',
     'kick': '踢人',
-    'board': '白板',
+    'granted': '授权',
   },
   'hands_up': '举手',
   'co_video': {
@@ -209,6 +209,8 @@ export const zh = {
     'student_interactive_apply': `"{reason}"想和你连麦`
   },
   'scaffold': {
+    'search': '搜索',
+    'student_list': '学生列表',
     'pencil': '画笔',
     'laser_pointer': '激光笔',
     'straight': '直线',
@@ -263,6 +265,12 @@ export const zh = {
     'title': '设备检测',
     'settingTitle': '设备设置',
     'finishTest': '完成'
+  },
+  'biz-header': {
+    'setting': '设置',
+    'exit': '退出',
+    'recording': '录制中',
+    'start_record': '开启录制'
   },
   'message': '消息',
   'zh': '中文',

@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react';
+import React, { FC, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Tool, ToolItem } from './tool';
@@ -7,6 +7,7 @@ import foldAbsent from './assets/icon-open.svg';
 import unfoldHover from './assets/icon-close-hover.svg';
 import foldHover from './assets/icon-open-hover.svg';
 import './index.css';
+import { useMounted } from '@/ui-kit/utilities/hooks';
 
 export { Colors } from './colors';
 
@@ -55,6 +56,14 @@ export const Toolbar: FC<ToolbarProps> = ({
     [`${className}`]: !!className,
   });
 
+  const isMounted = useMounted()
+
+  useEffect(() => {
+    if (animTimer.current) {
+      clearTimeout(animTimer.current)
+    }
+  }, [])
+
   return (
     <div 
       className='toolbar-position'
@@ -75,7 +84,6 @@ export const Toolbar: FC<ToolbarProps> = ({
           onMouseEnter={() => setMenuHover(true)}
           onMouseLeave={() => setMenuHover(false)}
           onClick={() => {
-            // console.log({opened, el: toolbarEl.current})
             toolbarEl.current && toolbarEl.current.parentElement && toolbarEl.current.parentElement.classList.remove('toolbar-anim-hide')
             toolbarEl.current && toolbarEl.current.parentElement && toolbarEl.current.parentElement.classList.remove('toolbar-anim-show')
             if (opened) {
@@ -85,6 +93,9 @@ export const Toolbar: FC<ToolbarProps> = ({
             }
             animTimer.current && clearTimeout(animTimer.current)
             animTimer.current = setTimeout(() => {
+              if (!isMounted) {
+                return
+              }
               setOpened(!opened);
               onOpenedChange && onOpenedChange(!opened);
               animTimer.current && clearTimeout(animTimer.current)

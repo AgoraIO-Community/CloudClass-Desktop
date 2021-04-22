@@ -38,7 +38,7 @@ export const allTools: ToolItem[] = [
   {
     value: 'color',
     label: 'scaffold.color',
-    icon: 'color',
+    icon: 'circle',
     component: (props: any) => {
       return <ColorsContainer {...props}/>
     }
@@ -162,21 +162,26 @@ export const WhiteboardContainer = observer(() => {
   } = useBoardContext()
 
   const handleToolClick = (type: string) => {
+    console.log('handleToolClick tool click', type)
     switch(type) {
       case 'cloud': {
+        setTool(type)
         addDialog(CloudDriverContainer)
-        break;
+        break
       }
       case 'register': {
+        setTool(type)
         addDialog(UserListDialog)
-        break;
+        break
       }
       case 'student_list': {
+        setTool(type)
         addDialog(StudentUserListDialog)
-        break;
+        break
       }
       default: {
         setTool(type)
+        break
       }
     }
   }

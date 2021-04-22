@@ -22,13 +22,14 @@ export const Icon: FC<IconProps> = ({
   style,
   size,
   color,
-  hover,
+  hover = false,
   ...restProps
 }) => {
   const cls = classnames({
+    'icon-box': true,
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
-    [`hover`]: !!hover,
+    [`icon-hover`]: !!hover,
   });
   return (
     <i

@@ -752,6 +752,7 @@ export class RoomStore extends SimpleInterval {
     if (userRole === EduRoleTypeEnum.student) {
       const studentRoleConfig = {
         [EduSceneType.Scene1v1]: 'broadcaster',
+        [EduSceneType.SceneLarge]: 'audience',
         [EduSceneType.SceneMedium]: 'audience'
       }
       return {

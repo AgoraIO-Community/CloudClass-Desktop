@@ -239,6 +239,19 @@
   content: '\e69c';
 }
 
+.icon-color::after {
+  content: ' ';
+  border: 1px solid transparent;
+  width: 25px;
+  height: 25px;
+  display: block;
+  border-radius: 55px;
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  opacity: 0.5;
+}
+
 .icon-square:before {
   content: '\e69d';
 }

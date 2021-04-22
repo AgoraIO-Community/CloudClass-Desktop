@@ -47,7 +47,7 @@ export const en = {
     'microphone_state': 'Microphone',
     'reward': 'Reward',
     'kick': 'Kick',
-    'board': 'Board',
+    'granted': 'Auth',
   },
   'hands_up': 'Hands Up',
   'co_video': {
@@ -210,6 +210,8 @@ export const en = {
     'student_interactive_apply': `"{reason}" want to co-video`
   },
   'scaffold': {
+    'search': 'Search',
+    'student_list': 'Student List',
     'pencil': 'Pencil',
     'laser_pointer': 'Laser pointer',
     'straight': 'straight',
@@ -289,6 +291,12 @@ export const en = {
     'title': 'Device Test',
     'settingTitle': 'Device Setting',
     'finishTest': 'Finish'
+  },
+  'biz-header': {
+    'setting': 'Setting',
+    'exit': 'Exit',
+    'recording': 'Recording',
+    'start_record': 'Start Recording',
   },
   'nav': {
     'delay': 'Delay: ',

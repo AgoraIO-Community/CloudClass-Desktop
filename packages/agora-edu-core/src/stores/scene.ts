@@ -1270,8 +1270,8 @@ export class SceneStore extends SimpleInterval {
     const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
 
     const config = {
-      hideOffPodium: roomType === EduRoomType.SceneType1v1 ? true : false,
-      hideOffAllPodium: roomType === EduRoomType.SceneType1v1 ? true : false,
+      hideOffPodium: roomType === EduRoomType.SceneTypeMiddleClass ? false : true,
+      hideOffAllPodium: roomType === EduRoomType.SceneTypeMiddleClass ? false : true,
       isHost: isHost,
     }
 

@@ -4,6 +4,7 @@ import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useRef } from 'react';
+import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Draggable from 'react-draggable';
@@ -47,7 +48,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     cancelUpload,
     removeMaterialList,
     room,
-    doUpload
+    doUpload,
   } = useBoardContext()
 
   const {
@@ -86,11 +87,13 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   })
   const [currentProgress, setCurrentProgress] = useState<number>(0)
 
-  const onCancel = () => {
-    // setTool('')
+  const onCancel = useCallback(() => {
+    if (room) {
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
+    }
     removeDialog(id)
-    // props.actionClose()
-  }
+  }, [room])
 
   const [activeKey, setActiveKey] = useState<string>('1')
 
@@ -208,7 +211,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     <Draggable>
       <div className="agora-board-resources">
         <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+          <Icon type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onCancel()
           }}></Icon>
         </div>
