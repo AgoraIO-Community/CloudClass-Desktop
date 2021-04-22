@@ -3,58 +3,55 @@ import { IconTypes } from "../icon/icon-types"
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 
 export const canOperate = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
+  //任何角色的星星不可点击
+  if(col.key === 'stars'){
+    return false;
   }
 
+  if (['assistant', 'teacher'].includes(role)) {
+    //授权上台、白板、离开始终可点击
+    if(['onPodium', 'whiteboardGranted', 'kickOut'].includes(col.key)){
+      return true;
+    }
+    //摄像头、麦克风 当该用户上台时可点击，下台时不可点击
+    if(data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)){
+      return true;
+    }
+    return false;
+  }
+  
   if (role === 'student' && localUid === data.uid) {
-    // only onPodium is true, student can control self media device
+    //学生自己上台时 摄像头与麦克风可点击
     if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
       return true
     }
     return false
   }
-
   return false
 }
 
-export const canHover = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
-  }
-  if (role === 'student' && localUid === data.uid) {
-    if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
-      return true
-    }
-    return false
-  }
-  return false
-}
-
-
-export const getCameraState = (profile: any) => {
+export const getCameraState = (profile: any, canOperate: boolean) => {
   const defaultType = 'camera-off'
-  // const hover = !!profile.onlineState || profile.disabled === false || !!profile.cameraDevice === true 
-
   const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
 
-  const className = !!profile.cameraEnabled === true ? 'un-muted' : 'muted'
-
+  const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
+  const cameraStatus = !!profile.cameraEnabled === true ? 'icon-active' : 'media-un-active';
   return {
     type: type as IconTypes,
-    className: className
+    operateStatus: operateStatus,
+    cameraStatus: cameraStatus
   }
 }
 
-export const getMicrophoneState = (profile: any): any => {
+export const getMicrophoneState = (profile: any, canOperate: boolean) => {
   const defaultType = 'microphone-off-outline'
-
   const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
 
-  const className = !!profile.micEnabled === true ? 'un-muted' : 'muted'
-
+  const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
+  const microphoneStatus = !!profile.micEnabled === true ? 'icon-active' : 'media-un-active';
   return {
     type: type as IconTypes,
-    className: className
+    operateStatus: operateStatus,
+    microphoneStatus: microphoneStatus
   }
 }

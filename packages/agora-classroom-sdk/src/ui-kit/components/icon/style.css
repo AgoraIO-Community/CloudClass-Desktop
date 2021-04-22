@@ -1,4 +1,4 @@
-.hover {
+.hover{
   cursor: pointer;
 }
 
@@ -8,11 +8,20 @@
 }
 
 .icon-hover:hover {
-  /* color: #191919 !important; */
   background-color: #f0f0f7;
 }
 
 .header-actions .icon-hover:hover,
 .tool .icon-hover:hover {
   color: #191919 !important;
+}
+
+.icon-hover{
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  height: 32px;
+  width: 32px;
+  transform: translateX(-5px);
 }

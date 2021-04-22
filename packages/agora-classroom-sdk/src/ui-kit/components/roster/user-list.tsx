@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
-import { canHover, canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
+import { canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
@@ -57,18 +57,20 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     action: 'camera',
     render: (_, profile, hover) => {
       const {
-        className,
+        operateStatus,
+        cameraStatus,
         type,
-      } = getCameraState(profile)
+      } = getCameraState(profile, hover)
 
       const cls = classnames({
-        [`${className}`]: 1,
+        [`${operateStatus}`]: 1,
+        [`${cameraStatus}`]: 1,
         // [`disabled`]: profile.disabled
       })
       return (
         <span className="camera-enabled">
           <Icon
-            hover={hover}
+            iconhover={hover}
             className={cls}
             type={type}
           />
@@ -82,18 +84,20 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     action: 'mic',
     render: (_, profile, hover) => {
       const {
-        className,
+        operateStatus,
+        microphoneStatus,
         type,
-      } = getMicrophoneState(profile)
+      } = getMicrophoneState(profile, hover)
 
       const cls = classnames({
-        [`${className}`]: 1,
+        [`${operateStatus}`]: 1,
+        [`${microphoneStatus}`]: 1,
         // [`disabled`]: profile.disabled
       })
       return (
         <span className="mic-enabled">
           <Icon
-            hover={hover}
+            iconhover={hover}
             className={cls}
             type={type}
           />
@@ -110,7 +114,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     render: (_, profile, hover) => {
       return (
         <span className="kick-out">
-          <Icon hover={hover} type="exit" />
+          <Icon iconhover={hover} type="exit" />
         </span>
       )
     },
@@ -180,7 +184,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                             : undefined
                         }>
                         {col.render
-                          ? col.render((data as any)[col.key], data, canHover(role, localUserUuid, data, col), userType)
+                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType)
                           : (data as any)[col.key]}
                       </span>
                     </Col>

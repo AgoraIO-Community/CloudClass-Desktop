@@ -1134,6 +1134,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
     const stream = this.getStreamBy(userUuid)
 
@@ -1556,6 +1557,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   async muteAudio(userUuid: string, isLocal: boolean) {
     const targetStream = this.getStreamBy(userUuid)
     if (!targetStream) {
@@ -1588,6 +1590,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   async unmuteAudio(userUuid: string, isLocal: boolean) {
     const targetStream = this.getStreamBy(userUuid)
     if (!targetStream) {
@@ -1621,6 +1624,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   async muteVideo(userUuid: string, isLocal: boolean) {
     const targetStream = this.getStreamBy(userUuid)
     if (!targetStream) {
@@ -1654,6 +1658,7 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
   async unmuteVideo(userUuid: string, isLocal: boolean) {
     const targetStream = this.getStreamBy(userUuid)
     if (!targetStream) {
