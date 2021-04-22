@@ -383,7 +383,7 @@ export class RoomStore extends SimpleInterval {
         // timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         return {
           classState: 'end-class',
-          duration,
+          duration: this.classroomSchedule ? Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0) : -1
         }
     }
 
