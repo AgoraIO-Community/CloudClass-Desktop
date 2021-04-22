@@ -13,6 +13,7 @@ export interface IconProps extends BaseProps {
   size?: number;
   color?: string;
   hover?: boolean;
+  iconhover?: boolean;
   onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
 
@@ -23,22 +24,33 @@ export const Icon: FC<IconProps> = ({
   size,
   color,
   hover,
+  iconhover,
   ...restProps
 }) => {
   const cls = classnames({
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
-    [`hover`]: !!hover,
+    ['hover']: !!hover
   });
   return (
-    <i
-      className={cls}
+    !!iconhover ? <div className="icon-hover">
+      <i className={cls}
+        style={{
+          color,
+          fontSize: size,
+          ...style,
+        }}
+        {...restProps}>
+      </i>
+    </div> :
+    <i className={cls}
       style={{
         color,
         fontSize: size,
         ...style,
       }}
-      {...restProps}></i>
+      {...restProps}>
+    </i>
   );
 };
 
