@@ -7,12 +7,12 @@
   max-width: 29px;
 }
 
-.icon-hover:hover {
+.icon-box-hover:hover {
   background-color: #f0f0f7;
 }
 
-.header-actions .icon-hover:hover,
-.tool .icon-hover:hover {
+.header-actions .icon-box-hover:hover,
+.tool .icon-box-hover:hover {
   color: #191919 !important;
 }
 

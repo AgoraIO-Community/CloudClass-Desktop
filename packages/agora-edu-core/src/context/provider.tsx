@@ -158,6 +158,7 @@ export const useRoomContext = () => {
     unmuteVideo,
     muteAudio,
     unmuteAudio,
+    sceneType,
   } = useSceneStore()
 
   const {
@@ -175,7 +176,6 @@ export const useRoomContext = () => {
     kickOutBan,
     kickOutOnce,
     join,
-    sceneType,
     liveClassStatus
   } = useRoomStore()
 

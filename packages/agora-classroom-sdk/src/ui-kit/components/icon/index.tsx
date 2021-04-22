@@ -31,7 +31,7 @@ export const Icon: FC<IconProps> = ({
     'icon-box': true,
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
-    [`icon-hover`]: !!hover,
+    [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
   return (

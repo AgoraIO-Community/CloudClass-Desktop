@@ -23,13 +23,13 @@ export interface StudentRosterProfile {
 export type StudentRosterActionTypes =
   | 'camera'
   | 'mic'
-  | 'kick-out'
+  | 'kickOut'
   | string
 
 export type StudentRosterColumnKey = 
   | 'camera'
   | 'mic'
-  | 'kick-out'
+  | 'kickOut'
   | 'name'
 
 export type StudentRosterProps = {
@@ -106,9 +106,9 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     },
   },
   {
-    key: 'kick-out',
+    key: 'kickOut',
     name: 'student.operation',
-    action: 'kick-out',
+    action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
     // FIXME: 不能点击时的样式
     render: (_, profile, hover) => {
@@ -158,7 +158,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               <label>{t('roster.teacher_name')}</label>
               <span className="roster-username">{teacherName}</span>
             </div>
-            <input type="text" placeholder={transI18n('scaffold.search_user')} onChange={onChange} />
+            <input type="text" placeholder={transI18n('scaffold.search')} onChange={onChange} />
           </div>
           <Table className="roster-table">
             <TableHeader>

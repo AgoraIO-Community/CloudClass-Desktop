@@ -99,7 +99,7 @@ export const defaultColumns: Column[] = [
   {
     key: 'kickOut',
     name: 'roster.kick',
-    action: 'kick-out',
+    action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
     render: (_, profile, canOperate) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';

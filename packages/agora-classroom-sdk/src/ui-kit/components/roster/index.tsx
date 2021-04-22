@@ -15,7 +15,7 @@ export type ActionTypes =
   | 'whiteboard'
   | 'camera'
   | 'mic'
-  | 'kick-out'
+  | 'kickOut'
   | string;
 
 export enum MediaDeviceState {

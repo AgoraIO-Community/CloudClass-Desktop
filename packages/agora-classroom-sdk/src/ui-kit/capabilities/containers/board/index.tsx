@@ -13,7 +13,7 @@ import { useEffect } from 'react'
 
 export const allTools: ToolItem[] = [
   {
-    value: 'selection',
+    value: 'selector',
     label: 'scaffold.selector',
     icon: 'select',
   },

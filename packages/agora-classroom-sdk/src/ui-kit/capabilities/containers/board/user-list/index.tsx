@@ -99,7 +99,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                 }
                 break;
             }
-            case 'kick-out': {
+            case 'kickOut': {
                 if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
                     addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
                 }
@@ -221,7 +221,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 }
                 break;
             }
-            case 'kick-out': {
+            case 'kickOut': {
                 if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
                     addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
                 }
