@@ -25,14 +25,14 @@ export interface StudentRosterProfile {
 }
 
 export type StudentRosterActionTypes =
-  | 'camera'
-  | 'mic'
+  | 'cameraEnabled'
+  | 'micEnabled'
   | 'kickOut'
   | string
 
 export type StudentRosterColumnKey = 
-  | 'camera'
-  | 'mic'
+  | 'cameraEnabled'
+  | 'micEnabled'
   | 'kickOut'
   | 'name'
 
@@ -64,7 +64,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     },
   },
   {
-    key: 'camera',
+    key: 'cameraEnabled',
     name: 'student.camera',
     action: 'camera',
     render: (_, profile, canOperate) => {
@@ -83,7 +83,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     },
   },
   {
-    key: 'mic',
+    key: 'micEnabled',
     name: 'student.microphone',
     action: 'mic',
     render: (_, profile, canOperate) => {

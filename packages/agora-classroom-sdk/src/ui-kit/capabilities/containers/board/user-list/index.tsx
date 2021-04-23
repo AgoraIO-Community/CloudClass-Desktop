@@ -168,7 +168,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         return {
             name: user.userName,
             uid: user.userUuid,
-            micEnable: stream?.hasAudio ?? false,
+            micEnabled: stream?.hasAudio ?? false,
             cameraEnabled: stream?.hasVideo ?? false,
             onPodium: onPodium,
             disabled: checkDisable(user, role)
@@ -176,6 +176,10 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     }
 
     const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
+
+    // const localStudentInfo = useMemo(() => {
+
+    // }, [])
 
     const lectureClassUserStreamList = useMemo(() => {
         const remoteStudentList = userList
@@ -188,11 +192,33 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 return acc
               }, [])
 
+        // is student
+        if (roomInfo.userRole === 2) {
+            const localUserInfo = transformRosterUserInfo(
+                {
+                    userUuid: roomInfo.userUuid,
+                    userName: roomInfo.userName,
+                },
+                roomInfo.userRole,
+                localStream,
+                acceptedIds.includes(roomInfo.userUuid)
+                )
+            return [localUserInfo].concat(remoteStudentList)
+        }              
+
         return remoteStudentList
-    }, [userList, streamList, acceptedIds, localStream, acceptedUserList])
+    }, [localStream, roomInfo.userName, roomInfo.userUuid, roomInfo.userRole, userList, streamList, acceptedIds, localStream, acceptedUserList])
+
+
+    const dataList = useMemo(() => {
+        return lectureClassUserStreamList.filter((item: any) => item.name.includes(keyword))
+      }, [keyword, lectureClassUserStreamList])
+
+    //@ts-ignore
+    window.dataList = dataList
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
-        const userList = lectureClassUserStreamList
+        const userList = dataList
         const user = userList.find((user: RosterUserInfo) => user.uid === uid)
 
         if (!user) {
@@ -230,11 +256,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 break;
             }
         }
-    }, [lectureClassUserStreamList, roomInfo.roomUuid, roomInfo.userRole])
-
-    const dataList = useMemo(() => {
-        return lectureClassUserStreamList.filter((item: any) => item.name.includes(keyword))
-      }, [keyword, lectureClassUserStreamList])
+    }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
 
     return (
         <StudentRoster
