@@ -8,10 +8,9 @@ import { transI18n } from '@/ui-kit/components';
 export const HandsUpManagerContainer = observer(() => {
 
     const {
-        handsUpState,
+        teacherHandsUpState,
         processUserCount,
         onlineUserCount,
-        coVideoUsers,
         handsUpStudentList,
         teacherAcceptHandsUp,
         teacherRejectHandsUp,
@@ -35,7 +34,7 @@ export const HandsUpManagerContainer = observer(() => {
             processUserCount={processUserCount}
             onlineUserCount={onlineUserCount}
             unreadCount={0}
-            state={handsUpState as any}
+            state={teacherHandsUpState as any}
             onClick={handleUpdateList}
             studentList={handsUpStudentList}
         />
@@ -63,7 +62,7 @@ export const HandsUpReceiverContainer = observer(() => {
                 addToast(transI18n('co_video.hands_up_requsted'), 'success')
                 break;
             }
-            case 'apply': {
+            case 'actived': {
                 await studentCancelHandsUp()
                 addToast(transI18n('co_video.hands_up_cancelled'), 'warning')
                 break;

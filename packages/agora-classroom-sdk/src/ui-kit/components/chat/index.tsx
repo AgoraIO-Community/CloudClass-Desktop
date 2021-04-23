@@ -9,6 +9,8 @@ import { ChatMin } from './chat-min';
 import './index.css';
 import { Message } from './interface';
 
+import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
+
 export interface ChatProps extends AffixProps {
   /**
    * 消息列表
@@ -31,7 +33,7 @@ export interface ChatProps extends AffixProps {
    */
   chatText?: string;
 
-  closeIcon?: React.ReactElement;
+  showCloseIcon?: boolean;
 
   unreadCount?: number;
   /**
@@ -63,7 +65,7 @@ export const Chat: FC<ChatProps> = ({
   uid,
   isHost,
   chatText,
-  closeIcon,
+  showCloseIcon = false,
   unreadCount = 0,
   collapse = false,
   onCanChattingChange,
@@ -74,7 +76,7 @@ export const Chat: FC<ChatProps> = ({
   ...resetProps
 }) => {
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const [focused, setFocused] = useState<boolean>(false);
 
@@ -98,7 +100,7 @@ export const Chat: FC<ChatProps> = ({
   const scrollDirection = useRef<string>('bottom')
 
   const handleScroll = (event: any) => {
-    const {target} = event
+    const { target } = event
     if (target?.scrollTop === 0) {
       onPullFresh && onPullFresh()
       currentHeight.current = target.scrollHeight
@@ -107,10 +109,10 @@ export const Chat: FC<ChatProps> = ({
   }
 
   const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if(event.key === 'Enter') {
-      if(event.ctrlKey) {
+    if (event.key === 'Enter') {
+      if (event.ctrlKey) {
         event.currentTarget.value += '\n'
-      } else if(!event.shiftKey && !event.altKey) {
+      } else if (!event.shiftKey && !event.altKey) {
         // send message if enter is hit
         event.preventDefault()
         await handleSend()
@@ -139,22 +141,27 @@ export const Chat: FC<ChatProps> = ({
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
-      content={<ChatMin unreadCount={unreadCount} 
+      content={<ChatMin unreadCount={unreadCount}
       />}>
-      <div className="chat-panel">
+      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : ''].join(' ')}>
         <div className="chat-header">
           <span className="chat-header-title">{t('message')}</span>
-          <span>
+          <span style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
             {isHost ? (
-              <span 
+              <span
                 onClick={() => onCanChattingChange(!!canChatting)}
               >
                 <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>
             ) : null}
-            <span style={{cursor: 'pointer'}} onClick={() => onCollapse && onCollapse()}>
-              {closeIcon && closeIcon}
-            </span>
+            {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
+              <img src={chatMinBtn} />
+            </span>) : null}
+
           </span>
         </div>
         {!canChatting ? (

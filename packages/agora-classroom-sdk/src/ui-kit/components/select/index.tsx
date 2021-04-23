@@ -20,7 +20,7 @@ export interface SelectProps extends BaseProps {
 // 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
 export const Select: FC<SelectProps> = ({
     value,
-    placeholder,
+    placeholder = "",
     options,
     isSearchable = false,
     onChange,

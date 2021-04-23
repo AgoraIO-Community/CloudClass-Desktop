@@ -1,8 +1,8 @@
 import { Chat, Icon } from '~components'
 import { observer } from 'mobx-react'
 import * as React from 'react';
-import { useChatContext, useRoomContext } from 'agora-edu-core';
-import { useCallback } from 'react';
+import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
+import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
 
 // const useRoomChat = (store: RoomChatUIKitStore) => {
@@ -65,6 +65,18 @@ export const RoomChat = observer(() => {
     roomInfo
   } = useRoomContext()
 
+  const {
+    isFullScreen
+  } = useGlobalContext()
+
+  useEffect(() => {
+    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
+      // 第一个条件 点击全屏默认聊天框最小化
+      // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
+      toggleChatMinimize()
+    }
+  }, [isFullScreen])
+
   const [nextId, setNextID] = React.useState('')
 
   const isMounted = React.useRef<boolean>(true)
@@ -118,7 +130,7 @@ export const RoomChat = observer(() => {
         toggleChatMinimize()
       }}
       onSend={handleSendText}
-      closeIcon={isHost ? <Icon type="close" onClick={() => {}} /> : <></>}
+      showCloseIcon={isFullScreen}
       onPullFresh={refreshMessageList}
       unreadCount={unreadMessageCount}
     />

@@ -10,7 +10,7 @@ const meta: Meta = {
         handsUpState: {
             control: {
                 type: 'select',
-                options: ['default', 'received', 'stalled', 'active']
+                options: ['default', 'actived']
             }
         }
     }
@@ -20,9 +20,13 @@ type DocsProps = {
     handsUpState: HandsUpState;
 }
 
-export const Docs = ({handsUpState, animStart}: any) => {
+export const Docs = ({handsUpState}: any) => {
 
-    const [inProp, setInProp] = useState(false);
+    const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        setCurrent(current + 1)
+    }, [handsUpState])
 
     const [list, updateList] = useState<StudentInfo[]>([...'.'.repeat(5)].map((_, idx: number) => ({
         userName: `${idx}_name`,
@@ -44,24 +48,16 @@ export const Docs = ({handsUpState, animStart}: any) => {
         }
     }, [list, updateList])
 
-    
-    
-    useEffect(() => {
-        let animFlag = handsUpState === 'received';
-        console.log(animFlag)
-        setInProp(animFlag)
-    }, [handsUpState])
-
     return (
         <div className="flex justify-center items-center m-screen h-screen">
             <HandsUpManager
-                processUserCount={0}
+                processUserCount={current}
                 onlineUserCount={10}
                 unreadCount={9}
                 state={handsUpState}
                 onClick={handleUpdateList}
                 studentList={list}
-                animStart={inProp}
+                timeout={1500}
             />
         </div>
     )
@@ -69,7 +65,6 @@ export const Docs = ({handsUpState, animStart}: any) => {
 
 Docs.args = {
     handsUpState: 'default',
-    animStart: false
 }
 
 export const StudentHandUp = () => {
@@ -80,7 +75,7 @@ export const StudentHandUp = () => {
         <div className="flex justify-center items-center m-screen h-screen">
             <HandsUpSender
             state={state}
-            onClick={() => setActive('apply')}
+            onClick={() => setActive('actived')}
             />
         </div>
     )
