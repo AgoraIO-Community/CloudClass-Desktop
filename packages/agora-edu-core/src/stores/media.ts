@@ -5,6 +5,7 @@ import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
+import { LocalVideoRenderState } from 'agora-rte-sdk';
 
 
 const delay = 2000
@@ -155,7 +156,11 @@ export class MediaStore {
 
   @computed
   get device(): boolean {
-    if (this.rendererOutputFrameRate[`${0}`] > 0) {
+    if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+      return false
+    }
+
+    if (this.cameraRenderer?.renderState === LocalVideoRenderState.Playing) {
       return true
     } else {
       return false
@@ -247,14 +252,12 @@ export class MediaStore {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       EduLogger.info(`[agora-apaas] [media#renderers] user-published ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
-      this.rendererOutputFrameRate[`${uid}`] = 0
       console.log('sdkwrapper update user-pubilshed', evt)
     })
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
-      delete this.rendererOutputFrameRate[`${uid}`]
       console.log('sdkwrapper update user-unpublished', evt)
     })
     this.mediaService.on('network-quality', (evt: any) => {
@@ -311,14 +314,10 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
-      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate)
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
-      if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
-        this.rendererOutputFrameRate[`${evt.user.uid}`] = evt.stats.decoderOutputFrameRate
-        BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
-      }
+      BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
     })
 
     reaction(() => JSON.stringify([
@@ -349,11 +348,6 @@ export class MediaStore {
   speakers: Record<number, number> = {}
 
   @observable
-  rendererOutputFrameRate: Record<number, number> = {
-    0: 1
-  }
-
-  @observable
   networkQuality: string = 'unknown'
 
   @action
@@ -370,9 +364,6 @@ export class MediaStore {
     this.autoplay = false
     this.totalVolume = 0
     this.speakers = {}
-    this.rendererOutputFrameRate = {
-      0: 1
-    }
   }
 
   @observable
