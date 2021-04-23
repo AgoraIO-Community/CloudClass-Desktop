@@ -4,6 +4,8 @@
 
 .facade {
   gap: 10px;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .home-align-center {
