@@ -1,3 +1,4 @@
+import { useWatch } from "@/ui-kit/utilities/hooks";
 import classnames from "classnames";
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
@@ -8,14 +9,11 @@ export type HandleUpClick = (action: 'confirm' | 'cancel', student: StudentInfo)
 
 const stateColorDict: Record<string, string> = {
   default: '#7B88A0',
-  received: '#7b88a0',
-  stalled: '#191919',
-  active: '#2e73ff'
+  actived: '#357BF6',
 }
 
 export interface HandsUpManagerProps extends BaseHandsUpProps {
   state?: HandsUpState;
-  animStart?: boolean;
   timeout?: number;
   onClick: HandleUpClick;
   unreadCount?: number;
@@ -29,8 +27,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   height = 41,
   borderRadius = 20,
   state = 'default',
-  animStart = false,
-  timeout = 1000,
+  timeout = 1500,
   unreadCount = 0,
   className,
   studentList = [],
@@ -40,7 +37,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`hands-up`]: 1,
+    [`hands-up hands-up-manager`]: 1,
     [`${className}`]: !!className,
   });
 
@@ -49,6 +46,15 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   }
 
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
+  const [animStart, setAnimStart] = useState<boolean>(false);
+
+  useWatch(processUserCount, prev => {
+    if (prev !== undefined && processUserCount > prev) {
+      setAnimStart(true)
+    } else {
+      setAnimStart(false)
+    }
+  })
 
   const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo)
 
@@ -65,26 +71,31 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
         in={animStart}
         timeout={timeout}
         classNames={'received-card'}
+        onEntered={() => {
+          setAnimStart(false)
+        }}
       >
-        <Card
-          width={width}
-          height={height}
-          borderRadius={borderRadius}
-        >
-          {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
-          <Popover
-            visible={popoverVisible}
-            onVisibleChange={(visible) => setPopoverVisible(visible)}
-            overlayClassName="customize-dialog-popover"
-            trigger="click"
-            content={content}
-            placement="top">
+        <Popover
+          visible={popoverVisible}
+          onVisibleChange={(visible) => {
+            setPopoverVisible(visible)
+          }}
+          overlayClassName="customize-dialog-popover"
+          trigger="hover"
+          content={content}
+          placement="topRight">
+          <Card
+            width={width}
+            height={height}
+            borderRadius={borderRadius}
+          >
+            {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon size={28} onClick={handleClick} type={state === 'default' ? 'hands-up-student' : 'hands-up'} hover={true} color={stateColorDict[state]} />
+              <Icon size={28} onClick={handleClick} type={popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')} hover={true} color={popoverVisible ? '#639AFA' : (stateColorDict[state])} />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
-          </Popover>
-        </Card>
+          </Card>
+        </Popover>
       </CSSTransition>
     </div>
   )
