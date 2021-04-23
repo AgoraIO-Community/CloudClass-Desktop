@@ -235,6 +235,7 @@
     "react-datepicker": "3.6.0",
     "react-docgen-typescript": "1.21.0",
     "react-draggable": "4.2.0",
+    "pinyin": "2.10.2",
     "react-gtm-module": "2.0.8",
     "react-i18next": "11.8.10",
     "react-router-dom": "5.2.0",

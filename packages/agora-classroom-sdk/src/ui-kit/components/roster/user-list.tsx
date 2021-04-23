@@ -5,8 +5,7 @@ import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
 import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
-import PodiumSvg from '~components/icon/assets/svg/podium.svg'
-import { canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
+import { canOperate, getCameraState, getMicrophoneState, ProfileRole, studentListSort } from './base'
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
@@ -122,7 +121,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   title,
   teacherName,
   localUserUuid,
-  dataSource,
+  dataSource = [],
   columns = defaultStudentColumns,
   role,
   userType,
@@ -130,6 +129,8 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   onClick,
   onChange
 }) => {
+
+  const studentList = studentListSort(dataSource as any[])
 
   const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
@@ -167,7 +168,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               ))}
             </TableHeader>
             <Table className="table-container">
-              {dataSource?.map((data: StudentRosterProfile) => (
+              {studentList?.map((data: StudentRosterProfile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: StudentRosterColumn, idx: number) => (
                     <Col key={col.key}>
