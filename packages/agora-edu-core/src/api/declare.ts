@@ -1,11 +1,40 @@
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
-// TODO: need implements
-export type ICloudClassExtApp = any
+export type AgoraExtAppUserInfo = {
+  userUuid: string
+  userName: string
+  roleType: number
+}
 
-// TODO: need implements
-export type IAgoraExtApp = any
+export type AgoraExtAppRoomInfo = {
+  roomUuid: string
+  roomName: string
+  roomType: number
+}
+
+export type AgoraExtAppContext = {
+  properties: any
+  dependencies: Map<string, any>
+  localUserInfo: AgoraExtAppUserInfo,
+  roomInfo: AgoraExtAppRoomInfo,
+  language: string
+}
+
+export type AgoraExtAppHandle = {
+  updateRoomProperty: (properties:any, cause: any) => Promise<void>
+  deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
+}
+
+export interface IAgoraExtApp {
+  appIdentifier: string
+  appName: string
+  width: number
+  height: number
+  extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle):void
+  extAppRoomPropertiesDidUpdate(properties:any, cause: any):void
+  extAppWillUnload():void
+}
 
 export type ConvertedFile = {
   width: number,
@@ -88,7 +117,7 @@ export type AppStoreConfigParams = {
     endpoint: string,
   },
   recordUrl: string,
-  appPlugins?: ICloudClassExtApp[]
+  extApps?: IAgoraExtApp[]
 }
 
 export type LanguageEnum = "en" | "zh"

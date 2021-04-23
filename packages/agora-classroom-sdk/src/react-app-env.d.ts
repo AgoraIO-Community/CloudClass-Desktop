@@ -17,6 +17,7 @@ declare const REACT_APP_AGORA_RECORDING_OSS_URL: string;
 declare const REACT_APP_BUILD_VERSION: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;
+declare const REACT_APP_AGORA_APP_CERTIFICATE: string;
 declare const REACT_APP_NETLESS_APP_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_ID: string;
 declare const REACT_APP_AGORA_CUSTOMER_CERTIFICATE: string;

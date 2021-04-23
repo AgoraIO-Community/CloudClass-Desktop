@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom';
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
-import {IAgoraExtApp} from 'agora-classroom-sdk'
-// import {BoardClient} from './board'
+import type {IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle} from 'agora-edu-core'
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -26,9 +25,9 @@ const App = observer(() => {
 })
 
 
-export class AgoraExtAppTest implements IAgoraExtApp {
-  appIdentifier = "io.agora.test"
-  appName = "Test App"
+export class AgoraExtAppCountDown implements IAgoraExtApp {
+  appIdentifier = "io.agora.countdown"
+  appName = "Count Down App"
   width = 640
   height= 480
 
