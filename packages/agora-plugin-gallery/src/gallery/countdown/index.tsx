@@ -27,7 +27,7 @@ const App = observer(() => {
 
 export class AgoraExtAppCountDown implements IAgoraExtApp {
   appIdentifier = "io.agora.countdown"
-  appName = "Count Down App"
+  appName = "Count Down"
   width = 640
   height= 480
 

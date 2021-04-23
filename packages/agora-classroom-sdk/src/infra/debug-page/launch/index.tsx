@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
-import { AgoraExtAppCountDown } from 'agora-plugin-gallery'
+import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 
 //@ts-ignore
@@ -50,7 +50,7 @@ export const LaunchPage = observer(() => {
         )
       }
 
-      // launchOption.extApps = [new AgoraExtAppCountDown()]
+      // launchOption.extApps = [new AgoraExtAppCountDown(), new AgoraExtAppWhiteboard()]
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {
