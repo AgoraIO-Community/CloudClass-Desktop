@@ -5,6 +5,7 @@ import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
 import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
+import PodiumSvg from '~components/icon/assets/svg/podium.svg'
 import { canOperate, getCameraState, getMicrophoneState, ProfileRole, studentListSort } from './base'
 
 export type StudentRosterColumn = {
