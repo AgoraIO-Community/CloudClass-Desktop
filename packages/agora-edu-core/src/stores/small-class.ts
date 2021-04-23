@@ -501,17 +501,24 @@ export class SmallClassStore {
   
   @computed
   get handsUpState() {
+    // 学生举手状态
     const accepted = this.acceptedUserList.find((it: any) => it.userUuid === this.roomInfo.userUuid)
     if (accepted) {
-      return 'co-video'
+      return 'forbidden'
     }
 
     const applied = this.applyCoVideoUserList.find((it: any) => it.userUuid === this.roomInfo.userUuid)
     if (applied) {
-      return 'apply'
+      return 'actived'
     }
 
     return 'default'
+  }
+
+  @computed
+  get teacherHandsUpState () {
+    // 老师端举手状态
+    return this.processUserCount === 0 ? 'default' : 'actived'
   }
 
   @computed

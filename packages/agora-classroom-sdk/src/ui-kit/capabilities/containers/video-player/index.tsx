@@ -200,6 +200,6 @@ export const VideoList = observer(() => {
     <>
       <VideoPlayerTeacher />
       <VideoPlayerStudent controlPlacement="left" />
-    </> : null
+    </> : <div style={{height: 300}}></div>
   )
 })

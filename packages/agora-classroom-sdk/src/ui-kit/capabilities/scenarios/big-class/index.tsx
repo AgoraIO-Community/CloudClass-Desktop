@@ -51,7 +51,7 @@ export const BigClassScenario = observer(() => {
           </div>
         </Content>
         <Aside>
-          <VideoPlayerTeacher/>
+          {isFullScreen ? <div style={{height: 300}}></div> : <VideoPlayerTeacher/>}
           <RoomChat />
         </Aside>
       </Layout>
