@@ -591,9 +591,6 @@ export class SceneStore extends SimpleInterval {
       } as CameraOption
       await this.mediaService.openCamera(config)
       this._cameraRenderer = this.mediaService.cameraRenderer
-      if (this.isElectron) {
-        this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
-      }
 
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
@@ -1200,8 +1197,11 @@ export class SceneStore extends SimpleInterval {
       const freezeCount = this.cameraRenderer?.freezeCount || 0
       return freezeCount < 3
     } else {
-      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
-      return frameRate > 0
+      const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
+      if(render) {
+        return render.renderFrameRate > 0
+      }
+      return false
     }
   }
 
