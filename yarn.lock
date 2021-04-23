@@ -17287,9 +17287,9 @@ pinkie@^2.0.0:
   resolved "https://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-pinyin@^2.10.2:
+pinyin@2.10.2:
   version "2.10.2"
-  resolved "https://registry.npm.taobao.org/pinyin/download/pinyin-2.10.2.tgz#93e3b3cb4430009925163bad10c741778c85b013"
+  resolved "https://registry.npm.taobao.org/pinyin/download/pinyin-2.10.2.tgz?cache=0&sync_timestamp=1618154357256&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpinyin%2Fdownload%2Fpinyin-2.10.2.tgz#93e3b3cb4430009925163bad10c741778c85b013"
   integrity sha1-k+Ozy0QwAJklFjutEMdBd4yFsBM=
   dependencies:
     commander "~1.1.1"
