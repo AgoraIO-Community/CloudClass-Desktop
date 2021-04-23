@@ -165,6 +165,7 @@
     "@storybook/node-logger": "6.2.8",
     "@storybook/preset-create-react-app": "3.1.7",
     "@storybook/react": "6.2.8",
+    "@svgr/webpack": "^5.5.0",
     "@types/ali-oss": "6.0.4",
     "@types/axios": "0.14.0",
     "@types/classnames": "2.2.11",

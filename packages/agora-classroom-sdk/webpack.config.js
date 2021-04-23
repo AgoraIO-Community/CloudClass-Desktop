@@ -97,6 +97,10 @@ module.exports = {
           }
         ]
       },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      }
       // {
       //   test: /\.(module.scss|module.css)$/i,
       //   use: [

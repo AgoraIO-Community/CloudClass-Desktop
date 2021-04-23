@@ -221,3 +221,17 @@
 .roster-table .un-operate-status{
   color: #BDBDCA;
 }
+
+.search-teacher-name {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.search-teacher-name label {
+  color: #7B88A0;
+}
+
+.search-teacher-name .roster-username {
+  margin: 0;
+}

@@ -3,6 +3,9 @@ import { Meta } from '@storybook/react'
 import { Input, Search } from '~components/input'
 import { Icon } from '~components/icon'
 import { Button } from '~components/button'
+import {ReactComponent as SearchSvg}  from '~components/icon/assets/svg/search.svg'
+// import {ReactComponent as ReactLogo} from './logo.svg';
+
 
 
 const meta: Meta = {
@@ -73,6 +76,7 @@ export const Docs = () => {
             <div className="mt-4">
                 <Search
                     onSearch={value => console.log(value)}
+                    suffix={<SearchSvg />}
                     placeholder={'search的placeholder'}
                 />
             </div>

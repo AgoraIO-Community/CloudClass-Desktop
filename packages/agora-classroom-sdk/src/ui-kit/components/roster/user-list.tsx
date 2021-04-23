@@ -3,6 +3,8 @@ import classnames from 'classnames'
 import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
+import { Search } from '~components/input'
+import {ReactComponent as SearchSvg}  from '~components/icon/assets/svg/search.svg'
 import { canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
 
 export type StudentRosterColumn = {
@@ -153,12 +155,17 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           {title ?? transI18n('scaffold.user_list')}
         </div>
         <div>
-          <div className="roster-header">
-            <div>
+          <div className="search-header roster-header">
+            <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
               <span className="roster-username">{teacherName}</span>
             </div>
-            <input type="text" placeholder={transI18n('scaffold.search')} onChange={onChange} />
+            <Search
+              onSearch={onChange}
+              suffix={<SearchSvg />}
+              placeholder={'search的placeholder'}
+            />
+            {/* <input type="text" placeholder={transI18n('scaffold.search')} onChange={onChange} /> */}
           </div>
           <Table className="roster-table">
             <TableHeader>

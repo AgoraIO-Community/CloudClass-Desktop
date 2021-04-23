@@ -1,8 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { Button } from '~components/button'
 import './index.css';
+import { transI18n } from '../i18n';
+import { ReactElement } from 'react';
 
 export interface InputProps extends BaseProps {
     type?: string;
@@ -67,12 +69,14 @@ export const Input: FC<InputProps> = ({
 }
 
 export interface SearchProps extends InputProps {
-    onSearch: (value: string) => void | Promise<void>
+    onSearch: (value: string) => void | Promise<void>;
+    suffix: (props: any) => ReactElement
 }
 
 export const Search: FC<SearchProps> = ({
     onSearch,
     className,
+    suffix,
     ...restProps
 }) => {
     const [searchStr, setSearchStr] = useState<string>('')
@@ -87,10 +91,10 @@ export const Search: FC<SearchProps> = ({
             value={searchStr}
             onChange={e => {
                 setSearchStr(e.target.value)
+                onSearch(e.target.value)
             }}
-            suffix={<Button onClick={e => {
-                onSearch(searchStr)
-            }}>Search</Button>}
+            suffix={suffix
+            }
         />
     )
 }
