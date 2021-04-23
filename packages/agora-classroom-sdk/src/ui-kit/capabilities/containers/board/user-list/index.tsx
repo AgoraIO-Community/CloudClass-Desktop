@@ -5,7 +5,7 @@ import { useUserListContext, useStreamListContext, useBoardContext, useGlobalCon
 import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StudentRoster } from '@/ui-kit/components';
 import { KickDialog } from '../../dialog';
 
@@ -123,6 +123,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
 export const StudentUserListContainer: React.FC<UserListContainerProps> = observer((props) => {
 
+    const [keyword, setKeyword] = useState<string>('')
+
     const {
         streamList,
         localStream,
@@ -230,17 +232,22 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         }
     }, [lectureClassUserStreamList, roomInfo.roomUuid, roomInfo.userRole])
 
+    const dataList = useMemo(() => {
+        return lectureClassUserStreamList.filter((item: any) => item.name.includes(keyword))
+      }, [keyword, lectureClassUserStreamList])
+
     return (
         <StudentRoster
             isDraggable={true}
             localUserUuid={localUserUuid}
             role={myRole as any}
             teacherName={teacherName}
-            dataSource={lectureClassUserStreamList}
+            dataSource={dataList}
             userType={'teacher'}
             onClick={onClick}
             onClose={props.onClose}
             onChange={(text: string) => {
+                setKeyword(text)
             }}
         />
     )

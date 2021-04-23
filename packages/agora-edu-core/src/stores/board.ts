@@ -1374,7 +1374,7 @@ export class BoardStore extends ZoomController {
         if (this.hasPermission) {
           return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
         } else {
-          return []
+          return ['student_list']
         }
       }
       return bigClassTools

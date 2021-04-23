@@ -200,7 +200,7 @@ export const WhiteboardContainer = observer(() => {
       return [true, hasPermission]
     }
 
-    if (roomInfo.roomType === EduRoomType.SceneTypeMiddleClass && roomInfo.userRole === EduRoleTypeEnum.student) {
+    if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
       return [true, hasPermission]
     }
 
