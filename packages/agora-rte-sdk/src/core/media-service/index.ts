@@ -131,9 +131,17 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.fire('rtcStats', evt)
     })
     this.sdkWrapper.on('localVideoStats', (evt: any) => {
+      let {stats = {}} = evt
+      let {encoderOutputFrameRate = 0} = stats
+      this.cameraRenderer?.setFPS(encoderOutputFrameRate)
       this.fire('localVideoStats', evt)
     })
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
+      let {stats = {}, user = {}} = evt
+      let {decoderOutputFrameRate = 0} = stats
+      let {uid} = user
+      let remoteUserRender = this.remoteUsersRenderer.find(uid)
+      remoteUserRender?.setFPS(decoderOutputFrameRate)
       this.fire('remoteVideoStats', evt)
     })
     this.sdkWrapper.on('localVideoStateChanged', (evt: any) => {
