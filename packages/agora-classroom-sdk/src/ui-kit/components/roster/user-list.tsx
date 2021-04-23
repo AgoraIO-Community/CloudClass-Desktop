@@ -4,7 +4,7 @@ import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
 import { Search } from '~components/input'
-import * as SearchSvg  from '~components/icon/assets/svg/search.svg'
+import SearchSvg from '~components/icon/assets/svg/search.svg'
 import { canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
 
 export type StudentRosterColumn = {

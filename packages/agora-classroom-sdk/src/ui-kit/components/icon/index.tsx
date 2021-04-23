@@ -105,7 +105,7 @@ export const SvgGrantBoardIcon: React.FC<SvgIconProps> = (restProps) => {
   });
   return (
     <i className={cls} {...restProps} >
-      <img src={IconWhiteboard} alt=""/>
+      <IconWhiteboard />
     </i>
   );
 }

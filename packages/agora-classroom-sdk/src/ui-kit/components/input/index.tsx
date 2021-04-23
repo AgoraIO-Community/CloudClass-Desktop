@@ -70,7 +70,7 @@ export const Input: FC<InputProps> = ({
 
 export interface SearchProps extends InputProps {
     onSearch: (value: string) => void | Promise<void>;
-    suffix: (props: any) => ReactElement
+    suffix: any
 }
 
 export const Search: FC<SearchProps> = ({
