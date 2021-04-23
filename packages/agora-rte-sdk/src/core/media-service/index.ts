@@ -140,7 +140,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       let {stats = {}, user = {}} = evt
       let {decoderOutputFrameRate = 0} = stats
       let {uid} = user
-      let remoteUserRender = this.remoteUsersRenderer.find(uid)
+      let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
       remoteUserRender?.setFPS(decoderOutputFrameRate)
       this.fire('remoteVideoStats', evt)
     })
