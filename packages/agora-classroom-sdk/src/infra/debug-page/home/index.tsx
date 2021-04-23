@@ -116,6 +116,7 @@ export const HomePage = observer(() => {
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
         let {userUuid, rtmToken} = await homeApi.login(uid)
+        console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
           rtmUid: userUuid,
           pretest: true,

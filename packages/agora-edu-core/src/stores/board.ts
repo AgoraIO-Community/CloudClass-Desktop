@@ -1040,6 +1040,12 @@ export class BoardStore extends ZoomController {
       case 'hand':
       case 'eraser':
       case 'color':
+      case ApplianceNames.pencil:
+      case ApplianceNames.rectangle:
+      case ApplianceNames.ellipse:
+      case ApplianceNames.straight:
+      case ApplianceNames.arrow:
+      case ApplianceNames.selector:
       {
         const room = this.room
         if (room.isWritable) {
@@ -1052,7 +1058,21 @@ export class BoardStore extends ZoomController {
               currentApplianceName: appliance
             })
           }
-          this.selector = tool
+
+          const selector = {
+            [ApplianceNames.pencil]: 'pen',
+            [ApplianceNames.rectangle]: 'square',
+            [ApplianceNames.ellipse]: 'circle',
+            [ApplianceNames.straight]: 'line',
+            [ApplianceNames.arrow]: 'arrow',
+            [ApplianceNames.selector]: 'selection'
+          }
+
+          if (selector[tool]) {
+            this.selector = selector[tool]
+          } else {
+            this.selector = tool
+          }
         }
         break
       }

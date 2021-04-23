@@ -101,6 +101,7 @@ export class EduManager extends EventEmitter {
     rtmUid: string
     rtmToken: string
   }) {
+    console.log('updateRtmConfig: ', JSON.stringify(info))
     this.config.rtmUid = info.rtmUid
     this.config.rtmToken = info.rtmToken
     this.apiService.updateRtmConfig({

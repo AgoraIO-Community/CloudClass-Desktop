@@ -5,6 +5,7 @@ import Draggable from 'react-draggable'
 import { Col, Row, Table, TableHeader } from '~components/table'
 import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
+import PodiumSvg from '~components/icon/assets/svg/podium.svg'
 import { canOperate, getCameraState, getMicrophoneState, ProfileRole } from './base'
 
 export type StudentRosterColumn = {
@@ -20,6 +21,7 @@ export interface StudentRosterProfile {
   name: string;
   cameraEnabled: boolean;
   micEnabled: boolean;
+  onPodium: boolean;
 }
 
 export type StudentRosterActionTypes =
@@ -52,31 +54,31 @@ const defaultStudentColumns: StudentRosterColumn[] = [
   {
     key: 'name',
     name: 'student.student_name',
+    render: (_, profile) => {
+      return (
+        <div className="student-username">
+          <span className="roster-username">{profile.name}</span>
+          {profile.onPodium ? <img src={PodiumSvg} /> : null}
+        </div>
+      )
+    },
   },
   {
     key: 'camera',
     name: 'student.camera',
     action: 'camera',
-    render: (_, profile, hover) => {
+    render: (_, profile, canOperate) => {
       const {
         operateStatus,
         cameraStatus,
         type,
-      } = getCameraState(profile, hover)
-
+      } = getCameraState(profile, canOperate);
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${cameraStatus}`]: 1,
-        // [`disabled`]: profile.disabled
       })
       return (
-        <span className="camera-enabled">
-          <Icon
-            iconhover={hover}
-            className={cls}
-            type={type}
-          />
-        </span>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },
@@ -84,26 +86,18 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     key: 'mic',
     name: 'student.microphone',
     action: 'mic',
-    render: (_, profile, hover) => {
+    render: (_, profile, canOperate) => {
       const {
         operateStatus,
         microphoneStatus,
         type,
-      } = getMicrophoneState(profile, hover)
-
+      } = getMicrophoneState(profile, canOperate);
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${microphoneStatus}`]: 1,
-        // [`disabled`]: profile.disabled
       })
       return (
-        <span className="mic-enabled">
-          <Icon
-            iconhover={hover}
-            className={cls}
-            type={type}
-          />
-        </span>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },

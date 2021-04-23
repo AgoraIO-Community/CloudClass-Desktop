@@ -14,8 +14,6 @@ window.controller = controller
 
 export const LaunchPage = observer(() => {
 
-  console.log("Launch")
-
   const homeStore = useHomeStore()
 
   const history = useHistory()

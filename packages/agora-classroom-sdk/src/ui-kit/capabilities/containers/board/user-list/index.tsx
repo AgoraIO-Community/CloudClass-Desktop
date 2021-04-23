@@ -240,8 +240,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             userType={'teacher'}
             onClick={onClick}
             onClose={props.onClose}
-            onChange={(evt: any) => {
-                console.log("onchange " ,evt.target.value)
+            onChange={(text: string) => {
             }}
         />
     )

@@ -663,10 +663,14 @@ export class ZoomController extends EventEmitter {
 }
 
 export const transLineTool = {
-  'pen': ApplianceNames.pencil,
-  'square': ApplianceNames.rectangle,
-  'circle': ApplianceNames.ellipse,
-  'line': ApplianceNames.straight,
+  'pen': 'pen',
+  'square': 'square',
+  'circle': 'circle',
+  'line': 'line',
+  [ApplianceNames.pencil]: 'pen',
+  [ApplianceNames.rectangle]:'square',
+  [ApplianceNames.ellipse]: 'circle',
+  [ApplianceNames.straight]: 'line',
 }
 
 export const transToolBar = {
@@ -681,6 +685,13 @@ export const transToolBar = {
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,
+
+  [ApplianceNames.pencil]: ApplianceNames.pencil,
+  [ApplianceNames.rectangle]: ApplianceNames.rectangle,
+  [ApplianceNames.ellipse]: ApplianceNames.ellipse,
+  [ApplianceNames.straight]: ApplianceNames.straight,
+  [ApplianceNames.arrow]: ApplianceNames.arrow,
+  [ApplianceNames.selector]: ApplianceNames.selector,
   // 'blank-page': 'new-page',
   // 'cloud': 'cloud',
   // 'follow': 'follow',

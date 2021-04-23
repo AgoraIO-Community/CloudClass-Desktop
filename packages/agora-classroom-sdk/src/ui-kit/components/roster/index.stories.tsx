@@ -15,7 +15,7 @@ const meta: Meta = {
     dataSource: '.'.repeat(20).split('.').map((_: any, i: number) => ({
       uid: i,
       name: 'Lily True',
-      onPodium: false,
+      onPodium: i < 5 ? true : false,
       whiteboardGranted: true,
       cameraEnabled: false,
       micEnabled: true,
