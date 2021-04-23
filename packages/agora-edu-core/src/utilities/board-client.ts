@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState, ApplianceNames } from 'white-web-sdk';
+import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState, ApplianceNames, LoggerReportMode } from 'white-web-sdk';
 import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 import { get } from 'lodash';
@@ -52,8 +52,8 @@ export class BoardClient extends EventEmitter {
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
       loggerOptions: {
-        // reportQualityMode: "alwaysReport",
-        // reportDebugLogMode: "alwaysReport",
+        reportQualityMode: LoggerReportMode.AlwaysReport,
+        reportDebugLogMode: LoggerReportMode.AlwaysReport,
         // disableReportLog: true,
         reportLevelMask: "debug",
         printLevelMask: "debug",

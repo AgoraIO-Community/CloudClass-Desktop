@@ -1,8 +1,10 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
+import { useCallback } from 'react'
 import { useMemo } from 'react'
-import { BizHeader, transI18n } from '~ui-kit'
+import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
 import { Exit, Record } from '../dialog'
 import { SettingContainer } from '../setting'
 
@@ -12,9 +14,9 @@ export const NavigationBar = observer(() => {
   } = useRecordingContext()
   const {
     roomInfo,
-    isCourseStart,
     liveClassStatus
   } = useRoomContext()
+
   const {
     isNative,
     cpuUsage,
@@ -27,10 +29,14 @@ export const NavigationBar = observer(() => {
     addDialog
   } = useGlobalContext()
 
+  const addRecordDialog = useCallback(() => {
+    return addDialog(Record, {starting: isRecording})
+  }, [addDialog, Record, isRecording])
+
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
-    'record': () => addDialog(Record, {starting: isRecording}),
+    'record': () => addRecordDialog(),
   }
 
   function handleClick (type: string) {
@@ -43,8 +49,9 @@ export const NavigationBar = observer(() => {
 
     const stateMap = {
       'default': () => `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`,
-      'beforeStart': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
-      'StartOrEnd': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'pre-class': () => `${transI18n('nav.to_start_in')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'in-class': () => `${transI18n('nav.started_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`,
+      'end-class': ()=> `${transI18n('nav.ended_elapse')}${formatCountDown(duration, TimeFormatType.Timeboard)}`
     }
 
     if (stateMap[classState]) {
@@ -54,11 +61,19 @@ export const NavigationBar = observer(() => {
     return stateMap['default']()
   }, [JSON.stringify(liveClassStatus), formatCountDown])
 
+  const userType = useMemo(() => {
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      return 'teacher'
+    }
+    return 'student'
+  }, [roomInfo.userRole])
+
   return (
     <BizHeader
+      userType={userType}
       isNative={isNative}
       classStatusText={classStatusText}
-      isStarted={isCourseStart}
+      classState={liveClassStatus.classState as BizClassStatus}
       isRecording={isRecording}
       title={roomInfo.roomName}
       signalQuality={networkQuality as any}

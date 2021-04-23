@@ -29,6 +29,12 @@ export const en = {
     'microphone_volume': 'Microphone Volume',
     'speaker_volume': 'Speaker Volume',
   },
+  'student': {
+    'student_name': 'Name',
+    'camera': 'Camera',
+    'microphone': 'Microphone',
+    'operation': 'Operation',
+  },
   'roster': {
     'teacher_name': 'Teacher：',
     'user_list': 'User List',
@@ -40,7 +46,8 @@ export const en = {
     'camera_state': 'Camera',
     'microphone_state': 'Microphone',
     'reward': 'Reward',
-    'kick': 'Kick'
+    'kick': 'Kick',
+    'granted': 'Auth',
   },
   'hands_up': 'Hands Up',
   'co_video': {
@@ -203,6 +210,8 @@ export const en = {
     'student_interactive_apply': `"{reason}" want to co-video`
   },
   'scaffold': {
+    'search': 'Search',
+    'student_list': 'Student List',
     'pencil': 'Pencil',
     'laser_pointer': 'Laser pointer',
     'straight': 'straight',
@@ -283,6 +292,12 @@ export const en = {
     'settingTitle': 'Device Setting',
     'finishTest': 'Finish'
   },
+  'biz-header': {
+    'setting': 'Setting',
+    'exit': 'Exit',
+    'recording': 'Recording',
+    'start_record': 'Start Recording',
+  },
   'nav': {
     'delay': 'Delay: ',
     'network': 'Network: ',
@@ -292,6 +307,7 @@ export const en = {
     'back': 'Back',
     'to_start_in': 'To start in: ',
     'started_elapse': 'Started: ',
+    'ended_elapse': 'Ended: ',
     'hours': 'hours',
     'minutes': 'minutes',
     'seconds': 'seconds',
@@ -319,6 +335,7 @@ export const en = {
     'roomType_placeholder': 'please choose room type',
     'roomType_1v1': '1v1',
     'roomType_interactiveSmallClass': 'interactive Small Class',
+    'roomType_interactiveBigClass': 'interactive Lecture Hall',
     'role': 'Role',
     'role_placeholder': 'please choose role',
     'role_teacher': 'teacher',

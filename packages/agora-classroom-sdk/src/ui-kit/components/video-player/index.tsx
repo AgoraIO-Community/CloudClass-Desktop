@@ -156,7 +156,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
-  hidePrivateChat = false,
+  hidePrivateChat = true,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
@@ -325,6 +325,13 @@ export type VideoItemProps = Omit<VideoPlayerProps,
 >
 
 export interface VideoMarqueeListProps {
+  /**
+   * 显示发送奖励的icon
+   */
+  hideStars: boolean;
+  /**
+   * video stream list
+   */
   videoStreamList: BaseVideoPlayerProps[],
   /**
   * 点击摄像头的按钮时的回调
@@ -353,6 +360,7 @@ export interface VideoMarqueeListProps {
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
+  hideStars,
   videoStreamList,
   onCameraClick,
   onMicClick,
@@ -439,6 +447,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
+              hideStars={hideStars}
               onCameraClick={onCameraClick}
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}

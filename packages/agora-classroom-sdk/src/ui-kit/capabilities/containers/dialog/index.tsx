@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { UserListContainer } from '~capabilities/containers/board/user-list'
+import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n } from '~ui-kit'
@@ -24,14 +24,14 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
 
   const onOK = useCallback(async () => {
     if (type === 'kicked_once') {
-      await kickOutOnce(roomInfo.userUuid, roomInfo.roomUuid)
+      await kickOutOnce(userUuid, roomInfo.roomUuid)
       removeDialog(id)
     }
     if (type === 'kicked_ban') {
-      await kickOutBan(roomInfo.userUuid, roomInfo.roomUuid)
+      await kickOutBan(userUuid, roomInfo.roomUuid)
       removeDialog(id)
     }
-  }, [type, id, roomInfo.userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan])
+  }, [type, id, userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan])
 
   return (
     <Modal
@@ -107,11 +107,45 @@ export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericErro
 })
 
 export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+
+  const {
+    setTool,
+    room
+  } = useBoardContext()
+
   const {removeDialog} = useGlobalContext()
+
+  const onCancel = useCallback(() => {
+    if (room) {
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
+    }
+    removeDialog(id)
+  }, [room, removeDialog, setTool])
+
   return (
-    <UserListContainer onClose={() => {
-      removeDialog(id)
-    }} />
+    <UserListContainer onClose={onCancel} />
+  )
+})
+
+export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const {
+    setTool,
+    room
+  } = useBoardContext()
+
+  const {removeDialog} = useGlobalContext()
+
+  const onCancel = useCallback(() => {
+    if (room) {
+      const tool = room.state.memberState.currentApplianceName
+      setTool(tool)
+    }
+    removeDialog(id)
+  }, [room, removeDialog, setTool])
+
+  return (
+    <StudentUserListContainer onClose={onCancel} />
   )
 })
 
@@ -132,6 +166,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   const onOK = async () => {
     await onConfirm()
+    removeDialog(id)
   }
 
   const onCancel = () => {
@@ -347,16 +382,27 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
     startRecording,
     stopRecording
   } = useRecordingContext()
+
+  const recordingTitle = starting ? 'toast.stop_recording.title' : 'toast.start_recording.title'
+
+  const recordingContent = starting ? 'toast.stop_recording.body' : 'toast.start_recording.body'
+
   return (
     <Modal
       onOk={async () => {
-        removeDialog(id)
         try {
-          await (starting ? startRecording() : stopRecording())
-          addToast(transI18n(starting ? 'toast.start_recording.success' : 'toast.stop_recording.success'))
+          if (starting) {
+            await stopRecording()
+          } else {
+            await startRecording()
+          }
+          const recordingToast = starting ? 'toast.stop_recording.success' : 'toast.start_recording.success'
+          addToast(transI18n(recordingToast))
+          removeDialog(id)
         }catch(err) {
           const wrapperError = GenericErrorWrapper(err)
           addToast(BusinessExceptions.getErrorText(wrapperError), 'error')
+          removeDialog(id)
         }
       }}
       onCancel={() => {
@@ -366,9 +412,9 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
         <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
       ]}
-      title={starting ? transI18n('toast.start_recording.title') : transI18n('toast.stop_recording.title')}
+      title={transI18n(recordingTitle)}
     >
-      <p>{starting ? transI18n('toast.start_recording.body') : transI18n('toast.stop_recording.body')}</p>
+      <p>{transI18n(recordingContent)}</p>
     </Modal>
   )
 })
@@ -387,7 +433,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
 
   useEffect(() => {
     dialogEventObserver.subscribe((evt: any) => {
-      console.log('dialogEventObserver # dialog ', evt)
+      console.log('dialogEventObserver # evt ', evt)
       const dialogOperation = dialogMap[evt.eventName]
 
       if (dialogOperation) {

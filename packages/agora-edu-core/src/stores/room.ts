@@ -168,8 +168,17 @@ type TrophyType = {
 }
 
 type ClassroomScheduleType = {
+  /**
+   * 课程开始时刻 单位：ms
+   */
   startTime: number,
+  /**
+   * 课程时长 单位：s
+   */
   duration: number,
+  /**
+   * 课程结束后延迟关闭时长 单位：s
+   */
   closeDelay: number
 }
 
@@ -319,6 +328,9 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  /**
+   * 当前时间（校验之后的）
+   */
   @computed
   get calibratedTime(): number {
     return this.time + this.timeShift
@@ -359,15 +371,19 @@ export class RoomStore extends SimpleInterval {
       case EduClassroomStateEnum.beforeStart:
         // timeText = `${transI18n('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         return {
-          classState: 'beforeStart',
+          classState: 'pre-class',
           duration,
         }
       case EduClassroomStateEnum.start:
+        return {
+          classState: 'in-class',
+          duration,
+        }
       case EduClassroomStateEnum.end:
         // timeText = `${transI18n('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         return {
-          classState: 'StartOrEnd',
-          duration,
+          classState: 'end-class',
+          duration: this.classroomSchedule ? Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0) : -1
         }
     }
 
@@ -377,6 +393,12 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  /**
+   * 当前所属于状态的时间段 单位：ms
+   * 课程开始之前表示：距离开始上课多久
+   * 课程正在开始表示：已经上课多久
+   * 课程已经结束表示：已经下课多久
+   */
   @computed
   get classTimeDuration(): number {
     let duration = -1
@@ -386,8 +408,10 @@ export class RoomStore extends SimpleInterval {
           duration = Math.max(this.classroomSchedule.startTime - this.calibratedTime, 0)
           break;
         case EduClassroomStateEnum.start:
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0);
+          break;
         case EduClassroomStateEnum.end:
-          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0)
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime - this.classroomSchedule.duration*1000, 0)
           break;
       }
     }
@@ -634,31 +658,29 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async checkClassroomNotification() {
     if (this.classroomSchedule) {
-      let duration = this.classTimeDuration
-      let durationToEnd = this.classroomSchedule.duration * 1000 - this.classTimeDuration
-      let durationToClose = this.classroomSchedule.duration * 1000 + this.classroomSchedule.closeDelay * 1000 - this.classTimeDuration
-
       switch (this.sceneStore.classState) {
         case EduClassroomStateEnum.beforeStart:
+          //距离上课的时间
+          let duration = this.classTimeDuration
+          let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
-            let dDuration = dayjs.duration(duration)
             if (dDuration.minutes() === min && dDuration.seconds() === 0) {
               this.appStore.uiStore.fireToast(
                 'toast.time_interval_between_start',
                 { reason: duration }
-                // {reason: this.formatTimeCountdown(duration, TimeFormatType.Message)},
               )
             }
           })
           break;
         case EduClassroomStateEnum.start:
+          //距离下课的时间
+          let durationToEnd = this.classroomSchedule.duration * 1000 - this.classTimeDuration;
           let dDurationToEnd = dayjs.duration(durationToEnd);
           [5, 1].forEach(min => {
-            // let dDurationToEnd = dayjs.duration(durationToEnd)
             if (dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               this.appStore.uiStore.fireToast(
                 'toast.time_interval_between_end',
-                { reason: duration }
+                { reason: durationToEnd }
                 // {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}
               )
             }
@@ -666,11 +688,13 @@ export class RoomStore extends SimpleInterval {
           if (dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
             this.appStore.uiStore.fireToast(
               'toast.class_is_end', {
-              reason: ((this.classroomSchedule?.closeDelay || 0) * 1000)
+              reason: ((this.classroomSchedule.closeDelay || 0) * 1000)
             })
           }
           break;
         case EduClassroomStateEnum.end:
+          //距离教室关闭的时间
+          let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration;
           let dDurationToClose = dayjs.duration(durationToClose)
           if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.uiStore.fireToast(
@@ -728,6 +752,7 @@ export class RoomStore extends SimpleInterval {
     if (userRole === EduRoleTypeEnum.student) {
       const studentRoleConfig = {
         [EduSceneType.Scene1v1]: 'broadcaster',
+        [EduSceneType.SceneLarge]: 'audience',
         [EduSceneType.SceneMedium]: 'audience'
       }
       return {
@@ -1349,13 +1374,9 @@ export class RoomStore extends SimpleInterval {
       })
       // this.appStore.uiStore.addDialog(RoomEndNotice)
     } else if (state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.fireToast(
-        'toast.class_is_end',
-        {
-          scheduler: (this.classroomSchedule?.closeDelay || 0) * 1000,
-        }
-        // {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)},
-      )
+      this.appStore.uiStore.fireToast('toast.class_is_end',{
+        reason: this.classroomSchedule ? this.classroomSchedule.closeDelay*1000 - this.classTimeDuration : 0
+      });
     }
   }
 

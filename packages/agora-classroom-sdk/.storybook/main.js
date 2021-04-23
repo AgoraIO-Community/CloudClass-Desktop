@@ -66,6 +66,12 @@ module.exports = {
       test: /\.js$/,
       loader: require.resolve('@open-wc/webpack-import-meta-loader'),
     })
+    // config.module.rules.push(
+    //   {
+    //     test: /\.svg$/,
+    //     use: ['@svgr/webpack'],
+    //   }
+    // )
     config.resolve.alias = {
       ...config.resolve.alias,
       ['@']: path.resolve(__dirname, '../src'),

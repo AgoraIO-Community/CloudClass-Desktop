@@ -120,7 +120,7 @@ export class EduSDKApi extends ApiBase {
       data: {
         mode: 'web',
         webRecordConfig: {
-          url: params.url
+          rootUrl: params.url
         },
         backupCount: 0
       }

@@ -1,3 +1,27 @@
-.hover {
+.hover{
   cursor: pointer;
+}
+
+.icon-box {
+  border-radius: 99px;
+  max-width: 29px;
+}
+
+.icon-box-hover:hover {
+  background-color: #f0f0f7;
+}
+
+.header-actions .icon-box-hover:hover,
+.tool .icon-box-hover:hover {
+  color: #191919 !important;
+}
+
+.icon-hover{
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  height: 32px;
+  width: 32px;
+  transform: translateX(-5px);
 }

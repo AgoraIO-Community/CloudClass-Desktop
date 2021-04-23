@@ -1,4 +1,4 @@
-import { EduMediaStream, useGlobalContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -167,10 +167,15 @@ export const VideoMarqueeStudentContainer = observer(() => {
     }
   }
 
+  const {
+    sceneType
+  } = useRoomContext()
+
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
+          hideStars={sceneType === 2}
           videoStreamList={videoStreamList}
           onCameraClick={onCameraClick}
           onMicClick={onMicClick}

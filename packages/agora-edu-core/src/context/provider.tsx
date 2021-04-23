@@ -34,7 +34,7 @@ export const useChatContext = () => {
   }
 }
 
-export const useStreamList = () => {
+export const useStreamListContext = () => {
 
   const sceneStore = useSceneStore()
 
@@ -50,6 +50,7 @@ export const useStreamList = () => {
     muteVideo,
     unmuteVideo,
     streamList,
+    cameraEduStream
   } = sceneStore
 
   const {
@@ -71,6 +72,7 @@ export const useStreamList = () => {
     muteVideo,
     unmuteVideo,
     revokeUserPermission,
+    localStream: cameraEduStream,
     grantUserPermission,
   }
 }
@@ -151,7 +153,12 @@ export const useRoomContext = () => {
   const {
     startNativeScreenShareBy,
     roomInfo,
-    classState
+    classState,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
+    sceneType,
   } = useSceneStore()
 
   const {
@@ -173,6 +180,7 @@ export const useRoomContext = () => {
   } = useRoomStore()
 
   return {
+    sceneType,
     destroyRoom,
     joinRoom: join,
     removeDialog,
@@ -185,7 +193,11 @@ export const useRoomContext = () => {
     isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
-    liveClassStatus
+    liveClassStatus,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
   }
 }
 
@@ -285,6 +297,8 @@ export const useBoardContext = () => {
     installTools,
     handleUpload,
     publicResources,
+    revokeBoardPermission,
+    grantBoardPermission
   } = useBoardStore()
 
   const {
@@ -342,7 +356,17 @@ export const useBoardContext = () => {
     installTools,
     personalResources,
     publicResources,
+    revokeBoardPermission,
+    grantBoardPermission,
     doUpload: handleUpload
+  }
+}
+
+export const useStreamContext = () => {
+  const {streamList} = useSceneStore()
+
+  return {
+    streamList
   }
 }
 
@@ -350,11 +374,17 @@ export const useUserListContext = () => {
   const appStore = useCoreContext()
   const smallClassStore = useSmallClassStore()
 
+  const acceptedUserList = smallClassStore.acceptedList
+
   const localUserUuid = appStore.roomInfo.userUuid
   const teacherName = smallClassStore.teacherName
   const myRole = smallClassStore.role
   const rosterUserList = smallClassStore.rosterUserList
   const handleRosterClick = smallClassStore.handleRosterClick
+
+  const userList = appStore.sceneStore.userList
+
+  const {revokeCoVideo, teacherAcceptHandsUp} = smallClassStore
 
   return {
     localUserUuid,
@@ -362,6 +392,10 @@ export const useUserListContext = () => {
     rosterUserList,
     teacherName,
     handleRosterClick,
+    revokeCoVideo,
+    teacherAcceptHandsUp,
+    userList,
+    acceptedUserList
   }
 }
 
@@ -377,43 +411,10 @@ export const useRecordingContext = () => {
   const roomStore = useRoomStore()
 
   async function startRecording() {
-    const roomUuid = roomStore.roomInfo.roomUuid
-    const tokenRule = `${roomUuid}-record-${Date.now()}`
-    // 生成token home-api login
-    const { rtmToken, userUuid } = await homeApi.login(tokenRule)
-    const urlParams = {
-      userUuid, // 用户uuid
-      userName: 'agora incognito', // 用户昵称
-      roomUuid, // 房间uuid
-      roleType: EduRoleTypeEnum.invisible, // 角色
-      roomType: roomStore.roomInfo.roomType, // 房间类型
-      roomName: roomStore.roomInfo.roomName, // 房间名称x
-      // listener: 'ListenerCallback', // launch状态 todo 在页面中处理
-      pretest: false, // 开启设备检测
-      rtmUid: userUuid,
-      rtmToken, // rtmToken
-      language: appStore.params.language, // 国际化
-      startTime: appStore.params.startTime, // 房间开始时间
-      duration: appStore.params.duration, // 课程时长
-      recordUrl: appStore.params.config.recordUrl, // 回放页地址
-      appId: appStore.params.config.agoraAppId,
-      userRole: EduRoleTypeEnum.invisible
-    }
-
-    // TODO: need design recordUrl
-    if (!urlParams.recordUrl) {
-      // urlParams.recordUrl = 'https://webdemo.agora.io/aclass/#/invisible/courses'
-      urlParams.recordUrl = 'https://webdemo.agora.io/gqf-incognito-record'
-      // throw GenericErrorWrapper()
-      // return;
-    }
-    const urlParamsStr = Object.keys(urlParams).map(key => key + '=' + encodeURIComponent(urlParams[key])).join('&')
-    const url = `${urlParams.recordUrl}?${urlParamsStr}`
-    // todo fetch 
     await eduSDKApi.updateRecordingState({
       roomUuid,
       state: 1,
-      url
+      url: appStore.params.config.recordUrl
     })
   }
 

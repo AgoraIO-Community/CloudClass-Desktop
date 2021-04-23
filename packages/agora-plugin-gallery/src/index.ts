@@ -1,1 +1,2 @@
-export * from './gallery/dice/index'
+export * from './gallery/countdown/index'
+export * from './gallery/whiteboard/index'

@@ -6,14 +6,14 @@ import { useMemo } from 'react'
 import { ColorsContainer } from '~capabilities/containers/board/colors'
 import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
-import { CloseConfirm, UserListDialog } from '~capabilities/containers/dialog'
+import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabilities/containers/dialog'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 
 export const allTools: ToolItem[] = [
   {
-    value: 'selection',
+    value: 'selector',
     label: 'scaffold.selector',
     icon: 'select',
   },
@@ -38,7 +38,7 @@ export const allTools: ToolItem[] = [
   {
     value: 'color',
     label: 'scaffold.color',
-    icon: 'color',
+    icon: 'circle',
     component: (props: any) => {
       return <ColorsContainer {...props}/>
     }
@@ -73,9 +73,11 @@ export const allTools: ToolItem[] = [
     value: 'register',
     label: 'scaffold.user_list',
     icon: 'register',
-    // component: () => {
-    //   return <UserListDialog />
-    // }
+  },
+  {
+    value: 'student_list',
+    label: 'scaffold.student_list',
+    icon: 'register',
   }
 ]
 
@@ -160,17 +162,26 @@ export const WhiteboardContainer = observer(() => {
   } = useBoardContext()
 
   const handleToolClick = (type: string) => {
+    console.log('handleToolClick tool click', type)
     switch(type) {
       case 'cloud': {
+        setTool(type)
         addDialog(CloudDriverContainer)
-        break;
+        break
       }
       case 'register': {
+        setTool(type)
         addDialog(UserListDialog)
-        break;
+        break
+      }
+      case 'student_list': {
+        setTool(type)
+        addDialog(StudentUserListDialog)
+        break
       }
       default: {
         setTool(type)
+        break
       }
     }
   }
@@ -224,9 +235,9 @@ export const WhiteboardContainer = observer(() => {
       }
       {showTab ? 
       <TabsContainer /> : null}
-      {showToolBar ? <div className='toolbar-position'>
+      {showToolBar ? 
         <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolClick} className="toolbar-biz" />
-      </div> : null}
+      : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'
         zoomValue={zoomValue}

@@ -15,6 +15,8 @@ const packageInfo = require('./package.json')
 
 const swSrcPath = packageInfo.swSrcPath
 
+const babelConfig = packageInfo.babel
+
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const ModuleFederationPlugin = require("webpack").container
 //   .ModuleFederationPlugin;
@@ -53,10 +55,11 @@ module.exports = {
           {
             loader: "babel-loader",
             options: {
-              presets: [
-                "@babel/preset-react",
-                "@babel/preset-typescript"
-              ]
+              ...babelConfig
+              // presets: [
+              //   "@babel/preset-react",
+              //   "@babel/preset-typescript"
+              // ]
             }
           }, 
           {
@@ -94,6 +97,10 @@ module.exports = {
           }
         ]
       },
+      // {
+      //   test: /\.svg$/,
+      //   use: ['@svgr/webpack'],
+      // }
       // {
       //   test: /\.(module.scss|module.css)$/i,
       //   use: [

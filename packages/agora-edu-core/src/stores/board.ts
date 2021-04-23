@@ -2,7 +2,7 @@ import { CursorTool } from '@netless/cursor-tool';
 import { EduLogger, EduRoleTypeEnum, EduRoomType, EduUser, GenericErrorWrapper } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
@@ -289,6 +289,18 @@ export class BoardStore extends ZoomController {
       this.folder = demoOssConfig.folder
     }
     this.scale = 0
+    reaction(() => JSON.stringify({ready: this.ready, hasPermission: this.hasPermission, role: this.userRole}), (data: string) => {
+      const {ready, hasPermission, role} = JSON.parse(data)
+      if (ready) {
+        if (role === EduRoleTypeEnum.student) {
+          if (hasPermission) {
+            this.room.setViewMode(ViewMode.Freedom)
+          } else {
+            this.room.setViewMode(ViewMode.Follower)
+          }
+        }
+      }
+    })
   }
 
   get room(): Room {
@@ -404,6 +416,7 @@ export class BoardStore extends ZoomController {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
+  @action.bound
   changeSceneItem(resourceUuid: string) {
     let targetPath = resourceUuid
     if (resourceUuid === "/init" || resourceUuid === "/" || resourceUuid === "init") {
@@ -451,6 +464,7 @@ export class BoardStore extends ZoomController {
   }
 
   // 更新白板
+  @action.bound
   updateBoardSceneItems ({scenes, resourceUuid, resourceName, page, taskUuid}: any, setScene: boolean) {
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
@@ -496,6 +510,7 @@ export class BoardStore extends ZoomController {
     return 0
   }
 
+  @action.bound
   closeMaterial(resourceUuid: string) {
     const currentSceneState = this.room.state.sceneState
     const roomScenes = (this.room.state.globalState as any).roomScenes
@@ -991,6 +1006,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   setLaserPoint() {
     if (this.room) {
+      this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
       })
@@ -1039,6 +1055,22 @@ export class BoardStore extends ZoomController {
           this.selector = tool
         }
         break
+      }
+      case 'cloud': {
+        this.selector = tool
+        break;
+      }
+      case 'register': {
+        this.selector = tool
+        break;
+      }
+      case 'student_list': {
+        this.selector = tool
+        break;
+      }
+      case 'laser': {
+        this.selector = tool
+        break;
       }
     }
   }
@@ -1290,40 +1322,68 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get tools() {
+  get _tools() {
     const allTools = this.allTools
     const {userRole, roomType} = this.appStore.roomInfo
     if (roomType === EduRoomType.SceneType1v1) {
+      const oneToOneTools = allTools.filter((item: ToolItem) => !['student_list', 'register'].includes(item.value))
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'tools', 'register'].includes(item.value))
+        return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'tools'].includes(item.value))
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools', 'register'].includes(item.value))  
+        return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))  
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return allTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return oneToOneTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
         } else {
-          return allTools.filter((item: ToolItem) => ['register'].includes(item.value))
+          return []
         }
       }
-      return allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+      return oneToOneTools
+    }
+    if (roomType === EduRoomType.SceneTypeBigClass) {
+      const bigClassTools = allTools.filter((item: ToolItem) => !['register'].includes(item.value))
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+        return bigClassTools.filter((item: ToolItem) => !['blank-page', 'tools'].includes(item.value))
+      }
+      if ([EduRoleTypeEnum.invisible].includes(userRole)) {
+        return bigClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))  
+      }
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        if (this.hasPermission) {
+          return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+        } else {
+          return []
+        }
+      }
+      return bigClassTools
     }
     if (roomType === EduRoomType.SceneTypeMiddleClass) {
+      const midClassTools = allTools.filter((item: ToolItem) => !['student_list'].includes(item.value))
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['tools'].includes(item.value))
+        return midClassTools.filter((item: ToolItem) => !['tools'].includes(item.value))
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
-        return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+        return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return allTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
+          return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
-          return allTools.filter((item: ToolItem) => ['register'].includes(item.value))
+          return midClassTools.filter((item: ToolItem) => ['register'].includes(item.value))
         }
       }
-      return allTools
+      return midClassTools
+    }
+    return []
+  }
+
+  @computed
+  get tools() {
+    if (this._tools) {
+      const isMenuItem = (value: string) => !['cloud', 'tools', 'register', 'student_list'].includes(value)
+      return this._tools.map((item: ToolItem) => ({...item, hover: isMenuItem(item.value) ? this.ready : true}))
     }
     return []
   }

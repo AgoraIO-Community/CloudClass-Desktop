@@ -2,6 +2,7 @@ import { AppRouteComponent, routesMap } from "@/infra/router"
 import { HomeStore } from "@/infra/stores/app/home"
 import { BizPageRouter } from "@/infra/types"
 import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
+import { AppPluginContainer } from "@/ui-kit/capabilities/containers/ext-app"
 import { AppStoreConfigParams, AppStoreInitParams, useStorageSWContext } from 'agora-edu-core'
 import {I18nProvider} from '~ui-kit'
 import { RoomParameters } from '../api/declare'
@@ -11,7 +12,7 @@ import { HashRouter, MemoryRouter, Redirect, Route, Switch } from "react-router-
 export interface RouteContainerProps {
   routes: BizPageRouter[];
   mainPath?: string;
-  showToast?: boolean;
+  inRoom?: boolean;
 }
 
 export interface AppContainerProps extends RouteContainerProps {
@@ -50,7 +51,8 @@ export const RouteContainer = (props: RouteContainerProps) => {
       }
 
       </Switch>
-      {props.showToast ? <ToastContainer/> : null}
+      {props.inRoom ? <AppPluginContainer/> : null}
+      {props.inRoom ? <ToastContainer/> : null}
     </>
   )
 }
@@ -69,7 +71,7 @@ export const RoomContainer = (props: RoomContainerParams) => {
   return (
     <I18nProvider language={props.language}>
       <MemoryRouter>
-        <RouteContainer routes={props.routes} mainPath={props.mainPath} showToast={true} />
+        <RouteContainer routes={props.routes} mainPath={props.mainPath} inRoom={true} />
       </MemoryRouter>
     </I18nProvider>
   )
@@ -80,7 +82,7 @@ export const AppContainer = (props: AppContainerProps) => {
   return (
     <Provider store={props.store}>
       <HashRouter>
-        <RouteContainer routes={props.routes} showToast={false} />
+        <RouteContainer routes={props.routes} inRoom={false} />
       </HashRouter>
     </Provider>
   )

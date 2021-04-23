@@ -28,7 +28,7 @@
   border: 0;
   outline: 0;
   /* cursor: pointer; */
-  color: #586376;
+  color: #191919;
   width: 100%;
   padding-left: 19px;
 }
@@ -42,6 +42,36 @@
   border: 1px solid #e3e3ec;
   position: relative;
   overflow-y: hidden;
+}
+
+.roster-user-list-wrap .main-title {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 12px;
+  font-size: 14px;
+  background: #f9f9fc;
+  border: 0;
+  outline: 0;
+  /* cursor: pointer; */
+  color: #586376;
+  width: 100%;
+  padding-left: 19px;
+}
+
+.roster-user-list-wrap {
+  width: 349px;
+  min-height: 276px;
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(47,65%,146%,15%);
+  border-radius: 6px;
+  border: 1px solid #e3e3ec;
+  position: relative;
+  overflow-y: hidden;
+}
+
+.roster-user-list-wrap .table-header {
+  color: #7B88A0;
 }
 
 .roster-wrap .table-header {
@@ -144,6 +174,9 @@
 
 .roster-table .star-nums {
   color: #7b88a0;
+  transform: translateY(-4px);
+  position: relative;
+  display: inline-block;
 }
 
 .roster-table .kick-out {
@@ -171,4 +204,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.roster-table .operate-status{
+  color: #979797;
+} 
+.roster-table .un-active{
+  color: #979797;
+} 
+.roster-table .icon-active{
+  color: #0073FF;
+}
+.roster-table .media-un-active{
+  color: #F04C36;
+}
+.roster-table .un-operate-status{
+  color: #BDBDCA;
+}
+
+.search-teacher-name {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.search-teacher-name label {
+  color: #7B88A0;
+}
+
+.search-teacher-name .roster-username {
+  margin: 0;
 }

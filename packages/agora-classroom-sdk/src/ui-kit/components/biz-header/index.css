@@ -30,8 +30,14 @@
 
 .header-actions > .iconfont {
   margin-left: 27px;
-  font-size: 36px;
+  font-size: 29px;
   color: #3f5c8f;
+  cursor: pointer;
+  width: 29px;
+  height: 29px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   @apply cursor-pointer;
 }
 

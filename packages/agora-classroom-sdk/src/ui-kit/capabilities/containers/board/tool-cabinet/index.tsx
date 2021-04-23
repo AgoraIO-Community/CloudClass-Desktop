@@ -1,12 +1,18 @@
-import { useBoardContext } from 'agora-edu-core'
+import { useBoardContext, useAppPluginContext, IAgoraExtApp } from 'agora-edu-core'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 
 export const ToolCabinetContainer = () => {
 
     const {
         startOrStopSharing,
-        setLaserPoint
+        setLaserPoint,
+        currentSelector
     } = useBoardContext()
+
+    const {
+        appPlugins,
+        onLaunchAppPlugin
+    } = useAppPluginContext()
 
     const onClick = async (itemType: string) => {
         switch(itemType) {
@@ -14,12 +20,12 @@ export const ToolCabinetContainer = () => {
                 await startOrStopSharing()
                 break;
             }
-            case 'laserPoint': {
-                await setLaserPoint()
+            case 'laser': {
+                setLaserPoint()
+                break;
             }
         }
     }
-
     return (
         <ToolCabinet
             value='tools'
@@ -32,12 +38,26 @@ export const ToolCabinetContainer = () => {
                     name: t('scaffold.screen_share')
                 },
                 {
-                    id: 'laserPoint',
+                    id: 'laser',
                     icon: <Icon type="laser-pointer" />,
                     name: t('scaffold.laser_pointer')
                 },
+                ...appPlugins.map((p:IAgoraExtApp) => {
+                    return {
+                        id: p.appIdentifier,
+                        icon:<Icon type="share-screen" />,
+                        name: p.appName
+                    }
+                })
             ]}
-            onClick={onClick}
+            onClick={(id: any) => {
+                if(['screenShare', 'laser'].includes(id)) {
+                    onClick(id)
+                } else {
+                    onLaunchAppPlugin(id)
+                }
+            }}
+            activeItem={currentSelector}
         />
     )
 }

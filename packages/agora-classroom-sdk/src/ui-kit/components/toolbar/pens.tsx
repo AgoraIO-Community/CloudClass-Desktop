@@ -1,4 +1,5 @@
-import React, { FC, useCallback, useState } from 'react';
+import { useMounted } from '@/ui-kit/utilities/hooks';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
@@ -23,13 +24,16 @@ export const Pens: FC<PensProps> = ({
     pens = defaultPens,
     activePen = 'pen',
     isActive = false,
+    hover,
     onClick,
 }) => {
     const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
+
     const handleClick = (pen: string) => {
         setPopoverVisible(!popoverVisible);
         onClick && onClick(pen);
     };
+
     const content = useCallback(() => (
         <div className={`expand-tools pens`}>
             {pens.map((pen) => (
@@ -43,21 +47,32 @@ export const Pens: FC<PensProps> = ({
                 </div>
             ))}
         </div>
-    ), [pens, activePen]);
+    ), [pens, activePen, handleClick]);
+
+    const handleClickTool = useCallback((pen: string) => {
+        if (!isActive) {
+          handleClick(pen)
+        }
+    }, [handleClick, isActive])
     return (
         <Tooltip title={label} placement="bottom">
+            <div className="tool" onClick={() => {
+                handleClickTool(activePen)
+            }}>
             <Popover
                 visible={popoverVisible}
-                onVisibleChange={(visible) => setPopoverVisible(visible)}
+                onVisibleChange={(visible) => {
+                    setPopoverVisible(visible)
+                }}
                 overlayClassName="expand-tools-popover"
-                trigger="click"
+                trigger="hover"
                 content={content}
                 placement="right">
-                <div className="tool">
-                    <Icon type={activePen as any} className={isActive ? 'active' : ''} />
-                    <Icon type="triangle-down" className="triangle-icon" />
-                </div>
+                <Icon hover={hover} type={activePen as any} className={isActive ? 'active' : ''} />
+                <Icon type="triangle-down" className="triangle-icon" />
             </Popover>
+            </div>
+
         </Tooltip>
     );
 };

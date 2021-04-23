@@ -104,6 +104,12 @@ const addStyleLoader = () => (config) => {
       }
     ],
   });
+  // config.module.rules.push(
+  //   {
+  //     test: /\.svg$/,
+  //     use: ['@svgr/webpack'],
+  //   }
+  // )
   return config;
 }
 
@@ -221,9 +227,10 @@ const webpackConfig = override(
     REACT_APP_BUILD_VERSION: JSON.stringify(config.REACT_APP_BUILD_VERSION),
     REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
     REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
+    REACT_APP_AGORA_APP_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_APP_CERTIFICATE),
+    REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
     REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
     REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
-    REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
     REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
 
     REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),

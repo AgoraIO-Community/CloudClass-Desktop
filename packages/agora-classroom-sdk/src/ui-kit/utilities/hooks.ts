@@ -1,6 +1,38 @@
 import { useEffect, useRef } from 'react';
 import type { RendererPlayerProps } from '~utilities/renderer-player';
 
+type UseWatchCallback<T> = (prev: T | undefined) => void;
+type UseWatchConfig = {
+  immediate: boolean;
+};
+
+export const useWatch = <T>(dep: T, callback: UseWatchCallback<T>, config: UseWatchConfig = { immediate: false }) => {
+  const { immediate } = config;
+
+  const prev = useRef<T>();
+  const inited = useRef(false);
+  const stop = useRef(false);
+  const execute = () => callback(prev.current);
+
+  useEffect(() => {
+    if (!stop.current) {
+      if (!inited.current) {
+        inited.current = true;
+        if (immediate) {
+          execute();
+        }
+      } else {
+        execute();
+      }
+      prev.current = dep;
+    }
+  }, [dep]);
+
+  return () => {
+    stop.current = true;
+  };
+}
+
 export const useUnMount = (cb: CallableFunction) => {
   useEffect(() => {
     return () => cb()
@@ -84,8 +116,9 @@ export const useRendererPlayer = <T extends HTMLElement>(props: RendererPlayerPr
   }
 
   useEffect(
-    () => onRendererPlayer<T>(ref.current!, props)
-  , [ref, props.track, props.fitMode, props.preview])
+    () => onRendererPlayer<T>(ref.current!, props),
+    [ref, props.track, props.fitMode, props.preview]
+  )
 
   return ref
 }

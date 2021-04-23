@@ -1,4 +1,6 @@
 import { action, observable, computed, runInAction } from 'mobx';
+import type {AgoraExtAppContext, AgoraExtAppHandle} from 'agora-edu-core'
+
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 

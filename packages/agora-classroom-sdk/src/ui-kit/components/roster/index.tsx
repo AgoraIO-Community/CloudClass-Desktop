@@ -6,15 +6,16 @@ import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
+import { canOperate, ProfileRole } from './base';
 
-export { defaultColumns } from './default-columns';
+export * from './user-list';
 
 export type ActionTypes =
   | 'podium'
   | 'whiteboard'
   | 'camera'
   | 'mic'
-  | 'kick-out'
+  | 'kickOut'
   | string;
 
 export enum MediaDeviceState {
@@ -22,7 +23,7 @@ export enum MediaDeviceState {
   available = 1
 }
 
-type ColumnKey = 
+export type ColumnKey = 
   | 'name' 
   | 'onPodium' 
   | 'whiteboardGranted' 
@@ -51,10 +52,10 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, hover: boolean, userType?: string) => ReactNode;
+  render?: (text: string, profile: Profile, canOperate: boolean, userType?: string) => ReactNode;
 }
 
-type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
+
 export interface RosterProps extends ModalProps {
   isDraggable?: boolean;
   /**
@@ -91,35 +92,6 @@ export interface RosterProps extends ModalProps {
   onClose?: () => void;
 }
 
-const canOperate = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
-  }
-
-  if (role === 'student' && localUid === data.uid) {
-    // only onPodium is true, student can control self media device
-    if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
-      return true
-    }
-    return false
-  }
-
-  return false
-}
-
-const canHover = (role: ProfileRole, localUid: string, data: Profile, col: Column): boolean => {
-  if (['assistant', 'teacher'].includes(role)) {
-    return true
-  }
-  if (role === 'student' && localUid === data.uid) {
-    if (data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)) {
-      return true
-    }
-    return false
-  }
-  return false
-}
-
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
@@ -137,7 +109,7 @@ export const Roster: FC<RosterProps> = ({
   const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
     return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
-
+  console.warn(role, localUserUuid, dataSource,"gggkkkk")
   return (
     <DraggableContainer>
       <div className="agora-board-resources roster-wrap">
@@ -167,7 +139,7 @@ export const Roster: FC<RosterProps> = ({
                     <Col key={col.key}>
                       <span
                         className={
-                          `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
+                          `${idx === 0 ? 'roster-username' : ''}`
                         }
                         onClick={
                           canOperate(role, localUserUuid, data, col)
@@ -178,7 +150,7 @@ export const Roster: FC<RosterProps> = ({
                             : undefined
                         }>
                         {col.render
-                          ? col.render((data as any)[col.key], data, canHover(role, localUserUuid, data, col), userType)
+                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col))
                           : (data as any)[col.key]}
                       </span>
                     </Col>

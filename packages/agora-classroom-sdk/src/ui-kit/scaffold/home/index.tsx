@@ -3,12 +3,9 @@ import { Button } from '~components/button'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
-import { DatePicker } from '~components/date-picker'
 import { t } from '~components/i18n'
 import './index.css'
-import { HomeModule, OnChangeEvents } from '~utilities/types'
-
-const {Option}: any = Select
+import { HomeModule } from '~utilities/types'
 
 export interface HomeAttributes {
   roomId: string,
@@ -19,6 +16,7 @@ export interface HomeAttributes {
   scenario: string,
   duration: number,
   language: string,
+  region: string,
 }
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
@@ -36,17 +34,39 @@ export const Home: React.FC<HomeProps> = ({
   duration,
   version,
   language,
+  region,
   onChangeRole,
   onChangeScenario,
   onChangeLanguage,
   onChangeDuration,
+  onChangeRegion,
   onChangeRoomId,
   onChangeUserId,
   onChangeUserName,
   onChangeRoomName,
   onClick
 }) => {
-
+  const scenarioOptions = [
+    {label: '1v1', value: '1v1'},
+    {label: t('home.roomType_interactiveSmallClass'), value: 'mid-class'},
+    {label: t('home.roomType_interactiveBigClass'), value: 'big-class'},
+  ]
+  const roleOptions = [
+    {label: t('home.role_teacher'), value: 'teacher'},
+    {label: t('home.role_student'), value: 'student'},
+    {label: t('home.role_assistant'), value: 'assistant'},
+    {label: t('home.role_audience'), value: 'incognito'},
+  ]
+  const languageOptions = [
+    {label: '中文', value: 'zh'},
+    {label: 'English', value: 'en'},
+  ]
+  const regionOptions = [
+    {label: 'NA', value: 'NS'},
+    {label: 'AP', value: 'AP'},
+    {label: 'CN', value: 'CN'},
+    {label: 'EU', value: 'EU'},
+  ]
   return (
     <Layout className="home-page">
       <Layout style={{boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)'}} className="facade" direction="row">
@@ -99,9 +119,15 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <Select id="scenario" value={scenario || undefined} onChange={onChangeScenario} placeholder={t('home.roomType_placeholder')}>
-                <Option value="1v1">1v1</Option>
-                <Option value="mid-class">{t('home.roomType_interactiveSmallClass')}</Option>
+              <Select 
+                id="scenario" 
+                value={scenario}
+                options={scenarioOptions} 
+                onChange={value => {
+                  onChangeScenario(value)
+                }} 
+                placeholder={t('home.roomType_placeholder')}
+              >
               </Select>
             </Col>
           </Row>
@@ -112,11 +138,16 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <Select id="role" value={role || undefined} onChange={onChangeRole} placeholder={t('home.role_placeholder')}>
-                <Option value="teacher">{t('home.role_teacher')}</Option>
-                <Option value="student">{t('home.role_student')}</Option>
-                <Option value="assistant">{t('home.role_assistant')}</Option>
-                <Option value="incognito">{t('home.role_audience')}</Option>
+              <Select 
+                id="role" 
+                value={role} 
+                onChange={value => {
+                  onChangeRole(value)
+                }} 
+                placeholder={t('home.role_placeholder')}
+                options={roleOptions}
+              >
+                
               </Select>
             </Col>
           </Row>
@@ -127,9 +158,35 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <Select id="language" value={language} onChange={onChangeLanguage} placeholder={t('home.language_placeholder')}>
-                <Option value="zh">中文</Option>
-                <Option value="en">English</Option>
+              <Select 
+                id="language" 
+                value={language} 
+                onChange={value => {
+                  onChangeLanguage(value)
+                }} 
+                placeholder={t('home.language_placeholder')}
+                options={languageOptions}
+              >
+                
+              </Select>
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <label htmlFor="region">
+                <span>{t('home.region')}</span>
+              </label>
+            </Col>
+            <Col>
+              <Select 
+                id="region" 
+                value={region} 
+                onChange={value => {
+                  onChangeRegion(value)
+                }} 
+                placeholder={t('home.region_placeholder')}
+                options={regionOptions}
+              >
               </Select>
             </Col>
           </Row>
@@ -145,7 +202,7 @@ export const Home: React.FC<HomeProps> = ({
             </Col>
           </Row>
           <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName)}>{t('home.enter_classroom')}</Button>
-          <Row className="text-center">
+          <Row className="text-center home-align-center">
             version: {version}
           </Row>
         </Table>

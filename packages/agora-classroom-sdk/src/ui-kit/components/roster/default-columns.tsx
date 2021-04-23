@@ -1,35 +1,7 @@
 import classnames from 'classnames';
-import React from 'react';
-import { t } from '~components/i18n';
-import { Icon, IconTypes } from '~components/icon';
+import { Icon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
-
-const getCameraState = (profile: Profile) => {
-  const defaultType = 'camera-off'
-  // const hover = !!profile.onlineState || profile.disabled === false || !!profile.cameraDevice === true 
-
-  const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
-
-  const className = !!profile.cameraEnabled === true ? 'un-muted' : 'muted'
-
-  return {
-    type: type as IconTypes,
-    className: className
-  }
-}
-
-const getMicrophoneState = (profile: Profile): any => {
-  const defaultType = 'microphone-off-outline'
-
-  const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
-
-  const className = !!profile.micEnabled === true ? 'un-muted' : 'muted'
-
-  return {
-    type: type as IconTypes,
-    className: className
-  }
-}
+import {getCameraState, getMicrophoneState} from './base';
 
 export const defaultColumns: Column[] = [
   {
@@ -40,29 +12,33 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_, profile, hover, userType) => {
+    render: (_, profile, canOperate) => {
+      const type =  !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
+      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
+      const podiumStatus= !!profile.onPodium === true ? 'icon-active' : 'un-active';
       const cls = classnames({
-        'podium-svg': 1,
-        [`${!!profile.onPodium ? 'on' : 'off'}-podium`]: 1,
-        [`student-${!!profile.onPodium ? 'on' : 'off'}-podium`]: userType === 'student',
+        [`${operateStatus}`]: 1,
+        [`${podiumStatus}`]: 1,
       })
       return (
-        <div className={cls}></div>
-      )
+        <Icon type={type} className={cls} iconhover={canOperate}/>
+      );
     }
   },
   {
     key: 'whiteboardGranted',
     name: 'roster.granted',
     action: 'whiteboard',
-    render: (_, profile, hover, userType) => {
+    render: (_, profile, canOperate) => {
+      const type =  !!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard';
+      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
+      const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
-        'whiteboard-granted-svg': 1,
-        [`whiteboard-${!!profile.whiteboardGranted ? 'granted' : 'no_granted'}`]: 1,
-        [`student-${!!profile.whiteboardGranted ? 'granted' : 'no_granted'}`]: userType === 'student'
+        [`${operateStatus}`]: 1,
+        [`${whiteboardStatus}`]: 1,
       })
       return (
-        <div className={cls}></div>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },
@@ -70,24 +46,18 @@ export const defaultColumns: Column[] = [
     key: 'cameraEnabled',
     name: 'roster.camera_state',
     action: 'camera',
-    render: (_, profile, hover) => {
+    render: (_, profile, canOperate) => {
       const {
-        className,
+        operateStatus,
+        cameraStatus,
         type,
-      } = getCameraState(profile)
-
+      } = getCameraState(profile, canOperate);
       const cls = classnames({
-        [`${className}`]: 1,
-        // [`disabled`]: profile.disabled
+        [`${operateStatus}`]: 1,
+        [`${cameraStatus}`]: 1,
       })
       return (
-        <span className="camera-enabled">
-          <Icon
-            hover={hover}
-            className={cls}
-            type={type}
-          />
-        </span>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },
@@ -95,39 +65,32 @@ export const defaultColumns: Column[] = [
     key: 'micEnabled',
     name: 'roster.microphone_state',
     action: 'mic',
-    render: (_, profile, hover) => {
+    render: (_, profile, canOperate) => {
       const {
-        className,
+        operateStatus,
+        microphoneStatus,
         type,
-      } = getMicrophoneState(profile)
-
+      } = getMicrophoneState(profile, canOperate);
       const cls = classnames({
-        [`${className}`]: 1,
-        // [`disabled`]: profile.disabled
+        [`${operateStatus}`]: 1,
+        [`${microphoneStatus}`]: 1,
       })
-      console.log('mic', hover)
       return (
-        <span className="mic-enabled">
-          <Icon
-            hover={hover}
-            className={cls}
-            type={type}
-          />
-        </span>
+        <Icon type={type} className={cls} iconhover={canOperate}/>
       )
     },
   },
   {
     key: 'stars',
     name: 'roster.reward',
-    render: (text, profile: Profile, hover) => {
+    render: (text, profile: Profile, canOperate) => {
+      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
-        'inline-flex': 1,
+        [`${operateStatus}`]: 1,
       })
-
       return (
-        <div className={cls}>
-          <Icon className="star" type="star-outline" />
+        <div>
+          <Icon type={'star-outline'} className={cls} iconhover={canOperate}/>
           <span className="star-nums">&nbsp;x{text}</span>
         </div>
       )
@@ -136,15 +99,15 @@ export const defaultColumns: Column[] = [
   {
     key: 'kickOut',
     name: 'roster.kick',
-    action: 'kick-out',
+    action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
-    // FIXME: 不能点击时的样式
-    render: (_, profile, hover) => {
-      console.log('kick', hover)
+    render: (_, profile, canOperate) => {
+      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
+      const cls = classnames({
+        [`${operateStatus}`]: 1,
+      })
       return (
-        <span className="kick-out">
-          <Icon hover={hover} type="exit" />
-        </span>
+        <Icon type={'exit'} className={cls} iconhover={canOperate}/>
       )
     },
   },

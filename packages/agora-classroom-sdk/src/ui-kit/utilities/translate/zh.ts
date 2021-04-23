@@ -29,6 +29,12 @@ export const zh = {
     'microphone_volume': '麦克风音量',
     'speaker_volume': '扬声器音量',
   },
+  'student': {
+    'student_name': '学生姓名',
+    'camera': '摄像头',
+    'microphone': '麦克风',
+    'operation': '操作',
+  },
   'roster': {
     'teacher_name': '教师姓名：',
     'user_list': '人员列表',
@@ -40,7 +46,8 @@ export const zh = {
     'camera_state': '摄像头',
     'microphone_state': '麦克风',
     'reward': '奖励',
-    'kick': '踢人'
+    'kick': '踢人',
+    'granted': '授权',
   },
   'hands_up': '举手',
   'co_video': {
@@ -202,6 +209,8 @@ export const zh = {
     'student_interactive_apply': `"{reason}"想和你连麦`
   },
   'scaffold': {
+    'search': '搜索',
+    'student_list': '学生列表',
     'pencil': '画笔',
     'laser_pointer': '激光笔',
     'straight': '直线',
@@ -257,6 +266,12 @@ export const zh = {
     'settingTitle': '设备设置',
     'finishTest': '完成'
   },
+  'biz-header': {
+    'setting': '设置',
+    'exit': '退出',
+    'recording': '录制中',
+    'start_record': '开启录制'
+  },
   'message': '消息',
   'zh': '中文',
   'nav': {
@@ -268,8 +283,9 @@ export const zh = {
     'back': '返回',
     'to_start_in': '距离上课还有：',
     'started_elapse': '已开始上课：',
+    'ended_elapse': '已经下课：',
     'hours': '小时',
-    'minutes': '分',
+    'minutes': '分钟',
     'seconds': '秒',
     'short': {
       'hours': '小时',
@@ -318,6 +334,7 @@ export const zh = {
     'roomType_placeholder': '请选择课堂类型',
     'roomType_1v1': '1v1',
     'roomType_interactiveSmallClass': '互动小班',
+    'roomType_interactiveBigClass': '互动大班课',
     'role': '角色',
     'role_placeholder': '请选择你的角色',
     'role_teacher': '老师',

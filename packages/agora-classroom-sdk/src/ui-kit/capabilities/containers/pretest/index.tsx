@@ -77,6 +77,7 @@ export const PretestContainer = observer(() => {
     const handleOk = () => {
         stopPretestCamera()
         stopPretestMicrophone()
+        console.log('roomPath ', global.params.roomPath)
         history.push(global?.params?.roomPath ?? '/classroom/1v1')
     }
 

@@ -1,52 +1,49 @@
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
-import RcSelect, { Option } from 'rc-select';
+import ReactSelect from 'react-select'
 
 import './index.css'
+
+export type SelectOption = {
+    label: string;
+    value: string;
+}
 export interface SelectProps extends BaseProps {
-    defaultValue?: string;
-    value?: string;
+    value?: string | undefined;
     placeholder?: string;
-    listHeight?: number;
-    size?: 'large' | 'middle' | 'small';
-    onChange?: (value: string) => void;
-    onSelect?: (value: string) => void;
+    options: SelectOption[],
+    isSearchable?: boolean,
+    onChange?: (value: string) => unknown
 }
 
-type SelectType = FC<SelectProps> & {
-    Option?: any
-}
-
-export const Select: SelectType = ({
-    defaultValue,
+// 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
+export const Select: FC<SelectProps> = ({
     value,
     placeholder,
-    listHeight,
-    size = 'middle',
-    onChange = value => { console.log('change', value) },
-    onSelect = value => { console.log('change', value) },
+    options,
+    isSearchable = false,
+    onChange,
     className,
     ...restProps
 }) => {
     const cls = classnames({
-        [`select select-${size}`]: 1,    
+        [`select`]: 1,    
         [`${className}`]: !!className,
     });
     return (
-        <RcSelect
+        <ReactSelect
+            classNamePrefix={'react-select'}
             className={cls}
-            dropdownClassName={'select-dropdown'}
-            defaultValue={defaultValue}
-            value={value}
+            value={options.find(item => item.value === value)}
             placeholder={placeholder}
-            listHeight={listHeight}
-            showArrow
-            onChange={onChange}
-            onSelect={onSelect}
+            options={options}
+            isSearchable={isSearchable}
+            // @ts-ignore
+            onChange={(option: SelectOption)  => {
+                onChange && onChange(option.value)
+            }}
             {...restProps}
         />
     )
 }
-
-Select.Option = Option
