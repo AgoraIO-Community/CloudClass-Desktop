@@ -14,7 +14,6 @@ console.log(`webpack.config.js loaded ${env}`)
 
 module.exports = {
   entry: {
-    ['agora-cloudclass-test-plugin']: './src/gallery/dice/index.tsx',
     ['index']: "./src/index.ts"
   },
   mode: env,

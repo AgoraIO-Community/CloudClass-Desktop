@@ -9,14 +9,14 @@ export const useAppPluginContext = () => {
   const roomStore = useRoomStore()
 
   const onLaunchAppPlugin = (id:any) => {
-    let plugin = appStore.params.config.appPlugins!.find(p => p.appIdentifier === id)
+    let plugin = appStore.params.config.extApps!.find(p => p.appIdentifier === id)
     if(plugin) {
       uiStore.addAppPlugin(plugin)
     }
   }
 
   const onShutdownAppPlugin = (id:any) => {
-    let plugin = appStore.params.config.appPlugins!.find(p => p.appIdentifier === id)
+    let plugin = appStore.params.config.extApps!.find(p => p.appIdentifier === id)
     if(plugin) {
       uiStore.removeAppPlugin(plugin)
     }
@@ -26,7 +26,7 @@ export const useAppPluginContext = () => {
     return roomStore.pluginRoomProperties(app)
   }
 
-  const appPlugins = appStore.params ? appStore.params.config.appPlugins : []
+  const appPlugins:IAgoraExtApp[] = appStore.params ? appStore.params.config.extApps || [] : []
 
   const {roomName, roomType, roomUuid, userName,userRole, userUuid} = get(appStore, "params.roomInfoParams", {})
   const language = appStore.params ? appStore.params.language : "zh"
