@@ -163,9 +163,8 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
             <Search
               onSearch={onChange}
               suffix={<img src={SearchSvg} />}
-              placeholder={'search的placeholder'}
+              placeholder={transI18n('scaffold.search')}
             />
-            {/* <input type="text" placeholder={transI18n('scaffold.search')} onChange={onChange} /> */}
           </div>
           <Table className="roster-table">
             <TableHeader>
