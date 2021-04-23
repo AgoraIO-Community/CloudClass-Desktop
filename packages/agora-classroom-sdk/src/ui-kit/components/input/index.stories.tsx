@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react'
 import { Input, Search } from '~components/input'
 import { Icon } from '~components/icon'
 import { Button } from '~components/button'
-import {ReactComponent as SearchSvg}  from '~components/icon/assets/svg/search.svg'
+import * as SearchSvg  from '~components/icon/assets/svg/search.svg'
 // import {ReactComponent as ReactLogo} from './logo.svg';
 
 
