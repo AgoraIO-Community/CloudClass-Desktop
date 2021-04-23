@@ -19,6 +19,7 @@ export const Docs = () => (
     style={{ width: '100vw', height: '100vh' }}>
     <Header className="bg-green-400"></Header>
     <Layout className="bg-green-500" style={{ height: '100%' }}>
+      <Aside className="bg-green-700"></Aside>
       <Content className="bg-green-600"></Content>
       <Aside className="bg-green-700"></Aside>
     </Layout>

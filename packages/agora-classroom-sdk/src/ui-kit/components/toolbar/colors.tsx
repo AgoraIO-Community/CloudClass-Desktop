@@ -78,7 +78,7 @@ export const Colors: FC<ColorsProps> = ({
         overlayClassName="expand-tools-popover"
         trigger="click"
         content={content}
-        placement="right">
+        placement="bottom">
         <div className="tool">
           <Icon type="color" color={activeColor} />
           <Icon type="triangle-down" className="triangle-icon"/>

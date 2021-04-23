@@ -1,5 +1,5 @@
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext ,useUserListContext ,useBoardContext} from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useMemo } from 'react'
 import { BizHeader, transI18n } from '~ui-kit'
@@ -24,9 +24,16 @@ export const NavigationBar = observer(() => {
   } = useMediaContext()
 
   const {
-    addDialog
+    addDialog,
+    isFullScreen
   } = useGlobalContext()
 
+  const {
+    zoomBoard
+  } = useBoardContext()
+
+  const { rosterUserList } = useUserListContext()
+  
   const bizHeaderDialogs = {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
@@ -34,6 +41,11 @@ export const NavigationBar = observer(() => {
   }
 
   function handleClick (type: string) {
+    console.log('isFullScreen',isFullScreen)
+    if (type === 'fullScreen') {
+      isFullScreen ? zoomBoard('fullscreenExit') : zoomBoard('fullscreen')
+      return
+    }
     const showDialog = bizHeaderDialogs[type]
     showDialog && showDialog(type)
   }
@@ -60,7 +72,10 @@ export const NavigationBar = observer(() => {
       classStatusText={classStatusText}
       isStarted={isCourseStart}
       isRecording={isRecording}
+      currentStudents={rosterUserList ? rosterUserList.length : 0}
+      totalStudents={20} //todo: api param from back-end
       title={roomInfo.roomName}
+      isRole={roomInfo.userRole as any}
       signalQuality={networkQuality as any}
       monitor={{
         cpuUsage: cpuUsage,

@@ -20,7 +20,7 @@ export const MidClassScenario = observer(() => {
   const {
     isFullScreen,
   } = useGlobalContext()
-
+ 
   useEffectOnce(() => {
     joinRoom()
   })
@@ -40,8 +40,16 @@ export const MidClassScenario = observer(() => {
     >
       <NavigationBar />
       <Layout className="bg-white" style={{ height: '100%' }}>
+        <Layout className='video-play-all'>
+          <div style={{height: '164px'}}>
+            <VideoPlayerTeacher/>
+          </div>
+          <Aside>
+            <VideoMarqueeStudentContainer />
+          </Aside>
+        </Layout>
+        
         <Content className="column">
-          <VideoMarqueeStudentContainer />
           <div className="board-box">
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
@@ -51,7 +59,6 @@ export const MidClassScenario = observer(() => {
           </div>
         </Content>
         <Aside>
-          <VideoPlayerTeacher/>
           <RoomChat />
         </Aside>
       </Layout>

@@ -4,6 +4,7 @@
   @apply bg-white;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
+  height: 80px;
 }
 
 .biz-header-title-wrap {
@@ -20,14 +21,66 @@
 }
 
 .biz-header-title {
-  color: #191919;
-  font-size: 13px;
+  color: #2D353A;
+  font-size: 20px;
+  font-weight: bold
 }
-
+.right-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .header-actions {
   @apply flex;
+  align-items: center;
+}
+.pen-action {
+  width: 177px;
+  height: 31px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #38AE48;
+  border-radius: 18.5px;
+  color: white;
+  justify-content: center;
+}
+.pen-action > img {
+  width: 15px;
+  height: 15px;
+ }
+.pen-status {
+  padding-left: 5px;
+  font-size: 15px;
+}
+.pen-status > span{
+  padding-left: 3px;
+  font-weight: bold;
+}
+.zoomout  {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 35px;
+  font-size: 14px;
 }
 
+.zoomout > img {
+  padding-right: 10px;
+}
+
+.logout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 55px;
+  margin-right: 10px;
+  font-size: 14px;
+}
+.logout > img {
+  padding-right: 10px;
+}
 .header-actions > .iconfont {
   margin-left: 27px;
   font-size: 36px;
@@ -38,24 +91,68 @@
 /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
 .biz-signal-quality {
   @apply text-center;
-  width: 40px;
+  width: 20px;
+  height: 100%;
+  padding: 0 10px;
+  background-repeat: no-repeat;
 }
+
+.biz-header-col {
+  margin: 0px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 120px;
+  font-size: 14px;
+}
+
+.student-count > span {
+  color: #38AE48;
+  padding-left: 10px;
+}
+
+.biz-header-right-content-row {
+  display: flex;
+  flex-direction: row;
+  margin-right: 35px;
+}
+
+.biz-header-col-networkLatency {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.biz-header-col-networkLatency.excellent {
+  color: #0bad69
+}
+
+.biz-header-col-networkLatency.good {
+  color: #f5b723
+}
+
+.biz-header-col-networkLatency.bad {
+  color: #f04c36
+}
+
+.biz-header-col-networkLatency.unknown {
+  color: #666
+}
+
 .biz-signal-quality.popover-open {
 }
 .biz-signal-quality.excellent {
-  color: #0bad69;
+  background-image: url('./assets/excellent.png');
 }
 
 .biz-signal-quality.good {
-  color: #f5b723;
+  background-image: url('./assets/good.png');
 }
 
 .biz-signal-quality.bad {
-  color: #f04c36;
+  background-image: url('./assets/bad.png');
 }
 
 .biz-signal-quality.unknown {
-  color: #666;
+  background-image: url('./assets/unknown.png');
 }
 
 .biz-signal-content-row {

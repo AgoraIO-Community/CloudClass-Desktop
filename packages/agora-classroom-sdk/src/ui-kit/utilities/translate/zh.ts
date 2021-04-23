@@ -65,7 +65,7 @@ export const zh = {
   'placeholder': {
     'empty_chat': '还没有消息',
     'enable_chat_muted': '已开启学生禁言',
-    'input_message': '请输入消息',
+    'input_message': '输入你想说的话（上课期间不要随意发言哦～)',
   },
   'signal': {
     'delay': '网络延迟',
@@ -330,5 +330,10 @@ export const zh = {
     'enter_classroom': '加入课堂',
     'region_placeholder': '请选择区域',
     'region': '区域',
-  }
+  },
+
+  'excellent': '优',
+  'good': '好',
+  'bad': '坏',
+  'unknown': '未知',
 }

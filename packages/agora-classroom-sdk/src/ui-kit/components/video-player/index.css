@@ -12,7 +12,18 @@
   @apply absolute top-0 right-0 flex items-center;
   padding: 8px;
 }
-
+.bottom-info{
+  background-color: black;
+  opacity: 0.6;
+  height: 30px;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row; 
+}
 .bottom-left-info {
   @apply absolute bottom-0 left-0 flex items-end;
   padding: 0 8px;
@@ -60,14 +71,17 @@
   color: #ffe72e;
   font-size: 18px;
 }
-
+.micWrapper {
+  @apply flex flex-row items-center;
+  width: 150px;
+}
 .video-player-tools {
-  @apply flex flex-col items-center;
-  width: 36px;
-  background: #ffffff;
+  @apply flex flex-row items-center;
+  /* width: 36px; */
+  /* background: #ffffff;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 18px;
-  padding: 16px 10px;
+  padding: 16px 10px; */
 }
 /* .video-player-tools.host {
   height: 168px;
@@ -76,7 +90,8 @@
 .video-player-tools > .iconfont {
   @apply cursor-pointer box-content;
   font-size: 22px;
-  color: #357bf6;
+  color: #ffffff;
+  padding: 0 5px;
 }
 
 .video-player-tools > .iconfont.red {
@@ -143,16 +158,18 @@
 }
 
 .volume-indicators {
-  @apply flex flex-col;
+  @apply flex flex-row;
   margin-left: 6px;
 }
 
 .v-indicator {
   @apply rounded;
-  height: 1px;
-  width: 6px;
+  border-radius: 0.25rem;
+  height: 10px;
+  width: 2px;
   background-color: #357bf6;
   margin-bottom: 4px;
+  margin: 0px 2px;
 }
 
 .show-scroll .scroll-btn {
@@ -167,7 +184,7 @@
 
 .video-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow-x: scroll;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
@@ -222,19 +239,21 @@
 }
 
 .video-player-tools .iconfont::before{
-  border-radius: 50%;
+  /* border-radius: 50%; */
 } 
 
 .video-player-tools .iconfont:hover::before {
-  background-color: #f0f0f7;
+  /* background-color: #f0f0f7; */
 }
+/* .iconfont .icon-camera-off .red .tooltip-open {
 
+} */
 .center-reward {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; 
   margin: auto;
 }
 

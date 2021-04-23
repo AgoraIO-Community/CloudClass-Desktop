@@ -2,6 +2,9 @@ import React from 'react'
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
+import apply from './assets/apply.png';
+import coVideo from './assets/co-video.png';
+import defaultHandsup from './assets/default.png';
 
 export interface HandsUpSenderProps extends BaseProps {
   state?: 'default' | 'apply' | 'co-video';
@@ -11,20 +14,16 @@ export interface HandsUpSenderProps extends BaseProps {
 export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'default'}) => {
 
   const mapping = {
-    'default': "#7B88A0",
-    'apply': "#0073FF",
-    'co-video': "#666666"
+    'default': defaultHandsup,
+    'apply': apply,
+    'co-video': coVideo
   }
 
-  const color = mapping[state || 'default']
-
+  const handsupStatus = mapping[state || 'default']
+ 
   return (
-    <Card
-      width={40}
-      height={40}
-      borderRadius={40}
-    >
-      <Icon hover={true} type="hands-up-student" color={color} onClick={onClick} />
-    </Card>
+    <div className='handsupWrapper' onClick={ onClick }>
+      <img src={handsupStatus} alt=""/>
+    </div>
   )
 }

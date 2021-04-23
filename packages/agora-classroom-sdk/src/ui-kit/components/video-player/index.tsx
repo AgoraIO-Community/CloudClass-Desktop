@@ -193,14 +193,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
+      <Tooltip visible={false} title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
         <Icon
           className={micEnabled ? '' : 'red'}
           type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
           onClick={() => onMicClick(uid)}
         />
       </Tooltip>
-      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
+      <Tooltip visible={false} title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
         <Icon
           className={cameraEnabled ? '' : 'red'}
           type={cameraEnabled ? 'camera' : 'camera-off'}
@@ -254,55 +254,39 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     </div>
   );
   return (
-    <Popover
-      align={{
-        offset: [-8, 0],
-      }}
-      overlayClassName="video-player-tools-popover"
-      content={hideControl ? null : tools}
-      placement={controlPlacement}>
-      <div className={cls}>
-        {children ? children : null}
-        {placeholder ? <>{placeholder}</> : null}
-        {animList.length ? (
-          animList.map((item) => (
-            <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
-              <SvgaPlayer 
-                type="reward" 
-                width={200} 
-                height={200}
-                audio="reward"
-                duration={2000}
-                onClose={() => onClose(item.id)}
-              />
-            </div>
-          ))
-        ) : ""}
-        <div className="top-right-info">
+    <div className={cls}>
+      {children ? children : null}
+      {placeholder ? <>{placeholder}</> : null}
+      {animList.length ? (
+        animList.map((item) => (
+          <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
+            <SvgaPlayer 
+              type="reward" 
+              width={200} 
+              height={200}
+              audio="reward"
+              duration={2000}
+              onClose={() => onClose(item.id)}
+            />
+          </div>
+        ))
+      ) : ""}
+      <div className="top-right-info">
           {stars > 0 ? (
             <>
               <Icon className="stars" type="star" />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}
-        </div>
-        <div className="bottom-left-info">
-          <div>
-            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
-            <Icon
-              className={micStateCls}
-              type={micEnabled ? 'microphone-on' : 'microphone-off'}
-            />
-          </div>
-          <span className="username">{username}</span>
-        </div>
-        <div className="bottom-right-info">
-          {(whiteboardGranted && userType === 'student') ? (
-            <div className="bottom-right-granted"></div>
-          ) : null}
-        </div>
       </div>
-    </Popover>
+      <div className="bottom-info">
+        <div className='micWrapper'>
+          {tools ? tools : null}
+          {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
+        </div>
+        <div className="username">{username}</div>
+      </div>
+    </div>
   );
 };
 
@@ -429,11 +413,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   return (
     <div className="video-container" ref={mountDOM}>
-      <div className="left-container scroll-btn" onClick={() => {scroll('left')}}>
+      {/* <div className="left-container scroll-btn" onClick={() => {scroll('left')}}>
       <span className="offset">
         <Icon type="backward"></Icon>
       </span> 
-      </div>
+      </div> */}
       {
         videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => 
           <div className="video-item" key={idx} ref={attachVideoItem}>
@@ -453,11 +437,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           </div>
         )
       }
-      <div className="right-container scroll-btn" onClick={() => {scroll('right')}}>
+      {/* <div className="right-container scroll-btn" onClick={() => {scroll('right')}}>
         <span className="offset">
           <Icon type="forward"></Icon>
         </span> 
-      </div>
+      </div> */}
     </div>
   )
 }

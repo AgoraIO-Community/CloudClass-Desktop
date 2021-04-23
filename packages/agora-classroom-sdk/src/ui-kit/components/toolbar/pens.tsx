@@ -52,7 +52,7 @@ export const Pens: FC<PensProps> = ({
                 overlayClassName="expand-tools-popover"
                 trigger="click"
                 content={content}
-                placement="right">
+                placement="bottom">
                 <div className="tool">
                     <Icon type={activePen as any} className={isActive ? 'active' : ''} />
                     <Icon type="triangle-down" className="triangle-icon" />

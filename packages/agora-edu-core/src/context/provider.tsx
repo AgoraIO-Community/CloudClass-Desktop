@@ -376,6 +376,7 @@ export const useRecordingContext = () => {
 
   const roomStore = useRoomStore()
 
+  /*
   async function startRecording() {
     const roomUuid = roomStore.roomInfo.roomUuid
     const tokenRule = `${roomUuid}-record-${Date.now()}`
@@ -416,7 +417,14 @@ export const useRecordingContext = () => {
       url
     })
   }
-
+  */
+  async function startRecording() {
+    await eduSDKApi.updateRecordingState({
+      roomUuid,
+      state: 1,
+      url: appStore.params.config.recordUrl
+    })
+  }
   async function stopRecording() {
     await eduSDKApi.updateRecordingState({
       roomUuid,

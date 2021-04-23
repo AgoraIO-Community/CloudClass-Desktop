@@ -43,7 +43,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
                 overlayClassName="expand-tools-popover"
                 trigger="click"
                 content={content}
-                placement="right">
+                placement="bottom">
                 <div className="tool">
                     <Icon type="tools" />
                     <Icon type="triangle-down" className="triangle-icon"/>

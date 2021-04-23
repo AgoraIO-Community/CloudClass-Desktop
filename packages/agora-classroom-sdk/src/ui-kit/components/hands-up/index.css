@@ -24,6 +24,11 @@
     position: relative;
 }
 
+.handsupWrapper{
+    width: 103px;
+    height: 40px;
+}
+
 .student-box .student-name,
 .student-item .student-name {
     font-size: 14px;

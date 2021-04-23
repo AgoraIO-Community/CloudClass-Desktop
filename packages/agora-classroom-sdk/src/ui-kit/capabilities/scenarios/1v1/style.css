@@ -1,6 +1,6 @@
 .toolbar-position {
   position: absolute;
-  left: 15px;
+  right: 15px;
   top: 5rem;
   transition: .5s;
 }

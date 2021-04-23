@@ -55,4 +55,8 @@ yarn dev
 yarn release:classroom:sdk
 ```
 
+```
+ui开发就是yarn dev:ui-kit
+```
+
 + [Electron QuickStart](./packages/agora-electron-edu-demo/README.md)

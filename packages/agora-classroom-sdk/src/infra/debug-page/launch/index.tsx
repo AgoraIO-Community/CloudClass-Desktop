@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
+import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 
 //@ts-ignore
 window.controller = controller
@@ -34,6 +35,9 @@ export const LaunchPage = observer(() => {
         appId: `${REACT_APP_AGORA_APP_ID}`,
         sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       })
+      launchOption.rtmToken = RtmTokenBuilder.buildToken(
+        `${REACT_APP_AGORA_APP_ID}`, '04271c107fb447fdbc3b91cc469b4128',
+        launchOption.userUuid, RtmRole.Rtm_User, 0)
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {

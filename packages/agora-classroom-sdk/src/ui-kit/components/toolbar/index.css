@@ -1,23 +1,36 @@
 .toolbar {
   width: 42px;
   background-color: white;
+  right: 15px;
+  left: initial;
+  /* position: fixed; */
 }
 
 .toolbar.opened {
   box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
   border-radius: 21px;
+  position: absolute;
+  width: 400px;
+  padding: 0px 10px;
+  height: 42px;
+  border-radius: 21px 0px 0px 21px;
+  left: initial;
+  right: 15px;
+  /* position: fixed; */
 }
 
 .toolbar .menu {
   @apply flex justify-center items-center cursor-pointer;
-  margin-bottom: 18px;
+  margin-left: 18px;
 }
 
 .toolbar .menu.fold {
   width: 42px;
   height: 42px;
   box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
-  border-radius: 0px 21px 21px 0px;
+  border-radius: 21px 0px 0px 21px;
+  right: 10px;
+  position: absolute;
 }
 
 .toolbar .menu.unfold {
@@ -25,6 +38,8 @@
   height: 42px;
   box-shadow: none;
   border-radius: none;
+  position: absolute;
+  right: 0;
 }
 
 .toolbar > .tools {
@@ -32,7 +47,10 @@
 }
 
 .toolbar.opened > .tools {
-  @apply flex flex-col items-center;
+  @apply flex flex-row items-center;
+  justify-content: space-evenly;
+  width: 340px;
+  height: 100%;
 }
 
 .tool {
@@ -40,7 +58,7 @@
   height: 28px;
   width: 29px;
   line-height: 1;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   color: #7b88a0;
 }
 
