@@ -10,13 +10,6 @@ declare module '*.png';
 declare module '*.gif';
 declare module '*.jpg';
 
-declare interface SvgrComponent extends React.StatelessComponent<React.SVGAttributes<SVGElement>> {}
-declare module '*.svg' {
-  const content: SvgrComponent
-  export default content
-}
-
-
 declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
 declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
 declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;

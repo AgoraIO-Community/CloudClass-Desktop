@@ -162,7 +162,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
             </div>
             <Search
               onSearch={onChange}
-              suffix={<SearchSvg />}
+              suffix={<img src={SearchSvg} />}
               placeholder={'search的placeholder'}
             />
             {/* <input type="text" placeholder={transI18n('scaffold.search')} onChange={onChange} /> */}

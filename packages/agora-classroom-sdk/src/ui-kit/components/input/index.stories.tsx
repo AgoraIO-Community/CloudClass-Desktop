@@ -73,7 +73,7 @@ export const Docs = () => {
             <div className="mt-4">
                 <Search
                     onSearch={value => console.log(value)}
-                    suffix={<SearchSvg />}
+                    suffix={<img src={SearchSvg} />}
                     placeholder={'search的placeholder'}
                 />
             </div>
