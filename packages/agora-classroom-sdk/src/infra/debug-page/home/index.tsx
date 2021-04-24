@@ -22,6 +22,7 @@ export const HomePage = observer(() => {
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>('en')
   const [region, setRegion] = useState<AgoraRegion>('CN')
+  const [debug, setDebug] = useState<boolean>(false)
 
   const onChangeRegion = (region: string) => {
     setRegion(region as AgoraRegion)
@@ -51,7 +52,19 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const uid = `${userId}`
+  const userUuid = useMemo(() => {
+    if(!debug) {
+      return `${userName}${role}`
+    }
+    return `${userId}`
+  }, [role, userName, debug, userId])
+
+  const roomUuid = useMemo(() => {
+    if(!debug) {
+      return `${roomName}${scenario}`
+    }
+    return `${roomId}`
+  }, [scenario, roomName, debug, roomId])
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -84,6 +97,10 @@ export const HomePage = observer(() => {
     text['userName'](newValue)
   }
 
+  const onChangeDebug = (newValue: boolean) => {
+    setDebug(newValue)
+  }
+
   const history = useHistory()
 
   const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
@@ -91,14 +108,16 @@ export const HomePage = observer(() => {
   return (
     <Home
       version="1.1.0"
-      roomId={roomId}
-      userId={userId}
+      roomId={roomUuid}
+      userId={userUuid}
       roomName={roomName}
       userName={userName}
       role={userRole}
       scenario={curScenario}
       duration={duration}
       region={region}
+      debug={debug}
+      onChangeDebug={onChangeDebug}
       onChangeRegion={onChangeRegion}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
@@ -115,7 +134,7 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        let {userUuid, rtmToken} = await homeApi.login(uid)
+        let {rtmToken} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
           rtmUid: userUuid,
@@ -125,7 +144,7 @@ export const HomePage = observer(() => {
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,
-          roomUuid: `${roomId}`,
+          roomUuid: `${roomUuid}`,
           roomType: scenario,
           roomName: `${roomName}`,
           userName: userName,

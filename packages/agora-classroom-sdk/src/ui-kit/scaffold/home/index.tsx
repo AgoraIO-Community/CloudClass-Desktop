@@ -3,7 +3,7 @@ import { Button } from '~components/button'
 import { Layout } from '~components/layout'
 import { Select } from '~components/select'
 import { Col, Row, Table } from '~components/table'
-import { t } from '~components/i18n'
+import { t, transI18n } from '~components/i18n'
 import './index.css'
 import { HomeModule } from '~utilities/types'
 
@@ -17,6 +17,7 @@ export interface HomeAttributes {
   duration: number,
   language: string,
   region: string,
+  debug: boolean;
 }
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
@@ -35,6 +36,7 @@ export const Home: React.FC<HomeProps> = ({
   version,
   language,
   region,
+  debug=false,
   onChangeRole,
   onChangeScenario,
   onChangeLanguage,
@@ -44,6 +46,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeUserId,
   onChangeUserName,
   onChangeRoomName,
+  onChangeDebug,
   onClick
 }) => {
   const scenarioOptions = [
@@ -68,10 +71,11 @@ export const Home: React.FC<HomeProps> = ({
     {label: 'EU', value: 'EU'},
   ]
   return (
-    <Layout className="home-page">
+    <Layout className={debug ? "home-page debug" : "home-page"}>
       <Layout style={{boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)'}} className="facade" direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
+          {debug ? 
           <Row className="home-row-item">
             <Col>
               <label htmlFor="roomId">
@@ -79,9 +83,11 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder={t('home.roomId_placeholder')} />
+              <input id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder={transI18n('home.roomId_placeholder')} />
             </Col>
           </Row>
+          : <></>}
+          {debug ? 
           <Row className="home-row-item">
             <Col>
               <label htmlFor="userId">
@@ -89,33 +95,34 @@ export const Home: React.FC<HomeProps> = ({
               </label>
             </Col>
             <Col>
-              <input id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder={t('home.userId_placeholder')} />
+              <input id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder={transI18n('home.userId_placeholder')} />
             </Col>
           </Row>
+          : <></>}
           <Row className="home-row-item">
             <Col>
               <label htmlFor="roomName">
-                <span>{t('home.roomName')}</span>
+                <span>{transI18n('home.roomName')}</span>
               </label>
             </Col>
             <Col>
-              <input id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}  placeholder={t('home.roomName_placeholder')} />
+              <input id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}  placeholder={transI18n('home.roomName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
               <label htmlFor="userName">
-                <span>{t('home.nickName')}</span>
+                <span>{transI18n('home.nickName')}</span>
               </label>
             </Col>
             <Col>
-              <input id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)}  placeholder={t('home.nickName_placeholder')} />
+              <input id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)}  placeholder={transI18n('home.nickName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
               <label htmlFor="userName">
-                <span>{t('home.roomType')}</span>
+                <span>{transI18n('home.roomType')}</span>
               </label>
             </Col>
             <Col>
@@ -126,7 +133,7 @@ export const Home: React.FC<HomeProps> = ({
                 onChange={value => {
                   onChangeScenario(value)
                 }} 
-                placeholder={t('home.roomType_placeholder')}
+                placeholder={transI18n('home.roomType_placeholder')}
               >
               </Select>
             </Col>
@@ -134,7 +141,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <label htmlFor="role">
-                <span>{t('home.role')}</span>
+                <span>{transI18n('home.role')}</span>
               </label>
             </Col>
             <Col>
@@ -144,17 +151,18 @@ export const Home: React.FC<HomeProps> = ({
                 onChange={value => {
                   onChangeRole(value)
                 }} 
-                placeholder={t('home.role_placeholder')}
+                placeholder={transI18n('home.role_placeholder')}
                 options={roleOptions}
               >
                 
               </Select>
             </Col>
           </Row>
+          {debug ? 
           <Row className="home-row-item">
             <Col>
               <label htmlFor="language">
-                <span>{t('home.language')}</span>
+                <span>{transI18n('home.language')}</span>
               </label>
             </Col>
             <Col>
@@ -164,17 +172,19 @@ export const Home: React.FC<HomeProps> = ({
                 onChange={value => {
                   onChangeLanguage(value)
                 }} 
-                placeholder={t('home.language_placeholder')}
+                placeholder={transI18n('home.language_placeholder')}
                 options={languageOptions}
               >
                 
               </Select>
             </Col>
           </Row>
+          : <></>}
+          {debug ? 
           <Row className="home-row-item">
             <Col>
               <label htmlFor="region">
-                <span>{t('home.region')}</span>
+                <span>{transI18n('home.region')}</span>
               </label>
             </Col>
             <Col>
@@ -184,16 +194,18 @@ export const Home: React.FC<HomeProps> = ({
                 onChange={value => {
                   onChangeRegion(value)
                 }} 
-                placeholder={t('home.region_placeholder')}
+                placeholder={transI18n('home.region_placeholder')}
                 options={regionOptions}
               >
               </Select>
             </Col>
           </Row>
+          : <></>}
+          {debug ? 
           <Row className="home-row-item">
             <Col>
               <label htmlFor="duration">
-                <span>{t('home.duration')}</span>
+                <span>{transI18n('home.duration')}</span>
               </label>
             </Col>
             <Col>
@@ -201,9 +213,12 @@ export const Home: React.FC<HomeProps> = ({
               {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
             </Col>
           </Row>
-          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName)}>{t('home.enter_classroom')}</Button>
+          : <></>}
+          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario)}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
-            version: {version}
+            <div onClick={() => onChangeDebug(!debug)}>
+              version: {version}
+            </div>
           </Row>
         </Table>
       </Layout>
