@@ -14,6 +14,7 @@ export const HomePage = () => {
   const [scenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(3000)
   const [startDate, setStartDate] = useState<Date>(new Date())
+  const [debug, setDebug] = useState<boolean>(false)
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -37,6 +38,10 @@ export const HomePage = () => {
     setStartDate(date)
   }
 
+  const onChangeDebug = (debug: boolean) => {
+    setDebug(debug)
+  }
+
   return (
     <Home
       version="1.1.0"
@@ -49,6 +54,8 @@ export const HomePage = () => {
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
       onChangeStartDate={onChangeStartDate}
+      debug={debug}
+      onChangeDebug={onChangeDebug}
       onClick={() => {
         console.log('click')
       }}
