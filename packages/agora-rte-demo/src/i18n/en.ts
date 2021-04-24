@@ -344,6 +344,7 @@ const en = {
     'reward_limit': 'The maximum number of trophies in the room has been reached',
     'chat_disable': 'Turn on mute mode',
     'chat_enable': 'Turn off mute mode',
+    'not_enough_window': 'Please expand all video windows first before continue'
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {

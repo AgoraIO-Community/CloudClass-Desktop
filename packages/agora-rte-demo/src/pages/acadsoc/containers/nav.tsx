@@ -160,17 +160,26 @@ const ActionBarContainer = observer(() => {
       name: 'sos',
       clickEvent: () => {
         let windows = roomStore.minimizeView
+
+        let videoWindows = windows.filter(w => w.type !== 'chat' && !w.isHidden)
+        if(videoWindows.length < 2) {
+          // not enough window
+          uiStore.addToast(t('toast.not_enough_window'))
+          return
+        }
+
         let clientX = roomStore.rightContainerClientX
         let clientY = roomStore.rightContainerClientY
         let clientWidth = roomStore.rightContainerClientWidth
         let clientHeight = 0
-        windows.forEach(w => {if(w.type !== 'chat')clientHeight+=w.height})
-        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "highlight"})
+        videoWindows.forEach(w => clientHeight+=w.height)
+        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "highlight", rect: {x:clientX, y: clientY + 10, width: clientWidth, height: clientHeight + 10}})
       }
     },
     {
       name: 'sos',
       clickEvent: () => {
+        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "prepare"})
       }
     },
     {

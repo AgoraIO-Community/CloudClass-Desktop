@@ -330,6 +330,7 @@ const zhCN: any = {
     'reward_limit': '奖杯已全部发完',
     'chat_disable': '禁言模式开启',
     'chat_enable': '禁言模式关闭',
+    'not_enough_window': '请先打开所有折叠的视频窗口'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
