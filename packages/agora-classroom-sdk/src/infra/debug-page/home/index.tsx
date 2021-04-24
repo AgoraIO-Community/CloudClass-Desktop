@@ -107,7 +107,7 @@ export const HomePage = observer(() => {
 
   return (
     <Home
-      version="1.1.0"
+      version={REACT_APP_BUILD_VERSION}
       roomId={roomUuid}
       userId={userUuid}
       roomName={roomName}
