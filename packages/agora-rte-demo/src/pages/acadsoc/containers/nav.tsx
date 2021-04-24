@@ -159,6 +159,23 @@ const ActionBarContainer = observer(() => {
     {
       name: 'sos',
       clickEvent: () => {
+        let windows = roomStore.minimizeView
+        let clientX = roomStore.rightContainerClientX
+        let clientY = roomStore.rightContainerClientY
+        let clientWidth = roomStore.rightContainerClientWidth
+        let clientHeight = 0
+        windows.forEach(w => {if(w.type !== 'chat')clientHeight+=w.height})
+        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "highlight"})
+      }
+    },
+    {
+      name: 'sos',
+      clickEvent: () => {
+      }
+    },
+    {
+      name: 'sos',
+      clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
         controller.appController.uploadLog()
           .then(console.log)

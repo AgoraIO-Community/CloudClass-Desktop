@@ -17,10 +17,18 @@ export const RightContainer = observer(() => {
   useEffect(() => {
     const onResize = () => {
       let t = rightContainerRef.current ? rightContainerRef.current.clientHeight : 0
+      let rect = rightContainerRef.current ? rightContainerRef.current.getBoundingClientRect() : {}
+      let left = rect.x || 0
+      let top = rect.y || 0
+      let width = rect.width || 0
       setRightContainerHeight(t)
       acadsocStore.windowWidth = window.innerWidth
       acadsocStore.windowHeight = window.innerHeight
       acadsocStore.rightContainerHeight = t
+      acadsocStore.rightContainerClientX = left
+      acadsocStore.rightContainerClientY = top
+      acadsocStore.rightContainerClientWidth = width
+
     }
     window.addEventListener('resize', onResize)
     onResize()
