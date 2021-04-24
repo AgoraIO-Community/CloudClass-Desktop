@@ -18,6 +18,7 @@ export interface IControlButtonProps {
   icon?: ControlButtonIcon,
   iconStyle?: CSSProperties,
   styles?: CSSProperties,
+  count?: number,
   onClick?: () => any
 }
 
@@ -28,6 +29,12 @@ export interface IExitButton {
 }
 
 const buttonsMap = {
+  'highlight': (props: any) => (
+    <div>
+      <CustomizeIconBtn icon={sos} style={{ ...defaultStyle, ...props.style }}></CustomizeIconBtn>
+      <div style={{position:"absolute", fontSize:13, right:0, bottom:0}}>{props.count}</div>
+    </div>
+  ),
   'sos': (props: any) => <CustomizeIconBtn icon={sos} style={{ ...defaultStyle, ...props.style }} />,
   'customerService': (props: any) => <CustomizeIconBtn icon={customerService} style={{ ...defaultStyle, ...props.style }} />,
   'equipmentDetection': (props: any) => <CustomizeIconBtn icon={equipmentDetection} style={{ ...defaultStyle, ...props.style }} />,
@@ -38,7 +45,7 @@ const buttonsMap = {
 
 }
 
-export const NavigationControlButton = ({ icon, iconStyle, onClick,styles }: IControlButtonProps) => {
+export const NavigationControlButton = ({ icon, iconStyle, onClick,styles, count }: IControlButtonProps) => {
   const ControlIconButton = icon && buttonsMap[icon]
   return (
     <IconButton disableRipple component="div" style={{
@@ -50,7 +57,7 @@ export const NavigationControlButton = ({ icon, iconStyle, onClick,styles }: ICo
       ...styles
     }} onClick={onClick}
     >
-      <ControlIconButton style={{ ...defaultStyle, ...iconStyle }} />
+      <ControlIconButton count={count} style={{ ...defaultStyle, ...iconStyle }} />
     </IconButton >
   )
 }

@@ -157,7 +157,8 @@ const ActionBarContainer = observer(() => {
 
   const menuBars = [
     {
-      name: 'sos',
+      name: 'highlight',
+      count: 50,
       clickEvent: () => {
         let windows = roomStore.minimizeView
 

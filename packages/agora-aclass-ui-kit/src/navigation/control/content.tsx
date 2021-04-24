@@ -33,6 +33,7 @@ export const StartView = (props: { text: any, isEnd: any}) => {
 }
 interface IActionItem {
   name: string,
+  count?: number,
   clickEvent?: () => any
 }
 interface IActionButtons {
@@ -44,7 +45,7 @@ export const ActionButtons = (props: IActionButtons) => {
   return (
     <>
       {props.buttonArr.map((item: IActionItem) => {
-        return <NavigationControlButton icon={item.name} key={item.name} onClick={item.clickEvent} />
+        return <NavigationControlButton count={item.count} icon={item.name} key={item.name} onClick={item.clickEvent} />
       })}
     </>)
 }
