@@ -47,7 +47,6 @@ export const VideoPlayerTeacher = observer(() => {
       {
 
         <>
-          <CameraPlaceHolder state={userStream.holderState} />
           {
             userStream.renderer && userStream.video ?
             <RendererPlayer
@@ -55,6 +54,7 @@ export const VideoPlayerTeacher = observer(() => {
             />
             : null
           }
+          <CameraPlaceHolder state={userStream.holderState} />
         </>
       }
     </VideoPlayer>)
@@ -97,7 +97,6 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
     >
       {
         <>
-          <CameraPlaceHolder state={userStream.holderState} />
           {
             userStream.renderer && userStream.video ?
             <RendererPlayer
@@ -105,6 +104,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
             />
             : null
           }
+          <CameraPlaceHolder state={userStream.holderState} />
         </>
       }
     </VideoPlayer>
@@ -143,7 +143,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
       hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (
         <>
-        <CameraPlaceHolder state={stream.holderState} />
         {
           stream.renderer && stream.video ?
           <RendererPlayer
@@ -151,6 +150,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
           />
           : null
         }
+        <CameraPlaceHolder state={stream.holderState} />
         </>
       )
       }))
