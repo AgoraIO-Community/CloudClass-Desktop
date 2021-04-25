@@ -1080,21 +1080,21 @@ export class SceneStore extends SimpleInterval {
   }
 
   getLocalPlaceHolderProps() {
-    if (this.openingCamera === true) {
-      return {
-        holderState: 'loading',
-        text: 'placeholder.openingCamera'
-      }
-    }
+    // if (this.openingCamera === true) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: 'placeholder.openingCamera'
+    //   }
+    // }
 
-    if (this.closingCamera === true) {
-      return {
-        holderState: 'closedCamera',
-        text: 'placeholder.closingCamera'
-      }
-    }
+    // if (this.closingCamera === true) {
+    //   return {
+    //     holderState: 'closedCamera',
+    //     text: 'placeholder.closingCamera'
+    //   }
+    // }
 
-    if (!this.cameraEduStream) {
+    if (!this.cameraEduStream || this.openingCamera || this.closingCamera) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
@@ -1131,7 +1131,6 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
-  @action.bound
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
     const stream = this.getStreamBy(userUuid)
 
@@ -1197,9 +1196,13 @@ export class SceneStore extends SimpleInterval {
       const freezeCount = this.cameraRenderer?.freezeCount || 0
       return freezeCount < 3
     } else {
-      const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
-      if(render) {
-        return render.renderFrameRate > 0
+      // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
+      // if(render) {
+      //   return render.renderFrameRate > 0
+      // }
+      const stats = this.appStore.mediaStore.remoteVideoStats.get(`${uid}`)
+      if(stats){
+        return stats.renderFrameRate > 0
       }
       return false
     }

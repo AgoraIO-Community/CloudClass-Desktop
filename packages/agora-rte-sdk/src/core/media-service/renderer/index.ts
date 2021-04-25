@@ -103,6 +103,9 @@ export class LocalUserRenderer extends UserRenderer {
         }
       }
     }
+    if(fps > 0) {
+      this.renderState = LocalVideoRenderState.Playing
+    }
   }
 
   play(dom: HTMLElement, fit?: boolean): void {
@@ -190,6 +193,9 @@ export class RemoteUserRenderer extends UserRenderer {
           this.renderState = RemoteVideoRenderState.Failed
         }
       }
+    }
+    if(fps > 0) {
+      this.renderState = RemoteVideoRenderState.Playing
     }
   }
 
