@@ -343,6 +343,10 @@ export type NetlessMediaFile = {
 }
 
 export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
+
+
+  console.log("video file", file.url)
+
   room.insertPlugin(
     'video',
     {
@@ -351,7 +355,7 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          url: file.url
+          pluginVideoUrl: file.url
           // isNavigationDisable: false
       }
     }
@@ -359,6 +363,9 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
 }
 
 export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
+
+  console.log("audio file", file.url)
+
   room.insertPlugin(
     'audio',
     {
@@ -367,7 +374,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          url: file.url
+        pluginAudioUrl: file.url
           // isNavigationDisable: false
       }
     }

@@ -2842,15 +2842,15 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/white-audio-plugin@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-2.0.3.tgz#f5edb6f8d32ece49ac023bcf6bc01458db50aca8"
-  integrity sha1-9e22+NMuzkmsAjvPa8AUWNtQrKg=
+"@netless/white-audio-plugin@1.2.21":
+  version "1.2.21"
+  resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.21.tgz#8a9b4e6a8a4f7094ac576e55a3480f67436c09f4"
+  integrity sha1-iptOaopPcJSsV25Vo0gPZ0NsCfQ=
 
-"@netless/white-video-plugin@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-2.0.3.tgz#7502979430dd28a8982b8d630e2b1b457a8a1074"
-  integrity sha1-dQKXlDDdKKiYK41jDisbRXqKEHQ=
+"@netless/white-video-plugin@1.2.21":
+  version "1.2.21"
+  resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.21.tgz#facd980e268d8471c60f8adc04d8a2728b05ca85"
+  integrity sha1-+s2YDiaNhHHGD4rcBNiicosFyoU=
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -3309,7 +3309,7 @@
 
 "@snyk/fix@1.554.0":
   version "1.554.0"
-  resolved "https://registry.nlark.com/@snyk/fix/download/@snyk/fix-1.554.0.tgz#7ae786882e0ffea5e7f10d0b41e3d593b65555c4"
+  resolved "https://registry.nlark.com/@snyk/fix/download/@snyk/fix-1.554.0.tgz?cache=0&sync_timestamp=1619351480922&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40snyk%2Ffix%2Fdownload%2F%40snyk%2Ffix-1.554.0.tgz#7ae786882e0ffea5e7f10d0b41e3d593b65555c4"
   integrity sha1-eueGiC4P/qXn8Q0LQePVk7ZVVcQ=
   dependencies:
     "@snyk/dep-graph" "^1.21.0"
@@ -8995,7 +8995,7 @@ debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.2.0, debug@^4.3.1:
   dependencies:
     ms "2.1.2"
 
-debug@^3.0.0, debug@^3.0.1, debug@^3.1.0, debug@^3.1.1, debug@^3.2.5, debug@^3.2.6:
+debug@^3.0.0, debug@^3.1.0, debug@^3.1.1, debug@^3.2.5, debug@^3.2.6:
   version "3.2.7"
   resolved "https://registry.npm.taobao.org/debug/download/debug-3.2.7.tgz?cache=0&sync_timestamp=1607566580543&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdebug%2Fdownload%2Fdebug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
   integrity sha1-clgLfpFF+zm2Z2+cXl+xALk0F5o=
@@ -11121,7 +11121,7 @@ forever-agent@~0.6.1:
 
 fork-ts-checker-webpack-plugin@4.1.6, fork-ts-checker-webpack-plugin@^4.1.6:
   version "4.1.6"
-  resolved "https://registry.nlark.com/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-4.1.6.tgz?cache=0&sync_timestamp=1619039754988&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffork-ts-checker-webpack-plugin%2Fdownload%2Ffork-ts-checker-webpack-plugin-4.1.6.tgz#5055c703febcf37fa06405d400c122b905167fc5"
+  resolved "https://registry.nlark.com/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-4.1.6.tgz#5055c703febcf37fa06405d400c122b905167fc5"
   integrity sha1-UFXHA/6883+gZAXUAMEiuQUWf8U=
   dependencies:
     "@babel/code-frame" "^7.5.5"
@@ -11133,9 +11133,9 @@ fork-ts-checker-webpack-plugin@4.1.6, fork-ts-checker-webpack-plugin@^4.1.6:
     worker-rpc "^0.1.0"
 
 fork-ts-checker-webpack-plugin@^6.0.4:
-  version "6.2.4"
-  resolved "https://registry.nlark.com/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-6.2.4.tgz?cache=0&sync_timestamp=1619039754988&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffork-ts-checker-webpack-plugin%2Fdownload%2Ffork-ts-checker-webpack-plugin-6.2.4.tgz#f46dc0700820476f260451518b9d545c42277aff"
-  integrity sha1-9G3AcAggR28mBFFRi51UXEInev8=
+  version "6.2.5"
+  resolved "https://registry.nlark.com/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-6.2.5.tgz#09e81ad57ed862c9dd093298550e7f6966ab1a2f"
+  integrity sha1-Cega1X7YYsndCTKYVQ5/aWarGi8=
   dependencies:
     "@babel/code-frame" "^7.8.3"
     "@types/json-schema" "^7.0.5"
@@ -12166,15 +12166,6 @@ hastscript@^6.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-hcl-to-json@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.npm.taobao.org/hcl-to-json/download/hcl-to-json-0.1.1.tgz#39674aa2a5a4d2b4c2b6762c8196af4af4f12903"
-  integrity sha1-OWdKoqWk0rTCtnYsgZavSvTxKQM=
-  dependencies:
-    debug "^3.0.1"
-    lodash.get "^4.4.2"
-    lodash.set "^4.3.2"
-
 he@^1.2.0:
   version "1.2.0"
   resolved "https://registry.nlark.com/he/download/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
@@ -12605,7 +12596,7 @@ immediate@~3.0.5:
 
 immer@8.0.1:
   version "8.0.1"
-  resolved "https://registry.npm.taobao.org/immer/download/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
+  resolved "https://registry.nlark.com/immer/download/immer-8.0.1.tgz?cache=0&sync_timestamp=1619363097132&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fimmer%2Fdownload%2Fimmer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
   integrity sha1-nHPbaD4rOXXEJPsFcq9YiYd65lY=
 
 immutable@4.0.0-rc.12:
@@ -13463,7 +13454,7 @@ is-wsl@^2.1.1, is-wsl@^2.2.0:
 
 is-yarn-global@^0.3.0:
   version "0.3.0"
-  resolved "https://registry.npm.taobao.org/is-yarn-global/download/is-yarn-global-0.3.0.tgz#d502d3382590ea3004893746754c89139973e232"
+  resolved "https://registry.nlark.com/is-yarn-global/download/is-yarn-global-0.3.0.tgz#d502d3382590ea3004893746754c89139973e232"
   integrity sha1-1QLTOCWQ6jAEiTdGdUyJE5lz4jI=
 
 is@^3.2.1:
@@ -14068,7 +14059,7 @@ js-string-escape@^1.0.1:
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  resolved "https://registry.nlark.com/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha1-GSA/tZmR35jjoocFDUZHzerzJJk=
 
 js-yaml@^3.10.0, js-yaml@^3.13.1:
@@ -15328,7 +15319,7 @@ mdast-util-definitions@^4.0.0:
 
 mdast-util-to-hast@10.0.1:
   version "10.0.1"
-  resolved "https://registry.npm.taobao.org/mdast-util-to-hast/download/mdast-util-to-hast-10.0.1.tgz#0cfc82089494c52d46eb0e3edb7a4eb2aea021eb"
+  resolved "https://registry.nlark.com/mdast-util-to-hast/download/mdast-util-to-hast-10.0.1.tgz?cache=0&sync_timestamp=1619346870152&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmdast-util-to-hast%2Fdownload%2Fmdast-util-to-hast-10.0.1.tgz#0cfc82089494c52d46eb0e3edb7a4eb2aea021eb"
   integrity sha1-DPyCCJSUxS1G6w4+23pOsq6gIes=
   dependencies:
     "@types/mdast" "^3.0.0"
@@ -18868,9 +18859,9 @@ react-app-rewired@2.1.8:
     semver "^5.6.0"
 
 react-colorful@^5.0.1:
-  version "5.1.3"
-  resolved "https://registry.nlark.com/react-colorful/download/react-colorful-5.1.3.tgz#67aaff52185c3e5aff5c17a16a4e66b27c99bdeb"
-  integrity sha1-Z6r/UhhcPlr/XBehak5msnyZves=
+  version "5.1.4"
+  resolved "https://registry.nlark.com/react-colorful/download/react-colorful-5.1.4.tgz?cache=0&sync_timestamp=1619336946218&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-colorful%2Fdownload%2Freact-colorful-5.1.4.tgz#7391568db7c0a4163436bfb076e5da8ef394e87c"
+  integrity sha1-c5FWjbfApBY0Nr+wduXajvOU6Hw=
 
 react-datepicker@3.6.0:
   version "3.6.0"
@@ -21016,9 +21007,9 @@ snyk-try-require@^2.0.0:
     lru-cache "^5.1.1"
 
 snyk@^1.231.0:
-  version "1.563.0"
-  resolved "https://registry.nlark.com/snyk/download/snyk-1.563.0.tgz#e75341b68751f6ad37f97b9e3f06145d20056870"
-  integrity sha1-51NBtodR9q03+XuePwYUXSAFaHA=
+  version "1.564.0"
+  resolved "https://registry.nlark.com/snyk/download/snyk-1.564.0.tgz#c8c511128351f8b8fe239b010b6799f40bb659c5"
+  integrity sha1-yMUREoNR+Lj+I5sBC2eZ9Au2WcU=
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -21039,7 +21030,6 @@ snyk@^1.231.0:
     debug "^4.1.1"
     diff "^4.0.1"
     global-agent "^2.1.12"
-    hcl-to-json "^0.1.1"
     lodash.assign "^4.2.0"
     lodash.camelcase "^4.3.0"
     lodash.clonedeep "^4.5.0"
@@ -22795,7 +22785,7 @@ typedoc@0.19.2:
 
 typescript@4.2.3:
   version "4.2.3"
-  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1619248856008&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
+  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1619335470640&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
   integrity sha1-OQYtgBmRLUNyYpjwlJPVmASMHOM=
 
 ua-parser-js@0.7.22:
