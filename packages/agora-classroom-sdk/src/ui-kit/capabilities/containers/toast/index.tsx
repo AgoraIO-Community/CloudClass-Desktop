@@ -46,7 +46,17 @@ export const ToastContainer = observer(() => {
     'private_media_chat.chat_ended': (props: any) => toast('private_media_chat.chat_ended', props),
     'co_video.received_student_cancel': (props: any) => toast('co_video.received_student_cancel', props),
     'co_video.received_teacher_refused': (props: any) => toast('co_video.received_teacher_refused', props),
-    'co_video.received_student_hands_up': (props: any) => toast('co_video.received_student_hands_up', props)
+    'co_video.received_student_hands_up': (props: any) => toast('co_video.received_student_hands_up', props),
+    'co_video.remote_close_camera': (props: any) => toast('co_video.remote_close_camera', props),
+    'co_video.remote_open_camera': (props: any) => toast('co_video.remote_open_camera', props),
+    'co_video.remote_open_microphone': (props: any) => toast('co_video.remote_open_microphone', props),
+    'co_video.remote_grant_board': (props: any) => toast('co_video.remote_grant_board', props),
+    'co_video.remote_close_microphone': (props: any) => toast('co_video.remote_close_microphone', props),
+    'co_video.remote_revoke_board': (props: any) => toast('co_video.remote_revoke_board', props),
+    'co_video.received_teacher_accepted': (props: any) => toast('co_video.received_teacher_accepted', props),
+    'co_video.received_message_timeout': (props: any) => toast('co_video.received_message_timeout', props),
+    'co_video.hands_up_requsted': (props: any) => toast('co_video.hands_up_requsted', props),
+    'co_video.hands_up_cancelled': (props: any) => toast('co_video.hands_up_cancelled', props)
   }
   
 

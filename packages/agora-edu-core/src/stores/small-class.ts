@@ -1,3 +1,4 @@
+import { EduSceneType } from 'agora-rte-sdk';
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -233,8 +234,21 @@ export class SmallClassStore {
 
   @computed
   get studentsMap() {
-    const studentsMap = get(this.roomStore, 'roomProperties.students', {})
-    return studentsMap
+    if (this.roomInfo.roomType === EduSceneType.SceneLarge) {
+      const map = {}
+      return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
+        acc[user.userUuid] = {
+          uid: user.userUuid,
+          name: user.userName,
+          role: user.role,
+          userProperties: user.userProperties
+        }
+        return acc;
+      }, map)
+    } else {
+      const studentsMap = get(this.roomStore, 'roomProperties.students', {})
+      return studentsMap
+    }
   }
 
   @action.bound
