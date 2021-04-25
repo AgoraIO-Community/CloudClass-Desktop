@@ -1080,21 +1080,21 @@ export class SceneStore extends SimpleInterval {
   }
 
   getLocalPlaceHolderProps() {
-    if (this.openingCamera === true) {
-      return {
-        holderState: 'loading',
-        text: 'placeholder.openingCamera'
-      }
-    }
+    // if (this.openingCamera === true) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: 'placeholder.openingCamera'
+    //   }
+    // }
 
-    if (this.closingCamera === true) {
-      return {
-        holderState: 'closedCamera',
-        text: 'placeholder.closingCamera'
-      }
-    }
+    // if (this.closingCamera === true) {
+    //   return {
+    //     holderState: 'closedCamera',
+    //     text: 'placeholder.closingCamera'
+    //   }
+    // }
 
-    if (!this.cameraEduStream) {
+    if (!this.cameraEduStream || this.openingCamera || this.closingCamera) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
