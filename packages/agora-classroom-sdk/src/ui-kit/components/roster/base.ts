@@ -1,7 +1,7 @@
 import { IconTypes } from "../icon/icon-types"
 import { Profile } from '~components/roster';
 import { StudentRosterProfile } from '~components/roster/user-list'
-const pinyin = require("pinyin");
+const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 
@@ -62,9 +62,7 @@ export const getMicrophoneState = (profile: any, canOperate: boolean) => {
 const shfitPinyin = (str: string) => {
   const pattern = new RegExp("[\u4E00-\u9FA5]+") 
   if(pattern.test(str)) {
-    return pinyin(str, {
-      style: pinyin.STYLE_NORMAL, // 不带声调
-    })
+    return pinyinlite(str)
   }
   return str
 }
