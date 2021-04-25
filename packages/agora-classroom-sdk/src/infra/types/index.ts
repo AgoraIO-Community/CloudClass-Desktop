@@ -19,7 +19,8 @@ export enum BizPageRouter {
   LaunchPage = 'launch',
   PretestPage = 'pretest',
   TestHomePage = 'test_home',
-  Incognito = "Incognito"
+  Incognito = "Incognito",
+  TestRecordPage = "test_record"
 }
 
 export enum BizPagePath {

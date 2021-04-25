@@ -140,6 +140,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
       canHoverHideOffAllPodium: true,
+      hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (
         <>
         <CameraPlaceHolder state={stream.holderState} />

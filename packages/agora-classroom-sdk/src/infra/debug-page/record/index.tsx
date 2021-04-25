@@ -1,19 +1,19 @@
 import { AgoraEduSDK, AgoraEduEvent} from '../../api'
 import {ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
-import { useHomeStore } from '@/infra/hooks'
+import { useAudienceParams, useHomeStore } from '@/infra/hooks'
 import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom'
-import {generatePath} from 'react-router'
+import { useHistory, useParams } from 'react-router-dom'
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
+import { EduRoomTypeEnum } from 'agora-rte-sdk'
 
 //@ts-ignore
-window.controller = controller
+window.recordController = controller
 
-export const LaunchPage = observer(() => {
+export const RecordPage = observer(() => {
 
   const homeStore = useHomeStore()
 
@@ -23,17 +23,30 @@ export const LaunchPage = observer(() => {
 
   const roomRef = useRef<ClassRoom<ClassRoomAbstractStore> | null>(null)
 
-  useEffect(() => {
-    if (!launchOption || isEmpty(launchOption)) {
-      history.push('/')
-      return 
-    }
-  }, [])
+  const params = useAudienceParams() as any
+
+  console.log('record ', params)
+
+  const {
+    userUuid,
+    userName,
+    roomUuid,
+    roleType,
+    roomName,
+    roomType,
+    rtmToken,
+    language,
+    startTime,
+    duration,
+    appId,
+    recordUrl,
+    translateLanguage
+  } = params
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
       AgoraEduSDK.config({
-        appId: `${REACT_APP_AGORA_APP_ID}`,
+        appId: `${appId}`,
         sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       })
 
@@ -50,10 +63,24 @@ export const LaunchPage = observer(() => {
         )
       }
 
+      console.log('recordUrl')
+
       // launchOption.extApps = [new AgoraExtAppCountDown(), new AgoraExtAppWhiteboard()]
       roomRef.current = await AgoraEduSDK.launch(dom, {
-        ...launchOption,
-        recordUrl: `${window.location.href}record`,
+        // ...launchOption,
+        userUuid,
+        userName,
+        roomUuid,
+        roleType,
+        roomName,
+        roomType: roomType as EduRoomTypeEnum,
+        courseWareList: [],
+        rtmToken,
+        language,
+        startTime,
+        duration,
+        recordUrl,
+        pretest: false,
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)

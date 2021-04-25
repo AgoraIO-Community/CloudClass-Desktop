@@ -882,7 +882,10 @@ export class BoardStore extends ZoomController {
       floatBar: true,
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
-      disableNewPencil: false
+      disableNewPencil: false,
+      pptParams: {
+        useServerWrap: true
+      }
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {

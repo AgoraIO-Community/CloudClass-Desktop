@@ -1274,6 +1274,7 @@ export class SceneStore extends SimpleInterval {
       hideOffPodium: [EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType) ? false : true,
       hideOffAllPodium: roomType === EduRoomType.SceneTypeMiddleClass ? false : true,
       isHost: isHost,
+      hideBoardGranted: [EduRoomType.SceneTypeBigClass].includes(roomType) ? true : false,
     }
 
     return config
@@ -1717,6 +1718,7 @@ export class SceneStore extends SimpleInterval {
     try {
       await eduSDKApi.updateRecordingState({
         roomUuid: this.roomUuid,
+        url: this.appStore.params.config.recordUrl,
         state: 1
       })
       // let {recordId} = await this.recordService.startRecording(this.roomUuid)

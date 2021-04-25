@@ -11,6 +11,7 @@ const routes: BizPageRouter[] = [
   BizPageRouter.MidClass,
   BizPageRouter.SmallClassIncognito,
   BizPageRouter.TestHomePage,
+  BizPageRouter.TestRecordPage,
 ]
 
 type AppType = {

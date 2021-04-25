@@ -10,6 +10,7 @@ declare module '*.png';
 declare module '*.gif';
 declare module '*.jpg';
 
+declare const REACT_APP_AGORA_APP_RECORD_URL: string;
 declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
 declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
 declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;
