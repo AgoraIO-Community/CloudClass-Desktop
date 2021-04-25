@@ -1,5 +1,6 @@
 import { IconTypes } from "../icon/icon-types"
 import { Profile } from '~components/roster';
+import { StudentRosterProfile } from '~components/roster/user-list'
 const pinyin = require("pinyin");
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
@@ -68,54 +69,32 @@ const shfitPinyin = (str: string) => {
   return str
 }
 
-const listSort = (list: Array<Profile>) => {
-  list.sort(function(a, b) {
-    const nameA = a.name
-    const nameB = b.name
-    if (nameA < nameB) {
-      return -1
-    }
-    if (nameA > nameB) {
-      return 1
-    }
-    return 0
-  })
-}
-
 export const studentListSort = (list: Array<Profile>) => {
   if(list.length === 0) {
     return
   }
-  // 台上学生 台下学生 
-  const onStage: Array<Profile> = list.filter((item: Profile) => item.onPodium)
-  const offStage: Array<Profile> = list.filter((item: Profile) => !item.onPodium)
-
-  // 首字符为数字过滤
-  let onStageNum: Array<Profile> = onStage.filter((item: any) => {
-    let character: string = item.name.slice(0, 1)
-    return '0123456789'.includes(character)
+  // 对数组进行浅拷贝，并将名字中所有中文名转拼音 等待排序
+  const students = list.map((item: Profile) => {
+    return {
+      ...item,
+      name: shfitPinyin(item.name)
+    }
   })
-  listSort(onStageNum)
-
-  let onStageOther: Array<Profile> = onStage.filter((item: any) => {
-    let character: string = item.name.slice(0, 1)
-    return !'0123456789'.includes(character)
+  const isNumber = (str: string) => {
+    return '0123456789'.includes(str)
+  }
+  students.sort((current: Profile, next: Profile) => {
+    // 上台的在前面
+    if(current.onPodium !== next.onPodium) {
+      return current.onPodium? -1 : 1
+    }
+    // 首字符是否为数字
+    const currentFirst = current.name[0]
+    const nextFirst = next.name[0]
+    if(isNumber(currentFirst) !== isNumber(nextFirst)) {
+      return !isNumber(currentFirst)? -1 : 1
+    }
+    return current.name < next.name ? -1 : 1
   })
-  onStageOther.forEach((e: Profile) => shfitPinyin(e.name))
-  listSort(onStageOther)
-
-  let offStageNum: Array<Profile> = offStage.filter((item: any) => {
-    let character: string = item.name.slice(0, 1)
-    return '0123456789'.includes(character)
-  })
-  listSort(offStageNum)
-
-  let offStageOther: Array<Profile> = offStage.filter((item: any) => {
-    let character: string = item.name.slice(0, 1)
-    return !'0123456789'.includes(character)
-  })
-  offStageOther.forEach((e: Profile) => shfitPinyin(e.name))
-  listSort(offStageOther)
-
-  return onStageOther.concat(onStageNum, offStageOther, offStageNum)
+  return students
 }
