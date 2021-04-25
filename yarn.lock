@@ -18999,7 +18999,7 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
-react-dom@17.0.0, react-dom@^16.8.0:
+react-dom@17.0.0:
   version "17.0.0"
   resolved "https://registry.nlark.com/react-dom/download/react-dom-17.0.0.tgz?cache=0&sync_timestamp=1619108528327&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-dom%2Fdownload%2Freact-dom-17.0.0.tgz#f8266e4d9861584553ccbd186d596a1c7dd8dcb4"
   integrity sha1-+CZuTZhhWEVTzL0YbVlqHH3Y3LQ=
@@ -19007,6 +19007,16 @@ react-dom@17.0.0, react-dom@^16.8.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.0"
+
+react-dom@^16.8.0:
+  version "16.14.0"
+  resolved "https://registry.nlark.com/react-dom/download/react-dom-16.14.0.tgz?cache=0&sync_timestamp=1619195784384&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-dom%2Fdownload%2Freact-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
+  integrity sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.1"
 
 react-draggable@4.4.3, react-draggable@^4.4.3:
   version "4.4.3"
@@ -19306,13 +19316,22 @@ react-use@13.24.0:
     ts-easing "^0.2.0"
     tslib "^1.10.0"
 
-react@17.0.0, react@^16.13.1, react@^16.8.0:
+react@17.0.0:
   version "17.0.0"
   resolved "https://registry.nlark.com/react/download/react-17.0.0.tgz?cache=0&sync_timestamp=1619108526958&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact%2Fdownload%2Freact-17.0.0.tgz#ad96d5fa1a33bb9b06d0cc52672f7992d84aa662"
   integrity sha1-rZbV+hozu5sG0MxSZy95kthKpmI=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+react@^16.13.1, react@^16.8.0:
+  version "16.14.0"
+  resolved "https://registry.nlark.com/react/download/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -20336,6 +20355,14 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
+scheduler@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.nlark.com/scheduler/download/scheduler-0.19.1.tgz?cache=0&sync_timestamp=1619195236551&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fscheduler%2Fdownload%2Fscheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
+  integrity sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
 scheduler@^0.20.0:
   version "0.20.2"
   resolved "https://registry.nlark.com/scheduler/download/scheduler-0.20.2.tgz?cache=0&sync_timestamp=1619108746554&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fscheduler%2Fdownload%2Fscheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
@@ -20658,7 +20685,7 @@ shellwords@^0.1.1:
   resolved "https://registry.npm.taobao.org/shellwords/download/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha1-1rkYHBpI05cyTISHHvvPxz/AZUs=
 
-short-uuid@^4.1.0:
+short-uuid@4.1.0:
   version "4.1.0"
   resolved "https://registry.npm.taobao.org/short-uuid/download/short-uuid-4.1.0.tgz#c959f46101b4278e2589d5c85b4c35a385b51764"
   integrity sha1-yVn0YQG0J44lidXIW0w1o4W1F2Q=
