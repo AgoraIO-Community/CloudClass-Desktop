@@ -112,7 +112,6 @@ export const Roster: FC<RosterProps> = ({
   const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
     return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
-  console.warn(role, localUserUuid, dataSource,"gggkkkk")
 
   return (
     <DraggableContainer>
