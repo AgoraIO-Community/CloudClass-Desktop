@@ -45,13 +45,17 @@ export const VideoPlayerTeacher = observer(() => {
       userType={'teacher'}
     >
       {
-        userStream.renderer && userStream.video ?
-        <RendererPlayer
-          key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-        />
-        : (
-          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
-        )
+
+        <>
+          <CameraPlaceHolder state={userStream.holderState} />
+          {
+            userStream.renderer && userStream.video ?
+            <RendererPlayer
+              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+            />
+            : null
+          }
+        </>
       }
     </VideoPlayer>)
 })
@@ -92,13 +96,16 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       placement={controlPlacement}
     >
       {
-        userStream.renderer && userStream.video ?
-        <RendererPlayer
-          key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-        />
-        : (
-          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
-        )
+        <>
+          <CameraPlaceHolder state={userStream.holderState} />
+          {
+            userStream.renderer && userStream.video ?
+            <RendererPlayer
+              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+            />
+            : null
+          }
+        </>
       }
     </VideoPlayer>
   )

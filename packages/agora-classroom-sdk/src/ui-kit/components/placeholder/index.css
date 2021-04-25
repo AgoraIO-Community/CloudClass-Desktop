@@ -11,10 +11,10 @@
 
 .camera-placeholder {
   overflow: hidden;
-  border-radius: 4px;
   position: relative;
   height: 100%;
   width: 100%;
+  z-index: 1;
 }
 
 .camera-placeholder.camera-loading-placeholder::before {
