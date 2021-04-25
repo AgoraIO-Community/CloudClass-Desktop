@@ -685,12 +685,6 @@ export class RoomStore extends SimpleInterval {
               )
             }
           })
-          if (dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
-            this.appStore.uiStore.fireToast(
-              'toast.class_is_end', {
-              reason: ((this.classroomSchedule.closeDelay || 0) * 1000)
-            })
-          }
           break;
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间
@@ -1374,9 +1368,16 @@ export class RoomStore extends SimpleInterval {
       })
       // this.appStore.uiStore.addDialog(RoomEndNotice)
     } else if (state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.fireToast('toast.class_is_end',{
-        reason: this.classroomSchedule ? this.classroomSchedule.closeDelay*1000 - this.classTimeDuration : 0
-      });
+      if(this.classroomSchedule) {
+        // classroomSchedule must already exists
+        let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration
+        if(durationToClose > 0) {
+          // durationToClose > 0 means not yet closed
+          this.appStore.uiStore.fireToast('toast.class_is_end',{
+            reason: durationToClose
+          });
+        }
+      }
     }
   }
 
