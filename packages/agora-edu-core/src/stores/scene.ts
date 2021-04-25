@@ -1131,7 +1131,6 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
-  @action.bound
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
     const stream = this.getStreamBy(userUuid)
 
@@ -1197,9 +1196,13 @@ export class SceneStore extends SimpleInterval {
       const freezeCount = this.cameraRenderer?.freezeCount || 0
       return freezeCount < 3
     } else {
-      const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
-      if(render) {
-        return render.renderFrameRate > 0
+      // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
+      // if(render) {
+      //   return render.renderFrameRate > 0
+      // }
+      const stats = this.appStore.mediaStore.remoteVideoStats.get(`${uid}`)
+      if(stats){
+        return stats.renderFrameRate > 0
       }
       return false
     }

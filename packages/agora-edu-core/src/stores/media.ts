@@ -72,6 +72,9 @@ export class MediaStore {
   remoteUsersRenderer: any[] = []
 
   @observable
+  remoteVideoStats: Map<string, any> = new Map<string, any>()
+
+  @observable
   signalStatus: any[] = []
 
   get mediaService() {
@@ -318,6 +321,9 @@ export class MediaStore {
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
+      let {stats = {}, user = {}} = evt
+      let {uid} = user
+      this.remoteVideoStats.set(`${uid}`, stats)
     })
 
     reaction(() => JSON.stringify([
