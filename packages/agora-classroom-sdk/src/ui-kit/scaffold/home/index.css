@@ -64,6 +64,7 @@
 .home-form input{
   height: 100%;
   background-color: #F9F9FC;
+  padding-left: 10px;
 }
 .home-form .select {
   flex: 1;

@@ -298,7 +298,7 @@ export const useBoardContext = () => {
     handleUpload,
     publicResources,
     revokeBoardPermission,
-    grantBoardPermission
+    grantBoardPermission,
   } = useBoardStore()
 
   const {
@@ -358,7 +358,7 @@ export const useBoardContext = () => {
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
-    doUpload: handleUpload
+    doUpload: handleUpload,
   }
 }
 

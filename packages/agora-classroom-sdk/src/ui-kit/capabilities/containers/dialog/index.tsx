@@ -110,18 +110,23 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   const {
     setTool,
-    room
+    room,
+    hasPermission
   } = useBoardContext()
 
   const {removeDialog} = useGlobalContext()
 
   const onCancel = useCallback(() => {
     if (room) {
-      const tool = room.state.memberState.currentApplianceName
-      setTool(tool)
+      if (hasPermission) {
+        const tool = room.state.memberState.currentApplianceName
+        setTool(tool)
+      } else {
+        setTool('reset')
+      }
     }
     removeDialog(id)
-  }, [room, removeDialog, setTool])
+  }, [room, removeDialog, setTool, hasPermission])
 
   return (
     <UserListContainer onClose={onCancel} />
@@ -131,18 +136,23 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   const {
     setTool,
-    room
+    room,
+    hasPermission
   } = useBoardContext()
 
   const {removeDialog} = useGlobalContext()
 
   const onCancel = useCallback(() => {
     if (room) {
-      const tool = room.state.memberState.currentApplianceName
-      setTool(tool)
+      if (hasPermission) {
+        const tool = room.state.memberState.currentApplianceName
+        setTool(tool)
+      } else {  
+        setTool('reset')
+      }
     }
     removeDialog(id)
-  }, [room, removeDialog, setTool])
+  }, [room, removeDialog, setTool, hasPermission])
 
   return (
     <StudentUserListContainer onClose={onCancel} />
