@@ -644,6 +644,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         videoLossRate: evt.packetLossRate,
         videoReceiveDelay: evt.delay
       }
+
+      this.fire('remoteVideoStats', {
+        user: {
+          uid: convertUid(uid),
+        },
+        stats: {
+          uid: convertUid(uid),
+          ...evt
+        }
+      })
     })
     this.client.on('remoteAudioStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback

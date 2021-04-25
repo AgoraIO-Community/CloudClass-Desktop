@@ -134,7 +134,11 @@ export class MediaService extends EventEmitter implements IMediaService {
       let {stats = {}} = evt
       let {encoderOutputFrameRate = 0} = stats
       this.cameraRenderer?.setFPS(encoderOutputFrameRate)
-      this.fire('localVideoStats', evt)
+      this.fire('localVideoStats', {
+        renderState: this.cameraRenderer?.renderState,
+        renderFrameRate: this.cameraRenderer?.renderFrameRate,
+        ...evt
+      })
     })
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
       let {stats = {}, user = {}} = evt
@@ -142,7 +146,14 @@ export class MediaService extends EventEmitter implements IMediaService {
       let {uid} = user
       let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
       remoteUserRender?.setFPS(decoderOutputFrameRate)
-      this.fire('remoteVideoStats', evt)
+      this.fire('remoteVideoStats', {
+        user,
+        stats: {
+          renderState: remoteUserRender?.renderState,
+          renderFrameRate: remoteUserRender?.renderFrameRate,
+          ...stats
+        }
+      })
     })
     this.sdkWrapper.on('localVideoStateChanged', (evt: any) => {
       this.fire('localVideoStateChanged', evt)
