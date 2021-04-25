@@ -56,7 +56,9 @@ export const ToastContainer = observer(() => {
     'co_video.received_teacher_accepted': (props: any) => toast('co_video.received_teacher_accepted', props),
     'co_video.received_message_timeout': (props: any) => toast('co_video.received_message_timeout', props),
     'co_video.hands_up_requsted': (props: any) => toast('co_video.hands_up_requsted', props),
-    'co_video.hands_up_cancelled': (props: any) => toast('co_video.hands_up_cancelled', props)
+    'co_video.hands_up_cancelled': (props: any) => toast('co_video.hands_up_cancelled', props),
+    'roster.close_student_co_video': (props: any) => toast('roster.close_student_co_video', props),
+    'roster.open_student_co_video': (props: any) => toast('roster.open_student_co_video', props),
   }
   
 
