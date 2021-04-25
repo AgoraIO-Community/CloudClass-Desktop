@@ -6,11 +6,6 @@ import { RoomParameters } from '../../api/declare'
 const routes: BizPageRouter[] = [
   BizPageRouter.LaunchPage,
   BizPageRouter.TestRecordPage,
-  // BizPageRouter.OneToOne,
-  // BizPageRouter.OneToOneIncognito,
-  // BizPageRouter.Incognito,
-  // BizPageRouter.MidClass,
-  // BizPageRouter.SmallClassIncognito,
   BizPageRouter.TestHomePage,
 ]
 
