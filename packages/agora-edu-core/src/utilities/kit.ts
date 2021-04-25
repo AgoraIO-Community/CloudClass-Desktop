@@ -351,7 +351,7 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          pluginVideoUrl: file.url
+          url: file.url
           // isNavigationDisable: false
       }
     }
@@ -367,7 +367,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          pluginAudioUrl: file.url
+          url: file.url
           // isNavigationDisable: false
       }
     }

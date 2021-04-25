@@ -12,6 +12,7 @@
 }
 
 .header-actions .icon-box-hover:hover,
+.zoom-controller .icon-box-hover:hover,
 .tool .icon-box-hover:hover {
   color: #191919 !important;
 }

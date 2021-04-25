@@ -91,7 +91,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           >
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon size={28} onClick={handleClick} type={popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')} hover={true} color={popoverVisible ? '#639AFA' : (stateColorDict[state])} />
+              <Icon size={28} onClick={handleClick} type={popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')} color={popoverVisible ? '#639AFA' : (stateColorDict[state])} />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
           </Card>
