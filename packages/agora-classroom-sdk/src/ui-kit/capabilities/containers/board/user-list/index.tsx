@@ -258,6 +258,13 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         }
     }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
 
+    const userType = useMemo(() => {
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
+            return 'teacher'
+        }
+        return 'student'
+    }, [roomInfo.userRole])
+
     return (
         <StudentRoster
             isDraggable={true}
@@ -265,7 +272,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             role={myRole as any}
             teacherName={teacherName}
             dataSource={dataList}
-            userType={'teacher'}
+            userType={userType}
             onClick={onClick}
             onClose={props.onClose}
             onChange={(text: string) => {

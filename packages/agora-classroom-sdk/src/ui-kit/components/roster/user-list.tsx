@@ -156,11 +156,14 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               <label>{t('roster.teacher_name')}</label>
               <span className="roster-username">{teacherName}</span>
             </div>
-            <Search
-              onSearch={onChange}
-              suffix={<img src={SearchSvg} />}
-              placeholder={transI18n('scaffold.search')}
-            />
+            {
+              userType === 'teacher' ?
+              <Search
+                onSearch={onChange}
+                suffix={<img src={SearchSvg} />}
+                placeholder={transI18n('scaffold.search')}
+              /> : null
+            }
           </div>
           <Table className="roster-table">
             <TableHeader>
