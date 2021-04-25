@@ -2842,15 +2842,15 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/white-audio-plugin@1.2.21":
-  version "1.2.21"
-  resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.21.tgz#8a9b4e6a8a4f7094ac576e55a3480f67436c09f4"
-  integrity sha1-iptOaopPcJSsV25Vo0gPZ0NsCfQ=
+"@netless/white-audio-plugin@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-2.0.3.tgz#f5edb6f8d32ece49ac023bcf6bc01458db50aca8"
+  integrity sha1-9e22+NMuzkmsAjvPa8AUWNtQrKg=
 
-"@netless/white-video-plugin@1.2.21":
-  version "1.2.21"
-  resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.21.tgz#facd980e268d8471c60f8adc04d8a2728b05ca85"
-  integrity sha1-+s2YDiaNhHHGD4rcBNiicosFyoU=
+"@netless/white-video-plugin@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-2.0.3.tgz#7502979430dd28a8982b8d630e2b1b457a8a1074"
+  integrity sha1-dQKXlDDdKKiYK41jDisbRXqKEHQ=
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -8071,13 +8071,6 @@ commander@^7.0.0:
   resolved "https://registry.nlark.com/commander/download/commander-7.2.0.tgz?cache=0&sync_timestamp=1618847161680&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
   integrity sha1-o2y1fQtQHOEI5NIFWaFQo5HZerc=
 
-commander@~1.1.1:
-  version "1.1.1"
-  resolved "https://registry.nlark.com/commander/download/commander-1.1.1.tgz?cache=0&sync_timestamp=1618847161680&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-1.1.1.tgz#50d1651868ae60eccff0a2d9f34595376bc6b041"
-  integrity sha1-UNFlGGiuYOzP8KLZ80WVN2vGsEE=
-  dependencies:
-    keypress "0.1.x"
-
 comment-json@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npm.taobao.org/comment-json/download/comment-json-4.1.0.tgz#09d08f0fbc4ad5eeccbac20f469adbb967dcbd2c"
@@ -9308,11 +9301,6 @@ detect-it@^3.0.5:
     detect-passive-events "^1.0.5"
     detect-pointer "^1.0.3"
     detect-touch-events "^2.0.2"
-
-detect-libc@^1.0.2:
-  version "1.0.3"
-  resolved "https://registry.npm.taobao.org/detect-libc/download/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
-  integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
 detect-newline@^3.0.0:
   version "3.1.0"
@@ -14447,11 +14435,6 @@ keycode@^2.2.0:
   resolved "https://registry.npm.taobao.org/keycode/download/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
   integrity sha1-PQr1bce4uOXLqNCpfxByBO7CKwQ=
 
-keypress@0.1.x:
-  version "0.1.0"
-  resolved "https://registry.nlark.com/keypress/download/keypress-0.1.0.tgz#4a3188d4291b66b4f65edb99f806aa9ae293592a"
-  integrity sha1-SjGI1CkbZrT2XtuZ+AaqmuKTWSo=
-
 keyv@3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/keyv/download/keyv-3.0.0.tgz#44923ba39e68b12a7cec7df6c3268c031f2ef373"
@@ -16005,7 +15988,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.npm.taobao.org/natural-compare/download/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-needle@2.6.0, needle@^2.2.1, needle@^2.3.3, needle@^2.5.0:
+needle@2.6.0, needle@^2.3.3, needle@^2.5.0:
   version "2.6.0"
   resolved "https://registry.npm.taobao.org/needle/download/needle-2.6.0.tgz#24dbb55f2509e2324b4a99d61f413982013ccdbe"
   integrity sha1-JNu1XyUJ4jJLSpnWH0E5ggE8zb4=
@@ -16051,11 +16034,6 @@ no-case@^3.0.4:
   dependencies:
     lower-case "^2.0.2"
     tslib "^2.0.3"
-
-node-addon-api@^3.0.2:
-  version "3.1.0"
-  resolved "https://registry.npm.taobao.org/node-addon-api/download/node-addon-api-3.1.0.tgz?cache=0&sync_timestamp=1608165738569&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-addon-api%2Fdownload%2Fnode-addon-api-3.1.0.tgz#98b21931557466c6729e51cb77cd39c965f42239"
-  integrity sha1-mLIZMVV0ZsZynlHLd805yWX0Ijk=
 
 node-dir@^0.1.10, node-dir@^0.1.17:
   version "0.1.17"
@@ -16168,22 +16146,6 @@ node-object-hash@^1.2.0:
   resolved "https://registry.npm.taobao.org/node-object-hash/download/node-object-hash-1.4.2.tgz?cache=0&sync_timestamp=1614531241840&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-object-hash%2Fdownload%2Fnode-object-hash-1.4.2.tgz#385833d85b229902b75826224f6077be969a9e94"
   integrity sha1-OFgz2FsimQK3WCYiT2B3vpaanpQ=
 
-node-pre-gyp@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.npm.taobao.org/node-pre-gyp/download/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
-  integrity sha1-mgWWUzuHcom8rU4UOYLKPZBN3IM=
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4.4.2"
-
 node-releases@^1.1.61, node-releases@^1.1.71:
   version "1.1.71"
   resolved "https://registry.npm.taobao.org/node-releases/download/node-releases-1.1.71.tgz#cb1334b179896b1c89ecfdd4b725fb7bbdfc7dbb"
@@ -16196,14 +16158,6 @@ node.extend@^2.0.0:
   dependencies:
     has "^1.0.3"
     is "^3.2.1"
-
-nodejieba@^2.2.1:
-  version "2.5.1"
-  resolved "https://registry.nlark.com/nodejieba/download/nodejieba-2.5.1.tgz#626cc93a104b96de6ce85f59b640fb316d4b763c"
-  integrity sha1-YmzJOhBLlt5s6F9ZtkD7MW1Ldjw=
-  dependencies:
-    node-addon-api "^3.0.2"
-    node-pre-gyp "^0.14.0"
 
 nopt@^4.0.1:
   version "4.0.3"
@@ -16330,7 +16284,7 @@ npm-normalize-package-bin@^1.0.0, npm-normalize-package-bin@^1.0.1:
     semver "^5.6.0"
     validate-npm-package-name "^3.0.0"
 
-npm-packlist@^1.1.6, npm-packlist@^1.4.4:
+npm-packlist@^1.4.4:
   version "1.4.8"
   resolved "https://registry.npm.taobao.org/npm-packlist/download/npm-packlist-1.4.8.tgz?cache=0&sync_timestamp=1616694518639&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnpm-packlist%2Fdownload%2Fnpm-packlist-1.4.8.tgz#56ee6cc135b9f98ad3d51c1c95da22bbb9b2ef3e"
   integrity sha1-Vu5swTW5+YrT1Rwcldoiu7my7z4=
@@ -16377,7 +16331,7 @@ npm-run-path@^4.0.0, npm-run-path@^4.0.1:
   dependencies:
     path-key "^3.0.0"
 
-npmlog@^4.0.2, npmlog@^4.1.2:
+npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.nlark.com/npmlog/download/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
   integrity sha1-CKfyqL9zRgR3mp76StXMcXq7lUs=
@@ -17292,17 +17246,7 @@ pinkie@^2.0.0:
   resolved "https://registry.npm.taobao.org/pinkie/download/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-pinyin@2.10.2:
-  version "2.10.2"
-  resolved "https://registry.npm.taobao.org/pinyin/download/pinyin-2.10.2.tgz?cache=0&sync_timestamp=1618154357256&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpinyin%2Fdownload%2Fpinyin-2.10.2.tgz#93e3b3cb4430009925163bad10c741778c85b013"
-  integrity sha1-k+Ozy0QwAJklFjutEMdBd4yFsBM=
-  dependencies:
-    commander "~1.1.1"
-    object-assign "^4.0.1"
-  optionalDependencies:
-    nodejieba "^2.2.1"
-
-pinyinlite@^1.2.1:
+pinyinlite@1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/pinyinlite/download/pinyinlite-1.2.1.tgz#48b30f68a4f1daf193756d9b6ea66acb233fa4fb"
   integrity sha1-SLMPaKTx2vGTdW2bbqZqyyM/pPs=
@@ -18894,7 +18838,7 @@ rc-virtual-list@^3.2.0:
     rc-resize-observer "^1.0.0"
     rc-util "^5.0.7"
 
-rc@^1.2.7, rc@^1.2.8:
+rc@^1.2.8:
   version "1.2.8"
   resolved "https://registry.nlark.com/rc/download/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
   integrity sha1-zZJL9SAKB1uDwYjNa54hG3/A0+0=
@@ -20473,7 +20417,7 @@ semver-diff@^3.1.1:
   dependencies:
     semver "^6.3.0"
 
-"semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@^5.0.1, semver@^5.3.0, semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0, semver@^5.7.0, semver@^5.7.1:
+"semver@2 || 3 || 4 || 5", "semver@2.x || 3.x || 4 || 5", semver@^5.0.1, semver@^5.4.1, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0, semver@^5.7.0, semver@^5.7.1:
   version "5.7.1"
   resolved "https://registry.npm.taobao.org/semver/download/semver-5.7.1.tgz?cache=0&sync_timestamp=1616463603361&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsemver%2Fdownload%2Fsemver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha1-qVT5Ma66UI0we78Gnv8MAclhFvc=
@@ -22111,7 +22055,7 @@ tar-stream@^2.0.1, tar-stream@^2.1.0, tar-stream@^2.1.2:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-tar@^4.4.10, tar@^4.4.12, tar@^4.4.2, tar@^4.4.8:
+tar@^4.4.10, tar@^4.4.12, tar@^4.4.8:
   version "4.4.13"
   resolved "https://registry.nlark.com/tar/download/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
   integrity sha1-Q7NkvFKIjVVSmGN7ENYHkCVKtSU=
