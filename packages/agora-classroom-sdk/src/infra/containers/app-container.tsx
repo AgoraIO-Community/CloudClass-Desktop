@@ -35,6 +35,9 @@ export const RouteContainer = (props: RouteContainerProps) => {
     acc.push(routesMap[item])
     return acc
   }, [])
+
+  console.log('RouteContainer routes', JSON.stringify(routes))
+
   return (
     <>
       <Switch>

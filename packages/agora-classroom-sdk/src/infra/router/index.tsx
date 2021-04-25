@@ -53,6 +53,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito/small',
   //   component: () => PageSFC(SmallClassRoom)
   // },
+  [BizPageRouter.TestRecordPage]: {
+    path: '/record',
+    component: () => PageSFC(RecordPage)
+  },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage)
@@ -69,9 +73,5 @@ export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.TestHomePage]: {
     path: '/',
     component: () => PageSFC(HomePage)
-  },
-  [BizPageRouter.TestRecordPage]: {
-    path: '/record',
-    component: () => PageSFC(RecordPage)
   }
 }
