@@ -19,9 +19,9 @@ export const HomeAbout: FC<HomeAboutProps> = ({
     publishDate = '2021.02.22',
     SDKVersion = 'Ver 3.3.0',
     classroomVersion = 'Ver 1.0',
-    onLookPrivate,
-    onLookDeclare,
-    onRegiste,
+    onLookPrivate = () => {console.log('onLookPrivate')},
+    onLookDeclare = () => {console.log('onLookDeclare')},
+    onRegiste = () => {console.log('onRegiste')},
     className,
     ...restProps
 }) => {
@@ -33,7 +33,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
         <div className={cls} {...restProps}>
             <div className="about-header">
                 <div className="about-header-logo"></div>
-                <div className="about-header-title">声网灵动课堂</div>
+                <div className="about-header-title">{t('home.header-left-title')}</div>
                 <div className="about-header-version">Version: Flexible Classroom_{version}</div>
             </div>
             <div className="about-main">

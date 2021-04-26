@@ -75,6 +75,15 @@ export const Home: React.FC<HomeProps> = ({
     { label: 'CN', value: 'CN' },
     { label: 'EU', value: 'EU' },
   ]
+
+  const privacyEnUrl = "https://www.agora.io/en/privacy-policy/";
+
+  const privacyCnUrl = "https://www.agora.io/cn/privacy-policy/";
+
+  const signupCnUrl = "https://sso.agora.io/cn/signup";
+
+  const signupEnUrl = "https://sso.agora.io/en/signup";
+
   return (
     <Layout className={debug ? "home-page debug" : "home-page"} direction="col">
       <Header className="home-page-header">
@@ -119,16 +128,26 @@ export const Home: React.FC<HomeProps> = ({
       </Header>
       {showAbout ? (
         <Modal
-          title="关于"
+          title={transI18n('home.about')}
           width={366}
           onCancel={() => {
             setShowAbout(false)
           }}
         >
-          <HomeAbout onLookDeclare={() => {
-            setShowAbout(false)
-            setShowDisclaimer(true)
-          }}/>
+          <HomeAbout 
+            onLookDeclare={() => {
+              setShowAbout(false)
+              setShowDisclaimer(true)
+            }}
+            onLookPrivate={() => {
+              const url = language === 'en' ? privacyEnUrl : privacyCnUrl
+              window.open(url)
+            }}
+            onRegiste={() => {
+              const url = language === 'en' ? signupEnUrl : signupCnUrl
+              window.open(url)
+            }}
+          />
         </Modal>
       ) : null}
       {showDisclaimer ? (
