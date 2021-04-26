@@ -50,10 +50,9 @@ export const LaunchPage = observer(() => {
         )
       }
 
-      // launchOption.extApps = [new AgoraExtAppCountDown(), new AgoraExtAppWhiteboard()]
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
-        recordUrl: `${window.location.href}record`,
+        recordUrl: `${window.location.protocol}//${window.location.host}${window.location.pathname}#/record`,
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)

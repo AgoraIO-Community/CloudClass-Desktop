@@ -1241,7 +1241,7 @@ export class BoardStore extends ZoomController {
   updatePen(value: any) {
     this.lineSelector = value
     this.room.setMemberState({
-      currentApplianceName: transLineTool[value] as any
+      currentApplianceName: transToolBar[value] as any
     })
   }
 
