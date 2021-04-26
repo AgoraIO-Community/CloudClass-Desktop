@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Meta } from '@storybook/react';
 import { Modal } from '~components/modal'
-import { HomeAbout } from '~components/home-about'
+import { HomeAbout, Disclaimer } from '~components/home-about'
 
 const meta: Meta = {
     title: 'Components/HomeAbout',
@@ -20,7 +20,7 @@ const HomeAboutContainer = () => {
                         setVisible(false)
                     }}
                 >
-                    <HomeAbout/>
+                    <HomeAbout />
                 </Modal>
             ) : null}
         </div>
@@ -31,8 +31,30 @@ export const Docs = () => {
     return (
         <>
             <div className="mt-4">
-                <HomeAboutContainer/>
+                <HomeAboutContainer />
             </div>
+        </>
+    )
+}
+
+export const DocsBackModal = () => {
+    const [visible, setVisible] = useState<boolean>(true)
+    return (
+        <>
+            {visible ? (
+                <div className="mt-4">
+                    <Modal
+                        width={560}
+                        title="免责声明"
+                        modalType="back"
+                        onCancel={() => {
+                            setVisible(false)
+                        }}
+                    >
+                        <Disclaimer/>
+                    </Modal>
+                </div>
+            ) : null}
         </>
     )
 }

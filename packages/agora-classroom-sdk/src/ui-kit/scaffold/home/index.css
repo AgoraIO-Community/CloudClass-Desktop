@@ -139,3 +139,6 @@
   height: 520px;
   z-index: 9;
 }
+.home-page .back-modal {
+  height: 430px !important;
+}

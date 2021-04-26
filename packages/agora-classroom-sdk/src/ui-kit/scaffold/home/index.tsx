@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Button } from '~components/button'
 import { Layout, Header } from '~components/layout'
 import { Input } from '~components/input'
@@ -8,7 +8,7 @@ import { t, transI18n } from '~components/i18n'
 import './index.css'
 import { HomeModule } from '~utilities/types'
 import { Modal } from '~components/modal'
-import { HomeAbout } from '~components/home-about'
+import { HomeAbout, Disclaimer } from '~components/home-about'
 
 export interface HomeAttributes {
   roomId: string,
@@ -53,6 +53,7 @@ export const Home: React.FC<HomeProps> = ({
   onClick
 }) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
+  const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
   const scenarioOptions = [
     { label: '1v1', value: '1v1' },
     { label: t('home.roomType_interactiveSmallClass'), value: 'mid-class' },
@@ -108,7 +109,7 @@ export const Home: React.FC<HomeProps> = ({
             >
             </Select>
           </div>
-          <div 
+          <div
             className="header-right-about"
             onClick={() => {
               setShowAbout(true)
@@ -124,7 +125,23 @@ export const Home: React.FC<HomeProps> = ({
             setShowAbout(false)
           }}
         >
-          <HomeAbout/>
+          <HomeAbout onLookDeclare={() => {
+            setShowAbout(false)
+            setShowDisclaimer(true)
+          }}/>
+        </Modal>
+      ) : null}
+      {showDisclaimer ? (
+        <Modal
+          width={560}
+          title="免责声明"
+          modalType="back"
+          onCancel={() => {
+            setShowAbout(true)
+            setShowDisclaimer(false)
+          }}
+        >
+          <Disclaimer />
         </Modal>
       ) : null}
       <Layout style={{ boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)' }} className="facade" direction="row">

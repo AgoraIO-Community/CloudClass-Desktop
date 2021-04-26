@@ -1,4 +1,4 @@
-.home-about, .about-header {
+.home-about, .about-header, .disclaimer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -58,6 +58,19 @@
 }
 
 .about-main-item .main-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: #586376;
+}
+
+.disclaimer-main p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #586376;
+    margin-bottom: 10px;
+}
+
+.disclaimer-footer {
     font-size: 13px;
     font-weight: 400;
     color: #586376;
