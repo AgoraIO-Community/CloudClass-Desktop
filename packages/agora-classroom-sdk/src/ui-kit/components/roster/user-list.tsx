@@ -135,12 +135,12 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
 
   const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  const DraggableContainer = useCallback(({ children }: { children: React.ReactChild }) => {
-    return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
+  const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
+    return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
 
   return (
-    <DraggableContainer>
+    <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-user-list-wrap">
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
