@@ -151,6 +151,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         stats: {
           renderState: remoteUserRender?.renderState,
           renderFrameRate: remoteUserRender?.renderFrameRate,
+          freezeCount: remoteUserRender?.freezeCount,
           ...stats
         }
       })
