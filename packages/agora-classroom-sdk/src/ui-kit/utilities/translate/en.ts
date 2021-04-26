@@ -348,5 +348,7 @@ export const en = {
     'enter_classroom': 'Enter Classroom',
     'region_placeholder': 'please choose region',
     'region': 'Region',
+    'header-left-title': 'Agora Classroom',
+    'about': 'About'
   }
 }

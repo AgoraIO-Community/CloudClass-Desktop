@@ -347,5 +347,7 @@ export const zh = {
     'enter_classroom': '加入课堂',
     'region_placeholder': '请选择区域',
     'region': '区域',
+    'header-left-title': '声网灵动课堂',
+    'about': '关于'
   }
 }
