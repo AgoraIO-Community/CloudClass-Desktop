@@ -153,7 +153,7 @@ export const Home: React.FC<HomeProps> = ({
       {showDisclaimer ? (
         <Modal
           width={560}
-          title="免责声明"
+          title={transI18n('disclaimer.title')}
           modalType="back"
           onCancel={() => {
             setShowAbout(true)
