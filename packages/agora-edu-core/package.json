@@ -2,6 +2,7 @@
   "name": "agora-edu-core",
   "version": "1.0.0",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "agora",
   "maintainers": [
     "yooobuntu@gmail.com"
@@ -9,11 +10,11 @@
   "license": "MIT",
   "scripts": {
     "start": "vite",
-    "build": "run-s build:bundle build:types",
+    "build": "run-s build:js build:types",
     "build:dev:js": "run-s build:dev:bundle build:types",
     "build:types": "tsc --outDir lib --module commonjs",
     "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
-    "build:bundle": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'"
+    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'"
   },
   "devDependencies": {
     "@babel/core": "7.13.15",
@@ -96,8 +97,7 @@
         {
           "loose": true
         }
-      ],
-      "transform-react-remove-prop-types"
+      ]
     ],
     "exclude": "node_modules"
   }

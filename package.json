@@ -35,7 +35,7 @@
     "build:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build",
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:dev:edu-core": "lerna exec --scope=agora-edu-core npm run build:dev:js",
-    "build:edu-core": "lerna exec --scope=agora-edu-core npm run build:dev:js",
+    "build:edu-core": "lerna exec --scope=agora-edu-core npm run build:js",
     "build:demo": "lerna exec --scope=agora-classroom-sdk npm run build",
     "run:build:rte-sdk": "run-s build:rte-sdk",
     "run:demo": "lerna exec --scope=agora-classroom-sdk npm run dev",

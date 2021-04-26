@@ -11,7 +11,8 @@
       "esnext",
       "webworker"
     ],
-    "noImplicitAny": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "allowJs": true,
@@ -24,7 +25,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
     "jsx": "react",
     "noFallthroughCasesInSwitch": true
   },

@@ -9,14 +9,27 @@
   "babel": {
     "presets": [
       [
-        "react-app",
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "usage",
+          "debug": false,
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
+        }
+      ],
+      [
+        "@babel/preset-react",
         {
           "runtime": "automatic"
-        },
-        "@babel/preset-env"
-      ]
+        }
+      ],
+      "@babel/preset-typescript"
     ],
     "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-optional-chaining",
       [
         "@babel/plugin-proposal-decorators",
         {
@@ -27,12 +40,6 @@
         "@babel/plugin-proposal-class-properties",
         {
           "loose": true
-        }
-      ],
-      [
-        "@babel/plugin-transform-runtime",
-        {
-          "regenerator": true
         }
       ]
     ]
@@ -117,7 +124,7 @@
     "electron": "cross-env REACT_APP_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run electron:web\" \"wait-on http://localhost:3000 && npm run electron:client\"",
     "electron:client": "cross-env electron ./app/",
     "electron:web": "cross-env BROWSER=none react-app-rewired start",
-    "electron:copy:web": "cross-env REACT_APP_RUNTIME_PLATFORM=electron react-app-rewired build",
+    "electron:copy:web": "cross-env NODE_ENV=production REACT_APP_RUNTIME_PLATFORM=electron react-app-rewired build",
     "electron:copy:electron": "cpx ./app/**/*.js ./build",
     "electron:build": "npm run electron:copy:web && npm run electron:copy:electron",
     "dev": "cross-env NODE_ENV=development BABEL_NODE=development TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired start",
@@ -198,10 +205,11 @@
     "cache-loader": "4.1.0",
     "classnames": "2.2.6",
     "concurrently": "5.0.0",
+    "core-js": "3",
     "cpx": "1.5.0",
     "cross-env": "6.0.3",
     "css-loader": "2.1.0",
-    "customize-cra": "0.8.0",
+    "customize-cra": "1.0.0",
     "dayjs": "1.10.4",
     "deep-diff": "1.0.2",
     "devtron": "1.4.0",
@@ -215,7 +223,6 @@
     "fs-extra": "9.1.0",
     "glob-all": "3.2.1",
     "hard-source-webpack-plugin": "0.13.1",
-    "i18next": "19.9.2",
     "immutable": "4.0.0-rc.12",
     "joi": "17.3.0",
     "js-md5": "0.7.3",
@@ -234,9 +241,7 @@
     "react-app-rewired": "2.1.8",
     "react-datepicker": "3.6.0",
     "react-docgen-typescript": "1.21.0",
-    "react-draggable": "4.2.0",
     "react-gtm-module": "2.0.8",
-    "react-i18next": "11.8.10",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "react-use": "13.24.0",
@@ -299,7 +304,6 @@
     "react-select": "4.3.0",
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
-    "workbox-strategies": "6.1.1",
-    "workbox-webpack-plugin": "6.1.2"
+    "workbox-strategies": "6.1.1"
   }
 }
