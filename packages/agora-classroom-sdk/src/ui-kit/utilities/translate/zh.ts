@@ -94,6 +94,8 @@ export const zh = {
     'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'toast': {
+    'add_screen_share': '老师开启了屏幕共享',
+    'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',
     'revoke_board_success': '收回白板成功', 
     'create_screen_share_failed': '创建屏幕分享失败',
@@ -201,8 +203,8 @@ export const zh = {
     'class_is_end': `下课咯，教室还有{reason}关闭`,
     'time_interval_between_close': `教室还有{reason}关闭`,
     'reward_limit': '奖杯已全部发完',
-    'chat_disable': '禁言模式开启',
-    'chat_enable': '禁言模式关闭',
+    'chat_enable': '禁言模式开启',
+    'chat_disable': '禁言模式关闭',
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

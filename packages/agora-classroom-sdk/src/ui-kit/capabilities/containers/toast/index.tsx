@@ -41,6 +41,8 @@ export const ToastContainer = observer(() => {
     'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)},'error'),
+    'toast.chat_disable': (props: any) => toast('toast.chat_disable', props),
+    'toast.chat_enable': (props: any) => toast('toast.chat_enable', props),
     'toast.time_interval_between_close': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'private_media_chat.chat_started': (props: any) => toast('private_media_chat.chat_started', props),
     'private_media_chat.chat_ended': (props: any) => toast('private_media_chat.chat_ended', props),
@@ -59,6 +61,8 @@ export const ToastContainer = observer(() => {
     'co_video.hands_up_cancelled': (props: any) => toast('co_video.hands_up_cancelled', props),
     'roster.close_student_co_video': (props: any) => toast('roster.close_student_co_video', props),
     'roster.open_student_co_video': (props: any) => toast('roster.open_student_co_video', props),
+    'toast.add_screen_share': (props: any) => toast('toast.add_screen_share', props),
+    'toast.remove_screen_share': (props: any) => toast('toast.remove_screen_share', props),
   }
   
 

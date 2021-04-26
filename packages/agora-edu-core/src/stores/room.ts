@@ -1063,6 +1063,10 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端流加入
       roomManager.on('remote-stream-added', (evt: any) => {
+        const {stream} = evt
+        if (stream.videoSourceType === EduVideoSourceType.screen) {
+          this.appStore.uiStore.fireToast('toast.add_screen_share')
+        }
         runInAction(() => {
           this.sceneStore.streamList = roomManager.getFullStreamList()
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
@@ -1077,6 +1081,10 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端流移除
       roomManager.on('remote-stream-removed', (evt: any) => {
+        const {stream} = evt
+        if (stream.videoSourceType === EduVideoSourceType.screen) {
+          this.appStore.uiStore.fireToast('toast.remove_screen_share')
+        }
         runInAction(() => {
           this.sceneStore.streamList = roomManager.getFullStreamList()
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
