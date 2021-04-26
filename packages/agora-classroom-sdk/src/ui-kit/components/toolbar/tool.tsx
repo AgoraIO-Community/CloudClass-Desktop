@@ -9,7 +9,6 @@ export interface ToolItem {
   icon: IconTypes;
   isActive?: boolean;
   hover?: boolean;
-  itemHeight?: number;
   component?: React.FC<{isActive: boolean, onClick: ReactEventHandler<any>, hover?: boolean}>
 }
 export interface ToolProps extends ToolItem {

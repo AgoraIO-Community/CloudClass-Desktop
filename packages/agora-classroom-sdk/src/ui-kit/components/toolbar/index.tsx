@@ -101,9 +101,8 @@ export const Toolbar: FC<ToolbarProps> = ({
 
   const maxHeight = 
     // toolbar items height accumulation
-    tools.map(t => t.itemHeight || 28).reduce((acc, cur) => acc+cur, 0)
     // margin bottom 10 * 10
-    + 10 * tools.length
+    (28 + 10) * tools.length
     // top button
     + 42
     // shadow extra
