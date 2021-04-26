@@ -124,7 +124,7 @@ export const Roster: FC<RosterProps> = ({
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}
         </div>
-        <div>
+        <div className="roster-container">
           <div className="roster-header">
             <label>{t('roster.teacher_name')}</label>
             <span className="roster-username">{teacherName}</span>
