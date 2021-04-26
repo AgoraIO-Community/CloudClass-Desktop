@@ -16,7 +16,7 @@ const routes: BizPageRouter[] = [
 export const LiveRoom = observer(() => {
 
   const {mainPath, language, params} = useGlobalContext()
-  
+    
   return (
     <>
     <AgoraCSSBasement />

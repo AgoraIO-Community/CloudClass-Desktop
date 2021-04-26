@@ -6,11 +6,6 @@ import { EduManager } from 'agora-rte-sdk';
 import { eduSDKApi } from 'agora-edu-core';
 import {AgoraEduSDK} from './infra/api'
 import { GlobalStorage } from '@/infra/utils';
-import {configure} from 'mobx'
-
-configure({
-  isolateGlobalState: true
-})
 
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";

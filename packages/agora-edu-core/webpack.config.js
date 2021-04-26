@@ -1,28 +1,31 @@
-const threadLoader = require("thread-loader");
-const webpack = require("webpack");
+const threadLoader = require('thread-loader');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const path = require("path");
+const path = require('path');
 
 const isProd = process.env.NODE_ENV === 'production'
 
+const packageInfo = require('./package.json')
+
+const babelConfig = packageInfo.babel
+
 module.exports = {
   entry: {
-    ['agora-rte-sdk']: "./src/index.ts",
+    ['agora-edu-core']: './src/index.ts',
   },
   mode: isProd ? 'production' : 'development',
   output: {
     publicPath: '',
     // filename: '[name].js',
     filename: 'index.js',
-    libraryTarget: "umd",
+    libraryTarget: 'umd',
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.tsx', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
@@ -33,29 +36,35 @@ module.exports = {
         test: /\.ts(x)?$/,
         use: [
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: [
-                "@babel/preset-env",
-                "@babel/preset-typescript"
-              ],
-              plugins: [
-                ['@babel/plugin-proposal-decorators', { legacy: true }],
-                ['@babel/plugin-proposal-class-properties', { loose: true }],
-                ['@babel/plugin-transform-runtime', { regenerator: true }],
-              ],
+              ...babelConfig,
+              // presets: [
+              //   '@babel/preset-env',
+              //   '@babel/preset-typescript'
+              // ],
+              // plugins: [
+              //   ['@babel/plugin-proposal-decorators', { legacy: true }],
+              //   ['@babel/plugin-proposal-class-properties', { loose: true }],
+              //   ['@babel/plugin-transform-runtime', { regenerator: true }],
+              // ],
             }
           }
         ],
         exclude: /node_modules/,
+      },
+      // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
+      {
+        test: /\.js$/,
+        loader: require.resolve('@open-wc/webpack-import-meta-loader'),
       }
     ],
   },
   optimization: {
     minimizer: [
-        new TerserPlugin({
-            parallel: true,
-        })
+      new TerserPlugin({
+          parallel: true,
+      })
     ]
 },
   plugins: [
@@ -72,11 +81,11 @@ module.exports = {
     //   REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
 
     //   REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(""),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(''),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(''),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(''),
+    //   REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(''),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(''),
     //   // 'process': 'utils'
     // }),
     new HardSourceWebpackPlugin({
@@ -99,4 +108,10 @@ module.exports = {
       }
     })
   ],
+  externals: {
+    'white-web-sdk': 'white-web-sdk',
+    'react': 'react',
+    'react-dom': 'react-dom',
+    'dayjs': 'dayjs'
+  }
 };

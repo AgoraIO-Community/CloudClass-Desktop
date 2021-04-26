@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
 import { debounce, uniq } from 'lodash';
-import { observable, action, computed, reaction } from 'mobx';
+import { observable, action, computed, reaction, autorun } from 'mobx';
 import { LocalUserRenderer,EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
@@ -311,9 +311,10 @@ export class MediaStore {
     this.mediaService.on('volume-indication', (evt: any) => {
       const {speakers, speakerNumber, totalVolume} = evt
       
-      speakers.forEach((speaker: any) => {
-        this.speakers[+speaker.uid] = + speaker.volume
-        // this.speakers.set(+speaker.uid, +speaker.volume)
+      autorun(() => {
+        speakers.forEach((speaker: any) => {
+          this.updateSpeaker(+speaker.uid, speaker.volume)
+        })
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
@@ -323,7 +324,9 @@ export class MediaStore {
       BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
       let {stats = {}, user = {}} = evt
       let {uid} = user
-      this.remoteVideoStats.set(`${uid}`, stats)
+      autorun(() => {
+        this.updateRemoteVideoStats(`${uid}`, stats)
+      })
     })
 
     reaction(() => JSON.stringify([
@@ -351,7 +354,15 @@ export class MediaStore {
   totalVolume: number = 0
   
   @observable
-  speakers: Record<number, number> = {}
+  speakers = new Map<number, number>()
+
+  updateSpeaker(uid: number, value: number) {
+    this.speakers.set(+uid, value)
+  }
+
+  updateRemoteVideoStats(uid: string, stats: any) {
+    this.remoteVideoStats.set(`${uid}`, stats)
+  }
 
   @observable
   networkQuality: string = 'unknown'
@@ -369,7 +380,7 @@ export class MediaStore {
     this.networkQuality = 'unknown'
     this.autoplay = false
     this.totalVolume = 0
-    this.speakers = {}
+    this.speakers.clear()
   }
 
   @observable

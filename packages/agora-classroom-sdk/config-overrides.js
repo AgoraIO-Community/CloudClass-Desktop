@@ -82,9 +82,10 @@ const {devDependencies} = require('./package.json');
 
 // TODO: You can customize your env
 // TODO: 这里你可以定制自己的env
-const isProd = process.env.ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 const addStyleLoader = () => (config) => {
+  config.mode = isProd ? 'production' : 'development';
   config.module.rules.push({
     test: /\.css$/,
     exclude: /node_modules/,
@@ -112,6 +113,11 @@ const addStyleLoader = () => (config) => {
   //     use: ['@svgr/webpack'],
   //   }
   // )
+  config.module.rules.push({
+    test: /\.js$/,
+    use: ['source-map-loader'],
+    include: /\node_modules\/(agora-rte-sdk|agora-edu-core)/
+  })
   return config;
 }
 
@@ -240,7 +246,6 @@ const webpackConfig = override(
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
     REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
-    REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
     REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
     REACT_APP_BUILD_VERSION: JSON.stringify(version),
     REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),

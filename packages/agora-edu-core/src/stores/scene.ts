@@ -397,6 +397,16 @@ export class SceneStore extends SimpleInterval {
             })
             // this.appStore.uiStore.addDialog(OpenShareScreen)
             // this.appStore.uiStore.addDialog(screenComponent)
+          } else {
+            this.appStore.uiStore.fireToast(`toast.failed_to_enable_screen_sharing_permission_denied`)
+            //@ts-ignore
+            if (window.isMacOS && window.openPrivacyForCaptureScreen) {
+              //@ts-ignore
+              if (window.isMacOS()) {
+                //@ts-ignore
+                window.openPrivacyForCaptureScreen()
+              }
+            }
           }
         })
       }).catch(err => {
@@ -1179,7 +1189,7 @@ export class SceneStore extends SimpleInterval {
     if (isLocal) {
       return this.localVolume
     }
-    const level = this.appStore.mediaStore.speakers[`${streamUuid}`] || 0
+    const level = this.appStore.mediaStore.speakers.get(+streamUuid) || 0
     if (this.appStore.isElectron) {
       return this.fixNativeVolume(level)
     }
@@ -1390,11 +1400,11 @@ export class SceneStore extends SimpleInterval {
     // TODO: native adapter
     if (this.appStore.isElectron) {
       // native sdk默认0是本地音量
-      volume = this.appStore.mediaStore.speakers[0] || 0
+      volume = this.appStore.mediaStore.speakers.get(0) || 0
       return this.fixNativeVolume(volume)
     }
     if (this.appStore.isWeb && get(this, 'cameraEduStream.streamUuid', 0)) {
-      volume = this.appStore.mediaStore.speakers[+this.cameraEduStream.streamUuid] || 0
+      volume = this.appStore.mediaStore.speakers.get(+this.cameraEduStream.streamUuid) || 0
       return this.fixWebVolume(volume)
     }
     return volume

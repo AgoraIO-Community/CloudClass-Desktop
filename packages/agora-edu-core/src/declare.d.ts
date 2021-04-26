@@ -3,7 +3,6 @@ declare module '@babel/runtime-corejs3/helpers/classCallCheck';
 declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
 declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
 declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;
-declare const REACT_APP_AGORA_RECORDING_OSS_URL: string;
 declare const REACT_APP_BUILD_VERSION: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;

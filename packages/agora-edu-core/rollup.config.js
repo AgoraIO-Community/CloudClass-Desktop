@@ -16,7 +16,7 @@ export default {
     format: 'esm', // 输出的格式 可以是 cjs commonJs 规范 | esm es Module 规范 | iife 浏览器可引入的规范
     entryFileNames: '[name].js',
     exports: 'named',
-    sourcemap: false,
+    sourcemap: isProd ? false : true,
     name: 'AgoraEduSDK',
   },
   // 需要引入的插件

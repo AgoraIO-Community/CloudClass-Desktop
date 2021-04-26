@@ -1,6 +1,6 @@
 export * from './context/provider'
 // export * from './api/index'
-export * from './context/mediaContext'
+export * from './context/media-context'
 
 export * from './context/private-chat-context'
 

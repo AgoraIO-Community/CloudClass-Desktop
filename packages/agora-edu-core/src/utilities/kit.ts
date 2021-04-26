@@ -9,7 +9,7 @@ import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
 
-const OSS_PREFIX = REACT_APP_AGORA_RECORDING_OSS_URL as string;
+const OSS_PREFIX = '';
 
 export function getOSSUrl (mediaUrl: string): string {
   const res = `${OSS_PREFIX}/${mediaUrl}`;

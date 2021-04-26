@@ -448,33 +448,46 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         }
       }
 
-      const calcLostRate = (oldStats: MediaSendPacketStats, newStats: MediaSendPacketStats) => {
-        const deltaSendPacketsLost = Math.abs(oldStats.sendPacketsLost - newStats.sendPacketsLost)
-        const deltaSendPackets = Math.abs(oldStats.sendPackets - newStats.sendPackets)
+      const calcLostRate = (oldStats: MediaSendPacketStats, newStats: MediaSendPacketStats, type: string) => {
 
-        const res = (deltaSendPacketsLost / (deltaSendPacketsLost + deltaSendPackets)) * 100
+        if (oldStats.sendPacketsLost < newStats.sendPacketsLost
+          && oldStats.sendPackets < newStats.sendPackets) {
+          const deltaSendPacketsLost = newStats.sendPacketsLost - oldStats.sendPacketsLost
+          const deltaSendPackets = newStats.sendPackets - oldStats.sendPackets
+          const res = (deltaSendPacketsLost / (deltaSendPacketsLost + deltaSendPackets)) * 100
 
-        console.log('calc lost rate', `oldStats `, oldStats, `newStats `, newStats, ' deltaSendPacketsLost ', deltaSendPacketsLost, ' deltaSendPackets ', deltaSendPackets)
+          if (type === 'video') {
+            this.stats.localVideoStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          } else {
+            this.stats.localAudioStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          }
 
-        if (isNaN(res)) {
-          return 0
+          if (isNaN(res)) {
+            return 0
+          }
+          return +res.toFixed(2)
         }
-        return +res.toFixed(2)
       }
 
-      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(this.stats.localAudioStats))
-      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(this.stats.localVideoStats))
+      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(this.stats.localAudioStats), 'video')
+      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(this.stats.localVideoStats), 'audio')
 
-      this.stats = {
-        localAudioStats: {
-          sendPackets: localAudioStats.sendPackets,
-          sendPacketsLost: localAudioStats.sendPacketsLost,
-        },
-        localVideoStats: {
-          sendPackets: localVideoStats.sendPackets,
-          sendPacketsLost: localVideoStats.sendPacketsLost,
-        }
-      }
+      // this.stats = {
+      //   localAudioStats: {
+      //     sendPackets: localAudioStats.sendPackets,
+      //     sendPacketsLost: localAudioStats.sendPacketsLost,
+      //   },
+      //   localVideoStats: {
+      //     sendPackets: localVideoStats.sendPackets,
+      //     sendPacketsLost: localVideoStats.sendPacketsLost,
+      //   }
+      // }
       // const audioLossRate = localAudioStats.sendPacketsLost / (localAudioStats.sendPacketsLost + localAudioStats.sendPackets)
       // const videoLossRate = localVideoStats.sendPacketsLost / (localVideoStats.sendPacketsLost + localVideoStats.sendPackets)
       // this._localVideoStats = {
