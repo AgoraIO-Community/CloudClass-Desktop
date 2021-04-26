@@ -16,11 +16,13 @@ export const allTools: ToolItem[] = [
     value: 'selection',
     label: 'scaffold.selector',
     icon: 'select',
+    itemHeight: 28
   },
   {
     value: 'pen',
     label: 'scaffold.pencil',
     icon: 'pen',
+    itemHeight: 24,
     component: (props: any) => {
       return <PensContainer {...props}/>
     }
@@ -29,16 +31,20 @@ export const allTools: ToolItem[] = [
     value: 'text',
     label: 'scaffold.text',
     icon: 'text',
+    itemHeight: 28
   },
   {
     value: 'eraser',
     label: 'scaffold.eraser',
     icon: 'eraser',
+    itemHeight: 28
+    
   },
   {
     value: 'color',
     label: 'scaffold.color',
     icon: 'circle',
+    itemHeight: 20,
     component: (props: any) => {
       return <ColorsContainer {...props}/>
     }
@@ -47,16 +53,19 @@ export const allTools: ToolItem[] = [
     value: 'blank-page',
     label: 'scaffold.blank_page',
     icon: 'blank-page',
+    itemHeight: 28
   },
   {
     value: 'hand',
     label: 'scaffold.move',
     icon: 'hand',
+    itemHeight: 28
   },
   {
     value: 'cloud',
     label: 'scaffold.cloud_storage',
     icon: 'cloud',
+    itemHeight: 28
     // component: () => {
     //   return <CloudDiskContainer />
     // }
@@ -65,6 +74,7 @@ export const allTools: ToolItem[] = [
     value: 'tools',
     label: 'scaffold.tools',
     icon: 'tools',
+    itemHeight: 28,
     component: () => {
       return <ToolCabinetContainer/>
     }
@@ -73,11 +83,13 @@ export const allTools: ToolItem[] = [
     value: 'register',
     label: 'scaffold.user_list',
     icon: 'register',
+    itemHeight: 28
   },
   {
     value: 'student_list',
     label: 'scaffold.student_list',
     icon: 'register',
+    itemHeight: 28
   }
 ]
 
