@@ -92,7 +92,7 @@ export const Home: React.FC<HomeProps> = ({
             >
             </Select>
           </div>
-          <div style={{ marginRight: 30, width: 200 }}>
+          <div style={{ marginRight: 30, width: language === 'en' ? 200 : 150 }} className={[language === 'en' ? "language-en-div" : ""].join(" ")}>
             <Select
               prefix={<span>{transI18n('home.language')}</span>}
               id="language"

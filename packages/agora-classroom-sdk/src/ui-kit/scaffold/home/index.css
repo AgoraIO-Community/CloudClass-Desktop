@@ -124,3 +124,7 @@
   outline: none;
   box-shadow: 0 0 0 0 transparent;
 }
+
+.header-right .language-en-div .react-select__value-container {
+  padding-left: 100px !important;
+}
