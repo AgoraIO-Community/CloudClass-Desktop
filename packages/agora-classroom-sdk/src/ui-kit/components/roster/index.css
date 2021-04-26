@@ -194,10 +194,6 @@
   width: 32px;
 }
 
-.roster-table .kick-out:hover {
-  background-color: #e7e7f3;
-}
-
 .roster-table .camera-enabled, .roster-table .mic-enabled {
   @apply rounded-full text-center cursor-pointer inline-block;
   height: 32px;
