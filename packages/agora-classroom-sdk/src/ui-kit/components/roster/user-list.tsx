@@ -58,7 +58,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       return (
         <div className="student-username">
           <span className="roster-username">{profile.name}</span>
-          {profile.onPodium ? <img src={PodiumSvg} /> : null}
+          {profile.onPodium ? <img src={PodiumSvg} style={{marginLeft: 2}}/> : null}
         </div>
       )
     },
@@ -148,7 +148,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           }}></Icon>
         </div>
         <div className="main-title">
-          {title ?? transI18n('scaffold.user_list')}
+          {title ?? transI18n('roster.user_list')}
         </div>
         <div>
           <div className="search-header roster-header">
@@ -168,14 +168,14 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col: StudentRosterColumn) => (
-                <Col key={col.key}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
               ))}
             </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: StudentRosterProfile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: StudentRosterColumn, idx: number) => (
-                    <Col key={col.key}>
+                    <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       <span
                         className={
                           `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`

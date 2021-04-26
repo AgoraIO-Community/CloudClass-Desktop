@@ -70,13 +70,15 @@ export const Input: FC<InputProps> = ({
 
 export interface SearchProps extends InputProps {
     onSearch: (value: string) => void | Promise<void>;
-    suffix: any
+    suffix?: any
+    prefix?: any
 }
 
 export const Search: FC<SearchProps> = ({
     onSearch,
     className,
     suffix,
+    prefix,
     ...restProps
 }) => {
     const [searchStr, setSearchStr] = useState<string>('')
@@ -93,6 +95,7 @@ export const Search: FC<SearchProps> = ({
                 setSearchStr(e.target.value)
                 onSearch(e.target.value)
             }}
+            prefix={prefix}
             suffix={suffix
             }
         />
