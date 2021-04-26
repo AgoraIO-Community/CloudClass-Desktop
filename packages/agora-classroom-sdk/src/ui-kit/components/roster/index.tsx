@@ -132,14 +132,14 @@ export const Roster: FC<RosterProps> = ({
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
               ))}
             </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: Profile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
-                    <Col key={col.key}>
+                    <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       <span
                         className={
                           `${idx === 0 ? 'roster-username' : ''}`

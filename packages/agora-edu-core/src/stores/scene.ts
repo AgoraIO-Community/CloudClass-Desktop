@@ -1142,6 +1142,15 @@ export class SceneStore extends SimpleInterval {
         return this.defaultStudentPlaceholder
       }
     }
+    const stats = this.getRemoteVideoStatsBy(stream.streamUuid)
+
+    if(!stats){
+      // display loading when stats is not yet ready
+      return {
+        holderState: 'loading',
+        text: `placeholder.loading`
+      }
+    }
 
     if (!!stream.hasVideo === false) {
       return {
@@ -1200,11 +1209,9 @@ export class SceneStore extends SimpleInterval {
       // if(render) {
       //   return render.renderFrameRate > 0
       // }
-      const stats = this.appStore.mediaStore.remoteVideoStats.get(`${uid}`)
-      if(stats){
-        return stats.renderFrameRate > 0
-      }
-      return false
+      const stats = this.getRemoteVideoStatsBy(`${uid}`)
+      let freezeCount = stats ? stats.freezeCount : 0
+      return freezeCount < 3
     }
   }
 
@@ -1296,6 +1303,10 @@ export class SceneStore extends SimpleInterval {
 
   private getStreamBy(userUuid: string): EduStream {
     return this.streamList.find((it: EduStream) => get(it.userInfo, 'userUuid', 0) as string === userUuid) as EduStream
+  }
+
+  private getRemoteVideoStatsBy(streamUuid: string): any {
+    return this.appStore.mediaStore.remoteVideoStats.get(streamUuid)
   }
 
   @computed
