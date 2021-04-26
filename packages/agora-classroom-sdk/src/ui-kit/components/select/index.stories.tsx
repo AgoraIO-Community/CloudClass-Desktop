@@ -27,6 +27,17 @@ export const Docs = () => {
                     options={options}
                 />
             </div>
+            <div className="mt-4">
+                <Select
+                    value={selectedOption}
+                    onChange={value => {
+                        console.log(value)
+                        setSelectedOption(value) 
+                    }}
+                    options={options}
+                    prefix={<span>food</span>}
+                />
+            </div>
         </>
     )
 }
