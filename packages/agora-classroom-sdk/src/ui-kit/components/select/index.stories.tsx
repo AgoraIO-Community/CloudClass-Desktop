@@ -24,6 +24,7 @@ export const Docs = () => {
                         console.log(value)
                         setSelectedOption(value) 
                     }}
+                    // defaultMenuIsOpen={true}
                     options={options}
                 />
             </div>

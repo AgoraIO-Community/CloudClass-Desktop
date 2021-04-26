@@ -19,7 +19,7 @@
 }
 
 .react-select-prefix .react-select__value-container{
-    padding-left: 75px !important;
+    padding-left: 80px !important;
 }
 
 .react-select__indicator-separator {
@@ -35,3 +35,7 @@
 .react-select__control--menu-is-open .react-select__indicators{
     transform: rotate(180deg);
 }   
+
+.select .react-select__option {
+    text-align: center;
+}

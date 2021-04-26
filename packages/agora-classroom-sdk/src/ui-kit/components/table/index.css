@@ -7,7 +7,7 @@
   @apply flex;
   @apply flex-row;
   font-size: 13px;
-  padding-left: 19px;
+  /* padding-left: 19px; */
 }
 
 .table-col-item {

@@ -12,7 +12,7 @@ export interface InputProps extends BaseProps {
     prefix?: React.ReactNode;
     suffix?: React.ReactNode;
     disabled?: boolean;
-    value?: string;
+    value?: any;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onFocus?: React.FocusEventHandler<HTMLInputElement>;
     onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -49,7 +49,8 @@ export const Input: FC<InputProps> = ({
             {prefix ? (<span className="input-prefix">
                 {prefix}
             </span>) : ""}
-            <input 
+            <input
+                type={type} 
                 className={cls} 
                 placeholder={placeholder}
                 disabled={disabled}

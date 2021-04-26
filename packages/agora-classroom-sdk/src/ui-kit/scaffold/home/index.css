@@ -1,6 +1,6 @@
-.home-form .table-row-item .table-col-item:first-child {
+/* .home-form .table-row-item .table-col-item:first-child {
   flex: 86px 0;
-}
+} */
 
 .facade {
   gap: 10px;
@@ -57,15 +57,19 @@
   height: 40px;
   font-size: 14px;
   border-radius: 5px;
-  background-color: #F9F9FC;
+  /* background-color: #F9F9FC; */
   /* border: 1px solid black; */
   margin-bottom: 12px;
 }
 .home-form input{
   height: 100%;
-  background-color: #F9F9FC;
+  /* background-color: #F9F9FC; */
   padding-left: 10px;
 }
 .home-form .select {
+  flex: 1;
+}
+
+.table-col-item .react-select-container {
   flex: 1;
 }
