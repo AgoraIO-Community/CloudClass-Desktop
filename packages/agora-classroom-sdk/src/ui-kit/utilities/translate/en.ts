@@ -95,6 +95,8 @@ export const en = {
     'room_is_full': 'The room is full',
   },
   'toast': {
+    'add_screen_share': 'Teacher starts to the screen share',
+    'remove_screen_share': 'Teacher stops the screen share',
     'granted_board_success': 'Grant Permission success',
     'revoke_board_success': 'Revoke Permission success',
     'create_screen_share_failed': 'Create screen share failed',
@@ -202,8 +204,8 @@ export const en = {
     'class_is_end': `Class is over. The classroom will be closed in {reason}`,
     'time_interval_between_close': `The classroom will be closed in {reason}`,
     'reward_limit': 'The maximum number of trophies in the room has been reached',
-    'chat_disable': 'Turn on mute mode',
-    'chat_enable': 'Turn off mute mode',
+    'chat_enable': 'Enable Mute Chat',
+    'chat_disable': 'Disable Mute Chat',
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -245,7 +247,7 @@ export const en = {
     'upload': 'Upload',
     'delete': 'Delete',
     'download': 'Download',
-    'downloading': 'Downloading',
+    'downloading': 'Download',
     'pause': 'Pause',
     'upload_success': 'Upload Success',
   },
