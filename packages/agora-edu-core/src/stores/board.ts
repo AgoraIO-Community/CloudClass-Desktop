@@ -1282,15 +1282,15 @@ export class BoardStore extends ZoomController {
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
         this.appStore.uiStore.fireToast(notice)
-        if (hasPermission) {
-          this.room.setMemberState({
-            currentApplianceName: ApplianceNames.pencil
-          })
-        }
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission)
+        if (this.room.isWritable) {
+          this.room.setMemberState({
+            currentApplianceName: ApplianceNames.pencil
+          })
+        }
       }
     }
   }

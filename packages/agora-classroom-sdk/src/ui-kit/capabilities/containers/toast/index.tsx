@@ -13,6 +13,7 @@ export const ToastContainer = observer(() => {
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
   const toastMap = {
+    'toast.failed_to_send_reward': () => toast('toast.failed_to_send_reward'),
     'toast.granted_board_success': () => toast('toast.granted_board_success'),
     'toast.failed_to_authorize_whiteboard': (props: any) => toast('toast.failed_to_authorize_whiteboard', props),
     'toast.revoke_board_success': (props: any) => toast('toast.revoke_board_success', props),
