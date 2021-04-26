@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Button } from '~components/button'
 import { Layout, Header } from '~components/layout'
 import { Input } from '~components/input'
@@ -7,6 +7,8 @@ import { Col, Row, Table } from '~components/table'
 import { t, transI18n } from '~components/i18n'
 import './index.css'
 import { HomeModule } from '~utilities/types'
+import { Modal } from '~components/modal'
+import { HomeAbout } from '~components/home-about'
 
 export interface HomeAttributes {
   roomId: string,
@@ -50,6 +52,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeDebug,
   onClick
 }) => {
+  const [showAbout, setShowAbout] = useState<boolean>(false);
   const scenarioOptions = [
     { label: '1v1', value: '1v1' },
     { label: t('home.roomType_interactiveSmallClass'), value: 'mid-class' },
@@ -105,9 +108,25 @@ export const Home: React.FC<HomeProps> = ({
             >
             </Select>
           </div>
-          <div className="header-right-about">{transI18n('home.about')}</div>
+          <div 
+            className="header-right-about"
+            onClick={() => {
+              setShowAbout(true)
+            }}
+          >{transI18n('home.about')}</div>
         </div>
       </Header>
+      {showAbout ? (
+        <Modal
+          title="关于"
+          width={366}
+          onCancel={() => {
+            setShowAbout(false)
+          }}
+        >
+          <HomeAbout/>
+        </Modal>
+      ) : null}
       <Layout style={{ boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)' }} className="facade" direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">

@@ -15,7 +15,7 @@
 }
 
 .react-select__menu {
-    z-index: 2 !important;
+    z-index: 10 !important;
 }
 
 .react-select-prefix .react-select__value-container{

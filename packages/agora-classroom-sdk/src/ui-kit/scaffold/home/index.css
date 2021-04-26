@@ -128,3 +128,14 @@
 .header-right .language-en-div .react-select__value-container {
   padding-left: 100px !important;
 }
+
+.home-page .modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 520px;
+  z-index: 9;
+}
