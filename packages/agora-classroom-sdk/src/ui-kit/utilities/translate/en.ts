@@ -358,8 +358,8 @@ export const en = {
     'version-time': 'Version Time',
     'sdk-version': 'SDK Version',
     'classroom-version': 'Flexible Classroom Version',
-    'watch': 'watch',
-    'registe': 'registe'
+    'check': 'Check',
+    'register': 'Register'
   },
   'disclaimer': {
     'title': 'disclaimer',

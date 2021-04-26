@@ -357,8 +357,8 @@ export const zh = {
     'version-time': '发版时间',
     'sdk-version': 'SDK版本',
     'classroom-version': '灵动课堂版本',
-    'watch': '查看',
-    'registe': '注册'
+    'check': '查看',
+    'register': '注册'
   },
   'disclaimer': {
     'title': '免责声明',

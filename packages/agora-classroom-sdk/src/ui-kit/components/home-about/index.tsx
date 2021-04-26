@@ -41,19 +41,19 @@ export const HomeAbout: FC<HomeAboutProps> = ({
                     <div className="main-text">{t('home-about.privacy-policy')}</div>
                     <div className="main-desc main-operation" onClick={() => {
                         onLookPrivate && onLookPrivate()
-                    }}>{t('home-about.watch')} &gt;</div>
+                    }}>{t('home-about.check')} &gt;</div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.product-disclaimer')}</div>
                     <div className="main-desc main-operation" onClick={() => {
                         onLookDeclare && onLookDeclare()
-                    }}>{t('home-about.watch')} &gt;</div>
+                    }}>{t('home-about.check')} &gt;</div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.sign-up')}</div>
                     <div className="main-desc main-operation" onClick={() => {
                         onRegiste && onRegiste()
-                    }}>{t('home-about.registe')} &gt;</div>
+                    }}>{t('home-about.register')} &gt;</div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.version-time')}</div>
