@@ -68,6 +68,6 @@
     "tslib": "2.2.0"
   },
   "peerDependencies": {
-    "agora-electron-sdk": "2.9.107-rc.136-build.426"
+    "agora-electron-sdk": "apaas"
   }
 }
