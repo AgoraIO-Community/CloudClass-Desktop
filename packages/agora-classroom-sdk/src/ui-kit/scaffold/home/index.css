@@ -32,7 +32,7 @@
 }
 
 .home-bg {
-  background-image: url('./assets/bg.png');
+  background: url('./assets/bg.png') no-repeat center / cover;
 }
 
 .facade .table-flex-container {
@@ -72,4 +72,8 @@
 
 .table-col-item .react-select-container {
   flex: 1;
+}
+
+.table-col-item .input-prefix {
+  color: #7B88A0;
 }

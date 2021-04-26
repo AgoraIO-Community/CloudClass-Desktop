@@ -169,7 +169,7 @@ export const Home: React.FC<HomeProps> = ({
           {debug ? 
           <Row className="home-row-item">
             <Col>
-            <Input prefix={transI18n('home.duration')} id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+            <Input prefix={<span>{transI18n('home.duration')}</span>} id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
               {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
             </Col>
           </Row>
@@ -177,7 +177,7 @@ export const Home: React.FC<HomeProps> = ({
           <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario)}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
             <div onClick={() => onChangeDebug(!debug)}>
-              version: {version}
+              Version: Flexible Classroom_{version}
             </div>
           </Row>
         </Table>
