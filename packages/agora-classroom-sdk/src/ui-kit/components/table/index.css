@@ -86,7 +86,7 @@
 .table-container {
   overflow-y: auto;
   box-sizing: content-box;
-  height: 450px;
+  height: 275px;
 }
 
 /* .indeterminate {

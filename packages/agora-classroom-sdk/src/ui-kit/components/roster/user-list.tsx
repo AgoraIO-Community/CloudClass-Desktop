@@ -131,7 +131,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   onChange
 }) => {
 
-  const studentList = studentListSort(dataSource as any[])
+  const studentList = studentListSort(dataSource)
 
   const cols = columns.filter(({visibleRoles = []}: any) => visibleRoles.length === 0 || visibleRoles.includes(role))
 

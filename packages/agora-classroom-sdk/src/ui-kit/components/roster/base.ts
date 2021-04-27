@@ -67,32 +67,37 @@ const shfitPinyin = (str: string) => {
   return str
 }
 
-export const studentListSort = (list: Array<Profile>) => {
+interface PublicProfile {
+  name: string
+  onPodium: boolean
+}
+
+export const studentListSort = <T extends PublicProfile >(list: Array<T>): Array<T> => {
   if(list.length === 0) {
-    return
+    return []
   }
-  // 对数组进行浅拷贝，并将名字中所有中文名转拼音 等待排序
-  const students = list.map((item: Profile) => {
+  // 对数组进行浅拷贝，并将名字中所有中文名转拼音 命名为 pinyinName 等待排序
+  const students = list.map((item: T) => {
     return {
       ...item,
-      name: shfitPinyin(item.name)
+      pinyinName: shfitPinyin(item.name) 
     }
   })
   const isNumber = (str: string) => {
     return '0123456789'.includes(str)
   }
-  students.sort((current: Profile, next: Profile) => {
+  students.sort((current: any, next: any) => {
     // 上台的在前面
     if(current.onPodium !== next.onPodium) {
       return current.onPodium? -1 : 1
     }
     // 首字符是否为数字
-    const currentFirst = current.name[0]
-    const nextFirst = next.name[0]
+    const currentFirst = current.pinyinName[0]
+    const nextFirst = next.pinyinName[0]
     if(isNumber(currentFirst) !== isNumber(nextFirst)) {
       return !isNumber(currentFirst)? -1 : 1
     }
-    return current.name < next.name ? -1 : 1
+    return current.pinyinName < next.pinyinName ? -1 : 1
   })
   return students
 }
