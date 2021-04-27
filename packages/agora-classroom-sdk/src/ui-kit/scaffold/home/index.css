@@ -4,7 +4,7 @@
 
 .facade {
   gap: 10px;
-  border-radius: 6px;
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -13,26 +13,27 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 320px;
+  width: 280px;
 }
 
 .home-page {
   width: 100vw;
   height: 100vh;
-  background: #ffffff;
+  background: #F9F9FC;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #586376;
+  font-family: helvetica neue, arial, PingFangSC, microsoft yahei;
 }
 
 .home-form button{
-  width:320px;
+  width: 280px;
   margin-bottom: 12px;
 }
 
 .home-bg {
-  background: url('./assets/bg.png') no-repeat center / cover;
+  background: url('./assets/bg.png') no-repeat center / 380px 500px;
 }
 
 .facade .table-flex-container {
@@ -46,14 +47,14 @@
 }
 
 .home-form {
-  padding-left: 50px;
+  padding-left: 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
 }
 .home-form .table-row-item.home-row-item {
-  width: 320px;
+  width: 280px;
   height: 40px;
   font-size: 14px;
   border-radius: 5px;
@@ -105,6 +106,10 @@
   background: url('./assets/logo.png') no-repeat center / 36px 36px;
 }
 
+.header-left-title {
+  margin-left: 10px;
+}
+
 .header-left-text {
   font-size: 16px;
   font-weight: 400;
@@ -145,4 +150,9 @@
 }
 .home-page .back-modal {
   height: 490px;
+}
+
+.home-label {
+  color: #586376;
+  font-size: 14px;
 }

@@ -163,7 +163,7 @@ export const Home: React.FC<HomeProps> = ({
           <Disclaimer />
         </Modal>
       ) : null}
-      <Layout style={{ boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)' }} className="facade" direction="row">
+      <Layout style={{ boxShadow: '0px 6px 18px 0px rgba(47, 65, 146, 0.12)', background: '#fff', width: 760 }} className="facade" direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
           {/* <div className="form-title">{transI18n('home.form_title')}</div> */}
@@ -183,18 +183,18 @@ export const Home: React.FC<HomeProps> = ({
             : <></>}
           <Row className="home-row-item">
             <Col>
-              <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} placeholder={transI18n('home.roomName_placeholder')} />
+              <Input inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} placeholder={transI18n('home.roomName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
-              <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)} placeholder={transI18n('home.nickName_placeholder')} />
+              <Input inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)} placeholder={transI18n('home.nickName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
               <Select
-                prefix={<span title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
+                prefix={<span className="home-label" title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
                 id="scenario"
                 value={scenario}
                 options={scenarioOptions}
@@ -209,7 +209,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <Select
-                prefix={<span title={transI18n('home.role')}>{transI18n('home.role')}</span>}
+                prefix={<span className="home-label" title={transI18n('home.role')}>{transI18n('home.role')}</span>}
                 id="role"
                 value={role}
                 onChange={value => {
@@ -257,17 +257,20 @@ export const Home: React.FC<HomeProps> = ({
               </Col>
             </Row>
             : <></>}
-          {debug ?
+          
             <Row className="home-row-item">
               <Col>
-                <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.duration')}>{transI18n('home.duration')}</span>} id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+                <Input disabled inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.duration')}>{transI18n('home.duration')}</span>} id="duration" className="block w-full" value={duration + transI18n('home.duration_unit')} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
                 {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
               </Col>
             </Row>
-            : <></>}
+            
           <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario)}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
-            <div onClick={() => onChangeDebug(!debug)}>
+            <div onClick={() => {
+              return;
+              onChangeDebug(!debug)
+            }}>
               Version: Flexible Classroom_{version}
             </div>
           </Row>
