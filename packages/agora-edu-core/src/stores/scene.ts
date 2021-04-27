@@ -170,7 +170,22 @@ export class SceneStore extends SimpleInterval {
   userList: EduUser[] = []
 
   @observable
-  streamList: EduStream[] = []
+  private _streamList: EduStream[] = []
+
+  @computed
+  get screenShareStreamList() {
+    return this._streamList.filter((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)
+  }
+  
+  @computed
+  get streamList() {
+    return this._streamList.filter((it: EduStream) => it.videoSourceType !== EduVideoSourceType.screen)
+  }
+
+  @action.bound
+  updateStreamList(streamList: EduStream[])  {
+    this._streamList = streamList
+  }
 
   @observable
   unreadMessageCount: number = 0
@@ -243,7 +258,7 @@ export class SceneStore extends SimpleInterval {
     this.microphoneLock = false
     this.waitingShare = false
     this.userList = []
-    this.streamList = []    
+    this._streamList = []    
     this.unreadMessageCount = 0
     this.joined = false
     this.classState = 0
@@ -1312,7 +1327,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   private getStreamBy(userUuid: string): EduStream {
-    return this.streamList.find((it: EduStream) => get(it.userInfo, 'userUuid', 0) as string === userUuid) as EduStream
+    return this.streamList.find((it: EduStream) => get(it.userInfo, 'userUuid', 0) as string === userUuid && it.videoSourceType === EduVideoSourceType.camera) as EduStream
   }
 
   private getRemoteVideoStatsBy(streamUuid: string): any {
@@ -1335,7 +1350,7 @@ export class SceneStore extends SimpleInterval {
         hideControl: false
       } as any
     } else {
-      return this.streamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
+      return this.screenShareStreamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
         const teacher = this.userList.find((user: EduUser) => user.role === 'host')
         if (stream.videoSourceType !== EduVideoSourceType.screen 
           || !teacher 
