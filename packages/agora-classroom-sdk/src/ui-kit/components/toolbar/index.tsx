@@ -8,6 +8,7 @@ import unfoldHover from './assets/icon-close-hover.svg';
 import foldHover from './assets/icon-open-hover.svg';
 import './index.css';
 import { useMounted } from '@/ui-kit/utilities/hooks';
+import { debounce } from 'lodash'
 
 export { Colors } from './colors';
 
@@ -49,7 +50,9 @@ export const Toolbar: FC<ToolbarProps> = ({
   const [opened, setOpened] = useState<boolean>(defaultOpened);
   const [menuHover, setMenuHover] = useState<boolean>(false);
   const toolbarEl = useRef<HTMLDivElement | null>(null)
+  const toolbarScrollEl = useRef<HTMLDivElement | null>(null)
   const animContainer = useRef<HTMLDivElement | null>(null)
+  const [reachEnd, setReachEnd] = useState<boolean>(false)
   const cls = classnames({
     [`toolbar`]: 1,
     [`opened`]: opened,
@@ -62,11 +65,52 @@ export const Toolbar: FC<ToolbarProps> = ({
     if (animTimer.current) {
       clearTimeout(animTimer.current)
     }
+    const onWindowSizeChange = debounce(() => {
+      if(animContainer.current) {
+        let maxHeight = +(animContainer.current.style.maxHeight.replace("px", ""))
+        setReachEnd(maxHeight !== animContainer.current.clientHeight)
+      }
+    }, 200)
+    window.addEventListener('resize', onWindowSizeChange)
+
+    return () => {
+      window.removeEventListener('resize', onWindowSizeChange)
+    }
   }, [])
+
+  useEffect(() => {
+    let current = toolbarScrollEl.current
+    const onScrollToolbar = debounce(() => {
+      if(current) {
+        const bottom = current.scrollHeight - current.scrollTop === current.clientHeight
+        setReachEnd(!bottom)
+      }
+    }, 50)
+    current?.addEventListener('scroll', onScrollToolbar)
+    return () => {
+      current?.removeEventListener('scroll', onScrollToolbar)
+    }
+  }, [toolbarScrollEl])
+
+  useEffect(() => {
+    if(animContainer.current) {
+      let maxHeight = +(animContainer.current.style.maxHeight.replace("px", ""))
+      setReachEnd(maxHeight !== animContainer.current.clientHeight)
+    }
+  }, [tools])
+
+  const maxHeight = 
+    // toolbar items height accumulation
+    // margin bottom 10 * 10
+    (28 + 10) * tools.length
+    // top button
+    + 42
+    // shadow extra
+    + 10
 
   return (
     <div 
-      className='toolbar-position'
+      className='toolbar-position' style={{maxHeight}}
       ref={animContainer}
         onAnimationEnd={() => {
           const animEl = animContainer.current
@@ -110,7 +154,7 @@ export const Toolbar: FC<ToolbarProps> = ({
             alt="menu"
           />
         </div>
-        <div className="tools">
+        <div className="tools" ref={toolbarScrollEl}>
           {tools.map(({ value, ...restProps }) => (
             <Tool
               key={value}
@@ -122,6 +166,7 @@ export const Toolbar: FC<ToolbarProps> = ({
           ))}
         </div>
       </div>
+      <div className={reachEnd ? "toolbar-shadow" : "toolbar-shadow hidden"}></div>
     </div>
   );
 };
