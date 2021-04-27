@@ -169,31 +169,31 @@ export const Home: React.FC<HomeProps> = ({
           {debug ?
             <Row className="home-row-item">
               <Col>
-                <Input prefix={<span>roomId</span>} id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder={transI18n('home.roomId_placeholder')} />
+                <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="RoomId">RoomId</span>} id="roomId" type="text" className="block w-full" value={roomId} onChange={(evt) => onChangeRoomId(evt.currentTarget.value)} placeholder={transI18n('home.roomId_placeholder')} />
               </Col>
             </Row>
             : <></>}
           {debug ?
             <Row className="home-row-item">
               <Col>
-                <Input prefix={<span>userId</span>} id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder={transI18n('home.userId_placeholder')} />
+                <Input inputPrefixWidth={language === 'en' ? 70 : 75} prefix={<span title="UserId">UserId</span>} id="userId" type="text" className="block w-full" value={userId} onChange={(evt) => onChangeUserId(evt.currentTarget.value)} placeholder={transI18n('home.userId_placeholder')} />
               </Col>
             </Row>
             : <></>}
           <Row className="home-row-item">
             <Col>
-              <Input prefix={<span>{transI18n('home.roomName')}</span>} id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} placeholder={transI18n('home.roomName_placeholder')} />
+              <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} placeholder={transI18n('home.roomName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
-              <Input prefix={<span>{transI18n('home.nickName')}</span>} id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)} placeholder={transI18n('home.nickName_placeholder')} />
+              <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)} placeholder={transI18n('home.nickName_placeholder')} />
             </Col>
           </Row>
           <Row className="home-row-item">
             <Col>
               <Select
-                prefix={<span>{transI18n('home.roomType')}</span>}
+                prefix={<span title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
                 id="scenario"
                 value={scenario}
                 options={scenarioOptions}
@@ -208,7 +208,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <Select
-                prefix={<span>{transI18n('home.role')}</span>}
+                prefix={<span title={transI18n('home.role')}>{transI18n('home.role')}</span>}
                 id="role"
                 value={role}
                 onChange={value => {
@@ -225,7 +225,7 @@ export const Home: React.FC<HomeProps> = ({
             <Row className="home-row-item">
               <Col>
                 <Select
-                  prefix={<span>{transI18n('home.language')}</span>}
+                  prefix={<span title={transI18n('home.language')}>{transI18n('home.language')}</span>}
                   id="language"
                   value={language}
                   onChange={value => {
@@ -243,7 +243,7 @@ export const Home: React.FC<HomeProps> = ({
             <Row className="home-row-item">
               <Col>
                 <Select
-                  prefix={<span>{transI18n('home.region')}</span>}
+                  prefix={<span title={transI18n('home.region')}>{transI18n('home.region')}</span>}
                   id="region"
                   value={region}
                   onChange={value => {
@@ -259,7 +259,7 @@ export const Home: React.FC<HomeProps> = ({
           {debug ?
             <Row className="home-row-item">
               <Col>
-                <Input prefix={<span>{transI18n('home.duration')}</span>} id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
+                <Input inputPrefixWidth={language === 'en' ? 57 : 75} prefix={<span title={transI18n('home.duration')}>{transI18n('home.duration')}</span>} id="duration" type="number" className="block w-full" value={duration} onChange={(evt) => onChangeDuration(+evt.currentTarget.value)} placeholder="" />
                 {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
               </Col>
             </Row>

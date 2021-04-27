@@ -13,6 +13,7 @@ export interface InputProps extends BaseProps {
     suffix?: React.ReactNode;
     disabled?: boolean;
     value?: any;
+    inputPrefixWidth?: number;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onFocus?: React.FocusEventHandler<HTMLInputElement>;
     onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -25,6 +26,7 @@ export const Input: FC<InputProps> = ({
     suffix,
     disabled = false,
     value = "",
+    inputPrefixWidth = 75,
     onFocus = () => {},
     onBlur = () => {},
     onChange = () => {},
@@ -46,7 +48,7 @@ export const Input: FC<InputProps> = ({
     });
     return (
         <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-search-wrapper']: cls.includes('input-search')})}>
-            {prefix ? (<span className="input-prefix">
+            {prefix ? (<span className="input-prefix" style={{width: inputPrefixWidth}}>
                 {prefix}
             </span>) : ""}
             <input

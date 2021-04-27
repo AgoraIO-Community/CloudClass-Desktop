@@ -119,6 +119,10 @@
   cursor: pointer;
 }
 
+.header-right-about:hover {
+  color: #0073FF;
+}
+
 .header-right .react-select__control {
   border: none;
   outline: none;

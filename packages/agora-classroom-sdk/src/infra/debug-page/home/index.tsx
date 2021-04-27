@@ -4,7 +4,7 @@ import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
 
@@ -20,15 +20,21 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>('en')
+  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
   const [region, setRegion] = useState<AgoraRegion>('CN')
   const [debug, setDebug] = useState<boolean>(false)
+
+  useEffect(() => {
+    changeLanguage(language)
+    setLanguage(language)
+  }, [])
 
   const onChangeRegion = (region: string) => {
     setRegion(region as AgoraRegion)
   }
 
   const onChangeLanguage = (language: string) => {
+    sessionStorage.setItem('language', language)
     changeLanguage(language)
     setLanguage(language)
   }
