@@ -57,7 +57,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     render: (_, profile) => {
       return (
         <div className="student-username">
-          <span className="roster-username">{profile.name}</span>
+          <span title={profile.name} className="roster-username">{profile.name}</span>
           {profile.onPodium ? <img src={PodiumSvg} style={{marginLeft: 2}}/> : null}
         </div>
       )
@@ -154,7 +154,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
           <div className="search-header roster-header">
             <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
-              <span className="roster-username">{teacherName}</span>
+              <span title={teacherName} className="roster-username">{teacherName}</span>
             </div>
             {
               userType === 'teacher' ?
@@ -177,6 +177,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                   {cols.map((col: StudentRosterColumn, idx: number) => (
                     <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       <span
+                        title={col.name}
                         className={
                           `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
                         }

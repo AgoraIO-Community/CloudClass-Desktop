@@ -33,7 +33,7 @@ export const en = {
     'student_name': 'Name',
     'camera': 'Camera',
     'microphone': 'Microphone',
-    'operation': 'Operation',
+    'operation': 'Remove',
   },
   'roster': {
     'teacher_name': 'Teacher：',
