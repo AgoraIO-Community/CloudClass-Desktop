@@ -80,6 +80,7 @@
   margin: 0;
 }
 
+
 .roster-header {
   font-size: 13px;
   color: #191919;
@@ -88,6 +89,17 @@
 
 .roster-header > label {
   color: #7b88a0;
+}
+
+.roster-container {
+  display:flex;
+  flex-direction: column;
+  height: calc(100% - 45px);
+}
+
+.roster-container .roster-table {
+  flex: 1;
+  min-height: 0;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
