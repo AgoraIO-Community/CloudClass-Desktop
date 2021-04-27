@@ -37,17 +37,17 @@ export const DownloadContainer = observer(() => {
             </Col>
             <Col>
               <Progress width={60} type="download" progress={progress} />
-              <Inline color="#586376">{progress}</Inline>
+              <Inline color="#586376" style={{marginLeft:5}}>{progress}%</Inline>
             </Col>
             <Col>
               <Row className="btn-group no-padding" gap={10}>
                 {
                   !download ? 
-                  <Button type="secondary" disabled={progress === 100} action="download" onClick={async () => {
+                  <Button style={{fontSize:12}} type="secondary" disabled={progress === 100} action="download" onClick={async () => {
                     await startDownload(taskUuid)
                   }}>{!download ? <span>{transI18n('cloud.download')}</span> : <span>{transI18n('cloud.downloading')}</span>}</Button>
                 : 
-                  <Button type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
+                  <Button style={{fontSize:12}} type="secondary" disabled={progress === 100}>{transI18n('cloud.downloading')}</Button>
                 }
                 <Button type="ghost" disabled={progress === 100 ? false : true} onClick={() => deleteSingle(taskUuid)}>{transI18n('cloud.delete')}</Button>
               </Row>
