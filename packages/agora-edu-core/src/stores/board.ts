@@ -1286,12 +1286,6 @@ export class BoardStore extends ZoomController {
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission)
-        if (this.room.isWritable) {
-          this.room.setMemberState({
-            currentApplianceName: ApplianceNames.selector
-          })
-          this.selector = 'selection'
-        }
       }
     }
   }
@@ -1485,6 +1479,14 @@ export class BoardStore extends ZoomController {
     if (this.online && this.room) {
       await this.room.setWritable(v)
 
+      if (this.userRole === EduRoleTypeEnum.student) {
+        if (this.room.isWritable) {
+          this.room.setMemberState({
+            currentApplianceName: ApplianceNames.selector
+          })
+          this.selector = 'selection'
+        }
+      }
       this.room.disableDeviceInputs = !v
     }
   }
