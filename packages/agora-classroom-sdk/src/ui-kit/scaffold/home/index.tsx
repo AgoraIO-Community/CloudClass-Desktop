@@ -55,7 +55,7 @@ export const Home: React.FC<HomeProps> = ({
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
   const scenarioOptions = [
-    { label: '1v1', value: '1v1' },
+    { label: t('home.roomType_1v1'), value: '1v1' },
     { label: t('home.roomType_interactiveSmallClass'), value: 'mid-class' },
     { label: t('home.roomType_interactiveBigClass'), value: 'big-class' },
   ]
@@ -92,9 +92,9 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
-          <div style={{ marginRight: 30, width: 150 }}>
+          <div style={{ marginRight: 0, width: 131 }}>
             <Select
-              prefix={<span>{transI18n('home.region')}</span>}
+              prefix={<span className="home-label">{transI18n('home.region')}</span>}
               id="region"
               value={region}
               onChange={value => {
@@ -105,9 +105,9 @@ export const Home: React.FC<HomeProps> = ({
             >
             </Select>
           </div>
-          <div style={{ marginRight: 30, width: language === 'en' ? 200 : 150 }} className={[language === 'en' ? "language-en-div" : ""].join(" ")}>
+          <div style={{ marginRight: 0, width: 185 }} className={[language === 'en' ? "language-en-div" : ""].join(" ")}>
             <Select
-              prefix={<span>{transI18n('home.language')}</span>}
+              prefix={<span className="home-label">{transI18n('home.language')}</span>}
               id="language"
               value={language}
               onChange={value => {
@@ -153,6 +153,7 @@ export const Home: React.FC<HomeProps> = ({
       {showDisclaimer ? (
         <Modal
           width={560}
+          style={{height: language === 'en' ? 475 : 370}}
           title={transI18n('disclaimer.title')}
           modalType="back"
           onCancel={() => {

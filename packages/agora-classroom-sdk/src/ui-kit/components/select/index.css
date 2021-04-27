@@ -21,6 +21,7 @@
 }
 .react-select__single-value, .react-select__option {
     font-size: 14px !important;
+    top: 51% !important;
 }
 .react-select__option {
     color: #586376 !important;

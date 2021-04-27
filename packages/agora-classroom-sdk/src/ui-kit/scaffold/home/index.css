@@ -108,6 +108,7 @@
 
 .header-left-title {
   margin-left: 10px;
+  color: #191919;
 }
 
 .header-left-text {
@@ -148,10 +149,6 @@
   height: 520px;
   z-index: 9;
 }
-.home-page .back-modal {
-  height: 490px;
-}
-
 .home-label {
   color: #586376;
   font-size: 14px;
