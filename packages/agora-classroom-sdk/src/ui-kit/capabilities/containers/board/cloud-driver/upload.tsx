@@ -91,7 +91,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
       <Table className="table-container">
         {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
-            <Col width={9}>
+            <Col style={{paddingLeft:19}} width={9}>
               <CheckBox className="checkbox" onClick={(evt: any) => {
                 changeChecked(id, evt.currentTarget.checked)
               }} checked={checked}></CheckBox>

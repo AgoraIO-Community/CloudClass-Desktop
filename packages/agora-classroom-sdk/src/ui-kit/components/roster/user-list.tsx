@@ -180,6 +180,9 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                         className={
                           `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
                         }
+                        style={{
+                          paddingLeft: idx !== 0 ? 0 : 25
+                        }}
                         onClick={
                           canOperate(role, localUserUuid, data, col)
                             ? () =>

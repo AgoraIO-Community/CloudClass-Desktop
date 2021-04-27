@@ -74,10 +74,12 @@
 
 .roster-user-list-wrap .table-header {
   color: #7B88A0;
+  padding-left: 0;
 }
 
 .roster-wrap .table-header {
   margin: 0;
+  padding-left: 0;
 }
 
 

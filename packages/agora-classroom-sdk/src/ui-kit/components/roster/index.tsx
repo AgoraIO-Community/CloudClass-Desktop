@@ -144,6 +144,9 @@ export const Roster: FC<RosterProps> = ({
                         className={
                           `${idx === 0 ? 'roster-username' : ''}`
                         }
+                        style={{
+                          paddingLeft: idx !== 0 ? 0 : 25
+                        }}
                         onClick={
                           canOperate(role, localUserUuid, data, col)
                             ? () =>

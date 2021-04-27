@@ -26,7 +26,7 @@ export const DownloadContainer = observer(() => {
       <Table className="table-container">
         {downloadList.length ? downloadList.map(({ id, name, progress, size, type, taskUuid, download }: any, idx: number) =>
           <Row height={10} border={1} key={`${id}${idx}`}>
-            <Col style={{cursor: 'pointer'}} onClick={() => {
+            <Col style={{cursor: 'pointer', paddingLeft:19}} onClick={() => {
               onResourceClick(id)
             }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
