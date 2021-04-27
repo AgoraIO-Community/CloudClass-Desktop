@@ -247,6 +247,7 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
                     promises.push(new Promise(async (resolve) => {
                         try {
                             await this.client?.subscribe(user, "video")
+                            console.log('Agora-SDK client subscribe' , user)
                             this.emit('user-published', user, "video")
                             resolve(true)
                         } catch(e) {

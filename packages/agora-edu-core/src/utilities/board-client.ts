@@ -93,7 +93,7 @@ export class BoardClient extends EventEmitter {
     if (isAssistant) {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
-        currentApplianceName: ApplianceNames.arrow,
+        currentApplianceName: ApplianceNames.selector,
         textSize: 24,
       })
     } else {

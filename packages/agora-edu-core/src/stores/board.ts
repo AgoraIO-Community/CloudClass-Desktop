@@ -894,10 +894,10 @@ export class BoardStore extends ZoomController {
       b: 63
     }
     this.room.setMemberState({
-      currentApplianceName: ApplianceNames.pencil,
+      currentApplianceName: ApplianceNames.selector,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
-    this.selector = 'pen'
+    this.selector = 'selection'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -1288,8 +1288,9 @@ export class BoardStore extends ZoomController {
         this.setGrantPermission(hasPermission)
         if (this.room.isWritable) {
           this.room.setMemberState({
-            currentApplianceName: ApplianceNames.pencil
+            currentApplianceName: ApplianceNames.selector
           })
+          this.selector = 'selection'
         }
       }
     }
