@@ -463,11 +463,8 @@ export class UploadService extends ApiBase {
   }
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-
-    const prefix = `${REACT_APP_AGORA_APP_SDK_DOMAIN}` === `https://api-solutions-dev.bj2.agoralab.co` ? `https://api-solutions-dev.bj2.agoralab.co` : `https://api-solutions.agoralab.co`
-    // TODO: 生产环境需要更替地址
+    const prefix = this.sdkDomain
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-
     console.log("[agora-edu-core] addFileToOss ", key, " prefix ", prefix, "  callbackUrl ", callbackUrl)
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
