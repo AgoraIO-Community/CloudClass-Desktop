@@ -644,11 +644,11 @@ export class RoomStore extends SimpleInterval {
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
         this.appStore.uiStore.fireToast(
-          'toast.chat_disable',
+          'toast.chat_enable',
         )
       } else {
         this.appStore.uiStore.fireToast(
-          'toast.chat_enable',
+          'toast.chat_disable',
         )
       }
     }

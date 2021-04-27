@@ -6,14 +6,25 @@
   margin: 0;
 }
 
+.student-username>span{
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.roster-table .table-row-item .table-col-item:first-child {
+  flex:1;
+  min-width: 0;
+}
+
 .roster-username {
   font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex:1;
-  min-width: 0;
 }
+
 
 .reward {
   display: inline-flex;

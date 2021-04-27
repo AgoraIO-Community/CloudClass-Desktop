@@ -43,7 +43,7 @@ export class UIStore {
 
   @computed
   get isElectron(): boolean {
-    return false
+    return window.isElectron
   }
 
   @observable
