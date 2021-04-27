@@ -57,7 +57,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     render: (_, profile) => {
       return (
         <div className="student-username">
-          <span title={profile.name} className="roster-username">{profile.name}</span>
+          <span title={profile.name}>{profile.name}</span>
           {profile.onPodium ? <img src={PodiumSvg} style={{marginLeft: 2}}/> : null}
         </div>
       )
