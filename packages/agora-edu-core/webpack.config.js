@@ -4,6 +4,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const config = require('dotenv').config().parsed
+
 const path = require('path');
 
 const isProd = process.env.NODE_ENV === 'production'
