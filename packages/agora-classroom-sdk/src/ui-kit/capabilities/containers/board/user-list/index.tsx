@@ -211,7 +211,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
 
 
     const dataList = useMemo(() => {
-        return lectureClassUserStreamList.filter((item: any) => item.name.includes(keyword))
+        return lectureClassUserStreamList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
       }, [keyword, lectureClassUserStreamList])
 
     //@ts-ignore
