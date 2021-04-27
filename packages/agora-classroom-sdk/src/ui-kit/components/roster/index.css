@@ -11,7 +11,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 71px;
+  flex:1;
+  min-width: 0;
 }
 
 .reward {
