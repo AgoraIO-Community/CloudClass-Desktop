@@ -166,6 +166,7 @@ export const Home: React.FC<HomeProps> = ({
       <Layout style={{ boxShadow: '2px 2px 8px 1px rgb(0 0 0 / 10%)' }} className="facade" direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
+          {/* <div className="form-title">{transI18n('home.form_title')}</div> */}
           {debug ?
             <Row className="home-row-item">
               <Col>

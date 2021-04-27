@@ -324,6 +324,7 @@ export const zh = {
   },
   'send': '发送',
   'home': {
+    'form_title': '免费试用',
     'roomId': 'roomId',
     'roomId_placeholder': '请输入roomId',
     'userId': 'userId',

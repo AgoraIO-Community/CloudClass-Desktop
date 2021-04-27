@@ -325,6 +325,7 @@ export const en = {
   },
   'send': 'Send',
   'home': {
+    'form_title': 'Free Use',
     'roomId': 'RoomId',
     'roomId_placeholder': 'Please input roomId',
     'userId': 'UserId',
