@@ -450,8 +450,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
       const calcLostRate = (oldStats: MediaSendPacketStats, newStats: MediaSendPacketStats, type: string) => {
 
-        if (oldStats.sendPacketsLost < newStats.sendPacketsLost
-          && oldStats.sendPackets < newStats.sendPackets) {
+        if (oldStats.sendPacketsLost <= newStats.sendPacketsLost
+          && oldStats.sendPackets <= newStats.sendPackets) {
           const deltaSendPacketsLost = newStats.sendPacketsLost - oldStats.sendPacketsLost
           const deltaSendPackets = newStats.sendPackets - oldStats.sendPackets
           const res = (deltaSendPacketsLost / (deltaSendPacketsLost + deltaSendPackets)) * 100
@@ -472,11 +472,22 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
             return 0
           }
           return +res.toFixed(2)
+        } else {
+          // reset prevStats when current stats is smaller than prev stats
+          this.stats.localVideoStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          this.stats.localAudioStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          return 0
         }
       }
 
-      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(this.stats.localAudioStats), 'video')
-      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(this.stats.localVideoStats), 'audio')
+      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(localAudioStats), 'audio')
+      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(localVideoStats), 'video')
 
       // this.stats = {
       //   localAudioStats: {
