@@ -33,7 +33,7 @@ export const zh = {
     'student_name': '学生姓名',
     'camera': '摄像头',
     'microphone': '麦克风',
-    'operation': '操作',
+    'operation': '踢人',
   },
   'roster': {
     'teacher_name': '教师姓名：',

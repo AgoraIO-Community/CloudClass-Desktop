@@ -294,7 +294,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               type={micEnabled ? 'microphone-on' : 'microphone-off'}
             />
           </div>
-          <span className="username">{username}</span>
+          <span title={username} className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
           {(whiteboardGranted && userType === 'student') ? (
