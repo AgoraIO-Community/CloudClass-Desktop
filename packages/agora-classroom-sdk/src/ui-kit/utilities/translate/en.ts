@@ -350,5 +350,23 @@ export const en = {
     'enter_classroom': 'Enter Classroom',
     'region_placeholder': 'please choose region',
     'region': 'Region',
+    'header-left-title': 'Agora Classroom',
+    'about': 'About'
+  },
+  'home-about': {
+    'privacy-policy': 'Privacy Policy',
+    'product-disclaimer': 'Product Disclaimer',
+    'sign-up': 'Sign up Agora.io',
+    'version-time': 'Version Time',
+    'sdk-version': 'SDK Version',
+    'classroom-version': 'Flexible Classroom Version',
+    'check': 'Check',
+    'register': 'Register'
+  },
+  'disclaimer': {
+    'title': 'disclaimer',
+    'content-a': `Agora Live ("this product") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as "software") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.`,
+    'content-b': `This product is provided "as is" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.`,
+    'content-c': `You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.`,
   }
 }

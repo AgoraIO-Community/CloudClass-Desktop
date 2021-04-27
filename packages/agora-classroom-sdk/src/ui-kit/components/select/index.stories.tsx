@@ -24,7 +24,19 @@ export const Docs = () => {
                         console.log(value)
                         setSelectedOption(value) 
                     }}
+                    // defaultMenuIsOpen={true}
                     options={options}
+                />
+            </div>
+            <div className="mt-4">
+                <Select
+                    value={selectedOption}
+                    onChange={value => {
+                        console.log(value)
+                        setSelectedOption(value) 
+                    }}
+                    options={options}
+                    prefix={<span>food</span>}
                 />
             </div>
         </>

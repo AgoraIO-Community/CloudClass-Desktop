@@ -12,8 +12,10 @@ export type SelectOption = {
 export interface SelectProps extends BaseProps {
     value?: string | undefined;
     placeholder?: string;
-    options: SelectOption[],
-    isSearchable?: boolean,
+    options: SelectOption[];
+    isSearchable?: boolean;
+    defaultMenuIsOpen?: boolean;
+    prefix?: React.ReactNode;
     onChange?: (value: string) => unknown
 }
 
@@ -23,6 +25,8 @@ export const Select: FC<SelectProps> = ({
     placeholder = "",
     options,
     isSearchable = false,
+    defaultMenuIsOpen = false,
+    prefix,
     onChange,
     className,
     ...restProps
@@ -32,18 +36,26 @@ export const Select: FC<SelectProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <ReactSelect
-            classNamePrefix={'react-select'}
-            className={cls}
-            value={options.find(item => item.value === value)}
-            placeholder={placeholder}
-            options={options}
-            isSearchable={isSearchable}
-            // @ts-ignore
-            onChange={(option: SelectOption)  => {
-                onChange && onChange(option.value)
-            }}
-            {...restProps}
-        />
+        <div className={'react-select-container'}>
+            {prefix && (
+                <div className={'select-prefix'}>
+                    {prefix}
+                </div>
+            )}
+            <ReactSelect
+                className={[cls, prefix ? 'react-select-prefix' : ''].join(" ")}
+                classNamePrefix={['react-select'].join(" ")}
+                value={options.find(item => item.value === value)}
+                placeholder={placeholder}
+                options={options}
+                isSearchable={isSearchable}
+                // @ts-ignore
+                onChange={(option: SelectOption)  => {
+                    onChange && onChange(option.value)
+                }}
+                defaultMenuIsOpen={defaultMenuIsOpen}
+                {...restProps}
+            />
+        </div>
     )
 }

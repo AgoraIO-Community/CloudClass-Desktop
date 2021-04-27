@@ -1,3 +1,41 @@
+.react-select-container {
+    position: relative;
+}
+
+.react-select-container .select-prefix {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 15px;
+    margin: auto;
+    z-index: 1;
+}
+
+.react-select__menu {
+    z-index: 10 !important;
+}
+
+.react-select-prefix .react-select__value-container{
+    padding-left: 80px !important;
+}
+
 .react-select__indicator-separator {
     display: none;
+}
+
+.select .react-select__indicators {
+    transform: rotate(0deg);
+    transition: 150ms;
+    -webkit-transition: 150ms;
+}
+
+.react-select__control--menu-is-open .react-select__indicators{
+    transform: rotate(180deg);
+}   
+
+.select .react-select__option {
+    text-align: center;
 }
