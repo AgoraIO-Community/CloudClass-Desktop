@@ -48,6 +48,9 @@ export class BoardClient extends EventEmitter {
         // 其他参数
       // invisiblePlugins: [IframeBridge],
       // wrappedComponents: [IframeWrapper],
+      pptParams: {
+        useServerWrap: true
+      },
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,

@@ -56,6 +56,9 @@ export class BoardClient extends EventEmitter {
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
+      pptParams: {
+        useServerWrap: true
+      },
       loggerOptions: {
         // reportQualityMode: "alwaysReport",
         // reportDebugLogMode: "alwaysReport",
