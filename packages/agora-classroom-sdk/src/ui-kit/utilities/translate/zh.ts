@@ -348,7 +348,7 @@ export const zh = {
     'language_placeholder': '请选择语言',
     'duration': '时长',
     'duration_unit': '分钟',
-    'enter_classroom': '加入课堂',
+    'enter_classroom': '进入教室',
     'region_placeholder': '请选择区域',
     'region': '区域：',
     'header-left-title': '声网灵动课堂',

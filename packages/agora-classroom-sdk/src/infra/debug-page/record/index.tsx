@@ -45,11 +45,12 @@ export const RecordPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
+      AgoraEduSDK.setParameters(JSON.stringify({
+        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+      }))
       AgoraEduSDK.config({
         appId: `${appId}`,
-        sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       })
-
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
       // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
       // const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
@@ -62,9 +63,6 @@ export const RecordPage = observer(() => {
       //     0
       //   )
       // }
-
-      console.log('recordUrl')
-
       // launchOption.extApps = [new AgoraExtAppCountDown(), new AgoraExtAppWhiteboard()]
       roomRef.current = await AgoraEduSDK.launch(dom, {
         // ...launchOption,

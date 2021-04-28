@@ -1,4 +1,5 @@
 import { getLiveRoomPath } from '@/infra/router/index';
+import { globalConfigs } from '@/ui-kit/utilities';
 import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
@@ -48,7 +49,6 @@ export interface ApplicationConfigParameters {
 
 type SDKConfig = {
   configParams: AgoraEduSDKConfigParams
-  sdkDomain: string
 }
 
 const sdkConfig: SDKConfig = {
@@ -64,9 +64,8 @@ const sdkConfig: SDKConfig = {
     // appId: '',
     // whiteboardAppId: '',
     // rtmUid: '',
-  },
-  sdkDomain: ``
-}
+  }
+} 
 
 export type LanguageEnum = "en" | "zh"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
@@ -150,10 +149,24 @@ export class AgoraEduSDK {
     Object.assign(sdkConfig.configParams, params)
 
     console.log('# set config ', sdkConfig.configParams, ' params ', params)
+    // globalConfigs should only be copied here
     eduSDKApi.updateConfig({ 
-      sdkDomain: `${sdkConfig.configParams.sdkDomain}`,
+      sdkDomain: globalConfigs.sdkDomain,
       appId: sdkConfig.configParams.appId,
     })
+  }
+
+  // @internal
+  static setParameters(params: string) {
+    try {
+      let json = JSON.parse(params)
+      if(json["edu.apiUrl"]) {
+        globalConfigs.sdkDomain = json["edu.apiUrl"]
+      } 
+      console.info(`setParameters ${params}`)
+    }catch(e) {
+      console.error(`parse private params failed ${params}`)
+    }
   }
 
   static _launchTime = 0
@@ -204,7 +217,7 @@ export class AgoraEduSDK {
           agoraAppId: sdkConfig.configParams.appId,
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,
-          sdkDomain: `${sdkConfig.configParams.sdkDomain}`,
+          sdkDomain: `${globalConfigs.sdkDomain}`,
           region: option.region,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,

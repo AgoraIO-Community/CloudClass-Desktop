@@ -303,7 +303,7 @@ export class MediaStore {
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
       if (this.appStore.uiStore.isElectron) {
-        this.totalVolume = Number((totalVolume / 255).toFixed(3))
+        this.totalVolume = +Number(((totalVolume / 255) * 100)).toFixed(3)
       } else {
         this.totalVolume = totalVolume * 100;
       }

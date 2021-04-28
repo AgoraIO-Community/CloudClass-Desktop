@@ -33,7 +33,6 @@ export enum AgoraEduEvent {
 
 export type AgoraEduSDKConfigParams = {
   appId: string;
-  sdkDomain?: string;
 }
 
 export interface RoomParameters {

@@ -14,7 +14,8 @@
     "build:dev:js": "run-s build:dev:bundle build:types",
     "build:types": "tsc --outDir lib --module commonjs",
     "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
-    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'"
+    "build:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "build:js": "run-s build:release:bundle:js build:types"
   },
   "devDependencies": {
     "@babel/core": "7.13.15",
