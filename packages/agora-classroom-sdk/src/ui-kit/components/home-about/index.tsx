@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
+import { Icon } from '~components/icon'
 import './index.css';
 import { t } from '~components/i18n';
 
@@ -39,21 +40,21 @@ export const HomeAbout: FC<HomeAboutProps> = ({
             <div className="about-main">
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.privacy-policy')}</div>
-                    <div className="main-desc main-operation" onClick={() => {
+                    <div className="main-desc main-operation operation-click" onClick={() => {
                         onLookPrivate && onLookPrivate()
-                    }}>{t('home-about.check')} &gt;</div>
+                    }}><span>{t('home-about.check')} </span><Icon type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.product-disclaimer')}</div>
-                    <div className="main-desc main-operation" onClick={() => {
+                    <div className="main-desc main-operation operation-click" onClick={() => {
                         onLookDeclare && onLookDeclare()
-                    }}>{t('home-about.check')} &gt;</div>
+                    }}><span>{t('home-about.check')}</span><Icon type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.sign-up')}</div>
-                    <div className="main-desc main-operation" onClick={() => {
+                    <div className="main-desc main-operation operation-click" onClick={() => {
                         onRegiste && onRegiste()
-                    }}>{t('home-about.register')} &gt;</div>
+                    }}><span>{t('home-about.register')}</span><Icon type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.version-time')}</div>
