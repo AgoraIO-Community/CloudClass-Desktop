@@ -262,3 +262,11 @@
 .search-teacher-name .roster-username {
   margin: 0;
 }
+
+.search-header .input-search-wrapper {
+  height:34px;
+}
+
+.search-header .input-search-wrapper .input-prefix {
+  opacity: 0.5;
+}
