@@ -130,9 +130,9 @@ const webWorkerConfig = () => config => {
 const sourceMap = () => config => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
-  // config.devtool = 'source-map'
   console.log('node version', process.version)
-  config.devtool = isProd ? 'none' : 'cheap-module-eval-source-map'
+  config.devtool = 'none'
+  // config.devtool = isProd ? 'source-map' : 'cheap-module-eval-source-map'
   return config;
 }
 
@@ -179,14 +179,15 @@ const useOptimizeBabelConfig = () => config => {
     include: [
       path.resolve("src")
     ],
-    exclude: /\.(stories.ts)x?$/i,
+    // exclude: /\.(stories.ts)x?$/i,
     use: [
       'thread-loader', 'cache-loader', getBabelLoader(config).loader,
     ],
-    exclude: [
-      path.resolve("node_modules"),
-      path.resolve("src/sw"),
-    ],
+    exclude: /node_modules|(\.(stories.ts)x?$)/,
+    // exclude: [
+    //   path.resolve("node_modules"),
+    //   path.resolve("src/sw"),
+    // ],
   }
 
   for (let _rule of config.module.rules) {

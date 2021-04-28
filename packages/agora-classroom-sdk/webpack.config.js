@@ -159,7 +159,7 @@ module.exports = {
   optimization: {
     minimizer: [
         new TerserPlugin({
-            parallel: true,
+            parallel: require('os').cpus().length,
         }),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.css$/g,
