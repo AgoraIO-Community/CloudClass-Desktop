@@ -6,6 +6,7 @@
 .toolbar.opened {
   box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
   border-radius: 21px;
+  height:100%;
 }
 
 .toolbar .menu {
@@ -28,15 +29,36 @@
 
 .toolbar > .tools {
   @apply hidden;
+  overflow-y: scroll;
+  height: calc(100% - 42px);
+}
+
+.toolbar > .tools::-webkit-scrollbar {
+  width: 0;
 }
 
 .toolbar.opened > .tools {
   @apply flex flex-col items-center;
 }
 
+.toolbar-shadow {
+  bottom: -2px;
+  position: absolute;
+  height: 20px;
+  width: 100%;
+  background: white;
+  border-radius: 0 0 21px 21px;
+  box-shadow: 0px -4px 6px 0px rgb(47 65 146 / 15%);
+}
+
+.toolbar-shadow.hidden {
+  box-shadow: none;
+}
+
 .circle-border {
   border-radius: 50%;
   border: 1px solid;
+  margin: 4px;
 }
 
 .tool {
@@ -58,6 +80,10 @@
   line-height: 1;
   margin-bottom: 10px;
   color: #7b88a0;
+}
+
+.toolbar.opened .tools .tool:last-child {
+  margin-bottom: 25px;
 }
 
 .tool .triangle-icon {
@@ -180,6 +206,7 @@
   position: absolute;
   left: 15px;
   top: 5rem;
+  height: calc(100% - 92px - 5rem);
 }
 
 .toolbar-anim-hide {

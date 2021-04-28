@@ -13,9 +13,9 @@ import { useEffect } from 'react'
 
 export const allTools: ToolItem[] = [
   {
-    value: 'selector',
+    value: 'selection',
     label: 'scaffold.selector',
-    icon: 'select',
+    icon: 'select'
   },
   {
     value: 'pen',
@@ -28,12 +28,13 @@ export const allTools: ToolItem[] = [
   {
     value: 'text',
     label: 'scaffold.text',
-    icon: 'text',
+    icon: 'text'
   },
   {
     value: 'eraser',
     label: 'scaffold.eraser',
-    icon: 'eraser',
+    icon: 'eraser'
+    
   },
   {
     value: 'color',
@@ -46,17 +47,17 @@ export const allTools: ToolItem[] = [
   {
     value: 'blank-page',
     label: 'scaffold.blank_page',
-    icon: 'blank-page',
+    icon: 'blank-page'
   },
   {
     value: 'hand',
     label: 'scaffold.move',
-    icon: 'hand',
+    icon: 'hand'
   },
   {
     value: 'cloud',
     label: 'scaffold.cloud_storage',
-    icon: 'cloud',
+    icon: 'cloud'
     // component: () => {
     //   return <CloudDiskContainer />
     // }
@@ -72,12 +73,12 @@ export const allTools: ToolItem[] = [
   {
     value: 'register',
     label: 'scaffold.user_list',
-    icon: 'register',
+    icon: 'register'
   },
   {
     value: 'student_list',
     label: 'scaffold.student_list',
-    icon: 'register',
+    icon: 'register'
   }
 ]
 
@@ -200,7 +201,7 @@ export const WhiteboardContainer = observer(() => {
       return [true, hasPermission]
     }
 
-    if (roomInfo.roomType === EduRoomType.SceneTypeMiddleClass && roomInfo.userRole === EduRoleTypeEnum.student) {
+    if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
       return [true, hasPermission]
     }
 

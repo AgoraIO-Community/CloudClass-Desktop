@@ -170,7 +170,22 @@ export class SceneStore extends SimpleInterval {
   userList: EduUser[] = []
 
   @observable
-  streamList: EduStream[] = []
+  private _streamList: EduStream[] = []
+
+  @computed
+  get screenShareStreamList() {
+    return this._streamList.filter((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)
+  }
+  
+  @computed
+  get streamList() {
+    return this._streamList.filter((it: EduStream) => it.videoSourceType !== EduVideoSourceType.screen)
+  }
+
+  @action.bound
+  updateStreamList(streamList: EduStream[])  {
+    this._streamList = streamList
+  }
 
   @observable
   unreadMessageCount: number = 0
@@ -243,7 +258,7 @@ export class SceneStore extends SimpleInterval {
     this.microphoneLock = false
     this.waitingShare = false
     this.userList = []
-    this.streamList = []    
+    this._streamList = []    
     this.unreadMessageCount = 0
     this.joined = false
     this.classState = 0
@@ -397,6 +412,16 @@ export class SceneStore extends SimpleInterval {
             })
             // this.appStore.uiStore.addDialog(OpenShareScreen)
             // this.appStore.uiStore.addDialog(screenComponent)
+          } else {
+            this.appStore.uiStore.fireToast(`toast.failed_to_enable_screen_sharing_permission_denied`)
+            //@ts-ignore
+            if (window.isMacOS && window.openPrivacyForCaptureScreen) {
+              //@ts-ignore
+              if (window.isMacOS()) {
+                //@ts-ignore
+                window.openPrivacyForCaptureScreen()
+              }
+            }
           }
         })
       }).catch(err => {
@@ -591,9 +616,6 @@ export class SceneStore extends SimpleInterval {
       } as CameraOption
       await this.mediaService.openCamera(config)
       this._cameraRenderer = this.mediaService.cameraRenderer
-      if (this.isElectron) {
-        this.appStore.mediaStore.rendererOutputFrameRate[`${0}`] = 1
-      }
 
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
@@ -1083,21 +1105,21 @@ export class SceneStore extends SimpleInterval {
   }
 
   getLocalPlaceHolderProps() {
-    if (this.openingCamera === true) {
-      return {
-        holderState: 'loading',
-        text: 'placeholder.openingCamera'
-      }
-    }
+    // if (this.openingCamera === true) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: 'placeholder.openingCamera'
+    //   }
+    // }
 
-    if (this.closingCamera === true) {
-      return {
-        holderState: 'closedCamera',
-        text: 'placeholder.closingCamera'
-      }
-    }
+    // if (this.closingCamera === true) {
+    //   return {
+    //     holderState: 'closedCamera',
+    //     text: 'placeholder.closingCamera'
+    //   }
+    // }
 
-    if (!this.cameraEduStream) {
+    if (!this.cameraEduStream || this.openingCamera || this.closingCamera) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
@@ -1134,7 +1156,6 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
-  @action.bound
   getRemotePlaceHolderProps(userUuid: string, userRole: string) {
     const stream = this.getStreamBy(userUuid)
 
@@ -1144,6 +1165,15 @@ export class SceneStore extends SimpleInterval {
         return this.defaultTeacherPlaceholder
       } else {
         return this.defaultStudentPlaceholder
+      }
+    }
+    const stats = this.getRemoteVideoStatsBy(stream.streamUuid)
+
+    if(!stats){
+      // display loading when stats is not yet ready
+      return {
+        holderState: 'loading',
+        text: `placeholder.loading`
       }
     }
 
@@ -1174,7 +1204,7 @@ export class SceneStore extends SimpleInterval {
     if (isLocal) {
       return this.localVolume
     }
-    const level = this.appStore.mediaStore.speakers[`${streamUuid}`] || 0
+    const level = this.appStore.mediaStore.speakers.get(+streamUuid) || 0
     if (this.appStore.isElectron) {
       return this.fixNativeVolume(level)
     }
@@ -1200,8 +1230,13 @@ export class SceneStore extends SimpleInterval {
       const freezeCount = this.cameraRenderer?.freezeCount || 0
       return freezeCount < 3
     } else {
-      const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${uid}`]
-      return frameRate > 0
+      // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
+      // if(render) {
+      //   return render.renderFrameRate > 0
+      // }
+      const stats = this.getRemoteVideoStatsBy(`${uid}`)
+      let freezeCount = stats ? stats.freezeCount : 0
+      return freezeCount < 3
     }
   }
 
@@ -1274,6 +1309,7 @@ export class SceneStore extends SimpleInterval {
       hideOffPodium: [EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType) ? false : true,
       hideOffAllPodium: roomType === EduRoomType.SceneTypeMiddleClass ? false : true,
       isHost: isHost,
+      hideBoardGranted: [EduRoomType.SceneTypeBigClass].includes(roomType) ? true : false,
     }
 
     return config
@@ -1291,7 +1327,11 @@ export class SceneStore extends SimpleInterval {
   }
 
   private getStreamBy(userUuid: string): EduStream {
-    return this.streamList.find((it: EduStream) => get(it.userInfo, 'userUuid', 0) as string === userUuid) as EduStream
+    return this.streamList.find((it: EduStream) => get(it.userInfo, 'userUuid', 0) as string === userUuid && it.videoSourceType === EduVideoSourceType.camera) as EduStream
+  }
+
+  private getRemoteVideoStatsBy(streamUuid: string): any {
+    return this.appStore.mediaStore.remoteVideoStats.get(streamUuid)
   }
 
   @computed
@@ -1310,7 +1350,7 @@ export class SceneStore extends SimpleInterval {
         hideControl: false
       } as any
     } else {
-      return this.streamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
+      return this.screenShareStreamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
         const teacher = this.userList.find((user: EduUser) => user.role === 'host')
         if (stream.videoSourceType !== EduVideoSourceType.screen 
           || !teacher 
@@ -1375,11 +1415,11 @@ export class SceneStore extends SimpleInterval {
     // TODO: native adapter
     if (this.appStore.isElectron) {
       // native sdk默认0是本地音量
-      volume = this.appStore.mediaStore.speakers[0] || 0
+      volume = this.appStore.mediaStore.speakers.get(0) || 0
       return this.fixNativeVolume(volume)
     }
     if (this.appStore.isWeb && get(this, 'cameraEduStream.streamUuid', 0)) {
-      volume = this.appStore.mediaStore.speakers[+this.cameraEduStream.streamUuid] || 0
+      volume = this.appStore.mediaStore.speakers.get(+this.cameraEduStream.streamUuid) || 0
       return this.fixWebVolume(volume)
     }
     return volume
@@ -1717,6 +1757,7 @@ export class SceneStore extends SimpleInterval {
     try {
       await eduSDKApi.updateRecordingState({
         roomUuid: this.roomUuid,
+        url: this.appStore.params.config.recordUrl,
         state: 1
       })
       // let {recordId} = await this.recordService.startRecording(this.roomUuid)

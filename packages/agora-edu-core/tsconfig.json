@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "lib",
     "target": "es6",
     "experimentalDecorators": true,
     "module": "esnext",
@@ -9,7 +11,8 @@
       "esnext",
       "webworker"
     ],
-    "noImplicitAny": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "allowJs": true,
@@ -22,8 +25,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve"
+    "noEmit": false,
+    "jsx": "react",
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"

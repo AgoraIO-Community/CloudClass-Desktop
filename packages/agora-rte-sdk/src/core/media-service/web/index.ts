@@ -1,4 +1,4 @@
-import { IAgoraRTCRemoteUser, UID } from 'agora-rtc-sdk-ng';
+import { IAgoraRTCRemoteUser, LocalAudioTrackStats, UID } from 'agora-rtc-sdk-ng';
 import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
@@ -6,6 +6,8 @@ import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import { convertUid, paramsConfig } from '../utils';
 import { AgoraWebStreamCoordinator } from './coordinator';
+
+type MediaSendPacketStats = Pick<LocalAudioTrackStats, 'sendPackets' | 'sendPacketsLost'>;
 
 export type AgoraWebVolumeResult = {
   level: number,
@@ -130,6 +132,16 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   reset() {
+    this.stats = {
+      localAudioStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      },
+      localVideoStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      }
+    }
     this.publishedVideo = false
     this.publishedAudio = false
     this.hasCamera = undefined
@@ -301,6 +313,26 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.reset()
   }
 
+  private stats: {
+    localAudioStats: {
+     sendPackets: number;
+     sendPacketsLost: number;
+    },
+    localVideoStats: {
+      sendPackets: number;
+      sendPacketsLost: number;
+    }
+  } = {
+    localAudioStats: {
+      sendPackets: 0,
+      sendPacketsLost: 0,
+    },
+    localVideoStats: {
+      sendPackets: 0,
+      sendPacketsLost: 0,
+    }
+  }
+
   private channelName: string = ''
 
   async join(option: any): Promise<any> {
@@ -393,15 +425,86 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     client.on('network-quality', (evt: any) => {
       const audioStats = this.client.getRemoteAudioStats()
       const videoStats = this.client.getRemoteVideoStats()
+
+      const prevStats = this.stats
+
+      const prevAudioStats: MediaSendPacketStats = {
+        sendPackets: prevStats.localAudioStats.sendPackets,
+        sendPacketsLost: prevStats.localAudioStats.sendPacketsLost,
+      }
+
+      const prevVideoStats: MediaSendPacketStats = {
+        sendPackets: prevStats.localVideoStats.sendPackets,
+        sendPacketsLost: prevStats.localVideoStats.sendPacketsLost,
+      }
+      
       const localAudioStats = this.client.getLocalAudioStats()
       const localVideoStats = this.client.getLocalVideoStats()
-      this._localAudioStats = {
-        audioLossRate: localAudioStats.sendPacketsLost
+
+      const take = (stats: MediaSendPacketStats) => {
+        return {
+          sendPacketsLost: !isNaN(stats.sendPacketsLost) ? stats.sendPacketsLost : 0,
+          sendPackets: !isNaN(stats.sendPackets) ? stats.sendPackets : 0,
+        }
       }
-      this._localVideoStats = {
-        videoLossRate: localVideoStats.sendPacketsLost
+
+      const calcLostRate = (oldStats: MediaSendPacketStats, newStats: MediaSendPacketStats, type: string) => {
+
+        if (oldStats.sendPacketsLost <= newStats.sendPacketsLost
+          && oldStats.sendPackets <= newStats.sendPackets) {
+          const deltaSendPacketsLost = newStats.sendPacketsLost - oldStats.sendPacketsLost
+          const deltaSendPackets = newStats.sendPackets - oldStats.sendPackets
+          const res = (deltaSendPacketsLost / (deltaSendPacketsLost + deltaSendPackets)) * 100
+
+          if (type === 'video') {
+            this.stats.localVideoStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          } else {
+            this.stats.localAudioStats = {
+              sendPacketsLost: newStats.sendPacketsLost,
+              sendPackets: newStats.sendPackets,
+            }
+          }
+
+          if (isNaN(res)) {
+            return 0
+          }
+          return +res.toFixed(2)
+        } else {
+          // reset prevStats when current stats is smaller than prev stats
+          this.stats.localVideoStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          this.stats.localAudioStats = {
+            sendPacketsLost: 0,
+            sendPackets: 0,
+          }
+          return 0
+        }
       }
-      // console.log("network quality ", videoStats, localVideoStats)
+
+      const deltaAudioLostRate = calcLostRate(take(prevAudioStats), take(localAudioStats), 'audio')
+      const deltaVideoLostRate = calcLostRate(take(prevVideoStats), take(localVideoStats), 'video')
+
+      // this.stats = {
+      //   localAudioStats: {
+      //     sendPackets: localAudioStats.sendPackets,
+      //     sendPacketsLost: localAudioStats.sendPacketsLost,
+      //   },
+      //   localVideoStats: {
+      //     sendPackets: localVideoStats.sendPackets,
+      //     sendPacketsLost: localVideoStats.sendPacketsLost,
+      //   }
+      // }
+      // const audioLossRate = localAudioStats.sendPacketsLost / (localAudioStats.sendPacketsLost + localAudioStats.sendPackets)
+      // const videoLossRate = localVideoStats.sendPacketsLost / (localVideoStats.sendPacketsLost + localVideoStats.sendPackets)
+      // this._localVideoStats = {
+      //   // TODO: handle NaN
+      //   videoLossRate: isNaN(videoLossRate) ? 0 : videoLossRate
+      // }
       this.fire('localVideoStats', {
         stats: {
           encoderOutputFrameRate: localVideoStats.captureFrameRate,
@@ -428,8 +531,12 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         channel: channelName,
         rtt: stats.RTT,
         localPacketLoss: {
-          audioStats: this._localAudioStats,
-          videoStats: this._localVideoStats
+          audioStats: {
+            audioLossRate: deltaAudioLostRate,
+          },
+          videoStats: {
+            videoLossRate: deltaVideoLostRate,
+          }
         },
         remotePacketLoss:{
           audioStats,
@@ -956,11 +1063,15 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     if (this.cameraTrack 
         && this.cameraTrack.getTrackId() === trackId) {
       await this.client.unpublish([this.cameraTrack])
+      this.stats.localVideoStats.sendPackets = 0
+      this.stats.localVideoStats.sendPacketsLost = 0
       EduLogger.info(`[agora-web] unpublish camera track [${trackId}] success`)
     }
     if (this.microphoneTrack 
       && this.microphoneTrack.getTrackId() === trackId) {
       await this.client.unpublish([this.microphoneTrack])
+      this.stats.localAudioStats.sendPackets = 0
+      this.stats.localAudioStats.sendPacketsLost = 0
       EduLogger.info(`[agora-web] unpublish microphone track [${trackId}] success`)
     }
     this.publishedTrackIds.splice(idx, 1)
@@ -1015,6 +1126,19 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   private fireTrackEnd({resource, tag, trackId}: FireTrackEndedAction) {
+    // 加入房间的时候重置丢包率
+    if (this.joined) {
+      if (resource === 'audio') {
+        this.stats.localAudioStats.sendPackets = 0
+        this.stats.localAudioStats.sendPacketsLost = 0
+      }
+  
+      if (resource === 'video') {
+        this.stats.localVideoStats.sendPackets = 0
+        this.stats.localVideoStats.sendPacketsLost = 0
+      }
+    }
+
     this.fire("track-ended", {resource, tag, trackId})
   }
 

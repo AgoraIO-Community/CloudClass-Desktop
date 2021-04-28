@@ -808,7 +808,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async aClassJoinBoard(params: any) {
     const {role, ...data} = params
-    const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
+    const identity = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
@@ -882,7 +882,7 @@ export class BoardStore extends ZoomController {
       floatBar: true,
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
-      disableNewPencil: false
+      disableNewPencil: false,
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -891,10 +891,10 @@ export class BoardStore extends ZoomController {
       b: 63
     }
     this.room.setMemberState({
-      currentApplianceName: ApplianceNames.pencil,
+      currentApplianceName: ApplianceNames.selector,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
-    this.selector = 'pen'
+    this.selector = 'selection'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -1040,6 +1040,12 @@ export class BoardStore extends ZoomController {
       case 'hand':
       case 'eraser':
       case 'color':
+      case ApplianceNames.pencil:
+      case ApplianceNames.rectangle:
+      case ApplianceNames.ellipse:
+      case ApplianceNames.straight:
+      case ApplianceNames.arrow:
+      case ApplianceNames.selector:
       {
         const room = this.room
         if (room.isWritable) {
@@ -1052,7 +1058,21 @@ export class BoardStore extends ZoomController {
               currentApplianceName: appliance
             })
           }
-          this.selector = tool
+
+          const selector = {
+            [ApplianceNames.pencil]: 'pen',
+            [ApplianceNames.rectangle]: 'square',
+            [ApplianceNames.ellipse]: 'circle',
+            [ApplianceNames.straight]: 'line',
+            [ApplianceNames.arrow]: 'arrow',
+            [ApplianceNames.selector]: 'selection'
+          }
+
+          if (selector[tool]) {
+            this.selector = selector[tool]
+          } else {
+            this.selector = tool
+          }
         }
         break
       }
@@ -1071,6 +1091,10 @@ export class BoardStore extends ZoomController {
       case 'laser': {
         this.selector = tool
         break;
+      }
+      case 'reset': {
+        this.selector = ""
+        break
       }
     }
   }
@@ -1214,7 +1238,7 @@ export class BoardStore extends ZoomController {
   updatePen(value: any) {
     this.lineSelector = value
     this.room.setMemberState({
-      currentApplianceName: transLineTool[value] as any
+      currentApplianceName: transToolBar[value] as any
     })
   }
 
@@ -1354,7 +1378,7 @@ export class BoardStore extends ZoomController {
         if (this.hasPermission) {
           return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
         } else {
-          return []
+          return bigClassTools.filter((item: ToolItem) => item.value === 'student_list')
         }
       }
       return bigClassTools
@@ -1452,6 +1476,14 @@ export class BoardStore extends ZoomController {
     if (this.online && this.room) {
       await this.room.setWritable(v)
 
+      if (this.userRole === EduRoleTypeEnum.student) {
+        if (this.room.isWritable) {
+          this.room.setMemberState({
+            currentApplianceName: ApplianceNames.selector
+          })
+          this.selector = 'selection'
+        }
+      }
       this.room.disableDeviceInputs = !v
     }
   }

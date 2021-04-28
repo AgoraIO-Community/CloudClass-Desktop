@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/react';
 import React, { FC, useState } from 'react';
 import { Chat, ChatProps } from '~components/chat';
-import { Icon } from '~components/icon';
 
 const meta: Meta = {
   title: 'Components/Chat',
@@ -107,11 +106,11 @@ export const Docs: FC<ChatProps> = (props) => {
               setText('')
             }
           } 
-          closeIcon={<Icon type="close" />}
           onClickMiniChat={() => {
-            console.log('click chat min');
+            
           }}
           canChatting={false}
+          showCloseIcon={true}
         />
       </div>
     </div>

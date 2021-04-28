@@ -220,7 +220,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
             <StorageContainer />
           </TabPane>
           <TabPane tab={transI18n('cloud.personalResources')} key="2">
-            <Row className="btn-group margin-gap">
+            <Row style={{paddingLeft:19}} className="btn-group margin-gap">
               <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
                 onChange={handleUpload} type="file">
               </input>

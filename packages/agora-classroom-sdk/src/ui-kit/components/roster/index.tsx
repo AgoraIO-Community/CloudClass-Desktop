@@ -6,7 +6,7 @@ import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
-import { canOperate, ProfileRole } from './base';
+import { canOperate, ProfileRole, studentListSort } from './base';
 
 export * from './user-list';
 
@@ -95,7 +95,7 @@ export interface RosterProps extends ModalProps {
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
-  dataSource,
+  dataSource = [],
   onClick,
   onClose = () => console.log("onClose"),
   role,
@@ -104,12 +104,15 @@ export const Roster: FC<RosterProps> = ({
   isDraggable = true,
   userType = 'teacher'
 }) => {
+
+  const studentList = studentListSort(dataSource)
+
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
   const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
     return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
-  console.warn(role, localUserUuid, dataSource,"gggkkkk")
+
   return (
     <DraggableContainer>
       <div className="agora-board-resources roster-wrap">
@@ -121,7 +124,7 @@ export const Roster: FC<RosterProps> = ({
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}
         </div>
-        <div>
+        <div className="roster-container">
           <div className="roster-header">
             <label>{t('roster.teacher_name')}</label>
             <span className="roster-username">{teacherName}</span>
@@ -129,18 +132,21 @@ export const Roster: FC<RosterProps> = ({
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
               ))}
             </TableHeader>
             <Table className="table-container">
-              {dataSource?.map((data: Profile) => (
+              {studentList?.map((data: Profile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
-                    <Col key={col.key}>
+                    <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       <span
                         className={
                           `${idx === 0 ? 'roster-username' : ''}`
                         }
+                        style={{
+                          paddingLeft: idx !== 0 ? 0 : 25
+                        }}
                         onClick={
                           canOperate(role, localUserUuid, data, col)
                             ? () =>

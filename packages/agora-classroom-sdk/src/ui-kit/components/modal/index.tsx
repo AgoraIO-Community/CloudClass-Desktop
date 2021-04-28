@@ -24,6 +24,7 @@ export interface ModalProps extends BaseProps {
     // TODO: need support
     maskClosable?: boolean;
     contentClassName?: string;
+    modalType?: 'normal' | 'back';
     children?: React.ReactNode;
 }
 
@@ -43,6 +44,7 @@ export const Modal: ModalType = ({
     className,
     component,
     contentClassName,
+    modalType = 'normal',
     maskClosable,
     ...restProps
 }) => {
@@ -57,21 +59,35 @@ export const Modal: ModalType = ({
     }
     const cls = classnames({
         [`modal`]: 1,
-        [`${className}`]: !!className,
+        [`back-modal`]: modalType === 'back',
+        [`${className}`]: !!className
     });
 
     const contentCls = classnames({
         [`modal-content`]: contentClassName ? false : true,
         [`${contentClassName}`]: !!contentClassName,
     })
-    
+
     return (
         <div className={cls} {...restProps} style={{ ...style, width }}>
-            <div className="modal-title">
-                <div className="modal-title-text">
-                    {title}
-                </div>
-                {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => {onCancel(e)}}><Icon type="close" color="#D8D8D8" /></div>) : ""}
+            <div className={["modal-title", modalType === 'back' ? "back-modal-title" : ""].join(" ")}>
+                {modalType === 'normal' ? (
+                    <>
+                        <div className="modal-title-text">
+                            {title}
+                        </div>
+                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#D8D8D8" /></div>) : ""}
+                    </>
+                ) : null}
+                {modalType === 'back' ? (
+                    <>
+                        <div style={{cursor: 'pointer'}} className="back-icon" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="backward" color="#D8D8D8" /></div>
+                        <div className="back-title">
+                            {title}
+                        </div>
+                        <div></div>
+                    </>
+                ) : null}
             </div>
             <div className={contentCls}>
                 {children}
@@ -113,8 +129,8 @@ Modal.show = (
 ) => {
     const cls = classnames({
         [`rc-mask`]: !!showMask,
-      })
-    Notification.newInstance({prefixCls: cls}, notification => {
+    })
+    Notification.newInstance({ prefixCls: cls }, notification => {
         const modalId = 'modal-' + Date.now()
         const hideModal = () => {
             notification.removeNotice(modalId)

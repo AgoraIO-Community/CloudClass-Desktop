@@ -17,7 +17,7 @@ export const StorageContainer = observer(() => {
     <Table className="table-container">
       {publicResources.length ? publicResources.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
         <Row height={10} border={1} key={idx} >
-          <Col style={{cursor: 'pointer'}} onClick={async () => {
+          <Col style={{cursor: 'pointer', paddingLeft: 19}} onClick={async () => {
             await openCloudResource(id)
           }}>
             <IconBox iconType={type} style={{ marginRight: '6px' }} />

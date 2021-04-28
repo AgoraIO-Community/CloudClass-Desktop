@@ -10,7 +10,7 @@ const meta: Meta = {
 };
 
 export const Docs: FC<AffixProps> = (props) => {
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
   return (
     <div className="w-screen h-screen">
       <Affix
@@ -18,10 +18,13 @@ export const Docs: FC<AffixProps> = (props) => {
         top="20%"
         left="20%"
         collapse={collapse}
-        onCollapse={() => setCollapse(true)}
-        content={<Icon type="chat" />}>
-        <div>content</div>
-        <Button onClick={() => setCollapse(false)}>hide</Button>
+        onCollapse={() => setCollapse(false)}
+        content={<Icon type="chat" />}
+      >
+        <>
+          <div>content</div>
+          <Button onClick={() => setCollapse(true)}>hide</Button>
+        </>
       </Affix>
     </div>
   );

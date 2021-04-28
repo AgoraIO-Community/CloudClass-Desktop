@@ -12,17 +12,21 @@ export type SelectOption = {
 export interface SelectProps extends BaseProps {
     value?: string | undefined;
     placeholder?: string;
-    options: SelectOption[],
-    isSearchable?: boolean,
+    options: SelectOption[];
+    isSearchable?: boolean;
+    defaultMenuIsOpen?: boolean;
+    prefix?: React.ReactNode;
     onChange?: (value: string) => unknown
 }
 
 // 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
 export const Select: FC<SelectProps> = ({
     value,
-    placeholder,
+    placeholder = "",
     options,
     isSearchable = false,
+    defaultMenuIsOpen = false,
+    prefix,
     onChange,
     className,
     ...restProps
@@ -32,18 +36,26 @@ export const Select: FC<SelectProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <ReactSelect
-            classNamePrefix={'react-select'}
-            className={cls}
-            value={options.find(item => item.value === value)}
-            placeholder={placeholder}
-            options={options}
-            isSearchable={isSearchable}
-            // @ts-ignore
-            onChange={(option: SelectOption)  => {
-                onChange && onChange(option.value)
-            }}
-            {...restProps}
-        />
+        <div className={'react-select-container'}>
+            {prefix && (
+                <div className={'select-prefix'}>
+                    {prefix}
+                </div>
+            )}
+            <ReactSelect
+                className={[cls, prefix ? 'react-select-prefix' : ''].join(" ")}
+                classNamePrefix={['react-select'].join(" ")}
+                value={options.find(item => item.value === value)}
+                placeholder={placeholder}
+                options={options}
+                isSearchable={isSearchable}
+                // @ts-ignore
+                onChange={(option: SelectOption)  => {
+                    onChange && onChange(option.value)
+                }}
+                defaultMenuIsOpen={defaultMenuIsOpen}
+                {...restProps}
+            />
+        </div>
     )
 }

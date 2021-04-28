@@ -56,6 +56,9 @@ export class BoardClient extends EventEmitter {
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
+      pptParams: {
+        useServerWrap: true
+      },
       loggerOptions: {
         // reportQualityMode: "alwaysReport",
         // reportDebugLogMode: "alwaysReport",
@@ -98,7 +101,7 @@ export class BoardClient extends EventEmitter {
     })
     this.room.setMemberState({
       strokeColor: [252, 58, 63],
-      currentApplianceName: ApplianceNames.pencil,
+      currentApplianceName: ApplianceNames.selector,
       textSize: 24,
     })
 

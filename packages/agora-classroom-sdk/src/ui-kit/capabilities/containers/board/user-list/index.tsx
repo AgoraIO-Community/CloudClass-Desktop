@@ -5,7 +5,7 @@ import { useUserListContext, useStreamListContext, useBoardContext, useGlobalCon
 import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StudentRoster } from '@/ui-kit/components';
 import { KickDialog } from '../../dialog';
 
@@ -123,6 +123,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
 export const StudentUserListContainer: React.FC<UserListContainerProps> = observer((props) => {
 
+    const [keyword, setKeyword] = useState<string>('')
+
     const {
         streamList,
         localStream,
@@ -166,7 +168,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         return {
             name: user.userName,
             uid: user.userUuid,
-            micEnable: stream?.hasAudio ?? false,
+            micEnabled: stream?.hasAudio ?? false,
             cameraEnabled: stream?.hasVideo ?? false,
             onPodium: onPodium,
             disabled: checkDisable(user, role)
@@ -174,6 +176,10 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     }
 
     const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
+
+    // const localStudentInfo = useMemo(() => {
+
+    // }, [])
 
     const lectureClassUserStreamList = useMemo(() => {
         const remoteStudentList = userList
@@ -186,11 +192,33 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 return acc
               }, [])
 
+        // is student
+        if (roomInfo.userRole === 2) {
+            const localUserInfo = transformRosterUserInfo(
+                {
+                    userUuid: roomInfo.userUuid,
+                    userName: roomInfo.userName,
+                },
+                roomInfo.userRole,
+                localStream,
+                acceptedIds.includes(roomInfo.userUuid)
+                )
+            return [localUserInfo].concat(remoteStudentList)
+        }              
+
         return remoteStudentList
-    }, [userList, streamList, acceptedIds, localStream, acceptedUserList])
+    }, [localStream, roomInfo.userName, roomInfo.userUuid, roomInfo.userRole, userList, streamList, acceptedIds, localStream, acceptedUserList])
+
+
+    const dataList = useMemo(() => {
+        return lectureClassUserStreamList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+      }, [keyword, lectureClassUserStreamList])
+
+    //@ts-ignore
+    window.dataList = dataList
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
-        const userList = lectureClassUserStreamList
+        const userList = dataList
         const user = userList.find((user: RosterUserInfo) => user.uid === uid)
 
         if (!user) {
@@ -228,7 +256,14 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 break;
             }
         }
-    }, [lectureClassUserStreamList, roomInfo.roomUuid, roomInfo.userRole])
+    }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
+
+    const userType = useMemo(() => {
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
+            return 'teacher'
+        }
+        return 'student'
+    }, [roomInfo.userRole])
 
     return (
         <StudentRoster
@@ -236,12 +271,12 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             localUserUuid={localUserUuid}
             role={myRole as any}
             teacherName={teacherName}
-            dataSource={lectureClassUserStreamList}
-            userType={'teacher'}
+            dataSource={dataList}
+            userType={userType}
             onClick={onClick}
             onClose={props.onClose}
-            onChange={(evt: any) => {
-                console.log("onchange " ,evt.target.value)
+            onChange={(text: string) => {
+                setKeyword(text)
             }}
         />
     )

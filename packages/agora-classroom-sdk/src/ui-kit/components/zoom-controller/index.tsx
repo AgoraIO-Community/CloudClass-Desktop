@@ -41,29 +41,29 @@ export const ZoomController: FC<ZoomControllerProps> = ({
         <div className={cls} {...restProps}>
             { maximum ?
                 <Tooltip title={t('tool.fullScreen')} placement="top">
-                    <Icon hover={true} type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
+                    <Icon type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
                 </Tooltip>
                 :
                 <Tooltip title={t('tool.reduction')} placement="top">
-                    <Icon hover={true} type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
+                    <Icon type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
                 </Tooltip>
             }
             <Tooltip title={t('tool.zoomOut')} placement="top">
-                <Icon hover={true} type="zoom-out" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-out')} />
+                <Icon type="zoom-out" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-out')} />
             </Tooltip>
             <span className="zoom-value">{zoomValue}%</span>
             <Tooltip title={t('tool.zoomIn')} placement="top">
-                <Icon hover={true} type="zoom-in" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-in')} />   
+                <Icon type="zoom-in" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-in')} />   
             </Tooltip>
             <span className="line"></span>
             <Tooltip title={t('tool.prev')} placement="top">
-                <Icon hover={true} type="backward" size={fontSize} color={fontColor} onClick={() => clickHandler('backward')} />
+                <Icon type="backward" size={fontSize} color={fontColor} onClick={() => clickHandler('backward')} />
             </Tooltip>
             <span className="page-info">
                 {currentPage}/{totalPage}
             </span>
             <Tooltip title={t('tool.next')} placement="top">
-                <Icon hover={true} type="forward" size={fontSize} color={fontColor} onClick={() => clickHandler('forward')} />   
+                <Icon type="forward" size={fontSize} color={fontColor} onClick={() => clickHandler('forward')} />   
             </Tooltip>
         </div>
     )

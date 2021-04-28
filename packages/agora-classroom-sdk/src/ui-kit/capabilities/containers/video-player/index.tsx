@@ -45,13 +45,17 @@ export const VideoPlayerTeacher = observer(() => {
       userType={'teacher'}
     >
       {
-        userStream.renderer && userStream.video ?
-        <RendererPlayer
-          key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-        />
-        : (
-          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
-        )
+
+        <>
+          {
+            userStream.renderer && userStream.video ?
+            <RendererPlayer
+              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+            />
+            : null
+          }
+          <CameraPlaceHolder state={userStream.holderState} />
+        </>
       }
     </VideoPlayer>)
 })
@@ -92,13 +96,16 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       placement={controlPlacement}
     >
       {
-        userStream.renderer && userStream.video ?
-        <RendererPlayer
-          key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-        />
-        : (
-          <CameraPlaceHolder state={userStream.holderState}></CameraPlaceHolder>
-        )
+        <>
+          {
+            userStream.renderer && userStream.video ?
+            <RendererPlayer
+              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
+            />
+            : null
+          }
+          <CameraPlaceHolder state={userStream.holderState} />
+        </>
       }
     </VideoPlayer>
   )
@@ -133,9 +140,9 @@ export const VideoMarqueeStudentContainer = observer(() => {
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
       canHoverHideOffAllPodium: true,
+      hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (
         <>
-        <CameraPlaceHolder state={stream.holderState} />
         {
           stream.renderer && stream.video ?
           <RendererPlayer
@@ -143,6 +150,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
           />
           : null
         }
+        <CameraPlaceHolder state={stream.holderState} />
         </>
       )
       }))
@@ -200,6 +208,6 @@ export const VideoList = observer(() => {
     <>
       <VideoPlayerTeacher />
       <VideoPlayerStudent controlPlacement="left" />
-    </> : null
+    </> : <div style={{height: 300}}></div>
   )
 })

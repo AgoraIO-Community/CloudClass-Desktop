@@ -48,6 +48,9 @@ export class BoardClient extends EventEmitter {
         // 其他参数
       // invisiblePlugins: [IframeBridge],
       // wrappedComponents: [IframeWrapper],
+      pptParams: {
+        useServerWrap: true
+      },
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
@@ -93,7 +96,7 @@ export class BoardClient extends EventEmitter {
     if (isAssistant) {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
-        currentApplianceName: ApplianceNames.arrow,
+        currentApplianceName: ApplianceNames.selector,
         textSize: 24,
       })
     } else {

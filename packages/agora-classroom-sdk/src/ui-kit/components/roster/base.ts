@@ -1,4 +1,7 @@
 import { IconTypes } from "../icon/icon-types"
+import { Profile } from '~components/roster';
+import { StudentRosterProfile } from '~components/roster/user-list'
+const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 
@@ -54,4 +57,47 @@ export const getMicrophoneState = (profile: any, canOperate: boolean) => {
     operateStatus: operateStatus,
     microphoneStatus: microphoneStatus
   }
+}
+
+const shfitPinyin = (str: string) => {
+  const pattern = new RegExp("[\u4E00-\u9FA5]+") 
+  if(pattern.test(str)) {
+    return pinyinlite(str)
+  }
+  return str
+}
+
+interface PublicProfile {
+  name: string
+  onPodium: boolean
+}
+
+export const studentListSort = <T extends PublicProfile >(list: Array<T>): Array<T> => {
+  if(list.length === 0) {
+    return []
+  }
+  // 对数组进行浅拷贝，并将名字中所有中文名转拼音 命名为 pinyinName 等待排序
+  const students = list.map((item: T) => {
+    return {
+      ...item,
+      pinyinName: shfitPinyin(item.name) 
+    }
+  })
+  const isNumber = (str: string) => {
+    return '0123456789'.includes(str)
+  }
+  students.sort((current: any, next: any) => {
+    // 上台的在前面
+    if(current.onPodium !== next.onPodium) {
+      return current.onPodium? -1 : 1
+    }
+    // 首字符是否为数字
+    const currentFirst = current.pinyinName[0]
+    const nextFirst = next.pinyinName[0]
+    if(isNumber(currentFirst) !== isNumber(nextFirst)) {
+      return !isNumber(currentFirst)? -1 : 1
+    }
+    return current.pinyinName < next.pinyinName ? -1 : 1
+  })
+  return students
 }

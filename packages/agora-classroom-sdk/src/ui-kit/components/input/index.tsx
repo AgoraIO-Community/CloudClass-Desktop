@@ -12,7 +12,8 @@ export interface InputProps extends BaseProps {
     prefix?: React.ReactNode;
     suffix?: React.ReactNode;
     disabled?: boolean;
-    value?: string;
+    value?: any;
+    inputPrefixWidth?: number;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onFocus?: React.FocusEventHandler<HTMLInputElement>;
     onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -25,6 +26,7 @@ export const Input: FC<InputProps> = ({
     suffix,
     disabled = false,
     value = "",
+    inputPrefixWidth = 75,
     onFocus = () => {},
     onBlur = () => {},
     onChange = () => {},
@@ -45,11 +47,12 @@ export const Input: FC<InputProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-search-wrapper']: cls.includes('input-search')})}>
-            {prefix ? (<span className="input-prefix">
+        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-wrapper-disabled']: disabled, ['input-search-wrapper']: cls.includes('input-search')})}>
+            {prefix ? (<span className="input-prefix" style={{width: inputPrefixWidth}}>
                 {prefix}
             </span>) : ""}
-            <input 
+            <input
+                type={type} 
                 className={cls} 
                 placeholder={placeholder}
                 disabled={disabled}
@@ -70,13 +73,15 @@ export const Input: FC<InputProps> = ({
 
 export interface SearchProps extends InputProps {
     onSearch: (value: string) => void | Promise<void>;
-    suffix: any
+    suffix?: any
+    prefix?: any
 }
 
 export const Search: FC<SearchProps> = ({
     onSearch,
     className,
     suffix,
+    prefix,
     ...restProps
 }) => {
     const [searchStr, setSearchStr] = useState<string>('')
@@ -93,6 +98,7 @@ export const Search: FC<SearchProps> = ({
                 setSearchStr(e.target.value)
                 onSearch(e.target.value)
             }}
+            prefix={prefix}
             suffix={suffix
             }
         />

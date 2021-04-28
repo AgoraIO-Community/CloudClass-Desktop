@@ -21,6 +21,8 @@ const tailwindcss = require('tailwindcss')
 const path = require('path')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+const short = require('short-uuid');
+const dayjs = require('dayjs')
 
 const packageInfo = require('./package.json')
 
@@ -135,9 +137,9 @@ const sourceMap = () => config => {
 
 const setElectronDeps = isProd ? {
   ...devDependencies,
-  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
+  // "agora-electron-sdk": "commonjs2 agora-electron-sdk"
 } : {
-  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
+  // "agora-electron-sdk": "commonjs2 agora-electron-sdk"
 }
 
 // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
@@ -204,6 +206,21 @@ const removeEslint = () => config => {
   return config;
 }
 
+let version = packageInfo.version
+let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
+if(apaasBuildEnv) {
+  const date = dayjs().format('YYMMDD')
+  const translator = short()
+  const hash = translator.new()
+  if(apaasBuildEnv === 'test') {
+    version=`test-${packageInfo.version}-${date}${hash}`
+  } else if(apaasBuildEnv === 'preprod') {
+    version=`preprod-${packageInfo.version}-${date}${hash}`
+  } else if(apaasBuildEnv === 'prod') {
+    version=`prod-${packageInfo.version}-${date}${hash}`
+  }
+}
+
 const webpackConfig = override(
   // useBabelRc(),
   // isElectron && addWebpackTarget('electron-renderer'),
@@ -221,10 +238,11 @@ const webpackConfig = override(
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
+    REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
     REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
     REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
-    REACT_APP_BUILD_VERSION: JSON.stringify(config.REACT_APP_BUILD_VERSION),
+    REACT_APP_BUILD_VERSION: JSON.stringify(version),
     REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
     REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
     REACT_APP_AGORA_APP_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_APP_CERTIFICATE),

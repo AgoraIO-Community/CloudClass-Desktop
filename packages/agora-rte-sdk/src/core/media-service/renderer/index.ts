@@ -72,24 +72,45 @@ export abstract class UserRenderer implements IMediaRenderer {
   }
 }
 
+export enum LocalVideoRenderState {
+  Init = 0,
+  Playing = 1,
+  Failed = 2
+}
+
 export class LocalUserRenderer extends UserRenderer {
 
   private el: HTMLCanvasElement | undefined;
-  private fpsTimer: any;
-  private previousFrame: number = 0;
   renderFrameRate: number = 0;
   freezeCount: number = 0;
+  renderState: LocalVideoRenderState = LocalVideoRenderState.Init
 
   constructor(config: UserRendererInit) {
     super(config)
     this.local = true
   }
 
+  setFPS(fps: number) {
+    this.renderFrameRate = fps
+    if(this.renderState === LocalVideoRenderState.Init) {
+      if(fps > 0) {
+        this.renderState = LocalVideoRenderState.Playing
+      } else {
+        this.freezeCount++
+
+        if(this.freezeCount > 3) {
+          this.renderState = LocalVideoRenderState.Failed
+        }
+      }
+    }
+    if(fps > 0) {
+      this.renderState = LocalVideoRenderState.Playing
+    }
+  }
+
   play(dom: HTMLElement, fit?: boolean): void {
     // clear flag when re-play
-    clearInterval(this.fpsTimer)
     this.renderFrameRate = 0
-    this.previousFrame = 0
     this.freezeCount = 0
     if (this.isWeb) {
       if (this.videoTrack) {
@@ -140,15 +161,42 @@ export class LocalUserRenderer extends UserRenderer {
   }
 }
 
+export enum RemoteVideoRenderState {
+  Init = 0,
+  Playing = 1,
+  Failed = 2
+}
+
 export class RemoteUserRenderer extends UserRenderer {
 
   private el: HTMLCanvasElement | undefined
+  renderFrameRate: number = 0;
+  freezeCount: number = 0;
+  renderState: RemoteVideoRenderState = RemoteVideoRenderState.Init
 
   constructor(config: UserRendererInit) {
     super(config)
     this.local = false
     this.uid = config.uid
     this.channel = config.channel
+  }
+
+  setFPS(fps: number) {
+    this.renderFrameRate = fps
+    if(this.renderState === RemoteVideoRenderState.Init) {
+      if(fps > 0) {
+        this.renderState = RemoteVideoRenderState.Playing
+      } else {
+        this.freezeCount++
+
+        if(this.freezeCount > 3) {
+          this.renderState = RemoteVideoRenderState.Failed
+        }
+      }
+    }
+    if(fps > 0) {
+      this.renderState = RemoteVideoRenderState.Playing
+    }
   }
 
   play(dom: HTMLElement, fit?: boolean) {

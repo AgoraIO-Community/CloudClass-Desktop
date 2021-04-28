@@ -16,7 +16,6 @@ export const PensContainer = observer((props: PensContainerProps) => {
   } = useBoardContext()
 
   const onClick = (pen: any) => {
-    console.log('pen', pen)
     setTool(pen)
     updatePen(pen)
   }

@@ -4,7 +4,7 @@ import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
 
@@ -20,14 +20,21 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('')
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>('en')
+  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
   const [region, setRegion] = useState<AgoraRegion>('CN')
+  const [debug, setDebug] = useState<boolean>(false)
+
+  useEffect(() => {
+    changeLanguage(language)
+    setLanguage(language)
+  }, [])
 
   const onChangeRegion = (region: string) => {
     setRegion(region as AgoraRegion)
   }
 
   const onChangeLanguage = (language: string) => {
+    sessionStorage.setItem('language', language)
     changeLanguage(language)
     setLanguage(language)
   }
@@ -51,7 +58,19 @@ export const HomePage = observer(() => {
     return scenes[curScenario]
   }, [curScenario])
 
-  const uid = `${userId}`
+  const userUuid = useMemo(() => {
+    if(!debug) {
+      return `${userName}${role}`
+    }
+    return `${userId}`
+  }, [role, userName, debug, userId])
+
+  const roomUuid = useMemo(() => {
+    if(!debug) {
+      return `${roomName}${scenario}`
+    }
+    return `${roomId}`
+  }, [scenario, roomName, debug, roomId])
 
   const onChangeRole = (value: string) => {
     setRole(value)
@@ -84,21 +103,27 @@ export const HomePage = observer(() => {
     text['userName'](newValue)
   }
 
+  const onChangeDebug = (newValue: boolean) => {
+    setDebug(newValue)
+  }
+
   const history = useHistory()
 
   const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
 
   return (
     <Home
-      version="1.1.0"
-      roomId={roomId}
-      userId={userId}
+      version={REACT_APP_BUILD_VERSION}
+      roomId={roomUuid}
+      userId={userUuid}
       roomName={roomName}
       userName={userName}
       role={userRole}
       scenario={curScenario}
       duration={duration}
       region={region}
+      debug={debug}
+      onChangeDebug={onChangeDebug}
       onChangeRegion={onChangeRegion}
       onChangeRole={onChangeRole}
       onChangeScenario={onChangeScenario}
@@ -115,16 +140,17 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        let {userUuid, rtmToken} = await homeApi.login(uid)
+        let {rtmToken} = await homeApi.login(userUuid)
+        console.log('## rtm Token', rtmToken)
         homeStore.setLaunchConfig({
-          rtmUid: userUuid,
+          // rtmUid: userUuid,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,
-          roomUuid: `${roomId}`,
+          roomUuid: `${roomUuid}`,
           roomType: scenario,
           roomName: `${roomName}`,
           userName: userName,

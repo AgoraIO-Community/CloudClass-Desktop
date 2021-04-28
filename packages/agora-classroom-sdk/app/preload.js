@@ -25,6 +25,8 @@ window.child_process = child_process
 
 window.os_platform = platform
 
+window.isMacOS = () => process.platform === 'darwin'
+
 window.openPrivacyForCaptureScreen = () => window.child_process.execSync(`open "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"`)
 
 const AdmZip = require('adm-zip');

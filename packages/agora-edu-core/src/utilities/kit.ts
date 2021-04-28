@@ -9,7 +9,7 @@ import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
 
-const OSS_PREFIX = REACT_APP_AGORA_RECORDING_OSS_URL as string;
+const OSS_PREFIX = '';
 
 export function getOSSUrl (mediaUrl: string): string {
   const res = `${OSS_PREFIX}/${mediaUrl}`;
@@ -343,6 +343,10 @@ export type NetlessMediaFile = {
 }
 
 export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
+
+
+  console.log("video file", file.url)
+
   room.insertPlugin(
     'video',
     {
@@ -359,6 +363,9 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
 }
 
 export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
+
+  console.log("audio file", file.url)
+
   room.insertPlugin(
     'audio',
     {
@@ -367,7 +374,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
       width: file.width,
       height: file.height,
       attributes: {
-          pluginAudioUrl: file.url
+        pluginAudioUrl: file.url
           // isNavigationDisable: false
       }
     }
@@ -663,10 +670,14 @@ export class ZoomController extends EventEmitter {
 }
 
 export const transLineTool = {
-  'pen': ApplianceNames.pencil,
-  'square': ApplianceNames.rectangle,
-  'circle': ApplianceNames.ellipse,
-  'line': ApplianceNames.straight,
+  'pen': 'pen',
+  'square': 'square',
+  'circle': 'circle',
+  'line': 'line',
+  [ApplianceNames.pencil]: 'pen',
+  [ApplianceNames.rectangle]:'square',
+  [ApplianceNames.ellipse]: 'circle',
+  [ApplianceNames.straight]: 'line',
 }
 
 export const transToolBar = {
@@ -681,6 +692,13 @@ export const transToolBar = {
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,
+
+  [ApplianceNames.pencil]: ApplianceNames.pencil,
+  [ApplianceNames.rectangle]: ApplianceNames.rectangle,
+  [ApplianceNames.ellipse]: ApplianceNames.ellipse,
+  [ApplianceNames.straight]: ApplianceNames.straight,
+  [ApplianceNames.arrow]: ApplianceNames.arrow,
+  [ApplianceNames.selector]: ApplianceNames.selector,
   // 'blank-page': 'new-page',
   // 'cloud': 'cloud',
   // 'follow': 'follow',

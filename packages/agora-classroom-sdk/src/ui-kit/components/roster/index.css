@@ -2,15 +2,29 @@
   padding: 0 1px;
 }
 
-.roster-username {
-  @apply font-medium;
-  font-size: 12px;
-  margin-bottom: 5px;
+.student-username .roster-username {
+  margin: 0;
+}
+
+.student-username>span{
+  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 71px;
 }
+
+.roster-table .table-row-item .table-col-item:first-child {
+  flex:1;
+  min-width: 0;
+}
+
+.roster-username {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 .reward {
   display: inline-flex;
@@ -35,7 +49,7 @@
 
 .roster-wrap {
   width: 606px;
-  height: 540px;
+  height: 402px;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47,65%,146%,15%);
   border-radius: 6px;
@@ -60,8 +74,8 @@
 }
 
 .roster-user-list-wrap {
-  width: 349px;
-  min-height: 276px;
+  width: 350px;
+  height: 402px;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47,65%,146%,15%);
   border-radius: 6px;
@@ -72,11 +86,14 @@
 
 .roster-user-list-wrap .table-header {
   color: #7B88A0;
+  padding-left: 0;
 }
 
 .roster-wrap .table-header {
   margin: 0;
+  padding-left: 0;
 }
+
 
 .roster-header {
   font-size: 13px;
@@ -88,11 +105,21 @@
   color: #7b88a0;
 }
 
+.roster-container {
+  display:flex;
+  flex-direction: column;
+  height: calc(100% - 45px);
+}
+
+.roster-container .roster-table {
+  flex: 1;
+  min-height: 0;
+}
+
 .roster-table .table-container .table-row-item .table-col-item {
   @apply box-content;
   color: #191919;
-  height: 22px;
-  padding: 9px 0;
+  height: 40px;
 }
 
 .roster-table .table-container .table-row-item .iconfont {
@@ -172,6 +199,10 @@
   color: #979797;
 }
 
+.student-username {
+  display: flex;
+}
+
 .roster-table .star-nums {
   color: #7b88a0;
   transform: translateY(-4px);
@@ -184,10 +215,6 @@
   color: #7b88a0;
   height: 32px;
   width: 32px;
-}
-
-.roster-table .kick-out:hover {
-  background-color: #e7e7f3;
 }
 
 .roster-table .camera-enabled, .roster-table .mic-enabled {
@@ -234,4 +261,12 @@
 
 .search-teacher-name .roster-username {
   margin: 0;
+}
+
+.search-header .input-search-wrapper {
+  height:34px;
+}
+
+.search-header .input-search-wrapper .input-prefix {
+  opacity: 0.5;
 }

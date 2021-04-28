@@ -11,6 +11,7 @@ import * as React from 'react';
 import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '@/ui-kit/capabilities/scenarios/mid-class';
 import {BigClassScenario} from '@/ui-kit/capabilities/scenarios/big-class';
+import { RecordPage } from '../debug-page/record';
 
 export type AppRouteComponent = {
   path: string
@@ -52,6 +53,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito/small',
   //   component: () => PageSFC(SmallClassRoom)
   // },
+  [BizPageRouter.TestRecordPage]: {
+    path: '/record',
+    component: () => PageSFC(RecordPage)
+  },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage)

@@ -35,6 +35,7 @@ export const RouteContainer = (props: RouteContainerProps) => {
     acc.push(routesMap[item])
     return acc
   }, [])
+  
   return (
     <>
       <Switch>

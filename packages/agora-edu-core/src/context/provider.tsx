@@ -298,7 +298,7 @@ export const useBoardContext = () => {
     handleUpload,
     publicResources,
     revokeBoardPermission,
-    grantBoardPermission
+    grantBoardPermission,
   } = useBoardStore()
 
   const {
@@ -358,7 +358,7 @@ export const useBoardContext = () => {
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
-    doUpload: handleUpload
+    doUpload: handleUpload,
   }
 }
 
@@ -436,6 +436,7 @@ export const useHandsUpContext = () => {
   const {
     teacherUuid,
     handsUpState,
+    teacherHandsUpState,
     studentHandsUp,
     studentCancelHandsUp,
     handsUpStudentList,
@@ -449,6 +450,7 @@ export const useHandsUpContext = () => {
   return {
     teacherUuid,
     handsUpState,
+    teacherHandsUpState,
     studentHandsUp,
     studentCancelHandsUp,
     handsUpStudentList,

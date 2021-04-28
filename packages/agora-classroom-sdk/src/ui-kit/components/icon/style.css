@@ -11,7 +11,12 @@
   background-color: #f0f0f7;
 }
 
+.icon-hover:hover {
+  background-color: #f0f0f7;
+}
+
 .header-actions .icon-box-hover:hover,
+.zoom-controller .icon-box-hover:hover,
 .tool .icon-box-hover:hover {
   color: #191919 !important;
 }
@@ -23,5 +28,4 @@
   text-align: center;
   height: 32px;
   width: 32px;
-  transform: translateX(-5px);
 }

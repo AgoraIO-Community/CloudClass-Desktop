@@ -644,11 +644,11 @@ export class RoomStore extends SimpleInterval {
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
         this.appStore.uiStore.fireToast(
-          'toast.chat_disable',
+          'toast.chat_enable',
         )
       } else {
         this.appStore.uiStore.fireToast(
-          'toast.chat_enable',
+          'toast.chat_disable',
         )
       }
     }
@@ -685,12 +685,6 @@ export class RoomStore extends SimpleInterval {
               )
             }
           })
-          if (dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
-            this.appStore.uiStore.fireToast(
-              'toast.class_is_end', {
-              reason: ((this.classroomSchedule.closeDelay || 0) * 1000)
-            })
-          }
           break;
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间
@@ -938,7 +932,8 @@ export class RoomStore extends SimpleInterval {
       roomManager.on('local-stream-updated', async (evt: any) => {
         const { operator, data, cause } = evt
         await this.sceneStore.mutex.dispatch<Promise<void>>(async () => {
-          this.sceneStore.streamList = roomManager.getFullStreamList()
+          const streamList = roomManager.getFullStreamList()
+          this.sceneStore.updateStreamList(streamList)
           if (!this.sceneStore.joiningRTC) {
             return
           }
@@ -1069,10 +1064,15 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端流加入
       roomManager.on('remote-stream-added', (evt: any) => {
+        const {stream} = evt
+        if (stream.videoSourceType === EduVideoSourceType.screen) {
+          this.appStore.uiStore.fireToast('toast.add_screen_share')
+        }
         runInAction(() => {
-          this.sceneStore.streamList = roomManager.getFullStreamList()
+          const streamList = roomManager.getFullStreamList()
+          this.sceneStore.updateStreamList(streamList)
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
-            if (this.sceneStore.streamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
+            if (this.sceneStore.screenShareStreamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
               this.sceneStore.sharing = true
             } else {
               this.sceneStore.sharing = false
@@ -1083,10 +1083,15 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端流移除
       roomManager.on('remote-stream-removed', (evt: any) => {
+        const {stream} = evt
+        if (stream.videoSourceType === EduVideoSourceType.screen) {
+          this.appStore.uiStore.fireToast('toast.remove_screen_share')
+        }
         runInAction(() => {
-          this.sceneStore.streamList = roomManager.getFullStreamList()
+          const streamList = roomManager.getFullStreamList()
+          this.sceneStore.updateStreamList(streamList)
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
-            if (this.sceneStore.streamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
+            if (this.sceneStore.screenShareStreamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
               this.sceneStore.sharing = true
             } else {
               this.sceneStore.sharing = false
@@ -1098,9 +1103,10 @@ export class RoomStore extends SimpleInterval {
       // 远端流更新
       roomManager.on('remote-stream-updated', (evt: any) => {
         runInAction(() => {
-          this.sceneStore.streamList = roomManager.getFullStreamList()
+          const streamList = roomManager.getFullStreamList()
+          this.sceneStore.updateStreamList(streamList)
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
-            if (this.sceneStore.streamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
+            if (this.sceneStore.screenShareStreamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
               this.sceneStore.sharing = true
             } else {
               this.sceneStore.sharing = false
@@ -1332,9 +1338,10 @@ export class RoomStore extends SimpleInterval {
       this.roomProperties = roomProperties
 
       this.sceneStore.userList = roomManager.getFullUserList()
-      this.sceneStore.streamList = roomManager.getFullStreamList()
+      const streamList = roomManager.getFullStreamList()
+      this.sceneStore.updateStreamList(streamList)
       if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
-        if (this.sceneStore.streamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
+        if (this.sceneStore.screenShareStreamList.find((it: EduStream) => it.videoSourceType === EduVideoSourceType.screen)) {
           this.sceneStore.sharing = true
         } else {
           this.sceneStore.sharing = false
@@ -1374,9 +1381,16 @@ export class RoomStore extends SimpleInterval {
       })
       // this.appStore.uiStore.addDialog(RoomEndNotice)
     } else if (state === EduClassroomStateEnum.end) {
-      this.appStore.uiStore.fireToast('toast.class_is_end',{
-        reason: this.classroomSchedule ? this.classroomSchedule.closeDelay*1000 - this.classTimeDuration : 0
-      });
+      if(this.classroomSchedule) {
+        // classroomSchedule must already exists
+        let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration
+        if(durationToClose > 0) {
+          // durationToClose > 0 means not yet closed
+          this.appStore.uiStore.fireToast('toast.class_is_end',{
+            reason: durationToClose
+          });
+        }
+      }
     }
   }
 
