@@ -331,7 +331,7 @@ export const en = {
     'userId': 'UserId',
     'userId_placeholder': 'Please input userId',
     'roomName': 'Room',
-    'roomName_placeholder': 'Please input classroom name',
+    'roomName_placeholder': 'Please input room name',
     'nickName': 'Name',
     'nickName_placeholder': 'Please input your name',
     'roomType': 'Type',
@@ -353,7 +353,8 @@ export const en = {
     'region_placeholder': 'Please choose region',
     'region': 'Region:',
     'header-left-title': 'Agora Flexible Classroom',
-    'about': 'About'
+    'about': 'About',
+    'input-error-msg': 'Letter or number only'
   },
   'home-about': {
     'privacy-policy': 'Privacy Policy',
@@ -362,8 +363,8 @@ export const en = {
     'version-time': 'Version Time',
     'sdk-version': 'SDK Version',
     'classroom-version': 'Flexible Classroom Version',
-    'check': 'Check',
-    'register': 'Register'
+    'check': 'View',
+    'register': 'Sign up'
   },
   'disclaimer': {
     'title': 'Product Disclaimer',

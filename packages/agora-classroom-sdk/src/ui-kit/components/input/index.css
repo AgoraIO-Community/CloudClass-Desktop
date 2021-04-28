@@ -17,6 +17,16 @@
     align-items: center;
 }
 
+.input-wrapper-error {
+    border-color: #F04C36 !important;
+}
+.input-error-msg {
+    position: absolute;
+    color: #F04C36;
+    font-size: 10px;
+    top: 100%;
+}
+
 .input-wrapper:not(.input-wrapper-disabled):hover {
     border-color: #357BF6;
     border-right-width: 1px!important;
