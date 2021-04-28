@@ -352,7 +352,8 @@ export const zh = {
     'region_placeholder': '请选择区域',
     'region': '区域：',
     'header-left-title': '声网灵动课堂',
-    'about': '关于'
+    'about': '关于',
+    'input-error-msg': '只能输入字母、数字'
   },
   'home-about': {
     'privacy-policy': '隐私条例',

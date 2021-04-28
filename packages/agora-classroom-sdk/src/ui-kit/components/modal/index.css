@@ -1,6 +1,6 @@
 .modal {
     box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
-    border-radius: 4px;
+    border-radius: 8px;
     border: 1px solid #E1E1EA;
     padding-bottom: 20px;
     @apply box-border bg-white;
@@ -51,6 +51,7 @@
     height: 40px;
     background-color: #F9F9FC;
     padding: 0 20px;
+    border-radius: 8px 8px 0 0;
 }
 
 .modal-title-text {

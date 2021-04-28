@@ -76,12 +76,12 @@ export const Modal: ModalType = ({
                         <div className="modal-title-text">
                             {title}
                         </div>
-                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#D8D8D8" /></div>) : ""}
+                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#586376" size={20}/></div>) : ""}
                     </>
                 ) : null}
                 {modalType === 'back' ? (
                     <>
-                        <div style={{cursor: 'pointer'}} className="back-icon" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="backward" color="#D8D8D8" /></div>
+                        <div style={{cursor: 'pointer'}} className="back-icon" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="backward" color="#586376" /></div>
                         <div className="back-title">
                             {title}
                         </div>

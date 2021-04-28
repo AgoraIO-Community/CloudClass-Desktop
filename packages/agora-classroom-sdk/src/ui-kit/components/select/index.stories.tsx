@@ -14,7 +14,7 @@ export const Docs = () => {
         { value: 'strawberry', label: 'Strawberry' },
         { value: 'vanilla', label: 'Vanilla' },
     ];
-    const [selectedOption, setSelectedOption] = useState('chocolate');
+    const [selectedOption, setSelectedOption] = useState('');
     return (
         <>
             <div className="mt-4">
