@@ -2842,10 +2842,20 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
+"@netless/white-audio-plugin2@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@netless/white-audio-plugin2/-/white-audio-plugin2-2.0.4.tgz#661af49e67779dbfee293506f81112d8aa08be1d"
+  integrity sha512-A1ATk3jM8KeXlVpsaG0t/qXVePFdoDRdf6ly3qCSTo6lreiYnhqT1mMPYnedfyqI9gG+rMj4WtQ2lxbCp4I0SQ==
+
 "@netless/white-audio-plugin@1.2.23":
   version "1.2.23"
   resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.23.tgz#8867c4a90a23f297a8cb01701ce068846b847c67"
   integrity sha1-iGfEqQoj8peoywFwHOBohGuEfGc=
+
+"@netless/white-video-plugin2@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@netless/white-video-plugin2/-/white-video-plugin2-2.0.4.tgz#501a2b58ab745eb70f8a9371d80579e166c8bf5f"
+  integrity sha512-NdN/VTdbYgg4VBDY9R0ofEknUOdARyCj+NXp6ffaR8I4NVUyjf8g0UPIuwwAVmqFoO9XpCRsi3bk7ebasu0l2A==
 
 "@netless/white-video-plugin@1.2.23":
   version "1.2.23"
@@ -10042,7 +10052,7 @@ es6-shim@^0.35.5:
   resolved "https://registry.npm.taobao.org/es6-shim/download/es6-shim-0.35.6.tgz#d10578301a83af2de58b9eadb7c2c9945f7388a0"
   integrity sha1-0QV4MBqDry3li56tt8LJlF9ziKA=
 
-es6-symbol@^3.1.1, es6-symbol@^3.1.3, es6-symbol@~3.1.3:
+es6-symbol@^3.1.1, es6-symbol@~3.1.3:
   version "3.1.3"
   resolved "https://registry.npm.taobao.org/es6-symbol/download/es6-symbol-3.1.3.tgz#bad5d3c1bcdac28269f4cb331e431c78ac705d18"
   integrity sha1-utXTwbzawoJp9MszHkMceKxwXRg=
@@ -11712,7 +11722,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.nlark.com/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=
@@ -15796,10 +15806,10 @@ mobx-react@6.3.1:
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx-react@^5.4.0:
+mobx-react@^5.4.4:
   version "5.4.4"
-  resolved "https://registry.npm.taobao.org/mobx-react/download/mobx-react-5.4.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmobx-react%2Fdownload%2Fmobx-react-5.4.4.tgz#b3de9c6eabcd0ed8a40036888cb0221ab9568b80"
-  integrity sha1-s96cbqvNDtikADaIjLAiGrlWi4A=
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.4.4.tgz#b3de9c6eabcd0ed8a40036888cb0221ab9568b80"
+  integrity sha512-2mTzpyEjVB/RGk2i6KbcmP4HWcAUFox5ZRCrGvSyz49w20I4C4qql63grPpYrS9E9GKwgydBHQlA4y665LuRCQ==
   dependencies:
     hoist-non-react-statics "^3.0.0"
     react-lifecycles-compat "^3.0.2"
@@ -15809,10 +15819,10 @@ mobx@5.15.4:
   resolved "https://registry.nlark.com/mobx/download/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
   integrity sha1-naGoTpe6YkYi9OVaC/MwD7kxwqs=
 
-mobx@^4.9.0:
+mobx@^4.15.7:
   version "4.15.7"
-  resolved "https://registry.nlark.com/mobx/download/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
-  integrity sha1-kzKBJow7Rli2zyUm6HLPeOpIq5U=
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
+  integrity sha512-X4uQvuf2zYKHVO5kRT5Utmr+J9fDnRgxWWnSqJ4oiccPTQU38YG+/O3nPmOhUy4jeHexl7XJJpWDBgEnEfp+8w==
 
 modern-normalize@^1.0.0:
   version "1.0.0"
@@ -23929,20 +23939,20 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.9:
-  version "2.12.9"
-  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.12.9.tgz#488a475115d019aaa7593f7ee1d8616cb5b9c2cc"
-  integrity sha1-SIpHURXQGaqnWT9+4dhhbLW5wsw=
+white-web-sdk@2.12.14:
+  version "2.12.14"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.12.14.tgz#c712102d9c232c8a2dd0ebe94272810268611e33"
+  integrity sha512-CWy5oRxXHhaTsqlZy1rjRwd5vpeSlHD206I8d06vph/KwjCjjJolkNBc13LrV0b+vd4L/TBy1O/kYUEG99c6QQ==
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
     bezier-js "^2.4.4"
     color "^3.1.0"
     detect-it "^3.0.5"
-    es6-symbol "^3.1.3"
+    es6-symbol "^3.1.1"
     mathjs "^6.2.2"
-    mobx "^4.9.0"
-    mobx-react "^5.4.0"
+    mobx "^4.15.7"
+    mobx-react "^5.4.4"
     numeric "^1.2.6"
     query-string "5"
     react "^16.8.0"
