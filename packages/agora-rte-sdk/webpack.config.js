@@ -15,6 +15,7 @@ module.exports = {
     ['agora-rte-sdk']: "./src/index.ts",
   },
   mode: isProd ? 'production' : 'development',
+  devtool: isProd ? 'none' : 'source-map',
   output: {
     publicPath: '',
     // filename: '[name].js',
