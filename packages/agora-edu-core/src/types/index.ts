@@ -119,6 +119,7 @@ export interface ChatMessage {
   id: string
   sender?: boolean
   role: number
+  messageId: string
   fromRoomUuid?: string
   fromRoomName?: string
   status?: 'fail' | 'success' | 'loading'
