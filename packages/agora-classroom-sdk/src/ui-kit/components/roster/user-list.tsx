@@ -160,7 +160,8 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
               userType === 'teacher' ?
               <Search
                 onSearch={onChange}
-                suffix={<img src={SearchSvg} />}
+                prefix={<img src={SearchSvg} />}
+                inputPrefixWidth={32}
                 placeholder={transI18n('scaffold.search')}
               /> : null
             }
