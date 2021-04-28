@@ -137,6 +137,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.fire('localVideoStats', {
         renderState: this.cameraRenderer?.renderState,
         renderFrameRate: this.cameraRenderer?.renderFrameRate,
+        freezeCount: this.cameraRenderer?.freezeCount,
         ...evt
       })
     })
