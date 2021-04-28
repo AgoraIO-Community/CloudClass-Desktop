@@ -130,8 +130,8 @@ const webWorkerConfig = () => config => {
 const sourceMap = () => config => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
-  config.devtool = 'source-map'
-  //config.devtool = isProd ? 'source-map' : 'cheap-module-eval-source-map'
+  // config.devtool = 'source-map'
+  config.devtool = isProd ? 'none' : 'cheap-module-eval-source-map'
   return config;
 }
 
