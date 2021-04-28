@@ -163,7 +163,7 @@ export class MediaStore {
       return false
     }
 
-    if (this.cameraRenderer?.renderState === LocalVideoRenderState.Playing) {
+    if ((this.cameraRenderer?.freezeCount || 0) < 3) {
       return true
     } else {
       return false
@@ -319,6 +319,12 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate)
+      autorun(() => {
+        let {freezeCount} = evt
+        if(this.cameraRenderer) {
+          this.cameraRenderer.freezeCount = freezeCount
+        }
+      })
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
