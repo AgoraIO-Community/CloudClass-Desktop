@@ -51,7 +51,9 @@
     "@netless/cursor-tool": "0.0.7",
     "@netless/react-seek-slider": "1.0.4",
     "@netless/white-audio-plugin": "1.2.23",
+    "@netless/white-audio-plugin2": "2.0.4",
     "@netless/white-video-plugin": "1.2.23",
+    "@netless/white-video-plugin2": "2.0.4",
     "agora-rte-sdk": "1.0.0",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",
@@ -60,7 +62,7 @@
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
-    "white-web-sdk": "2.12.9"
+    "white-web-sdk": "2.12.14"
   },
   "browserslist": {
     "production": [
