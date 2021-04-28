@@ -14,7 +14,7 @@ export const Docs = () => {
         { value: 'strawberry', label: 'Strawberry' },
         { value: 'vanilla', label: 'Vanilla' },
     ];
-    const [selectedOption, setSelectedOption] = useState('');
+    const [selectedOption, setSelectedOption] = useState('chocolate');
     return (
         <>
             <div className="mt-4">
@@ -24,7 +24,7 @@ export const Docs = () => {
                         console.log(value)
                         setSelectedOption(value) 
                     }}
-                    // defaultMenuIsOpen={true}
+                    defaultMenuIsOpen={true}
                     options={options}
                 />
             </div>

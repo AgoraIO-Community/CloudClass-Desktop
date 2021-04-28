@@ -47,7 +47,7 @@ export const Input: FC<InputProps> = ({
         [`${className}`]: !!className,
     });
     return (
-        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-search-wrapper']: cls.includes('input-search')})}>
+        <span className={classnames({[`input-wrapper`]: 1, ['input-wrapper-focused']: focused, ['input-wrapper-disabled']: disabled, ['input-search-wrapper']: cls.includes('input-search')})}>
             {prefix ? (<span className="input-prefix" style={{width: inputPrefixWidth}}>
                 {prefix}
             </span>) : ""}
