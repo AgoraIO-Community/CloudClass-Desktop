@@ -131,6 +131,7 @@ const sourceMap = () => config => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
   // config.devtool = 'source-map'
+  console.log('node version', process.version)
   config.devtool = isProd ? 'none' : 'cheap-module-eval-source-map'
   return config;
 }
