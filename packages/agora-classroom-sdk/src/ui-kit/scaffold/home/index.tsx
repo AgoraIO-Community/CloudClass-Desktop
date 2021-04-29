@@ -26,6 +26,8 @@ export interface HomeAttributes {
 export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
   version: string;
+  SDKVersion: string;
+  publishDate: string;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -37,6 +39,8 @@ export const Home: React.FC<HomeProps> = ({
   scenario,
   duration,
   version,
+  SDKVersion,
+  publishDate,
   language,
   region,
   debug = false,
@@ -150,8 +154,8 @@ export const Home: React.FC<HomeProps> = ({
               window.open(url)
             }}
             version={version}
-            SDKVersion={''}
-            publishDate={''}
+            SDKVersion={SDKVersion}
+            publishDate={publishDate}
             classroomVersion={version}
           />
         </Modal>
