@@ -227,7 +227,7 @@ export class RemoteUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron) {
-      this.electron.client.stopAudioRecordingDeviceTest()
+      // this.electron.client.stopAudioRecordingDeviceTest()
       if (this.el) {
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined

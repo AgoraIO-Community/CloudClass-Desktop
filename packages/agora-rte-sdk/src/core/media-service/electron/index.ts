@@ -953,6 +953,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = true;
+      this.client.setClientRole(1)
       return
     } catch(err) {
       throw GenericErrorWrapper(err)
