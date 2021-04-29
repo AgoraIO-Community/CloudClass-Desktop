@@ -240,3 +240,9 @@
     left: 15px;
   }
 }
+
+.my-tooltip {
+  left: 40px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
