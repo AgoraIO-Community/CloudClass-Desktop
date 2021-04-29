@@ -34,7 +34,7 @@ export const PretestContainer = observer(() => {
         return (
             <RendererPlayer
                 className="camera-placeholder camera-muted-placeholder"
-                style={{width: 320, height: 216}}
+                style={{width: 320, height: 180}}
                 mirror={isMirror}
                 key={cameraId}
                 id="stream-player"
