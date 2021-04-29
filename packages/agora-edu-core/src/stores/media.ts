@@ -318,18 +318,18 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate)
+      let {freezeCount} = evt
+      BizLogger.info("localVideoStats", " encode fps " , evt.stats.encoderOutputFrameRate, ', freeze: ', freezeCount)
       autorun(() => {
-        let {freezeCount} = evt
         if(this.cameraRenderer) {
           this.cameraRenderer.freezeCount = freezeCount
         }
       })
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
-      BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
       let {stats = {}, user = {}} = evt
       let {uid} = user
+      BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
       autorun(() => {
         this.updateRemoteVideoStats(`${uid}`, stats)
       })
