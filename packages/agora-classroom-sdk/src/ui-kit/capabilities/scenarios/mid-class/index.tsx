@@ -51,7 +51,9 @@ export const MidClassScenario = observer(() => {
           </div>
         </Content>
         <Aside>
-          {isFullScreen ? <div style={{height: 300}}></div> : <VideoPlayerTeacher/>}
+          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
+            <VideoPlayerTeacher />
+          </div>
           <RoomChat />
         </Aside>
       </Layout>

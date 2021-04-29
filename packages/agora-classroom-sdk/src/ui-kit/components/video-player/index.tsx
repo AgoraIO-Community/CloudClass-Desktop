@@ -157,7 +157,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onWhiteboardClick,
   onSendStar,
   hidePrivateChat = true,
-  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
   const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
@@ -261,7 +262,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       overlayClassName="video-player-tools-popover"
       content={hideControl ? null : tools}
       placement={controlPlacement}>
-      <div className={cls}>
+      <div className={cls} {...restProps}>
         {children ? children : null}
         {placeholder ? <>{placeholder}</> : null}
         {animList.length ? (

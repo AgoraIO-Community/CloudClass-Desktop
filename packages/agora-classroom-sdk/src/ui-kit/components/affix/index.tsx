@@ -25,7 +25,7 @@ export const Affix: FC<AffixProps> = ({
   return (
     <CSSTransition
       in={!collapse}
-      timeout={300}
+      timeout={500}
       classNames="collapse"
     >
       {!collapse ? (
