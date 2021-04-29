@@ -808,7 +808,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async aClassJoinBoard(params: any) {
     const {role, ...data} = params
-    const identity = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ? 'host' : 'guest'
+    const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
