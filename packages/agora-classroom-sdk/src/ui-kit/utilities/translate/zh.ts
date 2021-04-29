@@ -258,7 +258,7 @@ export const zh = {
     'switch_speaker': '切换扬声器',
     'volume': '音量',
     'adjust_volume': '调整音量',
-    'test_speaker': '扬声器检测',
+    'test_speaker': '检测',
     'camera_error': '摄像头被拔出或摄像头已占用，无法显示视频！',
     'microphone_error': '麦克风被拔出或麦克风被占用，无法使用麦克风！',
     'mirror': '镜像模式',
