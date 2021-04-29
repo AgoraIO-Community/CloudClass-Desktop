@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 
-export const VideoPlayerTeacher = observer(() => {
+export const VideoPlayerTeacher = observer(({style}: any) => {
   const {
     teacherStream: userStream,
     onCameraClick,
@@ -43,6 +43,7 @@ export const VideoPlayerTeacher = observer(() => {
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
       userType={'teacher'}
+      style={style}
     >
       {
 
@@ -62,9 +63,10 @@ export const VideoPlayerTeacher = observer(() => {
 
 export type VideoProps = {
   controlPlacement: 'left' | 'bottom'
+  style?: any
 }
 
-export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement}) => {
+export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement, style}) => {
 
   const {
     firstStudent: userStream,
@@ -94,6 +96,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       onOffPodiumClick={onOffPodiumClick}
       controlPlacement={controlPlacement}
       placement={controlPlacement}
+      style={style}
     >
       {
         <>
@@ -204,10 +207,9 @@ export const VideoList = observer(() => {
   } = useGlobalContext()
 
   return (
-    !isFullScreen ?
     <>
-      <VideoPlayerTeacher />
-      <VideoPlayerStudent controlPlacement="left" />
-    </> : <div style={{height: 300}}></div>
+      <VideoPlayerTeacher style={{opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}/>
+      <VideoPlayerStudent controlPlacement="left" style={{opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}/>
+    </>
   )
 })
