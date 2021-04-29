@@ -65,13 +65,13 @@
     display: none;
 }
 
-.react-select__indicators {
+.react-select__indicators svg{
     transform: rotate(0deg);
     transition: 150ms;
     -webkit-transition: 150ms;
 }
 
-.react-select__control--menu-is-open .react-select__indicators{
+.react-select__control--menu-is-open .react-select__indicators svg{
     transform: rotate(180deg);
 }   
 
