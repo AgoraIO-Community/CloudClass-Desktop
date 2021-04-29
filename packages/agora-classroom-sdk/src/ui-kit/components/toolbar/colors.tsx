@@ -77,7 +77,7 @@ export const Colors: FC<ColorsProps> = ({
     </div>
   ), [colors, activeColor]);
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="my-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
