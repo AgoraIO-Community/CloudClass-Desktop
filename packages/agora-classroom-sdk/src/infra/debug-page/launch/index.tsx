@@ -72,6 +72,6 @@ export const LaunchPage = observer(() => {
   }, [AgoraEduSDK])
 
   return (
-    <div ref={mountLaunch} id="app" style={{width: '100%', height: '100%'}}></div>
+    <div ref={mountLaunch} id="app" style={{width: '100%', height: '100%', background: '#F9F9FC'}}></div>
   )
 })

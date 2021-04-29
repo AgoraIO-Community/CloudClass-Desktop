@@ -26,6 +26,8 @@ export interface HomeAttributes {
 export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
   version: string;
+  SDKVersion: string;
+  publishDate: string;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -37,6 +39,8 @@ export const Home: React.FC<HomeProps> = ({
   scenario,
   duration,
   version,
+  SDKVersion,
+  publishDate,
   language,
   region,
   debug = false,
@@ -149,6 +153,10 @@ export const Home: React.FC<HomeProps> = ({
               const url = language === 'en' ? signupEnUrl : signupCnUrl
               window.open(url)
             }}
+            version={version}
+            SDKVersion={SDKVersion}
+            publishDate={publishDate}
+            classroomVersion={version}
           />
         </Modal>
       ) : null}
@@ -198,6 +206,7 @@ export const Home: React.FC<HomeProps> = ({
                 rule={/^[a-zA-Z0-9]{1,20}$/}
                 errorMsg={transI18n('home.input-error-msg')}
                 errorMsgPositionLeft={75} 
+                maxLength={20}
               />
             </Col>
           </Row>
@@ -215,6 +224,7 @@ export const Home: React.FC<HomeProps> = ({
                 rule={/^[a-zA-Z0-9]{1,20}$/}
                 errorMsg={transI18n('home.input-error-msg')}
                 errorMsgPositionLeft={75}
+                maxLength={20}
               />
             </Col>
           </Row>

@@ -25,7 +25,7 @@ export const CloudDisk: FC<CloudDiskProps> = ({ label, children }) => {
   //   [children, actionClose],
   // );
   return (
-    <Tooltip title={label} placement="bottom">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       {/* <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => {

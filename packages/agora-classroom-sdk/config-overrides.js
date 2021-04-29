@@ -245,6 +245,7 @@ const webpackConfig = override(
     REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
     REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
     REACT_APP_BUILD_VERSION: JSON.stringify(version),
+    REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
     REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
     REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
     REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty('REACT_APP_AGORA_APP_CERTIFICATE') ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`) : JSON.stringify(""),

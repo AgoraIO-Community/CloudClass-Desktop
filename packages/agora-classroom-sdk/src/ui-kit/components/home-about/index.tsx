@@ -18,8 +18,8 @@ export interface HomeAboutProps extends BaseProps {
 export const HomeAbout: FC<HomeAboutProps> = ({
     version = '1.1.0',
     publishDate = '2021.02.22',
-    SDKVersion = 'Ver 3.3.0',
-    classroomVersion = 'Ver 1.0',
+    SDKVersion = '3.3.0',
+    classroomVersion = '1.0',
     onLookPrivate = () => {console.log('onLookPrivate')},
     onLookDeclare = () => {console.log('onLookDeclare')},
     onRegiste = () => {console.log('onRegiste')},
@@ -62,11 +62,11 @@ export const HomeAbout: FC<HomeAboutProps> = ({
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.sdk-version')}</div>
-                    <div className="main-desc">{SDKVersion}</div>
+                    <div className="main-desc">{`Ver ${SDKVersion}`}</div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.classroom-version')}</div>
-                    <div className="main-desc">{classroomVersion}</div>
+                    <div className="main-desc">{`Ver ${classroomVersion}`}</div>
                 </div>
             </div>
         </div>

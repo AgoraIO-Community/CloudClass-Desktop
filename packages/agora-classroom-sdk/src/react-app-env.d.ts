@@ -15,6 +15,7 @@ declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
 declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
 declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;
 declare const REACT_APP_BUILD_VERSION: string;
+declare const REACT_APP_PUBLISH_DATE: string;
 declare const REACT_APP_AGORA_GTM_ID: string;
 declare const REACT_APP_AGORA_APP_ID: string;
 declare const REACT_APP_AGORA_APP_CERTIFICATE: string;

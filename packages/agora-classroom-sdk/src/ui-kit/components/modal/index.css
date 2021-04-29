@@ -52,6 +52,7 @@
     background-color: #F9F9FC;
     padding: 0 20px;
     border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #EEEEF7;
 }
 
 .modal-title-text {

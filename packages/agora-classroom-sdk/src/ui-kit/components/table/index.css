@@ -142,6 +142,18 @@ input.indeterminate:indeterminate {
   background: transparent;
 }
 
+.form-checkbox {
+  border: 1px solid #ECECF1;
+  background: #F9F9FC;
+  -webkit-appearance: none;
+}
+.form-checkbox:checked {
+  -webkit-appearance: checkbox;
+}
+.form-checkbox:checked + span {
+  color: #191919;
+}
+
 .agora-board-resources .form-checkbox {
   margin-right: 15px;
 }

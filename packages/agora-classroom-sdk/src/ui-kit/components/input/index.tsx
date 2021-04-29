@@ -17,6 +17,7 @@ export interface InputProps extends BaseProps {
     rule?: RegExp;
     errorMsg?: string;
     errorMsgPositionLeft?: number;
+    maxLength?: string | number;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onFocus?: React.FocusEventHandler<HTMLInputElement>;
     onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -33,6 +34,7 @@ export const Input: FC<InputProps> = ({
     rule,
     errorMsg,
     errorMsgPositionLeft = 0,
+    maxLength = 'infinite', // 调研后，数字字符串生效，非法字符串则无限制
     onFocus = () => {},
     onBlur = () => {},
     onChange = () => {},
@@ -86,6 +88,7 @@ export const Input: FC<InputProps> = ({
                     placeholder={placeholder}
                     disabled={disabled}
                     value={value}
+                    maxLength={maxLength as any}
                     onFocus={_onFocus}
                     onBlur={_onBlur}
                     onChange={_onChange}
