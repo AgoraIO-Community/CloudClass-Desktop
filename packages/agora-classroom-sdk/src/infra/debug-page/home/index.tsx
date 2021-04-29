@@ -117,7 +117,7 @@ export const HomePage = observer(() => {
     <Home
       version={REACT_APP_BUILD_VERSION}
       SDKVersion={SDKVersion}
-      publishDate={'publishDate'}
+      publishDate={REACT_APP_PUBLISH_DATE}
       roomId={roomUuid}
       userId={userUuid}
       roomName={roomName}
