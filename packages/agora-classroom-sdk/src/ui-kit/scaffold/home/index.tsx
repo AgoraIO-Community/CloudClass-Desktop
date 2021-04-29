@@ -149,6 +149,10 @@ export const Home: React.FC<HomeProps> = ({
               const url = language === 'en' ? signupEnUrl : signupCnUrl
               window.open(url)
             }}
+            version={version}
+            SDKVersion={''}
+            publishDate={''}
+            classroomVersion={version}
           />
         </Modal>
       ) : null}
