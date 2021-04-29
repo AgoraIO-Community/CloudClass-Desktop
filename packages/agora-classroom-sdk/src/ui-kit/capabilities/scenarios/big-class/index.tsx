@@ -2,20 +2,20 @@ import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
 import { useRoomContext, useGlobalContext } from 'agora-edu-core'
-import {NavigationBar} from '~capabilities/containers/nav'
-import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
-import {WhiteboardContainer} from '~capabilities/containers/board'
-import {DialogContainer} from '~capabilities/containers/dialog'
-import {LoadingContainer} from '~capabilities/containers/loading'
-import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
-import {HandsUpContainer} from '~capabilities/containers/hands-up'
-import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
+import { NavigationBar } from '~capabilities/containers/nav'
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
+import { WhiteboardContainer } from '~capabilities/containers/board'
+import { DialogContainer } from '~capabilities/containers/dialog'
+import { LoadingContainer } from '~capabilities/containers/loading'
+import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
+import { HandsUpContainer } from '~capabilities/containers/hands-up'
+import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 
 export const BigClassScenario = observer(() => {
 
-  const {joinRoom} = useRoomContext()
+  const { joinRoom } = useRoomContext()
 
   const {
     isFullScreen,
@@ -47,11 +47,13 @@ export const BigClassScenario = observer(() => {
             <WhiteboardContainer />
           </div>
           <div className="pin-right">
-            <HandsUpContainer/>
+            <HandsUpContainer />
           </div>
         </Content>
         <Aside>
-          {isFullScreen ? <div style={{height: 300}}></div> : <VideoPlayerTeacher/>}
+          <div style={{ height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }}>
+            <VideoPlayerTeacher />
+          </div>
           <RoomChat />
         </Aside>
       </Layout>
