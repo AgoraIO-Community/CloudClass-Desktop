@@ -196,6 +196,7 @@ export class RemoteUserRenderer extends UserRenderer {
     }
     if(fps > 0) {
       this.renderState = RemoteVideoRenderState.Playing
+      this.freezeCount = 0
     }
   }
 
