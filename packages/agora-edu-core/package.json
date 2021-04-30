@@ -2,7 +2,7 @@
   "name": "agora-edu-core",
   "version": "1.0.0",
   "main": "lib/index.js",
-  "keywords": ["agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education"],
+  "keywords": ["Agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education", "TypesScript", "JavaScript"],
   "types": "lib/index.d.ts",
   "author": "agora",
   "maintainers": [

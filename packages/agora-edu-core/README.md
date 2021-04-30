@@ -1,5 +1,5 @@
-### agora-classroom-sdk  
-For publishing npm package agora-classroom-sdk (Web & Electron).
+### agora-edu-core 
+For publishing npm package agora-edu-core (Web & Electron).
 Get more information from https://docs.agora.io
 
 ### Requirements

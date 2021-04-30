@@ -1,0 +1,35 @@
+# folders
+examples/
+packages/
+public/
+src/
+.storybook/
+app/
+release/
+main_land/
+build/
+scripts/
+icons/
+dist/
+node_modules/
+
+# files
+rollup.config.js
+ts.base.json
+ts.release.json
+tsconfig.json
+typedoc.json
+taliwind.config.js
+
+*.sh
+*.sh~
+.eslintcache
+.npmrc
+.env
+env.example
+config-overrides.js
+webpack.config.js
+entitlements.mac.plist
+.env.example
+*.map
+*.*~

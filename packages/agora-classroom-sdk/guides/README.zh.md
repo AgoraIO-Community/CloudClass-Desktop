@@ -22,10 +22,10 @@
 - 声网云录制 （建议在服务端集成）
 
 ### 使用的技术
-- typescript 3.8.3
+- typescript 4.2.3
 - react & react hooks & mobx
 - electron 7.1.14 & electron-builder
-- material-ui
+- ui-kit & storybook
 - Agora Edu 云服务
 
 ## 准备工作
