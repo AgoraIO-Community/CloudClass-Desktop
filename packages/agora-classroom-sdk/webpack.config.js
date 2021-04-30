@@ -32,7 +32,7 @@ module.exports = {
     filename: '[name].bundle.js',
     libraryTarget: "umd",
     // library: "AgoraEduSDK",
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".css"],
