@@ -60,5 +60,3 @@ yarn ci:build:electron:mac
 # build electron win
 yarn ci:build:electron:win
 ```
-
-+ [Electron QuickStart](./packages/agora-electron-edu-demo/README.md)
