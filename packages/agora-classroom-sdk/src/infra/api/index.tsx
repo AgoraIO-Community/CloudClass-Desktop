@@ -138,6 +138,7 @@ export class AgoraEduSDK {
 
   static _list: AgoraEduCourseWare[]
 
+  // @internal
   static configCourseWares(list: AgoraEduCourseWare[]) {
     this._list = list
   }

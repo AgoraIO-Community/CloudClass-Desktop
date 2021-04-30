@@ -5,7 +5,7 @@
   "homepage": ".",
   "keywords": ["agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education"],
   "main": "dist/edu_sdk.bundle.js",
-  "typings": "types/edu-sdk.d.ts",
+  "types": "lib/infra/api/index.d.ts",
   "swSrcPath": "./src/infra/sw/service-worker.ts",
   "babel": {
     "presets": [
