@@ -12,6 +12,7 @@ scripts/
 icons/
 dist/
 node_modules/
+guides/
 
 # files
 rollup.config.js
@@ -20,6 +21,9 @@ ts.release.json
 tsconfig.json
 typedoc.json
 taliwind.config.js
+postcss.config.js
+edu-demo-tsconfig.json
+*.json
 
 *.sh
 *.sh~
@@ -33,4 +37,3 @@ entitlements.mac.plist
 .env.example
 *.map
 *.*~
-*.md
