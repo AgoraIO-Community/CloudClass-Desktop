@@ -5,7 +5,6 @@ const OSS_PREFIX = '';
 
 export function getOSSUrl (mediaUrl: string): string {
   const res = `${OSS_PREFIX}/${mediaUrl}`;
-  console.log("resolve: ", res, OSS_PREFIX);
   return res;
 }
 export interface OSSConfig {

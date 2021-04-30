@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "author": "agora",
   "maintainers": [
-    "yooobuntu@gmail.com"
+    "liyang@agora.io"
   ],
   "license": "MIT",
   "scripts": {

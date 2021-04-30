@@ -358,7 +358,6 @@ export const startDownload = async (isNative: boolean, taskUuid: string, callbac
     await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
       callback(progress)
     })
-    console.log("web端 课件下载完成")
   // }
 }
 
@@ -375,7 +374,6 @@ export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: strin
  }
 
 export const showMaskText = (text: string, sensitiveWords: string[]) => {
-  console.log('sensitiveWords ', sensitiveWords)
   for (let word of sensitiveWords) {
     const regexp = new RegExp(word, 'gi')
     text = text.replace(regexp, "*".repeat(word.length))

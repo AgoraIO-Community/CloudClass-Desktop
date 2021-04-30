@@ -22,6 +22,7 @@
     "release:classroom:sdk": "run-s build:rte-sdk build:edu-core build:classroom:sdk",
     "release:electron:mac": "run-s build:rte-sdk build:edu-core pack:electron:mac",
     "release:electron:win": "run-s build:rte-sdk build:edu-core pack:electron:win",
+    "release:edu-core": "run-s build:rte-sdk build:edu-core",
     "release:demo": "run-s build:rte-sdk build:edu-core build:demo",
     "dev": "run-s build:dev:rte-sdk build:dev:edu-core run:demo",
     "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core run:demo:electron",
