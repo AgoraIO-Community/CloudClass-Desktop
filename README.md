@@ -60,3 +60,7 @@ yarn ci:build:electron:mac
 # build electron win
 yarn ci:build:electron:win
 ```
+
+## UI Folder Structure
+![image](https://user-images.githubusercontent.com/471561/116705542-396afe80-a9ff-11eb-8732-3126b2740d15.png)
+
