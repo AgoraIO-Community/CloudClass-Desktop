@@ -23,6 +23,8 @@ yarn bootstrap
 cp .env.example packages/agora-classroom-sdk/.env
 ```
 
+*Please do not put your certificate in client for production release. For sake of convenience we allow you to put certificate here and help you calculate tokens so that you can start easily. when you go production you should use your own server to sign the token.*
+
 ```
 SKIP_PREFLIGHT_CHECK=true
 ELECTRON_START_URL=http://localhost:3000
