@@ -218,8 +218,6 @@ if(apaasBuildEnv) {
     version=`test-${packageInfo.version}-${date}${hash}`
   } else if(apaasBuildEnv === 'preprod') {
     version=`preprod-${packageInfo.version}-${date}${hash}`
-  } else if(apaasBuildEnv === 'prod') {
-    version=`prod-${packageInfo.version}-${date}${hash}`
   }
 }
 
