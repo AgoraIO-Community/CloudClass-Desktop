@@ -20,7 +20,7 @@ ts.base.json
 ts.release.json
 tsconfig.json
 typedoc.json
-taliwind.config.js
+tailwind.config.js
 postcss.config.js
 edu-demo-tsconfig.json
 *.json
