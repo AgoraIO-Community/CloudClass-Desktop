@@ -22913,7 +22913,7 @@ typedoc@0.19.2:
 
 typescript@4.2.3:
   version "4.2.3"
-  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1619681049389&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
+  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1619767586116&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
   integrity sha1-OQYtgBmRLUNyYpjwlJPVmASMHOM=
 
 ua-parser-js@0.7.22:

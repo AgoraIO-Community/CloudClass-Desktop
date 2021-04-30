@@ -1,11 +1,3 @@
-# `agora-rte-sdk`
-
-> TODO: description
-
-## Usage
-
-```
-const agoraRteSdk = require('agora-rte-sdk');
-
-// TODO: DEMONSTRATE API
-```
+### agora-rte-sdk  
+For publishing npm package agora-rte-sdk (Web & Electron).
+Get more information from [https://github.com/AgoraIO-Community/CloudClass-Desktop](https://github.com/AgoraIO-Community/CloudClass-Desktop)

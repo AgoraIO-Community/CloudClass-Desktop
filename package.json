@@ -58,5 +58,8 @@
   "bugs": {
     "url": "https://github.com/agoraio-community/CloudClass-Desktop/issues"
   },
-  "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme"
+  "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
+  "dependencies": {
+    "agora-edu-core": "1.0.0"
+  }
 }
