@@ -2,12 +2,12 @@
 
 # 声网灵动课堂
 
-## Prerequisites
+## 配置需求
 
 - NodeJS 12+
 - Chrome浏览器
 
-## Install  
+## 安装依赖  
 ```bash
 # 全局安装 lerna 与 yarn
 npm i yarn -g
@@ -17,7 +17,7 @@ npm i lerna
 yarn bootstrap
 ```
 
-## config
+## 环境配置
 ```bash
 # 将示例配置文件放入agora-classroom-sdk
 cp .env.example packages/agora-classroom-sdk/.env
@@ -41,12 +41,12 @@ REACT_APP_AGORA_APP_SDK_DOMAIN=https://api-test.agora.io/preview
 ```
 
 
-## run
+## 启动开发
 ```bash
 yarn dev
 ```
 
-## build release products
+## 编译生产
 ```bash
 # 编译 classroom sdk
 yarn ci:build:classroom:sdk
@@ -60,3 +60,6 @@ yarn ci:build:electron:mac
 # 编译electron win版本
 yarn ci:build:electron:win
 ```
+
+## UI目录结构
+![image](https://user-images.githubusercontent.com/471561/116705621-50115580-a9ff-11eb-8495-bea60a262fcd.png)
