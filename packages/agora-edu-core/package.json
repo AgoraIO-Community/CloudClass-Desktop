@@ -2,6 +2,7 @@
   "name": "agora-edu-core",
   "version": "1.0.0",
   "main": "lib/index.js",
+  "keywords": ["agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education"],
   "types": "lib/index.d.ts",
   "author": "agora",
   "maintainers": [
@@ -9,7 +10,6 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start": "vite",
     "build": "run-s build:js build:types",
     "build:dev:js": "run-s build:dev:bundle build:types",
     "build:types": "tsc --outDir lib --module commonjs",
@@ -43,8 +43,7 @@
     "rollup-plugin-clear": "2.0.7",
     "rollup-plugin-typescript2": "0.30.0",
     "tsc-alias": "1.2.8",
-    "typescript": "4.2.3",
-    "vite": "2.0.5"
+    "typescript": "4.2.3"
   },
   "dependencies": {
     "@netless/combine-player": "1.1.4",
