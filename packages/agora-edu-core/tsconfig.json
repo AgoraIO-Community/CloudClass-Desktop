@@ -11,6 +11,7 @@
       "esnext",
       "webworker"
     ],
+    "sourceMap": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "noImplicitThis": true,

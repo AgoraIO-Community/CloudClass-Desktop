@@ -125,7 +125,7 @@
   cursor: pointer;
 }
 
-.header-right-about:hover {
+.header-right-about:hover, .header-right .react-select__single-value:hover {
   color: #0073FF;
 }
 
@@ -134,6 +134,10 @@
   outline: none;
   box-shadow: 0 0 0 0 transparent;
 }
+.header-right .react-select__control:hover {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+} 
 
 .header-right .language-en-div .react-select__value-container {
   padding-left: 100px !important;
@@ -152,4 +156,48 @@
 .home-label {
   color: #586376;
   font-size: 14px;
+}
+.language-en-div .select-prefix, .region-zh-div .select-prefix {
+  left: 28px;
+}
+
+.language-zh-div .select-prefix {
+  left: 75px;
+}
+
+.language-zh-div .react-select__value-container {
+  padding-left: 117px !important;
+}
+
+.header-right .react-select__menu {
+  top: 30px;
+}
+
+.language-en-div .react-select__menu,  .language-zh-div .react-select__menu{
+  width: 131px;
+}
+
+.region-en-div .react-select__menu {
+  left: 16px;
+}
+
+.language-en-div .react-select__menu {
+  left: 28px;
+}
+
+.region-zh-div .react-select__menu {
+  left: 29px;
+}
+
+.language-zh-div .react-select__menu {
+  left: 75px;
+}
+
+.header-right .react-select__single-value {
+  cursor: pointer;
+  color: #7B88A0;
+}
+
+.can-error-item .table-col-item {
+  flex-direction: column;
 }

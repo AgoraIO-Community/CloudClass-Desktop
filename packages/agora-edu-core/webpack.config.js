@@ -8,12 +8,14 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const path = require('path');
 
-const isProd = true
-// const isProd = process.env.NODE_ENV === 'production'
+// const isProd = true
+const isProd = process.env.NODE_ENV === 'production'
 
 const packageInfo = require('./package.json')
 
 const babelConfig = packageInfo.babel
+
+console.log(`run edu-core webpack isProd ${isProd}, NODE_ENV: ${process.env.NODE_ENV}`)
 
 module.exports = {
   entry: {
@@ -66,7 +68,7 @@ module.exports = {
   optimization: {
     minimizer: [
       new TerserPlugin({
-          parallel: true,
+          parallel: require('os').cpus().length,
       })
     ]
 },

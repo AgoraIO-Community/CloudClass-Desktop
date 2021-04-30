@@ -7,6 +7,7 @@ import { observer } from "mobx-react"
 import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
+import AgoraRTC from 'agora-rtc-sdk-ng'
 
 export const HomePage = observer(() => {
 
@@ -110,10 +111,13 @@ export const HomePage = observer(() => {
   const history = useHistory()
 
   const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
-
+  // @ts-ignore
+  const SDKVersion = window.isElectron ? window.rtcEngine.getVersion().version : AgoraRTC.VERSION
   return (
     <Home
       version={REACT_APP_BUILD_VERSION}
+      SDKVersion={SDKVersion}
+      publishDate={REACT_APP_PUBLISH_DATE}
       roomId={roomUuid}
       userId={userUuid}
       roomName={roomName}

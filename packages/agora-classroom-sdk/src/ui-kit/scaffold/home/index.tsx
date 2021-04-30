@@ -26,6 +26,8 @@ export interface HomeAttributes {
 export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
   version: string;
+  SDKVersion: string;
+  publishDate: string;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -37,6 +39,8 @@ export const Home: React.FC<HomeProps> = ({
   scenario,
   duration,
   version,
+  SDKVersion,
+  publishDate,
   language,
   region,
   debug = false,
@@ -92,7 +96,7 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
-          <div style={{ marginRight: 0, width: 131 }}>
+          <div style={{ marginRight: language === 'en' ? -12 : -58, width: 131, position: 'relative', zIndex: 9 }} className={[language === 'en' ? "region-en-div" : "region-zh-div"].join(" ")}>
             <Select
               prefix={<span className="home-label">{transI18n('home.region')}</span>}
               id="region"
@@ -102,10 +106,11 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.region_placeholder')}
               options={regionOptions}
+              // defaultMenuIsOpen={true}
             >
             </Select>
           </div>
-          <div style={{ marginRight: 0, width: 185 }} className={[language === 'en' ? "language-en-div" : ""].join(" ")}>
+          <div style={{ marginRight: 17, width: 185 }} className={[language === 'en' ? "language-en-div" : "language-zh-div"].join(" ")}>
             <Select
               prefix={<span className="home-label">{transI18n('home.language')}</span>}
               id="language"
@@ -115,6 +120,7 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.language_placeholder')}
               options={languageOptions}
+              // defaultMenuIsOpen={true}
             >
             </Select>
           </div>
@@ -147,6 +153,10 @@ export const Home: React.FC<HomeProps> = ({
               const url = language === 'en' ? signupEnUrl : signupCnUrl
               window.open(url)
             }}
+            version={version}
+            SDKVersion={SDKVersion}
+            publishDate={publishDate}
+            classroomVersion={version}
           />
         </Modal>
       ) : null}
@@ -182,14 +192,40 @@ export const Home: React.FC<HomeProps> = ({
               </Col>
             </Row>
             : <></>}
-          <Row className="home-row-item">
+          <Row className="home-row-item can-error-item">
             <Col>
-              <Input inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} id="roomName" type="text" className="block w-full" value={roomName} onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} placeholder={transI18n('home.roomName_placeholder')} />
+              <Input 
+                inputPrefixWidth={55} 
+                prefix={<span className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} 
+                id="roomName" 
+                type="text" 
+                className="block w-full" 
+                value={roomName} 
+                onChange={(evt) => onChangeRoomName(evt.currentTarget.value)} 
+                placeholder={transI18n('home.roomName_placeholder')}
+                rule={/^[a-zA-Z0-9]{1,20}$/}
+                errorMsg={transI18n('home.input-error-msg')}
+                errorMsgPositionLeft={75} 
+                maxLength={20}
+              />
             </Col>
           </Row>
-          <Row className="home-row-item">
+          <Row className="home-row-item can-error-item">
             <Col>
-              <Input inputPrefixWidth={55} prefix={<span className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} id="userName" type="text" className="block w-full" value={userName} onChange={(evt) => onChangeUserName(evt.currentTarget.value)} placeholder={transI18n('home.nickName_placeholder')} />
+              <Input 
+                inputPrefixWidth={55} 
+                prefix={<span className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} 
+                id="userName" 
+                type="text" 
+                className="block w-full" 
+                value={userName} 
+                onChange={(evt) => onChangeUserName(evt.currentTarget.value)} 
+                placeholder={transI18n('home.nickName_placeholder')} 
+                rule={/^[a-zA-Z0-9]{1,20}$/}
+                errorMsg={transI18n('home.input-error-msg')}
+                errorMsgPositionLeft={75}
+                maxLength={20}
+              />
             </Col>
           </Row>
           <Row className="home-row-item">
@@ -266,7 +302,7 @@ export const Home: React.FC<HomeProps> = ({
               </Col>
             </Row>
             
-          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario)}>{transI18n('home.enter_classroom')}</Button>
+          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario && /^[a-zA-Z0-9]{1,20}$/.test(roomName) && /^[a-zA-Z0-9]{1,20}$/.test(userName))}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
             <div onClick={() => {
               return;

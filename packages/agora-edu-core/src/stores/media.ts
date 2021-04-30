@@ -163,7 +163,7 @@ export class MediaStore {
       return false
     }
 
-    if (this.cameraRenderer?.renderState === LocalVideoRenderState.Playing) {
+    if ((this.cameraRenderer?.freezeCount || 0) < 3) {
       return true
     } else {
       return false
@@ -303,7 +303,7 @@ export class MediaStore {
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
       if (this.appStore.uiStore.isElectron) {
-        this.totalVolume = Number((totalVolume / 255).toFixed(3))
+        this.totalVolume = +Number(((totalVolume / 255) * 100)).toFixed(3)
       } else {
         this.totalVolume = totalVolume * 100;
       }
@@ -318,12 +318,18 @@ export class MediaStore {
       })
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
-      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate)
+      let {freezeCount} = evt
+      BizLogger.info("localVideoStats", " encode fps " , evt.stats.encoderOutputFrameRate, ', freeze: ', freezeCount)
+      autorun(() => {
+        if(this.cameraRenderer) {
+          this.cameraRenderer.freezeCount = freezeCount
+        }
+      })
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
-      BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate)
       let {stats = {}, user = {}} = evt
       let {uid} = user
+      BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
       autorun(() => {
         this.updateRemoteVideoStats(`${uid}`, stats)
       })

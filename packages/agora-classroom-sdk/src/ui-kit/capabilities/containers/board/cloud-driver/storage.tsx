@@ -14,7 +14,7 @@ export const StorageContainer = observer(() => {
       <Col>{transI18n('cloud.size')}</Col>
       <Col>{transI18n('cloud.updated_at')}</Col>
     </TableHeader>
-    <Table className="table-container">
+    <Table className="table-container" style={{flex:1,minHeight:0}}>
       {publicResources.length ? publicResources.map(({ id, name, date, updateTime, size, type }: any, idx: number) =>
         <Row height={10} border={1} key={idx} >
           <Col style={{cursor: 'pointer', paddingLeft: 19}} onClick={async () => {

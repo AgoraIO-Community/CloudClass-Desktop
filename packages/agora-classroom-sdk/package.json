@@ -94,7 +94,7 @@
       "icon": "icons/favicon.png",
       "target": [
         {
-          "target": "nsis",
+          "target": "zip",
           "arch": [
             "ia32"
           ]

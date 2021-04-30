@@ -462,10 +462,26 @@ export class UploadService extends ApiBase {
     console.log('cancelFileUpload click cancel')
   }
 
+  get uploadCallbackPrefix() {
+    const getDomain = {
+      'https://api.agora.io': 'https://api-solutions.agoralab.co/',
+      'https://api-test.agora.io/preview': 'https://api-solutions-pre.agoralab.co/',
+      'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
+    }
+
+    const defaultDomain = getDomain['https://api-solutions-dev.bj2.agoralab.co'];
+
+    const ossCallbackDomain = getDomain[this.sdkDomain]
+
+    if (ossCallbackDomain) {
+      return ossCallbackDomain
+    }
+    return defaultDomain;
+  }
+
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-    const prefix = this.sdkDomain
+    const prefix = this.uploadCallbackPrefix
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-    console.log("[agora-edu-core] addFileToOss ", key, " prefix ", prefix, "  callbackUrl ", callbackUrl)
     try{
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,

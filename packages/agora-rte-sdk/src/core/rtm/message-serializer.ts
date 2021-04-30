@@ -50,6 +50,7 @@ export class MessageSerializer {
       fromUser: this.getFromUser(data),
       type: get(data, 'type'),
       message: get(data, 'message'),
+      messageId: get(data, 'messageId'),
       sensitiveWords: get(data, 'sensitiveWords', []),
       timestamp: get(data, 'ts') || get(data, 'sendTime'),
     }

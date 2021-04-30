@@ -32,11 +32,12 @@ export const LaunchPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
+      AgoraEduSDK.setParameters(JSON.stringify({
+        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+      }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
-        sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
       })
-
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
       // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
       const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
@@ -52,7 +53,8 @@ export const LaunchPage = observer(() => {
 
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
-        recordUrl: `${window.location.protocol}//${window.location.host}${window.location.pathname}#/record`,
+        // TODO:  这里需要传递开发者自己发布的录制页面地址
+        recordUrl: 'https://webdemo.agora.io/flexible-classroom/record_page',
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)
@@ -70,6 +72,6 @@ export const LaunchPage = observer(() => {
   }, [AgoraEduSDK])
 
   return (
-    <div ref={mountLaunch} id="app" style={{width: '100%', height: '100%'}}></div>
+    <div ref={mountLaunch} id="app" style={{width: '100%', height: '100%', background: '#F9F9FC'}}></div>
   )
 })

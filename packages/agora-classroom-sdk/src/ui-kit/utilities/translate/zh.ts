@@ -258,7 +258,7 @@ export const zh = {
     'switch_speaker': '切换扬声器',
     'volume': '音量',
     'adjust_volume': '调整音量',
-    'test_speaker': '扬声器检测',
+    'test_speaker': '检测',
     'camera_error': '摄像头被拔出或摄像头已占用，无法显示视频！',
     'microphone_error': '麦克风被拔出或麦克风被占用，无法使用麦克风！',
     'mirror': '镜像模式',
@@ -348,11 +348,12 @@ export const zh = {
     'language_placeholder': '请选择语言',
     'duration': '时长',
     'duration_unit': '分钟',
-    'enter_classroom': '加入课堂',
+    'enter_classroom': '进入教室',
     'region_placeholder': '请选择区域',
     'region': '区域：',
     'header-left-title': '声网灵动课堂',
-    'about': '关于'
+    'about': '关于',
+    'input-error-msg': '只能输入字母、数字'
   },
   'home-about': {
     'privacy-policy': '隐私条例',

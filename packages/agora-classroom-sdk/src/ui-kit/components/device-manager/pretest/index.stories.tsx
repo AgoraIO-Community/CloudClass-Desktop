@@ -36,7 +36,7 @@ const VideoPreviewPlayer = () => {
 }
 
 const ChildrenWrap = () => {
-    let [isMirror, setIsMirror] = useState<boolean>(true)
+    let [isMirror, setIsMirror] = useState<boolean>(false)
     let [cameraId, setCameraId] = useState<string>(cameraList[0].deviceId)
     let [microphoneId, setMicrophoneId] = useState<string>(microphoneList[0].deviceId)
     let [speakerId, setSpeakerId] = useState<string>(speakerList[0].deviceId)
@@ -99,6 +99,7 @@ const PretestContainer = () => {
                     onCancel={hideModal}
                 >
                     <Pretest
+                        isMirror={false}
                         videoComponent={<VideoPreviewPlayer />}
                         cameraList={cameraList}
                         cameraId={cameraList[0].deviceId}

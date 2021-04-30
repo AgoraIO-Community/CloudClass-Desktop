@@ -1,4 +1,4 @@
-import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, StreamSubscribeOptions } from "agora-rte-sdk"
+import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, OperatorUser, StreamSubscribeOptions } from "agora-rte-sdk"
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { get } from "lodash"
@@ -283,7 +283,14 @@ export class RoomStore extends SimpleInterval {
 
   @computed
   get chatMessageList(): any[] {
-    return this.roomChatMessages.map((item: ChatMessage, key: number) => ({
+    return this.roomChatMessages
+      .filter(
+        (item: ChatMessage, index: number) => 
+        this.roomChatMessages
+        .findIndex(predicateValue =>
+          predicateValue.messageId === item.messageId) === index
+      )
+      .map((item: ChatMessage, key: number) => ({
       id: `${item.id}${item.ts}${key}`,
       uid: item.id,
       username: `${item.account}`,
@@ -528,9 +535,10 @@ export class RoomStore extends SimpleInterval {
       return {
         id: this.userUuid,
         ts,
-        text: message,
+        text: result.message,
         account: this.roomInfo.userName,
         sender: true,
+        messageId: result.messageId,
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
@@ -539,15 +547,7 @@ export class RoomStore extends SimpleInterval {
       )
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
-      return {
-        id: this.userUuid,
-        ts,
-        text: message,
-        account: this.roomInfo.userName,
-        sender: true,
-        fromRoomName: this.roomInfo.userName,
-        status: 'fail'
-      }
+      throw error;
     }
   }
 
@@ -575,6 +575,7 @@ export class RoomStore extends SimpleInterval {
           fromRoomUuid: item.fromUser.userUuid,
           userName: item.fromUser.userName,
           role: item.fromUser.role,
+          messageId: item.messageId,
           sender: item.fromUser.userUuid === this.roomInfo.userUuid,
           account: item.fromUser.userName
         } as ChatMessage)
@@ -1190,6 +1191,7 @@ export class RoomStore extends SimpleInterval {
         this.addChatMessage({
           id: fromUser.userUuid,
           ts: message.timestamp,
+          messageId: message.messageId,
           text: chatMessage,
           account: fromUser.userName,
           role: `${this.getRoleEnumValue(fromUser.role)}`,

@@ -21,7 +21,10 @@
 }
 .react-select__single-value, .react-select__option {
     font-size: 14px !important;
-    top: 51% !important;
+    top: 52% !important;
+}
+.react-select__option--is-focused {
+    background: transparent !important;
 }
 .react-select__option {
     color: #586376 !important;
@@ -45,7 +48,7 @@
     transition: all .3s !important;
 }
 
-.react-select-container:hover .react-select__control {
+.react-select__control:hover {
     background-color: #fff !important;
     border: 1px solid #357BF6 !important;
 } 
@@ -62,16 +65,25 @@
     display: none;
 }
 
-.select .react-select__indicators {
+.react-select__indicators svg{
     transform: rotate(0deg);
     transition: 150ms;
     -webkit-transition: 150ms;
 }
 
-.react-select__control--menu-is-open .react-select__indicators{
+.react-select__control--menu-is-open .react-select__indicators svg{
     transform: rotate(180deg);
 }   
 
-.select .react-select__option {
+.react-select__option {
     text-align: center;
 }
+
+.react-select__control--is-focused:hover {
+    border: 1px solid transparent !important;
+}
+
+.react-select__indicator {
+    margin-left: -5px;
+}
+

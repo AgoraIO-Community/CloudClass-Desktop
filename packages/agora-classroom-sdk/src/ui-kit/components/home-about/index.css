@@ -38,6 +38,8 @@
     align-items: center;
     padding: 12px 0px;
     border-top: 1px solid #EEEEF7;
+    box-sizing: border-box;
+    height: 45px;
 }
 
 .about-main-item .main-text {
@@ -47,6 +49,9 @@
 }
 
 .about-main-item .main-operation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 14px;
     font-weight: 400;
     color: #191919;
@@ -58,6 +63,7 @@
 }
 
 .about-main-item .main-desc {
+    position: relative;
     font-size: 13px;
     font-weight: 400;
     color: #586376;
@@ -74,5 +80,9 @@
     font-size: 13px;
     font-weight: 400;
     color: #586376;
+}
+
+.operation-click {
+    left: 10px !important;
 }
 

@@ -25,7 +25,9 @@ export const Docs = () => {
                     onChange={e => {
                         setInput0(e.target.value)
                     }}
-                    placeholder='这个是最普通的input'
+                    rule={/^[a-zA-Z0-9]{1,10}$/}
+                    errorMsg={'你输错了'}
+                    placeholder='这个是校验只能输入英文数字的input'
                 />
             </div>
             <div className="mt-4">

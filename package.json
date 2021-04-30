@@ -24,7 +24,7 @@
     "release:electron:win": "run-s build:rte-sdk build:edu-core pack:electron:win",
     "release:demo": "run-s build:rte-sdk build:edu-core build:demo",
     "dev": "run-s build:dev:rte-sdk build:dev:edu-core run:demo",
-    "dev:electron": "run-s build:dev:rte-sdk run:demo:electron",
+    "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-classroom-sdk yarn storybook",
     "dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run dev",
     "pack:sdk": "run-s build:rte-sdk build:classroom:sdk",

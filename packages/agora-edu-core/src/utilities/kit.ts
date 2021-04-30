@@ -348,14 +348,14 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
   console.log("video file", file.url)
 
   room.insertPlugin(
-    'video',
+    'video2',
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-          pluginVideoUrl: file.url
+          src: file.url
           // isNavigationDisable: false
       }
     }
@@ -367,14 +367,14 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
   console.log("audio file", file.url)
 
   room.insertPlugin(
-    'audio',
+    'audio2',
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-        pluginAudioUrl: file.url
+        src: file.url
           // isNavigationDisable: false
       }
     }

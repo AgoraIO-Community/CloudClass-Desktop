@@ -410,6 +410,7 @@ export interface EduCustomMessage {
 export interface EduTextMessage {
   fromUser: EduUserInfo,
   message: string,
+  messageId: string,
   sensitiveWords: string[],
   type: number,
   timestamp: number,

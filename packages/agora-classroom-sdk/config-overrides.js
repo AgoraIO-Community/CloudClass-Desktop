@@ -130,8 +130,9 @@ const webWorkerConfig = () => config => {
 const sourceMap = () => config => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
-  config.devtool = 'source-map'
-  //config.devtool = isProd ? 'source-map' : 'cheap-module-eval-source-map'
+  console.log('node version', process.version)
+  config.devtool = 'none'
+  // config.devtool = isProd ? 'source-map' : 'cheap-module-eval-source-map'
   return config;
 }
 
@@ -178,14 +179,15 @@ const useOptimizeBabelConfig = () => config => {
     include: [
       path.resolve("src")
     ],
-    exclude: /\.(stories.ts)x?$/i,
+    // exclude: /\.(stories.ts)x?$/i,
     use: [
       'thread-loader', 'cache-loader', getBabelLoader(config).loader,
     ],
-    exclude: [
-      path.resolve("node_modules"),
-      path.resolve("src/sw"),
-    ],
+    exclude: /node_modules|(\.(stories.ts)x?$)/,
+    // exclude: [
+    //   path.resolve("node_modules"),
+    //   path.resolve("src/sw"),
+    // ],
   }
 
   for (let _rule of config.module.rules) {
@@ -216,8 +218,6 @@ if(apaasBuildEnv) {
     version=`test-${packageInfo.version}-${date}${hash}`
   } else if(apaasBuildEnv === 'preprod') {
     version=`preprod-${packageInfo.version}-${date}${hash}`
-  } else if(apaasBuildEnv === 'prod') {
-    version=`prod-${packageInfo.version}-${date}${hash}`
   }
 }
 
@@ -243,9 +243,10 @@ const webpackConfig = override(
     REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
     REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
     REACT_APP_BUILD_VERSION: JSON.stringify(version),
+    REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
     REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
     REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
-    REACT_APP_AGORA_APP_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_APP_CERTIFICATE),
+    REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty('REACT_APP_AGORA_APP_CERTIFICATE') ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`) : JSON.stringify(""),
     REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
     REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
     REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
