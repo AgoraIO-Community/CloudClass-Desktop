@@ -1,9 +1,60 @@
 {
-  "extends": "./ts.base.json",
-  "exclude": ["node_modules", "lib", "./src/**/*.stories.tsx"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "~core": ["./src/core"],
+      "~core/*": ["./src/core/*"],
+      "~ui-kit": ["./src/ui-kit"],
+      "~components": ["./src/ui-kit/components"],
+      "~scaffold": ["./src/ui-kit/scaffold"],
+      "~styles": ["./src/ui-kit/styles"],
+      "~utilities": ["./src/ui-kit/utilities"],
+      "~utilities/*": ["./src/ui-kit/utilities/*"],
+      "~components/*": ["./src/ui-kit/components/*"],
+      "~scaffold/*": ["./src/ui-kit/scaffold/*"],
+      "~capabilities/*": ["./src/ui-kit/capabilities/*"],
+      "~capabilities": ["./src/ui-kit/capabilities"],
+      "~capabilities/containers": ["./src/ui-kit/capabilities/containers"],
+      "~capabilities/containers/*": ["./src/ui-kit/capabilities/containers/*"],
+      "~capabilities/hooks": ["./src/ui-kit/capabilities/hooks"],
+      "~capabilities/hooks/*": ["./src/ui-kit/capabilities/hooks/*"]
+    },
+    "downlevelIteration": true,
+    "target": "es6",
     "experimentalDecorators": true,
-    "noImplicitAny" :false
-  }
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "webworker"
+    ],
+    "diagnostics": false,
+    "outDir": "lib",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "./src/react-app-env.d.ts",
+    "./src/infra/api/index.tsx"
+  ],
+  "exclude": [
+    "./src/ui-kit/"
+  ]
 }
