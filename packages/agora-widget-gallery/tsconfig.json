@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "target": "es5",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": ".code",
+    "lib": ["dom", "es2017", "DOM.Iterable", "WebWorker"],
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "declaration": true,
+    "pretty": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": false,
+    "emitDeclarationOnly": true,
+    "allowJs": false,
+    "jsx": "preserve"
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "exclude": ["node_modules", "dist", "es", "lib", "build", "examples"]
+}
