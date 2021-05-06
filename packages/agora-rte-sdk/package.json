@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "run-p build:js build:types",
+    "build:dev": "run-p build:dev:js build:types",
     "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:types": "tsc --outDir lib --module commonjs",

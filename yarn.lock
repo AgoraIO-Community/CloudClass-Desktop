@@ -5827,6 +5827,47 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
+agora-classroom-sdk@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/agora-classroom-sdk/-/agora-classroom-sdk-1.1.0.tgz#f32ccc5f8c3142777f6bd5f6340885a6e838c7e5"
+  integrity sha512-wpSMIJWlcnmXcldwTGXaw54kklN4yTMB0MIAcJBIXhtMjZc7/kBZYIARgviPbW6Yej1MfCyjQwg1o33Y7XkPkQ==
+  dependencies:
+    "@netless/fetch-progress" "0.0.1"
+    "@netless/iframe-bridge" "2.0.13"
+    "@tailwindcss/forms" "0.2.1"
+    "@types/react-transition-group" "4.4.1"
+    "@zip.js/zip.js" "2.2.22"
+    adm-zip "0.4.14"
+    agora-access-token "2.0.4"
+    agora-edu-core "1.0.0"
+    agora-electron-sdk apaas
+    agora-rte-sdk "1.0.0"
+    animate.css "4.1.1"
+    bowser "1.9.4"
+    classnames "2.2.6"
+    fetch-progress "1.3.0"
+    i18next "20.1.0"
+    jszip "3.6.0"
+    mobx "5.15.4"
+    mobx-react "6.3.1"
+    pinyinlite "1.2.1"
+    rc-notification "4.4.0"
+    rc-select "12.1.6"
+    rc-slider "9.7.1"
+    rc-tabs "11.7.3"
+    rc-tooltip "5.1.0"
+    rc-trigger "5.2.3"
+    rc-util "5.8.1"
+    react "17.0.0"
+    react-dom "17.0.0"
+    react-draggable "4.4.3"
+    react-i18next "11.8.12"
+    react-router "5.2.0"
+    react-select "4.3.0"
+    react-transition-group "4.4.1"
+    workbox-range-requests "6.1.2"
+    workbox-strategies "6.1.1"
+
 agora-electron-sdk@apaas:
   version "2.9.107-rc.136-build.426"
   resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.136-build.426.tgz#9a5c78a603e7f4303366d2f15dfcc5f1e1add534"
@@ -11824,7 +11865,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.npm.taobao.org/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=
