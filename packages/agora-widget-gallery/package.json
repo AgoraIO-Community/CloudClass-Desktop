@@ -1,8 +1,8 @@
 {
-  "name": "agora-rte-sdk",
+  "name": "agora-widget-gallery",
   "version": "1.0.0",
   "description": "> TODO: description",
-  "author": "agora",
+  "author": "matrixbirds <yooobuntu@gmail.com>",
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
   "license": "ISC",
   "main": "lib/index.js",
@@ -19,9 +19,9 @@
     "url": "git+https://github.com/agoraio-community/CloudClass-Desktop.git"
   },
   "scripts": {
-    "build": "run-p build:js build:types",
-    "build:dev": "run-p build:dev:js build:types",
-    "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
+    "dev": "cross-env NODE_ENV=development BABEL_NODE=development webpack-cli serve",
+    "build": "run-p build:dev:js build:types",
+    "build:js": "cross-env NODE_ENV=production BABEL_NODE=development webpack --mode='development'",
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:types": "tsc --outDir lib --module commonjs",
     "test": "echo \"Error: run tests from root\" && exit 1"
@@ -45,6 +45,7 @@
     "@types/node": "14.14.22",
     "@types/ua-parser-js": "0.7.35",
     "@types/uuid": "8.3.0",
+    "agora-classroom-sdk": "1.1.0",
     "ali-oss": "6.13.1",
     "babel-loader": "8.2.2",
     "cross-env": "6.0.3",
@@ -52,7 +53,10 @@
     "deep-diff": "1.0.2",
     "dexie": "3.0.3",
     "hard-source-webpack-plugin": "0.13.1",
+    "html-webpack-plugin": "4.5.2",
     "js-md5": "0.7.3",
+    "mobx": "5.15.4",
+    "mobx-react": "6.3.1",
     "npm-run-all": "4.1.5",
     "thread-loader": "3.0.1",
     "typescript": "4.2.3",
@@ -61,14 +65,11 @@
     "webpack": "4.46.0",
     "webpack-bundle-analyzer": "4.3.0",
     "webpack-cli": "4.5.0",
-    "worker-loader": "2.0.0"
+    "worker-loader": "2.0.0",
+    "tailwindcss": "2.0.3",
+    "autoprefixer": "10.2.5"
   },
   "dependencies": {
-    "agora-rtc-sdk-ng": "4.4.0",
-    "agora-rtm-sdk": "1.4.2",
-    "tslib": "2.2.0"
-  },
-  "peerDependencies": {
-    "agora-electron-sdk": "apaas"
+    "dayjs": "1.10.4"
   }
 }
