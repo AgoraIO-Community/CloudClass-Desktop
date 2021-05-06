@@ -439,6 +439,20 @@ export class EduScenarioAppStore {
     }
   }
 
+  async stopRTCSharing() {
+    if (this.isWeb) {
+      if (this.sharing) {
+        await this.stopWebSharing()
+      }
+    }
+
+    if (this.isElectron) {
+      if (this.sharing) {
+        await this.stopNativeSharing()
+      }
+    }
+  }
+
   async startOrStopSharing() {
     if (this.isWeb) {
       if (this.sharing) {

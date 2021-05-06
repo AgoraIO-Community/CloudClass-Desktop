@@ -159,6 +159,14 @@
   content: '\e68a';
 }
 
+.icon-share-active {
+  color: #357BF6;
+}
+
+.icon-share-inactive {
+  color: #999999;
+}
+
 .icon-share-screen:before {
   content: '\e68b';
 }

@@ -11,6 +11,7 @@ import { BusinessExceptions } from "../utilities/biz-error"
 import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
+import { screenSharePath } from '../constants';
 
 const delay = 2000
 
@@ -226,6 +227,14 @@ export class SceneStore extends SimpleInterval {
   _roomManager?: EduClassroomManager = undefined;
 
   appStore!: EduScenarioAppStore;
+
+  @computed
+  get isShareScenePath() {
+    return false
+    // if (this.appStore.boardStore.room.state.sceneState.contextPath)
+    // if (this.appStore.)
+    // return this.appStore.boardStore.share
+  }
 
   @action.bound
   reset() {
@@ -445,7 +454,7 @@ export class SceneStore extends SimpleInterval {
     try {
       this.waitingShare = true
       await this.roomManager?.userService.startShareScreen()
-      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
+      this.appStore.boardStore.setScreenShareScenePath()
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -831,7 +840,7 @@ export class SceneStore extends SimpleInterval {
         encoderConfig: '720p'
       })
       await this.roomManager?.userService.startShareScreen()
-      // await eduSDKApi.startShareScreen(this.roomUuid, this.userUuid)
+      this.appStore.boardStore.setScreenShareScenePath()
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -841,6 +850,7 @@ export class SceneStore extends SimpleInterval {
       await this.mediaService.startScreenShare({
         params
       })
+
       this._screenEduStream = this.roomManager?.userService.screenStream.stream
       this._screenVideoRenderer = this.mediaService.screenRenderer
       this.sharing = true
@@ -869,6 +879,21 @@ export class SceneStore extends SimpleInterval {
 
   attachScreenComponent(component: ReactElement) {
     this.screenComponent = component
+  }
+
+  @action.bound
+  async stopRTCSharing() {
+    if (this.isWeb) {
+      if (this.sharing) {
+        await this.stopWebSharing()
+      }
+    }
+
+    if (this.isElectron) {
+      if (this.sharing) {
+        await this.stopNativeSharing()
+      }
+    }
   }
 
   @action.bound

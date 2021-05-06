@@ -22,6 +22,8 @@ import { BizLogger,
   transToolBar
 } from '../utilities/kit';
 import { ZoomController } from './zoom';
+import { screenSharePath } from '../constants';
+import { eduSDKApi } from '../services/edu-sdk-api';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -421,6 +423,8 @@ export class BoardStore extends ZoomController {
     let targetPath = resourceUuid
     if (resourceUuid === "/init" || resourceUuid === "/" || resourceUuid === "init") {
       targetPath = "init"
+    } else if (resourceUuid === "/screenShare" || resourceUuid === "screenShare") {
+      targetPath = "screenShare"
     } else {
       targetPath = `/${resourceUuid}`
     }
@@ -434,13 +438,37 @@ export class BoardStore extends ZoomController {
         } else {
           this.room.setScenePath(`/${currentPage}`)
         }
-      } else {
+      }
+      else if (targetPath === "screenShare") {
+        this.room.setScenePath(`/${targetPath}`)
+      }
+      else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
       }
+    }
+
+    if (targetPath === 'screenShare') {
+      eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 1})
+      .then(() => {
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+      })
+      .catch((err) => {
+        const error = GenericErrorWrapper(err)
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+      })
+    } else {
+      eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 0})
+      .then(() => {
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+      })
+      .catch((err) => {
+        const error = GenericErrorWrapper(err)
+        EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+      })
     }
 
     this.moveCamera()
@@ -510,28 +538,110 @@ export class BoardStore extends ZoomController {
     return 0
   }
 
+  @observable
+  currentPath: string = ''
+
+  @computed
+  get bizScreenShare() {
+    const selectedShare = this.appStore.roomStore?.roomProperties?.screen?.selected ?? false
+    return !!selectedShare;
+  }
+
+  @computed
+  get isBoardScreenShare() {
+    const matchedShareScreen = this.currentPath.match(/^\/screenShare/i)
+    return !!matchedShareScreen
+  }
+
+  @computed
+  get showBoardTool(): [boolean, boolean] {
+    const roomInfo = this.appStore.roomInfo
+    let showZoomControl = false
+    if (this.isBoardScreenShare) {
+      showZoomControl = false
+    } else {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+        showZoomControl = true
+      } else {
+        showZoomControl = this.hasPermission
+      }
+    }
+    // TODO: need refactor
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+      return [true, true]
+    }
+    else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, showZoomControl]
+    }
+    else if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
+      return [true, showZoomControl]
+    }
+    else {
+      return [false, false]
+    }
+  }
+
+  @computed
+  get isShareScreen() {
+    if (!this.isBoardScreenShare) {
+      return !!this.bizScreenShare
+    }
+    return !!this.isBoardScreenShare
+  }
+
+  removeScreenShareScene() {
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    const restRoomScenes = {...roomScenes, [`${screenSharePath}`]: undefined}
+    const room = this.room
+    room.setGlobalState({
+      roomScenes: {
+        ...restRoomScenes,
+      }
+    })
+
+    const sharePath = `/${screenSharePath}`
+    const hasScreenShare = room.entireScenes()[sharePath]
+    if (hasScreenShare) {
+      room.removeScenes(sharePath)
+    }
+
+    room.setScenePath('')
+  }
+
   @action.bound
-  closeMaterial(resourceUuid: string) {
+  async closeMaterial(resourceUuid: string) {
     const currentSceneState = this.room.state.sceneState
     const roomScenes = (this.room.state.globalState as any).roomScenes
     const resourceName = roomScenes[resourceUuid]?.resourceName
-    this.room.setGlobalState({
-      roomScenes: {
-        ...roomScenes,
-        [`${resourceUuid}`]: {
-          contextPath: currentSceneState.contextPath,
-          index: currentSceneState.index,
-          sceneName: currentSceneState.sceneName,
-          scenePath: currentSceneState.scenePath,
-          totalPage: currentSceneState.scenes.length,
-          resourceName: resourceName,
-          resourceUuid: resourceUuid,
-          show: false,
+    const currentContextPath = currentSceneState.contextPath
+
+    if (currentContextPath.match(/\/screenShare/i)) {
+      await this.appStore.sceneStore.stopRTCSharing()
+      const restRoomScenes = {...roomScenes, [`${screenSharePath}`]: undefined}
+      this.room.setGlobalState({
+        roomScenes: {
+          ...restRoomScenes,
         }
-      }
-    })
-    // const resourceName = this.resourcesList.find((it: any) => it.resou)
-    this.room.setScenePath('')
+      })
+      this.room.setScenePath('')
+    } else {
+      this.room.setGlobalState({
+        roomScenes: {
+          ...roomScenes,
+          [`${resourceUuid}`]: {
+            contextPath: currentSceneState.contextPath,
+            index: currentSceneState.index,
+            sceneName: currentSceneState.sceneName,
+            scenePath: currentSceneState.scenePath,
+            totalPage: currentSceneState.scenes.length,
+            resourceName: resourceName,
+            resourceUuid: resourceUuid,
+            show: false,
+          }
+        }
+      })
+      this.room.setScenePath('')
+    }
   }
 
   async autoFetchDynamicTask() {
@@ -593,6 +703,7 @@ export class BoardStore extends ZoomController {
       }, false)
     }
     this.updatePagination()
+    this.currentPath = this.room.state.sceneState.contextPath
   }
 
   @observable
@@ -621,6 +732,23 @@ export class BoardStore extends ZoomController {
           taskUuid: '',
           show: true,
           resourceName: 'init',
+        }
+      } 
+      else if (resourceUuid === "screenShare" || resourceUuid === "/screenShare") {
+        if (resource) {
+          newList.push({
+            file: {
+              name: resourceUuid,
+              type: 'screen_share',
+            },
+            resourceUuid: resourceUuid,
+            resourceName: resourceUuid,
+            taskUuid: '',
+            currentPage: resource.index,
+            totalPage: resource.totalPage,
+            scenePath: resource?.scenePath,
+            show: resource.show,
+          })
         }
       } else {
         const rawResource = this.allResources.find((it) => it.id === resourceUuid)
@@ -731,6 +859,11 @@ export class BoardStore extends ZoomController {
     }
 
     this.ready = true
+
+
+    if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      this.resetBoardPath()
+    }
 
     this.updateBoardState(this.room.state.globalState as CustomizeGlobalState)
     this.updateCourseWareList()
@@ -931,6 +1064,10 @@ export class BoardStore extends ZoomController {
     this.room.setGlobalState({
       materialList: this.internalResources.map(transformMaterialList)
     })
+  }
+
+  resetBoardPath() {
+    this.removeScreenShareScene()
   }
 
   // reset board scenes
@@ -1717,6 +1854,44 @@ export class BoardStore extends ZoomController {
       this.room.putScenes(`/${resource.id}`, resource.scenes)
       this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
     }
+  }
+
+  @action.bound
+  setScreenShareScenePath () {
+    const room = this.appStore.boardStore.room
+    const sharePath = `/${screenSharePath}`
+    const hasScreenShare = room.entireScenes()[sharePath]
+    if (hasScreenShare) {
+      room.removeScenes(sharePath)
+    }
+    const roomScenes = (this.room.state.globalState as any).roomScenes
+    const currentSceneState = this.room.state.sceneState
+    room.setGlobalState({
+      currentSceneInfo: {
+        contextPath: currentSceneState.contextPath,
+        index: currentSceneState.index,
+        sceneName: currentSceneState.sceneName,
+        scenePath: currentSceneState.scenePath,
+        totalPage: currentSceneState.scenes.length,
+        resourceUuid: `${screenSharePath}`,
+        resourceName: `${screenSharePath}`
+      },
+      roomScenes: {
+        ...roomScenes,
+        [`${screenSharePath}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceUuid: `${screenSharePath}`,
+          resourceName: `${screenSharePath}`,
+          show: true,
+        }
+      }
+    })
+    room.putScenes(sharePath, [{name: "0"}])
+    room.setScenePath(sharePath)
   }
 
   @action.bound

@@ -301,6 +301,7 @@ export const zh = {
   },
   'tool': {
     'board_name': '白板',
+    'screen_share': '屏幕共享',
     'selector': '鼠标选择器',
     'pencil': '画笔',
     'rectangle': '矩形',

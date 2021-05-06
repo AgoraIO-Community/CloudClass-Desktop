@@ -3,5 +3,5 @@ import {en} from './en'
 
 export const config = {
   zh,
-  en
+  en,
 }

@@ -8,6 +8,7 @@ export interface CabinetItem {
     id: string;
     icon: React.ReactElement;
     name: string;
+    disabled?: boolean;
 }
 
 export interface ToolCabinetProps extends ToolItem { 
@@ -32,7 +33,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
     const content = useCallback(() => (
         <div className={`expand-tools tool-cabinet`}>
             {cabinetList.map((item) => (
-                <div className={`cabinet-item ${activeItem === item.id ? 'active' : ''}` } key={item.id} onClick={() => handleClick(item.id)}>
+                <div className={`cabinet-item ${activeItem === item.id ? 'active' : ''}` } key={item.id} onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
                     {item.icon}
                     <span>{item.name}</span>
                 </div>

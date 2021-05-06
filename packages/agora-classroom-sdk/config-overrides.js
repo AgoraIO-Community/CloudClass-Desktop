@@ -23,6 +23,7 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
 const short = require('short-uuid');
 const dayjs = require('dayjs')
+const fs = require('fs')
 
 const packageInfo = require('./package.json')
 
@@ -201,6 +202,11 @@ const useOptimizeBabelConfig = () => config => {
 
 const config = process.env
 
+const exportWebpackConfig = () => config => {
+  fs.writeFileSync("./webpack.cra.js", JSON.stringify(config))
+  return config;
+}
+
 const removeEslint = () => config => {
   config.plugins = config.plugins.filter(
     (plugin) => plugin.constructor.name !== "ESLintWebpackPlugin",
@@ -325,6 +331,7 @@ const webpackConfig = override(
   //   "@babel/preset-typescript",
   //   "@babel/preset-react"
   // )
+  // exportWebpackConfig()
 )
 
 module.exports = webpackConfig
