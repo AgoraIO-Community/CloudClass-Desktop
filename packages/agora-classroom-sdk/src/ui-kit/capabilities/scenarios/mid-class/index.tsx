@@ -10,14 +10,11 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
-import {AgoraChatWidget} from 'agora-widget-gallery'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import { Widget } from '../../containers/widget'
-
-const chatWidget = new AgoraChatWidget()
 
 export const MidClassScenario = observer(() => {
+
   const {joinRoom} = useRoomContext()
 
   const {
@@ -57,8 +54,7 @@ export const MidClassScenario = observer(() => {
           <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
             <VideoPlayerTeacher />
           </div>
-          {/* <RoomChat /> */}
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          <RoomChat />
         </Aside>
       </Layout>
       <DialogContainer />
