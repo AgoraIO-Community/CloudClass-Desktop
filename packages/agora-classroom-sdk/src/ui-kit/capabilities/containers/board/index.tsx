@@ -232,7 +232,7 @@ export const WhiteboardContainer = observer(() => {
     <div className="whiteboard">
       {
         ready ? 
-        <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
+        <div id="netless" ref={mountToDOM} ></div> : null
       }
       {showTab ? 
       <TabsContainer /> : null}

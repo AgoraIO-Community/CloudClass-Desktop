@@ -1,12 +1,10 @@
 .chat-panel {
   @apply bg-white;
-  /* width: 300px; */
   position: relative;
   flex: 1;
   border-radius: 4px;
   min-width: 300px;
-  margin-left: 2px;
-  @apply border-l border-gray-100;
+  @apply border-l border-gray-100 border-t;
 }
 
 .chat-header {
@@ -70,12 +68,13 @@
 
 .chat-texting > textarea {
   @apply w-full outline-none border-none resize-none;
-  height: 50px;
+  height: 20px;
+  font-size: 13px;
   transition: .3s;
 }
 
 .chat-texting.focus > textarea {
-  height: 80px;
+  height: 50px;
   margin-top: 10px;
 }
 
@@ -113,4 +112,9 @@
 
 .full-screen-chat .chat-header {
   border-top: 1px solid #ececf1;
+}
+
+.svg-icon-wrap {
+  position: relative;
+  left: -11px;
 }

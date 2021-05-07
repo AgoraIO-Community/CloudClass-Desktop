@@ -1,20 +1,24 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext } from 'agora-edu-core'
-import {NavigationBar} from '~capabilities/containers/nav'
-import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
-import {WhiteboardContainer} from '~capabilities/containers/board'
-import {DialogContainer} from '~capabilities/containers/dialog'
-import {LoadingContainer} from '~capabilities/containers/loading'
-import {VideoList} from '~capabilities/containers/video-player'
-import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
+import { useGlobalContext, useRoomContext } from 'agora-edu-core'
+import { NavigationBar } from '~capabilities/containers/nav'
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
+import { WhiteboardContainer } from '~capabilities/containers/board'
+import { DialogContainer } from '~capabilities/containers/dialog'
+import { LoadingContainer } from '~capabilities/containers/loading'
+import { VideoList } from '~capabilities/containers/video-player'
+import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 
 export const OneToOneScenario = observer(() => {
 
-  const {joinRoom} = useRoomContext()
+  const {
+    isFullScreen,
+  } = useGlobalContext()
+
+  const { joinRoom } = useRoomContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -40,15 +44,17 @@ export const OneToOneScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="bg-white" style={{ height: '100%' }}>
+      <Layout className="bg-white">
         <Content>
           <ScreenSharePlayerContainer />
           <WhiteboardContainer />
         </Content>
-        <Aside className={fullscreenCls}>
-          <VideoList />
-          <RoomChat />
-        </Aside>
+        {isFullScreen ? <RoomChat /> : (
+          <Aside className={fullscreenCls}>
+            <VideoList />
+            <RoomChat />
+          </Aside>
+        )}
       </Layout>
       <DialogContainer />
       <LoadingContainer />
