@@ -7,3 +7,9 @@ export interface Message {
   content: string;
   isOwn: boolean;
 }
+
+export interface Conversation {
+  userName: string;
+  userUuid: string;
+  unreadMessageCount: number;
+}

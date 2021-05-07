@@ -7,15 +7,21 @@ import { Placeholder } from '~components/placeholder';
 import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
 import './index.css';
-import { Message } from './interface';
+import { Conversation, Message } from './interface';
+import { Tabs, TabPane } from '~components/tabs'
 
 import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
+import { ChatList } from './chat-list';
 
 export interface ChatProps extends AffixProps {
   /**
    * 消息列表
    */
   messages?: Message[];
+  /**
+   * 对话列表
+   */
+  conversations?: Conversation[];
   /**
    * 是否对学生禁言
    */
@@ -61,6 +67,7 @@ export interface ChatProps extends AffixProps {
 
 export const Chat: FC<ChatProps> = ({
   messages = [],
+  conversations = [],
   canChatting,
   uid,
   isHost,
@@ -79,6 +86,7 @@ export const Chat: FC<ChatProps> = ({
   const { t } = useTranslation()
 
   const [focused, setFocused] = useState<boolean>(false);
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null)
 
   const handleFocus = () => setFocused(true);
 
@@ -144,7 +152,7 @@ export const Chat: FC<ChatProps> = ({
       content={<ChatMin unreadCount={unreadCount}
       />}>
       <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : ''].join(' ')}>
-        <div className="chat-header">
+        {/* <div className="chat-header">
           <span className="chat-header-title">{t('message')}</span>
           <span style={{
             display: 'flex',
@@ -163,47 +171,99 @@ export const Chat: FC<ChatProps> = ({
             </span>) : null}
 
           </span>
-        </div>
-        {!canChatting ? (
-          <div className="chat-notice">
-            <span>
-              <Icon type="red-caution" />
-              <span>{t('placeholder.enable_chat_muted')}</span>
-            </span>
+        </div> */}
+        <Tabs>
+          <TabPane tab="消息" key="0">
+          {!canChatting ? (
+            <div className="chat-notice">
+              <span>
+                <Icon type="red-caution" />
+                <span>{t('placeholder.enable_chat_muted')}</span>
+              </span>
+            </div>
+          ) : null}
+          <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
+            {!messages || messages.length === 0 ? (
+              <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
+            ) : (
+              messages.map((message) => (
+                <ChatMessage
+                  key={message.id}
+                  {...message}
+                  isOwn={message.isOwn}
+                />
+              ))
+            )}
           </div>
-        ) : null}
-        <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
-          {!messages || messages.length === 0 ? (
-            <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
-          ) : (
-            messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                {...message}
-                isOwn={message.isOwn}
-              />
-            ))
-          )}
-        </div>
-        <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
-          <textarea
-            value={chatText}
-            className="chat-texting-message"
-            placeholder={t('placeholder.input_message')}
-            disabled={!isHost && !canChatting}
-            onChange={(e) => onText(e.currentTarget.value)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onKeyPress={handleKeypress}
-          />
-          <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10
-          }}>
-            {t('send')}
-          </Button>
-        </div>
+          <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
+            <textarea
+              value={chatText}
+              className="chat-texting-message"
+              placeholder={t('placeholder.input_message')}
+              disabled={!isHost && !canChatting}
+              onChange={(e) => onText(e.currentTarget.value)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onKeyPress={handleKeypress}
+            />
+            <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
+              position: 'absolute',
+              bottom: 10,
+              right: 10
+            }}>
+              {t('send')}
+            </Button>
+          </div>
+          </TabPane>
+          <TabPane tab="提问" key="1">
+            {activeConversation ? 
+              <>
+                <div className="conversation-header">
+                  <div className="back-btn" onClick={() => setActiveConversation(null)}>{'<'}</div>
+                  <div className="avatar">
+                  </div>
+                  <div className="name">{activeConversation.userName}</div>
+                </div>
+                <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
+                  {!messages || messages.length === 0 ? (
+                    <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
+                  ) : (
+                    messages.map((message) => (
+                      <ChatMessage
+                        key={message.id}
+                        {...message}
+                        isOwn={message.isOwn}
+                      />
+                    ))
+                  )}
+                </div>
+                <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
+                  <textarea
+                    value={chatText}
+                    className="chat-texting-message"
+                    placeholder={t('placeholder.input_message')}
+                    disabled={!isHost && !canChatting}
+                    onChange={(e) => onText(e.currentTarget.value)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyPress={handleKeypress}
+                  />
+                  <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
+                    position: 'absolute',
+                    bottom: 10,
+                    right: 10
+                  }}>
+                    {t('send')}
+                  </Button>
+                </div>
+              </>
+            : 
+              <ChatList conversations={conversations} onClickConversation={(conversation) => {
+                setActiveConversation(conversation)
+              }}></ChatList>
+            }
+          </TabPane>
+        </Tabs>
       </div>
     </Affix>
   );

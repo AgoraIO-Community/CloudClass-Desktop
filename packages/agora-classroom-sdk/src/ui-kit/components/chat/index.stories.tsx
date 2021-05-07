@@ -42,6 +42,18 @@ const meta: Meta = {
           '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
       },
     ],
+    conversations: [
+      {
+        userName: "testuser1",
+        userUuid: "12345",
+        unreadMessageCount: 50
+      },
+      {
+        userName: "testuser2",
+        userUuid: "123456",
+        unreadMessageCount: 100
+      }
+    ]
   },
 };
 

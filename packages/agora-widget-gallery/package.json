@@ -20,8 +20,8 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development BABEL_NODE=development webpack-cli serve",
-    "build": "run-p build:dev:js build:types",
-    "build:js": "cross-env NODE_ENV=production BABEL_NODE=development webpack --mode='development'",
+    "build": "run-p build:js build:types",
+    "build:js": "cross-env NODE_ENV=production BABEL_NODE=development webpack --mode='production'",
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:types": "tsc --outDir lib --module commonjs",
     "test": "echo \"Error: run tests from root\" && exit 1"
