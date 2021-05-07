@@ -144,3 +144,12 @@
 .conversation-header>.name {
   margin-left: 8px;
 }
+
+.conversation-history {
+  width: 100%;
+  height: calc(100% - 120px - 48px);
+  padding-bottom: 18px;
+  overflow-y: scroll;
+  width: 100%;
+  position: absolute;
+}

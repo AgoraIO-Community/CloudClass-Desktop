@@ -224,7 +224,7 @@ export const Chat: FC<ChatProps> = ({
                   </div>
                   <div className="name">{activeConversation.userName}</div>
                 </div>
-                <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
+                <div className="conversation-history" ref={chatHistoryRef} onScroll={handleScroll}>
                   {!messages || messages.length === 0 ? (
                     <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
                   ) : (
