@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgoraFlexibleClassroomDemo</title>
+  <script src="./edu_sdk.bundle.js"></script>
+</head>
+
+<body>
+  <style>
+    #root1 {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <div id="root1"></div>
+  <script type="text/javascript">
+    window.addEventListener('message', function(e) {  
+        if (e.source != window.parent)   
+            return;
+        let data = e.data
+        let {appId, options, cachePath, cmd, data:aData} = JSON.parse(data)
+
+        if(cmd) {
+          if(cmd === 'screenshot') {
+            if(window.globalStore 
+              && window.globalStore.acadsocStore) {
+                if(aData) {
+                  const {amount = 0} = aData
+                  window.globalStore.acadsocStore.highlightCount = parseInt(amount)
+                }
+            }
+          }
+        } else {
+          if(!options || !appId) {
+            document.querySelector("#root1").textContent = "launchOption/appid missing"
+          } else {
+              if(AgoraEduSDK.setParameters) {
+                AgoraEduSDK.setParameters(JSON.stringify({
+                  "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
+                  "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
+                }))
+                console.log(`AgoraEduSDK setParameters called`)
+              }
+              AgoraEduSDK.config({
+                  appId,
+                  cachePath
+              })
+              Object.assign(options, {
+                listener: (evt, args) => {
+                  console.log("evt", evt, args)
+                  window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
+                }
+              })
+              AgoraEduSDK.launch(
+                  document.querySelector("#root1"), options
+              )
+          }
+        }
+          
+    }, false);
+  </script>
+</body>
+
+</html>
