@@ -615,15 +615,9 @@ export class BoardStore extends ZoomController {
     const resourceName = roomScenes[resourceUuid]?.resourceName
     const currentContextPath = currentSceneState.contextPath
 
-    if (currentContextPath.match(/\/screenShare/i)) {
+    if (resourceUuid.match(/\screenShare/i)) {
       await this.appStore.sceneStore.stopRTCSharing()
-      const restRoomScenes = {...roomScenes, [`${screenSharePath}`]: undefined}
-      this.room.setGlobalState({
-        roomScenes: {
-          ...restRoomScenes,
-        }
-      })
-      this.room.setScenePath('')
+      this.removeScreenShareScene()
     } else {
       this.room.setGlobalState({
         roomScenes: {
