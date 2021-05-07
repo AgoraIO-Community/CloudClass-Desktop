@@ -1,7 +1,7 @@
 .zoom-position {
   position: absolute;
   left: 15px;
-  bottom: 8px;
+  bottom: 20px;
 }
 
 .whiteboard {
@@ -49,4 +49,15 @@
   height: 100%;
   padding-top: 2px;
   box-sizing: border-box;
+}
+
+.edu-room .video-player {
+  margin-top: 0px !important;
+}
+
+.full-screen-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 514px;
 }

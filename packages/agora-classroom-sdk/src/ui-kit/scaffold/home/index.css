@@ -84,6 +84,7 @@
   top: 0;
   left: 0;
   border-bottom: 0;
+  z-index: 999;
 }
 
 .header-left, .header-right {

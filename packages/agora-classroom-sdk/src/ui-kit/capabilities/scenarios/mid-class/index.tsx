@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -20,6 +20,8 @@ export const MidClassScenario = observer(() => {
   const {
     isFullScreen,
   } = useGlobalContext()
+
+  const { chatCollapse }  = useChatContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -46,7 +48,7 @@ export const MidClassScenario = observer(() => {
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
           </div>
-          <div className="pin-right">
+          <div className={["pin-right", (isFullScreen && !chatCollapse) ? 'pin-right-special' : ''].join(' ')}>
             <HandsUpContainer />
           </div>
         </Content>

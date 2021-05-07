@@ -375,8 +375,8 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
       onOk={onOK}
       onCancel={onCancel}
       footer={[
-        <Button type={'primary'} action="cancel">{t('toast.cancel')}</Button>,
-        <Button type={'secondary'} action="ok">{t('toast.confirm')}</Button>,
+        <Button type={'ghost'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
       ]}
       title={t('toast.leave_room')}>
       <p>{t('toast.quit_room')}</p>
@@ -419,12 +419,12 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
         removeDialog(id)
       }}
       footer={[
-        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'ghost'} action="cancel">{t('toast.cancel')}</Button>,
         <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>
       ]}
       title={transI18n(recordingTitle)}
     >
-      <p>{transI18n(recordingContent)}</p>
+      <p style={{fontSize: 13, color: '#586376', padding: '15px 0'}}>{transI18n(recordingContent)}</p>
     </Modal>
   )
 })
