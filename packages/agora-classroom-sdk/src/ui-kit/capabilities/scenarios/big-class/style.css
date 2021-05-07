@@ -21,6 +21,41 @@
 
 .pin-right {
   position: absolute;
-  right: 40px;
+  right: 60px;
   bottom: 7px;
+}
+
+.full-screen-chat {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  height: 514px;
+}
+
+.big-class-aside .chat-panel {
+  margin-left: 2px;
+}
+
+.bg-white {
+  height: 100%;
+  padding-top: 2px;
+  box-sizing: border-box;
+}
+
+.big-class-teacher {
+  border: 2px solid white;
+  border-right: none;
+}
+
+.full-video-wrap {
+  height: 300px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+.video-wrap {
+  height: auto;
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
 }
