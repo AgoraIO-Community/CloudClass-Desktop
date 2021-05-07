@@ -162,7 +162,7 @@ export class AgoraEduSDK {
     try {
       let json = JSON.parse(params)
       if(json["edu.apiUrl"]) {
-        globalConfigs.sdkDomain = json["edu.apiUrl"]
+        globalConfigs.setSDKDomain(json["edu.apiUrl"])
       } 
       console.info(`setParameters ${params}`)
     }catch(e) {

@@ -16,6 +16,7 @@ import { reportService } from '../core/services/report-service';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
+import { getSDKDomain } from '../core/media-service/utils';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -62,8 +63,13 @@ export class EduManager extends EventEmitter {
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
-      appId: this.config.appId
+      appId: this.config.appId,
+      rtcArea: this.config.rtcArea ?? "GLOBAL",
+      rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
+    const domain = getSDKDomain(this.config.sdkDomain!, this.config.region)
+    this.config.sdkDomain = domain
+    // if ()
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
         logPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/agorasdk.log` : (window.logPath || ""),
@@ -80,7 +86,7 @@ export class EduManager extends EventEmitter {
         appId: this.config.appId,
         rtmToken: this.config.rtmToken,
         rtmUid: this.config.rtmUid,
-        sdkDomain: `${this.config.sdkDomain}`
+        sdkDomain: `${this.config.sdkDomain}`,
       }
     )
     Object.assign(

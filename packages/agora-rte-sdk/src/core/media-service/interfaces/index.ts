@@ -35,16 +35,34 @@ export declare interface IElectronRTCWrapper extends IAgoraRTCModule {
  * 主要用于初始化构造electron rtc wrapper
  */
 export declare interface ElectronWrapperInitOption {
-  logPath: string
-  videoSourceLogPath: string
-  AgoraRtcEngine: any
-  appId: string
-  cefClient: any,
+  logPath: string;
+  videoSourceLogPath: string;
+  AgoraRtcEngine: any;
+  appId: string;
+  cefClient: any;
+  area: AREA_CODE;
   resolution?: {
-    width: number,
-    height: number,
-    frameRate: number
+    width: number;
+    height: number;
+    frameRate: number;
   }
+}
+
+export const convertNativeAreaCode = (codeName: string) => {
+  const areaTable: Record<string, number> = {
+    "CHINA": 1,
+    "ASIA": 8,
+    "NORTH_AMERICA": 2,
+    "JAPAN": 16,
+    "EUROPE": 4,
+    "INDIA": 32,
+    "GLOBAL": 0xFFFFFFFF,
+  }
+
+  const areaCode = areaTable[codeName] ?? areaTable["GLOBAL"]
+
+  console.log("use native area code: ", areaCode)
+  return areaCode;
 }
 
 /**
@@ -63,18 +81,31 @@ export declare interface IWebRTCWrapper extends IAgoraRTCModule {
   client: IAgoraRTCClient
 }
 
+export type AREA_CODE = 
+  | "CHINA"
+  | "ASIA"
+  | "NORTH_AMERICA"
+  | "EUROPE"
+  | "JAPAN"
+  | "INDIA"
+  | "OVERSEA"
+  | "GLOBAL"
+  | "SOUTH_AMERICA"
+  | "AFRICA"
+
 /**
  * WebRtcWrapperInitOption
  * 主要用于初始化构造agora-web-sdk-ng rtc wrapper
  */
 export declare interface WebRtcWrapperInitOption {
-  appId: string
-  uploadLog: boolean
-  agoraWebSdk: IAgoraRTC
+  appId: string;
+  uploadLog: boolean;
+  agoraWebSdk: IAgoraRTC;
+  area: AREA_CODE;
   webConfig: {
-    mode: string,
-    codec: string,
-    role: string
+    mode: string;
+    codec: string;
+    role: string;
   }
 }
 
@@ -155,14 +186,15 @@ export declare interface IAgoraRTCModule {
 }
 
 export declare interface RTCProviderInitParams {
-  cefClient: any
-  agoraSdk: any
-  platform: string
-  codec: string
-  appId: string
+  cefClient: any;
+  agoraSdk: any;
+  platform: string;
+  codec: string;
+  appId: string;
+  rtcArea: AREA_CODE;
   electronLogPath?: {
-    logPath: string
-    videoSourceLogPath: string
+    logPath: string;
+    videoSourceLogPath: string;
   }
 }
 

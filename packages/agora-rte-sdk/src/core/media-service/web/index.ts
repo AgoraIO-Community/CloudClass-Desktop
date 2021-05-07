@@ -79,6 +79,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   constructor(options: WebRtcWrapperInitOption) {
     super();
     this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK
+    this.agoraWebSdk.setArea([options.area as any])
+    // this.agoraWebSdk.setArea(options.area)
     this.agoraWebSdk.setParameter("AUDIO_SOURCE_AVG_VOLUME_DURATION", 300)
     this.agoraWebSdk.setParameter("AUDIO_VOLUME_INDICATION_INTERVAL", 300)
     this.clientConfig = options.webConfig
