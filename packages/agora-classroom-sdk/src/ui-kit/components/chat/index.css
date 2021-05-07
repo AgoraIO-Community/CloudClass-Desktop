@@ -9,6 +9,50 @@
   @apply border-l border-gray-100;
 }
 
+.unread-count {
+  position: absolute;
+  top: -5px;
+  left: 24px;
+  font-size: 10px;
+  background: #F04C36;
+  color: white;
+  border-radius: 10px;
+  padding: 0 4px;
+}
+
+.message-tab {
+  position: relative;
+}
+
+.message-tab .message-point {
+  display: inline-block;
+  border: 1px solid #F04C36;
+  width: 8px;
+  height: 8px;
+  background: #F04C36;
+  border-radius: 50%;
+  position: absolute;
+  right: -4px;
+  top: -5px;
+}
+
+.question {
+  position: relative;
+}
+
+.question .question-count {
+  position: absolute;
+  right: 0px;
+}
+
+.chat-panel .tabs-nav-list {
+  margin-left: 25px;
+}
+
+.chat-panel .tabs-nav {
+  z-index: 3;
+}
+
 .chat-header {
   @apply flex items-center justify-between;
   height: 44px;

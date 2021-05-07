@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '~components/affix';
 import { Button } from '~components/button';
@@ -82,6 +82,18 @@ export const Chat: FC<ChatProps> = ({
   onPullFresh,
   ...resetProps
 }) => {
+  const totalCount = useMemo(() => {
+    const res = conversations.reduce((sum: number, item: any) => {
+      const count = item?.unreadMessageCount?? 0
+      sum += count
+      return sum
+    }, 0)
+    const num = Math.min(res, 99)
+    if (num === 99) {
+      return `${num}+`
+    }
+    return `${num}`
+  }, [JSON.stringify(conversations)])
 
   const { t } = useTranslation()
 
@@ -173,7 +185,12 @@ export const Chat: FC<ChatProps> = ({
           </span>
         </div> */}
         <Tabs>
-          <TabPane tab="消息" key="0">
+          <TabPane tab={
+            <span className="message-tab">
+              消息
+              <span className="message-point"></span>
+            </span>
+          } key="0">
           {!canChatting ? (
             <div className="chat-notice">
               <span>
@@ -215,7 +232,14 @@ export const Chat: FC<ChatProps> = ({
             </Button>
           </div>
           </TabPane>
-          <TabPane tab="提问" key="1">
+          <TabPane 
+          tab={
+            <span className="question">
+              提问
+              <span className="unread-count">{totalCount}</span>
+            </span>
+          } 
+          key="1">
             {activeConversation ? 
               <>
                 <div className="conversation-header">

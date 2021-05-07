@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "keywords": ["Agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education", "TypesScript", "JavaScript"],
-  "types": "lib/index.d.ts",
+  "types": "src/index.ts",
   "author": "agora",
   "maintainers": [
     "liyang@agora.io"
