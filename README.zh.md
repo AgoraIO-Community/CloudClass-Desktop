@@ -11,7 +11,7 @@
   - 安装 [Node.js 和 npm](https://www.npmjs.com/)
 
     ```bash
-    Install Node.js and npm globally
+    # Install Node.js and npm globally
     npm install -g npm
     # Check Node.js version
     node -v
@@ -71,7 +71,7 @@
 3. 运行以下命令编译灵动课堂。编译完成后，在浏览器中打开 `localhost:9000`，即可进入灵动课堂。
 
    ```bash
-   # start dev server
+   # Start dev server
    yarn run:apaas
    ```
 
