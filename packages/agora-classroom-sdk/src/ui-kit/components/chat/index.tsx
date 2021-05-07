@@ -154,6 +154,7 @@ export const Chat: FC<ChatProps> = ({
             {isHost ? (
               <span
                 onClick={() => onCanChattingChange(!!canChatting)}
+                className="svg-icon-wrap"
               >
                 <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>

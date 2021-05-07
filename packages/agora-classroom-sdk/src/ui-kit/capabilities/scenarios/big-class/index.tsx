@@ -39,7 +39,7 @@ export const BigClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="bg-white" style={{ height: '100%' }}>
+      <Layout className="bg-white">
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
@@ -50,12 +50,14 @@ export const BigClassScenario = observer(() => {
             <HandsUpContainer />
           </div>
         </Content>
-        <Aside>
-          <div style={{ height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }}>
-            <VideoPlayerTeacher />
-          </div>
-          <RoomChat />
-        </Aside>
+        {isFullScreen ? <RoomChat /> : (
+          <Aside className="big-class-aside">
+            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+              <VideoPlayerTeacher className="big-class-teacher"/>
+            </div>
+            <RoomChat />
+          </Aside>
+        )}
       </Layout>
       <DialogContainer />
       <LoadingContainer />

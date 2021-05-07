@@ -18,3 +18,35 @@
   right: 0;
   margin: auto;
 }
+
+.full-teacher-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+  border-bottom: 2px solid white;
+}
+
+.teacher-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+  border-bottom: 2px solid white;
+}
+
+.full-student-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+
+.student-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+}
+
+.bg-white {
+  height: 100%;
+  padding-top: 2px;
+  box-sizing: border-box;
+}
