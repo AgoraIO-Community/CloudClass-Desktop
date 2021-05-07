@@ -306,6 +306,7 @@ export const useBoardContext = () => {
     grantBoardPermission,
     showBoardTool,
     isShareScreen,
+    canSharingScreen,
   } = useBoardStore()
 
   const {
@@ -361,6 +362,7 @@ export const useBoardContext = () => {
     cancelUpload,
     closeMaterial,
     installTools,
+    canSharingScreen,
     personalResources,
     publicResources,
     revokeBoardPermission,

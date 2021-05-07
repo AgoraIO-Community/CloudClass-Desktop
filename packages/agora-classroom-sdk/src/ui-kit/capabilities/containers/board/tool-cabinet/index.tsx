@@ -10,7 +10,7 @@ export const ToolCabinetContainer = () => {
         startOrStopSharing,
         setLaserPoint,
         currentSelector,
-        isShareScreen
+        canSharingScreen,
     } = useBoardContext()
 
     const {
@@ -21,7 +21,7 @@ export const ToolCabinetContainer = () => {
     const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {
             case 'screenShare': {
-                if (!isShareScreen) {
+                if (!canSharingScreen) {
                     await startOrStopSharing()
                 }
                 break;
@@ -31,7 +31,7 @@ export const ToolCabinetContainer = () => {
                 break;
             }
         }
-    }, [isShareScreen])
+    }, [canSharingScreen])
 
     const {
         roomInfo

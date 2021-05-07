@@ -813,15 +813,15 @@ export class SceneStore extends SimpleInterval {
   async stopWebSharing() {
     try {
       this.waitingShare = true
+      if (this.screenEduStream) {
+        await this.roomManager?.userService.stopShareScreen()
+        // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
+        this._screenEduStream = undefined
+      }
       if (this._screenVideoRenderer) {
         await this.mediaService.stopScreenShare()
         this.mediaService.screenRenderer && this.mediaService.screenRenderer.stop()
         this._screenVideoRenderer = undefined
-      }
-      if (this._screenEduStream) {
-        await this.roomManager?.userService.stopShareScreen()
-        // await eduSDKApi.stopShareScreen(this.roomUuid, this.userUuid)
-        this._screenEduStream = undefined
       }
       this.sharing = false
     } catch(err) {

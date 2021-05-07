@@ -582,6 +582,17 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
+  get canSharingScreen() {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
+      if (this.isBoardScreenShare || this.appStore.sceneStore.screenEduStream) {
+        return true
+      }
+      return false
+    }
+    return false
+  }
+
+  @computed
   get isShareScreen() {
     if (!this.isBoardScreenShare) {
       return !!this.bizScreenShare
@@ -615,7 +626,7 @@ export class BoardStore extends ZoomController {
     const resourceName = roomScenes[resourceUuid]?.resourceName
     const currentContextPath = currentSceneState.contextPath
 
-    if (resourceUuid.match(/\screenShare/i)) {
+    if (resourceUuid.match(/screenShare/i)) {
       await this.appStore.sceneStore.stopRTCSharing()
       this.removeScreenShareScene()
     } else {
