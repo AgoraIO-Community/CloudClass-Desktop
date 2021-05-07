@@ -9,6 +9,10 @@
   @apply border-l border-gray-100;
 }
 
+.chat-panel .tabs {
+  margin-left: 25px;
+}
+
 .chat-header {
   @apply flex items-center justify-between;
   height: 44px;

@@ -10,6 +10,7 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
+//@ts-ignore
 import {AgoraChatWidget} from 'agora-widget-gallery'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
