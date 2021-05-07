@@ -1,0 +1,72 @@
+{
+  "name": "agora-edu-electron-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "resolutions": {
+    "webpack-sources": "1.0.1"
+  },
+  "electronWebpack": {
+    "main": {
+      "sourceDirectory": "src/main",
+      "extraEntries": [
+        "@/preload.js"
+      ]
+    },
+    "renderer": {
+      "sourceDirectory": "src/renderer",
+      "webpackConfig": "webpack.renderer.additions.js"
+    }
+  },
+  "agora_electron": {
+    "prebuilt": true,
+    "electron_version": "7.1.2"
+  },
+  "build": {
+    "appId": "io.agora.edu-electron-app",
+    "win": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "entitlements": "entitlements/entitlements.mac.plist",
+      "extendInfo": {
+        "NSCameraUsageDescription": "Request camera usage",
+        "NSMicrophoneUsageDescription": "Request mic usage"
+      }
+    },
+    "npmRebuild": false,
+    "publish": null
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+  },
+  "dependencies": {
+    "adm-zip": "0.5.1",
+    "agora-classroom-sdk": "^1.0.0",
+    "agora-electron-sdk": "apaas",
+    "source-map-support": "0.5.16"
+  },
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "electron": "7.1.14",
+    "electron-builder": "22.4.1",
+    "electron-webpack": "2.8.2",
+    "webpack": "4.42.1",
+    "webpack-dev-server": "3.8.0",
+    "webpack-cli": "3.3.8",
+    "html-loader": "1.0.0-alpha.0"
+  }
+}
