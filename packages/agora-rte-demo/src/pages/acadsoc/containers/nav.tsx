@@ -158,7 +158,7 @@ const ActionBarContainer = observer(() => {
   const menuBars = [
     {
       name: 'highlight',
-      count: 50,
+      count: roomStore.highlightCount,
       clickEvent: () => {
         let windows = roomStore.minimizeView
 
@@ -178,7 +178,7 @@ const ActionBarContainer = observer(() => {
       }
     },
     {
-      name: 'sos',
+      name: 'prepare',
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "prepare"})
       }

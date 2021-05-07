@@ -224,6 +224,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   windowHeight: number = 0
 
   @observable
+  highlightCount: number = 0
+
+  @observable
   rightContainerClientX: number = 0
   @observable
   rightContainerClientY: number = 0

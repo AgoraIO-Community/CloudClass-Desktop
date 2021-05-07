@@ -18,6 +18,8 @@ const onExitRoom = () => {
   console.log('click onExitRoom')
 }
 const buttonArr = [
+  { name: 'highlight', clickEvent: onRefresh, count: 5 },
+  { name: 'prepare', clickEvent: onRefresh },
   { name: 'refresh', clickEvent: onRefresh },
   { name: 'customerService', clickEvent: onCustomerService },
   { name: 'equipmentDetection', clickEvent: onEquipmentDetection },

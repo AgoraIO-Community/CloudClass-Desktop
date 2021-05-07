@@ -2,6 +2,8 @@ import React from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import customerService from '../assets/customerService.png'
 import sos from '../assets/sos.png'
+import prepare from '../assets/prepare.png'
+import highlight from '../assets/highlight.png'
 import equipmentDetection from '../assets/equipmentDetection.png'
 import refresh from '../assets/refresh.png'
 import userNetwork from '../assets/userNetwork.png'
@@ -30,11 +32,12 @@ export interface IExitButton {
 
 const buttonsMap = {
   'highlight': (props: any) => (
-    <div>
-      <CustomizeIconBtn icon={sos} style={{ ...defaultStyle, ...props.style }}></CustomizeIconBtn>
-      <div style={{position:"absolute", fontSize:13, right:0, bottom:0}}>{props.count}</div>
+    <div style={{display:'flex', alignItems:'center'}}>
+      <CustomizeIconBtn icon={highlight} style={{ height:32, width: 56 }}></CustomizeIconBtn>
+      <div style={{position:"absolute", fontSize:14, right:0, fontWeight:600, textShadow:'0px 0px 4px #122585'}}>{props.count}</div>
     </div>
   ),
+  'prepare': (props: any) => <CustomizeIconBtn icon={prepare} style={{ ...defaultStyle, ...props.style }} />,
   'sos': (props: any) => <CustomizeIconBtn icon={sos} style={{ ...defaultStyle, ...props.style }} />,
   'customerService': (props: any) => <CustomizeIconBtn icon={customerService} style={{ ...defaultStyle, ...props.style }} />,
   'equipmentDetection': (props: any) => <CustomizeIconBtn icon={equipmentDetection} style={{ ...defaultStyle, ...props.style }} />,
