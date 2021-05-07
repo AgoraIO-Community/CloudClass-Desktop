@@ -136,11 +136,16 @@ export const useScreenShareContext = () => {
     startOrStopSharing,
   } = useSceneStore()
 
+  const {
+    isShareScreen
+  } = useBoardStore()
+
   return {
     nativeAppWindowItems: customScreenShareItems,
     screenShareStream,
     screenEduStream,
-    startOrStopSharing
+    startOrStopSharing,
+    isShareScreen
   }
 }
 
@@ -299,6 +304,9 @@ export const useBoardContext = () => {
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
+    showBoardTool,
+    isShareScreen,
+    canSharingScreen,
   } = useBoardStore()
 
   const {
@@ -354,11 +362,14 @@ export const useBoardContext = () => {
     cancelUpload,
     closeMaterial,
     installTools,
+    canSharingScreen,
     personalResources,
     publicResources,
     revokeBoardPermission,
     grantBoardPermission,
     doUpload: handleUpload,
+    showBoardTool,
+    isShareScreen
   }
 }
 

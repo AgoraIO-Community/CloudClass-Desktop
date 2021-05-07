@@ -134,6 +134,12 @@ type RoomProperties = {
   },
   reward: RoomRewardType,
   state: number,
+  screen: {
+    state: number,
+    streamUuid: string,
+    userUuid: string,
+    selected: number,
+  },
   students: Record<string, ProcessType>,
 }
 
@@ -252,6 +258,12 @@ export class RoomStore extends SimpleInterval {
         }
       },
       students: {},
+      screen: {
+        state: 0,
+        streamUuid: '',
+        userUuid: '',
+        selected: 0
+      }
     }
   }
 
@@ -276,6 +288,12 @@ export class RoomStore extends SimpleInterval {
       }
     },
     students: {},
+    screen: {
+      state: 0,
+      streamUuid: '',
+      userUuid: '',
+      selected: 0
+    }
   }
 
   @observable

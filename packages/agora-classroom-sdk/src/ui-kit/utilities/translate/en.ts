@@ -268,6 +268,7 @@ export const en = {
   },
   'tool': {
     'board_name': 'Whiteboard',
+    'screen_share': 'Screen Share',
     'selector': 'mouse selector',
     'pencil': 'pencil',
     'rectangle': 'rectangle',

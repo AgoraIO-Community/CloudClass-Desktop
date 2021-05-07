@@ -208,8 +208,8 @@ export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> 
 
   const {closeMaterial} = useBoardContext()
 
-  const onOK = () => {
-    closeMaterial(resourceUuid)
+  const onOK = async () => {
+    await closeMaterial(resourceUuid)
     removeDialog(id)
   }
 

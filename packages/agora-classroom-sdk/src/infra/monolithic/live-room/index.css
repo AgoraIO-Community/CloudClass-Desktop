@@ -72,7 +72,7 @@ html, body, #root {
   height: 100%;
   align-items: center;
   flex-direction: column;
-  z-index: 2;
+  z-index: 0;
 }
 
 .agora-board-resources .tabs {

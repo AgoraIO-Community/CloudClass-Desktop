@@ -347,6 +347,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async selectShare(roomId: string, userUuid: string, payload: {selected: number}) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/users/${userUuid}/screen/1`,
+      method: 'PATCH',
+      data: {
+        selected: payload.selected
+      }
+    })
+    return res.data
+  }
+
   async startShareScreen(roomId: string, userUuid: string) {
     const state = 1
     const res = await this.fetch({

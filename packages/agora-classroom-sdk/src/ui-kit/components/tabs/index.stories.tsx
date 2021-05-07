@@ -47,7 +47,14 @@ export const Docs = () => {
           <div>公共资源</div>
           <div>公共资源</div>
         </TabPane>
-        <TabPane tab="PPT课件制作规范" key="1">
+        <TabPane
+          tab={
+            <>
+              <Icon type="share-screen" />
+              Storybook的屏幕共享
+            </>
+          }
+          key="1">
           <div>PPT课件制作规范</div>
           <div>PPT课件制作规范</div>
           <div>PPT课件制作规范</div>
