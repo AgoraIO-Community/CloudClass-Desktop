@@ -11,7 +11,7 @@
   - 安装 [Node.js 和 npm](https://www.npmjs.com/)
 
     ```bash
-    Install Node.js and npm globally
+    # Install Node.js and npm globally
     npm install -g npm
     # Check Node.js version
     node -v
