@@ -9,22 +9,11 @@
   @apply border-l border-gray-100;
 }
 
-.unread-count {
-  position: absolute;
-  top: -5px;
-  left: 24px;
-  font-size: 10px;
-  background: #F04C36;
-  color: white;
-  border-radius: 10px;
-  padding: 0 4px;
-}
-
 .message-tab {
   position: relative;
 }
 
-.message-tab .message-point {
+.message-tab .new-message-notice {
   display: inline-block;
   border: 1px solid #F04C36;
   width: 8px;
@@ -42,7 +31,7 @@
 
 .question .question-count {
   position: absolute;
-  right: 0px;
+  top: -8px;
 }
 
 .chat-panel .tabs-nav-list {

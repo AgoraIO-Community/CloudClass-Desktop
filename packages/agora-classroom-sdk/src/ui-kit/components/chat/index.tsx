@@ -188,7 +188,7 @@ export const Chat: FC<ChatProps> = ({
           <TabPane tab={
             <span className="message-tab">
               消息
-              <span className="message-point"></span>
+              <span className="new-message-notice"></span>
             </span>
           } key="0">
           {!canChatting ? (
@@ -236,7 +236,7 @@ export const Chat: FC<ChatProps> = ({
           tab={
             <span className="question">
               提问
-              <span className="unread-count">{totalCount}</span>
+              <span className="question-count">{totalCount}</span>
             </span>
           } 
           key="1">
