@@ -18,10 +18,12 @@ export const ToolCabinetContainer = () => {
         onLaunchAppPlugin
     } = useAppPluginContext()
 
-    const onClick = async (itemType: string) => {
+    const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {
             case 'screenShare': {
-                await startOrStopSharing()
+                if (!isShareScreen) {
+                    await startOrStopSharing()
+                }
                 break;
             }
             case 'laser': {
@@ -29,7 +31,7 @@ export const ToolCabinetContainer = () => {
                 break;
             }
         }
-    }
+    }, [isShareScreen])
 
     const {
         roomInfo
@@ -40,7 +42,6 @@ export const ToolCabinetContainer = () => {
             id: 'screenShare',
             icon: <Icon type="share-screen" />,
             name: t('scaffold.screen_share'),
-            disabled: isShareScreen
         }]
 
         const restTools: CabinetItem[] = [
@@ -63,7 +64,7 @@ export const ToolCabinetContainer = () => {
         } else {
             return restTools
         }
-    }, [roomInfo.userRole, isShareScreen])
+    }, [roomInfo.userRole])
 
     return (
         <ToolCabinet

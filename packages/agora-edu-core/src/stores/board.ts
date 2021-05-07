@@ -665,30 +665,33 @@ export class BoardStore extends ZoomController {
 
     const resourceName = roomScenes[resourceUuid]?.resourceName ?? 'init'
 
-    this.room.setGlobalState({
-      currentSceneInfo: {
-        contextPath: currentSceneState.contextPath,
-        index: currentSceneState.index,
-        sceneName: currentSceneState.sceneName,
-        scenePath: currentSceneState.scenePath,
-        totalPage: currentSceneState.scenes.length,
-        resourceUuid: resourceUuid,
-        resourceName: resourceName
-      },
-      roomScenes: {
-        ...roomScenes,
-        [`${resourceUuid}`]: {
+    if (this.room.isWritable) {
+      this.room.setGlobalState({
+        currentSceneInfo: {
           contextPath: currentSceneState.contextPath,
           index: currentSceneState.index,
           sceneName: currentSceneState.sceneName,
           scenePath: currentSceneState.scenePath,
           totalPage: currentSceneState.scenes.length,
           resourceUuid: resourceUuid,
-          resourceName: resourceName,
-          show: true,
+          resourceName: resourceName
+        },
+        roomScenes: {
+          ...roomScenes,
+          [`${resourceUuid}`]: {
+            contextPath: currentSceneState.contextPath,
+            index: currentSceneState.index,
+            sceneName: currentSceneState.sceneName,
+            scenePath: currentSceneState.scenePath,
+            totalPage: currentSceneState.scenes.length,
+            resourceUuid: resourceUuid,
+            resourceName: resourceName,
+            show: true,
+          }
         }
-      }
-    })
+      })
+    }
+
     const sceneState = this.room.state.sceneState
     const name = this.getResourcePath(sceneState.contextPath)
     
