@@ -1,7 +1,7 @@
 .zoom-position {
   position: absolute;
   left: 15px;
-  bottom: 8px;
+  bottom: 20px;
 }
 
 .whiteboard {
@@ -21,14 +21,19 @@
 
 .pin-right {
   position: absolute;
-  right: 60px;
-  bottom: 7px;
+  right: 65px;
+  bottom: 20px;
+  transition: .5s;
+}
+
+.pin-right-special {
+  right: 330px;
 }
 
 .full-screen-chat {
   position: fixed;
-  right: 0;
-  bottom: 0;
+  right: 20px;
+  bottom: 20px;
   height: 514px;
 }
 .mid-class-aside .chat-panel {
@@ -57,4 +62,8 @@
   opacity: 1;
   transform: scale(1);
   transition: .5s;
+}
+
+.edu-room .video-player {
+  margin-top: -2px !important;
 }
