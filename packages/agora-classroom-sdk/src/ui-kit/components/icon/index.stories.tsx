@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
 import { Icon, SvgGrantBoardIcon } from '~components/icon';
 
@@ -403,5 +403,22 @@ export const Docs = () => (
     </div>
   </div>
 );
+
+export const IconSvg = () => {
+  const [isRecording, setIsRecording] = useState<boolean>(false)
+  return (
+    <>
+      <div>
+        <Icon
+          type={isRecording ? 'recording' : 'record'}
+          onClick={() => {
+            setIsRecording(!isRecording)
+          }}
+          hover={true}
+        />
+      </div>
+    </>
+  )
+}
 
 export default meta;
