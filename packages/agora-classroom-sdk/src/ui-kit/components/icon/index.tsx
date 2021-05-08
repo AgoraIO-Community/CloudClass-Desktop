@@ -8,6 +8,10 @@ import './style.css';
 
 export type { IconTypes } from './icon-types';
 
+import recordingSvg from './assets/svg/recording.svg'
+const svgDict: Record<string, any> = {
+  'recording': recordingSvg
+}
 export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
@@ -34,25 +38,25 @@ export const Icon: FC<IconProps> = ({
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
-  return (
-    !!iconhover ? <div className="icon-hover">
-      <i className={cls}
-        style={{
-          color,
-          fontSize: size,
-          ...style,
-        }}
-        {...restProps}>
-      </i>
-    </div> :
-    <i className={cls}
+  const iconAssets = ['recording'].includes(type) ? (
+    <img className={cls} src={svgDict[type]} {...restProps}/>
+  ) : (
+    <i  
+      className={cls}
       style={{
         color,
         fontSize: size,
         ...style,
       }}
-      {...restProps}>
+      {...restProps}
+    >
     </i>
+  )
+  return (
+    !!iconhover ? <div className="icon-hover">
+      {iconAssets}
+    </div> :
+      iconAssets
   );
 };
 
