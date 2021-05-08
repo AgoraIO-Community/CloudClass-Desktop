@@ -549,7 +549,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get isBoardScreenShare() {
-    const matchedShareScreen = this.currentPath.match(/^\/screenShare/i)
+    const matchedShareScreen = this.currentPath.match(/screenShare/i)
     return !!matchedShareScreen
   }
 
