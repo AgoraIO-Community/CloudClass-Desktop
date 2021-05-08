@@ -7,6 +7,7 @@
   "license": "ISC",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "module": "lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -21,6 +22,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development BABEL_NODE=development webpack-cli serve",
     "build": "run-p build:js build:types",
+    "build:dev": "run-p build:dev:js build:types",
     "build:js": "cross-env NODE_ENV=production BABEL_NODE=development webpack --mode='production'",
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:types": "tsc --outDir lib --module commonjs",

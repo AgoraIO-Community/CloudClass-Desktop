@@ -81,6 +81,7 @@ export const Chat: FC<ChatProps> = ({
   messages = [],
   conversations = [],
   canChatting,
+  //@ts-ignore
   showConversationList,
   uid,
   isHost,
