@@ -117,6 +117,7 @@ export const Docs: FC<ChatProps> = (props) => {
               ...messages
             )])
           }}
+          singleConversation={conversations[0]}
           onCollapse={() => {
             setCollapse(!collapse);
           }}

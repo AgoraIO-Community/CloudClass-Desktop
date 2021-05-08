@@ -6,7 +6,14 @@
   border-radius: 4px;
   min-width: 300px;
   margin-left: 2px;
+  display: flex;
   @apply border-l border-gray-100;
+}
+
+.chat-panel .tabs {
+  left: 0;
+  top: 0;
+  flex: 1 1;
 }
 
 .message-tab {

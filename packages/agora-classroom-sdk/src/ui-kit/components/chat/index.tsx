@@ -38,10 +38,14 @@ export interface ChatProps extends AffixProps {
   showCloseIcon?: boolean;
 
   unreadCount?: number;
+
+  /**
+   * 若提供这个属性，则不显示对话列表，提问页直接使用提供的这个对话
+   */
+  singleConversation?: Conversation;
   /**
    * 刷新聊天消息列表
    */
-
   onPullFresh: () => Promise<void> | void;
   /**
    *  禁言状态改变的回调
@@ -77,10 +81,12 @@ export const Chat: FC<ChatProps> = ({
   messages = [],
   conversations = [],
   canChatting,
+  showConversationList,
   uid,
   isHost,
   chatText,
   showCloseIcon = false,
+  singleConversation,
   unreadCount = 0,
   collapse = false,
   onCanChattingChange,
@@ -108,7 +114,7 @@ export const Chat: FC<ChatProps> = ({
 
   const { t } = useTranslation()
 
-  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null)
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(singleConversation || null)
   return (
     <Affix
       {...resetProps}
@@ -172,12 +178,16 @@ export const Chat: FC<ChatProps> = ({
           key="1">
             {activeConversation ? 
               <>
-                <div className="conversation-header">
-                  <div className="back-btn" onClick={() => setActiveConversation(null)}>{'<'}</div>
-                  <div className="avatar">
+                {
+                singleConversation ? 
+                  null:
+                  <div className="conversation-header">
+                    <div className="back-btn" onClick={() => setActiveConversation(null)}>{'<'}</div>
+                    <div className="avatar">
+                    </div>
+                    <div className="name">{activeConversation.userName}</div>
                   </div>
-                  <div className="name">{activeConversation.userName}</div>
-                </div>
+                }
                 <MessageList
                   className={'conversation chat-history'}
                   messages={activeConversation.messages}

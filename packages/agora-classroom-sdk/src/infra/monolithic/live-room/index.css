@@ -40,6 +40,13 @@ html, body, #root {
   left: 15px;
 }
 
+.chat-panel .tabs {
+  top: 0;
+  left: 0;
+  flex: 1 1;
+  position: relative;
+}
+
 .layout-aside-normal {
   max-width: 300px;
   min-width: 300px;
