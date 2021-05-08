@@ -16,7 +16,7 @@ console.log(`webpack.config.js loaded ${env}`)
 
 module.exports = {
   entry: {
-    ['agora-widget-gallery']: "./src/index.ts"
+    ['index']: "./src/index.ts"
   },
   mode: env,
   output: {

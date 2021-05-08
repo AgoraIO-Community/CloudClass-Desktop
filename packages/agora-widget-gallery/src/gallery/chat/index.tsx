@@ -117,6 +117,15 @@ const App = observer(() => {
         showCloseIcon={isFullScreen}
         onPullFresh={refreshMessageList}
         unreadCount={unreadMessageCount}
+        onConversationPullFresh={() => {}}
+        onConversationText={(conv, content) => {
+          setText(content)
+        }}
+        onConversationSend={(conversation) => {
+          // handleSendTextToConv(conversation)
+        }}
+        singleConversation={undefined}
+        onRefreshConversationList={() => {}}
       />
     </div>
   )

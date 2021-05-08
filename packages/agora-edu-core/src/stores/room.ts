@@ -12,7 +12,7 @@ import { eduSDKApi } from "../services/edu-sdk-api"
 import { reportService } from "../services/report"
 import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
-import { ChatMessage, QuickTypeEnum } from "../types"
+import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
@@ -588,6 +588,63 @@ export class RoomStore extends SimpleInterval {
       BizLogger.warn(`${error}`)
     }
   }
+
+
+  @observable
+  roomChatConversations: ChatConversation[] = []
+
+
+  @computed
+  get chatConversationList(): any[] {
+    let {userRole, userUuid, userName} = this.roomInfo
+    if(userRole === EduRoleTypeEnum.student) {
+        // for student always return single conversation
+        let conversation = this.roomChatConversations.filter(c => c.userUuid === userUuid)[0]
+        if(!conversation) {
+          //mock a temp one for placeholder
+          conversation = {
+            userName,
+            userUuid,
+            unreadMessageCount: 0,
+            messages: []
+          }
+        }
+        conversation.messages = conversation.messages.map((item, key:number) => ({
+          id: `${item.id}${item.ts}${key}`,
+          uid: item.id,
+          username: `${item.account}`,
+          timestamp: item.ts,
+          isOwn: item.sender,
+          content: item.text,
+          role: item.role
+        }))
+        return [conversation]
+    }
+    // otherwise return the whole list
+    return this.roomChatConversations
+  }
+
+  @action.bound
+  addConversationChatMessage(args: any, conversation: any) {
+    let chatConversation = this.getConversation(conversation.userUuid)
+    if(!chatConversation) {
+      this.roomChatConversations.push({
+        userName: conversation.userName,
+        userUuid: conversation.userUuid,
+        unreadMessageCount: conversation.unreadMessageCount,
+        messages: [args]
+      })
+    } else {
+      chatConversation.messages.push(args)
+    }
+    this.roomChatConversations = [...this.roomChatConversations]
+  }
+  
+  getConversation(userUuid: string) {
+    let idx  = this.roomChatConversations.map(c => c.userUuid).indexOf(userUuid)
+    return idx === -1 ? null : this.roomChatConversations[idx]
+  }
+
   // 奖杯
   @action.bound
   async sendReward(userUuid: string, reward: number) {
