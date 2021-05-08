@@ -46,12 +46,28 @@ const meta: Meta = {
       {
         userName: "testuser1",
         userUuid: "12345",
-        unreadMessageCount: 50
+        unreadMessageCount: 50,
+        messages: [{
+          id: 'fjdjjdjd4',
+          uid: '2',
+          username: 'Victor Tsoi',
+          timestamp: Date.now(),
+          content:
+            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
+        }],
       },
       {
         userName: "testuser2",
         userUuid: "123456",
-        unreadMessageCount: 100
+        unreadMessageCount: 100,
+        messages: [{
+          id: 'fjdjjdjd4',
+          uid: '2',
+          username: 'Victor Tsoi',
+          timestamp: Date.now(),
+          content:
+            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
+        }],
       }
     ]
   },
@@ -65,6 +81,7 @@ export const Docs: FC<ChatProps> = (props) => {
 
 
   const [messages, updateMessages] = useState<any[]>([])
+  const [conversations, updateConversations] = useState<any[]>(meta.args.conversations)
 
   const newMessageList = () => {
     if (!count) return []
@@ -92,6 +109,7 @@ export const Docs: FC<ChatProps> = (props) => {
         }}>
         <Chat
           {...props}
+          conversations={conversations}
           messages={messages}
           collapse={collapse}
           onPullFresh={() => {
@@ -123,6 +141,34 @@ export const Docs: FC<ChatProps> = (props) => {
           }}
           canChatting={false}
           showCloseIcon={true}
+          onConversationText={(conversation, val) => setText(val)}
+          onConversationSend={
+            (conversation) => {
+              let idx = conversations.map(c => c.userUuid).indexOf(conversation.userUuid)
+              if(idx !== -1) {
+                let copy = [...conversations]
+                copy[idx].messages = conversations[idx].messages.concat([{
+                  id: Date.now(),
+                  uid: `1`,
+                  username: 'test',
+                  timestamp: +Date.now(),
+                  content: text
+                }])
+                updateConversations(copy)
+              } else {
+                updateConversations([...conversations].concat([conversation]))
+              }
+              setText('')
+            }
+          }
+          onConversationPullFresh={(conversation) => {
+            let idx = conversations.map(c => c.userUuid).indexOf(conversation.userUuid)
+            if(idx !== -1) {
+              let copy = [...conversations]
+              copy[idx].messages = newMessageList().concat(conversations[idx].messages)
+              updateConversations(copy)
+            }
+          }}
         />
       </div>
     </div>

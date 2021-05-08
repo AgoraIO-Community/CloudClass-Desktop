@@ -12,4 +12,5 @@ export interface Conversation {
   userName: string;
   userUuid: string;
   unreadMessageCount: number;
+  messages: Message[]
 }

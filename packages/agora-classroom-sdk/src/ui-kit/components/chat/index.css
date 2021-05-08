@@ -81,12 +81,24 @@
 
 .chat-history {
   width: 100%;
-  height: calc(100% - 120px);
   padding-bottom: 18px;
   overflow-y: scroll;
   width: 100%;
   position: absolute;
 }
+
+.chat-history>.chat-message:first-child {
+  margin-top: 32px;
+}
+
+.room.chat-history {
+  height: calc(100% - 120px);
+}
+
+.conversation.chat-history {
+  height: calc(100% - 120px - 48px);
+}
+
 
 .chat-texting {
   @apply flex justify-between items-center;

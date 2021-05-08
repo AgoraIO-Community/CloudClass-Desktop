@@ -1,17 +1,13 @@
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '~components/affix';
-import { Button } from '~components/button';
-import { Icon } from '~components/icon';
-import { Placeholder } from '~components/placeholder';
-import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
 import './index.css';
 import { Conversation, Message } from './interface';
 import { Tabs, TabPane } from '~components/tabs'
-
-import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
+import { Icon } from '~components/icon';
 import { ChatList } from './chat-list';
+import { MessageList } from './message-list';
 
 export interface ChatProps extends AffixProps {
   /**
@@ -63,6 +59,18 @@ export interface ChatProps extends AffixProps {
    * 点击最小化的聊天图标
    */
   onClickMiniChat?: () => void | Promise<void>;
+  /**
+   * 刷新聊天消息列表
+   */
+  onConversationPullFresh: (conversation:Conversation) => Promise<void> | void;
+  /**
+   * 输入框发生变化的回调
+   */
+  onConversationText: (conversation:Conversation, content: string) => void;
+  /**
+   * 点击发送按钮的回调
+   */
+  onConversationSend: (conversation:Conversation) => void | Promise<void>;
 }
 
 export const Chat: FC<ChatProps> = ({
@@ -80,6 +88,9 @@ export const Chat: FC<ChatProps> = ({
   onSend,
   onCollapse,
   onPullFresh,
+  onConversationPullFresh,
+  onConversationSend,
+  onConversationText,
   ...resetProps
 }) => {
   const totalCount = useMemo(() => {
@@ -97,65 +108,7 @@ export const Chat: FC<ChatProps> = ({
 
   const { t } = useTranslation()
 
-  const [focused, setFocused] = useState<boolean>(false);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null)
-
-  const handleFocus = () => setFocused(true);
-
-  const handleBlur = () => {
-    if (!!chatText) {
-      return;
-    }
-    setFocused(false);
-  };
-
-  const chatHistoryRef = useRef<HTMLDivElement | null>(null)
-
-  const handleScrollDown = (current: HTMLDivElement) => {
-    current.scrollTop = current.scrollHeight;
-  }
-
-  const currentHeight = useRef<number>(0)
-
-  const scrollDirection = useRef<string>('bottom')
-
-  const handleScroll = (event: any) => {
-    const { target } = event
-    if (target?.scrollTop === 0) {
-      onPullFresh && onPullFresh()
-      currentHeight.current = target.scrollHeight
-      scrollDirection.current = 'top'
-    }
-  }
-
-  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter') {
-      if (event.ctrlKey) {
-        event.currentTarget.value += '\n'
-      } else if (!event.shiftKey && !event.altKey) {
-        // send message if enter is hit
-        event.preventDefault()
-        await handleSend()
-      }
-    }
-  }
-
-  const handleSend = async () => {
-    await onSend()
-    scrollDirection.current = 'bottom'
-  }
-
-
-  useEffect(() => {
-    if (scrollDirection.current === 'bottom') {
-      chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
-    }
-    if (scrollDirection.current === 'top' && chatHistoryRef.current) {
-      const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
-      chatHistoryRef.current.scrollTo(0, position)
-    }
-  }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
-
   return (
     <Affix
       {...resetProps}
@@ -191,46 +144,23 @@ export const Chat: FC<ChatProps> = ({
               <span className="new-message-notice"></span>
             </span>
           } key="0">
-          {!canChatting ? (
-            <div className="chat-notice">
-              <span>
-                <Icon type="red-caution" />
-                <span>{t('placeholder.enable_chat_muted')}</span>
-              </span>
-            </div>
-          ) : null}
-          <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
-            {!messages || messages.length === 0 ? (
-              <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
-            ) : (
-              messages.map((message) => (
-                <ChatMessage
-                  key={message.id}
-                  {...message}
-                  isOwn={message.isOwn}
-                />
-              ))
-            )}
-          </div>
-          <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
-            <textarea
-              value={chatText}
-              className="chat-texting-message"
-              placeholder={t('placeholder.input_message')}
-              disabled={!isHost && !canChatting}
-              onChange={(e) => onText(e.currentTarget.value)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onKeyPress={handleKeypress}
+            {!canChatting ? (
+                <div className="chat-notice">
+                <span>
+                    <Icon type="red-caution" />
+                    <span>{t('placeholder.enable_chat_muted')}</span>
+                </span>
+                </div>
+            ) : null}
+            <MessageList
+              className={'room chat-history'}
+              messages={messages}
+              disableChat={!isHost && !canChatting}
+              chatText={chatText}
+              onPullFresh={onPullFresh}
+              onSend={onSend}
+              onText={onText}
             />
-            <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
-              position: 'absolute',
-              bottom: 10,
-              right: 10
-            }}>
-              {t('send')}
-            </Button>
-          </div>
           </TabPane>
           <TabPane 
           tab={
@@ -248,38 +178,15 @@ export const Chat: FC<ChatProps> = ({
                   </div>
                   <div className="name">{activeConversation.userName}</div>
                 </div>
-                <div className="conversation-history" ref={chatHistoryRef} onScroll={handleScroll}>
-                  {!messages || messages.length === 0 ? (
-                    <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
-                  ) : (
-                    messages.map((message) => (
-                      <ChatMessage
-                        key={message.id}
-                        {...message}
-                        isOwn={message.isOwn}
-                      />
-                    ))
-                  )}
-                </div>
-                <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
-                  <textarea
-                    value={chatText}
-                    className="chat-texting-message"
-                    placeholder={t('placeholder.input_message')}
-                    disabled={!isHost && !canChatting}
-                    onChange={(e) => onText(e.currentTarget.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onKeyPress={handleKeypress}
-                  />
-                  <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
-                    position: 'absolute',
-                    bottom: 10,
-                    right: 10
-                  }}>
-                    {t('send')}
-                  </Button>
-                </div>
+                <MessageList
+                  className={'conversation chat-history'}
+                  messages={activeConversation.messages}
+                  disableChat={false}
+                  chatText={chatText}
+                  onPullFresh={() => {onConversationPullFresh && onConversationPullFresh(activeConversation)}}
+                  onSend={() => {onConversationSend && onConversationSend(activeConversation)}}
+                  onText={(content:string) => onConversationText && onConversationText(activeConversation, content)}
+                />
               </>
             : 
               <ChatList conversations={conversations} onClickConversation={(conversation) => {
