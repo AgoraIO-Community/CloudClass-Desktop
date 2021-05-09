@@ -33,6 +33,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         muteAudio,
         unmuteAudio,
         unmuteVideo,
+        muteUserChat,
+        unmuteUserChat,
         roomInfo
     } = useRoomContext()
 
@@ -83,6 +85,17 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                         await muteVideo(uid, isLocal)
                     } else {
                         await unmuteVideo(uid, isLocal)
+                    }
+                }
+                break;
+            }
+            case 'chat': {
+                const targetUser = rosterUserList.find((user) => get(user, 'uid', '') === uid)
+                if (targetUser) {
+                    if (targetUser.chatEnabled) {
+                        await muteUserChat(uid)
+                    } else {
+                        await unmuteUserChat(uid)
                     }
                 }
                 break;

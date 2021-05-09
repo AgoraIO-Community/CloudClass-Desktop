@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { Icon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
-import {getCameraState, getMicrophoneState} from './base';
+import {getCameraState, getChatState, getMicrophoneState} from './base';
 
 export const defaultColumns: Column[] = [
   {
@@ -77,6 +77,27 @@ export const defaultColumns: Column[] = [
       })
       return (
         <Icon type={type} className={cls} iconhover={canOperate}/>
+      )
+    },
+  },
+  {
+    key: 'chat',
+    name: 'roster.chat',
+    action: 'chat',
+    render: (text, profile: Profile, canOperate) => {
+      const {
+        operateStatus,
+        chatStatus,
+        type,
+      } = getChatState(profile, canOperate);
+      const cls = classnames({
+        ["icon-hover"]: canOperate,
+        ["icon-disable"]: !canOperate,
+      })
+      return (
+        <div className={cls}>
+          <i className={chatStatus}></i>
+        </div>
       )
     },
   },
