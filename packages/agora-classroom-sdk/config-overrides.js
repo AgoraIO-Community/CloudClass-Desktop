@@ -98,10 +98,11 @@ const addStyleLoader = () => (config) => {
         options: {
           postcssOptions: {
             ident: 'postcss',
-            plugins: [
-              tailwindcss(),
-              autoprefixer()
-            ]
+            config: path.resolve(__dirname, './postcss.config.js')
+            // plugins: [
+            //   tailwindcss(),
+            //   autoprefixer()
+            // ]
           }
         }
       }
@@ -235,13 +236,13 @@ const webpackConfig = override(
     use: { loader: 'worker-loader' },
   }),
   // addWebpackExternals(setElectronDeps),
-  addStyleLoader(),
   adjustStyleLoaders((loader) => {
     loader.exclude = [
       /node_modules/,
       path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
     ]
   }),
+  addStyleLoader(),
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)

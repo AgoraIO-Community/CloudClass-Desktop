@@ -147,11 +147,11 @@ html, body, #root {
   display: none;
 }
 
-.small-class-chat {
+/* .small-class-chat {
   position: absolute;
   bottom: 8px;
   right: 11px;
-}
+} */
 
 .fullscreen .video-marquee-pin ~ .board-box {
   margin-top: 0px;

@@ -665,22 +665,30 @@ export class RoomStore extends SimpleInterval {
 
       let conversation = this.getConversation(data.studentUuid)
 
-      if(conversation) {
-        historyMessage.list.map((item: any) => {
-          conversation!.messages.unshift({
-            text: item.message,
-            ts: item.sendTime,
-            id: item.sequences,
-            fromRoomUuid: item.fromUser.userUuid,
-            userName: item.fromUser.userName,
-            role: item.fromUser.role,
-            messageId: item.peerMessageId,
-            sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-            account: item.fromUser.userName
-          } as ChatMessage)
-  
-        })
+      if(!conversation) {
+        conversation = {
+          userUuid: data.studentUuid,
+          userName: "",
+          unreadMessageCount: 0,
+          messages: []
+        }
+        this.roomChatConversations.push(conversation)
       }
+      
+      historyMessage.list.map((item: any) => {
+        conversation!.messages.unshift({
+          text: item.message,
+          ts: item.sendTime,
+          id: item.sequences,
+          fromRoomUuid: item.fromUser.userUuid,
+          userName: item.fromUser.userName,
+          role: item.fromUser.role,
+          messageId: item.peerMessageId,
+          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+          account: item.fromUser.userName
+        } as ChatMessage)
+
+      })
       return historyMessage
     } catch (err) {
       const error = GenericErrorWrapper(err)

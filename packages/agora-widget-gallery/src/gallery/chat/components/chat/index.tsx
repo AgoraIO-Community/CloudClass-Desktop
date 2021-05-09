@@ -197,6 +197,12 @@ export const Chat: FC<ChatProps> = ({
     }
   }, [activeConversation])
 
+  useEffect(() => {
+    if(singleConversation) {
+      onPullRefresh({type:'conversation', conversation: singleConversation})
+    }
+  }, [singleConversation])
+
   return (
     <Affix
       {...resetProps}
