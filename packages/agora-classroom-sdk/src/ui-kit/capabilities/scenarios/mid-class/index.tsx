@@ -14,7 +14,7 @@ import {AgoraChatWidget} from 'agora-widget-gallery'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
-import { Widget } from '../../containers/widget'
+import { Widget } from '~capabilities/containers/widget'
 
 const chatWidget = new AgoraChatWidget()
 

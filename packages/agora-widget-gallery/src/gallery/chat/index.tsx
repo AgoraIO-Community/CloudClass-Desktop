@@ -1,4 +1,4 @@
-import { Chat } from './components/chat'
+import { Chat, SimpleChat } from './components/chat'
 import * as React from 'react';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { get } from 'lodash';
@@ -131,39 +131,68 @@ const App = observer(() => {
 
   useEffect(() => {
     refreshMessageList()
-    refreshConversationList()
+    if(pluginStore.context.localUserInfo.roleType === 1) {
+      // refresh conv list for teacher
+      refreshConversationList()
+    }
   }, [])
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-      <Chat
-        className="small-class-chat"
-        collapse={chatCollapse}
-        onCanChattingChange={onCanChattingChange}
-        canChatting={canChatting}
-        isHost={isHost}
-        uid={pluginStore.context.localUserInfo.userUuid}
-        messages={messageList}
-        conversations={conversationList}
-        chatText={text}
-        onText={(evt:ChatEvent ,textValue: string) => {
-          setText(textValue)
-        }}
-        onCollapse={() => {
-          toggleChatMinimize()
-        }}
-        onSend={handleSendText}
-        showCloseIcon={isFullScreen}
-        onPullRefresh={(evt:ChatEvent) => {
-          if(evt.type === 'conversation' && evt.conversation) {
-            refreshConversationMessageList(evt.conversation)
-          } else {
+      {pluginStore.context.roomInfo.roomType === 0 ? 
+        // display simple chat for 1v1
+        <SimpleChat
+          className="simple-chat"
+          collapse={chatCollapse}
+          onCanChattingChange={onCanChattingChange}
+          canChatting={canChatting}
+          isHost={isHost}
+          uid={pluginStore.context.localUserInfo.userUuid}
+          messages={messageList}
+          chatText={text}
+          onText={(_:ChatEvent ,textValue: string) => {
+            setText(textValue)
+          }}
+          onCollapse={() => {
+            toggleChatMinimize()
+          }}
+          onSend={handleSendText}
+          showCloseIcon={isFullScreen}
+          onPullRefresh={() => {
             refreshMessageList()
-          }
-        }}
-        unreadCount={unreadMessageCount}
-        singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
-      />
+          }}
+          unreadCount={unreadMessageCount}
+        />
+       :
+        <Chat
+          className="small-class-chat"
+          collapse={chatCollapse}
+          onCanChattingChange={onCanChattingChange}
+          canChatting={canChatting}
+          isHost={isHost}
+          uid={pluginStore.context.localUserInfo.userUuid}
+          messages={messageList}
+          conversations={conversationList}
+          chatText={text}
+          onText={(evt:ChatEvent ,textValue: string) => {
+            setText(textValue)
+          }}
+          onCollapse={() => {
+            toggleChatMinimize()
+          }}
+          onSend={handleSendText}
+          showCloseIcon={isFullScreen}
+          onPullRefresh={(evt:ChatEvent) => {
+            if(evt.type === 'conversation' && evt.conversation) {
+              refreshConversationMessageList(evt.conversation)
+            } else {
+              refreshMessageList()
+            }
+          }}
+          unreadCount={unreadMessageCount}
+          singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
+        />
+      }
     </div>
   )
 })

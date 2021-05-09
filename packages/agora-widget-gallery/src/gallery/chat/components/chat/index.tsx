@@ -5,10 +5,12 @@ import { Icon } from '../icon';
 import { ChatMin } from './chat-min';
 import './index.css';
 import { ChatEvent, Conversation, Message } from './interface';
+import classnames from 'classnames';
 //@ts-ignore
 import { TabPane, Tabs } from '../tabs';
 import { MessageList } from './message-list';
 import { ChatList } from './chat-list';
+import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg'
 
 export interface ChatProps extends AffixProps {
   /**
@@ -66,6 +68,82 @@ export interface ChatProps extends AffixProps {
   onClickMiniChat?: () => void | Promise<void>;
 }
 
+export const SimpleChat: FC<ChatProps> = ({
+  messages = [],
+  conversations = [],
+  canChatting,
+  uid,
+  isHost,
+  chatText,
+  showCloseIcon = false,
+  unreadCount = 0,
+  collapse = false,
+  singleConversation,
+  onCanChattingChange,
+  onText,
+  onSend,
+  onCollapse,
+  onPullRefresh,
+  className,
+  ...resetProps
+}) => {
+  const { t } = useTranslation()
+  const cls = classnames({
+      [`${className}`]: !!className,
+  })
+
+  return (
+    <Affix
+      {...resetProps}
+      onCollapse={onCollapse}
+      collapse={collapse}
+      content={<ChatMin unreadCount={unreadCount}
+      />}>
+      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
+        <div className="chat-header">
+          <span className="chat-header-title">{t('message')}</span>
+          <span style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            {isHost ? (
+              <span
+                onClick={() => onCanChattingChange(!!canChatting)}
+              >
+                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
+              </span>
+            ) : null}
+            {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
+              <img src={chatMinBtn} />
+            </span>) : null}
+
+          </span>
+        </div>
+
+        {!canChatting ? (
+            <div className="chat-notice">
+            <span>
+                <Icon type="red-caution" />
+                <span>{t('placeholder.enable_chat_muted')}</span>
+            </span>
+            </div>
+        ) : null}
+        <MessageList
+          className={'room chat-history'}
+          messages={messages}
+          disableChat={!isHost && !canChatting}
+          chatText={chatText}
+          onPullFresh={() => {onPullRefresh({type:'room'})}}
+          onSend={() => {onSend({type:'room'})}}
+          onText={(content:string) => {onText({type:'room'}, content)}}
+        />
+      </div>
+    </Affix>
+  );
+}
+
+
 export const Chat: FC<ChatProps> = ({
   messages = [],
   conversations = [],
@@ -82,10 +160,14 @@ export const Chat: FC<ChatProps> = ({
   onSend,
   onCollapse,
   onPullRefresh,
+  className,
   ...resetProps
 }) => {
 
   const { t } = useTranslation()
+  const cls = classnames({
+      [`${className}`]: !!className,
+  })
 
   const totalCount = useMemo(() => {
     const res = conversations.reduce((sum: number, item: any) => {
@@ -122,7 +204,7 @@ export const Chat: FC<ChatProps> = ({
       collapse={collapse}
       content={<ChatMin unreadCount={unreadCount}
       />}>
-      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : ''].join(' ')}>
+      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
         {/* <div className="chat-header">
           <span className="chat-header-title">{t('message')}</span>
           <span style={{

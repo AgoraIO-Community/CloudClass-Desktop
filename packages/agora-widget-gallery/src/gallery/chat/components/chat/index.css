@@ -50,6 +50,12 @@
   color: #f04c36;
 }
 
+
+
+.simple-chat .chat-history{
+  margin-top: 44px;
+}
+
 .chat-history {
   width: 100%;
   height: calc(100% - 120px);
