@@ -23,7 +23,7 @@
     "release:electron:mac": "run-s build:rte-sdk build:edu-core pack:electron:mac",
     "release:electron:win": "run-s build:rte-sdk build:edu-core pack:electron:win",
     "release:edu-core": "run-s build:rte-sdk build:edu-core",
-    "release:demo": "run-s build:rte-sdk build:edu-core build:demo",
+    "release:demo": "run-s build:rte-sdk build:edu-core build:widget build:demo",
     "dev": "run-s build:dev:rte-sdk build:dev:edu-core build:dev:widget run:demo",
     "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-classroom-sdk yarn storybook",
