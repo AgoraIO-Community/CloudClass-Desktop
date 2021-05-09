@@ -267,7 +267,7 @@ export const Chat: FC<ChatProps> = ({
             {singleConversation ? 
               <>
                 <MessageList
-                  className={'conversation chat-history'}
+                  className={'conversation no-header chat-history'}
                   messages={singleConversation.messages}
                   disableChat={false}
                   chatText={chatText}

@@ -674,19 +674,22 @@ export class RoomStore extends SimpleInterval {
         }
         this.roomChatConversations.push(conversation)
       }
-      
+
+      let messageIds = conversation!.messages.map(m => m.messageId)
       historyMessage.list.map((item: any) => {
-        conversation!.messages.unshift({
-          text: item.message,
-          ts: item.sendTime,
-          id: item.sequences,
-          fromRoomUuid: item.fromUser.userUuid,
-          userName: item.fromUser.userName,
-          role: item.fromUser.role,
-          messageId: item.peerMessageId,
-          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-          account: item.fromUser.userName
-        } as ChatMessage)
+        if(!messageIds.includes(item.peerMessageId)) {
+          conversation!.messages.unshift({
+            text: item.message,
+            ts: item.sendTime,
+            id: item.sequences,
+            fromRoomUuid: item.fromUser.userUuid,
+            userName: item.fromUser.userName,
+            role: item.fromUser.role,
+            messageId: item.peerMessageId,
+            sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+            account: item.fromUser.userName
+          } as ChatMessage)
+        }
 
       })
       return historyMessage
@@ -753,7 +756,11 @@ export class RoomStore extends SimpleInterval {
         messages: [args]
       })
     } else {
-      chatConversation.messages.push(args)
+      if(chatConversation.messages.findIndex((msg => {
+        msg.messageId === args.messageId
+      })) === -1) {
+        chatConversation.messages.push(args)
+      }
     }
     this.roomChatConversations = [...this.roomChatConversations]
   }
