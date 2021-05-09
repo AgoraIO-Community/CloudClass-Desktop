@@ -14,7 +14,9 @@ const App = observer(() => {
 
   const {events, actions} = pluginStore.context
 
-  const [chatContext, setChatContext] = useState<any>({})
+  const [chatContext, setChatContext] = useState<any>({
+    conversationList: []
+  })
   const [globalContext, setGlobalContext] = useState<any>({})
 
   useEffect(() => {
@@ -26,7 +28,6 @@ const App = observer(() => {
     })
     return () => {
       events.chat.unsubscribe()
-      events.room.unsubscribe()
       events.global.unsubscribe()
     }
   }, [])
@@ -36,7 +37,8 @@ const App = observer(() => {
     messageList,
     chatCollapse,
     canChatting,
-    isHost
+    isHost,
+    conversationList
   } = chatContext
 
   const {
@@ -49,7 +51,9 @@ const App = observer(() => {
     unmuteChat,
     toggleChatMinimize,
     sendMessage,
-    addChatMessage
+    addChatMessage,
+    sendMessageToConversation,
+    addConversationChatMessage
   } = actions.chat
 
   useEffect(() => {
@@ -96,6 +100,14 @@ const App = observer(() => {
     addChatMessage(message)
   }, [text, setText])
 
+  const handleSendTextToConv = useCallback(async (conversation): Promise<void> => {
+    if (!text.trim()) return;
+    const textMessage = text
+    setText('')
+    const message = await sendMessageToConversation(textMessage, conversation.userUuid)
+    addConversationChatMessage(message, conversation)
+  }, [text, setText])
+
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
       <Chat
@@ -106,6 +118,7 @@ const App = observer(() => {
         isHost={isHost}
         uid={pluginStore.context.localUserInfo.userUuid}
         messages={messageList}
+        conversations={conversationList}
         chatText={text}
         onText={(textValue: string) => {
           setText(textValue)
@@ -122,9 +135,9 @@ const App = observer(() => {
           setText(content)
         }}
         onConversationSend={(conversation) => {
-          // handleSendTextToConv(conversation)
+          handleSendTextToConv(conversation)
         }}
-        singleConversation={undefined}
+        singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
         onRefreshConversationList={() => {}}
       />
     </div>

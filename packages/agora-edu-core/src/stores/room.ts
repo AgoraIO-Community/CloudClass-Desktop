@@ -552,8 +552,77 @@ export class RoomStore extends SimpleInterval {
   }
 
   @action.bound
+  async sendMessageToConversation(message: any, userUuid: string) {
+    const ts = +Date.now();
+    try {
+      const result = await eduSDKApi.sendConversationChat({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: userUuid,
+        data: {
+          message,
+          type: 1,
+        }
+      })
+
+      if (this.isTeacher || this.isAssistant) {
+        const sensitiveWords = get(result, 'sensitiveWords', [])
+      }
+
+      return {
+        id: this.userUuid,
+        ts,
+        text: result.message,
+        account: this.roomInfo.userName,
+        sender: true,
+        messageId: result.peerMessageId,
+        fromRoomName: this.roomInfo.userName,
+      }
+    } catch (err) {
+      this.appStore.uiStore.fireToast(
+        'toast.failed_to_send_chat',
+      )
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+      throw error;
+    }
+  }
+
+  @action.bound
   setMessageList(messageList: ChatMessage[]) {
     this.roomChatMessages = messageList
+  }
+
+  @action.bound
+  async getConversationList(data: {
+    nextId: string,
+    sort: number
+  }) {
+    try {
+      const historyMessage = await eduSDKApi.getHistoryChatMessage({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: this.roomInfo.userUuid,
+        data
+      })
+      historyMessage.list.map((item: any) => {
+        this.roomChatMessages.unshift({
+          text: item.message,
+          ts: item.sendTime,
+          id: item.sequences,
+          fromRoomUuid: item.fromUser.userUuid,
+          userName: item.fromUser.userName,
+          role: item.fromUser.role,
+          messageId: item.messageId,
+          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+          account: item.fromUser.userName
+        } as ChatMessage)
+
+      })
+      return historyMessage
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.failed_to_get_conversations', { reason: error })
+      BizLogger.warn(`${error}`)
+    }
   }
 
   @action.bound
@@ -599,17 +668,29 @@ export class RoomStore extends SimpleInterval {
     let {userRole, userUuid, userName} = this.roomInfo
     if(userRole === EduRoleTypeEnum.student) {
         // for student always return single conversation
-        let conversation = this.roomChatConversations.filter(c => c.userUuid === userUuid)[0]
-        if(!conversation) {
-          //mock a temp one for placeholder
-          conversation = {
-            userName,
-            userUuid,
-            unreadMessageCount: 0,
-            messages: []
-          }
-        }
-        conversation.messages = conversation.messages.map((item, key:number) => ({
+        let conversation = this.roomChatConversations.filter(c => c.userUuid === userUuid)[0] || {}
+
+        return [{
+          userName: conversation.userName || userName,
+          userUuid: conversation.userUuid || userUuid,
+          unreadMessageCount: conversation.unreadMessageCount || 0,
+          messages: (conversation.messages || []).map((item, key:number) => ({
+            id: `${item.id}${item.ts}${key}`,
+            uid: item.id,
+            username: `${item.account}`,
+            timestamp: item.ts,
+            isOwn: item.sender,
+            content: item.text,
+            role: item.role
+          }))
+        }]
+    } else {
+      // otherwise return the whole list
+      return this.roomChatConversations.map(c => ({
+        userName: c.userName,
+        userUuid: c.userUuid,
+        unreadMessageCount: c.unreadMessageCount,
+        messages: c.messages.map((item, key:number) => ({
           id: `${item.id}${item.ts}${key}`,
           uid: item.id,
           username: `${item.account}`,
@@ -618,10 +699,8 @@ export class RoomStore extends SimpleInterval {
           content: item.text,
           role: item.role
         }))
-        return [conversation]
+      }))
     }
-    // otherwise return the whole list
-    return this.roomChatConversations
   }
 
   @action.bound

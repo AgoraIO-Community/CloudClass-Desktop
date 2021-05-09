@@ -8,17 +8,21 @@ export const Adapter = () => {
     const [globalEvents] = useState(() => new BehaviorSubject({}))
 
     const {
-      chatCollapse,
-      canChatting,
-      isHost,
-      getHistoryChatMessage,
-      unreadMessageCount,
-      muteChat,
-      unmuteChat,
-      toggleChatMinimize,
-      messageList,
-      sendMessage,
-      addChatMessage
+        chatCollapse,
+        canChatting,
+        isHost,
+        getHistoryChatMessage,
+        unreadMessageCount,
+        muteChat,
+        unmuteChat,
+        toggleChatMinimize,
+        messageList,
+        sendMessage,
+        addChatMessage,
+        addConversationChatMessage,
+        sendMessageToConversation,
+        conversationList,
+        onRefreshConversationList
     } = useChatContext()
     const {
         roomInfo
@@ -29,16 +33,16 @@ export const Adapter = () => {
     } = useGlobalContext()
 
     useEffect(() => {
-        chatEvents.next({unreadMessageCount, messageList, chatCollapse, canChatting, isHost})
-    }, [unreadMessageCount, messageList, chatCollapse, canChatting, isHost])
+        chatEvents.next({unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList})
+    }, [unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList, chatEvents])
 
     useEffect(() => {
         globalEvents.next({isFullScreen})
-    }, [isFullScreen])
+    }, [isFullScreen, globalEvents])
 
     useEffect(() => {
         roomEvents.next({roomInfo})
-    }, [roomInfo])
+    }, [roomInfo, roomEvents])
 
     return {
         events: {
@@ -48,7 +52,14 @@ export const Adapter = () => {
         },
         actions: {
             chat: {
-                getHistoryChatMessage, muteChat, unmuteChat,toggleChatMinimize,sendMessage,addChatMessage
+                getHistoryChatMessage,
+                muteChat,
+                unmuteChat,
+                toggleChatMinimize,
+                sendMessage,
+                addChatMessage,
+                addConversationChatMessage,
+                sendMessageToConversation,
             }
         }
     }

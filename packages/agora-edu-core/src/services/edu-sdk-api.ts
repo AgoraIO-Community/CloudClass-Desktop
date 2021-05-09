@@ -161,6 +161,22 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async sendConversationChat(params: {
+    roomUuid: string,
+    userUuid: string,
+    data: {
+      message: string,
+      type: number
+    }
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students/${params.userUuid}/messages`,
+      method: 'POST',
+      data: params.data
+    })
+    return res.data
+  }
+
   async muteChat(params: {
     roomUuid: string,
     muteChat: number

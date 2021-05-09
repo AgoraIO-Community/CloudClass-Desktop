@@ -30,7 +30,11 @@ export const useChatContext = () => {
     toggleChatMinimize: uiStore.toggleChatMinimize,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
-    addChatMessage: roomStore.addChatMessage
+    addChatMessage: roomStore.addChatMessage,
+    addConversationChatMessage: roomStore.addConversationChatMessage,
+    sendMessageToConversation: roomStore.sendMessageToConversation,
+    conversationList: roomStore.chatConversationList,
+    onRefreshConversationList: roomStore.getConversationList
   }
 }
 
