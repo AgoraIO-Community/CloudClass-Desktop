@@ -47,7 +47,7 @@ export const ChatList: FC<ChatListProps> = ({
             {conversations.map(c => (
                 <li className="chat-list-item" key={`${c.userUuid}`} onClick={() => {onClickConversation(c)}}>
                     <div className="avatar">
-                        <div className="unread-count">{c.unreadMessageCount > 99 ? '99+' : c.unreadMessageCount}</div>
+                        {/* <div className="unread-count">{c.unreadMessageCount > 99 ? '99+' : c.unreadMessageCount}</div> */}
                     </div>
                     <div className="name">{c.userName}</div>
                 </li>

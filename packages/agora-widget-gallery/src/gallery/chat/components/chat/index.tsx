@@ -11,6 +11,7 @@ import { TabPane, Tabs } from '../tabs';
 import { MessageList } from './message-list';
 import { ChatList } from './chat-list';
 import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg'
+import backBtn from '../icon/assets/svg/conversation-back.svg'
 
 export interface ChatProps extends AffixProps {
   /**
@@ -169,18 +170,18 @@ export const Chat: FC<ChatProps> = ({
       [`${className}`]: !!className,
   })
 
-  const totalCount = useMemo(() => {
-    const res = conversations.reduce((sum: number, item: any) => {
-      const count = item?.unreadMessageCount?? 0
-      sum += count
-      return sum
-    }, 0)
-    const num = Math.min(res, 99)
-    if (num === 99) {
-      return `${num}+`
-    }
-    return `${num}`
-  }, [JSON.stringify(conversations)])
+  // const totalCount = useMemo(() => {
+  //   const res = conversations.reduce((sum: number, item: any) => {
+  //     const count = item?.unreadMessageCount?? 0
+  //     sum += count
+  //     return sum
+  //   }, 0)
+  //   const num = Math.min(res, 99)
+  //   if (num === 99) {
+  //     return `${num}+`
+  //   }
+  //   return `${num}`
+  // }, [JSON.stringify(conversations)])
   const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined)
 
   const getActiveConversationMessages = () => {
@@ -211,8 +212,7 @@ export const Chat: FC<ChatProps> = ({
       content={<ChatMin unreadCount={unreadCount}
       />}>
       <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
-        {/* <div className="chat-header">
-          <span className="chat-header-title">{t('message')}</span>
+        <div className="chat-header with-tab">
           <span style={{
             display: 'flex',
             justifyContent: 'center',
@@ -230,7 +230,7 @@ export const Chat: FC<ChatProps> = ({
             </span>) : null}
 
           </span>
-        </div> */}
+        </div>
         <Tabs>
           <TabPane tab={
             <span className="message-tab">
@@ -239,7 +239,7 @@ export const Chat: FC<ChatProps> = ({
             </span>
           } key="0">
             {!canChatting ? (
-                <div className="chat-notice">
+                <div className="chat-notice with-tab">
                 <span>
                     <Icon type="red-caution" />
                     <span>{t('placeholder.enable_chat_muted')}</span>
@@ -260,7 +260,7 @@ export const Chat: FC<ChatProps> = ({
           tab={
             <span className="question">
               提问
-              <span className="question-count">{totalCount}</span>
+              {/* <span className="question-count">{totalCount}</span> */}
             </span>
           } 
           key="1">
@@ -280,7 +280,7 @@ export const Chat: FC<ChatProps> = ({
               activeConversation ?
                 <>
                   <div className="conversation-header">
-                    <div className="back-btn" onClick={() => setActiveConversation(undefined)}>{'<'}</div>
+                    <div className="back-btn" onClick={() => setActiveConversation(undefined)}><img src={backBtn} /></div>
                     <div className="avatar">
                     </div>
                     <div className="name">{activeConversation.userName}</div>
