@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { Conversation } from '../interface';
+import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 
 export interface ChatListProps {
     conversations:Conversation[]
-    onPullRefresh?: () => void
+    onPullRefresh?: (evt: ChatEvent) => void
     onClickConversation?: (conversation:Conversation) => void
 }
 
@@ -36,7 +36,7 @@ export const ChatList: FC<ChatListProps> = ({
     const handleScroll = (event: any) => {
         const { target } = event
         if (target?.scrollTop === 0) {
-            onPullRefresh && onPullRefresh()
+            onPullRefresh && onPullRefresh({type:'conversation-list'})
             currentHeight.current = target.scrollHeight
             scrollDirection.current = 'top'
         }

@@ -56,6 +56,17 @@ export class MessageSerializer {
     }
   }
 
+  static getEduPeerTextMessage(data: any): EduTextMessage {
+    return {
+      fromUser: this.getFromUser(data),
+      type: get(data, 'type'),
+      message: get(data, 'message'),
+      messageId: get(data, 'peerMessageId'),
+      sensitiveWords: get(data, 'sensitiveWords', []),
+      timestamp: get(data, 'ts') || get(data, 'sendTime'),
+    }
+  }
+
   static getRoomInfo(data: any): any {
     return {
       roomInfo: get(data, 'roomInfo'),

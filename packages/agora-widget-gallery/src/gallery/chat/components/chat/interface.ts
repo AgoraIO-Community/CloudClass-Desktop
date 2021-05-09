@@ -14,3 +14,8 @@ export interface Conversation {
   unreadMessageCount: number;
   messages: Message[]
 }
+
+export type ChatEvent = {
+  type: 'room' | 'conversation' | 'conversation-list',
+  conversation?: Conversation
+}

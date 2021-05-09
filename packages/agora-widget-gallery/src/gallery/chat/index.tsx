@@ -1,6 +1,6 @@
 import { Chat } from './components/chat'
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { get } from 'lodash';
 import type {IAgoraWidget} from 'agora-edu-core'
 import { PluginStore } from './store'
@@ -8,6 +8,7 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import {AgoraWidgetHandle, AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
+import { ChatEvent } from './components/chat/interface';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -53,7 +54,8 @@ const App = observer(() => {
     sendMessage,
     addChatMessage,
     sendMessageToConversation,
-    addConversationChatMessage
+    addConversationChatMessage,
+    getConversationList
   } = actions.chat
 
   useEffect(() => {
@@ -64,10 +66,10 @@ const App = observer(() => {
     }
   }, [isFullScreen])
 
-  const [nextId, setNextID] = React.useState('')
+  const [nextId, setNextID] = useState('')
+  const [nextClId, setNextClID] = useState('')
 
-  const isMounted = React.useRef<boolean>(true)
-
+  const isMounted = useRef<boolean>(true)
 
   const refreshMessageList = useCallback(async () => {
     const res = nextId !== 'last' && await getHistoryChatMessage({ nextId, sort: 0 })
@@ -76,7 +78,14 @@ const App = observer(() => {
     }
   }, [nextId, setNextID, isMounted.current])
 
-  React.useEffect(() => {
+  const refreshConversationList = useCallback(async () => {
+    const res = nextId !== 'last' && await getConversationList({ nextId, sort: 0 })
+    if (isMounted.current) {
+      setNextClID(get(res, 'nextId', 'last'))
+    }
+  }, [nextClId, setNextClID, isMounted.current])
+
+  useEffect(() => {
     return () => {
       isMounted.current = false
     }
@@ -90,23 +99,26 @@ const App = observer(() => {
     }
   }
 
-  const [text, setText] = React.useState<string>('')
+  const [text, setText] = useState<string>('')
 
-  const handleSendText = useCallback(async (): Promise<void> => {
+  const handleSendText = useCallback(async (evt:ChatEvent): Promise<void> => {
     if (!text.trim()) return;
     const textMessage = text
     setText('')
-    const message = await sendMessage(textMessage)
-    addChatMessage(message)
+
+    if(evt.type === 'room') {
+      const message = await sendMessage(textMessage)
+      addChatMessage(message)
+    } else if(evt.type === 'conversation' && evt.conversation) {
+      const message = await sendMessageToConversation(textMessage, evt.conversation.userUuid)
+      addConversationChatMessage(message, evt.conversation)
+    }
   }, [text, setText])
 
-  const handleSendTextToConv = useCallback(async (conversation): Promise<void> => {
-    if (!text.trim()) return;
-    const textMessage = text
-    setText('')
-    const message = await sendMessageToConversation(textMessage, conversation.userUuid)
-    addConversationChatMessage(message, conversation)
-  }, [text, setText])
+  useEffect(() => {
+    refreshMessageList()
+    refreshConversationList()
+  }, [])
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
@@ -120,7 +132,7 @@ const App = observer(() => {
         messages={messageList}
         conversations={conversationList}
         chatText={text}
-        onText={(textValue: string) => {
+        onText={(evt:ChatEvent ,textValue: string) => {
           setText(textValue)
         }}
         onCollapse={() => {
@@ -128,17 +140,9 @@ const App = observer(() => {
         }}
         onSend={handleSendText}
         showCloseIcon={isFullScreen}
-        onPullFresh={refreshMessageList}
+        onPullRefresh={(evt:ChatEvent) => {refreshMessageList()}}
         unreadCount={unreadMessageCount}
-        onConversationPullFresh={() => {}}
-        onConversationText={(conv, content) => {
-          setText(content)
-        }}
-        onConversationSend={(conversation) => {
-          handleSendTextToConv(conversation)
-        }}
         singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
-        onRefreshConversationList={() => {}}
       />
     </div>
   )

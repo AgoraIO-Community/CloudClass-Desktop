@@ -145,6 +145,22 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+
+  async getConversationList(params: {
+    roomUuid: string,
+    data: {
+      nextId: string
+    }
+  }){
+    const { data: { nextId } } = params
+    const isNextId = nextId ? `nextId=${nextId}&` : ''
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students?nextId=${isNextId}`,
+      method: 'GET',
+    })
+    return res.data
+  }
+
   async sendChat(params: {
     roomUuid: string,
     userUuid: string,

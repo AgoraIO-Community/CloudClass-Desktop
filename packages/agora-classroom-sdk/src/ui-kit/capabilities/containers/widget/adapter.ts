@@ -22,7 +22,7 @@ export const Adapter = () => {
         addConversationChatMessage,
         sendMessageToConversation,
         conversationList,
-        onRefreshConversationList
+        getConversationList
     } = useChatContext()
     const {
         roomInfo
@@ -60,6 +60,7 @@ export const Adapter = () => {
                 addChatMessage,
                 addConversationChatMessage,
                 sendMessageToConversation,
+                getConversationList
             }
         }
     }

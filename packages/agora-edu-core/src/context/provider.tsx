@@ -34,7 +34,7 @@ export const useChatContext = () => {
     addConversationChatMessage: roomStore.addConversationChatMessage,
     sendMessageToConversation: roomStore.sendMessageToConversation,
     conversationList: roomStore.chatConversationList,
-    onRefreshConversationList: roomStore.getConversationList
+    getConversationList: roomStore.getConversationList
   }
 }
 

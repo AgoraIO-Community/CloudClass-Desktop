@@ -352,7 +352,7 @@ export class EduClassroomDataController {
 
         // room chat message
         case EduChannelMessageCmdType.roomChatState: {
-          const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+          const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
           if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             if (!this.isLocalUser(textMessage.fromUser.userUuid)) {

@@ -598,26 +598,19 @@ export class RoomStore extends SimpleInterval {
     sort: number
   }) {
     try {
-      const historyMessage = await eduSDKApi.getHistoryChatMessage({
+      const conversalistList = await eduSDKApi.getConversationList({
         roomUuid: this.roomInfo.roomUuid,
-        userUuid: this.roomInfo.userUuid,
         data
       })
-      historyMessage.list.map((item: any) => {
-        this.roomChatMessages.unshift({
-          text: item.message,
-          ts: item.sendTime,
-          id: item.sequences,
-          fromRoomUuid: item.fromUser.userUuid,
-          userName: item.fromUser.userName,
-          role: item.fromUser.role,
-          messageId: item.messageId,
-          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-          account: item.fromUser.userName
-        } as ChatMessage)
-
+      conversalistList.list.map((item: any) => {
+        this.roomChatConversations.push({
+          userName: item.userName,
+          userUuid: item.userUuid,
+          unreadMessageCount: 0,
+          messages: []
+        } as ChatConversation)
       })
-      return historyMessage
+      return conversalistList
     } catch (err) {
       const error = GenericErrorWrapper(err)
       this.appStore.uiStore.fireToast('toast.failed_to_get_conversations', { reason: error })
@@ -1006,6 +999,42 @@ export class RoomStore extends SimpleInterval {
         reportService.updateConnectionState(newState)
       })
 
+      this.eduManager.on('user-chat-message', (evt: any) => {
+        const { message:textMessage } = evt;
+        console.log('### user-chat-message ', evt)
+        const message = textMessage as EduTextMessage
+
+        const fromUser = message.fromUser
+
+        const chatMessage = message.message
+
+        this.addConversationChatMessage({
+          id: fromUser.userUuid,
+          ts: message.timestamp,
+          messageId: message.messageId,
+          text: chatMessage,
+          account: fromUser.userName,
+          role: `${this.getRoleEnumValue(fromUser.role)}`,
+          isOwn: false
+        }, this.roomInfo.userRole === EduRoleTypeEnum.student ? {
+          // if current user is student, use my info
+          userName: this.roomInfo.userName,
+          userUuid: this.roomInfo.userUuid,
+          unreadMessageCount: 0,
+          messages: []
+        } : {
+          // else, use from info
+          userName: fromUser.userName,
+          userUuid: fromUser.userUuid,
+          unreadMessageCount: 0,
+          messages: []
+        })
+        // if (this.appStore.uiStore.chatCollapse) {
+        //   this.incrementUnreadMessageCount()
+        // }
+        BizLogger.info('user-chat-message', evt)
+      })
+
       await this.eduManager.login(this.userUuid)
 
       const roomManager = this.eduManager.createClassroom({
@@ -1338,6 +1367,7 @@ export class RoomStore extends SimpleInterval {
         }
         BizLogger.info('room-chat-message', evt)
       })
+
       const { sceneType, userRole } = this.getSessionConfig()
       await roomManager.join({
         userRole: userRole,

@@ -4,7 +4,7 @@ import { Affix, AffixProps } from '../affix';
 import { Icon } from '../icon';
 import { ChatMin } from './chat-min';
 import './index.css';
-import { Conversation, Message } from './interface';
+import { ChatEvent, Conversation, Message } from './interface';
 //@ts-ignore
 import { TabPane, Tabs } from '../tabs';
 import { MessageList } from './message-list';
@@ -47,7 +47,7 @@ export interface ChatProps extends AffixProps {
    * 刷新聊天消息列表
    */
 
-  onPullFresh: () => Promise<void> | void;
+  onPullRefresh: (evt:ChatEvent) => Promise<void> | void;
   /**
    *  禁言状态改变的回调
    */
@@ -55,31 +55,15 @@ export interface ChatProps extends AffixProps {
   /**
    * 输入框发生变化的回调
    */
-  onText: (content: string) => void;
+  onText: (evt:ChatEvent, content: string) => void;
   /**
    * 点击发送按钮的回调
    */
-  onSend: () => void | Promise<void>;
+  onSend: (evt:ChatEvent) => void | Promise<void>;
   /**
    * 点击最小化的聊天图标
    */
   onClickMiniChat?: () => void | Promise<void>;
-  /**
-   * 刷新聊天消息列表
-   */
-  onConversationPullFresh: (conversation:Conversation) => Promise<void> | void;
-  /**
-  * 输入框发生变化的回调
-  */
-  onConversationText: (conversation:Conversation, content: string) => void;
-  /**
-  * 点击发送按钮的回调
-  */
-  onConversationSend: (conversation:Conversation) => void | Promise<void>;
-  /**
-  * 刷新对话列表
-  */
-  onRefreshConversationList: () => Promise<void> | void;
 }
 
 export const Chat: FC<ChatProps> = ({
@@ -97,11 +81,7 @@ export const Chat: FC<ChatProps> = ({
   onText,
   onSend,
   onCollapse,
-  onPullFresh,
-  onConversationPullFresh,
-  onConversationSend,
-  onConversationText,
-  onRefreshConversationList,
+  onPullRefresh,
   ...resetProps
 }) => {
 
@@ -120,6 +100,14 @@ export const Chat: FC<ChatProps> = ({
     return `${num}`
   }, [JSON.stringify(conversations)])
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null)
+
+  const getActiveConversationMessages = () => {
+    if(!activeConversation) {
+      return []
+    }
+    let conversation = conversations.filter(c => c.userUuid === activeConversation.userUuid)[0]
+    return conversation ? conversation.messages : []
+  }
 
   return (
     <Affix
@@ -169,9 +157,9 @@ export const Chat: FC<ChatProps> = ({
               messages={messages}
               disableChat={!isHost && !canChatting}
               chatText={chatText}
-              onPullFresh={onPullFresh}
-              onSend={onSend}
-              onText={onText}
+              onPullFresh={() => {onPullRefresh({type:'room'})}}
+              onSend={() => {onSend({type:'room'})}}
+              onText={(content:string) => {onText({type:'room'}, content)}}
             />
           </TabPane>
           <TabPane 
@@ -189,9 +177,9 @@ export const Chat: FC<ChatProps> = ({
                   messages={singleConversation.messages}
                   disableChat={false}
                   chatText={chatText}
-                  onPullFresh={() => {onConversationPullFresh && onConversationPullFresh(singleConversation)}}
-                  onSend={() => {onConversationSend && onConversationSend(singleConversation)}}
-                  onText={(content:string) => onConversationText && onConversationText(singleConversation, content)}
+                  onPullFresh={() => {onPullRefresh({type:'conversation', conversation:singleConversation})}}
+                  onSend={() => {onSend({type:'conversation', conversation:singleConversation})}}
+                  onText={(content:string) => onText({type:'conversation', conversation:singleConversation}, content)}
                 />
               </>
               :
@@ -205,18 +193,18 @@ export const Chat: FC<ChatProps> = ({
                   </div>
                   <MessageList
                     className={'conversation chat-history'}
-                    messages={activeConversation.messages}
+                    messages={getActiveConversationMessages()}
                     disableChat={false}
                     chatText={chatText}
-                    onPullFresh={() => {onConversationPullFresh && onConversationPullFresh(activeConversation)}}
-                    onSend={() => {onConversationSend && onConversationSend(activeConversation)}}
-                    onText={(content:string) => onConversationText && onConversationText(activeConversation, content)}
+                    onPullFresh={() => {onPullRefresh({type:'conversation', conversation:activeConversation})}}
+                    onSend={() => {onSend({type:'conversation', conversation:activeConversation})}}
+                    onText={(content:string) => onText({type:'conversation', conversation:activeConversation}, content)}
                   />
                 </>
               : 
                 <ChatList 
                   conversations={conversations}
-                  onPullRefresh={onRefreshConversationList}
+                  onPullRefresh={onPullRefresh}
                   onClickConversation={(conversation) => {
                     setActiveConversation(conversation)
                   }}>

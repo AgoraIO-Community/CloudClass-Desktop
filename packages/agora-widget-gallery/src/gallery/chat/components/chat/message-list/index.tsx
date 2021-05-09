@@ -64,11 +64,11 @@ export const MessageList: FC<MessageListProps> = ({
 
     useEffect(() => {
         if (scrollDirection.current === 'bottom') {
-        chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
+            chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
         }
         if (scrollDirection.current === 'top' && chatHistoryRef.current) {
-        const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
-        chatHistoryRef.current.scrollTo(0, position)
+            const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
+            chatHistoryRef.current.scrollTo(0, position)
         }
     }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
 
