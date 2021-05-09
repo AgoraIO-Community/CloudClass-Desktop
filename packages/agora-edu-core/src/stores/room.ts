@@ -1102,6 +1102,20 @@ export class RoomStore extends SimpleInterval {
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
         this.sceneStore.userList = roomManager.getFullUserList()
+        const cause = evt.cause
+        if (cause) {
+          if (cause.cmd === 6) {
+            if (evt.hasOwnProperty('muteChat')) {
+              const muteChat = evt.muteChat
+              if (muteChat) {
+                this.appStore.uiStore.fireToast('toast.mute_chat')
+              } else {
+                this.appStore.uiStore.fireToast('toast.unmute_chat')
+              }
+            }
+          }
+        }
+        // if (evt)
         BizLogger.info("ode", evt)
       })
       roomManager.on('local-user-removed', async (evt: any) => {

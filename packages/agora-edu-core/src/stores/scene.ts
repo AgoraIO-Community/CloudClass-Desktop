@@ -1735,6 +1735,30 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @action.bound
+  async muteUserChat(userUuid: string) {
+    try {
+      await eduSDKApi.muteStudentChat({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: userUuid
+      })
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
+  @action.bound
+  async unmuteUserChat(userUuid: string) {
+    try {
+      await eduSDKApi.unmuteStudentChat({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: userUuid
+      })
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
+
   async startOrStopRecording(){
     try {
       if (this.recording) {

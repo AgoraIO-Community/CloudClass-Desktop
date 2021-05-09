@@ -29,3 +29,12 @@
   height: 32px;
   width: 32px;
 }
+
+.icon-disable {
+  user-select: none;
+}
+
+.icon-disable .no-discussion-svg, 
+.icon-disable .can-discussion-svg {
+  cursor: inherit !important;
+}

@@ -36,6 +36,7 @@ export const zh = {
     'operation': '踢人',
   },
   'roster': {
+    'chat': '禁言',
     'teacher_name': '教师姓名：',
     'user_list': '人员列表',
     'student_name': '姓名',
@@ -94,6 +95,8 @@ export const zh = {
     'room_is_full': '当前房间已满，请点击确认离开教室',
   },
   'toast': {
+    'mute_chat': '已被禁言',
+    'unmute_chat': '已被解除禁言',
     'add_screen_share': '老师开启了屏幕共享',
     'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',

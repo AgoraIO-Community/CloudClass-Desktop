@@ -16,6 +16,7 @@ export type ActionTypes =
   | 'camera'
   | 'mic'
   | 'kickOut'
+  | 'chat'
   | string;
 
 export enum MediaDeviceState {
@@ -30,6 +31,7 @@ export type ColumnKey =
   | 'cameraEnabled' 
   | 'micEnabled' 
   | 'stars' 
+  | 'chat'
   | 'kickOut'
 
 export interface Profile {

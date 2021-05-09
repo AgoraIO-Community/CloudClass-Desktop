@@ -145,6 +145,33 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async muteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 1
+      }
+    })
+  }
+
+  async unmuteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 0
+      }
+    })
+    return res.data
+  }
+
   async getConversationHistoryChatMessage(params: {
     roomUuid: string,
     data: {

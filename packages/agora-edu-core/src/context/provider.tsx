@@ -164,6 +164,8 @@ export const useRoomContext = () => {
     muteAudio,
     unmuteAudio,
     sceneType,
+    muteUserChat,
+    unmuteUserChat
   } = useSceneStore()
 
   const {
@@ -203,6 +205,8 @@ export const useRoomContext = () => {
     unmuteVideo,
     muteAudio,
     unmuteAudio,
+    muteUserChat,
+    unmuteUserChat
   }
 }
 

@@ -13,7 +13,7 @@ export const canOperate = (role: ProfileRole, localUid: string, data: any, col: 
 
   if (['assistant', 'teacher'].includes(role)) {
     //授权上台、白板、离开始终可点击
-    if(['onPodium', 'whiteboardGranted', 'kickOut'].includes(col.key)){
+    if(['onPodium', 'whiteboardGranted', 'kickOut', 'chat'].includes(col.key)){
       return true;
     }
     //摄像头、麦克风 当该用户上台时可点击，下台时不可点击
@@ -31,6 +31,19 @@ export const canOperate = (role: ProfileRole, localUid: string, data: any, col: 
     return false
   }
   return false
+}
+
+export const getChatState = (profile: any, canOperate: boolean) => {
+  const defaultType = 'message-off'
+  const type = !!profile.chatEnabled === true ? 'message-on' : defaultType
+
+  const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
+  const chatStatus = !!profile.chatEnabled === true ? 'can-discussion-svg' : 'no-discussion-svg';
+  return {
+    type: type as IconTypes,
+    operateStatus: operateStatus,
+    chatStatus: chatStatus
+  }
 }
 
 export const getCameraState = (profile: any, canOperate: boolean) => {
