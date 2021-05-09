@@ -69,7 +69,10 @@
     "webpack-cli": "4.5.0",
     "worker-loader": "2.0.0",
     "tailwindcss": "2.0.3",
-    "autoprefixer": "10.2.5"
+    "autoprefixer": "10.2.5",
+    "postcss": "8.2.7",
+    "postcss-import": "14.0.1",
+    "postcss-loader": "4.0.3"
   },
   "dependencies": {
     "dayjs": "1.10.4"

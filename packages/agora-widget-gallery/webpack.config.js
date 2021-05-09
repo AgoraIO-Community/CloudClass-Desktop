@@ -88,11 +88,11 @@ module.exports = {
             options: {
               postcssOptions: {
                 ident: 'postcss',
-                // config: path.resolve(__dirname, './postcss.config.js')
-                plugins: [
-                  tailwindcss(),
-                  autoprefixer()
-                ]
+                config: path.resolve(__dirname, './postcss.config.js')
+                // plugins: [
+                //   tailwindcss(),
+                //   autoprefixer()
+                // ]
               }
             }
           },
