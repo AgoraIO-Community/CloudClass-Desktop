@@ -75,26 +75,32 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        exclude: /node_modules/,
-        include: path.resolve(__dirname, 'src'),
+        test: /\.css$/i,
         use: [
-          // No need for "css-loader" nor "style-loader"
-          // for CRA will later apply them anyways.
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
           {
             loader: "postcss-loader",
             options: {
               postcssOptions: {
                 ident: 'postcss',
+                // config: path.resolve(__dirname, './postcss.config.js')
                 plugins: [
                   tailwindcss(),
                   autoprefixer()
                 ]
               }
             }
+          },
+          {
+            loader: 'thread-loader',
           }
-        ],
-      }
+        ]
+      },
     ],
   },
   optimization: {

@@ -14,6 +14,7 @@ const {
   addWebpackAlias,
   addDecoratorsLegacy,
   addBabelPresets,
+  adjustStyleLoaders,
   // addWebpackTarget,
 } = require('customize-cra')
 const autoprefixer = require('autoprefixer')
@@ -235,6 +236,12 @@ const webpackConfig = override(
   }),
   // addWebpackExternals(setElectronDeps),
   addStyleLoader(),
+  adjustStyleLoaders((loader) => {
+    loader.exclude = [
+      /node_modules/,
+      path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
+    ]
+  }),
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
     // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
