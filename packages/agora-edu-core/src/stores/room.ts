@@ -651,6 +651,44 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  @action.bound
+  async getConversationHistoryChatMessage(data: {
+    nextId: string,
+    sort: number,
+    studentUuid: string
+  }) {
+    try {
+      const historyMessage = await eduSDKApi.getConversationHistoryChatMessage({
+        roomUuid: this.roomInfo.roomUuid,
+        data
+      })
+
+      let conversation = this.getConversation(data.studentUuid)
+
+      if(conversation) {
+        historyMessage.list.map((item: any) => {
+          conversation!.messages.unshift({
+            text: item.message,
+            ts: item.sendTime,
+            id: item.sequences,
+            fromRoomUuid: item.fromUser.userUuid,
+            userName: item.fromUser.userName,
+            role: item.fromUser.role,
+            messageId: item.peerMessageId,
+            sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+            account: item.fromUser.userName
+          } as ChatMessage)
+  
+        })
+      }
+      return historyMessage
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.failed_to_send_chat', { reason: error })
+      BizLogger.warn(`${error}`)
+    }
+  }
+
 
   @observable
   roomChatConversations: ChatConversation[] = []

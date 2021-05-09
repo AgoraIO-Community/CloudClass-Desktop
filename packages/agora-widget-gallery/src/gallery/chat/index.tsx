@@ -8,7 +8,7 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import {AgoraWidgetHandle, AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
-import { ChatEvent } from './components/chat/interface';
+import { ChatEvent, Conversation } from './components/chat/interface';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -55,7 +55,8 @@ const App = observer(() => {
     addChatMessage,
     sendMessageToConversation,
     addConversationChatMessage,
-    getConversationList
+    getConversationList,
+    getConversationHistoryChatMessage
   } = actions.chat
 
   useEffect(() => {
@@ -66,24 +67,37 @@ const App = observer(() => {
     }
   }, [isFullScreen])
 
-  const [nextId, setNextID] = useState('')
+  const [nextMsgId, setNextID] = useState('')
   const [nextClId, setNextClID] = useState('')
+  const [nextConvMsgId, setNextConvMsgID] = useState({})
 
   const isMounted = useRef<boolean>(true)
 
   const refreshMessageList = useCallback(async () => {
-    const res = nextId !== 'last' && await getHistoryChatMessage({ nextId, sort: 0 })
+    const res = nextMsgId !== 'last' && await getHistoryChatMessage({ nextMsgId, sort: 0 })
     if (isMounted.current) {
       setNextID(get(res, 'nextId', 'last'))
     }
-  }, [nextId, setNextID, isMounted.current])
+  }, [nextMsgId, setNextID, isMounted.current])
 
   const refreshConversationList = useCallback(async () => {
-    const res = nextId !== 'last' && await getConversationList({ nextId, sort: 0 })
+    const res = nextClId !== 'last' && await getConversationList({ nextClId, sort: 0 })
     if (isMounted.current) {
       setNextClID(get(res, 'nextId', 'last'))
     }
   }, [nextClId, setNextClID, isMounted.current])
+
+  const refreshConversationMessageList = useCallback(async (conversation:Conversation) => {
+    let nextId = nextConvMsgId[conversation.userUuid]
+    const res = nextId !== 'last' && await getConversationHistoryChatMessage({ nextId, sort: 0, studentUuid: conversation.userUuid })
+    
+    if (isMounted.current) {
+      setNextConvMsgID({
+        ...nextConvMsgId,
+        [conversation.userUuid]: get(res, 'nextId') || 'last'
+      })
+    }
+  }, [nextConvMsgId, setNextConvMsgID, isMounted.current])
 
   useEffect(() => {
     return () => {
@@ -140,7 +154,13 @@ const App = observer(() => {
         }}
         onSend={handleSendText}
         showCloseIcon={isFullScreen}
-        onPullRefresh={(evt:ChatEvent) => {refreshMessageList()}}
+        onPullRefresh={(evt:ChatEvent) => {
+          if(evt.type === 'conversation' && evt.conversation) {
+            refreshConversationMessageList(evt.conversation)
+          } else {
+            refreshMessageList()
+          }
+        }}
         unreadCount={unreadMessageCount}
         singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}
       />

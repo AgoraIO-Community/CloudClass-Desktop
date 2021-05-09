@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '../affix';
 import { Icon } from '../icon';
@@ -99,7 +99,7 @@ export const Chat: FC<ChatProps> = ({
     }
     return `${num}`
   }, [JSON.stringify(conversations)])
-  const [activeConversation, setActiveConversation] = useState<Conversation | null>(null)
+  const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined)
 
   const getActiveConversationMessages = () => {
     if(!activeConversation) {
@@ -108,6 +108,12 @@ export const Chat: FC<ChatProps> = ({
     let conversation = conversations.filter(c => c.userUuid === activeConversation.userUuid)[0]
     return conversation ? conversation.messages : []
   }
+
+  useEffect(() => {
+    if(activeConversation) {
+      onPullRefresh({type:'conversation', conversation: activeConversation})
+    }
+  }, [activeConversation])
 
   return (
     <Affix
@@ -186,7 +192,7 @@ export const Chat: FC<ChatProps> = ({
               activeConversation ?
                 <>
                   <div className="conversation-header">
-                    <div className="back-btn" onClick={() => setActiveConversation(null)}>{'<'}</div>
+                    <div className="back-btn" onClick={() => setActiveConversation(undefined)}>{'<'}</div>
                     <div className="avatar">
                     </div>
                     <div className="name">{activeConversation.userName}</div>
