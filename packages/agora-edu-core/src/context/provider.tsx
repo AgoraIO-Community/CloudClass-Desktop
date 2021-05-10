@@ -6,6 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
+import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext } from './type'
 
 export type {
  CoreAppContext,
@@ -16,7 +17,11 @@ export {
   CoreContextProvider
 } from './core'
 
-export const useChatContext = () => {
+/**
+ * 
+ * @returns 聊天能力池返回的内容
+ */
+export const useChatContext = (): ChatContext=> {
   const core = useCoreContext()
   const { roomStore, sceneStore, uiStore } = core
   return {
@@ -34,7 +39,7 @@ export const useChatContext = () => {
   }
 }
 
-export const useStreamListContext = () => {
+export const useStreamListContext = (): StreamListContext => {
 
   const sceneStore = useSceneStore()
 
@@ -77,7 +82,7 @@ export const useStreamListContext = () => {
   }
 }
 
-export const usePretestContext = () => {
+export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
   const [isMirror, setMirror] = useState<boolean>(false)
 
@@ -128,7 +133,7 @@ export const usePretestContext = () => {
   }
 }
 
-export const useScreenShareContext = () => {
+export const useScreenShareContext = (): ScreenShareContext => {
   const {
     customScreenShareItems,
     screenShareStream,
@@ -144,7 +149,7 @@ export const useScreenShareContext = () => {
   }
 }
 
-export const useRoomContext = () => {
+export const useRoomContext = (): RoomContext => {
 
   const {
     destroyRoom,
@@ -201,7 +206,7 @@ export const useRoomContext = () => {
   }
 }
 
-export const useRoomDiagnosisContext = () => {
+export const useRoomDiagnosisContext = (): RoomDiagnosisContext => {
   const {
     navigationState
   } = useRoomStore()
@@ -211,7 +216,7 @@ export const useRoomDiagnosisContext = () => {
   }
 }
 
-export const useGlobalContext = () => {
+export const useGlobalContext = (): GlobalContext => {
 
   const { isFullScreen } = useBoardStore()
   const appStore = useCoreContext()
@@ -256,7 +261,7 @@ export const useGlobalContext = () => {
   }
 }
 
-export const useBoardContext = () => {
+export const useBoardContext = (): BoardContext => {
   const {
     currentColor,
     currentStrokeWidth,
@@ -362,7 +367,7 @@ export const useBoardContext = () => {
   }
 }
 
-export const useStreamContext = () => {
+export const useStreamContext = (): StreamContext => {
   const {streamList} = useSceneStore()
 
   return {
@@ -370,7 +375,7 @@ export const useStreamContext = () => {
   }
 }
 
-export const useUserListContext = () => {
+export const useUserListContext = (): UserListContext => {
   const appStore = useCoreContext()
   const smallClassStore = useSmallClassStore()
 
@@ -399,7 +404,7 @@ export const useUserListContext = () => {
   }
 }
 
-export const useRecordingContext = () => {
+export const useRecordingContext = (): RecordingContext => {
 
   const {
     isRecording,
@@ -432,7 +437,7 @@ export const useRecordingContext = () => {
   }
 }
 
-export const useHandsUpContext = () => {
+export const useHandsUpContext = (): HandsUpContext => {
   const {
     teacherUuid,
     handsUpState,
@@ -462,7 +467,7 @@ export const useHandsUpContext = () => {
   }
 }
 
-export const useVideoControlContext = () => {
+export const useVideoControlContext = (): VideoControlContext => {
 
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()
@@ -547,7 +552,7 @@ export const useVideoControlContext = () => {
   }
 }
 
-export const useSmallClassVideoControlContext = () => {
+export const useSmallClassVideoControlContext = (): SmallClassVideoControlContext => {
 
   const sceneStore = useSceneStore()
   const boardStore = useBoardStore()

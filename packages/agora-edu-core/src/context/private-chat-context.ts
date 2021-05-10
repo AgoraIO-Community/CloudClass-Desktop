@@ -1,7 +1,8 @@
 import { eduSDKApi } from ".."
 import { useRoomStore, useSmallClassStore } from "./core"
+import { PrivateChatContext } from './type'
 
-export const usePrivateChatContext = () => {
+export const usePrivateChatContext = (): PrivateChatContext => {
   const roomStore = useRoomStore()
   const smallClassStore = useSmallClassStore()
 
