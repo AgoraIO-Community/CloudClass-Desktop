@@ -64,6 +64,10 @@ export const ToastContainer = observer(() => {
     'roster.open_student_co_video': (props: any) => toast('roster.open_student_co_video', props),
     'toast.add_screen_share': (props: any) => toast('toast.add_screen_share', props),
     'toast.remove_screen_share': (props: any) => toast('toast.remove_screen_share', props),
+    'toast.mute_chat': (props: any) => toast('toast.mute_chat', props),
+    'toast.unmute_chat': (props: any) => toast('toast.unmute_chat', props),
+    'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
+    'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
   }
   
 

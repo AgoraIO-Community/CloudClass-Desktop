@@ -26,6 +26,7 @@ const meta: Meta = {
       onlineState: true,
       canCoVideo: true,
       canGrantBoard: true,
+      chatEnabled: true
     })),
   }
 };
@@ -58,6 +59,10 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
       }
       case 'mic': {
         item.micEnabled = !item.micEnabled
+        break;
+      }
+      case 'chat': {
+        item.chatEnabled = !item.chatEnabled
         break;
       }
     }

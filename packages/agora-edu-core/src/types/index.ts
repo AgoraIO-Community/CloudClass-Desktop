@@ -124,3 +124,11 @@ export interface ChatMessage {
   fromRoomName?: string
   status?: 'fail' | 'success' | 'loading'
 }
+
+export interface ChatConversation {
+  userUuid: string,
+  userName: string,
+  unreadMessageCount: number,
+  messages: any[],
+  timestamp?: number
+}

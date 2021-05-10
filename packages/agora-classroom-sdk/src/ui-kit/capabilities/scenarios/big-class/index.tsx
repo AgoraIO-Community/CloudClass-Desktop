@@ -12,6 +12,11 @@ import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
+import { AgoraChatWidget } from 'agora-widget-gallery'
+import React from 'react'
+import { Widget } from '~capabilities/containers/widget'
+
+const chatWidget = new AgoraChatWidget()
 
 export const BigClassScenario = observer(() => {
 
@@ -52,14 +57,13 @@ export const BigClassScenario = observer(() => {
             <HandsUpContainer />
           </div>
         </Content>
-        {isFullScreen ? <RoomChat /> : (
-          <Aside className="big-class-aside">
-            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-              <VideoPlayerTeacher className="big-class-teacher"/>
-            </div>
-            <RoomChat />
-          </Aside>
-        )}
+        <Aside>
+          <div style={{ height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s' }}>
+            <VideoPlayerTeacher />
+          </div>
+          {/* <RoomChat /> */}
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+        </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer />

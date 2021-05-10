@@ -1,21 +1,23 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '~components/affix';
-import { Button } from '~components/button';
-import { Icon } from '~components/icon';
-import { Placeholder } from '~components/placeholder';
-import { ChatMessage } from './chat-message';
 import { ChatMin } from './chat-min';
 import './index.css';
-import { Message } from './interface';
-
-import chatMinBtn from '~components/icon/assets/svg/chat-min-btn.svg'
+import { Conversation, Message } from './interface';
+import { Tabs, TabPane } from '~components/tabs'
+import { Icon } from '~components/icon';
+import { ChatList } from './chat-list';
+import { MessageList } from './message-list';
 
 export interface ChatProps extends AffixProps {
   /**
    * 消息列表
    */
   messages?: Message[];
+  /**
+   * 对话列表
+   */
+  conversations?: Conversation[];
   /**
    * 是否对学生禁言
    */
@@ -36,10 +38,14 @@ export interface ChatProps extends AffixProps {
   showCloseIcon?: boolean;
 
   unreadCount?: number;
+
+  /**
+   * 若提供这个属性，则不显示对话列表，提问页直接使用提供的这个对话
+   */
+  singleConversation?: Conversation;
   /**
    * 刷新聊天消息列表
    */
-
   onPullFresh: () => Promise<void> | void;
   /**
    *  禁言状态改变的回调
@@ -57,15 +63,31 @@ export interface ChatProps extends AffixProps {
    * 点击最小化的聊天图标
    */
   onClickMiniChat?: () => void | Promise<void>;
+  /**
+   * 刷新聊天消息列表
+   */
+  onConversationPullFresh: (conversation:Conversation) => Promise<void> | void;
+  /**
+   * 输入框发生变化的回调
+   */
+  onConversationText: (conversation:Conversation, content: string) => void;
+  /**
+   * 点击发送按钮的回调
+   */
+  onConversationSend: (conversation:Conversation) => void | Promise<void>;
 }
 
 export const Chat: FC<ChatProps> = ({
   messages = [],
+  conversations = [],
   canChatting,
+  //@ts-ignore
+  showConversationList,
   uid,
   isHost,
   chatText,
   showCloseIcon = false,
+  singleConversation,
   unreadCount = 0,
   collapse = false,
   onCanChattingChange,
@@ -73,69 +95,27 @@ export const Chat: FC<ChatProps> = ({
   onSend,
   onCollapse,
   onPullFresh,
+  onConversationPullFresh,
+  onConversationSend,
+  onConversationText,
   ...resetProps
 }) => {
+  const totalCount = useMemo(() => {
+    const res = conversations.reduce((sum: number, item: any) => {
+      const count = item?.unreadMessageCount?? 0
+      sum += count
+      return sum
+    }, 0)
+    const num = Math.min(res, 99)
+    if (num === 99) {
+      return `${num}+`
+    }
+    return `${num}`
+  }, [JSON.stringify(conversations)])
 
   const { t } = useTranslation()
 
-  const [focused, setFocused] = useState<boolean>(false);
-
-  const handleFocus = () => setFocused(true);
-
-  const handleBlur = () => {
-    if (!!chatText) {
-      return;
-    }
-    setFocused(false);
-  };
-
-  const chatHistoryRef = useRef<HTMLDivElement | null>(null)
-
-  const handleScrollDown = (current: HTMLDivElement) => {
-    current.scrollTop = current.scrollHeight;
-  }
-
-  const currentHeight = useRef<number>(0)
-
-  const scrollDirection = useRef<string>('bottom')
-
-  const handleScroll = (event: any) => {
-    const { target } = event
-    if (target?.scrollTop === 0) {
-      onPullFresh && onPullFresh()
-      currentHeight.current = target.scrollHeight
-      scrollDirection.current = 'top'
-    }
-  }
-
-  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter') {
-      if (event.ctrlKey) {
-        event.currentTarget.value += '\n'
-      } else if (!event.shiftKey && !event.altKey) {
-        // send message if enter is hit
-        event.preventDefault()
-        await handleSend()
-      }
-    }
-  }
-
-  const handleSend = async () => {
-    await onSend()
-    scrollDirection.current = 'bottom'
-  }
-
-
-  useEffect(() => {
-    if (scrollDirection.current === 'bottom') {
-      chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
-    }
-    if (scrollDirection.current === 'top' && chatHistoryRef.current) {
-      const position = chatHistoryRef?.current.scrollHeight - currentHeight.current
-      chatHistoryRef.current.scrollTo(0, position)
-    }
-  }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
-
+  const [activeConversation, setActiveConversation] = useState<Conversation | null>(singleConversation || null)
   return (
     <Affix
       {...resetProps}
@@ -144,7 +124,7 @@ export const Chat: FC<ChatProps> = ({
       content={<ChatMin unreadCount={unreadCount}
       />}>
       <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : ''].join(' ')}>
-        <div className="chat-header">
+        {/* <div className="chat-header">
           <span className="chat-header-title">{t('message')}</span>
           <span style={{
             display: 'flex',
@@ -164,47 +144,69 @@ export const Chat: FC<ChatProps> = ({
             </span>) : null}
 
           </span>
-        </div>
-        {!canChatting ? (
-          <div className="chat-notice">
-            <span>
-              <Icon type="red-caution" />
-              <span>{t('placeholder.enable_chat_muted')}</span>
+        </div> */}
+        <Tabs>
+          <TabPane tab={
+            <span className="message-tab">
+              消息
+              <span className="new-message-notice"></span>
             </span>
-          </div>
-        ) : null}
-        <div className="chat-history" ref={chatHistoryRef} onScroll={handleScroll}>
-          {!messages || messages.length === 0 ? (
-            <Placeholder placeholderDesc={t('placeholder.empty_chat')} />
-          ) : (
-            messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                {...message}
-                isOwn={message.isOwn}
-              />
-            ))
-          )}
-        </div>
-        <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
-          <textarea
-            value={chatText}
-            className="chat-texting-message"
-            placeholder={t('placeholder.input_message')}
-            disabled={!isHost && !canChatting}
-            onChange={(e) => onText(e.currentTarget.value)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onKeyPress={handleKeypress}
-          />
-          <Button disabled={!isHost && !canChatting} onClick={handleSend} style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10
-          }}>
-            {t('send')}
-          </Button>
-        </div>
+          } key="0">
+            {!canChatting ? (
+                <div className="chat-notice">
+                <span>
+                    <Icon type="red-caution" />
+                    <span>{t('placeholder.enable_chat_muted')}</span>
+                </span>
+                </div>
+            ) : null}
+            <MessageList
+              className={'room chat-history'}
+              messages={messages}
+              disableChat={!isHost && !canChatting}
+              chatText={chatText}
+              onPullFresh={onPullFresh}
+              onSend={onSend}
+              onText={onText}
+            />
+          </TabPane>
+          <TabPane 
+          tab={
+            <span className="question">
+              提问
+              <span className="question-count">{totalCount}</span>
+            </span>
+          } 
+          key="1">
+            {activeConversation ? 
+              <>
+                {
+                singleConversation ? 
+                  null:
+                  <div className="conversation-header">
+                    <div className="back-btn" onClick={() => setActiveConversation(null)}>{'<'}</div>
+                    <div className="avatar">
+                    </div>
+                    <div className="name">{activeConversation.userName}</div>
+                  </div>
+                }
+                <MessageList
+                  className={'conversation chat-history'}
+                  messages={activeConversation.messages}
+                  disableChat={false}
+                  chatText={chatText}
+                  onPullFresh={() => {onConversationPullFresh && onConversationPullFresh(activeConversation)}}
+                  onSend={() => {onConversationSend && onConversationSend(activeConversation)}}
+                  onText={(content:string) => onConversationText && onConversationText(activeConversation, content)}
+                />
+              </>
+            : 
+              <ChatList conversations={conversations} onClickConversation={(conversation) => {
+                setActiveConversation(conversation)
+              }}></ChatList>
+            }
+          </TabPane>
+        </Tabs>
       </div>
     </Affix>
   );

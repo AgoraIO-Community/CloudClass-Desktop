@@ -133,6 +133,9 @@ export const RoomChat = observer(() => {
       showCloseIcon={isFullScreen}
       onPullFresh={refreshMessageList}
       unreadCount={unreadMessageCount}
+      onConversationPullFresh={() => {}}
+      onConversationText={() => {}}
+      onConversationSend={() => {}}
     />
   )
 })

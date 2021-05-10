@@ -216,7 +216,7 @@ export class EduManager extends EventEmitter {
         switch(cmd) {
           case EduPeerMessageCmdType.peer: {
             EduLogger.info(`custom chat message, PeerMessage.${EduPeerMessageCmdType.peer}: `, data, requestId)
-            const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
+            const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data)
             this.emit('user-chat-message', {
               message: textMessage
             })

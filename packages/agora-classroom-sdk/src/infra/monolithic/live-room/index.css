@@ -37,6 +37,13 @@ html, body, #root {
   left: 15px;
 }
 
+.chat-panel .tabs {
+  top: 0;
+  left: 0;
+  flex: 1 1;
+  position: relative;
+}
+
 .layout-aside-normal {
   max-width: 300px;
   min-width: 300px;
@@ -144,11 +151,11 @@ html, body, #root {
   display: none;
 }
 
-.small-class-chat {
+/* .small-class-chat {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-}
+  bottom: 8px;
+  right: 11px;
+} */
 
 .fullscreen .video-marquee-pin ~ .board-box {
   margin-top: 0px;

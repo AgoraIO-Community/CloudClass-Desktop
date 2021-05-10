@@ -67,3 +67,14 @@
 .edu-room .video-player {
   margin-top: -2px !important;
 }
+
+.chat-panel {
+  @apply bg-white;
+  /* width: 300px; */
+  position: relative;
+  flex: 1;
+  border-radius: 4px;
+  min-width: 300px;
+  margin-left: 2px;
+  @apply border-l border-gray-100;
+}

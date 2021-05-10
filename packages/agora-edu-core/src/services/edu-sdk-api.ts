@@ -145,6 +145,66 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async muteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 1
+      }
+    })
+  }
+
+  async unmuteStudentChat(params: {
+    roomUuid: string,
+    userUuid: string
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/users/${params.userUuid}/mute`,
+      method: 'PUT',
+      data: {
+        muteChat: 0
+      }
+    })
+    return res.data
+  }
+
+  async getConversationHistoryChatMessage(params: {
+    roomUuid: string,
+    data: {
+      nextId: string,
+      sort: number,
+      studentUuid: string
+    }
+  }){
+    const { data: { nextId, sort, studentUuid}} = params
+    const isNextId = nextId ? `nextId=${nextId}&` : ''
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students/${studentUuid}/messages?${isNextId}sort=${sort}`,
+      method: 'GET',
+    })
+    return res.data
+  }
+
+
+  async getConversationList(params: {
+    roomUuid: string,
+    data: {
+      nextId: string
+    }
+  }){
+    const { data: { nextId } } = params
+    const isNextId = nextId ? `nextId=${nextId}&` : ''
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students?nextId=${isNextId}`,
+      method: 'GET',
+    })
+    return res.data
+  }
+
   async sendChat(params: {
     roomUuid: string,
     userUuid: string,
@@ -155,6 +215,22 @@ export class EduSDKApi extends ApiBase {
   }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/from/${params.userUuid}/chat`,
+      method: 'POST',
+      data: params.data
+    })
+    return res.data
+  }
+
+  async sendConversationChat(params: {
+    roomUuid: string,
+    userUuid: string,
+    data: {
+      message: string,
+      type: number
+    }
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/conversation/students/${params.userUuid}/messages`,
       method: 'POST',
       data: params.data
     })

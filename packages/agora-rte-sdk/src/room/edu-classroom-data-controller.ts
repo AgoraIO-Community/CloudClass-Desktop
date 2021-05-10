@@ -300,10 +300,47 @@ export class EduClassroomDataController {
         // userListBatchUpdated
         case EduChannelMessageCmdType.userListBatchUpdated: {
           EduLogger.info(`[userListBatchUpdated] [${this._id}] before [${seqId}]#userListBatchUpdated: `, JSON.stringify(data))
-          const user = MessageSerializer.getChangedUser(data)
-          EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
-          this.updateUserState(user)
-          EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
+
+          const cmd = data?.cause?.cmd ?? -1
+
+          const fromUser = data?.fromUser
+
+          const userOperator = data?.operator
+
+          const cause = data?.cause ?? undefined
+
+          const operations: Record<string, CallableFunction> = {
+            // muted chat
+            6: (data: any) => {
+              const changeProperties = data.changeProperties
+              const isMuteChat = changeProperties.hasOwnProperty('mute.muteChat')
+              if (isMuteChat) {
+                return {
+                  muteChat: changeProperties['mute.muteChat'],
+                }
+              }
+            }
+          }
+
+          const operator = operations[cmd]
+          if (operator) {
+            const res = operator(data)
+            if (res.hasOwnProperty('muteChat')) {
+              this.updateUserChatMute(
+                {
+                  muteChat: res.muteChat,
+                  userUuid: fromUser.userUuid
+                },
+                userOperator,
+                cause
+                )
+            }
+          } else {
+            const user = MessageSerializer.getChangedUser(data)
+            EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
+            this.updateUserState(user)
+            EduLogger.info(`[userListBatchUpdated] [${this._id}] after serialized [getChangedUser] `, JSON.stringify(user))
+          }
           break;
         }
 
@@ -912,13 +949,31 @@ export class EduClassroomDataController {
     }
   }
 
-  updateUserProperties(data: EduUserData) {
-    if (this.isLocalUser(data.user.userUuid)) {
-      this.localUser.updateUser(data)
-    } else {
-      const findUser = this._userList.find((it: any) => it.user.userUuid === data.user.userUuid)
+  // TODO: workaround
+  updateUserChatMute(data: any, operator: any, cause: any) {
+    if (this.isLocalUser(data.userUuid)) {
+      this.localUser.updateUserChatMute(data.muteChat)
+      const findUser = this._userList.find((it: any) => it.user.userUuid === data.userUuid)
       if (findUser) {
-        findUser.updateUser(data)
+        findUser.updateUserChatMute(data.muteChat)
+      }
+      this.fire('local-user-updated', {
+        user: this.localUserData,
+        //@ts-ignore
+        muteChat: data.muteChat,
+        operator: operator,
+        cause: cause
+      })
+    } else {
+      const findUser = this._userList.find((it: any) => it.user.userUuid === data.userUuid)
+      if (findUser) {
+        findUser.updateUserChatMute(data.muteChat)
+        this.fire('remote-user-updated', {
+          user: findUser,
+          //@ts-ignore
+          muteChat: data.muteChat,
+          operator,
+          cause})
       }
     }
   }
@@ -1304,6 +1359,7 @@ export class EduClassroomDataController {
       userName: roomData.user.name,
       role: roomData.user.role as any,
       isChatAllowed: !!roomData.user.muteChat,
+      muteChat: !!roomData.user.muteChat,
       userProperties: roomData.user.properties,
       rtmToken: roomData.user.rtmToken,
     }, rtcStreamInfo)
@@ -1362,6 +1418,7 @@ export class EduClassroomDataController {
         state: 1,
         updateTime: 0,
         userUuid: localUuid,
+        muteChat: get(this.localUser, 'muteChat'),
         userName: get(this.localUser, 'user.userName'),
         role: get(this.localUser, 'user.role'),
         userProperties: {},
@@ -1391,6 +1448,7 @@ export class EduClassroomDataController {
           userUuid: localUser.user.userUuid,
           userName: localUser.user.userName,
           role: localUser.user.role as any,
+          muteChat: localUser.user.muteChat,
           isChatAllowed: !!localUser.user.isChatAllowed,
           userProperties: localUser.user.userProperties,
         })

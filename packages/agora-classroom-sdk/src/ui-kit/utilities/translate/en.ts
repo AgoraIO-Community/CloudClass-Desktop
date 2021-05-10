@@ -36,6 +36,7 @@ export const en = {
     'operation': 'Remove',
   },
   'roster': {
+    'chat': 'Mute Chat',
     'teacher_name': 'Teacher：',
     'user_list': 'User List',
     'student_name': 'Name',
@@ -95,6 +96,10 @@ export const en = {
     'room_is_full': 'The room is full',
   },
   'toast': {
+    'mute_chat': 'You have been muted chat by teacher',
+    'unmute_chat': 'Your have been unmuted chat by teacher',
+    'remote_mute_chat': '{reason} muted chat by teacher',
+    'remote_unmute_chat': '{reason} unmuted chat by teacher',
     'add_screen_share': 'Teacher starts to the screen share',
     'remove_screen_share': 'Teacher stops the screen share',
     'granted_board_success': 'Grant Permission success',

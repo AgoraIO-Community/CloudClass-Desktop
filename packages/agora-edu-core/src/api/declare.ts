@@ -36,6 +36,40 @@ export interface IAgoraExtApp {
   extAppWillUnload():void
 }
 
+export type AgoraWidgetUserInfo = {
+  userUuid: string
+  userName: string
+  roleType: number
+}
+
+export type AgoraWidgetRoomInfo = {
+  roomUuid: string
+  roomName: string
+  roomType: number
+}
+
+export type AgoraWidgetContext = {
+  // properties: any
+  events: any
+  actions: any
+  dependencies: Map<string, any>
+  localUserInfo: AgoraWidgetUserInfo,
+  roomInfo: AgoraWidgetRoomInfo,
+  language: string
+}
+
+export type AgoraWidgetHandle = {
+  updateRoomProperty: (properties:any, cause: any) => Promise<void>
+  deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
+}
+
+export interface IAgoraWidget {
+  widgetId: string
+  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext, handle:AgoraWidgetHandle):void
+  widgetRoomPropertiesDidUpdate(properties:any, cause: any):void
+  widgetWillUnload():void
+}
+
 export type ConvertedFile = {
   width: number,
   height: number,

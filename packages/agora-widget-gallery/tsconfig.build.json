@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.build.json",
+
+  "compilerOptions": {
+    "outDir": "./lib",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+  },
+  "files": [
+    "../agora-classroom-sdk/src/react-app-env.d.ts"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}

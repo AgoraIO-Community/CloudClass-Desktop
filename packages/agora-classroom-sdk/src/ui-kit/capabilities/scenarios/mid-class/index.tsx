@@ -2,20 +2,24 @@ import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
 import { useRoomContext, useGlobalContext, useChatContext } from 'agora-edu-core'
-import { NavigationBar } from '~capabilities/containers/nav'
-import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
-import { WhiteboardContainer } from '~capabilities/containers/board'
-import { DialogContainer } from '~capabilities/containers/dialog'
-import { LoadingContainer } from '~capabilities/containers/loading'
-import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
-import { HandsUpContainer } from '~capabilities/containers/hands-up'
-import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
+import {NavigationBar} from '~capabilities/containers/nav'
+import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
+import {WhiteboardContainer} from '~capabilities/containers/board'
+import {DialogContainer} from '~capabilities/containers/dialog'
+import {LoadingContainer} from '~capabilities/containers/loading'
+import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
+import {HandsUpContainer} from '~capabilities/containers/hands-up'
+import {RoomChat} from '@/ui-kit/capabilities/containers/room-chat'
+import {AgoraChatWidget} from 'agora-widget-gallery'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
+import React from 'react'
+import { Widget } from '~capabilities/containers/widget'
+
+const chatWidget = new AgoraChatWidget()
 
 export const MidClassScenario = observer(() => {
-
-  const { joinRoom } = useRoomContext()
+  const {joinRoom} = useRoomContext()
 
   const {
     isFullScreen,
@@ -52,14 +56,13 @@ export const MidClassScenario = observer(() => {
             <HandsUpContainer />
           </div>
         </Content>
-        {isFullScreen ? <RoomChat /> : (
-          <Aside className="mid-class-aside">
-            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-              <VideoPlayerTeacher className="mid-class-teacher"/>
-            </div>
-            <RoomChat/>
-          </Aside>
-        )}
+        <Aside>
+          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
+            <VideoPlayerTeacher />
+          </div>
+          {/* <RoomChat /> */}
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+        </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer />

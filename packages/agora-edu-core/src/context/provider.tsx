@@ -30,7 +30,12 @@ export const useChatContext = () => {
     toggleChatMinimize: uiStore.toggleChatMinimize,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
-    addChatMessage: roomStore.addChatMessage
+    addChatMessage: roomStore.addChatMessage,
+    addConversationChatMessage: roomStore.addConversationChatMessage,
+    sendMessageToConversation: roomStore.sendMessageToConversation,
+    conversationList: roomStore.chatConversationList,
+    getConversationList: roomStore.getConversationList,
+    getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage
   }
 }
 
@@ -164,6 +169,8 @@ export const useRoomContext = () => {
     muteAudio,
     unmuteAudio,
     sceneType,
+    muteUserChat,
+    unmuteUserChat
   } = useSceneStore()
 
   const {
@@ -203,6 +210,8 @@ export const useRoomContext = () => {
     unmuteVideo,
     muteAudio,
     unmuteAudio,
+    muteUserChat,
+    unmuteUserChat
   }
 }
 

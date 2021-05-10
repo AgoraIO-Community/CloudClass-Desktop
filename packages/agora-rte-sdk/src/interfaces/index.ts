@@ -51,6 +51,7 @@ export enum EduChannelMessageCmdType {
   roomChatState = 3,
   roomPropertiesStateChanged = 4,
   roomPropertiesBatchUpdated = 5,
+  muteChatOperation = 6,
   userListChanged = 20,
   userStateUpdated = 21,
   userListBatchUpdated = 23,
@@ -442,6 +443,7 @@ export interface EduUser {
   role: EduRoleType
   isChatAllowed: boolean
   userProperties: Record<any, any>
+  muteChat: boolean
 }
 
 export interface EduUserAttrs extends EduUser {
@@ -531,6 +533,10 @@ export class EduUserData {
     this._screenRtcToken = v
   }
 
+  updateUserChatMute(v: boolean) {
+    this._user!.muteChat = !!v
+  }
+
   get rtcToken(): string {
     return this._rtcToken as string;
   }
@@ -573,6 +579,7 @@ export class EduUserData {
         userUuid: item.userUuid,
         userName: item.userName,
         role: item.role,
+        muteChat: item.muteChat,
         userProperties: item.userProperties,
         isChatAllowed: item.isChatAllowed,
         streamUuid: item.streamUuid,

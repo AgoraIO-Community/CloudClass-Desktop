@@ -14,6 +14,7 @@ const {
   addWebpackAlias,
   addDecoratorsLegacy,
   addBabelPresets,
+  adjustStyleLoaders,
   // addWebpackTarget,
 } = require('customize-cra')
 const autoprefixer = require('autoprefixer')
@@ -98,10 +99,11 @@ const addStyleLoader = () => (config) => {
         options: {
           postcssOptions: {
             ident: 'postcss',
-            plugins: [
-              tailwindcss(),
-              autoprefixer()
-            ]
+            config: path.resolve(__dirname, './postcss.config.js')
+            // plugins: [
+            //   tailwindcss(),
+            //   autoprefixer()
+            // ]
           }
         }
       }
@@ -132,16 +134,16 @@ const sourceMap = () => config => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
   console.log('node version', process.version)
-  config.devtool = 'none'
-  // config.devtool = isProd ? 'source-map' : 'cheap-module-eval-source-map'
+  // config.devtool = 'none'
+  config.devtool = 'source-map'
   return config;
 }
 
 const setElectronDeps = isProd ? {
   ...devDependencies,
-  // "agora-electron-sdk": "commonjs2 agora-electron-sdk"
+  // "agora-widget-gallery": "commonjs2 agora-widget-gallery"
 } : {
-  // "agora-electron-sdk": "commonjs2 agora-electron-sdk"
+  // "agora-widget-gallery": "commonjs2 agora-widget-gallery"
 }
 
 // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
@@ -239,7 +241,13 @@ const webpackConfig = override(
     test: /\.worker\.js$/,
     use: { loader: 'worker-loader' },
   }),
-  addWebpackExternals(setElectronDeps),
+  // addWebpackExternals(setElectronDeps),
+  adjustStyleLoaders((loader) => {
+    loader.exclude = [
+      /node_modules/,
+      path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
+    ]
+  }),
   addStyleLoader(),
   addWebpackPlugin(new DefinePlugin({
     // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),

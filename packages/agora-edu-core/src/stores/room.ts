@@ -12,7 +12,7 @@ import { eduSDKApi } from "../services/edu-sdk-api"
 import { reportService } from "../services/report"
 import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
-import { ChatMessage, QuickTypeEnum } from "../types"
+import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
@@ -570,8 +570,71 @@ export class RoomStore extends SimpleInterval {
   }
 
   @action.bound
+  async sendMessageToConversation(message: any, userUuid: string) {
+    const ts = +Date.now();
+    try {
+      const result = await eduSDKApi.sendConversationChat({
+        roomUuid: this.roomInfo.roomUuid,
+        userUuid: userUuid,
+        data: {
+          message,
+          type: 1,
+        }
+      })
+
+      if (this.isTeacher || this.isAssistant) {
+        const sensitiveWords = get(result, 'sensitiveWords', [])
+      }
+
+      return {
+        id: this.userUuid,
+        ts,
+        text: result.message,
+        account: this.roomInfo.userName,
+        sender: true,
+        messageId: result.peerMessageId,
+        fromRoomName: this.roomInfo.userName,
+      }
+    } catch (err) {
+      this.appStore.uiStore.fireToast(
+        'toast.failed_to_send_chat',
+      )
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn(`${error}`)
+      throw error;
+    }
+  }
+
+  @action.bound
   setMessageList(messageList: ChatMessage[]) {
     this.roomChatMessages = messageList
+  }
+
+  @action.bound
+  async getConversationList(data: {
+    nextId: string,
+    sort: number
+  }) {
+    try {
+      const conversationList = await eduSDKApi.getConversationList({
+        roomUuid: this.roomInfo.roomUuid,
+        data
+      })
+      conversationList.list.map((item: any) => {
+        this.roomChatConversations.push({
+          userName: item.userName,
+          userUuid: item.userUuid,
+          unreadMessageCount: 0,
+          messages: [],
+          timestamp: item.lastMessageTs
+        } as ChatConversation)
+      })
+      return conversationList
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.failed_to_get_conversations', { reason: error })
+      BizLogger.warn(`${error}`)
+    }
   }
 
   @action.bound
@@ -606,6 +669,131 @@ export class RoomStore extends SimpleInterval {
       BizLogger.warn(`${error}`)
     }
   }
+
+  @action.bound
+  async getConversationHistoryChatMessage(data: {
+    nextId: string,
+    sort: number,
+    studentUuid: string
+  }) {
+    try {
+      const historyMessage = await eduSDKApi.getConversationHistoryChatMessage({
+        roomUuid: this.roomInfo.roomUuid,
+        data
+      })
+
+      let conversation = this.getConversation(data.studentUuid)
+
+      if(!conversation) {
+        conversation = {
+          userUuid: data.studentUuid,
+          userName: "",
+          unreadMessageCount: 0,
+          messages: []
+        }
+        this.roomChatConversations.push(conversation)
+      }
+
+      let messageIds = conversation!.messages.map(m => m.messageId)
+      historyMessage.list.map((item: any) => {
+        if(!messageIds.includes(item.peerMessageId)) {
+          conversation!.messages.unshift({
+            text: item.message,
+            ts: item.sendTime,
+            id: item.sequences,
+            fromRoomUuid: item.fromUser.userUuid,
+            userName: item.fromUser.userName,
+            role: item.fromUser.role,
+            messageId: item.peerMessageId,
+            sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+            account: item.fromUser.userName
+          } as ChatMessage)
+        }
+      })
+      return historyMessage
+    } catch (err) {
+      const error = GenericErrorWrapper(err)
+      this.appStore.uiStore.fireToast('toast.failed_to_send_chat', { reason: error })
+      BizLogger.warn(`${error}`)
+    }
+  }
+
+
+  @observable
+  roomChatConversations: ChatConversation[] = []
+
+
+  @computed
+  get chatConversationList(): any[] {
+    let {userRole, userUuid, userName} = this.roomInfo
+    if(userRole === EduRoleTypeEnum.student) {
+        // for student always return single conversation
+        let conversation = this.roomChatConversations.filter(c => c.userUuid === userUuid)[0] || {}
+
+        return [{
+          userName: conversation.userName || userName,
+          userUuid: conversation.userUuid || userUuid,
+          unreadMessageCount: conversation.unreadMessageCount || 0,
+          messages: (conversation.messages || []).map((item, key:number) => ({
+            id: `${item.id}${item.ts}${key}`,
+            uid: item.id,
+            username: `${item.account}`,
+            timestamp: item.ts,
+            isOwn: item.sender,
+            content: item.text,
+            role: item.role
+          })),
+          timestamp: ((conversation.messages || []).length > 0) ? conversation.messages[conversation.messages.length - 1].timestamp : 0
+        }]
+    } else {
+      // otherwise return the whole list
+      return this.roomChatConversations.map(c => {
+        let messageTs = (((c.messages || []).length > 0) ? c.messages[c.messages.length - 1].timestamp : 0) || 0
+        let convTs = c.timestamp || 0
+        return {
+          userName: c.userName,
+          userUuid: c.userUuid,
+          unreadMessageCount: c.unreadMessageCount,
+          messages: c.messages.map((item, key:number) => ({
+            id: `${item.id}${item.ts}${key}`,
+            uid: item.id,
+            username: `${item.account}`,
+            timestamp: item.ts,
+            isOwn: item.sender,
+            content: item.text,
+            role: item.role
+          })),
+          timestamp: Math.max(messageTs, convTs)
+        }
+      })
+    }
+  }
+
+  @action.bound
+  addConversationChatMessage(args: any, conversation: any) {
+    let chatConversation = this.getConversation(conversation.userUuid)
+    if(!chatConversation) {
+      this.roomChatConversations.push({
+        userName: conversation.userName,
+        userUuid: conversation.userUuid,
+        unreadMessageCount: conversation.unreadMessageCount,
+        messages: [args]
+      })
+    } else {
+      if(chatConversation.messages.findIndex((msg => {
+        msg.messageId === args.messageId
+      })) === -1) {
+        chatConversation.messages.push(args)
+      }
+    }
+    this.roomChatConversations = [...this.roomChatConversations]
+  }
+  
+  getConversation(userUuid: string) {
+    let idx  = this.roomChatConversations.map(c => c.userUuid).indexOf(userUuid)
+    return idx === -1 ? null : this.roomChatConversations[idx]
+  }
+
   // 奖杯
   @action.bound
   async sendReward(userUuid: string, reward: number) {
@@ -864,7 +1052,7 @@ export class RoomStore extends SimpleInterval {
       }
       this.tickClassroom()
 
-      this.sceneStore.canChatting = checkInResult.muteChat ? false : true
+      this.sceneStore._canChatting = checkInResult.muteChat ? false : true
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
       this.appStore.boardStore.init({
@@ -888,6 +1076,42 @@ export class RoomStore extends SimpleInterval {
         reportService.updateConnectionState(newState)
       })
 
+      this.eduManager.on('user-chat-message', (evt: any) => {
+        const { message:textMessage } = evt;
+        console.log('### user-chat-message ', evt)
+        const message = textMessage as EduTextMessage
+
+        const fromUser = message.fromUser
+
+        const chatMessage = message.message
+
+        this.addConversationChatMessage({
+          id: fromUser.userUuid,
+          ts: message.timestamp,
+          messageId: message.messageId,
+          text: chatMessage,
+          account: fromUser.userName,
+          role: `${this.getRoleEnumValue(fromUser.role)}`,
+          isOwn: false
+        }, this.roomInfo.userRole === EduRoleTypeEnum.student ? {
+          // if current user is student, use my info
+          userName: this.roomInfo.userName,
+          userUuid: this.roomInfo.userUuid,
+          unreadMessageCount: 0,
+          messages: []
+        } : {
+          // else, use from info
+          userName: fromUser.userName,
+          userUuid: fromUser.userUuid,
+          unreadMessageCount: 0,
+          messages: []
+        })
+        // if (this.appStore.uiStore.chatCollapse) {
+        //   this.incrementUnreadMessageCount()
+        // }
+        BizLogger.info('user-chat-message', evt)
+      })
+
       await this.eduManager.login(this.userUuid)
 
       const roomManager = this.eduManager.createClassroom({
@@ -902,6 +1126,20 @@ export class RoomStore extends SimpleInterval {
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
         this.sceneStore.userList = roomManager.getFullUserList()
+        const cause = evt.cause
+        if (cause) {
+          if (cause.cmd === 6) {
+            if (evt.hasOwnProperty('muteChat')) {
+              const muteChat = evt.muteChat
+              if (muteChat) {
+                this.appStore.uiStore.fireToast('toast.mute_chat')
+              } else {
+                this.appStore.uiStore.fireToast('toast.unmute_chat')
+              }
+            }
+          }
+        }
+        // if (evt)
         BizLogger.info("ode", evt)
       })
       roomManager.on('local-user-removed', async (evt: any) => {
@@ -1069,9 +1307,23 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端人更新
       roomManager.on('remote-user-updated', (evt: any) => {
-        runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList()
-        })
+        this.sceneStore.userList = roomManager.getFullUserList()
+        const cause = evt.cause
+        if (cause) {
+          if (cause.cmd === 6) {
+            if (evt.hasOwnProperty('muteChat')) {
+              const muteChat = evt.muteChat
+              if (muteChat) {
+                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {reason: evt.user.user.userName})
+              } else {
+                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {reason: evt.user.user.userName})
+              }
+            }
+          }
+        }
+        // runInAction(() => {
+        //   this.sceneStore.userList = roomManager.getFullUserList()
+        // })
         BizLogger.info("remote-user-updated", evt)
       })
       // 远端人移除
@@ -1193,7 +1445,7 @@ export class RoomStore extends SimpleInterval {
           }
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
           console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom)
-          this.sceneStore.canChatting = isStudentChatAllowed
+          this.sceneStore._canChatting = isStudentChatAllowed
           this.chatIsBanned(isStudentChatAllowed)
         })
       })
@@ -1220,6 +1472,7 @@ export class RoomStore extends SimpleInterval {
         }
         BizLogger.info('room-chat-message', evt)
       })
+
       const { sceneType, userRole } = this.getSessionConfig()
       await roomManager.join({
         userRole: userRole,

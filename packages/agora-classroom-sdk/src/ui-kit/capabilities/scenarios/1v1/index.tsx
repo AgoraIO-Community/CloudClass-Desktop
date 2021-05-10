@@ -11,6 +11,10 @@ import { VideoList } from '~capabilities/containers/video-player'
 import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
+import { Widget } from '~capabilities/containers/widget'
+import { AgoraChatWidget } from 'agora-widget-gallery'
+
+const chatWidget = new AgoraChatWidget()
 
 export const OneToOneScenario = observer(() => {
 
@@ -49,12 +53,11 @@ export const OneToOneScenario = observer(() => {
           <ScreenSharePlayerContainer />
           <WhiteboardContainer />
         </Content>
-        {isFullScreen ? <RoomChat /> : (
-          <Aside className={fullscreenCls}>
-            <VideoList />
-            <RoomChat />
-          </Aside>
-        )}
+        <Aside className={fullscreenCls}>
+          <VideoList />
+          {/* <RoomChat /> */}
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+        </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer />
