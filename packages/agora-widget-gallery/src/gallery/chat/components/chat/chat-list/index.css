@@ -5,8 +5,13 @@
     cursor: pointer;
 }
 
+.chat-list {
+    position: relative;
+}
+
 .chat-list>.chat-list-item>.avatar {
-    background: gray;
+    background: url('../../icon/assets/avatar.svg') no-repeat center / 36px 36px;
+    /* background: gray; */
     border-radius: 50%;
     width:36px;
     height:36px;
@@ -22,6 +27,7 @@
     color: white;
     border-radius: 10px;
     padding: 0 4px;
+    height: 8px;
 }
 
 .chat-list>.chat-list-item>.name {
