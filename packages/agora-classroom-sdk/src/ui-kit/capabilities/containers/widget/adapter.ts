@@ -30,7 +30,8 @@ export const Adapter = () => {
     } = useRoomContext()
 
     const {
-        isFullScreen
+        isFullScreen,
+        joined
     } = useGlobalContext()
 
     useEffect(() => {
@@ -38,8 +39,8 @@ export const Adapter = () => {
     }, [unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList, chatEvents])
 
     useEffect(() => {
-        globalEvents.next({isFullScreen})
-    }, [isFullScreen, globalEvents])
+        globalEvents.next({isFullScreen, joined})
+    }, [isFullScreen, globalEvents, joined])
 
     useEffect(() => {
         roomEvents.next({roomInfo})

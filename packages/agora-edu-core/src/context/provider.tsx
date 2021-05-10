@@ -248,6 +248,10 @@ export const useGlobalContext = () => {
     fireDialog
   } = useUIStore()
 
+  const {
+    joined
+  } = useRoomStore()
+
   return {
     loading,
     isFullScreen,
@@ -267,6 +271,7 @@ export const useGlobalContext = () => {
     toastEventObserver: toast$,
     dialogEventObserver: dialog$,
     fireDialog,
+    joined,
   }
 }
 

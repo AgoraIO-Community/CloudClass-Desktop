@@ -9,6 +9,7 @@ import { Provider, observer } from 'mobx-react';
 import {AgoraWidgetHandle, AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
 import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';
+import { I18nProvider } from './components/i18n';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -38,7 +39,8 @@ const App = observer(() => {
   } = pluginStore.chatContext
 
   const {
-    isFullScreen
+    isFullScreen,
+    joined
   } = pluginStore.globalContext
 
   const {
@@ -125,12 +127,13 @@ const App = observer(() => {
   }, [text, setText])
 
   useEffect(() => {
+    if (!joined) return
     refreshMessageList()
     if(pluginStore.context.localUserInfo.roleType === 1) {
       // refresh conv list for teacher
       refreshConversationList()
     }
-  }, [])
+  }, [joined])
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
@@ -210,7 +213,9 @@ export class AgoraChatWidget implements IAgoraWidget {
     this.store = new PluginStore(ctx, handle)
     ReactDOM.render((
       <Provider store={this.store}>
-        <App/>
+        <I18nProvider language={ctx.language}>
+          <App/>
+        </I18nProvider>
       </Provider>
     ),
       dom

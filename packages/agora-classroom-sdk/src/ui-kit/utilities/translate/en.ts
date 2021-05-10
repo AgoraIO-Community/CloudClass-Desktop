@@ -239,7 +239,8 @@ export const en = {
     'tools': 'Tools',
     'user_list': 'User List'
   },
-  'message': 'message',
+  'message': 'Message',
+  'quiz': 'Quiz',
   'en': 'English',
   'cloud': {
     'fileName': 'file name',

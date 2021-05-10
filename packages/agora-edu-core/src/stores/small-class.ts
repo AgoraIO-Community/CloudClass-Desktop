@@ -353,7 +353,7 @@ export class SmallClassStore {
       micDevice: !!get(user, 'userProperties.microphone', 0),
       cameraDevice: !!get(user, 'userProperties.camera', 0),
       cameraEnabled: stream?.hasVideo ?? false,
-      chatEnabled: !(!!get(user, 'userProperties.muteChat', 0)),
+      chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
       micEnabled: stream?.hasAudio ?? false,
       whiteboardGranted: this.appStore.boardStore.checkUserPermission(user.userUuid),
       // whiteboardGranted: !!get,

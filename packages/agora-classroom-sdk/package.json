@@ -270,7 +270,8 @@
     "webpack-cli": "4.3.1",
     "workbox-webpack-plugin": "6.1.1",
     "worker-loader": "2.0.0",
-    "zlib": "1.0.5"
+    "zlib": "1.0.5",
+    "agora-electron-sdk": "apaas"
   },
   "dependencies": {
     "@netless/fetch-progress": "0.0.1",
@@ -282,7 +283,6 @@
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.0.0",
     "agora-widget-gallery": "1.0.0",
-    "agora-electron-sdk": "apaas",
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
@@ -309,5 +309,8 @@
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1"
+  },
+  "peerDependencies": {
+    "agora-electron-sdk": "apaas"
   }
 }

@@ -1410,10 +1410,14 @@ export class EduClassroomDataController {
 
   setRawUsers(rawUsers: any[]) {
     const localUuid = this.localUserUuid
-    const users = EduUserData
+    const rawEduUserData = EduUserData
       .fromArray(
         rawUsers.map((user: any) => user)
       )
+
+    const localUserSnapShot = rawEduUserData.find((user: EduUserData) => user.user.userUuid === localUuid) ?? {}
+    const users = 
+      rawEduUserData
       .concat(new EduUserData({
         state: 1,
         updateTime: 0,
@@ -1421,7 +1425,7 @@ export class EduClassroomDataController {
         // muteChat: get(this.localUser, 'muteChat'),
         userName: get(this.localUser, 'user.userName'),
         role: get(this.localUser, 'user.role'),
-        userProperties: {},
+        userProperties: get(localUserSnapShot, 'user.userProperties', {}),
         // isChatAllowed: false,
         streamUuid: '0',
       }))

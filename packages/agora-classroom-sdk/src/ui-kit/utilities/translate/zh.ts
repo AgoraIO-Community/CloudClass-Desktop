@@ -281,6 +281,7 @@ export const zh = {
     'start_record': '开启录制'
   },
   'message': '消息',
+  'quiz': '提问',
   'zh': '中文',
   'nav': {
     'delay': '延迟: ',

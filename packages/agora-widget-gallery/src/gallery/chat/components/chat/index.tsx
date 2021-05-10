@@ -12,6 +12,7 @@ import { MessageList } from './message-list';
 import { ChatList } from './chat-list';
 import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg'
 import backBtn from '../icon/assets/svg/conversation-back.svg'
+import { transI18n } from '../i18n';
 
 export interface ChatProps extends AffixProps {
   /**
@@ -270,7 +271,7 @@ export const Chat: FC<ChatProps> = ({
         }}>
           <TabPane tab={
             <span className="message-tab tab-title">
-              消息
+              {transI18n("message")}
               {messageListUnread ? <span className="new-message-notice"></span> : null}
             </span>
           } key="0">
@@ -295,7 +296,7 @@ export const Chat: FC<ChatProps> = ({
           <TabPane 
           tab={
             <span className="question tab-title">
-              提问
+              {transI18n("quiz")}
               {conversationListUnread ? <span className="new-message-notice"></span> : null}
               {/* <span className="question-count">{totalCount}</span> */}
             </span>

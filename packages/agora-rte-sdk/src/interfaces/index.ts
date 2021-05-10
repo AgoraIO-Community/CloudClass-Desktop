@@ -1,7 +1,7 @@
 import { AgoraEduApi } from '../core/services/edu-api';
 import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { EnumOnlineState } from '../core/services/interface';
-import { isEmpty } from 'lodash';
+import { isEmpty, set, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
 
 export enum EduCourseState {
@@ -534,7 +534,7 @@ export class EduUserData {
   }
 
   updateUserChatMute(v: boolean) {
-    this._user!.userProperties.muteChat = !!v
+    setWith(this._user!, 'userProperties.mute.muteChat', !!v)
   }
 
   get rtcToken(): string {

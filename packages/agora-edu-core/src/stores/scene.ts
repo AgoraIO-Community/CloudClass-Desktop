@@ -232,7 +232,7 @@ export class SceneStore extends SimpleInterval {
         const userUuid = this.roomInfo.userUuid
         const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
         if (user) {
-          return !(!!user.userProperties.muteChat)
+          return !(!!get(user, 'userProperties.mute.muteChat', 0))
         }
       }
     }
