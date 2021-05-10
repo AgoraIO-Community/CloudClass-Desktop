@@ -1290,9 +1290,9 @@ export class RoomStore extends SimpleInterval {
             if (evt.hasOwnProperty('muteChat')) {
               const muteChat = evt.muteChat
               if (muteChat) {
-                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {reason: evt.user.userName})
+                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {reason: evt.user.user.userName})
               } else {
-                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {reason: evt.user.userName})
+                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {reason: evt.user.user.userName})
               }
             }
           }
