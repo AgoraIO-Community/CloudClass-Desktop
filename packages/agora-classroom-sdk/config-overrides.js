@@ -141,9 +141,9 @@ const sourceMap = () => config => {
 
 const setElectronDeps = isProd ? {
   ...devDependencies,
-  // "agora-widget-gallery": "commonjs2 agora-widget-gallery"
+  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
 } : {
-  // "agora-widget-gallery": "commonjs2 agora-widget-gallery"
+  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
 }
 
 // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
@@ -241,7 +241,7 @@ const webpackConfig = override(
     test: /\.worker\.js$/,
     use: { loader: 'worker-loader' },
   }),
-  // addWebpackExternals(setElectronDeps),
+  addWebpackExternals(setElectronDeps),
   adjustStyleLoaders((loader) => {
     loader.exclude = [
       /node_modules/,
