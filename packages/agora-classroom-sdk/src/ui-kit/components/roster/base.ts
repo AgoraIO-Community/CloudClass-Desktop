@@ -38,7 +38,14 @@ export const getChatState = (profile: any, canOperate: boolean) => {
   const type = !!profile.chatEnabled === true ? 'message-on' : defaultType
 
   const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
-  const chatStatus = !!profile.chatEnabled === true ? 'can-discussion-svg' : 'no-discussion-svg';
+  let chatStatus = !!profile.chatEnabled === true ? 'can-discussion-svg' : 'no-discussion-svg';
+  if (!canOperate) {
+    const studentIconClass = {
+      'can-discussion-svg': 'stu-can-discussion-svg',
+      'no-discussion-svg': 'stu-no-discussion-svg',
+    }
+    chatStatus = studentIconClass[chatStatus]
+  }
   return {
     type: type as IconTypes,
     operateStatus: operateStatus,

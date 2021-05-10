@@ -159,6 +159,24 @@
   background: url('../icon/assets/svg/icon-nodiscussion-default.svg')
 }
 
+.stu-can-discussion-svg {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: url('../icon/assets/svg/icon-stu-chat-default.svg')  no-repeat center / 24px 24px;
+}
+
+.stu-no-discussion-svg {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: url('../icon/assets/svg/icon-stu-chat-mute.svg')  no-repeat center / 24px 24px;
+}
+
 .full-screen-chat {
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
 }
