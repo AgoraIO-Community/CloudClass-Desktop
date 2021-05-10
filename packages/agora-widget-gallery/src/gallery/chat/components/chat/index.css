@@ -178,7 +178,7 @@
 }
 
 .conversation-header>.avatar {
-  background: url('../../icon/assets/avatar.svg') no-repeat center / 30px 30px;
+  background: url('../icon/assets/avatar.svg') no-repeat center / 30px 30px;
   border-radius: 50%;
   width:30px;
   height:30px;
