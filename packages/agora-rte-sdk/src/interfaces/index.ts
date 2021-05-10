@@ -441,9 +441,9 @@ export interface EduUser {
   userUuid: string
   userName: string
   role: EduRoleType
-  isChatAllowed: boolean
+  // isChatAllowed: boolean
   userProperties: Record<any, any>
-  muteChat: boolean
+  // muteChat: boolean
 }
 
 export interface EduUserAttrs extends EduUser {
@@ -534,7 +534,7 @@ export class EduUserData {
   }
 
   updateUserChatMute(v: boolean) {
-    this._user!.muteChat = !!v
+    this._user!.userProperties.muteChat = !!v
   }
 
   get rtcToken(): string {
@@ -579,9 +579,9 @@ export class EduUserData {
         userUuid: item.userUuid,
         userName: item.userName,
         role: item.role,
-        muteChat: item.muteChat,
+        // muteChat: item.muteChat,
         userProperties: item.userProperties,
-        isChatAllowed: item.isChatAllowed,
+        // isChatAllowed: item.isChatAllowed,
         streamUuid: item.streamUuid,
         type: item.type,
       }))

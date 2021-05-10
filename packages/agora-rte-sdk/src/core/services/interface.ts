@@ -56,7 +56,7 @@ export interface AgoraEduUser {
   userName: string
   userUuid: string
   role: string
-  muteChat: number
+  // muteChat: number
   state: EnumOnlineState
   updateTime?: number
 }
@@ -133,7 +133,7 @@ export interface JoinRoomResponseData {
     userToken: string
     rtmToken: string
     rtcToken: string
-    muteChat: EnumChatState
+    // muteChat: EnumChatState
     streams: any[]
     properties: any
   }

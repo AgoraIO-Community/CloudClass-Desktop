@@ -1358,8 +1358,8 @@ export class EduClassroomDataController {
       userUuid: roomData.user.uuid,
       userName: roomData.user.name,
       role: roomData.user.role as any,
-      isChatAllowed: !!roomData.user.muteChat,
-      muteChat: !!roomData.user.muteChat,
+      // isChatAllowed: !!roomData.user.muteChat,
+      // muteChat: !!roomData.user.muteChat,
       userProperties: roomData.user.properties,
       rtmToken: roomData.user.rtmToken,
     }, rtcStreamInfo)
@@ -1418,11 +1418,11 @@ export class EduClassroomDataController {
         state: 1,
         updateTime: 0,
         userUuid: localUuid,
-        muteChat: get(this.localUser, 'muteChat'),
+        // muteChat: get(this.localUser, 'muteChat'),
         userName: get(this.localUser, 'user.userName'),
         role: get(this.localUser, 'user.role'),
         userProperties: {},
-        isChatAllowed: false,
+        // isChatAllowed: false,
         streamUuid: '0',
       }))
     const streams = EduStreamData.fromArray(rawUsers
@@ -1448,8 +1448,8 @@ export class EduClassroomDataController {
           userUuid: localUser.user.userUuid,
           userName: localUser.user.userName,
           role: localUser.user.role as any,
-          muteChat: localUser.user.muteChat,
-          isChatAllowed: !!localUser.user.isChatAllowed,
+          // muteChat: localUser.user.muteChat,
+          // isChatAllowed: !!localUser.user.isChatAllowed,
           userProperties: localUser.user.userProperties,
         })
       }
