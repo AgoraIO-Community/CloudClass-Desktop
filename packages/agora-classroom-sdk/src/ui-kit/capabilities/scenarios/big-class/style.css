@@ -42,7 +42,7 @@
 }
 
 .big-class-aside .chat-panel {
-  margin-left: 2px;
+  transform: translateX(2px);
 }
 
 .bg-white {

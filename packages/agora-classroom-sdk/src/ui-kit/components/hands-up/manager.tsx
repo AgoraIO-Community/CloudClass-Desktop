@@ -38,7 +38,8 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
 }) => {
   const cls = classnames({
     [`hands-up hands-up-manager`]: 1,
-    [`${className}`]: !!className,
+    ['can-not-hover']: processUserCount === 0,
+    [`${className}`]: !!className
   });
 
   const handleClick = () => {
@@ -91,7 +92,12 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           >
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon size={28} onClick={handleClick} type={popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')} color={popoverVisible ? '#639AFA' : (stateColorDict[state])} />
+              <Icon 
+                size={28} 
+                onClick={handleClick} 
+                type={processUserCount ?(popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'} 
+                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']} 
+              />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
           </Card>
@@ -168,14 +174,13 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
           students.map((item, index) => (
             <div className="student-item" key={index}>
               <span className="student-name">{item?.userName}</span>
-              <span>
-                <Icon type="checked"
-                  color="#0073FF"
-                  hover={true}
+              <span className="operation-icon-wrap">
+                <Icon 
+                  type="checked"
                   onClick={() => onClick("confirm", item)}
                 />
-                <Icon type="close" style={{ marginLeft: 6 }}
-                  hover={true}
+                <Icon 
+                  type="close" 
                   onClick={() => onClick("cancel", item)}
                 />
               </span>

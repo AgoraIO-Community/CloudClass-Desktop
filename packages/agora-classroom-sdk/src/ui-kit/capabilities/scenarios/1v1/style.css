@@ -26,11 +26,12 @@
   border-bottom: 2px solid white;
 }
 
-.teacher-1v1 {
+.edu-room .video-player.teacher-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: .5s;
   border-bottom: 2px solid white;
+  margin-top: 0px !important
 }
 
 .full-student-1v1 {
@@ -39,10 +40,11 @@
   transition: .5s;
 }
 
-.student-1v1 {
+.edu-room .video-player.student-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: .5s;
+  margin-top: -2px !important;
 }
 
 .bg-white {
