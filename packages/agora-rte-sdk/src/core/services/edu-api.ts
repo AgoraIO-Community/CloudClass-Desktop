@@ -624,7 +624,7 @@ export class AgoraEduApi extends ApiBase {
         userToken: get(entryRoomData, 'user.userToken'),
         rtmToken: get(entryRoomData, 'user.rtmToken'),
         rtcToken: get(entryRoomData, 'user.rtcToken'),
-        muteChat: get(entryRoomData, 'user.muteChat'),
+        // muteChat: get(entryRoomData, 'user.muteChat'),
         streams,
         properties: get(entryRoomData, 'user.userProperties', {}),
       }

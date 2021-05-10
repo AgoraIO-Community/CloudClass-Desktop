@@ -231,7 +231,7 @@ export class SceneStore extends SimpleInterval {
         const userUuid = this.roomInfo.userUuid
         const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
         if (user) {
-          return !(!!user.muteChat)
+          return !(!!user.userProperties.muteChat)
         }
       }
     }
