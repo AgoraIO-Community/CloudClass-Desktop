@@ -28,7 +28,7 @@ export const Docs = ({handsUpState}: any) => {
         setCurrent(current + 1)
     }, [handsUpState])
 
-    const [list, updateList] = useState<StudentInfo[]>([...'.'.repeat(5)].map((_, idx: number) => ({
+    const [list, updateList] = useState<StudentInfo[]>([...'.'.repeat(10)].map((_, idx: number) => ({
         userName: `${idx}_name`,
         userUuid: `${idx}`,
         coVideo: false,
@@ -49,7 +49,7 @@ export const Docs = ({handsUpState}: any) => {
     }, [list, updateList])
 
     return (
-        <div className="flex justify-center items-center m-screen h-screen">
+        <div className="flex justify-center m-screen h-screen items-end" style={{position: 'relative', top: -20}}>
             <HandsUpManager
                 processUserCount={current}
                 onlineUserCount={10}

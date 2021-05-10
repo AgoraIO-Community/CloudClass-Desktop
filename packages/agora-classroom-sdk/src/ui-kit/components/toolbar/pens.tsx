@@ -42,7 +42,7 @@ export const Pens: FC<PensProps> = ({
                     onClick={() => handleClick(pen)}
                     className="expand-tool pen"
                 >
-                    <Icon type={pen as any} className={activePen === pen ? 'active': ''} />
+                    <Icon type={pen as any} className={activePen === pen ? 'active': ''} iconhover={true}/>
                     <div className={activePen === pen ? "current-pen" : ""} style={{ width: 3, height: 3 }}></div>
                 </div>
             ))}

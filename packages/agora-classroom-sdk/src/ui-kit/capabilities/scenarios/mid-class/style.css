@@ -41,7 +41,7 @@
   height: 514px;
 }
 .mid-class-aside .chat-panel {
-  margin-left: 2px;
+  transform: translateX(2px);
 }
 
 .bg-white {

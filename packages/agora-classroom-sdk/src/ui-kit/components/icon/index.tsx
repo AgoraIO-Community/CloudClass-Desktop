@@ -10,10 +10,14 @@ export type { IconTypes } from './icon-types';
 
 import recordingSvg from './assets/svg/recording.svg'
 import shareScreenSvg from './assets/svg/share-screen.svg'
+import checkedSvg from './assets/svg/icon-accept.svg'
+import closeSvg from './assets/svg/icon-refuse.svg'
 
 const svgDict: Record<string, any> = {
   'recording': recordingSvg,
-  'share-screen': shareScreenSvg
+  'share-screen': shareScreenSvg,
+  'checked': checkedSvg,
+  'close': closeSvg
 }
 export interface IconProps extends BaseProps {
   type: IconTypes;
@@ -41,7 +45,7 @@ export const Icon: FC<IconProps> = ({
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
-  const iconAssets = ['recording', 'share-screen'].includes(type) ? (
+  const iconAssets = Object.keys(svgDict).includes(type) ? (
     <img className={cls} src={svgDict[type]} {...restProps}/>
   ) : (
     <i  
