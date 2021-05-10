@@ -77,6 +77,7 @@ export const en = {
     'CPU': 'CPU',
   },
   'placeholder': {
+    'muted_chat': 'Muted Chat',
     'empty_chat': 'Empty Message',
     'enable_chat_muted': 'Student Chat Muted',
     'input_message': 'Please Input Message',

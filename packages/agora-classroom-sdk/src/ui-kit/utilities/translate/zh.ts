@@ -71,6 +71,7 @@ export const zh = {
     'chat_ended': '私密聊天结束'
   },
   'placeholder': {
+    'muted_chat': '禁言中',
     'empty_chat': '还没有消息',
     'enable_chat_muted': '已开启学生禁言',
     'input_message': '请输入消息',

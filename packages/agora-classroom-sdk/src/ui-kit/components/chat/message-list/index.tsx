@@ -120,9 +120,9 @@ export const MessageList: FC<MessageListProps> = ({
             </div>
             <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
                 <textarea
-                    value={chatText}
+                    value={disableChat ? '' : chatText}
                     className="chat-texting-message"
-                    placeholder={t('placeholder.input_message')}
+                    placeholder={disableChat ? t('placeholder.muted_chat') : t('placeholder.input_message')}
                     disabled={disableChat}
                     onChange={(e) => onText(e.currentTarget.value)}
                     onFocus={handleFocus}
