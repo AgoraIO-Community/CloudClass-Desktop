@@ -953,6 +953,10 @@ export class EduClassroomDataController {
   updateUserChatMute(data: any, operator: any, cause: any) {
     if (this.isLocalUser(data.userUuid)) {
       this.localUser.updateUserChatMute(data.muteChat)
+      const findUser = this._userList.find((it: any) => it.user.userUuid === data.userUuid)
+      if (findUser) {
+        findUser.updateUserChatMute(data.muteChat)
+      }
       this.fire('local-user-updated', {
         user: this.localUserData,
         //@ts-ignore

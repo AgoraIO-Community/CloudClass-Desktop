@@ -227,10 +227,12 @@ export class SceneStore extends SimpleInterval {
   get canChatting() {
     // TODO: global muted
     if (this._canChatting) {
-      const userUuid = this.roomInfo.userUuid
-      const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
-      if (user) {
-        return !!user.muteChat
+      if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+        const userUuid = this.roomInfo.userUuid
+        const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
+        if (user) {
+          return !(!!user.muteChat)
+        }
       }
     }
 
