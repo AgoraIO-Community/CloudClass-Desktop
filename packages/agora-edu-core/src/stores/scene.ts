@@ -221,7 +221,21 @@ export class SceneStore extends SimpleInterval {
   recording: boolean = false
 
   @observable
-  canChatting: boolean = true
+  _canChatting: boolean = true
+
+  @computed
+  get canChatting() {
+    // TODO: global muted
+    if (this._canChatting) {
+      const userUuid = this.roomInfo.userUuid
+      const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
+      if (user) {
+        return !!user.muteChat
+      }
+    }
+
+    return this._canChatting
+  }
 
   _roomManager?: EduClassroomManager = undefined;
 
@@ -269,7 +283,7 @@ export class SceneStore extends SimpleInterval {
     this.joiningRTC = false
     this.recordId = ''
     this.recording = false  
-    this.canChatting = true
+    this._canChatting = true
     this._roomManager = undefined
   }
 
@@ -1541,7 +1555,7 @@ export class SceneStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       muteChat: 1
     })
-    this.canChatting = true
+    this._canChatting = true
   }
 
   @action.bound
@@ -1550,7 +1564,7 @@ export class SceneStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       muteChat: 0
     })
-    this.canChatting = false
+    this._canChatting = false
   }
 
   /**

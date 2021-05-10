@@ -1034,7 +1034,7 @@ export class RoomStore extends SimpleInterval {
       }
       this.tickClassroom()
 
-      this.sceneStore.canChatting = checkInResult.muteChat ? false : true
+      this.sceneStore._canChatting = checkInResult.muteChat ? false : true
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
       this.appStore.boardStore.init({
@@ -1427,7 +1427,7 @@ export class RoomStore extends SimpleInterval {
           }
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
           console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom)
-          this.sceneStore.canChatting = isStudentChatAllowed
+          this.sceneStore._canChatting = isStudentChatAllowed
           this.chatIsBanned(isStudentChatAllowed)
         })
       })
