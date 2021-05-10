@@ -66,6 +66,8 @@ export const ToastContainer = observer(() => {
     'toast.remove_screen_share': (props: any) => toast('toast.remove_screen_share', props),
     'toast.mute_chat': (props: any) => toast('toast.mute_chat', props),
     'toast.unmute_chat': (props: any) => toast('toast.unmute_chat', props),
+    'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
+    'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
   }
   
 

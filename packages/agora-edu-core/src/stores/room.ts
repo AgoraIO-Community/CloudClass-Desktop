@@ -1283,9 +1283,23 @@ export class RoomStore extends SimpleInterval {
       })
       // 远端人更新
       roomManager.on('remote-user-updated', (evt: any) => {
-        runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList()
-        })
+        this.sceneStore.userList = roomManager.getFullUserList()
+        const cause = evt.cause
+        if (cause) {
+          if (cause.cmd === 6) {
+            if (evt.hasOwnProperty('muteChat')) {
+              const muteChat = evt.muteChat
+              if (muteChat) {
+                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {reason: evt.user.userName})
+              } else {
+                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {reason: evt.user.userName})
+              }
+            }
+          }
+        }
+        // runInAction(() => {
+        //   this.sceneStore.userList = roomManager.getFullUserList()
+        // })
         BizLogger.info("remote-user-updated", evt)
       })
       // 远端人移除
