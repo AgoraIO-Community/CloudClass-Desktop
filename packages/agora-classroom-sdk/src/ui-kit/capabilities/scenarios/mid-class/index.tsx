@@ -48,7 +48,13 @@ export const MidClassScenario = observer(() => {
             <ScreenSharePlayerContainer />
             <WhiteboardContainer />
           </div>
-          <div className={["pin-right", (isFullScreen && !chatCollapse) ? 'pin-right-special' : ''].join(' ')}>
+          <div
+            className={classnames({
+              ['pin-right']: 1,
+              ['pin-right-full-not-collapse']: (isFullScreen && !chatCollapse),
+              ['pin-right-full-collapse']: (isFullScreen && chatCollapse)
+            })}
+          >
             <HandsUpContainer />
           </div>
         </Content>
