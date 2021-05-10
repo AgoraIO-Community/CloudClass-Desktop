@@ -1,6 +1,6 @@
 import { Chat, SimpleChat } from './components/chat'
 import * as React from 'react';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { get } from 'lodash';
 import type {IAgoraWidget} from 'agora-edu-core'
 import { PluginStore } from './store'
@@ -8,24 +8,19 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import {AgoraWidgetHandle, AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
-import { ChatEvent, Conversation } from './components/chat/interface';
+import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
 
   const {events, actions} = pluginStore.context
 
-  const [chatContext, setChatContext] = useState<any>({
-    conversationList: []
-  })
-  const [globalContext, setGlobalContext] = useState<any>({})
-
   useEffect(() => {
     events.chat.subscribe((state:any) => {
-      setChatContext(state)
+      pluginStore.chatContext = state
     })
     events.global.subscribe((state:any) => {
-      setGlobalContext(state)
+      pluginStore.globalContext = state
     })
     return () => {
       events.chat.unsubscribe()
@@ -40,11 +35,11 @@ const App = observer(() => {
     canChatting,
     isHost,
     conversationList
-  } = chatContext
+  } = pluginStore.chatContext
 
   const {
     isFullScreen
-  } = globalContext
+  } = pluginStore.globalContext
 
   const {
     getHistoryChatMessage,
@@ -171,8 +166,8 @@ const App = observer(() => {
           canChatting={canChatting}
           isHost={isHost}
           uid={pluginStore.context.localUserInfo.userUuid}
-          messages={messageList}
-          conversations={conversationList}
+          messages={pluginStore.convertedMessageList}
+          conversations={pluginStore.convertedConversationList}
           chatText={text}
           onText={(evt:ChatEvent ,textValue: string) => {
             setText(textValue)
@@ -185,9 +180,14 @@ const App = observer(() => {
           onPullRefresh={(evt:ChatEvent) => {
             if(evt.type === 'conversation' && evt.conversation) {
               refreshConversationMessageList(evt.conversation)
+            } else if(evt.type === 'conversation-list') {
+              refreshConversationList()
             } else {
               refreshMessageList()
             }
+          }}
+          onChangeActiveTab={(activeTab: ChatListType, conversation?: Conversation) => {
+            pluginStore.updateActiveTab(activeTab, conversation)
           }}
           unreadCount={unreadMessageCount}
           singleConversation={pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined}

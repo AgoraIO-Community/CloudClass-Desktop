@@ -598,19 +598,20 @@ export class RoomStore extends SimpleInterval {
     sort: number
   }) {
     try {
-      const conversalistList = await eduSDKApi.getConversationList({
+      const conversationList = await eduSDKApi.getConversationList({
         roomUuid: this.roomInfo.roomUuid,
         data
       })
-      conversalistList.list.map((item: any) => {
+      conversationList.list.map((item: any) => {
         this.roomChatConversations.push({
           userName: item.userName,
           userUuid: item.userUuid,
           unreadMessageCount: 0,
-          messages: []
+          messages: [],
+          timestamp: item.lastMessageTs
         } as ChatConversation)
       })
-      return conversalistList
+      return conversationList
     } catch (err) {
       const error = GenericErrorWrapper(err)
       this.appStore.uiStore.fireToast('toast.failed_to_get_conversations', { reason: error })
@@ -690,7 +691,6 @@ export class RoomStore extends SimpleInterval {
             account: item.fromUser.userName
           } as ChatMessage)
         }
-
       })
       return historyMessage
     } catch (err) {
@@ -724,24 +724,30 @@ export class RoomStore extends SimpleInterval {
             isOwn: item.sender,
             content: item.text,
             role: item.role
-          }))
+          })),
+          timestamp: ((conversation.messages || []).length > 0) ? conversation.messages[conversation.messages.length - 1].timestamp : 0
         }]
     } else {
       // otherwise return the whole list
-      return this.roomChatConversations.map(c => ({
-        userName: c.userName,
-        userUuid: c.userUuid,
-        unreadMessageCount: c.unreadMessageCount,
-        messages: c.messages.map((item, key:number) => ({
-          id: `${item.id}${item.ts}${key}`,
-          uid: item.id,
-          username: `${item.account}`,
-          timestamp: item.ts,
-          isOwn: item.sender,
-          content: item.text,
-          role: item.role
-        }))
-      }))
+      return this.roomChatConversations.map(c => {
+        let messageTs = (((c.messages || []).length > 0) ? c.messages[c.messages.length - 1].timestamp : 0) || 0
+        let convTs = c.timestamp || 0
+        return {
+          userName: c.userName,
+          userUuid: c.userUuid,
+          unreadMessageCount: c.unreadMessageCount,
+          messages: c.messages.map((item, key:number) => ({
+            id: `${item.id}${item.ts}${key}`,
+            uid: item.id,
+            username: `${item.account}`,
+            timestamp: item.ts,
+            isOwn: item.sender,
+            content: item.text,
+            role: item.role
+          })),
+          timestamp: Math.max(messageTs, convTs)
+        }
+      })
     }
   }
 

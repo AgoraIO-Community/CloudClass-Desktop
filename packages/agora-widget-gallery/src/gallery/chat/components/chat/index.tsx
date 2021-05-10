@@ -4,7 +4,7 @@ import { Affix, AffixProps } from '../affix';
 import { Icon } from '../icon';
 import { ChatMin } from './chat-min';
 import './index.css';
-import { ChatEvent, Conversation, Message } from './interface';
+import { ChatEvent, ChatListType, Conversation, Message } from './interface';
 import classnames from 'classnames';
 //@ts-ignore
 import { TabPane, Tabs } from '../tabs';
@@ -67,6 +67,10 @@ export interface ChatProps extends AffixProps {
    * 点击最小化的聊天图标
    */
   onClickMiniChat?: () => void | Promise<void>;
+  /**
+   * 切换tab
+   */
+  onChangeActiveTab?: (activeTab: ChatListType, activeConversation?: Conversation) => void | Promise<void>;
 }
 
 export const SimpleChat: FC<ChatProps> = ({
@@ -161,6 +165,7 @@ export const Chat: FC<ChatProps> = ({
   onSend,
   onCollapse,
   onPullRefresh,
+  onChangeActiveTab,
   className,
   ...resetProps
 }) => {
@@ -182,6 +187,25 @@ export const Chat: FC<ChatProps> = ({
   //   }
   //   return `${num}`
   // }, [JSON.stringify(conversations)])
+
+  const messageListUnread = useMemo(() => {
+    for(let i = 0; i < messages.length; i++) {
+      if(messages[i].unread) {
+        return true
+      }
+    }
+    return false
+  }, [JSON.stringify(messages)])
+
+  const conversationListUnread = useMemo(() => {
+    for(let i = 0; i < conversations.length; i++) {
+      if(conversations[i].unread) {
+        return true
+      }
+    }
+    return false
+  }, [JSON.stringify(conversations)])
+
   const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined)
 
   const getActiveConversationMessages = () => {
@@ -231,11 +255,23 @@ export const Chat: FC<ChatProps> = ({
 
           </span>
         </div>
-        <Tabs>
+        <Tabs onChange={(activeKey: string) => {
+          if(activeKey === '0') {
+            onChangeActiveTab && onChangeActiveTab('room')
+          } else if(singleConversation) {
+            // no list
+            onChangeActiveTab && onChangeActiveTab('conversation', singleConversation)
+          } else if(activeConversation) {
+            // already in list
+            onChangeActiveTab && onChangeActiveTab('conversation', activeConversation)
+          } else {
+            onChangeActiveTab && onChangeActiveTab('conversation-list')
+          }
+        }}>
           <TabPane tab={
-            <span className="message-tab">
+            <span className="message-tab tab-title">
               消息
-              <span className="new-message-notice"></span>
+              {messageListUnread ? <span className="new-message-notice"></span> : null}
             </span>
           } key="0">
             {!canChatting ? (
@@ -258,8 +294,9 @@ export const Chat: FC<ChatProps> = ({
           </TabPane>
           <TabPane 
           tab={
-            <span className="question">
+            <span className="question tab-title">
               提问
+              {conversationListUnread ? <span className="new-message-notice"></span> : null}
               {/* <span className="question-count">{totalCount}</span> */}
             </span>
           } 
@@ -280,7 +317,10 @@ export const Chat: FC<ChatProps> = ({
               activeConversation ?
                 <>
                   <div className="conversation-header">
-                    <div className="back-btn" onClick={() => setActiveConversation(undefined)}><img src={backBtn} /></div>
+                    <div className="back-btn" onClick={() => {
+                      setActiveConversation(undefined)
+                      onChangeActiveTab && onChangeActiveTab('conversation-list', undefined)
+                    }}><img src={backBtn} /></div>
                     <div className="avatar">
                     </div>
                     <div className="name">{activeConversation.userName}</div>
@@ -301,6 +341,7 @@ export const Chat: FC<ChatProps> = ({
                   onPullRefresh={onPullRefresh}
                   onClickConversation={(conversation) => {
                     setActiveConversation(conversation)
+                    onChangeActiveTab && onChangeActiveTab('conversation', conversation)
                   }}>
                 </ChatList>
               }

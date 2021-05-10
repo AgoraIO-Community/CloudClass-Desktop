@@ -18,6 +18,7 @@ export interface TabsProps extends Omit<RcTabsProps, 'editable'> {
     e: React.MouseEvent | React.KeyboardEvent | string,
     action: 'add' | 'remove',
   ) => void;
+  onChange?: (activeKey: string) => void;
 }
 
 export const Tabs: FC<TabsProps> = ({
@@ -25,6 +26,7 @@ export const Tabs: FC<TabsProps> = ({
   className,
   onEdit,
   centered,
+  onChange,
   ...props
 }) => {
   const {
@@ -62,6 +64,7 @@ export const Tabs: FC<TabsProps> = ({
       moreIcon={moreIcon}
       editable={editable}
       prefixCls={prefixCls}
+      onChange={onChange}
     />
   );
 };

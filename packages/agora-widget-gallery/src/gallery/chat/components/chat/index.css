@@ -203,3 +203,19 @@
   width: 100%;
   position: absolute;
 }
+
+.chat-panel .tab-title {
+  position: relative;
+}
+
+.chat-panel .tab-title .new-message-notice {
+  display: inline-block;
+  border: 1px solid #F04C36;
+  width: 8px;
+  height: 8px;
+  background: #F04C36;
+  border-radius: 50%;
+  position: absolute;
+  right: -4px;
+  top: -5px;
+}

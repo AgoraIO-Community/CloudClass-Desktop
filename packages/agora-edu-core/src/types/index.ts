@@ -129,5 +129,6 @@ export interface ChatConversation {
   userUuid: string,
   userName: string,
   unreadMessageCount: number,
-  messages: any[]
+  messages: any[],
+  timestamp?: number
 }
