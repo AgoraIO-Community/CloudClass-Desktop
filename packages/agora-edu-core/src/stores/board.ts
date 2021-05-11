@@ -573,7 +573,7 @@ export class BoardStore extends ZoomController {
   @computed
   get canSharingScreen() {
     if (this.userRole === EduRoleTypeEnum.teacher) {
-      if (!this.appStore.sceneStore.screenEduStream) {
+      if (!this.appStore.sceneStore.screenShareStream || this.appStore.sceneStore.screenShareStream && !this.appStore.sceneStore.screenShareStream.renderer) {
         return true
       }
       return false

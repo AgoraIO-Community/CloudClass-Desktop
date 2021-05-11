@@ -73,6 +73,7 @@ export const ToolCabinetContainer = observer(() => {
 
     return (
         <ToolCabinet
+            key={`${canSharingScreen}`}
             value='tools'
             label={t('scaffold.tools')}
             icon='tools'
