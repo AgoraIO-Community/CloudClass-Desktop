@@ -33,7 +33,7 @@ export const mapFileType = (type: string): any => {
   return 'excel'
 }
 
-type MaterialDataResource = {
+export type MaterialDataResource = {
   id: string,
   name: string,
   ext: string,

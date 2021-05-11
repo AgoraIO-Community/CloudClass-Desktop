@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { useCoreContext, usePretestStore, useUIStore } from './core';
+import { MediaContext } from './type';
 
-export const useMediaContext = ()=> {
+export const useMediaContext = (): MediaContext => {
     const {
         mediaStore,
         isElectron

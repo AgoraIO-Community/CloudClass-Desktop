@@ -24,6 +24,7 @@ import { BizLogger,
 import { ZoomController } from './zoom';
 import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
+import { Resource } from 'src/context/type';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -57,19 +58,7 @@ export type GlobalRoomScene = {
   }
 }
 
-export type Resource = {
-  file: {
-    name: string,
-    type: string,
-  },
-  resourceName: string,
-  resourceUuid: string,
-  taskUuid: string,
-  currentPage: number,
-  totalPage: number,
-  scenePath: string,
-  show: boolean,
-}
+export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {

@@ -12,6 +12,7 @@ import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
+import { EduMediaStream } from "../context/type"
 
 const delay = 2000
 
@@ -54,22 +55,7 @@ export const networkQualities: {[key: string]: string} = {
   'unknown': 'network-normal',
 }
 
-export type EduMediaStream = {
-  streamUuid: string,
-  userUuid: string,
-  renderer?: UserRenderer,
-  account: string,
-  local: boolean,
-  audio: boolean,
-  video: boolean,
-  hideControl: boolean,
-  whiteboardGranted: boolean,
-  micVolume: number,
-  placement: string,
-  stars: number,
-  holderState: 'loading' | 'muted' | 'broken'
-}
-
+export type { EduMediaStream }
 export class SimpleInterval {
   _intervalMap: Record<string, any> = {}
 
@@ -179,7 +165,7 @@ export class SceneStore extends SimpleInterval {
   }
   
   @computed
-  get streamList() {
+  get streamList(): EduStream[] {
     return this._streamList.filter((it: EduStream) => it.videoSourceType !== EduVideoSourceType.screen)
   }
 
@@ -1282,7 +1268,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @computed
-  get teacherStream(): EduMediaStream {
+  get teacherStream() {
 
     // 当本地是老师时
     const localUser = this.localUser
@@ -1358,7 +1344,7 @@ export class SceneStore extends SimpleInterval {
 
 
   @computed
-  get sceneType() {
+  get sceneType():number {
     const roomType = get(this.roomInfo, 'roomType', 1)
     return roomType
   }

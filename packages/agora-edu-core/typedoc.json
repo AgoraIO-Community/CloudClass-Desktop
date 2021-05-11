@@ -1,0 +1,12 @@
+{
+    "entryPoints": [
+      "./src/context",
+      "./src/stores"
+    ],
+    "out": "./docs",
+    "exclude": [
+      "**/node_modules/**"
+    ],
+    "excludeExternals": true,
+    "hideGenerator": true
+}
