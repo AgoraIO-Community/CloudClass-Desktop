@@ -67,9 +67,6 @@ export class EduManager extends EventEmitter {
       rtcArea: this.config.rtcArea ?? "GLOBAL",
       rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
-    const domain = getSDKDomain(this.config.sdkDomain!, this.config.region)
-    this.config.sdkDomain = domain
-    // if ()
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
         logPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/agorasdk.log` : (window.logPath || ""),

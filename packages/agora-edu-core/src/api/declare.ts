@@ -107,6 +107,8 @@ export type AppStoreConfigParams = {
   rtmToken: string,
   courseWareList: CourseWareList,
   region?: AgoraRegion,
+  rtcArea?: string,
+  rtmArea?: string,
   personalCourseWareList?: CourseWareList,
   oss?: {
     region: string,

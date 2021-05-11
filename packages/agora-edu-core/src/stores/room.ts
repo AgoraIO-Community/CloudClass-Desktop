@@ -745,7 +745,7 @@ export class RoomStore extends SimpleInterval {
     const roomType = +this.roomInfo.roomType
 
     if (userRole === EduRoleTypeEnum.student) {
-      const studentRoleConfig = {
+      const studentRoleConfig: Record<any, any> = {
         [EduSceneType.Scene1v1]: 'broadcaster',
         [EduSceneType.SceneLarge]: 'audience',
         [EduSceneType.SceneMedium]: 'audience'
@@ -912,7 +912,7 @@ export class RoomStore extends SimpleInterval {
               await this.sceneStore.closeCamera()
               await this.sceneStore.closeMicrophone()
               if (cause && cause.cmd === 501) {
-                const roleMap = {
+                const roleMap: Record<string, string> = {
                   'host': 'role.teacher',
                   'assistant': 'role.assistant'
                 }
@@ -949,7 +949,7 @@ export class RoomStore extends SimpleInterval {
             const causeCmd = cause?.cmd ?? 0
             if (localStream && localStream.state !== 0) {
               if (causeCmd === 501) {
-                const roleMap = {
+                const roleMap: Record<string, string> = {
                   'host': 'role.teacher',
                   'assistant': 'role.assistant'
                 }

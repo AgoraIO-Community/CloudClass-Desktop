@@ -37,7 +37,7 @@ export interface ToolItem {
 export type CustomizeGlobalState = {
   materialList: CourseWareItem[];
   dynamicTaskUuidList: any[];
-  roomScenes: GlobalRoomScene[];
+  roomScenes: GlobalRoomScene;
   grantUsers: string[];
   follow: boolean;
   isFullScreen: boolean;
@@ -615,7 +615,7 @@ export class BoardStore extends ZoomController {
             type: 'board',
           },
           currentPage: resource.index,
-          totalPage: resource.totalPage,
+          totalPage: +resource.totalPage,
           scenePath: resource.scenePath,
           resourceUuid: 'init',
           taskUuid: '',
@@ -1059,7 +1059,7 @@ export class BoardStore extends ZoomController {
             })
           }
 
-          const selector = {
+          const selector: Record<any, string> = {
             [ApplianceNames.pencil]: 'pen',
             [ApplianceNames.rectangle]: 'square',
             [ApplianceNames.ellipse]: 'circle',

@@ -167,9 +167,9 @@ export enum LogLevel {
 export interface EduConfiguration {
   appId: string;
   cefClient?: any;
-  region: AREA_CODE;
-  rtcArea: AREA_CODE;
-  rtmArea: AREA_CODE;
+  // region: AREA_CODE;
+  rtcArea?: string;
+  rtmArea?: string;
   // agoraRestToken: string
   platform: 'web' | 'electron';
   agoraRtc?: any;

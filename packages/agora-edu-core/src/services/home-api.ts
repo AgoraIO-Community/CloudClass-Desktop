@@ -19,7 +19,10 @@ export class HomeApi extends ApiBase {
     this.prefix = `${this.sdkDomain}/edu`.replace('%app_id%', this.appId)
   }
 
-  async login(userUuid: string): LoginResult {
+  async login(userUuid: string): Promise<{
+    rtmToken: string,
+    userUuid: string
+  }> {
     const res = await this.fetch({
       url: `/v2/users/${userUuid}/token`,
       method: 'GET',

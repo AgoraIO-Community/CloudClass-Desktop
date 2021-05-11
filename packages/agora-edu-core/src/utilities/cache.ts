@@ -7,7 +7,7 @@ configure({
 
 export type CacheResourceType = 'dynamicConvert' | 'staticConvert'
 
-const contentTypesByExtension = {
+const contentTypesByExtension: Record<string, string> = {
     "css": "text/css",
     "js": "application/javascript",
     "png": "image/png",
