@@ -23998,10 +23998,10 @@ typedoc@0.19.2:
     shelljs "^0.8.4"
     typedoc-default-themes "^0.11.4"
 
-typedoc@^0.20.36:
+typedoc@0.20.36:
   version "0.20.36"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.36.tgz#ee5523c32f566ad8283fc732aa8ea322d1a45f6a"
-  integrity sha512-qFU+DWMV/hifQ9ZAlTjdFO9wbUIHuUBpNXzv68ZyURAP9pInjZiO4+jCPeAzHVcaBCHER9WL/+YzzTt6ZlN/Nw==
+  resolved "https://registry.nlark.com/typedoc/download/typedoc-0.20.36.tgz?cache=0&sync_timestamp=1619146320208&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypedoc%2Fdownload%2Ftypedoc-0.20.36.tgz#ee5523c32f566ad8283fc732aa8ea322d1a45f6a"
+  integrity sha1-7lUjwy9WatgoP8cyqo6jItGkX2o=
   dependencies:
     colors "^1.4.0"
     fs-extra "^9.1.0"

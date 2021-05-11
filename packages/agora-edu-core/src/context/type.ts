@@ -44,6 +44,26 @@ export type DialogType = {
 }
 export type ChatContext = {
     /**
+     * 发送私聊聊天消息
+     */
+    sendMessageToConversation: (message: any, userUuid: string) => void;
+    /**
+     * 会话列表
+     */
+    conversationList: any[];
+    /**
+     * 拉取会话列表
+     */
+    getConversationList: (data: any) => Promise<any>;
+    /**
+     * 拉取会话历史列表
+     */
+    getConversationHistoryChatMessage: (data: any) => Promise<any>;
+    /**
+     * 添加私聊聊天消息
+     */
+    addConversationChatMessage: (args: any, conversation: any) => void;
+    /**
      * 是否为主持人
      */
     isHost: boolean,
@@ -287,6 +307,10 @@ export type ScreenShareContext = {
      * 开始或者暂停共享屏幕
      */
     startOrStopSharing: () => Promise<void>
+    /**
+     * 正在屏幕共享
+     */
+     isShareScreen: boolean;
 }
 export type RoomContext = {
     /**
@@ -380,6 +404,14 @@ export type RoomContext = {
      * @param isLocal 是否为本地用户
      */
     unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 单个用户禁言
+     */
+    muteUserChat: (userUuid: string) => Promise<any>;
+    /**
+     * 取消单个用户禁言
+     */
+    unmuteUserChat: (userUuid: string) => Promise<any>;
 }
 export type RoomDiagnosisContext = {
     navigationState: {
@@ -488,8 +520,18 @@ export type GlobalContext = {
      * @param props 事件的参数
      */
     fireDialog: (eventName: string, props?: any) => void,
+    /**
+     * 已经加入房间
+     */
+    joined: boolean;
 }
 export type BoardContext = {
+    //@internal
+    canSharingScreen: boolean;
+    //@internal
+    showBoardTool: [boolean, boolean];
+    //@internal
+    isShareScreen: boolean;
     /**
      * 白板所在的房间
      */

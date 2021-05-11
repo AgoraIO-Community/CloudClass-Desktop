@@ -36,7 +36,7 @@
 
 .mic-state {
   color: #0073ff;
-  font-size: 18px;
+  font-size: 18px !important;
   margin-right: 6px;
 }
 
@@ -58,7 +58,7 @@
 
 .whiteboard-state {
   color: #ffe72e;
-  font-size: 18px;
+  font-size: 18px !important;
 }
 
 .video-player-tools {
