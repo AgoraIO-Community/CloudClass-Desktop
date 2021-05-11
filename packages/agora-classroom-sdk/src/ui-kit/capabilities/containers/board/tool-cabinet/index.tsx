@@ -34,7 +34,7 @@ export const ToolCabinetContainer = () => {
             cabinetList={[
                 {
                     id: 'screenShare',
-                    icon: <Icon type="share-screen" />,
+                    icon: <Icon type="share-screen" useSvg />,
                     name: t('scaffold.screen_share')
                 },
                 {

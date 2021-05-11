@@ -40,7 +40,7 @@ export const DownloadContainer = observer(() => {
               <Inline color="#586376" style={{marginLeft:5}}>{progress}%</Inline>
             </Col>
             <Col>
-              <Row className="btn-group no-padding" gap={10}>
+              <Row className="btn-group no-padding" gap={10} style={{paddingRight: 10}}>
                 {
                   !download ? 
                   <Button style={{fontSize:12}} type="secondary" disabled={progress === 100} action="download" onClick={async () => {
