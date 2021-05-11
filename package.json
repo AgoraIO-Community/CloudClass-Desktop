@@ -32,7 +32,7 @@
     "pack:electron:mac": "lerna exec --scope=agora-classroom-sdk npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-classroom-sdk npm run pack:win",
     "build:classroom:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
-    "build:dev:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build:dev:js",
+    "build:dev:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build:dev",
     "build:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build",
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:dev:edu-core": "lerna exec --scope=agora-edu-core npm run build:dev:js",
