@@ -45,6 +45,7 @@
 
     .loading-container .loading-block {
       width: 400px;height: 200px;display: flex;align-items: center;justify-content: flex-start;flex-direction: column;
+      font-size: 12px;
     }
 
     body{
@@ -70,6 +71,7 @@
       }
 
       let readyState = {
+        dns: -1,
         dom: -1,
         lib: -1,
         paint: -1
@@ -80,6 +82,7 @@
         let entry = entries[i].toJSON()
         if(entry.entryType === 'navigation') {
           readyState.dom = entry.duration.toFixed(2)
+          readyState.dns = (entry.domainLookupEnd - entry.domainLookupStart).toFixed(2)
         } else if(entry.entryType === 'resource' && entry.name.includes('edu_sdk.bundle.js')) {
           readyState.lib = entry.duration.toFixed(2)
         } else if(entry.entryType === 'paint' && entry.name === 'first-paint') {
@@ -88,6 +91,7 @@
       }
 
       update_status([
+        `DNS ${readyState.dns < 0 ? 'loading...' : readyState.dns+'ms'}`,
         `Document ${readyState.dom <= 0 ? 'loading...' : readyState.dom+'ms'}`,
         `Library ${readyState.lib <= 0 ? 'loading...' : readyState.lib+'ms'}`
       ].join('\r\n'))
