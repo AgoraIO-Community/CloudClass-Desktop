@@ -40,4 +40,8 @@
     font-size: 13px;
     font-weight: 400;
     color: #191919;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
 }

@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper } from '../interfaces/index';
+import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
@@ -290,7 +290,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     if (this._cefClient) {
       ret = this.client.initialize(this._cefClient)
     } else {
-      ret = this.client.initialize(this.appId)
+      //@ts-ignore
+      ret = this.client.initialize(this.appId, convertNativeAreaCode(`${options.area}`))
     }
     if (ret < 0) {
       throw GenericErrorWrapper({

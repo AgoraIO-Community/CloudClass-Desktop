@@ -577,6 +577,9 @@
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 .tabs-tab-remove:hover {
   color: rgba(0, 0, 0, 0.85);
