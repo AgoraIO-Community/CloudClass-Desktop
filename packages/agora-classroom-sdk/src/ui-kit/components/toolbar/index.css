@@ -185,9 +185,24 @@
   @apply flex flex-col justify-center items-center cursor-pointer float-left;
 }
 
+.expand-tools .cabinet-item img {
+  position: relative;
+  left: 0;
+}
+
+.expand-tools .cabinet-item img + span {
+  position: relative;
+  top: 5px;
+}
+
 .expand-tools .cabinet-item:hover {
   color: #191919;
   background-color: #F9F9FC;
+}
+
+.expand-tools .cabinet-item:hover img {
+  left: -999px;
+  filter: drop-shadow(#191919 999px 0);
 }
 
 .customize-dialog-popover .popover-inner-content {

@@ -8,6 +8,7 @@
 .hands-apply-inline-box {
     font-size: 12px;
     margin-left: 10px;
+    color: #586376;
 }
 
 .students-hands-up .card {
@@ -16,7 +17,7 @@
 
 .students-hands-up .student-item {
     width: 100%;
-    padding: 0 16px;
+    padding: 4px 10px 4px 16px;
     @apply box-border flex justify-between items-center;
 }
 
@@ -39,7 +40,7 @@
     min-height: 37px !important;
     height: auto !important;
     width: 210px !important;
-    max-height: 150px !important;
+    max-height: 290px !important;
 }
 
 .hands-up .unread-count {
@@ -148,7 +149,21 @@
     color: #fff;
 }
 
-.hands-up-manager:hover i::before {
+.hands-up-manager:not(.can-not-hover):hover i::before {
     content: '\e696';
     color: #639AFA;
+}
+
+.operation-icon-wrap {
+    display: flex;
+    width: 62px;
+    justify-content: space-between;
+}
+
+.operation-icon-wrap img {
+    cursor: pointer;
+}
+
+.customize-dialog-popover .popover-inner {
+    border-radius: 12px;
 }

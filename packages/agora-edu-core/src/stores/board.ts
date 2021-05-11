@@ -651,13 +651,13 @@ export class BoardStore extends ZoomController {
 
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
-    const resourceName = this.getResourcePath(currentSceneState.contextPath)
-    const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
+    const resourceUuid = this.getResourcePath(currentSceneState.contextPath)
+    const isRootDir = ["init", "/", "", "/init"].includes(resourceUuid)
     if (isRootDir) {
-      const taskUuidList = this.globalState?.dynamicTaskUuidList ?? []
-      const pptItem = taskUuidList.find((it) => it.resourceName === resourceName)
+      const materialList = this.globalState?.materialList ?? []
+      const pptItem = materialList.find((it) => it.resourceUuid === resourceUuid)
       if (pptItem) {
-        await this.startDownload(pptItem.taskUuid)
+        await this.startDownload(pptItem.resourceUuid)
       }
     }
   }
@@ -1991,7 +1991,7 @@ export class BoardStore extends ZoomController {
       const materialList = this.globalState?.materialList ?? []
       this.room.setGlobalState({
         materialList: uniqBy(materialList.concat([{
-          ...res
+          ...res,
         } as CourseWareItem]), 'resourceUuid')
       })
       this.fileLoading = false
