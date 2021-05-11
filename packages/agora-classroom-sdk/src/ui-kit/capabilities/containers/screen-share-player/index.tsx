@@ -10,7 +10,8 @@ export const ScreenSharePlayerContainer = observer(() => {
         screenShareStream,
         screenEduStream,
         startOrStopSharing,
-        isShareScreen
+        isShareScreen,
+        isBoardScreenShare
     } = useScreenShareContext()
 
 
@@ -19,7 +20,7 @@ export const ScreenSharePlayerContainer = observer(() => {
     }, [startOrStopSharing])
     
     return (
-        isShareScreen ? <div className="screen-share-player-container">
+        isBoardScreenShare ? <div className="screen-share-player-container">
             {/* {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""} */}
             {
                   screenShareStream && screenShareStream.renderer ?

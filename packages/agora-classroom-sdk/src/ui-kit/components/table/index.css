@@ -164,11 +164,17 @@ input.indeterminate:indeterminate {
 
 .btn-pin {
   position: absolute;
-  right: 5px;
-  top: 7px;
+  right: 8px;
+  top: 10px;
   display: block;
   color: #A7A7CA;
   z-index: 1;
+}
+
+.btn-pin > .icon-close {
+  width: 20px !important;
+  height: 20px !important;
+  cursor: pointer;
 }
 
 .rc-mask {

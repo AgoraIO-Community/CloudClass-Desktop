@@ -147,7 +147,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
   } = useSceneStore()
 
   const {
-    isShareScreen
+    isShareScreen,
+    isBoardScreenShare
   } = useBoardStore()
 
   return {
@@ -155,7 +156,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
-    isShareScreen
+    isShareScreen,
+    isBoardScreenShare
   }
 }
 

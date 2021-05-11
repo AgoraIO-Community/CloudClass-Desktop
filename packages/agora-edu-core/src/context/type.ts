@@ -310,7 +310,11 @@ export type ScreenShareContext = {
     /**
      * 正在屏幕共享
      */
-     isShareScreen: boolean;
+    isShareScreen: boolean;
+    /**
+     * 正在共享白板
+     */
+    isBoardScreenShare: boolean;
 }
 export type RoomContext = {
     /**

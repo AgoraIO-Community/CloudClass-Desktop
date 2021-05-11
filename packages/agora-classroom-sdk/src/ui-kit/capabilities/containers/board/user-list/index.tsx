@@ -161,7 +161,9 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         muteAudio,
         unmuteAudio,
         unmuteVideo,
-        roomInfo
+        roomInfo,
+        muteUserChat,
+        unmuteUserChat,
     } = useRoomContext()
 
     const {
@@ -193,6 +195,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             micEnabled: stream?.hasAudio ?? false,
             cameraEnabled: stream?.hasVideo ?? false,
             onPodium: onPodium,
+            chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
             disabled: checkDisable(user, role)
         }
     }
@@ -264,6 +267,17 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                         await muteAudio(uid, isLocal)
                     } else {
                         await unmuteAudio(uid, isLocal)
+                    }
+                }
+                break;
+            }
+            case 'chat': {
+                const targetUser = dataList.find((user) => get(user, 'uid', '') === uid)
+                if (targetUser) {
+                    if (targetUser.chatEnabled) {
+                        await muteUserChat(uid)
+                    } else {
+                        await unmuteUserChat(uid)
                     }
                 }
                 break;

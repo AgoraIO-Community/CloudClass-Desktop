@@ -6,7 +6,7 @@ import { Col, Row, Table, TableHeader } from '~components/table'
 import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import PodiumSvg from '~components/icon/assets/svg/podium.svg'
-import { canOperate, getCameraState, getMicrophoneState, ProfileRole, studentListSort } from './base'
+import { canOperate, getCameraState, getChatState, getMicrophoneState, ProfileRole, studentListSort } from './base'
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
@@ -28,12 +28,14 @@ export type StudentRosterActionTypes =
   | 'cameraEnabled'
   | 'micEnabled'
   | 'kickOut'
+  | 'chat'
   | string
 
 export type StudentRosterColumnKey = 
   | 'cameraEnabled'
   | 'micEnabled'
   | 'kickOut'
+  | 'chat'
   | 'name'
 
 export type StudentRosterProps = {
@@ -98,6 +100,27 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       })
       return (
         <Icon type={type} className={cls} iconhover={canOperate}/>
+      )
+    },
+  },
+  {
+    key: 'chat',
+    name: 'roster.chat',
+    action: 'chat',
+    render: (text: string, profile: any, canOperate) => {
+      const {
+        operateStatus,
+        chatStatus,
+        type,
+      } = getChatState(profile, canOperate);
+      const cls = classnames({
+        ["icon-hover"]: canOperate,
+        ["icon-disable"]: !canOperate,
+      })
+      return (
+        <div className={cls}>
+          <i className={chatStatus}></i>
+        </div>
       )
     },
   },

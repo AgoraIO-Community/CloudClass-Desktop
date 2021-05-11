@@ -230,14 +230,6 @@ export class SceneStore extends SimpleInterval {
 
   appStore!: EduScenarioAppStore;
 
-  @computed
-  get isShareScenePath() {
-    return false
-    // if (this.appStore.boardStore.room.state.sceneState.contextPath)
-    // if (this.appStore.)
-    // return this.appStore.boardStore.share
-  }
-
   @action.bound
   reset() {
     this.mediaService.reset()

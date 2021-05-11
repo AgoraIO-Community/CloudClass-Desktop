@@ -3,8 +3,9 @@ import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext } fr
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
 import { Icon, t, ToolCabinet } from '~ui-kit'
+import {observer} from 'mobx-react'
 
-export const ToolCabinetContainer = () => {
+export const ToolCabinetContainer = observer(() => {
 
     const {
         startOrStopSharing,
@@ -21,7 +22,7 @@ export const ToolCabinetContainer = () => {
     const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {
             case 'screenShare': {
-                if (!canSharingScreen) {
+                if (canSharingScreen) {
                     await startOrStopSharing()
                 }
                 break;
@@ -30,8 +31,12 @@ export const ToolCabinetContainer = () => {
                 setLaserPoint()
                 break;
             }
+            default: {
+                onLaunchAppPlugin(itemType)
+                break;
+            }
         }
-    }, [canSharingScreen])
+    }, [canSharingScreen, startOrStopSharing, setLaserPoint, onLaunchAppPlugin])
 
     const {
         roomInfo
@@ -72,14 +77,8 @@ export const ToolCabinetContainer = () => {
             label={t('scaffold.tools')}
             icon='tools'
             cabinetList={getCabinetList()}
-            onClick={(id: any) => {
-                if(['screenShare', 'laser'].includes(id)) {
-                    onClick(id)
-                } else {
-                    onLaunchAppPlugin(id)
-                }
-            }}
+            onClick={onClick}
             activeItem={currentSelector}
         />
     )
-}
+})
