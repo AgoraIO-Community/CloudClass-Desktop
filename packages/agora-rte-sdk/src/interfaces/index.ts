@@ -1,3 +1,4 @@
+import { AREA_CODE } from './../core/media-service/interfaces/index';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { EnumOnlineState } from '../core/services/interface';
@@ -166,6 +167,9 @@ export enum LogLevel {
 export interface EduConfiguration {
   appId: string;
   cefClient?: any;
+  region: AREA_CODE;
+  rtcArea: AREA_CODE;
+  rtmArea: AREA_CODE;
   // agoraRestToken: string
   platform: 'web' | 'electron';
   agoraRtc?: any;

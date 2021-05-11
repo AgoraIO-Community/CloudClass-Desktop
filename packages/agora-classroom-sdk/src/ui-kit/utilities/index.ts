@@ -60,12 +60,20 @@ export const makeContainer = (name: string) => {
 export const list = (num: number) => Array.from({length: num}, (_, i) => i)
 
 class GlobalConfigs {
-  sdkDomain: string = 'https://api.agora.io'
+  sdkDomain: string = 'https://api.agora.io/%region%'
   reportDomain: string = 'https://api.agora.io'
   logDomain: string = 'https://api-solutions.agoralab.co'
-  appId: string = ''
+  appId: string = '';
+
+  public setRegion(region: string): void {
+    this.sdkDomain.replace('%region%', region)
+  }
+
+  public setSDKDomain(domain: string): void {
+    this.sdkDomain = domain
+  }
 }
 
-let globalConfigs = new GlobalConfigs()
+const globalConfigs = Object.freeze(new GlobalConfigs())
 
 export {globalConfigs}

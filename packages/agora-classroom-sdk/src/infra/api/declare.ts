@@ -1,3 +1,4 @@
+import { AREA_CODE } from './../../../../agora-rte-sdk/src/core/media-service/interfaces/index';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>
@@ -33,6 +34,7 @@ export enum AgoraEduEvent {
 
 export type AgoraEduSDKConfigParams = {
   appId: string;
+  region?: AREA_CODE;
 }
 
 export interface RoomParameters {
