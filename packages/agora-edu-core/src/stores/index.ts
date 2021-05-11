@@ -18,6 +18,10 @@ import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api
 
 export class EduScenarioAppStore {
   // stores
+  /**
+   * appStore类
+   * 包含uiStore
+   */
   uiStore!: UIStore;
   boardStore!: BoardStore;
   mediaStore!: MediaStore;

@@ -4,7 +4,7 @@ import { action, computed, observable, reaction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { EduScenarioAppStore } from '.';
 import { IAgoraExtApp } from '../api/declare';
-
+import { DialogType, ToastType } from '../context/type'
 
 interface NoticeMessage {
   type: string
@@ -18,20 +18,15 @@ type RoomTypesList = {
   value: number
 }
 
+export type { DialogType }
+export type { ToastType }
 
-export type DialogType = {
-  id: string,
-  component: any,
-  props?: any,
-}
 
-export type ToastType = {
-  id: string,
-  desc: string,
-  type?: 'success' | 'error' | 'warning'
-}
 export class UIStore {
 
+  /**
+   * 语言列表
+   */
   static languages: any[] = [
     {
       text: '中文', name: 'zh-CN',
@@ -40,7 +35,9 @@ export class UIStore {
       text: 'En', name: 'en'
     }
   ]
-
+  /**
+   * 是否为electron客户端
+   */
   @computed
   get isElectron(): boolean {
     return window.isElectron
@@ -90,6 +87,11 @@ export class UIStore {
 
   toast$: BehaviorSubject<any>
 
+  /**
+   * 
+   * @param appStore 
+   * @returns
+   */
   constructor(appStore: EduScenarioAppStore) {
     this.appStore = appStore
     this.dialog$ = new BehaviorSubject<any>({})
