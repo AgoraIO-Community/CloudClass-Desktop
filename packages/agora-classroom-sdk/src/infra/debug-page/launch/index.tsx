@@ -37,6 +37,7 @@ export const LaunchPage = observer(() => {
       }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
+        // region: launchOption.region ?? "CN",
       })
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
       // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端

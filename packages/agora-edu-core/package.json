@@ -21,7 +21,7 @@
     "build:docs": "npx typedoc",
     "build": "run-s build:js build:types",
     "build:dev:js": "run-s build:dev:bundle build:types",
-    "build:types": "tsc --outDir lib --module commonjs",
+    "build:types": "tsc -p tsconfig.json",
     "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build:js": "run-s build:release:bundle:js build:types"
@@ -53,6 +53,7 @@
     "rollup-plugin-typescript2": "0.30.0",
     "tsc-alias": "1.2.8",
     "typedoc": "0.20.36",
+    "tslib": "2.2.0",
     "typescript": "4.2.3"
   },
   "dependencies": {

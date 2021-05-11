@@ -178,6 +178,8 @@ export class EduScenarioAppStore {
         // @ts-ignore
         agoraRtc: window.rtcEngine,
         // agoraRtc: window,
+        rtcArea: config.rtcArea,
+        rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
       })
     } else {
@@ -189,6 +191,8 @@ export class EduScenarioAppStore {
         logLevel: '' as any,
         logDirectoryPath: '',
         codec: 'vp8',
+        rtcArea: config.rtcArea,
+        rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
       })
     }
@@ -488,7 +492,7 @@ export class EduScenarioAppStore {
           this.customScreenShareWindowVisible = true
           this.customScreenShareItems = items
         })
-      }).catch(err => {
+      }).catch((err: any) => {
         BizLogger.warn('show screen share window with items', err)
       })
     }

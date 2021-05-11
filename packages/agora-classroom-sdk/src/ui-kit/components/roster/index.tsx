@@ -6,7 +6,9 @@ import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
+import SearchSvg from '~components/icon/assets/svg/search.svg'
 import { canOperate, ProfileRole, studentListSort } from './base';
+import { Search } from '../input';
 
 export * from './user-list';
 
@@ -92,6 +94,7 @@ export interface RosterProps extends ModalProps {
    * onClose
    */
   onClose?: () => void;
+  onChange: (evt: any) => void;
 }
 
 export const Roster: FC<RosterProps> = ({
@@ -104,19 +107,20 @@ export const Roster: FC<RosterProps> = ({
   localUserUuid,
   title,
   isDraggable = true,
-  userType = 'teacher'
+  userType = 'student',
+  onChange
 }) => {
 
   const studentList = studentListSort(dataSource)
 
   const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
 
-  const DraggableContainer = useCallback(({children}: {children: React.ReactChild}) => {
-    return isDraggable ? <Draggable>{children}</Draggable> : <>{children}</>
+  const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
+    return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
 
   return (
-    <DraggableContainer>
+    <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-wrap">
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
@@ -127,9 +131,20 @@ export const Roster: FC<RosterProps> = ({
           {title ?? transI18n('roster.user_list')}
         </div>
         <div className="roster-container">
-          <div className="roster-header">
-            <label>{t('roster.teacher_name')}</label>
-            <span className="roster-username">{teacherName}</span>
+          <div className="search-header roster-header">
+            <div className="search-teacher-name">
+              <label>{t('roster.teacher_name')}</label>
+              <span title={teacherName} className="roster-username">{teacherName}</span>
+            </div>
+            {
+              userType === 'teacher' ?
+              <Search
+                onSearch={onChange}
+                prefix={<img src={SearchSvg} />}
+                inputPrefixWidth={32}
+                placeholder={transI18n('scaffold.search')}
+              /> : null
+            }
           </div>
           <Table className="roster-table">
             <TableHeader>

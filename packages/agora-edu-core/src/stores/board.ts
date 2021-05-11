@@ -24,7 +24,7 @@ import { BizLogger,
 import { ZoomController } from './zoom';
 import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
-import { Resource } from 'src/context/type';
+import { Resource } from '../context/type';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -40,7 +40,7 @@ export interface ToolItem {
 export type CustomizeGlobalState = {
   materialList: CourseWareItem[];
   dynamicTaskUuidList: any[];
-  roomScenes: GlobalRoomScene[];
+  roomScenes: GlobalRoomScene;
   grantUsers: string[];
   follow: boolean;
   isFullScreen: boolean;
@@ -557,7 +557,7 @@ export class BoardStore extends ZoomController {
     }
     // TODO: need refactor
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
-      return [true, true]
+      return [true, showZoomControl]
     }
     else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
       return [true, showZoomControl]
@@ -723,7 +723,7 @@ export class BoardStore extends ZoomController {
             type: 'board',
           },
           currentPage: resource.index,
-          totalPage: resource.totalPage,
+          totalPage: +resource.totalPage,
           scenePath: resource.scenePath,
           resourceUuid: 'init',
           taskUuid: '',
@@ -1193,7 +1193,7 @@ export class BoardStore extends ZoomController {
             })
           }
 
-          const selector = {
+          const selector: Record<any, string> = {
             [ApplianceNames.pencil]: 'pen',
             [ApplianceNames.rectangle]: 'square',
             [ApplianceNames.ellipse]: 'circle',

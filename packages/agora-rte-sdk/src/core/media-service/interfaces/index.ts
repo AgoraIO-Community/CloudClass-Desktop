@@ -92,6 +92,7 @@ export type AREA_CODE =
   | "GLOBAL"
   | "SOUTH_AMERICA"
   | "AFRICA"
+  | string
 
 /**
  * WebRtcWrapperInitOption

@@ -24,7 +24,7 @@
     "build:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build:dev": "run-p build:dev:js build:types",
     "build:dev:js": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
-    "build:types": "tsc --outDir lib --module commonjs",
+    "build:types": "tsc -p tsconfig.json",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {

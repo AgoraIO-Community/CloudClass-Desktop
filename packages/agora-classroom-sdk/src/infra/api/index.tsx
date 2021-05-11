@@ -149,6 +149,8 @@ export class AgoraEduSDK {
 
     Object.assign(sdkConfig.configParams, params)
 
+    globalConfigs.setRegion(params.region ?? 'GLOBAL')
+
     console.log('# set config ', sdkConfig.configParams, ' params ', params)
     // globalConfigs should only be copied here
     eduSDKApi.updateConfig({ 
@@ -215,6 +217,8 @@ export class AgoraEduSDK {
 
       const params = {
         config: {
+          rtcArea: globalConfigs.sdkArea.rtcArea,
+          rtmArea: globalConfigs.sdkArea.rtmArea,
           agoraAppId: sdkConfig.configParams.appId,
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,

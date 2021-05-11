@@ -70,7 +70,7 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
   }
 
   return (
-    <Roster dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} userType="student"/>
+    <Roster userType="student" dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} />
   )
 };
 

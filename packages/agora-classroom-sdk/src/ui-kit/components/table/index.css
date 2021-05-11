@@ -164,8 +164,8 @@ input.indeterminate:indeterminate {
 
 .btn-pin {
   position: absolute;
-  right: 17px;
-  top: 2px;
+  right: 5px;
+  top: 7px;
   display: block;
   color: #A7A7CA;
   z-index: 1;

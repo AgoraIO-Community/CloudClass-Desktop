@@ -22,8 +22,7 @@ export class HomeApi extends ApiBase {
   async login(userUuid: string): Promise<{
     rtmToken: string,
     userUuid: string
-  }>
-   {
+  }> {
     const res = await this.fetch({
       url: `/v2/users/${userUuid}/token`,
       method: 'GET',

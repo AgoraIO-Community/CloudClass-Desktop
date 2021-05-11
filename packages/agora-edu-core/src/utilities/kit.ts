@@ -669,7 +669,7 @@ export class ZoomController extends EventEmitter {
   }
 }
 
-export const transLineTool = {
+export const transLineTool: Record<any, any> = {
   'pen': 'pen',
   'square': 'square',
   'circle': 'circle',
@@ -680,7 +680,7 @@ export const transLineTool = {
   [ApplianceNames.straight]: 'line',
 }
 
-export const transToolBar = {
+export const transToolBar: Record<any, any> = {
   'pen': ApplianceNames.pencil,
   'square': ApplianceNames.rectangle,
   'circle': ApplianceNames.ellipse,

@@ -1,6 +1,6 @@
 import { GenericError } from 'agora-rte-sdk';
 
-const ExceptionMapping = {
+const ExceptionMapping: Record<string, string> = {
     "20410100": 'error.class_end',
     "20403001": 'error.room_is_full',
     "30429460": 'error.apply_co_video_limit',
