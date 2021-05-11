@@ -25,6 +25,7 @@ export interface IconProps extends BaseProps {
   color?: string;
   hover?: boolean;
   iconhover?: boolean;
+  useSvg?: boolean;
   onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
 
@@ -36,6 +37,7 @@ export const Icon: FC<IconProps> = ({
   color,
   hover,
   iconhover,
+  useSvg = false,
   ...restProps
 }) => {
   const cls = classnames({
@@ -45,7 +47,7 @@ export const Icon: FC<IconProps> = ({
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
-  const iconAssets = Object.keys(svgDict).includes(type) ? (
+  const iconAssets = (Object.keys(svgDict).includes(type) && useSvg) ? (
     <img className={cls} src={svgDict[type]} {...restProps}/>
   ) : (
     <i  

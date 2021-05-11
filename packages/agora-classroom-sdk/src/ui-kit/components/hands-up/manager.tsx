@@ -177,10 +177,12 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
               <span className="operation-icon-wrap">
                 <Icon 
                   type="checked"
+                  useSvg
                   onClick={() => onClick("confirm", item)}
                 />
                 <Icon 
                   type="close" 
+                  useSvg
                   onClick={() => onClick("cancel", item)}
                 />
               </span>

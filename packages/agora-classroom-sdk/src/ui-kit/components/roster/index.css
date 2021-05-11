@@ -267,6 +267,13 @@
   height:34px;
 }
 
+.search-header .input-search::-webkit-input-placeholder {
+  font-size: 13px !important;
+}
+
 .search-header .input-search-wrapper .input-prefix {
+  position: relative;
+  left: -10px;
+  margin-right: -10px;
   opacity: 0.5;
 }

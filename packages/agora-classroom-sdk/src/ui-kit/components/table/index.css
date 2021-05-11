@@ -178,3 +178,26 @@ input.indeterminate:indeterminate {
   top: 0 !important;
   left: 0 !important;
 }
+
+.cloud-wrap {
+  border: 1px solid #e3e3ec;
+}
+.cloud-wrap .table-header .table-col-item{
+  color: #191919 !important;
+}
+
+.cloud-wrap input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #B4BADA;
+}
+
+.cloud-wrap .table-container {
+  height: 100%;
+}
+
+.cloud-wrap .table-container-upload .placeholder {
+  position: relative;
+  top: -47px;
+}
