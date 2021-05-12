@@ -198,7 +198,8 @@ export const WhiteboardContainer = observer(() => {
       return [true, true]
     }
     if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [true, hasPermission]
+      // 1v1 学生场景，showToolBar 需要在授权后在展示
+      return [hasPermission, hasPermission]
     }
 
     if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
@@ -236,8 +237,15 @@ export const WhiteboardContainer = observer(() => {
       }
       {showTab ? 
       <TabsContainer /> : null}
-      {showToolBar ? 
-        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolClick} className="toolbar-biz" />
+      {showToolBar ?
+        <Toolbar 
+          active={currentSelector} 
+          activeMap={activeMap} 
+          tools={tools} 
+          onClick={handleToolClick} 
+          className="toolbar-biz"
+          defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true} 
+        />
       : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'

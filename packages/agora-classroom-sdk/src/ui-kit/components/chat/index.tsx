@@ -186,7 +186,7 @@ export const Chat: FC<ChatProps> = ({
             ))
           )}
         </div>
-        <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
+        <div className={`chat-texting ${focused ? 'focus' : ''}`}>
           <textarea
             value={chatText}
             className="chat-texting-message"

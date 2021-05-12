@@ -156,7 +156,7 @@ export const Roster: FC<RosterProps> = ({
                             : undefined
                         }>
                         {col.render
-                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col))
+                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), role)
                           : (data as any)[col.key]}
                       </span>
                     </Col>

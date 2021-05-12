@@ -110,17 +110,20 @@ export const Toolbar: FC<ToolbarProps> = ({
 
   return (
     <div 
-      className='toolbar-position' style={{maxHeight}}
+      className='toolbar-position' style={{
+        maxHeight,
+        left: opened ? 15 : 0
+      }}
       ref={animContainer}
-        onAnimationEnd={() => {
-          const animEl = animContainer.current
-          if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
-            animEl.style.left = '0px'
-          }
-          if (animEl && animEl.classList.contains('toolbar-anim-show')) {
-            animEl.style.left = '15px'
-          }
-        }}
+      onAnimationEnd={() => {
+        const animEl = animContainer.current
+        if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
+          animEl.style.left = '0px'
+        }
+        if (animEl && animEl.classList.contains('toolbar-anim-show')) {
+          animEl.style.left = '15px'
+        }
+      }}
     >
       <div className={cls} style={style} ref={toolbarEl}>
         <div
