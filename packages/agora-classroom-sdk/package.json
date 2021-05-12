@@ -2,7 +2,13 @@
   "name": "agora-classroom-sdk",
   "version": "1.1.1",
   "homepage": ".",
-  "keywords": ["agora", "WebRTC", "APaaS", "AgoraFlexibleClassroom", "Education"],
+  "keywords": [
+    "agora",
+    "WebRTC",
+    "latest",
+    "AgoraFlexibleClassroom",
+    "Education"
+  ],
   "main": "lib/edu_sdk.bundle.js",
   "types": "lib/infra/api/index.d.ts",
   "swSrcPath": "./src/infra/sw/service-worker.ts",
@@ -225,6 +231,7 @@
     "dexie": "3.0.2",
     "electron": "7.1.14",
     "electron-builder": "22.5.1",
+    "electron-util": "^0.16.0",
     "eruda": "2.2.1",
     "eslint-plugin-react": "7.20.0",
     "extract-zip": "2.0.1",
@@ -287,8 +294,9 @@
     "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.0.0",
-    "agora-widget-gallery": "1.0.0",
+    "agora-electron-sdk": "apaas",
     "agora-rte-sdk": "1.0.0",
+    "agora-widget-gallery": "1.0.0",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
     "classnames": "2.2.6",
@@ -313,7 +321,6 @@
     "react-select": "4.3.0",
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
-    "workbox-strategies": "6.1.1",
-    "agora-electron-sdk": "apaas"
+    "workbox-strategies": "6.1.1"
   }
 }

@@ -115,7 +115,14 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="header-actions">
           {userType === 'teacher' ? 
           <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
-            <Icon hover={true} type={isRecording ? "recording" : "record"} color={isRecording ? '#2962F4': undefined} size={24} onClick={() => onClick('record')} />
+            <Icon 
+              hover={true} 
+              type={isRecording ? "recording" : "record"} 
+              color={isRecording ? '#2962F4': undefined} 
+              size={24} 
+              useSvg={isRecording ? true : false}
+              onClick={() => onClick('record')} 
+            />
           </Tooltip> : null}
           <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
             <Icon hover={true} type="set" size={24} onClick={() => onClick('setting')}  />

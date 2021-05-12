@@ -379,7 +379,11 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
         <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
       ]}
       title={t('toast.leave_room')}>
-      <p>{t('toast.quit_room')}</p>
+      <p style={{
+        fontSize: 13, 
+        color: 'rgb(88, 99, 118)',
+        padding: '15px 0'
+      }}>{t('toast.quit_room')}</p>
     </Modal>
   )
 })

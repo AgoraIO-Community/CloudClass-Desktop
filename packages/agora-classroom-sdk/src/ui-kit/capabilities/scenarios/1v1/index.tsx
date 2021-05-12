@@ -53,11 +53,13 @@ export const OneToOneScenario = observer(() => {
           <ScreenSharePlayerContainer />
           <WhiteboardContainer />
         </Content>
+        {
+        isFullScreen ? <Widget widgetComponent={chatWidget}/> :
         <Aside className={fullscreenCls}>
           <VideoList />
-          {/* <RoomChat /> */}
           <Widget className="chat-panel" widgetComponent={chatWidget}/>
         </Aside>
+        }
       </Layout>
       <DialogContainer />
       <LoadingContainer />

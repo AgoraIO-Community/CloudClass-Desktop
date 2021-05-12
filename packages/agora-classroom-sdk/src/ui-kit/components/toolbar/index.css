@@ -131,7 +131,6 @@
   @apply flex justify-center items-center rounded-full;
   height: 22px;
   width: 22px;
-  border: 1px solid #e1e1ea;
   margin: 6px;
 }
 

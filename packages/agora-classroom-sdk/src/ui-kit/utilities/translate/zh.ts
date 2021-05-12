@@ -239,7 +239,7 @@ export const zh = {
     'user_list': '用户列表'
   },
   'cloud': {
-    'fileName': '文件名字',
+    'fileName': '文件名',
     'size': '大小',
     'progress': '进度条',
     'operation': '操作',

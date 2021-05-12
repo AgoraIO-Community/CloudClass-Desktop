@@ -62,13 +62,14 @@ export const MidClassScenario = observer(() => {
             <HandsUpContainer />
           </div>
         </Content>
-        <Aside>
-          <div style={{height: isFullScreen ? 300 : 'auto', opacity: isFullScreen ? 0 : 1, transform: isFullScreen ? 'scale(0.9)' : 'scale(1)', transition: '.5s'}}>
-            <VideoPlayerTeacher />
-          </div>
-          {/* <RoomChat /> */}
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
-        </Aside>
+        {isFullScreen ? <Widget className="chat-panel" widgetComponent={chatWidget}/> : (
+          <Aside className="mid-class-aside">
+            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+              <VideoPlayerTeacher className="mid-class-teacher"/>
+            </div>
+            <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          </Aside>
+        )}
       </Layout>
       <DialogContainer />
       <LoadingContainer />

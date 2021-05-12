@@ -560,7 +560,7 @@ export class BoardStore extends ZoomController {
       return [true, showZoomControl]
     }
     else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [true, showZoomControl]
+      return [this.hasPermission, showZoomControl]
     }
     else if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
       return [true, showZoomControl]

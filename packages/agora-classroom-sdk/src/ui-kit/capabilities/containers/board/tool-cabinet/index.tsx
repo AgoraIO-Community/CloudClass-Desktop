@@ -45,7 +45,7 @@ export const ToolCabinetContainer = observer(() => {
     const getCabinetList = useCallback(() => {
         const screenShareTool: CabinetItem[] = [{
             id: 'screenShare',
-            icon: <Icon type="share-screen" />,
+            icon: <Icon type="share-screen" useSvg />,
             name: t('scaffold.screen_share'),
         }]
 

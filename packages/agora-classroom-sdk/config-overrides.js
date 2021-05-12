@@ -204,6 +204,11 @@ const useOptimizeBabelConfig = () => config => {
 
 const config = process.env
 
+const getToday = () => {
+  const today = new Date()
+  return `${today.getFullYear()}${today.getMonth()+1}${today.getDate()}`
+}
+
 const exportWebpackConfig = () => config => {
   fs.writeFileSync("./webpack.cra.js", JSON.stringify(config))
   return config;
@@ -272,7 +277,8 @@ const webpackConfig = override(
     REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME),
     REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE),
     REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
-    REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN)
+    REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
+    REACT_APP_APAAS_BUILD_DATE: config.hasOwnProperty('AGORA_APAAS_BUILD_DATE') ? JSON.stringify(`${process.env.AGORA_APAAS_BUILD_DATE}`) : JSON.stringify(""),
   })),
   // addWebpackPlugin(
   //   new SimpleProgressWebpackPlugin()

@@ -274,8 +274,15 @@ export const WhiteboardContainer = observer(() => {
       }
       {showTab ? 
       <TabsContainer /> : null}
-      {showToolBar ? 
-        <Toolbar active={currentSelector} activeMap={activeMap} tools={tools} onClick={handleToolClick} className="toolbar-biz" />
+      {showToolBar ?
+        <Toolbar 
+          active={currentSelector} 
+          activeMap={activeMap} 
+          tools={tools} 
+          onClick={handleToolClick} 
+          className="toolbar-biz"
+          defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true} 
+        />
       : null}
       {showZoomControl ? <ZoomController
         className='zoom-position'
