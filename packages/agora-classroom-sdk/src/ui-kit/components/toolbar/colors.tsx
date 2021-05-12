@@ -69,9 +69,15 @@ export const Colors: FC<ColorsProps> = ({
           onClick={() => handleClick(color)}
           className="expand-tool color"
           style={{
-            borderColor: activeColor === color ? color : undefined,
+            border: activeColor === color ? `1px solid ${color === '#ffffff' ? '#E1E1EA' : color}` : 'none', // 选中的才有边框颜色
           }}>
-          <div className="circle" style={{ backgroundColor: color }} />
+          <div 
+            className="circle" 
+            style={{ 
+              backgroundColor: color,
+              border: color === '#ffffff' ? '1px solid #E1E1EA' : 'none'
+            }} 
+          />
         </div>
       ))}
     </div>
@@ -86,7 +92,7 @@ export const Colors: FC<ColorsProps> = ({
         content={content}
         placement="right">
         <div className="tool">
-          <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor, 0.5)}`}}>
+          <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor === '#ffffff' ? '#E1E1EA' : activeColor, 0.5)}`}}>
             <div className="circle" style={{backgroundColor: activeColor}}></div>
           </div>
           {/* <Icon type="circle" hover={hover} color={activeColor} /> */}

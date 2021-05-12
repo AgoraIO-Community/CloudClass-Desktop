@@ -209,7 +209,9 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
 
   return (
     <Draggable>
-      <div className="agora-board-resources">
+      <div 
+        className="agora-board-resources cloud-wrap"
+      >
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onCancel()

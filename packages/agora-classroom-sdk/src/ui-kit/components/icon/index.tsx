@@ -12,12 +12,20 @@ import recordingSvg from './assets/svg/recording.svg'
 import shareScreenSvg from './assets/svg/share-screen.svg'
 import checkedSvg from './assets/svg/icon-accept.svg'
 import closeSvg from './assets/svg/icon-refuse.svg'
+import studentGrantedActiveSvg from './assets/svg/student-granted-active.svg'
+import studentGrantedDefaultSvg from './assets/svg/student-granted-default.svg'
+import teacherGrantedActiveSvg from './assets/svg/teacher-granted-active.svg'
+import teacherGrantedDefaultSvg from './assets/svg/teacher-granted-default.svg'
 
 const svgDict: Record<string, any> = {
   'recording': recordingSvg,
   'share-screen': shareScreenSvg,
   'checked': checkedSvg,
-  'close': closeSvg
+  'close': closeSvg,
+  'student-authorized': studentGrantedActiveSvg,
+  'student-whiteboard': studentGrantedDefaultSvg,
+  'teacher-authorized': teacherGrantedActiveSvg,
+  'teacher-whiteboard': teacherGrantedDefaultSvg,
 }
 export interface IconProps extends BaseProps {
   type: IconTypes;
@@ -25,6 +33,7 @@ export interface IconProps extends BaseProps {
   color?: string;
   hover?: boolean;
   iconhover?: boolean;
+  useSvg?: boolean;
   onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
 
@@ -36,6 +45,7 @@ export const Icon: FC<IconProps> = ({
   color,
   hover,
   iconhover,
+  useSvg = false,
   ...restProps
 }) => {
   const cls = classnames({
@@ -45,7 +55,7 @@ export const Icon: FC<IconProps> = ({
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
-  const iconAssets = Object.keys(svgDict).includes(type) ? (
+  const iconAssets = (Object.keys(svgDict).includes(type) && useSvg) ? (
     <img className={cls} src={svgDict[type]} {...restProps}/>
   ) : (
     <i  
