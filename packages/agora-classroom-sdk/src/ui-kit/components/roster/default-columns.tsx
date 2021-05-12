@@ -29,16 +29,17 @@ export const defaultColumns: Column[] = [
     key: 'whiteboardGranted',
     name: 'roster.granted',
     action: 'whiteboard',
-    render: (_, profile, canOperate) => {
-      const type =  !!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard';
+    render: (_, profile, canOperate, role) => {
+      const type =  role + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${whiteboardStatus}`]: 1,
       })
+      console.log(type)
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg/>
       )
     },
   },
