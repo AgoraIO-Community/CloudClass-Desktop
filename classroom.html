@@ -1,20 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height:100%;">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AgoraFlexibleClassroomDemo</title>
-  <script src="./edu_sdk.bundle.js"></script>
-</head>
-
-<body>
   <style>
     #root1 {
       width: 100%;
       height: 100%;
     }
+    .spinner {
+      animation: rotate 1.25s infinite ease;
+      border:8px solid rgba(100,100,100,0.6);
+      border-top-color: rgba(200,200,200,0.6);
+      border-radius:50%;
+      display:block;
+      font-size:0;
+      height: 30px;
+      left:50%;
+      margin:-1em 0 0 -1em;
+      top:50%;
+      width: 30px;
+    }
+    @keyframes rotate {
+      0% { transform:rotate(0deg) }
+      100%   { transform:rotate(360deg) }
+    }
+
+    .loading-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: #959595;
+    }
+
+    .loading-container .loading-block {
+      width: 400px;height: 200px;display: flex;align-items: center;justify-content: flex-start;flex-direction: column;
+      font-size: 12px;
+    }
+
+    body{
+      width:100%;
+      height: 100%;
+      margin: 0;
+    }
+
   </style>
+  <script>
+    const update_status = (status) => {
+      let div = document.getElementById('status-label')
+      if(div) {
+        div.textContent = status
+      }
+    }
+
+
+    const collectPerformance = () => {
+      if (performance === undefined) {
+        update_status('Loading...Unknown Environment')
+        return;
+      }
+
+      let readyState = {
+        dns: -1,
+        dom: -1,
+        lib: -1,
+        paint: -1
+      }
+      let entries = performance.getEntries();
+      let results = []
+      for(let i = 0; i < entries.length; i++) {
+        let entry = entries[i].toJSON()
+        if(entry.entryType === 'navigation') {
+          readyState.dom = entry.duration.toFixed(2)
+          readyState.dns = (entry.domainLookupEnd - entry.domainLookupStart).toFixed(2)
+        } else if(entry.entryType === 'resource' && entry.name.includes('edu_sdk.bundle.js')) {
+          readyState.lib = entry.duration.toFixed(2)
+        } else if(entry.entryType === 'paint' && entry.name === 'first-paint') {
+          readyState.paint = 0
+        }
+      }
+
+      update_status([
+        `DNS ${readyState.dns < 0 ? 'loading...' : readyState.dns+'ms'}`,
+        `Document ${readyState.dom <= 0 ? 'loading...' : readyState.dom+'ms'}`,
+        `Library ${readyState.lib <= 0 ? 'loading...' : readyState.lib+'ms'}`
+      ].join('\r\n'))
+
+      if(readyState.dom <= 0 || readyState.lib <= 0 || readyState.paint === -1) {
+        setTimeout(collectPerformance, 200)
+      }
+    }
+
+    collectPerformance()
+  </script>
+</head>
+
+<body>
+  <div class="loading-container">
+    <div class="loading-block">
+      <div class="spinner">Loading...</div>
+      <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
+    </div>
+  </div>
   <div id="root1"></div>
   <script type="text/javascript">
     window.addEventListener('message', function(e) {  
@@ -62,6 +159,7 @@
           
     }, false);
   </script>
+  <script src="./edu_sdk.bundle.js"></script>
 </body>
 
 </html>

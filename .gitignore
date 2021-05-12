@@ -1,4 +1,6 @@
 node_modules
+edu_sdk.bundle.js
+
 .env
 .DS_Store
 *.sh
