@@ -52,8 +52,8 @@
     "rollup-plugin-clear": "2.0.7",
     "rollup-plugin-typescript2": "0.30.0",
     "tsc-alias": "1.2.8",
+    "tslib": "^2.2.0",
     "typedoc": "0.20.36",
-    "tslib": "2.2.0",
     "typescript": "4.2.3"
   },
   "dependencies": {
