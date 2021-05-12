@@ -1314,23 +1314,25 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       }
     })
 
-    return await Promise.race([startScreenPromise, wait(8000)])
+    return await Promise.race([startScreenPromise])
   }
 
   async stopScreenShare(): Promise<any> {
     const stopScreenSharePromise = new Promise((resolve, reject) => {
       const handleVideoSourceLeaveChannel = (evt: any) => {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
+        const release = this.client.videoSourceRelease()
+        EduLogger.info(' videoSourceLeave Channel', release)
         setTimeout(resolve, 1)
       }
       try {
         this.client.on('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         let ret = this.client.videoSourceLeave()
         EduLogger.info("stopScreenShare leaveSubChannel", ret)
-        wait(8000).catch((err: any) => {
-          this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-          reject(err)
-        })
+        // wait(8000).catch((err: any) => {
+        //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
+        //   reject(err)
+        // })
       } catch(err) {
         this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         reject(err)
