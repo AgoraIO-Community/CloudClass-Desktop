@@ -174,7 +174,7 @@ const devicePath = '/pretest'
 export class AgoraEduSDK {
 
   static get version(): string {
-    return '1.1.0'
+    return '1.1.1'
   }
 
   static _debug: boolean = false 
