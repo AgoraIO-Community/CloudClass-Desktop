@@ -134,13 +134,13 @@
           if(!options || !appId) {
             document.querySelector("#root1").textContent = "launchOption/appid missing"
           } else {
-              if(AgoraEduSDK.setParameters) {
-                AgoraEduSDK.setParameters(JSON.stringify({
-                  "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
-                  "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
-                }))
-                console.log(`AgoraEduSDK setParameters called`)
-              }
+              // if(AgoraEduSDK.setParameters) {
+              //   AgoraEduSDK.setParameters(JSON.stringify({
+              //     "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
+              //     "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
+              //   }))
+              //   console.log(`AgoraEduSDK setParameters called`)
+              // }
               AgoraEduSDK.config({
                   appId,
                   cachePath
