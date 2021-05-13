@@ -35,10 +35,10 @@
 }
 
 .full-screen-chat {
-  position: fixed;
+  /* position: fixed;
   right: 20px;
   bottom: 20px;
-  height: 514px;
+  height: 514px; */
 }
 
 .big-class-aside .chat-panel {
@@ -56,13 +56,13 @@
   border-right: none;
 }
 
-.full-video-wrap {
-  height: 300px;
+.big-class-aside .full-video-wrap {
+  height: 0;
   opacity: 0;
   transform: scale(0.9);
   transition: .5s;
 }
-.video-wrap {
+.mid-class-aside .video-wrap {
   height: auto;
   opacity: 1;
   transform: scale(1);

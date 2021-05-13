@@ -15,6 +15,7 @@ import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
+import { ChatMin } from '@/ui-kit/components/chat/chat-min'
 
 const chatWidget = new AgoraChatWidget()
 
@@ -54,22 +55,25 @@ export const MidClassScenario = observer(() => {
           </div>
           <div
             className={classnames({
-              ['pin-right']: 1,
-              ['pin-right-full-not-collapse']: (isFullScreen && !chatCollapse),
-              ['pin-right-full-collapse']: (isFullScreen && chatCollapse)
+              'pin-right': 1
             })}
+            style={{display:'flex'}}
           >
             <HandsUpContainer />
+            {(isFullScreen && chatCollapse) ? <ChatMin style={{marginLeft: 10}} onClick={() => {}} /> : null}
+            
           </div>
         </Content>
-        {isFullScreen ? <Widget className="chat-panel" widgetComponent={chatWidget}/> : (
-          <Aside className="mid-class-aside">
-            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-              <VideoPlayerTeacher className="mid-class-teacher"/>
-            </div>
-            <Widget className="chat-panel" widgetComponent={chatWidget}/>
-          </Aside>
-        )}
+        <Aside className={classnames({
+          "mid-class-aside": 1,
+          "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
+          "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
+        })}>
+          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+            <VideoPlayerTeacher className="mid-class-teacher"/>
+          </div>
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+        </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer />

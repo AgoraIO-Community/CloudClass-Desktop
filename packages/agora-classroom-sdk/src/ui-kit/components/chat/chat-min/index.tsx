@@ -6,11 +6,13 @@ import './index.css';
 
 export interface ChatMinProps extends BaseProps {
   unreadCount?: number;
+  onClick?: () => void | Promise<void>;
 }
 
 export const ChatMin: FC<ChatMinProps> = ({
   unreadCount = 0,
   className,
+  onClick,
   ...restProps
 }) => {
   const cls = classnames({
@@ -18,7 +20,7 @@ export const ChatMin: FC<ChatMinProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} {...restProps}>
+    <div className={cls} onClick={() => onClick && onClick()} {...restProps}>
       <Icon type="chat" color="#7B88A0" />
       {unreadCount ? (
         <div className="unread-count">

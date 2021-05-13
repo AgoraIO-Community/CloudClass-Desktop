@@ -141,7 +141,7 @@ const App = observer(() => {
         // display simple chat for 1v1
         <SimpleChat
           className="simple-chat"
-          collapse={chatCollapse}
+          collapse={false}
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
@@ -152,7 +152,7 @@ const App = observer(() => {
             setText(textValue)
           }}
           onCollapse={() => {
-            toggleChatMinimize()
+            // toggleChatMinimize()
           }}
           onSend={handleSendText}
           showCloseIcon={isFullScreen}
@@ -164,7 +164,7 @@ const App = observer(() => {
        :
         <Chat
           className="small-class-chat"
-          collapse={chatCollapse}
+          collapse={false}
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
@@ -176,7 +176,7 @@ const App = observer(() => {
             setText(textValue)
           }}
           onCollapse={() => {
-            toggleChatMinimize()
+            // toggleChatMinimize()
           }}
           onSend={handleSendText}
           showCloseIcon={isFullScreen}
