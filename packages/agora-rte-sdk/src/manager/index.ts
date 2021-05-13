@@ -67,6 +67,7 @@ export class EduManager extends EventEmitter {
       rtcArea: this.config.rtcArea ?? "GLOBAL",
       rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
+    //@ts-ignore
     const domain = getSDKDomain(this.config.sdkDomain!, this.config.region)
     this.config.sdkDomain = domain
     // if ()
