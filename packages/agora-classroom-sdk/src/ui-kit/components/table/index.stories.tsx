@@ -226,7 +226,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
         <Col>大小</Col>
         <Col>修改时间</Col>
       </TableHeader>
-      <Table className="table-container">
+      <Table className="table-container table-container-upload">
         {items.length ? (items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col width={9}>

@@ -200,7 +200,7 @@ input.indeterminate:indeterminate {
 }
 
 .cloud-wrap .table-container {
-  height: 100%;
+  height: 400px;
 }
 
 .cloud-wrap .table-container-upload .placeholder {
