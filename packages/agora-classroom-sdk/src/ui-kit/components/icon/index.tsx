@@ -48,15 +48,35 @@ export const Icon: FC<IconProps> = ({
   useSvg = false,
   ...restProps
 }) => {
-  const cls = classnames({
+  let cls = classnames({
     'icon-box': true,
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover
   });
+
+  if (useSvg && svgDict[type]) {
+    cls = classnames({
+      'icon-box': true,
+      [`iconfont`]: true,
+      [`${className}`]: !!className,
+      [`icon-box-hover`]: !!hover,
+      ['hover']: !!hover,
+      ['icon-svg']: 1,
+      [`svg-${[type]}`]: 1
+    });
+  }
+
   const iconAssets = (Object.keys(svgDict).includes(type) && useSvg) ? (
-    <img className={cls} src={svgDict[type]} {...restProps}/>
+    <i className={cls}
+      style={{
+        color,
+        fontSize: size,
+        ...style,
+      }}
+      {...restProps}
+    />
   ) : (
     <i  
       className={cls}

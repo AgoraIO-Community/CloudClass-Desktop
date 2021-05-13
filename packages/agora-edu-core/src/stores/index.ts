@@ -493,6 +493,8 @@ export class EduScenarioAppStore {
           this.customScreenShareItems = items
         })
       }).catch((err: any) => {
+        this.customScreenShareWindowVisible = false
+        this.customScreenShareItems = []
         BizLogger.warn('show screen share window with items', err)
       })
     }
@@ -561,6 +563,8 @@ export class EduScenarioAppStore {
       this.removeScreenShareWindow()
       this.sharing = true
     } catch (err) {
+      this.customScreenShareWindowVisible = false
+      this.customScreenShareItems = []
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       // if (!this.mediaService.screenRenderer) {

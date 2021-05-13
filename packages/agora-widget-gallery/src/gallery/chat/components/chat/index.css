@@ -145,7 +145,6 @@
 .no-discussion-svg, .can-discussion-svg {
   display: inline-block;
   position: relative;
-  top: 3px;
   width: 24px;
   height: 24px;
   background: url('../icon/assets/svg/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
