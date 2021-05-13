@@ -39,7 +39,7 @@ export const defaultColumns: Column[] = [
       })
       console.log(type)
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg/>
+        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22}/>
       )
     },
   },
