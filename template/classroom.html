@@ -145,6 +145,9 @@
                   appId,
                   cachePath
               })
+
+              options["userUuid"] = options["rtmUid"]
+              
               Object.assign(options, {
                 listener: (evt, args) => {
                   console.log("evt", evt, args)
