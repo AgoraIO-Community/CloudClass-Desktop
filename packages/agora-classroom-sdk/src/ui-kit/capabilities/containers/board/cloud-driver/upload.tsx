@@ -47,6 +47,10 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
   }, [items, checkMap])
 
   const handleSelectAll = useCallback((evt: any) => {
+    // TODO: skip empty
+    if (!items.length) {
+      return;
+    }
     if (isSelectAll) {
       const ids = items.map((item: any) => ({[`${item.id}`]: 0})).reduce((acc: any, it: any) => ({...acc, ...it}))
       const v = {
@@ -65,6 +69,10 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
   }, [items, isSelectAll, checkMap])
 
   const changeChecked = useCallback((id: any, checked: boolean) => {
+    // TODO: skip empty
+    if (!items.length) {
+      return;
+    }
     const idx = items.findIndex((item: any) => item.id === id)
     if (idx >= 0) {
       setCheckMap({
