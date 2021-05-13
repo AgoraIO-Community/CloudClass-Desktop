@@ -8,25 +8,17 @@ import './style.css';
 
 export type { IconTypes } from './icon-types';
 
-import recordingSvg from './assets/svg/recording.svg'
-import shareScreenSvg from './assets/svg/share-screen.svg'
-import checkedSvg from './assets/svg/icon-accept.svg'
-import closeSvg from './assets/svg/icon-refuse.svg'
-import studentGrantedActiveSvg from './assets/svg/student-granted-active.svg'
-import studentGrantedDefaultSvg from './assets/svg/student-granted-default.svg'
-import teacherGrantedActiveSvg from './assets/svg/teacher-granted-active.svg'
-import teacherGrantedDefaultSvg from './assets/svg/teacher-granted-default.svg'
+const svgDict: string[] = [
+  'recording',
+  'share-screen',
+  'checked',
+  'close',
+  'student-authorized',
+  'student-whiteboard',
+  'teacher-authorized',
+  'teacher-whiteboard',
+]
 
-const svgDict: Record<string, any> = {
-  'recording': recordingSvg,
-  'share-screen': shareScreenSvg,
-  'checked': checkedSvg,
-  'close': closeSvg,
-  'student-authorized': studentGrantedActiveSvg,
-  'student-whiteboard': studentGrantedDefaultSvg,
-  'teacher-authorized': teacherGrantedActiveSvg,
-  'teacher-whiteboard': teacherGrantedDefaultSvg,
-}
 export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
@@ -53,10 +45,20 @@ export const Icon: FC<IconProps> = ({
     [`iconfont icon-${type}`]: true,
     [`${className}`]: !!className,
     [`icon-box-hover`]: !!hover,
-    ['hover']: !!hover
+    ['hover']: !!hover,
+    [`use-svg ${type}`]: useSvg
   });
-  const iconAssets = (Object.keys(svgDict).includes(type) && useSvg) ? (
-    <img className={cls} src={svgDict[type]} {...restProps}/>
+  const iconAssets = (svgDict.includes(type) && useSvg) ? (
+    <div 
+      className={cls}
+      style={{
+        width: size,
+        height: size,
+        ...style
+      }}
+      {...restProps}
+    >
+    </div>
   ) : (
     <i  
       className={cls}
