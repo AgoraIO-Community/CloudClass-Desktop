@@ -48,7 +48,7 @@
     "ci:build:web": "yarn release:demo",
     "ci:build:electron:win": "yarn release:electron:win",
     "ci:build:electron:mac": "yarn release:electron:mac",
-    "ci:build:classroom:sdk": "yarn release:electron:mac"
+    "ci:build:classroom:sdk": "yarn release:classroom:sdk"
   },
   "repository": {
     "type": "git",
