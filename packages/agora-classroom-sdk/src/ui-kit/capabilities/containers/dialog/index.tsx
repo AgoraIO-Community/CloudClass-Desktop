@@ -161,7 +161,8 @@ export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }
 
 export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   const {
-    startNativeScreenShareBy
+    startNativeScreenShareBy,
+    removeScreenShareWindow
   } = useRoomContext()
 
   const {
@@ -180,6 +181,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   }
 
   const onCancel = () => {
+    removeScreenShareWindow()
     removeDialog(id)
   }
 
