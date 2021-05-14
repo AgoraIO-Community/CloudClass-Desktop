@@ -16,6 +16,7 @@ import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ChatMin } from '@/ui-kit/components/chat/chat-min'
+import { Popover } from '@/ui-kit'
 
 const chatWidget = new AgoraChatWidget()
 
@@ -60,8 +61,6 @@ export const MidClassScenario = observer(() => {
             style={{display:'flex'}}
           >
             <HandsUpContainer />
-            {(isFullScreen && chatCollapse) ? <ChatMin style={{marginLeft: 10}} onClick={() => {}} /> : null}
-            
           </div>
         </Content>
         <Aside className={classnames({

@@ -152,7 +152,7 @@ const App = observer(() => {
             setText(textValue)
           }}
           onCollapse={() => {
-            // toggleChatMinimize()
+            toggleChatMinimize()
           }}
           onSend={handleSendText}
           showCloseIcon={isFullScreen}
@@ -176,7 +176,7 @@ const App = observer(() => {
             setText(textValue)
           }}
           onCollapse={() => {
-            // toggleChatMinimize()
+            toggleChatMinimize()
           }}
           onSend={handleSendText}
           showCloseIcon={isFullScreen}
