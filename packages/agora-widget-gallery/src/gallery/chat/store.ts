@@ -1,11 +1,10 @@
 import { action, observable, computed, runInAction, autorun } from 'mobx';
-import type {AgoraWidgetContext, AgoraWidgetHandle} from 'agora-edu-core'
+import type {AgoraWidgetContext} from 'agora-edu-core'
 import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';
 import { ChatStorage } from './utilities';
 
 export class PluginStore {
     context: AgoraWidgetContext
-    handle: AgoraWidgetHandle
 
     @observable
     activeTab: ChatListType = 'room'
@@ -25,9 +24,8 @@ export class PluginStore {
     @observable
     conversationLastReadTs : Map<string, number> = ChatStorage.getConversationReadTs()
 
-    constructor(ctx: AgoraWidgetContext, handle: AgoraWidgetHandle) {
+    constructor(ctx: AgoraWidgetContext) {
         this.context = ctx
-        this.handle = handle
 
         autorun(() => {
             ChatStorage.saveConversationReadTs(JSON.stringify(Object.fromEntries(this.conversationLastReadTs.entries())))

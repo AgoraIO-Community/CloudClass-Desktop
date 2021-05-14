@@ -6,7 +6,7 @@ import type {IAgoraWidget} from 'agora-edu-core'
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
-import {AgoraWidgetHandle, AgoraWidgetContext} from 'agora-edu-core'
+import {AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
 import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';
 import { I18nProvider } from './components/i18n';
@@ -209,8 +209,8 @@ export class AgoraChatWidget implements IAgoraWidget {
   constructor(){
   }
 
-  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, handle: AgoraWidgetHandle): void {
-    this.store = new PluginStore(ctx, handle)
+  widgetDidLoad(dom: Element, props: any,ctx: AgoraWidgetContext): void {
+    this.store = new PluginStore(ctx)
     ReactDOM.render((
       <Provider store={this.store}>
         <I18nProvider language={ctx.language}>

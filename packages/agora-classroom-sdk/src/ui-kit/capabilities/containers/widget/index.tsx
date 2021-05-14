@@ -9,11 +9,13 @@ import {Adapter} from './adapter'
 
 export interface WidgetProps extends BaseProps {
     widgetComponent: IAgoraWidget;
+    widgetProps?: any;
 }
 
 export const Widget: FC<WidgetProps> = ({
     className,
     widgetComponent,
+    widgetProps = {},
     ...restProps
 }) => {
     const ref = useRef<HTMLDivElement | null>(null)
@@ -41,13 +43,7 @@ export const Widget: FC<WidgetProps> = ({
     useEffect(() => {
         if (ref.current) {
             // only run for very first time
-            widgetComponent.widgetDidLoad(ref.current, context, {
-              updateRoomProperty: async (properties: any, cause: {}) => {
-                return await eduSDKApi.updateExtAppProperties(roomUuid, widgetComponent.widgetId, properties, cause)
-              },
-              deleteRoomProperties: async(properties: string[], cause: {}) => {
-                return await eduSDKApi.deleteExtAppProperties(roomUuid, widgetComponent.widgetId, properties, cause)
-              }})
+            widgetComponent.widgetDidLoad(ref.current, widgetProps, context)
         }
         return () => widgetComponent.widgetWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
