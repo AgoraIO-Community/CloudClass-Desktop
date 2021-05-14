@@ -36,8 +36,8 @@ export const defaultColumns: Column[] = [
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${whiteboardStatus}`]: 1,
+        ['icon-flex']: 1
       })
-      console.log(type)
       return (
         <Icon type={type as any} className={cls} iconhover={canOperate} useSvg/>
       )
@@ -94,6 +94,7 @@ export const defaultColumns: Column[] = [
       const cls = classnames({
         ["icon-hover"]: canOperate,
         ["icon-disable"]: !canOperate,
+        ["icon-flex"]: 1,
       })
       return (
         <div className={cls}>

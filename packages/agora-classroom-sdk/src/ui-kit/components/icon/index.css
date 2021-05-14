@@ -295,3 +295,36 @@
 .svg-icon {
   display: inline-flex;
 }
+
+.no-discussion-svg, .can-discussion-svg {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background: url('./assets/svg/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
+  cursor: pointer;
+}
+
+.can-discussion-svg {
+  background: url('./assets/svg/icon-nodiscussion-default.svg')
+}
+
+.stu-can-discussion-svg {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background: url('./assets/svg/icon-stu-chat-default.svg')  no-repeat center / 24px 24px;
+}
+
+.stu-no-discussion-svg {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background: url('./assets/svg/icon-stu-chat-mute.svg')  no-repeat center / 24px 24px;
+}
+
+.icon-flex {
+  display: flex;
+}

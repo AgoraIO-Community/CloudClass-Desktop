@@ -116,6 +116,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       const cls = classnames({
         ["icon-hover"]: canOperate,
         ["icon-disable"]: !canOperate,
+        ["icon-flex"]: 1,
       })
       return (
         <div className={cls}>
