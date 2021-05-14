@@ -165,6 +165,7 @@ export const useRoomContext = (): RoomContext => {
 
   const {
     destroyRoom,
+    removeScreenShareWindow
   } = useCoreContext()
 
   const {
@@ -213,6 +214,7 @@ export const useRoomContext = (): RoomContext => {
     kickOutBan,
     kickOutOnce,
     liveClassStatus,
+    removeScreenShareWindow,
     muteVideo,
     unmuteVideo,
     muteAudio,

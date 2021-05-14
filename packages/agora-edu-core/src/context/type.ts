@@ -340,6 +340,10 @@ export type RoomContext = {
      */
     startNativeScreenShareBy: (windowId: number) => Promise<void>,
     /**
+     * 关闭屏幕分享展示窗口
+     */
+     removeScreenShareWindow: () => void,
+    /**
      * 教师接受举手
      * @param userUuid 举手用户uuid
      */
