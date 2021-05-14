@@ -2,7 +2,7 @@ import { Chat, SimpleChat } from './components/chat'
 import * as React from 'react';
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { get } from 'lodash';
-import type {IAgoraWidget} from 'agora-edu-core'
+import type {AgoraWidgetHandle, IAgoraWidget} from 'agora-edu-core'
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
@@ -209,7 +209,7 @@ export class AgoraChatWidget implements IAgoraWidget {
   constructor(){
   }
 
-  widgetDidLoad(dom: Element, props: any,ctx: AgoraWidgetContext): void {
+  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext): void {
     this.store = new PluginStore(ctx)
     ReactDOM.render((
       <Provider store={this.store}>

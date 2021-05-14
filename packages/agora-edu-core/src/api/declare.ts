@@ -65,7 +65,7 @@ export type AgoraWidgetHandle = {
 
 export interface IAgoraWidget {
   widgetId: string
-  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext, handle:AgoraWidgetHandle):void
+  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext):void
   widgetRoomPropertiesDidUpdate(properties:any, cause: any):void
   widgetWillUnload():void
 }
