@@ -278,7 +278,7 @@ const webpackConfig = override(
     REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE),
     REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
     REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
-    AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BUILD_DATE') ? JSON.stringify(`${process.env.AGORA_APAAS_BUILD_DATE}`) : JSON.stringify(""),
+    AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
   })),
   // addWebpackPlugin(
   //   new SimpleProgressWebpackPlugin()
