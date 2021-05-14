@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -12,11 +12,10 @@ import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import { AgoraChatWidget } from 'agora-widget-gallery'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
 
-const chatWidget = new AgoraChatWidget()
+
 
 export const BigClassScenario = observer(() => {
 
@@ -25,6 +24,11 @@ export const BigClassScenario = observer(() => {
   const {
     isFullScreen,
   } = useGlobalContext()
+
+  const {
+    widgets
+  } = useWidgetContext()
+  const chatWidget = widgets['chat']
 
   const { chatCollapse }  = useChatContext()
 
@@ -55,22 +59,22 @@ export const BigClassScenario = observer(() => {
           </div>
           <div 
             className={classnames({
-              ['pin-right']: 1,
-              ['pin-right-full-not-collapse']: (isFullScreen && !chatCollapse),
-              ['pin-right-full-collapse']: (isFullScreen && chatCollapse)
+              'pin-right': 1
             })}
           >
             <HandsUpContainer />
           </div>
         </Content>
-        {isFullScreen ? <Widget className="chat-panel" widgetComponent={chatWidget}/> : (
-          <Aside className="big-class-aside">
-            <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-              <VideoPlayerTeacher className="big-class-teacher"/>
-            </div>
-            <Widget className="chat-panel" widgetComponent={chatWidget}/>
-          </Aside>
-        )}
+        <Aside className={classnames({
+          "big-class-aside": 1,
+          "big-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
+          "big-class-aside-full-collapse": (isFullScreen && chatCollapse)
+        })}>
+          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+            <VideoPlayerTeacher className="big-class-teacher"/>
+          </div>
+          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+        </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer />

@@ -65,7 +65,7 @@ export type AgoraWidgetHandle = {
 
 export interface IAgoraWidget {
   widgetId: string
-  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext):void
+  widgetDidLoad(dom:Element, ctx:AgoraWidgetContext, widgetProps:any):void
   widgetRoomPropertiesDidUpdate(properties:any, cause: any):void
   widgetWillUnload():void
 }
@@ -153,7 +153,8 @@ export type AppStoreConfigParams = {
     endpoint: string,
   },
   recordUrl: string,
-  extApps?: IAgoraExtApp[]
+  extApps?: IAgoraExtApp[],
+  widgets?: {[key:string]: IAgoraWidget}
 }
 
 export type LanguageEnum = "en" | "zh"

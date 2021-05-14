@@ -6,6 +6,8 @@ export * from './context/private-chat-context'
 
 export * from './context/app-plugin-context'
 
+export * from './context/widget-context'
+
 export * from 'white-web-sdk'
 
 export {

@@ -15,6 +15,7 @@ import { SceneStore } from './scene'
 import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
+import { WidgetStore } from './widget'
 
 export class EduScenarioAppStore {
   // stores
@@ -28,6 +29,7 @@ export class EduScenarioAppStore {
   sceneStore!: SceneStore;
   roomStore!: RoomStore;
   pretestStore!: PretestStore;
+  widgetStore!: WidgetStore;
 
   eduManager!: EduManager;
 
@@ -253,6 +255,8 @@ export class EduScenarioAppStore {
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.mediaStore = new MediaStore(this)
+    this.widgetStore = new WidgetStore()
+    this.widgetStore.widgets = this.params.config.widgets || {}
 
     this._screenVideoRenderer = undefined
   }
