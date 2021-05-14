@@ -22,18 +22,22 @@ export class EduLogger {
   }
 
   static warn(...args: any[]) {
+    //@ts-ignore
     this.log(`WARN`, ...args)
   }
 
   static debug(...args: any[]) {
+    //@ts-ignore
     this.log(`DEBUG`, ...args)
   }
 
   static info(...args: any[]) {
+    //@ts-ignore
     this.log(`INFO`, ...args)
   }
 
   static error(...args: any[]) {
+    //@ts-ignore
     this.log(`ERROR`, ...args)
   }
 
