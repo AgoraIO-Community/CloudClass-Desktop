@@ -1206,6 +1206,14 @@ export class AcadsocRoomStore extends SimpleInterval {
     return false
   }
 
+  @computed
+  get isStudent() {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
+      return true
+    }
+    return false
+  }
+
   @action
   getRewardByUid(uid: string): number {
     return get(this.studentsReward, `${uid}.reward`, 0)

@@ -201,9 +201,13 @@ const ActionBarContainer = observer(() => {
     { name: 'equipmentDetection', clickEvent: handleSetting },
   ]
 
-  const buttonArr = roomStore.isAssistant ? 
+  let buttonArr = roomStore.isAssistant ? 
     menuBars.filter(({name}: {name: string}) => name !== 'equipmentDetection') :
     menuBars
+
+  buttonArr = roomStore.isStudent ?
+    buttonArr.filter(({name}: {name: string}) => !['prepare', 'highlight'].includes(name)) :
+    buttonArr
 
   return (
     <ActionButtons buttonArr={buttonArr} />
