@@ -165,7 +165,6 @@ export const useRoomContext = (): RoomContext => {
 
   const {
     destroyRoom,
-    removeScreenShareWindow
   } = useCoreContext()
 
   const {
@@ -178,7 +177,8 @@ export const useRoomContext = (): RoomContext => {
     unmuteAudio,
     sceneType,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    removeScreenShareWindow
   } = useSceneStore()
 
   const {
