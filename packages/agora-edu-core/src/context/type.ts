@@ -4,6 +4,7 @@ import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
 import { BehaviorSubject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
+import { ScreenShareType } from 'agora-rte-sdk/lib/core/media-service/interfaces';
 export type Resource = {
     file: {
         name: string,
@@ -292,7 +293,7 @@ export type PretestContext = {
 }
 export type ScreenShareContext = {
     /**
-     * 分享屏幕的列表数据
+     * 屏幕分享选择数据
      */
     nativeAppWindowItems: any[],
     /**
@@ -306,15 +307,28 @@ export type ScreenShareContext = {
     /**
      * 开始或者暂停共享屏幕
      */
-    startOrStopSharing: () => Promise<void>
+    startOrStopSharing: (type?:ScreenShareType) => Promise<void>
+    // /**
+    //  * 正在屏幕共享
+    //  */
+    // isShareScreen: boolean;
+    // /**
+    //  * 正在共享白板
+    //  */
+    // isBoardScreenShare: boolean;
     /**
-     * 正在屏幕共享
+     * 当前正在共享屏幕
      */
-    isShareScreen: boolean;
+    isScreenSharing: boolean
     /**
-     * 正在共享白板
+     * 当前显示的屏幕共享选择器类型
      */
-    isBoardScreenShare: boolean;
+    customScreenSharePickerType: ScreenShareType,
+    /**
+     * 屏幕分享
+     * @param windowId 窗口ID
+     */
+    startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>,
 }
 export type RoomContext = {
     /**
@@ -334,11 +348,12 @@ export type RoomContext = {
      * @param id 对话框ID
      */
     removeDialog: (id: string) => void,
-    /**
-     * 屏幕分享
-     * @param windowId 窗口ID
-     */
-    startNativeScreenShareBy: (windowId: number) => Promise<void>,
+    // TO-REVIEW REMOVED in v1.1.1
+    // /**
+    //  * 屏幕分享
+    //  * @param windowId 窗口ID
+    //  */
+    // startNativeScreenShareBy: (windowId: number) => Promise<void>,
     /**
      * 关闭屏幕分享展示窗口
      */
@@ -534,12 +549,6 @@ export type GlobalContext = {
     joined: boolean;
 }
 export type BoardContext = {
-    //@internal
-    canSharingScreen: boolean;
-    //@internal
-    showBoardTool: [boolean, boolean];
-    //@internal
-    isShareScreen: boolean;
     /**
      * 白板所在的房间
      */
@@ -666,10 +675,10 @@ export type BoardContext = {
      * 当前白板使用的工具是否为画笔
      */
     boardPenIsActive: boolean,
-    /**
-     * 切换屏幕共享状态
-     */
-    startOrStopSharing: () => Promise<void>,
+    // /**
+    //  * 切换屏幕共享状态
+    //  */
+    // startOrStopSharing: () => Promise<void>,
     /**
      * 设置当前工具为激光笔
      */
@@ -728,6 +737,14 @@ export type BoardContext = {
      * @param payload 上传的资源参数
      */
     doUpload: (payload: any) => Promise<void>,
+
+    //v1.1.1
+    //@internal
+    canSharingScreen: boolean;
+    //@internal
+    showBoardTool: [boolean, boolean];
+    //@internal
+    isCurrentScenePathScreenShare: boolean;
 }
 export type StreamContext = {
     /**

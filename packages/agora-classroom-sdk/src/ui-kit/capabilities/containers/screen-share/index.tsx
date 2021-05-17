@@ -4,8 +4,8 @@ import * as React from 'react';
 import { useScreenShareContext } from 'agora-edu-core';
 
 export type ScreenShareContainerProps = {
-    windowId: string,
-    setWindowId: (newValue: string) => void,
+    windowId: any,
+    setWindowId: (newValue: any) => void,
 }
 
 export const ScreenShareContainer: React.FC<ScreenShareContainerProps> = observer((props) => {

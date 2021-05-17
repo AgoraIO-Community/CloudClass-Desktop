@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
+import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
 import { get } from "lodash"
 import { observable, computed, action, runInAction } from "mobx"
 import { EduScenarioAppStore } from "."
@@ -116,10 +116,13 @@ export class SceneStore extends SimpleInterval {
   currentWindowId: string = ''
 
   @observable
-  customScreenShareWindowVisible: boolean = false;
+  customScreenSharePickerVisible: boolean = false;
 
   @observable
-  customScreenShareItems: any[] = []
+  customScreenSharePickerType: ScreenShareType = ScreenShareType.Window
+
+  @observable
+  customScreenSharePickerItems: any[] = []
 
   @observable
   settingVisible: boolean = false
@@ -131,6 +134,7 @@ export class SceneStore extends SimpleInterval {
 
   startTime: number = 0
 
+  //TO-REVIEW 和isScreenSharing啥区别?
   @observable
   sharing: boolean = false;
 
@@ -230,6 +234,8 @@ export class SceneStore extends SimpleInterval {
 
   appStore!: EduScenarioAppStore;
 
+  screenShareType: ScreenShareType = ScreenShareType.Window
+
   @action.bound
   reset() {
     this.mediaService.reset()
@@ -248,8 +254,8 @@ export class SceneStore extends SimpleInterval {
     this._cameraRenderer = undefined;
     this._screenVideoRenderer = undefined;
     this.currentWindowId = ''
-    this.customScreenShareWindowVisible = false
-    this.customScreenShareItems = []
+    this.customScreenSharePickerVisible = false
+    this.customScreenSharePickerItems = []
     this.settingVisible = false
     this.autoplay = false
     this.recordState = false
@@ -394,14 +400,17 @@ export class SceneStore extends SimpleInterval {
     )
   }
 
+
+
   @action.bound
-  showScreenShareWindowWithItems (screenComponent: ReactElement) {
+  showScreenShareWindowWithItems (type?:ScreenShareType) {
     if (this.isElectron) {
-      this.mediaService.prepareScreenShare().then((items: any) => {
+      this.mediaService.prepareScreenShare({type}).then((items: any) => {
         runInAction(() => {
           // TODO: addDialog
-          this.customScreenShareWindowVisible = true
-          this.customScreenShareItems = items.map((item: any) => ({
+          this.customScreenSharePickerVisible = true
+          this.customScreenSharePickerType = type || ScreenShareType.Window
+          this.customScreenSharePickerItems = items.map((item: any) => ({
             ...item,
             title: item.name,
             id: item.windowId,
@@ -410,8 +419,8 @@ export class SceneStore extends SimpleInterval {
           }))
           if (items.length) {
             this.appStore.uiStore.fireDialog('screen-share', {
-              customScreenShareWindowVisible: this.customScreenShareWindowVisible,
-              customScreenShareItems: this.customScreenShareItems,
+              customScreenSharePickerVisible: this.customScreenSharePickerVisible,
+              customScreenShareItems: this.customScreenSharePickerItems,
             })
             // this.appStore.uiStore.addDialog(OpenShareScreen)
             // this.appStore.uiStore.addDialog(screenComponent)
@@ -445,7 +454,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async startNativeScreenShareBy(windowId: number) {
+  async startNativeScreenShareBy(shareId: any, type?:ScreenShareType) {
     try {
       this.waitingShare = true
       await this.roomManager?.userService.startShareScreen()
@@ -456,7 +465,8 @@ export class SceneStore extends SimpleInterval {
         token: this.roomManager?.userService.screenStream.token,
       }
       await this.mediaService.startScreenShare({
-        windowId: windowId as number,
+        shareId,
+        type,
         params
       })
       if (!this.mediaService.screenRenderer) {
@@ -478,8 +488,8 @@ export class SceneStore extends SimpleInterval {
   @action.bound
   removeScreenShareWindow () {
     if (this.isElectron) {
-      this.customScreenShareWindowVisible = false
-      this.customScreenShareItems = []
+      this.customScreenSharePickerVisible = false
+      this.customScreenSharePickerItems = []
     }
   }
 
@@ -892,7 +902,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async startOrStopSharing() {
+  async startOrStopSharing(type?:ScreenShareType) {
     if (this.isWeb) {
       if (this.sharing) {
         await this.stopWebSharing()
@@ -905,7 +915,7 @@ export class SceneStore extends SimpleInterval {
       if (this.sharing) {
         await this.stopNativeSharing()
       } else {
-        await this.showScreenShareWindowWithItems(this.screenComponent!)
+        await this.showScreenShareWindowWithItems(type)
       }
     }
   }
@@ -930,10 +940,10 @@ export class SceneStore extends SimpleInterval {
       this._screenVideoRenderer && this._screenVideoRenderer.stop()
       this._screenVideoRenderer = undefined
     }
-    if (this.customScreenShareWindowVisible) {
-      this.customScreenShareWindowVisible = false
+    if (this.customScreenSharePickerVisible) {
+      this.customScreenSharePickerVisible = false
     }
-    this.customScreenShareItems = []
+    this.customScreenSharePickerItems = []
     this.sharing = false
   }
 

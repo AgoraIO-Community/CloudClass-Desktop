@@ -140,24 +140,30 @@ export const usePretestContext = (): PretestContext => {
 
 export const useScreenShareContext = (): ScreenShareContext => {
   const {
-    customScreenShareItems,
+    customScreenSharePickerItems,
+    customScreenSharePickerType,
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
+    startNativeScreenShareBy
   } = useSceneStore()
 
   const {
-    isShareScreen,
-    isBoardScreenShare
+    isShareScreen
   } = useBoardStore()
 
   return {
-    nativeAppWindowItems: customScreenShareItems,
+    nativeAppWindowItems: customScreenSharePickerItems,
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
-    isShareScreen,
-    isBoardScreenShare
+    // v1.1.1 - TO-REVIEW
+    // isShareScreen,
+    // isBoardScreenShare
+    // is screensharing going on
+    isScreenSharing: isShareScreen,
+    customScreenSharePickerType,
+    startNativeScreenShareBy
   }
 }
 
@@ -168,7 +174,6 @@ export const useRoomContext = (): RoomContext => {
   } = useCoreContext()
 
   const {
-    startNativeScreenShareBy,
     roomInfo,
     classState,
     muteVideo,
@@ -204,7 +209,8 @@ export const useRoomContext = (): RoomContext => {
     destroyRoom,
     joinRoom: join,
     removeDialog,
-    startNativeScreenShareBy,
+    // TO-REVIEW REMOVED in v1.1.1
+    // startNativeScreenShareBy,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
     handsUpStudentList,
@@ -328,13 +334,9 @@ export const useBoardContext = (): BoardContext => {
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
-    isShareScreen,
     canSharingScreen,
+    isBoardScreenShare
   } = useBoardStore()
-
-  const {
-    startOrStopSharing,
-  } = useSceneStore()
 
   const {
     roomInfo
@@ -376,7 +378,8 @@ export const useBoardContext = (): BoardContext => {
     deleteSingle,
     updatePen,
     boardPenIsActive,
-    startOrStopSharing,
+    // REMOVED in v1.1.1
+    // startOrStopSharing,
     setLaserPoint,
     resourcesList,
     activeSceneName,
@@ -392,7 +395,8 @@ export const useBoardContext = (): BoardContext => {
     grantBoardPermission,
     doUpload: handleUpload,
     showBoardTool,
-    isShareScreen
+    // v1.1.1
+    isCurrentScenePathScreenShare:isBoardScreenShare
   }
 }
 

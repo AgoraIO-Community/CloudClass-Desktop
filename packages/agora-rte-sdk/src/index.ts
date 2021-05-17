@@ -75,6 +75,7 @@ export type { EduStream, EduUser } from './interfaces';
 export type { EduUserService } from './user/edu-user-service';
 export type { IMediaRenderer } from './core/media-service/renderer'
 export type { StartScreenShareParams, PrepareScreenShareParams, CameraOption } from './core/media-service/interfaces';
+export { ScreenShareType } from './core/media-service/interfaces';
 export type { MediaService } from './core/media-service'
 export type {
   RoomResponseData,

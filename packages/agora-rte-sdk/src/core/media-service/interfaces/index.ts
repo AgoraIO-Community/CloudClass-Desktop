@@ -110,9 +110,15 @@ export declare interface WebRtcWrapperInitOption {
   }
 }
 
+export enum ScreenShareType {
+  Window = 0,
+  Screen = 1
+}
+
 export declare interface PrepareScreenShareParams {
   // 仅适用于Electron平台 目前只支持ElectronSDK
   dom?: HTMLElement
+  type?:ScreenShareType
   // 仅适用于web平台 详细参考agora-web-sdk-ng的文档
   shareAudio?: 'enable' | 'auto' | 'disable'
   encoderConfig?: any
@@ -201,12 +207,13 @@ export declare interface RTCProviderInitParams {
 
 export declare interface StartScreenShareParams {
   // Electron屏幕共享参数
-  windowId?: number
+  shareId?: any
   config?: {
     profile: number
     rect: any
     param: any
   }
+  type?: ScreenShareType
   // Web屏幕共享参数
   params: {
     uid: any
