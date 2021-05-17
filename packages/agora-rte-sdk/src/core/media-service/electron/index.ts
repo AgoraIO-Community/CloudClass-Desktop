@@ -1284,6 +1284,17 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         this.client.videoSourceSetChannelProfile(1)
         this.client.videoSourceEnableWebSdkInteroperability(true)
         this.client.videoSourceSetVideoProfile(config && config.profile ? config.profile : 50, false)
+        this.client.videoSourceSetVideoEncoderConfiguration({
+          width: 640,
+          height: 480,
+          frameRate: 5,
+          minFrameRate: 5,
+          bitrate: 1500,
+          minBitrate: 1500,
+          degradationPreference: 0,
+          orientationMode: 0,
+          mirrorMode: 0
+        })
         EduLogger.info(`[electron-log-path] checkout videoSourceLogPath: ${this.videoSourceLogPath}`)
         if (this.videoSourceLogPath) {
           this.client.videoSourceSetLogFile(this.videoSourceLogPath)
