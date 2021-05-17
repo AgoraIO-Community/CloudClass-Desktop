@@ -15,7 +15,7 @@ export const Countdown: React.FC<CountdownProps> = ({
     type = 4,
     theme = 1,
     timeUnit = [],
-    onTimeUp = () => {console.log('time up')},
+    onTimeUp = () => { console.log('time up') },
     ...restProps
 }) => {
     const [timeArray, setTimeArray] = useState<string[]>(
@@ -74,6 +74,13 @@ export const Countdown: React.FC<CountdownProps> = ({
     useWatch(endTime, () => {
         if (endTime > 0) {
             start()
+        } else {
+            // restart时 endTime为0还要归位
+            setTimeArray(theme === 2
+                ? new Array(type * 2).fill("0")
+                : new Array(type).fill("00"))
+            timer && clearTimeout(timer);
+            setTimer(null)
         }
     })
 
@@ -81,6 +88,7 @@ export const Countdown: React.FC<CountdownProps> = ({
         start(0);
         return () => {
             timer && clearTimeout(timer);
+            setTimer(null)
         }
     }, [])
 
@@ -89,7 +97,8 @@ export const Countdown: React.FC<CountdownProps> = ({
      * @param st 重复执行的间隔时间
      */
     const start = (st = 1000) => {
-        timer && clearTimeout(timer);
+        if (!endTime) return
+        timer && clearTimeout(timer)
         setTimer(setTimeout(() => {
             let t = endTime - new Date().getTime(); // 剩余的毫秒数
             t = t < 0 ? 0 : t;
@@ -130,6 +139,7 @@ export const Countdown: React.FC<CountdownProps> = ({
             if (t > 0) {
                 start();
             } else {
+                timer && clearTimeout(timer);
                 // 执行timeup
                 onTimeUp && onTimeUp()
             }
@@ -169,7 +179,12 @@ export const Countdown: React.FC<CountdownProps> = ({
         >
             {timeArray.map((item, index: any) => (
                 <React.Fragment key={index}>
-                    <div className="time-box">
+                    <div
+                        className="time-box"
+                        style={{
+                            color: ((endTime - new Date().getTime() < 4000) && timer) ? '#F04C36' : '#4C6377'
+                        }}
+                    >
                         <div className="base">
                             {item}
                             <div className="base-b">{timeArrayT[index]}</div>
@@ -181,15 +196,15 @@ export const Countdown: React.FC<CountdownProps> = ({
                             {timeArrayT[index]}
                         </div>
                         <div className={['back', isAnimate[index] ? 'anime' : ''].join(' ')}>{item}</div>
-                        
+
                     </div>
                     {
-                        isTimeUnitShow(index) ? 
-                        (
-                            <div className="time-unit" key={`unit-${index}`}>
-                                { setTimeUnit(index) }
-                            </div>
-                        ) : ""
+                        isTimeUnitShow(index) ?
+                            (
+                                <div className="time-unit" key={`unit-${index}`}>
+                                    { setTimeUnit(index)}
+                                </div>
+                            ) : ""
                     }
                 </React.Fragment>
             ))}
