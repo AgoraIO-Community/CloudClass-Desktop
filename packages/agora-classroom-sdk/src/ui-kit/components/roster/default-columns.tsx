@@ -39,7 +39,7 @@ export const defaultColumns: Column[] = [
         ['icon-flex']: 1
       })
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg/>
+        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22}/>
       )
     },
   },

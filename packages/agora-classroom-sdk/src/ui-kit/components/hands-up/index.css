@@ -160,7 +160,7 @@
     justify-content: space-between;
 }
 
-.operation-icon-wrap img {
+.operation-icon-wrap div.use-svg {
     cursor: pointer;
 }
 
