@@ -67,4 +67,5 @@ export type IconTypes =
   | 'kick-out'
   | 'red-caution'
   | 'laser-pointer'
-  | 'recording';
+  | 'recording'
+  | 'countdown';

@@ -78,7 +78,6 @@
     perspective: 800px;
     /* border-radius: 3px; */
     padding: 0 2px;
-    color: #4C6377;
     line-height: var(--boxHeight);
     margin: 0 0.05em;
     border-radius: 0.25em;
@@ -173,4 +172,26 @@
 
 .react-countdown-component .time-box>div.back.anime {
     animation-name: animate-filp-back;
+}
+
+.countdown-modal {
+    position: relative;
+}
+
+.restart-wrap {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100% - 40px);
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    background: rgba(255,255,255,.88);
+    border-radius: 0 0 8px 8px; 
+}
+
+.countdown-modal-hover:hover .restart-wrap {
+    display: flex;
 }

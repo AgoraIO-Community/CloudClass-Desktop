@@ -221,6 +221,7 @@ export const zh = {
     'student_list': '学生列表',
     'pencil': '画笔',
     'laser_pointer': '激光笔',
+    'countdown': '倒计时',
     'straight': '直线',
     'circle': '圆圈',
     'rectangle': '矩形',

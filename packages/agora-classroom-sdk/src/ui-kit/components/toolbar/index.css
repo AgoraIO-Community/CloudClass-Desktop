@@ -199,7 +199,11 @@
   background-color: #F9F9FC;
 }
 
-.expand-tools .cabinet-item:hover img {
+.expand-tools .cabinet-item div.use-svg {
+  position: relative
+}
+
+.expand-tools .cabinet-item:hover div.use-svg {
   left: -999px;
   filter: drop-shadow(#191919 999px 0);
 }

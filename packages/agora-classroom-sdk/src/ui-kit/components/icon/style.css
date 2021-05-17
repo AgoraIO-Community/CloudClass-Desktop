@@ -32,42 +32,40 @@
   align-items: center;
 }
 
-.icon-svg {
-  display: inline-block;
-  position: relative;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
+.use-svg {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.use-svg:before {
+  opacity: 0;
 }
 
-.svg-recording {
-  background: url('./assets/svg/recording.svg') no-repeat center;
+.icon-teacher-authorized.teacher-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+}
+.icon-teacher-whiteboard.teacher-whiteboard {
+  background-image: url('./assets//svg/teacher-granted-default.svg');
+}
+.icon-student-authorized.student-authorized {
+  background-image: url('./assets/svg/student-granted-active.svg'); 
+}
+.icon-student-whiteboard.student-whiteboard {
+  background-image: url('./assets//svg/student-granted-default.svg');
 }
 
-.svg-share-screen {
-  background: url('./assets/svg/share-screen.svg') no-repeat center;
+.icon-recording.recording {
+  background-image: url('./assets/svg/recording.svg'); 
 }
-
-.svg-checked {
-  background: url('./assets/svg/icon-accept.svg') no-repeat center;
+.icon-share-screen.share-screen {
+  background-image: url('./assets/svg/share-screen.svg');
 }
-
-.svg-close {
-  background: url('./assets/svg/icon-refuse.svg') no-repeat center;
+.icon-checked.checked {
+  background-image: url('./assets/svg/icon-accept.svg'); 
 }
-
-.svg-student-authorized {
-  background: url('./assets/svg/student-granted-active.svg') no-repeat center;
+.icon-close.close{
+  background-image: url('./assets/svg/icon-refuse.svg');
 }
-
-.svg-student-whiteboard {
-  background: url('./assets/svg/student-granted-default.svg') no-repeat center;
-}
-
-.svg-teacher-authorized {
-  background: url('./assets/svg/teacher-granted-active.svg') no-repeat center;
-}
-
-.svg-teacher-whiteboard {
-  background: url('./assets/svg/teacher-granted-default.svg') no-repeat center;
+.icon-countdown.countdown{
+  background-image: url('./assets/svg/icon-countdown.svg');
 }
