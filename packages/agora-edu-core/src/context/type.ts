@@ -1,10 +1,11 @@
-import { UserRenderer, LocalUserRenderer, EduUser, EduStream } from 'agora-rte-sdk'
+import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum } from 'agora-rte-sdk'
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
 import { BehaviorSubject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { ScreenShareType } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { RosterUserInfo } from '../stores/small-class';
 export type Resource = {
     file: {
         name: string,
@@ -43,6 +44,13 @@ export type DialogType = {
     component: any,
     props?: any,
 }
+
+export enum ControlTool {
+    offPodium = 0,
+    offPodiumAll = 1,
+    grantBoard = 2
+}
+
 export type ChatContext = {
     /**
      * 发送私聊聊天消息
@@ -143,6 +151,14 @@ export type ChatContext = {
      * 添加消息
      */
     addChatMessage: (args: any) => void
+    /**
+     * 操作指定用户聊天禁言
+     */
+    muteUserChat: (userUuid:string) => Promise<void>
+    /**
+     * 操作指定用户聊天解禁
+     */
+    unmuteUserChat: (userUuid:string) => Promise<void>
 }
 export type StreamListContext = {
     /**
@@ -404,38 +420,39 @@ export type RoomContext = {
         classState: string;
         duration: number;
     },
-    /**
-     * 禁用视频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 取消禁用视频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 禁用音频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 取消禁用音频
-     * @param userUuid 用户uuid
-     * @param isLocal 是否为本地用户
-     */
-    unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
-    /**
-     * 单个用户禁言
-     */
-    muteUserChat: (userUuid: string) => Promise<any>;
-    /**
-     * 取消单个用户禁言
-     */
-    unmuteUserChat: (userUuid: string) => Promise<any>;
+    // TO-REVIEW REMOVED in v1.1.1
+    // /**
+    //  * 禁用视频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 取消禁用视频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 禁用音频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 取消禁用音频
+    //  * @param userUuid 用户uuid
+    //  * @param isLocal 是否为本地用户
+    //  */
+    // unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    // /**
+    //  * 单个用户禁言
+    //  */
+    // muteUserChat: (userUuid: string) => Promise<any>;
+    // /**
+    //  * 取消单个用户禁言
+    //  */
+    // unmuteUserChat: (userUuid: string) => Promise<any>;
 }
 export type RoomDiagnosisContext = {
     navigationState: {
@@ -454,6 +471,7 @@ export type GlobalContext = {
      * 正在加载中
      */
     loading: boolean,
+    isLoading: boolean,
     /**
      * 是否全屏
      */
@@ -548,6 +566,7 @@ export type GlobalContext = {
      * 已经加入房间
      */
     joined: boolean;
+    isJoined: boolean;
 }
 export type BoardContext = {
     /**
@@ -747,50 +766,54 @@ export type BoardContext = {
     //@internal
     isCurrentScenePathScreenShare: boolean;
 }
-export type StreamContext = {
-    /**
-     * 媒体数据流列表
-     */
-    streamList: EduStream[]
-}
+// TO-REVIEW removed in v1.1.1
+// export type StreamContext = {
+//     /**
+//      * 媒体数据流列表
+//      */
+//     streamList: EduStream[]
+// }
 export type UserListContext = {
-    /**
-     * 当前用户的uuid
-     */
-    localUserUuid: string,
-    /**
-     * 当前用户的角色
-     */
-    myRole: "teacher" | "assistant" | "student" | "invisible",
+    // TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 当前用户的uuid
+    //  */
+    // localUserUuid: string,
+    // /**
+    //  * 当前用户的角色
+    //  */
+    // myRole: "teacher" | "assistant" | "student" | "invisible",
     /**
      * 当前课堂内点名册上的用户列表（只有学生）
      */
     rosterUserList: any[],
-    /**
-     * 当前课堂的老师名称
-     */
-    teacherName: string,
-    /**
-     * 对用户的点击事件如上台、授权白板、打开摄像头麦克风
-     * @param actionType 动作类型 
-     * 上台：podium 
-     * 白板授权：whiteboard 
-     * 打开摄像头：camera 
-     * 打开麦克风：mic 
-     * 踢人：kick-out
-     * @param uid 用户的uid
-     */
-    handleRosterClick: (actionType: string, uid: string) => Promise<void>,
-    /**
-     * 关闭指定用户的摄像头
-     * @param userUuid 用户uid
-     */
-    revokeCoVideo: (userUuid: string) => Promise<void>,
-    /**
-     * 老师同意用户的举手 
-     * @param userUuid 用户uid
-     */
-    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    // /**
+    //  * 当前课堂的老师名称
+    //  */
+    // teacherName: string,
+    // /**
+    //  * 对用户的点击事件如上台、授权白板、打开摄像头麦克风
+    //  * @param actionType 动作类型 
+    //  * 上台：podium 
+    //  * 白板授权：whiteboard 
+    //  * 打开摄像头：camera 
+    //  * 打开麦克风：mic 
+    //  * 踢人：kick-out
+    //  * @param uid 用户的uid
+    //  */
+    // handleRosterClick: (actionType: string, uid: string) => Promise<void>,
+    //TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 使指定用户下麦
+    //  * @param userUuid 用户uid
+    //  */
+    // revokeCoVideo: (userUuid: string) => Promise<void>,
+    //TO-REVIEW removed in v1.1.1
+    // /**
+    //  * 老师同意用户的举手 
+    //  * @param userUuid 用户uid
+    //  */
+    // teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
     /**
      * 当前课堂内的所有用户列表
      */
@@ -799,7 +822,18 @@ export type UserListContext = {
      * 同意举手的用户列表
      */
     acceptedUserList: any
+    //v1.1.1
+    localUserInfo: EduUser,
+    teacherInfo?: EduUser,
+    togglePodium: (userUuid:string, onPodium:boolean) => Promise<any>,
+    toggleWhiteboardPermission: (userUuid:string, whiteboardGranted: boolean) => Promise<any>,
+    toggleCamera: (userUuid:string) => Promise<any>,
+    toggleMic: (userUuid:string) => Promise<any>,
+    kick: (userUuid:string) => Promise<any>,
+    controlTools: ControlTool[],
+    isHost: boolean
 }
+
 export type RecordingContext = {
     /**
      * 是否正在录制
@@ -866,20 +900,26 @@ export type HandsUpContext = {
      * @param userUuid 用户uuid
      */
     teacherRejectHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 使指定用户下麦
+     * @param userUuid 用户uid
+     */
+    exitCoVideo: (userUuid: string) => Promise<void>,
+
 }
 export type VideoControlContext = {
-    /**
-     * 老师的媒体数据流
-     */
-    teacherStream: any,
-    /**
-     * 第一个学生的媒体数据流
-     */
-    firstStudent: EduMediaStream,
-    /**
-     * 学生的媒体数据流列
-     */
-    studentStreams: EduMediaStream[],
+    // /**
+    //  * 老师的媒体数据流
+    //  */
+    // teacherStream: any,
+    // /**
+    //  * 第一个学生的媒体数据流
+    //  */
+    // firstStudent: EduMediaStream,
+    // /**
+    //  * 学生的媒体数据流列
+    //  */
+    // studentStreams: EduMediaStream[],
     /**
      * 点击摄像头切换开关状态
      * @param userUuid 用户uuid
@@ -905,19 +945,19 @@ export type VideoControlContext = {
      * @param userUuid 用户uuid
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    /**
-     * 场景摄像头配置
-     */
-    sceneVideoConfig: {
-        hideOffPodium: boolean;
-        hideOffAllPodium: boolean;
-        isHost: boolean;
-        hideBoardGranted: boolean;
-    },
-    /**
-     * 是否为主持人
-     */
-    isHost: boolean,
+    // /**
+    //  * 场景摄像头配置
+    //  */
+    // sceneVideoConfig: {
+    //     hideOffPodium: boolean;
+    //     hideOffAllPodium: boolean;
+    //     isHost: boolean;
+    //     hideBoardGranted: boolean;
+    // },
+    // /**
+    //  * 是否为主持人
+    //  */
+    // isHost: boolean,
     /**
      * 击所有人下台（仅主持人可用）
      */
@@ -965,15 +1005,15 @@ export type SmallClassVideoControlContext = {
      * @param userUuid 用户uuid
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    /**
-     * 场景摄像头配置
-     */
-    sceneVideoConfig: {
-        hideOffPodium: boolean;
-        hideOffAllPodium: boolean;
-        isHost: boolean;
-        hideBoardGranted: boolean;
-    },
+    // /**
+    //  * 场景摄像头配置
+    //  */
+    // sceneVideoConfig: {
+    //     hideOffPodium: boolean;
+    //     hideOffAllPodium: boolean;
+    //     isHost: boolean;
+    //     hideBoardGranted: boolean;
+    // },
     // videoStreamList,
 }
 export type PrivateChatContext = {

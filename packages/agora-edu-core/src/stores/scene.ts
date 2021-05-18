@@ -12,7 +12,7 @@ import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
-import { EduMediaStream } from "../context/type"
+import { ControlTool, EduMediaStream } from "../context/type"
 
 const delay = 2000
 
@@ -1342,6 +1342,24 @@ export class SceneStore extends SimpleInterval {
     }
 
     return config
+  }
+
+  @computed
+  get controlTools() {
+    const roomType = this.roomInfo?.roomType ?? 1
+    let tools:ControlTool[] = []
+    
+    if([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType)) {
+      tools.push(ControlTool.offPodiumAll)
+    }
+    if(roomType === EduRoomType.SceneTypeMiddleClass) {
+      tools.push(ControlTool.offPodiumAll)
+    }
+    if(![EduRoomType.SceneTypeBigClass].includes(roomType)) {
+      tools.push(ControlTool.grantBoard)
+    }
+
+    return tools
   }
 
 

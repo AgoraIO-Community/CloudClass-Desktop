@@ -154,12 +154,6 @@ export class SmallClassStore {
     return !!this.acceptedList.find((it: any) => it.userUuid=== meUid)
   }
 
-  @computed
-  get coVideoUsers() {
-    const userList = get(this.roomStore, 'roomProperties.coVideo.users', [])
-    return userList
-  }
-
   get roomInfo() {
     return this.roomStore.roomInfo
   }
@@ -366,7 +360,7 @@ export class SmallClassStore {
   }
 
   @computed
-  get localUserRosterInfo() {
+  get localUserRosterInfo(): RosterUserInfo {
     const localUserUuid = this.roomStore.roomInfo.userUuid 
     const user = this.roomStore.sceneStore.userList.find((user: EduUser) => user.userUuid === localUserUuid)
     if (user) {
@@ -387,6 +381,8 @@ export class SmallClassStore {
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole),
       stars: 0,
       disabled: false,
+      chatEnabled: false,
+      canCoVideo: false
     }
   }
 
@@ -429,7 +425,7 @@ export class SmallClassStore {
     const userList = this.studentInfoList
       .filter((user: EduUser) => ['audience'].includes(user.role))
       .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: any[], user: EduUser) => {
+      .reduce((acc: RosterUserInfo[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
         const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
         acc.push(rosterUser)
@@ -444,6 +440,81 @@ export class SmallClassStore {
 
   reset() {
 
+  }
+
+  rosterUserExists(userUuid:string):boolean {
+    const userList = this.rosterUserList
+    const user = userList.find((user: RosterUserInfo) => user.uid === userUuid)
+    return !!user
+  }
+
+  @action.bound
+  async togglePodium(userUuid:string, onPodium:boolean) {
+    if(!this.rosterUserExists(userUuid))return
+
+    if (onPodium) {
+      if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+        await this.revokeCoVideo(userUuid)
+      }
+    } else {
+      if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+        await this.teacherAcceptHandsUp(userUuid)
+      }
+    }
+  }
+
+  @action.bound
+  async toggleWhiteboardPermission(userUuid:string, whiteboardGranted: boolean) {
+    if(!this.rosterUserExists(userUuid))return
+
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+      if (whiteboardGranted) {
+        await this.appStore.boardStore.revokeBoardPermission(userUuid)
+      } else {
+        await this.appStore.boardStore.grantBoardPermission(userUuid)
+      }
+    }
+  }
+
+  @action.bound
+  async toggleCamera(userUuid:string) {
+    if(!this.rosterUserExists(userUuid))return
+
+    const sceneStore = this.appStore.sceneStore
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (targetStream.hasVideo) {
+        await sceneStore.muteVideo(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteVideo(userUuid, isLocal)
+      }
+    }
+  }
+
+  @action.bound
+  async toggleMic(userUuid:string) {
+    if(!this.rosterUserExists(userUuid))return
+
+    const sceneStore = this.appStore.sceneStore
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (targetStream.hasAudio) {
+        await sceneStore.muteAudio(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteAudio(userUuid, isLocal)
+      }
+    }
+  }
+
+  @action.bound
+  async kick(userUuid:string) {
+    if(!this.rosterUserExists(userUuid))return
+    
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+      this.appStore.uiStore.fireDialog('kick-dialog', {userUuid, roomUuid: this.roomInfo.roomUuid})
+    }
   }
 
   @action.bound

@@ -1,4 +1,4 @@
-import { EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, useVideoControlContext, usePrivateChatContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -7,20 +7,27 @@ import { RendererPlayer } from '~utilities/renderer-player';
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
-    teacherStream: userStream,
+    // teacherStream: userStream,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
     onOffAllPodiumClick,
-    sceneVideoConfig,
+    // sceneVideoConfig,
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
+  const {
+    teacherStream: userStream
+  } = useStreamListContext()
+  const {
+    controlTools,
+    isHost
+  } = useUserListContext()
 
   return (
     <VideoPlayer
-      isHost={sceneVideoConfig.isHost}
+      isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
       stars={userStream.stars}
@@ -32,7 +39,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       hideBoardGranted={true}
       hideStars={true}
       micVolume={userStream.micVolume}
-      hideOffAllPodium={sceneVideoConfig.hideOffAllPodium}
+      hideOffAllPodium={!controlTools.includes(ControlTool.offPodiumAll)}
       canHoverHideOffAllPodium={canHoverHideOffAllPodium}
       onOffAllPodiumClick={onOffAllPodiumClick!}
       onCameraClick={onCameraClick}
@@ -71,16 +78,22 @@ export type VideoProps = {
 export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacement, style, className}) => {
 
   const {
-    firstStudent: userStream,
+    // firstStudent: userStream,
     onCameraClick, onMicClick,
     onSendStar, onWhiteboardClick,
-    sceneVideoConfig,
+    // sceneVideoConfig,
     onOffPodiumClick,
   } = useVideoControlContext()
+  const {
+    teacherStream: userStream
+  } = useStreamListContext()
+  const {
+    isHost
+  } = useUserListContext()
   
   return (
     <VideoPlayer
-      isHost={sceneVideoConfig.isHost}
+      isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
       stars={userStream.stars}
@@ -125,16 +138,26 @@ export const VideoMarqueeStudentContainer = observer(() => {
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    studentStreams,
-    sceneVideoConfig,
-    firstStudent
+    // studentStreams,
+    // sceneVideoConfig,
+    // firstStudent
   } = useSmallClassVideoControlContext()
 
-    const videoStreamList = useMemo(() => {
+  const {
+    isHost,
+    controlTools
+  } = useUserListContext()
 
+  const {
+    studentStreams
+  } = useStreamListContext()
+
+  const firstStudentStream = studentStreams[0]
+
+  const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
-      isHost: sceneVideoConfig.isHost,
-      hideOffPodium: sceneVideoConfig.hideOffPodium,
+      isHost: isHost,
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium),
       username: stream.account,
       stars: stream.stars,
       uid: stream.userUuid,
@@ -146,7 +169,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
       canHoverHideOffAllPodium: true,
-      hideBoardGranted: sceneVideoConfig.hideBoardGranted,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
         {
@@ -161,10 +184,10 @@ export const VideoMarqueeStudentContainer = observer(() => {
       )
       }))
   }, [
-    firstStudent,
+    firstStudentStream,
     studentStreams,
-    sceneVideoConfig.hideOffPodium,
-    sceneVideoConfig.isHost
+    isHost,
+    controlTools.includes(ControlTool.grantBoard)
   ])
 
   const {
