@@ -107,14 +107,14 @@ const TabsContainer = observer(() => {
 
 
   const {
-    isShareScreen
+    isScreenSharing
   } = useScreenShareContext()
 
   const TabPaneIcon = useCallback((name: string, resourceUuid: string, key: number) => {
 
     const panelCls = classnames({
-      [`icon-share-active`]: !!isShareScreen === true,
-      [`icon-share-inactive`]: !!isShareScreen === false,
+      [`icon-share-active`]: !!isScreenSharing === true,
+      [`icon-share-inactive`]: !!isScreenSharing === false,
     })
 
     if (key === 0) {
@@ -140,7 +140,7 @@ const TabsContainer = observer(() => {
         {name}
       </>
     )
-  }, [isShareScreen])
+  }, [isScreenSharing])
 
   return (
     <Tabs activeKey={activeSceneName} type="editable-card"

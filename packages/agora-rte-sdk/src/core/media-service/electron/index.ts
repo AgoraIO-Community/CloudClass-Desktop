@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode } from '../interfaces/index';
+import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode, PrepareScreenShareParams, ScreenShareType } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
@@ -1242,13 +1242,21 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
 
-  async prepareScreenShare(): Promise<any> {
+  async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
     try {
       //@ts-ignore
-      let items = this.client.getScreenWindowsInfo()
+      let items = params.type === ScreenShareType.Screen ? this.client.getScreenDisplaysInfo() : this.client.getScreenWindowsInfo()
       const noImageSize = items.filter((it: any) => !it.image).length
       if (noImageSize) {
         throw {code: 'ELECTRON_PERMISSION_DENIED'}
+      }
+      if(params.type === ScreenShareType.Screen){
+        return items.map((it: any, idx:number) => ({
+          ownerName: it.ownerName,
+          name: `Screen ${idx+1}`,
+          windowId: it.displayId,
+          image: CustomBtoa(it.image),
+        }))
       }
       return items.map((it: any) => ({
         ownerName: it.ownerName,
@@ -1304,7 +1312,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         const handleVideoSourceJoin = (uid: number) => {
           this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin)
           EduLogger.info("startScreenShare#options uid, ", uid, "  options", options)
-          this.client.videoSourceStartScreenCaptureByWindow(options.windowId as number, config.rect, config.param)
+          if(options.type === ScreenShareType.Window) {
+            this.client.videoSourceStartScreenCaptureByWindow(options.shareId as number, config.rect, config.param)
+          } else {
+            this.client.videoSourceStartScreenCaptureByScreen(options.shareId, config.rect, config.param)
+          }
           this.client.startScreenCapturePreview()
           resolve(uid)
         }

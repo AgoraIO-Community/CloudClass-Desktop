@@ -120,9 +120,6 @@ export class EduScenarioAppStore {
 
   @observable
   sharing: boolean = false
-
-  @observable
-  customScreenShareWindowVisible: boolean = false
   
   @observable
   customScreenShareItems: any[] = []
@@ -141,7 +138,6 @@ export class EduScenarioAppStore {
     this._screenVideoRenderer = undefined;
     this._screenEduStream = undefined
     this.sharing = false
-    this.customScreenShareWindowVisible = false
     this.customScreenShareItems = []
   }
 
