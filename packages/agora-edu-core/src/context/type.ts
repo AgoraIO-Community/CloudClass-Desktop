@@ -600,7 +600,7 @@ export type BoardContext = {
      */
     activeMap: Record<string, boolean>,
     /**
-     * 白板是否只读
+     * 白板是否就绪
      */
     ready: boolean,
     /**

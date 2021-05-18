@@ -134,7 +134,6 @@ export class SceneStore extends SimpleInterval {
 
   startTime: number = 0
 
-  //TO-REVIEW 和isScreenSharing啥区别?
   @observable
   sharing: boolean = false;
 
