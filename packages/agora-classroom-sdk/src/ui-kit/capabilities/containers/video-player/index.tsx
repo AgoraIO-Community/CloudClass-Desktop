@@ -187,7 +187,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
     firstStudentStream,
     studentStreams,
     isHost,
-    controlTools.includes(ControlTool.grantBoard)
+    controlTools.includes(ControlTool.offPodium)
   ])
 
   const {

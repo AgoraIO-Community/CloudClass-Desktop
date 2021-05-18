@@ -86,8 +86,6 @@ export const useStreamListContext = (): StreamListContext => {
     streamList,
     teacherStream,
     studentStreams,
-    //TO-REVIEW
-    //maybe roomProperties + stream = roomContext?
     onPodiumStudentStreams,
     muteAudio,
     unmuteAudio,
@@ -169,8 +167,6 @@ export const useScreenShareContext = (): ScreenShareContext => {
     screenEduStream,
     startOrStopSharing,
     // v1.1.1 - TO-REVIEW
-    // isShareScreen,
-    // isBoardScreenShare
     // is screensharing going on
     isScreenSharing: isShareScreen,
     customScreenSharePickerType,
@@ -187,26 +183,13 @@ export const useRoomContext = (): RoomContext => {
   const {
     roomInfo,
     classState,
-    // muteVideo,
-    // unmuteVideo,
-    // muteAudio,
-    // unmuteAudio,
     sceneType,
-    // muteUserChat,
-    // unmuteUserChat,
     removeScreenShareWindow
   } = useSceneStore()
 
   const {
     removeDialog,
   } = useUIStore()
-
-  // const {
-    // teacherAcceptHandsUp,
-    // teacherRejectHandsUp,
-  //   handsUpStudentList,
-  //   processUserCount,
-  // } = useSmallClassStore()
 
   const {
     kickOutBan,
@@ -224,13 +207,16 @@ export const useRoomContext = (): RoomContext => {
     removeDialog,
     // TO-REVIEW REMOVED in v1.1.1
     // startNativeScreenShareBy,
-    // TO-REVIEW REMOVED in v1.1.1
     // teacherAcceptHandsUp,
     // teacherRejectHandsUp,
-    // TO-REVIEW REMOVED in v1.1.1
-    // need change name
     // handsUpStudentList,
     // processUserCount,
+    // muteVideo,
+    // unmuteVideo,
+    // muteAudio,
+    // unmuteAudio,
+    // muteUserChat,
+    // unmuteUserChat
     roomInfo,
     isCourseStart: !!classState,
     kickOutBan,
@@ -239,14 +225,6 @@ export const useRoomContext = (): RoomContext => {
     // TO-REVIEW
     // ui context?
     removeScreenShareWindow,
-    // TO-REVIEW
-    // to remove in v1.1.1
-    // muteVideo,
-    // unmuteVideo,
-    // muteAudio,
-    // unmuteAudio,
-    // muteUserChat,
-    // unmuteUserChat
   }
 }
 
@@ -501,24 +479,13 @@ export const useUserListContext = (): UserListContext => {
 
   return {
     //TO-REVIEW removed in v1.1.1
-    //merged into localUserInfo
     // localUserUuid,
     // myRole,
-    //TO-REVIEW removed in v1.1.1
-    //merged into teacherInfo
     // teacherName,
-    //TO-REVIEW removed in v1.1.1
-    //split to separate func
     // handleRosterClick,
-    //TO-REVIEW removed in v1.1.1
-    //separate func?
     // revokeCoVideo,
-    //TO-REVIEW removed in v1.1.1
-    //room context?
     // teacherAcceptHandsUp,
     userList,
-    //TO-REVIEW
-    //room context??? coVideo
     acceptedUserList,
     rosterUserList,
     //v1.1.1
@@ -604,12 +571,6 @@ export const useVideoControlContext = (): VideoControlContext => {
   const boardStore = useBoardStore()
   const smallClassStore = useSmallClassStore()
   const isHost = sceneStore.isHost
-  const teacherStream = sceneStore.teacherStream
-  const studentStreams = sceneStore.studentStreams
-
-  const firstStudent = studentStreams[0]
-
-  const sceneVideoConfig = sceneStore.sceneVideoConfig
 
   const userRole = sceneStore.roomInfo.userRole
 
@@ -668,18 +629,19 @@ export const useVideoControlContext = (): VideoControlContext => {
 
 
   return {
-    // teacherStream,
-    // firstStudent,
-    // studentStreams,
     onCameraClick,
     onMicClick,
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    // sceneVideoConfig,
-    // isHost,
     onOffAllPodiumClick,
     canHoverHideOffAllPodium: !!acceptedUserList.length as any
+    //TO-REVIEW removed in v1.1.1
+    // teacherStream,
+    // firstStudent,
+    // studentStreams,
+    // sceneVideoConfig,
+    // isHost,
   }
 }
 
@@ -752,6 +714,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
+    //TO-REVIEW removed in v1.1.1
     // sceneVideoConfig,
     // videoStreamList,
   }
