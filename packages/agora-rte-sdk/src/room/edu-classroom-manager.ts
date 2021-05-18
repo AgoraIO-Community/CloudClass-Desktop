@@ -18,6 +18,7 @@ import { RTMWrapper } from '../core/rtm';
 import { MessageSerializer } from '../core/rtm/message-serializer';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
+import { reportServiceV2 } from '../core/services/report-service-v2';
 
 export type EduClassroomInitParams = {
   eduManager: EduManager
@@ -139,8 +140,44 @@ export class EduClassroomManager {
     try {
       // REPORT
       reportService.startTick('joinRoom', 'end')
-      await this._join(params)
+      let data = await this._join(params)
       reportService.reportElapse('joinRoom', 'end', {result: true})
+      /**
+       * room: {
+    name: string
+    uuid: string
+    muteChat: {
+      audience: EnumChatState
+      broadcaster: EnumChatState
+      host: EnumChatState
+    }
+    muteVideo: {
+      audience: EnumVideoState
+      host: EnumVideoState
+    }
+    muteAudio: {
+      audience: EnumAudioState
+      host: EnumAudioState
+    }
+    startTime: number
+    state: number
+    properties: any
+  }
+  user: {
+    uuid: string
+    name: string
+    role: string
+    streamUuid: string
+    userToken: string
+    rtmToken: string
+    rtcToken: string
+    // muteChat: EnumChatState
+    streams: any[]
+    properties: any
+  }
+       */
+      // reportServiceV2.initReportUserParams();
+      reportServiceV2.reportApaasUserJoin();
     } catch(e) {
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.code || e.message}`})
       throw e
@@ -215,6 +252,7 @@ export class EduClassroomManager {
       this.data.BatchUpdateData()
       this._userService = new EduUserService(this)
       EduLogger.debug(`join classroom ${this.roomUuid} success`)
+      return joinRoomData;
     }
   }
 
@@ -229,7 +267,8 @@ export class EduClassroomManager {
       await this.eduManager._rtmWrapper.leave({
         channelName: this.roomUuid,
       })
-      delete this.eduManager._dataBuffer[this.rawRoomUuid]
+      delete this.eduManager._dataBuffer[this.rawRoomUuid];
+      reportServiceV2.reportApaasUserQuit();
       EduLogger.debug(`leave classroom ${this.roomUuid} success`)
     }
   }
