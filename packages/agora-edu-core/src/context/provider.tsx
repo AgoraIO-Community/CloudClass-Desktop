@@ -194,12 +194,12 @@ export const useRoomContext = (): RoomContext => {
     removeDialog,
   } = useUIStore()
 
-  const {
-    teacherAcceptHandsUp,
-    teacherRejectHandsUp,
-    handsUpStudentList,
-    processUserCount,
-  } = useSmallClassStore()
+  // const {
+    // teacherAcceptHandsUp,
+    // teacherRejectHandsUp,
+  //   handsUpStudentList,
+  //   processUserCount,
+  // } = useSmallClassStore()
 
   const {
     kickOutBan,
@@ -217,10 +217,9 @@ export const useRoomContext = (): RoomContext => {
     removeDialog,
     // TO-REVIEW REMOVED in v1.1.1
     // startNativeScreenShareBy,
-    // TO-REVIEW
-    // sceneContext?
-    teacherAcceptHandsUp,
-    teacherRejectHandsUp,
+    // TO-REVIEW REMOVED in v1.1.1
+    // teacherAcceptHandsUp,
+    // teacherRejectHandsUp,
     // TO-REVIEW
     // need change
     handsUpStudentList,
