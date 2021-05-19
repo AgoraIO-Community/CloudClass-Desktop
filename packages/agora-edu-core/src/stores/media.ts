@@ -248,7 +248,7 @@ export class MediaStore {
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
         this.autoplay = true
-        this.appStore.uiStore.showAutoplayNotification()
+        this.appStore.roomStore.fireToast('toast.autoplay')
       }
     })
     this.mediaService.on('user-published', (evt: any) => {

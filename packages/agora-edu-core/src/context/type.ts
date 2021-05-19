@@ -130,15 +130,15 @@ export type ChatContext = {
      * 禁止聊天
      */
     unmuteChat: () => void,
-    /**
-     * @param chatCollapse 是否折叠
-     * ui使用，不应该提供
-     */
-    chatCollapse: boolean,
-    /**
-     * 切换最小化最大化聊天
-     */
-    toggleChatMinimize: () => void,
+    // /**
+    //  * @param chatCollapse 是否折叠
+    //  * ui使用，不应该提供
+    //  */
+    // chatCollapse: boolean,
+    // /**
+    //  * 切换最小化最大化聊天
+    //  */
+    // toggleChatMinimize: () => void,
     /**
      * 未读取消息数量
      */

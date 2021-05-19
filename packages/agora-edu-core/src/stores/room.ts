@@ -1477,9 +1477,9 @@ export class RoomStore extends SimpleInterval {
           role: `${this.getRoleEnumValue(fromUser.role)}`,
           isOwn: false
         })
-        if (this.appStore.uiStore.chatCollapse) {
-          this.incrementUnreadMessageCount()
-        }
+        // if (this.appStore.uiStore.chatCollapse) {
+        //   this.incrementUnreadMessageCount()
+        // }
         BizLogger.info('room-chat-message', evt)
       })
 
@@ -1880,11 +1880,11 @@ export class RoomStore extends SimpleInterval {
       // extApp
       // emit events for app plugins
       const { extAppCause } = data
-      this.appStore.uiStore.activeAppPlugins.forEach(appPlugin => {
-        let oldProps = get(oldRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
-        let newProps = get(newRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
+      this.appStore.activeExtApps.forEach(app => {
+        let oldProps = get(oldRoomProperties, `extApps.${escapeExtAppIdentifier(app.appIdentifier)}`)
+        let newProps = get(newRoomProperties, `extApps.${escapeExtAppIdentifier(app.appIdentifier)}`)
         if (oldProps !== newProps) {
-          appPlugin.extAppRoomPropertiesDidUpdate(newProps, extAppCause)
+          app.extAppRoomPropertiesDidUpdate(newProps, extAppCause)
         }
       })
     } else if (cmd === 600) {

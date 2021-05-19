@@ -14,7 +14,7 @@ import { RoomStore } from './room'
 import { SceneStore } from './scene'
 // import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
-import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
+import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
 
 export class EduScenarioAppStore {
@@ -123,6 +123,20 @@ export class EduScenarioAppStore {
   
   @observable
   customScreenShareItems: any[] = []
+
+  @observable
+  allExtApps:IAgoraExtApp[]
+
+  @observable
+  activeExtAppIds:string[] = []
+
+  @computed
+  get activeExtApps():IAgoraExtApp[] {
+    return this.allExtApps.filter(app => this.activeExtAppIds.includes(app.appIdentifier))
+  }
+
+  @observable
+  language: string = 'zh'
 
   @action.bound
   resetStates() {
@@ -243,7 +257,7 @@ export class EduScenarioAppStore {
     // this.uiStore = new UIStore(this)
 
     if (language) {
-      this.uiStore.setLanguage(language)
+      this.language = language
     }
 
     this.pretestStore = new PretestStore(this)
@@ -253,6 +267,7 @@ export class EduScenarioAppStore {
     this.mediaStore = new MediaStore(this)
     this.widgetStore = new WidgetStore()
     this.widgetStore.widgets = this.params.config.widgets || {}
+    this.allExtApps = this.params.config.extApps || []
 
     this._screenVideoRenderer = undefined
   }

@@ -35,7 +35,7 @@ export const useChatContext = (): ChatContext=> {
     conversationList: roomStore.chatConversationList,
     //TO-REVIEW
     //ui store?
-    chatCollapse: uiStore.chatCollapse,
+    // chatCollapse: uiStore.chatCollapse,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
     sendMessage: roomStore.sendMessage,
@@ -44,7 +44,7 @@ export const useChatContext = (): ChatContext=> {
     unmuteChat: sceneStore.unmuteChat,
     muteUserChat: sceneStore.muteUserChat,
     unmuteUserChat: sceneStore.unmuteUserChat,
-    toggleChatMinimize: uiStore.toggleChatMinimize,
+    // toggleChatMinimize: uiStore.toggleChatMinimize,
     addChatMessage: roomStore.addChatMessage,
     addConversationChatMessage: roomStore.addConversationChatMessage,
     getHistoryChatMessage: roomStore.getHistoryChatMessage,
