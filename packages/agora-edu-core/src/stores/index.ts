@@ -240,7 +240,7 @@ export class EduScenarioAppStore {
       EduManager.enableDebugLog(true);
     }
 
-    this.uiStore = new UIStore(this)
+    // this.uiStore = new UIStore(this)
 
     if (language) {
       this.uiStore.setLanguage(language)
@@ -424,4 +424,4 @@ export class EduScenarioAppStore {
 export { BoardStore } from './board';
 export { PretestStore } from './pretest';
 export { RoomStore } from './room';
-export { UIStore } from './ui';
+// export { UIStore } from './ui';

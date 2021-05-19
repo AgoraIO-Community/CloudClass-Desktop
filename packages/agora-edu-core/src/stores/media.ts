@@ -204,7 +204,7 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed")
       if (appStore.isNotInvisible) {
-        this.appStore.uiStore.fireToast('toast.audio_equipment_has_changed')
+        this.appStore.roomStore.fireToast('toast.audio_equipment_has_changed')
         // Modal.show({
         //   title: transI18n('aclass.device.audio_failed'),
         //   // text: transI18n('aclass.device.audio_failed'),
@@ -241,7 +241,7 @@ export class MediaStore {
       //   onCancel: () => {
       //   }
       // })
-      this.appStore.uiStore.fireToast('toast.video_equipment_has_changed')
+      this.appStore.roomStore.fireToast('toast.video_equipment_has_changed')
       // await this.appStore.deviceStore.init({ video: true })
       await this.appStore.pretestStore.init({ video: true})
     }, delay))
@@ -302,7 +302,7 @@ export class MediaStore {
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
-      if (this.appStore.uiStore.isElectron) {
+      if (this.appStore.isElectron) {
         this.totalVolume = +Number(((totalVolume / 255) * 100)).toFixed(3)
       } else {
         this.totalVolume = totalVolume * 100;

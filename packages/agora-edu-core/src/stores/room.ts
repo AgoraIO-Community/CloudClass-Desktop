@@ -482,6 +482,8 @@ export class RoomStore extends SimpleInterval {
   appStore!: EduScenarioAppStore;
 
   toast$: BehaviorSubject<any>
+  dialog$: BehaviorSubject<any>
+  seq$: BehaviorSubject<any>
 
   get sceneStore() {
     return this.appStore.sceneStore
@@ -494,6 +496,8 @@ export class RoomStore extends SimpleInterval {
   constructor(appStore: EduScenarioAppStore) {
     super()
     this.toast$ = new BehaviorSubject<any>({})
+    this.dialog$ = new BehaviorSubject<any>({})
+    this.seq$ = new BehaviorSubject<any>({})
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
   }
@@ -1124,8 +1128,7 @@ export class RoomStore extends SimpleInterval {
       })
       roomManager.on('seqIdChanged', (evt: any) => {
         BizLogger.info("seqIdChanged", evt)
-        this.appStore.uiStore.updateCurSeqId(evt.curSeqId)
-        this.appStore.uiStore.updateLastSeqId(evt.latestSeqId)
+        this.updateSeqId({current: evt.curSeqId, latest: evt.latestSeqId})
       })
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
@@ -1637,7 +1640,7 @@ export class RoomStore extends SimpleInterval {
       const error = GenericErrorWrapper(err)
       reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${error.message}` })
       // TODO 需要把Dialog UI和业务解耦，提供事件即可
-      this.appStore.uiStore.fireDialog('generic-error-dialog', {
+      this.fireDialog('generic-error-dialog', {
         error
       })
       // this.appStore.uiStore.addDialog(GenericErrorDialog, {error})
@@ -1653,7 +1656,7 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      this.appStore.uiStore.fireDialog('room-end-notice', {
+      this.fireDialog('room-end-notice', {
         state
       })
       // this.appStore.uiStore.addDialog(RoomEndNotice)
@@ -1716,8 +1719,7 @@ export class RoomStore extends SimpleInterval {
       // this.fireToast(t('toast.successfully_left_the_business_channel'))
       this.delInterval('timer')
       this.reset()
-      this.appStore.uiStore.updateCurSeqId(0)
-      this.appStore.uiStore.updateLastSeqId(0)
+      this.updateSeqId({current:0, latest:0})
     } catch (err) {
       this.reset()
       const error = GenericErrorWrapper(err)
@@ -1729,17 +1731,17 @@ export class RoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch (quickType) {
       case QuickTypeEnum.Kick: {
-        this.appStore.uiStore.fireDialog('kick-end')
+        this.fireDialog('kick-end')
         // this.appStore.uiStore.addDialog(KickEnd)
         break;
       }
       case QuickTypeEnum.End: {
-        this.appStore.uiStore.fireDialog('room-end-notice')
+        this.fireDialog('room-end-notice')
         // this.appStore.uiStore.addDialog(RoomEndNotice)
         break;
       }
       case QuickTypeEnum.Kicked: {
-        this.appStore.uiStore.fireDialog('kicked-end')
+        this.fireDialog('kicked-end')
         // this.appStore.uiStore.addDialog(KickedEnd)
         break;
       }
@@ -1950,6 +1952,22 @@ export class RoomStore extends SimpleInterval {
     this.toast$.next({
       eventName,
       props,
+    })
+  }
+
+  @action.bound
+  fireDialog(eventName: string, props?: any) {
+    console.log('fire dialog ', eventName, props)
+    this.dialog$.next({
+      eventName,
+      props
+    })
+  }
+
+  @action.bound
+  updateSeqId(props?: any) {
+    this.seq$.next({
+      props
     })
   }
 }

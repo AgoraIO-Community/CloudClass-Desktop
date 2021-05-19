@@ -5,7 +5,7 @@ import { get } from "lodash"
 
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
-import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
+import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
 import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
@@ -187,15 +187,18 @@ export const useRoomContext = (): RoomContext => {
     removeScreenShareWindow
   } = useSceneStore()
 
-  const {
-    removeDialog,
-  } = useUIStore()
+  // const {
+  //   removeDialog,
+  // } = useUIStore()
 
   const {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus
+    liveClassStatus,
+    toast$,
+    dialog$,
+    seq$
   } = useRoomStore()
 
   return {
@@ -204,7 +207,7 @@ export const useRoomContext = (): RoomContext => {
     joinRoom: join,
     // TO-REVIEW
     // ui context?
-    removeDialog,
+    // removeDialog,
     // TO-REVIEW REMOVED in v1.1.1
     // startNativeScreenShareBy,
     // teacherAcceptHandsUp,
@@ -225,6 +228,10 @@ export const useRoomContext = (): RoomContext => {
     // TO-REVIEW
     // ui context?
     removeScreenShareWindow,
+    // v1.1.1
+    toastEventObserver: toast$,
+    dialogEventObserver: dialog$,
+    sequenceEventObserver: seq$
   }
 }
 
@@ -268,37 +275,35 @@ export const useGlobalContext = (): GlobalContext => {
   return {
     //TO-REVIEW
     //add isLoading
-    loading,
+    // loading,
     isFullScreen,
     //TO-REVIEW
     //ui context?
-    addDialog,
-    removeDialog,
-    toast$,
-    fireToast,
-    addToast,
+    // addDialog,
+    // removeDialog,
+    // toast$,
+    // fireToast,
+    // addToast,
     //TO-REVIEW
     //??
-    checked,
+    // checked,
     params: appStore.params,
     //TO-REVIEW
     //ui context?
-    dialogQueue,
-    removeToast,
-    toastQueue,
+    // dialogQueue,
+    // removeToast,
+    // toastQueue,
     //TO-REVIEW
     //??
-    updateChecked,
+    // updateChecked,
     mainPath,
     language: appStore.params.language,
-    toastEventObserver: toast$,
-    dialogEventObserver: dialog$,
     //TO-REVIEW
     //ui context?
-    fireDialog,
-    joined,
+    // fireDialog,
+    // joined,
     //v1.1.1
-    isLoading: loading,
+    // isLoading: loading,
     isJoined: joined
   }
 }

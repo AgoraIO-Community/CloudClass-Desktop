@@ -359,11 +359,11 @@ export type RoomContext = {
      * 加入房间
      */
     joinRoom: () => Promise<void>,
-    /**
-     * 移除对话框
-     * @param id 对话框ID
-     */
-    removeDialog: (id: string) => void,
+    // /**
+    //  * 移除对话框
+    //  * @param id 对话框ID
+    //  */
+    // removeDialog: (id: string) => void,
     // TO-REVIEW REMOVED in v1.1.1
     // /**
     //  * 屏幕分享
@@ -420,6 +420,30 @@ export type RoomContext = {
         classState: string;
         duration: number;
     },
+    /**
+     * BehaviorSubject实例化的对象 toastEventObserver
+     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+     *  toastEventObserver.subscribe((evt)=>{
+     *   //观察者订阅的事件 evt   事件名称：evt.eventname
+     *   })
+     */
+     toastEventObserver: BehaviorSubject<any>,
+     /**
+      * BehaviorSubject实例化的对象 dialogEventObserver
+      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+      *  dialogEventObserver.subscribe((evt)=>{
+      *   //观察者订阅的事件 evt   事件名称：evt.eventname
+      *   })
+      */
+     dialogEventObserver: BehaviorSubject<any>,
+    /**
+     * BehaviorSubject实例化的对象 sequenceEventObserver
+     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+     *  sequenceEventObserver.subscribe((evt)=>{
+     *   //观察者订阅的事件 evt   事件名称：evt.eventname
+     *   })
+     */
+    sequenceEventObserver: BehaviorSubject<any>,
     // TO-REVIEW REMOVED in v1.1.1
     // /**
     //  * 禁用视频
@@ -467,72 +491,72 @@ export type RoomDiagnosisContext = {
     }
 }
 export type GlobalContext = {
-    /**
-     * 正在加载中
-     */
-    loading: boolean,
-    isLoading: boolean,
+    // /**
+    //  * 正在加载中
+    //  */
+    // loading: boolean,
+    // isLoading: boolean,
     /**
      * 是否全屏
      */
     isFullScreen: boolean,
-    /**
-     * 向dialogQueue中新增一个dialog数据
-     * @param component 对话框组件
-     * @param this.props 对话框组件的props
-     */
-    addDialog: (component: any, props?: any) => any,
-    /**
-     * 移除dialogQueue中的一个dialog数据
-     * @param id 对话框的ID
-     */
-    removeDialog: (id: string) => void,
-    /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    toast$: BehaviorSubject<any>,
-    /**
-     * 触发toastEventObserver订阅的事件
-     * @param eventName 事件名称
-     * @param props 事件的参数
-     */
-    fireToast: (eventName: string, props?: any) => void,
-    /**
-     * 向toastQueue中新增一个toast数据
-     * @param desc toast内容
-     * @param type toast类型
-     */
-    addToast: (desc: string, type?: "success" | "error" | "warning" | undefined) => string,
-    /**
-     * 是否选中
-     */
-    checked: boolean,
+    // /**
+    //  * 向dialogQueue中新增一个dialog数据
+    //  * @param component 对话框组件
+    //  * @param this.props 对话框组件的props
+    //  */
+    // addDialog: (component: any, props?: any) => any,
+    // /**
+    //  * 移除dialogQueue中的一个dialog数据
+    //  * @param id 对话框的ID
+    //  */
+    // removeDialog: (id: string) => void,
+    // /**
+    //  * BehaviorSubject实例化的对象 toastEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  toastEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // toast$: BehaviorSubject<any>,
+    // /**
+    //  * 触发toastEventObserver订阅的事件
+    //  * @param eventName 事件名称
+    //  * @param props 事件的参数
+    //  */
+    // fireToast: (eventName: string, props?: any) => void,
+    // /**
+    //  * 向toastQueue中新增一个toast数据
+    //  * @param desc toast内容
+    //  * @param type toast类型
+    //  */
+    // addToast: (desc: string, type?: "success" | "error" | "warning" | undefined) => string,
+    // /**
+    //  * 是否选中
+    //  */
+    // checked: boolean,
     /**
      * appStore的参数
      */
     params: AppStoreInitParams,
-    /**
-     * 对话框的数据队列
-     */
-    dialogQueue: DialogType[],
-    /**
-     * 移出toastQueue中的一个toast数据
-     * @param id toast的ID
-     */
-    removeToast: (id: string) => string,
-    /**
-     * toast的数据队列
-     */
-    toastQueue: ToastType[],
-    /**
-     * 设置是否选中
-     * @param v 设置参数
-     */
-    updateChecked: (v: boolean) => void,
+    // /**
+    //  * 对话框的数据队列
+    //  */
+    // dialogQueue: DialogType[],
+    // /**
+    //  * 移出toastQueue中的一个toast数据
+    //  * @param id toast的ID
+    //  */
+    // removeToast: (id: string) => string,
+    // /**
+    //  * toast的数据队列
+    //  */
+    // toastQueue: ToastType[],
+    // /**
+    //  * 设置是否选中
+    //  * @param v 设置参数
+    //  */
+    // updateChecked: (v: boolean) => void,
     /**
      * 主路由
      */
@@ -541,31 +565,31 @@ export type GlobalContext = {
      * 语言
      */
     language: LanguageEnum,
-    /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    toastEventObserver: BehaviorSubject<any>,
-    /**
-     * BehaviorSubject实例化的对象 dialogEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  dialogEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    dialogEventObserver: BehaviorSubject<any>,
-    /** 触发dialogEventObserver订阅的事件
-     * @param eventName 事件名称
-     * @param props 事件的参数
-     */
-    fireDialog: (eventName: string, props?: any) => void,
+    // /**
+    //  * BehaviorSubject实例化的对象 toastEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  toastEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // toastEventObserver: BehaviorSubject<any>,
+    // /**
+    //  * BehaviorSubject实例化的对象 dialogEventObserver
+    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+    //  *  dialogEventObserver.subscribe((evt)=>{
+    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
+    //  *   })
+    //  */
+    // dialogEventObserver: BehaviorSubject<any>,
+    // /** 触发dialogEventObserver订阅的事件
+    //  * @param eventName 事件名称
+    //  * @param props 事件的参数
+    //  */
+    // fireDialog: (eventName: string, props?: any) => void,
     /**
      * 已经加入房间
      */
-    joined: boolean;
+    // joined: boolean;
     isJoined: boolean;
 }
 export type BoardContext = {
@@ -1043,11 +1067,11 @@ export type MediaContext = {
      * @param value 改变的值
      */
     changeAudioVolume: (deviceType: string, value: any) => Promise<void>,
-    /**
-     * 关闭对话框
-     * @param id 对话框id
-     */
-    removeDialog: (id: string) => void
+    // /**
+    //  * 关闭对话框
+    //  * @param id 对话框id
+    //  */
+    // removeDialog: (id: string) => void
 }
 
 export type CloudDriveContext = {

@@ -1,7 +1,7 @@
 import { useCoreContext } from './core';
 import { get } from "lodash"
 import { IAgoraExtApp } from ".."
-import { useUIStore, useRoomStore } from "./core"
+import { useRoomStore } from "./core"
 
 export const useAppPluginContext = () => {
   const appStore = useCoreContext()

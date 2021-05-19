@@ -487,7 +487,7 @@ export class PretestStore {
       }
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
+      this.appStore.roomStore.fireToast('toast.switch_camera_failed', {reason: error})
     }
   }
 
@@ -546,7 +546,7 @@ export class PretestStore {
       }
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
+      this.appStore.roomStore.fireToast('toast.switch_camera_failed', {reason: error})
     }
   }
 
@@ -718,7 +718,7 @@ export class PretestStore {
 
   @computed
   get speakerLabel(): string {
-    if (this.appStore.uiStore.isElectron) {
+    if (this.appStore.isElectron) {
       return this.appStore.eduManager.mediaService.getSpeakerLabel()
     }
     return '默认'
