@@ -12,7 +12,7 @@ import { MediaStore } from './media'
 import { PretestStore } from './pretest'
 import { RoomStore } from './room'
 import { SceneStore } from './scene'
-import { UIStore } from './ui'
+// import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
@@ -23,7 +23,7 @@ export class EduScenarioAppStore {
    * appStore类
    * 包含uiStore
    */
-  uiStore!: UIStore;
+  // uiStore!: UIStore;
   boardStore!: BoardStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;

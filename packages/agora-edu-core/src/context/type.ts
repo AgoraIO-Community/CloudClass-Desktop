@@ -914,10 +914,10 @@ export type SmallClassVideoControlContext = {
      * 老师的媒体数据流
      */
     teacherStream: any,
-    /**
-     * 第一个学生的媒体数据流
-     */
-    firstStudent: EduMediaStream,
+    // /**
+    //  * 第一个学生的媒体数据流
+    //  */
+    // firstStudent: EduMediaStream,
     /**
      * 学生的媒体数据流列
      */

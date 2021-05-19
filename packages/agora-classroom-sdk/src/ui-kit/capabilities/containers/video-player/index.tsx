@@ -138,7 +138,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    // studentStreams,
+    studentStreams,
     // sceneVideoConfig,
     // firstStudent
   } = useSmallClassVideoControlContext()
@@ -147,10 +147,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
     isHost,
     controlTools
   } = useUserListContext()
-
-  const {
-    studentStreams
-  } = useStreamListContext()
 
   const firstStudentStream = studentStreams[0]
 

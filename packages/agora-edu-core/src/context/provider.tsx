@@ -28,7 +28,7 @@ export {
  */
 export const useChatContext = (): ChatContext=> {
   const core = useCoreContext()
-  const { roomStore, sceneStore, uiStore } = core
+  const { roomStore, sceneStore } = core
   return {
     isHost: sceneStore.isHost,
     messageList: roomStore.chatMessageList,
@@ -245,21 +245,21 @@ export const useGlobalContext = (): GlobalContext => {
 
   const mainPath = useCoreContext().params.mainPath
 
-  const {
-    addDialog,
-    removeDialog,
-    addToast,
-    toast$,
-    fireToast,
-    removeToast,
-    toastQueue,
-    checked,
-    loading,
-    dialogQueue,
-    updateChecked,
-    dialog$,
-    fireDialog
-  } = useUIStore()
+  // const {
+  //   addDialog,
+  //   removeDialog,
+  //   addToast,
+  //   toast$,
+  //   fireToast,
+  //   removeToast,
+  //   toastQueue,
+  //   checked,
+  //   loading,
+  //   dialogQueue,
+  //   updateChecked,
+  //   dialog$,
+  //   fireDialog
+  // } = useUIStore()
 
   const {
     joined
@@ -653,7 +653,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
   const teacherStream = sceneStore.teacherStream
   const studentStreams = smallClassStore.studentStreams
 
-  const firstStudent = studentStreams[0]
+  // const firstStudent = studentStreams[0]
 
   // const sceneVideoConfig = sceneStore.sceneVideoConfig
 
@@ -706,7 +706,6 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
 
   return {
     teacherStream,
-    firstStudent,
     studentStreams,
     onCameraClick,
     onMicClick,
@@ -714,6 +713,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
     onWhiteboardClick,
     onOffPodiumClick,
     //TO-REVIEW removed in v1.1.1
+    // firstStudent,
     // sceneVideoConfig,
     // videoStreamList,
   }
