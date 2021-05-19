@@ -1094,7 +1094,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultTeacherPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.roomStore.isJoiningRoom) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
@@ -1114,7 +1114,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultStudentPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.roomStore.isJoiningRoom) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`

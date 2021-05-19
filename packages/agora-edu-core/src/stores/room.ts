@@ -477,6 +477,9 @@ export class RoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
+  @observable
+  isJoiningRoom: boolean = false
+
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
   appStore!: EduScenarioAppStore;
@@ -1016,7 +1019,7 @@ export class RoomStore extends SimpleInterval {
     try {
       this.disposers.push(reaction(() => this.sceneStore.classState, this.onClassStateChanged.bind(this)))
 
-      this.appStore.uiStore.startLoading()
+      this.startJoining()
       this.roomApi = new RoomApi({
         appId: this.eduManager.config.appId,
         sdkDomain: this.eduManager.config.sdkDomain as string,
@@ -1072,7 +1075,7 @@ export class RoomStore extends SimpleInterval {
         BizLogger.warn(`${error}`)
         this.appStore.isNotInvisible && this.fireToast('toast.failed_to_join_board')
       })
-      this.appStore.uiStore.stopLoading()
+      this.stopJoining()
 
       // logout will clean up eduManager events, so we need to put the listener here
       this.eduManager.on('ConnectionStateChanged', async ({ newState, reason }) => {
@@ -1631,7 +1634,7 @@ export class RoomStore extends SimpleInterval {
       this.roomJoined = true
     } catch (err) {
       this.eduManager.removeAllListeners()
-      this.appStore.uiStore.stopLoading()
+      this.stopJoining()
       try {
         await this.appStore.destroy()
       } catch (err) {
@@ -1969,5 +1972,15 @@ export class RoomStore extends SimpleInterval {
     this.seq$.next({
       props
     })
+  }
+
+  @action.bound
+  startJoining() {
+    this.isJoiningRoom = true
+  }
+
+  @action.bound
+  stopJoining() {
+    this.isJoiningRoom = false
   }
 }
