@@ -40,6 +40,22 @@
   transition: .5s;
 }
 
+.one-class-aside {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.one-class-aside-full {
+  transition: .5s;
+  margin-right: -300px;
+}
+
+.one-class-aside .chat-panel {
+  transform: translateX(2px);
+  right: 0;
+  bottom: 0;
+}
+
 .edu-room .video-player.student-1v1 {
   opacity: 1;
   transform: scale(1);

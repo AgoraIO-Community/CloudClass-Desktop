@@ -1,18 +1,22 @@
 import { CabinetItem } from '@/ui-kit/components/toolbar/tool-cabinet'
-import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext } from 'agora-edu-core'
+import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext, useScreenShareContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 import {observer} from 'mobx-react'
+import { ScreenShareType } from 'agora-rte-sdk'
 
 export const ToolCabinetContainer = observer(() => {
 
     const {
-        startOrStopSharing,
         setLaserPoint,
         currentSelector,
         canSharingScreen,
     } = useBoardContext()
+
+    const {
+        startOrStopSharing
+    } = useScreenShareContext()
 
     const {
         appPlugins,

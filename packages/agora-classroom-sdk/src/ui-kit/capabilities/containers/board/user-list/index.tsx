@@ -127,6 +127,13 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
       }, [keyword, rosterUserList])
 
+      const userType = useMemo(() => {
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
+            return 'teacher'
+        }
+        return 'student'
+    }, [roomInfo.userRole])
+
     return (
         <Roster
             isDraggable={true}
@@ -134,6 +141,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             role={myRole as any}
             teacherName={teacherName}
             dataSource={dataList}
+            userType={userType}
             onClick={onClick}
             onClose={props.onClose}
             onChange={(text: string) => {

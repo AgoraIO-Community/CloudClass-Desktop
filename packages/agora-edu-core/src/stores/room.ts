@@ -1685,6 +1685,11 @@ export class RoomStore extends SimpleInterval {
     try {
       this.sceneStore.joiningRTC = false
       try {
+        this.appStore.widgetStore.leave()
+      } catch (err) {
+        BizLogger.error(`${err}`)
+      }
+      try {
         await this.sceneStore.leaveRtc()
       } catch (err) {
         BizLogger.error(`${err}`)

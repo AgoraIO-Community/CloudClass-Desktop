@@ -222,6 +222,7 @@ export const en = {
     'student_list': 'Student List',
     'pencil': 'Pencil',
     'laser_pointer': 'Laser pointer',
+    'countdown': 'countdown',
     'straight': 'straight',
     'circle': 'circle',
     'rectangle': 'rectangle',

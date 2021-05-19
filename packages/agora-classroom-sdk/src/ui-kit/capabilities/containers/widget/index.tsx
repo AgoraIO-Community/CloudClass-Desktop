@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
-import { eduSDKApi, IAgoraWidget, useAppPluginContext,  useChatContext, useGlobalContext, useRoomContext} from 'agora-edu-core';
+import { IAgoraWidget, useAppPluginContext} from 'agora-edu-core';
 import './index.css';
 import { Dependencies } from '../ext-app/dependencies';
 import {Adapter} from './adapter'
@@ -41,11 +41,10 @@ export const Widget: FC<WidgetProps> = ({
     }
     
     useEffect(() => {
-        if (ref.current) {
+        if (ref.current && widgetComponent) {
             // only run for very first time
-            widgetComponent.widgetDidLoad(ref.current, widgetProps, context)
+            widgetComponent.widgetDidLoad(ref.current, context, widgetProps)
         }
-        return () => widgetComponent.widgetWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, widgetComponent])
 

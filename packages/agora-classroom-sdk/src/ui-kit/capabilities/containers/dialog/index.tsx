@@ -1,6 +1,6 @@
 import { BusinessExceptions } from '@/infra/biz-error'
-import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext } from 'agora-edu-core'
-import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
+import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext } from 'agora-edu-core'
+import { GenericError, GenericErrorWrapper, ScreenShareType } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -161,18 +161,23 @@ export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }
 
 export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   const {
-    startNativeScreenShareBy
+    removeScreenShareWindow
   } = useRoomContext()
 
   const {
     removeDialog
   } = useGlobalContext()
 
-  const [windowId, setWindowId] = useState<string>('')
+  const {
+    startNativeScreenShareBy,
+    customScreenSharePickerType
+  } = useScreenShareContext()
+
+  const [shareId, setShareId] = useState<any>('')
 
   const onConfirm = useCallback(async () => {
-    await startNativeScreenShareBy(+windowId)
-  }, [windowId])
+    await startNativeScreenShareBy(shareId, customScreenSharePickerType)
+  }, [shareId])
 
   const onOK = async () => {
     await onConfirm()
@@ -180,6 +185,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   }
 
   const onCancel = () => {
+    removeScreenShareWindow()
     removeDialog(id)
   }
 
@@ -195,8 +201,8 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
       title={t('toast.screen_share')}
     >
       <ScreenShareContainer
-        windowId={windowId}
-        setWindowId={setWindowId}
+        windowId={shareId}
+        setWindowId={setShareId}
       />
     </Modal>
   )

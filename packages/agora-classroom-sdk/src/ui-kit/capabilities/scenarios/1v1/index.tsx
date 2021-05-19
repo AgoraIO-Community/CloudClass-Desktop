@@ -1,26 +1,28 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useGlobalContext, useRoomContext } from 'agora-edu-core'
+import { useGlobalContext, useRoomContext, useWidgetContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
 import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoList } from '~capabilities/containers/video-player'
-import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import { Widget } from '~capabilities/containers/widget'
-import { AgoraChatWidget } from 'agora-widget-gallery'
 
-const chatWidget = new AgoraChatWidget()
 
 export const OneToOneScenario = observer(() => {
 
   const {
     isFullScreen,
   } = useGlobalContext()
+
+  const {
+    widgets
+  } = useWidgetContext()
+  const chatWidget = widgets['chat']
 
   const { joinRoom } = useRoomContext()
 
@@ -53,13 +55,13 @@ export const OneToOneScenario = observer(() => {
           <ScreenSharePlayerContainer />
           <WhiteboardContainer />
         </Content>
-        {
-        isFullScreen ? <Widget widgetComponent={chatWidget}/> :
-        <Aside className={fullscreenCls}>
+        <Aside className={classnames({
+          "one-class-aside": 1,
+          "one-class-aside-full": isFullScreen,
+        })}>
           <VideoList />
           <Widget className="chat-panel" widgetComponent={chatWidget}/>
         </Aside>
-        }
       </Layout>
       <DialogContainer />
       <LoadingContainer />

@@ -24,8 +24,8 @@
     "release:electron:win": "run-s build:rte-sdk build:edu-core build:widget pack:electron:win",
     "release:edu-core": "run-s build:rte-sdk build:edu-core",
     "release:demo": "run-s build:rte-sdk build:edu-core build:widget build:demo",
-    "dev": "run-s build:dev:rte-sdk build:dev:edu-core build:dev:widget run:demo",
-    "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core run:demo:electron",
+    "dev": "run-s build:dev:rte-sdk build:dev:edu-core build:widget build:dev:widget run:demo",
+    "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core build:dev:widget run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-classroom-sdk yarn storybook",
     "dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run dev",
     "pack:sdk": "run-s build:rte-sdk build:classroom:sdk",
@@ -45,10 +45,10 @@
     "run:demo:electron": "lerna exec --scope=agora-classroom-sdk npm run electron",
     "run:apaas": "lerna exec --scope=agora-apaas-demo npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ci:build:web": "just release:web",
-    "ci:build:electron:win": "just release:electron:win",
-    "ci:build:electron:mac": "just release:electron:mac",
-    "ci:build:classroom:sdk": "just release:classroom:sdk"
+    "ci:build:web": "yarn release:demo",
+    "ci:build:electron:win": "yarn release:electron:win",
+    "ci:build:electron:mac": "yarn release:electron:mac",
+    "ci:build:classroom:sdk": "yarn release:classroom:sdk"
   },
   "repository": {
     "type": "git",

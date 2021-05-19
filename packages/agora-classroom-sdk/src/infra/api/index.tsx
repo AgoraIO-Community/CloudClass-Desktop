@@ -1,9 +1,10 @@
 import { getLiveRoomPath } from '@/infra/router/index';
 import { globalConfigs } from '@/ui-kit/utilities';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp } from 'agora-edu-core';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement } from 'react';
+import { AgoraChatWidget } from 'agora-widget-gallery';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
@@ -92,6 +93,7 @@ export type LaunchOption = {
   recordUrl?: string, // 回放页地址
   extApps?: IAgoraExtApp[] // app插件
   region?: AgoraRegion
+  widgets?: {[key: string]: IAgoraWidget}
 }
 
 export type ReplayOption = {
@@ -237,7 +239,8 @@ export class AgoraEduSDK {
           rtmUid: option.userUuid,
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
-          extApps: option.extApps
+          extApps: option.extApps,
+          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets}
         },
         language: option.language,
         startTime: option.startTime,

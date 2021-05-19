@@ -41,8 +41,25 @@
   height: 514px; */
 }
 
+.big-class-aside {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.big-class-aside-full-collapse {
+  transition: .5s;
+  margin-right: -300px;
+}
+
+.big-class-aside-full-not-collapse {
+  transition: .5s;
+  margin-right: 0;
+}
+
 .big-class-aside .chat-panel {
   transform: translateX(2px);
+  right: 0;
+  bottom: 0;
 }
 
 .bg-white {

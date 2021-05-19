@@ -733,7 +733,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       })
     }
     if (this.isElectron) {
-      let items = await this.electron.prepareScreenShare()
+      let items = await this.electron.prepareScreenShare(params)
       return items
     }
   }

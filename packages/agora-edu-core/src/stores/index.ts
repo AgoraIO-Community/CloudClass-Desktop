@@ -15,6 +15,7 @@ import { SceneStore } from './scene'
 import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
+import { WidgetStore } from './widget'
 
 export class EduScenarioAppStore {
   // stores
@@ -28,6 +29,7 @@ export class EduScenarioAppStore {
   sceneStore!: SceneStore;
   roomStore!: RoomStore;
   pretestStore!: PretestStore;
+  widgetStore!: WidgetStore;
 
   eduManager!: EduManager;
 
@@ -118,9 +120,6 @@ export class EduScenarioAppStore {
 
   @observable
   sharing: boolean = false
-
-  @observable
-  customScreenShareWindowVisible: boolean = false
   
   @observable
   customScreenShareItems: any[] = []
@@ -139,7 +138,6 @@ export class EduScenarioAppStore {
     this._screenVideoRenderer = undefined;
     this._screenEduStream = undefined
     this.sharing = false
-    this.customScreenShareWindowVisible = false
     this.customScreenShareItems = []
   }
 
@@ -253,6 +251,8 @@ export class EduScenarioAppStore {
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.mediaStore = new MediaStore(this)
+    this.widgetStore = new WidgetStore()
+    this.widgetStore.widgets = this.params.config.widgets || {}
 
     this._screenVideoRenderer = undefined
   }
@@ -386,202 +386,8 @@ export class EduScenarioAppStore {
   }
 
   @action.bound
-  async stopWebSharing() {
-    try {
-      this.waitingShare = true
-      if (this._screenVideoRenderer) {
-        await this.mediaService.stopScreenShare()
-        this.mediaService.screenRenderer && this.mediaService.screenRenderer.stop()
-        this._screenVideoRenderer = undefined
-      }
-      if (this._screenEduStream) {
-        await this.roomManager?.userService.stopShareScreen()
-        this._screenEduStream = undefined
-      }
-      this.sharing = false
-    } catch(err) {
-      this.uiStore.fireToast('toast.failed_to_end_screen_sharing', {reason: `${err.message}`})
-    } finally {
-      this.waitingShare = false
-    }
-  }
-
-  @action.bound
-  async startWebSharing() {
-    try {
-      this.waitingShare = true
-      await this.mediaService.prepareScreenShare({
-        shareAudio: 'auto',
-        encoderConfig: '720p'
-      })
-      await this.roomManager?.userService.startShareScreen()
-      const streamUuid = this.roomManager!.userService.screenStream.stream.streamUuid
-      const params: any = {
-        channel: this.roomManager?.roomUuid,
-        uid: +streamUuid,
-        token: this.roomManager?.userService.screenStream.token,
-      }
-      BizLogger.info("screenStreamData params ", JSON.stringify(params))
-      BizLogger.info("screenStreamData ", JSON.stringify(this.roomManager?.userService.screenStream))
-
-      await this.mediaService.startScreenShare({
-        params
-      })
-      this._screenEduStream = this.roomManager?.userService.screenStream.stream
-      this._screenVideoRenderer = this.mediaService.screenRenderer
-      this.sharing = true
-    } catch (err) {
-      if (this.mediaService.screenRenderer) {
-        this.mediaService.screenRenderer.stop()
-        this.mediaService.screenRenderer = undefined
-        this._screenVideoRenderer = undefined
-        this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing_to_remote', {reason: `${err.message}`})
-      } else {
-        this.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: `${err.message}`})
-      }
-      BizLogger.info('SCREEN-SHARE ERROR ', err)
-      const error = GenericErrorWrapper(err)
-      BizLogger.error(`${error}`)
-    } finally {
-      this.waitingShare = false
-    }
-  }
-
-  async stopRTCSharing() {
-    if (this.isWeb) {
-      if (this.sharing) {
-        await this.stopWebSharing()
-      }
-    }
-
-    if (this.isElectron) {
-      if (this.sharing) {
-        await this.stopNativeSharing()
-      }
-    }
-  }
-
-  async startOrStopSharing() {
-    if (this.isWeb) {
-      if (this.sharing) {
-        await this.stopWebSharing()
-      } else {
-        await this.startWebSharing()
-      }
-    }
-
-    if (this.isElectron) {
-      if (this.sharing) {
-        await this.stopNativeSharing()
-      } else {
-        await this.showScreenShareWindowWithItems()
-      }
-    }
-  }
-
-  @action.bound
   updateCourseWareList(courseWareList: CourseWareItem[]) {
     this.params.config.courseWareList = courseWareList
-  }
-
-  @action.bound
-  showScreenShareWindowWithItems () {
-    if (this.isElectron) {
-      this.mediaService.prepareScreenShare().then((items: any) => {
-        runInAction(() => {
-          this.customScreenShareWindowVisible = true
-          this.customScreenShareItems = items
-        })
-      }).catch((err: any) => {
-        this.customScreenShareWindowVisible = false
-        this.customScreenShareItems = []
-        BizLogger.warn('show screen share window with items', err)
-      })
-    }
-  }
-
-  @action.bound
-  async resetWebPrepareScreen() {
-    if (this.mediaService.screenRenderer) {
-      this._screenVideoRenderer = undefined
-    }
-  }
-
-
-  @action.bound
-  async prepareScreenShare(params: PrepareScreenShareParams = {}) {
-    const res = await this.mediaService.prepareScreenShare(params)
-    if (this.mediaService.screenRenderer) {
-      this._screenVideoRenderer = this.mediaService.screenRenderer
-    }
-  }
-
-  @computed
-  get screenEduStream(): EduStream {
-    return this._screenEduStream as EduStream
-  }
-
-  @action.bound
-  async stopNativeSharing() {
-    if (this.screenEduStream) {
-      await this.roomManager?.userService.stopShareScreen()
-      this._screenEduStream = undefined
-    }
-    if (this._screenVideoRenderer) {
-      await this.mediaService.stopScreenShare()
-      this._screenVideoRenderer && this._screenVideoRenderer.stop()
-      this._screenVideoRenderer = undefined
-    }
-    if (this.customScreenShareWindowVisible) {
-      this.customScreenShareWindowVisible = false
-    }
-    this.customScreenShareItems = []
-    this.sharing = false
-  }
-
-  @action.bound
-  async startNativeScreenShareBy(windowId: number) {
-    try {
-      this.waitingShare = true
-      await this.roomManager?.userService.startShareScreen()
-      const streamUuid = this.roomManager!.userService.screenStream.stream.streamUuid
-      const params: any = {
-        channel: this.roomManager?.roomUuid,
-        uid: +streamUuid,
-        token: this.roomManager?.userService.screenStream.token,
-      }
-      await this.mediaService.startScreenShare({
-        windowId: windowId as number,
-        params
-      })
-      if (!this.mediaService.screenRenderer) {
-        this.uiStore.fireToast('toast.create_screen_share_failed')
-        return
-      } else {
-        this._screenVideoRenderer = this.mediaService.screenRenderer
-      }
-      this.removeScreenShareWindow()
-      this.sharing = true
-    } catch (err) {
-      this.customScreenShareWindowVisible = false
-      this.customScreenShareItems = []
-      const error = GenericErrorWrapper(err)
-      BizLogger.warn(`${error}`)
-      // if (!this.mediaService.screenRenderer) {
-      //   await this.mediaService.stopScreenShare()
-      // }
-      this.waitingShare = false
-      this.uiStore.fireToast('toast.failed_to_initiate_screen_sharing', {reason: `${err.message}`})
-      // throw err
-    }
-  }
-
-  @action.bound
-  removeScreenShareWindow () {
-    if (this.isElectron) {
-      this.customScreenShareWindowVisible = false
-      this.customScreenShareItems = []
-    }
   }
 
   @action.bound
@@ -590,8 +396,6 @@ export class EduScenarioAppStore {
     this._recordService = undefined
     this._uploadService = undefined
     // this.roomInfo = {}
-    this.resetWebPrepareScreen()
-    this.removeScreenShareWindow()
   }
 
   @action.bound

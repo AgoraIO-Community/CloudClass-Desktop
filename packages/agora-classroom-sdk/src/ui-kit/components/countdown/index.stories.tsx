@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Meta } from '@storybook/react';
 import { Countdown } from './index'
 import { Button } from '~components/button'
+import { Modal } from '~components/modal'
+import { Input } from '~components/input'
+import classnames from 'classnames'
 
 const meta: Meta = {
     title: 'Components/Countdown',
@@ -17,16 +20,9 @@ type DocsProps = {
 export const Docs = ({ endDate, type, theme }: DocsProps) => {
     const [result, setResult] = useState<number>(0)
     const [number, setNumber] = useState<number>(60)
+    const [showSetting, setShowSetting] = useState<boolean>(true)
     return (
         <div>
-            <h1 className="mt-4">默认倒计时</h1>
-            <Countdown
-                endDate={endDate}
-                theme={theme}
-                type={type}
-                timeUnit={[':',':',':']}
-            />
-            <h1 className="mt-4">简单交互demo</h1>
             <div
                 style={{
                     display: 'flex',
@@ -35,27 +31,69 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
                     flexDirection: 'column'
                 }}
             >
-                <Countdown
-                    endDate={result}
-                    theme={theme}
-                    type={type}
-                    timeUnit={[':',':',':']}
-                />
-                
-                <div className="mt-4"><input style={{border: '1px solid black'}} type="number" value={number} onChange={(e: any) => {setNumber(e.target.value)}}/>(seconds)</div>
-                <div>
-                    <Button 
-                        className="mt-4"
-                        onClick={() => {
-                            if (number > 3600) {
-                                alert('最大值为3600')
-                                return;
-                            }
-                            const result = Date.now() + (number) * 1000
-                            setResult(result)
-                        }}
-                    >Sure</Button>
-                </div>
+                <Modal
+                    title={'countdown'}
+                    width={258}
+                    className={classnames({
+                        [`countdown-modal`]: 1,
+                        [`countdown-modal-hover`]: !showSetting
+                    })}
+                >
+
+                    <div className="restart-wrap">
+                        <Button
+                            onClick={() => {
+                                setResult(0)
+                                setShowSetting(true)
+                            }}
+                        >restart</Button>
+                    </div>
+
+                    <Countdown
+                        style={{ transform: 'scale(0.4)' }}
+                        endDate={result}
+                        theme={2}
+                        type={2}
+                        timeUnit={[':', ':', ':']}
+                    />
+                    {showSetting ? (
+                        <div style={{ width: '100%' }}>
+                            <div>
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    max="3600"
+                                    step="60"
+                                    required
+                                    value={number}
+                                    onChange={(e: any) => { setNumber(e.target.value) }}
+                                    suffix={<span>(seconds)</span>}
+
+                                />
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <Button
+                                    className="mt-4"
+                                    onClick={() => {
+                                        if (number > 3600) {
+                                            alert('最大值为3600')
+                                            return;
+                                        }
+                                        const result = Date.now() + (number) * 1000
+                                        setResult(result)
+                                        setShowSetting(false)
+                                    }}
+                                >Sure</Button>
+                            </div>
+                        </div>
+                    ) : null}
+
+
+                </Modal>
             </div>
         </div>
     )
