@@ -586,10 +586,6 @@ export type BoardContext = {
      */
     totalPage: number,
     /**
-     * 课件列表
-     */
-    courseWareList: any[],
-    /**
      * 当前画笔颜色
      */
     currentColor: string,
@@ -668,25 +664,6 @@ export type BoardContext = {
      */
     changeSceneItem: (resourceUuid: string) => void,
     /**
-     * 可下载的云盘资源列表 
-     */
-    downloadList: StorageCourseWareItem[],
-    /**
-     * 打开课件资源
-     * @param uuid 资源uuid
-     */
-    openCloudResource: (uuid: string) => Promise<void>,
-    /**
-     * 下载课件资源
-     * @param taskUuid 课件taskUuid
-     */
-    startDownload: (taskUuid: string) => Promise<void>,
-    /**
-     * 删除课件资源
-     * @param taskUuid 课件taskUuid
-     */
-    deleteSingle: (taskUuid: string) => Promise<void>,
-    /**
      * 更新画笔
      * @param value 画笔名称 pen square circle line
      */
@@ -704,44 +681,10 @@ export type BoardContext = {
      */
     setLaserPoint: () => void,
     /**
-     * 所有云盘课件资源列
-     */
-    resourcesList: Resource[],
-    /**
-     * 活跃场景名称
-     */
-    activeSceneName: string,
-    /**
-     * 更新云盘资源列表
-     */
-    refreshCloudResources: () => Promise<void>,
-    /**
-     * 移除云盘课件资源
-     * @param resourceUuids 课件资源uuid
-     */
-    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
-    /**
-     * 取消上传
-     */
-    cancelUpload: () => Promise<void>,
-    /**
-     * 关闭课件资源
-     * @param resourceUuid 资源uuid
-     */
-    closeMaterial: (resourceUuid: string) => void,
-    /**
      * 安装白板工具
      * @param tools 白板工具列表 
      */
     installTools: (tools: any[]) => void,
-    /**
-     * 云盘个人资源列表
-     */
-    personalResources: MaterialDataResource[],
-    /**
-     * 云盘公共资源列表
-     */
-    publicResources: MaterialDataResource[],
     /**
      * 取消白板授权
      * @param userUuid 用户uuid
@@ -753,10 +696,9 @@ export type BoardContext = {
      */
     grantBoardPermission: (userUuid: string) => Promise<void>,
     /**
-     * 上传云盘课件资源
-     * @param payload 上传的资源参数
+     * 活跃场景名称
      */
-    doUpload: (payload: any) => Promise<void>,
+    activeSceneName: string,
 
     //v1.1.1
     //@internal
@@ -1106,4 +1048,65 @@ export type MediaContext = {
      * @param id 对话框id
      */
     removeDialog: (id: string) => void
+}
+
+export type CloudDriveContext = {
+    /**
+     * 可下载的云盘资源列表 
+     */
+    downloadList: StorageCourseWareItem[],
+    /**
+     * 打开课件资源
+     * @param uuid 资源uuid
+     */
+    openCloudResource: (uuid: string) => Promise<void>,
+    /**
+     * 下载课件资源
+     * @param taskUuid 课件taskUuid
+     */
+    startDownload: (taskUuid: string) => Promise<void>,
+    /**
+     * 删除课件资源
+     * @param taskUuid 课件taskUuid
+     */
+    deleteSingle: (taskUuid: string) => Promise<void>,
+    /**
+     * 云盘个人资源列表
+     */
+     personalResources: MaterialDataResource[],
+     /**
+      * 云盘公共资源列表
+      */
+     publicResources: MaterialDataResource[],
+     /**
+     * 所有云盘课件资源列
+     */
+    resourcesList: Resource[],
+    /**
+     * 更新云盘资源列表
+     */
+    refreshCloudResources: () => Promise<void>,
+    /**
+     * 移除云盘课件资源
+     * @param resourceUuids 课件资源uuid
+     */
+    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
+    /**
+     * 取消上传
+     */
+    cancelUpload: () => Promise<void>,
+    /**
+     * 关闭课件资源
+     * @param resourceUuid 资源uuid
+     */
+    closeMaterial: (resourceUuid: string) => void,
+    /**
+     * 上传云盘课件资源
+     * @param payload 上传的资源参数
+     */
+    doUpload: (payload: any) => Promise<void>,
+    /**
+     * 课件列表
+     */
+    courseWareList: any[],
 }

@@ -1,4 +1,4 @@
-import { useBoardContext } from 'agora-edu-core'
+import { useCloudDriveContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, Table, TableHeader, transI18n } from '~ui-kit'
 
@@ -9,7 +9,7 @@ export const DownloadContainer = observer(() => {
     openCloudResource,
     startDownload,
     deleteSingle
-  } = useBoardContext()
+  } = useCloudDriveContext()
 
   const onResourceClick = async (id: string) => {
     await openCloudResource(id)

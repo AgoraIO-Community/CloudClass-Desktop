@@ -1,4 +1,4 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext } from 'agora-edu-core'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
 import { ZoomItemType } from '@/ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
@@ -96,10 +96,13 @@ export type WhiteBoardState = {
 const TabsContainer = observer(() => {
 
   const {
-    resourcesList,
     changeSceneItem,
     activeSceneName,
   } = useBoardContext()
+
+  const {
+    resourcesList
+  } = useCloudDriveContext()
 
   const {
     addDialog,

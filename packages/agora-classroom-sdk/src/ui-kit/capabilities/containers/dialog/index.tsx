@@ -1,5 +1,5 @@
 import { BusinessExceptions } from '@/infra/biz-error'
-import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext } from 'agora-edu-core'
+import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
 import { GenericError, GenericErrorWrapper, ScreenShareType } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
@@ -212,7 +212,7 @@ export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> 
 
   const {removeDialog} = useGlobalContext()
 
-  const {closeMaterial} = useBoardContext()
+  const {closeMaterial} = useCloudDriveContext()
 
   const onOK = async () => {
     await closeMaterial(resourceUuid)

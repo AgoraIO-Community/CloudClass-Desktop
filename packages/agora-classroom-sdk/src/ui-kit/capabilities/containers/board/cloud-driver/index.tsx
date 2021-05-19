@@ -1,4 +1,4 @@
-import { useBoardContext, mapFileType, useGlobalContext, PPTKind } from 'agora-edu-core';
+import { useBoardContext, mapFileType, useGlobalContext, PPTKind, useCloudDriveContext } from 'agora-edu-core';
 import { EduLogger } from 'agora-rte-sdk';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
@@ -42,14 +42,17 @@ export type CloudDriveContainerProps = {
 
 export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer(({id}: any) => {
   const {
-    openCloudResource,
     setTool,
+    room,
+  } = useBoardContext()
+
+  const {
+    openCloudResource,
     refreshCloudResources,
     cancelUpload,
     removeMaterialList,
-    room,
     doUpload,
-  } = useBoardContext()
+  } = useCloudDriveContext()
 
   const {
     checked,

@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
 export {
@@ -315,8 +315,6 @@ export const useBoardContext = (): BoardContext => {
     currentPage,
     totalPage,
     ready,
-    courseWareList,
-    downloadList,
     changeStroke,
     changeHexColor,
     mount,
@@ -325,25 +323,14 @@ export const useBoardContext = (): BoardContext => {
     zoomBoard,
     setZoomScale,
     changeFooterMenu,
-    putSceneByResourceUuid,
-    startDownload,
-    deleteSingle,
-    refreshState,
     updatePen,
     setLaserPoint,
     tools,
-    resourcesList,
     activeSceneName,
     boardPenIsActive,
     changeSceneItem,
-    removeMaterialList,
-    cancelUpload,
     room,
-    closeMaterial,
-    personalResources,
     installTools,
-    handleUpload,
-    publicResources,
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
@@ -364,10 +351,6 @@ export const useBoardContext = (): BoardContext => {
     zoomValue,
     currentPage,
     totalPage,
-    //TO-REVIEW
-    //clouddriver context?
-    courseWareList,
-    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
     currentColor,
     currentStrokeWidth,
     hasPermission,
@@ -384,13 +367,6 @@ export const useBoardContext = (): BoardContext => {
     changeFooterMenu,
     changeSceneItem,
     //TO-REVIEW
-    //clouddriver context?
-    openCloudResource: putSceneByResourceUuid,
-    startDownload,
-    //TO-REVIEW
-    //name, clouddriver context
-    deleteSingle,
-    //TO-REVIEW
     //setPenType?
     updatePen,
     //TO-REVIEW
@@ -402,32 +378,55 @@ export const useBoardContext = (): BoardContext => {
     setLaserPoint,
     activeSceneName,
     //TO-REVIEW
-    //clouddriver context?
-    resourcesList,
-    refreshCloudResources: refreshState,
-    removeMaterialList,
-    cancelUpload,
-    closeMaterial,
-    //TO-REVIEW
     //??setTools?
     installTools,
     //TO-REVIEW
     //room context?
     canSharingScreen,
-    //TO-REVIEW
-    //clouddriver context?
-    personalResources,
-    publicResources,
     revokeBoardPermission,
     grantBoardPermission,
-    //TO-REVIEW
-    //clouddriver context?
-    doUpload: handleUpload,
     //TO-REVIEW
     //ui context?
     showBoardTool,
     // v1.1.1
     isCurrentScenePathScreenShare:isBoardScreenShare
+  }
+}
+
+export const useCloudDriveContext = (): CloudDriveContext => {
+  const {
+    courseWareList,
+    downloadList,
+    putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    handleUpload,
+    publicResources,
+  } = useBoardStore()
+
+
+  return {
+    //TO-REVIEW
+    //clouddriver context?
+    courseWareList,
+    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
+    openCloudResource: putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    resourcesList,
+    refreshCloudResources: refreshState,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    publicResources,
+    doUpload: handleUpload,
   }
 }
 
