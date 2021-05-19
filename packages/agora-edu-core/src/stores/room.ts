@@ -498,6 +498,7 @@ export class RoomStore extends SimpleInterval {
   reset() {
     this.appStore.resetStates()
     this.sceneStore.reset()
+    this.joining = false
     this.resetRoomProperties()
     this.roomChatMessages = []
     this.unreadMessageCount = 0
@@ -1003,9 +1004,13 @@ export class RoomStore extends SimpleInterval {
     return props
   }
 
+  @observable
+  joining: boolean = false;
+
   @action.bound
   async join() {
     try {
+      this.joining = true
       this.disposers.push(reaction(() => this.sceneStore.classState, this.onClassStateChanged.bind(this)))
 
       this.appStore.uiStore.startLoading()

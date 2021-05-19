@@ -1,5 +1,25 @@
 import { useEffect, useRef } from 'react';
+import { IReactionOptions, IReactionPublic, observable, reaction } from 'mobx';
 import type { RendererPlayerProps } from '~utilities/renderer-player';
+import { DependencyList } from 'react';
+import { useLocalStore } from 'mobx-react';
+import { useLayoutEffect } from 'react';
+
+export const useReaction = <T>(
+  expression: (reaction: IReactionPublic) => T,
+  effect: (value: T, prev: T | null) => void,
+  options?: IReactionOptions,
+): void => {
+
+  const effectRef = useRef(effect)
+
+  const prevRef = useRef<T | null>(null)
+
+  useEffect(() => reaction(expression, (value: T, reaction: IReactionPublic) => {
+    effectRef.current(value, prevRef.current)
+    prevRef.current = value
+  }, options), [])
+}
 
 type UseWatchCallback<T> = (prev: T | undefined) => void;
 type UseWatchConfig = {

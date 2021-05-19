@@ -591,17 +591,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       this.releaseChannel(channelName)
     }
   }
-  
-  // async publishChannel(option: any): Promise<any> {
-  //   const client = this._subClient[option.channel]
-  //   if (client) {
-  //     client.publish([this.cameraTrack])
-  //   }
-  // }
-
-  // async unpublishChannel(option: any): Promise<any> {
-    
-  // }
 
   async leave(): Promise<any> {
     await this.stopScreenShare()
@@ -839,7 +828,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           this.cameraTrack.close()
           EduLogger.info(`[agora-web] close camera [${trackId}] success`)
           this.cameraTrack = undefined
-          this.fire('track-ended', {video: true, trackId: trackId, type: 'localCameraRenderer'})
+          this.fire('track-ended', {resource: 'video', trackId: trackId, type: 'cameraRenderer', operation: 'close'})
         }
       } catch (err) {
         if (this.cameraTrack) {
@@ -848,7 +837,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           this.cameraTrack.close()
           EduLogger.info(`[agora-web] close camera [${trackId}] success`)
           this.cameraTrack = undefined
-          this.fire('track-ended', {video: true, trackId: trackId, type: 'localCameraRenderer'})
+          this.fire('track-ended', {resource: 'video', trackId: trackId, type: 'cameraRenderer', operation: 'close'})
         }
         throw GenericErrorWrapper(err)
       }
@@ -995,7 +984,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       (this.screenVideoTrack as ILocalTrack).on('track-ended', () => {
         this.screenAudioTrack && this.closeScreenTrack(this.screenAudioTrack)
         this.screenVideoTrack && this.closeScreenTrack(this.screenVideoTrack)
-        this.fire('track-ended', {screen: true})
+        this.fire('track-ended', {resource: 'screen', screen: true})
       })
 
       this._screenClient = screenClient
@@ -1141,7 +1130,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       }
     }
 
-    this.fire("track-ended", {resource, tag, trackId})
+    this.fire('track-ended', {resource, tag, trackId, operation: 'pulled'})
   }
 
   private async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer', option?: CameraOption) {
@@ -1249,6 +1238,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
   
   closeTestCamera() {
+    const trackId = this.cameraTestTrack?.getTrackId() ?? ''
+    this.fire('track-ended', {resource: 'video', trackId, type: 'cameraTestRenderer', operation: 'close'})
     if (this.cameraTestTrack) {
       this.cameraTestTrack.isPlaying && this.cameraTestTrack.stop()
       this.cameraTestTrack.close()
@@ -1295,6 +1286,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
   
   closeTestMicrophone() {
+    const trackId = this.microphoneTestTrack?.getTrackId() ?? ''
+    this.fire('track-ended', {resource: 'audio', trackId, type: 'microphoneTestTrack', operation: 'close'})
     if (this.microphoneTestTrack) {
       this.closeInterval('test-volume')
       this.microphoneTestTrack.isPlaying && this.microphoneTestTrack.stop()

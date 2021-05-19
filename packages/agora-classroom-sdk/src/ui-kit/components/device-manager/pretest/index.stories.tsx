@@ -4,6 +4,7 @@ import { Button } from '~components/button';
 import { Pretest } from '~components/device-manager/pretest';
 import { Modal } from '~components/modal';
 import { CameraPlaceHolder } from '~components/placeholder';
+import {transI18n} from '~ui-kit';
 
 const meta: Meta = {
     title: 'Components/Pretest',
@@ -82,7 +83,7 @@ const ChildrenWrap = () => {
 
 const PretestContainer = () => {
     const [visible, setVisible] = useState<boolean>(true)
-    const isNative = true;
+    const isNative = false;
     const cameraError = false;
     const microphoneError = false;
     function hideModal () {
@@ -92,9 +93,9 @@ const PretestContainer = () => {
         <div className="fixed-container">
             {visible ? (
                 <Modal
-                    title={'设备检测'}
+                    title={transI18n('pretest.settingTitle')}
                     width={720}
-                    footer={[<Button action="ok">完成检测</Button>]}
+                    footer={[<Button action="ok">{transI18n('pretest.finishTest')}</Button>]}
                     onOk={hideModal}
                     onCancel={hideModal}
                 >

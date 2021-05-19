@@ -1,8 +1,9 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
-import { useMediaContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core'
+import { useCallback } from 'react'
 
-export const SettingContainer = observer(({id}: any) => {
+export const SettingContainer = observer(({ id }: any) => {
 
     const {
         cameraList,
@@ -11,10 +12,41 @@ export const SettingContainer = observer(({id}: any) => {
         cameraId,
         speakerId,
         microphoneId,
-        changeDevice,
-        changeAudioVolume,
-        removeDialog
+        changeCamera,
+        changeMicrophone,
+        changeSpeakerVolume,
+        changeMicrophoneVolume
     } = useMediaContext()
+
+    const changeDevice = async (deviceType: string, value: any) => {
+        switch (deviceType) {
+            case 'camera': {
+                await changeCamera(value)
+                break;
+            }
+            case 'microphone': {
+                await changeMicrophone(value)
+                break;
+            }
+        }
+    }
+
+    const changeAudioVolume = async (deviceType: string, value: any) => {
+        switch (deviceType) {
+            case 'speaker': {
+                await changeSpeakerVolume(value)
+                break;
+            }
+            case 'microphone': {
+                await changeMicrophoneVolume(value)
+                break;
+            }
+        }
+    }
+
+    const {
+        removeDialog
+    } = useGlobalContext()
 
     return (
         <Modal
@@ -30,18 +62,18 @@ export const SettingContainer = observer(({id}: any) => {
                 removeDialog(id)
             }}
         >
-        <Setting
-            cameraList={cameraList}
-            microphoneList={microphoneList}
-            speakerList={speakerList}
-            cameraId={cameraId}
-            microphoneId={microphoneId}
-            speakerId={speakerId}
-            onChangeDevice={changeDevice}
-            onChangeAudioVolume={changeAudioVolume}
-            hasMicrophoneVolume={false}
-            hasSpeakerVolume={false}
-        />
+            <Setting
+                cameraList={cameraList}
+                microphoneList={microphoneList}
+                speakerList={speakerList}
+                cameraId={cameraId}
+                microphoneId={microphoneId}
+                speakerId={speakerId}
+                onChangeDevice={changeDevice}
+                onChangeAudioVolume={changeAudioVolume}
+                hasMicrophoneVolume={false}
+                hasSpeakerVolume={false}
+            />
         </Modal>
     )
 })
