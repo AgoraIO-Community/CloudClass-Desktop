@@ -167,6 +167,7 @@ export class EduScenarioAppStore {
 
     if (platform === 'electron') {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,
@@ -182,6 +183,7 @@ export class EduScenarioAppStore {
       })
     } else {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,

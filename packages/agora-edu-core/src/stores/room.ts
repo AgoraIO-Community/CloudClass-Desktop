@@ -1474,7 +1474,7 @@ export class RoomStore extends SimpleInterval {
       })
 
       const { sceneType, userRole } = this.getSessionConfig()
-      await roomManager.join({
+      const userAndRoomdata = await roomManager.join({
         userRole: userRole,
         roomUuid,
         userName: `${this.roomInfo.userName}`,
@@ -1531,7 +1531,8 @@ export class RoomStore extends SimpleInterval {
       await this.sceneStore.joinRTC({
         uid: +mainStream.streamUuid,
         channel: roomInfo.roomInfo.roomUuid,
-        token: mainStream.rtcToken
+        token: mainStream.rtcToken,
+        data: userAndRoomdata
       })
 
       const localStreamData = roomManager.data.localStreamData

@@ -8,6 +8,9 @@ import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
+import { reportServiceV2 } from '../services/report-service-v2';
+import { EduManager } from '../../manager';
+import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
@@ -25,9 +28,12 @@ export class MediaService extends EventEmitter implements IMediaService {
   screenShareIds: any[] = []
 
   readonly _id!: string
+  
+  private eduManager: EduManager
 
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
+    this.eduManager = rtcProvider.eduManager;
     this._id = uuidv4()
     this.cameraRenderer = undefined
     this.screenRenderer = undefined
@@ -437,10 +443,44 @@ export class MediaService extends EventEmitter implements IMediaService {
     try {
       // REPORT
       reportService.startTick('joinRoom', 'rtc', 'joinChannel')
-      await this._join(option)
+      await this._join(option);
+      let reportUserParams = {
+        vid: this.eduManager.vid,
+        ver: packageJson.apaas_version,
+        scenario: 'education',
+        uid: option.data?.user.uuid,
+        userName: option.data?.user.name,
+        /**
+         * rtc流id
+         */
+        streamUid: +option.data?.user.streamUuid,
+        /**
+         * rtc流id
+         */
+        streamSuid: option.data?.user.streamUuid,
+        /**
+         * apaas角色
+         */
+        role: option.data?.user.role,
+        /**
+         * rtc sid
+         */
+        streamSid: this.eduManager.rtcSid,
+        /**
+         * rtm sid
+         */
+        rtmSid: this.eduManager.rtmSid,
+        /**
+         * apaas房间id，与rtc/rtm channelName相同
+         */
+        roomId: option.data?.room.uuid
+      };
+      reportServiceV2.initReportUserParams(reportUserParams);
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
       reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: false, errCode: `${e.code || e.message}`})
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), e.code);
       throw e
     }
   }

@@ -166,6 +166,7 @@ export enum LogLevel {
 }
 
 export interface EduConfiguration {
+  vid?: number,
   appId: string;
   cefClient?: any;
   // region: AREA_CODE;

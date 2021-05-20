@@ -228,6 +228,7 @@ export class AgoraEduSDK {
           region: option.region,
           courseWareList: option.courseWareList,
           personalCourseWareList: option.personalCourseWareList,
+          vid: data.vid,
           oss: {
             region: data.netless.oss.region,
             bucketName: data.netless.oss.bucket,

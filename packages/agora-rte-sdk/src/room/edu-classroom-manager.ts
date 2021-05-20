@@ -1,12 +1,12 @@
 import { EduClassroomDataController } from './edu-classroom-data-controller';
 import { EduUserService } from '../user/edu-user-service';
-import {reportService} from '../core/services/report-service'
+import { reportService } from '../core/services/report-service'
 import { EduLogger } from '../core/logger';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { EventEmitter } from 'events';
 import { EduManager } from "../manager";
 import { OperatorUser, EduClassroomManagerEventHandlers, ListenerCallbackType } from './types';
-import { 
+import {
   EduStreamData,
   EduUserData,
   EduUser,
@@ -89,7 +89,7 @@ export class EduClassroomManager {
       return false
     } else {
       // this.data
-    }    
+    }
     return true
   }
 
@@ -128,7 +128,7 @@ export class EduClassroomManager {
       streamUuid: args.streamUuid ? args.streamUuid : `0`
     })
     return joinRoomData
-    
+
     // this.eduManager._dataBuffer[this.roomUuid] = this.data
   }
 
@@ -141,45 +141,10 @@ export class EduClassroomManager {
       // REPORT
       reportService.startTick('joinRoom', 'end')
       let data = await this._join(params)
-      reportService.reportElapse('joinRoom', 'end', {result: true})
-      /**
-       * room: {
-    name: string
-    uuid: string
-    muteChat: {
-      audience: EnumChatState
-      broadcaster: EnumChatState
-      host: EnumChatState
-    }
-    muteVideo: {
-      audience: EnumVideoState
-      host: EnumVideoState
-    }
-    muteAudio: {
-      audience: EnumAudioState
-      host: EnumAudioState
-    }
-    startTime: number
-    state: number
-    properties: any
-  }
-  user: {
-    uuid: string
-    name: string
-    role: string
-    streamUuid: string
-    userToken: string
-    rtmToken: string
-    rtcToken: string
-    // muteChat: EnumChatState
-    streams: any[]
-    properties: any
-  }
-       */
-      // reportServiceV2.initReportUserParams();
-      reportServiceV2.reportApaasUserJoin();
-    } catch(e) {
-      reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.code || e.message}`})
+      reportService.reportElapse('joinRoom', 'end', { result: true })
+      return data;
+    } catch (e) {
+      reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${e.code || e.message}` })
       throw e
     }
   }
@@ -219,8 +184,8 @@ export class EduClassroomManager {
             data
           }
 
-          EduLogger.debug("[EDU-STATE] [ClassRoom Manager] appendBuffer in Raw Message ",obj)
-          
+          EduLogger.debug("[EDU-STATE] [ClassRoom Manager] appendBuffer in Raw Message ", obj)
+
           this.data.appendBuffer({
             seqId: sequence,
             cmd,
@@ -257,19 +222,27 @@ export class EduClassroomManager {
   }
 
   async leave() {
-    if (this._rtmObserver) {
-      this._rtmObserver.removeAllListeners()
-      this._rtmObserver = undefined
-    }
-    EduLogger.debug(`leave classroom ${this.roomUuid}`)
-    if (this.eduManager._rtmWrapper) {
-      EduLogger.debug(`leave this.rtmWrapper ${this.roomUuid}`)
-      await this.eduManager._rtmWrapper.leave({
-        channelName: this.roomUuid,
-      })
-      delete this.eduManager._dataBuffer[this.rawRoomUuid];
-      reportServiceV2.reportApaasUserQuit();
-      EduLogger.debug(`leave classroom ${this.roomUuid} success`)
+    try {
+
+      if (this._rtmObserver) {
+        this._rtmObserver.removeAllListeners()
+        this._rtmObserver = undefined
+      }
+      EduLogger.debug(`leave classroom ${this.roomUuid}`)
+      if (this.eduManager._rtmWrapper) {
+        EduLogger.debug(`leave this.rtmWrapper ${this.roomUuid}`)
+        await this.eduManager._rtmWrapper.leave({
+          channelName: this.roomUuid,
+        })
+        delete this.eduManager._dataBuffer[this.rawRoomUuid];
+        const lts = new Date().getTime()
+        reportServiceV2.reportApaasUserQuit(lts, 0);
+        EduLogger.debug(`leave classroom ${this.roomUuid} success`)
+      }
+
+    } catch (e) {
+      const lts = new Date().getTime()
+      reportServiceV2.reportApaasUserQuit(lts, e.code);
     }
   }
 
@@ -348,9 +321,9 @@ export class EduClassroomManager {
   }
 
   syncStreamCoordinator() {
-    if(this.data) {
+    if (this.data) {
       let sdkWrapper = this.eduManager.mediaService.sdkWrapper
-      if(sdkWrapper instanceof AgoraWebRtcWrapper) {
+      if (sdkWrapper instanceof AgoraWebRtcWrapper) {
         this.data.streamCoordinator = sdkWrapper.streamCoordinator
       }
     }

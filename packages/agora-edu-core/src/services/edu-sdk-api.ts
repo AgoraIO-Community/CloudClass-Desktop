@@ -7,6 +7,7 @@ import { escapeExtAppIdentifier } from "../utilities/ext-app";
 type ConfigResult = {
   customerId: string,
   customerCertificate: string,
+  vid: number,
   netless: {
     appId: string
     token: string,

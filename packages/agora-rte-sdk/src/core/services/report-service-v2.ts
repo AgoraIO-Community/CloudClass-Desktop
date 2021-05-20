@@ -1,32 +1,8 @@
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import md5 from "js-md5";
-import { ReportService } from "./report-service";
 import { GenericErrorWrapper } from "../utils/generic-error";
 import { HttpClient } from "../utils/http-client";
 import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect } from '../../protobuf';
-type ReportPointMetricParams = {
-    count?: number
-    elapse?: number
-}
-type ReportPointParams = {
-    m: string,
-    ls: {
-        ctype: string,
-        platform: "web" | "electron"
-        version: string,
-        appId: string,
-        // rid: string,
-        // uid: string,
-        // sid?: string,
-        event?: string,
-        category?: string,
-        result?: string,
-        errCode?: string,
-        httpCode?: number,
-        api?: string
-    },
-    vs: ReportPointMetricParams
-}
 type ReportParams = {
     /**
      * 当前通话的cid
@@ -67,7 +43,7 @@ type ReportUserParams = {
     /**
      * 时间戳，必须存在
      */
-    lts: number,
+    lts?: number,
     /**
      * vid
      */
@@ -174,18 +150,24 @@ export class ReportServiceV2 extends ApiBase {
             sign,
         }
     }
-    protected buildApaasUserJoinParams(src: string, payloadParams: ReportUserParams): ReportParams{
+    protected buildApaasUserJoinParams(src: string, payloadParams: ReportUserParams, lts: number, errorCode: number): ReportParams{
         const id = 9012;
+        payloadParams.lts = lts;
+        payloadParams.errorCode = errorCode;
         const payload = this.buildUserJoinPaylod(payloadParams);
         return this.buildBaseParams(id, src, payload);
     }
-    protected buildApaasUserQuitParams(src: string, payloadParams: ReportUserParams): ReportParams{
+    protected buildApaasUserQuitParams(src: string, payloadParams: ReportUserParams, lts: number, errorCode: number): ReportParams{
         const id= 9013;
+        payloadParams.lts = lts;
+        payloadParams.errorCode = errorCode;
         const payload = this.buildUserQuitPaylod(payloadParams);
         return this.buildBaseParams(id, src, payload);
     }
-    protected buildApaasUserReconnectParams(src: string, payloadParams: ReportUserParams): ReportParams{
+    protected buildApaasUserReconnectParams(src: string, payloadParams: ReportUserParams, lts: number, errorCode: number): ReportParams{
         const id = 9014;
+        payloadParams.lts = lts;
+        payloadParams.errorCode = errorCode;
         const payload = this.buildUserReconnectPaylod(payloadParams);
         return this.buildBaseParams(id, src, payload);
     }
@@ -200,9 +182,6 @@ export class ReportServiceV2 extends ApiBase {
     }
     initReportUserParams(params: ReportUserParams) {
         this.reportUserParams = params;
-        // this.sid = params.sid
-        // this.appId = params.appId
-        // this.rtmUid = params.uid
     }
     async request (params: {
         method: string,
@@ -233,36 +212,39 @@ export class ReportServiceV2 extends ApiBase {
         }
         return resp
     }
-    async reportApaasUserJoin() {
+    async reportApaasUserJoin(lts: number, errorCode: number) {
+        console.warn("加入上报",this.reportUserParams, lts, errorCode);
         if(!this.guardParams()){
             return
         }
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserJoinParams('rte', this.reportUserParams)
+            data: this.buildApaasUserJoinParams('rte', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
-    async reportApaasUserQuit() {
+    async reportApaasUserQuit(lts: number, errorCode: number) {
         if(!this.guardParams()){
             return
         }
+        console.warn("离开上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserQuitParams('rte', this.reportUserParams)
+            data: this.buildApaasUserQuitParams('rte', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
-    async reportApaasUserReconnect() {
+    async reportApaasUserReconnect(lts: number, errorCode: number) {
         if(!this.guardParams()){
             return
         }
+        console.warn("重连上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserReconnectParams('rte', this.reportUserParams)
+            data: this.buildApaasUserReconnectParams('rte', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }

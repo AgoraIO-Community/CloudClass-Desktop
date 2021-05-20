@@ -59,6 +59,7 @@ export class EduManager extends EventEmitter {
     super()
     this.config = config
     const buildOption: any = {
+      eduManager: this,
       platform: this.config.platform,
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
@@ -67,10 +68,6 @@ export class EduManager extends EventEmitter {
       rtcArea: this.config.rtcArea ?? "GLOBAL",
       rtmArea: this.config.rtmArea ?? "GLOBAL"
     }
-    //@ts-ignore
-    const domain = getSDKDomain(this.config.sdkDomain!, this.config.region)
-    this.config.sdkDomain = domain
-    // if ()
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
         logPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/agorasdk.log` : (window.logPath || ""),
@@ -120,7 +117,15 @@ export class EduManager extends EventEmitter {
   private get rtmWrapper(): RTMWrapper {
     return this._rtmWrapper as RTMWrapper;
   }
-
+  get rtcSid(): string{
+    return (this.mediaService.sdkWrapper.client as any)._sessionId;
+  }
+  get rtmSid(): string{
+    return (this.rtmWrapper.client as any).context.sid;
+  }
+  get vid(): number{
+    return this.config.vid!;
+  }
   get mediaService(): MediaService {
     return this._mediaService;
   }
