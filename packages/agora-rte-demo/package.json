@@ -235,7 +235,7 @@
     "react": "16.13.1",
     "react-beautiful-dnd": "13.0.0",
     "react-dom": "16.13.1",
-    "white-web-sdk": "2.12.9",
+    "white-web-sdk": "2.12.19",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.1.2"

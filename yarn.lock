@@ -10576,7 +10576,7 @@ es6-shim@^0.35.5:
   resolved "https://registry.yarnpkg.com/es6-shim/-/es6-shim-0.35.6.tgz#d10578301a83af2de58b9eadb7c2c9945f7388a0"
   integrity sha512-EmTr31wppcaIAgblChZiuN/l9Y7DPyw8Xtbg7fIVngn6zMW+IEBJDJngeKC3x6wr0V/vcA2wqeFnaw1bFJbDdA==
 
-es6-symbol@^3.1.1, es6-symbol@^3.1.3, es6-symbol@~3.1.3:
+es6-symbol@^3.1.1, es6-symbol@~3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/es6-symbol/-/es6-symbol-3.1.3.tgz#bad5d3c1bcdac28269f4cb331e431c78ac705d18"
   integrity sha512-NJ6Yn3FuDinBaBRWl/q5X/s4koRHBrgKAu+yGI6JCBeiu3qrcbJhwT2GeR/EXVfylRk8dpQVJoLEFhK+Mu31NA==
@@ -17006,7 +17006,7 @@ mobx-react@6.3.1:
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx-react@^5.4.0:
+mobx-react@^5.4.4:
   version "5.4.4"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.4.4.tgz#b3de9c6eabcd0ed8a40036888cb0221ab9568b80"
   integrity sha512-2mTzpyEjVB/RGk2i6KbcmP4HWcAUFox5ZRCrGvSyz49w20I4C4qql63grPpYrS9E9GKwgydBHQlA4y665LuRCQ==
@@ -17019,7 +17019,7 @@ mobx@5.15.7:
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.7.tgz#b9a5f2b6251f5d96980d13c78e9b5d8d4ce22665"
   integrity sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==
 
-mobx@^4.9.0:
+mobx@^4.15.7:
   version "4.15.7"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
   integrity sha512-X4uQvuf2zYKHVO5kRT5Utmr+J9fDnRgxWWnSqJ4oiccPTQU38YG+/O3nPmOhUy4jeHexl7XJJpWDBgEnEfp+8w==
@@ -25177,20 +25177,20 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.9:
-  version "2.12.9"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.12.9.tgz#488a475115d019aaa7593f7ee1d8616cb5b9c2cc"
-  integrity sha512-AHTmVXa+CBQpuH4omMxlRgZ3eRcgyF3jfmREu+IAY8QGYL/uRS37nCbaXNuOP5rHxZLzqYFb8rmZ90KUXexx6A==
+white-web-sdk@2.12.19:
+  version "2.12.19"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.12.19.tgz#54b972fc0d74fe08400c977d99dcc9ed6552e6e8"
+  integrity sha512-lzrN/m1rcAwRooAKB5Kus/DsmOT+ZXu1cmgNzTuvSBTHKKnHmzt81zLn2+So4cVHGW7ax8x7jfsNJrLrq/hryw==
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
     bezier-js "^2.4.4"
     color "^3.1.0"
     detect-it "^3.0.5"
-    es6-symbol "^3.1.3"
+    es6-symbol "^3.1.1"
     mathjs "^6.2.2"
-    mobx "^4.9.0"
-    mobx-react "^5.4.0"
+    mobx "^4.15.7"
+    mobx-react "^5.4.4"
     numeric "^1.2.6"
     query-string "5"
     react "^16.8.0"
