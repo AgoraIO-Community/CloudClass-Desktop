@@ -15,7 +15,7 @@
   @apply flex-1;
   @apply items-center;
   font-size: 13px;
-  font-family: PingFangSC-Regular, PingFang SC;
+  /* font-family: PingFangSC-Regular, PingFang SC; */
   font-weight: 400;
   color: #7B88A0;
   /* justify-content: center; */

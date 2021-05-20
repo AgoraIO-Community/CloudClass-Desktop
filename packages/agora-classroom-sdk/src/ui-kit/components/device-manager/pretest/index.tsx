@@ -1,6 +1,7 @@
 import classnames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { Subject } from 'rxjs';
 import { Button } from '~components/button';
 import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
@@ -8,12 +9,15 @@ import { BaseProps } from '~components/interface/base-props';
 import { Select } from '~components/select';
 import { Slider } from '~components/slider';
 import { CheckBox } from '~components/table';
+import { Toast } from '~components/toast';
+import { useTimeout } from '~utilities/hooks';
 import { Volume } from '~components/volume';
 import './index.css';
 
 interface DeviceProps {
     deviceId: string;
     label: string;
+    i18n?: boolean;
 }
 
 export interface PretestProps extends BaseProps {
@@ -25,8 +29,7 @@ export interface PretestProps extends BaseProps {
     speakerList?: DeviceProps[]; // 扬声器设备数组
     speakerId?: string; // 选中的扬声器Id
     isNative?: boolean; // web平台没有扬声器下拉
-    microphoneVolume?: number; // 麦克风音量
-    microphoneLevel?: number;
+    microphoneVolume?: number;
     speakerTestUrl?: string; // 音频地址用于测试扬声器
     speakerVolume?: number; // 扬声器音量
     speakerLevel?: number;
@@ -36,10 +39,12 @@ export interface PretestProps extends BaseProps {
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
     onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
-    videoComponent?: React.ReactElement
+    videoComponent?: React.ReactElement,
+    volumeComponent?: React.ReactElement,
+    pretestChannel: Subject<any>
 }
 
-export const Pretest: React.FC<PretestProps> = ({
+const PretestComponent: React.FC<PretestProps> = ({
     isMirror = true,
     cameraList = [],
     cameraId,
@@ -48,25 +53,24 @@ export const Pretest: React.FC<PretestProps> = ({
     speakerList = [],
     speakerId,
     isNative = false,
-    microphoneVolume = 50,
+    microphoneVolume,
     speakerVolume = 50,
-    microphoneLevel = 0,
     speakerTestUrl,
     speakerLevel = 0,
     cameraError = false,
     microphoneError = false,
     className,
     videoComponent,
+    volumeComponent,
     onSelectMirror = (isMirror) => {},
     onChangeDevice = (deviceType, value) => {},
     onChangeAudioVolume = (deviceType, value) => {},
     onSelectDevice = (deviceType, value) => {},
+    pretestChannel,
     ...restProps
 }) => {
 
     const [disable, setDisable] = useState<boolean>(false)
-
-    const [level, setLevel] = useState<number>(0)
 
     const [testLevel, setTestLevel] = useState<number>(0)
 
@@ -82,7 +86,6 @@ export const Pretest: React.FC<PretestProps> = ({
         }
     }, [audioElementRef])
 
-
     const handleTestSpeakerClick = () => {
         const audioElement = new Audio(speakerTestUrl);
         audioElement.onended = () => {
@@ -93,11 +96,6 @@ export const Pretest: React.FC<PretestProps> = ({
         }
         audioElement.play()
         audioElementRef.current = audioElement
-        // if (!isNative) {
-        //     timer.current = window.setInterval(() => {
-        //         setLevel(audioElement.volume * 100)
-        //     })
-        // }
         timer.current = window.setInterval(() => {
             setTestLevel(Math.floor(Math.random() * 34))
         }, 500)
@@ -113,12 +111,104 @@ export const Pretest: React.FC<PretestProps> = ({
         [`${className}`]: !!className,
     })
 
-    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId}))
-    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId}))
+    const cameraOptions = cameraList.map(item => ({label: item.i18n ? transI18n(item.label) : item.label, value: item.deviceId}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.i18n ? transI18n(item.label) : item.label, value: item.deviceId}))
     const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId}))
+
+    const [noticeMessage, setMessage] = useState<{id: string, type: 'video' | 'audio'}[]>([])
+
+    const removeMessages = (id: any) => setMessage(list => list.filter((it: any) => it.id !== id))
+
+    const [toastQueue, setToastQueue] = useState<any[]>([])
+
+    const removeToast = (id: any) => {
+        console.log('removeToast ', id)
+        setToastQueue(oldArray => oldArray.filter((it: any) => it.id !== id))
+    }
+
+    useEffect(() => {
+        pretestChannel && pretestChannel.subscribe({
+            next: (evt: any) => {
+                if (evt.kind === 'toast') {
+                    setToastQueue(oldArray => oldArray.concat(evt))
+                } else {
+                    setMessage((oldArray: any[]) => oldArray.concat(evt))
+                }
+            }
+        })
+        return () => {
+            pretestChannel && pretestChannel.complete()
+        }
+    }, [pretestChannel])
+
+    const DeviceNotice = (props: any) => {
+        useTimeout(() => {
+            props.close && props.close()
+        }, 2500)
+
+        const [animated, setAnimate] = useState<boolean>(false)
+
+        useEffect(() => {
+            Promise.resolve().then(() => {
+                setAnimate(true)
+            })
+        }, [])
+
+        return <CSSTransition
+            in={animated}
+            onEntered={() => {
+                setAnimate(!animated)
+                console.log('onEnter')
+            }}
+            // unmountOnExit
+            timeout={3000}
+            classNames="popover-transition"
+        >
+            <div className="popover-section">
+                <div className="popover-notice">
+                {props.title}
+                <div className="popover-triangle"></div>
+                </div>
+            </div>
+        </CSSTransition>
+    }
+
+    const NoticeContainer = (props: any) => {
+        return <>
+            {props.list.map((it: any) => 
+                <DeviceNotice key={it.id} title={transI18n('pretest.detect_new_device')}
+                   close={() => {
+                       props.removeMessages(it.id)
+                   }}
+                ></DeviceNotice>
+            )}
+        </>
+    }
+
+    const PretestToastContainer = (props: any) => {
+        return <div style={{justifyContent: 'center', display: 'flex'}}>
+            {props.toastQueue.map((value: any, idx: number) => 
+            <Toast
+                style={{position:'absolute', top: (50 * (idx + 1)), zIndex: 9999}}
+                key={`${value.id}`}
+                type={value.type}
+                closeToast={() => {
+                // props.removeToast(`${value.id}`)
+                }}
+            >{transI18n(value.info)}</Toast>
+            )}
+        </div>
+    }
+
+    // useEffect(() => {
+    //     console.log(' notice ', noticeMessage, ' toast ', toastQueue)
+    // }, [noticeMessage, toastQueue])
 
     return (
         <div className={cls} {...restProps}>
+            <div className="pretest-toast">
+                <PretestToastContainer toastQueue={toastQueue} removeToast={removeToast} />
+            </div>
             <div className="pretest-left" style={{width: 318}}>
                 <div className="device-choose">
                     <div className="device-title">
@@ -134,14 +224,17 @@ export const Pretest: React.FC<PretestProps> = ({
                             <span className="camera-mode" style={{marginLeft: 5}}>{t('media.mirror')}</span>
                         </span>
                     </div>
-                    <Select 
-                        value={cameraId}
-                        onChange={async value => {
-                            await onChangeDevice('camera', value)
-                        }}
-                        options={cameraOptions}
-                    >
-                    </Select>
+                    <div className="select-section">
+                        <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'video')} removeMessages={removeMessages} />
+                        <Select 
+                            value={cameraId}
+                            onChange={async value => {
+                                await onChangeDevice('camera', value)
+                            }}
+                            options={cameraOptions}
+                        >
+                        </Select>
+                    </div>
                     {videoComponent && React.cloneElement(videoComponent, {}, null)}
                 </div>
             </div>
@@ -150,6 +243,8 @@ export const Pretest: React.FC<PretestProps> = ({
                     <div className="device-title">
                         <span className="device-title-text">{t('media.microphone')}</span>
                     </div>
+                    <div className="select-section">
+                    <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'audio')} removeMessages={removeMessages} />
                     <Select 
                         value={microphoneId}
                         onChange={async value => {
@@ -157,8 +252,8 @@ export const Pretest: React.FC<PretestProps> = ({
                         }}
                         options={microphoneOptions}
                     >
-                        
                     </Select>
+                    </div>
                     {isNative ? (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('media.microphone_volume')}</span>
@@ -175,11 +270,7 @@ export const Pretest: React.FC<PretestProps> = ({
                     ) : ""}
                     <div className="device-volume-test">
                         <Icon type="microphone-on-outline" color="#0073FF"/>
-                        <Volume
-                            currentVolume={microphoneLevel}
-                            maxLength={48}
-                            style={{marginLeft: 6}}
-                        />
+                        {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
                     </div>
                 </div>
                 <div className="device-choose">
@@ -213,7 +304,6 @@ export const Pretest: React.FC<PretestProps> = ({
                     <div className="device-volume-test">
                         <Icon type="speaker" color="#0073FF"/>
                         <Volume
-                            // currentVolume={isNative ? speakerLevel : level}
                             currentVolume={testLevel}
                             maxLength={33}
                             style={{marginLeft: 6}}
@@ -221,21 +311,9 @@ export const Pretest: React.FC<PretestProps> = ({
                         <Button disabled={disable} type="secondary" style={{marginLeft: 10}} onClick={handleTestSpeakerClick}>{t('media.test_speaker')}</Button>
                     </div>
                 </div>
-                <div className="pretest-error-info">
-                    {cameraError ? (
-                        <div className="error-info">
-                            <Icon type="camera-off" color="#BDBDCA"/>
-                            <span className="error-info-desc">{transI18n('media.camera_error')}</span>
-                        </div>
-                    ) : ""}
-                    {microphoneError ? (
-                        <div className="error-info">
-                            <Icon type="microphone-off-outline" color="#BDBDCA"/>
-                            <span className="error-info-desc">{transI18n('media.microphone_error')}</span>
-                        </div>
-                    ) : ""}
-                </div>
             </div>
         </div>
     )
 }
+
+export const Pretest = React.memo(PretestComponent)

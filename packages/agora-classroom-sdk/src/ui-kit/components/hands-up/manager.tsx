@@ -69,7 +69,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   return (
     <div className={cls} {...restProps}>
       <CSSTransition
-        in={animStart}
+        in={!animStart}
         timeout={timeout}
         classNames={'received-card'}
         onEntered={() => {

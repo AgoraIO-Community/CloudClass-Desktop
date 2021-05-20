@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
-import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext } from './type'
+import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext } from './type'
 
 export type {
  CoreAppContext,
@@ -87,8 +87,17 @@ export const useStreamListContext = (): StreamListContext => {
   }
 }
 
+export const useVolumeContext = (): VolumeContext => {
+  const pretestStore = usePretestStore()
+
+  return {
+    microphoneLevel: pretestStore.microphoneLevel
+  }
+}
+
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
+  const uiStore = useUIStore()
   const [isMirror, setMirror] = useState<boolean>(false)
 
   const [cameraError, setCameraError] = useState<boolean>(false)
@@ -122,7 +131,6 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: pretestStore.microphoneLevel,
     isMirror: isMirror,
     setMirror,
     installPretest,
@@ -135,6 +143,7 @@ export const usePretestContext = (): PretestContext => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
+    pretestNoticeChannel: uiStore.pretestNotice$
   }
 }
 
@@ -264,7 +273,8 @@ export const useGlobalContext = (): GlobalContext => {
   } = useUIStore()
 
   const {
-    joined
+    joined,
+    joining,
   } = useRoomStore()
 
   return {
@@ -287,6 +297,7 @@ export const useGlobalContext = (): GlobalContext => {
     dialogEventObserver: dialog$,
     fireDialog,
     joined,
+    inRoom: joining
   }
 }
 

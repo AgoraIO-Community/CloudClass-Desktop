@@ -1,10 +1,10 @@
 import { UserRenderer, LocalUserRenderer, EduUser, EduStream } from 'agora-rte-sdk'
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
-import { ScreenShareType } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { ScreenShareType } from 'agora-rte-sdk';
 export type Resource = {
     file: {
         name: string,
@@ -200,6 +200,12 @@ export type StreamListContext = {
      */
     grantUserPermission: (userUuid: string) => void,
 }
+export type VolumeContext = {
+    /**
+     * 当前麦克风设备音量
+     */
+    microphoneLevel: number,
+}
 export type PretestContext = {
     /**
      * 摄像头是否错误
@@ -233,10 +239,6 @@ export type PretestContext = {
      * 当前选中的扬声器ID
      */
     speakerId: string,
-    /**
-     * 当前麦克风设备音量
-     */
-    microphoneLevel: number,
     /**
      * 当前摄像头画面是否镜
      */
@@ -290,6 +292,10 @@ export type PretestContext = {
      * 预置阶段摄像头渲染器
      */
     pretestCameraRenderer: LocalUserRenderer | undefined,
+    /**
+     * 设备频道通知
+     */
+    pretestNoticeChannel: Subject<any>;
 }
 export type ScreenShareContext = {
     /**
@@ -449,6 +455,10 @@ export type RoomDiagnosisContext = {
     }
 }
 export type GlobalContext = {
+    /**
+     * 在房间内
+     */
+    inRoom: boolean,
     /**
      * 正在加载中
      */
@@ -1045,10 +1055,6 @@ export type MediaContext = {
      */
     cameraRenderer: LocalUserRenderer | undefined,
     /**
-     * 当前麦克风设备音量
-     */
-    microphoneLevel: number,
-    /**
      * 切换媒体设备（摄像头、麦克风、扬声器）
      * @param deviceType 设备类型：camera microphone speaker
      * @param value 改变的值
@@ -1065,4 +1071,20 @@ export type MediaContext = {
      * @param id 对话框id
      */
     removeDialog: (id: string) => void
+    /**
+     * 切换摄像头
+     */
+    changeCamera: (deviceId: string) => Promise<void>
+    /**
+     * 切换麦克风
+     */
+    changeMicrophone: (deviceId: string) => Promise<void>
+    /**
+     * 设置扬声器设备音量，仅electron
+     */
+    changeSpeakerVolume: (v: number) => Promise<void>
+    /**
+     * 设置麦克风设备音量，仅electron
+     */
+     changeMicrophoneVolume: (v: number) => Promise<void>
 }
