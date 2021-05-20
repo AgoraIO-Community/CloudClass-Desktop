@@ -1,6 +1,7 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useMediaContext } from 'agora-edu-core'
+import { useUIStore } from '@/infra/hooks'
 
 export const SettingContainer = observer(({id}: any) => {
 
@@ -12,9 +13,12 @@ export const SettingContainer = observer(({id}: any) => {
         speakerId,
         microphoneId,
         changeDevice,
-        changeAudioVolume,
-        removeDialog
+        changeAudioVolume
     } = useMediaContext()
+
+    const {
+        removeDialog
+    } = useUIStore()
 
     return (
         <Modal

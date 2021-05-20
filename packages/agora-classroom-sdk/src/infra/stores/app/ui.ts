@@ -29,31 +29,6 @@ export class UIStore {
       text: 'En', name: 'en'
     }
   ]
-  /**
-   * 是否为electron客户端
-   */
-  @computed
-  get isElectron(): boolean {
-    return window.isElectron
-  }
-
-  @observable
-  language: string = 'zh'
-
-  @observable
-  setLanguage(language: any) {
-    this.language = language
-  }
-
-  showAutoplayNotification() {
-    console.log('showAutoplayNotification')
-  }
-
-  @observable
-  loading: boolean = false
-
-  @observable
-  boardLoading: boolean = false;
 
   @observable
   dialogQueue: DialogType[] = [] 
@@ -72,13 +47,7 @@ export class UIStore {
     this.checked =v
   }
 
-  dialog$: BehaviorSubject<any>
-
-  toast$: BehaviorSubject<any>
-
-  constructor() {
-    this.dialog$ = new BehaviorSubject<any>({})
-    this.toast$ = new BehaviorSubject<any>({})
+  // constructor() {
     // reaction(() => JSON.stringify([
     //   this.chatCollapse
     // ]) , (data: string) => {
@@ -88,7 +57,7 @@ export class UIStore {
     //     this.appStore.roomStore.resetUnreadMessageCount()
     //   }
     // })
-  }
+  // }
 
   @action.bound
   resetStateQueue() {
@@ -102,14 +71,6 @@ export class UIStore {
   }
 
   @action.bound
-  fireToast(eventName: string, props?: any) {
-    this.toast$.next({
-      eventName,
-      props,
-    })
-  }
-
-  @action.bound
   addToast(desc: string, type?: 'success' | 'error' | 'warning') {
     const id = uuidv4()
     this.toastQueue.push({id, desc, type})
@@ -120,15 +81,6 @@ export class UIStore {
   removeToast(id: string) {
     this.toastQueue = this.toastQueue.filter(item => item.id != id);
     return id;
-  }
-
-  @action.bound
-  fireDialog(eventName: string, props?: any) {
-    console.log('fire dialog ', eventName, props)
-    this.dialog$.next({
-      eventName,
-      props
-    })
   }
 
   @action.bound
@@ -158,21 +110,9 @@ export class UIStore {
 
   @action.bound
   reset() {
-    this.loading = false
-    this.boardLoading = false
     this.chatCollapse = false
     this.visibleSetting = false
     this.checked = false
     this.resetStateQueue()
-  }
-
-  @action.bound
-  stopLoading() {
-    this.loading = false
-  }
-
-  @action.bound
-  startLoading () {
-    this.loading = true
   }
 }

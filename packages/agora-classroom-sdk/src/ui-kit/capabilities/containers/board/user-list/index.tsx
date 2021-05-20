@@ -1,13 +1,14 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext } from 'agora-edu-core';
+import { useUserListContext, useStreamListContext, useBoardContext, useRoomContext, useChatContext, useHandsUpContext } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { StudentRoster } from '@/ui-kit/components';
 import { KickDialog } from '../../dialog';
+import { useUIStore } from '@/infra/hooks';
 
 export type UserListContainerProps = {
     onClose: () => void
@@ -29,7 +30,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
     const {
         addDialog,
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
         // muteVideo,
@@ -176,7 +177,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
 
     const {
         addDialog,
-    } = useGlobalContext()
+    } = useUIStore()
 
     const {
         roomInfo

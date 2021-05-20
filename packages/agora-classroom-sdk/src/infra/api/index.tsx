@@ -3,13 +3,26 @@ import { globalConfigs } from '@/ui-kit/utilities';
 import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
-import { ReactElement } from 'react';
+import { ReactElement, useState, ReactChild } from 'react';
 import { AgoraChatWidget } from 'agora-widget-gallery';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
 import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
 import { checkConfigParams, checkLaunchOption } from './validator';
+import { UIContext } from '@/infra/hooks'
+import { UIStore } from '@/infra/stores/app/ui'
+
+export const UIContextProvider = ({ children }: { children: ReactChild}) => {
+
+  const [store] = useState<UIStore>(() => new UIStore())
+
+  return (
+    <UIContext.Provider value={store}>
+      {children}
+    </UIContext.Provider>
+  )
+}
 
 export interface AliOSSBucket {
   key: string
@@ -260,7 +273,9 @@ export class AgoraEduSDK {
       }
       controller.appController.create(
         <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
-            <LiveRoom />
+            <UIContextProvider>
+              <LiveRoom />
+            </UIContextProvider>
         </CoreContextProvider>,
         dom,
         option.listener

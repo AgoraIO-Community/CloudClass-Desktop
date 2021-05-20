@@ -11,6 +11,7 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 import classnames from 'classnames'
+import { useUIStore } from '@/infra/hooks'
 
 export const allTools: ToolItem[] = [
   {
@@ -106,7 +107,7 @@ const TabsContainer = observer(() => {
 
   const {
     addDialog,
-  } = useGlobalContext()
+  } = useUIStore()
 
 
   const {
@@ -174,9 +175,11 @@ const TabsContainer = observer(() => {
 export const WhiteboardContainer = observer(() => {
 
   const {
+    addDialog
+  } = useUIStore()
+
+  const {
     isFullScreen,
-    addDialog,
-    removeDialog
   } = useGlobalContext()
 
   const {

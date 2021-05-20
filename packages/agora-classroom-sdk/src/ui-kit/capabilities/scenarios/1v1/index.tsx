@@ -24,7 +24,10 @@ export const OneToOneScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { joinRoom } = useRoomContext()
+  const { 
+    joinRoom,
+    isJoiningRoom
+  } = useRoomContext()
 
   useEffectOnce(() => {
     joinRoom()
@@ -35,10 +38,6 @@ export const OneToOneScenario = observer(() => {
   })
 
   const className = 'normal'
-
-  const fullscreenCls = classnames({
-    [`layout-aside-${className}`]: 1,
-  })
 
 
   return (
@@ -64,7 +63,7 @@ export const OneToOneScenario = observer(() => {
         </Aside>
       </Layout>
       <DialogContainer />
-      <LoadingContainer />
+      <LoadingContainer loading={isJoiningRoom} />
     </Layout>
   )
 })

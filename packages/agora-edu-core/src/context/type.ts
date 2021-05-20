@@ -444,6 +444,7 @@ export type RoomContext = {
      *   })
      */
     sequenceEventObserver: BehaviorSubject<any>,
+    isJoiningRoom: boolean
     // TO-REVIEW REMOVED in v1.1.1
     // /**
     //  * 禁用视频

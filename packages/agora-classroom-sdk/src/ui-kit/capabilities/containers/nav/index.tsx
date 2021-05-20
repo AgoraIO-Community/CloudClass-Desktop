@@ -1,3 +1,4 @@
+import { useUIStore } from '@/infra/hooks'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
@@ -27,7 +28,7 @@ export const NavigationBar = observer(() => {
 
   const {
     addDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const addRecordDialog = useCallback(() => {
     return addDialog(Record, {starting: isRecording})

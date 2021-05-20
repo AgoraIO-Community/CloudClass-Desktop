@@ -12,7 +12,6 @@ export const useMediaContext = (): MediaContext => {
         networkQuality,
         delay,
         localPacketLostRate,
-    
     } = mediaStore;
     // const {
     //   removeDialog

@@ -192,6 +192,7 @@ export const useRoomContext = (): RoomContext => {
   // } = useUIStore()
 
   const {
+    isJoiningRoom,
     kickOutBan,
     kickOutOnce,
     join,
@@ -231,7 +232,8 @@ export const useRoomContext = (): RoomContext => {
     // v1.1.1
     toastEventObserver: toast$,
     dialogEventObserver: dialog$,
-    sequenceEventObserver: seq$
+    sequenceEventObserver: seq$,
+    isJoiningRoom
   }
 }
 
