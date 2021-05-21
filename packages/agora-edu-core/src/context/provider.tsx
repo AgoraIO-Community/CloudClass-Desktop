@@ -33,9 +33,6 @@ export const useChatContext = (): ChatContext=> {
     isHost: sceneStore.isHost,
     messageList: roomStore.chatMessageList,
     conversationList: roomStore.chatConversationList,
-    //TO-REVIEW
-    //ui store?
-    // chatCollapse: uiStore.chatCollapse,
     unreadMessageCount: roomStore.unreadMessageCount,
     canChatting: sceneStore.canChatting,
     sendMessage: roomStore.sendMessage,
@@ -44,12 +41,14 @@ export const useChatContext = (): ChatContext=> {
     unmuteChat: sceneStore.unmuteChat,
     muteUserChat: sceneStore.muteUserChat,
     unmuteUserChat: sceneStore.unmuteUserChat,
-    // toggleChatMinimize: uiStore.toggleChatMinimize,
     addChatMessage: roomStore.addChatMessage,
     addConversationChatMessage: roomStore.addConversationChatMessage,
     getHistoryChatMessage: roomStore.getHistoryChatMessage,
     getConversationList: roomStore.getConversationList,
     getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage
+    // REMOVED v1.1.1
+    // chatCollapse: uiStore.chatCollapse,
+    // toggleChatMinimize: uiStore.toggleChatMinimize,
   }
 }
 
@@ -166,8 +165,7 @@ export const useScreenShareContext = (): ScreenShareContext => {
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
-    // v1.1.1 - TO-REVIEW
-    // is screensharing going on
+    // ADDED v1.1.1
     isScreenSharing: isShareScreen,
     customScreenSharePickerType,
     startNativeScreenShareBy
@@ -186,10 +184,6 @@ export const useRoomContext = (): RoomContext => {
     sceneType,
     removeScreenShareWindow
   } = useSceneStore()
-
-  // const {
-  //   removeDialog,
-  // } = useUIStore()
 
   const {
     isJoiningRoom,
