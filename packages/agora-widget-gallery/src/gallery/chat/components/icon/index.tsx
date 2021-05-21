@@ -95,18 +95,3 @@ export const IconBox: FC<IconBoxProps> = ({
     <Icon style={style} color={color} type={type} {...restProps}></Icon>
   )
 }
-
-export type SvgIconProps = {
-  onClick?: ReactEventHandler<any>
-}
-
-export const SvgGrantBoardIcon: React.FC<SvgIconProps> = (restProps) => {
-  const cls = classnames({
-    [`svg-icon`]: true
-  });
-  return (
-    <i className={cls} {...restProps} >
-      <img src={IconWhiteboard} alt=""/>
-    </i>
-  );
-}

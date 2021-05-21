@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
-import { Icon, SvgGrantBoardIcon } from '~components/icon';
+import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
@@ -84,7 +84,15 @@ export interface BaseVideoPlayerProps {
    * 隐藏私密聊天按钮
    */
   hidePrivateChat?: boolean;
+  /**
+   * 在线状态
+  */
+  online?: boolean;
+  hasStream?: boolean;
   userType?: 'student' | 'teacher';
+  isLocal?: boolean;
+  cameraDevice?: number;
+  micDevice?: number;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -146,10 +154,15 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hideStars = false,
   hideBoardGranted = false,
   privateCallEnabled = false,
-  isOnPodium,
   placement = 'bottom',
   canHoverHideOffAllPodium = false,
+  online = false,
+  hasStream = false,
+  isLocal = false,
+  isOnPodium = false,
   userType = 'student',
+  micDevice = 1,
+  cameraDevice = 1,
   onCameraClick,
   onMicClick,
   onOffAllPodiumClick = () => console.log("on clear podiums"),
@@ -194,20 +207,36 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title={micEnabled ? t('Close Microphone') : t('Open Microphone')} placement={placement}>
-        <Icon
-          className={micEnabled ? '' : 'red'}
-          type={micEnabled ? 'microphone-on-outline' : 'microphone-off-outline'}
-          onClick={() => onMicClick(uid)}
-        />
-      </Tooltip>
-      <Tooltip title={cameraEnabled ? t('Close Camera') : t('Open Camera')} placement={placement}>
-        <Icon
-          className={cameraEnabled ? '' : 'red'}
-          type={cameraEnabled ? 'camera' : 'camera-off'}
-          onClick={() => onCameraClick(uid)}
-        />
-      </Tooltip>
+      <MediaIcon
+        {...getMediaIconProps({
+          muted: !!micEnabled,
+          deviceState: micDevice,
+          online: !!online,
+          onPodium: isOnPodium,
+          userType: userType,
+          hasStream: hasStream,
+          isLocal: isLocal,
+          uid: uid,
+          type: 'microphone',
+        })}
+        placement={placement}
+        onClick={() => micDevice === 1 && onMicClick(uid)}
+      />
+      <MediaIcon
+        {...getMediaIconProps({
+          muted: !!cameraEnabled,
+          deviceState: cameraDevice,
+          online: !!online,
+          onPodium: isOnPodium,
+          userType: userType,
+          hasStream: hasStream,
+          isLocal: isLocal,
+          uid: uid,
+          type: 'camera',
+        })}
+        placement={placement}
+        onClick={() => cameraDevice === 1 && onCameraClick(uid)}
+      />
       {isHost ? (
         <>
           {hideOffAllPodium ? null : (
@@ -222,6 +251,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideOffPodium ? null : (
             <Tooltip title={t('Clear Podium')} placement={placement}>
               <Icon
+                hover={true}
                 type="invite-to-podium"
                 className={isOnPodium ? 'no_podium' : 'podium'}
                 onClick={() => onOffPodiumClick(uid)}
@@ -236,6 +266,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
               <Icon 
+                hover={true}
                 type="star-outline" 
                 onClick={() => {
                   onSendStar(uid)
@@ -256,6 +287,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   );
   return (
     <Popover
+      trigger="click"
       align={{
         offset: [-8, 0],
       }}
@@ -282,17 +314,30 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <div className="top-right-info">
           {stars > 0 ? (
             <>
-              <Icon className="stars" type="star" />
+              <Icon hover={true} className="stars" type="star" />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled ? <VolumeIndicator volume={micVolume} /> : null}
-            <Icon
+            {micEnabled && micDevice === 1 ? <VolumeIndicator volume={micVolume} /> : null}
+            <MediaIcon
               className={micStateCls}
-              type={micEnabled ? 'microphone-on' : 'microphone-off'}
+              {...getMediaIconProps({
+                muted: !!micEnabled,
+                deviceState: micDevice,
+                online: !!online,
+                onPodium: isOnPodium,
+                userType: userType,
+                hasStream: hasStream,
+                isLocal: isLocal,
+                type: 'microphone',
+                uid: uid,
+                disabled: true,
+              })}
+              volumeIndicator={true}
+              onClick={() => {}}
             />
           </div>
           <span title={username} className="username">{username}</span>

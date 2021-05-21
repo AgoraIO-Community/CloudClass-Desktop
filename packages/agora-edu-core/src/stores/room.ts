@@ -1123,6 +1123,7 @@ export class RoomStore extends SimpleInterval {
         roomUuid: roomUuid,
         roomName: this.roomInfo.roomName
       })
+      this.sceneStore._roomManager = roomManager
       roomManager.on('seqIdChanged', (evt: any) => {
         BizLogger.info("seqIdChanged", evt)
         this.appStore.uiStore.updateCurSeqId(evt.curSeqId)

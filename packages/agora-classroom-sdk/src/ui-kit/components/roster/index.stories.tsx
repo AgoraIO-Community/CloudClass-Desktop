@@ -19,14 +19,17 @@ const meta: Meta = {
       whiteboardGranted: true,
       cameraEnabled: false,
       micEnabled: true,
+      cameraDevice: 1,
+      micDevice: 1,
       stars: 2,
       disabled: i === 0 ? false : true,
-      micDevice: true,
-      cameraDevice: true,
-      onlineState: true,
+      online: true,
       canCoVideo: true,
       canGrantBoard: true,
-      chatEnabled: true
+      chatEnabled: true,
+      userType: 'student',
+      hasStream: i < 5 ? true: false,
+      isLocal: i === 0 ? true : false,
     })),
   }
 };
@@ -54,11 +57,12 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
       }
       case 'camera': {
         item.cameraEnabled = !item.cameraEnabled
-        console.log('cameraEnable', item)
+        // item.cameraDevice = (item.cameraDevice + 1) % 3
         break;
       }
       case 'mic': {
         item.micEnabled = !item.micEnabled
+        // item.micDevice = (item.micDevice + 1) % 3
         break;
       }
       case 'chat': {
@@ -114,7 +118,7 @@ export const DocsUserList: Story<StudentRosterProps> = ({dataSource, ...restProp
   }, [list, setKeyword])
 
   return (
-    <StudentRoster onChange={handleChange} dataSource={dataList} {...restProps} onClick={handleClick} userType="teacher"/>
+    <StudentRoster onChange={handleChange} dataSource={dataList} {...restProps} onClick={handleClick} userType="student"/>
   )
 };
 

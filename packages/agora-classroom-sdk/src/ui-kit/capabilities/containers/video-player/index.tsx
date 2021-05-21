@@ -28,6 +28,12 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
       hideControl={userStream.hideControl}
+      micDevice={userStream.micDevice}
+      cameraDevice={userStream.cameraDevice}
+      isLocal={userStream.isLocal}
+      online={userStream.online}
+      isOnPodium={userStream.onPodium}
+      hasStream={userStream.hasStream}
       whiteboardGranted={userStream.whiteboardGranted}
       hideBoardGranted={true}
       hideStars={true}
@@ -87,6 +93,12 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       uid={userStream.userUuid}
       micEnabled={userStream.audio}
       cameraEnabled={userStream.video}
+      micDevice={userStream.micDevice}
+      cameraDevice={userStream.cameraDevice}
+      isLocal={userStream.isLocal}
+      online={userStream.online}
+      isOnPodium={userStream.onPodium}
+      hasStream={userStream.hasStream}
       whiteboardGranted={userStream.whiteboardGranted}
       hideStars={true}
       micVolume={userStream.micVolume}
@@ -132,7 +144,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 
     const videoStreamList = useMemo(() => {
 
-    return studentStreams.map((stream: EduMediaStream) => ({
+    return studentStreams.map((stream: any) => ({
       isHost: sceneVideoConfig.isHost,
       hideOffPodium: sceneVideoConfig.hideOffPodium,
       username: stream.account,
@@ -146,6 +158,12 @@ export const VideoMarqueeStudentContainer = observer(() => {
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
       canHoverHideOffAllPodium: true,
+      hasStream: stream.hasStream,
+      online: stream.online,
+      isLocal: stream.isLocal,
+      isOnPodium: stream.onPodium,
+      micDevice: stream.micDevice,
+      cameraDevice: stream.cameraDevice,
       hideBoardGranted: sceneVideoConfig.hideBoardGranted,
       children: (
         <>

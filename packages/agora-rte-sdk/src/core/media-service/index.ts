@@ -26,9 +26,12 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   readonly _id!: string
 
+  encoderConfig: any;
+
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
     this._id = uuidv4()
+    this.encoderConfig = undefined
     this.cameraRenderer = undefined
     this.screenRenderer = undefined
     this.remoteUsersRenderer = []
@@ -167,15 +170,24 @@ export class MediaService extends EventEmitter implements IMediaService {
     //     volumes
     //   })
     // })
-    //@ts-ignore
-    if (window.agoraBridge) {
-      this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
-        this.fire('audio-device-changed', (evt))
-      })
-
-      this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
-        this.fire('video-device-changed', (evt))
-      })
+    if (this.isElectron) {
+      //@ts-ignore
+      if (window.agoraBridge) {
+        this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
+          this.fire('audio-device-changed', (evt))
+        })
+  
+        this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
+          this.fire('video-device-changed', (evt))
+        })
+      } else {
+        this.electron.client.on('audiodevicestatechanged', (evt: any) => {
+          this.fire('audio-device-changed', (evt))
+        })
+        this.electron.client.on('videodevicestatechanged', (evt: any) => {
+          this.fire('video-device-changed', (evt))
+        })
+      }
     } else {
       AgoraRTC.onCameraChanged = (info) => {
         this.fire('video-device-changed', (info))
@@ -540,6 +552,9 @@ export class MediaService extends EventEmitter implements IMediaService {
   }
 
   async openCamera(option?: CameraOption): Promise<any> {
+    if (option?.encoderConfig) {
+      this.encoderConfig = this.encoderConfig
+    }
     if (this.isWeb) {
       await this.sdkWrapper.openCamera(option)
       if (!this.web.cameraTrack) return
@@ -575,10 +590,10 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   async changeCamera(deviceId: string): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.changeCamera(deviceId)
+      await this.sdkWrapper.changeLocalCamera({deviceId, encoderConfig: this.encoderConfig})
     }
     if (this.isElectron) {
-      await this.sdkWrapper.changeCamera(deviceId)
+      await this.sdkWrapper.changeLocalCamera({deviceId, encoderConfig: this.encoderConfig})
     }
   }
 

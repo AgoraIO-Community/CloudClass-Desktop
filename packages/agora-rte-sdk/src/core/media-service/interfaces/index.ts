@@ -125,7 +125,7 @@ export declare interface PrepareScreenShareParams {
 }
 export declare interface CameraOption {
   deviceId: string
-  encoderConfig: {
+  encoderConfig?: {
     width: number,
     height: number,
     frameRate: number,
@@ -156,7 +156,8 @@ export declare interface IAgoraRTCModule {
   muteRemoteAudio(uid: any, val: boolean): Promise<any>
 
   openCamera(option?: CameraOption): Promise<any>
-  changeCamera(deviceId: string): Promise<any>
+  // changeCamera(deviceId: string): Promise<any>
+  // changeCamera(option: CameraOption): Promise<any>
   closeCamera(): void
 
   getCameras(): Promise<any[]>
@@ -443,6 +444,11 @@ export declare interface IMediaService extends IAgoraRTCModule {
    * 获取扬声器音量，仅适用于electron
    */
   getPlaybackVolume(): number
+
+  /**
+   * 更改摄像头
+   */
+  changeCamera(deviceId: string): Promise<any>
 
   /**
    * 关闭或打开远端视频

@@ -3,8 +3,11 @@ import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
 import IconWhiteboard from '~components/icon/assets/icon-whiteboard.svg';
+import IconH5 from '~components/icon/assets/svg/icon-h5.svg';
 import './index.css';
 import './style.css';
+import { Tooltip } from '../tooltip';
+import { transI18n } from '../i18n';
 
 export type { IconTypes } from './icon-types';
 
@@ -16,6 +19,7 @@ const svgDict: string[] = [
   'student-authorized',
   'student-whiteboard',
   'teacher-authorized',
+  'assistant-authorized',
   'teacher-whiteboard',
   'countdown'
 ]
@@ -101,6 +105,7 @@ export type FormatIconType =
   | 'video'
   | 'pdf'
   | 'image'
+  | 'h5'
 
 export interface IconBoxProps extends BaseProps {
   iconType: FormatIconType
@@ -112,6 +117,10 @@ export const IconBox: FC<IconBoxProps> = ({
   ...restProps
 }) => {
 
+  if (iconType === 'h5') {
+    return <SvgIcon type="h5" {...restProps} />
+  }
+
   const color = getIconInfo(iconType)
   const type = `format-${iconType}` as IconTypes
   return (
@@ -121,15 +130,253 @@ export const IconBox: FC<IconBoxProps> = ({
 
 export type SvgIconProps = {
   onClick?: ReactEventHandler<any>
+  type: 'grant-board' | 'h5'
 }
 
-export const SvgGrantBoardIcon: React.FC<SvgIconProps> = (restProps) => {
+const svgIconTable = {
+  'grant-board': IconWhiteboard,
+  'h5': IconH5
+}
+
+export const SvgIcon: React.FC<SvgIconProps> = ({type, onClick, ...restProps}) => {
   const cls = classnames({
-    [`svg-icon`]: true
+    [`svg-icon`]: true,
+    ['resource-type']: ['h5'].includes(type),
   });
+
+  const svgSrc = svgIconTable[type]
   return (
     <i className={cls} {...restProps} >
-      <img src={IconWhiteboard} alt=""/>
+      <img src={svgSrc} alt=""/>
     </i>
   );
+}
+
+type MediaIconState = {
+  hover: boolean,
+  state: any,
+  streamState: boolean,
+  type: any
+}
+
+type MediaIconArgs = {
+  muted: boolean;
+  deviceState: any;
+  online: boolean;
+  onPodium?: boolean;
+  userType: string;
+  hasStream: boolean;
+  isLocal: boolean;
+  type: any;
+  uid: any;
+  disabled?: boolean;
+  // canOperate: boolean;
+}
+
+export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
+
+  const {
+    muted,
+    deviceState,
+    online,
+    onPodium,
+    userType,
+    hasStream,
+    isLocal,
+    type,
+    uid,
+    disabled = false,
+  } = args
+
+  const canHover = disabled === true ? false : true
+
+  if (!isLocal) {
+    if (userType === 'student') {
+      if (!online || !onPodium) {
+        return {
+          hover: false,
+          state: 'not-available',
+          streamState: false,
+          type: type
+        }
+      } else {
+        if (deviceState !== 1) {
+          return {
+            hover: false,
+            state: 'not-available',
+            streamState: false,
+            type: type
+          }
+        } else {
+          return {
+            hover: false,
+            state: 'not-permitted',
+            streamState: false,
+            type
+          }
+        }
+      }
+    } else {
+      if (!online || !onPodium || deviceState === 2 || !hasStream) {
+        console.log('不可用 ', ' uid', JSON.stringify(args))
+        return {
+          hover: false,
+          state: 'not-available',
+          streamState: false,
+          type: type
+        }
+      }
+      if (hasStream && muted === false) {
+        console.log('available muted ', JSON.stringify(args))
+        return {
+          hover: canHover,
+          state: 'available',
+          streamState: false,
+          type: type
+        }
+      }
+      if (deviceState === 0 || deviceState === 2) {
+        console.log('不可用 deviceState ', JSON.stringify(args))
+        return {
+          hover: false,
+          state: 'not-available',
+          streamState: false,
+          type: type
+        }
+      }
+      console.log('available indeed ', JSON.stringify(args))
+      return {
+        hover: canHover,
+        state: 'available',
+        streamState: muted,
+        type: type
+      }
+    }
+  } else {
+    if (deviceState === 2 || !hasStream) {
+      return {
+        hover: false,
+        state: 'not-available',
+        streamState: false,
+        type: type
+      }
+    }
+    if (muted === false) {
+      return {
+        hover: canHover,
+        state: 'available',
+        streamState: false,
+        type: type
+      }
+    }
+
+    if (deviceState === 1) {
+      return {
+        hover: canHover,
+        state: 'available',
+        streamState: muted,
+        type: type
+      }
+    } else {
+      return {
+        hover: false,
+        state: 'not-available',
+        streamState: muted,
+        type: type
+      }
+    }
+  }
+
+  // return {
+  //   hover: false,
+  //   state: 'not-available',
+  //   streamState: muted,
+  //   type
+  // }
+}
+
+type MediaIconProps = {
+  className?: string;
+  type: 'microphone' | 'camera';
+  hover: boolean;
+  streamState?: boolean;
+  volumeIndicator?: boolean;
+  placement?: string;
+  state: 'available' | 'not-available' | 'not-permitted'
+  onClick: (evt: any) => any
+}
+
+export const MediaIcon = ({className, hover, state, streamState = false, volumeIndicator = false, placement = '', type, onClick}: MediaIconProps) => {
+  const cls = classnames({
+    [`rtc-state-${state}`]: 1,
+    [`${className ? className : ''}`]: !!className
+  })
+
+  const mapType: Record<string, any> = {
+    'not-available': {
+      'microphone': 'microphone-off-outline',
+      'camera': 'camera-off',
+    },
+    'available': {
+      'microphone': !!streamState === true ? 'microphone-on-outline' : 'microphone-off-outline',
+      'camera': !!streamState === true ? 'camera' : 'camera-off',
+    },
+    'not-permitted': {
+      'microphone': 'microphone-on-outline',
+      'camera': 'camera',
+    }
+  }
+
+  if (volumeIndicator && type === 'microphone') {
+    const volumeMapType: Record<string, any> = {
+      'not-available': {
+        'microphone': 'microphone-off',
+      },
+      'available': {
+        'microphone': !!streamState === true ? 'microphone-on' : 'microphone-off',
+      },
+      'not-permitted': {
+        'microphone': 'microphone-on',
+      }
+    }
+    return (
+      <Icon
+        hover={false}
+        className={cls}
+        type={volumeMapType[state][type]}
+      />
+    )
+  }
+
+  if (placement) {
+    const text: Record<string, any> = {
+      'camera': {
+        'true': 'Close Camera',
+        'false': 'Open Camera'
+      },
+      'microphone': {
+        'true': 'Close Microphone',
+        'false': 'Open Microphone'
+      }
+    }
+    return (
+      <Tooltip title={streamState ? transI18n(text[type][state]) : transI18n(text[type][state])} placement={placement as any}> 
+        <Icon
+          hover={hover}
+          className={cls}
+          type={mapType[state][type]}
+          onClick={onClick}
+        />
+      </Tooltip>
+    )
+  }
+  
+  return (
+    <Icon
+      hover={hover}
+      className={cls}
+      type={mapType[state][type]}
+      onClick={onClick}
+    />
+  )
 }

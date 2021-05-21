@@ -1,5 +1,5 @@
-import { LocalUserRenderer, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, GenericErrorWrapper, EduLogger } from "agora-rte-sdk"
-import { isEmpty } from "lodash"
+import { LocalUserRenderer, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, GenericErrorWrapper, EduLogger, EduUser } from "agora-rte-sdk"
+import { get, isEmpty } from "lodash"
 import { observable, action, computed, reaction, runInAction } from "mobx"
 import { EduScenarioAppStore } from "."
 import { AgoraMediaDeviceEnum } from "../types"
@@ -170,6 +170,24 @@ export class PretestStore {
     return this.appStore.mediaStore.totalVolume
   }
 
+  queryVideoFrameIsNotFrozen(streamUuid: number) {
+    return this.appStore.sceneStore.queryVideoFrameIsNotFrozen(streamUuid)
+  }
+
+  queryCamIssue(userUuid: string): boolean {
+    return this.appStore.sceneStore.queryCamIssue(userUuid)
+  }
+
+  @computed
+  get cameraDevice() {
+    return this.appStore.sceneStore.cameraDevice
+  }
+
+  @computed
+  get micDevice() {
+    return this.appStore.sceneStore.micDevice
+  }
+
   @computed
   get isCameraOpen () {
     return !!this.appStore.sceneStore.cameraRenderer
@@ -262,7 +280,7 @@ export class PretestStore {
   get cameraList(): any[] {
     return [
       {
-        deviceId: AgoraMediaDeviceEnum.Muted,
+        deviceId: AgoraMediaDeviceEnum.Disabled,
         type: 'video',
         label: CustomizeDeviceLabel.Disabled,
         i18n: true
@@ -277,7 +295,7 @@ export class PretestStore {
   get microphoneList(): any[] {
     return [
       {
-        deviceId: AgoraMediaDeviceEnum.Muted,
+        deviceId: AgoraMediaDeviceEnum.Disabled,
         type: 'audio',
         label: CustomizeDeviceLabel.Disabled,
         i18n: true
@@ -347,12 +365,13 @@ export class PretestStore {
 
   muteMicrophone() {
     this.microphoneLabel = CustomizeDeviceLabel.Disabled
-    this._microphoneId = AgoraMediaDeviceEnum.Muted
+    this._microphoneId = AgoraMediaDeviceEnum.Disabled
   }
 
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
-    this._cameraId = AgoraMediaDeviceEnum.Muted
+    this._cameraId = AgoraMediaDeviceEnum.Disabled
+    this.appStore.mediaStore.totalVolume = 0
   }
 
   @action.bound
@@ -386,7 +405,7 @@ export class PretestStore {
   @action.bound
   async changeTestCamera(deviceId: string) {
     try {
-      if (deviceId === AgoraMediaDeviceEnum.Muted) {
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
         await this.mediaService.closeTestCamera()
         this._cameraRenderer = undefined
         this.muteCamera()
@@ -472,7 +491,7 @@ export class PretestStore {
   @action.bound
   async changeTestMicrophone(deviceId: string) {
     try {
-      if (deviceId === AgoraMediaDeviceEnum.Muted) {
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
         await this.mediaService.closeTestMicrophone()
         if (this.isWeb) {
           this._microphoneTrack = undefined
@@ -596,7 +615,7 @@ export class PretestStore {
 
   @action.bound
   async changeCamera(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Muted) {
+    if (deviceId === AgoraMediaDeviceEnum.Disabled) {
       await this.mediaService.closeCamera()
       this._cameraRenderer = undefined
       this.muteCamera()
@@ -708,7 +727,7 @@ export class PretestStore {
 
   @action.bound
   async changeMicrophone(deviceId: string) {
-    if (deviceId === AgoraMediaDeviceEnum.Muted) {
+    if (deviceId === AgoraMediaDeviceEnum.Disabled) {
       await this.mediaService.closeMicrophone()
       if (this.isWeb) {
         this._microphoneTrack = undefined

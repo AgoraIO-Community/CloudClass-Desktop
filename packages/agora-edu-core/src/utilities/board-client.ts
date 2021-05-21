@@ -191,4 +191,9 @@ export class BoardClient extends EventEmitter {
     }
   }
 
+  get bridge() {
+    if (!this.room) return
+    return this.room.getInvisiblePlugin(IframeBridge.kind)
+  }
+
 }

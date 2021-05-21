@@ -24,11 +24,31 @@ export enum LocalVideoStreamState {
 
 export enum LocalVideoErrorEnum {
   OK = 0,
-  FAILURE = 2,
+  FAILURE = 1,
   NO_PERMISSION = 2,
   BUSY = 3,
   CAPTURE_FAILURE = 4,
   ENCODE_FAILURE = 5,
+  ERROR_DEVICE_NOT_FOUND = 8,
+  SCREEN_CAPTURE_WINDOW_MINIMIZED = 11,
+  SCREEN_CAPTURE_WINDOW_CLOSED = 12
+}
+
+export enum LocalAudioStreamState {
+  LOCAL_AUDIO_STREAM_STATE_STOPPED = 0,
+  LOCAL_AUDIO_STREAM_STATE_CAPTURING = 1,
+  LOCAL_AUDIO_STREAM_STATE_ENCODING = 2,
+  LOCAL_AUDIO_STREAM_STATE_FAILED = 3
+}
+
+export enum LocalAudioErrorEnum {
+  OK = 0,
+  FAILURE = 1,
+  NO_PERMISSION = 2,
+  BUSY = 3,
+  CAPTURE_FAILURE = 4,
+  ENCODE_FAILURE = 5,
+  ERROR_DEVICE_NOT_FOUND = 8,
   SCREEN_CAPTURE_WINDOW_MINIMIZED = 11,
   SCREEN_CAPTURE_WINDOW_CLOSED = 12
 }
@@ -86,6 +106,9 @@ export class MediaStore {
 
   @observable
   localVideoState: LocalVideoStreamState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
+
+  @observable
+  localAudioState: LocalAudioStreamState = LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED
 
   @observable
   _delay: number = 0
@@ -157,18 +180,18 @@ export class MediaStore {
 
   id: string = uuidv4()
 
-  @computed
-  get device(): boolean {
-    if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
-      return false
-    }
+  // @computed
+  // get device(): boolean {
+  //   if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+  //     return false
+  //   }
 
-    if ((this.cameraRenderer?.freezeCount || 0) < 3) {
-      return true
-    } else {
-      return false
-    }
-  }
+  //   if ((this.cameraRenderer?.freezeCount || 0) < 3) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // }
   
 
   get pretestNotice () {
@@ -208,6 +231,13 @@ export class MediaStore {
       }
       if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
         this.appStore.sceneStore.resetMicrophoneTrack()
+        eduSDKApi.reportMicState({
+          roomUuid: this.appStore.roomInfo.roomUuid,
+          userUuid: this.appStore.roomInfo.userUuid,
+          state: 0
+        }).catch((err: Error) => {
+          BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
+        })
       }
       const handleDevicePulled = (evt: any) => {
         const notice = MediaDeviceState.getNotice(evt.resource)
@@ -326,6 +356,13 @@ export class MediaStore {
         this.localVideoState = state
       }
     })
+    this.mediaService.on('localAudioStateChanged', (evt: any) => {
+      const {state, msg} = evt
+      if ([LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED,
+        LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_ENCODING].includes(state)) {
+        this.localAudioState = state
+      }
+    })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
       if (this.appStore.uiStore.isElectron) {
@@ -364,19 +401,29 @@ export class MediaStore {
     reaction(() => JSON.stringify([
       this.appStore.roomInfo.roomUuid,
       this.appStore.roomInfo.userUuid,
-      this.device,
+      this.appStore.sceneStore.localCameraDeviceState,
+      this.appStore.sceneStore.localMicrophoneDeviceState,
       this.appStore.roomStore.roomJoined,
     ]), (data: string) => {
-      const [roomUuid, userUuid, device, roomJoined] = JSON.parse(data)
+      const [roomUuid, userUuid, localCameraDeviceState, localMicrophoneDeviceState, roomJoined] = JSON.parse(data)
       if (roomJoined && roomUuid && userUuid) {
         eduSDKApi.reportCameraState({
           roomUuid: roomUuid,
           userUuid: userUuid,
-          state: +device
+          state: +localCameraDeviceState
         }).catch((err) => {
           BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
         }).then(() => {
           BizLogger.info(`[CAMERA] report camera device not working`)
+        })
+        eduSDKApi.reportMicState({
+          roomUuid: roomUuid,
+          userUuid: userUuid,
+          state: +localMicrophoneDeviceState
+        }).catch((err) => {
+          BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+        }).then(() => {
+          BizLogger.info(`[CAMERA] report mic device not working`)
         })
       }
     })
@@ -407,6 +454,7 @@ export class MediaStore {
   reset() {
     this.cpuUsage = 0
     this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED
+    this.localAudioState = LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED
     this.remoteUsersRenderer = []
     EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`)
     this.networkQuality = 'unknown'
@@ -432,37 +480,6 @@ export class MediaStore {
   get screenVideoRenderer(): LocalUserRenderer | undefined {
     return this._screenVideoRenderer;
   }
-
-  @action
-  async openCamera() {
-
-  }
-
-  @action
-  async startWebSharing() {
-
-  }
-
-  @action
-  async stopWebSharing() {
-
-  }
-
-  @action
-  async stopNativeSharing() {
-
-  }
-
-  @action
-  async showScreenShareWindowWithItems() {
-
-  }
-
-  @action
-  async prepareScreenShare() {
-
-  }
-
 
   @action
   resetRoomState() {

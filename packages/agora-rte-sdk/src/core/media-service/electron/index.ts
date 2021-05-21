@@ -603,6 +603,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('localAudioStateChanged', (state: number, error: number) => {
+      this.fire('localAudioStateChanged', {
+        state,
+        type: 'audio',
+        msg: error
+      })
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,
@@ -1094,7 +1099,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
 
-  async changeCamera(deviceId: string): Promise<any> {
+  async changeLocalCamera({deviceId, encoderConfig}: CameraOption): Promise<any> {
     try {
       let ret = -1
       if (this._cefClient) {
@@ -1414,7 +1419,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       EduLogger.warn('joined mode not support changeTestCamera')
       return
     }
-    await this.changeCamera(deviceId)
+    await this.changeLocalCamera({deviceId})
   }
   
   async openTestMicrophone(option?: MicrophoneOption): Promise<any> {

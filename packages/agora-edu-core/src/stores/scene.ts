@@ -10,9 +10,10 @@ import { RoomApi } from "../services/room-api"
 import { BusinessExceptions } from "../utilities/biz-error"
 import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
-import { LocalVideoStreamState } from "./media"
+import { LocalAudioStreamState, LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
 import { EduMediaStream } from "../context/type"
+import { AgoraMediaDeviceEnum, DeviceStateEnum } from '../types';
 
 const delay = 2000
 
@@ -1134,25 +1135,106 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  @computed
+  get localCameraDeviceState(): DeviceStateEnum {
+    // use muted device
+    if (this.appStore.pretestStore._cameraId === AgoraMediaDeviceEnum.Disabled) {
+      return DeviceStateEnum.Disabled
+    }
+
+    // has rte stream
+    if (this.cameraEduStream) {
+      if (this.cameraEduStream.hasVideo === false) {
+        return DeviceStateEnum.Available
+      } else {
+        const streamUuid = +this.cameraEduStream.streamUuid
+        const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
+        return isFreeze ? DeviceStateEnum.Frozen : DeviceStateEnum.Available
+      }
+    }
+
+    return DeviceStateEnum.Available
+  }
+
+  @computed
+  get localMicrophoneDeviceState(): DeviceStateEnum {
+    // use muted device
+    if (this.appStore.pretestStore._microphoneId === AgoraMediaDeviceEnum.Disabled) {
+      return DeviceStateEnum.Disabled
+    }
+
+    // has rte stream
+    if (this.cameraEduStream) {
+      if (this.cameraEduStream.hasAudio === false) {
+        return DeviceStateEnum.Available
+      } else {
+        // TODO: need workaround support microphone
+        return DeviceStateEnum.Available
+        // const streamUuid = +this.cameraEduStream.streamUuid
+        // const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
+        // return isFreeze ? DeviceStateEnum.Frozen : DeviceStateEnum.Available
+      }
+    }
+
+    return DeviceStateEnum.Available
+  }
+
+  queryCameraDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+    if (this.roomInfo.userUuid === userUuid) {
+      return this.localCameraDeviceState
+    } else {
+      return this.queryRemoteCameraDeviceState(userList, userUuid, streamUuid)
+    }
+  }
+
+  queryMicDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+    if (this.roomInfo.userUuid === userUuid) {
+      return this.localMicrophoneDeviceState
+    } else {
+      return this.queryRemoteMicrophoneDeviceState(userList, userUuid, streamUuid)
+    }
+  }
+
+  queryRemoteCameraDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+    const user = userList.find((it: EduUser) => it.userUuid === userUuid)
+    if (!user) {
+      return DeviceStateEnum.Disabled
+    } else {
+      const cameraState = get(user, 'userProperties.device.camera', 1)
+      if (cameraState === 1) {
+        const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
+        return isFreeze ? DeviceStateEnum.Frozen : DeviceStateEnum.Available
+      }
+      return cameraState;
+    }
+  }
+
+  queryRemoteMicrophoneDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+    const user = userList.find((it: EduUser) => it.userUuid === userUuid)
+    if (!user) {
+      return DeviceStateEnum.Disabled
+    } else {
+      const cameraState = get(user, 'userProperties.device.camera', 1)
+      if (cameraState === 1) {
+        const isFreeze = this.queryAudioIsNotFrozen(+streamUuid) === false
+        return isFreeze ? DeviceStateEnum.Frozen : DeviceStateEnum.Available
+      }
+      return cameraState;
+    }
+  }
+
   getLocalPlaceHolderProps() {
-    // if (this.openingCamera === true) {
-    //   return {
-    //     holderState: 'loading',
-    //     text: 'placeholder.openingCamera'
-    //   }
-    // }
-
-    // if (this.closingCamera === true) {
-    //   return {
-    //     holderState: 'closedCamera',
-    //     text: 'placeholder.closingCamera'
-    //   }
-    // }
-
     if (!this.cameraEduStream || this.openingCamera || this.closingCamera) {
       return {
         holderState: 'loading',
-        text: `placeholder.loading`
+        text: `placeholder.loading`,
+      }
+    }
+
+    if (this.localCameraDeviceState === DeviceStateEnum.Disabled) {
+      return {
+        holderState: 'disabled',
+        text: `placeholder.disabled`
       }
     }
 
@@ -1214,6 +1296,13 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
+    if (this.queryRemoteCameraDeviceState(this.userList, userUuid, stream.streamUuid) === DeviceStateEnum.Disabled) {
+      return {
+        holderState: 'disabled',
+        text: `placeholder.disabled`
+      }
+    }
+
     const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
     if (isFreeze) {
       return {
@@ -1241,10 +1330,76 @@ export class SceneStore extends SimpleInterval {
     return this.fixWebVolume(level)
   }
 
+  queryLocalCameraDevice(userUuid: string) {
+    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    if (user && user.userProperties) {
+      return get(user.userProperties, 'devices.camera', 1)
+    }
+    return 1
+  }
+
+  queryLocalMicDevice(userUuid: string) {
+    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    if (user && user.userProperties) {
+      return get(user.userProperties, 'devices.microphone', 1)
+    }
+    return 1
+  }
+
+  @computed
+  get cameraDevice() {
+    if (this.appStore.pretestStore._cameraId === AgoraMediaDeviceEnum.Disabled) {
+      return 2
+    }
+    
+    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === false) {
+      return 1
+    }
+
+    // when biz stream is muted
+    if (this.cameraEduStream && !!this.cameraEduStream.hasVideo === true) {
+      const streamUuid = +this.cameraEduStream.streamUuid
+      const isFreeze = this.queryVideoFrameIsNotFrozen(+streamUuid) === false
+      if (isFreeze) {
+        return 0
+      } else {
+        return this.queryLocalCameraDevice(this.appStore.roomInfo.userUuid)
+      }
+    }
+
+    return 1
+  }
+
+  @computed
+  get micDevice() {
+    if (this.appStore.pretestStore._microphoneId === AgoraMediaDeviceEnum.Disabled) {
+      return 2
+    }
+    
+    if (this.cameraEduStream && !!this.cameraEduStream.hasAudio === false) {
+      return 1
+    }
+
+    // when biz stream is muted
+    if (this.cameraEduStream && !!this.cameraEduStream.hasAudio === true) {
+      return this.queryLocalMicDevice(this.appStore.roomInfo.userUuid)
+    }
+
+    return 1
+  }
+
   queryCamIssue(userUuid: string): boolean {
     const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
     if (user && user.userProperties) {
       return !!get(user.userProperties, 'devices.camera', 1) === false
+    }
+    return false
+  }
+
+  queryCamDisabled(userUuid: string): boolean {
+    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    if (user && user.userProperties) {
+      return get(user.userProperties, 'devices.camera', 1) === 2
     }
     return false
   }
@@ -1255,9 +1410,7 @@ export class SceneStore extends SimpleInterval {
       if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
         return false
       }
-      // const frameRate = this.appStore.mediaStore.rendererOutputFrameRate[`${0}`]
-      // return frameRate > 0
-      const freezeCount = this.cameraRenderer?.freezeCount || 0
+      const freezeCount = this.cameraRenderer?.freezeCount ?? 0
       return freezeCount < 3
     } else {
       // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
@@ -1268,6 +1421,37 @@ export class SceneStore extends SimpleInterval {
       let freezeCount = stats ? stats.freezeCount : 0
       return freezeCount < 3
     }
+  }
+
+  queryAudioIsNotFrozen (uid: number): boolean {
+    const isLocal = +get(this, 'cameraEduStream.streamUuid', 0) === +uid
+    if (isLocal) {
+      if (this.appStore.mediaStore.localAudioState === LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED) {
+        return false
+      }
+      if (this.appStore.isWeb) {
+        return !!this.appStore.pretestStore._microphoneTrack
+      }
+      return true
+    } else {
+      return true
+    }
+  }
+
+  queryUserIsOnline(userUuid: string) {
+    const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
+    if (!user) {
+      return false
+    }
+    return true
+  }
+
+  queryUserIsOnPodium(streamUuid: string) {
+    const user = this.streamList.find((it: any) => it.streamUuid === streamUuid)
+    if (!user) {
+      return false
+    }
+    return true
   }
 
   @computed
@@ -1290,6 +1474,12 @@ export class SceneStore extends SimpleInterval {
         placeHolderText: text,
         whiteboardGranted: true,
         micVolume: this.localVolume,
+        isLocal: true,
+        online: true,
+        onPodium: true,
+        hasStream: !!this.cameraEduStream,
+        micDevice: this.localMicrophoneDeviceState,
+        cameraDevice: this.localCameraDeviceState,
       } as any
     }
 
@@ -1312,6 +1502,12 @@ export class SceneStore extends SimpleInterval {
         placeHolderText: props.text,
         whiteboardGranted: true,
         micVolume: volumeLevel,
+        online: !!teacherStream.streamUuid,
+        onPodium: true,
+        hasStream: !!teacherStream,
+        isLocal: false,
+        cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, teacherStream.streamUuid),
+        micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, teacherStream.streamUuid),
       } as any
     }
     return {
@@ -1323,6 +1519,12 @@ export class SceneStore extends SimpleInterval {
       audio: false,
       renderer: undefined,
       hideControl: true,
+      isLocal: false,
+      hasStream: false,
+      online: false,
+      onPodium: false,
+      micDevice: 1,
+      cameraDevice: 1,
       placeHolderText: this.defaultTeacherPlaceholder.text,
       holderState: this.defaultTeacherPlaceholder.holderState,
       micVolume: 0,
@@ -1476,6 +1678,12 @@ export class SceneStore extends SimpleInterval {
           placeHolderText: props.text,
           micVolume: volumeLevel,
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
+          online: this.queryUserIsOnline(user.userUuid),
+          onPodium: this.queryUserIsOnPodium(stream.streamUuid),
+          micDevice: this.localMicrophoneDeviceState,
+          cameraDevice: this.localCameraDeviceState,
+          isLocal: true,
+          hasStream: !!this.cameraEduStream,
         } as any)
         return acc;
       }
@@ -1500,6 +1708,12 @@ export class SceneStore extends SimpleInterval {
         placeHolderText: props.text,
         micVolume: this.localVolume,
         whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
+        online: true,
+        onPodium: true,
+        micDevice: this.localMicrophoneDeviceState,
+        cameraDevice: this.localCameraDeviceState,
+        isLocal: true,
+        hasStream: !!this.cameraEduStream,
       } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
@@ -1518,7 +1732,13 @@ export class SceneStore extends SimpleInterval {
       holderState: this.defaultStudentPlaceholder.holderState,
       micVolume: 0,
       whiteboardGranted: false,
-      defaultStream: true
+      defaultStream: true,
+      online:false,
+      onPodium: false,
+      micDevice: 1,
+      cameraDevice: 1,
+      isLocal: false,
+      hasStream: false,
     } as any]
   }
 

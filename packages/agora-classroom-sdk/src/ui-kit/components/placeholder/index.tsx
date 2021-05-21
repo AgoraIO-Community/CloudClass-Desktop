@@ -7,15 +7,17 @@ import cameraBroken from './assets/camera-broken.png';
 import cameraClose from './assets/camera-close.png';
 import noBody from './assets/no-body.png';
 import noFile from './assets/no-file.png';
+import cameraDisabled from './assets/camera-disabled.png';
 
-type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile'
+type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled'
 
 const placeholderImgDict = {
   emptyHistory,
   cameraBroken,
   cameraClose,
   noBody,
-  noFile
+  noFile,
+  cameraDisabled
 }
 
 export interface PlaceholderProps extends BaseProps {
@@ -46,7 +48,7 @@ export const Placeholder: FC<PlaceholderProps> = ({
 };
 
 export interface CameraPlaceHolderProps extends BaseProps {
-  state?: 'loading' | 'broken' | 'muted',
+  state?: 'loading' | 'broken' | 'muted' | 'disabled',
   children?: React.ReactNode;
 }
 

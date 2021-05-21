@@ -17,6 +17,15 @@ const meta: Meta = {
 
 const list = [
   {
+    id: 0,
+    type: 'h5',
+    name: 'PPT课件制作规范.h5',
+    progress: 0.2,
+    size: 10000,
+    date: '2021-02-15',
+    checked: false,
+  },
+  {
     id: 1,
     type: 'ppt',
     name: 'PPT课件制作规范.pptx',
@@ -88,7 +97,7 @@ export type CloudStorageProps = {
 export const CloudStorage = ({ size }: CloudStorageProps) => {
 
   const itemList = resizeList(list, size)
-  itemList.length = 0;
+  // itemList.length = 0;
   // console.log(itemList)
 
   return (
@@ -281,7 +290,9 @@ export const CourseWareManager = ({
       </div>
       <Tabs defaultActiveKey="2" onChange={handleChange}>
         <TabPane tab="公共资源" key="1">
-          <CloudStorage size={1} />
+          <CloudStorage
+            size={1}
+          />
         </TabPane>
         <TabPane tab="我的资源" key="2" style={{position: 'relative'}}> 
           <Row className="btn-group margin-gap">

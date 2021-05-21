@@ -35,13 +35,9 @@
 }
 
 .mic-state {
-  color: #0073ff;
+  /* color: #0073ff; */
   font-size: 18px !important;
-  margin-right: 6px;
-}
-
-.mic-state.disabled {
-  color: #ff0000;
+  /* margin-right: 6px; */
 }
 
 .username {
@@ -74,7 +70,7 @@
 } */
 
 .video-player-tools > .iconfont {
-  @apply cursor-pointer box-content;
+  @apply box-content;
   font-size: 22px;
   color: #357bf6;
 }
@@ -224,10 +220,10 @@
 .video-player-tools .iconfont::before{
   border-radius: 50%;
 } 
-
-.video-player-tools .iconfont:hover::before {
+/* 
+.video-player-tools .icon-box-hover:hover::before {
   background-color: #f0f0f7;
-}
+} */
 
 .center-reward {
   position: absolute;

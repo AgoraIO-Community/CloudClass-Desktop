@@ -3007,25 +3007,33 @@
     eventemitter2 "^6.4.3"
     react "^16.13.1"
 
+"@netless/iframe-bridge@2.0.7":
+  version "2.0.7"
+  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.0.7.tgz#74dc3825c9d634b34f63857b3534f5cd4dac9026"
+  integrity sha1-dNw4JcnWNLNPY4V7NTT1zU2skCY=
+  dependencies:
+    eventemitter2 "^6.4.3"
+    react "^16.13.1"
+
 "@netless/react-seek-slider@1.0.4":
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/white-audio-plugin2@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.nlark.com/@netless/white-audio-plugin2/download/@netless/white-audio-plugin2-2.0.4.tgz#661af49e67779dbfee293506f81112d8aa08be1d"
-  integrity sha1-Zhr0nmd3nb/uKTUG+BES2KoIvh0=
+"@netless/white-audio-plugin2@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.nlark.com/@netless/white-audio-plugin2/download/@netless/white-audio-plugin2-2.0.5.tgz#9a162d3fe9bb7463b0a697ed0e94f6ec9cf9fa57"
+  integrity sha1-mhYtP+m7dGOwppftDpT27Jz5+lc=
 
 "@netless/white-audio-plugin@1.2.23":
   version "1.2.23"
   resolved "https://registry.nlark.com/@netless/white-audio-plugin/download/@netless/white-audio-plugin-1.2.23.tgz#8867c4a90a23f297a8cb01701ce068846b847c67"
   integrity sha1-iGfEqQoj8peoywFwHOBohGuEfGc=
 
-"@netless/white-video-plugin2@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.nlark.com/@netless/white-video-plugin2/download/@netless/white-video-plugin2-2.0.4.tgz#501a2b58ab745eb70f8a9371d80579e166c8bf5f"
-  integrity sha1-UBorWKt0XrcPipNx2AV54WbIv18=
+"@netless/white-video-plugin2@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.nlark.com/@netless/white-video-plugin2/download/@netless/white-video-plugin2-2.0.5.tgz#13cc2497d640bd1b01cc56aa9930cbf0ffa84db1"
+  integrity sha1-E8wkl9ZAvRsBzFaqmTDL8P+oTbE=
 
 "@netless/white-video-plugin@1.2.23":
   version "1.2.23"
@@ -12438,7 +12446,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.nlark.com/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=
@@ -25336,10 +25344,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.12.14:
-  version "2.12.14"
-  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.12.14.tgz#c712102d9c232c8a2dd0ebe94272810268611e33"
-  integrity sha1-xxIQLZwjLIot0OvpQnKBAmhhHjM=
+white-web-sdk@2.12.19:
+  version "2.12.19"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.12.19.tgz#54b972fc0d74fe08400c977d99dcc9ed6552e6e8"
+  integrity sha1-VLly/A10/ghADJd9mdzJ7WVS5ug=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"

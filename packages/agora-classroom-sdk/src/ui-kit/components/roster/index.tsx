@@ -48,7 +48,11 @@ export interface Profile {
   cameraDevice: boolean;
   micDevice: boolean;
   stars: number;
-  onlineState: boolean;
+  online: boolean;
+  userType: string;
+  hasStream: boolean;
+  isLocal: boolean;
+  // onlineState: boolean;
 }
 
 export interface Column {
@@ -56,7 +60,7 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, canOperate: boolean, userType?: string) => ReactNode;
+  render?: (text: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => ReactNode;
 }
 
 
@@ -157,25 +161,40 @@ export const Roster: FC<RosterProps> = ({
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
                     <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
-                      <span
-                        className={
-                          `${idx === 0 ? 'roster-username' : ''}`
-                        }
-                        style={{
-                          paddingLeft: idx !== 0 ? 0 : 25
-                        }}
-                        onClick={
-                          canOperate(role, localUserUuid, data, col)
+                      {idx === 0 ? 
+                        <span
+                          className={
+                            `${idx === 0 ? 'roster-username' : ''}`
+                          }
+                          style={{
+                            paddingLeft: 25
+                          }}
+                          onClick={
+                            canOperate(role, localUserUuid, data, col)
+                              ? () =>
+                                  col.action &&
+                                  onClick &&
+                                  onClick(col.action, data.uid)
+                              : undefined
+                          }>
+                          {(data as any)[col.key]}
+                        </span>
+                      : 
+                          <span
+                            style={{
+                              paddingLeft: 0
+                            }}
+                          >
+                            {col.render
+                            ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType, (canOperate(role, localUserUuid, data, col)
                             ? () =>
                                 col.action &&
                                 onClick &&
                                 onClick(col.action, data.uid)
-                            : undefined
-                        }>
-                        {col.render
-                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), role)
-                          : (data as any)[col.key]}
-                      </span>
+                            : undefined), role)
+                            : (data as any)[col.key]}
+                          </span>
+                      }
                     </Col>
                   ))}
                 </Row>
