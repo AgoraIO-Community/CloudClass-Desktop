@@ -240,18 +240,19 @@ export class BoardStore extends ZoomController {
   @observable
   downloading: boolean = false
 
-  @action.bound
-  changeScenePath(path: string) {
-    this.activeScenePath = path
-    if (this.online && this.room) {
-      const id = this.room.state.sceneState.contextPath.replace('/', '')
-      const resource = this.allResources.find((it: any) => it.id === id)
-      if (resource && resource.ext === 'h5') {
-        return this.insertH5(resource.url, id)
-      }
-      this.room.setScenePath(this.activeScenePath)
-    }
-  }
+  // @action.bound
+  // changeScenePath(path: string) {
+  //   this.activeScenePath = path
+  //   if (this.online && this.room) {
+  //     const id = this.room.state.sceneState.contextPath.replace('/', '')
+  //     const resource = this.allResources.find((it: any) => it.id === id)
+  //     if (resource && resource.ext === 'h5') {
+  //       console.log("changeScenePath insertH5 ", id, resource)
+  //       return this.insertH5(resource.url, id)
+  //     }
+  //     this.room.setScenePath(this.activeScenePath)
+  //   }
+  // }
 
   appStore!: EduScenarioAppStore
 
@@ -441,6 +442,9 @@ export class BoardStore extends ZoomController {
       else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
+          if (targetResource.ext === 'h5') {
+            return this.insertH5(targetResource.url, targetResource.id)
+          }
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
