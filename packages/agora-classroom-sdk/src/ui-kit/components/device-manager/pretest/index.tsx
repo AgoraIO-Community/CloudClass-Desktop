@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Subject } from 'rxjs';
 import { Button } from '~components/button';
@@ -10,7 +10,7 @@ import { Select } from '~components/select';
 import { Slider } from '~components/slider';
 import { CheckBox } from '~components/table';
 import { Toast } from '~components/toast';
-import { useTimeout } from '~utilities/hooks';
+import { useMounted, useTimeout } from '~utilities/hooks';
 import { Volume } from '~components/volume';
 import './index.css';
 
@@ -122,7 +122,6 @@ const PretestComponent: React.FC<PretestProps> = ({
     const [toastQueue, setToastQueue] = useState<any[]>([])
 
     const removeToast = (id: any) => {
-        console.log('removeToast ', id)
         setToastQueue(oldArray => oldArray.filter((it: any) => it.id !== id))
     }
 
@@ -142,15 +141,20 @@ const PretestComponent: React.FC<PretestProps> = ({
     }, [pretestChannel])
 
     const DeviceNotice = (props: any) => {
+
+        const mounted = useMounted()
+
         useTimeout(() => {
             props.close && props.close()
         }, 2500)
 
         const [animated, setAnimate] = useState<boolean>(false)
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             Promise.resolve().then(() => {
-                setAnimate(true)
+                if (mounted) {
+                    setAnimate(true)
+                }
             })
         }, [])
 
@@ -193,17 +197,12 @@ const PretestComponent: React.FC<PretestProps> = ({
                 key={`${value.id}`}
                 type={value.type}
                 closeToast={() => {
-                // props.removeToast(`${value.id}`)
+                    props.removeToast(`${value.id}`)
                 }}
             >{transI18n(value.info)}</Toast>
             )}
         </div>
     }
-
-    // useEffect(() => {
-    //     console.log(' notice ', noticeMessage, ' toast ', toastQueue)
-    // }, [noticeMessage, toastQueue])
-
     return (
         <div className={cls} {...restProps}>
             <div className="pretest-toast">

@@ -15,6 +15,23 @@ type LocalPacketLoss = {
   videoStats: { videoLossRate: number }
 }
 
+
+export enum DeviceChangedDeviceType {
+  UNKNOWN_AUDIO_DEVICE = -1,
+  AUDIO_PLAYOUT_DEVICE = 0,
+  AUDIO_RECORDING_DEVICE = 1,
+  VIDEO_RENDER_DEVICE = 2,
+  VIDEO_CAPTURE_DEVICE = 3,
+  AUDIO_APPLICATION_PLAYOUT_DEVICE = 4
+}
+
+export enum DeviceChangedStateType {
+  MEDIA_DEVICE_STATE_ACTIVE = 1,
+  MEDIA_DEVICE_STATE_DISABLED = 2,
+  MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
+  MEDIA_DEVICE_STATE_UNPLUGGED = 8
+}
+
 export enum LocalVideoStreamState {
   LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
   LOCAL_VIDEO_STREAM_STATE_CAPTURING = 1,
@@ -205,6 +222,34 @@ export class MediaStore {
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
+
+    const handleDevicePulled = (evt: {resource: 'video' | 'audio'}) => {
+      const notice = MediaDeviceState.getNotice(evt.resource)
+      if (notice) {
+        if (!this.pretestNotice.isStopped) {
+          this.pretestNotice.next({
+            type: 'error',
+            info: notice,
+            kind: 'toast',
+            id: uuidv4()
+          })
+        }
+        if (!this.uiStore.toast$.isStopped) {
+          this.uiStore.fireToast(notice)
+        }
+      }
+      switch(evt.resource) {
+        case 'video': {
+          this.appStore.pretestStore.muteCamera()
+          break;
+        }
+        case 'audio': {
+          this.appStore.pretestStore.muteMicrophone()
+          break;
+        }
+      }
+    }
+
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
@@ -239,32 +284,6 @@ export class MediaStore {
           BizLogger.info(`[demo] action in report web device camera state failed, reason: ${err}`)
         })
       }
-      const handleDevicePulled = (evt: any) => {
-        const notice = MediaDeviceState.getNotice(evt.resource)
-        if (notice) {
-          if (!this.pretestNotice.isStopped) {
-            this.pretestNotice.next({
-              type: 'error',
-              info: notice,
-              kind: 'toast',
-              id: uuidv4()
-            })
-          }
-          if (!this.uiStore.toast$.isStopped) {
-            this.uiStore.fireToast(notice)
-          }
-        }
-        switch(evt.resource) {
-          case 'video': {
-            this.appStore.pretestStore.muteCamera()
-            break;
-          }
-          case 'audio': {
-            this.appStore.pretestStore.muteMicrophone()
-            break;
-          }
-        }
-      }
 
       if (evt.operation === 'pulled') {
         handleDevicePulled(evt)
@@ -274,12 +293,27 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed ", info)
       if (appStore.isNotInvisible) {
-        this.pretestNotice.next({
-          type: 'audio',
-          info: 'device_changed',
-          id: uuidv4()
-        })
-        // this.appStore.uiStore.fireToast('toast.audio_equipment_has_changed')
+        if (appStore.isWeb) {
+          this.pretestNotice.next({
+            type: 'audio',
+            info: 'device_changed',
+            id: uuidv4()
+          })
+        }
+      }
+
+      if (appStore.isElectron) {
+        const {deviceId, type, state} = info
+        if (type === DeviceChangedDeviceType.AUDIO_RECORDING_DEVICE) {
+          this.pretestNotice.next({
+            type: 'audio',
+            info: 'device_changed',
+            id: uuidv4()
+          })
+        }
+        if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
+          handleDevicePulled({resource: 'audio'})
+        }
       }
       // const prevLength = this.appStore.pretestStore._microphoneList.length
       await this.appStore.pretestStore.init({ audio: true})
@@ -290,11 +324,27 @@ export class MediaStore {
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed ", info)
       if (appStore.isNotInvisible) {
-        this.pretestNotice.next({
-          type: 'video',
-          info: 'device_changed',
-          id: uuidv4()
-        })
+        if (appStore.isWeb) {
+          this.pretestNotice.next({
+            type: 'video',
+            info: 'device_changed',
+            id: uuidv4()
+          })
+        }
+      }
+
+      if (appStore.isElectron) {
+        const {deviceId, type, state} = info
+        if (type === DeviceChangedDeviceType.VIDEO_CAPTURE_DEVICE) {
+          this.pretestNotice.next({
+            type: 'video',
+            info: 'device_changed',
+            id: uuidv4()
+          })
+        }
+        if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
+          handleDevicePulled({resource: 'video'})
+        }
       }
       // const prevLength = this.appStore.pretestStore._cameraList.length
       await this.appStore.pretestStore.init({ video: true})

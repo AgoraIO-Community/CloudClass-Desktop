@@ -181,11 +181,13 @@ export class MediaService extends EventEmitter implements IMediaService {
           this.fire('video-device-changed', (evt))
         })
       } else {
-        this.electron.client.on('audiodevicestatechanged', (evt: any) => {
-          this.fire('audio-device-changed', (evt))
+        this.electron.client.on('audiodevicestatechanged', (...evt: any[]) => {
+          const [deviceId, type, state] = evt
+          this.fire('audio-device-changed', {deviceId, type, state})
         })
-        this.electron.client.on('videodevicestatechanged', (evt: any) => {
-          this.fire('video-device-changed', (evt))
+        this.electron.client.on('videodevicestatechanged', (...evt: any) => {
+          const [deviceId, type, state] = evt
+          this.fire('video-device-changed', {deviceId, type, state})
         })
       }
     } else {
