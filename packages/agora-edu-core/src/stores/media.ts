@@ -172,12 +172,12 @@ export class MediaStore {
   
 
   get pretestNotice () {
-    return this.appStore.uiStore.pretestNotice$
+    return this.appStore.pretestNotice$
   }
 
-  get uiStore() {
-    return this.appStore.uiStore;
-  }
+  // get uiStore() {
+  //   return this.appStore.uiStore;
+  // }
 
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
@@ -220,8 +220,8 @@ export class MediaStore {
               id: uuidv4()
             })
           }
-          if (!this.uiStore.toast$.isStopped) {
-            this.uiStore.fireToast(notice)
+          if (!this.appStore.roomStore.toast$.isStopped) {
+            this.appStore.roomStore.fireToast(notice)
           }
         }
         switch(evt.resource) {

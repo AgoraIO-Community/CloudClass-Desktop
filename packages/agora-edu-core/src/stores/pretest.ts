@@ -305,7 +305,7 @@ export class PretestStore {
       this.mediaService.getCameras().then((list: any[]) => {
         runInAction(() => {
           if (list.length > this._cameraList.length) {
-            this.appStore.uiStore.fireToast('detect_new_device_in_room', {type: 'video'})
+            this.appStore.roomStore.fireToast('detect_new_device_in_room', {type: 'video'})
           }
           this._cameraList = list
         })
@@ -315,7 +315,7 @@ export class PretestStore {
       this.mediaService.getMicrophones().then((list: any[]) => {
         runInAction(() => {
           if (list.length > this._microphoneList.length) {
-            this.appStore.uiStore.fireToast('detect_new_device_in_room', {type: 'audio'})
+            this.appStore.roomStore.fireToast('detect_new_device_in_room', {type: 'audio'})
           }
           this._microphoneList = list
         })

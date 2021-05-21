@@ -105,6 +105,7 @@ export const useVolumeContext = (): VolumeContext => {
 
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
+  const appStore = useCoreContext()
   // const uiStore = useUIStore()
   const [isMirror, setMirror] = useState<boolean>(false)
 
@@ -151,7 +152,7 @@ export const usePretestContext = (): PretestContext => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
-    pretestNoticeChannel: uiStore.pretestNotice$
+    pretestNoticeChannel: appStore.pretestNotice$
   }
 }
 

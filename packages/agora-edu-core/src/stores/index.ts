@@ -16,6 +16,7 @@ import { SceneStore } from './scene'
 import { v4 as uuidv4} from 'uuid'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
+import { BehaviorSubject } from 'rxjs'
 
 export class EduScenarioAppStore {
   // stores
@@ -129,6 +130,8 @@ export class EduScenarioAppStore {
 
   @observable
   activeExtAppIds:string[] = []
+
+  pretestNotice$: BehaviorSubject<any> = new BehaviorSubject<any>({})
 
   @computed
   get activeExtApps():IAgoraExtApp[] {
