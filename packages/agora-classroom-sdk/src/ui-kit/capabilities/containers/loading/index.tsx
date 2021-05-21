@@ -11,8 +11,10 @@ export const LoadingContainer = observer(() => {
 
 const PageLoading = () => {
   return (
-    <Card width={90} height={90} className="card-loading-position">
-      <Loading></Loading>
-    </Card>
+    <div className="fullscreen">
+      <Card width={90} height={90} className="card-loading-position">
+        <Loading></Loading>
+      </Card>
+    </div>
   )
 }
