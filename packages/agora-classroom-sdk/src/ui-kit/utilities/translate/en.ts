@@ -228,6 +228,7 @@ export const en = {
     'circle': 'circle',
     'rectangle': 'rectangle',
     'selector': 'selector',
+    'clicker':'mouse',
     'eraser': 'eraser',
     'color': 'color',
     'blank_page': 'add page',

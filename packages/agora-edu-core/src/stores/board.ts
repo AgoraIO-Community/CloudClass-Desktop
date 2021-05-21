@@ -86,7 +86,7 @@ const transformMaterialList = (item: CourseWareItem) => {
     size: item.size,
     taskProgress: item.taskProgress,
     taskUuid: item.taskUuid || "",
-    updateTime: item.updateTime ?? '- -',
+    updateTime: item.updateTime,
     url: item.url
   }
 }
@@ -970,7 +970,7 @@ export class BoardStore extends ZoomController {
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
-          this.room.scalePptToFit()
+          this.scaleToFit()
         }
       }
       if (state.memberState) {
@@ -1908,14 +1908,15 @@ export class BoardStore extends ZoomController {
     room.setScenePath(sharePath)
   }
 
-  iframeList: Map<string, IframeBridge> = new Map()
+  iframe: IframeBridge = null as any;
 
   @action.bound
   async insertH5(url: string, resourceUuid: string) {
     const bridge = this.boardClient.bridge;
     const scenePath = `/${resourceUuid}`
     const room = this.room
-    const iframe = this.iframeList.get(scenePath)
+    // const iframe = this.iframeList.get(scenePath)
+    const iframe = this.iframe
     if (!iframe) {
       const iframe = await IframeBridge.insert({
         room,
@@ -1923,18 +1924,17 @@ export class BoardStore extends ZoomController {
         width: 1280,
         height: 720,
         displaySceneDir: `${scenePath}`,
-        useClicker: true
+        useClicker: false
       })
-      this.iframeList.set(scenePath, iframe)
+      this.iframe = iframe
       this.putCourseResource(resourceUuid)
     } else {
-      const iframe = this.iframeList.get(scenePath)
       iframe?.setAttributes({
         url: url,
         width: 1280,
         height: 720,
         displaySceneDir: `${scenePath}`,
-        useClicker: true
+        useClicker: false
       })
       room.setScenePath(scenePath)
     }
@@ -2070,10 +2070,20 @@ export class BoardStore extends ZoomController {
     return ext === 'h5'
   }
 
+
+  @action.bound
+  scaleToFit() {
+    if (this.isH5IFrame) {
+      this.iframe.scaleIframeToFit()
+    } else {
+      this.room.scalePptToFit()
+    }
+  }
+
   @action.bound
   moveCamera() {
     if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt || this.isH5IFrame) {
-      this.room.scalePptToFit()
+      this.scaleToFit()
     } else {
       this.room.moveCamera({
         centerX: 0,

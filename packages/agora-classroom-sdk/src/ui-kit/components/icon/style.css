@@ -7,16 +7,17 @@
   max-width: 29px;
 }
 
-.icon-box-hover:hover::before {
-  background-color: #f0f0f7;
-  border-radius: 50%;
-  height: 28px;
-  width: 28px;
-  /* text-align: center; */
-  /* align-items: revert; */
+.biz-header .icon-box-hover:hover::before {
+  height: 28px !important;
+  width: 28px !important;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.icon-box-hover:hover::before {
+  background-color: #f0f0f7;
+  border-radius: 50%;
 }
 
 .icon-hover:hover {

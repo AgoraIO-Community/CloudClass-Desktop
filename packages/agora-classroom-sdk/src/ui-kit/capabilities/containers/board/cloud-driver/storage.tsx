@@ -27,7 +27,7 @@ export const StorageContainer = observer(() => {
             <Inline color="#586376">{size}</Inline>
           </Col>
           <Col>
-            <Inline color="#586376">{dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss")}</Inline>
+            <Inline color="#586376">{!!updateTime ? dayjs(updateTime).format("YYYY-MM-DD HH:mm:ss") : '- -'}</Inline>
           </Col>
         </Row>
       ) : <Placeholder placeholderType="noFile"/>}

@@ -1073,10 +1073,42 @@ export class RoomStore extends SimpleInterval {
 
       // logout will clean up eduManager events, so we need to put the listener here
       this.eduManager.on('ConnectionStateChanged', async ({ newState, reason }) => {
+        EduLogger.info(" RTM ConnectionStateChanged ", newState)
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
           this.appStore.uiStore.fireToast('toast.classroom_remote_join')
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
+        }
+        if (this.eduManager._rtmWrapper) {
+          const prevConnectionState = this.eduManager._rtmWrapper.prevConnectionState
+          if (prevConnectionState === 'RECONNECTING' && newState === 'CONNECTED') {
+            eduSDKApi.reportCameraState({
+              roomUuid: roomUuid,
+              userUuid: this.appStore.roomInfo.userUuid,
+              state: +this.appStore.sceneStore.localCameraDeviceState
+            }).catch((err) => {
+              BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+            }).then(() => {
+              BizLogger.info(`[CAMERA] report camera device not working`)
+            })
+            eduSDKApi.reportMicState({
+              roomUuid: roomUuid,
+              userUuid: this.appStore.roomInfo.userUuid,
+              state: +this.appStore.sceneStore.localMicrophoneDeviceState
+            }).catch((err) => {
+              BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+            }).then(() => {
+              BizLogger.info(`[CAMERA] report mic device not working`)
+            })
+            if (this.appStore.uiStore.loading) {
+              this.appStore.uiStore.stopLoading()
+            }
+          }
+          if (newState === 'RECONNECTING') {
+            if (!this.appStore.uiStore.loading) {
+              this.appStore.uiStore.startLoading()
+            }
+          }
         }
         reportService.updateConnectionState(newState)
       })
