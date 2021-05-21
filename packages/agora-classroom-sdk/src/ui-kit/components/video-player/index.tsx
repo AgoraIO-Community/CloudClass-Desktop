@@ -207,6 +207,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
+      <Tooltip title="32333" placement="bottom">
       <MediaIcon
         {...getMediaIconProps({
           muted: !!micEnabled,
@@ -222,6 +223,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         placement={placement}
         onClick={() => micDevice === 1 && onMicClick(uid)}
       />
+      </Tooltip>
       <MediaIcon
         {...getMediaIconProps({
           muted: !!cameraEnabled,

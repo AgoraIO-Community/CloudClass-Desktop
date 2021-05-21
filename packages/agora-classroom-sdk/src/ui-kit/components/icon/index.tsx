@@ -1,4 +1,4 @@
-import React, { EventHandler, FC, ReactEventHandler, SyntheticEvent } from 'react';
+import React, { EventHandler, FC, ReactEventHandler, SyntheticEvent, useCallback } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
@@ -6,7 +6,7 @@ import IconWhiteboard from '~components/icon/assets/icon-whiteboard.svg';
 import IconH5 from '~components/icon/assets/svg/icon-h5.svg';
 import './index.css';
 import './style.css';
-import { Tooltip } from '../tooltip';
+import { Tooltip, TooltipPlacement } from '../tooltip';
 import { transI18n } from '../i18n';
 
 export type { IconTypes } from './icon-types';
@@ -31,6 +31,7 @@ export interface IconProps extends BaseProps {
   hover?: boolean;
   iconhover?: boolean;
   useSvg?: boolean;
+  id?: string;
   onClick?: EventHandler<SyntheticEvent<HTMLElement>>;
 }
 
@@ -43,6 +44,7 @@ export const Icon: FC<IconProps> = ({
   hover,
   iconhover,
   useSvg = false,
+  id,
   ...restProps
 }) => {
   let cls = classnames({
@@ -66,6 +68,7 @@ export const Icon: FC<IconProps> = ({
     </div>
   ) : (
     <i  
+      id={id}
       className={cls}
       style={{
         color,
@@ -77,7 +80,7 @@ export const Icon: FC<IconProps> = ({
     </i>
   )
   return (
-    !!iconhover ? <div className="icon-hover">
+    !!iconhover ? <div id={id} className="icon-hover">
       {iconAssets}
     </div> :
       iconAssets
@@ -286,13 +289,6 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
       }
     }
   }
-
-  // return {
-  //   hover: false,
-  //   state: 'not-available',
-  //   streamState: muted,
-  //   type
-  // }
 }
 
 type MediaIconProps = {
@@ -351,17 +347,29 @@ export const MediaIcon = ({className, hover, state, streamState = false, volumeI
   if (placement) {
     const text: Record<string, any> = {
       'camera': {
-        'true': 'Close Camera',
-        'false': 'Open Camera'
+        // 'true': 'Close Camera',
+        // 'false': 'Open Camera',
+        'not-available': 'Camera Not Available',
+        'not-permitted': 'Camera Not Available',
+        'available': streamState === true ? 'Close Camera' : 'Open Camera',
       },
       'microphone': {
-        'true': 'Close Microphone',
-        'false': 'Open Microphone'
+        // 'true': 'Close Microphone',
+        // 'false': 'Open Microphone',
+        'not-available': 'Microphone Not Available',
+        'not-permitted': 'Microphone Not Available',
+        'available': streamState === true ? 'Close Microphone' : 'Open Microphone',
       }
     }
+    const title = transI18n(text[type][`${state}`])
+
+    const OverLayView = useCallback(() => {
+      return <span>{title}</span>
+    }, [title])
     return (
-      <Tooltip title={streamState ? transI18n(text[type][state]) : transI18n(text[type][state])} placement={placement as any}> 
+      <Tooltip overlay={<OverLayView />} placement={`${placement}` as TooltipPlacement}>
         <Icon
+          key={title}
           hover={hover}
           className={cls}
           type={mapType[state][type]}
