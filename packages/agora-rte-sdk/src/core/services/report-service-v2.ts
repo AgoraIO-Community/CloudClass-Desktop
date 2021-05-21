@@ -2,7 +2,7 @@ import { ApiBase, ApiBaseInitializerParams } from "./base";
 import md5 from "js-md5";
 import { GenericErrorWrapper } from "../utils/generic-error";
 import { HttpClient } from "../utils/http-client";
-import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect } from '../../protobuf';
+import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../../protobuf';
 type ReportParams = {
     /**
      * 当前通话的cid
@@ -137,6 +137,22 @@ export class ReportServiceV2 extends ApiBase {
         let buffer = ApaasUserReconnect.encode(message).finish();
         return this.Uint8ToBase64(buffer);
     }
+    protected buildScreenShareStar(payloadParams: ReportUserParams): string{
+        let errMsg = ScreenShareStar.verify(payloadParams);
+        if (errMsg)
+            throw Error(errMsg);
+        let message = ScreenShareStar.create(payloadParams);
+        let buffer = ScreenShareStar.encode(message).finish();
+        return this.Uint8ToBase64(buffer);
+    }
+    protected buildScreenShareEnd(payloadParams: ReportUserParams): string{
+        let errMsg = ScreenShareEnd.verify(payloadParams);
+        if (errMsg)
+            throw Error(errMsg);
+        let message = ScreenShareEnd.create(payloadParams);
+        let buffer = ScreenShareEnd.encode(message).finish();
+        return this.Uint8ToBase64(buffer);
+    }
     protected buildBaseParams(id: number,src: string, payload: string): ReportParams {
         const qos = 101
         const ts = Math.floor(new Date().getTime() / 1000);
@@ -169,6 +185,20 @@ export class ReportServiceV2 extends ApiBase {
         payloadParams.lts = lts;
         payloadParams.errorCode = errorCode;
         const payload = this.buildUserReconnectPaylod(payloadParams);
+        return this.buildBaseParams(id, src, payload);
+    }
+    protected buildScreenShareStartParams(src: string, payloadParams: ReportUserParams, lts: number, errorCode: number): ReportParams{
+        const id = 9017;
+        payloadParams.lts = lts;
+        payloadParams.errorCode = errorCode;
+        const payload = this.buildScreenShareStar(payloadParams);
+        return this.buildBaseParams(id, src, payload);
+    }
+    protected buildScreenShareEndParams(src: string, payloadParams: ReportUserParams, lts: number, errorCode: number): ReportParams{
+        const id = 9019;
+        payloadParams.lts = lts;
+        payloadParams.errorCode = errorCode;
+        const payload = this.buildScreenShareEnd(payloadParams);
         return this.buildBaseParams(id, src, payload);
     }
     guardParams() {
@@ -245,6 +275,30 @@ export class ReportServiceV2 extends ApiBase {
             path: `/v2/report`,
             method: 'POST',
             data: this.buildApaasUserReconnectParams('rte', this.reportUserParams, lts, errorCode)
+        })
+        return res.data
+    }
+    async reportScreenShareStart(lts: number, errorCode: number){
+        if(!this.guardParams()){
+            return
+        }
+        console.warn("开始屏幕共享上报",this.reportUserParams, lts, errorCode);
+        const res = await this.request({
+            path: `/v2/report`,
+            method: 'POST',
+            data: this.buildScreenShareStartParams('rte', this.reportUserParams, lts, errorCode)
+        })
+        return res.data
+    }
+    async reportScreenShareEnd(lts: number, errorCode: number){
+        if(!this.guardParams()){
+            return
+        }
+        console.warn("结束屏幕共享上报",this.reportUserParams, lts, errorCode);
+        const res = await this.request({
+            path: `/v2/report`,
+            method: 'POST',
+            data: this.buildScreenShareEndParams('rte', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }

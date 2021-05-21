@@ -235,11 +235,10 @@ export class EduClassroomManager {
           channelName: this.roomUuid,
         })
         delete this.eduManager._dataBuffer[this.rawRoomUuid];
-        const lts = new Date().getTime()
-        reportServiceV2.reportApaasUserQuit(lts, 0);
         EduLogger.debug(`leave classroom ${this.roomUuid} success`)
       }
-
+      const lts = new Date().getTime()
+      reportServiceV2.reportApaasUserQuit(lts, 0);
     } catch (e) {
       const lts = new Date().getTime()
       reportServiceV2.reportApaasUserQuit(lts, e.code);
