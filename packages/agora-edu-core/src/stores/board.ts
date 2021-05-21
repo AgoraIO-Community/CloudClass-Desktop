@@ -86,7 +86,7 @@ const transformMaterialList = (item: CourseWareItem) => {
     size: item.size,
     taskProgress: item.taskProgress,
     taskUuid: item.taskUuid || "",
-    updateTime: item.updateTime,
+    updateTime: item.updateTime ?? '- -',
     url: item.url
   }
 }
@@ -244,6 +244,11 @@ export class BoardStore extends ZoomController {
   changeScenePath(path: string) {
     this.activeScenePath = path
     if (this.online && this.room) {
+      const id = this.room.state.sceneState.contextPath.replace('/', '')
+      const resource = this.allResources.find((it: any) => it.id === id)
+      if (resource && resource.ext === 'h5') {
+        return this.insertH5(resource.url, id)
+      }
       this.room.setScenePath(this.activeScenePath)
     }
   }
@@ -624,10 +629,10 @@ export class BoardStore extends ZoomController {
       await this.appStore.sceneStore.stopRTCSharing()
       this.removeScreenShareScene()
     } else {
-      const iframe = this.iframeList.get(currentSceneState.contextPath)
-      if (iframe) {
-        await iframe.destroy()
-      }
+      // const iframe = this.iframeList.get(currentSceneState.contextPath)
+      // if (iframe) {
+      //   await iframe.destroy()
+      // }
       // if (this)
       this.room.setGlobalState({
         roomScenes: {
@@ -1917,12 +1922,20 @@ export class BoardStore extends ZoomController {
         url: url,
         width: 1280,
         height: 720,
-        displaySceneDir: `${scenePath}/`,
+        displaySceneDir: `${scenePath}`,
         useClicker: true
       })
       this.iframeList.set(scenePath, iframe)
       this.putCourseResource(resourceUuid)
     } else {
+      const iframe = this.iframeList.get(scenePath)
+      iframe?.setAttributes({
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: true
+      })
       room.setScenePath(scenePath)
     }
     // if (bridge) {

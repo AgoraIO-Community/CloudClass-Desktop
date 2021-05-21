@@ -8,7 +8,7 @@ export type BaseElementProps = {
 
 export const formatFileSize = (fileByteSize: number, decimalPoint?: number) => {
   const bytes = +fileByteSize
-  if(bytes === 0) return '0 Bytes';
+  if(bytes === 0) return '- -';
   const k = 1000;
   const dm = decimalPoint || 2;
   const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];

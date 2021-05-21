@@ -63,7 +63,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskUuid: '',
       taskProgress: data.taskProgress,
       convertedPercentage: 100,
-      updateTime: data.updateTime,
+      updateTime: data.updateTime ?? '- -',
       scenes: data.scenes,
     }
   }
@@ -79,7 +79,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskUuid: '',
       taskProgress: null,
       convertedPercentage: 100,
-      updateTime: data.updateTime,
+      updateTime: data.updateTime ?? '- -',
     }
   }
   return {
@@ -92,7 +92,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
     taskProgress: data.taskProgress,
     url: data.url,
     convertedPercentage: data.taskProgress!.convertedPercentage,
-    updateTime: data.updateTime,
+    updateTime: data.updateTime ?? '- -',
     scenes: data.scenes,
   }
 }
