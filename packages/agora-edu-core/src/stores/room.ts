@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { get } from "lodash"
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from "mobx"
-import { BehaviorSubject } from "rxjs"
+import { Subject } from "rxjs"
 import { v4 as uuidv4 } from 'uuid'
 import { EduScenarioAppStore } from "."
 import { IAgoraExtApp, regionMap } from "../api/declare"
@@ -484,9 +484,9 @@ export class RoomStore extends SimpleInterval {
   disposers: IReactionDisposer[] = [];
   appStore!: EduScenarioAppStore;
 
-  toast$: BehaviorSubject<any>
-  dialog$: BehaviorSubject<any>
-  seq$: BehaviorSubject<any>
+  toast$: Subject<any>
+  dialog$: Subject<any>
+  seq$: Subject<any>
 
   get sceneStore() {
     return this.appStore.sceneStore
@@ -498,9 +498,9 @@ export class RoomStore extends SimpleInterval {
 
   constructor(appStore: EduScenarioAppStore) {
     super()
-    this.toast$ = new BehaviorSubject<any>({})
-    this.dialog$ = new BehaviorSubject<any>({})
-    this.seq$ = new BehaviorSubject<any>({})
+    this.toast$ = new Subject<any>()
+    this.dialog$ = new Subject<any>()
+    this.seq$ = new Subject<any>()
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
   }
