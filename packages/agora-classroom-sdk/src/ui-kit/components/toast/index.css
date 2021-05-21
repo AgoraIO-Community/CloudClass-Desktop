@@ -1,5 +1,6 @@
 .toast {
     min-width: 260px;
+    width: 341px;
     height: 44px;
     color: #191919;
     font-size: 14px;
@@ -10,7 +11,8 @@
 }
 
 .toast i {
-    margin: 0 8px;
+    margin-left: 8px;
+    margin-right: 2px;
 }
 
 .toast-success {

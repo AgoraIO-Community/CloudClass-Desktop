@@ -27,7 +27,10 @@ export const useMediaContext = (): MediaContext => {
       microphoneId,
       speakerId,
       cameraRenderer,
-      microphoneLevel,
+      changeCamera,
+      changeMicrophone,
+      changeSpeakerVolume,
+      changeMicrophoneVolume,
     } = pretestStore
   
     const changeDevice = useCallback(async (deviceType: string, value: any) => {
@@ -72,9 +75,12 @@ export const useMediaContext = (): MediaContext => {
         microphoneId,
         speakerId,
         cameraRenderer,
-        microphoneLevel,
         changeDevice,
         changeAudioVolume,
         // removeDialog
+        changeSpeakerVolume,
+        changeMicrophoneVolume,
+        changeCamera,
+        changeMicrophone,
     }
 }

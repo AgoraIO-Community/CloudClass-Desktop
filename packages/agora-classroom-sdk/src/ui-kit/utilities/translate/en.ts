@@ -4,6 +4,7 @@ export const en = {
     'student': 'Student',
     'assistant': 'Assistant',
   },
+  'disabled': 'Disabled',
   'whiteboard': {
     'converting': 'Converting',
   },
@@ -301,7 +302,13 @@ export const en = {
   'pretest': {
     'title': 'Device Test',
     'settingTitle': 'Device Setting',
-    'finishTest': 'Finish'
+    'finishTest': 'Finish',
+    'detect_new_device': 'The device has installed, Please try it!',
+    'camera_move_out': 'Camera is pulled out, unable to display video!',
+    'mic_move_out': 'Microphone is pulled out!',
+    'device_not_working': 'The device is not working properly!',
+    'detect_new_device_in_room': 'The device has installed, Please try it!',
+    'teacher_device_may_not_work': "There is something wrong with the teacher's device",
   },
   'biz-header': {
     'setting': 'Setting',

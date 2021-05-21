@@ -465,7 +465,7 @@ export class UploadService extends ApiBase {
   get uploadCallbackPrefix() {
     const getDomain: Record<string, string> = {
       'https://api.agora.io': 'https://api-solutions.agoralab.co/',
-      'https://api-test.agora.io/preview': 'https://api-solutions-pre.agoralab.co/',
+      'https://api-test.agora.io/preview': 'https://api-solutions-pre.bj2.agoralab.co/',
       'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
     }
 

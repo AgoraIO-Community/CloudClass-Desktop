@@ -143,7 +143,7 @@
     "dev": "cross-env NODE_ENV=development BABEL_NODE=development TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired start",
     "s": "yarn dev",
     "webpack": "webpack --config webpack.dev.server.js",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 --no-manager-cache",
     "build:types": "tsc -p ./ts.release.json && tsc-alias -p ts.release.json",
     "build": "cross-env NODE_ENV=production TSC_COMPILE_ON_ERROR=false REACT_APP_RUNTIME_PLATFORM=web react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",

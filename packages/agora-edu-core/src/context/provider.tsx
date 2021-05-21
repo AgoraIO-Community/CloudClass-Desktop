@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
 export {
@@ -95,8 +95,17 @@ export const useStreamListContext = (): StreamListContext => {
   }
 }
 
+export const useVolumeContext = (): VolumeContext => {
+  const pretestStore = usePretestStore()
+
+  return {
+    microphoneLevel: pretestStore.microphoneLevel
+  }
+}
+
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
+  // const uiStore = useUIStore()
   const [isMirror, setMirror] = useState<boolean>(false)
 
   const [cameraError, setCameraError] = useState<boolean>(false)
@@ -130,7 +139,6 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: pretestStore.microphoneLevel,
     isMirror: isMirror,
     setMirror,
     installPretest,
@@ -143,6 +151,7 @@ export const usePretestContext = (): PretestContext => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
+    pretestNoticeChannel: uiStore.pretestNotice$
   }
 }
 
@@ -265,7 +274,8 @@ export const useGlobalContext = (): GlobalContext => {
   // } = useUIStore()
 
   const {
-    joined
+    joined,
+    // joining,
   } = useRoomStore()
 
   return {
@@ -301,6 +311,7 @@ export const useGlobalContext = (): GlobalContext => {
     //v1.1.1
     // isLoading: loading,
     isJoined: joined
+    // inRoom: joining
   }
 }
 
