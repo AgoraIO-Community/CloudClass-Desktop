@@ -118,10 +118,10 @@ export class EduManager extends EventEmitter {
     return this._rtmWrapper as RTMWrapper;
   }
   get rtcSid(): string{
-    return (this.mediaService.sdkWrapper.client as any)._sessionId;
+    return this.mediaService.sessionId;
   }
   get rtmSid(): string{
-    return (this.rtmWrapper.client as any).context.sid;
+    return this.rtmWrapper.sessionId;
   }
   get vid(): number{
     return this.config.vid!;

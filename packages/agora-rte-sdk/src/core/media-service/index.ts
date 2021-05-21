@@ -211,7 +211,9 @@ export class MediaService extends EventEmitter implements IMediaService {
   get isElectron (): boolean {
     return this.sdkWrapper instanceof AgoraElectronRTCWrapper
   }
-
+  get sessionId (): string {
+    return this.isElectron ? (this.sdkWrapper.client as any).getCallId() : (this.sdkWrapper.client as any)._sessionId;
+  }
   private getNativeCurrentVideoDevice() {
     if (this.electron._cefClient) {
       //@ts-ignore
