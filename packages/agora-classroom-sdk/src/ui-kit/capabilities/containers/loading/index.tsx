@@ -11,7 +11,7 @@ export const LoadingContainer = observer(() => {
 
 const PageLoading = () => {
   return (
-    <div className="fullscreen">
+    <div className="page-loading">
       <Card width={90} height={90} className="card-loading-position">
         <Loading></Loading>
       </Card>
