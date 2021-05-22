@@ -13,7 +13,8 @@ import { BusinessExceptions } from '../utilities/biz-error';
 export type RosterUserInfo = {
   name: string,
   uid: string,
-  onlineState: boolean,
+  online: boolean,
+  isLocal: boolean,
   onPodium: boolean,
   micDevice: boolean,
   cameraDevice: boolean,
@@ -95,11 +96,18 @@ export class SmallClassStore {
       if (acceptedUser.userUuid !== this.roomInfo.userUuid) {
         acc.push({
           local: false,
+          isLocal: false,
+          online: this.appStore.sceneStore.queryUserIsOnline(acceptedUser.userUuid),
+          onPodium: this.acceptedUserList.find((it: any) => it.userUuid === acceptedUser.userUuid) ? true : false,
+          // onPodium: this.appStore.sceneStore.queryUserIsOnPodium(get(stream, 'streamUuid', '')),
+          micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(this.appStore.sceneStore.userList, acceptedUser.userUuid, get(stream, 'streamUuid', '')),
+          cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(this.appStore.sceneStore.userList, acceptedUser.userUuid, get(stream, 'streamUuid', '')),
           account: get(user, 'name', ''),
           userUuid: acceptedUser.userUuid,
           streamUuid: get(stream, 'streamUuid', ''),
           video: get(stream, 'hasVideo', ''),
           audio: get(stream, 'hasAudio', ''),
+          hasStream: !!stream,
           renderer: this.sceneStore.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +get(stream, 'streamUuid', -1)) as RemoteUserRenderer,
           hideControl: this.sceneStore.hideControl(user.userUuid),
           holderState: props.holderState,
@@ -120,11 +128,17 @@ export class SmallClassStore {
       const props = this.sceneStore.getLocalPlaceHolderProps()
       streamList = [{
         local: true,
+        isLocal: true,
+        online: true,
+        onPodium: true,
+        micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
+        cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
         account: localUser.userName,
         userUuid: this.sceneStore.cameraEduStream.userInfo.userUuid as string,
         streamUuid: this.sceneStore.cameraEduStream.streamUuid,
         video: this.sceneStore.cameraEduStream.hasVideo,
         audio: this.sceneStore.cameraEduStream.hasAudio,
+        hasStream: !!this.sceneStore.cameraEduStream,
         renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
         hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
         holderState: props.holderState,
@@ -345,13 +359,20 @@ export class SmallClassStore {
 
 
   transformRosterUserInfo (user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): RosterUserInfo {
+
+    const isLocal = user.userUuid === this.roomInfo.userUuid
+
+    const micDevice = isLocal ? this.appStore.sceneStore.localMicrophoneDeviceState : this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(this.appStore.sceneStore.userList, user.userUuid, get(stream, 'streamUuid', ''))
+    const cameraDevice = isLocal ? this.appStore.sceneStore.localCameraDeviceState : this.appStore.sceneStore.queryRemoteCameraDeviceState(this.appStore.sceneStore.userList, user.userUuid, get(stream, 'streamUuid', ''))
+
     return {
+      isLocal: isLocal,
       name: user.userName,
       uid: user.userUuid,
-      onlineState: true,
+      online: isLocal ? true : this.appStore.sceneStore.queryUserIsOnline(user.userUuid),
       onPodium: this.acceptedUserList.find((it: any) => it.userUuid === user.userUuid) ? true : false,
-      micDevice: !!get(user, 'userProperties.microphone', 0),
-      cameraDevice: !!get(user, 'userProperties.camera', 0),
+      micDevice,
+      cameraDevice,
       cameraEnabled: stream?.hasVideo ?? false,
       chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
       micEnabled: stream?.hasAudio ?? false,
@@ -375,12 +396,13 @@ export class SmallClassStore {
       return this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
     }
     return {
+      isLocal: true,
       uid: localUserUuid,
       name: this.roomInfo.userName,
       onPodium: this.acceptedUserList.find((it: any) => it.userUuid === localUserUuid) ? true : false,
-      onlineState: true,
-      micDevice: false,
-      cameraDevice: false,
+      online: true,
+      micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
+      cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
       cameraEnabled: !!get(this.sceneStore, 'cameraEduStream.hasVideo',0),
       micEnabled: !!get(this.sceneStore, 'cameraEduStream.hasAudio',0),
       whiteboardGranted: false,

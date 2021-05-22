@@ -1,4 +1,4 @@
-import { ActionTypes, Icon, t, transI18n } from '@/ui-kit'
+import { ActionTypes, t, transI18n } from '@/ui-kit'
 import classnames from 'classnames'
 import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
@@ -7,13 +7,15 @@ import { Search } from '~components/input'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import PodiumSvg from '~components/icon/assets/svg/podium.svg'
 import { canOperate, getCameraState, getChatState, getMicrophoneState, ProfileRole, studentListSort } from './base'
+import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: StudentRosterProfile, hover: boolean, userType?: string) => ReactNode;
+  // render?: (text: string, profile: StudentRosterProfile, hover: boolean, userType?: string) => ReactNode;
+  render?: (text: string, profile: StudentRosterProfile, hover: boolean, userType: string, onClick: any) => ReactNode;
 }
 
 export interface StudentRosterProfile {
@@ -21,7 +23,13 @@ export interface StudentRosterProfile {
   name: string;
   cameraEnabled: boolean;
   micEnabled: boolean;
+  cameraDevice: boolean;
+  micDevice: boolean;
   onPodium: boolean;
+  online: boolean;
+  userType: string;
+  hasStream: boolean;
+  isLocal: boolean;
 }
 
 export type StudentRosterActionTypes =
@@ -69,18 +77,31 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     key: 'cameraEnabled',
     name: 'student.camera',
     action: 'camera',
-    render: (_, profile, canOperate) => {
+    render: (_, profile, hover, userType, onClick) => {
       const {
-        operateStatus,
-        cameraStatus,
-        type,
-      } = getCameraState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${cameraStatus}`]: 1,
-      })
+        cameraEnabled,
+        cameraDevice,
+        online,
+        onPodium,
+        hasStream,
+        isLocal,
+        uid,
+      } = profile
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <MediaIcon
+          {...getMediaIconProps({
+            muted: !!cameraEnabled,
+            deviceState: cameraDevice,
+            online: !!online,
+            onPodium: !!onPodium,
+            userType: userType,
+            hasStream: hasStream,
+            isLocal: isLocal,
+            uid: uid,
+            type: 'camera',
+          })}
+          onClick={() => onClick && onClick(uid)}
+        />
       )
     },
   },
@@ -88,18 +109,31 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     key: 'micEnabled',
     name: 'student.microphone',
     action: 'mic',
-    render: (_, profile, canOperate) => {
+    render: (_, profile, hover, userType, onClick) => {
       const {
-        operateStatus,
-        microphoneStatus,
-        type,
-      } = getMicrophoneState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${microphoneStatus}`]: 1,
-      })
+        micEnabled,
+        micDevice,
+        online,
+        onPodium,
+        hasStream,
+        isLocal,
+        uid,
+      } = profile
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <MediaIcon
+          {...getMediaIconProps({
+            muted: !!micEnabled,
+            deviceState: micDevice,
+            online: !!online,
+            onPodium: onPodium,
+            userType: userType,
+            hasStream: hasStream,
+            isLocal: isLocal,
+            uid: uid,
+            type: 'microphone',
+          })}
+          onClick={() => onClick && onClick(uid)}
+        />
       )
     },
   },
@@ -201,26 +235,40 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: StudentRosterColumn, idx: number) => (
                     <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
-                      <span
-                        title={col.name}
-                        className={
-                          `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
-                        }
-                        style={{
-                          paddingLeft: idx !== 0 ? 0 : 25
-                        }}
-                        onClick={
-                          canOperate(role, localUserUuid, data, col)
-                            ? () =>
+                      {idx === 0 ? 
+                        <span
+                          title={col.name}
+                          className={
+                            `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
+                          }
+                          style={{
+                            paddingLeft: idx !== 0 ? 0 : 25
+                          }}
+                          onClick={
+                            canOperate(role, localUserUuid, data, col)
+                              ? () =>
+                                col.action &&
+                                onClick &&
+                                onClick(col.action, data.uid)
+                              : undefined
+                          }>
+                          {(data as any)[col.key]}
+                        </span> :
+                        <span
+                          style={{
+                            paddingLeft: 0
+                          }}
+                        >
+                          {col.render
+                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType as any, (canOperate(role, localUserUuid, data, col)
+                          ? () =>
                               col.action &&
                               onClick &&
                               onClick(col.action, data.uid)
-                            : undefined
-                        }>
-                        {col.render
-                          ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType)
+                          : undefined))
                           : (data as any)[col.key]}
-                      </span>
+                        </span>
+                      }
                     </Col>
                   ))}
                 </Row>

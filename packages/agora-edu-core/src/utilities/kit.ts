@@ -451,7 +451,7 @@ export type BytesType = number | string
 
 export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
   const bytes = +fileBytes
-  if(bytes == 0) return '0 Bytes';
+  if(bytes == 0) return '- -';
   const k = 1000,
     dm = decimalPoint || 2,
     units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],

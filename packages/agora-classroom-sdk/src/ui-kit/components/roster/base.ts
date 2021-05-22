@@ -18,6 +18,12 @@ export const canOperate = (role: ProfileRole, localUid: string, data: any, col: 
     }
     //摄像头、麦克风 当该用户上台时可点击，下台时不可点击
     if(data.onPodium && ['micEnabled', 'cameraEnabled'].includes(col.key)){
+      if (col.key === 'cameraEnabled') {
+        return data.cameraDevice === 1
+      }
+      if (col.key === 'micEnabled') {
+        return data.micDevice === 1
+      }
       return true;
     }
     return false;
@@ -55,10 +61,31 @@ export const getChatState = (profile: any, canOperate: boolean) => {
 
 export const getCameraState = (profile: any, canOperate: boolean) => {
   const defaultType = 'camera-off'
-  const type = !!profile.cameraEnabled === true ? 'camera' : defaultType
+  const types: Record<string, string> = {
+    'true': 'camera',
+    'false': 'camera-off'
+  }
+
+  const device = +profile.cameraDevice
+  const type = types[profile.cameraEnabled] ?? defaultType
 
   const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
-  const cameraStatus = !!profile.cameraEnabled === true ? 'icon-active' : 'media-un-active';
+  const deviceStatus = {
+    0: {
+      'active': '',
+      'inactive': '',
+    },
+    1: {
+      'active': 'icon-active',
+      'inactive': 'media-un-active',
+    },
+    2: {
+      'active': '',
+      'inactive': '',
+    },
+  }
+  const deviceMap = deviceStatus[device]
+  const cameraStatus = profile.cameraEnabled ? deviceMap['active'] : deviceMap['inactive'];
   return {
     type: type as IconTypes,
     operateStatus: operateStatus,
@@ -68,10 +95,31 @@ export const getCameraState = (profile: any, canOperate: boolean) => {
 
 export const getMicrophoneState = (profile: any, canOperate: boolean) => {
   const defaultType = 'microphone-off-outline'
-  const type = !!profile.micEnabled === true ? 'microphone-on-outline' : defaultType
+  const types: Record<string, string> = {
+    'true': 'microphone-on-outline',
+    'false': 'microphone-off-outline'
+  }
+
+  const device = +profile.micDevice
+  const type = types[profile.micEnabled] ?? defaultType
 
   const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
-  const microphoneStatus = !!profile.micEnabled === true ? 'icon-active' : 'media-un-active';
+  const deviceStatus = {
+    0: {
+      'active': '',
+      'inactive': '',
+    },
+    1: {
+      'active': 'icon-active',
+      'inactive': 'media-un-active',
+    },
+    2: {
+      'active': '',
+      'inactive': '',
+    },
+  }
+  const deviceMap = deviceStatus[device]
+  const microphoneStatus = profile.micEnabled ? deviceMap['active'] : deviceMap['inactive'];
   return {
     type: type as IconTypes,
     operateStatus: operateStatus,

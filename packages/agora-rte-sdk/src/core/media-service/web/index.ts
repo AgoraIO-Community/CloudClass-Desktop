@@ -23,6 +23,15 @@ export type FireTrackEndedAction = {
 type AgoraWebSDK = IAgoraRTC & {
   setParameter: (key: 'AUDIO_SOURCE_AVG_VOLUME_DURATION' | 'AUDIO_VOLUME_INDICATION_INTERVAL', value: number) => void
 };
+
+function getEncoderConfig (option: CameraOption) {
+  return {
+    frameRate: option?.encoderConfig?.frameRate ?? 15,
+    width: option?.encoderConfig?.width ?? 320,
+    height: option?.encoderConfig?.height ?? 240,
+  }
+}
+
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   _client?: IAgoraRTCClient;
@@ -844,14 +853,15 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
   }
 
-  async changeCamera(deviceId: string): Promise<any> {
+  async changeLocalCamera({deviceId, encoderConfig}: CameraOption): Promise<any> {
     EduLogger.info('[agora-web] invoke close#changeCamera')
     if (this.cameraTrack) {
       await this.cameraTrack.setDevice(deviceId)
       await this.agoraWebSdk.checkVideoTrackIsActive(this.cameraTrack as ILocalVideoTrack)
       EduLogger.info(`[agora-web] changeCamera by deviceId: ${deviceId} success`)
     } else {
-      throw 'no camera track found'
+      await this.openCamera({deviceId, encoderConfig})
+      // throw 'no camera track found'
     }
   }
 
@@ -929,7 +939,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       await this.microphoneTrack.setDevice(deviceId)
       await this.agoraWebSdk.checkAudioTrackIsActive(this.microphoneTrack as ILocalAudioTrack)
     } else {
-      throw 'no microphone track found'
+      await this.openMicrophone({deviceId})
+      // await this.microphoneTrack.setDevice(deviceId)
+      // await this.agoraWebSdk.checkAudioTrackIsActive(this.microphoneTrack as ILocalAudioTrack)
+      // throw 'no microphone track found'
     }
   }
 
@@ -1144,11 +1157,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       } else {
         this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
           cameraId: option.deviceId,
-          encoderConfig: {
-            frameRate: option.encoderConfig.frameRate,
-            width: option.encoderConfig.width,
-            height: option.encoderConfig.height,
-          }
+          encoderConfig: getEncoderConfig(option)
         })
       }
       const trackId = this.cameraTestTrack.getTrackId()
@@ -1170,11 +1179,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       } else {
         this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
           cameraId: option.deviceId,
-          encoderConfig: {
-            frameRate: option.encoderConfig.frameRate,
-            width: option.encoderConfig.width,
-            height: option.encoderConfig.height,
-          }
+          encoderConfig: getEncoderConfig(option)
         })
       }
       const trackId = this.cameraTrack.getTrackId()
