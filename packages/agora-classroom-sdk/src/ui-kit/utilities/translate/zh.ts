@@ -226,6 +226,7 @@ export const zh = {
     'straight': '直线',
     'circle': '圆圈',
     'rectangle': '矩形',
+    'clicker':'鼠标',
     'selector': '选择',
     'eraser': '橡皮擦',
     'color': '颜色',

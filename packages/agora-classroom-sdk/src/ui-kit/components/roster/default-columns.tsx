@@ -1,7 +1,7 @@
 import classnames from 'classnames';
-import { Icon } from '~components/icon';
+import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
-import {getCameraState, getChatState, getMicrophoneState} from './base';
+import {canOperate, getCameraState, getChatState, getMicrophoneState} from './base';
 
 export const defaultColumns: Column[] = [
   {
@@ -12,7 +12,7 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_, profile, canOperate) => {
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
       const type =  !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const podiumStatus= !!profile.onPodium === true ? 'icon-active' : 'un-active';
@@ -21,7 +21,7 @@ export const defaultColumns: Column[] = [
         [`${podiumStatus}`]: 1,
       })
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <Icon type={type} className={cls} iconhover={canOperate} onClick={onClick}/>
       );
     }
   },
@@ -29,8 +29,8 @@ export const defaultColumns: Column[] = [
     key: 'whiteboardGranted',
     name: 'roster.granted',
     action: 'whiteboard',
-    render: (_, profile, canOperate, role) => {
-      const type =  role + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+      const type =  userType + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
@@ -39,7 +39,7 @@ export const defaultColumns: Column[] = [
         ['icon-flex']: 1
       })
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22}/>
+        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22} onClick={onClick}/>
       )
     },
   },
@@ -47,18 +47,31 @@ export const defaultColumns: Column[] = [
     key: 'cameraEnabled',
     name: 'roster.camera_state',
     action: 'camera',
-    render: (_, profile, canOperate) => {
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
       const {
-        operateStatus,
-        cameraStatus,
-        type,
-      } = getCameraState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${cameraStatus}`]: 1,
-      })
+        cameraEnabled,
+        cameraDevice,
+        online,
+        onPodium,
+        hasStream,
+        isLocal,
+        uid,
+      } = profile
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <MediaIcon
+          {...getMediaIconProps({
+            muted: !!cameraEnabled,
+            deviceState: cameraDevice,
+            online: !!online,
+            onPodium: onPodium,
+            userType: userType,
+            hasStream: hasStream,
+            isLocal: isLocal,
+            uid: uid,
+            type: 'camera',
+          })}
+          onClick={() => onClick && onClick(uid)}
+        />
       )
     },
   },
@@ -66,18 +79,32 @@ export const defaultColumns: Column[] = [
     key: 'micEnabled',
     name: 'roster.microphone_state',
     action: 'mic',
-    render: (_, profile, canOperate) => {
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+      
       const {
-        operateStatus,
-        microphoneStatus,
-        type,
-      } = getMicrophoneState(profile, canOperate);
-      const cls = classnames({
-        [`${operateStatus}`]: 1,
-        [`${microphoneStatus}`]: 1,
-      })
+        micEnabled,
+        micDevice,
+        online,
+        onPodium,
+        hasStream,
+        isLocal,
+        uid,
+      } = profile
       return (
-        <Icon type={type} className={cls} iconhover={canOperate}/>
+        <MediaIcon
+          {...getMediaIconProps({
+            muted: !!micEnabled,
+            deviceState: micDevice,
+            online: !!online,
+            onPodium: onPodium,
+            userType: userType,
+            hasStream: hasStream,
+            isLocal: isLocal,
+            uid: uid,
+            type: 'microphone',
+          })}
+          onClick={() => onClick && onClick(uid)}
+        />
       )
     },
   },
@@ -85,7 +112,7 @@ export const defaultColumns: Column[] = [
     key: 'chat',
     name: 'roster.chat',
     action: 'chat',
-    render: (text, profile: Profile, canOperate) => {
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
       const {
         operateStatus,
         chatStatus,
@@ -97,7 +124,7 @@ export const defaultColumns: Column[] = [
         ["icon-flex"]: 1,
       })
       return (
-        <div className={cls}>
+        <div className={cls} onClick={onClick}>
           <i className={chatStatus}></i>
         </div>
       )
@@ -106,14 +133,14 @@ export const defaultColumns: Column[] = [
   {
     key: 'stars',
     name: 'roster.reward',
-    render: (text, profile: Profile, canOperate) => {
+    render: (text: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,
       })
       return (
         <div>
-          <Icon type={'star-outline'} className={cls} iconhover={canOperate}/>
+          <Icon type={'star-outline'} className={cls} iconhover={canOperate} onClick={onClick}/>
           <span className="star-nums">&nbsp;x{text}</span>
         </div>
       )
@@ -124,13 +151,13 @@ export const defaultColumns: Column[] = [
     name: 'roster.kick',
     action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
-    render: (_, profile, canOperate) => {
+    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,
       })
       return (
-        <Icon type={'exit'} className={cls} iconhover={canOperate}/>
+        <Icon type={'exit'} className={cls} iconhover={canOperate} onClick={onClick} />
       )
     },
   },

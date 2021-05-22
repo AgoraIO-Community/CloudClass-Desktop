@@ -1,6 +1,6 @@
 import React from 'react'
 import { Meta } from '@storybook/react';
-import { Placeholder } from '~components/placeholder'
+import { Placeholder, CameraPlaceHolder } from '~components/placeholder'
 
 const meta: Meta = {
     title: 'Components/Placeholder',
@@ -42,8 +42,16 @@ export const Docs = ({ placeholderDesc }: DocsProps) => (
         <div className="mt-4">
             <Placeholder
                 placeholderDesc={placeholderDesc}
-                placeholderType="noFile"
+                placeholderType=""
+                backgroundColor='#F9F9FC'
             />
+        </div>
+        <div className="mt-4">
+            <CameraPlaceHolder state="disabled" />
+            {/* <Placeholder
+                placeholderDesc={placeholderDesc}
+                placeholderType="noFile"
+            /> */}
         </div>
     </>
 )

@@ -65,6 +65,17 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async reportMicState(payload: {roomUuid: string, userUuid: string, state: number}): Promise<any> {
+    const res = await this.fetch({
+      url: `/v2/rooms/${payload.roomUuid}/users/${payload.userUuid}/device`,
+      method: 'PUT',
+      data: {
+        mic: payload.state
+      }
+    })
+    return res.data
+  }
+
   async checkIn(params: {
     roomUuid: string,
     roomName: string,

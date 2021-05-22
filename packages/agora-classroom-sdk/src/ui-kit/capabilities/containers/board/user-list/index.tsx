@@ -2,7 +2,7 @@ import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream, EduVideoSourceType } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
@@ -172,6 +172,8 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         roomInfo,
         muteUserChat,
         unmuteUserChat,
+        queryMicrophoneDeviceState,
+        queryCameraDeviceState
     } = useRoomContext()
 
     const {
@@ -196,15 +198,20 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         return true
       }
 
-    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean) {
+    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean, userList: EduUser[]) {
         return {
             name: user.userName,
             uid: user.userUuid,
             micEnabled: stream?.hasAudio ?? false,
             cameraEnabled: stream?.hasVideo ?? false,
             onPodium: onPodium,
+            micDevice: queryMicrophoneDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
+            cameraDevice: queryCameraDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
+            online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
+            hasStream: !!stream,
             chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
-            disabled: checkDisable(user, role)
+            disabled: checkDisable(user, role),
+            userType: ['assistant', 'teacher'].includes(role) ? 'teacher' : 'student'
         }
     }
 
@@ -220,7 +227,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
             .filter((user: any) => user.userUuid !== localUserUuid)
             .reduce((acc: any[], user: any) => {
                 const stream = streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-                const userInfo = transformRosterUserInfo(user, roomInfo.userRole, stream, acceptedIds.includes(user.userUuid))
+                const userInfo = transformRosterUserInfo(user, roomInfo.userRole, stream, acceptedIds.includes(user.userUuid), userList)
                 acc.push(userInfo)
                 return acc
               }, [])
@@ -234,7 +241,8 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
                 },
                 roomInfo.userRole,
                 localStream,
-                acceptedIds.includes(roomInfo.userUuid)
+                acceptedIds.includes(roomInfo.userUuid),
+                userList,
                 )
             return [localUserInfo].concat(remoteStudentList)
         }              

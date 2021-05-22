@@ -31,7 +31,13 @@ export type EduMediaStream = {
     micVolume: number,
     placement: string,
     stars: number,
-    holderState: 'loading' | 'muted' | 'broken'
+    isLocal: boolean;
+    online: boolean;
+    onPodium: boolean;
+    cameraDevice: number;
+    micDevice: number;
+    hasStream: boolean;
+    holderState: 'loading' | 'muted' | 'broken' | 'disabled'
 }
 export type ToastType = {
     id: string,
@@ -441,6 +447,10 @@ export type RoomContext = {
      * 取消单个用户禁言
      */
     unmuteUserChat: (userUuid: string) => Promise<any>;
+    // 查询摄像头设备状态
+    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+    // 查询麦克风设备状态
+    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
 }
 export type RoomDiagnosisContext = {
     navigationState: {

@@ -17,6 +17,8 @@ const resources = {
     translation: {
       "Close Microphone": "close microphone",
       "Open Microphone": "open microphone",
+      "Camera Not Available": "Camera Not Available",
+      "Microphone Not Available": "Microphone Not Available",
       "Close Camera": "close camera",
       "Open Camera": "open camera",
       "Clear Podium": "Close Podium",
@@ -33,6 +35,8 @@ const resources = {
     translation: {
       "Close Microphone": "禁用麦克风",
       "Open Microphone": "开启麦克风",
+      "Camera Not Available": "摄像头已禁用",
+      "Microphone Not Available": "麦克风已禁用",
       "Close Camera": "禁用摄像头",
       "Open Camera": "开启摄像头",
       "Clear Podium": "下台",

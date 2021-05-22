@@ -3,7 +3,7 @@ import { homeApi } from "../services/home-api"
 import { StorageCourseWareItem } from "../types"
 import { get } from "lodash"
 
-import { EduRoleTypeEnum, EduStream } from "agora-rte-sdk"
+import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
 import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext, ReportContext } from './type'
@@ -182,6 +182,8 @@ export const useRoomContext = (): RoomContext => {
     destroyRoom,
   } = useCoreContext()
 
+  const sceneStore = useSceneStore()
+
   const {
     roomInfo,
     classState,
@@ -192,8 +194,8 @@ export const useRoomContext = (): RoomContext => {
     sceneType,
     muteUserChat,
     unmuteUserChat,
-    removeScreenShareWindow
-  } = useSceneStore()
+    removeScreenShareWindow,
+  } = sceneStore
 
   const {
     removeDialog,
@@ -235,7 +237,13 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
+      return sceneStore.queryCameraDeviceState(userList, userUuid, streamUuid)
+    },
+    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
+      return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
+    }
   }
 }
 

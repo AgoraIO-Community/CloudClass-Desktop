@@ -5,6 +5,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
+import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
@@ -26,6 +27,7 @@ import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { Resource } from '../context/type';
 import { reportServiceV2 } from '../services/report-v2';
+import MD5 from 'js-md5';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -239,13 +241,19 @@ export class BoardStore extends ZoomController {
   @observable
   downloading: boolean = false
 
-  @action.bound
-  changeScenePath(path: string) {
-    this.activeScenePath = path
-    if (this.online && this.room) {
-      this.room.setScenePath(this.activeScenePath)
-    }
-  }
+  // @action.bound
+  // changeScenePath(path: string) {
+  //   this.activeScenePath = path
+  //   if (this.online && this.room) {
+  //     const id = this.room.state.sceneState.contextPath.replace('/', '')
+  //     const resource = this.allResources.find((it: any) => it.id === id)
+  //     if (resource && resource.ext === 'h5') {
+  //       console.log("changeScenePath insertH5 ", id, resource)
+  //       return this.insertH5(resource.url, id)
+  //     }
+  //     this.room.setScenePath(this.activeScenePath)
+  //   }
+  // }
 
   appStore!: EduScenarioAppStore
 
@@ -435,6 +443,9 @@ export class BoardStore extends ZoomController {
       else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
+          if (targetResource.ext === 'h5') {
+            return this.insertH5(targetResource.url, targetResource.id)
+          }
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
@@ -628,6 +639,11 @@ export class BoardStore extends ZoomController {
       }
       this.removeScreenShareScene()
     } else {
+      // const iframe = this.iframeList.get(currentSceneState.contextPath)
+      // if (iframe) {
+      //   await iframe.destroy()
+      // }
+      // if (this)
       this.room.setGlobalState({
         roomScenes: {
           ...roomScenes,
@@ -964,7 +980,7 @@ export class BoardStore extends ZoomController {
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
-          this.room.scalePptToFit()
+          this.scaleToFit()
         }
       }
       if (state.memberState) {
@@ -1022,6 +1038,8 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
+      wrappedComponents: [IframeWrapper],
+      invisiblePlugins: [IframeBridge]
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -1900,6 +1918,48 @@ export class BoardStore extends ZoomController {
     room.setScenePath(sharePath)
   }
 
+  iframe: IframeBridge = null as any;
+
+  @action.bound
+  async insertH5(url: string, resourceUuid: string) {
+    const bridge = this.boardClient.bridge;
+    const scenePath = `/${resourceUuid}`
+    const room = this.room
+    // const iframe = this.iframeList.get(scenePath)
+    const iframe = this.iframe
+    if (!iframe) {
+      const iframe = await IframeBridge.insert({
+        room,
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: false
+      })
+      this.iframe = iframe
+      this.putCourseResource(resourceUuid)
+    } else {
+      iframe?.setAttributes({
+        url: url,
+        width: 1280,
+        height: 720,
+        displaySceneDir: `${scenePath}`,
+        useClicker: false
+      })
+      room.setScenePath(scenePath)
+    }
+    // if (bridge) {
+      
+      // const scenes = room.entireScenes();
+      // if (!scenes[scenePath]) {
+      //     room.putScenes(scenePath, genH5Scenes(totalPage));
+      // }
+      // if (room.state.sceneState.contextPath !== scenePath) {
+      //     room.setScenePath(scenePath);
+      // }
+    // }
+  }
+
   @action.bound
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
@@ -1956,6 +2016,9 @@ export class BoardStore extends ZoomController {
       if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)
       }
+      if (["h5"].includes(resource.type)) {
+        await this.insertH5(resource.url, uuid)
+      }
     } catch (err) {
       throw err
     }
@@ -2009,10 +2072,28 @@ export class BoardStore extends ZoomController {
     this.room.cleanCurrentScene()
   }
 
+  @computed
+  get isH5IFrame() {
+    const id = this.room.state.sceneState.contextPath.split('/')[1]
+    const resource = this.allResources.find((it: any) => it.id === id)
+    const ext = resource?.ext ?? 'unknown'
+    return ext === 'h5'
+  }
+
+
+  @action.bound
+  scaleToFit() {
+    if (this.isH5IFrame) {
+      this.iframe.scaleIframeToFit()
+    } else {
+      this.room.scalePptToFit()
+    }
+  }
+
   @action.bound
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt) {
-      this.room.scalePptToFit()
+    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt || this.isH5IFrame) {
+      this.scaleToFit()
     } else {
       this.room.moveCamera({
         centerX: 0,
