@@ -31,7 +31,7 @@ export const AcadsocOneToOne = observer(() => {
       EduLogger.info(" appStore.destroyRoom ", err.message)
     }
     dialogManager.show({
-      text: BusinessExceptions.getReadableText(err.errCode),
+      text: BusinessExceptions.getReadableText(err.errCode, err.message),
       showConfirm: true,
       showCancel: false,
       confirmText: t('aclass.confirm.yes'),

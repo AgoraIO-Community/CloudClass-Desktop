@@ -1,4 +1,5 @@
 import { t } from "@/i18n";
+import { GenericError } from "agora-rte-sdk";
 
 const ExceptionMapping = {
     "20410100": t('error.class_end'),
@@ -7,10 +8,17 @@ const ExceptionMapping = {
 
 
 export class BusinessExceptions {
-    static getReadableText(errCode?: string):string {
+    static getReadableText(errCode?: string, errMessage?: string):string {
         if(errCode && ExceptionMapping.hasOwnProperty(errCode)) {
             return ExceptionMapping[errCode]
         }
-        return t('error.unknown')
+        let details = []
+        if(errCode){
+            details.push(`${errCode}`)
+        }
+        if(errMessage) {
+            details.push(`${errMessage}`)
+        }
+        return `${t('error.unknown')}: ${details.join(': ')}`
     }
 }
