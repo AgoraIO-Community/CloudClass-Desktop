@@ -46,6 +46,7 @@ export class BoardClient extends EventEmitter {
     this.client = new WhiteWebSdk({
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
+      preloadDynamicPPT: true,
       appIdentifier: this.appIdentifier,
       loggerOptions: {
         // reportQualityMode: "alwaysReport",
