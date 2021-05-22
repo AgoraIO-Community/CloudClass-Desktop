@@ -250,7 +250,6 @@ export class ReportServiceV2 extends ApiBase {
         return resp
     }
     async reportApaasUserJoin(lts: number, errorCode: number) {
-        console.warn("apaas加入上报",this.reportUserParams, lts, errorCode);
         if(!this.guardParams()){
             return
         }
@@ -265,7 +264,6 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("apaas离开上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
@@ -277,7 +275,6 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("apaas重连上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
@@ -289,7 +286,6 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("apaas开始屏幕共享上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
@@ -301,7 +297,6 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("apaas结束屏幕共享上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
