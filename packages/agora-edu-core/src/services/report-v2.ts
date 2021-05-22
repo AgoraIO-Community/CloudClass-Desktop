@@ -1,8 +1,9 @@
-import { ApiBase, ApiBaseInitializerParams } from "./base";
+import { ApiBase, ApiBaseInitializerParams } from './base';
 import md5 from "js-md5";
-import { GenericErrorWrapper } from "../utils/generic-error";
-import { HttpClient } from "../utils/http-client";
-import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../../protobuf';
+import { GenericErrorWrapper } from "agora-rte-sdk";
+import { HttpClient } from "../utilities/net";
+import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../protobuf';
+import { reportService } from './report';
 type ReportParams = {
     /**
      * 当前通话的cid
@@ -93,12 +94,11 @@ type ReportUserParams = {
      */
     roomId: string
 }
-// apaass.apaas.ApaasUserJoin
 export class ReportServiceV2 extends ApiBase {
-    protected reportUserParams: ReportUserParams = ({} as any);
+    reportUserParams: ReportUserParams = ({} as any);
+    protected qos!: number;
     constructor(params: ApiBaseInitializerParams) {
         super(params)
-        this.prefix = `${this.sdkDomain}`
     }
     protected Uint8ToBase64(u8Arr: Uint8Array): string{
         const CHUNK_SIZE = 0x8000; //arbitrary number
@@ -112,7 +112,7 @@ export class ReportServiceV2 extends ApiBase {
           index += CHUNK_SIZE;
         }
         return btoa(result);
-      }
+    }
     protected buildUserJoinPaylod(payloadParams: ReportUserParams): string{
         let errMsg = ApaasUserJoin.verify(payloadParams);
         if (errMsg)
@@ -208,7 +208,14 @@ export class ReportServiceV2 extends ApiBase {
         throw GenericErrorWrapper(new Error(`not initialize params: reportUserParams: ${this.reportUserParams}`));
     }
     get apiPath() {
-        return this.prefix;
+        return this.sdkDomain;
+    }
+    initReportConfig(config = {
+        sdkDomain: 'https://rest-argus-ad.agoralab.co',
+        qos: 1
+    }) {
+        this.sdkDomain = config.sdkDomain;
+        this.qos = config.qos;
     }
     initReportUserParams(params: ReportUserParams) {
         this.reportUserParams = params;
@@ -243,14 +250,14 @@ export class ReportServiceV2 extends ApiBase {
         return resp
     }
     async reportApaasUserJoin(lts: number, errorCode: number) {
-        console.warn("加入上报",this.reportUserParams, lts, errorCode);
+        console.warn("apaas加入上报",this.reportUserParams, lts, errorCode);
         if(!this.guardParams()){
             return
         }
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserJoinParams('rte', this.reportUserParams, lts, errorCode)
+            data: this.buildApaasUserJoinParams('apaas', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
@@ -258,11 +265,11 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("离开上报",this.reportUserParams, lts, errorCode);
+        console.warn("apaas离开上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserQuitParams('rte', this.reportUserParams, lts, errorCode)
+            data: this.buildApaasUserQuitParams('apaas', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
@@ -270,11 +277,11 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("重连上报",this.reportUserParams, lts, errorCode);
+        console.warn("apaas重连上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildApaasUserReconnectParams('rte', this.reportUserParams, lts, errorCode)
+            data: this.buildApaasUserReconnectParams('apaas', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
@@ -282,11 +289,11 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("开始屏幕共享上报",this.reportUserParams, lts, errorCode);
+        console.warn("apaas开始屏幕共享上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildScreenShareStartParams('rte', this.reportUserParams, lts, errorCode)
+            data: this.buildScreenShareStartParams('apaas', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
@@ -294,19 +301,19 @@ export class ReportServiceV2 extends ApiBase {
         if(!this.guardParams()){
             return
         }
-        console.warn("结束屏幕共享上报",this.reportUserParams, lts, errorCode);
+        console.warn("apaas结束屏幕共享上报",this.reportUserParams, lts, errorCode);
         const res = await this.request({
             path: `/v2/report`,
             method: 'POST',
-            data: this.buildScreenShareEndParams('rte', this.reportUserParams, lts, errorCode)
+            data: this.buildScreenShareEndParams('apaas', this.reportUserParams, lts, errorCode)
         })
         return res.data
     }
 }
 
 export const reportServiceV2 = new ReportServiceV2({
-    sdkDomain: 'https://test-rest-argus.bj2.agoralab.co',
     appId: '',
+    sdkDomain: '',
     rtmToken: '',
     rtmUid: ''
 })

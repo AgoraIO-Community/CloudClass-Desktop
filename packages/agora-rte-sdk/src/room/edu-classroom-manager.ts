@@ -18,7 +18,6 @@ import { RTMWrapper } from '../core/rtm';
 import { MessageSerializer } from '../core/rtm/message-serializer';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
-import { reportServiceV2 } from '../core/services/report-service-v2';
 
 export type EduClassroomInitParams = {
   eduManager: EduManager
@@ -222,27 +221,22 @@ export class EduClassroomManager {
   }
 
   async leave() {
-    try {
 
-      if (this._rtmObserver) {
-        this._rtmObserver.removeAllListeners()
-        this._rtmObserver = undefined
-      }
-      EduLogger.debug(`leave classroom ${this.roomUuid}`)
-      if (this.eduManager._rtmWrapper) {
-        EduLogger.debug(`leave this.rtmWrapper ${this.roomUuid}`)
-        await this.eduManager._rtmWrapper.leave({
-          channelName: this.roomUuid,
-        })
-        delete this.eduManager._dataBuffer[this.rawRoomUuid];
-        EduLogger.debug(`leave classroom ${this.roomUuid} success`)
-      }
-      const lts = new Date().getTime()
-      reportServiceV2.reportApaasUserQuit(lts, 0);
-    } catch (e) {
-      const lts = new Date().getTime()
-      reportServiceV2.reportApaasUserQuit(lts, e.code);
+    if (this._rtmObserver) {
+      this._rtmObserver.removeAllListeners()
+      this._rtmObserver = undefined
     }
+    EduLogger.debug(`leave classroom ${this.roomUuid}`)
+    if (this.eduManager._rtmWrapper) {
+      EduLogger.debug(`leave this.rtmWrapper ${this.roomUuid}`)
+      await this.eduManager._rtmWrapper.leave({
+        channelName: this.roomUuid,
+      })
+      delete this.eduManager._dataBuffer[this.rawRoomUuid];
+      EduLogger.debug(`leave classroom ${this.roomUuid} success`)
+    }
+    const lts = new Date().getTime()
+    
   }
 
   get userToken() {

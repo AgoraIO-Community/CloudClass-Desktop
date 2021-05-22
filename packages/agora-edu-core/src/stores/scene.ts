@@ -13,6 +13,7 @@ import { Mutex } from "../utilities/mutex"
 import { LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
 import { EduMediaStream } from "../context/type"
+import { reportServiceV2 } from '../services/report-v2';
 
 const delay = 2000
 
@@ -905,17 +906,41 @@ export class SceneStore extends SimpleInterval {
   async startOrStopSharing(type?:ScreenShareType) {
     if (this.isWeb) {
       if (this.sharing) {
-        await this.stopWebSharing()
+        console.warn("web end share");
+        try {
+          await this.stopWebSharing()
+          reportServiceV2.reportScreenShareEnd(new Date().getTime(),0)
+        } catch (error) {
+          reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message)
+        }
       } else {
-        await this.startWebSharing()
+        console.warn("web start share");
+        try {
+          await this.startWebSharing()
+          reportServiceV2.reportScreenShareStart(new Date().getTime(),0)
+        } catch (error) {
+          reportServiceV2.reportScreenShareStart(new Date().getTime(), error.code || error.message)
+        }
       }
     }
 
     if (this.isElectron) {
       if (this.sharing) {
-        await this.stopNativeSharing()
+        console.warn("native end share");
+        try {
+          await this.stopNativeSharing()
+          reportServiceV2.reportScreenShareEnd(new Date().getTime(),0)
+        } catch (error) {
+          reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message)
+        }
       } else {
-        await this.showScreenShareWindowWithItems(type)
+        console.warn("native start share");
+        try {
+          await this.showScreenShareWindowWithItems(type)
+          reportServiceV2.reportScreenShareStart(new Date().getTime(),0)
+        } catch (error) {
+          reportServiceV2.reportScreenShareStart(new Date().getTime(), error.code || error.message)
+        }
       }
     }
   }

@@ -8,7 +8,6 @@ import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
-import { reportServiceV2 } from '../services/report-service-v2';
 import { EduManager } from '../../manager';
 import packageJson from '../../../package.json';
 
@@ -477,12 +476,9 @@ export class MediaService extends EventEmitter implements IMediaService {
          */
         roomId: option.data?.room.uuid
       };
-      reportServiceV2.initReportUserParams(reportUserParams);
-      reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
       reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
     } catch (e) {
       reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
-      reportServiceV2.reportApaasUserJoin(new Date().getTime(), e.code);
       throw e
     }
   }
@@ -795,9 +791,8 @@ export class MediaService extends EventEmitter implements IMediaService {
           sourceType: 'screen',
         })
       }
-      reportServiceV2.reportScreenShareStart(new Date().getTime(), 0);
     } catch (error) {
-      reportServiceV2.reportScreenShareStart(new Date().getTime(), error.code);
+      throw error
     }
   }
 
@@ -809,9 +804,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       if (this.isElectron) {
         await this.sdkWrapper.stopScreenShare()
       }
-      reportServiceV2.reportScreenShareEnd(new Date().getTime(), 0);
     } catch (error) {
-      reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code);
+      throw error
     }
   }
 

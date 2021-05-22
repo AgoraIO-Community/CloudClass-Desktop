@@ -14,7 +14,7 @@ import { Widget } from '~capabilities/containers/widget'
 
 
 export const OneToOneScenario = observer(() => {
-
+  
   const {
     isFullScreen,
   } = useGlobalContext()

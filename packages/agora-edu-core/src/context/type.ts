@@ -1088,3 +1088,7 @@ export type MediaContext = {
      */
      changeMicrophoneVolume: (v: number) => Promise<void>
 }
+
+export type ReportContext = {
+    eduManger: any
+}

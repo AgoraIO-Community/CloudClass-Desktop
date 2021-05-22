@@ -25,6 +25,7 @@ import { ZoomController } from './zoom';
 import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { Resource } from '../context/type';
+import { reportServiceV2 } from '../services/report-v2';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -619,7 +620,12 @@ export class BoardStore extends ZoomController {
     const currentContextPath = currentSceneState.contextPath
 
     if (resourceUuid.match(/screenShare/i)) {
-      await this.appStore.sceneStore.stopRTCSharing()
+      try {
+        await this.appStore.sceneStore.stopRTCSharing()
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), 0)
+      } catch (error) {
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message)
+      }
       this.removeScreenShareScene()
     } else {
       this.room.setGlobalState({

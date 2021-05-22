@@ -44,4 +44,4 @@ mac
 win
 .log
 packages/agora-edu-core/docs
-packages/agora-rte-sdk/src/protobuf/index.*
+packages/agora-edu-core/src/protobuf/index.*

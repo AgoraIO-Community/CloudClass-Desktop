@@ -17,6 +17,8 @@ import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
+import { reportServiceV2 } from "../services/report-v2"
+import packageJson from "../../package.json"
 
 
 export enum CoVideoActionType {
@@ -1078,6 +1080,9 @@ export class RoomStore extends SimpleInterval {
           this.appStore.uiStore.fireToast('toast.classroom_remote_join')
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
+        if(newState === "CONNECTED" && reason === "LOGIN_SUCCESS" && reportServiceV2.reportUserParams.uid){
+          reportServiceV2.reportApaasUserReconnect(new Date().getTime(), 0);
+        }
         reportService.updateConnectionState(newState)
       })
 
@@ -1628,6 +1633,39 @@ export class RoomStore extends SimpleInterval {
       }
       this.joined = true
       this.roomJoined = true
+      let reportUserParams = {
+        vid: this.eduManager.vid,
+        ver: packageJson.version,
+        scenario: 'education',
+        uid: this.userUuid,
+        userName: this.appStore.roomInfo.userName,
+        /**
+         * rtc流id
+         */
+        streamUid: +(this.appStore.sceneStore.streamList[0].streamUuid),
+        /**
+         * rtc流id
+         */
+        streamSuid: this.appStore.sceneStore.streamList[0].streamUuid,
+        /**
+         * apaas角色
+         */
+        role: ""+this.appStore.userRole,
+        /**
+         * rtc sid
+         */
+        streamSid: this.eduManager.rtcSid,
+        /**
+         * rtm sid
+         */
+        rtmSid: this.eduManager.rtmSid,
+        /**
+         * apaas房间id，与rtc/rtm channelName相同
+         */
+        roomId: this.roomInfo.roomUuid
+      };
+      reportServiceV2.initReportUserParams(reportUserParams);
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
@@ -1638,6 +1676,7 @@ export class RoomStore extends SimpleInterval {
       }
       const error = GenericErrorWrapper(err)
       reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${error.message}` })
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), err.message);
       // TODO 需要把Dialog UI和业务解耦，提供事件即可
       this.appStore.uiStore.fireDialog('generic-error-dialog', {
         error
