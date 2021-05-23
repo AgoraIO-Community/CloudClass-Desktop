@@ -366,12 +366,12 @@ export class PretestStore {
   muteMicrophone() {
     this.microphoneLabel = CustomizeDeviceLabel.Disabled
     this._microphoneId = AgoraMediaDeviceEnum.Disabled
+    this.appStore.mediaStore.totalVolume = 0
   }
 
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
     this._cameraId = AgoraMediaDeviceEnum.Disabled
-    this.appStore.mediaStore.totalVolume = 0
   }
 
   @action.bound
