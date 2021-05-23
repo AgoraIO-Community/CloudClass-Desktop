@@ -449,13 +449,33 @@ export class MediaStore {
     })
 
     reaction(() => JSON.stringify([
+      this.appStore.roomStore.roomJoined,
+      this.appStore.sceneStore.teacherStream,
+      this.appStore.roomStore.roomInfo
+    ]), (data: string) => {
+      const [roomJoined, teacherStream, roomInfo] = JSON.parse(data)
+      if (roomJoined && teacherStream && roomInfo) {
+        const {userRole} = roomInfo
+        const {userUuid, streamUuid, micDevice, cameraDevice, hasAudio, hasVideo} = teacherStream
+        if (userUuid && streamUuid && userRole !== 'student') {
+          if (!!hasAudio && micDevice === 0 
+            || !!hasVideo && cameraDevice === 0) {
+              this.uiStore.fireToast('pretest.teacher_device_may_not_work')
+          }
+        }
+      }
+      // if (this.)
+    })
+
+    reaction(() => JSON.stringify([
       this.appStore.roomInfo.roomUuid,
       this.appStore.roomInfo.userUuid,
       this.appStore.sceneStore.localCameraDeviceState,
       this.appStore.sceneStore.localMicrophoneDeviceState,
       this.appStore.roomStore.roomJoined,
+      this.appStore.sceneStore.cameraEduStream,
     ]), (data: string) => {
-      const [roomUuid, userUuid, localCameraDeviceState, localMicrophoneDeviceState, roomJoined] = JSON.parse(data)
+      const [roomUuid, userUuid, localCameraDeviceState, localMicrophoneDeviceState, roomJoined, cameraEduStream] = JSON.parse(data)
       if (roomJoined && roomUuid && userUuid) {
         eduSDKApi.reportCameraState({
           roomUuid: roomUuid,
@@ -475,6 +495,15 @@ export class MediaStore {
         }).then(() => {
           BizLogger.info(`[MEDIA] report mic device not working`)
         })
+      }
+
+      if (roomJoined && roomUuid && userUuid && cameraEduStream) {
+        if (localCameraDeviceState === 0 && !!cameraEduStream.hasVideo === true) {
+          this.uiStore.fireToast('pretest.device_not_working')
+        }
+        if (localMicrophoneDeviceState === 0 && !!cameraEduStream.hasAudio === true) {
+          this.uiStore.fireToast('pretest.device_not_working')
+        }
       }
     })
   }

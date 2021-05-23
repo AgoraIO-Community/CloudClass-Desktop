@@ -161,6 +161,11 @@ export class SceneStore extends SimpleInterval {
   @observable
   userList: EduUser[] = []
 
+  @computed
+  get teacher() {
+    return this.userList.find((user: EduUser) => user.role === EduRoleType.teacher)
+  }
+
   @observable
   private _streamList: EduStream[] = []
 
@@ -1214,12 +1219,12 @@ export class SceneStore extends SimpleInterval {
     if (!user) {
       return DeviceStateEnum.Disabled
     } else {
-      const cameraState = get(user, 'userProperties.device.camera', 1)
-      if (cameraState === 1) {
+      const micState = get(user, 'userProperties.device.mic', 1)
+      if (micState === 1) {
         const isFreeze = this.queryAudioIsNotFrozen(+streamUuid) === false
         return isFreeze ? DeviceStateEnum.Frozen : DeviceStateEnum.Available
       }
-      return cameraState;
+      return micState;
     }
   }
 
@@ -1485,7 +1490,7 @@ export class SceneStore extends SimpleInterval {
 
     // 当远端是老师时
     const teacherStream = this.streamList.find((it: EduStream) => it.userInfo.role as string === 'host' && it.userInfo.userUuid === this.teacherUuid && it.videoSourceType !== EduVideoSourceType.screen) as EduStream
-    if (teacherStream) {
+    if (this.teacher && teacherStream) {
       const user = this.getUserBy(teacherStream.userInfo.userUuid as string) as EduUser
       const props = this.getRemotePlaceHolderProps(user.userUuid, 'teacher')
       const volumeLevel = this.getFixAudioVolume(+teacherStream.streamUuid)
