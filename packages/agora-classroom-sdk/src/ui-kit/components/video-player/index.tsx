@@ -93,6 +93,7 @@ export interface BaseVideoPlayerProps {
   isLocal?: boolean;
   cameraDevice?: number;
   micDevice?: number;
+  showGranted?: boolean;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -170,6 +171,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onWhiteboardClick,
   onSendStar,
   hidePrivateChat = true,
+  showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
   ...restProps
 }) => {
@@ -330,7 +332,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 deviceState: micDevice,
                 online: !!online,
                 onPodium: isOnPodium,
-                userType: userType,
+                userType: 'teacher',
                 hasStream: hasStream,
                 isLocal: isLocal,
                 type: 'microphone',
@@ -344,7 +346,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           <span title={username} className="username">{username}</span>
         </div>
         <div className="bottom-right-info">
-          {(whiteboardGranted && userType === 'student') ? (
+          {(whiteboardGranted && showGranted) ? (
             <div className="bottom-right-granted"></div>
           ) : null}
         </div>
@@ -404,6 +406,10 @@ export interface VideoMarqueeListProps {
    * 开启私密语音聊天
    */
   onPrivateChat?: (uid: string | number) => Promise<any>;
+  /**
+   * 用户类型
+   */
+  userType: 'teacher' | 'student';
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -495,6 +501,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             <VideoPlayer
               {...videoStream}
               hideStars={hideStars}
+              showGranted={true}
               onCameraClick={onCameraClick}
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}

@@ -8,26 +8,6 @@ import { Volume } from '~components/volume'
 import {v4 as uuidv4} from 'uuid'
 
 
-const VideoPreviewPlayer = observer(() => {
-    const {
-        cameraId,
-        pretestCameraRenderer,
-        isMirror,
-    } = usePretestContext()
-
-    return (
-        <RendererPlayer
-            className="camera-placeholder camera-muted-placeholder"
-            style={{width: 320, height: 180}}
-            mirror={isMirror}
-            key={cameraId}
-            id="stream-player"
-            track={pretestCameraRenderer}
-            preview={true}
-        />
-    )
-})
-
 const VolumeIndicationView = observer(() => {
     const {
         microphoneLevel
@@ -65,7 +45,22 @@ export const PretestContainer = observer(() => {
         stopPretestCamera,
         stopPretestMicrophone,
         pretestNoticeChannel,
+        pretestCameraRenderer,
     } = usePretestContext()
+
+    const VideoPreviewPlayer = useCallback(() => {    
+        return (
+            <RendererPlayer
+                className="camera-placeholder camera-muted-placeholder"
+                style={{width: 320, height: 180}}
+                mirror={isMirror}
+                key={cameraId}
+                id="stream-player"
+                track={pretestCameraRenderer}
+                preview={true}
+            />
+        )
+    }, [pretestCameraRenderer, cameraId, isMirror])
 
     const handleError = (evt: any) => {
         pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})

@@ -570,6 +570,10 @@ export type GlobalContext = {
      * 已经加入房间
      */
     joined: boolean;
+    /**
+     * 用户类型
+     */
+    userType: 'teacher' | 'student';
 }
 export type BoardContext = {
     /**

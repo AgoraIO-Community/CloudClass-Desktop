@@ -151,11 +151,11 @@ const PretestComponent: React.FC<PretestProps> = ({
         const [animated, setAnimate] = useState<boolean>(false)
 
         useLayoutEffect(() => {
-            Promise.resolve().then(() => {
-                if (mounted) {
-                    setAnimate(true)
-                }
-            })
+            // Promise.resolve().then(() => {
+            if (mounted) {
+                setAnimate(true)
+            }
+            // })
         }, [])
 
         return <CSSTransition

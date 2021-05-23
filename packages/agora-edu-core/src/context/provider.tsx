@@ -278,6 +278,10 @@ export const useGlobalContext = (): GlobalContext => {
     joining,
   } = useRoomStore()
 
+  const {
+    userType
+  } = useSceneStore()
+
   return {
     loading,
     isFullScreen,
@@ -298,7 +302,8 @@ export const useGlobalContext = (): GlobalContext => {
     dialogEventObserver: dialog$,
     fireDialog,
     joined,
-    inRoom: joining
+    inRoom: joining,
+    userType
   }
 }
 

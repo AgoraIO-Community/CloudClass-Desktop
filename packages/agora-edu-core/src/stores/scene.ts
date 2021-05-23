@@ -166,6 +166,11 @@ export class SceneStore extends SimpleInterval {
     return this.userList.find((user: EduUser) => user.role === EduRoleType.teacher)
   }
 
+  @computed
+  get userType() {
+    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? 'teacher' : 'student'
+  }
+
   @observable
   private _streamList: EduStream[] = []
 
@@ -634,9 +639,14 @@ export class SceneStore extends SimpleInterval {
           ...option
         }
       } as CameraOption
-      await this.mediaService.openCamera(config)
-      this._cameraRenderer = this.mediaService.cameraRenderer
-
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        await this.mediaService.closeCamera()
+        this._cameraRenderer = undefined
+        this.appStore.pretestStore.muteCamera()
+      } else {
+        await this.mediaService.openCamera(config)
+        this._cameraRenderer = this.mediaService.cameraRenderer  
+      }
       BizLogger.info('[demo] action in openCamera >>> openCamera, ', JSON.stringify(config))
       this.unLockCamera()
 
@@ -798,8 +808,17 @@ export class SceneStore extends SimpleInterval {
     this.lockMicrophone()
     try {
       const deviceId = this.appStore.pretestStore.microphoneId
-      await this.mediaService.openMicrophone({deviceId})
-      this._microphoneTrack = this.mediaService.microphoneTrack
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        await this.mediaService.closeMicrophone()
+        if (this._microphoneTrack) {
+          this._microphoneTrack.stop()
+          this._microphoneTrack = undefined
+        }
+        this.appStore.pretestStore.muteMicrophone()
+      } else {
+        await this.mediaService.openMicrophone({deviceId})
+        this._microphoneTrack = this.mediaService.microphoneTrack 
+      }
       // this.microphoneLabel = this.mediaService.getMicrophoneLabel()
       BizLogger.info('[demo] action in openMicrophone >>> openMicrophone')
       // this._microphoneId = this.microphoneId
@@ -1284,6 +1303,14 @@ export class SceneStore extends SimpleInterval {
         return this.defaultStudentPlaceholder
       }
     }
+
+    if (this.queryRemoteCameraDeviceState(this.userList, userUuid, stream.streamUuid) === DeviceStateEnum.Disabled) {
+      return {
+        holderState: 'disabled',
+        text: `placeholder.disabled`
+      }
+    }
+
     const stats = this.getRemoteVideoStatsBy(stream.streamUuid)
 
     if(!stats){
@@ -1301,13 +1328,6 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (this.queryRemoteCameraDeviceState(this.userList, userUuid, stream.streamUuid) === DeviceStateEnum.Disabled) {
-      return {
-        holderState: 'disabled',
-        text: `placeholder.disabled`
-      }
-    }
-
     const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
     if (isFreeze) {
       return {
@@ -1315,6 +1335,14 @@ export class SceneStore extends SimpleInterval {
         text: 'placeholder.noAvailableCamera'
       }
     }
+
+    if(stats && stats.renderFrameRate === 0) {
+      return {
+        holderState: 'loading',
+        text: `placeholder.loading`
+      }
+    }
+
 
     return {
       holderState: 'none',
@@ -1328,7 +1356,7 @@ export class SceneStore extends SimpleInterval {
     if (isLocal) {
       return this.localVolume
     }
-    const level = this.appStore.mediaStore.speakers.get(+streamUuid) || 0
+    const level = this.appStore.speakers.get(+streamUuid) || 0
     if (this.appStore.isElectron) {
       return this.fixNativeVolume(level)
     }
@@ -1457,6 +1485,14 @@ export class SceneStore extends SimpleInterval {
       return false
     }
     return true
+  }
+
+  @computed
+  get teacherStreamInfo() {
+    return {
+      ...this.teacherStream,
+      renderer: null
+    }
   }
 
   @computed
@@ -1652,11 +1688,11 @@ export class SceneStore extends SimpleInterval {
     // TODO: native adapter
     if (this.appStore.isElectron) {
       // native sdk默认0是本地音量
-      volume = this.appStore.mediaStore.speakers.get(0) || 0
+      volume = this.appStore.speakers.get(0) || 0
       return this.fixNativeVolume(volume)
     }
     if (this.appStore.isWeb && get(this, 'cameraEduStream.streamUuid', 0)) {
-      volume = this.appStore.mediaStore.speakers.get(+this.cameraEduStream.streamUuid) || 0
+      volume = this.appStore.speakers.get(+this.cameraEduStream.streamUuid) || 0
       return this.fixWebVolume(volume)
     }
     return volume
@@ -1685,9 +1721,9 @@ export class SceneStore extends SimpleInterval {
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
           online: this.queryUserIsOnline(user.userUuid),
           onPodium: this.queryUserIsOnPodium(stream.streamUuid),
-          micDevice: this.localMicrophoneDeviceState,
-          cameraDevice: this.localCameraDeviceState,
-          isLocal: true,
+          cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, stream.streamUuid),
+          micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, stream.streamUuid),
+          isLocal: false,
           hasStream: !!this.cameraEduStream,
         } as any)
         return acc;

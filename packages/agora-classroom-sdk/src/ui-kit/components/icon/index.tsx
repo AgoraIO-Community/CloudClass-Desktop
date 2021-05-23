@@ -8,6 +8,7 @@ import './index.css';
 import './style.css';
 import { Tooltip, TooltipPlacement } from '../tooltip';
 import { transI18n } from '../i18n';
+import { EduLogger } from 'agora-rte-sdk';
 
 export type { IconTypes } from './icon-types';
 
@@ -178,6 +179,8 @@ type MediaIconArgs = {
 
 export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
 
+  EduLogger.info("getMediaIconProps, args ", JSON.stringify(args))
+
   const {
     muted,
     deviceState,
@@ -221,7 +224,6 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
       }
     } else {
       if (!online || !onPodium || deviceState === 2 || !hasStream) {
-        console.log('不可用 ', ' uid', JSON.stringify(args))
         return {
           hover: false,
           state: 'not-available',
@@ -230,7 +232,6 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
         }
       }
       if (hasStream && muted === false) {
-        console.log('available muted ', JSON.stringify(args))
         return {
           hover: canHover,
           state: 'available',
@@ -239,7 +240,6 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
         }
       }
       if (deviceState === 0 || deviceState === 2) {
-        console.log('不可用 deviceState ', JSON.stringify(args))
         return {
           hover: false,
           state: 'not-available',
@@ -247,7 +247,6 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
           type: type
         }
       }
-      console.log('available indeed ', JSON.stringify(args))
       return {
         hover: canHover,
         state: 'available',

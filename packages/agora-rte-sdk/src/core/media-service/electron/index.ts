@@ -1219,12 +1219,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           code: ret
         }
       }
-      if (this._cefClient) {
-        //@ts-ignore
-        this.client.audioDeviceManager.stopRecordingDeviceTest()
-      } else {
-        this.client.stopAudioRecordingDeviceTest()
-      }
+      // if (this._cefClient) {
+      //   //@ts-ignore
+      //   this.client.audioDeviceManager.stopRecordingDeviceTest()
+      // } else {
+      //   this.client.stopAudioRecordingDeviceTest()
+      // }
       if (this.joined) {
         ret = this.client.muteLocalAudioStream(true)
         this.audioMuted = true

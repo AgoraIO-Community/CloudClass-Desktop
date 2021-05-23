@@ -310,6 +310,12 @@ export class EduClassroomDataController {
           const cause = data?.cause ?? undefined
 
           const operations: Record<string, CallableFunction> = {
+            4: (data: any) => {
+              const changeProperties = data.changeProperties
+              return {
+                ...changeProperties
+              }
+            },
             // muted chat
             6: (data: any) => {
               const changeProperties = data.changeProperties
@@ -325,6 +331,7 @@ export class EduClassroomDataController {
           const operator = operations[cmd]
           if (operator) {
             const res = operator(data)
+            // mute chat 
             if (res.hasOwnProperty('muteChat')) {
               this.updateUserChatMute(
                 {
@@ -334,6 +341,19 @@ export class EduClassroomDataController {
                 userOperator,
                 cause
                 )
+            }
+            if (res.hasOwnProperty('device.camera') || res.hasOwnProperty('device.mic')) {
+              const [path] = Object.keys(res)
+              const value = res[path]
+              this.updateUserDevice(
+                {
+                  path,
+                  value,
+                  userUuid: fromUser.userUuid
+                },
+                userOperator,
+                cause
+              )
             }
           } else {
             const user = MessageSerializer.getChangedUser(data)
@@ -948,6 +968,35 @@ export class EduClassroomDataController {
       }
     }
   }
+
+    // TODO: workaround
+  updateUserDevice(data: any, operator: any, cause: any) {
+    if (this.isLocalUser(data.userUuid)) {
+      this.localUser.updateUserDevice(data.path, data.value)
+      const findUser = this._userList.find((it: any) => it.user.userUuid === data.userUuid)
+      if (findUser) {
+        findUser.updateUserDevice(data.path, data.value)
+      }
+      this.fire('local-user-updated', {
+        user: this.localUserData,
+        //@ts-ignore
+        muteChat: data.muteChat,
+        operator: operator,
+        cause: cause
+      })
+    } else {
+      const findUser = this._userList.find((it: any) => it.user.userUuid === data.userUuid)
+      if (findUser) {
+        findUser.updateUserDevice(data.path, data.value)
+        this.fire('remote-user-updated', {
+          user: findUser,
+          //@ts-ignore
+          muteChat: data.muteChat,
+          operator,
+          cause})
+      }
+    }
+    }
 
   // TODO: workaround
   updateUserChatMute(data: any, operator: any, cause: any) {

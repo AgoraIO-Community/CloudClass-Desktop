@@ -321,11 +321,34 @@ export class PretestStore {
     // return this._speakerList
   }
 
+  @observable
+  private initRecords: Record<'videoDeviceInit' | 'audioDeviceInit', boolean> = {
+    videoDeviceInit: false,
+    audioDeviceInit: false
+  }
+
   init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
     if (option.video) {
+      const videoDeviceInit = this.initRecords.videoDeviceInit
+      if (!this.initRecords.videoDeviceInit) {
+        this.initRecords.videoDeviceInit = true
+      }
       this.mediaService.getCameras().then((list: any[]) => {
+        if (this.appStore.isElectron && this.cameraLabel !== CustomizeDeviceLabel.Disabled) {
+          const label = this.mediaService.getCameraLabel()
+          this.updateCameraLabel(label)
+          this.updateTestCameraLabel()
+        }
         runInAction(() => {
-          if (list.length > this._cameraList.length) {
+          if (videoDeviceInit && list.length > this._cameraList.length) {
+            const appStore = this.appStore
+            if (appStore.isNotInvisible) {
+              appStore.mediaStore.pretestNotice.next({
+                type: 'video',
+                info: 'device_changed',
+                id: uuidv4()
+              })
+            }
             this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
           }
           this._cameraList = list
@@ -333,9 +356,26 @@ export class PretestStore {
       })
     }
     if (option.audio) {
+      const audioDeviceInit = this.initRecords.audioDeviceInit
+      if (!this.initRecords.audioDeviceInit) {
+        this.initRecords.audioDeviceInit = true
+      }
       this.mediaService.getMicrophones().then((list: any[]) => {
+        if (this.appStore.isElectron && this.microphoneLabel !== CustomizeDeviceLabel.Disabled) {
+          const label = this.mediaService.getMicrophoneLabel()
+          this.updateMicrophoneLabel(label)
+          this.updateTestMicrophoneLabel()
+        }
         runInAction(() => {
-          if (list.length > this._microphoneList.length) {
+          if (audioDeviceInit && list.length > this._microphoneList.length) {
+            const appStore = this.appStore
+            if (appStore.isNotInvisible) {
+              appStore.mediaStore.pretestNotice.next({
+                type: 'audio',
+                info: 'device_changed',
+                id: uuidv4()
+              })
+            }
             this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
           }
           this._microphoneList = list
@@ -369,12 +409,18 @@ export class PretestStore {
   muteMicrophone() {
     this.microphoneLabel = CustomizeDeviceLabel.Disabled
     this._microphoneId = AgoraMediaDeviceEnum.Disabled
+    if (this.isElectron) {
+      this.mediaService.electron.client.stopAudioRecordingDeviceTest()
+    }
     this.appStore.mediaStore.totalVolume = 0
   }
 
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
     this._cameraId = AgoraMediaDeviceEnum.Disabled
+    if (this.isElectron) {
+      this.mediaService.electron.closeCamera()
+    }
   }
 
   @action.bound
@@ -502,7 +548,11 @@ export class PretestStore {
         this.muteMicrophone()
         return
       } else {
+        const prevDeviceMicrophoneId = this._microphoneId
         await this.mediaService.changeTestMicrophone(deviceId)
+        if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
+          this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+        }
         this.updateTestMicrophoneLabel()
       }
     } catch(err) {
@@ -627,8 +677,13 @@ export class PretestStore {
     } else {
       let sceneCameraRenderer = this.appStore.sceneStore._cameraRenderer
       if (sceneCameraRenderer) {
-        if (this.appStore.isElectron) {
+        if (this.isElectron) {
           sceneCameraRenderer.stop()
+          if (this.appStore.sceneStore.cameraEduStream) {
+            if (this.appStore.sceneStore.cameraEduStream.hasVideo) {
+              this.mediaService.electron.client.muteLocalVideoStream(false)
+            }
+          }
           await this.mediaService.changeCamera(deviceId)
           sceneCameraRenderer = this.mediaService.cameraRenderer
         } else {
@@ -737,6 +792,13 @@ export class PretestStore {
       }
       this.muteMicrophone()
     } else {
+      if (this.isElectron) {
+        if (this.appStore.sceneStore.cameraEduStream) {
+          if (this.appStore.sceneStore.cameraEduStream.hasAudio) {
+            this.mediaService.electron.client.muteLocalAudioStream(false)
+          }
+        }
+      }
       await this.mediaService.changeMicrophone(deviceId)
       if (this.isWeb) {
         this._microphoneTrack = this.web.microphoneTrack

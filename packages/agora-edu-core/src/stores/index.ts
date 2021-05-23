@@ -36,6 +36,9 @@ export class EduScenarioAppStore {
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
   _uploadService?: UploadService;
+  
+  @observable
+  speakers: Map<number, number> = new Map();
 
   get boardService() {
     return this._boardService as EduBoardService;

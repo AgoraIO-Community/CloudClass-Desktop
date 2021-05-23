@@ -541,6 +541,10 @@ export class EduUserData {
     setWith(this._user!, 'userProperties.mute.muteChat', !!v)
   }
 
+  updateUserDevice(path: 'device.camera' | 'device.mic', v: number) {
+    setWith(this._user!, `userProperties.${path}`, v)
+  }
+
   get rtcToken(): string {
     return this._rtcToken as string;
   }

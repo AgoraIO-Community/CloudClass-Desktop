@@ -18,6 +18,10 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
     canHoverHideOffAllPodium,
   } = useVideoControlContext()
 
+  const {
+    userType
+  } = useGlobalContext()
+
   return (
     <VideoPlayer
       isHost={sceneVideoConfig.isHost}
@@ -48,7 +52,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       controlPlacement={'left'}
       placement={'left'}
       onOffPodiumClick={onOffPodiumClick}
-      userType={'teacher'}
+      userType={userType}
       className={className}
       style={style}
     >
@@ -83,6 +87,11 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
     sceneVideoConfig,
     onOffPodiumClick,
   } = useVideoControlContext()
+
+
+  const {
+    userType
+  } = useGlobalContext()
   
   return (
     <VideoPlayer
@@ -112,6 +121,8 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       placement={controlPlacement}
       style={style}
       className={className}
+      showGranted={true}
+      userType={userType}
     >
       {
         <>
@@ -203,12 +214,17 @@ export const VideoMarqueeStudentContainer = observer(() => {
     sceneType
   } = useRoomContext()
 
+  const {
+    userType
+  } = useGlobalContext()
+
   return (
     videoStreamList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
           hideStars={sceneType === 2}
           videoStreamList={videoStreamList}
+          userType={userType}
           onCameraClick={onCameraClick}
           onMicClick={onMicClick}
           onSendStar={onSendStar}

@@ -292,25 +292,25 @@ export class MediaStore {
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed ", info)
-      if (appStore.isNotInvisible) {
-        if (appStore.isWeb) {
-          this.pretestNotice.next({
-            type: 'audio',
-            info: 'device_changed',
-            id: uuidv4()
-          })
-        }
-      }
+      // if (appStore.isNotInvisible) {
+      //   if (appStore.isWeb) {
+      //     this.pretestNotice.next({
+      //       type: 'audio',
+      //       info: 'device_changed',
+      //       id: uuidv4()
+      //     })
+      //   }
+      // }
 
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
-        if (type === DeviceChangedDeviceType.AUDIO_RECORDING_DEVICE) {
-          this.pretestNotice.next({
-            type: 'audio',
-            info: 'device_changed',
-            id: uuidv4()
-          })
-        }
+        // if (type === DeviceChangedDeviceType.AUDIO_RECORDING_DEVICE) {
+        //   this.pretestNotice.next({
+        //     type: 'audio',
+        //     info: 'device_changed',
+        //     id: uuidv4()
+        //   })
+        // }
         if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
           handleDevicePulled({resource: 'audio'})
         }
@@ -323,25 +323,25 @@ export class MediaStore {
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
       BizLogger.info("video device changed ", info)
-      if (appStore.isNotInvisible) {
-        if (appStore.isWeb) {
-          this.pretestNotice.next({
-            type: 'video',
-            info: 'device_changed',
-            id: uuidv4()
-          })
-        }
-      }
+      // if (appStore.isNotInvisible) {
+      //   if (appStore.isWeb) {
+      //     this.pretestNotice.next({
+      //       type: 'video',
+      //       info: 'device_changed',
+      //       id: uuidv4()
+      //     })
+      //   }
+      // }
 
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
-        if (type === DeviceChangedDeviceType.VIDEO_CAPTURE_DEVICE) {
-          this.pretestNotice.next({
-            type: 'video',
-            info: 'device_changed',
-            id: uuidv4()
-          })
-        }
+        // if (type === DeviceChangedDeviceType.VIDEO_CAPTURE_DEVICE) {
+        //   this.pretestNotice.next({
+        //     type: 'video',
+        //     info: 'device_changed',
+        //     id: uuidv4()
+        //   })
+        // }
         if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
           handleDevicePulled({resource: 'video'})
         }
@@ -433,30 +433,30 @@ export class MediaStore {
     this.mediaService.on('localVideoStats', (evt: any) => {
       let {freezeCount} = evt
       BizLogger.info("localVideoStats", " encode fps " , evt.stats.encoderOutputFrameRate, ', freeze: ', freezeCount)
-      autorun(() => {
+      // autorun(() => {
         if(this.cameraRenderer) {
           this.cameraRenderer.freezeCount = freezeCount
         }
-      })
+      // })
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       let {stats = {}, user = {}} = evt
       let {uid} = user
       BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
-      autorun(() => {
+      // autorun(() => {
         this.updateRemoteVideoStats(`${uid}`, stats)
-      })
+      // })
     })
 
     reaction(() => JSON.stringify([
       this.appStore.roomStore.roomJoined,
-      this.appStore.sceneStore.teacherStream,
+      this.appStore.sceneStore.teacherStreamInfo,
       this.appStore.roomStore.roomInfo
     ]), (data: string) => {
-      const [roomJoined, teacherStream, roomInfo] = JSON.parse(data)
-      if (roomJoined && teacherStream && roomInfo) {
+      const [roomJoined, teacherStreamInfo, roomInfo] = JSON.parse(data)
+      if (roomJoined && teacherStreamInfo && roomInfo) {
         const {userRole} = roomInfo
-        const {userUuid, streamUuid, micDevice, cameraDevice, hasAudio, hasVideo} = teacherStream
+        const {userUuid, streamUuid, micDevice, cameraDevice, hasAudio, hasVideo} = teacherStreamInfo
         if (userUuid && streamUuid && userRole !== 'student') {
           if (!!hasAudio && micDevice === 0 
             || !!hasVideo && cameraDevice === 0) {
@@ -511,8 +511,10 @@ export class MediaStore {
   @observable
   totalVolume: number = 0
   
-  @observable
-  speakers = new Map<number, number>()
+  @computed
+  get speakers() {
+    return this.appStore.speakers
+  }
 
   updateSpeaker(uid: number, value: number) {
     this.speakers.set(+uid, value)
