@@ -64,6 +64,48 @@
 
   </style>
   <script>
+
+
+    let readyState = {
+        dns: -1,
+        dom: -1,
+        lib: -1,
+        params: null
+    }
+    window.addEventListener('message', function(e) {  
+      if (e.source != window.parent)   
+          return;
+      let data = e.data
+      let {appId, options, cachePath, cmd, data:aData} = JSON.parse(data)
+
+      if(cmd) {
+        if(cmd === 'screenshot') {
+          if(window.globalStore 
+            && window.globalStore.acadsocStore) {
+              if(aData) {
+                const {amount = 0} = aData
+                window.globalStore.acadsocStore.highlightCount = parseInt(amount)
+              }
+          }
+        }
+      } else {
+        if(!options || !appId) {
+          document.querySelector("#root1").textContent = "launchOption/appid missing"
+        } else {
+            // if(AgoraEduSDK.setParameters) {
+            //   AgoraEduSDK.setParameters(JSON.stringify({
+            //     "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
+            //     "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
+            //   }))
+            //   console.log(`AgoraEduSDK setParameters called`)
+            // }
+            readyState.params = {appId, options, cachePath}
+        }
+      }
+          
+    }, false);
+
+
     const update_status = (status) => {
       let div = document.getElementById('status-label')
       if(div) {
@@ -72,17 +114,29 @@
     }
 
 
+    const launchApplication = ({appId, cachePath, options}) => {
+      AgoraEduSDK.config({
+        appId,
+        cachePath
+      })
+
+      options["userUuid"] = options["rtmUid"]
+      
+      Object.assign(options, {
+        listener: (evt, args) => {
+          console.log("evt", evt, args)
+          window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
+        }
+      })
+      AgoraEduSDK.launch(
+        document.querySelector("#root1"), options
+      )
+    }
+
     const collectPerformance = () => {
       if (performance === undefined) {
         update_status('Loading...Unknown Environment')
         return;
-      }
-
-      let readyState = {
-        dns: -1,
-        dom: -1,
-        lib: -1,
-        paint: -1
       }
       let entries = performance.getEntries();
       let results = []
@@ -93,19 +147,20 @@
           readyState.dns = (entry.domainLookupEnd - entry.domainLookupStart).toFixed(2)
         } else if(entry.entryType === 'resource' && entry.name.includes('edu_sdk.bundle.js')) {
           readyState.lib = entry.duration.toFixed(2)
-        } else if(entry.entryType === 'paint' && entry.name === 'first-paint') {
-          readyState.paint = 0
         }
       }
 
       update_status([
+        `Configurations ${readyState.params === null ? 'loading...' : 'loaded'}`,
         `DNS ${readyState.dns < 0 ? 'loading...' : readyState.dns+'ms'}`,
         `Document ${readyState.dom <= 0 ? 'loading...' : readyState.dom+'ms'}`,
         `Library ${readyState.lib <= 0 ? 'loading...' : readyState.lib+'ms'}`
       ].join('\r\n'))
 
-      if(readyState.dom <= 0 || readyState.lib <= 0 || readyState.paint === -1) {
+      if(readyState.dom <= 0 || readyState.lib <= 0 || readyState.params === null) {
         setTimeout(collectPerformance, 200)
+      } else {
+        launchApplication(readyState.params)
       }
     }
 
@@ -120,57 +175,8 @@
       <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
     </div>
   </div>
-  <div class="footer">v1.1.1.5</div>
+  <div class="footer">v1.1.1.6</div>
   <div id="root1"></div>
-  <script type="text/javascript">
-    window.addEventListener('message', function(e) {  
-        if (e.source != window.parent)   
-            return;
-        let data = e.data
-        let {appId, options, cachePath, cmd, data:aData} = JSON.parse(data)
-
-        if(cmd) {
-          if(cmd === 'screenshot') {
-            if(window.globalStore 
-              && window.globalStore.acadsocStore) {
-                if(aData) {
-                  const {amount = 0} = aData
-                  window.globalStore.acadsocStore.highlightCount = parseInt(amount)
-                }
-            }
-          }
-        } else {
-          if(!options || !appId) {
-            document.querySelector("#root1").textContent = "launchOption/appid missing"
-          } else {
-              // if(AgoraEduSDK.setParameters) {
-              //   AgoraEduSDK.setParameters(JSON.stringify({
-              //     "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
-              //     "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
-              //   }))
-              //   console.log(`AgoraEduSDK setParameters called`)
-              // }
-              AgoraEduSDK.config({
-                  appId,
-                  cachePath
-              })
-
-              options["userUuid"] = options["rtmUid"]
-              
-              Object.assign(options, {
-                listener: (evt, args) => {
-                  console.log("evt", evt, args)
-                  window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
-                }
-              })
-              AgoraEduSDK.launch(
-                  document.querySelector("#root1"), options
-              )
-          }
-        }
-          
-    }, false);
-  </script>
   <script src="./edu_sdk.bundle.js"></script>
 </body>
 

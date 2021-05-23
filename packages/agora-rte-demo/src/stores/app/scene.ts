@@ -608,7 +608,7 @@ export class SceneStore extends SimpleInterval {
     this.setOpeningCamera(true, this.roomInfo.userUuid)
     try {
       await Promise.all([
-        this.openCamera(),
+        this.openCamera(this.videoEncoderConfiguration),
         this.roomManager?.userService.updateMainStreamState({'videoState': true})
       ])
       this.setOpeningCamera(false, this.roomInfo.userUuid)

@@ -7,11 +7,12 @@
 <body style="height:100%;margin:0;padding:0">
     <script>
         //iframe接收消息，并把当前颜色发送给主页面
-        window.onload = () => {
-            let btn = document.querySelector('#btn')
-            btn.onclick = () => {
+        // window.onload = () => {
+        //     let btn = document.querySelector('#btn')
+            const start = (cname) => {
                 let iframe = document.querySelector('#agoraproxy')
-                let roomUuid = document.querySelector('#roomUuid').value
+                // let roomUuid = document.querySelector('#roomUuid').value
+                let roomUuid = cname
 
 
                 // const courseWareList = JSON.parse(`[{\"resourceName\":\"todo:课件名\",\"resourceUuid\":\"75704928_109133\",\"ext\":\"pptx\",\"url\":\"\",\"conversion\":{\"type\":\"dynamic\"},\"size\":13,\"updateTime\":0,\"scenes\":[{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/1.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 1\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/2.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 2\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/3.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 3\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/4.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 4\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/5.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 5\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/6.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 6\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/7.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 7\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/8.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 8\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/9.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 9\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/10.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 10\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/11.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 11\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/12.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 12\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/13.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 13\"}],\"convert\":true,\"taskUuid\":\"97387cd0ec2811ea83a68f3545d7926d\",\"taskToken\":null,\"taskProgress\":{\"totalPageSize\":13,\"convertedPageSize\":13,\"convertedPercentage\":100,\"convertedFileList\":[{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/1.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 1\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/2.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 2\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/3.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 3\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/4.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 4\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/5.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 5\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/6.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 6\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/7.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 7\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/8.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 8\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/9.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 9\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/10.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 10\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/11.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 11\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/12.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 12\"},{\"ppt\":{\"src\":\"pptx://cover.herewhite.com//dynamicConvert/97387cd0ec2811ea83a68f3545d7926d/13.slide\",\"width\":1890,\"height\":1058},\"name\":\"Scene 13\"}]}}]`)
@@ -21,9 +22,9 @@
                 // let opts = JSON.parse(`{"userUuid":"UID_10018690","rtmToken":"006d2931ea1715c4bc9b36608770bcf6d01IACRFrBvPbW6JM3XD/GDgAUm0TFF2T3pcogFNP+VapSmzTlLOSEAAAAAEADFnn1JmTFOYAEA6AOpfUxg","rtmUid":"10018690","userName":"声网1","roomUuid":"09fe42f080bb11ebb1a3d35074fec6fb2","roleType":2,"roomType":0,"roomName":"75702143","language":"zh","translateLanguage":"auto","courseWareList":,"duration":1500,"pretest":true}`)
 
                 const teachers = [
-                    {userUuid: "teacher01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABCOVVWy/DmjKoHvHNyqpC4u5BN8osTWJbq9hth1heqEUejuwwAAAAAEABTN9PNO9epYAEA6AM716lg"},
-                    {userUuid: "teacher02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IADPoAntRNRg5qBGYjrNTEonVrWlMC4japRQWYTl19T7WP3yspUAAAAAEABTN9PNSNepYAEA6ANI16lg"},
-                    {userUuid: "teacher03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAB1nLZK7bSNVL/B7MvjcRWFUyT4PUkGxQ9xFBciwboOPGvCteIAAAAAEABTN9PNV9epYAEA6ANX16lg"}
+                    {userUuid: "teacher01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABxX3pMa29fitHSwrzuty8maFUJB5T/dSVyMSH2baYa4EejuwwAAAAAEAAvUA+dhsCrYAEA6AOGwKtg"},
+                    {userUuid: "teacher02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IACNs74rrlzJ2WPn1rTP0OUGpGY+3kQAfG83AiR89+Nt7v3yspUAAAAAEAAvUA+dkcCrYAEA6AORwKtg"},
+                    {userUuid: "teacher03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABUmz0S7dhVa8wtADNUrQdTo/DQgpTmZMQ1GcRiiF3WqmvCteIAAAAAEAAvUA+dmsCrYAEA6AOawKtg"}
                 ]
 
                 const idx = document.querySelector('#userPicker').value
@@ -72,7 +73,10 @@
                     }
                 })
             }
-        }
+            // window.onload = () => {
+                setTimeout(() => {start("test")}, Math.random() * 3)
+            // }
+        // }
         
     </script>
     <select id="userPicker">
@@ -82,6 +86,6 @@
     </select>
     <input id="roomUuid" placeholder="roomUuid"></input>
     <button id="btn">test</button>
-    <iframe style="width:100%;height:100%;border:0;" allow="camera;microphone" frameBorder="0" id="agoraproxy" src="https://solutions-apaas.agora.io/acadsoc/1.1.1.4/app/classroom.html"></iframe>
+    <iframe style="width:100%;height:100%;border:0;" allow="camera;microphone" frameBorder="0" id="agoraproxy" src="http://localhost:8080/template/classroom.html"></iframe>
 </body>
 </html>

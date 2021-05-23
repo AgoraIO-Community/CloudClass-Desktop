@@ -540,7 +540,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
     }
     if (this.isElectron) {
-      await this.sdkWrapper.openCamera()
+      await this.sdkWrapper.openCamera(option)
 
       if (!this.cameraRenderer) {
         this.cameraRenderer = new LocalUserRenderer({
