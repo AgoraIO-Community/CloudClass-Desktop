@@ -5,6 +5,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { ScreenShareType } from 'agora-rte-sdk';
+
+export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
+
 export type Resource = {
     file: {
         name: string,
@@ -257,7 +260,7 @@ export type PretestContext = {
     /**
      * 按照预置 初始化摄像头麦克风，打开检测摄像头麦克风
      */
-    installPretest: () => () => void,
+    installPretest: (error: DeviceErrorCallback) => () => void,
     /**
      * 开启摄像头
      */

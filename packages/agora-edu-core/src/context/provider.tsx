@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
-import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext } from './type'
+import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext, DeviceErrorCallback } from './type'
 
 export type {
  CoreAppContext,
@@ -103,15 +103,8 @@ export const usePretestContext = (): PretestContext => {
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
 
-  const installPretest = () => {
-    const removeEffect = pretestStore.onDeviceTestError(({ type, error }) => {
-      if (type === 'video') {
-        setCameraError(error)
-      }
-      if (type === 'audio') {
-        setMicrophoneError(error)
-      }
-    })
+  const installPretest = (onError: DeviceErrorCallback) => {
+    const removeEffect = pretestStore.onDeviceTestError(onError)
     pretestStore.init({ video: true, audio: true })
     pretestStore.openTestCamera()
     pretestStore.openTestMicrophone({ enableRecording: true })

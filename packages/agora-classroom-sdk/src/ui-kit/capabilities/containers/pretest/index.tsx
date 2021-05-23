@@ -2,9 +2,10 @@ import { useGlobalContext, usePretestContext, useVolumeContext } from 'agora-edu
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Modal, Pretest, t } from '~ui-kit'
+import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
-import { Volume } from '~components/volume';
+import { Volume } from '~components/volume'
+import {v4 as uuidv4} from 'uuid'
 
 
 const VideoPreviewPlayer = observer(() => {
@@ -46,24 +47,9 @@ const VolumeIndicationView = observer(() => {
 
 
 export const PretestContainer = observer(() => {
-    // const {
-    //     cameraList,
-    //     microphoneList,
-    //     speakerList,
-    //     cameraId,
-    //     microphoneId,
-    //     isMirror,
-    //     setMirror,
-    //     changeTestSpeakerVolume,
-    //     changeTestMicrophoneVolume,
-    //     installPretest,
-    //     changeTestCamera,
-    //     changeTestMicrophone,
-    //     stopPretestCamera,
-    //     stopPretestMicrophone,
-    //     pretestNoticeChannel,
-    // } = usePretestContext()
     const {
+        cameraError,
+        microphoneError,
         cameraList,
         microphoneList,
         speakerList,
@@ -81,7 +67,11 @@ export const PretestContainer = observer(() => {
         pretestNoticeChannel,
     } = usePretestContext()
 
-    useEffect(() => installPretest(), [])
+    const handleError = (evt: any) => {
+        pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
+    }
+
+    useEffect(() => installPretest(handleError), [])
 
     const onChangeDevice = async (type: string, value: any) => {
         switch (type) {

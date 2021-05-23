@@ -289,7 +289,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   );
   return (
     <Popover
-      trigger="click"
       align={{
         offset: [-8, 0],
       }}

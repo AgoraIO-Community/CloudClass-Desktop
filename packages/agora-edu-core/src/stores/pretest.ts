@@ -6,10 +6,13 @@ import { AgoraMediaDeviceEnum } from "../types"
 import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit"
 import {v4 as uuidv4} from 'uuid'
 import { Subject } from 'rxjs'
+import { DeviceErrorCallback } from "../context/type"
 
 export enum CustomizeDeviceLabel {
   Disabled = 'disabled'
 }
+
+
 
 export class PretestStore {
   static resolutions: any[] = [
@@ -198,7 +201,7 @@ export class PretestStore {
 
   id: string = uuidv4()
 
-  error$!: Subject<{type: 'video' | 'audio', error: boolean}>
+  error$!: Subject<{type: 'video' | 'audio', error: boolean, info: string}>
 
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] pretestStore ### ", this.id)
@@ -206,8 +209,8 @@ export class PretestStore {
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange)
   }
 
-  onDeviceTestError(cb: (evt: {type: 'video' | 'audio', error: boolean}) => void) {
-    this.error$ = new Subject<{type: 'video' | 'audio', error: boolean}>()
+  onDeviceTestError(cb: DeviceErrorCallback) {
+    this.error$ = new Subject<{type: 'video' | 'audio', error: boolean, info: string}>()
     this.error$.subscribe({
       next: (value: any) => cb(value)
     })
@@ -323,7 +326,7 @@ export class PretestStore {
       this.mediaService.getCameras().then((list: any[]) => {
         runInAction(() => {
           if (list.length > this._cameraList.length) {
-            this.appStore.uiStore.fireToast('detect_new_device_in_room', {type: 'video'})
+            this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
           }
           this._cameraList = list
         })
@@ -333,7 +336,7 @@ export class PretestStore {
       this.mediaService.getMicrophones().then((list: any[]) => {
         runInAction(() => {
           if (list.length > this._microphoneList.length) {
-            this.appStore.uiStore.fireToast('detect_new_device_in_room', {type: 'audio'})
+            this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
           }
           this._microphoneList = list
         })
@@ -390,7 +393,7 @@ export class PretestStore {
     } catch(err) {
       const error = GenericErrorWrapper(err)
       this.muteCamera()
-      this.error$ && this.error$.next({type: 'video', error: true})
+      this.error$ && this.error$.next({type: 'video', error: true, info: 'pretest.device_not_working'})
       throw error
     }
     // this.appStore.deviceInfo.cameraName = this.cameraLabel
@@ -429,7 +432,7 @@ export class PretestStore {
       }
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'video', error: true})
+      this.error$ && this.error$.next({type: 'video', error: true, info: 'pretest.device_not_working'})
       throw error
     }
   }
@@ -450,7 +453,7 @@ export class PretestStore {
     } catch(err) {
       this.muteMicrophone()
       const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'audio', error: true})
+      this.error$ && this.error$.next({type: 'audio', error: true, info: 'pretest.device_not_working'})
       throw error
     }
   }
@@ -504,7 +507,7 @@ export class PretestStore {
       }
     } catch(err) {
       const error = GenericErrorWrapper(err)
-      this.error$ && this.error$.next({type: 'audio', error: true})
+      this.error$ && this.error$.next({type: 'audio', error: true, info: 'pretest.device_not_working'})
       // PretestStore.errCallback(error, 'audio')
       throw error
     }

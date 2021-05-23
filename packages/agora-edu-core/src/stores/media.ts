@@ -223,7 +223,7 @@ export class MediaStore {
     console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
 
-    const handleDevicePulled = (evt: {resource: 'video' | 'audio'}) => {
+    const handleDevicePulled = (evt: {resource: string}) => {
       const notice = MediaDeviceState.getNotice(evt.resource)
       if (notice) {
         if (!this.pretestNotice.isStopped) {
@@ -464,7 +464,7 @@ export class MediaStore {
         }).catch((err) => {
           BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
         }).then(() => {
-          BizLogger.info(`[CAMERA] report camera device not working`)
+          BizLogger.info(`[MEDIA] report camera device not working`)
         })
         eduSDKApi.reportMicState({
           roomUuid: roomUuid,
@@ -473,7 +473,7 @@ export class MediaStore {
         }).catch((err) => {
           BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
         }).then(() => {
-          BizLogger.info(`[CAMERA] report mic device not working`)
+          BizLogger.info(`[MEDIA] report mic device not working`)
         })
       }
     })
