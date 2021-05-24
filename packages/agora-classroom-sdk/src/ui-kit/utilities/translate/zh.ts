@@ -204,6 +204,7 @@ export const zh = {
     'failed_to_initiate_a_raise_of_hand_application': '发起举手申请失败',
     'failed_to_end_the_call': '结束通话失败',
     'failed_to_join_board': '加入白板失败',
+    'stop_screen_share_failed': '停止屏幕共享失败',
     'classroom_remote_join': '账号在远端设备登录，您已离开教室',
     'time_interval_between_start': `距离上课开始还有: {reason}`,
     'time_interval_between_end': `课程还有{reason}结束`,
