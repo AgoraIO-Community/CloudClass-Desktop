@@ -2037,22 +2037,21 @@ export class BoardStore extends ZoomController {
   scaleToFit() {
     if (this.isH5IFrame) {
       this.iframe.scaleIframeToFit()
-    } else {
-      this.room.scalePptToFit()
     }
-  }
+    this.room.scalePptToFit()
+  } 
 
   @action.bound
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[0].ppt || this.isH5IFrame) {
-      this.scaleToFit()
-    } else {
+    if (!isEmpty(this.room.state.sceneState.scenes) 
+    && !this.room.state.sceneState.scenes[0].ppt) {
       this.room.moveCamera({
         centerX: 0,
         centerY: 0,
         scale: 1,
       })
     }
+    this.scaleToFit()
   }
 
   @computed

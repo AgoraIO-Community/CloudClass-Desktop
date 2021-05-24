@@ -57,7 +57,7 @@
   background-image: url('./assets/svg/teacher-granted-active.svg'); 
 }
 .icon-teacher-whiteboard.teacher-whiteboard {
-  background-image: url('./assets//svg/teacher-granted-default.svg');
+  background-image: url('./assets/svg/teacher-granted-default.svg');
 }
 .icon-student-authorized.student-authorized {
   background-image: url('./assets/svg/student-granted-active.svg'); 

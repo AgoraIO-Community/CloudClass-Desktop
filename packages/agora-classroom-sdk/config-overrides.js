@@ -89,7 +89,6 @@ const isProd = process.env.ENV === 'production';
 const addStyleLoader = () => (config) => {
   config.module.rules.push({
     test: /\.css$/,
-    exclude: /node_modules/,
     include: path.resolve(__dirname, 'src'),
     use: [
       // No need for "css-loader" nor "style-loader"
@@ -249,7 +248,6 @@ const webpackConfig = override(
   addWebpackExternals(setElectronDeps),
   adjustStyleLoaders((loader) => {
     loader.exclude = [
-      /node_modules/,
       path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
     ]
   }),
