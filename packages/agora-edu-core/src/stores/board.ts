@@ -4,8 +4,8 @@ import OSS from 'ali-oss';
 import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
-import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
 import { ConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
@@ -239,21 +239,7 @@ export class BoardStore extends ZoomController {
 
   @observable
   downloading: boolean = false
-
-  // @action.bound
-  // changeScenePath(path: string) {
-  //   this.activeScenePath = path
-  //   if (this.online && this.room) {
-  //     const id = this.room.state.sceneState.contextPath.replace('/', '')
-  //     const resource = this.allResources.find((it: any) => it.id === id)
-  //     if (resource && resource.ext === 'h5') {
-  //       console.log("changeScenePath insertH5 ", id, resource)
-  //       return this.insertH5(resource.url, id)
-  //     }
-  //     this.room.setScenePath(this.activeScenePath)
-  //   }
-  // }
-
+  
   appStore!: EduScenarioAppStore
 
   @observable
@@ -633,11 +619,6 @@ export class BoardStore extends ZoomController {
       await this.appStore.sceneStore.stopRTCSharing()
       this.removeScreenShareScene()
     } else {
-      // const iframe = this.iframeList.get(currentSceneState.contextPath)
-      // if (iframe) {
-      //   await iframe.destroy()
-      // }
-      // if (this)
       this.room.setGlobalState({
         roomScenes: {
           ...roomScenes,
@@ -910,7 +891,7 @@ export class BoardStore extends ZoomController {
       this.scale = this.room.state.zoomScale
     }
   }
-
+  
   @action.bound
   setGrantPermission(v: boolean) {
     this._grantPermission = v
@@ -1127,9 +1108,17 @@ export class BoardStore extends ZoomController {
   @observable
   laserPoint: boolean = false
 
+  @computed
+  get boardRoomIsAvailable() {
+    if (!this.room || this.room && this.room.phase !== RoomPhase.Connected) {
+      return false
+    }
+    return true
+  }
+
   @action.bound
   setLaserPoint() {
-    if (this.room) {
+    if (!this.boardRoomIsAvailable) {
       this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
@@ -1142,7 +1131,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   setTool(tool: string) {
-    if (!this.room) return
+    if (!this.boardRoomIsAvailable) return
 
     switch(tool) {
       case 'blank-page': {
