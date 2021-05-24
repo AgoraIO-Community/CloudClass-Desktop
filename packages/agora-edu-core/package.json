@@ -1,6 +1,6 @@
 {
   "name": "agora-edu-core",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "main": "lib/index.js",
   "keywords": [
     "Agora",
@@ -74,7 +74,6 @@
     "lodash": "4.17.21",
     "mobx": "5.15.4",
     "mobx-react": "6.3.1",
-    "protobufjs": "^6.11.2",
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
