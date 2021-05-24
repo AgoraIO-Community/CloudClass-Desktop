@@ -396,7 +396,6 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
 
-  console.log('Record isRecording ', starting)
   const { removeDialog, addToast } = useGlobalContext()
   const {
     startRecording,

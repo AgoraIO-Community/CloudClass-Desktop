@@ -54,11 +54,9 @@ export const SettingContainer = observer(({ id }: any) => {
             width={360}
             footer={[<Button action="ok">{t('toast.confirm')}</Button>]}
             onCancel={() => {
-                // uiStore.removeDialog(id)
                 removeDialog(id)
             }}
             onOk={() => {
-                // uiStore.removeDialog(id)
                 removeDialog(id)
             }}
         >

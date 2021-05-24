@@ -911,37 +911,6 @@ export class BoardStore extends ZoomController {
     }
   }
 
-  // @action.bound
-  // setFollow(v: boolean) {
-  //   this.follow = v
-
-  //   const isTeacher = this.userRole === EduRoleTypeEnum.teacher
-
-  //   if (isTeacher) {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.appStore.uiStore.fireToast('toast.open_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Broadcaster)
-  //       } else {
-  //         this.appStore.uiStore.fireToast('toast.close_whiteboard_follow'))
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //       }
-  //     }
-  //   } else {
-  //     if (this.online && this.room) {
-  //       if (this.follow === true) {
-  //         this.room.disableCameraTransform = true
-  //         this.room.setViewMode(ViewMode.Follower)
-  //         this.room.disableDeviceInputs = true
-  //       } else {
-  //         this.room.disableCameraTransform = false
-  //         this.room.setViewMode(ViewMode.Freedom)
-  //         this.room.disableDeviceInputs = false
-  //       }
-  //     }
-  //   }
-  // }
-
   @action.bound
   setGrantPermission(v: boolean) {
     this._grantPermission = v
