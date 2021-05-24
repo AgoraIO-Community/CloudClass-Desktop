@@ -53,7 +53,7 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
       </Switch>
       {props.inRoom ? <AppPluginContainer/> : null}
-      {props.inRoom ? <ToastContainer/> : null}
+      {/* {props.inRoom ? <ToastContainer/> : null} */}
     </>
   )
 }

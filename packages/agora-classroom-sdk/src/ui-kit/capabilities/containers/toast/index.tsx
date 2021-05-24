@@ -39,7 +39,7 @@ export const ToastContainer = observer(() => {
     'error.unknown': (props: any) => toast('error.unknown', props),
     'pretest.camera_move_out': (props: any) => toast('pretest.camera_move_out', props),
     'pretest.mic_move_out': (props: any) => toast('pretest.mic_move_out', props),
-    'detect_new_device_in_room': (props: any) => toast('detect_new_device_in_room', props),
+    'pretest.detect_new_device_in_room': (props: any) => toast('pretest.detect_new_device_in_room', props),
     // 'toast.audio_equipment_has_changed': (props: any) => toast('toast.audio_equipment_has_changed', props),
     // 'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
     'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
@@ -86,7 +86,7 @@ export const ToastContainer = observer(() => {
       const toastOperation = toastMap[evt.eventName]
 
       if (toastOperation) {
-        if (evt.eventName === 'detect_new_device_in_room' && !roomRef.current) {
+        if (evt.eventName === 'pretest.detect_new_device_in_room' && !roomRef.current) {
           return
         }
         toastOperation(evt.props)

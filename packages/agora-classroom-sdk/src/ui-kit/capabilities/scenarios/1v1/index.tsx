@@ -10,6 +10,7 @@ import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoList } from '~capabilities/containers/video-player'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
+import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
 import { Widget } from '~capabilities/containers/widget'
 
 
@@ -65,6 +66,7 @@ export const OneToOneScenario = observer(() => {
       </Layout>
       <DialogContainer />
       <LoadingContainer />
+      <ToastContainer />
     </Layout>
   )
 })

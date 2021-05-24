@@ -351,6 +351,10 @@ export class PretestStore {
             }
             this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
           }
+
+          if (this.isElectron && !list.length) {
+            this.muteCamera()
+          }
           this._cameraList = list
         })
       })
@@ -377,6 +381,9 @@ export class PretestStore {
               })
             }
             this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+          }
+          if (this.isElectron && !list.length) {
+            this.muteMicrophone()
           }
           this._microphoneList = list
         })
@@ -550,8 +557,10 @@ export class PretestStore {
       } else {
         const prevDeviceMicrophoneId = this._microphoneId
         await this.mediaService.changeTestMicrophone(deviceId)
-        if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
-          this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+        if (this.isElectron) {
+          if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
+            this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
+          }
         }
         this.updateTestMicrophoneLabel()
       }

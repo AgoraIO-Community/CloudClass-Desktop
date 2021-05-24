@@ -13,7 +13,7 @@ import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
-
+import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
 
 
 export const MidClassScenario = observer(() => {
@@ -77,6 +77,7 @@ export const MidClassScenario = observer(() => {
       </Layout>
       <DialogContainer />
       <LoadingContainer />
+      <ToastContainer />
     </Layout>
   )
 })
