@@ -1287,7 +1287,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         profile: 50,
         rect: {x: 0, y: 0, width: 0, height: 0},
         param: {
-          width: 0, height: 0, bitrate: 500, frameRate: 15
+          width: 0, height: 0, bitrate: 1500, frameRate: 5
         }
       }
       EduLogger.info('startScreenShare#options', options)
@@ -1305,8 +1305,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         this.client.videoSourceEnableWebSdkInteroperability(true)
         this.client.videoSourceSetVideoProfile(config && config.profile ? config.profile : 50, false)
         this.client.videoSourceSetVideoEncoderConfiguration({
-          width: 640,
-          height: 480,
+          width: 0,
+          height: 0,
           frameRate: 5,
           minFrameRate: 5,
           bitrate: 1500,
