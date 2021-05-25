@@ -1,0 +1,12 @@
+.slider .rc-slider-track {
+    background-color: #0073FF;
+}
+.slider .rc-slider-handle {
+    border-color: #0073FF;
+}
+
+.agora-slider-tooltip .rc-slider-tooltip-inner {
+    position: relative;
+    min-width: 50px;
+    z-index: 99999;
+}

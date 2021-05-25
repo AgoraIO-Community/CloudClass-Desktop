@@ -96,10 +96,9 @@ export const Countdown: React.FC<CountdownProps> = ({
      * 开始倒计时
      * @param st 重复执行的间隔时间
      */
-    const start = (st = 1000) => {
+    const start = (st = 1000, loop = true) => {
         if (!endTime) return
-        timer && clearTimeout(timer)
-        setTimer(setTimeout(() => {
+        const loopFn = () => {
             let t = endTime - new Date().getTime(); // 剩余的毫秒数
             t = t < 0 ? 0 : t;
             let day = 0; // 剩余的天
@@ -137,13 +136,21 @@ export const Countdown: React.FC<CountdownProps> = ({
             }
             setTimeArray(ar)
             if (t > 0) {
-                start();
+                if (loop) {
+                    start();
+                }
             } else {
                 timer && clearTimeout(timer);
                 // 执行timeup
                 onTimeUp && onTimeUp()
             }
-        }, st));
+        }
+        timer && clearTimeout(timer)
+        if (loop) {
+            setTimer(setTimeout(loopFn, st));
+        } else {
+            loopFn()
+        }
     };
     // 动画完毕后，去掉对应的class, 为下次动画做准备
     const onAnimateEnd = (index: number) => {

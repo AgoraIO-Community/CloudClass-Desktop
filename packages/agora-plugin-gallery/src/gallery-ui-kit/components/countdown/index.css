@@ -1,0 +1,197 @@
+.react-countdown-component {
+    display: flex;
+    justify-content: center;
+    --a: linear-gradient(to bottom, #E8ECF0 0%, #F5F7F9 50%);  /** 上卡片背景颜色 **/
+    --b: rgba(16, 21, 26, 0.05); /** 中间线的颜色**/
+    --c: linear-gradient(to bottom, #F5F7F9, #FFFFFF); /** 下卡片背景颜色 **/
+    --boxWidth: 120px;
+    --boxHeight: 160px;
+    --timeUnitSize: 100px;
+}
+
+@keyframes animate-filp-face {
+    0% {
+        transform: rotateX(-0.01deg);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    51% {
+        opacity: 0;
+    }
+
+    100% {
+        transform: rotateX(-180deg);
+        opacity: 0;
+    }
+}
+
+@keyframes animate-filp-back {
+    0% {
+        transform: rotateX(180deg);
+    }
+
+    100% {
+        transform: rotateX(-0.01deg);
+    }
+}
+
+.react-countdown-component.ie .base .base-b {
+    clip: rect(15px, auto, auto, auto);
+}
+
+.react-countdown-component.ie .face {
+    clip: rect(auto, auto, 15px, auto);
+}
+
+.react-countdown-component.ie .back {
+    clip: rect(15px, auto, auto, auto);
+}
+
+.react-countdown-component.theme2 .time-box {
+    min-width: var(--boxWidth);
+}
+
+.react-countdown-component.theme2 .time-box+.time-box {
+    margin-left: 1px;
+}
+
+.react-countdown-component .time-unit {
+    padding: 0 4px;
+    color: #4D6277;
+    font-size: var(--timeUnitSize);
+    /* line-height: 30px; */
+    white-space: nowrap;
+}
+
+.react-countdown-component .time-box {
+    position: relative;
+    box-sizing: border-box;
+    height: var(--boxHeight);
+    min-width: var(--boxWidth);
+    font-size: 100px;
+    text-align: center;
+    background: var(--a);
+    perspective: 800px;
+    /* border-radius: 3px; */
+    padding: 0 2px;
+    line-height: var(--boxHeight);
+    margin: 0 0.05em;
+    border-radius: 0.25em;
+    box-shadow: 0 20px 30px -10px rgba(76, 99, 119, 0.1), inset 0 -1px 0 0 rgba(76, 99, 119, 0.3), inset 0 1px 0 0 #fff;
+}
+
+.react-countdown-component .time-box:before {
+    /* display: none; */
+    content: "";
+    position: absolute;
+    background: var(--b);
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: -1px;
+    margin-top: -3px;
+    z-index: 999999;
+    /* box-shadow: 0 2px 1px 0 rgb(255 255 255 / 20%); */
+}
+
+.react-countdown-component .time-box:after {
+    display: none;
+    content: "";
+    position: absolute;
+    background: var(--b);
+    width: 1px;
+    height: 6px;
+    top: 50%;
+    right: -1px;
+    margin-top: -3px;
+    z-index: -1;
+}
+
+.react-countdown-component .time-box+.time-box {
+    margin-left: 8px;
+}
+
+.react-countdown-component .time-box>div {
+    overflow: hidden;
+    animation-timing-function: linear;
+    animation-duration: 400ms;
+    transform: rotateX(-0.01deg);
+    /* border-radius: 3px; */
+}
+
+.react-countdown-component .time-box>div.base {
+    position: relative;
+}
+
+.react-countdown-component .time-box>div.base .base-b {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    /* border-radius: 0 0 3px 3px; */
+    width: 100%;
+    height: 100%;
+    background: var(--c);
+    border-radius: 0.25em;
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+    /* box-shadow: 0 20px 30px -10px rgba(76, 99, 119, 0.1), inset 0 -1px 0 0 rgba(76, 99, 119, 0.3), inset 0 1px 0 0 #fff; */
+}
+
+.react-countdown-component .time-box>div.face {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--a);
+    backface-visibility: visible;
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+    z-index: 2;
+    border-radius: 0.25em;
+}
+
+.react-countdown-component .time-box>div.face.anime {
+    animation-name: animate-filp-face;
+}
+
+.react-countdown-component .time-box>div.back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--c);
+    transform: rotateX(-180deg);
+    backface-visibility: visible;
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+    border-radius: 0.25em;
+}
+
+.react-countdown-component .time-box>div.back.anime {
+    animation-name: animate-filp-back;
+}
+
+.countdown-modal {
+    position: relative;
+}
+
+.restart-wrap {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100% - 40px);
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    background: rgba(255,255,255,.88);
+    border-radius: 0 0 8px 8px; 
+}
+
+.countdown-modal-hover:hover .restart-wrap {
+    display: flex;
+}

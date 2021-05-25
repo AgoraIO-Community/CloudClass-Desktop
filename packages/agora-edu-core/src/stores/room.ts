@@ -1909,7 +1909,7 @@ export class RoomStore extends SimpleInterval {
       // extApp
       // emit events for app plugins
       const { extAppCause } = data
-      this.appStore.uiStore.activeAppPlugins.forEach(appPlugin => {
+      this.appStore.params.config.extApps?.forEach(appPlugin => {
         let oldProps = get(oldRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
         let newProps = get(newRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
         if (oldProps !== newProps) {

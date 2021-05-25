@@ -1,0 +1,15 @@
+.icon-btn {
+    height: 30px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+    border-radius: 4px;
+    border: 1px solid #E1E1EA;
+    padding: 6px 14px;
+    @apply inline-flex items-center cursor-pointer;
+}
+
+.icon-btn-text {
+    margin-left: 10px;
+    font-size: 13px;
+    font-weight: 400;
+}

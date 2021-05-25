@@ -1,0 +1,88 @@
+.home-about, .about-header, .disclaimer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+    
+}
+
+.about-header-logo {
+    width: 80px;
+    height: 80px;
+    background: url('./assets/about-logo.png') no-repeat center / 80px 80px;
+}
+
+.about-header-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #191919;
+    margin-top: 10px;
+}
+
+.about-header-version {
+    font-size: 13px;
+    font-weight: 400;
+    color: #586376;
+    margin-top: 3px;
+}
+
+.about-main {
+    margin-top: 23px;
+    width: 100%;
+}
+
+.about-main-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0px;
+    border-top: 1px solid #EEEEF7;
+    box-sizing: border-box;
+    height: 45px;
+}
+
+.about-main-item .main-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: #191919;
+}
+
+.about-main-item .main-operation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #191919;
+    cursor: pointer;
+}
+
+.about-main-item .main-operation:hover {
+    color: #0073FF;
+}
+
+.about-main-item .main-desc {
+    position: relative;
+    font-size: 13px;
+    font-weight: 400;
+    color: #586376;
+}
+
+.disclaimer-main p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #586376;
+    margin-bottom: 10px;
+}
+
+.disclaimer-footer {
+    font-size: 13px;
+    font-weight: 400;
+    color: #586376;
+}
+
+.operation-click {
+    left: 10px !important;
+}
+

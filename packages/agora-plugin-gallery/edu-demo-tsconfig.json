@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"],
+        "~core": ["./src/core"],
+        "~core/*": ["./src/core/*"],
+        "~ui-kit": ["./src/gallery-ui-kit"],
+        "~components": ["./src/gallery-ui-kit/components"],
+        "~scaffold": ["./src/gallery-ui-kit/scaffold"],
+        "~styles": ["./src/gallery-ui-kit/styles"],
+        "~utilities": ["./src/gallery-ui-kit/utilities"],
+        "~utilities/*": ["./src/gallery-ui-kit/utilities/*"],
+        "~components/*": ["./src/gallery-ui-kit/components/*"],
+        "~scaffold/*": ["./src/gallery-ui-kit/scaffold/*"],
+        "~capabilities/*": ["./src/gallery-ui-kit/capabilities/*"],
+        "~capabilities": ["./src/gallery-ui-kit/capabilities"],
+        "~capabilities/containers": ["./src/gallery-ui-kit/capabilities/containers"],
+        "~capabilities/containers/*": ["./src/gallery-ui-kit/capabilities/containers/*"],
+        "~capabilities/hooks": ["./src/gallery-ui-kit/capabilities/hooks"],
+        "~capabilities/hooks/*": ["./src/gallery-ui-kit/capabilities/hooks/*"]
+      }
+    }
+  }

@@ -35,6 +35,9 @@ export const ToolCabinetContainer = observer(() => {
                 setLaserPoint()
                 break;
             }
+            case 'countdown':
+                onLaunchAppPlugin('io.agora.countdown')
+                break;
             default: {
                 onLaunchAppPlugin(itemType)
                 break;
@@ -49,7 +52,7 @@ export const ToolCabinetContainer = observer(() => {
     const getCabinetList = useCallback(() => {
         const screenShareTool: CabinetItem[] = [{
             id: 'screenShare',
-            icon: <Icon type="share-screen" useSvg />,
+            icon: <Icon type="share-screen" useSvg size={24} />,
             name: t('scaffold.screen_share'),
         }]
 
@@ -62,7 +65,7 @@ export const ToolCabinetContainer = observer(() => {
             ...appPlugins.map((p:IAgoraExtApp) => {
                 return {
                     id: p.appIdentifier,
-                    icon:<Icon type="share-screen" />,
+                    icon:<Icon type="countdown" useSvg size={24}/>,
                     name: p.appName
                 }
             })

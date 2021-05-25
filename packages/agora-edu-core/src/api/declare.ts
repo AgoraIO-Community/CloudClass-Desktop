@@ -22,7 +22,7 @@ export type AgoraExtAppContext = {
 }
 
 export type AgoraExtAppHandle = {
-  updateRoomProperty: (properties:any, cause: any) => Promise<void>
+  updateRoomProperty: (properties:any, common: any ,cause: any) => Promise<void>
   deleteRoomProperties: (properties:string[], cause: any) => Promise<void>
 }
 
