@@ -1170,9 +1170,13 @@ export class RoomStore extends SimpleInterval {
             if (evt.hasOwnProperty('muteChat')) {
               const muteChat = evt.muteChat
               if (muteChat) {
-                this.appStore.uiStore.fireToast('toast.mute_chat')
+                this.appStore.uiStore.fireToast('toast.mute_chat', {
+                  hostName: evt.operator.userName
+                })
               } else {
-                this.appStore.uiStore.fireToast('toast.unmute_chat')
+                this.appStore.uiStore.fireToast('toast.unmute_chat', {
+                  hostName: evt.operator.userName
+                })
               }
             }
           }
@@ -1352,9 +1356,15 @@ export class RoomStore extends SimpleInterval {
             if (evt.hasOwnProperty('muteChat')) {
               const muteChat = evt.muteChat
               if (muteChat) {
-                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {reason: evt.user.user.userName})
+                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {
+                  hostName: evt.operator.userUuid === this.appStore.userUuid ? 'you' : evt.operator.userName,
+                  studentName: evt.user.user.userName,
+                })
               } else {
-                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {reason: evt.user.user.userName})
+                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {
+                  hostName: evt.operator.userUuid === this.appStore.userUuid ? 'you' : evt.operator.userName,
+                  studentName: evt.user.user.userName,
+                })
               }
             }
           }
