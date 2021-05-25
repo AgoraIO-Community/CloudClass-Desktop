@@ -970,8 +970,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           code: ret
         })
       }
-      if (option) {
-        option.deviceId && (ret = this.client.setVideoDevice(option.deviceId))
+      if (option && this._cefClient) {
+        //@ts-ignore
+        option.deviceId && (ret = this.client.videoDeviceManager.setDevice(option.deviceId))
         if (ret < 0) {
           throw GenericErrorWrapper({
             message: `setVideoDevice failure`,
