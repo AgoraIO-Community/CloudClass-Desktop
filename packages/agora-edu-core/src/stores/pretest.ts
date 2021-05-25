@@ -355,6 +355,9 @@ export class PretestStore {
           if (this.isElectron && !list.length) {
             this.muteCamera()
           }
+          if (this.isWeb) {
+            this.muteCamera()
+          }
           this._cameraList = list
         })
       })
@@ -383,6 +386,9 @@ export class PretestStore {
             this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
           }
           if (this.isElectron && !list.length) {
+            this.muteMicrophone()
+          }
+          if (this.isWeb) {
             this.muteMicrophone()
           }
           this._microphoneList = list
