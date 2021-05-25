@@ -9,7 +9,7 @@ import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
 import { EduManager } from '../../manager';
-import packageJson from '../../../package.json';
+// import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
@@ -461,7 +461,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       await this._join(option);
       let reportUserParams = {
         vid: this.eduManager.vid,
-        ver: packageJson.apaas_version,
+        // ver: packageJson.apaas_version,
         scenario: 'education',
         uid: option.data?.user.uuid,
         userName: option.data?.user.name,

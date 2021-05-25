@@ -3,6 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "outDir": "lib",
+    "rootDir": "src",
     "lib": ["dom", "es2017", "DOM.Iterable", "WebWorker"],
     "moduleResolution": "node",
     "importHelpers": true,
