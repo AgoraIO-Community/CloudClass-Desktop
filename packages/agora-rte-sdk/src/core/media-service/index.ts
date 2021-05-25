@@ -1,4 +1,4 @@
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
@@ -8,6 +8,8 @@ import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
+import { EduManager } from '../../manager';
+import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
@@ -26,10 +28,13 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   readonly _id!: string
 
+  private eduManager: EduManager
+
   encoderConfig: any;
 
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
+    this.eduManager = rtcProvider.eduManager;
     this._id = uuidv4()
     this.encoderConfig = undefined
     this.cameraRenderer = undefined
@@ -52,7 +57,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         window.videoSourceLogPath = videoSourceLogPath;
         window.logPath = logPath
         EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`)
-        this.electron.setAddonLogPath({logPath, videoSourceLogPath})
+        this.electron.setAddonLogPath({ logPath, videoSourceLogPath })
         this.electron.enableLogPersist()
       })
     } else {
@@ -73,7 +78,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     })
     this.sdkWrapper.on('connection-state-change', (curState: any) => {
       EduLogger.info("[media-service] connection-state-change ", curState)
-      this.fire('connection-state-change', {curState})
+      this.fire('connection-state-change', { curState })
     })
     this.sdkWrapper.on('volume-indication', (evt: any) => {
       this.fire('volume-indication', evt)
@@ -136,8 +141,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.fire('rtcStats', evt)
     })
     this.sdkWrapper.on('localVideoStats', (evt: any) => {
-      let {stats = {}} = evt
-      let {encoderOutputFrameRate = 0} = stats
+      let { stats = {} } = evt
+      let { encoderOutputFrameRate = 0 } = stats
       this.cameraRenderer?.setFPS(encoderOutputFrameRate)
       this.fire('localVideoStats', {
         renderState: this.cameraRenderer?.renderState,
@@ -147,9 +152,9 @@ export class MediaService extends EventEmitter implements IMediaService {
       })
     })
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
-      let {stats = {}, user = {}} = evt
-      let {decoderOutputFrameRate = 0} = stats
-      let {uid} = user
+      let { stats = {}, user = {} } = evt
+      let { decoderOutputFrameRate = 0 } = stats
+      let { uid } = user
       let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
       remoteUserRender?.setFPS(decoderOutputFrameRate)
       this.fire('remoteVideoStats', {
@@ -212,14 +217,16 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.emit(message, ...args)
   }
 
-  get isWeb (): boolean {
+  get isWeb(): boolean {
     return this.sdkWrapper instanceof AgoraWebRtcWrapper
   }
 
-  get isElectron (): boolean {
+  get isElectron(): boolean {
     return this.sdkWrapper instanceof AgoraElectronRTCWrapper
   }
-
+  get sessionId(): string {
+    return this.isElectron ? (this.sdkWrapper.client as any).getCallId() : (this.sdkWrapper.client as any)._sessionId;
+  }
   private getNativeCurrentVideoDevice() {
     if (this.electron._cefClient) {
       //@ts-ignore
@@ -367,7 +374,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       this.sdkWrapper.changePlaybackVolume(volume)
     }
   }
-  
+
   async muteLocalVideo(val: boolean): Promise<any> {
     if (this.isWeb) {
       await this.sdkWrapper.muteLocalVideo(val)
@@ -419,11 +426,11 @@ export class MediaService extends EventEmitter implements IMediaService {
   //   }
   // }
 
-  get web (): AgoraWebRtcWrapper {
+  get web(): AgoraWebRtcWrapper {
     return (this.sdkWrapper as AgoraWebRtcWrapper)
   }
 
-  get electron (): AgoraElectronRTCWrapper {
+  get electron(): AgoraElectronRTCWrapper {
     return (this.sdkWrapper as AgoraElectronRTCWrapper)
   }
 
@@ -437,7 +444,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  release () {
+  release() {
     if (this.isWeb) {
       this.sdkWrapper.release()
     }
@@ -451,10 +458,41 @@ export class MediaService extends EventEmitter implements IMediaService {
     try {
       // REPORT
       reportService.startTick('joinRoom', 'rtc', 'joinChannel')
-      await this._join(option)
-      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: true})
-    } catch(e) {
-      reportService.reportElapse('joinRoom', 'rtc', {api: 'joinChannel', result: false, errCode: `${e.code || e.message}`})
+      await this._join(option);
+      let reportUserParams = {
+        vid: this.eduManager.vid,
+        ver: packageJson.apaas_version,
+        scenario: 'education',
+        uid: option.data?.user.uuid,
+        userName: option.data?.user.name,
+        /**
+         * rtc流id
+         */
+        streamUid: +option.data?.user.streamUuid,
+        /**
+         * rtc流id
+         */
+        streamSuid: option.data?.user.streamUuid,
+        /**
+         * apaas角色
+         */
+        role: option.data?.user.role,
+        /**
+         * rtc sid
+         */
+        streamSid: this.eduManager.rtcSid,
+        /**
+         * rtm sid
+         */
+        rtmSid: this.eduManager.rtmSid,
+        /**
+         * apaas房间id，与rtc/rtm channelName相同
+         */
+        roomId: option.data?.room.uuid
+      };
+      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
+    } catch (e) {
+      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
       throw e
     }
   }
@@ -756,27 +794,35 @@ export class MediaService extends EventEmitter implements IMediaService {
   }
 
   async startScreenShare(option: StartScreenShareParams): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.startScreenShare(option)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.startScreenShare(option)
-      this.screenRenderer = new LocalUserRenderer({
-        context: this,
-        uid: 0,
-        channel: 0,
-        videoTrack: undefined,
-        sourceType: 'screen',
-      })
+    try {
+      if (this.isWeb) {
+        await this.sdkWrapper.startScreenShare(option)
+      }
+      if (this.isElectron) {
+        await this.sdkWrapper.startScreenShare(option)
+        this.screenRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          videoTrack: undefined,
+          sourceType: 'screen',
+        })
+      }
+    } catch (error) {
+      throw error
     }
   }
 
   async stopScreenShare(): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.stopScreenShare()
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.stopScreenShare()
+    try {
+      if (this.isWeb) {
+        await this.sdkWrapper.stopScreenShare()
+      }
+      if (this.isElectron) {
+        await this.sdkWrapper.stopScreenShare()
+      }
+    } catch (error) {
+      throw error
     }
   }
 
@@ -791,7 +837,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   getPlaybackVolume(): number {
     if (this.isElectron) {
-      return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1) 
+      return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1)
     }
     return 100;
   }

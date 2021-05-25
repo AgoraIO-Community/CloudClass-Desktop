@@ -144,6 +144,7 @@ export type AppStoreConfigParams = {
   rtcArea?: string,
   rtmArea?: string,
   personalCourseWareList?: CourseWareList,
+  vid?: number,
   oss?: {
     region: string,
     bucketName: string,

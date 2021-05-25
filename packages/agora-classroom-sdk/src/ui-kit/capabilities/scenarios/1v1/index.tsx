@@ -16,7 +16,7 @@ import { useLayoutEffect } from 'react'
 
 
 export const OneToOneScenario = observer(() => {
-
+  
   const {
     isFullScreen,
   } = useGlobalContext()

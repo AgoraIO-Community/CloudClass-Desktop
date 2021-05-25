@@ -65,6 +65,10 @@ export class RTMWrapper extends EventEmitter {
     return this._client as any;
   }
 
+  get sessionId(): string {
+    return (this.client as any).context.sid;
+  }
+
   private releaseChannels() {
     for (let key of Object.keys(this.channels)) {
       if (this.channels[key]) {

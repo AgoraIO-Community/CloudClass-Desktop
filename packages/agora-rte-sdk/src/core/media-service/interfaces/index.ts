@@ -194,6 +194,7 @@ export declare interface IAgoraRTCModule {
 }
 
 export declare interface RTCProviderInitParams {
+  eduManager?: any;
   cefClient: any;
   agoraSdk: any;
   platform: string;
@@ -230,6 +231,7 @@ export type JoinOption = {
   token?: string | null
   uid: number
   info?: string
+  data: any
 }
 
 

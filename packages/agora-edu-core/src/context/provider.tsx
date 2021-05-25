@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useUIStore} from "./core"
-import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext, DeviceErrorCallback } from './type'
+import { ChatContext, StreamContext, PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, VideoControlContext, SmallClassVideoControlContext, StreamListContext, VolumeContext, DeviceErrorCallback, ReportContext } from './type'
 
 export type {
  CoreAppContext,
@@ -675,5 +675,12 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
     onOffPodiumClick,
     sceneVideoConfig,
     // videoStreamList,
+  }
+}
+
+export const useReportContext = (): ReportContext => {
+  const core = useCoreContext()
+  return {
+    eduManger: core.eduManager
   }
 }

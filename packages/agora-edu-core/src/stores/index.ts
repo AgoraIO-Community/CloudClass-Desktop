@@ -16,6 +16,7 @@ import { UIStore } from './ui'
 import { v4 as uuidv4} from 'uuid'
 import { AppStoreInitParams, CourseWareItem, DeviceInfo, RoomInfo } from '../api/declare'
 import { WidgetStore } from './widget'
+import { reportServiceV2 } from '../services/report-v2'
 
 export class EduScenarioAppStore {
   // stores
@@ -170,6 +171,7 @@ export class EduScenarioAppStore {
 
     if (platform === 'electron') {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,
@@ -185,6 +187,7 @@ export class EduScenarioAppStore {
       })
     } else {
       this.eduManager = new EduManager({
+        vid: config.vid,
         appId: config.agoraAppId,
         rtmUid: config.rtmUid,
         rtmToken: config.rtmToken,
@@ -258,6 +261,12 @@ export class EduScenarioAppStore {
     this.widgetStore.widgets = this.params.config.widgets || {}
 
     this._screenVideoRenderer = undefined
+
+    //todo 判断生产环境与开发环境
+    reportServiceV2.initReportConfig({
+      sdkDomain: 'https://test-rest-argus.bj2.agoralab.co',
+      qos: 101
+    })
   }
 
   @computed
@@ -406,10 +415,12 @@ export class EduScenarioAppStore {
     try {
       await this.roomStore.leave()
       reportService.stopHB()
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
       this.resetStates()
     } catch (err) {
       this.resetStates()
       const exception = GenericErrorWrapper(err)
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), err.code || err.message);
       throw exception
     }
   }
