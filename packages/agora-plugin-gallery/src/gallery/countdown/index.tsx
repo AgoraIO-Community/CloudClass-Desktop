@@ -52,9 +52,8 @@ const App = observer(() => {
         <div style={{ width: '100%' }}>
           <div>
             <Input
-              type="number"
               value={pluginStore.number}
-              onChange={(e: any) => { pluginStore.setNumber(e.target.value) }}
+              onChange={(e: any) => { pluginStore.setNumber(e.target.value.replace(/\D+/g, '')) }}
               suffix={<span style={{
                 color: (pluginStore.number != undefined && pluginStore.number <= 3600) ? '#333' : '#F04C36'
               }}>(seconds)</span>}

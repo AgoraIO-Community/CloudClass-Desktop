@@ -66,13 +66,8 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
                             <div style={{ width: '100%' }}>
                                 <div>
                                     <Input
-                                        type="number"
-                                        min="0"
-                                        max="3600"
-                                        step="60"
-                                        required
                                         value={number}
-                                        onChange={(e: any) => { setNumber(e.target.value) }}
+                                        onChange={(e: any) => { setNumber(e.target.value.replace(/\D+/g, '')) }}
                                         suffix={<span style={{
                                             color: number <= 3600 ? '#333' : '#F04C36'
                                         }}>(seconds)</span>}
