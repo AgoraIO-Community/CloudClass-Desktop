@@ -168,7 +168,8 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get userType() {
-    return this.roomInfo.userRole === EduRoleTypeEnum.teacher ? 'teacher' : 'student'
+    const teacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)
+    return teacher ? 'teacher' : 'student'
   }
 
   @observable
