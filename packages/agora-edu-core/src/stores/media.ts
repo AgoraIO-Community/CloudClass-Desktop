@@ -402,8 +402,18 @@ export class MediaStore {
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
       const {state, msg} = evt
       if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
-          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING].includes(state)) {
+          LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING,
+        ].includes(state)) {
         this.localVideoState = state
+      }
+      if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+        this.pretestNotice.next({
+          type: 'error',
+          info: 'pretest.device_not_working',
+          kind: 'toast',
+          id: uuidv4()
+        })
+        this.appStore.pretestStore.muteCamera()
       }
     })
     this.mediaService.on('localAudioStateChanged', (evt: any) => {
@@ -411,6 +421,15 @@ export class MediaStore {
       if ([LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED,
         LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_ENCODING].includes(state)) {
         this.localAudioState = state
+      }
+      if (this.localAudioState === LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED) {
+        this.pretestNotice.next({
+          type: 'error',
+          info: 'pretest.device_not_working',
+          kind: 'toast',
+          id: uuidv4()
+        })
+        this.appStore.pretestStore.muteMicrophone()
       }
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {

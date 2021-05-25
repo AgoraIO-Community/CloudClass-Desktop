@@ -326,9 +326,9 @@ export class MediaService extends EventEmitter implements IMediaService {
         return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo().deviceName
       }
       //@ts-ignore
-      const deviceItem = this.electron.client.getPlaybackDeviceInfo()[0]
+      const deviceName = this.electron.client.getPlaybackDeviceInfo()[0]?.devicename ?? ''
       //@ts-ignore
-      return deviceItem.devicename
+      return deviceName
     }
     return ''
   }
