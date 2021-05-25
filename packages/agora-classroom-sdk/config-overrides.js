@@ -223,13 +223,15 @@ const removeEslint = () => config => {
 let version = packageInfo.version
 let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
 if(apaasBuildEnv) {
-  const date = dayjs().format('YYMMDD')
-  const translator = short()
-  const hash = translator.new()
+  // const date = dayjs().format('YYMMDD')
+  // const translator = short()
+  // const hash = translator.new()
   if(apaasBuildEnv === 'test') {
-    version=`test-${packageInfo.version}-${date}${hash}`
+    version=`test-${packageInfo.version}`
   } else if(apaasBuildEnv === 'preprod') {
-    version=`preprod-${packageInfo.version}-${date}${hash}`
+    version=`preprod-${packageInfo.version}`
+  } else if(apaasBuildEnv === 'prod') {
+    version=`${packageInfo.version}`
   }
 }
 
