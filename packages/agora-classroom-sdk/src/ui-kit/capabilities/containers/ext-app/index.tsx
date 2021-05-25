@@ -6,6 +6,7 @@ import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
 import { Modal } from '@/ui-kit/components/modal'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable} : {app:IAgoraExtApp, properties: any, closable: boolean}) => {
     const ref = useRef<HTMLDivElement | null>(null)
@@ -42,7 +43,7 @@ export const AppPluginItem = observer(({app, properties, closable} : {app:IAgora
     }, [ref, app])
     return (
         <Draggable handle=".modal-title" defaultPosition={{x: 100, y: 100}}>
-            <Modal title={app.appName} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} closable={closable}>
+            <Modal title={transI18n(`${app.appName}.appName`)} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} closable={closable}>
                 <div ref={ref} style={{width: '100%', height: app.height}}>
                 </div>
             </Modal>

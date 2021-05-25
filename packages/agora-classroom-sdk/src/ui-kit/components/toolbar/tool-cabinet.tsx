@@ -3,6 +3,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
+import { transI18n } from '~components/i18n';
 
 export interface CabinetItem {
     id: string;
@@ -35,7 +36,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
             {cabinetList.map((item) => (
                 <div className={`cabinet-item ${activeItem === item.id ? 'active' : ''}` } key={item.id} onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
                     {item.icon}
-                    <span>{item.name}</span>
+                    <span>{['countdown'].includes(item.name) ? transI18n(`${item.name}.appName`) : item.name}</span>
                 </div>
             ))}
         </div>
