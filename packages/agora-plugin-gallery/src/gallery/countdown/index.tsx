@@ -9,6 +9,7 @@ import { Button } from '../../gallery-ui-kit/components/button'
 import { Countdown } from '../../gallery-ui-kit/components/countdown'
 import { Input } from '../../gallery-ui-kit/components/input'
 import classnames from 'classnames'
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -24,7 +25,7 @@ const App = observer(() => {
       }}
       className={classnames({
         [`countdown-modal`]: 1,
-        [`countdown-modal-hover`]: !pluginStore.showSetting
+        [`countdown-modal-hover`]: !pluginStore.showSetting && pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher
       })}
     >
       <div className="restart-wrap">
