@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
-import { IAgoraExtApp, useAppPluginContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-core'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
 import { Modal } from '@/ui-kit/components/modal'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
-export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, properties: any}) => {
+export const AppPluginItem = observer(({app, properties, closable} : {app:IAgoraExtApp, properties: any, closable: boolean}) => {
     const ref = useRef<HTMLDivElement | null>(null)
     const {onShutdownAppPlugin, contextInfo} = useAppPluginContext()
 
@@ -41,7 +42,7 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
     }, [ref, app])
     return (
         <Draggable handle=".modal-title" defaultPosition={{x: 100, y: 100}}>
-            <Modal title={app.appName} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)}>
+            <Modal title={app.appName} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} closable={closable}>
                 <div ref={ref} style={{width: '100%', height: app.height}}>
                 </div>
             </Modal>
@@ -51,10 +52,12 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
 
 export const AppPluginContainer = observer(() => {
   const {activeAppPlugins, appPluginProperties} = useAppPluginContext()
+  const {roomInfo} = useRoomContext()
+  const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
-        <AppPluginItem key={app.appIdentifier} app={app} properties={appPluginProperties(app)}></AppPluginItem>
+        <AppPluginItem key={app.appIdentifier} app={app} properties={appPluginProperties(app)} closable={closable}></AppPluginItem>
       )}
     </div>
   )
