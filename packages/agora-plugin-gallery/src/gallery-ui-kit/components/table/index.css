@@ -1,0 +1,209 @@
+.table-flex-container {
+  @apply flex;
+  @apply flex-col;
+}
+
+.table-row-item {
+  @apply flex;
+  @apply flex-row;
+  font-size: 13px;
+  /* padding-left: 19px; */
+}
+
+.table-col-item {
+  @apply flex;
+  @apply flex-1;
+  @apply items-center;
+  font-size: 13px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #7B88A0;
+  /* justify-content: center; */
+}
+
+.table-header {
+  @apply flex;
+  @apply flex-1;
+  @apply flex-row;
+  font-size: 13px;
+  line-height: 18px;
+  background-color: #F9F9FC;
+  padding: 10px 0;
+  padding-left: 19px;
+  @apply border-bottom-width-1;
+  line-height: 20px;
+}
+
+.border-bottom-width-1 {
+  border-bottom-width: 1px;
+  @apply border-table-bottom;
+  margin: 0px 0px -1px -1px;
+}
+
+.item-gap-10 {
+  gap: 10px;
+}
+
+.table-row-x-10 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 20px;
+}
+
+.flex-width-9 {
+  flex: 9px 0 0;
+}
+
+.flex-width-20 {
+  flex: 20px 0 0;
+}
+
+.inline {
+  line-height: 20px;
+  word-break: break-all;
+  height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.margin-gap {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 19px;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.btn-group {
+  margin-left: 1px;
+  display: flex;
+  gap: 10px;
+}
+
+.table-container {
+  overflow-y: auto;
+  box-sizing: content-box;
+  height: 275px;
+}
+
+/* .indeterminate {
+  background-color: #357BF6;
+  color: white;
+} */
+
+input.indeterminate[type=checkbox]:indeterminate {
+  background-color: #357BF6;
+  color: white;
+}
+
+input.indeterminate:indeterminate {
+  background-color: #357BF6;
+  color: white;
+}
+
+.agora-board-resources {
+  width: 606px;
+  height: 540px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 6px;
+  /* border: 1px solid #E3E3EC; */
+  position: relative;
+  overflow-y: hidden;
+}
+
+.agora-board-resources .tabs-nav-list {
+  padding-left: 24px;
+}
+
+.agora-board-resources .tabs-nav {
+  background-color: #F9F9FC;
+}
+
+.agora-board-resources .rc-tabs-nav {
+  @apply bg-table-header;
+  height: 40px;
+}
+
+.agora-board-resources .rc-tabs-nav-list {
+  left: 19px;
+}
+
+.agora-board-resources .rc-tabs-tab-btn {
+  line-height: 20px;
+  font-size: 14px;
+  padding: 10px 5px;
+}
+
+.agora-board-resources .rc-tabs-tab {
+  background: transparent;
+}
+
+.form-checkbox {
+  border: 1px solid #ECECF1;
+  background: #F9F9FC;
+  -webkit-appearance: none;
+}
+.form-checkbox:checked {
+  -webkit-appearance: checkbox;
+}
+.form-checkbox:checked + span {
+  color: #191919;
+}
+
+.agora-board-resources .form-checkbox {
+  margin-right: 15px;
+}
+
+.agora-board-resources .custom-fix-width {
+  flex: 0;
+}
+
+.btn-pin {
+  position: absolute;
+  right: 16px;
+  top: 5px;
+  display: block;
+  color: #A7A7CA;
+  z-index: 1;
+}
+
+.btn-pin > .icon-close {
+  width: 20px !important;
+  height: 20px !important;
+  cursor: pointer;
+}
+
+.rc-mask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.cloud-wrap {
+  border: 1px solid #e3e3ec;
+}
+.cloud-wrap .table-header .table-col-item{
+  color: #191919 !important;
+}
+
+.cloud-wrap input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #B4BADA;
+}
+
+.cloud-wrap .table-container {
+  height: 400px;
+}
+
+.cloud-wrap .table-container-upload .placeholder {
+  position: relative;
+  top: -47px;
+}

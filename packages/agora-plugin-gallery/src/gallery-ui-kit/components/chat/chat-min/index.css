@@ -1,0 +1,22 @@
+.chat-min {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    cursor: pointer;
+    box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+    @apply flex justify-center items-center relative;
+}
+.chat-min .unread-count {
+    position: absolute;
+    height: 14px;
+    padding: 1px 4px;
+    border-radius: 12px;
+    background: #F04C36;
+    top: -3px;
+    left: 25px;
+    font-size: 8px;
+    font-weight: 400;
+    color: #FFFFFF;
+    @apply flex justify-center items-center;
+}

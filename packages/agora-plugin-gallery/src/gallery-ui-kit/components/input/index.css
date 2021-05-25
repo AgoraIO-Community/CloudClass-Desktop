@@ -1,0 +1,77 @@
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    padding: 4px 15px;
+    color: rgba(0,0,0,.85);
+    font-size: 14px;
+    line-height: 1.5715;
+    background-color: #F9F9FC;
+    background-image: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    transition: all .3s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.input-wrapper-error {
+    border-color: #F04C36 !important;
+}
+.input-error-msg {
+    position: absolute;
+    color: #F04C36;
+    font-size: 10px;
+    top: 100%;
+}
+
+.input-wrapper:not(.input-wrapper-disabled):hover {
+    border-color: #357BF6;
+    border-right-width: 1px!important;
+    background-color: #fff;
+    z-index: 1;
+}
+
+.input-wrapper-disabled {
+    color: #7B88A0;
+}
+
+.input-wrapper-focused {
+    border-color: #357BF6;
+    border-right-width: 1px!important;
+    background-color: #fff;
+    outline: 0;
+}
+
+
+.input-wrapper .input-prefix {
+    margin-right: 4px;
+    white-space: nowrap;
+}
+
+.input-wrapper input {
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+}
+
+.input-wrapper input::-webkit-input-placeholder { 
+    /* WebKit browsers */ 
+    color: #7B88A0; 
+    font-size: 14px;
+} 
+
+.input-search-wrapper {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.input-search + .input-suffix .btn {
+    border-radius: 0;
+}
+

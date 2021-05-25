@@ -1,0 +1,41 @@
+.placeholder {
+  @apply w-full h-full flex flex-col items-center justify-center pt-36 pb-36;
+}
+
+.placeholder-desc {
+  margin-top: 46px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7d8798;
+}
+
+.camera-placeholder {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.camera-placeholder.camera-loading-placeholder::before, .camera-placeholder.camera-broken-placeholder::before, .camera-placeholder.camera-muted-placeholder::before{
+  content: ' ';
+  background-image: url('./assets/no-body.png');
+  background-position: center;
+  background-color: #F9F9FC;
+  border: 1px solid #ECECF1;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+}
+
+.camera-placeholder.camera-broken-placeholder::before {
+  background-image: url('./assets/camera-broken.png');
+}
+
+.camera-placeholder.camera-muted-placeholder::before {
+  background-size: 96px 96px;
+  background-image: url('./assets/camera-close.png');
+}

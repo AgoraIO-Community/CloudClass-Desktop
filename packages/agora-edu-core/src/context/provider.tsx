@@ -205,7 +205,8 @@ export const useRoomContext = (): RoomContext => {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus
+    liveClassStatus,
+    roomProperties,
   } = useRoomStore()
 
   return {
@@ -231,6 +232,7 @@ export const useRoomContext = (): RoomContext => {
     unmuteAudio,
     muteUserChat,
     unmuteUserChat,
+    roomProperties,
     queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
       return sceneStore.queryCameraDeviceState(userList, userUuid, streamUuid)
     },

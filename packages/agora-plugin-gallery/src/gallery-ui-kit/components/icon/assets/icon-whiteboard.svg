@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>@1xicon-whiteboard备份 2</title>
+    <defs>
+        <filter x="-10.6%" y="-10.8%" width="122.6%" height="120.1%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0.3" dy="0.3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.15" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.300954539 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="灵动课堂Guide-图标和图片" transform="translate(-24.000000, -437.000000)">
+            <g id="icon-whiteboard备份-2" transform="translate(24.000000, 437.000000)">
+                <rect id="icon-whiteboard" opacity="0" x="0" y="0" width="18" height="18"></rect>
+                <g id="编组-6" filter="url(#filter-1)" transform="translate(1.699336, 2.550000)">
+                    <path d="M1.3406636,11.3206897 C0.766287459,11.3206897 0.300663599,10.8550658 0.300663599,10.2806897 L0.300663599,1.31068966 C0.300663599,0.736313515 0.766287459,0.270689655 1.3406636,0.270689655 L1.3406636,0.270689655 L12.8606636,0.270689655 C13.4350397,0.270689655 13.9006636,0.736313515 13.9006636,1.31068966 L13.9006636,10.2806897 C13.9006636,10.8550658 13.4350397,11.3206897 12.8606636,11.3206897" id="路径" stroke="#FFE72E" stroke-width="0.96"></path>
+                    <line x1="2.0006636" y1="3.48023682" x2="3.53610061" y2="2" id="路径-22" stroke="#FFE72E" stroke-width="0.96" fill="#FFFFFF" stroke-linecap="round"></line>
+                    <rect id="矩形" fill="#FFE72E" x="2.49893946" y="10.4413793" width="8" height="1.75862069" rx="0.4"></rect>
+                    <path d="M10.7729865,5.96311945 C11.4968944,5.37953576 11.4879504,5.83398264 11.6374603,6.05203741 C11.6799848,6.11405785 11.7332466,6.20638863 11.7948472,6.33050592 C11.9028419,6.54810155 12.0470173,6.88173402 12.2263246,7.33188931 L12.2263246,7.33188931 L12.2556636,12.65 C12.2556636,12.8930053 12.1571662,13.1130053 11.9979176,13.272254 C11.8386689,13.4315026 11.6186689,13.53 11.3756636,13.53 C10.9598316,13.53 10.6894771,13.4678523 10.5145,13.3878627 C10.3454624,13.3105884 10.2361982,13.2099582 10.1616806,13.104742 C10.0646188,12.967694 10.0206636,12.814521 10.0206636,12.65 L10.0206636,12.65 L10.0206636,7.48901202 C10.224314,6.97911507 10.3832704,6.61676493 10.5011665,6.37986236 C10.6894572,6.04895007 10.7043104,6.02815663 10.721426,6.00549673 C10.7379124,5.99166793 10.755092,5.9775452 10.7729865,5.96311945 Z" id="矩形" stroke="#FFE72E" stroke-width="0.96"></path>
+                    <line x1="10.5006636" y1="8.375" x2="12.3882613" y2="8.375" id="路径-36" stroke="#FFE72E" stroke-width="0.96"></line>
+                    <path d="M2,5.95068164 C2.95359325,6.92788121 3.89300931,7.29002696 4.81824818,7.03711891 C5.5245843,6.84404651 5.9410794,6.37515834 6.25175153,5.86386121 C6.58709128,5.31196667 7.01856159,4.79352525 7.74324818,4.59537097 C8.62464075,4.35436787 9.54355803,4.8061381 10.5,5.95068164" id="路径-56" stroke="#FFE72E" stroke-width="0.96" stroke-linecap="round" transform="translate(6.250000, 5.823803) rotate(-29.000000) translate(-6.250000, -5.823803) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

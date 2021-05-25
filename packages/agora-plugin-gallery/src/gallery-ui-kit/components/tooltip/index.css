@@ -1,0 +1,244 @@
+.tooltip {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: #191919;
+  font-size: 10px;
+  font-variant: tabular-nums;
+  font-weight: 400;
+  line-height: 1.8;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  max-width: 250px;
+  visibility: visible;
+}
+.tooltip-hidden {
+  display: none;
+}
+.tooltip-placement-top,
+.tooltip-placement-topLeft,
+.tooltip-placement-topRight {
+  padding-bottom: 8px;
+}
+.tooltip-placement-right,
+.tooltip-placement-rightTop,
+.tooltip-placement-rightBottom {
+  padding-left: 8px;
+}
+.tooltip-placement-bottom,
+.tooltip-placement-bottomLeft,
+.tooltip-placement-bottomRight {
+  padding-top: 8px;
+}
+.tooltip-placement-left,
+.tooltip-placement-leftTop,
+.tooltip-placement-leftBottom {
+  padding-right: 8px;
+}
+.tooltip-inner {
+  min-width: 30px;
+  min-height: 22.75px;
+  padding: 4.5px 7.5px;
+  color: #191919;
+  text-align: left;
+  text-decoration: none;
+  word-wrap: break-word;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+.tooltip-arrow {
+  position: absolute;
+  display: block;
+  width: 13.07106781px;
+  height: 13.07106781px;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+.tooltip-arrow-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 5px;
+  height: 5px;
+  margin: auto;
+  background-color: #fff;
+  content: '';
+  pointer-events: auto;
+}
+.tooltip-placement-top .tooltip-arrow,
+.tooltip-placement-topLeft .tooltip-arrow,
+.tooltip-placement-topRight .tooltip-arrow {
+  bottom: -5.07106781px;
+}
+.tooltip-placement-top .tooltip-arrow-content,
+.tooltip-placement-topLeft .tooltip-arrow-content,
+.tooltip-placement-topRight .tooltip-arrow-content {
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
+  transform: translateY(-6.53553391px) rotate(45deg);
+}
+.tooltip-placement-top .tooltip-arrow {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.tooltip-placement-topLeft .tooltip-arrow {
+  left: 13px;
+}
+.tooltip-placement-topRight .tooltip-arrow {
+  right: 13px;
+}
+.tooltip-placement-right .tooltip-arrow,
+.tooltip-placement-rightTop .tooltip-arrow,
+.tooltip-placement-rightBottom .tooltip-arrow {
+  left: -5.07106781px;
+}
+.tooltip-placement-right .tooltip-arrow-content,
+.tooltip-placement-rightTop .tooltip-arrow-content,
+.tooltip-placement-rightBottom .tooltip-arrow-content {
+  box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.07);
+  transform: translateX(6.53553391px) rotate(45deg);
+}
+.tooltip-placement-right .tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.tooltip-placement-rightTop .tooltip-arrow {
+  top: 5px;
+}
+.tooltip-placement-rightBottom .tooltip-arrow {
+  bottom: 5px;
+}
+.tooltip-placement-left .tooltip-arrow,
+.tooltip-placement-leftTop .tooltip-arrow,
+.tooltip-placement-leftBottom .tooltip-arrow {
+  right: -5.07106781px;
+}
+.tooltip-placement-left .tooltip-arrow-content,
+.tooltip-placement-leftTop .tooltip-arrow-content,
+.tooltip-placement-leftBottom .tooltip-arrow-content {
+  box-shadow: 3px -3px 7px rgba(0, 0, 0, 0.07);
+  transform: translateX(-6.53553391px) rotate(45deg);
+}
+.tooltip-placement-left .tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.tooltip-placement-leftTop .tooltip-arrow {
+  top: 5px;
+}
+.tooltip-placement-leftBottom .tooltip-arrow {
+  bottom: 5px;
+}
+.tooltip-placement-bottom .tooltip-arrow,
+.tooltip-placement-bottomLeft .tooltip-arrow,
+.tooltip-placement-bottomRight .tooltip-arrow {
+  top: -5.07106781px;
+}
+.tooltip-placement-bottom .tooltip-arrow-content,
+.tooltip-placement-bottomLeft .tooltip-arrow-content,
+.tooltip-placement-bottomRight .tooltip-arrow-content {
+  box-shadow: -3px -3px 7px rgba(0, 0, 0, 0.07);
+  transform: translateY(6.53553391px) rotate(45deg);
+}
+.tooltip-placement-bottom .tooltip-arrow {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.tooltip-placement-bottomLeft .tooltip-arrow {
+  left: 13px;
+}
+.tooltip-placement-bottomRight .tooltip-arrow {
+  right: 13px;
+}
+.tooltip-pink .tooltip-inner {
+  background-color: #eb2f96;
+}
+.tooltip-pink .tooltip-arrow-content {
+  background-color: #eb2f96;
+}
+.tooltip-magenta .tooltip-inner {
+  background-color: #eb2f96;
+}
+.tooltip-magenta .tooltip-arrow-content {
+  background-color: #eb2f96;
+}
+.tooltip-red .tooltip-inner {
+  background-color: #f5222d;
+}
+.tooltip-red .tooltip-arrow-content {
+  background-color: #f5222d;
+}
+.tooltip-volcano .tooltip-inner {
+  background-color: #fa541c;
+}
+.tooltip-volcano .tooltip-arrow-content {
+  background-color: #fa541c;
+}
+.tooltip-orange .tooltip-inner {
+  background-color: #fa8c16;
+}
+.tooltip-orange .tooltip-arrow-content {
+  background-color: #fa8c16;
+}
+.tooltip-yellow .tooltip-inner {
+  background-color: #fadb14;
+}
+.tooltip-yellow .tooltip-arrow-content {
+  background-color: #fadb14;
+}
+.tooltip-gold .tooltip-inner {
+  background-color: #faad14;
+}
+.tooltip-gold .tooltip-arrow-content {
+  background-color: #faad14;
+}
+.tooltip-cyan .tooltip-inner {
+  background-color: #13c2c2;
+}
+.tooltip-cyan .tooltip-arrow-content {
+  background-color: #13c2c2;
+}
+.tooltip-lime .tooltip-inner {
+  background-color: #a0d911;
+}
+.tooltip-lime .tooltip-arrow-content {
+  background-color: #a0d911;
+}
+.tooltip-green .tooltip-inner {
+  background-color: #52c41a;
+}
+.tooltip-green .tooltip-arrow-content {
+  background-color: #52c41a;
+}
+.tooltip-blue .tooltip-inner {
+  background-color: #1890ff;
+}
+.tooltip-blue .tooltip-arrow-content {
+  background-color: #1890ff;
+}
+.tooltip-geekblue .tooltip-inner {
+  background-color: #2f54eb;
+}
+.tooltip-geekblue .tooltip-arrow-content {
+  background-color: #2f54eb;
+}
+.tooltip-purple .tooltip-inner {
+  background-color: #722ed1;
+}
+.tooltip-purple .tooltip-arrow-content {
+  background-color: #722ed1;
+}
+.tooltip-rtl {
+  direction: rtl;
+}
+.tooltip-rtl .tooltip-inner {
+  text-align: right;
+}
