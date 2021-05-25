@@ -98,8 +98,8 @@ export const zh = {
   'toast': {
     'mute_chat': '你已被老师禁言了',
     'unmute_chat': '你被解除禁言了',
-    'remote_mute_chat': '{reason}被老师禁言了',
-    'remote_unmute_chat': '{reason}被老师解除禁言了',
+    'remote_mute_chat': '{studentName}被老师禁言了',
+    'remote_unmute_chat': '{studentName}被老师解除禁言了',
     'add_screen_share': '老师开启了屏幕共享',
     'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',
