@@ -309,7 +309,7 @@ export const en = {
     'camera_move_out': 'Camera is pulled out, unable to display video!',
     'mic_move_out': 'Microphone is pulled out!',
     'device_not_working': 'The device is not working properly!',
-    'detect_new_device_in_room': 'The device has installed, Please try it!',
+    'detect_new_device_in_room': 'The device has installed, Please click setting and select the new device.',
     'teacher_device_may_not_work': "There is something wrong with the teacher's device",
   },
   'biz-header': {
