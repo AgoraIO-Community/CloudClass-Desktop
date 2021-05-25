@@ -463,12 +463,13 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, cause: any) {
+  async updateExtAppProperties(roomId: string, extAppUuid: string, properties: any, common: any, cause: any) {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'PUT',
       data: {
         properties,
+        common,
         cause
       }
     })

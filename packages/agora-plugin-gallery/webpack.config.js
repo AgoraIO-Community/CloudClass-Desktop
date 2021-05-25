@@ -28,6 +28,13 @@ module.exports = {
     extensions: [".ts", ".js", ".tsx"],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '~ui-kit': path.resolve(__dirname, 'src/gallery-ui-kit'),
+      '~components': path.resolve(__dirname, 'src/gallery-ui-kit/components'),
+      '~styles': path.resolve(__dirname, 'src/gallery-ui-kit/styles'),
+      '~utilities': path.resolve(__dirname, 'src/gallery-ui-kit/utilities'),
+      '~capabilities': path.resolve(__dirname, 'src/gallery-ui-kit/capabilities'),
+      '~capabilities/containers': path.resolve(__dirname, 'src/gallery-ui-kit/capabilities/containers'),
+      '~capabilities/hooks': path.resolve(__dirname, 'src/gallery-ui-kit/capabilities/hooks'),
     }
   },
   devServer: {
@@ -62,7 +69,43 @@ module.exports = {
           }
         ],
         exclude: /node_modules/,
-      }
+      },
+      {
+        test: /\.css$/i,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                config: path.resolve(__dirname, './postcss.config.js')
+                // plugins: [
+                //   tailwindcss(),
+                //   autoprefixer()
+                // ]
+              }
+            }
+          },
+          {
+            loader: 'thread-loader',
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
+        // exclude: /node_modules/,
+        loader: "url-loader",
+        options: {
+          esModule: false,
+          // limit: 1024
+        }
+      },
     ],
   },
   optimization: {

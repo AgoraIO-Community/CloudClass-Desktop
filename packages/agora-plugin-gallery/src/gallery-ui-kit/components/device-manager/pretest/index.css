@@ -1,0 +1,62 @@
+.pretest {
+    @apply flex justify-center;
+}
+
+.device-mirror-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pretest .select {
+    font-size: 13px;
+}
+
+.pretest .pretest-right {
+    margin-left: 40px;
+}
+
+.pretest .pretest-left .select {
+    margin-bottom: 17px;
+}
+
+.pretest .device-title, .pretest .device-text {
+    font-size: 12px;
+    font-weight: 400;
+    color: #586376;
+    margin-bottom: 10px;
+}
+
+.pretest-left .device-title {
+    @apply flex justify-between;
+}
+
+.pretest .device-volume {
+    margin-top: 15px;
+    @apply flex;
+}
+
+.pretest .device-volume .slider {
+    margin-left: 6px;
+    @apply flex-1;
+}
+
+.pretest .device-volume-test {
+    margin-top: 10px;
+    @apply flex items-center;
+}
+
+.pretest .device-choose {
+    margin-bottom: 20px;
+}
+
+.pretest-error-info .error-info {
+    @apply flex items-center;
+}
+
+.pretest-error-info .error-info .error-info-desc {
+    margin-left: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #586376;
+}

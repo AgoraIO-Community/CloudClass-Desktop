@@ -1,0 +1,71 @@
+.hover{
+  cursor: pointer;
+}
+
+.icon-box {
+  border-radius: 99px;
+  max-width: 29px;
+}
+
+.icon-box-hover:hover {
+  background-color: #f0f0f7;
+}
+
+.icon-hover:hover {
+  background-color: #f0f0f7;
+}
+
+.header-actions .icon-box-hover:hover,
+.zoom-controller .icon-box-hover:hover,
+.tool .icon-box-hover:hover {
+  color: #191919 !important;
+}
+
+.icon-hover{
+  border-radius: 9999px;
+  cursor: pointer;
+  text-align: center;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.use-svg {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.use-svg:before {
+  opacity: 0;
+}
+
+.icon-teacher-authorized.teacher-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+}
+.icon-teacher-whiteboard.teacher-whiteboard {
+  background-image: url('./assets//svg/teacher-granted-default.svg');
+}
+.icon-student-authorized.student-authorized {
+  background-image: url('./assets/svg/student-granted-active.svg'); 
+}
+.icon-student-whiteboard.student-whiteboard {
+  background-image: url('./assets//svg/student-granted-default.svg');
+}
+
+.icon-recording.recording {
+  background-image: url('./assets/svg/recording.svg'); 
+}
+.icon-share-screen.share-screen {
+  background-image: url('./assets/svg/share-screen.svg');
+}
+.icon-checked.checked {
+  background-image: url('./assets/svg/icon-accept.svg'); 
+}
+.icon-close.close{
+  background-image: url('./assets/svg/icon-refuse.svg');
+}
+.icon-countdown.countdown{
+  background-image: url('./assets/svg/icon-countdown.svg');
+}

@@ -28,8 +28,8 @@ export const AppPluginItem = observer(({app, properties} : {app:IAgoraExtApp, pr
               },
               language: language
             }, {
-              updateRoomProperty: async (properties: any, cause: {}) => {
-                return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, cause)
+              updateRoomProperty: async (properties: any, common: any, cause: {}) => {
+                return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)
               },
               deleteRoomProperties: async(properties: string[], cause: {}) => {
                 return await eduSDKApi.deleteExtAppProperties(roomUuid, app.appIdentifier, properties, cause)

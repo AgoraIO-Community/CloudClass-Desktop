@@ -34,65 +34,77 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
                 <Modal
                     title={'countdown'}
                     width={258}
-                    className={classnames({
-                        [`countdown-modal`]: 1,
-                        [`countdown-modal-hover`]: !showSetting
-                    })}
+
                 >
+                    <div 
+                        className={classnames({
+                            [`countdown-modal`]: 1,
+                            [`countdown-modal-hover`]: !showSetting
+                        })}
+                        style={{width: '80%'}}
+                    >
 
-                    <div className="restart-wrap">
-                        <Button
-                            onClick={() => {
-                                setResult(0)
-                                setShowSetting(true)
-                            }}
-                        >restart</Button>
-                    </div>
 
-                    <Countdown
-                        style={{ transform: 'scale(0.4)' }}
-                        endDate={result}
-                        theme={2}
-                        type={2}
-                        timeUnit={[':', ':', ':']}
-                    />
-                    {showSetting ? (
-                        <div style={{ width: '100%' }}>
-                            <div>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    max="3600"
-                                    step="60"
-                                    required
-                                    value={number}
-                                    onChange={(e: any) => { setNumber(e.target.value) }}
-                                    suffix={<span>(seconds)</span>}
 
-                                />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <Button
-                                    className="mt-4"
-                                    onClick={() => {
-                                        if (number > 3600) {
-                                            alert('最大值为3600')
-                                            return;
-                                        }
-                                        const result = Date.now() + (number) * 1000
-                                        setResult(result)
-                                        setShowSetting(false)
-                                    }}
-                                >Sure</Button>
-                            </div>
+                        <div className="restart-wrap">
+                            <Button
+                                onClick={() => {
+                                    setResult(0)
+                                    setShowSetting(true)
+                                }}
+                            >restart</Button>
                         </div>
-                    ) : null}
 
+                        <Countdown
+                            style={{ transform: 'scale(0.4)' }}
+                            endDate={result}
+                            theme={2}
+                            type={2}
+                            timeUnit={[':', ':', ':']}
+                        />
+                        {showSetting ? (
+                            <div style={{ width: '100%' }}>
+                                <div>
+                                    <Input
+                                        type="number"
+                                        min="0"
+                                        max="3600"
+                                        step="60"
+                                        required
+                                        value={number}
+                                        onChange={(e: any) => { setNumber(e.target.value) }}
+                                        suffix={<span style={{
+                                            color: number <= 3600 ? '#333' : '#F04C36'
+                                        }}>(seconds)</span>}
+                                        maxNumber={3600}
+                                        style={{
+                                            color: number <= 3600 ? '#333' : '#F04C36'
+                                        }}
+                                    />
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Button
+                                        className="mt-4"
+                                        onClick={() => {
+                                            if (number > 3600) {
+                                                alert('最大值为3600')
+                                                return;
+                                            }
+                                            const result = Date.now() + (number) * 1000
+                                            setResult(result)
+                                            setShowSetting(false)
+                                        }}
+                                        disabled={number > 3600}
+                                    >Sure</Button>
+                                </div>
+                            </div>
+                        ) : null}
 
+                    </div>
                 </Modal>
             </div>
         </div>

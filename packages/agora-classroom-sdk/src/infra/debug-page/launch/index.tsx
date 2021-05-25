@@ -53,6 +53,7 @@ export const LaunchPage = observer(() => {
         )
       }
 
+      launchOption.extApps = [new AgoraExtAppCountDown()]
       const genH5Scenes = (size: number) => {
         return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
       }

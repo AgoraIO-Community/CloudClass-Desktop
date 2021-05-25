@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>屏幕共享</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="灵动课堂Guide-13-组件工具箱" transform="translate(-1673.000000, -580.000000)">
+            <g id="编组-6" transform="translate(1265.000000, 276.000000)">
+                <g id="编组-6备份" transform="translate(167.000000, 289.000000)">
+                    <g id="屏幕共享" transform="translate(241.000000, 15.000000)">
+                        <rect id="矩形" fill="#0088EB" opacity="0" x="0" y="0" width="28" height="28"></rect>
+                        <g id="编组-8" transform="translate(4.666667, 5.833333)" stroke="#7B88A0" stroke-linecap="round" stroke-width="1.2">
+                            <rect id="矩形" x="0.976190476" y="0.166666667" width="16.7142857" height="14" rx="2"></rect>
+                            <path d="M4.66666667,9.21666667 C5.46998251,7.66111111 6.63664918,6.88333333 8.16666667,6.88333333 C9.69668415,6.88333333 11.4459248,6.88333333 13.4143885,6.88333333" id="路径-23"></path>
+                            <path d="M10.8799647,4.34890983 L13.0608351,6.52978027 C13.2560973,6.72504242 13.2560973,7.04162491 13.0608351,7.23688705 L10.8799647,9.41775749 L10.8799647,9.41775749" id="路径-25"></path>
+                            <line x1="4.66666667" y1="16.5" x2="14" y2="16.5" id="路径-21"></line>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

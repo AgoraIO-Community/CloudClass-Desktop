@@ -346,6 +346,7 @@ export type ScreenShareContext = {
     startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>,
 }
 export type RoomContext = {
+    roomProperties: any,
     /**
      * 场景类型
      */
