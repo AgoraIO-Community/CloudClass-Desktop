@@ -25,6 +25,7 @@ export interface LoadingProps extends BaseProps {
     footer?: React.ReactNode[];
     uploadItemList?: UploadItem[];
     onClick?: (id: string, type: 'delete' | 'click') => void;
+    noCloseBtn?: boolean;
 }
 
 export const Loading: FC<LoadingProps> = ({
@@ -79,9 +80,9 @@ export const Loading: FC<LoadingProps> = ({
                                 )}
                             </div>
                             <div>
-                                <Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
+                                {restProps.noCloseBtn ? "" :(<Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
                                     onClick && onClick(index.toString(), 'delete')
-                              }/>
+                              }/>)}
                             </div>
                         </div>
                     ))}

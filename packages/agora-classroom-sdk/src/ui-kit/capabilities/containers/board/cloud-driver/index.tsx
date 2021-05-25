@@ -247,6 +247,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
                   <Loading
                     onClick={handleClick}
                     hasLoadingGif={false}
+                    noCloseBtn={true}
                     uploadItemList={
                       [
                         { ...uploadFileInfo, currentProgress }
