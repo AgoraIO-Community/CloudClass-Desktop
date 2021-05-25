@@ -27,6 +27,7 @@ export type AgoraExtAppHandle = {
 }
 
 export interface IAgoraExtApp {
+  language: string
   appIdentifier: string
   appName: string
   width: number

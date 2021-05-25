@@ -6,6 +6,7 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import type {IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext} from 'agora-edu-core'
 import {BoardClient} from './board'
+import { I18nProvider } from '@/gallery-ui-kit/components/i18n';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -41,15 +42,17 @@ export class AgoraExtAppWhiteboard implements IAgoraExtApp {
 
   store?:PluginStore
 
-  constructor(){
+  constructor(public readonly language: any = 'en'){
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle)
     ReactDOM.render((
-      <Provider store={this.store}>
-        <App/>
-      </Provider>
+      <I18nProvider language={this.language}>
+        <Provider store={this.store}>
+          <App/>
+        </Provider>
+      </I18nProvider>
     ),
       dom
     );

@@ -10,6 +10,7 @@ import { Countdown } from '../../gallery-ui-kit/components/countdown'
 import { Input } from '../../gallery-ui-kit/components/input'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
@@ -38,7 +39,7 @@ const App = observer(() => {
               pauseTime: (Math.floor(Date.now() / 1000)).toString(),
             })
           }}
-        >restart</Button>
+        >{transI18n('countdown.restart')}</Button>
       </div>
 
       <Countdown
@@ -56,7 +57,7 @@ const App = observer(() => {
               onChange={(e: any) => { pluginStore.setNumber(e.target.value.replace(/\D+/g, '')) }}
               suffix={<span style={{
                 color: (pluginStore.number != undefined && pluginStore.number <= 3600) ? '#333' : '#F04C36'
-              }}>(seconds)</span>}
+              }}>({transI18n('countdown.seconds')})</span>}
               maxNumber={3600}
               style={{
                 color: (pluginStore.number != undefined && pluginStore.number <= 3600)  ? '#333' : '#F04C36'
@@ -82,7 +83,7 @@ const App = observer(() => {
                 })
               }}
               disabled={pluginStore.number !== undefined && pluginStore.number > 3600}
-            >Sure</Button>
+            >{transI18n('countdown.start')}</Button>
           </div>
         </div>
       ) : null}
@@ -93,22 +94,26 @@ const App = observer(() => {
 
 
 export class AgoraExtAppCountDown implements IAgoraExtApp {
+
   appIdentifier = "io.agora.countdown"
-  appName = "Count Down"
+  appName = 'countdown'
   width = 258
   height = 240
 
   store?: PluginStore
 
-  constructor() {
+  constructor(public readonly language: any = 'en') {
+    changeLanguage(this.language)
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle)
     ReactDOM.render((
-      <Provider store={this.store}>
-        <App />
-      </Provider>
+      <I18nProvider language={this.language}>
+        <Provider store={this.store}>
+          <App />
+        </Provider>
+      </I18nProvider>
     ),
       dom
     );
