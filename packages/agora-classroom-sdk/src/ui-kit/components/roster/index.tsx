@@ -166,6 +166,7 @@ export const Roster: FC<RosterProps> = ({
                           className={
                             `${idx === 0 ? 'roster-username' : ''}`
                           }
+                          title = {(data as any)[col.key]}
                           style={{
                             paddingLeft: 25
                           }}

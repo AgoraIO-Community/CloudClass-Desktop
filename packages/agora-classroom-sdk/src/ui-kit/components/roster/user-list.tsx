@@ -237,7 +237,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                     <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
                       {idx === 0 ? 
                         <span
-                          title={col.name}
+                          title={data[col.key]}
                           className={
                             `${idx === 0 ? 'roster-username' : ''} ${canOperate(role, localUserUuid, data, col) ? 'action' : ''}`
                           }
