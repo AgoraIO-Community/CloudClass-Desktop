@@ -64,13 +64,18 @@
 
   </style>
   <script>
-
-
     let readyState = {
-        dns: -1,
-        dom: -1,
-        lib: -1,
-        params: null
+        dns: false,
+        dom: false,
+        lib: false,
+        params: false
+    }
+
+    let readyValue = {
+      dns: -1,
+      dom: -1,
+      lib: -1,
+      params: null
     }
     window.addEventListener('message', function(e) {  
       if (e.source != window.parent)   
@@ -99,7 +104,8 @@
             //   }))
             //   console.log(`AgoraEduSDK setParameters called`)
             // }
-            readyState.params = {appId, options, cachePath}
+            readyValue.params = {appId, options, cachePath}
+            readyState.params = true
         }
       }
           
@@ -143,24 +149,27 @@
       for(let i = 0; i < entries.length; i++) {
         let entry = entries[i].toJSON()
         if(entry.entryType === 'navigation') {
-          readyState.dom = entry.duration.toFixed(2)
-          readyState.dns = (entry.domainLookupEnd - entry.domainLookupStart).toFixed(2)
+          readyValue.dom = entry.duration
+          readyValue.dns = (entry.domainLookupEnd - entry.domainLookupStart)
+          readyState.dom = entry.loadEventEnd !== undefined
+          readyState.dns = entry.domainLookupEnd !== undefined
         } else if(entry.entryType === 'resource' && entry.name.includes('edu_sdk.bundle.js')) {
-          readyState.lib = entry.duration.toFixed(2)
+          readyValue.lib = entry.duration
+          readyState.lib = entry.responseEnd !== undefined
         }
       }
 
       update_status([
-        `Configurations ${readyState.params === null ? 'loading...' : 'loaded'}`,
-        `DNS ${readyState.dns < 0 ? 'loading...' : readyState.dns+'ms'}`,
-        `Document ${readyState.dom <= 0 ? 'loading...' : readyState.dom+'ms'}`,
-        `Library ${readyState.lib <= 0 ? 'loading...' : readyState.lib+'ms'}`
+        `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+        `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+        `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+        `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`
       ].join('\r\n'))
 
-      if(readyState.dom <= 0 || readyState.lib <= 0 || readyState.params === null) {
+      if(!readyState.dom || !readyState.lib || !readyState.params) {
         setTimeout(collectPerformance, 200)
       } else {
-        launchApplication(readyState.params)
+        launchApplication(readyValue.params)
       }
     }
 
