@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "adm-zip": "0.5.1",
-    "agora-classroom-sdk": "^1.0.0",
+    "agora-classroom-sdk": "1.1.2",
     "agora-electron-sdk": "apaas",
     "source-map-support": "0.5.16"
   },

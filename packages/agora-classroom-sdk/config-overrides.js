@@ -226,13 +226,14 @@ if(apaasBuildEnv) {
   // const date = dayjs().format('YYMMDD')
   // const translator = short()
   // const hash = translator.new()
-  if(apaasBuildEnv === 'test') {
-    version=`test-${packageInfo.version}`
-  } else if(apaasBuildEnv === 'preprod') {
-    version=`preprod-${packageInfo.version}`
-  } else if(apaasBuildEnv === 'prod') {
-    version=`${packageInfo.version}`
-  }
+  version = `${packageInfo.version}`
+  // if(apaasBuildEnv === 'test') {
+  //   version=`test-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'preprod') {
+  //   version=`preprod-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'prod') {
+  //   version=`${packageInfo.version}`
+  // }
 }
 
 const webpackConfig = override(
