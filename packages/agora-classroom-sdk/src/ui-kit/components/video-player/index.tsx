@@ -223,7 +223,11 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           type: 'microphone',
         })}
         placement={placement}
-        onClick={() => micDevice === 1 && onMicClick(uid)}
+        onClick={() => {
+          if (micDevice === 1) {
+            onMicClick(uid)
+          }
+        }}
       />
       </Tooltip>
       <MediaIcon
@@ -239,7 +243,11 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           type: 'camera',
         })}
         placement={placement}
-        onClick={() => cameraDevice === 1 && onCameraClick(uid)}
+        onClick={() => {
+          if (cameraDevice === 1) {
+            onCameraClick(uid)
+          }
+        }}
       />
       {isHost ? (
         <>
@@ -257,7 +265,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <Icon
                 hover={true}
                 type="invite-to-podium"
-                className={isOnPodium ? 'no_podium' : 'podium'}
+                className={isOnPodium ? 'podium' : 'no_podium'}
                 onClick={() => onOffPodiumClick(uid)}
               />
             </Tooltip>

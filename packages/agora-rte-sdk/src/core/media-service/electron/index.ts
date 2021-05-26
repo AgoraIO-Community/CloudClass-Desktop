@@ -5,6 +5,7 @@ import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapper
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
+import { truncate } from 'lodash';
 
 export class CEFVideoEncoderConfiguration {
   /**
@@ -261,6 +262,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   gatewayRtt: number = 0
   lastMileDelay: number = 0
 
+  published: boolean = false;
+
   constructor(options: ElectronWrapperInitOption) {
     super();
     this._cefClient = options.cefClient
@@ -378,18 +381,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     let decibel = +((volume / 100) * 255).toFixed(0)
     let ret = this.client.setAudioPlaybackVolume(decibel)
     EduLogger.info("setAudioPlaybackVolume ret", ret)
-  }
-
-  async muteLocalVideo(val: boolean): Promise<any> {
-    // let ret = this.client.muteLocalVideoStream(val)
-    this.client.enableLocalVideo(!val)
-    // EduLogger.info("muteLocalVideo ret", ret)
-  }
-
-  async muteLocalAudio(val: boolean): Promise<any> {
-    let ret = this.client.muteLocalAudioStream(val)
-    this.client.enableLocalAudio(!val)
-    EduLogger.info("muteLocalAudio ret", ret)
   }
   
   async muteRemoteVideo(uid: any, val: boolean): Promise<any> {
@@ -1030,97 +1021,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.reset()
   }
 
-  async openCamera(option?: CameraOption): Promise<any> {
-    try {
-      let ret = this.client.enableLocalVideo(true)
-      if (ret < 0) {
-        throw GenericErrorWrapper({
-          message: `enableLocalVideo failure`,
-          code: ret
-        })
-      }
-      if (option) {
-        option.deviceId && (ret = this.client.setVideoDevice(option.deviceId))
-        if (ret < 0) {
-          throw GenericErrorWrapper({
-            message: `setVideoDevice failure`,
-            code: ret
-          })
-        }
-        // TODO: cef configuration
-        //@ts-ignore
-        option.encoderConfig && (ret = this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
-          new CEFVideoDimensions(
-            option.encoderConfig.width,
-            option.encoderConfig.height
-          ),
-          option.encoderConfig.frameRate
-          )
-        ))
-        if (ret < 0) {
-          throw GenericErrorWrapper({
-            message: `setVideoEncoderConfiguration failure`,
-            code: ret
-          })
-        }
-      }
-      if (this.joined) {
-        ret = this.client.muteLocalVideoStream(false)
-        EduLogger.info("living muteLocalVideoStream, ret: ", ret)
-        this.videoMuted = false
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err)
-    }
-  }
-
-  closeCamera() {
-    try {
-      let ret = this.client.enableLocalVideo(false)
-      if (ret < 0) {
-        throw {
-          message: `enableLocalVideo failure`,
-          code: ret
-        }
-      }
-      EduLogger.info("electron: closeCamera")
-      if (this.joined) {
-        ret = this.client.muteLocalVideoStream(true)
-        this.videoMuted = true
-        if (ret < 0) {
-          throw {
-            message: `enableLocalVideo failure`,
-            code: ret
-          }
-        }
-        EduLogger.info("electron: muteCamera")
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err)
-    }
-  }
-
-  async changeLocalCamera({deviceId, encoderConfig}: CameraOption): Promise<any> {
-    try {
-      let ret = -1
-      if (this._cefClient) {
-        //@ts-ignore
-        ret = this.client.videoDeviceManager.setDevice(deviceId)
-      } else {
-        ret = this.client.setVideoDevice(deviceId)
-      }
-      if (ret < 0) {
-        throw GenericErrorWrapper({
-          message: 'changeCamera failure',
-          code: ret
-        });
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err);
-    }
-  }
-
-
   async getMicrophones (): Promise<any[]> {
     let list: any[] = []
     if (this._cefClient) {
@@ -1181,77 +1081,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     // } catch (err) {
     //   GenericErrorWrapper(err);
     // }
-  }
-
-  async openMicrophone(option?: MicrophoneOption): Promise<any> {
-    try {
-      let ret = this.client.enableLocalAudio(true)
-      if (ret < 0) {
-        throw {
-          message: `enableLocalAudio failure`,
-          code: ret
-        }
-      }
-      //TODO: cef api
-      if (this._cefClient) {
-        //@ts-ignore
-        option.deviceId && this.client.audioDeviceManager.setRecordingDevice(option.deviceId)
-      } else {
-        //@ts-ignore
-        option.deviceId && this.client.setAudioRecordingDevice(option.deviceId)
-      }
-      if (this.joined) {
-        ret = this.client.muteLocalAudioStream(false)
-        this.audioMuted = false
-        EduLogger.info("living muteLocalAudioStream, ret: ", ret)
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err)
-    }
-  }
-
-  closeMicrophone() {
-    try {
-      let ret = this.client.enableLocalAudio(false)
-      if (ret < 0) {
-        throw {
-          message: `enableLocalAudio failure`,
-          code: ret
-        }
-      }
-      // if (this._cefClient) {
-      //   //@ts-ignore
-      //   this.client.audioDeviceManager.stopRecordingDeviceTest()
-      // } else {
-      //   this.client.stopAudioRecordingDeviceTest()
-      // }
-      if (this.joined) {
-        ret = this.client.muteLocalAudioStream(true)
-        this.audioMuted = true
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err)
-    }
-  }
-
-  async changeMicrophone(deviceId: string): Promise<any> {
-    try {
-      let ret = -1
-      if (this._cefClient) {
-        //@ts-ignore
-        ret = this.client.audioDeviceManager.setRecordingDevice(deviceId)
-      } else {
-        ret = this.client.setAudioRecordingDevice(deviceId)
-      }
-      if (ret < 0) {
-        throw {
-          message: 'setAudioRecordingDevice failure',
-          code: ret
-        }
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err)
-    }
   }
 
   async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
@@ -1399,63 +1228,171 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
 
-  async openTestCamera(option?: CameraOption): Promise<any> {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support openTestCamera')
-      return
+  async muteLocalAudioStream(v: boolean) {
+    let ret = this.client.muteLocalAudioStream(v)
+    if (ret < 0) {
+      throw {
+        name: 'muteLocalAudioStream stage muteLocalAudioStream failure',
+        code: ret
+      }
     }
-    await this.openCamera(option)
+    // ret = this.client.stopAudioRecordingDeviceTest()
+    // if (ret < 0) {
+    //   throw {
+    //     name: 'muteLocalAudioStream stage stopAudioRecordingDeviceTest failure',
+    //     code: ret
+    //   }
+    // }
+  }
+
+  async muteLocalVideoStream(v: boolean) {
+    let ret = this.client.muteLocalVideoStream(v)
+    if (ret < 0) {
+      throw {
+        name: 'muteLocalVideoStream stage muteLocalVideoStream failure',
+        code: ret
+      }
+    }
+  }
+
+  /**
+   * 开启音频采集
+   * @param v 
+   */
+  async enableLocalVideo(v: boolean) {
+    const ret = this.client.enableLocalVideo(v)
+    if (ret < 0) {
+      throw {
+        name: 'enableLocalVideo failure',
+        code: ret
+      }
+    }
+    return ret
+  }
+
+  /**
+   * 设置摄像头设备
+   * @param deviceId 
+   * @returns 
+   */
+  async enableLocalAudio(v: boolean) {
+    const ret = this.client.enableLocalAudio(v)
+    if (ret < 0) {
+      throw {
+        name: 'enableLocalAudio failure',
+        code: ret
+      }
+    }
+    return ret
+  }
+
+  /**
+   * 关闭音频发流
+   * @param v 
+   * @returns 
+   */
+  async muteLocalAudio(v: boolean, deviceId?: string) {
+    let ret = this.client.enableLocalAudio(!v)
+    if (ret < 0) {
+      throw {
+        name: 'enableLocalAudio failure',
+        code: ret
+      }
+    }
+    ret = this.client.muteLocalAudioStream(v)
+    if (ret < 0) {
+      throw {
+        name: 'muteLocalAudio failure',
+        code: ret
+      }
+    }
+    if (deviceId) {
+      ret = this.client.setAudioRecordingDevice(deviceId)
+    }
+    if (ret < 0) {
+      throw {
+        name: 'setAudioRecordingDevice failure',
+        code: ret
+      }
+    }
+    return ret
   }
   
-  closeTestCamera() {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support closeTestCamera')
-      return
+  /**
+   * 关闭视频发流
+   * @param v 
+   * @returns 
+   */
+  async muteLocalVideo(v: boolean, deviceId?: string) {
+    let ret = this.client.enableLocalVideo(!v)
+    if (ret < 0) {
+      throw {
+        name: 'enableLocalVideo failure',
+        code: ret
+      }
     }
-    this.closeCamera()
+    ret = this.client.muteLocalVideoStream(v)
+    if (ret < 0) {
+      throw {
+        name: 'muteLocalVideo failure',
+        code: ret
+      }
+    }
+    if (deviceId) {
+      ret = this.client.setVideoDevice(deviceId)
+    }
+    if (ret < 0) {
+      throw {
+        name: 'setVideoDevice failure',
+        code: ret
+      }
+    }
+    return ret
+  }
+
+  disableLocalVideo() {
+    const ret = this.client.enableLocalVideo(false)
+    if (ret < 0) {
+      throw {
+        name: 'disableLocalVideo failure',
+        code: ret
+      }
+    }
+  }
+
+  disableLocalAudio() {
+    const ret = this.client.enableLocalAudio(false)
+    if (ret < 0) {
+      throw {
+        name: 'disableLocalAudio failure',
+        code: ret
+      }
+    }
+  }
+
+  /**
+   * 设置摄像头设备
+   * @param deviceId 
+   * @returns 
+   */
+  async setCameraDevice(deviceId: string) {
+    const ret = this.client.setVideoDevice(deviceId)
+    if (ret < 0) {
+      throw 'setCameraDevice failure'
+    }
+    return ret
   }
   
-  async changeTestCamera(deviceId: string): Promise<any> {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestCamera')
-      return
+  /**
+   * 设置麦克风设备
+   * @param deviceId 
+   * @returns 
+   */
+  async setMicrophoneDevice(deviceId: string) {
+    const ret = this.client.setAudioRecordingDevice(deviceId)
+    if (ret < 0) {
+      throw 'setMicrophoneDevice failure'
     }
-    await this.changeLocalCamera({deviceId})
-  }
-  
-  async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support openTestMicrophone')
-      return
-    }
-    await this.openMicrophone(option)
-    // const res = this.client.startAudioRecordingDeviceTest(300)
-    // EduLogger.info('openTestMicrophone startAudioRecordingDeviceTest: ',  res)
-  }
-  
-  async changeTestResolution(config: any): Promise<any> {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestResolution')
-      return
-    }
-    await this.changeResolution(config)
-  }
-  
-  closeTestMicrophone() {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support closeTestMicrophone')
-      return
-    }
-    // const res = this.client.stopAudioRecordingDeviceTest()
-    // EduLogger.info('closeTestMicrophone stopAudioRecordingDeviceTest: ',  res)
-    this.closeMicrophone()
-  }
-  
-  async changeTestMicrophone(deviceId: string): Promise<any> {
-    if (this.joined) {
-      EduLogger.warn('joined mode not support changeTestMicrophone')
-      return
-    }
-    await this.changeMicrophone(deviceId)
+    return ret
   }
 }

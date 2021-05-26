@@ -1,5 +1,4 @@
-import { IAgoraRTCRemoteUser, LocalAudioTrackStats, UID } from 'agora-rtc-sdk-ng';
-import { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
+import { IAgoraRTCRemoteUser, LocalAudioTrackStats, UID, IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, ILocalVideoTrack, ILocalAudioTrack, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { EventEmitter } from "events";
 import { EduLogger } from '../../logger';
 import { IWebRTCWrapper, WebRtcWrapperInitOption, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams } from '../interfaces';
@@ -24,7 +23,7 @@ type AgoraWebSDK = IAgoraRTC & {
   setParameter: (key: 'AUDIO_SOURCE_AVG_VOLUME_DURATION' | 'AUDIO_VOLUME_INDICATION_INTERVAL', value: number) => void
 };
 
-function getEncoderConfig (option: CameraOption) {
+function getEncoderConfig(option?: CameraOption) {
   return {
     frameRate: option?.encoderConfig?.frameRate ?? 15,
     width: option?.encoderConfig?.width ?? 320,
@@ -49,11 +48,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   clientConfig?: any;
 
   joined: boolean
-  cameraTrack?: ICameraVideoTrack
-  microphoneTrack?: IMicrophoneAudioTrack
+  // cameraTrack?: ICameraVideoTrack
+  // microphoneTrack?: IMicrophoneAudioTrack
 
   cameraTestTrack?: ICameraVideoTrack
-  microphoneTestTrack?: IMicrophoneAudioTrack
+  // microphoneTestTrack?: IMicrophoneAudioTrack
 
   localScreenUid?: any;
   screenVideoTrack?: ILocalVideoTrack
@@ -85,8 +84,30 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     videoLossRate: number
   };
 
+  videoDeviceConfig: Map<'cameraTestRenderer' | 'cameraRenderer', any> = new Map()
+  audioDeviceConfig: Map<'microphoneTestTrack' | 'microphoneTrack', any> = new Map()
+  audioTrackPublished: Map<string, boolean> = new Map()
+  videoTrackPublished: Map<string, boolean> = new Map()
+
+  get microphoneTrack(): IMicrophoneAudioTrack {
+    return this.audioTrackMap.get('microphoneTrack')!
+  }
+
+  get cameraTrack(): ICameraVideoTrack {
+    return this.videoTrackMap.get('cameraRenderer')!
+  }
+
   constructor(options: WebRtcWrapperInitOption) {
     super();
+    this.videoDeviceConfig.set('cameraTestRenderer', undefined)
+    this.videoDeviceConfig.set('cameraRenderer', undefined)
+    this.audioDeviceConfig.set('microphoneTestTrack', undefined)
+    this.audioDeviceConfig.set('microphoneTrack', undefined)
+
+    this.videoTrackPublished.set('cameraTestRenderer', false)
+    this.videoTrackPublished.set('cameraRenderer', false)
+    this.audioTrackPublished.set('microphoneTestTrack', false)
+    this.audioTrackPublished.set('microphoneTrack', false)
     this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK
     this.agoraWebSdk.setArea([options.area as any])
     // this.agoraWebSdk.setArea(options.area)
@@ -160,12 +181,26 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.localUid = undefined
     this.releaseAllClient()
     this.clearAllInterval()
-    this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
-    this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
-    this.cameraTestTrack && this.closeTestTrack(this.cameraTestTrack)
-    this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
+    // this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
+    // this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
+    // this.cameraTestTrack && this.closeTestTrack(this.cameraTestTrack)
+    // this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
     this.screenVideoTrack && this.closeScreenTrack(this.screenVideoTrack)
     this.screenAudioTrack && this.closeScreenTrack(this.screenAudioTrack)
+    this.videoDeviceConfig.set('cameraTestRenderer', undefined)
+    this.videoDeviceConfig.set('cameraRenderer', undefined)
+    this.audioDeviceConfig.set('microphoneTestTrack', undefined)
+    this.audioDeviceConfig.set('microphoneTrack', undefined)
+
+    this.videoTrackPublished.set('cameraTestRenderer', false)
+    this.videoTrackPublished.set('cameraRenderer', false)
+    this.audioTrackPublished.set('microphoneTestTrack', false)
+    this.audioTrackPublished.set('microphoneTrack', false)
+    this.muteLocalAudio(true)
+    this.muteLocalVideo(true)
+    this.enableLocalAudio(false)
+    this.enableLocalVideo(false)
+    this.videoTrackMap.clear()
     this.joined = false
     this.publishedTrackIds = []
     this.deviceList = []
@@ -194,7 +229,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   }
 
   // TODO: not in used, need to refactor
-  init () {
+  init() {
     this._client = this.agoraWebSdk.createClient(this.clientConfig)
     this.streamCoordinator?.updateRtcClient(this._client)
     this.client.on('user-joined', (user) => {
@@ -212,30 +247,30 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
     })
     this.client.on('user-published', async (user, mediaType) => {
-        EduLogger.info("user-published ", user, mediaType)
-        if (user.uid !== this.localScreenUid) {
-          // if (mediaType === 'audio') {
-          //   if (!this.audioMuted) {
-          //     EduLogger.info("subscribeAudio, user", user)
-          //     await this.client.subscribe(user, 'audio')
-          //     if (user.audioTrack) {
-          //       !user.audioTrack.isPlaying && user.audioTrack.play()
-          //     }
-          //   }
-          // }
+      EduLogger.info("user-published ", user, mediaType)
+      if (user.uid !== this.localScreenUid) {
+        // if (mediaType === 'audio') {
+        //   if (!this.audioMuted) {
+        //     EduLogger.info("subscribeAudio, user", user)
+        //     await this.client.subscribe(user, 'audio')
+        //     if (user.audioTrack) {
+        //       !user.audioTrack.isPlaying && user.audioTrack.play()
+        //     }
+        //   }
+        // }
 
-          // if (mediaType === 'video') {
-          //   if (!this.videoMuted) {
-          //     EduLogger.info("subscribeVideo, user", user)
-          //     await this.client.subscribe(user, 'video')
-          //     this.fire('user-published', {
-          //       user,
-          //       mediaType,
-          //       channel: this.channelName
-          //     })
-          //   }
-          // }
-          this.streamCoordinator?.addRtcStream(user, mediaType)
+        // if (mediaType === 'video') {
+        //   if (!this.videoMuted) {
+        //     EduLogger.info("subscribeVideo, user", user)
+        //     await this.client.subscribe(user, 'video')
+        //     this.fire('user-published', {
+        //       user,
+        //       mediaType,
+        //       channel: this.channelName
+        //     })
+        //   }
+        // }
+        this.streamCoordinator?.addRtcStream(user, mediaType)
       }
     })
     this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
@@ -311,7 +346,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           audioStats: this._localAudioStats,
           videoStats: this._localVideoStats
         },
-        remotePacketLoss:{
+        remotePacketLoss: {
           audioStats,
           videoStats
         }
@@ -320,29 +355,29 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     return
   }
 
-  release () {
+  release() {
     this.reset()
   }
 
   private stats: {
     localAudioStats: {
-     sendPackets: number;
-     sendPacketsLost: number;
+      sendPackets: number;
+      sendPacketsLost: number;
     },
     localVideoStats: {
       sendPackets: number;
       sendPacketsLost: number;
     }
   } = {
-    localAudioStats: {
-      sendPackets: 0,
-      sendPacketsLost: 0,
-    },
-    localVideoStats: {
-      sendPackets: 0,
-      sendPacketsLost: 0,
+      localAudioStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      },
+      localVideoStats: {
+        sendPackets: 0,
+        sendPacketsLost: 0,
+      }
     }
-  }
 
   private channelName: string = ''
 
@@ -377,7 +412,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           // if (user.audioTrack) {
           //   !user.audioTrack.isPlaying && user.audioTrack.play()
           // }
-          
+
         }
 
         if (mediaType === 'video') {
@@ -448,7 +483,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         sendPackets: prevStats.localVideoStats.sendPackets,
         sendPacketsLost: prevStats.localVideoStats.sendPacketsLost,
       }
-      
+
       const localAudioStats = this.client.getLocalAudioStats()
       const localVideoStats = this.client.getLocalVideoStats()
 
@@ -549,7 +584,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
             videoLossRate: deltaVideoLostRate,
           }
         },
-        remotePacketLoss:{
+        remotePacketLoss: {
           audioStats,
           videoStats
         }
@@ -565,7 +600,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         }
       })
       const speakerNumber = speakers.length
-      
+
       this.fire('volume-indication', {
         channel: channelName,
         speakers,
@@ -613,34 +648,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
   }
 
-  private closeMediaTrack(track: ILocalTrack) {
-    if (track) {
-      track.stop()
-      track.close()
-    }
-    if (track.trackMediaType === 'video') {
-      this.cameraTrack = undefined
-    }
-    if (track.trackMediaType === 'audio') {
-      this.closeInterval('volume')
-      this.microphoneTrack = undefined
-    }
-  }
-
-  private closeTestTrack(track: ILocalTrack) {
-    if (track) {
-      track.stop()
-      track.close()
-    }
-    if (track.trackMediaType === 'video') {
-      this.cameraTestTrack = undefined
-    }
-    if (track.trackMediaType === 'audio') {
-      this.closeInterval('test-volume')
-      this.microphoneTestTrack = undefined
-    }
-  }
-
   async muteAllVideo(val: boolean): Promise<any> {
     const asyncList = [
       this.muteLocalVideo(val)
@@ -650,7 +657,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     try {
       await Promise.all(asyncList)
       this.videoMuted = val
-    } catch(err) {
+    } catch (err) {
       throw GenericErrorWrapper(err)
     }
   }
@@ -664,20 +671,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     try {
       await Promise.all(asyncList)
       this.audioMuted = val
-    } catch(err) {
+    } catch (err) {
       throw GenericErrorWrapper(err)
-    }
-  }
-
-  async muteLocalVideo(val: boolean): Promise<any> {
-    if (this.cameraTrack) {
-      await this.cameraTrack.setEnabled(val)
-    }
-  }
-  
-  async muteLocalAudio(val: boolean): Promise<any> {
-    if (this.microphoneTrack) {
-      await this.microphoneTrack.setEnabled(val)
     }
   }
 
@@ -770,27 +765,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
   }
 
-  // async muteRemoteVideoByClient(client: IAgoraRTCClient, uid: any, val: boolean): Promise<any> {
-  //   const targetUser = client.remoteUsers.find(user => user.uid === +uid)
-  //   if (!targetUser) return
-  //   if (val) {
-  //     await client.unsubscribe(targetUser, 'video')
-  //   } else {
-  //     EduLogger.info("call subscribeVideo")
-  //   }
-  // }
-
-  // async muteRemoteAudioByClient(client: IAgoraRTCClient, uid: any, val: boolean): Promise<any> {
-  //   const targetUser = client.remoteUsers.find(user => user.uid === +uid)
-  //   if (!targetUser) return
-  //   if (val) {
-  //     await client.unsubscribe(targetUser, 'audio')
-  //     this.fire('user-unpublished')
-  //   } else {
-  //     EduLogger.info("call subscribeVideo")
-  //   }
-  // }
-
   async muteRemoteAudio(uid: any, val: boolean): Promise<any> {
     const targetUser = this.client.remoteUsers.find(user => user.uid === +uid)
     if (!targetUser) return
@@ -799,92 +773,6 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     } else {
       EduLogger.info("call subscribeAudio")
       // await this.subscribeAudio(targetUser)
-    }
-  }
-
-  async openCamera(option?: CameraOption): Promise<any> {
-    EduLogger.info('[agora-web] invoke web#openCamera')
-    try {
-      await this.acquireCameraTrack('cameraRenderer', option)
-    } catch(err) {
-      this.fire('localVideoStateChanged', {state: 3, error: 0})
-      throw err
-    }
-    if (this.hasCamera === undefined) {
-      EduLogger.info(`[agora-web] prepare attempt open camera in web`)
-      const cameraList = await this.getCameras()
-      this.hasCamera = !!cameraList.length
-      this.publishedVideo = this.hasCamera
-      EduLogger.info(`[agora-web] prepare open camera success`)
-    }
-    if (this.joined && this.publishedVideo) {
-      const cameraId = this.cameraTrack!.getTrackId()
-      const videoTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'video')
-      await this.client.unpublish(videoTracks)
-      await this.client.publish([this.cameraTrack!])
-      EduLogger.info(`[agora-web] publish camera [${cameraId}] success`)
-    }
-  }
-
-  async closeCamera() {
-    EduLogger.info('[agora-web] invoke close#openCamera')
-    if (this.cameraTrack) {
-      try {
-        await this.unpublishTrack(this.cameraTrack)
-        if (this.cameraTrack) {
-          const trackId = this.cameraTrack?.getTrackId()
-          this.cameraTrack.isPlaying && this.cameraTrack.stop()
-          this.cameraTrack.close()
-          EduLogger.info(`[agora-web] close camera [${trackId}] success`)
-          this.cameraTrack = undefined
-          this.fire('track-ended', {resource: 'video', trackId: trackId, type: 'cameraRenderer', operation: 'close'})
-        }
-      } catch (err) {
-        if (this.cameraTrack) {
-          const trackId = this.cameraTrack?.getTrackId()
-          this.cameraTrack.isPlaying && this.cameraTrack.stop()
-          this.cameraTrack.close()
-          EduLogger.info(`[agora-web] close camera [${trackId}] success`)
-          this.cameraTrack = undefined
-          this.fire('track-ended', {resource: 'video', trackId: trackId, type: 'cameraRenderer', operation: 'close'})
-        }
-        throw GenericErrorWrapper(err)
-      }
-    }
-  }
-
-  async changeLocalCamera({deviceId, encoderConfig}: CameraOption): Promise<any> {
-    EduLogger.info('[agora-web] invoke close#changeCamera')
-    if (this.cameraTrack) {
-      await this.cameraTrack.setDevice(deviceId)
-      await this.agoraWebSdk.checkVideoTrackIsActive(this.cameraTrack as ILocalVideoTrack)
-      EduLogger.info(`[agora-web] changeCamera by deviceId: ${deviceId} success`)
-    } else {
-      await this.openCamera({deviceId, encoderConfig})
-      // throw 'no camera track found'
-    }
-  }
-
-  async openMicrophone(option?: MicrophoneOption): Promise<any> {
-    if (this.microphoneTrack) throw 'microphone track already exists'
-    EduLogger.info('[agora-web] invoke web#openMicrophone')
-    await this.acquireMicrophoneTrack('microphoneTrack', option)
-    if (this.microphoneTrack) {
-      this.microphoneTrack!.stop()
-      EduLogger.info(`[agora-web] create audio track stop playback [${this.microphoneTrack!.getTrackId()}] success`)
-    }
-    if (this.hasMicrophone === undefined) {
-      EduLogger.info(`[agora-web] prepare attempt open microphone in web`)
-      const microphoneList = await this.getMicrophones()
-      this.hasMicrophone = !!microphoneList.length
-      this.publishedAudio = this.hasMicrophone
-      EduLogger.info(`[agora-web] prepare open microphone success`)
-    }
-    if (this.joined && this.publishedAudio) {
-      const audioTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'audio')
-      await this.client.unpublish(audioTracks)
-      await this.client.publish([this.microphoneTrack!])
-      EduLogger.info(`[agora-web] publish audio track [${this.microphoneTrack!.getTrackId()}] success`)
     }
   }
 
@@ -906,44 +794,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.intervalMap[type] = setInterval(call, delay, args)
   }
 
-  async closeMicrophone() {
-    EduLogger.info('[agora-web] close microphone')
-    if (this.microphoneTrack) {
-      try {
-        await this.unpublishTrack(this.microphoneTrack)
-        if (this.microphoneTrack) {
-          this.microphoneTrack.stop()
-          this.microphoneTrack.close()
-          EduLogger.info('[agora-web] close microphone success')
-          this.microphoneTrack = undefined
-        }
-      } catch (err) {
-        if (this.microphoneTrack) {
-          this.microphoneTrack.stop()
-          this.microphoneTrack.close()
-          EduLogger.info('[agora-web] close microphone success')
-          this.microphoneTrack = undefined
-        }
-        throw GenericErrorWrapper(err)
-      }
-    }
-  }
-
   enableAudioVolumeIndicator() {
     this.client.enableAudioVolumeIndicator()
     EduLogger.info(" enableAudioVolumeIndicator ")
-  }
-
-  async changeMicrophone(deviceId: string): Promise<any> {
-    if (this.microphoneTrack) {
-      await this.microphoneTrack.setDevice(deviceId)
-      await this.agoraWebSdk.checkAudioTrackIsActive(this.microphoneTrack as ILocalAudioTrack)
-    } else {
-      await this.openMicrophone({deviceId})
-      // await this.microphoneTrack.setDevice(deviceId)
-      // await this.agoraWebSdk.checkAudioTrackIsActive(this.microphoneTrack as ILocalAudioTrack)
-      // throw 'no microphone track found'
-    }
   }
 
   private closeScreenTrack(track: ILocalTrack) {
@@ -971,7 +824,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         encoderConfig: options.encoderConfig,
       }, options.shareAudio)
 
-      switch(options.shareAudio) {
+      switch (options.shareAudio) {
         case 'enable': {
           const screenTracks: [ILocalVideoTrack, ILocalAudioTrack] = tracks as [ILocalVideoTrack, ILocalAudioTrack]
           this.screenVideoTrack = screenTracks[0]
@@ -997,11 +850,11 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       (this.screenVideoTrack as ILocalTrack).on('track-ended', () => {
         this.screenAudioTrack && this.closeScreenTrack(this.screenAudioTrack)
         this.screenVideoTrack && this.closeScreenTrack(this.screenVideoTrack)
-        this.fire('track-ended', {resource: 'screen', screen: true})
+        this.fire('track-ended', { resource: 'screen', screen: true })
       })
 
       this._screenClient = screenClient
-      return 
+      return
     } catch (err) {
       throw GenericErrorWrapper(err)
     }
@@ -1042,73 +895,13 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     this.localScreenUid = undefined
   }
 
-  async publish(): Promise<any> {
-    if (this.cameraTrack) {
-      const trackId = this.cameraTrack.getTrackId()
-      if (this.publishedTrackIds.indexOf(trackId) < 0) {
-        await this.client.publish([this.cameraTrack])
-        this.publishedVideo = true
-        this.publishedTrackIds.push(trackId)
-      }
-    }
-    if (this.microphoneTrack) {
-      const trackId = this.microphoneTrack.getTrackId()
-      if (this.publishedTrackIds.indexOf(trackId) < 0) {
-        await this.client.publish([this.microphoneTrack])
-        this.publishedAudio = true
-        this.publishedTrackIds.push(trackId)
-      }
-    }
-  }
-
-  private async unpublishTrack(track: ILocalTrack) {
-    const trackId = track.getTrackId()
-    const idx = this.publishedTrackIds.indexOf(trackId)
-    if (this.cameraTrack 
-        && this.cameraTrack.getTrackId() === trackId) {
-      await this.client.unpublish([this.cameraTrack])
-      this.stats.localVideoStats.sendPackets = 0
-      this.stats.localVideoStats.sendPacketsLost = 0
-      EduLogger.info(`[agora-web] unpublish camera track [${trackId}] success`)
-    }
-    if (this.microphoneTrack 
-      && this.microphoneTrack.getTrackId() === trackId) {
-      await this.client.unpublish([this.microphoneTrack])
-      this.stats.localAudioStats.sendPackets = 0
-      this.stats.localAudioStats.sendPacketsLost = 0
-      EduLogger.info(`[agora-web] unpublish microphone track [${trackId}] success`)
-    }
-    this.publishedTrackIds.splice(idx, 1)
-  }
-
-  async unpublish(): Promise<any> {
-    if (this.cameraTrack) {
-      const trackId = this.cameraTrack.getTrackId()
-      const idx = this.publishedTrackIds.indexOf(trackId)
-      if (idx !== -1) {
-        await this.client.unpublish([this.cameraTrack])
-        EduLogger.info('[agora-web] unpublish camera track success')
-        this.publishedTrackIds.splice(idx, 1)
-      }
-    }
-    if (this.microphoneTrack) {
-      const trackId = this.microphoneTrack.getTrackId()
-      const idx = this.publishedTrackIds.indexOf(trackId)
-      if (idx !== -1) {
-        await this.client.unpublish([this.microphoneTrack])
-        EduLogger.info('[agora-web] unpublish microphone track success')
-        this.publishedTrackIds.splice(idx, 1)
-      }
-    }
-  }
-
   async getDevices() {
     const list = await this.agoraWebSdk.getDevices()
     this.deviceList = list
     return list
   }
 
-  async getMicrophones () {
+  async getMicrophones() {
     const list = await this.agoraWebSdk.getMicrophones();
     this.deviceList = list
     return list;
@@ -1129,187 +922,271 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     })
   }
 
-  private fireTrackEnd({resource, tag, trackId}: FireTrackEndedAction) {
+  private fireTrackEnd({ resource, tag, trackId }: FireTrackEndedAction) {
     // 加入房间的时候重置丢包率
     if (this.joined) {
       if (resource === 'audio') {
         this.stats.localAudioStats.sendPackets = 0
         this.stats.localAudioStats.sendPacketsLost = 0
       }
-  
+
       if (resource === 'video') {
         this.stats.localVideoStats.sendPackets = 0
         this.stats.localVideoStats.sendPacketsLost = 0
       }
     }
 
-    this.fire('track-ended', {resource, tag, trackId, operation: 'pulled'})
-  }
-
-  private async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer', option?: CameraOption) {
-    if (type === 'cameraTestRenderer') {
-      if (!option) {
-        this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
-          encoderConfig: {
-            frameRate: 15
-          }
-        })
-      } else {
-        this.cameraTestTrack = await this.agoraWebSdk.createCameraVideoTrack({
-          cameraId: option.deviceId,
-          encoderConfig: getEncoderConfig(option)
-        })
-      }
-      const trackId = this.cameraTestTrack.getTrackId()
-      EduLogger.info("open test camera create track ", trackId, " option " , JSON.stringify(option))
-      this.cameraTestTrack.on('track-ended', () => {
-        EduLogger.info("test camera renderer track-ended ", trackId, " option " , JSON.stringify(option))
-        this.cameraTestTrack && this.closeTestTrack(this.cameraTestTrack)
-        this.fireTrackEnd({resource: 'video', tag: 'cameraTestRenderer', trackId})
-      })
+    if (resource === 'video') {
+      this.videoTrackPublished.set(`${tag}`, false)
     }
 
-    if (type === 'cameraRenderer') {
-      if (!option) {
-        this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
-          encoderConfig: {
-            frameRate: 15
-          }
-        })
-      } else {
-        this.cameraTrack = await this.agoraWebSdk.createCameraVideoTrack({
-          cameraId: option.deviceId,
-          encoderConfig: getEncoderConfig(option)
-        })
-      }
-      const trackId = this.cameraTrack.getTrackId()
-      EduLogger.info("open camera create track ", trackId, " option " , JSON.stringify(option))
-      this.cameraTrack.on('track-ended', () => {
-        EduLogger.info("camera renderer track-ended ", trackId, " option " , JSON.stringify(option))
-        this.cameraTrack && this.closeMediaTrack(this.cameraTrack)
-        this.fireTrackEnd({resource: 'video', tag: 'cameraRenderer', trackId})
-      })
-    }
-  }
-
-  private async acquireMicrophoneTrack(type: 'microphoneTestTrack' | 'microphoneTrack', option?: MicrophoneOption) {
-    if (type === 'microphoneTestTrack') {
-      if (!option) {
-        this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
-        const trackId = this.microphoneTestTrack.getTrackId()
-        this.microphoneTestTrack.on('track-ended', () => {
-          this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
-          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTestTrack', trackId})
-        })
-      } else {
-        this.microphoneTestTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
-          microphoneId: option.deviceId
-        })
-        const trackId = this.microphoneTestTrack.getTrackId()
-        this.microphoneTestTrack.on('track-ended', () => {
-          this.microphoneTestTrack && this.closeTestTrack(this.microphoneTestTrack)
-          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTestTrack', trackId})
-        })
-      }
-    }
-
-    if (type === 'microphoneTrack') {
-      if (!option) {
-        this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack()
-        const trackId = this.microphoneTrack.getTrackId()
-        EduLogger.info(`[agora-web] create audio track with  by default deviceId: [${trackId}] success`)
-        this.microphoneTrack.on('track-ended', () => {
-          this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
-          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTrack', trackId})
-        })
-      } else {
-        this.microphoneTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
-          microphoneId: option.deviceId
-        })
-        const trackId = this.microphoneTrack.getTrackId()
-        EduLogger.info(`[agora-web] create audio track with  by deviceId: ${option.deviceId} [${trackId}] success`)
-        this.microphoneTrack.on('track-ended', () => {
-          this.microphoneTrack && this.closeMediaTrack(this.microphoneTrack)
-          this.fireTrackEnd({resource: 'audio', tag: 'microphoneTrack', trackId})
-        })
-      }
-    }
-  }
-
-  async openTestCamera(option?: CameraOption): Promise<any> {
-    EduLogger.info(" test camera", JSON.stringify(option))
-    if (this.cameraTestTrack) throw 'camera test track already exists'
-    await this.acquireCameraTrack('cameraTestRenderer', option)
-  }
-  
-  closeTestCamera() {
-    const trackId = this.cameraTestTrack?.getTrackId() ?? ''
-    this.fire('track-ended', {resource: 'video', trackId, type: 'cameraTestRenderer', operation: 'close'})
-    if (this.cameraTestTrack) {
-      this.cameraTestTrack.isPlaying && this.cameraTestTrack.stop()
-      this.cameraTestTrack.close()
-    }
-    this.cameraTestTrack = undefined
-  }
-  
-  async changeTestCamera(deviceId: string): Promise<any> {
-    if (this.cameraTestTrack) {
-      EduLogger.info("change test camera try setDevice ", deviceId)
-      await this.cameraTestTrack.setDevice(deviceId)
-      EduLogger.info("change test camera setDevice success", deviceId)
-      EduLogger.info("change test camera try checkVideoTrackIsActive", deviceId)
-      await this.agoraWebSdk.checkVideoTrackIsActive(this.cameraTestTrack as ILocalVideoTrack)
-      EduLogger.info("change test camera checkVideoTrackIsActive success", deviceId)
-    } else {
-      EduLogger.info("change test camera try open test camera ", deviceId)
-      await this.openTestCamera({
-        deviceId,
-        encoderConfig: {
-          width: 320,
-          height: 240,
-          frameRate: 15
-        }
-      })
-    }
-  }
-  
-  async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
-    if (this.microphoneTestTrack) throw 'microphone test track already exists'
-    await this.acquireMicrophoneTrack('microphoneTestTrack', option)
-    if (this.microphoneTestTrack) {
-      this.addInterval((track: ILocalAudioTrack) => {
-        if (track) {
-          const totalVolume = track.getVolumeLevel()
-          this.fire('local-audio-volume', {totalVolume})
-        }
-      }, 'test-volume', this.microphoneTestTrack, 300)
-    }
-  }
-  
-  async changeTestResolution(config: any): Promise<any> {
-    await this.cameraTestTrack?.setEncoderConfiguration(config)
-  }
-  
-  closeTestMicrophone() {
-    const trackId = this.microphoneTestTrack?.getTrackId() ?? ''
-    this.fire('track-ended', {resource: 'audio', trackId, type: 'microphoneTestTrack', operation: 'close'})
-    if (this.microphoneTestTrack) {
+    if (resource === 'audio') {
+      this.audioTrackPublished.set(`${tag}`, false)
       this.closeInterval('test-volume')
-      this.microphoneTestTrack.isPlaying && this.microphoneTestTrack.stop()
-      this.microphoneTestTrack.close()
     }
-    this.microphoneTestTrack = undefined
+
+    console.log('fireTrackEnd web: ', resource, tag, trackId)
+
+    this.fire('track-ended', { resource, tag, trackId, operation: 'pulled' })
   }
-  
-  async changeTestMicrophone(deviceId: string): Promise<any> {
-    if (this.microphoneTestTrack) {
-      await this.microphoneTestTrack.setDevice(deviceId)
-      await this.agoraWebSdk.checkAudioTrackIsActive(this.microphoneTestTrack as ILocalAudioTrack)
-    } else {
-      await this.openTestMicrophone({
-        deviceId
+
+  videoTrackMap: Map<string, ICameraVideoTrack | undefined> = new Map()
+  audioTrackMap: Map<string, IMicrophoneAudioTrack | undefined> = new Map()
+
+  async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer') {
+    const track = this.videoTrackMap.get(type)
+    if (!track) {
+      const videoTrack = await this.agoraWebSdk.createCameraVideoTrack({
+        cameraId: this.videoDeviceConfig.get(type),
+        encoderConfig: getEncoderConfig(),
       })
-      // throw 'no microphone test track found'
+      const trackId = videoTrack.getTrackId()
+      this.videoTrackMap.set(type, videoTrack)
+      videoTrack.on('track-ended', () => {
+        this.fireTrackEnd({ resource: 'video', tag: type, trackId })
+        if (videoTrack) {
+          videoTrack.isPlaying && videoTrack.stop()
+          videoTrack.close()
+        }
+        this.videoTrackMap.set(type, undefined)
+      })
     }
+  }
+
+  async removeCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer') {
+    const track = this.videoTrackMap.get(type)
+    if (track) {
+      track.isPlaying && track.stop()
+      track.close()
+      this.videoTrackMap.set(type, undefined)
+    }
+  }
+
+  async acquireMicrophoneTrack(type: 'microphoneTestTrack' | 'microphoneTrack') {
+    const track = this.audioTrackMap.get(type)
+    if (!track) {
+      const microphoneId = this.audioDeviceConfig.get(type)
+      let audioTrack: any;
+      if (microphoneId) {
+        audioTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
+          microphoneId: this.audioDeviceConfig.get(type),
+        })
+      } else {
+        audioTrack = await this.agoraWebSdk.createMicrophoneAudioTrack({
+          microphoneId: this.audioDeviceConfig.get(type),
+        })
+      }
+
+      if (audioTrack) {
+        audioTrack.stop()
+        this.audioTrackMap.set(type, audioTrack)
+        this.addInterval((track: ILocalAudioTrack) => {
+          if (track) {
+            const totalVolume = track.getVolumeLevel()
+            this.fire('local-audio-volume', {totalVolume})
+          }
+        }, 'test-volume', this.microphoneTrack, 300)
+        const trackId = audioTrack.getTrackId()
+        audioTrack.on('track-ended', () => {
+          this.fireTrackEnd({ resource: 'audio', tag: type, trackId })
+          if (audioTrack) {
+            audioTrack.close()
+          }
+          this.audioTrackMap.set(type, undefined)
+        })
+      }
+    }
+  }
+
+  async removeMicrophoneTrack(type: 'microphoneTestTrack' | 'microphoneTrack') {
+    const track = this.audioTrackMap.get(type)
+    if (track) {
+      this.closeInterval('test-volume')
+      track.close()
+      this.audioTrackMap.set(type, undefined)
+    }
+  }
+
+  /**
+  * 开启视频采集
+  * @param v 
+  */
+  async enableLocalVideo(v: boolean) {
+    if (v) {
+      try {
+        await this.acquireCameraTrack('cameraRenderer')
+      } catch (err) {
+        // this.fire('localVideoStateChanged', { state: 3, error: 0 })
+        throw err
+      }
+    } else {
+      try {
+        await this.removeCameraTrack('cameraRenderer')
+      } catch (err) {
+        // this.fire('localVideoStateChanged', { state: 3, error: 0 })
+        throw err
+      }
+    }
+  }
+
+  disableLocalVideo() {
+    try {
+      this.removeCameraTrack('cameraRenderer')
+    } catch (err) {
+      this.fire('localVideoStateChanged', { state: 3, error: 0 })
+    }
+  }
+
+  disableLocalAudio() {
+    try {
+      this.removeMicrophoneTrack('microphoneTrack')
+    } catch (err) {
+      this.fire('localAudioStateChanged', { state: 3, error: 0 })
+    }
+  }
+
+  /**
+   * 开启音频采集
+   * @param v 
+   */
+  async enableLocalAudio(v: boolean) {
+    if (v) {
+      try {
+        await this.acquireMicrophoneTrack('microphoneTrack')
+      } catch (err) {
+        throw err
+        // this.fire('localAudioStateChanged', { state: 3, error: 0 })
+      }
+    } else {
+      try {
+        await this.removeMicrophoneTrack('microphoneTrack')
+      } catch (err) {
+        throw err
+        // this.fire('localAudioStateChanged', { state: 3, error: 0 })
+      }
+    }
+  }
+
+  /**
+   * 关闭音频发流
+   * @param v 
+   * @returns 
+   */
+  async muteLocalAudio(v: boolean, deviceId?: string) {
+    const track = this.audioTrackMap.get('microphoneTrack')
+    console.log('[RTE] microphoneTrack ', track, v, deviceId)
+    if (!track) {
+      if (!v) {
+        this.audioDeviceConfig.set('microphoneTrack', deviceId)
+        await this.acquireMicrophoneTrack('microphoneTrack')
+        const _audioTrack = this.audioTrackMap.get('microphoneTrack') as ILocalTrack
+        const oldAudioTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'audio')
+        await this.client.unpublish(oldAudioTracks)
+        await this.client.publish([_audioTrack])
+        this.audioTrackPublished.set('microphoneTrack', true)
+      }
+      return
+    }
+
+    const published = this.audioTrackPublished.get('microphoneTrack')
+    if (published) {
+      await track.setEnabled(!v)
+      if (deviceId) {
+        await this.setMicrophoneDevice(deviceId)
+      }
+    } else {
+      const oldAudioTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'audio')
+      await this.client.unpublish(oldAudioTracks)
+      await this.client.publish([track])
+      this.audioTrackPublished.set('microphoneTrack', true)
+      await track.setEnabled(!v)
+    }
+  }
+
+  /**
+   * 关闭视频发流
+   * @param v 
+   * @returns 
+   */
+  async muteLocalVideo(v: boolean, deviceId?: string) {
+    const track = this.videoTrackMap.get('cameraRenderer')
+    console.log('[RTE] muteLocalVideo ', track, v, deviceId)
+    if (!track) {
+      if (!v) {
+        this.videoDeviceConfig.set('cameraRenderer', deviceId)
+        await this.acquireCameraTrack('cameraRenderer')
+        const _videoTrack = this.videoTrackMap.get('cameraRenderer') as ILocalTrack
+        const oldVideoTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'video')
+        await this.client.unpublish(oldVideoTracks)
+        await this.client.publish([_videoTrack])
+        this.videoTrackPublished.set('cameraRenderer', true)
+      }
+      return
+    }
+    
+    const published = this.videoTrackPublished.get('cameraRenderer')
+    if (published) {
+      await track.setEnabled(!v)
+      if (deviceId) {
+        await this.setCameraDevice(deviceId)
+      }
+    } else {
+      const oldVideoTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'video')
+      await this.client.unpublish(oldVideoTracks)
+      await this.client.publish([track])
+      this.videoTrackPublished.set('cameraRenderer', true)
+      await track.setEnabled(!v)
+    }
+  }
+
+  /**
+   * 设置摄像头设备
+   * @param deviceId 
+   * @returns 
+   */
+   async setCameraDevice(deviceId: string) {
+    const track = this.videoTrackMap.get('cameraRenderer')
+    if (!track) {
+      this.videoDeviceConfig.set('cameraRenderer', deviceId)
+      return
+    }
+    await track.setDevice(deviceId)
+    this.videoDeviceConfig.set('cameraRenderer', deviceId)
+  }
+
+  /**
+   * 设置麦克风设备
+   * @param deviceId 
+   * @returns 
+   */
+  async setMicrophoneDevice(deviceId: string) {
+    const track = this.audioTrackMap.get('microphoneTrack')
+    if (!track) {
+      this.audioDeviceConfig.set('microphoneTrack', deviceId)
+      return
+    }
+    await track.setDevice(deviceId)
+    await this.agoraWebSdk.checkAudioTrackIsActive(track)
+    this.audioDeviceConfig.set('microphoneTrack', deviceId)
   }
 }

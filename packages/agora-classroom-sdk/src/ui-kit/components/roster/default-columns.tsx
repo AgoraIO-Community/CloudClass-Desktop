@@ -12,7 +12,7 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const type =  !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const podiumStatus= !!profile.onPodium === true ? 'icon-active' : 'un-active';
@@ -29,7 +29,7 @@ export const defaultColumns: Column[] = [
     key: 'whiteboardGranted',
     name: 'roster.granted',
     action: 'whiteboard',
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const type =  userType + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
@@ -47,7 +47,7 @@ export const defaultColumns: Column[] = [
     key: 'cameraEnabled',
     name: 'roster.camera_state',
     action: 'camera',
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const {
         cameraEnabled,
         cameraDevice,
@@ -65,7 +65,7 @@ export const defaultColumns: Column[] = [
             online: !!online,
             onPodium: onPodium,
             userType: userType,
-            hasStream: hasStream,
+            hasStream: !!hasStream,
             isLocal: isLocal,
             uid: uid,
             type: 'camera',
@@ -79,7 +79,7 @@ export const defaultColumns: Column[] = [
     key: 'micEnabled',
     name: 'roster.microphone_state',
     action: 'mic',
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       
       const {
         micEnabled,
@@ -98,7 +98,7 @@ export const defaultColumns: Column[] = [
             online: !!online,
             onPodium: onPodium,
             userType: userType,
-            hasStream: hasStream,
+            hasStream: !!hasStream,
             isLocal: isLocal,
             uid: uid,
             type: 'microphone',
@@ -112,7 +112,7 @@ export const defaultColumns: Column[] = [
     key: 'chat',
     name: 'roster.chat',
     action: 'chat',
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const {
         operateStatus,
         chatStatus,
@@ -133,7 +133,7 @@ export const defaultColumns: Column[] = [
   {
     key: 'stars',
     name: 'roster.reward',
-    render: (text: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (text: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,
@@ -151,7 +151,7 @@ export const defaultColumns: Column[] = [
     name: 'roster.kick',
     action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
-    render: (_: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => {
+    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,

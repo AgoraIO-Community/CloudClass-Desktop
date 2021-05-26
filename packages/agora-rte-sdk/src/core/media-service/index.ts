@@ -206,7 +206,109 @@ export class MediaService extends EventEmitter implements IMediaService {
         this.fire('audio-autoplay-failed')
       }
     }
+  }
 
+  async muteLocalVideo(val: boolean, deviceId?: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.muteLocalVideo(val, deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.muteLocalVideo(val, deviceId)
+    }
+    if (val) {
+      if (this.cameraRenderer) {
+        this.cameraRenderer.stop()
+        this.cameraRenderer = undefined
+      }
+    } else {
+      this.cameraRenderer = new LocalUserRenderer({
+        context: this,
+        uid: 0,
+        channel: 0,
+        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
+        sourceType: 'default',
+      })
+    }
+  }
+
+  async muteLocalAudio(val: boolean, deviceId?: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.muteLocalAudio(val, deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.muteLocalAudio(val, deviceId)
+    }
+  }
+
+  disableLocalAudio() {
+    if (this.isWeb) {
+      this.sdkWrapper.disableLocalAudio()
+    }
+    if (this.isElectron) {
+      this.sdkWrapper.disableLocalAudio()
+    }
+  }
+
+  disableLocalVideo() {
+    if (this.isWeb) {
+      this.sdkWrapper.disableLocalVideo()
+    }
+    if (this.isElectron) {
+      this.sdkWrapper.disableLocalVideo()
+    }
+    this.cameraRenderer = undefined
+  }
+
+  async enableLocalVideo(val: boolean): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.enableLocalVideo(val)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.enableLocalVideo(val)
+    }
+    if (val) {
+      this.cameraRenderer = new LocalUserRenderer({
+        context: this,
+        uid: 0,
+        channel: 0,
+        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
+        sourceType: 'default',
+      })
+    } else {
+      if (this.cameraRenderer) {
+        if (this.cameraRenderer._playing) {
+          this.cameraRenderer.stop()
+        }
+        this.cameraRenderer = undefined
+      }
+    }
+  }
+
+  async enableLocalAudio(val: boolean): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.enableLocalAudio(val)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.enableLocalAudio(val)
+    }
+  }
+
+  async setCameraDevice(deviceId: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.setCameraDevice(deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.setCameraDevice(deviceId)
+    }
+  }
+
+  async setMicrophoneDevice(deviceId: string): Promise<any> {
+    if (this.isWeb) {
+      await this.sdkWrapper.setMicrophoneDevice(deviceId)
+    }
+    if (this.isElectron) {
+      await this.sdkWrapper.setMicrophoneDevice(deviceId)
+    }
   }
 
   private fire(...params: any[]) {
@@ -275,8 +377,8 @@ export class MediaService extends EventEmitter implements IMediaService {
   getTestCameraLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
-      if (this.web.cameraTestTrack) {
-        return this.web.cameraTestTrack.getTrackLabel()
+      if (this.web.cameraTrack) {
+        return this.web.cameraTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -293,8 +395,8 @@ export class MediaService extends EventEmitter implements IMediaService {
   getTestMicrophoneLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
-      if (this.web.microphoneTestTrack) {
-        return this.web.microphoneTestTrack.getTrackLabel()
+      if (this.web.microphoneTrack) {
+        return this.web.microphoneTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -312,7 +414,8 @@ export class MediaService extends EventEmitter implements IMediaService {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.cameraTrack) {
-        return this.web.cameraTrack.getTrackLabel()
+        //@ts-ignore
+        return this.web.cameraTrack._deivceName || this.web.cameraTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -352,7 +455,8 @@ export class MediaService extends EventEmitter implements IMediaService {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.microphoneTrack) {
-        return this.web.microphoneTrack.getTrackLabel()
+        //@ts-ignore
+        return this.web.microphoneTrack._deviceName || this.web.microphoneTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {
@@ -372,24 +476,6 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
     if (this.isElectron) {
       this.sdkWrapper.changePlaybackVolume(volume)
-    }
-  }
-
-  async muteLocalVideo(val: boolean): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.muteLocalVideo(val)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.muteLocalVideo(val)
-    }
-  }
-
-  async muteLocalAudio(val: boolean): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.muteLocalAudio(val)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.muteLocalAudio(val)
     }
   }
 
@@ -573,188 +659,23 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  async publish(): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.publish()
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.publish()
-    }
-  }
+  // async publish(): Promise<any> {
+  //   if (this.isWeb) {
+  //     await this.sdkWrapper.publish()
+  //   }
+  //   if (this.isElectron) {
+  //     await this.sdkWrapper.publish()
+  //   }
+  // }
 
-  async unpublish(): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.unpublish()
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.unpublish()
-    }
-  }
-
-  async openCamera(option?: CameraOption): Promise<any> {
-    if (option?.encoderConfig) {
-      this.encoderConfig = this.encoderConfig
-    }
-    if (this.isWeb) {
-      await this.sdkWrapper.openCamera(option)
-      if (!this.web.cameraTrack) return
-
-      if (!this.cameraRenderer) {
-        this.cameraRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          sourceType: 'default',
-          videoTrack: this.web.cameraTrack
-        })
-      } else {
-        if (this.cameraRenderer._playing) {
-          this.cameraRenderer.stop()
-        }
-        this.cameraRenderer.videoTrack = this.web.cameraTrack
-      }
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.openCamera()
-
-      if (!this.cameraRenderer) {
-        this.cameraRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          sourceType: 'default',
-        })
-      }
-    }
-  }
-
-  async changeCamera(deviceId: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.changeLocalCamera({deviceId, encoderConfig: this.encoderConfig})
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.changeLocalCamera({deviceId, encoderConfig: this.encoderConfig})
-    }
-  }
-
-  async closeCamera() {
-    if (this.isWeb) {
-      await this.sdkWrapper.closeCamera()
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.closeCamera()
-    }
-    if (this.cameraRenderer) {
-      this.cameraRenderer.stop()
-      this.cameraRenderer = undefined
-    }
-  }
-
-  async openMicrophone(option?: MicrophoneOption): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.openMicrophone(option)
-      this.microphoneTrack = this.web.microphoneTrack
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.openMicrophone(option)
-      //@ts-ignore
-      this.microphoneTrack = {}
-    }
-  }
-
-  async changeMicrophone(deviceId: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.changeMicrophone(deviceId)
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.changeMicrophone(deviceId)
-    }
-  }
-
-  async closeMicrophone() {
-    await this.sdkWrapper.closeMicrophone()
-    this.microphoneTrack = undefined
-  }
-
-  async openTestCamera(option: CameraOption): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.openTestCamera(option)
-      if (!this.web.cameraTestTrack) return
-
-      if (!this.cameraTestRenderer) {
-        this.cameraTestRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          sourceType: 'default',
-          videoTrack: this.web.cameraTestTrack
-        })
-      } else {
-        this.cameraTestRenderer.videoTrack = this.web.cameraTestTrack
-      }
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.openTestCamera()
-
-      if (!this.cameraTestRenderer) {
-        this.cameraTestRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          sourceType: 'default',
-        })
-      }
-    }
-  }
-
-  closeTestCamera() {
-    this.sdkWrapper.closeTestCamera()
-    if (this.cameraTestRenderer) {
-      this.cameraTestRenderer.stop()
-      this.cameraTestRenderer = undefined
-    }
-  }
-
-  async changeTestCamera(deviceId: string): Promise<any> {
-    if (this.isWeb) {
-      await this.sdkWrapper.changeTestCamera(deviceId)
-      if (!this.cameraTestRenderer) {
-        this.cameraTestRenderer = new LocalUserRenderer({
-          context: this,
-          uid: 0,
-          channel: 0,
-          sourceType: 'default',
-          videoTrack: this.web.cameraTestTrack
-        })
-      } else {
-        this.cameraTestRenderer.videoTrack = this.web.cameraTestTrack
-      }
-    }
-    if (this.isElectron) {
-      await this.sdkWrapper.changeTestCamera(deviceId)
-    }
-  }
-
-  async changeTestResolution(config: any) {
-    if (this.isWeb) {
-      await this.web.changeTestResolution(config)
-    }
-    if (this.isElectron) {
-      await this.electron.changeTestResolution(config)
-    }
-  }
-
-  async openTestMicrophone(option?: MicrophoneOption): Promise<any> {
-    await this.sdkWrapper.openTestMicrophone(option)
-  }
-
-  closeTestMicrophone() {
-    this.sdkWrapper.closeTestMicrophone()
-  }
-
-  async changeTestMicrophone(id: string): Promise<any> {
-    await this.sdkWrapper.changeTestMicrophone(id)
-  }
+  // async unpublish(): Promise<any> {
+  //   if (this.isWeb) {
+  //     await this.sdkWrapper.unpublish()
+  //   }
+  //   if (this.isElectron) {
+  //     await this.sdkWrapper.unpublish()
+  //   }
+  // }
 
   async getCameras(): Promise<any> {
     if (this.isWeb) {

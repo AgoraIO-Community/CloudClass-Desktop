@@ -5,7 +5,7 @@ const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'
 
-export const canOperate = (role: ProfileRole, localUid: string, data: any, col: any): boolean => {
+export const canOperate = (role: any, localUid: string, data: any, col: any): boolean => {
   //任何角色的星星不可点击
   if(col.key === 'stars'){
     return false;

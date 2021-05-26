@@ -22,6 +22,7 @@ export type RosterUserInfo = {
   chatEnabled: boolean,
   micEnabled: boolean,
   whiteboardGranted: boolean,
+  hasStream: boolean,
   canCoVideo: boolean,
   canGrantBoard: boolean,
   stars: number,
@@ -377,6 +378,7 @@ export class SmallClassStore {
       chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
       micEnabled: stream?.hasAudio ?? false,
       whiteboardGranted: this.appStore.boardStore.checkUserPermission(user.userUuid),
+      hasStream: !!stream,
       // whiteboardGranted: !!get,
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
@@ -408,6 +410,7 @@ export class SmallClassStore {
       whiteboardGranted: false,
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole),
       stars: 0,
+      hasStream: true,
       disabled: false,
     }
   }

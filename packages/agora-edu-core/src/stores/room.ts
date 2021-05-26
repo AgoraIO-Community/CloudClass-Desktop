@@ -1213,8 +1213,8 @@ export class RoomStore extends SimpleInterval {
             BizLogger.info(`[demo] tag: ${tag}, [${Date.now()}], handle event: local-stream-removed, `, JSON.stringify(evt))
             if (evt.type === 'main') {
               this.sceneStore._cameraEduStream = undefined
-              await this.sceneStore.closeCamera()
-              await this.sceneStore.closeMicrophone()
+              await this.sceneStore.muteLocalCamera()
+              await this.sceneStore.muteLocalMicrophone()
               if (cause && cause.cmd === 501) {
                 const roleMap: Record<string, string> = {
                   'host': 'role.teacher',
@@ -1301,23 +1301,20 @@ export class RoomStore extends SimpleInterval {
               BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
               if (this.sceneStore.joiningRTC) {
                 if (this.sceneStore.cameraEduStream.hasVideo) {
-
-                  await this.sceneStore.openCamera(this.videoEncoderConfiguration)
+                  await this.sceneStore.unmuteLocalCamera()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after openCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 } else {
-
-                  await this.sceneStore.closeCamera()
+                  await this.sceneStore.muteLocalCamera()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 }
                 // if (this.sceneStore._hasMicrophone) {
                 if (this.sceneStore.cameraEduStream.hasAudio) {
                   BizLogger.info('open microphone')
-                  await this.sceneStore.openMicrophone()
-
+                  await this.sceneStore.unmuteLocalMicrophone()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} after openMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 } else {
                   BizLogger.info('close local-stream-updated microphone')
-                  await this.sceneStore.closeMicrophone()
+                  await this.sceneStore.muteLocalMicrophone()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 }
               }
@@ -1631,21 +1628,21 @@ export class RoomStore extends SimpleInterval {
             if (this.sceneStore._cameraEduStream.hasVideo) {
               this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid)
               try {
-                await this.sceneStore.openCamera(this.videoEncoderConfiguration)
+                await this.sceneStore.unmuteLocalCamera()
                 this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
               } catch (err) {
                 this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid)
                 throw err
               }
             } else {
-              await this.sceneStore.closeCamera()
+              await this.sceneStore.muteLocalCamera()
             }
             if (this.sceneStore._cameraEduStream.hasAudio) {
               BizLogger.info('open microphone')
-              await this.sceneStore.openMicrophone()
+              await this.sceneStore.muteLocalMicrophone()
             } else {
               BizLogger.info('close microphone')
-              await this.sceneStore.closeMicrophone()
+              await this.sceneStore.unmuteLocalMicrophone()
             }
           }
         } catch (err) {

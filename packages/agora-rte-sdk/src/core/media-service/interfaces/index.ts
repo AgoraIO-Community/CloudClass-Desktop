@@ -146,25 +146,19 @@ export declare interface IAgoraRTCModule {
 
   join(option: Option): Promise<any>
   leave(): Promise<any>
-  
-  publish(): Promise<any>
-  unpublish(): Promise<any>
 
-  muteLocalVideo(val: boolean): Promise<any>
-  muteLocalAudio(val: boolean): Promise<any>
+  enableLocalVideo(v: boolean): Promise<any>
+  enableLocalAudio(v: boolean): Promise<any>
+  disableLocalAudio(): void;
+  disableLocalVideo(): void;
+  setCameraDevice(deviceId: string): Promise<any>
+  setMicrophoneDevice(deviceId: string): Promise<any>
+  muteLocalVideo(val: boolean, deviceId?: string): Promise<any>
+  muteLocalAudio(val: boolean, deviceId?: string): Promise<any>
   muteRemoteVideo(uid: any, val: boolean): Promise<any>
   muteRemoteAudio(uid: any, val: boolean): Promise<any>
 
-  openCamera(option?: CameraOption): Promise<any>
-  // changeCamera(deviceId: string): Promise<any>
-  // changeCamera(option: CameraOption): Promise<any>
-  closeCamera(): void
-
   getCameras(): Promise<any[]>
-
-  openMicrophone(option?: MicrophoneOption): Promise<any>
-  changeMicrophone(deviceId: string): Promise<any>
-  closeMicrophone(): void
 
   getMicrophones(): Promise<any[]>
 
@@ -336,81 +330,15 @@ export declare interface IMediaService extends IAgoraRTCModule {
    */
   leaveSubChannel(channelName: string): Promise<any>
 
-  /**
-   * 发布流
-   */
-  publish(): Promise<any>
+  // /**
+  //  * 发布流
+  //  */
+  // publish(): Promise<any>
 
-  /**
-   * 取消发布流
-   */
-  unpublish(): Promise<any>
-
-  /**
-   * 打开摄像头
-   */
-  openCamera(option?: CameraOption): Promise<any>
-
-  /**
-   * 更换摄像头
-   */
-  changeCamera(deviceId: string): Promise<any>
-
-  /**
-   * 关闭摄像头
-   */
-  closeCamera(): Promise<any>
-
-  /**
-   * 打开麦克风
-   */
-  openMicrophone(option?: MicrophoneOption): Promise<any>
-
-  /**
-   * 更换麦克风
-   */
-  changeMicrophone(deviceId: string): Promise<any>
-
-  /**
-   * 关闭麦克风
-   */
-  closeMicrophone(): Promise<any>
-
-  /**
-   * 打开测试摄像头
-   */
-  openTestCamera(option: CameraOption): Promise<any>
-
-  /**
-   * 关闭测试摄像头
-   */
-  closeTestCamera(): void
-
-  /**
-   * 更改测试摄像头
-   */
-  changeTestCamera(deviceId: string): Promise<any>
-
-  /**
-   * 更改测试分辨率
-   */
-  changeTestResolution(config: any): Promise<any>
-
-  /**
-   * 打开测试麦克风
-   * @param option 
-   */
-  openTestMicrophone(option?: MicrophoneOption): Promise<any>
-
-  /**
-   * 关闭测试麦克风
-   */
-  closeTestMicrophone(): void
-
-  /**
-   * 更改测试麦克风
-   */
-  changeTestMicrophone(id: string): Promise<any>
+  // /**
+  //  * 取消发布流
+  //  */
+  // unpublish(): Promise<any>
 
   /**
    * 获取摄像头
@@ -438,29 +366,9 @@ export declare interface IMediaService extends IAgoraRTCModule {
   stopScreenShare(): Promise<any>
 
   /**
-   * 改变分辨率
-   */
-  changeResolution(config: any): Promise<any>
-
-  /**
    * 获取扬声器音量，仅适用于electron
    */
   getPlaybackVolume(): number
-
-  /**
-   * 更改摄像头
-   */
-  changeCamera(deviceId: string): Promise<any>
-
-  /**
-   * 关闭或打开远端视频
-   */
-  // muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any>
-
-  /**
-   * 关闭或打开远端音频
-   */
-  // muteRemoteAudioByClient(client: any, uid: string, val: boolean): Promise<any>
 
   /**
    * 重置

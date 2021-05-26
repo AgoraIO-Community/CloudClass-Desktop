@@ -422,6 +422,7 @@ export class PretestStore {
   muteMicrophone() {
     this.microphoneLabel = CustomizeDeviceLabel.Disabled
     this._microphoneId = AgoraMediaDeviceEnum.Disabled
+    this.mediaService.disableLocalAudio()
     if (this.isElectron) {
       this.mediaService.electron.client.stopAudioRecordingDeviceTest()
     }
@@ -431,22 +432,18 @@ export class PretestStore {
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
     this._cameraId = AgoraMediaDeviceEnum.Disabled
-    if (this.isElectron) {
-      this.mediaService.electron.closeCamera()
+    this.mediaService.disableLocalVideo()
+    if (this._cameraRenderer) {
+      this._cameraRenderer.stop()
+      this._cameraRenderer = undefined
     }
   }
 
   @action.bound
   async openTestCamera() {
     try {
-      const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-      await this.mediaService.openTestCamera({
-        deviceId,
-        encoderConfig: {
-          ...this.appStore.sceneStore.videoEncoderConfiguration
-        }
-      })
-      this._cameraRenderer = this.mediaService.cameraTestRenderer
+      await this.mediaService.enableLocalVideo(true)
+      this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getTestCameraLabel()
       this._cameraId = this.cameraId
     } catch(err) {
@@ -460,32 +457,30 @@ export class PretestStore {
 
   @action.bound
   closeTestCamera() {
-    this.mediaService.closeTestCamera()
-    this.resetCameraTrack()
+    this.mediaService.disableLocalVideo()
+    if (this._cameraRenderer) {
+      this._cameraRenderer.stop()
+      this._cameraRenderer = undefined
+    }
   }
 
   @action.bound
   async changeTestCamera(deviceId: string) {
     try {
       if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-        await this.mediaService.closeTestCamera()
-        this._cameraRenderer = undefined
+        // this._cameraRenderer = undefined
         this.muteCamera()
       } else {
         if (this.cameraRenderer) {
-          if (this.appStore.isElectron) {
-            await this.mediaService.changeTestCamera(deviceId)
-            this._cameraRenderer = this.mediaService.cameraRenderer
-          } else {
-            await this.mediaService.changeTestCamera(deviceId)
-          }
+          await this.mediaService.setCameraDevice(deviceId)
         } else {
-          await this.mediaService.openTestCamera({
-            deviceId,
-            encoderConfig: {
-              ...this.appStore.sceneStore.videoEncoderConfiguration
-            }
-          })
+          if (this.mediaService.isElectron) {
+            await this.mediaService.enableLocalVideo(true)
+          } else {
+            this.mediaService.web.videoDeviceConfig.set('cameraRenderer', deviceId)
+            await this.mediaService.enableLocalVideo(true)
+          }
+          this._cameraRenderer = this.mediaService.cameraRenderer
         }
         this.updateTestCameraLabel()
       }
@@ -499,10 +494,9 @@ export class PretestStore {
   @action.bound
   async openTestMicrophone(payload: {enableRecording: boolean}) {
     try {
-      const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
-      await this.mediaService.openTestMicrophone({deviceId})
+      await this.mediaService.enableLocalAudio(true)
       if (this.isWeb) {
-        this._microphoneTrack = this.web.microphoneTestTrack
+        this._microphoneTrack = this.web.microphoneTrack
       }
       if (this.isElectron) {
         payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
@@ -518,11 +512,11 @@ export class PretestStore {
   }
 
   @action.bound
-  closeTestMicrophone() {
+  async closeTestMicrophone() {
     if (this.isElectron) {
       this.mediaService.electron.client.stopAudioRecordingDeviceTest()
     }
-    this.mediaService.closeTestMicrophone()
+    this.mediaService.disableLocalAudio()
     this.resetMicrophoneTrack()
   }
 
@@ -537,15 +531,12 @@ export class PretestStore {
   }
 
   updateTestMicrophoneLabel() {
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTestTrack
-    }
     this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
     this._microphoneId = this.microphoneId
   }
 
   updateTestCameraLabel() {
-    this._cameraRenderer = this.mediaService.cameraTestRenderer
+    // this._cameraRenderer = this.mediaService.cameraRenderer
     this.cameraLabel = this.mediaService.getTestCameraLabel()
     this._cameraId = this.cameraId
   }
@@ -554,15 +545,21 @@ export class PretestStore {
   async changeTestMicrophone(deviceId: string) {
     try {
       if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-        await this.mediaService.closeTestMicrophone()
-        if (this.isWeb) {
-          this._microphoneTrack = undefined
-        }
         this.muteMicrophone()
         return
       } else {
         const prevDeviceMicrophoneId = this._microphoneId
-        await this.mediaService.changeTestMicrophone(deviceId)
+        if (this.mediaService.isWeb) {
+          if (this.mediaService.web.microphoneTrack) {
+            await this.mediaService.setMicrophoneDevice(deviceId)
+          } else {
+            this.mediaService.web.audioDeviceConfig.set('microphoneTrack', deviceId)
+            await this.mediaService.enableLocalAudio(true)
+            this._microphoneTrack = this.web.microphoneTrack
+          }
+        } else {
+          await this.mediaService.setMicrophoneDevice(deviceId)
+        }
         if (this.isElectron) {
           if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
             this.mediaService.electron.client.startAudioRecordingDeviceTest(300)
@@ -582,182 +579,57 @@ export class PretestStore {
     return !!this.mediaService.isElectron
   }
 
-  async switchCamera(deviceId: string) {
-    try {
-      if (this.isNative) {
-        await this.changeNativeCamera(deviceId)
-      } else {
-        await this.changeWebCamera(deviceId)
-      }
-    } catch (err) {
-      const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
-    }
-  }
-
-  async changeWebCamera(deviceId: string) {
-    if (this.appStore.sceneStore.cameraRenderer) {
-      await this.mediaService.changeCamera(deviceId)
-      const label = this.mediaService.getCameraLabel()
-      this.appStore.pretestStore.updateCameraLabel(label)
-    } else {
-      const sceneStore = this.appStore.sceneStore
-      const cameraEduStream = sceneStore.cameraEduStream
-      if (!cameraEduStream || !!cameraEduStream.hasVideo === false) {
-        EduLogger.info("userStream has been muted video")
-        const deviceLabel = this.getVideoDeviceLabelBy(deviceId)
-        if (deviceLabel) {
-          this.updateCameraLabel(deviceLabel)
-        }
-        return
-      }
-      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
-      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
-      const label = this.mediaService.getCameraLabel()
-      this.updateCameraLabel(label)
-    }
-  }
-
-  async changeWebMicrophone(deviceId: string) {
-    if (this.appStore.sceneStore._microphoneTrack) {
-      await this.mediaService.changeMicrophone(deviceId)
-      const label = this.mediaService.getMicrophoneLabel()
-      this.updateMicrophoneLabel(label)
-    } else {
-      const sceneStore = this.appStore.sceneStore
-      const cameraEduStream = sceneStore.cameraEduStream
-      if (!cameraEduStream || !!cameraEduStream.hasAudio === false) {
-        EduLogger.info("userStream has been muted audio")
-        const deviceLabel = this.appStore.pretestStore.getAudioDeviceLabelBy(deviceId)
-        if (deviceLabel) {
-          this.updateMicrophoneLabel(deviceLabel)
-        }
-        return
-      }
-      await this.mediaService.openMicrophone({deviceId})
-      this.appStore.sceneStore._microphoneTrack = this.mediaService.microphoneTrack
-      const label = this.mediaService.getMicrophoneLabel()
-      this.updateMicrophoneLabel(label)
-    }
-  }
-
-  async switchMicrophone(deviceId: string) {
-    try {
-      if (this.isNative) {
-        await this.changeNativeMicrophone(deviceId)
-      } else {
-        await this.changeWebMicrophone(deviceId)
-      }
-    } catch (err) {
-      const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.switch_camera_failed', {reason: error})
-    }
-  }
-
   // TODO: need poc implementation
   async switchSpeaker(deviceId: string) {
   }
 
-
-  /// live room camera operator
   @action.bound
-  async openCamera() {
-    const deviceId = this.getDeviceItem(this.cameraList, {type: 'label', value: this.cameraLabel, targetField: 'deviceId'})
-    await this.mediaService.openCamera({
-      deviceId,
-      encoderConfig: {
-        ...this.appStore.sceneStore.videoEncoderConfiguration
-      }
-    })
-    this._cameraRenderer = this.mediaService.cameraRenderer
-    this.cameraLabel = this.mediaService.getCameraLabel()
-    this._cameraId = this.cameraId
-    // this.appStore.deviceInfo.cameraName = this.cameraLabel
-  }
-
-  @action.bound
-  closeCamera() {
-    this.mediaService.closeCamera()
+  async closeCamera() {
+    await this.mediaService.muteLocalVideo(true)
     this.resetCameraTrack()
   }
 
   @action.bound
   async changeCamera(deviceId: string) {
     if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-      await this.mediaService.closeCamera()
-      this._cameraRenderer = undefined
       this.muteCamera()
-      // this._cameraId = deviceId
-      // this.cameraLabel = ''
     } else {
-      let sceneCameraRenderer = this.appStore.sceneStore._cameraRenderer
-      if (sceneCameraRenderer) {
-        if (this.isElectron) {
-          sceneCameraRenderer.stop()
-          if (this.appStore.sceneStore.cameraEduStream) {
-            if (this.appStore.sceneStore.cameraEduStream.hasVideo) {
-              this.mediaService.electron.client.muteLocalVideoStream(false)
-            }
-          }
-          await this.mediaService.changeCamera(deviceId)
-          sceneCameraRenderer = this.mediaService.cameraRenderer
+      if (this.isElectron) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
+          await this.mediaService.muteLocalVideo(false, deviceId)
         } else {
-          await this.mediaService.changeCamera(deviceId)
+          await this.mediaService.setCameraDevice(deviceId)
         }
-      } else {
-        await this.mediaService.openCamera({
-          deviceId,
-          encoderConfig: {
-            ...this.appStore.sceneStore.videoEncoderConfiguration
-          }
-        })
       }
-      sceneCameraRenderer = this.mediaService.cameraRenderer
-      this.appStore.sceneStore._cameraRenderer = sceneCameraRenderer
+
+      if (this.isWeb) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
+          await this.mediaService.muteLocalVideo(false, deviceId)
+        } else {
+          const camera = this.cameraList.find((it: any) => it.deviceId === deviceId)
+          if (!camera) {
+            return
+          }
+          await this.mediaService.setCameraDevice(deviceId)
+          if (!this.mediaService.web.cameraTrack) {
+            this.cameraLabel = camera.label
+            this.appStore.deviceInfo.cameraName = this.microphoneLabel
+            this._cameraId = camera.deviceId
+            return 
+          }
+        }
+      }
+      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
+      this.appStore.deviceInfo.cameraName = this.cameraLabel
       this._cameraId = this.cameraId
-      // this.appStore.deviceInfo.cameraName = this.cameraLabel
     }
   }
 
   @action.bound
-  async openMicrophone() {
-    const deviceId = this.getDeviceItem(this.microphoneList, {type: 'label', value: this.microphoneLabel, targetField: 'deviceId'})
-    await this.mediaService.openMicrophone({deviceId})
-    if (this.isWeb) {
-      this._microphoneTrack = this.web.microphoneTrack
-    }
-    // if (this.isElectron) {
-    //   this.mediaService.electron.client.stopAudioRecordingDeviceTest()
-    // }
-    this.microphoneLabel = this.mediaService.getMicrophoneLabel()
-    // this.appStore.deviceInfo.microphoneName = this.microphoneLabel
-    this._microphoneId = this.microphoneId
-  }
-
-  @action.bound
-  closeMicrophone() {
-    this.mediaService.closeTestMicrophone()
+  async closeMicrophone() {
+    await this.mediaService.muteLocalAudio(true)
     this.resetMicrophoneTrack()
-  }
-
-  @action.bound
-  async changeNativeCamera(deviceId: string) {
-    EduLogger.info("changeNativeCamera ", deviceId)
-    await this.mediaService.changeCamera(deviceId)
-    this.cameraLabel = this.mediaService.getTestCameraLabel()
-    this._cameraId = this.cameraId
-    EduLogger.info("changeNativeCamera#cameraLabel get camera id: ", this.cameraId, " cameraLabel ", this.cameraLabel)
-  }
-
-  @action.bound
-  async changeNativeMicrophone(deviceId: string) {
-    EduLogger.info("changeNativeMicrophone ", deviceId)
-    await this.mediaService.changeMicrophone(deviceId)
-    EduLogger.info("changeNativeMicrophone#changeMicrophone ", deviceId)
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
-    this._microphoneId = this.microphoneId
-    EduLogger.info("changeNativeMicrophone#changeMicrophone _microphoneId: ", this._microphoneId, " microphoneLabel ", this.microphoneLabel)
   }
 
   @action.bound
@@ -801,22 +673,34 @@ export class PretestStore {
   @action.bound
   async changeMicrophone(deviceId: string) {
     if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-      await this.mediaService.closeMicrophone()
       if (this.isWeb) {
         this._microphoneTrack = undefined
       }
       this.muteMicrophone()
     } else {
       if (this.isElectron) {
-        if (this.appStore.sceneStore.cameraEduStream) {
-          if (this.appStore.sceneStore.cameraEduStream.hasAudio) {
-            this.mediaService.electron.client.muteLocalAudioStream(false)
-          }
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
+          await this.mediaService.muteLocalAudio(false, deviceId)
+        } else {
+          await this.mediaService.setMicrophoneDevice(deviceId)
         }
       }
-      await this.mediaService.changeMicrophone(deviceId)
       if (this.isWeb) {
-        this._microphoneTrack = this.web.microphoneTrack
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
+          await this.mediaService.muteLocalAudio(false, deviceId)
+        } else {
+          const microphone = this.microphoneList.find((it: any) => it.deviceId === deviceId)
+          if (!microphone) {
+            return
+          }
+          await this.mediaService.setMicrophoneDevice(deviceId)
+          if (!this.mediaService.web.microphoneTrack) {
+            this.microphoneLabel = microphone.label
+            this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+            this._microphoneId = microphone.deviceId
+            return 
+          }
+        }
       }
       this.microphoneLabel = this.mediaService.getMicrophoneLabel()
       this.appStore.deviceInfo.microphoneName = this.microphoneLabel
@@ -825,13 +709,13 @@ export class PretestStore {
   }
   /// live room camera operator
 
-  @action.bound
-  async changeTestResolution(resolution: any) {
-    await this.mediaService.changeTestResolution(resolution)
-    runInAction(() => {
-      this.resolution = resolution
-    })
-  }
+  // @action.bound
+  // async changeTestResolution(resolution: any) {
+  //   await this.mediaService.changeTestResolution(resolution)
+  //   runInAction(() => {
+  //     this.resolution = resolution
+  //   })
+  // }
 
   @computed
   get speakerLabel(): string {

@@ -225,6 +225,7 @@ export class MediaStore {
 
     const handleDevicePulled = (evt: {resource: string}) => {
       const notice = MediaDeviceState.getNotice(evt.resource)
+      console.log('[handleDevicePulled] notice ', notice, ' evt ', evt)
       if (notice) {
         if (!this.pretestNotice.isStopped) {
           this.pretestNotice.next({
@@ -401,6 +402,7 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
       const {state, msg} = evt
+      console.log('[RTE] localVideoStateChanged', evt)
       if ([LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED,
           LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_ENCODING,
         ].includes(state)) {
@@ -418,6 +420,7 @@ export class MediaStore {
     })
     this.mediaService.on('localAudioStateChanged', (evt: any) => {
       const {state, msg} = evt
+      console.log('[RTE] localAudioStateChanged', evt)
       if ([LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED,
         LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_ENCODING].includes(state)) {
         this.localAudioState = state

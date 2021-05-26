@@ -79,7 +79,7 @@
 .pretest-toast {
     position: absolute;
     top: 26px;
-    left: 50%;
+    width: 100%;
 }
 
 @keyframes move-top {

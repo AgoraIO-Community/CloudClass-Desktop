@@ -214,15 +214,25 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
             type: type
           }
         } else {
-          return {
-            hover: false,
-            state: 'not-permitted',
-            streamState: false,
-            type
+          if (!muted) {
+            return {
+              hover: false,
+              state: 'not-available',
+              streamState: false,
+              type: type
+            }
+          } else {
+            return {
+              hover: false,
+              state: 'not-permitted',
+              streamState: false,
+              type
+            }
           }
         }
       }
-    } else {
+    }
+    if (userType === 'teacher') {
       if (!online || !onPodium || deviceState === 2 || !hasStream) {
         return {
           hover: false,
@@ -253,6 +263,12 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
         streamState: muted,
         type: type
       }
+    }
+    return {
+      hover: canHover,
+      state: 'available',
+      streamState: muted,
+      type: type
     }
   } else {
     if (deviceState === 2 || !hasStream) {

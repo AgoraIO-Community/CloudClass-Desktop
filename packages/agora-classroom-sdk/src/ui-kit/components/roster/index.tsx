@@ -60,7 +60,7 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, canOperate: boolean, role: string, onClick: any, userType: string) => ReactNode;
+  render?: (text: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => ReactNode;
 }
 
 
@@ -82,10 +82,10 @@ export interface RosterProps extends ModalProps {
    * 自己的userUuid
    */
   localUserUuid: string;
-  /**
-   * 当前用户角色
-   */
-  role: ProfileRole;
+  // /**
+  //  * 当前用户角色
+  //  */
+  // userType: ProfileRole;
   /**
    * 老师端或学生端人员列表标记
    */
@@ -107,7 +107,7 @@ export const Roster: FC<RosterProps> = ({
   dataSource = [],
   onClick,
   onClose = () => console.log("onClose"),
-  role,
+  // userType,
   localUserUuid,
   title,
   isDraggable = true,
@@ -117,7 +117,7 @@ export const Roster: FC<RosterProps> = ({
 
   const studentList = studentListSort(dataSource)
 
-  const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(role))
+  const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
 
   const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
     return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
@@ -171,7 +171,7 @@ export const Roster: FC<RosterProps> = ({
                             paddingLeft: 25
                           }}
                           onClick={
-                            canOperate(role, localUserUuid, data, col)
+                            canOperate(userType, localUserUuid, data, col)
                               ? () =>
                                   col.action &&
                                   onClick &&
@@ -187,12 +187,12 @@ export const Roster: FC<RosterProps> = ({
                             }}
                           >
                             {col.render
-                            ? col.render((data as any)[col.key], data, canOperate(role, localUserUuid, data, col), userType, (canOperate(role, localUserUuid, data, col)
+                            ? col.render((data as any)[col.key], data, canOperate(userType, localUserUuid, data, col), userType, (canOperate(userType, localUserUuid, data, col)
                             ? () =>
                                 col.action &&
                                 onClick &&
                                 onClick(col.action, data.uid)
-                            : undefined), role)
+                            : undefined))
                             : (data as any)[col.key]}
                           </span>
                       }

@@ -138,7 +138,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         <Roster
             isDraggable={true}
             localUserUuid={localUserUuid}
-            role={myRole as any}
+            // role={myRole as any}
             teacherName={teacherName}
             dataSource={dataList}
             userType={userType}
@@ -318,7 +318,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         <StudentRoster
             isDraggable={true}
             localUserUuid={localUserUuid}
-            role={myRole as any}
+            // role={myRole as any}
             teacherName={teacherName}
             dataSource={dataList}
             userType={userType}
