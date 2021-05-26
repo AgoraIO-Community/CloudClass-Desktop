@@ -626,9 +626,9 @@ export class SceneStore extends SimpleInterval {
 
   @action.bound
   async enableLocalAudio() {
-    if (this._microphoneTrack) {
-      return BizLogger.warn('[demo] enableLocalAudio locking 1 already exists')
-    }
+    // if (this._microphoneTrack) {
+    //   return BizLogger.warn('[demo] enableLocalAudio locking 1 already exists')
+    // }
     try {
       const deviceId = this.appStore.pretestStore.microphoneId
       if (deviceId === AgoraMediaDeviceEnum.Disabled) {
@@ -636,6 +636,7 @@ export class SceneStore extends SimpleInterval {
           this._microphoneTrack.stop()
           this._microphoneTrack = undefined
         }
+        this.appStore.mediaStore.totalVolume = 0
         this.appStore.pretestStore.muteMicrophone()
       } else {
         await this.mediaService.muteLocalAudio(false, deviceId)

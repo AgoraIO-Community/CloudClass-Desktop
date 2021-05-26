@@ -998,8 +998,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       }
 
       if (audioTrack) {
-        audioTrack.stop()
         this.audioTrackMap.set(type, audioTrack)
+        audioTrack.stop()
         this.addInterval((track: ILocalAudioTrack) => {
           if (track) {
             const totalVolume = track.getVolumeLevel()
@@ -1188,7 +1188,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       return
     }
     await track.setDevice(deviceId)
-    await this.agoraWebSdk.checkAudioTrackIsActive(track)
+    // await this.agoraWebSdk.checkAudioTrackIsActive(track)
     this.audioDeviceConfig.set('microphoneTrack', deviceId)
   }
 }
