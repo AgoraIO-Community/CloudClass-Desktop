@@ -2042,7 +2042,12 @@ export class BoardStore extends ZoomController {
   @action.bound
   scaleToFit() {
     if (this.isH5IFrame) {
-      this.iframe.scaleIframeToFit()
+      if(this.iframe){
+        this.iframe.scaleIframeToFit()
+      } else {
+          //@ts-ignore
+          this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+      }
     }
     this.room.scalePptToFit()
   } 
