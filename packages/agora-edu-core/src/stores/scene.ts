@@ -713,7 +713,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async muteLocalCamera() {
+  async muteLocalCamera(sync: boolean = false) {
     if (this.cameraLock || this.closingCamera === true) {
       return BizLogger.warn('[demo] enableLocalVideo locking')
     }
@@ -721,10 +721,14 @@ export class SceneStore extends SimpleInterval {
     try {
       this.lockCamera()
       BizLogger.info('[demo] [local] muteLocalCamera')
-      await Promise.all([
-        this.disableLocalVideo(),
-        this.sendMuteLocalCamera()
-      ])
+      if (sync) {
+        await Promise.all([
+          this.disableLocalVideo(),
+          this.sendMuteLocalCamera()
+        ])
+      } else {
+        await this.disableLocalVideo()
+      }
       this.setClosingCamera(false, this.roomInfo.userUuid)
       this.unLockCamera()
     } catch (err) {
@@ -737,7 +741,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound 
-  async unmuteLocalCamera() {
+  async unmuteLocalCamera(sync: boolean = false) {
     BizLogger.info('[demo] [local] unmuteLocalCamera')
     if (this.cameraLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalCamera')
@@ -745,10 +749,14 @@ export class SceneStore extends SimpleInterval {
     this.setOpeningCamera(true, this.roomInfo.userUuid)
     try {
       this.lockCamera()
-      await Promise.all([
-        this.enableLocalVideo(),
-        this.sendUnmuteLocalCamera(),
-      ])
+      if (sync) {
+        await Promise.all([
+          this.enableLocalVideo(),
+          this.sendUnmuteLocalCamera(),
+        ])
+      } else {
+        await this.enableLocalVideo()
+      }
       this.setOpeningCamera(false, this.roomInfo.userUuid)
       this.unLockCamera()
     } catch (err) {
@@ -761,7 +769,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async muteLocalMicrophone() {
+  async muteLocalMicrophone(sync: boolean = false) {
     BizLogger.info('[demo] [local] muteLocalMicrophone')
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] muteLocalMicrophone')
@@ -770,10 +778,14 @@ export class SceneStore extends SimpleInterval {
     this.setLoadingMicrophone(true, this.roomInfo.userUuid)
     try {
       this.lockMicrophone()
-      await Promise.all([
-        this.disableLocalAudio(),
-        this.sendMuteLocalMicrophone(),
-      ])
+      if (sync) {
+        await Promise.all([
+          this.disableLocalAudio(),
+          this.sendMuteLocalMicrophone(),
+        ])
+      } else {
+        await this.disableLocalAudio()
+      }
       this.setLoadingMicrophone(false, this.roomInfo.userUuid)
       this.unLockMicrophone()
     }catch(err) {
@@ -786,7 +798,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async unmuteLocalMicrophone() {
+  async unmuteLocalMicrophone(sync: boolean = false) {
     BizLogger.info('[demo] [local] unmuteLocalMicrophone')
     if (this.microphoneLock) {
       return BizLogger.warn('[demo] [mic lock] unmuteLocalMicrophone')
@@ -795,10 +807,14 @@ export class SceneStore extends SimpleInterval {
     this.setLoadingMicrophone(true, this.roomInfo.userUuid)
     try {
       this.lockMicrophone()
-      await Promise.all([
-        this.enableLocalAudio(),
-        this.sendUnmuteLocalMicrophone(),
-      ])
+      if (sync) {
+        await Promise.all([
+          this.enableLocalAudio(),
+          this.sendUnmuteLocalMicrophone(),
+        ])
+      } else {
+        await this.enableLocalAudio()
+      }
       this.setLoadingMicrophone(false, this.roomInfo.userUuid)
       this.unLockMicrophone()
     } catch(err) {
@@ -1908,7 +1924,7 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info("muteAudio", userUuid, local)
     if (local) {
       BizLogger.info('before muteLocalAudio', this.microphoneLock)
-      await this.muteLocalMicrophone()
+      await this.muteLocalMicrophone(true)
       BizLogger.info('after muteLocalAudio', this.microphoneLock)
     } else {
       const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
@@ -1940,7 +1956,7 @@ export class SceneStore extends SimpleInterval {
     const local = userUuid === this.roomInfo.userUuid
     BizLogger.info("unmuteAudio", userUuid, local)
     if (local) {
-      await this.unmuteLocalMicrophone()
+      await this.unmuteLocalMicrophone(true)
     } else {
       const stream = this.getStreamBy(userUuid)
       if (stream && this.mediaService.isElectron) {
@@ -1975,7 +1991,7 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info("muteVideo", userUuid, local)
     if (local) {
       BizLogger.info('before muteLocalCamera', this.cameraLock)
-      await this.muteLocalCamera()
+      await this.muteLocalCamera(true)
       BizLogger.info('after muteLocalCamera', this.cameraLock)
     } else {
       const stream = this.getStreamBy(userUuid)
@@ -2005,7 +2021,7 @@ export class SceneStore extends SimpleInterval {
     BizLogger.info("unmuteVideo", userUuid, local)
     if (local) {
       BizLogger.info('before unmuteLocalCamera', this.cameraLock)
-      await this.unmuteLocalCamera()
+      await this.unmuteLocalCamera(true)
       BizLogger.info('after unmuteLocalCamera', this.cameraLock)
     } else {
       const stream = this.getStreamBy(userUuid)
