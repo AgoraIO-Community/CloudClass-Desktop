@@ -415,7 +415,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (this.isWeb) {
       if (this.web.cameraTrack) {
         //@ts-ignore
-        return this.web.cameraTrack._deivceName || this.web.cameraTrack.getTrackLabel()
+        return this.web.cameraTrack._deviceName || this.web.cameraTrack.getTrackLabel()
       }
     }
     if (this.isElectron) {

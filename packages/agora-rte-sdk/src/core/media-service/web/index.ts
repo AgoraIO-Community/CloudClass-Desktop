@@ -1093,6 +1093,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
    * @returns 
    */
   async muteLocalAudio(v: boolean, deviceId?: string) {
+    if (!this.client) return
     const track = this.audioTrackMap.get('microphoneTrack')
     console.log('[RTE] microphoneTrack ', track, v, deviceId)
     if (!track) {
@@ -1129,6 +1130,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
    * @returns 
    */
   async muteLocalVideo(v: boolean, deviceId?: string) {
+    if (!this.client) return
     const track = this.videoTrackMap.get('cameraRenderer')
     console.log('[RTE] muteLocalVideo ', track, v, deviceId)
     if (!track) {

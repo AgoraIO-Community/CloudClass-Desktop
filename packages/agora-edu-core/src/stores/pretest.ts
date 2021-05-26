@@ -613,7 +613,7 @@ export class PretestStore {
           await this.mediaService.setCameraDevice(deviceId)
           if (!this.mediaService.web.cameraTrack) {
             this.cameraLabel = camera.label
-            this.appStore.deviceInfo.cameraName = this.microphoneLabel
+            this.appStore.deviceInfo.cameraName = this.cameraLabel
             this._cameraId = camera.deviceId
             return 
           }
@@ -629,6 +629,7 @@ export class PretestStore {
   @action.bound
   async closeMicrophone() {
     await this.mediaService.muteLocalAudio(true)
+    this.appStore.mediaStore.totalVolume = 0
     this.resetMicrophoneTrack()
   }
 
