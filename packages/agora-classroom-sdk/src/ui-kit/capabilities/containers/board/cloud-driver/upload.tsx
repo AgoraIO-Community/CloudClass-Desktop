@@ -23,7 +23,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
   const [checkMap, setCheckMap] = React.useState<Record<string, any>>({})
 
   React.useEffect(() => {
-    handleUpdateCheckedItems(Object.keys(checkMap))
+    handleUpdateCheckedItems(Object.keys(checkMap).filter(it=>!!checkMap[it]))
   }, [checkMap, handleUpdateCheckedItems])
 
   const items = React.useMemo(() => {
