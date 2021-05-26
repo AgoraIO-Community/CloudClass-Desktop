@@ -8,9 +8,9 @@ import { Modal } from '@/ui-kit/components/modal'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { transI18n } from '~components/i18n';
 
-export const AppPluginItem = observer(({app, properties, closable} : {app:IAgoraExtApp, properties: any, closable: boolean}) => {
+export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
     const ref = useRef<HTMLDivElement | null>(null)
-    const {onShutdownAppPlugin, contextInfo} = useAppPluginContext()
+    const {contextInfo} = useAppPluginContext()
 
     const {userUuid, userName, userRole, roomName, roomUuid, roomType, language} = contextInfo
 
@@ -42,8 +42,17 @@ export const AppPluginItem = observer(({app, properties, closable} : {app:IAgora
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, app])
     return (
-        <Draggable handle=".modal-title" defaultPosition={{x: 100, y: 100}}>
-            <Modal title={transI18n(`${app.appName}.appName`)} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} closable={closable}>
+        <Draggable 
+          handle=".modal-title" 
+          defaultPosition={{x: 100, y: 100}} 
+          bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
+          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? 40 : 0}}
+        >
+            <Modal 
+              title={transI18n(`${app.appName}.appName`)} 
+              width={app.width} onCancel={onCancel} 
+              closable={closable}
+            >
                 <div ref={ref} style={{width: '100%', height: app.height}}>
                 </div>
             </Modal>
@@ -52,13 +61,29 @@ export const AppPluginItem = observer(({app, properties, closable} : {app:IAgora
 })
 
 export const AppPluginContainer = observer(() => {
-  const {activeAppPlugins, appPluginProperties} = useAppPluginContext()
+  const {activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo} = useAppPluginContext()
   const {roomInfo} = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
-        <AppPluginItem key={app.appIdentifier} app={app} properties={appPluginProperties(app)} closable={closable}></AppPluginItem>
+        <AppPluginItem 
+          key={app.appIdentifier} 
+          app={app} 
+          properties={appPluginProperties(app)} 
+          closable={closable}
+          onCancel={async () => {
+            await eduSDKApi.updateExtAppProperties(contextInfo.roomUuid, app.appIdentifier, {
+              state: '0',
+              startTime: '0',
+              pauseTime: '0',
+              duration: '0'
+            }, {
+              state: 0
+            }, {})
+            onShutdownAppPlugin(app.appIdentifier)
+          }}
+        ></AppPluginItem>
       )}
     </div>
   )
