@@ -42,8 +42,17 @@ export const AppPluginItem = observer(({app, properties, closable} : {app:IAgora
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, app])
     return (
-        <Draggable handle=".modal-title" defaultPosition={{x: 100, y: 100}}>
-            <Modal title={transI18n(`${app.appName}.appName`)} width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} closable={closable}>
+        <Draggable 
+          handle=".modal-title" 
+          defaultPosition={{x: 100, y: 100}} 
+          bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
+          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? 40 : 0}}
+        >
+            <Modal 
+              title={transI18n(`${app.appName}.appName`)} 
+              width={app.width} onCancel={() => onShutdownAppPlugin(app.appIdentifier)} 
+              closable={closable}
+            >
                 <div ref={ref} style={{width: '100%', height: app.height}}>
                 </div>
             </Modal>
