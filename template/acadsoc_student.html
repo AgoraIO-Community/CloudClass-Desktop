@@ -32,9 +32,9 @@
                     // let opts = JSON.parse(`{"userUuid":"UID_10018690","rtmToken":"006d2931ea1715c4bc9b36608770bcf6d01IACRFrBvPbW6JM3XD/GDgAUm0TFF2T3pcogFNP+VapSmzTlLOSEAAAAAEADFnn1JmTFOYAEA6AOpfUxg","rtmUid":"10018690","userName":"声网1","roomUuid":"09fe42f080bb11ebb1a3d35074fec6fb2","roleType":2,"roomType":0,"roomName":"75702143","language":"zh","translateLanguage":"auto","courseWareList":,"duration":1500,"pretest":true}`)
 
                     const teachers = [
-                        {userUuid: "teacher01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IADUa42uJwNAyCRJljzf82THHkVGn4R8t01sogIzMxA2TUejuwwAAAAAEACr+I8je9KtYAEA6AN70q1g"},
-                        {userUuid: "teacher02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAVnYV/m7dSAqRVl0tZU4x44/C2xUUnFe3fhUij8jE6Ov3yspUAAAAAEACr+I8jh9KtYAEA6AOH0q1g"},
-                        {userUuid: "teacher03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IACxorSxpQ8+RVCOXObtwzn2b7IeZ4dYfIzcRa3pN3OwSmvCteIAAAAAEACr+I8jkNKtYAEA6AOQ0q1g"}
+                        {userUuid: "user01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAPp0hPtT4oyByG1AqP/S1Smsjkl8oaz3IA/1O8iI+HUQgqSoEAAAAAEABu+DT9Gv2uYAEA6AMa/a5g"},
+                        {userUuid: "user02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABGsSKa6rsVT0Kc6ixQKqPwe7+NjaD7bvXZp03OkIF7zLJ7QxgAAAAAEABu+DT9Iv2uYAEA6AMi/a5g"},
+                        {userUuid: "user03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABrqaF2wrGiBhRq/0M/fyEJy4ro0JHMpwRowZcAM8FXwCRLRG8AAAAAEABu+DT9Kv2uYAEA6AMq/a5g"}
                     ]
 
                     const idx = document.querySelector('#userPicker').value
@@ -55,7 +55,7 @@
                                 roomUuid: roomUuid,
                                 roomName: "test",
                                 language: "zh",
-                                roleType:1,
+                                roleType: parseInt(document.querySelector('#rolePicker').value),
                                 roomType:0,
                                 duration: 1500,
                                 translateLanguage: "auto",
@@ -94,10 +94,16 @@
         
     </script>
     <select id="userPicker">
-        <option value="0">teacher01</option>
-        <option value="1">teacher02</option>
-        <option value="2">teacher03</option>
+        <option value="0">user01</option>
+        <option value="1">user02</option>
+        <option value="2">user03</option>
     </select>
+
+    <select id="rolePicker">
+        <option value="1">teacher</option>
+        <option value="2">student</option>
+    </select>
+
     <input id="roomUuid" placeholder="roomUuid"></input>
     <button id="btn">test</button>
 </body>
