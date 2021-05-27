@@ -8,7 +8,7 @@ export interface CountdownProps extends BaseProps {
     theme?: number;
     timeUnit?: string[];
     onTimeUp?: Function;
-    loop?: boolean;
+    play?: boolean;
 }
 
 export const Countdown: React.FC<CountdownProps> = ({
@@ -17,7 +17,7 @@ export const Countdown: React.FC<CountdownProps> = ({
     theme = 1,
     timeUnit = [],
     onTimeUp = () => { console.log('time up') },
-    loop = true,
+    play = true,
     ...restProps
 }) => {
     const [timeArray, setTimeArray] = useState<string[]>(
@@ -100,7 +100,7 @@ export const Countdown: React.FC<CountdownProps> = ({
      */
     const start = (st = 1000) => {
         if (!endTime) return
-        const loopFn = () => {
+        const playFn = () => {
             let t = endTime - new Date().getTime(); // 剩余的毫秒数
             t = t < 0 ? 0 : t;
             let day = 0; // 剩余的天
@@ -138,7 +138,7 @@ export const Countdown: React.FC<CountdownProps> = ({
             }
             setTimeArray(ar)
             if (t > 0) {
-                if (loop) {
+                if (play) {
                     start();
                 }
             } else {
@@ -148,10 +148,10 @@ export const Countdown: React.FC<CountdownProps> = ({
             }
         }
         timer && clearTimeout(timer)
-        if (loop) {
-            setTimer(setTimeout(loopFn, st));
+        if (play) {
+            setTimer(setTimeout(playFn, st));
         } else {
-            loopFn()
+            playFn()
         }
     };
     // 动画完毕后，去掉对应的class, 为下次动画做准备
