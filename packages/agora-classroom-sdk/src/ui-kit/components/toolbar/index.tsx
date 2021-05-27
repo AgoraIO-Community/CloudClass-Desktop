@@ -169,7 +169,7 @@ export const Toolbar: FC<ToolbarProps> = ({
           ))}
         </div>
       </div>
-      <div className={reachEnd ? "toolbar-shadow" : "toolbar-shadow hidden"}></div>
+      <div className={reachEnd ? (opened ? "toolbar-shadow" : "toolbar-shadow hidden") : "toolbar-shadow hidden"}></div>
     </div>
   );
 };
