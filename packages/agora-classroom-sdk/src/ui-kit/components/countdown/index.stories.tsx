@@ -19,6 +19,7 @@ type DocsProps = {
 
 export const Docs = ({ endDate, type, theme }: DocsProps) => {
     const [result, setResult] = useState<number>(0)
+    const [loop, setLoop] = useState<boolean>(true)
     const [number, setNumber] = useState<number>(60)
     const [showSetting, setShowSetting] = useState<boolean>(true)
     return (
@@ -61,6 +62,7 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
                             theme={2}
                             type={2}
                             timeUnit={[':', ':', ':']}
+                            loop={loop}
                         />
                         {showSetting ? (
                             <div style={{ width: '100%' }}>
@@ -91,6 +93,7 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
                                             }
                                             const result = Date.now() + (number) * 1000
                                             setResult(result)
+                                            setLoop(false)
                                             setShowSetting(false)
                                         }}
                                         disabled={number > 3600}

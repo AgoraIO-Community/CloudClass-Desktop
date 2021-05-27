@@ -6,8 +6,9 @@ export interface CountdownProps extends BaseProps {
     endDate?: Date | number;
     type?: number;
     theme?: number;
-    timeUnit?: string[]
-    onTimeUp?: Function
+    timeUnit?: string[];
+    onTimeUp?: Function;
+    loop?: boolean;
 }
 
 export const Countdown: React.FC<CountdownProps> = ({
@@ -16,6 +17,7 @@ export const Countdown: React.FC<CountdownProps> = ({
     theme = 1,
     timeUnit = [],
     onTimeUp = () => { console.log('time up') },
+    loop = true,
     ...restProps
 }) => {
     const [timeArray, setTimeArray] = useState<string[]>(
@@ -96,7 +98,7 @@ export const Countdown: React.FC<CountdownProps> = ({
      * 开始倒计时
      * @param st 重复执行的间隔时间
      */
-    const start = (st = 1000, loop = true) => {
+    const start = (st = 1000) => {
         if (!endTime) return
         const loopFn = () => {
             let t = endTime - new Date().getTime(); // 剩余的毫秒数
