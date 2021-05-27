@@ -1001,7 +1001,7 @@ export class BoardStore extends ZoomController {
       currentApplianceName: ApplianceNames.clicker,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
-    this.selector = 'selection'
+    this.selector = 'clicker'
     BizLogger.info("[breakout board] after join", data)
     this.online = true
     // this.updateSceneItems()
@@ -1603,7 +1603,7 @@ export class BoardStore extends ZoomController {
           this.room.setMemberState({
             currentApplianceName: ApplianceNames.clicker
           })
-          this.selector = 'selection'
+          this.selector = 'clicker'
         }
       }
       this.room.disableDeviceInputs = !v

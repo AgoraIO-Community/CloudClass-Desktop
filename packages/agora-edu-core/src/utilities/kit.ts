@@ -689,6 +689,7 @@ export const transToolBar: Record<any, any> = {
   'text': ApplianceNames.text,
   'hand': ApplianceNames.hand,
   'eraser': ApplianceNames.eraser,
+  'clicker': ApplianceNames.clicker,
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,
@@ -699,6 +700,7 @@ export const transToolBar: Record<any, any> = {
   [ApplianceNames.straight]: ApplianceNames.straight,
   [ApplianceNames.arrow]: ApplianceNames.arrow,
   [ApplianceNames.selector]: ApplianceNames.selector,
+  // [ApplianceNames.clicker]: ApplianceNames.clicker,
   // 'blank-page': 'new-page',
   // 'cloud': 'cloud',
   // 'follow': 'follow',
