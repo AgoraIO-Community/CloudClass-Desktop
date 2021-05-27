@@ -26,9 +26,13 @@ export enum DeviceChangedDeviceType {
 }
 
 export enum DeviceChangedStateType {
+  //work in macOS unplugged when camera
   MEDIA_DEVICE_STATE_ACTIVE = 1,
   MEDIA_DEVICE_STATE_DISABLED = 2,
+  //only work for audio state unplugged
+  MEDIA_DEVICE_AUDIO_STATE_UNPLUGGED = 3,
   MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
+  //work in windows unplugged when camera
   MEDIA_DEVICE_STATE_UNPLUGGED = 8
 }
 
@@ -293,27 +297,23 @@ export class MediaStore {
     })
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed ", info)
-      // if (appStore.isNotInvisible) {
-      //   if (appStore.isWeb) {
-      //     this.pretestNotice.next({
-      //       type: 'audio',
-      //       info: 'device_changed',
-      //       id: uuidv4()
-      //     })
-      //   }
-      // }
-
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
-        // if (type === DeviceChangedDeviceType.AUDIO_RECORDING_DEVICE) {
-        //   this.pretestNotice.next({
-        //     type: 'audio',
-        //     info: 'device_changed',
-        //     id: uuidv4()
-        //   })
-        // }
-        if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
-          handleDevicePulled({resource: 'audio'})
+        //@ts-ignore
+        if (window.isMacOS()) {
+          if (
+            state === DeviceChangedStateType.MEDIA_DEVICE_STATE_ACTIVE &&
+            this.appStore.pretestStore.microphoneId === deviceId
+          ) {
+            handleDevicePulled({resource: 'audio'})
+          }
+        } else {
+          if (
+            DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED === state &&
+            this.appStore.pretestStore.microphoneId === deviceId
+          ) {
+            handleDevicePulled({resource: 'audio'})
+          }
         }
       }
       // const prevLength = this.appStore.pretestStore._microphoneList.length
@@ -336,15 +336,21 @@ export class MediaStore {
 
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
-        // if (type === DeviceChangedDeviceType.VIDEO_CAPTURE_DEVICE) {
-        //   this.pretestNotice.next({
-        //     type: 'video',
-        //     info: 'device_changed',
-        //     id: uuidv4()
-        //   })
-        // }
-        if (state === DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED) {
-          handleDevicePulled({resource: 'video'})
+        //@ts-ignore
+        if (window.isMacOS()) {
+          if (
+            state === DeviceChangedStateType.MEDIA_DEVICE_STATE_ACTIVE &&
+            this.appStore.pretestStore.cameraId === deviceId
+          ) {
+            handleDevicePulled({resource: 'video'})
+          }
+        } else {
+          if (
+            DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED === state &&
+            this.appStore.pretestStore.cameraId === deviceId
+          ) {
+            handleDevicePulled({resource: 'video'})
+          }
         }
       }
       // const prevLength = this.appStore.pretestStore._cameraList.length
