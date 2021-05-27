@@ -33,6 +33,7 @@ const App = observer(() => {
         <Button
           onClick={() => {
             pluginStore.setResult(0)
+            pluginStore.setPlay(false)
             pluginStore.setShowSetting(true)
             pluginStore.changeRoomProperties({
               state: '2',
@@ -48,6 +49,7 @@ const App = observer(() => {
         theme={2}
         type={2}
         timeUnit={[':', ':', ':']}
+        play={pluginStore.play}
       />
       {pluginStore.showSetting ? (
         <div style={{ width: '100%' }}>
@@ -75,6 +77,7 @@ const App = observer(() => {
                 const result = Date.now() + (pluginStore.number != undefined ? pluginStore.number : 0) * 1000
                 pluginStore.setResult(result)
                 pluginStore.setShowSetting(false)
+                pluginStore.setPlay(true)
                 pluginStore.changeRoomProperties({
                   state: '1',
                   startTime: (Math.floor(Date.now() / 1000)).toString(),

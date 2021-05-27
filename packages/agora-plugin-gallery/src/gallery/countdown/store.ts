@@ -10,6 +10,8 @@ export class PluginStore {
     number?: number = 60
     @observable
     showSetting?: boolean = true
+    @observable
+    play?: boolean = true
 
     constructor(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
         if(ctx.properties) {
@@ -17,6 +19,7 @@ export class PluginStore {
             const startTime = parseInt(sStartTime) * 1000
             const duration = parseInt(sDuration) * 1000
             if(startTime && duration) {
+                this.setPlay(true)
                 this.setResult(startTime + duration)
                 this.setShowSetting(false)
             }
@@ -58,13 +61,16 @@ export class PluginStore {
 
     @action
     onReceivedProps(properties:any, cause: any) {
-        const {startTime:sStartTime, duration:sDuration, state} = properties
+        const {startTime:sStartTime, duration:sDuration, state, pauseTime:sPauseTime} = properties
         const startTime = parseInt(sStartTime) * 1000
+        const pauseTime = parseInt(sPauseTime) * 1000
         const duration = parseInt(sDuration) * 1000
         if (state === '1') {
             this.setResult(startTime + duration)
+            this.setPlay(true)
         } else if (state === '2') {
-            this.setResult(0)
+            this.setPlay(false)
+            this.setResult(Date.now() + duration - (pauseTime - startTime))
         }
         
     }
@@ -82,5 +88,10 @@ export class PluginStore {
     @action
     setShowSetting (showSetting: boolean) {
         this.showSetting = showSetting
+    }
+
+    @action 
+    setPlay (play: boolean) {
+        this.play = play
     }
 }
