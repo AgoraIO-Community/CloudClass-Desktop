@@ -202,10 +202,15 @@ export class ReportServiceV2 extends ApiBase {
         return this.buildBaseParams(id, src, payload);
     }
     guardParams() {
-        if (!!this.reportUserParams.uid) {
-            return true;
+        try {
+            if (!!this.reportUserParams.uid) {
+                return true;
+            }
+        } catch (error) {
+            //todo 没有拿到上报数据
         }
-        throw GenericErrorWrapper(new Error(`not initialize params: reportUserParams: ${this.reportUserParams}`));
+        return false;
+        // throw GenericErrorWrapper(new Error(`not initialize params: reportUserParams: ${this.reportUserParams}`));
     }
     get apiPath() {
         return this.sdkDomain;
