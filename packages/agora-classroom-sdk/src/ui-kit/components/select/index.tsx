@@ -4,6 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import ReactSelect from 'react-select'
 
 import './index.css'
+import { transI18n } from '@/ui-kit';
 
 export type SelectOption = {
     label: string;
@@ -31,6 +32,9 @@ export const Select: FC<SelectProps> = ({
     className,
     ...restProps
 }) => {
+
+    const wrappedOptions = options.map((item: any) => ({label: item.i18n ? transI18n(item.label) : item.label, value: item.value}))
+
     const cls = classnames({
         [`select`]: 1,    
         [`${className}`]: !!className,
@@ -45,9 +49,9 @@ export const Select: FC<SelectProps> = ({
             <ReactSelect
                 className={[cls, prefix ? 'react-select-prefix' : ''].join(" ")}
                 classNamePrefix={['react-select'].join(" ")}
-                value={options.find(item => item.value === value)}
+                value={wrappedOptions.find(item => item.value === value)}
                 placeholder={placeholder}
-                options={options}
+                options={wrappedOptions}
                 isSearchable={isSearchable}
                 // @ts-ignore
                 onChange={(option: SelectOption)  => {

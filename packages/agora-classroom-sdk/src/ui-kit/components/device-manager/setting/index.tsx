@@ -47,9 +47,9 @@ export const Setting: FC<SettingProps> = ({
         [`setting`]: 1,
         [`${className}`]: !!className,
     });
-    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId}))
-    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId}))
-    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId}))
+    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
     return (
         <div className={cls} {...restProps} style={{width: 318}}>
             <div className="device-choose">

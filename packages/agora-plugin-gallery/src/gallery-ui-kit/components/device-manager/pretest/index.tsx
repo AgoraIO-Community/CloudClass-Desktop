@@ -113,9 +113,9 @@ export const Pretest: React.FC<PretestProps> = ({
         [`${className}`]: !!className,
     })
 
-    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId}))
-    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId}))
-    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId}))
+    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
 
     return (
         <div className={cls} {...restProps}>
