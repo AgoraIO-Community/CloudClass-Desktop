@@ -50,6 +50,21 @@
   opacity: 0;
 }
 
+.agora-board-resources .icon-clicker {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-clicker {
+  width: 28px;
+  height: 28px;
+  background-image: url('./assets/svg/select-default.svg');
+}
+
+.active .icon-clicker {
+  background-image: url('./assets/svg/select-actived.svg');
+}
+
 .icon-assistant-authorized.assistant-authorized {
   background-image: url('./assets/svg/teacher-granted-active.svg'); 
 }

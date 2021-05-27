@@ -22,7 +22,8 @@ const svgDict: string[] = [
   'teacher-authorized',
   'assistant-authorized',
   'teacher-whiteboard',
-  'countdown'
+  'countdown',
+  'clicker',
 ]
 
 export interface IconProps extends BaseProps {
@@ -48,6 +49,11 @@ export const Icon: FC<IconProps> = ({
   id,
   ...restProps
 }) => {
+
+  if (type === 'clicker') {
+    useSvg = true
+  }
+
   let cls = classnames({
     'icon-box': true,
     [`iconfont icon-${type}`]: true,
@@ -271,7 +277,7 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
       type: type
     }
   } else {
-    if (deviceState === 2 || !hasStream) {
+    if (deviceState === 2 || !hasStream || !onPodium || !online) {
       return {
         hover: false,
         state: 'not-available',

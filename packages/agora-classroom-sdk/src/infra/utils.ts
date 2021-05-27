@@ -629,6 +629,7 @@ export const transToolBar = {
   'text': ApplianceNames.text,
   'hand': ApplianceNames.hand,
   'eraser': ApplianceNames.eraser,
+  'clicker': ApplianceNames.clicker,
   // 'color': 'color',
   //  TODO: 'laserPoint icon' need import
   'laserPointer': ApplianceNames.laserPointer,

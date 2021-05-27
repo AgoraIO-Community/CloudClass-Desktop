@@ -68,4 +68,5 @@ export type IconTypes =
   | 'red-caution'
   | 'laser-pointer'
   | 'recording'
+  | 'clicker'
   | 'countdown';

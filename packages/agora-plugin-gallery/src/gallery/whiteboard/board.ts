@@ -101,7 +101,7 @@ export class BoardClient extends EventEmitter {
     })
     this.room.setMemberState({
       strokeColor: [252, 58, 63],
-      currentApplianceName: ApplianceNames.selector,
+      currentApplianceName: ApplianceNames.clicker,
       textSize: 24,
     })
 

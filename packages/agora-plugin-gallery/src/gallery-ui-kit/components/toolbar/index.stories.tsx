@@ -19,6 +19,11 @@ export const Docs: FC<ToolbarProps> = (props) => {
   }, [updateActiveItem])
   const tools: ToolItem[] = [
     {
+      value: 'clicker',
+      label: '鼠标',
+      icon: 'clicker'
+    },
+    {
       value: 'selection',
       label: '选择',
       icon: 'select',

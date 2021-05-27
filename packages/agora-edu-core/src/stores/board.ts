@@ -998,7 +998,7 @@ export class BoardStore extends ZoomController {
       b: 63
     }
     this.room.setMemberState({
-      currentApplianceName: ApplianceNames.selector,
+      currentApplianceName: ApplianceNames.clicker,
       strokeColor: [this.strokeColor.r, this.strokeColor.g, this.strokeColor.b],
     })
     this.selector = 'selection'
@@ -1159,6 +1159,8 @@ export class BoardStore extends ZoomController {
       case 'hand':
       case 'eraser':
       case 'color':
+      case 'clicker':
+      case ApplianceNames.clicker:
       case ApplianceNames.pencil:
       case ApplianceNames.rectangle:
       case ApplianceNames.ellipse:
@@ -1184,7 +1186,8 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.ellipse]: 'circle',
             [ApplianceNames.straight]: 'line',
             [ApplianceNames.arrow]: 'arrow',
-            [ApplianceNames.selector]: 'selection'
+            [ApplianceNames.selector]: 'selection',
+            [ApplianceNames.clicker]: 'clicker',
           }
 
           if (selector[tool]) {
@@ -1598,7 +1601,7 @@ export class BoardStore extends ZoomController {
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
           this.room.setMemberState({
-            currentApplianceName: ApplianceNames.selector
+            currentApplianceName: ApplianceNames.clicker
           })
           this.selector = 'selection'
         }
@@ -1892,7 +1895,7 @@ export class BoardStore extends ZoomController {
         width: 1280,
         height: 720,
         displaySceneDir: `${scenePath}`,
-        useClicker: false
+        useClicker: true
       })
       this.iframe = iframe
       this.putCourseResource(resourceUuid)

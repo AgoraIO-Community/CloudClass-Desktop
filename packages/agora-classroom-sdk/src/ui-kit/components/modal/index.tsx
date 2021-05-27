@@ -35,7 +35,7 @@ type ModalType = FC<ModalProps> & {
 export const Modal: ModalType = ({
     width = 280,
     title = 'modal title',
-    closable = true,
+    closable = false,
     footer,
     style,
     onOk = (e: React.MouseEvent<HTMLElement>) => { console.log('ok') },

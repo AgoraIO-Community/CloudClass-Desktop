@@ -1750,7 +1750,7 @@ export class SceneStore extends SimpleInterval {
           cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, stream.streamUuid),
           micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, stream.streamUuid),
           isLocal: false,
-          hasStream: !!this.cameraEduStream,
+          hasStream: !!stream,
         } as any)
         return acc;
       }

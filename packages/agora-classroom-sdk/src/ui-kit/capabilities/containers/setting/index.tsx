@@ -59,6 +59,7 @@ export const SettingContainer = observer(({ id }: any) => {
             onOk={() => {
                 removeDialog(id)
             }}
+            closable={true}
         >
             <Setting
                 cameraList={cameraList}
