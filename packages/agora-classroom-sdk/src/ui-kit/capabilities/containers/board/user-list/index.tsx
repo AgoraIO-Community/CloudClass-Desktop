@@ -217,43 +217,13 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
 
     const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
 
-    // const localStudentInfo = useMemo(() => {
-
-    // }, [])
-
-    const lectureClassUserStreamList = useMemo(() => {
-        const remoteStudentList = userList
-            .filter((user: any) => ['audience'].includes(user.role))
-            .filter((user: any) => user.userUuid !== localUserUuid)
-            .reduce((acc: any[], user: any) => {
-                const stream = streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-                const userInfo = transformRosterUserInfo(user, roomInfo.userRole, stream, acceptedIds.includes(user.userUuid), userList)
-                acc.push(userInfo)
-                return acc
-              }, [])
-
-        // is student
-        if (roomInfo.userRole === 2) {
-            const localUserInfo = transformRosterUserInfo(
-                {
-                    userUuid: roomInfo.userUuid,
-                    userName: roomInfo.userName,
-                },
-                roomInfo.userRole,
-                localStream,
-                acceptedIds.includes(roomInfo.userUuid),
-                userList,
-                )
-            return [localUserInfo].concat(remoteStudentList)
-        }              
-
-        return remoteStudentList
-    }, [localStream, roomInfo.userName, roomInfo.userUuid, roomInfo.userRole, userList, streamList, acceptedIds, localStream, acceptedUserList])
-
+    const {
+        rosterUserList,
+    } = useUserListContext()
 
     const dataList = useMemo(() => {
-        return lectureClassUserStreamList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-      }, [keyword, lectureClassUserStreamList])
+        return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
+      }, [keyword, rosterUserList])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = dataList
