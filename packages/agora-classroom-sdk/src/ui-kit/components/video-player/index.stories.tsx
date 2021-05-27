@@ -6,22 +6,24 @@ import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
 import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
+const config = {"muted":true,"deviceState":1,"online":true,"onPodium":true,"userType":"teacher","hasStream":true,"isLocal":false,"type":"microphone","uid":"3232","disabled":true}
 const meta: Meta = {
   title: 'Components/VideoPlayer',
   component: VideoPlayer,
   args: {
     size: 10,
     username: 'Lily True',
-    stars: 5,
     micEnabled: true,
     whiteboardGranted: true,
-    micVolume: 0.95,
-    controlPlacement: 'bottom',
-    hasStream: false,
-    online: false,
-    isLocal: false,
-    isOnPodium: false,
-    userType: 'student',
+    // stars: 5,
+    // micVolume: 0.95,
+    // hasStream: false,
+    // online: false,
+    // isLocal: false,
+    // isOnPodium: false,
+    // userType: 'student',
+    // controlPlacement: 'bottom',
+    ...config,
     placeholder: (
       <img
         src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF"
