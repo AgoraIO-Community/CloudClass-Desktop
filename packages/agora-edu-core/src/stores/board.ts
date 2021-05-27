@@ -1124,7 +1124,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   setLaserPoint() {
-    if (!this.boardRoomIsAvailable) {
+    if (this.boardRoomIsAvailable) {
       this.setTool('laser')
       this.room.setMemberState({
         currentApplianceName: ApplianceNames.laserPointer
