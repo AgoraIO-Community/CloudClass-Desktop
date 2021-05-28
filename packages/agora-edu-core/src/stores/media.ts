@@ -309,8 +309,11 @@ export class MediaStore {
           }
         } else {
           if (
-            DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED === state &&
-            this.appStore.pretestStore.microphoneId === deviceId
+            [
+              DeviceChangedStateType.MEDIA_DEVICE_STATE_UNPLUGGED, 
+              DeviceChangedStateType.MEDIA_DEVICE_STATE_NOT_PRESENT
+            ].includes(state)
+            && this.appStore.pretestStore.microphoneId === deviceId
           ) {
             handleDevicePulled({resource: 'audio'})
           }
