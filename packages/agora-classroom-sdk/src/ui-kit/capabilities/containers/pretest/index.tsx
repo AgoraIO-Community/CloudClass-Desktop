@@ -113,6 +113,7 @@ export const PretestContainer = observer(() => {
                 footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
                 onOk={handleOk}
                 onCancel={() => {}}
+                btnId="device_assert"
             >
                 <Pretest
                     pretestChannel={pretestNoticeChannel}
