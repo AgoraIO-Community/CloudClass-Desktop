@@ -428,6 +428,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
+  userType,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
 
@@ -510,6 +511,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               {...videoStream}
               hideStars={hideStars}
               showGranted={true}
+              userType={userType}
               onCameraClick={onCameraClick}
               onMicClick={onMicClick}
               onOffPodiumClick={onOffPodiumClick}
