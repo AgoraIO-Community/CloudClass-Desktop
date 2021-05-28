@@ -1905,7 +1905,7 @@ export class BoardStore extends ZoomController {
         width: 1280,
         height: 720,
         displaySceneDir: `${scenePath}`,
-        useClicker: false
+        useClicker: true
       })
       room.setScenePath(scenePath)
     }
