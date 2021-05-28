@@ -14,14 +14,16 @@ import classnames from 'classnames'
 
 export const allTools: ToolItem[] = [
   {
+    // clicker use selector icon
     value: 'clicker',
     label: 'scaffold.clicker',
-    icon: 'clicker'
+    icon: 'select'
   },
   {
+    // selector use clicker icon
     value: 'selection',
     label: 'scaffold.selector',
-    icon: 'select'
+    icon: 'clicker'
   },
   {
     value: 'pen',
