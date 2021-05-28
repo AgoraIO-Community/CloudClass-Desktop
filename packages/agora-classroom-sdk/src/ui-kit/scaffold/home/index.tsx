@@ -98,7 +98,7 @@ export const Home: React.FC<HomeProps> = ({
         <div className="header-right">
           <div style={{ marginRight: language === 'en' ? -12 : -58, width: 131, position: 'relative', zIndex: 9 }} className={[language === 'en' ? "region-en-div" : "region-zh-div"].join(" ")}>
             <Select
-              prefix={<span className="home-label">{transI18n('home.region')}</span>}
+              prefix={<span id="et_region" className="home-label">{transI18n('home.region')}</span>}
               id="region"
               value={region}
               onChange={value => {
@@ -196,7 +196,7 @@ export const Home: React.FC<HomeProps> = ({
             <Col>
               <Input 
                 inputPrefixWidth={55} 
-                prefix={<span className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} 
+                prefix={<span id="et_room_name" className="home-label" title={transI18n('home.roomName')}>{transI18n('home.roomName')}</span>} 
                 id="roomName" 
                 type="text" 
                 className="block w-full" 
@@ -214,7 +214,7 @@ export const Home: React.FC<HomeProps> = ({
             <Col>
               <Input 
                 inputPrefixWidth={55} 
-                prefix={<span className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} 
+                prefix={<span id='et_user_name' className="home-label" title={transI18n('home.nickName')}>{transI18n('home.nickName')}</span>} 
                 id="userName" 
                 type="text" 
                 className="block w-full" 
@@ -231,7 +231,7 @@ export const Home: React.FC<HomeProps> = ({
           <Row className="home-row-item">
             <Col>
               <Select
-                prefix={<span className="home-label" title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
+                prefix={<span id="et_room_type" className="home-label" title={transI18n('home.roomType')}>{transI18n('home.roomType')}</span>}
                 id="scenario"
                 value={scenario}
                 options={scenarioOptions}
@@ -302,7 +302,7 @@ export const Home: React.FC<HomeProps> = ({
               </Col>
             </Row>
             
-          <Button className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario && /^[a-zA-Z0-9]{1,20}$/.test(roomName) && /^[a-zA-Z0-9]{1,20}$/.test(userName))}>{transI18n('home.enter_classroom')}</Button>
+          <Button id="btn_join" className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario && /^[a-zA-Z0-9]{1,20}$/.test(roomName) && /^[a-zA-Z0-9]{1,20}$/.test(userName))}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
             <div onClick={() => {
               return;

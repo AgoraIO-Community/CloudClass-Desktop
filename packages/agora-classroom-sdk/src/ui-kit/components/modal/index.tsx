@@ -26,6 +26,7 @@ export interface ModalProps extends BaseProps {
     contentClassName?: string;
     modalType?: 'normal' | 'back';
     children?: React.ReactNode;
+    btnId?: string;
 }
 
 type ModalType = FC<ModalProps> & {
@@ -46,6 +47,7 @@ export const Modal: ModalType = ({
     contentClassName,
     modalType = 'normal',
     maskClosable,
+    btnId,
     ...restProps
 }) => {
 
@@ -94,7 +96,7 @@ export const Modal: ModalType = ({
             </div>
             <div className="modal-footer">
                 {footer && footer.map((item: any, index: number) => (
-                    <div className="btn-div" key={index}>
+                    <div className="btn-div" key={index} id={btnId}>
                         {
                             React.cloneElement(item, {
                                 onClick: (e: React.MouseEvent<HTMLElement>) => {
