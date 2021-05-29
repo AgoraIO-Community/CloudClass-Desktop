@@ -554,6 +554,10 @@ export type RoomContext = {
     roomProperties: any
 }
 export type RoomDiagnosisContext = {
+    /**
+     * 当前实时网络质量诊断
+     * @version v1.1.0
+     */
     navigationState: {
         cpuUsage: number;
         isStarted: boolean;
@@ -566,21 +570,15 @@ export type RoomDiagnosisContext = {
     }
 }
 export type GlobalContext = {
-    // /**
-    //  * 正在加载中
-    //  */
-    // loading: boolean,
-    // isLoading: boolean,
-    // /**
-    //  * 在房间内
-    //  */
-    // inRoom: boolean,
-    // /**
-    //  * 正在加载中
-    //  */
-    // loading: boolean,
+    /**
+     * 正在加载中
+     * @version v1.1.0
+     * @deprecated v1.1.2废弃, 请使用 RoomContext 的 isJoiningRoom
+     */
+    loading: boolean,
     /**
      * 是否全屏
+     * @version v1.1.0
      */
     isFullScreen: boolean,
     // /**
