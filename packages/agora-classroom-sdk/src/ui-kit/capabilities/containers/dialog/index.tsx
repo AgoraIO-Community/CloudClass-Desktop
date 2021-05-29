@@ -1,6 +1,6 @@
 import { BusinessExceptions } from '@/infra/biz-error'
 import { useUIStore } from '@/infra/hooks'
-import { useBoardContext, useRecordingContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
+import { useBoardContext, useRecordingContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext, useCloudDriveContext, useGlobalContext } from 'agora-edu-core'
 import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
@@ -441,7 +441,7 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 export const DialogContainer: React.FC<any> = observer(() => {
 
   const { dialogQueue, addDialog } = useUIStore()
-  const { dialogEventObserver } = useRoomContext()
+  const { dialogEventObserver } = useGlobalContext()
 
   const dialogMap = {
     'screen-share': () => addDialog(OpenShareScreen),

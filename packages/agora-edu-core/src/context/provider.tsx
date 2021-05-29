@@ -196,10 +196,7 @@ export const useRoomContext = (): RoomContext => {
     kickOutOnce,
     join,
     liveClassStatus,
-    roomProperties,
-    toast$,
-    dialog$,
-    seq$
+    roomProperties
   } = useRoomStore()
 
   return {
@@ -237,9 +234,6 @@ export const useRoomContext = (): RoomContext => {
       return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
     },
     // v1.1.1
-    toastEventObserver: toast$,
-    dialogEventObserver: dialog$,
-    sequenceEventObserver: seq$,
     isJoiningRoom
   }
 }
@@ -276,6 +270,12 @@ export const useGlobalContext = (): GlobalContext => {
   //   dialog$,
   //   fireDialog
   // } = useUIStore()
+
+  const {
+    toast$,
+    dialog$,
+    seq$
+  } = useCoreContext();
 
   const {
     joined,
@@ -324,7 +324,10 @@ export const useGlobalContext = (): GlobalContext => {
     // joined,
     //v1.1.1
     // isLoading: loading,
-    isJoined: joined
+    isJoined: joined,
+    toastEventObserver: toast$,
+    dialogEventObserver: dialog$,
+    sequenceEventObserver: seq$,
     // inRoom: joining
   }
 }

@@ -436,27 +436,10 @@ export type RoomContext = {
         classState: string;
         duration: number;
     },
-    /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
-     */
-    toastEventObserver: Subject<any>,
-    /**
-      * BehaviorSubject实例化的对象 dialogEventObserver
-      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-      *  dialogEventObserver.subscribe((evt)=>{
-      *   //观察者订阅的事件 evt   事件名称：evt.eventname
-      *   })
-      */
-    dialogEventObserver: Subject<any>,
     // 查询摄像头设备状态
     queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
     // 查询麦克风设备状态
     queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
-    sequenceEventObserver: Subject<any>,
     isJoiningRoom: boolean
 }
 export type RoomDiagnosisContext = {
@@ -585,6 +568,23 @@ export type GlobalContext = {
     // userType: 'teacher' | 'student';
     // joined: boolean;
     isJoined: boolean;
+    sequenceEventObserver: Subject<any>,
+    /**
+     * BehaviorSubject实例化的对象 toastEventObserver
+     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+     *  toastEventObserver.subscribe((evt)=>{
+     *   //观察者订阅的事件 evt   事件名称：evt.eventname
+     *   })
+     */
+    toastEventObserver: Subject<any>,
+    /**
+      * BehaviorSubject实例化的对象 dialogEventObserver
+      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
+      *  dialogEventObserver.subscribe((evt)=>{
+      *   //观察者订阅的事件 evt   事件名称：evt.eventname
+      *   })
+      */
+    dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
     /**

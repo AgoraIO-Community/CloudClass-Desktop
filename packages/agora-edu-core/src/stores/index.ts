@@ -38,6 +38,10 @@ export class EduScenarioAppStore {
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
   _uploadService?: UploadService;
+
+  toast$: Subject<any> = new Subject<any>()
+  dialog$: Subject<any> = new Subject<any>()
+  seq$: Subject<any> = new Subject<any>()
   
   @observable
   speakers: Map<number, number> = new Map();
@@ -451,6 +455,30 @@ export class EduScenarioAppStore {
   @action.bound
   async destroyRoom() {
     await this.appController.destroy()
+  }
+  
+  @action.bound
+  fireToast(eventName: string, props?: any) {
+    this.toast$.next({
+      eventName,
+      props,
+    })
+  }
+
+  @action.bound
+  fireDialog(eventName: string, props?: any) {
+    console.log('fire dialog ', eventName, props)
+    this.dialog$.next({
+      eventName,
+      props
+    })
+  }
+
+  @action.bound
+  updateSeqId(props?: any) {
+    this.seq$.next({
+      props
+    })
   }
 }
 export { BoardStore } from './board';

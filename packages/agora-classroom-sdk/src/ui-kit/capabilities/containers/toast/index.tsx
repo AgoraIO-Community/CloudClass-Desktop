@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
-import { useRoomContext } from 'agora-edu-core'
+import { useGlobalContext, useRoomContext } from 'agora-edu-core'
 import { useEffect, useRef } from 'react'
 import { transI18n } from '@/ui-kit/components'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
@@ -10,7 +10,8 @@ type ToastType = any
 
 export const ToastContainer = observer(() => {
   const {toastQueue, addToast, removeToast} = useUIStore()
-  const {toastEventObserver, isJoiningRoom} = useRoomContext()
+  const {isJoiningRoom} = useRoomContext()
+  const {toastEventObserver} = useGlobalContext()
 
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
