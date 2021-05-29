@@ -383,31 +383,40 @@ export type PretestContext = {
 export type ScreenShareContext = {
     /**
      * 屏幕分享选择数据
+     * @version v1.1.0
      */
     nativeAppWindowItems: any[],
     /**
      * 屏幕共享流
+     * @version v1.1.0
      */
     screenShareStream: EduMediaStream,
     /**
      * 屏幕数据流
+     * @version v1.1.0
      */
     screenEduStream: EduStream,
     /**
-     * 开始或者暂停共享屏幕
+     * 开始或暂停共享屏幕流程
+     * @param type 分享类型, 默认为窗口
+     * @version v1.1.0
      */
     startOrStopSharing: (type?:ScreenShareType) => Promise<void>
     /**
      * 当前正在共享屏幕
+     * @version v1.1.2
      */
     isScreenSharing: boolean
     /**
      * 当前显示的屏幕共享选择器类型
+     * @version v1.1.2
      */
     customScreenSharePickerType: ScreenShareType,
     /**
-     * 屏幕分享
+     * 使用指定的窗口/屏幕ID进行分享
      * @param windowId 窗口ID
+     * @param type 分享类型, 默认为窗口
+     * @version v1.1.2
      */
     startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>,
 }
