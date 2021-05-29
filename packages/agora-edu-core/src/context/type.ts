@@ -62,27 +62,8 @@ export enum ControlTool {
 
 export type ChatContext = {
     /**
-     * 发送私聊聊天消息
-     */
-    sendMessageToConversation: (message: any, userUuid: string) => void;
-    /**
-     * 会话列表
-     */
-    conversationList: any[];
-    /**
-     * 拉取会话列表
-     */
-    getConversationList: (data: any) => Promise<any>;
-    /**
-     * 拉取会话历史列表
-     */
-    getConversationHistoryChatMessage: (data: any) => Promise<any>;
-    /**
-     * 添加私聊聊天消息
-     */
-    addConversationChatMessage: (args: any, conversation: any) => void;
-    /**
-     * 是否为主持人
+     * 是否为IM主持人
+     * @version v1.1.0
      */
     isHost: boolean,
     /**
@@ -92,6 +73,7 @@ export type ChatContext = {
      *    sord
      * }
      * @param name 名称
+     * @version v1.1.0
      */
     getHistoryChatMessage: (data: {
         nextId: string;
@@ -99,10 +81,12 @@ export type ChatContext = {
     })=>Promise<any>,
     /**
      * 消息列表
+     * @version v1.1.0
      */
     messageList: any[],
     /**
      * 发送消息
+     * @version v1.1.0
      */
     sendMessage: (message: any) => Promise<{
         /**
@@ -133,192 +117,266 @@ export type ChatContext = {
     }>,
     /**
      * 开启聊天
+     * @version v1.1.0
      */
     muteChat: () => void,
     /**
      * 禁止聊天
+     * @version v1.1.0
      */
     unmuteChat: () => void,
-    // /**
-    //  * @param chatCollapse 是否折叠
-    //  * ui使用，不应该提供
-    //  */
-    // chatCollapse: boolean,
-    // /**
-    //  * 切换最小化最大化聊天
-    //  */
-    // toggleChatMinimize: () => void,
     /**
      * 未读取消息数量
+     * @version v1.1.0
      */
     unreadMessageCount: number,
     /**
      * 是否可以聊天
+     * @version v1.1.0
      */
     canChatting: boolean,
     /**
-     * 添加消息
+     * 添加消息到本地消息列表
+     * @version v1.1.0
      */
     addChatMessage: (args: any) => void
     /**
+     * @param chatCollapse 是否折叠
+     * @version v1.1.0
+     * @deprecated 该方法已被弃用, 1.1.2起 edu-core 不再托管ui逻辑
+     */
+    chatCollapse?: boolean,
+    /**
+     * 切换最小化最大化聊天
+     * @version v1.1.0
+     * @deprecated 该方法已被弃用, 1.1.2起 edu-core 不再托管ui逻辑
+     */
+    toggleChatMinimize?: () => void,
+    /**
+     * 发送私聊聊天消息
+     * @version v1.1.2
+     */
+    sendMessageToConversation: (message: any, userUuid: string) => void;
+    /**
+     * 会话列表
+     * @version v1.1.2
+     */
+    conversationList: any[];
+    /**
+     * 拉取会话列表
+     * @version v1.1.2
+     */
+    getConversationList: (data: any) => Promise<any>;
+    /**
+     * 拉取会话历史列表
+     * @version v1.1.2
+     */
+    getConversationHistoryChatMessage: (data: any) => Promise<any>;
+    /**
+     * 添加私聊聊天消息
+     * @version v1.1.2
+     */
+    addConversationChatMessage: (args: any, conversation: any) => void;
+    /**
      * 操作指定用户聊天禁言
+     * @version v1.1.2
      */
     muteUserChat: (userUuid:string) => Promise<void>
     /**
      * 操作指定用户聊天解禁
+     * @version v1.1.2
      */
     unmuteUserChat: (userUuid:string) => Promise<void>
 }
 export type StreamListContext = {
     /**
      * 全部媒体数据流列表
+     * @version v1.1.0
      */
     streamList: EduStream[],
     /**
      * 教师媒体数据流
+     * @version v1.1.0
      */
     teacherStream: any,
     /**
      * 学生媒体数据流列表
+     * @version v1.1.0
      */
     studentStreams: EduMediaStream[],
     /**
      * 当前上台的学生媒体数据流列表
+     * @version v1.1.0
      */
     onPodiumStudentStreams: EduMediaStream[],
     /**
      * 禁用音频
      * @param userUuid 用户id
      * @param isLocal 是否为本地用户
+     * @version v1.1.0
      */
     muteAudio: (userUuid: string, isLocal: boolean) => void,
     /**
      * 取消禁用音频
      * @param userUuid 用户id
      * @param isLocal 是否为本地用户
+     * @version v1.1.0
      */
     unmuteAudio: (userUuid: string, isLocal: boolean) => void,
     /**
      * 禁用视频
      * @param userUuid 用户id
      * @param isLocal 是否为本地用户
+     * @version v1.1.0
      */
     muteVideo: (userUuid: string, isLocal: boolean) => void,
     /**
      * 取消禁用视频
      * @param userUuid 用户id
      * @param isLocal 是否为本地用户
+     * @version v1.1.0
      */
     unmuteVideo: (userUuid: string, isLocal: boolean) => void,
     /**
      * 取消白板权限
      * @param userUuid 用户id
+     * @version v1.1.0
      */
     revokeUserPermission: (userUuid: string) => void,
     /**
      * 当前用户的媒体数据流
+     * @version v1.1.0
      */
     localStream: EduStream,
     /**
      * 授予白板权限
      * @param userUuid 用户id
+     * @version v1.1.0
      */
     grantUserPermission: (userUuid: string) => void,
 }
 export type VolumeContext = {
     /**
      * 当前麦克风设备音量
+     * @version v1.1.2
      */
     microphoneLevel: number,
 }
 export type PretestContext = {
     /**
      * 摄像头是否错误
+     * @version v1.1.0
      */
     cameraError: boolean,
     /**
      * 麦克风是否错误
+     * @version v1.1.0
      */
     microphoneError: boolean,
     /**
-     * 摄像头设备列
+     * 摄像头设备列表
+     * @version v1.1.0
      */
     cameraList: any[],
     /**
      * 麦克风设备列表
+     * @version v1.1.0
      */
     microphoneList: any[],
     /**
      * 扬声器列表
+     * @version v1.1.0
      */
     speakerList: any[],
     /**
      * 当前选中的摄像头ID
+     * @version v1.1.0
      */
     cameraId: string,
     /**
      * 当前选中的麦克风ID
+     * @version v1.1.0
      */
     microphoneId: string,
     /**
      * 当前选中的扬声器ID
+     * @version v1.1.0
      */
     speakerId: string,
     /**
-     * 当前摄像头画面是否镜
+     * 当前麦克风的音量
+     * @version v1.1.0
+     * @deprecated 该回调已在1.1.2废弃，请使用 VolumeContext 中的同名方法
+     */
+    microphoneLevel: number,
+    /**
+     * 当前摄像头画面是否镜像
+     * @version v1.1.0
      */
     isMirror: boolean,
     /**
      * 设置是否镜像
      * @param isMirror 是否镜像的参数
+     * @version v1.1.0
      */
     setMirror: (isMirror: boolean) => void,
     /**
      * 按照预置 初始化摄像头麦克风，打开检测摄像头麦克风
+     * @version v1.1.0
      */
     installPretest: (error: DeviceErrorCallback) => () => void,
     /**
      * 开启摄像头
+     * @version v1.1.0
      */
     startPretestCamera: () => Promise<void>,
     /**
      * 关闭摄像头
+     * @version v1.1.0
      */
     stopPretestCamera: () => void,
     /**
      * 开启麦克风
+     * @version v1.1.0
      */
     startPretestMicrophone: (payload: { enableRecording: boolean; }) => Promise<void>,
     /**
      * 关闭麦克风
+     * @version v1.1.0
      */
     stopPretestMicrophone: () => void,
     /**
      * 切换摄像头设备
      * @param deviceId 摄像头设备ID
+     * @version v1.1.0
      */
     changeTestCamera: (deviceId: string) => Promise<void>,
     /**
      * 切换麦克风设备
      * @param deviceId 麦克风设备ID
+     * @version v1.1.0
      */
     changeTestMicrophone: (deviceId: string) => Promise<void>,
     /**
      * 改变麦克风设备的音量
      * @param deviceId 麦克风设备ID
+     * @version v1.1.0
      */
     changeTestMicrophoneVolume: (deviceId: string) => Promise<void>,
     /**
      * 改变扬声器设备的音量
      * @param value 扬声器设备ID
+     * @version v1.1.0
      */
     changeTestSpeakerVolume: (value: any) => Promise<void>
     /**
      * 预置阶段摄像头渲染器
+     * @version v1.1.0
      */
     pretestCameraRenderer: LocalUserRenderer | undefined,
     /**
      * 设备频道通知
+     * @version v1.1.2
      */
     pretestNoticeChannel: Subject<any>;
 }
@@ -339,14 +397,6 @@ export type ScreenShareContext = {
      * 开始或者暂停共享屏幕
      */
     startOrStopSharing: (type?:ScreenShareType) => Promise<void>
-    // /**
-    //  * 正在屏幕共享
-    //  */
-    // isShareScreen: boolean;
-    // /**
-    //  * 正在共享白板
-    //  */
-    // isBoardScreenShare: boolean;
     /**
      * 当前正在共享屏幕
      */

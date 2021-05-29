@@ -45,7 +45,7 @@ export const useChatContext = (): ChatContext=> {
     addConversationChatMessage: roomStore.addConversationChatMessage,
     getHistoryChatMessage: roomStore.getHistoryChatMessage,
     getConversationList: roomStore.getConversationList,
-    getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage
+    getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage,
     // REMOVED v1.1.1
     // chatCollapse: uiStore.chatCollapse,
     // toggleChatMinimize: uiStore.toggleChatMinimize,
@@ -133,6 +133,7 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
+    microphoneLevel: pretestStore.microphoneLevel,
     isMirror: isMirror,
     setMirror,
     installPretest,
