@@ -1,14 +1,16 @@
 import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
-import { useGlobalContext } from 'agora-edu-core'
+import { useRoomContext } from 'agora-edu-core'
 import { useEffect, useRef } from 'react'
 import { transI18n } from '@/ui-kit/components'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
+import { useUIStore } from '@/infra/hooks'
 
 type ToastType = any
 
 export const ToastContainer = observer(() => {
-  const {inRoom, toastQueue, addToast, removeToast, toastEventObserver} = useGlobalContext()
+  const {toastQueue, addToast, removeToast} = useUIStore()
+  const {toastEventObserver, isJoiningRoom} = useRoomContext()
 
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
 
@@ -74,11 +76,11 @@ export const ToastContainer = observer(() => {
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
   }
 
-  const roomRef = useRef<boolean>(inRoom)
+  const roomRef = useRef<boolean>(isJoiningRoom)
 
   useEffect(() => {
-    roomRef.current = inRoom
-  }, [inRoom])
+    roomRef.current = isJoiningRoom
+  }, [isJoiningRoom])
   
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
+import { useUIStore } from '@/infra/hooks'
 import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core'
 import { useCallback } from 'react'
 
@@ -46,7 +47,7 @@ export const SettingContainer = observer(({ id }: any) => {
 
     const {
         removeDialog
-    } = useGlobalContext()
+    } = useUIStore()
 
     return (
         <Modal

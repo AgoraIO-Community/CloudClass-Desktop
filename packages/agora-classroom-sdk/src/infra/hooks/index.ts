@@ -1,6 +1,9 @@
 import { HomeStore } from '@/infra/stores/app/home';
 import { MobXProviderContext } from 'mobx-react';
-import { useContext } from 'react';
+import { createContext, useContext } from 'react';
+import { UIStore } from '@/infra/stores/app/ui';
+
+export const UIContext = createContext<UIStore>(null as unknown as UIStore)
 
 export const useHomeStore = (): HomeStore => {
   const context = useContext<HomeContext>(MobXProviderContext)
@@ -22,3 +25,5 @@ export const useAudienceParams = (params?: string): string | { [key: string]: an
   }
   return urlParams.get(params)
 }
+
+export const useUIStore = () => useContext(UIContext)

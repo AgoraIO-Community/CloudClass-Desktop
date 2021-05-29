@@ -1,6 +1,7 @@
 import { BusinessExceptions } from '@/infra/biz-error'
-import { useBoardContext, useRecordingContext, useGlobalContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext } from 'agora-edu-core'
-import { GenericError, GenericErrorWrapper, ScreenShareType } from 'agora-rte-sdk'
+import { useUIStore } from '@/infra/hooks'
+import { useBoardContext, useRecordingContext, useRoomContext, useRoomDiagnosisContext, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
+import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -17,7 +18,7 @@ export type BaseDialogProps = {
 
 export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
   const {roomInfo, kickOutOnce, kickOutBan} = useRoomContext()
 
   const [type, setType] = useState<string>('kicked_once')
@@ -69,7 +70,7 @@ export const SettingDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
 })
 
 export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
   return (
     <CloudDriverContainer onClose={() => {
       removeDialog(id)
@@ -78,7 +79,7 @@ export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(({ id }) =>
 })
 
 export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericError }> = observer(({ id, error }) => {
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const {destroyRoom} = useRoomContext()
 
@@ -114,7 +115,7 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
     hasPermission
   } = useBoardContext()
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const onCancel = useCallback(() => {
     if (room) {
@@ -140,7 +141,7 @@ export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }
     hasPermission
   } = useBoardContext()
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const onCancel = useCallback(() => {
     if (room) {
@@ -166,7 +167,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 
   const {
     removeDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const {
     startNativeScreenShareBy,
@@ -210,9 +211,9 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
 
 export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> = observer(({ id, resourceUuid }) => {
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
-  const {closeMaterial} = useBoardContext()
+  const {closeMaterial} = useCloudDriveContext()
 
   const onOK = async () => {
     await closeMaterial(resourceUuid)
@@ -242,7 +243,7 @@ export const KickEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
     removeDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const {
     destroyRoom
@@ -275,7 +276,7 @@ export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {
     removeDialog
-  } = useGlobalContext()
+  } = useUIStore()
 
   const {
     destroyRoom
@@ -305,7 +306,7 @@ export const KickedEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const RoomEndNotice: React.FC<BaseDialogProps> = observer(({id}) => {
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const {destroyRoom} = useRoomContext()
 
@@ -334,7 +335,7 @@ export const RoomEnd: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {destroyRoom} = useRoomContext()
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const isStarted = navigationState.isStarted
 
@@ -365,7 +366,7 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 
   const {destroyRoom} = useRoomContext()
 
-  const {removeDialog} = useGlobalContext()
+  const {removeDialog} = useUIStore()
 
   const onOK = async () => {
     await destroyRoom()
@@ -395,8 +396,7 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
 })
 
 export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(({id, starting}) => {
-
-  const { removeDialog, addToast } = useGlobalContext()
+  const { removeDialog, addToast } = useUIStore()
   const {
     startRecording,
     stopRecording
@@ -440,7 +440,8 @@ export const Record: React.FC<BaseDialogProps & {starting: boolean}> = observer(
 
 export const DialogContainer: React.FC<any> = observer(() => {
 
-  const { dialogQueue, dialogEventObserver, addDialog } = useGlobalContext()
+  const { dialogQueue, addDialog } = useUIStore()
+  const { dialogEventObserver } = useRoomContext()
 
   const dialogMap = {
     'screen-share': () => addDialog(OpenShareScreen),

@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { get } from "lodash"
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from "mobx"
+import { Subject } from "rxjs"
 import { v4 as uuidv4 } from 'uuid'
 import { EduScenarioAppStore } from "."
 import { IAgoraExtApp, regionMap } from "../api/declare"
@@ -479,9 +480,16 @@ export class RoomStore extends SimpleInterval {
   @observable
   additional: boolean = false
 
+  @observable
+  isJoiningRoom: boolean = false
+
   roomApi!: RoomApi;
   disposers: IReactionDisposer[] = [];
   appStore!: EduScenarioAppStore;
+
+  toast$: Subject<any>
+  dialog$: Subject<any>
+  seq$: Subject<any>
 
   get sceneStore() {
     return this.appStore.sceneStore
@@ -493,6 +501,9 @@ export class RoomStore extends SimpleInterval {
 
   constructor(appStore: EduScenarioAppStore) {
     super()
+    this.toast$ = new Subject<any>()
+    this.dialog$ = new Subject<any>()
+    this.seq$ = new Subject<any>()
     this.appStore = appStore
     this.smallClassStore = new SmallClassStore(this)
   }
@@ -564,7 +575,7 @@ export class RoomStore extends SimpleInterval {
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
-      this.appStore.uiStore.fireToast(
+      this.fireToast(
         'toast.failed_to_send_chat',
       )
       const error = GenericErrorWrapper(err)
@@ -600,7 +611,7 @@ export class RoomStore extends SimpleInterval {
         fromRoomName: this.roomInfo.userName,
       }
     } catch (err) {
-      this.appStore.uiStore.fireToast(
+      this.fireToast(
         'toast.failed_to_send_chat',
       )
       const error = GenericErrorWrapper(err)
@@ -636,7 +647,7 @@ export class RoomStore extends SimpleInterval {
       return conversationList
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.failed_to_get_conversations', { reason: error })
+      this.fireToast('toast.failed_to_get_conversations', { reason: error })
       BizLogger.warn(`${error}`)
     }
   }
@@ -669,7 +680,7 @@ export class RoomStore extends SimpleInterval {
       return historyMessage
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.failed_to_send_chat', { reason: error })
+      this.fireToast('toast.failed_to_send_chat', { reason: error })
       BizLogger.warn(`${error}`)
     }
   }
@@ -717,7 +728,7 @@ export class RoomStore extends SimpleInterval {
       return historyMessage
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.failed_to_send_chat', { reason: error })
+      this.fireToast('toast.failed_to_send_chat', { reason: error })
       BizLogger.warn(`${error}`)
     }
   }
@@ -810,7 +821,7 @@ export class RoomStore extends SimpleInterval {
         }]
       })
     } catch (err) {
-      this.appStore.uiStore.fireToast(
+      this.fireToast(
         'toast.failed_to_send_reward',
       )
       const error = GenericErrorWrapper(err)
@@ -854,11 +865,11 @@ export class RoomStore extends SimpleInterval {
     // 判断是否等于上一次的值 相同则不更新
     if (!isFirstLoad() && this.isStudentChatAllowed !== isStudentChatAllowed) {
       if (this.isStudentChatAllowed) {
-        this.appStore.uiStore.fireToast(
+        this.fireToast(
           'toast.chat_enable',
         )
       } else {
-        this.appStore.uiStore.fireToast(
+        this.fireToast(
           'toast.chat_disable',
         )
       }
@@ -876,7 +887,7 @@ export class RoomStore extends SimpleInterval {
           let dDuration = dayjs.duration(duration);
           [5, 3, 1].forEach(min => {
             if (dDuration.minutes() === min && dDuration.seconds() === 0) {
-              this.appStore.uiStore.fireToast(
+              this.fireToast(
                 'toast.time_interval_between_start',
                 { reason: duration }
               )
@@ -889,7 +900,7 @@ export class RoomStore extends SimpleInterval {
           let dDurationToEnd = dayjs.duration(durationToEnd);
           [5, 1].forEach(min => {
             if (dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-              this.appStore.uiStore.fireToast(
+              this.fireToast(
                 'toast.time_interval_between_end',
                 { reason: durationToEnd }
                 // {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}
@@ -902,7 +913,7 @@ export class RoomStore extends SimpleInterval {
           let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration;
           let dDurationToClose = dayjs.duration(durationToClose)
           if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
-            this.appStore.uiStore.fireToast(
+            this.fireToast(
               'toast.time_interval_between_close',
               { reason: durationToClose }
             )
@@ -1016,7 +1027,7 @@ export class RoomStore extends SimpleInterval {
       this.joining = true
       this.disposers.push(reaction(() => this.sceneStore.classState, this.onClassStateChanged.bind(this)))
 
-      this.appStore.uiStore.startLoading()
+      this.startJoining()
       this.roomApi = new RoomApi({
         appId: this.eduManager.config.appId,
         sdkDomain: this.eduManager.config.sdkDomain as string,
@@ -1070,16 +1081,16 @@ export class RoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.uiStore.fireToast('toast.failed_to_join_board')
+        this.appStore.isNotInvisible && this.fireToast('toast.failed_to_join_board')
       })
-      this.appStore.uiStore.stopLoading()
+      this.stopJoining()
 
       // logout will clean up eduManager events, so we need to put the listener here
       this.eduManager.on('ConnectionStateChanged', async ({ newState, reason }) => {
         EduLogger.info(" RTM ConnectionStateChanged ", newState)
         if (newState === "ABORTED" && reason === "REMOTE_LOGIN") {
           await this.appStore.releaseRoom()
-          this.appStore.uiStore.fireToast('toast.classroom_remote_join')
+          this.fireToast('toast.classroom_remote_join')
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
         if(newState === "CONNECTED" && reason === "LOGIN_SUCCESS" && reportServiceV2.reportUserParams.uid){
@@ -1106,13 +1117,13 @@ export class RoomStore extends SimpleInterval {
             }).then(() => {
               BizLogger.info(`[CAMERA] report mic device not working`)
             })
-            if (this.appStore.uiStore.loading) {
-              this.appStore.uiStore.stopLoading()
+            if (this.appStore.roomStore.isJoiningRoom) {
+              this.appStore.roomStore.stopJoining()
             }
           }
           if (newState === 'RECONNECTING') {
-            if (!this.appStore.uiStore.loading) {
-              this.appStore.uiStore.startLoading()
+            if (!this.appStore.roomStore.isJoiningRoom) {
+              this.appStore.roomStore.startJoining()
             }
           }
         }
@@ -1149,7 +1160,7 @@ export class RoomStore extends SimpleInterval {
           unreadMessageCount: 0,
           messages: []
         })
-        // if (this.appStore.uiStore.chatCollapse) {
+        // if (this.appStore.roomStore.chatCollapse) {
         //   this.incrementUnreadMessageCount()
         // }
         BizLogger.info('user-chat-message', evt)
@@ -1164,8 +1175,7 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore._roomManager = roomManager
       roomManager.on('seqIdChanged', (evt: any) => {
         BizLogger.info("seqIdChanged", evt)
-        this.appStore.uiStore.updateCurSeqId(evt.curSeqId)
-        this.appStore.uiStore.updateLastSeqId(evt.latestSeqId)
+        this.updateSeqId({current: evt.curSeqId, latest: evt.latestSeqId})
       })
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
@@ -1176,11 +1186,11 @@ export class RoomStore extends SimpleInterval {
             if (evt.hasOwnProperty('muteChat')) {
               const muteChat = evt.muteChat
               if (muteChat) {
-                this.appStore.uiStore.fireToast('toast.mute_chat', {
+                this.appStore.roomStore.fireToast('toast.mute_chat', {
                   hostName: evt.operator.userName
                 })
               } else {
-                this.appStore.uiStore.fireToast('toast.unmute_chat', {
+                this.appStore.roomStore.fireToast('toast.unmute_chat', {
                   hostName: evt.operator.userName
                 })
               }
@@ -1196,7 +1206,7 @@ export class RoomStore extends SimpleInterval {
           const { user, type } = evt
           if (user.user.userUuid === this.roomInfo.userUuid && type === 2) {
             await this.appStore.releaseRoom()
-            this.appStore.uiStore.fireToast('toast.kick_by_teacher')
+            this.fireToast('toast.kick_by_teacher')
             this.noticeQuitRoomWith(QuickTypeEnum.Kicked)
           }
         })
@@ -1221,7 +1231,7 @@ export class RoomStore extends SimpleInterval {
                   'assistant': 'role.assistant'
                 }
                 const role = roleMap[operator.userRole] ?? 'unknown'
-                this.appStore.uiStore.fireToast(`roster.close_student_co_video`, { teacher: role })
+                this.fireToast(`roster.close_student_co_video`, { teacher: role })
               }
               BizLogger.info(`[demo] tag: ${tag}, [${Date.now()}], main stream closed local-stream-removed, `, JSON.stringify(evt))
             }
@@ -1258,7 +1268,7 @@ export class RoomStore extends SimpleInterval {
                   'assistant': 'role.assistant'
                 }
                 const role = roleMap[operator.userRole] ?? 'unknown'
-                this.appStore.uiStore.fireToast(`roster.open_student_co_video`, { teacher: role })
+                this.fireToast(`roster.open_student_co_video`, { teacher: role })
               }
               BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC)
               if (this.sceneStore._cameraEduStream) {
@@ -1268,7 +1278,7 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-                    this.appStore.uiStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    this.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                   // this.operator = {
                   //   ...operator,
@@ -1282,7 +1292,7 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-                    this.appStore.uiStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    this.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                   // this.operator = {
                   //   ...operator,
@@ -1359,12 +1369,12 @@ export class RoomStore extends SimpleInterval {
             if (evt.hasOwnProperty('muteChat')) {
               const muteChat = evt.muteChat
               if (muteChat) {
-                this.appStore.uiStore.fireToast('toast.remote_mute_chat', {
+                this.appStore.roomStore.fireToast('toast.remote_mute_chat', {
                   hostName: evt.operator.userUuid === this.appStore.userUuid ? 'you' : evt.operator.userName,
                   studentName: evt.user.user.userName,
                 })
               } else {
-                this.appStore.uiStore.fireToast('toast.remote_unmute_chat', {
+                this.appStore.roomStore.fireToast('toast.remote_unmute_chat', {
                   hostName: evt.operator.userUuid === this.appStore.userUuid ? 'you' : evt.operator.userName,
                   studentName: evt.user.user.userName,
                 })
@@ -1388,7 +1398,7 @@ export class RoomStore extends SimpleInterval {
       roomManager.on('remote-stream-added', (evt: any) => {
         const {stream} = evt
         if (stream.videoSourceType === EduVideoSourceType.screen) {
-          this.appStore.uiStore.fireToast('toast.add_screen_share')
+          this.fireToast('toast.add_screen_share')
         }
         runInAction(() => {
           const streamList = roomManager.getFullStreamList()
@@ -1407,7 +1417,7 @@ export class RoomStore extends SimpleInterval {
       roomManager.on('remote-stream-removed', (evt: any) => {
         const {stream} = evt
         if (stream.videoSourceType === EduVideoSourceType.screen) {
-          this.appStore.uiStore.fireToast('toast.remove_screen_share')
+          this.fireToast('toast.remove_screen_share')
         }
         runInAction(() => {
           const streamList = roomManager.getFullStreamList()
@@ -1518,9 +1528,9 @@ export class RoomStore extends SimpleInterval {
           role: `${this.getRoleEnumValue(fromUser.role)}`,
           isOwn: false
         })
-        if (this.appStore.uiStore.chatCollapse) {
-          this.incrementUnreadMessageCount()
-        }
+        // if (this.appStore.roomStore.chatCollapse) {
+        //   this.incrementUnreadMessageCount()
+        // }
         BizLogger.info('room-chat-message', evt)
       })
 
@@ -1619,7 +1629,7 @@ export class RoomStore extends SimpleInterval {
           userInfo: {} as EduUser
         })
         EduLogger.info("toast.publish_business_flow_successfully")
-        // this.appStore.isNotInvisible && this.appStore.uiStore.fireToast(t('toast.publish_business_flow_successfully'))
+        // this.appStore.isNotInvisible && this.fireToast(t('toast.publish_business_flow_successfully'))
         this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream
         try {
           // await this.sceneStore.prepareCamera()
@@ -1647,7 +1657,7 @@ export class RoomStore extends SimpleInterval {
           }
         } catch (err) {
           if (this.appStore.isNotInvisible) {
-            this.appStore.uiStore.fireToast(
+            this.fireToast(
               'toast.media_method_call_failed',
               { reason: `${err.message}` }
             )
@@ -1709,7 +1719,7 @@ export class RoomStore extends SimpleInterval {
       reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
     } catch (err) {
       this.eduManager.removeAllListeners()
-      this.appStore.uiStore.stopLoading()
+      this.stopJoining()
       try {
         await this.appStore.destroy()
       } catch (err) {
@@ -1719,10 +1729,10 @@ export class RoomStore extends SimpleInterval {
       reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${error.message}` })
       reportServiceV2.reportApaasUserJoin(new Date().getTime(), err.message);
       // TODO 需要把Dialog UI和业务解耦，提供事件即可
-      this.appStore.uiStore.fireDialog('generic-error-dialog', {
+      this.fireDialog('generic-error-dialog', {
         error
       })
-      // this.appStore.uiStore.addDialog(GenericErrorDialog, {error})
+      // this.appStore.roomStore.addDialog(GenericErrorDialog, {error})
       throw error
     }
   }
@@ -1735,17 +1745,17 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         EduLogger.info("appStore.destroyRoom failed: ", err.message)
       }
-      this.appStore.uiStore.fireDialog('room-end-notice', {
+      this.fireDialog('room-end-notice', {
         state
       })
-      // this.appStore.uiStore.addDialog(RoomEndNotice)
+      // this.appStore.roomStore.addDialog(RoomEndNotice)
     } else if (state === EduClassroomStateEnum.end) {
       if(this.classroomSchedule) {
         // classroomSchedule must already exists
         let durationToClose = this.classroomSchedule.closeDelay*1000 - this.classTimeDuration
         if(durationToClose > 0) {
           // durationToClose > 0 means not yet closed
-          this.appStore.uiStore.fireToast('toast.class_is_end',{
+          this.fireToast('toast.class_is_end',{
             reason: durationToClose
           });
         }
@@ -1795,11 +1805,10 @@ export class RoomStore extends SimpleInterval {
       } catch (err) {
         BizLogger.error(`${err}`)
       }
-      // this.appStore.uiStore.fireToast(t('toast.successfully_left_the_business_channel'))
+      // this.fireToast(t('toast.successfully_left_the_business_channel'))
       this.delInterval('timer')
       this.reset()
-      this.appStore.uiStore.updateCurSeqId(0)
-      this.appStore.uiStore.updateLastSeqId(0)
+      this.updateSeqId({current:0, latest:0})
     } catch (err) {
       this.reset()
       const error = GenericErrorWrapper(err)
@@ -1811,18 +1820,18 @@ export class RoomStore extends SimpleInterval {
   noticeQuitRoomWith(quickType: QuickTypeEnum) {
     switch (quickType) {
       case QuickTypeEnum.Kick: {
-        this.appStore.uiStore.fireDialog('kick-end')
-        // this.appStore.uiStore.addDialog(KickEnd)
+        this.fireDialog('kick-end')
+        // this.appStore.roomStore.addDialog(KickEnd)
         break;
       }
       case QuickTypeEnum.End: {
-        this.appStore.uiStore.fireDialog('room-end-notice')
-        // this.appStore.uiStore.addDialog(RoomEndNotice)
+        this.fireDialog('room-end-notice')
+        // this.appStore.roomStore.addDialog(RoomEndNotice)
         break;
       }
       case QuickTypeEnum.Kicked: {
-        this.appStore.uiStore.fireDialog('kicked-end')
-        // this.appStore.uiStore.addDialog(KickedEnd)
+        this.fireDialog('kicked-end')
+        // this.appStore.roomStore.addDialog(KickedEnd)
         break;
       }
     }
@@ -1915,7 +1924,7 @@ export class RoomStore extends SimpleInterval {
         switch (data.actionType) {
           case CoVideoActionType.studentHandsUp: {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.uiStore.fireToast("co_video.received_student_hands_up")
+              this.fireToast("co_video.received_student_hands_up")
             }
             console.log('学生举手')
             break;
@@ -1924,7 +1933,7 @@ export class RoomStore extends SimpleInterval {
           //   if (data.addAccepted) {
           //     const exists = data.addAccepted.find((it: any) => it.userUuid === this.roomInfo.userUuid)
           //     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-          //       exists && this.appStore.uiStore.fireToast(transI18n('co_video.teacher_accept_co_video'))
+          //       exists && this.fireToast(transI18n('co_video.teacher_accept_co_video'))
           //     }
           //   }
           //   break;
@@ -1933,7 +1942,7 @@ export class RoomStore extends SimpleInterval {
             if ([EduRoleTypeEnum.student].includes(this.roomInfo.userRole)) {
               const includedRemoveProgress: ProgressUserInfo[] = data?.removeProgress ?? []
               if (includedRemoveProgress.find((it) => it.userUuid === this.roomInfo.userUuid)) {
-                this.appStore.uiStore.fireToast("co_video.received_teacher_refused")
+                this.fireToast("co_video.received_teacher_refused")
               }
             }
             console.log('老师拒绝')
@@ -1941,13 +1950,13 @@ export class RoomStore extends SimpleInterval {
           }
           case CoVideoActionType.studentCancel: {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.uiStore.fireToast("co_video.received_student_cancel")
+              this.fireToast("co_video.received_student_cancel")
             }
             console.log('学生取消')
             break;
           }
           // case CoVideoActionType.teacherReplayTimeout: {
-          //   this.appStore.uiStore.fireToast(transI18n("co_video.received_message_timeout"), 'error')
+          //   this.fireToast(transI18n("co_video.received_message_timeout"), 'error')
           //   console.log('超时')
           //   break;
           // }
@@ -1957,15 +1966,15 @@ export class RoomStore extends SimpleInterval {
       // extApp
       // emit events for app plugins
       const { extAppCause } = data
-      this.appStore.params.config.extApps?.forEach(appPlugin => {
-        let oldProps = get(oldRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
-        let newProps = get(newRoomProperties, `extApps.${escapeExtAppIdentifier(appPlugin.appIdentifier)}`)
+      this.appStore.activeExtApps.forEach(app => {
+        let oldProps = get(oldRoomProperties, `extApps.${escapeExtAppIdentifier(app.appIdentifier)}`)
+        let newProps = get(newRoomProperties, `extApps.${escapeExtAppIdentifier(app.appIdentifier)}`)
         if (oldProps !== newProps) {
-          appPlugin.extAppRoomPropertiesDidUpdate(newProps, extAppCause)
+          app.extAppRoomPropertiesDidUpdate(newProps, extAppCause)
         }
       })
     } else if (cmd === 600) {
-      this.appStore.uiStore.fireToast("private_media_chat.chat_started")
+      this.fireToast("private_media_chat.chat_started")
       if (this.appStore.eduManager.streamCoordinator) {
         const streamGroups = newRoomProperties.streamGroups
         let groupKey = Object.keys(streamGroups).find(groupKey => streamGroups[groupKey] !== 'deleted')
@@ -2015,7 +2024,7 @@ export class RoomStore extends SimpleInterval {
         }
       }
     } else if (cmd === 601) {
-      this.appStore.uiStore.fireToast("private_media_chat.chat_ended")
+      this.fireToast("private_media_chat.chat_ended")
       if (this.appStore.eduManager.streamCoordinator) {
         this.appStore.eduManager.streamCoordinator.updateSubscribeOptions({
           includeAudioStreams: undefined,
@@ -2025,5 +2034,39 @@ export class RoomStore extends SimpleInterval {
         })
       }
     }
+  }
+
+  @action.bound
+  fireToast(eventName: string, props?: any) {
+    this.toast$.next({
+      eventName,
+      props,
+    })
+  }
+
+  @action.bound
+  fireDialog(eventName: string, props?: any) {
+    console.log('fire dialog ', eventName, props)
+    this.dialog$.next({
+      eventName,
+      props
+    })
+  }
+
+  @action.bound
+  updateSeqId(props?: any) {
+    this.seq$.next({
+      props
+    })
+  }
+
+  @action.bound
+  startJoining() {
+    this.isJoiningRoom = true
+  }
+
+  @action.bound
+  stopJoining() {
+    this.isJoiningRoom = false
   }
 }

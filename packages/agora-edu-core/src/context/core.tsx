@@ -31,7 +31,7 @@ export const usePretestStore = () => useCoreContext().pretestStore
 
 export const useMediaStore = () => useCoreContext().mediaStore
 
-export const useUIStore = () => useCoreContext().uiStore
+// export const useUIStore = () => useCoreContext().uiStore
 
 export const useSceneStore = () => useCoreContext().sceneStore
 

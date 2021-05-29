@@ -12,7 +12,7 @@ import { BizLogger } from "../utilities/kit"
 import { Mutex } from "../utilities/mutex"
 import { LocalAudioStreamState, LocalVideoStreamState } from "./media"
 import { screenSharePath } from '../constants';
-import { EduMediaStream } from "../context/type"
+import { ControlTool, EduMediaStream } from "../context/type"
 import { reportServiceV2 } from '../services/report-v2';
 import { AgoraMediaDeviceEnum, DeviceStateEnum } from '../types';
 
@@ -136,7 +136,6 @@ export class SceneStore extends SimpleInterval {
 
   startTime: number = 0
 
-  //TO-REVIEW 和isScreenSharing啥区别?
   @observable
   sharing: boolean = false;
 
@@ -165,12 +164,6 @@ export class SceneStore extends SimpleInterval {
   @computed
   get teacher() {
     return this.userList.find((user: EduUser) => user.role === EduRoleType.teacher)
-  }
-
-  @computed
-  get userType() {
-    const teacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)
-    return teacher ? 'teacher' : 'student'
   }
 
   @observable
@@ -431,14 +424,14 @@ export class SceneStore extends SimpleInterval {
             // image: CustomBtoa(item.image),
           }))
           if (items.length) {
-            this.appStore.uiStore.fireDialog('screen-share', {
+            this.appStore.roomStore.fireDialog('screen-share', {
               customScreenSharePickerVisible: this.customScreenSharePickerVisible,
               customScreenShareItems: this.customScreenSharePickerItems,
             })
             // this.appStore.uiStore.addDialog(OpenShareScreen)
             // this.appStore.uiStore.addDialog(screenComponent)
           } else {
-            this.appStore.uiStore.fireToast(`toast.failed_to_enable_screen_sharing_permission_denied`)
+            this.appStore.roomStore.fireToast(`toast.failed_to_enable_screen_sharing_permission_denied`)
             //@ts-ignore
             if (window.isMacOS && window.openPrivacyForCaptureScreen) {
               //@ts-ignore
@@ -453,9 +446,9 @@ export class SceneStore extends SimpleInterval {
       }).catch(err => {
         BizLogger.warn('show screen share window with items', err)
         if (err.code === 'ELECTRON_PERMISSION_DENIED') {
-          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
+          this.appStore.roomStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
         } else {
-          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
+          this.appStore.roomStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
         }
       })
     }
@@ -483,7 +476,7 @@ export class SceneStore extends SimpleInterval {
         params
       })
       if (!this.mediaService.screenRenderer) {
-        this.appStore.uiStore.fireToast('toast.create_screen_share_failed')
+        this.appStore.roomStore.fireToast('toast.create_screen_share_failed')
         return
       } else {
         this._screenVideoRenderer = this.mediaService.screenRenderer
@@ -494,7 +487,7 @@ export class SceneStore extends SimpleInterval {
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       this.waitingShare = false
-      this.appStore.uiStore.fireToast('toast.failed_to_initiate_screen_sharing', {reason: `${err.message}`})
+      this.appStore.roomStore.fireToast('toast.failed_to_initiate_screen_sharing', {reason: `${err.message}`})
     }
   }
 
@@ -852,7 +845,7 @@ export class SceneStore extends SimpleInterval {
       }
       this.sharing = false
     } catch(err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_end_screen_sharing', {reason: `${err.message}`})
+      this.appStore.roomStore.fireToast('toast.failed_to_end_screen_sharing', {reason: `${err.message}`})
     } finally {
       this.waitingShare = false
     }
@@ -886,12 +879,12 @@ export class SceneStore extends SimpleInterval {
         this.mediaService.screenRenderer.stop()
         this.mediaService.screenRenderer = undefined
         this._screenVideoRenderer = undefined
-        this.appStore.uiStore.fireToast('toast.failed_to_initiate_screen_sharing_to_remote', {reason: `${err.message}`})
+        this.appStore.roomStore.fireToast('toast.failed_to_initiate_screen_sharing_to_remote', {reason: `${err.message}`})
       } else {
         if (err.code === 'PERMISSION_DENIED') {
-          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
+          this.appStore.roomStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
         } else {
-          this.appStore.uiStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
+          this.appStore.roomStore.fireToast('toast.failed_to_enable_screen_sharing', {reason: ` code: ${err.code}, msg: ${err.message}`})
         }
       }
       BizLogger.info('SCREEN-SHARE ERROR ', err)
@@ -1081,7 +1074,7 @@ export class SceneStore extends SimpleInterval {
       await this.mediaService.join(args)
       this.joiningRTC = true
     } catch (err) {
-      // this.appStore.uiStore.fireToast('toast.failed_to_join_rtc_please_refresh_and_try_again')
+      // this.appStore.roomStore.fireToast('toast.failed_to_join_rtc_please_refresh_and_try_again')
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
       throw err
@@ -1107,11 +1100,11 @@ export class SceneStore extends SimpleInterval {
         BizLogger.warn(`${err}`)
       }
       console.log('toast.leave_rtc_channel')
-      // this.appStore.uiStore.fireToast('toast.leave_rtc_channel'))
+      // this.appStore.roomStore.fireToast('toast.leave_rtc_channel'))
       this.appStore.reset()
     } catch (err) {
       console.log('toast.failed_to_leave_rtc')
-      // this.appStore.uiStore.fireToast('toast.failed_to_leave_rtc'))
+      // this.appStore.roomStore.fireToast('toast.failed_to_leave_rtc'))
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     }
@@ -1141,7 +1134,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultTeacherPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.roomStore.isJoiningRoom) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
@@ -1161,7 +1154,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get defaultStudentPlaceholder() {
-    if (this.appStore.uiStore.loading) {
+    if (this.appStore.roomStore.isJoiningRoom) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
@@ -1614,6 +1607,24 @@ export class SceneStore extends SimpleInterval {
     return config
   }
 
+  @computed
+  get controlTools() {
+    const roomType = this.roomInfo?.roomType ?? 1
+    let tools:ControlTool[] = []
+    
+    if([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType)) {
+      tools.push(ControlTool.offPodiumAll)
+    }
+    if(roomType === EduRoomType.SceneTypeMiddleClass) {
+      tools.push(ControlTool.offPodiumAll)
+    }
+    if(![EduRoomType.SceneTypeBigClass].includes(roomType)) {
+      tools.push(ControlTool.grantBoard)
+    }
+
+    return tools
+  }
+
 
   @computed
   get sceneType():number {
@@ -1818,10 +1829,10 @@ export class SceneStore extends SimpleInterval {
       })
       // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStart)
       // this.classState = true
-      this.appStore.uiStore.fireToast('toast.course_started_successfully')
+      this.appStore.roomStore.fireToast('toast.course_started_successfully')
     } catch (err) {
       BizLogger.info(err)
-      this.appStore.uiStore.fireToast('toast.setting_start_failed')
+      this.appStore.roomStore.fireToast('toast.setting_start_failed')
     }
   }
 
@@ -1833,10 +1844,10 @@ export class SceneStore extends SimpleInterval {
         state: 2
       })
       // await this.roomManager?.userService.updateCourseState(EduCourseState.EduCourseStateStop)
-      this.appStore.uiStore.fireToast('toast.the_course_ends_successfully')
+      this.appStore.roomStore.fireToast('toast.the_course_ends_successfully')
     } catch (err) {
       BizLogger.info(err)
-      this.appStore.uiStore.fireToast('toast.setting_ended_failed')
+      this.appStore.roomStore.fireToast('toast.setting_ended_failed')
     }
   }
 
@@ -2094,9 +2105,9 @@ export class SceneStore extends SimpleInterval {
       })
       // let {recordId} = await this.recordService.startRecording(this.roomUuid)
       // this.recordId = recordId
-      this.appStore.uiStore.fireToast('toast.start_recording_successfully')
+      this.appStore.roomStore.fireToast('toast.start_recording_successfully')
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.start_recording_failed', {reason: `${err.message}`})
+      this.appStore.roomStore.fireToast('toast.start_recording_failed', {reason: `${err.message}`})
     }
   }
 
@@ -2108,11 +2119,11 @@ export class SceneStore extends SimpleInterval {
         state: 0
       })
       // await this.recordService.stopRecording(this.roomUuid, this.recordId)
-      this.appStore.uiStore.fireToast('toast.successfully_ended_recording')
+      this.appStore.roomStore.fireToast('toast.successfully_ended_recording')
       this.recordId = ''
     } catch (err) {
       const error = GenericErrorWrapper(err)
-      this.appStore.uiStore.fireToast('toast.failed_to_end_recording', { reason: `${error}`})
+      this.appStore.roomStore.fireToast('toast.failed_to_end_recording', { reason: `${error}`})
     }
   }
 
@@ -2126,7 +2137,7 @@ export class SceneStore extends SimpleInterval {
     } catch (err) {
       const error = GenericErrorWrapper(err)
       const {result, reason} = BusinessExceptions.getErrorText(error)
-      this.appStore.uiStore.fireToast(result, {reason})
+      this.appStore.roomStore.fireToast(result, {reason})
     }
   }
 
@@ -2138,7 +2149,7 @@ export class SceneStore extends SimpleInterval {
     } catch(err) {
       const error = GenericErrorWrapper(err)
       const {result, reason} = BusinessExceptions.getErrorText(error)
-      this.appStore.uiStore.fireToast(result, {reason})
+      this.appStore.roomStore.fireToast(result, {reason})
     }
   }
 }

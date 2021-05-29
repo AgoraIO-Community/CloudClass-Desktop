@@ -15,11 +15,13 @@ import { useEffectOnce } from '@/infra/hooks/utils'
 import React, { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
+import { useUIStore } from '@/infra/hooks'
+
 
 
 export const BigClassScenario = observer(() => {
 
-  const { joinRoom, roomProperties } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
@@ -46,7 +48,7 @@ export const BigClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { chatCollapse }  = useChatContext()
+  const { chatCollapse }  = useUIStore()
 
   useEffectOnce(() => {
     joinRoom()
@@ -93,7 +95,7 @@ export const BigClassScenario = observer(() => {
         </Aside>
       </Layout>
       <DialogContainer />
-      <LoadingContainer />
+      <LoadingContainer loading={isJoiningRoom} />
       <ToastContainer />
     </Layout>
   )

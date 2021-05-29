@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useCoreContext, usePretestStore, useUIStore } from './core';
+import { useCoreContext, usePretestStore } from './core';
 import { MediaContext } from './type';
 
 export const useMediaContext = (): MediaContext => {
@@ -12,11 +12,10 @@ export const useMediaContext = (): MediaContext => {
         networkQuality,
         delay,
         localPacketLostRate,
-    
     } = mediaStore;
-    const {
-      removeDialog
-    } = useUIStore()
+    // const {
+    //   removeDialog
+    // } = useUIStore()
   
     const pretestStore = usePretestStore()
   
@@ -78,9 +77,9 @@ export const useMediaContext = (): MediaContext => {
         cameraRenderer,
         changeDevice,
         changeAudioVolume,
+        // removeDialog
         changeSpeakerVolume,
         changeMicrophoneVolume,
-        removeDialog,
         changeCamera,
         changeMicrophone,
     }

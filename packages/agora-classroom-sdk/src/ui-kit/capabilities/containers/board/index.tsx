@@ -1,4 +1,4 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext } from 'agora-edu-core'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
 import { ZoomItemType } from '@/ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
@@ -11,6 +11,7 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
 import { useEffect } from 'react'
 import classnames from 'classnames'
+import { useUIStore } from '@/infra/hooks'
 
 export const allTools: ToolItem[] = [
   {
@@ -103,14 +104,17 @@ export type WhiteBoardState = {
 const TabsContainer = observer(() => {
 
   const {
-    resourcesList,
     changeSceneItem,
     activeSceneName,
   } = useBoardContext()
 
   const {
+    resourcesList
+  } = useCloudDriveContext()
+
+  const {
     addDialog,
-  } = useGlobalContext()
+  } = useUIStore()
 
 
   const {
@@ -178,9 +182,11 @@ const TabsContainer = observer(() => {
 export const WhiteboardContainer = observer(() => {
 
   const {
+    addDialog
+  } = useUIStore()
+
+  const {
     isFullScreen,
-    addDialog,
-    removeDialog
   } = useGlobalContext()
 
   const {

@@ -1,213 +1,213 @@
-import { BehaviorSubject, Subject } from 'rxjs';
-import { isEmpty } from 'lodash';
-import { action, computed, observable, reaction } from 'mobx';
-import { v4 as uuidv4 } from 'uuid';
-import { EduScenarioAppStore } from '.';
-import { IAgoraExtApp } from '../api/declare';
-import { DialogType, ToastType } from '../context/type'
+// import { BehaviorSubject, Subject } from 'rxjs';
+// import { isEmpty } from 'lodash';
+// import { action, computed, observable, reaction } from 'mobx';
+// import { v4 as uuidv4 } from 'uuid';
+// import { EduScenarioAppStore } from '.';
+// import { IAgoraExtApp } from '../api/declare';
+// import { DialogType, ToastType } from '../context/type'
 
-interface NoticeMessage {
-  type: string
-  message: string
-}
-
-
-type RoomTypesList = {
-  path: string,
-  text: string,
-  value: number
-}
-
-export type { DialogType }
-export type { ToastType }
+// interface NoticeMessage {
+//   type: string
+//   message: string
+// }
 
 
-export class UIStore {
+// type RoomTypesList = {
+//   path: string,
+//   text: string,
+//   value: number
+// }
 
-  /**
-   * 语言列表
-   */
-  static languages: any[] = [
-    {
-      text: '中文', name: 'zh-CN',
-    },
-    {
-      text: 'En', name: 'en'
-    }
-  ]
-  /**
-   * 是否为electron客户端
-   */
-  @computed
-  get isElectron(): boolean {
-    return window.isElectron
-  }
+// export type { DialogType }
+// export type { ToastType }
 
-  @observable
-  language: string = 'zh'
 
-  @observable
-  setLanguage(language: any) {
-    this.language = language
-  }
+// export class UIStore {
 
-  showAutoplayNotification() {
-    console.log('showAutoplayNotification')
-  }
+//   /**
+//    * 语言列表
+//    */
+//   static languages: any[] = [
+//     {
+//       text: '中文', name: 'zh-CN',
+//     },
+//     {
+//       text: 'En', name: 'en'
+//     }
+//   ]
+//   /**
+//    * 是否为electron客户端
+//    */
+//   @computed
+//   get isElectron(): boolean {
+//     return window.isElectron
+//   }
 
-  @observable
-  loading: boolean = false
+//   @observable
+//   language: string = 'zh'
 
-  @observable
-  boardLoading: boolean = false;
+//   @observable
+//   setLanguage(language: any) {
+//     this.language = language
+//   }
 
-  @observable
-  dialogQueue: DialogType[] = [] 
+//   showAutoplayNotification() {
+//     console.log('showAutoplayNotification')
+//   }
 
-  @observable
-  toastQueue: ToastType[] = []
+//   @observable
+//   loading: boolean = false
 
-  @observable
-  activeAppPlugins: Set<IAgoraExtApp> = new Set<IAgoraExtApp>()
+//   @observable
+//   boardLoading: boolean = false;
 
-  @observable
-  chatCollapse: boolean = false
+//   @observable
+//   dialogQueue: DialogType[] = [] 
 
-  @observable
-  checked: boolean = false;
+//   @observable
+//   toastQueue: ToastType[] = []
 
-  @action.bound
-  updateChecked(v: boolean) {
-    this.checked =v
-  }
+//   @observable
+//   activeAppPlugins: Set<IAgoraExtApp> = new Set<IAgoraExtApp>()
 
-  appStore: EduScenarioAppStore;
+//   @observable
+//   chatCollapse: boolean = false
 
-  dialog$: BehaviorSubject<any> = new BehaviorSubject<any>({})
+//   @observable
+//   checked: boolean = false;
 
-  toast$: BehaviorSubject<any> = new BehaviorSubject<any>({})
+//   @action.bound
+//   updateChecked(v: boolean) {
+//     this.checked =v
+//   }
 
-  pretestNotice$: Subject<any> = new Subject<any>()
+//   appStore: EduScenarioAppStore;
 
-  /**
-   * 
-   * @param appStore 
-   * @returns
-   */
-  constructor(appStore: EduScenarioAppStore) {
-    this.appStore = appStore
-    reaction(() => JSON.stringify([
-      this.chatCollapse
-    ]) , (data: string) => {
-      const [chatCollapse] = JSON.parse(data)
-      if (!chatCollapse) {
-        // 已经缩小的chat组件，点击后需要清空消息数
-        this.appStore.roomStore.resetUnreadMessageCount()
-      }
-    })
-  }
+//   dialog$: BehaviorSubject<any> = new BehaviorSubject<any>({})
 
-  @action.bound
-  resetStateQueue() {
-    if (this.dialogQueue && !isEmpty(this.dialogQueue)) {
-      this.dialogQueue = []
-    }
+//   toast$: BehaviorSubject<any> = new BehaviorSubject<any>({})
 
-    if (this.toastQueue && !isEmpty(this.toastQueue)) {
-      this.toastQueue = []
-    }
-  }
+//   pretestNotice$: Subject<any> = new Subject<any>()
 
-  @action.bound
-  fireToast(eventName: string, props?: any) {
-    this.toast$.next({
-      eventName,
-      props,
-    })
-  }
+//   /**
+//    * 
+//    * @param appStore 
+//    * @returns
+//    */
+//   constructor(appStore: EduScenarioAppStore) {
+//     this.appStore = appStore
+//     reaction(() => JSON.stringify([
+//       this.chatCollapse
+//     ]) , (data: string) => {
+//       const [chatCollapse] = JSON.parse(data)
+//       if (!chatCollapse) {
+//         // 已经缩小的chat组件，点击后需要清空消息数
+//         this.appStore.roomStore.resetUnreadMessageCount()
+//       }
+//     })
+//   }
 
-  @action.bound
-  addToast(desc: string, type?: 'success' | 'error' | 'warning') {
-    const id = uuidv4()
-    this.toastQueue.push({id, desc, type})
-    return id
-  }
+//   @action.bound
+//   resetStateQueue() {
+//     if (this.dialogQueue && !isEmpty(this.dialogQueue)) {
+//       this.dialogQueue = []
+//     }
 
-  @action.bound
-  removeToast(id: string) {
-    this.toastQueue = this.toastQueue.filter(item => item.id != id);
-    return id;
-  }
+//     if (this.toastQueue && !isEmpty(this.toastQueue)) {
+//       this.toastQueue = []
+//     }
+//   }
 
-  @action.bound
-  fireDialog(eventName: string, props?: any) {
-    console.log('fire dialog ', eventName, props)
-    this.dialog$.next({
-      eventName,
-      props
-    })
-  }
+//   @action.bound
+//   fireToast(eventName: string, props?: any) {
+//     this.toast$.next({
+//       eventName,
+//       props,
+//     })
+//   }
 
-  @action.bound
-  addDialog(component: any, props?: any) {
-    const id = (props && props.id) ? props.id : uuidv4()
-    this.dialogQueue.push({id, component, props})
-    return id
-  }
+//   @action.bound
+//   addToast(desc: string, type?: 'success' | 'error' | 'warning') {
+//     const id = uuidv4()
+//     this.toastQueue.push({id, desc, type})
+//     return id
+//   }
 
-  @action.bound
-  removeDialog(id: string) {
-    this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
-  }
+//   @action.bound
+//   removeToast(id: string) {
+//     this.toastQueue = this.toastQueue.filter(item => item.id != id);
+//     return id;
+//   }
 
-  @action.bound
-  toggleChatMinimize() {
-    this.chatCollapse = !this.chatCollapse
-  }
+//   @action.bound
+//   fireDialog(eventName: string, props?: any) {
+//     console.log('fire dialog ', eventName, props)
+//     this.dialog$.next({
+//       eventName,
+//       props
+//     })
+//   }
 
-  @observable
-  visibleSetting: boolean = false
+//   @action.bound
+//   addDialog(component: any, props?: any) {
+//     const id = (props && props.id) ? props.id : uuidv4()
+//     this.dialogQueue.push({id, component, props})
+//     return id
+//   }
 
-  @action.bound
-  setVisibleSetting(v: boolean) { 
-    this.visibleSetting = v
-  }
+//   @action.bound
+//   removeDialog(id: string) {
+//     this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id)
+//   }
 
-  @action.bound
-  reset() {
-    this.loading = false
-    this.boardLoading = false
-    this.chatCollapse = false
-    this.visibleSetting = false
-    this.checked = false
-    this.resetStateQueue()
-  }
+//   @action.bound
+//   toggleChatMinimize() {
+//     this.chatCollapse = !this.chatCollapse
+//   }
 
-  updateCurSeqId(id: number) {
+//   @observable
+//   visibleSetting: boolean = false
 
-  }
+//   @action.bound
+//   setVisibleSetting(v: boolean) { 
+//     this.visibleSetting = v
+//   }
 
-  updateLastSeqId(id: number) {
+//   @action.bound
+//   reset() {
+//     this.loading = false
+//     this.boardLoading = false
+//     this.chatCollapse = false
+//     this.visibleSetting = false
+//     this.checked = false
+//     this.resetStateQueue()
+//   }
 
-  }
+//   updateCurSeqId(id: number) {
 
-  @action.bound
-  stopLoading() {
-    this.loading = false
-  }
+//   }
 
-  @action.bound
-  startLoading () {
-    this.loading = true
-  }
+//   updateLastSeqId(id: number) {
 
-  @action.bound
-  addAppPlugin(app: IAgoraExtApp) {
-    this.activeAppPlugins.add(app)
-  }
+//   }
 
-  @action.bound
-  removeAppPlugin(app: IAgoraExtApp) {
-    this.activeAppPlugins.delete(app)
-  }
-}
+//   @action.bound
+//   stopLoading() {
+//     this.loading = false
+//   }
+
+//   @action.bound
+//   startLoading () {
+//     this.loading = true
+//   }
+
+//   @action.bound
+//   addAppPlugin(app: IAgoraExtApp) {
+//     this.activeAppPlugins.add(app)
+//   }
+
+//   @action.bound
+//   removeAppPlugin(app: IAgoraExtApp) {
+//     this.activeAppPlugins.delete(app)
+//   }
+// }
