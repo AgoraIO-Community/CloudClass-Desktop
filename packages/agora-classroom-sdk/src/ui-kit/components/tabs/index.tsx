@@ -37,6 +37,7 @@ export const Tabs: FC<TabsProps> = ({
   if (type === 'editable-card') {
     editable = {
       onEdit: (editType, { key, event }) => {
+        //@ts-ignore
         onEdit?.(editType === 'add' ? event : key!, editType);
       },
       showAdd: false,

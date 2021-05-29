@@ -45,6 +45,10 @@ module.exports = {
       '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
       '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
       '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
+      'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
+      'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
+      'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
+      'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
     }
   },
   module: {
