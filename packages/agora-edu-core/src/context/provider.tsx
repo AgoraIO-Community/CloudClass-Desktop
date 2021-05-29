@@ -188,7 +188,14 @@ export const useRoomContext = (): RoomContext => {
     roomInfo,
     classState,
     sceneType,
-    removeScreenShareWindow
+    startNativeScreenShareBy,
+    removeScreenShareWindow,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
+    muteUserChat,
+    unmuteUserChat
   } = useSceneStore()
 
   const {
@@ -200,25 +207,28 @@ export const useRoomContext = (): RoomContext => {
     roomProperties
   } = useRoomStore()
 
+  const {
+    handsUpStudentList,
+    processUserCount,
+    teacherAcceptHandsUp,
+    teacherRejectHandsUp
+  } = useSmallClassStore()
+
   return {
     sceneType,
     destroyRoom,
     joinRoom: join,
-    // TO-REVIEW
-    // ui context?
+    // REMOVED v1.1.1
     // removeDialog,
-    // TO-REVIEW REMOVED in v1.1.1
-    // startNativeScreenShareBy,
-    // teacherAcceptHandsUp,
-    // teacherRejectHandsUp,
-    // handsUpStudentList,
-    // processUserCount,
-    // muteVideo,
-    // unmuteVideo,
-    // muteAudio,
-    // unmuteAudio,
-    // muteUserChat,
-    // unmuteUserChat
+    startNativeScreenShareBy,
+    teacherAcceptHandsUp,
+    teacherRejectHandsUp,
+    handsUpStudentList,
+    processUserCount,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
     roomInfo,
     isCourseStart: !!classState,
     kickOutBan,
@@ -234,7 +244,6 @@ export const useRoomContext = (): RoomContext => {
     queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
       return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
     },
-    // v1.1.1
     isJoiningRoom
   }
 }

@@ -141,18 +141,6 @@ export type ChatContext = {
      */
     addChatMessage: (args: any) => void
     /**
-     * @param chatCollapse 是否折叠
-     * @version v1.1.0
-     * @deprecated 该方法已被弃用, 1.1.2起 edu-core 不再托管ui逻辑
-     */
-    chatCollapse?: boolean,
-    /**
-     * 切换最小化最大化聊天
-     * @version v1.1.0
-     * @deprecated 该方法已被弃用, 1.1.2起 edu-core 不再托管ui逻辑
-     */
-    toggleChatMinimize?: () => void,
-    /**
      * 发送私聊聊天消息
      * @version v1.1.2
      */
@@ -421,85 +409,149 @@ export type ScreenShareContext = {
     startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>,
 }
 export type RoomContext = {
-    roomProperties: any,
     /**
      * 场景类型
+     * @version v1.1.0
      */
     sceneType: number,
     /**
      * 销毁房间
+     * @version v1.1.0
      */
     destroyRoom: () => Promise<void>,
     /**
      * 加入房间
+     * @version v1.1.0
      */
     joinRoom: () => Promise<void>,
-    // /**
-    //  * 移除对话框
-    //  * @param id 对话框ID
-    //  */
-    // removeDialog: (id: string) => void,
-    // TO-REVIEW REMOVED in v1.1.1
-    // /**
-    //  * 屏幕分享
-    //  * @param windowId 窗口ID
-    //  */
-    // startNativeScreenShareBy: (windowId: number) => Promise<void>,
+    /**
+     * 屏幕分享
+     * @param windowId 窗口ID
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 ScreenShareContext 中的同名方法
+     */
+    startNativeScreenShareBy: (windowId: number) => Promise<void>,
     /**
      * 关闭屏幕分享展示窗口
+     * @version v1.1.0
      */
-     removeScreenShareWindow: () => void,
-    // TO-REVIEW REMOVED in v1.1.1
-    // /**
-    //  * 教师接受举手
-    //  * @param userUuid 举手用户uuid
-    //  */
-    // teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
-    // /**
-    //  * 教师拒绝举手
-    //  * @param userUuid 举手用户uuid
-    //  */
-    // teacherRejectHandsUp: (userUuid: string) => Promise<void>,
-    // /**
-    //  * 举手学生列表
-    //  */
-    // handsUpStudentList: any[],
-    // /**
-    //  * 打开使用用户总数
-    //  */
-    // processUserCount: number,
+    removeScreenShareWindow: () => void,
+    /**
+     * 教师接受举手
+     * @param userUuid 举手用户uuid
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 教师拒绝举手
+     * @param userUuid 举手用户uuid
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    teacherRejectHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 举手学生列表
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    handsUpStudentList: any[],
+    /**
+     * 申请上台的用户总数
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    processUserCount: number,
     /**
      * 房间信息
+     * @version v1.1.0
      */
     roomInfo: RoomInfo,
     /**
      * 是否开始上课
+     * @version v1.1.0
      */
     isCourseStart: boolean,
     /**
      * 踢人，禁止再次进入教室
      * @param userUuid 用户uuid
      * @param roomUuid 房间uuid
+     * @version v1.1.0
      */
     kickOutBan: (userUuid: string, roomUuid: string) => Promise<void>,
     /**
      * 踢人，进移出教室一次
      * @param userUuid 用户uuid
      * @param roomUuid 房间uuid
+     * @version v1.1.0
      */
     kickOutOnce: (userUuid: string, roomUuid: string) => Promise<void>,
     /**
      * 课程状态
+     * @version v1.1.0
      */
     liveClassStatus: {
         classState: string;
         duration: number;
     },
-    // 查询摄像头设备状态
+    /**
+     * 禁用视频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 取消禁用视频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 禁用音频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 取消禁用音频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 查询摄像头设备状态
+     * @param userList 查询的用户列表
+     * @param userUuid 查询目标用户Uuid
+     * @param streamUuid 查询目标用户流Uuid
+     * @version v1.1.2
+     */
     queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
-    // 查询麦克风设备状态
+    /**
+     * 查询麦克风设备状态
+     * @param userList 查询的用户列表
+     * @param userUuid 查询目标用户Uuid
+     * @param streamUuid 查询目标用户流Uuid
+     * @version v1.1.2
+     */
     queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
-    isJoiningRoom: boolean
+    /**
+     * 是否正在加载房间
+     * @version v1.1.2
+     */
+    isJoiningRoom: boolean,
+    /**
+     * 当前房间属性
+     * @version v1.1.2
+     */
+    roomProperties: any
 }
 export type RoomDiagnosisContext = {
     navigationState: {
@@ -906,7 +958,7 @@ export type HandsUpContext = {
      */
     onlineUserCount: number,
     /**
-     * 打开视频的用户总数
+     * 申请上台的用户总数
      */
     processUserCount: number,
     /**
