@@ -265,22 +265,6 @@ export const useGlobalContext = (): GlobalContext => {
 
   const mainPath = useCoreContext().params.mainPath
 
-  // const {
-  //   addDialog,
-  //   removeDialog,
-  //   addToast,
-  //   toast$,
-  //   fireToast,
-  //   removeToast,
-  //   toastQueue,
-  //   checked,
-  //   loading,
-  //   dialogQueue,
-  //   updateChecked,
-  //   dialog$,
-  //   fireDialog
-  // } = useUIStore()
-
   const {
     toast$,
     dialog$,
@@ -289,56 +273,31 @@ export const useGlobalContext = (): GlobalContext => {
 
   const {
     joined,
-    // joining,
+    isJoiningRoom,
   } = useRoomStore()
 
-  // const {
-  //   userType
-  // } = useSceneStore()
-
   return {
-    //TO-REVIEW
-    //add isLoading
-    // loading,
-    isFullScreen,
-    //TO-REVIEW
-    //ui context?
+    // REMOVED v1.1.2
     // addDialog,
     // removeDialog,
     // toast$,
     // fireToast,
     // addToast,
-    //TO-REVIEW
-    //??
     // checked,
-    params: appStore.params,
-    //TO-REVIEW
-    //ui context?
     // dialogQueue,
     // removeToast,
     // toastQueue,
-    //TO-REVIEW
-    //??
     // updateChecked,
+    // fireDialog
     mainPath,
     language: appStore.params.language,
-    // toastEventObserver: toast$,
-    // dialogEventObserver: dialog$,
-    // fireDialog,
-    // joined,
-    // inRoom: joining,
-    // userType
-    //TO-REVIEW
-    //ui context?
-    // fireDialog,
-    // joined,
-    //v1.1.1
-    // isLoading: loading,
+    loading: isJoiningRoom,
+    isFullScreen,
+    params: appStore.params,
     isJoined: joined,
     toastEventObserver: toast$,
     dialogEventObserver: dialog$,
-    sequenceEventObserver: seq$,
-    // inRoom: joining
+    sequenceEventObserver: seq$
   }
 }
 
@@ -377,6 +336,10 @@ export const useBoardContext = (): BoardContext => {
     isBoardScreenShare
   } = useBoardStore()
 
+  const {
+    startOrStopSharing
+  } = useScreenShareContext()
+
   const mountToDOM = useCallback((dom: HTMLDivElement | null) => {
     if (dom) {
       mount(dom)
@@ -405,29 +368,18 @@ export const useBoardContext = (): BoardContext => {
     setZoomScale,
     changeFooterMenu,
     changeSceneItem,
-    //TO-REVIEW
-    //setPenType?
+    startOrStopSharing,
     updatePen,
-    //TO-REVIEW
-    //need merge
     activeMap,
     boardPenIsActive,
-    // REMOVED in v1.1.1
-    // startOrStopSharing,
     setLaserPoint,
     activeSceneName,
-    //TO-REVIEW
-    //??setTools?
     installTools,
-    //TO-REVIEW
-    //room context?
-    canSharingScreen,
     revokeBoardPermission,
     grantBoardPermission,
-    //TO-REVIEW
-    //ui context?
-    showBoardTool,
     // v1.1.1
+    canSharingScreen,
+    showBoardTool,
     isCurrentScenePathScreenShare:isBoardScreenShare
   }
 }

@@ -407,6 +407,11 @@ export type ScreenShareContext = {
      * @version v1.1.2
      */
     startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>,
+    /**
+     * 当前是否允许屏幕共享
+     * @version v1.1.2
+     */
+    canSharingScreen: boolean;
 }
 export type RoomContext = {
     /**
@@ -581,160 +586,92 @@ export type GlobalContext = {
      * @version v1.1.0
      */
     isFullScreen: boolean,
-    // /**
-    //  * 向dialogQueue中新增一个dialog数据
-    //  * @param component 对话框组件
-    //  * @param this.props 对话框组件的props
-    //  */
-    // addDialog: (component: any, props?: any) => any,
-    // /**
-    //  * 移除dialogQueue中的一个dialog数据
-    //  * @param id 对话框的ID
-    //  */
-    // removeDialog: (id: string) => void,
-    // /**
-    //  * BehaviorSubject实例化的对象 toastEventObserver
-    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-    //  *  toastEventObserver.subscribe((evt)=>{
-    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
-    //  *   })
-    //  */
-    // toast$: BehaviorSubject<any>,
-    // /**
-    //  * 触发toastEventObserver订阅的事件
-    //  * @param eventName 事件名称
-    //  * @param props 事件的参数
-    //  */
-    // fireToast: (eventName: string, props?: any) => void,
-    // /**
-    //  * 向toastQueue中新增一个toast数据
-    //  * @param desc toast内容
-    //  * @param type toast类型
-    //  */
-    // addToast: (desc: string, type?: "success" | "error" | "warning" | undefined) => string,
-    // /**
-    //  * 是否选中
-    //  */
-    // checked: boolean,
     /**
-     * appStore的参数
+     * 教室初始化参数
+     * @version v1.1.0
      */
     params: AppStoreInitParams,
-    // /**
-    //  * 对话框的数据队列
-    //  */
-    // dialogQueue: DialogType[],
-    // /**
-    //  * 移出toastQueue中的一个toast数据
-    //  * @param id toast的ID
-    //  */
-    // removeToast: (id: string) => string,
-    // /**
-    //  * toast的数据队列
-    //  */
-    // toastQueue: ToastType[],
-    // /**
-    //  * 设置是否选中
-    //  * @param v 设置参数
-    //  */
-    // updateChecked: (v: boolean) => void,
     /**
      * 主路由
+     * @version v1.1.0
      */
     mainPath: string | undefined,
     /**
      * 语言
+     * @version v1.1.0
      */
     language: LanguageEnum,
-    // /**
-    //  * BehaviorSubject实例化的对象 toastEventObserver
-    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-    //  *  toastEventObserver.subscribe((evt)=>{
-    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
-    //  *   })
-    //  */
-    // toastEventObserver: BehaviorSubject<any>,
-    // /**
-    //  * BehaviorSubject实例化的对象 dialogEventObserver
-    //  * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-    //  *  dialogEventObserver.subscribe((evt)=>{
-    //  *   //观察者订阅的事件 evt   事件名称：evt.eventname
-    //  *   })
-    //  */
-    // dialogEventObserver: BehaviorSubject<any>,
-    // /** 触发dialogEventObserver订阅的事件
-    //  * @param eventName 事件名称
-    //  * @param props 事件的参数
-    //  */
-    // fireDialog: (eventName: string, props?: any) => void,
-    // /**
-    //  * 已经加入房间
-    //  */
-    // joined: boolean;
-    // /**
-    //  * 用户类型
-    //  */
-    // userType: 'teacher' | 'student';
-    // joined: boolean;
+    /**
+     * 是否已成功加入教室
+     * @version v1.1.2
+     */
     isJoined: boolean;
+    /**
+     * 事件序列观察器
+     * @version v1.1.2
+     */
     sequenceEventObserver: Subject<any>,
     /**
-     * BehaviorSubject实例化的对象 toastEventObserver
-     * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-     *  toastEventObserver.subscribe((evt)=>{
-     *   //观察者订阅的事件 evt   事件名称：evt.eventname
-     *   })
+     * toast观察器
+     * @version v1.1.0
      */
     toastEventObserver: Subject<any>,
     /**
-      * BehaviorSubject实例化的对象 dialogEventObserver
-      * 参考：rxjs文档 地址 https://cn.rx.js.org/class/es6/BehaviorSubject.js~BehaviorSubject.html
-      *  dialogEventObserver.subscribe((evt)=>{
-      *   //观察者订阅的事件 evt   事件名称：evt.eventname
-      *   })
-      */
+     * dialog观察器
+     * @version v1.1.0
+     */
     dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
     /**
      * 白板所在的房间
+     * @version v1.1.0
      */
     room: Room,
     /**
      * 白板缩放的值
+     * @version v1.1.0
      */
     zoomValue: number,
     /**
      * 当前白板的页码
+     * @version v1.1.0
      */
     currentPage: number,
     /**
      * 白板总页数
+     * @version v1.1.0
      */
     totalPage: number,
     /**
      * 当前画笔颜色
+     * @version v1.1.0
      */
     currentColor: string,
     /**
      * 当前画笔宽度
+     * @version v1.1.0
      */
     currentStrokeWidth: number,
     /**
      * 是否拥有白板权限
+     * @version v1.1.0
      */
     hasPermission: boolean,
     /**
-     * 当钱白板的选择工具
+     * 当前白板的选择工具
+     * @version v1.1.0
      */
     currentSelector: string,
     /**
      * 画线类工具
+     * @version v1.1.0
      */
     lineSelector: string,
     /**
      * 默认激活的工具
-     * 例如默认激活画笔
+     * @version v1.1.0
+     * @example 例如默认激活画笔
      * ```
      * {
      *  "pen": true
@@ -744,104 +681,128 @@ export type BoardContext = {
     activeMap: Record<string, boolean>,
     /**
      * 白板是否就绪
+     * @version v1.1.0
      */
     ready: boolean,
     /**
      * 白板的工具列表
+     * @version v1.1.0
      */
     tools: any[],
     /**
      * 修改画笔宽度
      * @param value 要修改的值
+     * @version v1.1.0
      */
     changeStroke: (value: any) => void,
     /**
      * 修改画笔颜色
      * @param value 颜色#xxxxxx
+     * @version v1.1.0
      */
     changeHexColor: (value: any) => void,
     /**
      * 将白板挂载在DOM节点上 或者卸载白板
      * @param dom 被挂载的DOM节点
+     * @version v1.1.0
      */
     mountToDOM: (dom: HTMLDivElement | null) => void,
     /**
      * 设置当前工具
      * @param tool 工具名称
+     * @version v1.1.0
      */
     setTool: (tool: string) => void,
     /**
      * 设置全屏
      * @param type 设置的值，fullscreen：全屏， fullscreenExit：退出全屏
+     * @version v1.1.0
      */
     zoomBoard: (type: string) => void,
     /**
      * 设置放大或者缩小
      * @param operation 操作类型 out：缩小， in：放大
+     * @version v1.1.0
      */
     setZoomScale: (operation: string) => void,
     /**
      * 底部菜单跳转到那一页
      * @param itemName 跳转目标 第一页：first_page 最后一页：last_page 下一页：next_page 上一页：prev_page
+     * @version v1.1.0
      */
     changeFooterMenu: (itemName: string) => void,
     /**
      * 改变场景
      * @param resourceUuid 资源uuid
+     * @version v1.1.0
      */
     changeSceneItem: (resourceUuid: string) => void,
     /**
      * 更新画笔
      * @param value 画笔名称 pen square circle line
+     * @version v1.1.0
      */
     updatePen: (value: any) => void,
     /**
      * 当前白板使用的工具是否为画笔
+     * @version v1.1.0
      */
     boardPenIsActive: boolean,
-    // /**
-    //  * 切换屏幕共享状态
-    //  */
-    // startOrStopSharing: () => Promise<void>,
+    /**
+     * 切换屏幕共享状态
+     * @version v1.1.0
+     * @deprecated v1.1.2弃用, 请使用ScreenShareContext中的同名方法
+     */
+    startOrStopSharing: () => Promise<void>,
     /**
      * 设置当前工具为激光笔
+     * @version v1.1.0
      */
     setLaserPoint: () => void,
     /**
      * 安装白板工具
      * @param tools 白板工具列表 
+     * @version v1.1.0
      */
     installTools: (tools: any[]) => void,
     /**
      * 取消白板授权
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     revokeBoardPermission: (userUuid: string) => Promise<void>,
     /**
      * 授予白板权限
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     grantBoardPermission: (userUuid: string) => Promise<void>,
     /**
-     * 活跃场景名称
+     * 当前激活的scene名称
+     * @version v1.1.0
      */
     activeSceneName: string,
-
-    //v1.1.1
-    //@internal
-    canSharingScreen: boolean;
-    //@internal
+    /**
+     * 当前是否显示白板工具栏/zoom工具栏
+     * @version v1.1.2
+     */
     showBoardTool: [boolean, boolean];
-    //@internal
+    /**
+     * 当前白板scenePath是否为屏幕共享的scenePath
+     * @version v1.1.2
+     */
     isCurrentScenePathScreenShare: boolean;
 }
-// TO-REVIEW removed in v1.1.1
-// export type StreamContext = {
-//     /**
-//      * 媒体数据流列表
-//      */
-//     streamList: EduStream[]
-// }
+
+export type StreamContext = {
+    /**
+     * 媒体数据流列表
+     * @version v1.1.0
+     * @deprecated 已废弃, 请使用StreamListContext中的streamList
+     */
+    streamList: EduStream[]
+}
+
 export type UserListContext = {
     // TO-REVIEW removed in v1.1.1
     // /**
