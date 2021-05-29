@@ -6,7 +6,7 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import type {IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext} from 'agora-edu-core'
 import {BoardClient} from './board'
-import { I18nProvider } from '@/gallery-ui-kit/components/i18n';
+import { I18nProvider } from '../../gallery-ui-kit/components/i18n';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
