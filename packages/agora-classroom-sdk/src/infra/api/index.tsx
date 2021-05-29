@@ -1,7 +1,7 @@
 import { getLiveRoomPath } from '@/infra/router/index';
 import { globalConfigs } from '@/ui-kit/utilities';
 import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper, Hello } from "agora-rte-sdk";
+import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement } from 'react';
 import { AgoraChatWidget } from 'agora-widget-gallery';
