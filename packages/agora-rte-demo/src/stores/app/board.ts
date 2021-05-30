@@ -72,6 +72,7 @@ interface CacheInfo {
   progress: number,
   downloading: boolean,
   cached: boolean,
+  controller?: any,
   skip: boolean
 }
 
@@ -347,8 +348,8 @@ export class BoardStore {
   @observable
   enableStatus: string|boolean = 'disable'
 
-  @observable
-  downloading: boolean = false
+  // @observable
+  // downloading: boolean = false
 
   @action
   changeScenePath(path: string) {
@@ -548,20 +549,32 @@ export class BoardStore {
   @observable
   cacheMap = new Map<string, CacheInfo>()
 
-  cancelDownloading() {
-    if (this.controller) {
-      this.controller.abort()
-      this.controller = undefined
-      this.downloading = false
-      this.cacheMap.delete(this.currentTaskUuid)
-      this.preloadingProgress = -1
+  // cancelDownloading() {
+  //   if (this.controller) {
+  //     this.controller.abort()
+  //     this.controller = undefined
+  //     this.downloading = false
+  //     this.cacheMap.delete(this.currentTaskUuid)
+  //     this.preloadingProgress = -1
+  //   }
+  // }
+  abortDownload(taskUuid: string, cacheInfo: CacheInfo) {
+    if(!cacheInfo.controller) {
+      BizLogger.warn(`[precache] no signal controller exists for task ${taskUuid}`)
     }
+
+    try {
+      cacheInfo.controller.abort()
+    } catch(e) {
+      BizLogger.error(`[precache] fail to abort task ${taskUuid}`)
+    }
+    BizLogger.info(`[precache] aborted task ${taskUuid}`)
   }
 
   async startDownload(taskUuid: string) {
     try {
       this.currentTaskUuid = taskUuid
-      const cacheInfo = this.cacheMap.get(taskUuid)
+      let cacheInfo = this.cacheMap.get(taskUuid)
       if (cacheInfo && cacheInfo.downloading) {
         return
       }
@@ -570,16 +583,16 @@ export class BoardStore {
         progress: 0,
         cached: false,
         skip: false,
-        downloading: true
+        downloading: true,
       })
 
       // this.cancelDownloading()
       // if (cancelDownloading)
-      this.downloading = true
-      EduLogger.info(`正在下载中.... taskUuid: ${taskUuid}`)
+      // this.downloading = true
+      EduLogger.info(`Downloading.... taskUuid: ${taskUuid}`)
       await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
         this.preloadingProgress = progress
-        this.controller = controller
+        // this.controller = controller
         const cacheInfo = this.cacheMap.get(taskUuid)
 
         const currentProgress = get(cacheInfo, 'progress', 0)
@@ -592,16 +605,27 @@ export class BoardStore {
 
         this.cacheMap.set(taskUuid, {
           progress: newProgress,
+          controller,
           cached: newProgress === 100,
           skip: false,
           downloading: true
         })
       })
-      EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      EduLogger.info(`Download complete.... taskUuid: ${taskUuid}`)
+      cacheInfo = this.cacheMap.get(taskUuid)
+      if(cacheInfo){
+        cacheInfo.downloading = false
+        this.cacheMap.set(taskUuid, cacheInfo)
+      }
+      // this.downloading = false
     } catch (err) {
-      EduLogger.info(`下载失败.... taskUuid: ${taskUuid}`)
-      this.downloading = false
+      EduLogger.info(`Download failed.... taskUuid: ${taskUuid}`)
+      let cacheInfo = this.cacheMap.get(taskUuid)
+      if(cacheInfo){
+        cacheInfo.downloading = false
+        this.cacheMap.set(taskUuid, cacheInfo)
+      }
+      // this.downloading = false
     }
   }
 
@@ -874,7 +898,7 @@ export class BoardStore {
     if (!firstCourseWare) {
       return []
     }
-    await this.startDownload(`${firstCourseWare.taskUuid}`)
+    // await this.startDownload(`${firstCourseWare.taskUuid}`)
     // const items = this.appStore.params.config.courseWareList
     if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
       const scenes = firstCourseWare.taskProgress!.convertedFileList
@@ -899,11 +923,13 @@ export class BoardStore {
         const res = await agoraCaches.hasTaskUUID(item.taskUuid)
         const cacheInfo = this.cacheMap.get(item.taskUuid)
         const skip = get(cacheInfo, 'skip', false)
+        const controller = get(cacheInfo, 'controller', undefined)
         this.cacheMap.set(item.taskUuid, {
           progress: res === true ? 100 : 0,
           cached: res,
           skip: skip,
-          downloading: false
+          downloading: false,
+          controller
         })
       }
     }
@@ -2190,12 +2216,17 @@ export class BoardStore {
 
   @action
   reset () {
-    this.downloading = false
+    // this.downloading = false
     this.openDisk = false
     this.preloadingProgress = -1
-    if (this.controller) {
-      this.controller.abort()
-      this.controller = undefined
+    // if (this.controller) {
+    //   this.controller.abort()
+    //   this.controller = undefined
+    // }
+    for (let [taskUuid, cacheInfo] of this.cacheMap) {
+      if(cacheInfo.controller) {
+        this.abortDownload(taskUuid, cacheInfo)
+      }
     }
     this.cacheMap = new Map<string, CacheInfo>()
     // this.publicResources = []
@@ -2404,6 +2435,14 @@ export class BoardStore {
   @observable
   currentTaskUuid: string = ''
 
+  @computed
+  get downloading() {
+    if (this.currentTaskUuid) {
+      const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
+      return cacheInfo?.downloading
+    }
+    return false
+  }
   
   skipTask() {
     const taskUuid = this.currentTaskUuid
@@ -2411,6 +2450,7 @@ export class BoardStore {
       const cacheInfo = this.cacheMap.get(taskUuid)
       if (cacheInfo) {
         cacheInfo.skip = true
+        this.abortDownload(taskUuid, cacheInfo)
         this.cacheMap.set(taskUuid, cacheInfo)
       }
     }
@@ -2427,7 +2467,7 @@ export class BoardStore {
 
     if (this.currentTaskUuid) {
       const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
-      if (cacheInfo && cacheInfo.skip !== true && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+      if (cacheInfo && cacheInfo.skip !== true && cacheInfo.downloading && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
         let progress = get(cacheInfo, 'progress', 0)
         console.log(progress)
         return {
