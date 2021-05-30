@@ -31,7 +31,7 @@ export { EduManager } from './manager/index';
 export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
 export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
 export { AgoraWebRtcWrapper } from './core/media-service/web/index';
-export { StreamSubscribeOptions } from './core/media-service/web/coordinator';
+export type { StreamSubscribeOptions } from './core/media-service/web/coordinator';
 export { LocalVideoRenderState, RemoteVideoRenderState } from './core/media-service/renderer/index';
 
 export type { LocalUserRenderer, UserRenderer, RemoteUserRenderer } from './core/media-service/renderer/index';

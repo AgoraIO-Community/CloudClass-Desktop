@@ -1526,7 +1526,7 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get tools() {
+  get tools(): any[] {
     if (this._tools) {
       const isMenuItem = (value: string) => !['cloud', 'tools', 'register', 'student_list'].includes(value)
       return this._tools.map((item: ToolItem) => ({...item, hover: isMenuItem(item.value) ? this.ready : true}))
