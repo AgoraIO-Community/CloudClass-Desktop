@@ -775,11 +775,12 @@ export class BoardStore {
   async autoFetchDynamicTask() {
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
-    const globalState = this.room.state.globalState as any
-    const materialList = get(globalState, 'materialList', []) as MaterialItem[]
+    // const globalState = this.room.state.globalState as any
+    // const materialList = get(globalState, 'materialList', []) as MaterialItem[]
+    this.resourcesList
     const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
     if (!isRootDir) {
-      const item = materialList.find((item: MaterialItem) => item.resourceName === resourceName)
+      const item = this._resourcesList.find((item) => item.resourceName === resourceName)
       if (item && item.taskUuid) {
         await this.startDownload(item.taskUuid)
       }
