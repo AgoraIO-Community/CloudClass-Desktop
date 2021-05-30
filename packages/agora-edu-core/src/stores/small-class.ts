@@ -323,6 +323,21 @@ export class SmallClassStore {
   }
 
   @action.bound
+  async teacherRevokeCoVideo(userUuid: string) {
+    return await eduSDKApi.revokeCoVideo({
+      roomUuid: this.roomUuid,
+      toUserUuid: userUuid
+    })
+  }
+
+  @action.bound
+  async studentExitCoVideo() {
+    return await eduSDKApi.revokeCoVideo({
+      roomUuid: this.roomUuid
+    })
+  }
+
+  @action.bound
   async teacherRejectHandsUp(userUuid: string) {
     await eduSDKApi.refuseHandsUp({
       roomUuid: this.roomUuid,
@@ -474,26 +489,11 @@ export class SmallClassStore {
   }
 
   @action.bound
-  async togglePodium(userUuid:string, onPodium:boolean) {
-    if(!this.rosterUserExists(userUuid))return
-
-    if (onPodium) {
-      if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
-        await this.revokeCoVideo(userUuid)
-      }
-    } else {
-      if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
-        await this.teacherAcceptHandsUp(userUuid)
-      }
-    }
-  }
-
-  @action.bound
-  async toggleWhiteboardPermission(userUuid:string, whiteboardGranted: boolean) {
+  async toggleWhiteboardPermission(userUuid:string, grantWhiteboardPermission: boolean) {
     if(!this.rosterUserExists(userUuid))return
 
     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
-      if (whiteboardGranted) {
+      if (!grantWhiteboardPermission) {
         await this.appStore.boardStore.revokeBoardPermission(userUuid)
       } else {
         await this.appStore.boardStore.grantBoardPermission(userUuid)

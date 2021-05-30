@@ -939,13 +939,6 @@ export type UserListContext = {
      */
     teacherInfo?: EduUser,
     /**
-     * 切换上下台
-     * @param userUuid 用户uuid
-     * @param onPodium 上台/下台
-     * @version v1.1.2
-     */
-    togglePodium: (userUuid:string, onPodium:boolean) => Promise<any>,
-    /**
      * 切换白板权限
      * @param userUuid 用户uuid
      * @param whiteboardGranted 给与/不给与权限
@@ -1065,11 +1058,16 @@ export type HandsUpContext = {
      */
     teacherRejectHandsUp: (userUuid: string) => Promise<void>,
     /**
-     * 使指定用户下麦
+     * 老师使指定用户下麦
      * @param userUuid 用户uid
      * @version v1.1.2
      */
-    exitCoVideo: (userUuid: string) => Promise<void>,
+    teacherRevokeCoVideo: (userUuid: string) => Promise<void>,
+    /**
+     * 学生主动下麦
+     * @version v1.1.2
+     */
+    studentExitCoVideo: () => Promise<void>,
 }
 export type VideoControlContext = {
     // /**

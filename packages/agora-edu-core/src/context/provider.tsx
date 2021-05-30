@@ -465,7 +465,6 @@ export const useUserListContext = (): UserListContext => {
     acceptedList:acceptedUserList,
     teacherInfo,
     rosterUserList,
-    togglePodium,
     toggleWhiteboardPermission,
     toggleCamera,
     toggleMic,
@@ -501,7 +500,6 @@ export const useUserListContext = (): UserListContext => {
     //v1.1.1
     localUserInfo,
     teacherInfo,
-    togglePodium,
     toggleWhiteboardPermission,
     toggleCamera,
     toggleMic,
@@ -555,7 +553,9 @@ export const useHandsUpContext = (): HandsUpContext => {
     processUserCount,
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
-    revokeCoVideo
+    // revokeCoVideo,
+    teacherRevokeCoVideo,
+    studentExitCoVideo
   } = useSmallClassStore()
 
   return {
@@ -571,7 +571,8 @@ export const useHandsUpContext = (): HandsUpContext => {
     teacherAcceptHandsUp,
     teacherRejectHandsUp,
     //v1.1.1
-    exitCoVideo: revokeCoVideo
+    teacherRevokeCoVideo,
+    studentExitCoVideo
   }
 }
 
