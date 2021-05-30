@@ -1070,214 +1070,258 @@ export type HandsUpContext = {
     studentExitCoVideo: () => Promise<void>,
 }
 export type VideoControlContext = {
-    // /**
-    //  * 老师的媒体数据流
-    //  */
-    // teacherStream: any,
-    // /**
-    //  * 第一个学生的媒体数据流
-    //  */
-    // firstStudent: EduMediaStream,
-    // /**
-    //  * 学生的媒体数据流列
-    //  */
-    // studentStreams: EduMediaStream[],
+    /**
+     * 老师的媒体数据流
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用StreamListContext中的同名方法
+     */
+    teacherStream: any,
+    /**
+     * 第一个学生的媒体数据流
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用StreamListContext中的studentStreams
+     */
+    firstStudent: EduMediaStream,
+    /**
+     * 学生的媒体数据流列
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用StreamListContext中的studentStreams
+     */
+    studentStreams: EduMediaStream[],
     /**
      * 点击摄像头切换开关状态
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     onCameraClick: (userUuid: any) => Promise<void>,
     /**
      * 点击麦克风切换开关状态
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     onMicClick: (userUuid: any) => Promise<void>,
     /**
      * 奖励用户星星
      * @param uid 用户uuid
+     * @version v1.1.0
      */
     onSendStar: (uid: any) => Promise<void>,
     /**
      * 点击白板切换授权开关状
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     onWhiteboardClick: (userUuid: any) => Promise<void>,
     /**
      * 点击取消上台（仅主持人可用）
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    // /**
-    //  * 场景摄像头配置
-    //  */
-    // sceneVideoConfig: {
-    //     hideOffPodium: boolean;
-    //     hideOffAllPodium: boolean;
-    //     isHost: boolean;
-    //     hideBoardGranted: boolean;
-    // },
-    // /**
-    //  * 是否为主持人
-    //  */
-    // isHost: boolean,
+    /**
+     * 场景摄像头配置
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用UserListContext的controlTools以及isHost替代
+     */
+    sceneVideoConfig: {
+        hideOffPodium: boolean;
+        hideOffAllPodium: boolean;
+        isHost: boolean;
+        hideBoardGranted: boolean;
+    },
+    /**
+     * 是否为主持人
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用UserListContext的controlTools以及isHost替代
+     */
+    isHost: boolean,
     /**
      * 击所有人下台（仅主持人可用）
+     * @version v1.1.0
      */
     onOffAllPodiumClick: () => Promise<void>,
     /**
      * 是否有上台用户
+     * @version v1.1.0
      */
     canHoverHideOffAllPodium: boolean
 }
 export type SmallClassVideoControlContext = {
     /**
-     * 老师的媒体数据流
+     * 老师的媒体数据流, 注意这与StreamListContext的teacherStream不同
+     * @version v1.1.0
      */
     teacherStream: any,
-    // /**
-    //  * 第一个学生的媒体数据流
-    //  */
-    // firstStudent: EduMediaStream,
     /**
-     * 学生的媒体数据流列
+     * 第一个学生的媒体数据流
+     * @version v1.1.0
+     * @deprecated 已废弃，请使用SmallClassVideoControlContext的studentStreams替代
+     */
+    firstStudent: EduMediaStream,
+    /**
+     * 学生的媒体数据流列, 注意这与StreamListContext的studentStreams不同
+     * @version v1.1.0
      */
     studentStreams: EduMediaStream[],
     /**
      * 点击摄像头切换开关状态
      * @param userUuid 用户uid
+     * @version v1.1.0
      */
     onCameraClick: (userUuid: any) => Promise<void>,
     /**
      * 点击麦克风切换开关状态
      * @param userUuid 用户uid
+     * @version v1.1.0
      */
     onMicClick: (userUuid: any) => Promise<void>,
     /**
      * 奖励用户星星
      * @param uid 用户uid
+     * @version v1.1.0
      */
     onSendStar: (uid: any) => Promise<void>,
     /**
      * 点击白板切换授权开关状态
      * @param userUuid 用户uid
+     * @version v1.1.0
      */
     onWhiteboardClick: (userUuid: any) => Promise<void>,
     /**
      * 点击取消上台（仅主持人可用）
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     onOffPodiumClick: (userUuid: any) => Promise<void>,
-    // /**
-    //  * 场景摄像头配置
-    //  */
-    // sceneVideoConfig: {
-    //     hideOffPodium: boolean;
-    //     hideOffAllPodium: boolean;
-    //     isHost: boolean;
-    //     hideBoardGranted: boolean;
-    // },
-    // videoStreamList,
+    /**
+     * 场景摄像头配置
+     * @version v1.1.0
+     * @deprecated 已弃用, 请使用UserListContext的controlTools以及isHost替代
+     */
+    sceneVideoConfig: {
+        hideOffPodium: boolean;
+        hideOffAllPodium: boolean;
+        isHost: boolean;
+        hideBoardGranted: boolean;
+    },
 }
 export type PrivateChatContext = {
     /**
      * 开启私聊
      * @param toUuid 对方uid
+     * @version v1.1.0
      */
     onStartPrivateChat: (toUuid: string) => Promise<void>,
     /**
      * 关闭私聊
      * @param toUuid 对方uid
+     * @version v1.1.0
      */
     onStopPrivateChat: (toUuid: string) => Promise<void>,
     /**
      * 房间内是否存在私聊
+     * @version v1.1.0
      */
     hasPrivateConversation: boolean,
     /**
      * 当前用户是否处于私聊
+     * @version v1.1.0
      */
     inPrivateConversation: boolean
 }
 export type MediaContext = {
     /**
      * 是否为客户端应用
+     * @version v1.1.0
      */
     isNative: boolean,
     /**
      * CPU使用情况
+     * @version v1.1.0
      */
     cpuUsage: number,
     /**
      * 网络质量
+     * @version v1.1.0
      */
     networkQuality: string,
     /**
      * 网络延迟毫秒数
+     * @version v1.1.0
      */
     networkLatency: number,
     /**
      * 网络丢包率百分比
+     * @version v1.1.0
      */
     packetLostRate:   number,
     /**
      * 摄像头设备列表
+     * @version v1.1.0
      */
     cameraList: any[],
     /**
      * 麦克风设备列表
+     * @version v1.1.0
      */
     microphoneList: any[],
     /**
      * 扬声器设备列表
+     * @version v1.1.0
      */
     speakerList: any[],
     /**
      * 当前选中的摄像头ID
+     * @version v1.1.0
      */
     cameraId: string,
     /**
      * 当前选中的麦克风ID 
+     * @version v1.1.0
      */
     microphoneId: string,
     /**
      * 当前选中的扬声器ID
+     * @version v1.1.0
      */
     speakerId: string,
     /**
      * 预置阶段摄像头渲染器
+     * @version v1.1.0
      */
     cameraRenderer: LocalUserRenderer | undefined,
     /**
      * 切换媒体设备（摄像头、麦克风、扬声器）
      * @param deviceType 设备类型：camera microphone speaker
      * @param value 改变的值
+     * @version v1.1.0
      */
     changeDevice: (deviceType: string, value: any) => Promise<void>,
     /**
      * 改变音量（麦克风、扬声器)
      * @param deviceType 设备类型 microphone speaker
      * @param value 改变的值
+     * @version v1.1.0
      */
     changeAudioVolume: (deviceType: string, value: any) => Promise<void>,
-    // /**
-    //  * 关闭对话框
-    //  * @param id 对话框id
-    //  */
-    // removeDialog: (id: string) => void
     /**
      * 切换摄像头
+     * @version v1.1.2
      */
     changeCamera: (deviceId: string) => Promise<void>
     /**
      * 切换麦克风
+     * @version v1.1.2
      */
     changeMicrophone: (deviceId: string) => Promise<void>
     /**
      * 设置扬声器设备音量，仅electron
+     * @version v1.1.2
      */
     changeSpeakerVolume: (v: number) => Promise<void>
     /**
      * 设置麦克风设备音量，仅electron
+     * @version v1.1.2
      */
     changeMicrophoneVolume: (v: number) => Promise<void>
 }

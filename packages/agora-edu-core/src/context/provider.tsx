@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
 export {
@@ -583,6 +583,12 @@ export const useVideoControlContext = (): VideoControlContext => {
   const smallClassStore = useSmallClassStore()
   const isHost = sceneStore.isHost
 
+  const {
+    teacherStream,
+    studentStreams,
+    controlTools
+  } = sceneStore
+
   const userRole = sceneStore.roomInfo.userRole
 
   const onCameraClick = useCallback(async (userUuid: any) => {
@@ -646,13 +652,17 @@ export const useVideoControlContext = (): VideoControlContext => {
     onWhiteboardClick,
     onOffPodiumClick,
     onOffAllPodiumClick,
-    canHoverHideOffAllPodium: !!acceptedUserList.length as any
-    //TO-REVIEW removed in v1.1.1
-    // teacherStream,
-    // firstStudent,
-    // studentStreams,
-    // sceneVideoConfig,
-    // isHost,
+    canHoverHideOffAllPodium: !!acceptedUserList.length as any,
+    teacherStream,
+    firstStudent:studentStreams[0],
+    studentStreams,
+    sceneVideoConfig:{
+      isHost,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium)
+    },
+    isHost,
   }
 }
 
@@ -668,6 +678,10 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
   // const firstStudent = studentStreams[0]
 
   // const sceneVideoConfig = sceneStore.sceneVideoConfig
+
+  const {
+    controlTools
+  } = sceneStore
 
   const userRole = sceneStore.roomInfo.userRole
 
@@ -724,10 +738,13 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    //TO-REVIEW removed in v1.1.1
-    // firstStudent,
-    // sceneVideoConfig,
-    // videoStreamList,
+    firstStudent: studentStreams[0],
+    sceneVideoConfig: {
+      isHost,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium)
+    },
   }
 }
 
