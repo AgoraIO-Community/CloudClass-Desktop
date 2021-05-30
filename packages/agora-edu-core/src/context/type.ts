@@ -792,6 +792,90 @@ export type BoardContext = {
      * @version v1.1.2
      */
     isCurrentScenePathScreenShare: boolean;
+    /**
+     * 可下载的云盘资源列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    downloadList: StorageCourseWareItem[],
+    /**
+     * 打开课件资源
+     * @param uuid 资源uuid
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    openCloudResource: (uuid: string) => Promise<void>,
+    /**
+     * 下载课件资源
+     * @param taskUuid 课件taskUuid
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    startDownload: (taskUuid: string) => Promise<void>,
+    /**
+     * 删除课件资源
+     * @param taskUuid 课件taskUuid
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    deleteSingle: (taskUuid: string) => Promise<void>,
+    /**
+     * 云盘个人资源列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    personalResources: MaterialDataResource[],
+    /**
+     * 云盘公共资源列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    publicResources: MaterialDataResource[],
+    /**
+     * 所有云盘课件资源列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    resourcesList: Resource[],
+    /**
+     * 更新云盘资源列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    refreshCloudResources: () => Promise<void>,
+    /**
+     * 移除云盘课件资源
+     * @param resourceUuids 课件资源uuid
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
+    /**
+     * 取消上传
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    cancelUpload: () => Promise<void>,
+    /**
+     * 关闭课件资源
+     * @param resourceUuid 资源uuid
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    closeMaterial: (resourceUuid: string) => void,
+    /**
+     * 上传云盘课件资源
+     * @param payload 上传的资源参数
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    doUpload: (payload: any) => Promise<void>,
+    /**
+     * 课件列表
+     * @version v1.1.0
+     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     */
+    courseWareList: any[],
 }
 
 export type StreamContext = {
@@ -804,104 +888,149 @@ export type StreamContext = {
 }
 
 export type UserListContext = {
-    // TO-REVIEW removed in v1.1.1
-    // /**
-    //  * 当前用户的uuid
-    //  */
-    // localUserUuid: string,
-    // /**
-    //  * 当前用户的角色
-    //  */
-    // myRole: "teacher" | "assistant" | "student" | "invisible",
+    /**
+     * 当前用户的uuid
+     * @version v1.1.0
+     * @deprecated 弃用, 请使用UserListContext中的localUserInfo
+     */
+    localUserUuid: string,
+    /**
+     * 当前用户的角色
+     * @version v1.1.0
+     * @deprecated 弃用, 请使用UserListContext中的localUserInfo
+     */
+    myRole: "teacher" | "assistant" | "student" | "invisible",
     /**
      * 当前课堂内点名册上的用户列表（只有学生）
+     * @version v1.1.0
      */
     rosterUserList: any[],
-    // /**
-    //  * 当前课堂的老师名称
-    //  */
-    // teacherName: string,
-    // /**
-    //  * 对用户的点击事件如上台、授权白板、打开摄像头麦克风
-    //  * @param actionType 动作类型 
-    //  * 上台：podium 
-    //  * 白板授权：whiteboard 
-    //  * 打开摄像头：camera 
-    //  * 打开麦克风：mic 
-    //  * 踢人：kick-out
-    //  * @param uid 用户的uid
-    //  */
-    // handleRosterClick: (actionType: string, uid: string) => Promise<void>,
-    //TO-REVIEW removed in v1.1.1
-    // /**
-    //  * 使指定用户下麦
-    //  * @param userUuid 用户uid
-    //  */
-    // revokeCoVideo: (userUuid: string) => Promise<void>,
-    //TO-REVIEW removed in v1.1.1
-    // /**
-    //  * 老师同意用户的举手 
-    //  * @param userUuid 用户uid
-    //  */
-    // teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 当前课堂的老师名称
+     * @version v1.1.0
+     * @deprecated 弃用, 请使用UserListContext中的teacherInfo
+     */
+    teacherName: string,
+    /**
+     * 老师同意用户的举手 
+     * @param userUuid 用户uid
+     * @version v1.1.0
+     * @deprecated 弃用, 请使用HandsUpContext中的同名函数
+     */
+    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
     /**
      * 当前课堂内的所有用户列表
+     * @version v1.1.0
      */
     userList: EduUser[],
     /**
      * 同意举手的用户列表
+     * @version v1.1.0
      */
     acceptedUserList: any
-    //v1.1.1
+    /**
+     * 当前用户信息
+     * @version v1.1.2
+     */
     localUserInfo: EduUser,
+    /**
+     * 当前教室老师信息
+     * @version v1.1.2
+     */
     teacherInfo?: EduUser,
+    /**
+     * 切换上下台
+     * @param userUuid 用户uuid
+     * @param onPodium 上台/下台
+     * @version v1.1.2
+     */
     togglePodium: (userUuid:string, onPodium:boolean) => Promise<any>,
+    /**
+     * 切换白板权限
+     * @param userUuid 用户uuid
+     * @param whiteboardGranted 给与/不给与权限
+     * @version v1.1.2
+     */
     toggleWhiteboardPermission: (userUuid:string, whiteboardGranted: boolean) => Promise<any>,
-    toggleCamera: (userUuid:string) => Promise<any>,
-    toggleMic: (userUuid:string) => Promise<any>,
+    /**
+     * 切换视频开关
+     * @param userUuid 用户uuid
+     * @param enabled 打开/关闭
+     * @version v1.1.2
+     */
+    toggleCamera: (userUuid:string, enabled: boolean) => Promise<any>,
+    /**
+     * 切换音频开关
+     * @param userUuid 用户uuid
+     * @param enabled 打开/关闭
+     * @version v1.1.2
+     */
+    toggleMic: (userUuid:string, enabled: boolean) => Promise<any>,
+    /**
+     * 踢人
+     * @param userUuid 用户uuid
+     * @version v1.1.2
+     */
     kick: (userUuid:string) => Promise<any>,
+    /**
+     * 可用的人员控制工具
+     * @version v1.1.2
+     */
     controlTools: ControlTool[],
+    /**
+     * 是否为房主
+     * @version v1.1.2
+     */
     isHost: boolean
 }
 
 export type RecordingContext = {
     /**
      * 是否正在录制
+     * @version v1.1.0
      */
     isRecording: boolean,
     /**
      * 开始录制
+     * @version v1.1.0
      */
     startRecording: () => Promise<void>,
     /**
      * 停止录制
+     * @version v1.1.0
      */
     stopRecording: () => Promise<void>,
 }
 export type HandsUpContext = {
     /**
      * 老师的uuid
+     * @version v1.1.0
      */
     teacherUuid: string,
     /**
      * 学生的举手状态
+     * @version v1.1.0
      */
     handsUpState: "forbidden" | "actived" | "default",
     /**
      * 老师的举手状态
+     * @version v1.1.0
      */
     teacherHandsUpState: "actived" | "default",
     /**
      * 学生举手
      * @param teacherUuid 老师的uuid
+     * @version v1.1.0
      */
     studentHandsUp: (teacherUuid: string) => Promise<void>,
     /**
      * 学生取消举手
+     * @version v1.1.0
      */
     studentCancelHandsUp: () => Promise<void>,
     /**
      * 学生举手列表
+     * @version v1.1.0
      */
     handsUpStudentList: {
         userUuid: string;
@@ -909,33 +1038,38 @@ export type HandsUpContext = {
         coVideo: boolean;
     }[],
     /**
-     * 使用用户列表
+     * 已上台用户列表
+     * @version v1.1.0
      */
     coVideoUsers: any,
     /**
-     * 在线用户总数（不包含观众）
+     * 已上台用户总数
+     * @version v1.1.0
      */
     onlineUserCount: number,
     /**
      * 申请上台的用户总数
+     * @version v1.1.0
      */
     processUserCount: number,
     /**
      * 老师同样用户的举手
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
     /**
      * 老师拒绝用户的举手
      * @param userUuid 用户uuid
+     * @version v1.1.0
      */
     teacherRejectHandsUp: (userUuid: string) => Promise<void>,
     /**
      * 使指定用户下麦
      * @param userUuid 用户uid
+     * @version v1.1.2
      */
     exitCoVideo: (userUuid: string) => Promise<void>,
-
 }
 export type VideoControlContext = {
     // /**
@@ -1156,61 +1290,74 @@ export type ReportContext = {
 
 export type CloudDriveContext = {
     /**
-     * 可下载的云盘资源列表 
+     * 可下载的云盘资源列表
+     * @version v1.1.2
      */
     downloadList: StorageCourseWareItem[],
     /**
      * 打开课件资源
      * @param uuid 资源uuid
+     * @version v1.1.2
      */
     openCloudResource: (uuid: string) => Promise<void>,
     /**
      * 下载课件资源
      * @param taskUuid 课件taskUuid
+     * @version v1.1.2
      */
     startDownload: (taskUuid: string) => Promise<void>,
     /**
      * 删除课件资源
      * @param taskUuid 课件taskUuid
+     * @version v1.1.2
      */
     deleteSingle: (taskUuid: string) => Promise<void>,
     /**
      * 云盘个人资源列表
+     * @version v1.1.2
      */
     personalResources: MaterialDataResource[],
     /**
      * 云盘公共资源列表
+     * @version v1.1.2
      */
     publicResources: MaterialDataResource[],
     /**
-     * 所有云盘课件资源列
+     * 所有云盘课件资源列表
+     * @version v1.1.2
      */
     resourcesList: Resource[],
     /**
      * 更新云盘资源列表
+     * @version v1.1.2
      */
     refreshCloudResources: () => Promise<void>,
     /**
      * 移除云盘课件资源
      * @param resourceUuids 课件资源uuid
+     * @version v1.1.2
      */
     removeMaterialList: (resourceUuids: string[]) => Promise<void>,
     /**
      * 取消上传
+     * @version v1.1.2
      */
     cancelUpload: () => Promise<void>,
     /**
      * 关闭课件资源
      * @param resourceUuid 资源uuid
+     * @version v1.1.2
      */
     closeMaterial: (resourceUuid: string) => void,
     /**
      * 上传云盘课件资源
      * @param payload 上传的资源参数
+     * @version v1.1.2
      */
     doUpload: (payload: any) => Promise<void>,
     /**
      * 课件列表
+     * @version v1.1.2
      */
     courseWareList: any[],
 }

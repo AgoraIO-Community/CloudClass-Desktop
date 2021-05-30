@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
 export {
@@ -161,7 +161,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
   } = useSceneStore()
 
   const {
-    isShareScreen
+    isShareScreen,
+    canSharingScreen,
   } = useBoardStore()
 
   return {
@@ -172,7 +173,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     // ADDED v1.1.1
     isScreenSharing: isShareScreen,
     customScreenSharePickerType,
-    startNativeScreenShareBy
+    startNativeScreenShareBy,
+    canSharingScreen
   }
 }
 
@@ -332,8 +334,23 @@ export const useBoardContext = (): BoardContext => {
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
-    canSharingScreen,
     isBoardScreenShare
+  } = useBoardStore()
+
+  const {
+    courseWareList,
+    downloadList,
+    putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    handleUpload,
+    publicResources,
   } = useBoardStore()
 
   const {
@@ -377,10 +394,21 @@ export const useBoardContext = (): BoardContext => {
     installTools,
     revokeBoardPermission,
     grantBoardPermission,
-    // v1.1.1
-    canSharingScreen,
     showBoardTool,
-    isCurrentScenePathScreenShare:isBoardScreenShare
+    isCurrentScenePathScreenShare:isBoardScreenShare,
+    courseWareList,
+    downloadList,
+    openCloudResource: putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshCloudResources: refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    doUpload: handleUpload,
+    publicResources,
   }
 }
 
@@ -403,8 +431,6 @@ export const useCloudDriveContext = (): CloudDriveContext => {
 
 
   return {
-    //TO-REVIEW
-    //clouddriver context?
     courseWareList,
     downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
     openCloudResource: putSceneByResourceUuid,
@@ -421,15 +447,12 @@ export const useCloudDriveContext = (): CloudDriveContext => {
   }
 }
 
-//TO-REVIEW
-//to remove in v1.1.1
-// export const useStreamContext = (): StreamContext => {
-//   const {streamList} = useSceneStore()
-
-//   return {
-//     streamList
-//   }
-// }
+export const useStreamContext = (): StreamContext => {
+  const {streamList} = useSceneStore()
+  return {
+    streamList
+  }
+}
 
 
 export const useUserListContext = (): UserListContext => {
@@ -446,7 +469,9 @@ export const useUserListContext = (): UserListContext => {
     toggleWhiteboardPermission,
     toggleCamera,
     toggleMic,
-    kick
+    kick,
+    roleToString,
+    teacherAcceptHandsUp
   } = useSmallClassStore()
 
   const {roomInfo} = appStore
@@ -465,16 +490,11 @@ export const useUserListContext = (): UserListContext => {
 
   const userList = appStore.sceneStore.userList
 
-  // const {revokeCoVideo} = smallClassStore
-
   return {
-    //TO-REVIEW removed in v1.1.1
-    // localUserUuid,
-    // myRole,
-    // teacherName,
-    // handleRosterClick,
-    // revokeCoVideo,
-    // teacherAcceptHandsUp,
+    localUserUuid: localUserInfo.userUuid,
+    myRole: roleToString(roomInfo.userRole),
+    teacherName: teacherInfo?.userName || '',
+    teacherAcceptHandsUp,
     userList,
     acceptedUserList,
     rosterUserList,
@@ -713,6 +733,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
 export const useReportContext = (): ReportContext => {
   const core = useCoreContext()
   return {
+    //TODO: why?
     eduManger: core.eduManager
   }
 }

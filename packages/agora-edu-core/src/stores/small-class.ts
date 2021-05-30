@@ -502,14 +502,14 @@ export class SmallClassStore {
   }
 
   @action.bound
-  async toggleCamera(userUuid:string) {
+  async toggleCamera(userUuid:string, enabled: boolean) {
     if(!this.rosterUserExists(userUuid))return
 
     const sceneStore = this.appStore.sceneStore
     const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
     if (targetStream) {
       const isLocal = sceneStore.roomInfo.userUuid === userUuid
-      if (targetStream.hasVideo) {
+      if (!enabled) {
         await sceneStore.muteVideo(userUuid, isLocal)
       } else {
         await sceneStore.unmuteVideo(userUuid, isLocal)
@@ -518,14 +518,14 @@ export class SmallClassStore {
   }
 
   @action.bound
-  async toggleMic(userUuid:string) {
+  async toggleMic(userUuid:string, enabled: boolean) {
     if(!this.rosterUserExists(userUuid))return
 
     const sceneStore = this.appStore.sceneStore
     const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
     if (targetStream) {
       const isLocal = sceneStore.roomInfo.userUuid === userUuid
-      if (targetStream.hasAudio) {
+      if (!enabled) {
         await sceneStore.muteAudio(userUuid, isLocal)
       } else {
         await sceneStore.unmuteAudio(userUuid, isLocal)
@@ -537,6 +537,7 @@ export class SmallClassStore {
   async kick(userUuid:string) {
     if(!this.rosterUserExists(userUuid))return
     
+    //TODO
     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
       this.appStore.fireDialog('kick-dialog', {userUuid, roomUuid: this.roomInfo.roomUuid})
     }
