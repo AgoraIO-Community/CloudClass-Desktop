@@ -55,7 +55,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
     const {
         teacherAcceptHandsUp,
-        exitCoVideo
+        teacherRevokeCoVideo
     } = useHandsUpContext()
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
@@ -69,7 +69,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             case 'podium': {
                 if (user.onPodium) {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await exitCoVideo(user.uid)
+                        await teacherRevokeCoVideo(user.uid)
                     }
                 } else {
                     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
