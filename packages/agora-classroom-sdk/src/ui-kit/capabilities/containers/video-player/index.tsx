@@ -109,8 +109,11 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
   } = useUIStore()
 
   const {
-    teacherStream: userStream
+    studentStreams
   } = useStreamListContext()
+
+  const userStream = studentStreams[0]
+
   const {
     isHost
   } = useUserListContext()
