@@ -205,6 +205,7 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
+        scenarioType: roomInfoParams?.roomType
       })
     } else {
       this.eduManager = new EduManager({
@@ -219,6 +220,7 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
+        scenarioType: roomInfoParams?.roomType
       })
     }
 

@@ -16,7 +16,7 @@ import { reportService } from '../core/services/report-service';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
-import { getSDKDomain } from '../core/media-service/utils';
+import { getSDKDomain, setAppScenario } from '../core/media-service/utils';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -57,6 +57,7 @@ export class EduManager extends EventEmitter {
     config: EduConfiguration
   ) {
     super()
+    setAppScenario(config.scenarioType)
     this.config = config
     const buildOption: any = {
       eduManager: this,

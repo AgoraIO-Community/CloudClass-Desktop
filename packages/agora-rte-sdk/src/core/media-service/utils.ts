@@ -6,6 +6,10 @@ export const convertUid = (uid: any) => {
 
 export const paramsConfig = {"rtc.report_app_scenario":{"appScenario":0, "serviceType":0,"appVersion":"1.1.0"}}
 
+export const setAppScenario = (scenarioType?: number) => {
+  paramsConfig["rtc.report_app_scenario"].appScenario = scenarioType || 0;
+}
+
 export const getRegion = (region: string) => {
   const rtcRegions: Record<string, string> = {
     "CN": "GLOBAL",
