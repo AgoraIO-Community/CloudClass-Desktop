@@ -16,7 +16,7 @@ export const ChatMessage: FC<ChatMessageProps> = ({
   return (
     <div className="chat-message">
       <div className={`chat-message-${isOwn ? 'right' : 'left'}`}>
-        <div className="chat-message-username">{username} {role === '3' ? `(${transI18n('role.assistant')})` : ''}</div>
+        <div className="chat-message-username" title={username + (role === '3' ? `(${transI18n('role.assistant')})` : '')}>{username} {role === '3' ? `(${transI18n('role.assistant')})` : ''}</div>
         <div className={`chat-message-content ${isOwn ? 'blue' : 'ghost'}`}>
           {content}
         </div>
