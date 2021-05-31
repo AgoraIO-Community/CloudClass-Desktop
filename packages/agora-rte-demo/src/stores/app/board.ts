@@ -777,7 +777,6 @@ export class BoardStore {
     const resourceName = this.getResourceName(currentSceneState.contextPath)
     // const globalState = this.room.state.globalState as any
     // const materialList = get(globalState, 'materialList', []) as MaterialItem[]
-    this.resourcesList
     const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
     if (!isRootDir) {
       const item = this._resourcesList.find((item) => item.resourceName === resourceName)
@@ -1162,7 +1161,6 @@ export class BoardStore {
       }
       if (state.sceneState) {
         this.updatePageHistory()
-        this.autoFetchDynamicTask()
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList()
@@ -1171,6 +1169,12 @@ export class BoardStore {
       }
       if (state.globalState) {
         this.updateCourseWareList()
+        BizLogger.info(`[board] updateCourseWareList done`)
+      }
+
+      if(state.sceneState) {
+        BizLogger.info(`[board] begin autoFetchDynamicTask`)
+        this.autoFetchDynamicTask()
       }
     })
     BizLogger.info("[breakout board] join", data)
