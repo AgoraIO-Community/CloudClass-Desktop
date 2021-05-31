@@ -4,9 +4,9 @@ import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-cor
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
-import { Modal } from '~ui-kit/components/modal'
+import { Modal, transI18n } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
-import { transI18n } from '~components/i18n';
+// import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
     const ref = useRef<HTMLDivElement | null>(null)

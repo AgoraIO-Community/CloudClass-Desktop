@@ -6,14 +6,36 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+const dayjs = require('dayjs')
+const {DefinePlugin} = require('webpack')
 const autoprefixer = require('autoprefixer')
 const tailwindcss = require('tailwindcss')
-
-const config = require('dotenv').config().parsed
 
 const packageInfo = require('./package.json')
 
 const swSrcPath = packageInfo.swSrcPath
+
+let version = packageInfo.version
+let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
+if(apaasBuildEnv) {
+  // const date = dayjs().format('YYMMDD')
+  // const translator = short()
+  // const hash = translator.new()
+  version = `${packageInfo.version}`
+  // if(apaasBuildEnv === 'test') {
+  //   version=`test-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'preprod') {
+  //   version=`preprod-${packageInfo.version}`
+  // } else if(apaasBuildEnv === 'prod') {
+  //   version=`${packageInfo.version}`
+  // }
+}
+
+const config = require('dotenv').config().parsed
+
+// const packageInfo = require('./package.json')
+
+// const swSrcPath = packageInfo.swSrcPath
 
 const babelConfig = packageInfo.babel
 
@@ -35,13 +57,14 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".css"],
+    extensions: [".ts", ".tsx", ".js", "*.jsx"],
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
-      '~components': path.resolve(__dirname, 'src/ui-kit/components'),
-      '~styles': path.resolve(__dirname, 'src/ui-kit/styles'),
-      '~utilities': path.resolve(__dirname, 'src/ui-kit/utilities'),
+      ['@']: path.resolve(__dirname, 'src'),
+      '~core': path.resolve(__dirname, 'src/core'),
+      '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+      '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
+      '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
+      '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
       '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
       '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
       '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
@@ -54,7 +77,15 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts(x)?$/,
+        test: /\.ts(x)?$/i,
+        include: [
+          path.resolve("src"),
+          path.resolve(__dirname, '../agora-rte-sdk/src'),
+          path.resolve(__dirname, '../agora-edu-core/src'),
+          path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+          path.resolve(__dirname, '../agora-plugin-gallery/src'),
+          path.resolve(__dirname, '../agora-widget-gallery/src'),
+        ],
         use: [
           {
             loader: "babel-loader",
@@ -72,33 +103,52 @@ module.exports = {
             }
           }
         ],
-        exclude: /node_modules/,
+        exclude: /node_modules|(\.(stories.ts)x?$)/,
+        // exclude: [
+        //   // path.resolve('node_modules'),
+        //   {
+        //     test: /\.stories.ts?x$/i,
+        //   }
+        // ]
       },
       {
-        test: /\.css$/i,
+        test: /\.css$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, '../agora-rte-sdk/src'),
+          path.resolve(__dirname, '../agora-edu-core/src'),
+          path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+          path.resolve(__dirname, '../agora-plugin-gallery/src'),
+          path.resolve(__dirname, '../agora-widget-gallery/src'),
+          path.resolve(__dirname, '../../node_modules/rc-slider'),
+        ],
         use: [
-          {
-            loader: 'style-loader',
-          },
+          'style-loader',
+          // {
+          //   loader: 'style-loader',
+          // },
           {
             loader: 'css-loader',
+            options: {
+              importLoaders: 1 // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+            }
           },
           {
             loader: "postcss-loader",
             options: {
               postcssOptions: {
                 ident: 'postcss',
-                // config: path.resolve(__dirname, './postcss.config.js')
-                plugins: [
-                  tailwindcss(),
-                  autoprefixer()
-                ]
+                config: path.resolve(__dirname, './postcss.config.js')
+                // plugins: [
+                //   tailwindcss(),
+                //   autoprefixer()
+                // ]
               }
             }
           },
-          {
-            loader: 'thread-loader',
-          }
+          // {
+          //   loader: 'thread-loader',
+          // }
         ]
       },
       // {
@@ -182,24 +232,50 @@ module.exports = {
   plugins: [
     // new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin(),
-    new webpack.DefinePlugin({
+    new DefinePlugin({
+      // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
+      // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
+      REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
+      REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
       REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
-      REACT_APP_BUILD_VERSION: JSON.stringify(config.REACT_APP_BUILD_VERSION),
+      REACT_APP_BUILD_VERSION: JSON.stringify(version),
+      REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
       REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
       REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
+      REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty('REACT_APP_AGORA_APP_CERTIFICATE') ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`) : JSON.stringify(""),
+      REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
       REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
       REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
-      REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
       REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
-
+  
       REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(""),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(""),
-      // 'process': 'utils'
+      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME),
+      REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
+      AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
     }),
+    // new webpack.DefinePlugin({
+    //   REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
+    //   REACT_APP_BUILD_VERSION: JSON.stringify(config.REACT_APP_BUILD_VERSION),
+    //   REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
+    //   REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
+    //   REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
+    //   REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
+    //   REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
+    //   REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
+
+    //   REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(""),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(""),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(""),
+    //   REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(""),
+    //   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(""),
+    //   // 'process': 'utils'
+    // }),
     new HardSourceWebpackPlugin({
       root: process.cwd(),
       directories: [],

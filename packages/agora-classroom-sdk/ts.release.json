@@ -1,18 +1,45 @@
 {
   "compilerOptions": {
+    "target": "es6",
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "webworker"
+    ],
+    "outDir": "lib",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "~core": ["./src/core"],
       "~core/*": ["./src/core/*"],
-      "~ui-kit": ["./src/ui-kit"],
-      "~components": ["./src/ui-kit/components"],
-      "~scaffold": ["./src/ui-kit/scaffold"],
-      "~styles": ["./src/ui-kit/styles"],
-      "~utilities": ["./src/ui-kit/utilities"],
-      "~utilities/*": ["./src/ui-kit/utilities/*"],
-      "~components/*": ["./src/ui-kit/components/*"],
-      "~scaffold/*": ["./src/ui-kit/scaffold/*"],
+      "~ui-kit": ["../agora-scenario-ui-kit/src"],
+      "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
+      "~components": ["../agora-scenario-ui-kit/src/components"],
+      "~scaffold": ["../agora-scenario-ui-kit/src/scaffold"],
+      "~styles": ["../agora-scenario-ui-kit/src/styles"],
+      "~utilities": ["../agora-scenario-ui-kit/src/utilities"],
+      "~utilities/*": ["../agora-scenario-ui-kit/src/utilities/*"],
+      "~components/*": ["../agora-scenario-ui-kit/src/components/*"],
+      "~scaffold/*": ["../agora-scenario-ui-kit/src/scaffold/*"],
       "~capabilities/*": ["./src/ui-kit/capabilities/*"],
       "~capabilities": ["./src/ui-kit/capabilities"],
       "~capabilities/containers": ["./src/ui-kit/capabilities/containers"],
@@ -25,40 +52,15 @@
       "agora-plugin-gallery": ["../agora-plugin-gallery/src"]
     },
     "downlevelIteration": true,
-    "target": "es6",
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "webworker"
-    ],
     "diagnostics": false,
-    "outDir": "lib",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "forceConsistentCasingInFileNames": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "noFallthroughCasesInSwitch": true
+    "emitDeclarationOnly": true
   },
   "include": [
-    "./src/react-app-env.d.ts",
-    "./src/infra/api/index.tsx"
+    "src"
   ],
   "exclude": [
-    "./src/ui-kit/"
+    "node_modules",
+    "**/*/*.stories.tsx"
   ]
 }
