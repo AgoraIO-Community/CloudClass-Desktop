@@ -1,4 +1,4 @@
-import { BaseProps } from '@/ui-kit/components/interface/base-props'
+import { BaseProps } from '~ui-kit/components/interface/base-props'
 import { observer } from 'mobx-react'
 import { Card, Loading } from '~ui-kit'
 import { FC } from 'react'
