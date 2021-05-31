@@ -31,7 +31,7 @@
   "version": "1.0.0",
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
-    "release:classroom:sdk": "run-s build:apaas:sdk",
+    "release:classroom:sdk": "run-s build:proto build:apaas:sdk",
     "release:electron:mac": "run-s release:demo pack:electron:mac",
     "release:electron:win": "run-s release:demo pack:electron:win",
     "release:edu-core": "run-s build:rte-sdk build:edu-core",
@@ -41,7 +41,7 @@
     "build:apaas": "run-s build:proto build:demo",
     "build:proto": "lerna exec --scope=agora-edu-core npm run proto",
     "release:apaas:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
-    "build:apaas:sdk": "run-s build:proto release:apaas:sdk",
+    "build:apaas:sdk": "run-s release:classroom:sdk",
     "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core build:dev:plugin build:dev:widget run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-classroom-sdk yarn storybook",
     "dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run dev",
