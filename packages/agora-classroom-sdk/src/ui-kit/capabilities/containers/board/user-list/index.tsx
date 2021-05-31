@@ -6,7 +6,7 @@ import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-r
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import { StudentRoster } from '@/ui-kit/components';
+import { StudentRoster } from '~ui-kit/components';
 import { KickDialog } from '../../dialog';
 import { useUIStore } from '@/infra/hooks';
 

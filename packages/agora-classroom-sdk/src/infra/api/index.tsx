@@ -1,5 +1,5 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { globalConfigs } from '@/ui-kit/utilities';
+import { globalConfigs } from '~ui-kit/utilities';
 import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';

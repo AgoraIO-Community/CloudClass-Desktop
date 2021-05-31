@@ -46,7 +46,7 @@ export const RoomChat = observer(() => {
   const isMounted = React.useRef<boolean>(true)
 
 
-  const refreshMessageList = useCallback(async () => {
+  const refreshMessageList = useCallback(async (args: any) => {
     const res = nextId !== 'last' && await getHistoryChatMessage({ nextId, sort: 0 })
     if (isMounted.current) {
       setNextID(get(res, 'nextId', 'last'))
@@ -87,7 +87,7 @@ export const RoomChat = observer(() => {
       uid={roomInfo.userUuid}
       messages={messageList}
       chatText={text}
-      onText={(textValue: string) => {
+      onText={(_, textValue: string) => {
         setText(textValue)
       }}
       onCollapse={() => {
@@ -95,11 +95,11 @@ export const RoomChat = observer(() => {
       }}
       onSend={handleSendText}
       showCloseIcon={isFullScreen}
-      onPullFresh={refreshMessageList}
+      onPullRefresh={refreshMessageList}
       unreadCount={unreadMessageCount}
-      onConversationPullFresh={() => {}}
-      onConversationText={() => {}}
-      onConversationSend={() => {}}
+      // onConversationPullFresh={() => {}}
+      // onConversationText={() => {}}
+      // onConversationSend={() => {}}
     />
   )
 })

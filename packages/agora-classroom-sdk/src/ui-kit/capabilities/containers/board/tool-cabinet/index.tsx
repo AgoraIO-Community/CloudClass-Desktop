@@ -1,4 +1,4 @@
-import { CabinetItem } from '@/ui-kit/components/toolbar/tool-cabinet'
+import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet'
 import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext, useScreenShareContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'

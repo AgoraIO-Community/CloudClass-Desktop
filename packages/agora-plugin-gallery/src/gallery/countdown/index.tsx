@@ -5,12 +5,17 @@ import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core'
-import { Button } from '../../gallery-ui-kit/components/button'
-import { Countdown } from '../../gallery-ui-kit/components/countdown'
-import { Input } from '../../gallery-ui-kit/components/input'
+import {
+  Button,
+  Countdown,
+  Input,
+  transI18n,
+  I18nProvider,
+  changeLanguage
+} from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
-import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
+// import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(() => {
   const pluginStore = usePluginStore()

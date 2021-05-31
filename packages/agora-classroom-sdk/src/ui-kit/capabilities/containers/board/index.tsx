@@ -1,5 +1,5 @@
 import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
-import { ZoomItemType } from '@/ui-kit/components'
+import { ZoomItemType } from '~ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback, useMemo } from 'react'

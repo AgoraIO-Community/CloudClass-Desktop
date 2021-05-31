@@ -1,4 +1,4 @@
-import { Aside } from '@/ui-kit/components';
+import { Aside } from '~ui-kit/components';
 import { Story } from '@storybook/react';
 
 export const RoomChatStory: Story<any> = () => {

@@ -90,7 +90,14 @@ const isProd = process.env.ENV === 'production';
 const addStyleLoader = () => (config) => {
   config.module.rules.push({
     test: /\.css$/,
-    include: path.resolve(__dirname, 'src'),
+    include: [
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, '../agora-rte-sdk/src'),
+      path.resolve(__dirname, '../agora-edu-core/src'),
+      path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+      path.resolve(__dirname, '../agora-plugin-gallery/src'),
+      path.resolve(__dirname, '../agora-widget-gallery/src'),
+    ],
     use: [
       // No need for "css-loader" nor "style-loader"
       // for CRA will later apply them anyways.
@@ -301,6 +308,7 @@ const webpackConfig = override(
     path.resolve("src"),
     path.resolve(__dirname, '../agora-rte-sdk/src'),
     path.resolve(__dirname, '../agora-edu-core/src'),
+    path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
     path.resolve(__dirname, '../agora-plugin-gallery/src'),
     path.resolve(__dirname, '../agora-widget-gallery/src'),
   ]),
@@ -336,10 +344,10 @@ const webpackConfig = override(
   addWebpackAlias({
     ['@']: path.resolve(__dirname, 'src'),
     '~core': path.resolve(__dirname, 'src/core'),
-    '~ui-kit': path.resolve(__dirname, 'src/ui-kit'),
-    '~components': path.resolve(__dirname, 'src/ui-kit/components'),
-    '~styles': path.resolve(__dirname, 'src/ui-kit/styles'),
-    '~utilities': path.resolve(__dirname, 'src/ui-kit/utilities'),
+    '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+    '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
+    '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
+    '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
     '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
     '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
     '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),

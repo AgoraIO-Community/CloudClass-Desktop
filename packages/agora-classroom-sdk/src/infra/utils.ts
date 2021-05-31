@@ -8,7 +8,7 @@ import { ApplianceNames, Room } from "agora-edu-core"
 import { agoraCaches } from "./web-download.file"
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { transI18n } from '@/ui-kit/components/i18n';
+import { transI18n } from '~ui-kit';
 
 export enum TimeFormatType {
   Timeboard,

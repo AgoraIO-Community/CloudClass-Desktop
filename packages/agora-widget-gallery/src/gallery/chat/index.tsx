@@ -1,4 +1,4 @@
-import { Chat, SimpleChat } from './components/chat'
+import { Chat, SimpleChat, I18nProvider } from '~ui-kit'
 import * as React from 'react';
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { get } from 'lodash';
@@ -8,8 +8,9 @@ import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import {AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
-import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';
-import { I18nProvider } from './components/i18n';
+import { ChatEvent, ChatListType, Conversation } from '~ui-kit/components/chat/interface';
+// import { ChatEvent, ChatListType, Conversation, Message } from '~ui-kit';
+// import { I18nProvider } from './components/i18n';
 
 const App = observer(() => {
   const pluginStore = usePluginStore()

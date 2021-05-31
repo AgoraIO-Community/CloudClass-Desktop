@@ -16,7 +16,7 @@ import { Widget } from '~capabilities/containers/widget'
 import { useLayoutEffect } from 'react'
 import { useUIStore } from '@/infra/hooks'
 
-import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
+import { ToastContainer } from "~capabilities/containers/toast"
 
 
 export const MidClassScenario = observer(() => {

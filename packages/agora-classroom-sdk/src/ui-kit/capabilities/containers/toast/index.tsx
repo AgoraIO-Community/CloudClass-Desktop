@@ -2,7 +2,7 @@ import { observer } from 'mobx-react'
 import { Toast } from '~ui-kit'
 import { useGlobalContext, useRoomContext } from 'agora-edu-core'
 import { useEffect, useRef } from 'react'
-import { transI18n } from '@/ui-kit/components'
+import { transI18n } from '~ui-kit/components'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
 import { useUIStore } from '@/infra/hooks'
 

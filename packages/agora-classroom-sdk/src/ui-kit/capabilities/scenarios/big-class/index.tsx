@@ -9,14 +9,13 @@ import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
-import { RoomChat } from '@/ui-kit/capabilities/containers/room-chat'
+import { RoomChat } from '~capabilities/containers/room-chat'
 import './style.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React, { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
-import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
+import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
-
 
 
 export const BigClassScenario = observer(() => {

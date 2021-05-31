@@ -1,8 +1,8 @@
 import { AppRouteComponent, routesMap } from "@/infra/router"
 import { HomeStore } from "@/infra/stores/app/home"
 import { BizPageRouter } from "@/infra/types"
-import { ToastContainer } from "@/ui-kit/capabilities/containers/toast"
-import { AppPluginContainer } from "@/ui-kit/capabilities/containers/ext-app"
+import { ToastContainer } from "~capabilities/containers/toast"
+import { AppPluginContainer } from "~capabilities/containers/ext-app"
 import { AppStoreConfigParams, AppStoreInitParams, useStorageSWContext } from 'agora-edu-core'
 import {I18nProvider} from '~ui-kit'
 import { RoomParameters } from '../api/declare'

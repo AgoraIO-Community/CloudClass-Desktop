@@ -116,6 +116,7 @@ export const PretestContainer = observer(() => {
                 btnId="device_assert"
             >
                 <Pretest
+                    //@ts-ignore
                     pretestChannel={pretestNoticeChannel}
                     speakerTestUrl={"https://webdemo.agora.io/pretest_audio.mp3"}
                     isMirror={isMirror}
