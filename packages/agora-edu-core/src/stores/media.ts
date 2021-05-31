@@ -216,12 +216,12 @@ export class MediaStore {
   
 
   get pretestNotice () {
-    return this.appStore.uiStore.pretestNotice$
+    return this.appStore.pretestNotice$
   }
 
-  get uiStore() {
-    return this.appStore.uiStore;
-  }
+  // get uiStore() {
+  //   return this.appStore.uiStore;
+  // }
 
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
@@ -239,8 +239,8 @@ export class MediaStore {
             id: uuidv4()
           })
         }
-        if (!this.uiStore.toast$.isStopped) {
-          this.uiStore.fireToast(notice)
+        if (!this.appStore.toast$.isStopped) {
+          this.appStore.fireToast(notice)
         }
       }
       switch(evt.resource) {
@@ -322,7 +322,7 @@ export class MediaStore {
       // const prevLength = this.appStore.pretestStore._microphoneList.length
       await this.appStore.pretestStore.init({ audio: true})
       // const latestLength = this.appStore.pretestStore._microphoneList.length
-      // latestLength > prevLength && this.appStore.roomStore.joining && this.uiStore.fireToast('detect_new_device_in_room')
+      // latestLength > prevLength && this.appStore.roomStore.joining && this.appStore.fireToast('detect_new_device_in_room')
       // await this.appStore.deviceStore.init({ audio: true })
     }, delay))
     this.mediaService.on('video-device-changed', debounce(async (info: any) => {
@@ -359,12 +359,12 @@ export class MediaStore {
       // const prevLength = this.appStore.pretestStore._cameraList.length
       await this.appStore.pretestStore.init({ video: true})
       // const latestLength = this.appStore.pretestStore._cameraList.length
-      // latestLength > prevLength && this.appStore.roomStore.joining && this.uiStore.fireToast('detect_new_device_in_room')
+      // latestLength > prevLength && this.appStore.roomStore.joining && this.appStore.fireToast('detect_new_device_in_room')
     }, delay))
     this.mediaService.on('audio-autoplay-failed', () => {
       if (!this.autoplay) {
         this.autoplay = true
-        this.appStore.uiStore.showAutoplayNotification()
+        this.appStore.fireToast('toast.autoplay')
       }
     })
     this.mediaService.on('user-published', (evt: any) => {
@@ -446,7 +446,7 @@ export class MediaStore {
     })
     this.mediaService.on('local-audio-volume', (evt: any) => {
       const {totalVolume} = evt
-      if (this.appStore.uiStore.isElectron) {
+      if (this.appStore.isElectron) {
         this.totalVolume = +Number(((totalVolume / 255) * 100)).toFixed(3)
       } else {
         this.totalVolume = totalVolume * 100;
@@ -491,7 +491,7 @@ export class MediaStore {
         if (userUuid && streamUuid && userRole !== 'student') {
           if (!!hasAudio && micDevice === 0 
             || !!hasVideo && cameraDevice === 0) {
-              this.uiStore.fireToast('pretest.teacher_device_may_not_work')
+              this.appStore.fireToast('pretest.teacher_device_may_not_work')
           }
         }
       }
@@ -530,10 +530,10 @@ export class MediaStore {
 
       if (roomJoined && roomUuid && userUuid && cameraEduStream) {
         if (localCameraDeviceState === 0 && !!cameraEduStream.hasVideo === true) {
-          this.uiStore.fireToast('pretest.device_not_working')
+          this.appStore.fireToast('pretest.device_not_working')
         }
         if (localMicrophoneDeviceState === 0 && !!cameraEduStream.hasAudio === true) {
-          this.uiStore.fireToast('pretest.device_not_working')
+          this.appStore.fireToast('pretest.device_not_working')
         }
       }
     })

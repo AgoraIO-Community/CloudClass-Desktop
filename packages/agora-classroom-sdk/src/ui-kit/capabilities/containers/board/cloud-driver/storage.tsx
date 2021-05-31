@@ -1,11 +1,11 @@
-import { useBoardContext } from 'agora-edu-core';
+import { useCloudDriveContext } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
 
 export const StorageContainer = observer(() => {
 
-  const {publicResources, openCloudResource} = useBoardContext()
+  const {publicResources, openCloudResource} = useCloudDriveContext()
 
   return (
     <Table>

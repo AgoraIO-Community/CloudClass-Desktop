@@ -11,10 +11,10 @@ export const ToolCabinetContainer = observer(() => {
     const {
         setLaserPoint,
         currentSelector,
-        canSharingScreen,
     } = useBoardContext()
 
     const {
+        canSharingScreen,
         startOrStopSharing
     } = useScreenShareContext()
 

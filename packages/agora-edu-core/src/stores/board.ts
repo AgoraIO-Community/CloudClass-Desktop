@@ -1387,9 +1387,9 @@ export class BoardStore extends ZoomController {
     //   this.setFollow(follow)
     //   if (this.userRole === EduRoleTypeEnum.student) {
     //     if (this.follow) {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_lock'))
+    //       this.appStore.fireToast('toast.whiteboard_lock'))
     //     } else {
-    //       this.appStore.uiStore.fireToast('toast.whiteboard_unlock'))
+    //       this.appStore.fireToast('toast.whiteboard_unlock'))
     //     }
     //   }
     // }
@@ -1400,7 +1400,7 @@ export class BoardStore extends ZoomController {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false
       if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
         const notice = hasPermission ? 'toast.teacher_accept_whiteboard' : 'toast.teacher_cancel_whiteboard'
-        this.appStore.uiStore.fireToast(notice)
+        this.appStore.fireToast(notice)
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -1654,9 +1654,9 @@ export class BoardStore extends ZoomController {
   async grantBoardPermission(userUuid: string) {
     try {
       this.boardClient.grantPermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.granted_board_success`)
+      this.appStore.fireToast(`toast.granted_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_authorize_whiteboard', {reason: `${err.message}`})
     }
   }
 
@@ -1664,9 +1664,9 @@ export class BoardStore extends ZoomController {
   async revokeBoardPermission(userUuid: string) {
     try {
       this.boardClient.revokePermission(userUuid)
-      this.appStore.uiStore.fireToast(`toast.revoke_board_success`)
+      this.appStore.fireToast(`toast.revoke_board_success`)
     } catch (err) {
-      this.appStore.uiStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
+      this.appStore.fireToast('toast.failed_to_deauthorize_whiteboard', {reason: `${err.message}`})
     }
   }
 

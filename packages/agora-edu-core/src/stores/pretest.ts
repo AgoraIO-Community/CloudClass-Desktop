@@ -349,7 +349,7 @@ export class PretestStore {
                 id: uuidv4()
               })
             }
-            this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
           }
 
           if (this.isElectron && !list.length) {
@@ -383,7 +383,7 @@ export class PretestStore {
                 id: uuidv4()
               })
             }
-            this.appStore.uiStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
           }
           if (this.isElectron && !list.length) {
             this.muteMicrophone()
@@ -720,7 +720,7 @@ export class PretestStore {
 
   @computed
   get speakerLabel(): string {
-    if (this.appStore.uiStore.isElectron) {
+    if (this.appStore.isElectron) {
       return this.appStore.eduManager.mediaService.getSpeakerLabel()
     }
     return '默认'

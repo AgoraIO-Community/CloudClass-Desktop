@@ -8,6 +8,7 @@ import { get } from 'lodash';
 import { EduStream, EduUser, EduVideoSourceType, EduRoleTypeEnum, RemoteUserRenderer, LocalUserRenderer } from 'agora-rte-sdk';
 import { EduMediaStream } from './scene';
 import { BusinessExceptions } from '../utilities/biz-error';
+import { DeviceStateEnum } from '../types';
 
 
 export type RosterUserInfo = {
@@ -16,8 +17,8 @@ export type RosterUserInfo = {
   online: boolean,
   isLocal: boolean,
   onPodium: boolean,
-  micDevice: boolean,
-  cameraDevice: boolean,
+  micDevice: DeviceStateEnum,
+  cameraDevice: DeviceStateEnum,
   cameraEnabled: boolean,
   chatEnabled: boolean,
   micEnabled: boolean,
@@ -168,12 +169,6 @@ export class SmallClassStore {
     return !!this.acceptedList.find((it: any) => it.userUuid=== meUid)
   }
 
-  @computed
-  get coVideoUsers() {
-    const userList = get(this.roomStore, 'roomProperties.coVideo.users', [])
-    return userList
-  }
-
   get roomInfo() {
     return this.roomStore.roomInfo
   }
@@ -276,7 +271,7 @@ export class SmallClassStore {
     } catch (err) {
       const error = GenericErrorWrapper(err)
       const {result, reason} = BusinessExceptions.getErrorText(error)
-      this.appStore.uiStore.fireToast(result, {reason})
+      this.appStore.fireToast(result, {reason})
       console.log('studentHandsUp err', error)
       throw error;
     }
@@ -307,7 +302,7 @@ export class SmallClassStore {
     } catch(err) {
       const error = GenericErrorWrapper(err)
       const {result, reason} = BusinessExceptions.getErrorText(error)
-      this.appStore.uiStore.fireToast(result, {reason})
+      this.appStore.fireToast(result, {reason})
       console.log('teacherAcceptHandsUp err', error)
       throw error;
     }
@@ -325,6 +320,21 @@ export class SmallClassStore {
         toUserUuid: userUuid
       })
     }
+  }
+
+  @action.bound
+  async teacherRevokeCoVideo(userUuid: string) {
+    return await eduSDKApi.revokeCoVideo({
+      roomUuid: this.roomUuid,
+      toUserUuid: userUuid
+    })
+  }
+
+  @action.bound
+  async studentExitCoVideo() {
+    return await eduSDKApi.revokeCoVideo({
+      roomUuid: this.roomUuid
+    })
   }
 
   @action.bound
@@ -388,7 +398,7 @@ export class SmallClassStore {
   }
 
   @computed
-  get localUserRosterInfo() {
+  get localUserRosterInfo(): RosterUserInfo {
     const localUserUuid = this.roomStore.roomInfo.userUuid 
     const user = this.roomStore.sceneStore.userList.find((user: EduUser) => user.userUuid === localUserUuid)
     if (user) {
@@ -411,6 +421,8 @@ export class SmallClassStore {
       stars: 0,
       hasStream: true,
       disabled: false,
+      chatEnabled: false,
+      canCoVideo: false
     }
   }
 
@@ -453,7 +465,7 @@ export class SmallClassStore {
     const userList = this.studentInfoList
       .filter((user: EduUser) => ['audience'].includes(user.role))
       .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: any[], user: EduUser) => {
+      .reduce((acc: RosterUserInfo[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
         const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
         acc.push(rosterUser)
@@ -468,6 +480,67 @@ export class SmallClassStore {
 
   reset() {
 
+  }
+
+  rosterUserExists(userUuid:string):boolean {
+    const userList = this.rosterUserList
+    const user = userList.find((user: RosterUserInfo) => user.uid === userUuid)
+    return !!user
+  }
+
+  @action.bound
+  async toggleWhiteboardPermission(userUuid:string, grantWhiteboardPermission: boolean) {
+    if(!this.rosterUserExists(userUuid))return
+
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+      if (!grantWhiteboardPermission) {
+        await this.appStore.boardStore.revokeBoardPermission(userUuid)
+      } else {
+        await this.appStore.boardStore.grantBoardPermission(userUuid)
+      }
+    }
+  }
+
+  @action.bound
+  async toggleCamera(userUuid:string, enabled: boolean) {
+    if(!this.rosterUserExists(userUuid))return
+
+    const sceneStore = this.appStore.sceneStore
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (!enabled) {
+        await sceneStore.muteVideo(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteVideo(userUuid, isLocal)
+      }
+    }
+  }
+
+  @action.bound
+  async toggleMic(userUuid:string, enabled: boolean) {
+    if(!this.rosterUserExists(userUuid))return
+
+    const sceneStore = this.appStore.sceneStore
+    const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid)
+    if (targetStream) {
+      const isLocal = sceneStore.roomInfo.userUuid === userUuid
+      if (!enabled) {
+        await sceneStore.muteAudio(userUuid, isLocal)
+      } else {
+        await sceneStore.unmuteAudio(userUuid, isLocal)
+      }
+    }
+  }
+
+  @action.bound
+  async kick(userUuid:string) {
+    if(!this.rosterUserExists(userUuid))return
+    
+    //TODO
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
+      this.appStore.fireDialog('kick-dialog', {userUuid, roomUuid: this.roomInfo.roomUuid})
+    }
   }
 
   @action.bound
@@ -532,7 +605,7 @@ export class SmallClassStore {
       }
       case 'kick-out': {
         if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
-          this.appStore.uiStore.fireDialog('kick-dialog', {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
+          this.appStore.fireDialog('kick-dialog', {userUuid: uid, roomUuid: this.roomInfo.roomUuid})
         }
         break;
       }
