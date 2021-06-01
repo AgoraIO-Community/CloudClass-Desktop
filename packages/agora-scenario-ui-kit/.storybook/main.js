@@ -9,8 +9,8 @@ const disableEsLint = (e) => {
 
 module.exports = {
   "stories": [
-    "../src/ui-kit/**/*.stories.mdx",
-    "../src/ui-kit/**/*.stories.@(js|jsx|ts|tsx)"
+    "../src/**/*.stories.mdx",
+    "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
   "addons": [
     "@storybook/addon-links",
@@ -75,13 +75,13 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve.alias,
       ['@']: path.resolve(__dirname, '../src'),
-      '~ui-kit': path.resolve(__dirname, '../src/ui-kit'),
-      '~components': path.resolve(__dirname, '../src/ui-kit/components'),
-      '~styles': path.resolve(__dirname, '../src/ui-kit/styles'),
-      '~utilities': path.resolve(__dirname, '../src/ui-kit/utilities'),
-      '~capabilities': path.resolve(__dirname, '../src/ui-kit/capabilities'),
-      '~capabilities/containers': path.resolve(__dirname, '../src/ui-kit/capabilities/containers'),
-      '~capabilities/hooks': path.resolve(__dirname, '../src/ui-kit/capabilities/hooks'),
+      '~ui-kit': path.resolve(__dirname, '../src'),
+      '~components': path.resolve(__dirname, '../src/components'),
+      '~styles': path.resolve(__dirname, '../src/styles'),
+      '~utilities': path.resolve(__dirname, '../src/utilities'),
+      '~capabilities': path.resolve(__dirname, '../src/capabilities'),
+      '~capabilities/containers': path.resolve(__dirname, '../src/capabilities/containers'),
+      '~capabilities/hooks': path.resolve(__dirname, '../src/capabilities/hooks'),
     }
   
     config.resolve.modules = [
