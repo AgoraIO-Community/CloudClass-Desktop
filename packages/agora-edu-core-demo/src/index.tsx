@@ -8,7 +8,7 @@ import { GlobalStorage } from '@/infra/utils';
 
 //@ts-ignore
 import { stopReportingRuntimeErrors } from "react-error-overlay";
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Premium } from './infra/monolithic/premium';
 import { BizPagePath } from '../../agora-edu-core/src/types';
 import { EduSDKController } from './infra/api/controller';
@@ -31,7 +31,7 @@ eduSDKApi.updateConfig({
 
 let controller = new EduSDKController()
 
-const params:AppStoreInitParams = {
+let params:AppStoreInitParams = {
   config: {
     rtcArea: "GLOBAL",
     rtmArea: "GLOBAL",
@@ -75,20 +75,67 @@ const params:AppStoreInitParams = {
   pretest: true,
 }
 const App = () => {
+
+  const [token, setToken] = useState<string>("")
+  const [appid, setAppId] = useState<string>("")
+  const [roomUuid, setRoomUuid] = useState<string>("")
+  const [userUuid, setUserUuid] = useState<string>("")
+
   
+  const onInitialize = useCallback(() => {
+    const dom = document.getElementById('classroom')
+    params.config.rtmToken = token
+    params.config.agoraAppId = appid
+    params.roomInfoParams!.roomUuid = roomUuid
+    params.roomInfoParams!.userUuid = userUuid
+    controller.create(
+      <CoreContextProvider params={params} dom={dom!} controller={controller}>
+        <Premium></Premium>
+      </CoreContextProvider>,
+      dom!,
+      () => {
+
+      }
+    )
+  }, [token, appid, roomUuid, userUuid])
+
   return (
-    <Premium></Premium>
+    <div className="container mx-auto md:flex h-full">
+        <div style={{
+            maxWidth: 'calc(.25rem * 64)'
+        }}>
+            <div className="md:flex md:flex-col w-full text-xs md:mt-4">
+              <div className="mb-3 md:space-y-2 w-full text-xs">
+                <label className="font-semibold text-gray-600 py-2">Token</label>
+                <input value={token} onChange={e => setToken(e.currentTarget.value)} placeholder="Enter rtm token" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <p className="text-red text-xs hidden">Please fill out this field.</p>
+              </div>
+              <div className="mb-3 md:space-y-2 w-full text-xs">
+                <label className="font-semibold text-gray-600 py-2">AppID</label>
+                <input value={appid} onChange={e => setAppId(e.currentTarget.value)} placeholder="Enter appid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <p className="text-red text-xs hidden">Please fill out this field.</p>
+              </div>
+              <div className="mb-3 md:space-y-2 w-full text-xs">
+                <label className="font-semibold text-gray-600 py-2">Room Uuid</label>
+                <input value={roomUuid} onChange={e => setRoomUuid(e.currentTarget.value)} placeholder="Enter room uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <p className="text-red text-xs hidden">Please fill out this field.</p>
+              </div>
+              <div className="mb-3 md:space-y-2 w-full text-xs">
+                <label className="font-semibold text-gray-600 py-2">User Uuid</label>
+                <input value={userUuid} onChange={e => setUserUuid(e.currentTarget.value)} placeholder="Enter user uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <p className="text-red text-xs hidden">Please fill out this field.</p>
+              </div>
+            </div>
+            <button className="bg-blue-500 text-white py-2 px-8" onClick={onInitialize}>init</button>
+        </div>
+        <div id="classroom" style={{
+            minWidth: 'calc(100% - (.25rem * 64))'
+        }}>
+        </div>
+    </div>
   )
 }
 
 const dom = document.getElementById('root')
 
-controller.create(
-  <CoreContextProvider params={params} dom={dom!} controller={controller}>
-      <App />
-  </CoreContextProvider>,
-  dom!,
-  () => {
-
-  }
-)
+ReactDOM.render(<App/>, dom)
