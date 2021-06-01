@@ -68,9 +68,11 @@
                 window.getCachePath ? window.getCachePath(callback) : callback(undefined)
 
                 const check = () => {
-                    let label = iframe.contentDocument.querySelector('#status-label')
-                    if(label && label.textContent.includes('Application Launch Success...')) {
-                        next()
+                    if(iframe.contentDocument) {
+                        let label = iframe.contentDocument.querySelector('#status-label')
+                        if(label && label.textContent.includes('Application Launch Success...')) {
+                            next()
+                        }
                     }
                     setTimeout(check, 1000)
                 }
