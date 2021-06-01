@@ -206,7 +206,9 @@ export const useRoomContext = (): RoomContext => {
     kickOutOnce,
     join,
     liveClassStatus,
-    roomProperties
+    roomProperties,
+    updateFlexProperties,
+    flexProperties
   } = useRoomStore()
 
   const {
@@ -246,7 +248,9 @@ export const useRoomContext = (): RoomContext => {
     queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
       return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
     },
-    isJoiningRoom
+    isJoiningRoom,
+    updateFlexRoomProperties: updateFlexProperties,
+    flexRoomProperties: flexProperties
   }
 }
 

@@ -557,6 +557,16 @@ export type RoomContext = {
      * @version v1.1.2
      */
     roomProperties: any
+    /**
+     * 更新flexProps
+     * @version v1.1.2
+     */
+    updateFlexRoomProperties: (properties: any, cause: any) => Promise<any>;
+    /**
+     * 获取flexProps
+     * @version v1.1.2
+     */
+    flexRoomProperties: any;
 }
 export type RoomDiagnosisContext = {
     /**

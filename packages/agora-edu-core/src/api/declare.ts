@@ -156,7 +156,8 @@ export type AppStoreConfigParams = {
   },
   recordUrl: string,
   extApps?: IAgoraExtApp[],
-  widgets?: {[key:string]: IAgoraWidget}
+  widgets?: {[key:string]: IAgoraWidget},
+  userFlexProperties?: {[key: string]: any}
 }
 
 export type LanguageEnum = "en" | "zh"
