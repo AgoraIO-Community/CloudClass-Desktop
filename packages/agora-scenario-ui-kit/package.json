@@ -41,6 +41,8 @@
     "storybook": "6.2.8",
     "node-downloader-helper": "1.0.17",
     "optimize-css-assets-webpack-plugin": "5.0.4",
-    "@types/classnames": "2.2.11"
+    "@types/classnames": "2.2.11",
+    "tailwindcss": "2.0.3",
+    "@tailwindcss/forms": "0.2.1"
   }
 }
