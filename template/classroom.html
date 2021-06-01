@@ -121,23 +121,27 @@
 
 
     const launchApplication = ({appId, cachePath, options}) => {
-      AgoraEduSDK.config({
-        appId,
-        cachePath
-      })
+      return new Promise((resolve, reject) => {
+        AgoraEduSDK.config({
+          appId,
+          cachePath
+        })
 
-      options["userUuid"] = options["rtmUid"]
-      
-      Object.assign(options, {
-        listener: (evt, args) => {
-          console.log("evt", evt, args)
-          window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
-        }
+        options["userUuid"] = options["rtmUid"]
+        
+        Object.assign(options, {
+          listener: (evt, args) => {
+            console.log("evt", evt, args)
+            window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
+          }
+        })
+        AgoraEduSDK.launch(
+          document.querySelector("#root1"), options
+        ).then(resolve).catch(reject)
       })
-      AgoraEduSDK.launch(
-        document.querySelector("#root1"), options
-      )
     }
+
+    let rootDom = null
 
     const collectPerformance = () => {
       if (performance === undefined) {
@@ -166,10 +170,37 @@
         `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`
       ].join('\r\n'))
 
-      if(!readyState.dom || !readyState.lib || !readyState.params) {
+      if(!rootDom) {
+        rootDom = document.querySelector("#root1")
+      }
+
+      if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom) {
         setTimeout(collectPerformance, 200)
       } else {
-        launchApplication(readyValue.params)
+        update_status([
+          `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+          `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+          `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+          `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+          `Application Launching...`
+        ].join('\r\n'))
+        launchApplication(readyValue.params).then(() => {
+            update_status([
+              `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+              `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+              `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+              `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+              `Application Launch Success...`
+            ].join('\r\n'))
+        }).catch((e) => {
+          update_status([
+            `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+            `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+            `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+            `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+            `Application Launch Failed: ${e.message}`
+          ].join('\r\n'))
+        })
       }
     }
 
@@ -184,7 +215,7 @@
       <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
     </div>
   </div>
-  <div class="footer">v1.1.1.8</div>
+  <div class="footer">v1.1.1.9</div>
   <div id="root1"></div>
   <script src="./edu_sdk.bundle.js"></script>
 </body>
