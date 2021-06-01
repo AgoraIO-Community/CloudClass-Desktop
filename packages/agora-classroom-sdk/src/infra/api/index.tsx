@@ -107,6 +107,7 @@ export type LaunchOption = {
   extApps?: IAgoraExtApp[] // app插件
   region?: AgoraRegion
   widgets?: {[key: string]: IAgoraWidget}
+  userFlexProperties?: {[key: string]: any} //用户自订属性
 }
 
 export type ReplayOption = {
@@ -254,7 +255,8 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets}
+          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
+          userFlexProperties: option.userFlexProperties
         },
         language: option.language,
         startTime: option.startTime,

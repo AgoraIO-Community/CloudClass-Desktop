@@ -85,7 +85,8 @@ export class EduSDKApi extends ApiBase {
     role: number,
     startTime?: number,
     duration?: number,
-    region?: string
+    region?: string,
+    userProperties?: Record<string, any>
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'http', 'preflight')
@@ -99,7 +100,8 @@ export class EduSDKApi extends ApiBase {
         startTime: params.startTime,
         userName: params.userName,
         duration: params.duration,
-        boardRegion: params.region
+        boardRegion: params.region,
+        userProperties: params.userProperties
       }
     })
     res.data.ts = res.ts
@@ -481,6 +483,18 @@ export class EduSDKApi extends ApiBase {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'DELETE',
+      data: {
+        properties,
+        cause
+      }
+    })
+    return res.data;
+  }
+
+  async updateFlexProperties(roomId: string, properties: any, cause: any) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${roomId}/properties`,
+      method: 'PUT',
       data: {
         properties,
         cause

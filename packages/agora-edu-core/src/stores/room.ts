@@ -300,6 +300,11 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
+  @computed
+  get flexProperties() {
+    return get(this.roomProperties, 'flexProps')
+  }
+
   @observable
   roomChatMessages: ChatMessage[] = []
 
@@ -1053,7 +1058,8 @@ export class RoomStore extends SimpleInterval {
         role: this.roomInfo.userRole,
         startTime: startTime,  // 单位：毫秒
         duration: duration,    // 秒
-        region: region
+        region: region,
+        userProperties: this.appStore.params.config.userFlexProperties
       })
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
@@ -2034,5 +2040,9 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   stopJoining() {
     this.isJoiningRoom = false
+  }
+
+  async updateFlexProperties(properties: any, cause: any) {
+    return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
 }
