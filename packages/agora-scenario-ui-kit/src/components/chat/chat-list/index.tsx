@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
+import { Placeholder, t } from '~ui-kit';
 import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 
@@ -44,14 +45,17 @@ export const ChatList: FC<ChatListProps> = ({
 
     return (
         <ul className="chat-list" ref={chatHistoryRef} onScroll={handleScroll}>
-            {conversations.map(c => (
+            {!conversations || conversations.length === 0 ? (
+            <Placeholder placeholderDesc={t('placeholder.empty_quiz')} placeholderType={'noQuestion'} />
+                ) :
+            (conversations.map(c => (
                 <li className="chat-list-item" key={`${c.userUuid}`} onClick={() => {onClickConversation(c)}}>
                     <div className="avatar">
                         {c.unread ? <div className="unread-count"></div> : null}
                     </div>
                     <div className="name">{c.userName}</div>
                 </li>
-            ))}
+            )))}
         </ul>
     );
 };

@@ -1,5 +1,6 @@
 .layout {
   @apply flex;
+  background: #F9F9FC;
 }
 
 .layout-row {
@@ -26,4 +27,6 @@
   min-width: 18rem;
   border-left: none;
   @apply overflow-hidden;
+  gap: 4px;
+  transform: translateX(2px);
 }

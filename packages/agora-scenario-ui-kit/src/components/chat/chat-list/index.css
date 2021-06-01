@@ -1,3 +1,11 @@
+.chat-list {
+    height: calc(100% - 120px);
+    padding-bottom: 18px;
+    overflow-y: scroll;
+    width: 100%;
+    position: absolute;
+}
+
 .chat-list>.chat-list-item {
     height: 64px;
     display: flex;

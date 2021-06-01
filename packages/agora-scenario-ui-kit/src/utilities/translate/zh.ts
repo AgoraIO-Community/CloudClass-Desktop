@@ -74,6 +74,7 @@ export const zh = {
   'placeholder': {
     'muted_chat': '禁言中',
     'empty_chat': '还没有消息',
+    'empty_quiz': '暂无提问',
     'enable_chat_muted': '已开启学生禁言',
     'input_message': '请输入消息',
   },

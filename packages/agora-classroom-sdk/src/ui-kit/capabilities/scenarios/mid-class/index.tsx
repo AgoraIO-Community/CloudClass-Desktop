@@ -10,6 +10,7 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import './style.css'
+import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
@@ -69,7 +70,7 @@ export const MidClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="bg-white">
+      <Layout className="horizontal">
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
@@ -93,7 +94,7 @@ export const MidClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="mid-class-teacher"/>
           </div>
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>
       </Layout>
       <DialogContainer />

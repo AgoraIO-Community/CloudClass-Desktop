@@ -8,8 +8,9 @@ import cameraClose from './assets/camera-close.png';
 import noBody from './assets/no-body.png';
 import noFile from './assets/no-file.png';
 import cameraDisabled from './assets/camera-disabled.png';
+import noQuestion from './assets/noquestion.svg';
 
-type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled'
+type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
 
 const placeholderImgDict = {
   emptyHistory,
@@ -17,7 +18,8 @@ const placeholderImgDict = {
   cameraClose,
   noBody,
   noFile,
-  cameraDisabled
+  cameraDisabled,
+  noQuestion,
 }
 
 export interface PlaceholderProps extends BaseProps {

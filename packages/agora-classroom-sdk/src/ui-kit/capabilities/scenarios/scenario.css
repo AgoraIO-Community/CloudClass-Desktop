@@ -1,0 +1,21 @@
+.horizontal {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.chat-border {
+  border: 1px solid #ECECF1;
+  transform: translateY(-1px);
+}
+
+.whiteboard {
+  z-index: 0;
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  height: 100%; 
+  width: 100%;
+  border: 1px solid #ECECF1;
+  border-radius: 4px;
+  background: white;
+}

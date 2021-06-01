@@ -4,9 +4,9 @@
   flex: 1;
   border-radius: 4px;
   min-width: 300px;
-  margin-left: 2px;
+  /* margin-left: 2px; */
   display: flex;
-  @apply border-l border-gray-100;
+  /* @apply border-l border-gray-100; */
 }
 
 .chat-panel .tabs {

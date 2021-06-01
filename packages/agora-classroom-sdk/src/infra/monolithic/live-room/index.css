@@ -23,12 +23,9 @@ html, body, #root {
   object-fit: contain !important;
 }
 
-.edu-room .video-player {
-  margin-top: -2px;
-}
-
 .edu-room .layout {
   position: relative;
+  transform: translateY(2px);
 }
 
 .edu-room .tabs {
@@ -107,8 +104,8 @@ html, body, #root {
   left: 0; 
   height: 100%; 
   width: 100%;
-  border: 1px solid #ECECF1;
-  border-radius: 4px;
+  /* border: 1px solid #ECECF1; */
+  /* border-radius: 4px; */
 }
 
 .filename {
@@ -127,7 +124,7 @@ html, body, #root {
 }
 
 .video-marquee-pin ~ .board-box {
-  margin-top: 165px;
+  margin-top: 171px;
 }
 
 .board-box {
@@ -147,6 +144,16 @@ html, body, #root {
 
 .fullscreen .video-player {
   display: none;
+}
+
+.chat-header.with-tab {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  justify-content: flex-end;
+  flex: 1 1;
+  z-index: 9;
+  border: 0;
 }
 
 /* .small-class-chat {

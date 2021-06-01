@@ -11,6 +11,7 @@ import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
 import { RoomChat } from '~capabilities/containers/room-chat'
 import './style.css'
+import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React, { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
@@ -67,7 +68,7 @@ export const BigClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
-      <Layout className="bg-white">
+      <Layout className="horizontal">
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
@@ -90,7 +91,7 @@ export const BigClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="big-class-teacher"/>
           </div>
-          <Widget className="chat-panel" widgetComponent={chatWidget}/>
+          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>
       </Layout>
       <DialogContainer />

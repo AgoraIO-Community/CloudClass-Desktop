@@ -37,7 +37,7 @@
     "release:electron:win": "run-s release:demo pack:electron:win",
     "release:edu-core": "run-s build:rte-sdk build:edu-core",
     "release:demo": "run-s build:apaas",
-    "dev": "run-s build:dev:rte-sdk build:dev:edu-core build:widget build:dev:widget build:dev:plugin run:demo",
+    "dev": "run-s build:proto run:demo",
     "dev:apaas": "run-s build:proto run:demo",
     "build:apaas": "run-s build:proto build:demo",
     "build:proto": "lerna exec --scope=agora-edu-core npm run proto",

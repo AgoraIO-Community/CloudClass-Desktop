@@ -632,7 +632,7 @@
   font-size: 22px;
 }
 .tabs-tab + .tabs-tab {
-  margin: 0 0 0 44px;
+  margin: 0 0 0 30px;
 }
 .tabs-content {
   display: flex;

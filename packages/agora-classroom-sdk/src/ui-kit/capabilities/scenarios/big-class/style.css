@@ -57,15 +57,9 @@
 }
 
 .big-class-aside .chat-panel {
-  transform: translateX(2px);
+  /* transform: translateX(2px);
   right: 0;
-  bottom: 0;
-}
-
-.bg-white {
-  height: 100%;
-  padding-top: 2px;
-  box-sizing: border-box;
+  bottom: 0; */
 }
 
 .big-class-teacher {
@@ -84,8 +78,4 @@
   opacity: 1;
   transform: scale(1);
   transition: .5s;
-}
-
-.edu-room .video-player {
-  margin-top: -2px !important;
 }

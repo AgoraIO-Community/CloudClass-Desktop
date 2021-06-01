@@ -23,14 +23,14 @@
   opacity: 0;
   transform: scale(0.9);
   transition: .5s;
-  border-bottom: 2px solid white;
+  /* border-bottom: 2px solid white; */
 }
 
 .edu-room .video-player.teacher-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: .5s;
-  border-bottom: 2px solid white;
+  /* border-bottom: 2px solid white; */
   margin-top: 0px !important
 }
 
@@ -51,9 +51,9 @@
 }
 
 .one-class-aside .chat-panel {
-  transform: translateX(2px);
-  right: 0;
-  bottom: 0;
+  /* transform: translateX(2px); */
+  /* right: 0; */
+  /* bottom: 0; */
 }
 
 .edu-room .video-player.student-1v1 {
@@ -63,15 +63,9 @@
   margin-top: -2px !important;
 }
 
-.bg-white {
-  height: 100%;
-  padding-top: 2px;
-  box-sizing: border-box;
-}
-
-.edu-room .video-player {
+/* .edu-room .video-player {
   margin-top: 0px !important;
-}
+} */
 
 .full-screen-chat {
   position: fixed;
