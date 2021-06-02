@@ -277,6 +277,10 @@ export const en = {
     'camera_error': 'Device exception, camera is unplugged or occupied and cannot be used!',
     'microphone_error': 'Device exception, microphone is unplugged or occupied and cannot be used!',
     'mirror': 'mirror',
+    'beauty': 'beauty',
+    'whitening': 'Whitening',
+    'buffing': 'Buffing',
+    'ruddy': 'Ruddy'
   },
   'tool': {
     'board_name': 'Whiteboard',

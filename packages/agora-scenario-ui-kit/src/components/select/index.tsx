@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import ReactSelect from 'react-select'
 
 import './index.css'
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 
 export type SelectOption = {
     label: string;
