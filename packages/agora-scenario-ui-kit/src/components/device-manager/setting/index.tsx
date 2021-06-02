@@ -5,6 +5,7 @@ import { Select } from '~components/select'
 import { Slider } from '~components/slider'
 import './index.css';
 import { t } from '~components/i18n';
+import { CheckBox } from '~ui-kit/components/table';
 interface DeviceProps {
     deviceId: string;
     label: string;
@@ -21,9 +22,16 @@ export interface SettingProps extends BaseProps {
     microphoneVolume?: number; // 麦克风音量
     hasSpeakerVolume?: boolean; // 是否有扬声器音量slider
     speakerVolume?: number; // 扬声器音量
+    isNative?: boolean; // 是否原生
+    isBeauty?: boolean; // 是否开启美颜
+    whitening?: number; // 美白
+    buffing?: number; // 磨皮
+    ruddy?: number; // 红润
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
     onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
+    onSelectBeauty?: (isBeauty: boolean) => void;
+    onChangeBeauty?: (beautyType: string, value: number) => void;
 }
 
 export const Setting: FC<SettingProps> = ({
@@ -37,9 +45,16 @@ export const Setting: FC<SettingProps> = ({
     microphoneVolume = 50,
     hasSpeakerVolume = true,
     speakerVolume = 50,
+    isNative = true,
+    isBeauty = true,
+    whitening = 50,
+    buffing = 50,
+    ruddy = 50,
     onChangeDevice = (deviceType, value) => {},
     onChangeAudioVolume = (deviceType, value) => {},
     onSelectDevice = (deviceType, value) => {},
+    onSelectBeauty = (isBeauty) => {},
+    onChangeBeauty = (beautyType, value) => {},
     className,
     ...restProps
 }) => {
@@ -53,7 +68,30 @@ export const Setting: FC<SettingProps> = ({
     return (
         <div className={cls} {...restProps} style={{width: 318}}>
             <div className="device-choose">
-                <div className="device-title">{t('device.camera')}</div>
+                <div 
+                    className="device-title"
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <div>{t('device.camera')}</div>
+                    {isNative ? (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}>
+                            <CheckBox
+                                style={{ width: 12, height: 12 }}
+                                checked={isBeauty}
+                                onChange={(e: any) => {
+                                    onSelectBeauty(e.target.checked)
+                                }}
+                            />
+                            <span className="beauty-desc" style={{ marginLeft: 5 }}>{t('media.beauty')}</span>
+                        </div>
+                    ) : null}
+                </div>
                 <Select 
                     value={cameraId}
                     onChange={async value => {
@@ -62,6 +100,46 @@ export const Setting: FC<SettingProps> = ({
                     options={cameraOptions}
                 >
                 </Select>
+                {isNative && isBeauty ? (
+                    <>
+                        <div className="beauty-value">
+                            <span className="beauty-text">{t('media.whitening')}</span>
+                            <Slider
+                                min={0}
+                                max={100}
+                                defaultValue={whitening}
+                                step={1}
+                                onChange={async value => {
+                                    await onChangeBeauty('whitening', value)
+                                }}
+                            ></Slider>
+                        </div>
+                        <div className="beauty-value">
+                            <span className="beauty-text">{t('media.buffing')}</span>
+                            <Slider
+                                min={0}
+                                max={100}
+                                defaultValue={buffing}
+                                step={1}
+                                onChange={async value => {
+                                    await onChangeBeauty('buffing', value)
+                                }}
+                            ></Slider>
+                        </div>
+                        <div className="beauty-value">
+                            <span className="beauty-text">{t('media.ruddy')}</span>
+                            <Slider
+                                min={0}
+                                max={100}
+                                defaultValue={ruddy}
+                                step={1}
+                                onChange={async value => {
+                                    await onChangeBeauty('ruddy', value)
+                                }}
+                            ></Slider>
+                        </div>
+                    </>
+                ) : null}
             </div>
             <div className="device-choose">
                 <div className="device-title">{t('device.microphone')}</div>

@@ -21,6 +21,7 @@ interface DeviceProps {
 }
 
 export interface PretestProps extends BaseProps {
+    isBeauty?: boolean; // 是否美颜
     isMirror?: boolean; // 是否镜像
     cameraList?: DeviceProps[]; // 摄像头设备数组
     cameraId?: string; // 选中的摄像头Id
@@ -35,6 +36,7 @@ export interface PretestProps extends BaseProps {
     speakerLevel?: number;
     cameraError?: boolean; // 展示摄像头错误信息
     microphoneError?: boolean; // 展示麦克风错误信息
+    onSelectBeauty?: (isBeauty: boolean) => void;
     onSelectMirror?: (isMirror: boolean) => void;
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
@@ -45,6 +47,7 @@ export interface PretestProps extends BaseProps {
 }
 
 const PretestComponent: React.FC<PretestProps> = ({
+    isBeauty = true,
     isMirror = true,
     cameraList = [],
     cameraId,
@@ -62,10 +65,11 @@ const PretestComponent: React.FC<PretestProps> = ({
     className,
     videoComponent,
     volumeComponent,
-    onSelectMirror = (isMirror) => {},
-    onChangeDevice = (deviceType, value) => {},
-    onChangeAudioVolume = (deviceType, value) => {},
-    onSelectDevice = (deviceType, value) => {},
+    onSelectBeauty = (isBeauty) => { },
+    onSelectMirror = (isMirror) => { },
+    onChangeDevice = (deviceType, value) => { },
+    onChangeAudioVolume = (deviceType, value) => { },
+    onSelectDevice = (deviceType, value) => { },
     pretestChannel,
     ...restProps
 }) => {
@@ -111,11 +115,11 @@ const PretestComponent: React.FC<PretestProps> = ({
         [`${className}`]: !!className,
     })
 
-    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
-    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
-    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const cameraOptions = cameraList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
+    const microphoneOptions = microphoneList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
+    const speakerOptions = speakerList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
 
-    const [noticeMessage, setMessage] = useState<{id: string, type: 'video' | 'audio'}[]>([])
+    const [noticeMessage, setMessage] = useState<{ id: string, type: 'video' | 'audio' }[]>([])
 
     const removeMessages = (id: any) => setMessage(list => list.filter((it: any) => it.id !== id))
 
@@ -170,8 +174,8 @@ const PretestComponent: React.FC<PretestProps> = ({
         >
             <div className="popover-section">
                 <div className="popover-notice">
-                {props.title}
-                <div className="popover-triangle"></div>
+                    {props.title}
+                    <div className="popover-triangle"></div>
                 </div>
             </div>
         </CSSTransition>
@@ -179,27 +183,27 @@ const PretestComponent: React.FC<PretestProps> = ({
 
     const NoticeContainer = (props: any) => {
         return <>
-            {props.list.map((it: any) => 
+            {props.list.map((it: any) =>
                 <DeviceNotice key={it.id} title={transI18n('pretest.detect_new_device')}
-                   close={() => {
-                       props.removeMessages(it.id)
-                   }}
+                    close={() => {
+                        props.removeMessages(it.id)
+                    }}
                 ></DeviceNotice>
             )}
         </>
     }
 
     const PretestToastContainer = (props: any) => {
-        return <div style={{justifyContent: 'center', display: 'flex'}}>
-            {props.toastQueue.map((value: any, idx: number) => 
-            <Toast
-                style={{position:'absolute', top: (50 * (idx + 1)), zIndex: 9999}}
-                key={`${value.id}`}
-                type={value.type}
-                closeToast={() => {
-                    props.removeToast(`${value.id}`)
-                }}
-            >{transI18n(value.info)}</Toast>
+        return <div style={{ justifyContent: 'center', display: 'flex' }}>
+            {props.toastQueue.map((value: any, idx: number) =>
+                <Toast
+                    style={{ position: 'absolute', top: (50 * (idx + 1)), zIndex: 9999 }}
+                    key={`${value.id}`}
+                    type={value.type}
+                    closeToast={() => {
+                        props.removeToast(`${value.id}`)
+                    }}
+                >{transI18n(value.info)}</Toast>
             )}
         </div>
     }
@@ -208,24 +212,40 @@ const PretestComponent: React.FC<PretestProps> = ({
             <div className="pretest-toast">
                 <PretestToastContainer toastQueue={toastQueue} removeToast={removeToast} />
             </div>
-            <div className="pretest-left" style={{width: 318}}>
+            <div className="pretest-left" style={{ width: 318 }}>
                 <div className="device-choose">
                     <div className="device-title">
                         <span className="device-title-text">{t('media.camera')}</span>
-                        <span className="device-mirror-box">
-                            <CheckBox 
-                                style={{width: 12, height: 12}} 
-                                checked={isMirror}
-                                onChange={(e: any) => {
-                                    onSelectMirror(e.target.checked)
-                                }}
-                            /> 
-                            <span className="camera-mode" style={{marginLeft: 5}}>{t('media.mirror')}</span>
-                        </span>
+                        <div style={{
+                            display: 'flex'
+                        }}>
+                            {isNative ? (
+                                <span className="device-beauty-box" style={{ marginRight: 7 }}>
+                                    <CheckBox
+                                        style={{ width: 12, height: 12 }}
+                                        checked={isBeauty}
+                                        onChange={(e: any) => {
+                                            onSelectBeauty(e.target.checked)
+                                        }}
+                                    />
+                                    <span className="beauty-text" style={{ marginLeft: 5 }}>{t('media.beauty')}</span>
+                                </span>
+                            ) : null}
+                            <span className="device-mirror-box">
+                                <CheckBox
+                                    style={{ width: 12, height: 12 }}
+                                    checked={isMirror}
+                                    onChange={(e: any) => {
+                                        onSelectMirror(e.target.checked)
+                                    }}
+                                />
+                                <span className="camera-mode" style={{ marginLeft: 5 }}>{t('media.mirror')}</span>
+                            </span>
+                        </div>
                     </div>
                     <div className="select-section">
                         <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'video')} removeMessages={removeMessages} />
-                        <Select 
+                        <Select
                             value={cameraId}
                             onChange={async value => {
                                 await onChangeDevice('camera', value)
@@ -243,15 +263,15 @@ const PretestComponent: React.FC<PretestProps> = ({
                         <span className="device-title-text">{t('media.microphone')}</span>
                     </div>
                     <div className="select-section">
-                    <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'audio')} removeMessages={removeMessages} />
-                    <Select 
-                        value={microphoneId}
-                        onChange={async value => {
-                            await onChangeDevice('microphone', value)
-                        }}
-                        options={microphoneOptions}
-                    >
-                    </Select>
+                        <NoticeContainer list={noticeMessage.filter((it: any) => it.type === 'audio')} removeMessages={removeMessages} />
+                        <Select
+                            value={microphoneId}
+                            onChange={async value => {
+                                await onChangeDevice('microphone', value)
+                            }}
+                            options={microphoneOptions}
+                        >
+                        </Select>
                     </div>
                     {isNative ? (
                         <div className="device-volume">
@@ -268,7 +288,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         </div>
                     ) : ""}
                     <div className="device-volume-test">
-                        <Icon type="microphone-on-outline" color="#0073FF"/>
+                        <Icon type="microphone-on-outline" color="#0073FF" />
                         {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
                     </div>
                 </div>
@@ -278,7 +298,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                     </div>
                     {isNative ? (
                         <>
-                            <Select 
+                            <Select
                                 value={speakerId}
                                 onChange={async value => {
                                     await onChangeDevice('speaker', value)
@@ -301,13 +321,13 @@ const PretestComponent: React.FC<PretestProps> = ({
                         </>
                     ) : ""}
                     <div className="device-volume-test">
-                        <Icon type="speaker" color="#0073FF"/>
+                        <Icon type="speaker" color="#0073FF" />
                         <Volume
                             currentVolume={testLevel}
                             maxLength={33}
-                            style={{marginLeft: 6}}
+                            style={{ marginLeft: 6 }}
                         />
-                        <Button disabled={disable} type="secondary" style={{marginLeft: 10}} onClick={handleTestSpeakerClick}>{t('media.test_speaker')}</Button>
+                        <Button disabled={disable} type="secondary" style={{ marginLeft: 10 }} onClick={handleTestSpeakerClick}>{t('media.test_speaker')}</Button>
                     </div>
                 </div>
             </div>

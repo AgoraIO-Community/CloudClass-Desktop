@@ -273,6 +273,10 @@ export const zh = {
     'camera_error': '摄像头被拔出或摄像头已占用，无法显示视频！',
     'microphone_error': '麦克风被拔出或麦克风被占用，无法使用麦克风！',
     'mirror': '镜像模式',
+    'beauty': '美颜',
+    'whitening': '美白',
+    'buffing': '磨皮',
+    'ruddy': '红润'
   },
   'pretest': {
     'title': '设备检测',
