@@ -209,12 +209,21 @@ export class PretestStore {
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange)
   }
 
+  @action.bound
   onDeviceTestError(cb: DeviceErrorCallback) {
     this.error$ = new Subject<{type: 'video' | 'audio', error: boolean, info: string}>()
     this.error$.subscribe({
       next: (value: any) => cb(value)
     })
     return () => {
+      this.error$.complete()
+      this.error$ = null as any
+    }
+  }
+
+  @action.bound
+  stopDeviceTestError() {
+    if (this.error$) {
       this.error$.complete()
       this.error$ = null as any
     }

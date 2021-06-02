@@ -1334,6 +1334,75 @@ export type MediaContext = {
      * @version v1.1.2
      */
     changeMicrophoneVolume: (v: number) => Promise<void>
+    /**
+     * 开启预览，不能和pretestContext混用
+     * @version v1.1.2
+     */
+    startPreview: (onError: DeviceErrorCallback) => void;
+    /**
+     * 停止预览，不能和pretestContext混用
+     * @version v1.1.2
+     */
+    stopPreview: () => void;
+    /**
+     * 开启摄像头
+     * @version v1.1.2
+     */
+     startPretestCamera: () => Promise<void>,
+     /**
+      * 关闭摄像头
+      * @version v1.1.2
+      */
+     stopPretestCamera: () => void,
+     /**
+      * 开启麦克风
+      * @version v1.1.2
+      */
+     startPretestMicrophone: (payload: { enableRecording: boolean; }) => Promise<void>,
+     /**
+      * 关闭麦克风
+      * @version v1.1.2
+      */
+     stopPretestMicrophone: () => void,
+     /**
+      * 切换摄像头设备
+      * @param deviceId 摄像头设备ID
+      * @version v1.1.2
+      */
+     changeTestCamera: (deviceId: string) => Promise<void>,
+     /**
+      * 切换麦克风设备
+      * @param deviceId 麦克风设备ID
+      * @version v1.1.2
+      */
+     changeTestMicrophone: (deviceId: string) => Promise<void>,
+     /**
+      * 改变麦克风设备的音量
+      * @param deviceId 麦克风设备ID
+      * @version v1.1.2
+      */
+     changeTestMicrophoneVolume: (deviceId: string) => Promise<void>,
+     /**
+      * 改变扬声器设备的音量
+      * @param value 扬声器设备ID
+      * @version v1.1.2
+      */
+     changeTestSpeakerVolume: (value: any) => Promise<void>
+     /**
+      * 预置阶段摄像头渲染器
+      * @version v1.1.2
+      */
+     pretestCameraRenderer: LocalUserRenderer | undefined,
+     /**
+      * 设备频道通知
+      * @version v1.1.2
+      */
+     pretestNoticeChannel: Subject<any>;
+     /**
+      * 麦克风音量
+      * @version v1.1.2
+      */
+     microphoneLevel: number;
 }
 
 export type ReportContext = {

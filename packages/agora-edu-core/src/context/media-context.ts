@@ -1,12 +1,16 @@
 import { useCallback } from 'react';
 import { useCoreContext, usePretestStore } from './core';
-import { MediaContext } from './type';
+import { MediaContext, DeviceErrorCallback } from './type';
 
 export const useMediaContext = (): MediaContext => {
+    const appStore = useCoreContext();
+
     const {
-        mediaStore,
-        isElectron
-    } = useCoreContext();
+      mediaStore,
+      isElectron, 
+      pretestNotice$,
+    } = appStore
+
     const {
         cpuUsage,
         networkQuality,
@@ -30,8 +34,22 @@ export const useMediaContext = (): MediaContext => {
       changeCamera,
       changeMicrophone,
       changeSpeakerVolume,
+      stopDeviceTestError,
       changeMicrophoneVolume,
     } = pretestStore
+
+    const startPreview = (onError: DeviceErrorCallback) => {
+      const removeEffect = pretestStore.onDeviceTestError(onError)
+      pretestStore.init({ video: true, audio: true })
+      pretestStore.openTestCamera()
+      pretestStore.openTestMicrophone({ enableRecording: true })
+    }
+
+    const stopPreview = () => {
+      stopDeviceTestError()
+      pretestStore.closeTestCamera()
+      pretestStore.closeTestMicrophone()
+    }
   
     const changeDevice = useCallback(async (deviceType: string, value: any) => {
       switch (deviceType) {
@@ -82,5 +100,19 @@ export const useMediaContext = (): MediaContext => {
         changeMicrophoneVolume,
         changeCamera,
         changeMicrophone,
+        startPreview,
+        stopPreview,
+        startPretestCamera: pretestStore.openTestCamera,
+        stopPretestCamera: pretestStore.closeTestCamera,
+        startPretestMicrophone: pretestStore.openTestMicrophone,
+        stopPretestMicrophone: pretestStore.closeTestMicrophone,
+        changeTestCamera: pretestStore.changeTestCamera,
+        changeTestMicrophone: pretestStore.changeTestMicrophone,
+        changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
+        changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
+        pretestCameraRenderer: pretestStore.cameraRenderer,
+        pretestNoticeChannel: appStore.pretestNotice$,
+        // microphoneLevel: pretestStore.microphoneLevel,
+        microphoneLevel: 0,
     }
 }
