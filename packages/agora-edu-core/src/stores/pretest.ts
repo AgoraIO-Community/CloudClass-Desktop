@@ -105,7 +105,7 @@ export class PretestStore {
 
   @observable
   _microphoneId: string = '';
-
+  
   @computed
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default

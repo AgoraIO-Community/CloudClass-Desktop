@@ -9,6 +9,8 @@ export const useMediaContext = (): MediaContext => {
       mediaStore,
       isElectron, 
       pretestNotice$,
+      pretestStore,
+      sceneStore
     } = appStore
 
     const {
@@ -21,7 +23,7 @@ export const useMediaContext = (): MediaContext => {
     //   removeDialog
     // } = useUIStore()
   
-    const pretestStore = usePretestStore()
+    // const pretestStore = usePretestStore()
   
     const {
       cameraList,
@@ -30,7 +32,7 @@ export const useMediaContext = (): MediaContext => {
       cameraId,
       microphoneId,
       speakerId,
-      cameraRenderer,
+      // cameraRenderer,
       changeCamera,
       changeMicrophone,
       changeSpeakerVolume,
@@ -38,17 +40,23 @@ export const useMediaContext = (): MediaContext => {
       changeMicrophoneVolume,
     } = pretestStore
 
-    const startPreview = (onError: DeviceErrorCallback) => {
-      const removeEffect = pretestStore.onDeviceTestError(onError)
-      pretestStore.init({ video: true, audio: true })
-      pretestStore.openTestCamera()
-      pretestStore.openTestMicrophone({ enableRecording: true })
+    const startPreview = async (onError: DeviceErrorCallback) => {
+      // const removeEffect = pretestStore.onDeviceTestError(onError)
+      await pretestStore.init({ video: true, audio: true })
+      // const cameraId = pretestStore.cameraList.slice(1)[0].deviceId
+      // const microphoneId = pretestStore.microphoneList.slice(1)[0].deviceId
+      // await changeCamera(cameraId)
+      // await changeMicrophone(microphoneId)
+      // // changeCamera('')
+      // // changeMicrophone('')
+      await sceneStore.enableLocalVideo()
+      await sceneStore.enableLocalAudio()
     }
 
     const stopPreview = () => {
       stopDeviceTestError()
-      pretestStore.closeTestCamera()
-      pretestStore.closeTestMicrophone()
+      sceneStore.disableLocalAudio()
+      sceneStore.disableLocalVideo()
     }
   
     const changeDevice = useCallback(async (deviceType: string, value: any) => {
@@ -92,7 +100,6 @@ export const useMediaContext = (): MediaContext => {
         cameraId,
         microphoneId,
         speakerId,
-        cameraRenderer,
         changeDevice,
         changeAudioVolume,
         // removeDialog
@@ -110,6 +117,7 @@ export const useMediaContext = (): MediaContext => {
         changeTestMicrophone: pretestStore.changeTestMicrophone,
         changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
         changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
+        cameraRenderer: sceneStore.cameraRenderer,
         pretestCameraRenderer: pretestStore.cameraRenderer,
         pretestNoticeChannel: appStore.pretestNotice$,
         // microphoneLevel: pretestStore.microphoneLevel,
