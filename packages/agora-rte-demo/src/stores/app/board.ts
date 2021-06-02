@@ -954,40 +954,43 @@ export class BoardStore {
         disableAutoResize: false
       })
       await this.refreshState()
+
+
+      // 默认只有老师不用禁止跟随
+      if (this.userRole === EduRoleTypeEnum.teacher) {
+        this.room.setViewMode(ViewMode.Broadcaster)
+        this.room.disableCameraTransform = false
+      } else {
+        this.room.disableCameraTransform = true
+      }
+
+      // if student, set tool to pencil when auth to use whiteboard
+      if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
+        this.setTool('pencil')
+        this.currentActiveToolItem = 'pencil'
+      }
+
+      if (this.online && this.room) {
+        await this.room.setWritable(true)
+        if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+          this.room.disableDeviceInputs = false
+        }
+        if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
+          if (this.lockBoard) {
+            this.room.disableDeviceInputs = true
+            this.room.disableCameraTransform = true
+          } else {
+            this.room.disableDeviceInputs = false
+            this.room.disableCameraTransform = false
+          }
+        }
+      }
+
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})
       // throw the error to return the process
       throw e
-    }
-    // 默认只有老师不用禁止跟随
-    if (this.userRole === EduRoleTypeEnum.teacher) {
-      this.room.setViewMode(ViewMode.Broadcaster)
-      this.room.disableCameraTransform = false
-    } else {
-      this.room.disableCameraTransform = true
-    }
-
-    // if student, set tool to pencil when auth to use whiteboard
-    if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
-      this.setTool('pencil')
-      this.currentActiveToolItem = 'pencil'
-    }
-
-    if (this.online && this.room) {
-      await this.room.setWritable(true)
-      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
-        this.room.disableDeviceInputs = false
-      }
-      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.invisible].includes(this.appStore.roomInfo.userRole)) {
-        if (this.lockBoard) {
-          this.room.disableDeviceInputs = true
-          this.room.disableCameraTransform = true
-        } else {
-          this.room.disableDeviceInputs = false
-          this.room.disableCameraTransform = false
-        }
-      }
     }
 
     this.ready = true
