@@ -41,7 +41,7 @@
     "dev:apaas": "run-s build:proto run:demo",
     "build:apaas": "run-s build:proto build:demo",
     "build:proto": "lerna exec --scope=agora-edu-core npm run proto",
-    "dev:electron": "run-s build:dev:rte-sdk build:dev:edu-core build:dev:plugin build:dev:widget run:demo:electron",
+    "dev:electron": "run-s build:proto run:demo:electron",
     "dev:ui-kit": "lerna exec --scope=agora-scenario-ui-kit yarn storybook",
     "dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run dev",
     "build:dev:plugin": "lerna exec --scope=agora-plugin-gallery npm run build:dev",
