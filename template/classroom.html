@@ -119,6 +119,16 @@
       }
     }
 
+    const update_launch_status = (status) => {
+      update_status([
+        `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+        `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+        `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+        `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+        `${status}`
+      ].join('\r\n'))
+    }
+
 
     const launchApplication = ({appId, cachePath, options}) => {
       return new Promise((resolve, reject) => {
@@ -163,43 +173,20 @@
         }
       }
 
-      update_status([
-        `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
-        `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
-        `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-        `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`
-      ].join('\r\n'))
 
       if(!rootDom) {
         rootDom = document.querySelector("#root1")
       }
 
       if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom) {
+        update_launch_status('Waiting to launch..')
         setTimeout(collectPerformance, 200)
       } else {
-        update_status([
-          `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
-          `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
-          `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-          `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
-          `Application Launching...`
-        ].join('\r\n'))
+        update_launch_status('Application Launching...')
         launchApplication(readyValue.params).then(() => {
-            update_status([
-              `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
-              `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
-              `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-              `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
-              `Application Launch Success...`
-            ].join('\r\n'))
+          update_launch_status('Application Launch Success...')
         }).catch((e) => {
-          update_status([
-            `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
-            `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
-            `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-            `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
-            `Application Launch Failed: ${e.message}`
-          ].join('\r\n'))
+          update_launch_status(`Application Launch Failed: ${e.message}`)
         })
       }
     }
