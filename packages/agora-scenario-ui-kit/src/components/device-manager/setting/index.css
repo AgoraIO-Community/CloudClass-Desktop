@@ -5,19 +5,19 @@
 .setting .device-choose {
     margin-bottom: 30px;
 }
-.setting .device-title, .setting .device-text {
+.setting .device-title, .setting .device-text, .setting .beauty-text{
     font-size: 12px;
     font-weight: 400;
     color: #586376;
     margin-bottom: 10px;
 }
 
-.setting .device-volume {
+.setting .device-volume, .setting .beauty-value {
     margin-top: 15px;
     @apply flex;
 }
 
-.setting .device-volume .slider {
+.setting .device-volume .slider, .setting .beauty-value .slider{
     margin-left: 6px;
     @apply flex-1;
 }

@@ -4,7 +4,7 @@ import { Button } from '~components/button';
 import { Pretest } from '~components/device-manager/pretest';
 import { Modal } from '~components/modal';
 import { CameraPlaceHolder } from '~components/placeholder';
-import {transI18n} from '~ui-kit';
+import {transI18n} from '~components/i18n';
 
 const meta: Meta = {
     title: 'Components/Pretest',
@@ -83,7 +83,7 @@ const ChildrenWrap = () => {
 
 const PretestContainer = () => {
     const [visible, setVisible] = useState<boolean>(true)
-    const isNative = false;
+    const isNative = true; // native true 美颜功能
     const cameraError = false;
     const microphoneError = false;
     function hideModal () {

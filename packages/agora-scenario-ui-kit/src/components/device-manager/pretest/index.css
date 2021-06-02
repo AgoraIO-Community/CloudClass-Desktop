@@ -3,7 +3,7 @@
     position: relative;
 }
 
-.device-mirror-box {
+.device-mirror-box, .device-beauty-box {
     display: flex;
     justify-content: center;
     align-items: center;
