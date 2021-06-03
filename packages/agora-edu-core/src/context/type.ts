@@ -883,7 +883,7 @@ export type BoardContext = {
     /**
      * 课件列表
      * @version v1.1.0
-     * @deprecated 废弃, 请使用CloudDriverContext同名方法
+     * @deprecated 废弃
      */
     courseWareList: any[],
 }
@@ -1407,9 +1407,4 @@ export type CloudDriveContext = {
      * @version v1.1.2
      */
     doUpload: (payload: any) => Promise<void>,
-    /**
-     * 课件列表
-     * @version v1.1.2
-     */
-    courseWareList: any[],
 }
