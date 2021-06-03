@@ -443,7 +443,7 @@ export class SceneStore extends SimpleInterval {
             }
           }
         })
-      }).catch(err => {
+      }).catch((err: any) => {
         BizLogger.warn('show screen share window with items', err)
         if (err.code === 'ELECTRON_PERMISSION_DENIED') {
           this.appStore.fireToast('toast.failed_to_enable_screen_sharing_permission_denied')
