@@ -21,7 +21,7 @@ type ReportParams = {
      * 消息级别
      * 1: 默认, 101: 测试
      */
-    qos: 1 | 101,
+    qos: number,
     /**
      * 签名规则: md5(payload=base64(XX)&src=XX&ts=XX) 
      * 保留字段, XX为字段值 32位小写
@@ -98,7 +98,8 @@ export class ReportServiceV2 extends ApiBase {
     reportUserParams: ReportUserParams = ({} as any);
     protected qos!: number;
     constructor(params: ApiBaseInitializerParams) {
-        super(params)
+        super(params);
+        this.initReportConfig();
     }
     protected Uint8ToBase64(u8Arr: Uint8Array): string{
         const CHUNK_SIZE = 0x8000; //arbitrary number
@@ -154,7 +155,7 @@ export class ReportServiceV2 extends ApiBase {
         return this.Uint8ToBase64(buffer);
     }
     protected buildBaseParams(id: number,src: string, payload: string): ReportParams {
-        const qos = 101
+        const qos = this.qos;
         const ts = Math.floor(new Date().getTime() / 1000);
         const sign = md5(`payload=${payload}&src=${src}&ts=${ts}`)
         return {

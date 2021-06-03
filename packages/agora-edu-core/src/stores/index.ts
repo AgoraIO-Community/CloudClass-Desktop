@@ -285,12 +285,6 @@ export class EduScenarioAppStore {
     this.allExtApps = this.params.config.extApps || []
 
     this._screenVideoRenderer = undefined
-
-    //todo 判断生产环境与开发环境
-    reportServiceV2.initReportConfig({
-      sdkDomain: 'https://test-rest-argus.bj2.agoralab.co',
-      qos: 101
-    })
   }
 
   @computed
