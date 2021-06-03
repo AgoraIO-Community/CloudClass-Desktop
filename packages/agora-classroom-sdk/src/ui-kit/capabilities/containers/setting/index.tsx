@@ -16,8 +16,23 @@ export const SettingContainer = observer(({ id }: any) => {
         changeCamera,
         changeMicrophone,
         changeSpeakerVolume,
-        changeMicrophoneVolume
+        changeMicrophoneVolume,
+        isNative
     } = useMediaContext()
+
+    const {
+        isMirror,
+        setMirror,
+        isBeauty,
+        setBeauty,
+        whitening,
+        buffing,
+        ruddy,
+        setWhitening,
+        setBuffing,
+        setRuddy,
+        setBeautyEffectOptions,
+    } = usePretestContext()
 
     const changeDevice = async (deviceType: string, value: any) => {
         switch (deviceType) {
@@ -49,6 +64,33 @@ export const SettingContainer = observer(({ id }: any) => {
         removeDialog
     } = useUIStore()
 
+    const handleBeauty = () => {
+        setBeauty(!isBeauty)
+    }
+
+    const handleMirror = () => {
+        setMirror(!isMirror)
+    }
+
+    const onChangeBeauty = (type: string, value: any) => {
+        switch(type) {
+            case 'whitening':
+                setWhitening(value)
+                break;
+            case 'buffing':
+                setBuffing(value)
+                break;
+            case 'ruddy':
+                setRuddy(value)
+                break;        
+        }
+        setBeautyEffectOptions({
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        })
+    }
+
     return (
         <Modal
             title={t('pretest.settingTitle')}
@@ -73,6 +115,15 @@ export const SettingContainer = observer(({ id }: any) => {
                 onChangeAudioVolume={changeAudioVolume}
                 hasMicrophoneVolume={false}
                 hasSpeakerVolume={false}
+                isNative={isNative}
+                isBeauty={isBeauty}
+                onSelectBeauty={handleBeauty}
+                whitening={whitening}
+                buffing={buffing}
+                ruddy={ruddy}
+                onChangeBeauty={onChangeBeauty}
+                isMirror={isMirror}
+                onSelectMirror={handleMirror}
             />
         </Modal>
     )

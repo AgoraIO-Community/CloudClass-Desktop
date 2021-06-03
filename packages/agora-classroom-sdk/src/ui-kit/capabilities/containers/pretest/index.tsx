@@ -1,4 +1,4 @@
-import { useGlobalContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -46,7 +46,18 @@ export const PretestContainer = observer(() => {
         stopPretestMicrophone,
         pretestNoticeChannel,
         pretestCameraRenderer,
+        isBeauty,
+        setBeauty,
+        whitening,
+        buffing,
+        ruddy,
+        setWhitening,
+        setBuffing,
+        setRuddy,
+        setBeautyEffectOptions,
     } = usePretestContext()
+
+    const {isNative} = useMediaContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
         return (
@@ -94,6 +105,25 @@ export const PretestContainer = observer(() => {
         }
     }
 
+    const onChangeBeauty = (type: string, value: any) => {
+        switch(type) {
+            case 'whitening':
+                setWhitening(value)
+                break;
+            case 'buffing':
+                setBuffing(value)
+                break;
+            case 'ruddy':
+                setRuddy(value)
+                break;        
+        }
+        setBeautyEffectOptions({
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        })
+    }
+
     const global = useGlobalContext()
 
     const history = useHistory()
@@ -104,7 +134,14 @@ export const PretestContainer = observer(() => {
         history.push(global?.params?.roomPath ?? '/classroom/1v1')
     }
 
-    
+    const handleMirror = () => {
+        setMirror(!isMirror)
+    }
+
+    const handleBeauty = () => {
+        setBeauty(!isBeauty)
+    }
+
     return (
         <div className="fixed-container">
             <Modal
@@ -122,18 +159,22 @@ export const PretestContainer = observer(() => {
                     isMirror={isMirror}
                     onChangeDevice={onChangeDevice}
                     onChangeAudioVolume={onChangeAudioVolume}
-                    onSelectMirror={() => {
-                        setMirror(!isMirror)
-                    }}
+                    onSelectMirror={handleMirror}
                     cameraList={cameraList}
                     cameraId={cameraId}
                     microphoneList={microphoneList}
                     microphoneId={microphoneId}
                     speakerList={speakerList}
                     speakerId={speakerList[0].deviceId}
-                    isNative={false}
+                    isNative={isNative}
                     videoComponent={<VideoPreviewPlayer />}
                     volumeComponent={<VolumeIndicationView />}
+                    isBeauty={isBeauty}
+                    onSelectBeauty={handleBeauty}
+                    whitening={whitening}
+                    buffing={buffing}
+                    ruddy={ruddy}
+                    onChangeBeauty={onChangeBeauty}
                 />
             </Modal>
         </div>

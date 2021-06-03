@@ -31,6 +31,55 @@ export class PretestStore {
   ]
 
   @observable
+  isMirror: boolean = false
+
+  @observable
+  isBeauty: boolean = false
+
+  @observable
+  whitening: number = 70
+
+  @observable
+  buffing: number = 50
+
+  @observable
+  ruddy: number = 10
+
+  @action.bound
+  setMirror (value: boolean) {
+    this.isMirror = value
+  }
+
+  @action.bound 
+  setBeauty (value: boolean) {
+    this.isBeauty = value
+  }
+
+  @action.bound
+  setWhitening (value: number) {
+    this.whitening = value
+  }
+
+  @action.bound
+  setBuffing (value: number) {
+    this.buffing = value
+  }
+
+  @action.bound
+  setRuddy (value: number) {
+    this.ruddy = value
+  }
+
+  @action.bound
+  setBeautyEffectOptions ({lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number}) {
+    this.mediaService.setBeautyEffectOptions({
+      lighteningLevel: lighteningLevel / 100,
+      rednessLevel: rednessLevel / 100,
+      smoothnessLevel: smoothnessLevel / 100,
+    })
+  }
+
+  @observable
   settingVisible: boolean = false
 
   @action.bound 

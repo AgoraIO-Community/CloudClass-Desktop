@@ -157,7 +157,9 @@ export const I18nProvider: React.FC<I18nProvider> = ({children, language}) => {
   
   return (
     <I18nextProvider i18n={i18n}>
-      {children}
+      <div className={`${language}`}>
+        {children}
+      </div>
     </I18nextProvider>
   )
 }

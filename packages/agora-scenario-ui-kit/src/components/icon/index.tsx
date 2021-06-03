@@ -24,6 +24,9 @@ const svgDict: string[] = [
   'teacher-whiteboard',
   'countdown',
   'clicker',
+  'whitening',
+  'buffing',
+  'ruddy'
 ]
 
 export interface IconProps extends BaseProps {

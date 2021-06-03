@@ -251,6 +251,15 @@ export type VolumeContext = {
     microphoneLevel: number,
 }
 export type PretestContext = {
+    isBeauty: boolean,
+    setBeauty: (isBeauty: boolean) => void,
+    whitening: number,
+    buffing: number,
+    ruddy: number,
+    setWhitening: (whitening: number) => void,
+    setBuffing: (buffing: number) => void,
+    setRuddy: (ruddy: number) => void,
+    setBeautyEffectOptions: any,
     /**
      * 摄像头是否错误
      * @version v1.1.0

@@ -71,4 +71,7 @@ export type IconTypes =
   | 'student-whiteboard'
   | 'teacher-whiteboard'
   | 'student-authorized'
-  | 'teacher-authorized';
+  | 'teacher-authorized'
+  | 'whitening'
+  | 'buffing'
+  | 'ruddy';

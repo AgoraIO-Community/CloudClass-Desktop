@@ -316,7 +316,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
     this.client.enableAudioVolumeIndication(300, 3, true)
-    this.client.monitorDeviceChange(true)
+    // this.client.monitorDeviceChange(true)
     // this.client.setVideoProfile(20)
 
     const resolutionConfig = options.resolution
@@ -1409,5 +1409,25 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       encryptionMode: config.mode,
       encryptionKey: config.key
     })
+  }  
+  /**
+   * 设置美颜效果
+   * lighteningLevel 美白
+   * rednessLevel 红润
+   * smoothnessLevel 磨皮
+   * @param param0 
+   * @returns 
+   */
+  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number}) {
+    const ret = this.client.setBeautyEffectOptions(true, {
+      lighteningContrastLevel: 1,
+      lighteningLevel,
+      rednessLevel,
+      smoothnessLevel
+    })
+    if (ret < 0) {
+      throw 'setBeautyEffectOptions failure'
+    }
+    return ret
   }
 }
