@@ -21,7 +21,6 @@ interface DeviceProps {
 }
 
 export interface PretestProps extends BaseProps {
-    isBeauty?: boolean; // 是否美颜
     isMirror?: boolean; // 是否镜像
     cameraList?: DeviceProps[]; // 摄像头设备数组
     cameraId?: string; // 选中的摄像头Id
@@ -36,7 +35,6 @@ export interface PretestProps extends BaseProps {
     speakerLevel?: number;
     cameraError?: boolean; // 展示摄像头错误信息
     microphoneError?: boolean; // 展示麦克风错误信息
-    onSelectBeauty?: (isBeauty: boolean) => void;
     onSelectMirror?: (isMirror: boolean) => void;
     onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
     onChangeAudioVolume?: (deviceType: string, value: number) => void;
@@ -47,7 +45,6 @@ export interface PretestProps extends BaseProps {
 }
 
 const PretestComponent: React.FC<PretestProps> = ({
-    isBeauty = true,
     isMirror = true,
     cameraList = [],
     cameraId,
@@ -65,7 +62,6 @@ const PretestComponent: React.FC<PretestProps> = ({
     className,
     videoComponent,
     volumeComponent,
-    onSelectBeauty = (isBeauty) => { },
     onSelectMirror = (isMirror) => { },
     onChangeDevice = (deviceType, value) => { },
     onChangeAudioVolume = (deviceType, value) => { },
@@ -219,18 +215,6 @@ const PretestComponent: React.FC<PretestProps> = ({
                         <div style={{
                             display: 'flex'
                         }}>
-                            {isNative ? (
-                                <span className="device-beauty-box" style={{ marginRight: 7 }}>
-                                    <CheckBox
-                                        style={{ width: 12, height: 12 }}
-                                        checked={isBeauty}
-                                        onChange={(e: any) => {
-                                            onSelectBeauty(e.target.checked)
-                                        }}
-                                    />
-                                    <span className="beauty-text" style={{ marginLeft: 5 }}>{t('media.beauty')}</span>
-                                </span>
-                            ) : null}
                             <span className="device-mirror-box">
                                 <CheckBox
                                     style={{ width: 12, height: 12 }}

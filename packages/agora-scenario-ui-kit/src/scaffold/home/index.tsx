@@ -139,6 +139,7 @@ export const Home: React.FC<HomeProps> = ({
           onCancel={() => {
             setShowAbout(false)
           }}
+          closable={true}
         >
           <HomeAbout 
             onLookDeclare={() => {
