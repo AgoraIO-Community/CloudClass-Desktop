@@ -50,7 +50,7 @@
   resolved "https://registry.nlark.com/@babel/compat-data/download/@babel/compat-data-7.14.4.tgz#45720fe0cecf3fd42019e1d12cc3d27fadc98d58"
   integrity sha1-RXIP4M7PP9QgGeHRLMPSf63JjVg=
 
-"@babel/core@7.12.10", "@babel/core@7.12.3", "@babel/core@7.12.9", "@babel/core@7.13.15", "@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4", "@babel/core@^7.9.0":
+"@babel/core@7.12.3", "@babel/core@7.12.9", "@babel/core@7.13.15", "@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4", "@babel/core@^7.9.0":
   version "7.13.15"
   resolved "https://registry.nlark.com/@babel/core/download/@babel/core-7.13.15.tgz#a6d40917df027487b54312202a06812c4f7792d0"
   integrity sha1-ptQJF98CdIe1QxIgKgaBLE93ktA=
@@ -903,7 +903,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-runtime@7.12.1", "@babel/plugin-transform-runtime@7.12.10", "@babel/plugin-transform-runtime@7.13.15":
+"@babel/plugin-transform-runtime@7.12.1", "@babel/plugin-transform-runtime@7.13.15":
   version "7.13.15"
   resolved "https://registry.nlark.com/@babel/plugin-transform-runtime/download/@babel/plugin-transform-runtime-7.13.15.tgz#2eddf585dd066b84102517e10a577f24f76a9cd7"
   integrity sha1-Lt31hd0Ga4QQJRfhCld/JPdqnNc=
@@ -1082,7 +1082,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.12.17"
     "@babel/plugin-transform-react-pure-annotations" "^7.12.1"
 
-"@babel/preset-typescript@7.12.1", "@babel/preset-typescript@7.12.7", "@babel/preset-typescript@7.13.0", "@babel/preset-typescript@^7.1.0", "@babel/preset-typescript@^7.12.7":
+"@babel/preset-typescript@7.12.1", "@babel/preset-typescript@7.13.0", "@babel/preset-typescript@^7.1.0", "@babel/preset-typescript@^7.12.7":
   version "7.13.0"
   resolved "https://registry.nlark.com/@babel/preset-typescript/download/@babel/preset-typescript-7.13.0.tgz#ab107e5f050609d806fbb039bec553b33462c60a"
   integrity sha1-qxB+XwUGCdgG+7A5vsVTszRixgo=
@@ -12044,7 +12044,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.npm.taobao.org/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=

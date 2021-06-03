@@ -12,6 +12,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Premium } from './infra/monolithic/premium';
 import { BizPagePath } from '../../agora-edu-core/src/types';
 import { EduSDKController } from './infra/api/controller';
+import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 
 // NOTE: 改方法仅在开发环境生效，所以在开发环境禁止。
 if (process.env.NODE_ENV === "development") {
@@ -28,6 +29,7 @@ eduSDKApi.updateConfig({
   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
   appId: `${REACT_APP_AGORA_APP_ID}`,
 })
+
 
 let controller = new EduSDKController()
 
@@ -84,10 +86,26 @@ const App = () => {
   
   const onInitialize = useCallback(() => {
     const dom = document.getElementById('classroom')
-    params.config.rtmToken = token
-    params.config.agoraAppId = appid
+    // params.config.rtmToken = token
+    // params.config.agoraAppId = appid
     params.roomInfoParams!.roomUuid = roomUuid
     params.roomInfoParams!.userUuid = userUuid
+
+
+    // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
+    // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
+    const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
+    if(appCertificate) {
+      params.config.rtmToken = RtmTokenBuilder.buildToken(
+        `${REACT_APP_AGORA_APP_ID}`,
+        appCertificate,
+        userUuid,
+        RtmRole.Rtm_User,
+        0
+      )
+    }
+
+
     controller.create(
       <CoreContextProvider params={params} dom={dom!} controller={controller}>
         <Premium></Premium>
@@ -105,16 +123,6 @@ const App = () => {
             maxWidth: 'calc(.25rem * 64)'
         }}>
             <div className="md:flex md:flex-col w-full text-xs md:mt-4">
-              <div className="mb-3 md:space-y-2 w-full text-xs">
-                <label className="font-semibold text-gray-600 py-2">Token</label>
-                <input value={token} onChange={e => setToken(e.currentTarget.value)} placeholder="Enter rtm token" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
-                <p className="text-red text-xs hidden">Please fill out this field.</p>
-              </div>
-              <div className="mb-3 md:space-y-2 w-full text-xs">
-                <label className="font-semibold text-gray-600 py-2">AppID</label>
-                <input value={appid} onChange={e => setAppId(e.currentTarget.value)} placeholder="Enter appid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
-                <p className="text-red text-xs hidden">Please fill out this field.</p>
-              </div>
               <div className="mb-3 md:space-y-2 w-full text-xs">
                 <label className="font-semibold text-gray-600 py-2">Room Uuid</label>
                 <input value={roomUuid} onChange={e => setRoomUuid(e.currentTarget.value)} placeholder="Enter room uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
