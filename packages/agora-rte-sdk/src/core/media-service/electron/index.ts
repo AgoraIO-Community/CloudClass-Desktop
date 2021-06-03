@@ -511,7 +511,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('networkquality', (...args: any[]) => {
-      EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],
@@ -704,9 +704,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('NetworkQuality', (...args: any[]) => {
       console.log("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
-      EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
-      EduLogger.info( "remoteAudioStats: ", this._remoteAudioStats)
-      EduLogger.info( "remoteVideoStats: ", this._remoteVideoStats)
+      // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      // EduLogger.info( "remoteAudioStats: ", this._remoteAudioStats)
+      // EduLogger.info( "remoteVideoStats: ", this._remoteVideoStats)
       this.fire('network-quality', {
         downlinkNetworkQuality: args[1],
         uplinkNetworkQuality: args[2],

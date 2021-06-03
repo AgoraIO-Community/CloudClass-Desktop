@@ -184,9 +184,6 @@ type MediaIconArgs = {
 }
 
 export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
-
-  EduLogger.info("getMediaIconProps, args ", JSON.stringify(args))
-
   const {
     muted,
     deviceState,
