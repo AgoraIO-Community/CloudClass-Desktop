@@ -38,6 +38,7 @@ export const useMediaContext = (): MediaContext => {
       changeSpeakerVolume,
       stopDeviceTestError,
       changeMicrophoneVolume,
+      init: installDevices
     } = pretestStore
 
     const startPreview = async (onError: DeviceErrorCallback) => {
@@ -49,14 +50,14 @@ export const useMediaContext = (): MediaContext => {
       // await changeMicrophone(microphoneId)
       // // changeCamera('')
       // // changeMicrophone('')
-      await sceneStore.enableLocalVideo()
+      await sceneStore.enableLocalVideo2()
       await sceneStore.enableLocalAudio()
     }
 
     const stopPreview = () => {
       stopDeviceTestError()
       sceneStore.disableLocalAudio()
-      sceneStore.disableLocalVideo()
+      sceneStore.disableLocalVideo2()
     }
   
     const changeDevice = useCallback(async (deviceType: string, value: any) => {
@@ -122,5 +123,6 @@ export const useMediaContext = (): MediaContext => {
         pretestNoticeChannel: appStore.pretestNotice$,
         // microphoneLevel: pretestStore.microphoneLevel,
         microphoneLevel: 0,
+        installDevices
     }
 }

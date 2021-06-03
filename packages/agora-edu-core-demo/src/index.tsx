@@ -78,10 +78,9 @@ let params:AppStoreInitParams = {
 }
 const App = () => {
 
-  const [token, setToken] = useState<string>("")
-  const [appid, setAppId] = useState<string>("")
   const [roomUuid, setRoomUuid] = useState<string>("")
   const [userUuid, setUserUuid] = useState<string>("")
+  const [userRole, setUserRole] = useState<number>(1)
 
   
   const onInitialize = useCallback(() => {
@@ -90,6 +89,7 @@ const App = () => {
     // params.config.agoraAppId = appid
     params.roomInfoParams!.roomUuid = roomUuid
     params.roomInfoParams!.userUuid = userUuid
+    params.roomInfoParams!.userRole = userRole
 
 
     // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
@@ -115,7 +115,7 @@ const App = () => {
 
       }
     )
-  }, [token, appid, roomUuid, userUuid])
+  }, [roomUuid, userUuid, userRole])
 
   return (
     <div className="container mx-auto md:flex h-full">
@@ -131,6 +131,11 @@ const App = () => {
               <div className="mb-3 md:space-y-2 w-full text-xs">
                 <label className="font-semibold text-gray-600 py-2">User Uuid</label>
                 <input value={userUuid} onChange={e => setUserUuid(e.currentTarget.value)} placeholder="Enter user uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <p className="text-red text-xs hidden">Please fill out this field.</p>
+              </div>
+              <div className="mb-3 md:space-y-2 w-full text-xs">
+                <label className="font-semibold text-gray-600 py-2">User Role</label>
+                <input value={userRole} onChange={e => setUserRole(parseInt(e.currentTarget.value))} placeholder="Enter user role" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
                 <p className="text-red text-xs hidden">Please fill out this field.</p>
               </div>
             </div>

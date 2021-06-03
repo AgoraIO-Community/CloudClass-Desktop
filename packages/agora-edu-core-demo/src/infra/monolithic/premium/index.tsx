@@ -1,7 +1,7 @@
 import { RendererPlayer } from "@/ui-kit/utilities/renderer-player";
-import { useGlobalContext, useVolumeContext, useMediaContext, useRoomContext, useStreamListContext } from "agora-edu-core";
+import { useGlobalContext, useVolumeContext, useMediaContext, useRoomContext, useStreamListContext, useUserListContext } from "agora-edu-core";
 import { observer } from "mobx-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { transI18n, Select, Volume } from "~ui-kit";
 import {v4 as uuidv4} from 'uuid';
 import classnames from "classnames";
@@ -31,13 +31,12 @@ export const Premium = observer(() => {
         stopPreview,
         pretestNoticeChannel,
         pretestCameraRenderer,
-        cameraId,
-        changeTestCamera,
         cameraList,
-        changeTestMicrophone,
         microphoneList,
-        microphoneId,
-        microphoneLevel,
+        cameraRenderer,
+        changeCamera,
+        changeMicrophone,
+        installDevices
     } = useMediaContext()
 
     const {
@@ -49,26 +48,44 @@ export const Premium = observer(() => {
     } = useGlobalContext()
 
     const {
-        teacherStream: userStream
+        localUserInfo
+    } = useUserListContext()
+
+    const {
+        muteVideo,
+        muteAudio,
+        unmuteAudio,
+        unmuteVideo
     } = useStreamListContext()
 
     const [isPreview, setPreview] = useState<boolean>(false)
 
-    const previewCallback = useCallback(async () => {
-        if (isPreview) {
-            stopPreview()
-            setPreview(false)
-        } else {
-            await startPreview((evt: any) => {
-                pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
-            })
-            setPreview(true)
-        }
-    }, [isPreview])
+    useEffect(() => {
+        installDevices({video:true, audio: true})
+    }, [installDevices])
+
+    const startPreviewCallback = useCallback(async () => {
+        await changeCamera(cameraList[1].deviceId)
+        await changeMicrophone(microphoneList[1].deviceId)
+        await startPreview((evt: any) => {
+            pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
+        })
+        setPreview(true)
+    }, [cameraList, changeCamera, changeMicrophone, microphoneList, pretestNoticeChannel, startPreview])
+
+    const stopPreviewCallback = useCallback(async () => {
+        stopPreview()
+        setPreview(false)
+    }, [stopPreview])
+
+    const unmuteVideoCallback = useCallback(async () => {
+        unmuteVideo(localUserInfo.userUuid, true)
+    }, [localUserInfo.userUuid, unmuteVideo])
 
     const joinCallback = useCallback(async () => {
+        await changeCamera(cameraList[1].deviceId)
         await joinRoom()
-    }, [joinRoom])
+    }, [cameraList, changeCamera, joinRoom])
 
     // const setMirrorCallback = () => setMirror((value) => !value)
 
@@ -153,20 +170,18 @@ export const Premium = observer(() => {
                 maxWidth: 'calc(.25rem * 64)'
             }}>
                 <button className="bg-blue-500 text-white py-2 px-8" onClick={joinCallback}>join</button>
-                <button className={previewCls} onClick={previewCallback}>{previewText}</button>
+                <button className="bg-blue-500 text-white py-2 px-8" onClick={startPreviewCallback}>startPreview</button>
+                <button className="bg-blue-500 text-white py-2 px-8" onClick={stopPreviewCallback}>stopPreview</button>
+                <button className="bg-blue-500 text-white py-2 px-8" onClick={unmuteVideoCallback}>unmuteVideo</button>
             </div>
             <div style={{
                 minWidth: 'calc(100% - (.25rem * 64))'
             }} className="grid grid-cols-3">
                 <div className="h-40">
-                    {isJoined ? 
-                    <RendererPlayer style={{height:'100%'}} key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video">
-                        
+                    <RendererPlayer style={{height:'100%'}} key={cameraRenderer && cameraRenderer.videoTrack ? cameraRenderer.videoTrack.getTrackId() : ''} track={cameraRenderer} id={"local"} className="rtc-video">
                     </RendererPlayer>
-                    :null
-                    } 
                 </div>
-                <div className="h-40">
+                {/* <div className="h-40">
                     <MediaPreview
                         // microphoneLevel={microphoneLevel}
                         cameraOptions={cameraOptions}
@@ -177,7 +192,7 @@ export const Premium = observer(() => {
                         changeTestCamera={changeTestCamera}
                         changeTestMicrophone={changeTestMicrophone}
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     )

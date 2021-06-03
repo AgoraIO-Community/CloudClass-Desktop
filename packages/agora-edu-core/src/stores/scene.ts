@@ -665,12 +665,41 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
+  async disableLocalVideo2() {
+    if (this._cameraRenderer) {
+      await this.mediaService.enableLocalVideo(false)
+      this._cameraRenderer = undefined
+    }
+  }
+
+  @action.bound
+  async enableLocalVideo2() {
+    if (this._cameraRenderer) {
+      return BizLogger.warn('[demo] enableLocalVideo locking 1 already exists')
+    }
+    try {
+      const deviceId = this.appStore.pretestStore.cameraId
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        this.appStore.pretestStore.muteCamera()
+      } else {
+        await this.mediaService.enableLocalVideo(true)
+        this._cameraRenderer = this.mediaService.cameraRenderer
+      }
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn('[demo] action in enableLocalVideo >>> enableLocalVideo', error)
+      throw error
+    }
+  }
+
+  @action.bound
   async disableLocalVideo() {
     if (this._cameraRenderer) {
       await this.appStore.pretestStore.closeCamera()
       this._cameraRenderer = undefined
     }
   }
+
 
   @action.bound
   async sendMuteLocalCamera() {

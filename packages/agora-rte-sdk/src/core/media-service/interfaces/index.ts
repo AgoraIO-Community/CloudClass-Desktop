@@ -157,6 +157,8 @@ export declare interface IAgoraRTCModule {
   muteLocalAudio(val: boolean, deviceId?: string): Promise<any>
   muteRemoteVideo(uid: any, val: boolean): Promise<any>
   muteRemoteAudio(uid: any, val: boolean): Promise<any>
+  enableLocalVideo(val: boolean): Promise<any>
+  enableLocalAudio(val: boolean): Promise<any>
 
   getCameras(): Promise<any[]>
 

@@ -367,6 +367,7 @@ export type PretestContext = {
      * @version v1.1.2
      */
     pretestNoticeChannel: Subject<any>;
+    installDevices: (option: {video?: boolean, audio?: boolean}) => Promise<void>
 }
 export type ScreenShareContext = {
     /**
@@ -1403,6 +1404,7 @@ export type MediaContext = {
       * @version v1.1.2
       */
      microphoneLevel: number;
+     installDevices: (option: {video?: boolean, audio?: boolean}) => Promise<void>
 }
 
 export type ReportContext = {
