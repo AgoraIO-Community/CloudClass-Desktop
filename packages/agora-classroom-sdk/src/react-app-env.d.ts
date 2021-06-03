@@ -30,6 +30,8 @@ declare const REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: string;
 declare const REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: string;
 declare const REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: string;
 declare const REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: string;
+declare const REACT_APP_REPORT_URL: string;
+declare const REACT_APP_REPORT_QOS: number;
 interface CustomGlobalUtils {
   platform: string
   isElectron: boolean

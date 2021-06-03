@@ -1,4 +1,5 @@
 import { AgoraEduSDK, AgoraEduEvent} from '../../api'
+import { globalConfigs } from 'agora-edu-core'
 import {ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
 import { useHomeStore } from '@/infra/hooks'
 import { isEmpty } from 'lodash'
@@ -34,7 +35,9 @@ export const LaunchPage = observer(() => {
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
       AgoraEduSDK.setParameters(JSON.stringify({
-        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`
+        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+        'reportUrl': `${REACT_APP_REPORT_URL}`,
+        'reportQos': `${REACT_APP_REPORT_QOS}`,
       }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
