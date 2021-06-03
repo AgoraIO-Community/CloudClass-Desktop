@@ -188,7 +188,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
   const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
       isHost: isHost,
-      hideOffPodium: !controlTools.includes(ControlTool.offPodium),
       username: stream.account,
       stars: stream.stars,
       uid: stream.userUuid,
