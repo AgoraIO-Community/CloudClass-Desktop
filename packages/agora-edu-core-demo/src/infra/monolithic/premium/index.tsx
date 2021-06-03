@@ -1,5 +1,5 @@
 import { RendererPlayer } from "@/ui-kit/utilities/renderer-player";
-import { useGlobalContext, useVolumeContext, useMediaContext, useRoomContext, useStreamListContext, useUserListContext } from "agora-edu-core";
+import { useGlobalContext, useVolumeContext, useMediaContext, useRoomContext, useStreamListContext, useUserListContext, EduMediaStream } from "agora-edu-core";
 import { observer } from "mobx-react";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { transI18n, Select, Volume } from "~ui-kit";
@@ -40,7 +40,8 @@ export const Premium = observer(() => {
     } = useMediaContext()
 
     const {
-        joinRoom
+        joinRoom,
+        destroyRoom
     } = useRoomContext()
 
     const {
@@ -55,8 +56,13 @@ export const Premium = observer(() => {
         muteVideo,
         muteAudio,
         unmuteAudio,
-        unmuteVideo
+        unmuteVideo,
+        streamList,
+        teacherStream,
+        studentStreams
     } = useStreamListContext()
+
+    const remoteStreams = [teacherStream].concat(studentStreams).filter((s:EduMediaStream) => !s.isLocal)
 
     const [isPreview, setPreview] = useState<boolean>(false)
 
@@ -82,10 +88,19 @@ export const Premium = observer(() => {
         unmuteVideo(localUserInfo.userUuid, true)
     }, [localUserInfo.userUuid, unmuteVideo])
 
+    const muteVideoCallback = useCallback(async () => {
+        muteVideo(localUserInfo.userUuid, true)
+    }, [localUserInfo.userUuid, muteVideo])
+
     const joinCallback = useCallback(async () => {
         await changeCamera(cameraList[1].deviceId)
         await joinRoom()
     }, [cameraList, changeCamera, joinRoom])
+
+
+    const leaveCallback = useCallback(async () => {
+        await destroyRoom
+    }, [destroyRoom])
 
     // const setMirrorCallback = () => setMirror((value) => !value)
 
@@ -154,10 +169,8 @@ export const Premium = observer(() => {
         )
     })
 
-    const previewCls = classnames({
-        ['text-white py-2 px-8']: 1,
-        [`bg-blue-500 `]: !isPreview,
-        [`bg-red-500 `]: isPreview,
+    const btnClass = classnames({
+        ['bg-blue-500 text-white py-2 px-8 w-full']: 1
       })
 
     const previewText = useMemo(() => {
@@ -169,10 +182,12 @@ export const Premium = observer(() => {
             <div style={{
                 maxWidth: 'calc(.25rem * 64)'
             }}>
-                <button className="bg-blue-500 text-white py-2 px-8" onClick={joinCallback}>join</button>
-                <button className="bg-blue-500 text-white py-2 px-8" onClick={startPreviewCallback}>startPreview</button>
-                <button className="bg-blue-500 text-white py-2 px-8" onClick={stopPreviewCallback}>stopPreview</button>
-                <button className="bg-blue-500 text-white py-2 px-8" onClick={unmuteVideoCallback}>unmuteVideo</button>
+                <button className={btnClass} onClick={joinCallback}>join</button>
+                <button className={btnClass} onClick={leaveCallback}>leave</button>
+                <button className={btnClass} onClick={startPreviewCallback}>startPreview</button>
+                <button className={btnClass} onClick={stopPreviewCallback}>stopPreview</button>
+                <button className={btnClass} onClick={unmuteVideoCallback}>unmuteVideo</button>
+                <button className={btnClass} onClick={muteVideoCallback}>muteVideo</button>
             </div>
             <div style={{
                 minWidth: 'calc(100% - (.25rem * 64))'
@@ -181,18 +196,16 @@ export const Premium = observer(() => {
                     <RendererPlayer style={{height:'100%'}} key={cameraRenderer && cameraRenderer.videoTrack ? cameraRenderer.videoTrack.getTrackId() : ''} track={cameraRenderer} id={"local"} className="rtc-video">
                     </RendererPlayer>
                 </div>
-                {/* <div className="h-40">
-                    <MediaPreview
-                        // microphoneLevel={microphoneLevel}
-                        cameraOptions={cameraOptions}
-                        microphoneOptions={microphoneOptions}
-                        cameraId={cameraId}
-                        isPreview={isPreview}
-                        microphoneId={microphoneId}
-                        changeTestCamera={changeTestCamera}
-                        changeTestMicrophone={changeTestMicrophone}
-                    />
-                </div> */}
+                {
+                    remoteStreams.map((stream:EduMediaStream) => {
+                        return (
+                            <div className="h-40">
+                                <RendererPlayer style={{height:'100%'}} key={stream && stream.renderer && stream.renderer.videoTrack && stream.renderer.videoTrack.getTrackId()} track={stream.renderer} id={stream.streamUuid} className="rtc-video">
+                                </RendererPlayer>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </div>
     )
