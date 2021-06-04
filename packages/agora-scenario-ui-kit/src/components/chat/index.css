@@ -94,13 +94,26 @@
 }
 
 .chat-history>.chat-message:first-child {
-  margin-top: 32px;
+  margin-top: 20px;
 }
 
 .conversation-header {
   display: flex;
   align-items: center;
-  height: 35px;
+  height: 64px;
+}
+.conversation-header>.avatar{
+  background: url('../icon/assets/svg/avatar.svg') no-repeat center / 36px 36px;
+    /* background: gray; */
+    border-radius: 50%;
+    width:36px;
+    height:36px;
+    position: relative;
+}
+.conversation-header>.name{
+  color: #191919;
+  font-size:13px;
+  margin-left: 15px;
 }
 
 .room.chat-history {

@@ -257,6 +257,7 @@ export const Chat: FC<ChatProps> = ({
           </span>
         </div>
         <Tabs onChange={(activeKey: string) => {
+          debugger;
           if(activeKey === '0') {
             onChangeActiveTab && onChangeActiveTab('room')
           } else if(singleConversation) {
@@ -297,7 +298,7 @@ export const Chat: FC<ChatProps> = ({
           tab={
             <span className="question tab-title">
               {transI18n("quiz")}
-              {conversationListUnread ? <span className="new-message-notice"></span> : null}
+              {true ? <span className="new-message-notice"></span> : null}
               {/* <span className="question-count">{totalCount}</span> */}
             </span>
           } 
