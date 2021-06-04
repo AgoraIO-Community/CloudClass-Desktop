@@ -418,7 +418,6 @@ export const useBoardContext = (): BoardContext => {
 
 export const useCloudDriveContext = (): CloudDriveContext => {
   const {
-    courseWareList,
     downloadList,
     putSceneByResourceUuid,
     startDownload,
@@ -435,7 +434,6 @@ export const useCloudDriveContext = (): CloudDriveContext => {
 
 
   return {
-    courseWareList,
     downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
     openCloudResource: putSceneByResourceUuid,
     startDownload,
