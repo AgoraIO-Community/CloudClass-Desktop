@@ -1,3 +1,4 @@
+import { getMicrophoneState } from './../../../agora-scenario-ui-kit/src/components/roster/base';
 import { LocalUserRenderer, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, GenericErrorWrapper, EduLogger, EduUser } from "agora-rte-sdk"
 import { get, isEmpty } from "lodash"
 import { observable, action, computed, reaction, runInAction } from "mobx"
@@ -334,6 +335,18 @@ export class PretestStore {
   private initRecords: Record<'videoDeviceInit' | 'audioDeviceInit', boolean> = {
     videoDeviceInit: false,
     audioDeviceInit: false
+  }
+
+  @action.bound
+  async getCameraList() {
+    this._cameraList = await this.mediaService.getCameras()
+    return this._cameraList
+  }
+
+  @action.bound
+  async getMicrophoneList() {
+    this._microphoneList = await this.mediaService.getMicrophones()
+    return this._microphoneList
   }
 
   init = (option: {video?: boolean, audio?: boolean} = {video: true, audio: true}):Promise<void> => {

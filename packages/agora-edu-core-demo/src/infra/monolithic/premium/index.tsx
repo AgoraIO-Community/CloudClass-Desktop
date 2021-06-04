@@ -35,6 +35,8 @@ export const Premium = observer(() => {
         microphoneList,
         cameraRenderer,
         changeCamera,
+        getCameraList,
+        getMicrophoneList,
         changeMicrophone,
         installDevices
     } = useMediaContext()
@@ -71,6 +73,7 @@ export const Premium = observer(() => {
     }, [installDevices])
 
     const startPreviewCallback = useCallback(async () => {
+        await getCameraList()
         await changeCamera(cameraList[1].deviceId)
         await changeMicrophone(microphoneList[1].deviceId)
         await startPreview((evt: any) => {

@@ -1405,6 +1405,8 @@ export type MediaContext = {
       */
      microphoneLevel: number;
      installDevices: (option: {video?: boolean, audio?: boolean}) => Promise<void>
+     getCameraList: () => Promise<any[]>,
+     getMicrophoneList: () => Promise<any[]>
 }
 
 export type ReportContext = {

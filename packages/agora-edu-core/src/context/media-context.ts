@@ -38,7 +38,9 @@ export const useMediaContext = (): MediaContext => {
       changeSpeakerVolume,
       stopDeviceTestError,
       changeMicrophoneVolume,
-      init: installDevices
+      init: installDevices,
+      getCameraList,
+      getMicrophoneList,
     } = pretestStore
 
     const startPreview = async (onError: DeviceErrorCallback) => {
@@ -123,6 +125,8 @@ export const useMediaContext = (): MediaContext => {
         pretestNoticeChannel: appStore.pretestNotice$,
         // microphoneLevel: pretestStore.microphoneLevel,
         microphoneLevel: 0,
+        getCameraList,
+        getMicrophoneList,
         installDevices
     }
 }
