@@ -71,8 +71,9 @@ export const OneToOneScenario = observer(() => {
       <NavigationBar />
       <Layout className="horizontal">
         <Content>
-          <ScreenSharePlayerContainer />
-          <WhiteboardContainer />
+          <WhiteboardContainer>
+            <ScreenSharePlayerContainer />
+          </WhiteboardContainer>
         </Content>
         <Aside className={classnames({
           "one-class-aside": 1,

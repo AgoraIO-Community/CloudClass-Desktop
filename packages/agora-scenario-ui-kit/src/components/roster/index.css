@@ -215,6 +215,9 @@
   color: #7b88a0;
   height: 32px;
   width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .roster-table .camera-enabled, .roster-table .mic-enabled {

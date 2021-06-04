@@ -74,8 +74,9 @@ export const MidClassScenario = observer(() => {
         <Content className="column">
           <VideoMarqueeStudentContainer />
           <div className="board-box">
-            <ScreenSharePlayerContainer />
-            <WhiteboardContainer />
+            <WhiteboardContainer>
+              <ScreenSharePlayerContainer />
+            </WhiteboardContainer>
           </div>
           <div
             className={classnames({

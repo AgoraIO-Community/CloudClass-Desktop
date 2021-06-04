@@ -179,7 +179,7 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer = observer(() => {
+export const WhiteboardContainer = observer(({children}: any) => {
 
   const {
     addDialog
@@ -281,6 +281,7 @@ export const WhiteboardContainer = observer(() => {
 
   return (
     <div className="whiteboard">
+      {children}
       {
         ready ? 
         <div id="netless" ref={mountToDOM} ></div> : null
