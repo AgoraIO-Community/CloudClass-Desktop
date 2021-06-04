@@ -430,7 +430,27 @@ export class BoardStore extends ZoomController {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
         if (targetResource) {
           if (targetResource.ext === 'h5') {
-            return this.insertH5(targetResource.url, targetResource.id)
+            this.insertH5(targetResource.url, targetResource.id)
+            if (targetPath === 'screenShare') {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 1})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            } else {
+              eduSDKApi.selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {selected: 0})
+              .then(() => {
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`)
+              })
+              .catch((err) => {
+                const error = GenericErrorWrapper(err)
+                EduLogger.info(`select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`)
+              })
+            }
+            return
           }
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
