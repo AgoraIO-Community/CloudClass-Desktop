@@ -3,7 +3,7 @@ import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
 import { observable, action, computed, runInAction } from 'mobx'
 import { PPTProgressPhase } from '@/utils/upload-manager'
-import { Room, PPTKind, ViewMode, ApplianceNames, MemberState, AnimationMode, SceneDefinition } from 'white-web-sdk'
+import { Room, PPTKind, ViewMode, ApplianceNames, MemberState, AnimationMode, SceneDefinition, RoomPhase } from 'white-web-sdk'
 import { BoardClient } from '@/components/netless-board/board-client';
 import { get, isEmpty, omit, uniqBy } from 'lodash';
 import { OSSConfig } from '@/utils/helper';
@@ -953,25 +953,22 @@ export class BoardStore {
         disableCameraTransform: true,
         disableAutoResize: false
       })
-      await this.refreshState()
 
+      if (await this.waitRoomReady(this.room)) {
+        // 默认只有老师不用禁止跟随
+        if (this.userRole === EduRoleTypeEnum.teacher) {
+          this.room.setViewMode(ViewMode.Broadcaster)
+          this.room.disableCameraTransform = false
+        } else {
+          this.room.disableCameraTransform = true
+        }
 
-      // 默认只有老师不用禁止跟随
-      if (this.userRole === EduRoleTypeEnum.teacher) {
-        this.room.setViewMode(ViewMode.Broadcaster)
-        this.room.disableCameraTransform = false
-      } else {
-        this.room.disableCameraTransform = true
-      }
-
-      // if student, set tool to pencil when auth to use whiteboard
-      if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
-        this.setTool('pencil')
-        this.currentActiveToolItem = 'pencil'
-      }
-
-      if (this.online && this.room) {
-        await this.room.setWritable(true)
+        // if student, set tool to pencil when auth to use whiteboard
+        if([EduRoleTypeEnum.student].includes(this.appStore.roomInfo.userRole)){
+          this.setTool('pencil')
+          this.currentActiveToolItem = 'pencil'
+        }
+        // await this.room.setWritable(true)
         if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
           this.room.disableDeviceInputs = false
         }
@@ -984,12 +981,24 @@ export class BoardStore {
             this.room.disableCameraTransform = false
           }
         }
+      } else {
+        // process errors
+        throw GenericErrorWrapper({
+          code: 100,
+          message: "join_board_not_connected"
+        })
+      }
+
+      try {
+        await this.refreshState()
+      }catch(e) {
+        // ignore errors
+        BizLogger.warn(`refresh state failed ${e.message}`)
       }
 
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: false, errCode: `${e.message}`})
-      // throw the error to return the process
       throw e
     }
 
@@ -1118,11 +1127,11 @@ export class BoardStore {
     const {role, ...data} = params
     const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
-    this.boardClient.on('onPhaseChanged', (state: any) => {
-      if (state === 'disconnected') {
-        this.online = false
-      }
-    })
+    // this.boardClient.on('onPhaseChanged', (state: any) => {
+    //   if (state === 'disconnected') {
+    //     this.online = false
+    //   }
+    // })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
@@ -1185,6 +1194,7 @@ export class BoardStore {
     await this.boardClient.join({
       ...data,
       cursorAdapter,
+      isWritable: true,
       userPayload: {
         userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
@@ -1201,17 +1211,17 @@ export class BoardStore {
       b: 63
     }
     BizLogger.info("[breakout board] after join", data)
-    this.online = true
+    // this.online = true
     // this.updateSceneItems()
     this.room.bindHtmlElement(null)
-    const resizeCallback = () => {
-      if (this.online && this.room && this.room.isWritable) {
-        this.room.moveCamera({centerX: 0, centerY: 0});
-        this.room.refreshViewSize();
-      }
-    }
-    this.resizeCallback = resizeCallback
-    window.addEventListener('resize', this.resizeCallback)
+    // const resizeCallback = () => {
+    //   if (this.online && this.room && this.room.isWritable) {
+    //     this.room.moveCamera({centerX: 0, centerY: 0});
+    //     this.room.refreshViewSize();
+    //   }
+    // }
+    // this.resizeCallback = resizeCallback
+    // window.addEventListener('resize', this.resizeCallback)
 
     this.lockBoard = this.getCurrentLock(this.room.state) as any
   }
@@ -1241,11 +1251,11 @@ export class BoardStore {
     const {role, ...data} = params
     const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
-    this.boardClient.on('onPhaseChanged', (state: any) => {
-      if (state === 'disconnected') {
-        this.online = false
-      }
-    })
+    // this.boardClient.on('onPhaseChanged', (state: any) => {
+    //   if (state === 'disconnected') {
+    //     this.online = false
+    //   }
+    // })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
@@ -1287,17 +1297,17 @@ export class BoardStore {
       b: 63
     }
     BizLogger.info("[breakout board] after join", data)
-    this.online = true
+    // this.online = true
     // this.updateSceneItems()
     this.room.bindHtmlElement(null)
-    const resizeCallback = () => {
-      if (this.online && this.room && this.room.isWritable) {
-        this.room.moveCamera({centerX: 0, centerY: 0});
-        this.room.refreshViewSize();
-      }
-    }
-    this.resizeCallback = resizeCallback
-    window.addEventListener('resize', this.resizeCallback)
+    // const resizeCallback = () => {
+    //   if (this.online && this.room && this.room.isWritable) {
+    //     this.room.moveCamera({centerX: 0, centerY: 0});
+    //     this.room.refreshViewSize();
+    //   }
+    // }
+    // this.resizeCallback = resizeCallback
+    // window.addEventListener('resize', this.resizeCallback)
     this.updateSceneItems()
 
     this.lockBoard = this.getCurrentLock(this.room.state) as any
@@ -2201,8 +2211,9 @@ export class BoardStore {
   @observable
   scale: number = 1
 
-  @observable
-  online: boolean = false;
+  get online() {
+    return this.room && this.room.phase === RoomPhase.Connected
+  }
 
   @observable
   showColorPicker: boolean = false
@@ -2268,8 +2279,7 @@ export class BoardStore {
     this.convertPhase = ''
     this.sceneType = ''
     this.uploadingPhase = ''
-    this.scale = 1  
-    this.online = false;
+    this.scale = 1
     this.showColorPicker = false
     this.strokeColor = {
       r: 0,
@@ -2679,6 +2689,33 @@ export class BoardStore {
   
   setOpenDisk() {
     this.openDisk = !this.openDisk
+  }
+
+  private waitRoomReady(room: Room): Promise<boolean> {
+    if(!room) {
+      return Promise.resolve(false)
+    }
+    switch (room.phase) {
+        case RoomPhase.Connected: {
+            return Promise.resolve(true);
+        }
+        case RoomPhase.Disconnected:
+        case RoomPhase.Disconnecting: {
+            return Promise.resolve(false);
+        }
+        case RoomPhase.Connecting:
+        case RoomPhase.Reconnecting: {
+            return new Promise(resolve => {
+                room.callbacks.once("onPhaseChanged", (phase:RoomPhase) => {
+                    if (phase === RoomPhase.Connected) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                });
+            });
+        }
+    }
   }
 }
 

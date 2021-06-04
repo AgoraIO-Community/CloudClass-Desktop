@@ -742,7 +742,21 @@ export class AcadsocRoomStore extends SimpleInterval {
       }).catch((err) => {
         const error = GenericErrorWrapper(err)
         BizLogger.warn(`${error}`)
-        this.appStore.isNotInvisible && this.appStore.uiStore.addToast(t('toast.failed_to_join_board'))
+        if(this.appStore.isNotInvisible) {
+          dialogManager.show({
+            text: t(`error.join_board_fail`),
+            showConfirm: true,
+            showCancel: true,
+            confirmText: t('aclass.confirm.refresh'),
+            visible: true,
+            cancelText: t('aclass.confirm.no'),
+            onConfirm: async () => {
+              window.location.reload()
+            },
+            onCancel: () => {
+            }
+          })
+        }
       })
       this.appStore.uiStore.stopLoading()
 

@@ -8,6 +8,13 @@ const ExceptionMapping = {
 
 
 export class BusinessExceptions {
+    static shouldEndClassroomSession(errCode?: string): boolean {
+        if(["20410100", "20403001"].includes(`${errCode}`)) {
+            return true
+        }
+        return false
+    }
+
     static getReadableText(errCode?: string, errMessage?: string):string {
         if(errCode && ExceptionMapping.hasOwnProperty(errCode)) {
             return ExceptionMapping[errCode]
