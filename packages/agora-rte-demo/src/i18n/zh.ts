@@ -34,7 +34,8 @@ const zhCN: any = {
       "exit": "确定退出教室吗？",
       "endClass": "结束教室",
       "yes": "确定",
-      "no": "取消"
+      "no": "取消",
+      "refresh": "刷新"
     },
     "board": {
       "size": "大小",
@@ -228,6 +229,7 @@ const zhCN: any = {
     'class_end': '课程已结束，请点击确定离开教室',
     'unknown': '发生未知错误，请点击确认离开教室',
     'room_is_full': '当前房间已满，请点击确认离开教室',
+    'join_board_fail': '加入白板失败，请点击刷新重试或点击取消忽略'
   },
   'whiteboard': {
     'downloading': '下载中 {reason}%...',

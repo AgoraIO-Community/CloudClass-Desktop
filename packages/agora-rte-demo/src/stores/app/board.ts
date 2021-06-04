@@ -993,7 +993,7 @@ export class BoardStore {
         await this.refreshState()
       }catch(e) {
         // ignore errors
-        BizLogger.info(`refresh state failed ${e.message}`)
+        BizLogger.warn(`refresh state failed ${e.message}`)
       }
 
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
@@ -2706,7 +2706,7 @@ export class BoardStore {
         case RoomPhase.Connecting:
         case RoomPhase.Reconnecting: {
             return new Promise(resolve => {
-                room.callbacks.once("onPhaseChanged", phase => {
+                room.callbacks.once("onPhaseChanged", (phase:RoomPhase) => {
                     if (phase === RoomPhase.Connected) {
                         resolve(true);
                     } else {
@@ -2715,6 +2715,7 @@ export class BoardStore {
                 });
             });
         }
+    }
   }
 }
 

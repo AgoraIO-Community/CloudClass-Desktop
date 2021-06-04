@@ -33,8 +33,9 @@ const en = {
     "confirm": {
       "exit": "Are you sure exit room? ",
       "endClass": "Quit Classroom",
-      "yes": "confirm",
-      "no": "cancel"
+      "yes": "Confirm",
+      "no": "Cancel",
+      "refresh": "Refresh"
     },
     "board": {
       "size": "Size",
@@ -161,7 +162,7 @@ const en = {
   'tool': {
     'toolBarname': 'Tools',
     'selector': 'mouse selector',
-    'pencil': 'penceil',
+    'pencil': 'pencil',
     'rectangle': 'rectangle',
     'ellipse': 'ellipse',
     'eraser': 'eraser',
@@ -242,6 +243,7 @@ const en = {
     'class_end': 'The classroom is end.',
     'unknown': 'Unknown error occured.',
     'room_is_full': 'The room is full',
+    'join_board_fail': 'Join board failed, try refreshing the page'
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',
