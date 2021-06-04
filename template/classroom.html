@@ -122,9 +122,10 @@
     const update_launch_status = (status) => {
       update_status([
         `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+        `Library ${!window.AgoraEduSDK ? 'loading...' : 'loaded'}`,
         `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
         `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-        `Library ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+        `Resource ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
         `${status}`
       ].join('\r\n'))
     }
@@ -178,7 +179,7 @@
         rootDom = document.querySelector("#root1")
       }
 
-      if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom) {
+      if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom || !window.AgoraEduSDK) {
         update_launch_status('Waiting to launch..')
         setTimeout(collectPerformance, 200)
       } else {

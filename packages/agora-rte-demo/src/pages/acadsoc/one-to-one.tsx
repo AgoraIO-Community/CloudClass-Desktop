@@ -49,7 +49,7 @@ export const AcadsocOneToOne = observer(() => {
     } else {
       // should retry
       dialogManager.show({
-        text: `${BusinessExceptions.getReadableText(err.errCode, err.message)}, ${t('click_to_retry')}`,
+        text: `${BusinessExceptions.getReadableText(err.errCode, err.message)} ${t('click_to_retry')}`,
         showConfirm: true,
         showCancel: true,
         confirmText: t('aclass.confirm.refresh'),
