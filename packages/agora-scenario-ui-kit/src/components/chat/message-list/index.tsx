@@ -51,9 +51,6 @@ export const MessageList: FC<MessageListProps> = ({
     const handleFocus = () => setFocused(true);
 
     const handleBlur = () => {
-        if (!!chatText) {
-          return;
-        }
         setFocused(false);
     };
 
@@ -118,7 +115,7 @@ export const MessageList: FC<MessageListProps> = ({
                 ))
                 )}
             </div>
-            <div className={`chat-texting ${!!chatText && focused ? 'focus' : ''}`}>
+            <div className={`chat-texting ${!!chatText || focused ? 'focus' : ''}`}>
                 <textarea
                     value={disableChat ? '' : chatText}
                     className="chat-texting-message"
