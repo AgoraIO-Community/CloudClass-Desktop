@@ -2042,6 +2042,7 @@ export class RoomStore extends SimpleInterval {
     this.isJoiningRoom = false
   }
 
+  @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
