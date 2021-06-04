@@ -30,19 +30,42 @@ export const AcadsocOneToOne = observer(() => {
     } catch (err) {
       EduLogger.info(" appStore.destroyRoom ", err.message)
     }
-    dialogManager.show({
-      text: BusinessExceptions.getReadableText(err.errCode, err.message),
-      showConfirm: true,
-      showCancel: false,
-      confirmText: t('aclass.confirm.yes'),
-      visible: true,
-      cancelText: t('aclass.confirm.no'),
-      onConfirm: async () => {
-        await appStore.destroyRoom()
-        // uiStore.unblock()
-        // history.push('/')
-      }
-    })
+
+    if(BusinessExceptions.shouldEndClassroomSession(err.errCode)) {
+      // should exit classroom
+      dialogManager.show({
+        text: BusinessExceptions.getReadableText(err.errCode, err.message),
+        showConfirm: true,
+        showCancel: false,
+        confirmText: t('aclass.confirm.yes'),
+        visible: true,
+        cancelText: t('aclass.confirm.no'),
+        onConfirm: async () => {
+          await appStore.destroyRoom()
+          // uiStore.unblock()
+          // history.push('/')
+        }
+      })
+    } else {
+      // should retry
+      dialogManager.show({
+        text: `${BusinessExceptions.getReadableText(err.errCode, err.message)}, ${t('click_to_retry')}`,
+        showConfirm: true,
+        showCancel: true,
+        confirmText: t('aclass.confirm.refresh'),
+        visible: true,
+        cancelText: t('aclass.confirm.no'),
+        onConfirm: async () => {
+          window.location.reload()
+          // uiStore.unblock()
+          // history.push('/')
+        },
+        onCancel: async () => {
+
+        }
+      })
+    }
+    
     appStore.uiStore.stopLoading()
     return
   }

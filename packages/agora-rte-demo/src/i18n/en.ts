@@ -489,6 +489,7 @@ const en = {
   'cancel_confirm': 'Are you sure to ignore？',
   'reject_confirm': 'Are you sure to reject?',
   'allow_confirm': 'Are you sure to accept',
+  'click_to_retry': 'Try reloading the page, or ignore this error.'
 }
 
 export default en;

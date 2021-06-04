@@ -488,6 +488,7 @@ const zhCN: any = {
   'cancel_confirm': '确定忽略吗？',
   'reject_confirm': '确定拒绝吗？',
   'allow_confirm': '确定允许吗？',
+  'click_to_retry': '你可以尝试点击刷新重试, 或点击取消继续'
 }
 
 export default zhCN;
