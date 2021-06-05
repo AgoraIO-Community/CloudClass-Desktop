@@ -1908,6 +1908,11 @@ export class BoardStore extends ZoomController {
     const room = this.room
     // const iframe = this.iframeList.get(scenePath)
     const iframe = this.iframe
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
+      // TODO: workaround.
+      // Cause probably is readonly state, so the IframeBridge cannot operate.
+      await this.room.setWritable(true)
+    }
     if (!iframe) {
       const iframe = await IframeBridge.insert({
         room,
@@ -1927,7 +1932,8 @@ export class BoardStore extends ZoomController {
         displaySceneDir: `${scenePath}`,
         useClicker: true
       })
-      room.setScenePath(scenePath)
+      this.putCourseResource(resourceUuid)
+      // room.setScenePath(scenePath)
     }
     // if (bridge) {
       
