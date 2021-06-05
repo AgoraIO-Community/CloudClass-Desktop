@@ -235,7 +235,7 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
         }
       }
     }
-    if (userType === 'teacher') {
+    if (userType === 'teacher' || userType === 'assistant') {
       if (!online || !onPodium || deviceState === 2 || !hasStream) {
         return {
           hover: false,
