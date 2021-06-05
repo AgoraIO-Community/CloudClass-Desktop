@@ -708,12 +708,12 @@
   }
 }
 
-.tabs-top {
+.whiteboard .tabs-top {
   width: 100%;
 }
-.tabs-top .tabs-nav-list {
+.whiteboard .tabs-top .tabs-nav-list {
   overflow-x: scroll;
 }
-.tabs-top .tabs-nav-operations{
+.whiteboard .tabs-top .tabs-nav-operations{
   display: none !important;
 }
