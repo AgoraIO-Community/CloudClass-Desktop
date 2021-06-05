@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { Placeholder } from '~components/placeholder';
-import { t } from '~components/i18n';
+import { t, transI18n } from '~components/i18n';
 import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 
@@ -47,7 +47,7 @@ export const ChatList: FC<ChatListProps> = ({
     return (
         <ul className="chat-list" ref={chatHistoryRef} onScroll={handleScroll}>
             {!conversations || conversations.length === 0 ? (
-            <Placeholder placeholderDesc={t('placeholder.empty_quiz')} placeholderType={'noQuestion'} />
+            <Placeholder placeholderDesc={transI18n('placeholder.empty_quiz')} placeholderType={'noQuestion'} />
                 ) :
             (conversations.map(c => (
                 <li className="chat-list-item" key={`${c.userUuid}`} onClick={() => {onClickConversation(c)}}>

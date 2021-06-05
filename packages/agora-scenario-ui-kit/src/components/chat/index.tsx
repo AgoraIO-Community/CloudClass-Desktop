@@ -93,7 +93,6 @@ export const SimpleChat: FC<ChatProps> = ({
   className,
   ...resetProps
 }) => {
-  const { t } = useTranslation()
   const cls = classnames({
       [`${className}`]: !!className,
   })
@@ -107,7 +106,7 @@ export const SimpleChat: FC<ChatProps> = ({
       />}>
       <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
         <div className="chat-header">
-          <span className="chat-header-title">{t('message')}</span>
+          <span className="chat-header-title">{transI18n('message')}</span>
           <span style={{
             display: 'flex',
             justifyContent: 'center',
@@ -131,7 +130,7 @@ export const SimpleChat: FC<ChatProps> = ({
             <div className="chat-notice">
             <span>
                 <Icon type="red-caution" />
-                <span>{t('placeholder.enable_chat_muted')}</span>
+                <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
             </div>
         ) : null}
@@ -279,7 +278,7 @@ export const Chat: FC<ChatProps> = ({
                 <div className="chat-notice with-tab">
                 <span>
                     <Icon type="red-caution" />
-                    <span>{t('placeholder.enable_chat_muted')}</span>
+                    <span>{transI18n('placeholder.enable_chat_muted')}</span>
                 </span>
                 </div>
             ) : null}
