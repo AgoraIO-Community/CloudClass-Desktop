@@ -53,6 +53,7 @@
 
 .toolbar-shadow.hidden {
   box-shadow: none;
+  display: none;
 }
 
 .circle-border {
