@@ -91,8 +91,6 @@ module.exports = {
           }, 
           {
             loader: "thread-loader",
-            options: {
-            }
           }
         ],
         // exclude: /node_modules|(\.(stories.ts)x?$)/,
@@ -105,15 +103,6 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: [
-          path.resolve(__dirname, 'src'),
-          path.resolve(__dirname, '../agora-rte-sdk/src'),
-          path.resolve(__dirname, '../agora-edu-core/src'),
-          path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
-          path.resolve(__dirname, '../agora-plugin-gallery/src'),
-          path.resolve(__dirname, '../agora-widget-gallery/src'),
-          path.resolve(__dirname, '../../node_modules/rc-slider'),
-        ],
         use: [
           'style-loader',
           // {
@@ -138,6 +127,9 @@ module.exports = {
               }
             }
           },
+          {
+            loader: "thread-loader",
+          }
           // {
           //   loader: 'thread-loader',
           // }
@@ -222,7 +214,7 @@ module.exports = {
     ]
 },
   plugins: [
-    // new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin(),
     new DefinePlugin({
       // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),

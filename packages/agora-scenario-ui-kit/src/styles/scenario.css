@@ -1,0 +1,448 @@
+.horizontal {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.chat-border {
+  border: 1px solid #ECECF1;
+  transform: translateY(-2px);
+}
+
+.whiteboard {
+  z-index: 0;
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  height: 100%; 
+  width: 100%;
+  border: 1px solid #ECECF1;
+  border-radius: 4px;
+  background: white;
+}
+.zoom-position {
+  position: absolute;
+  left: 15px;
+  bottom: 20px;
+}
+
+.whiteboard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.card-loading-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.pin-right {
+  position: absolute;
+  right: 15px;
+  bottom: 20px;
+  transition: .5s;
+}
+
+.pin-right-full-not-collapse {
+  right: 330px !important;
+}
+
+.pin-right-full-collapse {
+  right: 76px !important;
+}
+
+.full-screen-chat {
+  /* position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 514px; */
+}
+
+.mid-class-aside {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.mid-class-aside-full-collapse {
+  transition: .5s;
+  margin-right: -300px;
+}
+
+.mid-class-aside-full-not-collapse {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.mid-class-aside .chat-panel {
+  /* transform: translateX(2px);
+  right: 0;
+  bottom: 0; */
+}
+
+.mid-class-teacher {
+  /* border: 2px solid white; */
+  border-right: none;
+}
+
+.mid-class-aside .full-video-wrap {
+  height: auto;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+.mid-class-aside .video-wrap {
+  height: auto;
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+}
+
+.chat-panel {
+  @apply bg-white;
+  /* width: 300px; */
+  position: relative;
+  flex: 1;
+  border-radius: 4px;
+  min-width: 300px;
+  /* margin-left: 2px; */
+  /* @apply border-l border-gray-100; */
+}
+
+.zoom-position {
+  position: absolute;
+  left: 15px;
+  bottom: 20px;
+}
+
+.whiteboard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.card-loading-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.pin-right {
+  position: absolute;
+  right: 15px;
+  bottom: 20px;
+  transition: .5s;
+}
+
+.pin-right-full-not-collapse {
+  right: 330px !important;
+}
+
+.pin-right-full-collapse {
+  right: 76px !important;
+}
+
+.full-screen-chat {
+  /* position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 514px; */
+}
+
+.big-class-aside {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.big-class-aside-full-collapse {
+  transition: .5s;
+  margin-right: -300px;
+}
+
+.big-class-aside-full-not-collapse {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.big-class-aside .chat-panel {
+  /* transform: translateX(2px);
+  right: 0;
+  bottom: 0; */
+}
+
+.big-class-teacher {
+  border: 2px solid white;
+  border-right: none;
+}
+
+.big-class-aside .full-video-wrap {
+  height: 0;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+.mid-class-aside .video-wrap {
+  height: auto;
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+}
+
+.zoom-position {
+  position: absolute;
+  left: 15px;
+  bottom: 20px;
+}
+
+.whiteboard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.card-loading-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.full-teacher-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+  /* border-bottom: 2px solid white; */
+}
+
+.edu-room .video-player.teacher-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+  /* border-bottom: 2px solid white; */
+  margin-top: 0px !important
+}
+
+.full-student-1v1 {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: .5s;
+}
+
+.one-class-aside {
+  transition: .5s;
+  margin-right: 0;
+}
+
+.one-class-aside-full {
+  transition: .5s;
+  margin-right: -300px;
+}
+
+.one-class-aside .chat-panel {
+  /* transform: translateX(2px); */
+  /* right: 0; */
+  /* bottom: 0; */
+}
+
+.edu-room .video-player.student-1v1 {
+  opacity: 1;
+  transform: scale(1);
+  transition: .5s;
+  margin-top: -2px !important;
+}
+
+/* .edu-room .video-player {
+  margin-top: 0px !important;
+} */
+
+.full-screen-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 514px;
+}
+
+
+.rtc-video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.rtc-screen-share {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+  background: black;
+}
+
+.rtc-screen-share video{
+  object-fit: contain !important;
+}
+
+.edu-room .layout {
+  position: relative;
+  transform: translateY(2px);
+}
+
+.edu-room .tabs {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.chat-panel .tabs {
+  top: 0;
+  left: 0;
+  flex: 1 1;
+  position: relative;
+}
+
+.layout-aside-normal {
+  max-width: 300px;
+  min-width: 300px;
+  flex: 1;
+  gap: 2px;
+  padding-left: 2px;
+  position: relative;
+}
+
+.layout-aside.layout-aside-fullscreen {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: none;
+}
+
+.layout-aside-fullscreen {
+  height: 50%;
+}
+
+.layout-aside-fullscreen .chat-header {
+  border-top: 1px solid #ececf1;
+}
+
+.layout-aside-normal .icon-close {
+  display: none;
+}
+
+.screen-share-player-container {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+  z-index: 0;
+}
+
+.agora-board-resources .tabs {
+  position: inherit;
+  top: 0;
+  left: 0;
+}
+
+.agora-board-resources input[type=file] {
+  display: none;
+}
+
+.mirror canvas{
+  transform: scaleX(1) !important;
+}
+
+.mirror video{
+  transform: scaleX(1) !important;
+}
+
+#netless {
+  z-index: 0;
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  height: 100%; 
+  width: 100%;
+  /* border: 1px solid #ECECF1; */
+  /* border-radius: 4px; */
+}
+
+.filename {
+  @apply text-white;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
+}
+
+.video-marquee-pin {
+  position: absolute;
+  height: 165px;
+  width: 100%;
+}
+
+.video-marquee-pin ~ .board-box {
+  margin-top: 171px;
+}
+
+.board-box {
+  position: relative;
+  height: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreen .layout-aside {
+  border: none;
+  min-width: 35px;
+}
+
+.fullscreen .video-player {
+  display: none;
+}
+
+.chat-header.with-tab {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  justify-content: flex-end;
+  flex: 1 1;
+  z-index: 9;
+  border: 0;
+}
+
+/* .small-class-chat {
+  position: absolute;
+  bottom: 8px;
+  right: 11px;
+} */
+
+.fullscreen .video-marquee-pin ~ .board-box {
+  margin-top: 0px;
+}
+
+.placeholder-desc {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7d8798;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  z-index: 999;
+  transform: translateY(74px);
+}

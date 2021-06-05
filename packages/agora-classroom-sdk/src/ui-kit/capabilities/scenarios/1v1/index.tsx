@@ -8,8 +8,6 @@ import { WhiteboardContainer } from '~capabilities/containers/board'
 import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoList } from '~capabilities/containers/video-player'
-import './style.css'
-import '../scenario.css'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { Widget } from '~capabilities/containers/widget'
