@@ -2,9 +2,11 @@ import { RendererPlayer } from "@/ui-kit/utilities/renderer-player";
 import { useGlobalContext, useVolumeContext, useMediaContext, useRoomContext, useStreamListContext, useUserListContext, EduMediaStream } from "agora-edu-core";
 import { observer } from "mobx-react";
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { transI18n, Select, Volume } from "~ui-kit";
+import { transI18n, Select, Volume, Toast } from "~ui-kit";
 import {v4 as uuidv4} from 'uuid';
 import classnames from "classnames";
+import { AgoraMediaDeviceEnum } from "agora-edu-core";
+import { GenericErrorWrapper } from "agora-rte-sdk";
 
 const VolumeIndicationView = observer(() => {
     const {
@@ -73,9 +75,31 @@ export const Premium = observer(() => {
     }, [installDevices])
 
     const startPreviewCallback = useCallback(async () => {
-        await getCameraList()
-        await changeCamera(cameraList[1].deviceId)
-        await changeMicrophone(microphoneList[1].deviceId)
+        try {
+            await getCameraList()
+            await changeCamera(cameraList[1].deviceId)
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text: `${GenericErrorWrapper(err)}`,
+                closeToast: () => {
+
+                }
+            })
+        }
+        try {
+            await getMicrophoneList()
+            const deviceId = cameraList[1]?.deviceId ?? AgoraMediaDeviceEnum.Disabled
+            await changeMicrophone(deviceId)
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text: `${GenericErrorWrapper(err)}`,
+                closeToast: () => {
+                    
+                }
+            })
+        }
         await startPreview((evt: any) => {
             pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
         })
@@ -96,7 +120,31 @@ export const Premium = observer(() => {
     }, [localUserInfo.userUuid, muteVideo])
 
     const joinCallback = useCallback(async () => {
-        await changeCamera(cameraList[1].deviceId)
+        try {
+            await getCameraList()
+            await changeCamera(cameraList[1].deviceId)
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text: `${GenericErrorWrapper(err)}`,
+                closeToast: () => {
+                    
+                }
+            })
+        }
+        try {
+            await getMicrophoneList()
+            const deviceId = cameraList[1]?.deviceId ?? AgoraMediaDeviceEnum.Disabled
+            await changeMicrophone(deviceId)
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text: `${GenericErrorWrapper(err)}`,
+                closeToast: () => {
+                    
+                }
+            })
+        }
         await joinRoom()
     }, [cameraList, changeCamera, joinRoom])
 
@@ -200,9 +248,9 @@ export const Premium = observer(() => {
                     </RendererPlayer>
                 </div>
                 {
-                    remoteStreams.map((stream:EduMediaStream) => {
+                    remoteStreams.map((stream:EduMediaStream, key: number) => {
                         return (
-                            <div className="h-40">
+                            <div key={key} className="h-40">
                                 <RendererPlayer style={{height:'100%'}} key={stream && stream.renderer && stream.renderer.videoTrack && stream.renderer.videoTrack.getTrackId()} track={stream.renderer} id={stream.streamUuid} className="rtc-video">
                                 </RendererPlayer>
                             </div>
