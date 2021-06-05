@@ -24,6 +24,7 @@ export const Progress: React.FC<ProgressProps> = ({
 
   const bgCls = classnames({
     [`overflow-hidden h-2 text-xs flex rounded bg-${type}-bg`]: 1,
+    ['progress-height']: 1,
   })
 
   const fgCls = classnames({

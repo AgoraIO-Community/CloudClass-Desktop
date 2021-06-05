@@ -5,3 +5,11 @@
 .bg-download-fg {
   background-color: #456DFD;
 }
+
+.progress-height {
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
