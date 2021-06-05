@@ -1,4 +1,5 @@
-import { ActionTypes, t, transI18n } from '~ui-kit'
+import { t, transI18n } from '~components/i18n'
+import { ActionTypes } from '~components/roster'
 import classnames from 'classnames'
 import React, { ReactNode, useCallback } from 'react'
 import Draggable from 'react-draggable'
@@ -246,15 +247,15 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                           style={{
                             paddingLeft: idx !== 0 ? 0 : 25
                           }}
-                          onClick={
-                            canOperate(userType, localUserUuid, data, col)
-                              ? () =>
+                        >
+                          {col.render
+                            ? col.render((data as any)[col.key], data, canOperate(userType, localUserUuid, data, col), userType as any, (canOperate(userType, localUserUuid, data, col)
+                            ? () =>
                                 col.action &&
                                 onClick &&
                                 onClick(col.action, data.uid)
-                              : undefined
-                          }>
-                          {(data as any)[col.key]}
+                            : undefined))
+                            : (data as any)[col.key]}
                         </span> :
                         <span
                           style={{

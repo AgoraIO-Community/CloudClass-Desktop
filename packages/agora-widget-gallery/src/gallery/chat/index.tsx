@@ -24,10 +24,6 @@ const App = observer(() => {
     events.global.subscribe((state:any) => {
       pluginStore.globalContext = state
     })
-    return () => {
-      events.chat.unsubscribe()
-      events.global.unsubscribe()
-    }
   }, [])
 
   const {

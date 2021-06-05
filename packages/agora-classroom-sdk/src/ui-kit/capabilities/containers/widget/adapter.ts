@@ -44,6 +44,11 @@ export const Adapter = () => {
     useEffect(() => {
         chatEvents.next({unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList})
     }, [unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList, chatEvents])
+    useEffect(() => {
+        return () => {
+            chatEvents.complete()
+        }
+    }, [])
 
     useEffect(() => {
         globalEvents.next({isFullScreen, isJoined})

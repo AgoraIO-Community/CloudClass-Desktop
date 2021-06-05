@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { Placeholder, t } from '~ui-kit';
+import { Placeholder } from '~components/placeholder';
+import { t } from '~components/i18n';
 import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 
