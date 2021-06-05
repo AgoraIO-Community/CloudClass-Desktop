@@ -5969,10 +5969,10 @@ agora-electron-sdk@education290:
 "agora-rtc-sdk-ng@file:packages/agora-rtc-sdk-ng":
   version "4.2.1"
 
-agora-rtm-sdk@1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/agora-rtm-sdk/-/agora-rtm-sdk-1.4.2.tgz#d4595b27e2bc24d554403397f0ae1e5caa5bb602"
-  integrity sha512-SJ0hOP5RfR0UAWEH0Hsm7YF5V1WqIxw8rEr5nbBwQmZVc9zXefMg9o5hHhKYR2LcYP9PYMO9zmpueCNImojktw==
+agora-rtm-sdk@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/agora-rtm-sdk/-/agora-rtm-sdk-1.4.3.tgz#cfdbf95b65a1b36ae83d1cd857d96e6e3fed3734"
+  integrity sha512-0CwobiGaT+vlc594vby6vOAzbkhbW9D/v7rBYcTwC/2mDfDgPR9ZWAU/xHPW/vJkVHMMPxQ2J7WY0Gtag65U8w==
 
 airbnb-js-shims@^2.2.1:
   version "2.2.1"
