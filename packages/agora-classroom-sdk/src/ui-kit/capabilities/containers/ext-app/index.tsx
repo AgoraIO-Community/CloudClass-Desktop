@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
-import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext, useSmallClassVideoControlContext } from 'agora-edu-core'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
@@ -41,12 +41,13 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
         return () => app.extAppWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, app])
+    const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
           handle=".modal-title" 
           defaultPosition={{x: 100, y: 100}} 
           bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
-          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? 40 : 0}}
+          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? (studentStreams.length ? 40 + 170 : 40) : 0}}
         >
             <Modal 
               title={transI18n(`${app.appName}.appName`)} 
