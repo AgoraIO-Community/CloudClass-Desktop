@@ -78,14 +78,6 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x)?$/i,
-        include: [
-          path.resolve("src"),
-          path.resolve(__dirname, '../agora-rte-sdk/src'),
-          path.resolve(__dirname, '../agora-edu-core/src'),
-          path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
-          path.resolve(__dirname, '../agora-plugin-gallery/src'),
-          path.resolve(__dirname, '../agora-widget-gallery/src'),
-        ],
         use: [
           {
             loader: "babel-loader",
@@ -103,7 +95,7 @@ module.exports = {
             }
           }
         ],
-        exclude: /node_modules|(\.(stories.ts)x?$)/,
+        // exclude: /node_modules|(\.(stories.ts)x?$)/,
         // exclude: [
         //   // path.resolve('node_modules'),
         //   {
