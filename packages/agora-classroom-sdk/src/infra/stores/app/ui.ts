@@ -117,9 +117,12 @@ export class UIStore {
     this.resetStateQueue()
   }
 
-  eduRole2UIRole(role: EduRoleTypeEnum) : "teacher" | "student" {
+  eduRole2UIRole(role: EduRoleTypeEnum) : "teacher" | "student" | "assistant"{
     if(role === EduRoleTypeEnum.teacher) {
       return "teacher"
+    }
+    if(role === EduRoleTypeEnum.assistant) {
+      return "assistant"
     }
     return "student"
   }
