@@ -1501,7 +1501,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return oneToOneTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return oneToOneTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return []
         }
@@ -1518,7 +1518,7 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
-          return bigClassTools.filter((item: ToolItem) => !['cloud', 'tools'].includes(item.value))
+          return bigClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
           return bigClassTools.filter((item: ToolItem) => item.value === 'student_list')
         }
