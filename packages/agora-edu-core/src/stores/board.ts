@@ -1856,8 +1856,13 @@ export class BoardStore extends ZoomController {
           }
         }
       })
-      this.room.putScenes(`/${resource.id}`, resource.scenes)
-      this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      const sceneExists = resource.id && this.room.entireScenes()[resource.id]
+      if (sceneExists) {
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      } else {
+        this.room.putScenes(`/${resource.id}`, resource.scenes)
+        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      }
     }
   }
 
