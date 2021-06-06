@@ -195,6 +195,10 @@
   transition: .5s;
 }
 
+.toolbar-biz{
+  border-radius: 0px 21px 21px 0px;
+}
+
 .zoom-position {
   position: absolute;
   left: 15px;
