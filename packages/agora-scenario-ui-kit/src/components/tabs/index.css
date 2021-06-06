@@ -712,7 +712,7 @@
   width: 100%;
 }
 .whiteboard .tabs-top .tabs-nav-list {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .whiteboard .tabs-top .tabs-nav-operations{
   display: none !important;
