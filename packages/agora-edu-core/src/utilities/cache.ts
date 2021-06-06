@@ -72,9 +72,10 @@ export class AgoraCaches {
         for (const request of keys) {
             if (request.url.indexOf(uuid) !== -1) {
                 await cache.delete(request);
-                this.downloadList.delete(uuid)
+                // this.downloadList.delete(uuid)
             }
         }
+        this.downloadList.delete(uuid)
         // this.agoraCaches = null;
     }
 
@@ -95,6 +96,9 @@ export class AgoraCaches {
         if (request.url.indexOf(uuid) !== -1) {
           return true;
         }
+      }
+      if(this.downloadList.has(uuid)){
+          return true;
       }
       return false;
     }
