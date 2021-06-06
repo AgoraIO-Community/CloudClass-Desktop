@@ -67,7 +67,7 @@ let params:AppStoreInitParams = {
     roomUuid: "testroom",
     userUuid: "user01",
     roomName: "room",
-    userName: "qianze",
+    userName: "test-demo",
     userRole: 1,
     roomType: 4,
   },
@@ -80,7 +80,7 @@ const App = () => {
 
   const [roomUuid, setRoomUuid] = useState<string>("")
   const [userUuid, setUserUuid] = useState<string>("")
-  const [userRole, setUserRole] = useState<number>(1)
+  const [userRole, setUserRole] = useState<string>("1")
 
   
   const onInitialize = useCallback(() => {
@@ -89,7 +89,7 @@ const App = () => {
     // params.config.agoraAppId = appid
     params.roomInfoParams!.roomUuid = roomUuid
     params.roomInfoParams!.userUuid = userUuid
-    params.roomInfoParams!.userRole = userRole
+    params.roomInfoParams!.userRole = +userRole
 
 
     // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
@@ -125,17 +125,17 @@ const App = () => {
             <div className="md:flex md:flex-col w-full text-xs md:mt-4">
               <div className="mb-3 md:space-y-2 w-full text-xs">
                 <label className="font-semibold text-gray-600 py-2">Room Uuid</label>
-                <input value={roomUuid} onChange={e => setRoomUuid(e.currentTarget.value)} placeholder="Enter room uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <input value={roomUuid} onChange={e => setRoomUuid(e.currentTarget.value)} placeholder="Enter room uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text"/>
                 <p className="text-red text-xs hidden">Please fill out this field.</p>
               </div>
               <div className="mb-3 md:space-y-2 w-full text-xs">
                 <label className="font-semibold text-gray-600 py-2">User Uuid</label>
-                <input value={userUuid} onChange={e => setUserUuid(e.currentTarget.value)} placeholder="Enter user uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <input value={userUuid} onChange={e => setUserUuid(e.currentTarget.value)} placeholder="Enter user uuid" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text"/>
                 <p className="text-red text-xs hidden">Please fill out this field.</p>
               </div>
               <div className="mb-3 md:space-y-2 w-full text-xs">
                 <label className="font-semibold text-gray-600 py-2">User Role</label>
-                <input value={userRole} onChange={e => setUserRole(parseInt(e.currentTarget.value))} placeholder="Enter user role" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text" name="integration[shop_name]" id="integration_shop_name"/>
+                <input value={userRole} onChange={e => setUserRole(`${e.currentTarget.value}`)} placeholder="Enter user role" className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4" type="text"/>
                 <p className="text-red text-xs hidden">Please fill out this field.</p>
               </div>
             </div>

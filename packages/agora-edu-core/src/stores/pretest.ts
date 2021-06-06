@@ -1,13 +1,12 @@
-import { getMicrophoneState } from './../../../agora-scenario-ui-kit/src/components/roster/base';
-import { LocalUserRenderer, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, GenericErrorWrapper, EduLogger, EduUser } from "agora-rte-sdk"
-import { get, isEmpty } from "lodash"
-import { observable, action, computed, reaction, runInAction } from "mobx"
-import { EduScenarioAppStore } from "."
-import { AgoraMediaDeviceEnum } from "../types"
-import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit"
-import {v4 as uuidv4} from 'uuid'
-import { Subject } from 'rxjs'
-import { DeviceErrorCallback } from "../context/type"
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer, MediaService } from "agora-rte-sdk";
+import { isEmpty } from "lodash";
+import { action, computed, observable, reaction, runInAction } from "mobx";
+import { Subject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { EduScenarioAppStore } from ".";
+import { DeviceErrorCallback } from "../context/type";
+import { AgoraMediaDeviceEnum } from "../types";
+import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit";
 
 export enum CustomizeDeviceLabel {
   Disabled = 'disabled'

@@ -40,7 +40,7 @@ export const Premium = observer(() => {
         getCameraList,
         getMicrophoneList,
         changeMicrophone,
-        installDevices
+        installDevices,
     } = useMediaContext()
 
     const {
@@ -113,16 +113,25 @@ export const Premium = observer(() => {
 
     const unmuteVideoCallback = useCallback(async () => {
         unmuteVideo(localUserInfo.userUuid, true)
-    }, [localUserInfo.userUuid, unmuteVideo])
+    }, [localUserInfo.userUuid])
 
     const muteVideoCallback = useCallback(async () => {
         muteVideo(localUserInfo.userUuid, true)
-    }, [localUserInfo.userUuid, muteVideo])
+    }, [localUserInfo.userUuid])
+
+    const unmuteAudioCallback = useCallback(async () => {
+        unmuteAudio(localUserInfo.userUuid, true)
+    }, [localUserInfo.userUuid])
+
+    const muteAudioCallback = useCallback(async () => {
+        muteAudio(localUserInfo.userUuid, true)
+    }, [localUserInfo.userUuid])
 
     const joinCallback = useCallback(async () => {
         try {
             await getCameraList()
-            await changeCamera(cameraList[1].deviceId)
+            const deviceId = cameraList[1]?.deviceId ?? AgoraMediaDeviceEnum.Disabled
+            await changeCamera(deviceId)
         } catch (err) {
             Toast.show({
                 type: 'error',
@@ -146,14 +155,12 @@ export const Premium = observer(() => {
             })
         }
         await joinRoom()
-    }, [cameraList, changeCamera, joinRoom])
+    }, [cameraList, changeCamera])
 
 
     const leaveCallback = useCallback(async () => {
-        await destroyRoom
-    }, [destroyRoom])
-
-    // const setMirrorCallback = () => setMirror((value) => !value)
+        await destroyRoom()
+    }, [])
 
     const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
     const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
@@ -239,13 +246,15 @@ export const Premium = observer(() => {
                 <button className={btnClass} onClick={stopPreviewCallback}>stopPreview</button>
                 <button className={btnClass} onClick={unmuteVideoCallback}>unmuteVideo</button>
                 <button className={btnClass} onClick={muteVideoCallback}>muteVideo</button>
+                <button className={btnClass} onClick={unmuteAudioCallback}>unmuteAudio</button>
+                <button className={btnClass} onClick={muteAudioCallback}>muteAudio</button>
             </div>
             <div style={{
                 minWidth: 'calc(100% - (.25rem * 64))'
             }} className="grid grid-cols-3">
                 <div className="h-40">
-                    <RendererPlayer style={{height:'100%'}} key={cameraRenderer && cameraRenderer.videoTrack ? cameraRenderer.videoTrack.getTrackId() : ''} track={cameraRenderer} id={"local"} className="rtc-video">
-                    </RendererPlayer>
+                    {cameraRenderer ? <RendererPlayer style={{height:'100%'}} key={cameraRenderer.videoTrack ? cameraRenderer.videoTrack.getTrackId() : ''} track={cameraRenderer} id={"local"} className="rtc-video">
+                    </RendererPlayer> : null}
                 </div>
                 {
                     remoteStreams.map((stream:EduMediaStream, key: number) => {
