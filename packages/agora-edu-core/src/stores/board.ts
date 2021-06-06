@@ -1856,7 +1856,7 @@ export class BoardStore extends ZoomController {
           }
         }
       })
-      const sceneExists = resource.id && this.room.entireScenes()[resource.id]
+      const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`]
       if (sceneExists) {
         this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
       } else {
@@ -1919,6 +1919,22 @@ export class BoardStore extends ZoomController {
       await this.room.setWritable(true)
     }
     if (!iframe) {
+      const oldIframe = this.room.getInvisiblePlugin('IframeBridge')
+      if (oldIframe) {
+        //@ts-ignore
+        oldIframe?.setAttributes({
+          //@ts-ignore
+          url: url,
+          width: 1280,
+          height: 720,
+          displaySceneDir: `${scenePath}`,
+          useClicker: true
+        })
+        //@ts-ignore
+        this.iframe = oldIframe
+        this.putCourseResource(resourceUuid)
+        return
+      }
       const iframe = await IframeBridge.insert({
         room,
         url: url,
