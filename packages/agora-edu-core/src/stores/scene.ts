@@ -1163,7 +1163,7 @@ export class SceneStore extends SimpleInterval {
     // if (this.classState)
     if (this.classState === EduClassroomStateEnum.beforeStart) {
       return {
-        holderState: 'noEnter',
+        holderState: 'loading',
         text: `placeholder.student_noEnter`
       }
     }
