@@ -45,7 +45,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     return (
         <Draggable 
           handle=".modal-title" 
-          defaultPosition={{x: 100, y: 100}} 
+          defaultPosition={{x: window.innerWidth / 2 - app.width / 2, y: window.innerHeight / 2 - app.height / 2 - 100}} 
           bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
           positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? (studentStreams.length ? 40 + 170 : 40) : 0}}
         >
@@ -54,7 +54,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               width={app.width} onCancel={onCancel} 
               closable={closable}
             >
-                <div ref={ref} style={{width: '100%', height: app.height}}>
+                <div ref={ref} style={{width: '100%', height: app.height, overflow: 'hidden', transition: '.5s'}}>
                 </div>
             </Modal>
         </Draggable>

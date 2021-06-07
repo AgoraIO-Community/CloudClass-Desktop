@@ -47,12 +47,13 @@
 }
 
 .modal-title {
-    @apply box-border flex justify-between items-center;
+    @apply box-border flex justify-between items-center relative;
     height: 40px;
     background-color: #F9F9FC;
     padding: 0 20px;
     border-radius: 8px 8px 0 0;
     border-bottom: 1px solid #EEEEF7;
+    z-index: 1;
 }
 
 .modal-title-text {
