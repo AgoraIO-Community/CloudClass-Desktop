@@ -47,17 +47,18 @@ const App = observer(() => {
           }}
         >{transI18n('countdown.restart')}</Button>
       </div>
-
-      <Countdown
-        style={{ transform: 'scale(0.4)' }}
-        endDate={pluginStore.result}
-        theme={2}
-        type={2}
-        timeUnit={[':', ':', ':']}
-        play={pluginStore.play}
-      />
+      <div className="numbers-wrap">
+        <Countdown
+          style={{ transform: 'scale(0.4)' }}
+          endDate={pluginStore.result}
+          theme={2}
+          type={2}
+          timeUnit={[':', ':', ':']}
+          play={pluginStore.play}
+        />
+      </div>    
       {pluginStore.showSetting ? (
-        <div style={{ width: '100%' }}>
+        <div className="setting-wrap">
           <div>
             <Input
               value={pluginStore.number}
@@ -106,7 +107,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   appIdentifier = "io.agora.countdown"
   appName = 'countdown'
   width = 258
-  height = 240
+  height = 168 // 开始倒计时后高度为 55
 
   store?: PluginStore
 
@@ -116,6 +117,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle)
+    this.height = this.store.showSetting ? 168 : 55
     ReactDOM.render((
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
@@ -127,6 +129,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     );
   }
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
+    this.height = this.store?.showSetting ? 168 : 55
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): void {

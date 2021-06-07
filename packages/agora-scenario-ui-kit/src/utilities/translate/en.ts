@@ -80,7 +80,7 @@ export const en = {
   'placeholder': {
     'muted_chat': 'Muted Chat',
     'empty_chat': 'Empty Message',
-    'empty_quiz': 'Empty Quiz',
+    'empty_quiz': 'Empty Question',
     'enable_chat_muted': 'Student Chat Muted',
     'input_message': 'Please Input Message',
   },
@@ -245,7 +245,7 @@ export const en = {
     'user_list': 'User List'
   },
   'message': 'Message',
-  'quiz': 'Quiz',
+  'quiz': 'Question',
   'en': 'English',
   'cloud': {
     'fileName': 'file name',
