@@ -9,10 +9,8 @@
 }
 
 .whiteboard {
-  z-index: 0;
-  position: absolute; 
-  top: 0; 
-  left: 0; 
+  display: flex;
+  flex-direction: column;
   height: 100%; 
   width: 100%;
   border: 1px solid #ECECF1;
@@ -23,13 +21,6 @@
   position: absolute;
   left: 15px;
   bottom: 20px;
-}
-
-.whiteboard {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
 .card-loading-position {
@@ -119,12 +110,6 @@
   bottom: 20px;
 }
 
-.whiteboard {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
 .card-loading-position {
   position: absolute;
   top: 0;
@@ -203,12 +188,6 @@
   position: absolute;
   left: 15px;
   bottom: 20px;
-}
-
-.whiteboard {
-  position: absolute;
-  width: 100%;
-  height: 100%;
 }
 
 .card-loading-position {
@@ -300,10 +279,10 @@
   transform: translateY(2px);
 }
 
-.edu-room .tabs {
-  position: absolute;
-  top: 15px;
-  left: 15px;
+.material-menu {
+  margin-top: 8px;
+  margin-left: 15px;
+  /* position: absolute; */
 }
 
 .chat-panel .tabs {
@@ -371,13 +350,10 @@
 
 #netless {
   z-index: 0;
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  height: 100%; 
+  top: 0px;
+  left: 0;
+  height: 100%;
   width: 100%;
-  /* border: 1px solid #ECECF1; */
-  /* border-radius: 4px; */
 }
 
 .filename {

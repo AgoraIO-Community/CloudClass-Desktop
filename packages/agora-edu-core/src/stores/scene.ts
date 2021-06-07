@@ -1085,12 +1085,15 @@ export class SceneStore extends SimpleInterval {
     try {
       this.joiningRTC = false
       try {
-        await this.appStore.pretestStore.closeCamera()
+        // await this.appStore.pretestStore.closeCamera()
+        await this.mediaService.disableLocalVideo()
       } catch (err) {
         BizLogger.warn(`${err}`)
       }
+      this._cameraRenderer = undefined
       try {
-        await this.appStore.pretestStore.closeMicrophone()
+        // await this.appStore.pretestStore.closeMicrophone()
+        await this.mediaService.disableLocalAudio()
       } catch (err) {
         BizLogger.warn(`${err}`)
       }

@@ -154,7 +154,7 @@ const TabsContainer = observer(() => {
   }, [isScreenSharing])
 
   return (
-    <Tabs activeKey={activeSceneName} type="editable-card"
+    <Tabs className="material-menu" activeKey={activeSceneName} type="editable-card"
       onChange={changeSceneItem}>
       {resourcesList.map((item: Resource, key: number) => (
         <TabPane
@@ -281,13 +281,15 @@ export const WhiteboardContainer = observer(({children}: any) => {
 
   return (
     <div className="whiteboard">
-      {children}
-      {
-        ready ? 
-        <div id="netless" ref={mountToDOM} ></div> : null
-      }
       {showTab ? 
       <TabsContainer /> : null}
+      <div className="board-section">
+        {children}
+        {
+          ready ? 
+          <div id="netless" ref={mountToDOM} ></div> : null
+        }
+      </div>
       {showToolBar ?
         <Toolbar 
           active={currentSelector} 
