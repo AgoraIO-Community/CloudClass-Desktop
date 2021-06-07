@@ -282,7 +282,7 @@
 .material-menu {
   margin-top: 8px;
   margin-left: 15px;
-  /* position: absolute; */
+  height: 48px;
 }
 
 .chat-panel .tabs {
