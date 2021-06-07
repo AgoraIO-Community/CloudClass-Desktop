@@ -10,6 +10,8 @@ export * from './context/widget-context'
 
 export * from 'white-web-sdk'
 
+export * from './types'
+
 export {
   mapFileType
 } from './services/upload-service'
