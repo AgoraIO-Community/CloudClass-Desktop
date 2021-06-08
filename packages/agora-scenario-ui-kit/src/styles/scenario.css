@@ -21,6 +21,7 @@
   position: absolute;
   left: 15px;
   bottom: 20px;
+  z-index: 2;
 }
 
 .card-loading-position {
@@ -37,6 +38,7 @@
   right: 15px;
   bottom: 20px;
   transition: .5s;
+  z-index: 2;
 }
 
 .pin-right-full-not-collapse {
@@ -104,12 +106,6 @@
   /* @apply border-l border-gray-100; */
 }
 
-.zoom-position {
-  position: absolute;
-  left: 15px;
-  bottom: 20px;
-}
-
 .card-loading-position {
   position: absolute;
   top: 0;
@@ -117,13 +113,6 @@
   bottom: 0;
   right: 0;
   margin: auto;
-}
-
-.pin-right {
-  position: absolute;
-  right: 15px;
-  bottom: 20px;
-  transition: .5s;
 }
 
 .pin-right-full-not-collapse {
@@ -182,12 +171,6 @@
 
 .toolbar-biz{
   border-radius: 0px 21px 21px 0px;
-}
-
-.zoom-position {
-  position: absolute;
-  left: 15px;
-  bottom: 20px;
 }
 
 .card-loading-position {

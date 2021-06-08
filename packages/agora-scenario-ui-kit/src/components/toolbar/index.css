@@ -228,6 +228,7 @@
   left: 15px;
   top: 5rem;
   height: calc(100% - 92px - 5rem);
+  z-index: 2;
 }
 
 .toolbar-anim-hide {
