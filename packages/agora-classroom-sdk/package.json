@@ -260,7 +260,6 @@
     "react-gtm-module": "2.0.8",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
-    "react-use": "13.24.0",
     "rxjs": "6.6.6",
     "sass-loader": "7.2.0",
     "short-uuid": "4.1.0",

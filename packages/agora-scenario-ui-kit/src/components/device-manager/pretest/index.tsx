@@ -121,15 +121,21 @@ const PretestComponent: React.FC<PretestProps> = ({
 
     const [toastQueue, setToastQueue] = useState<any[]>([])
 
-    const removeToast = (id: any) => {
-        setToastQueue(oldArray => oldArray.filter((it: any) => it.id !== id))
-    }
+    const removeToast = useCallback((id: any) => {
+        setToastQueue(toastQueue.filter((it: any) => it.id !== id))
+        // setToastQueue(oldArray => oldArray.filter((it: any) => it.id !== id))
+    }, [toastQueue])
 
     useEffect(() => {
         pretestChannel && pretestChannel.subscribe({
             next: (evt: any) => {
+                console.log('subscribe:next', evt)
                 if (evt.kind === 'toast') {
-                    setToastQueue(oldArray => oldArray.concat(evt))
+                    setToastQueue(oldArray => {
+                        const state = [...oldArray.concat(evt)]
+                        console.log('subscribe set state ', state)
+                        return state
+                    })
                 } else {
                     setMessage((oldArray: any[]) => oldArray.concat(evt))
                 }
