@@ -499,7 +499,7 @@ export const EducationBoard = observer((props: any) => {
         <ZoomController
           style={{
             position: 'absolute',
-            bottom: props.controlY,
+            bottom: boardStore.isFullScreen ? props.controlY + 44 : props.controlY,
             left: props.controlX,
             zIndex: 10,
             fontSize: '18px',

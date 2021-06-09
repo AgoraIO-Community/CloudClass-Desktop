@@ -292,7 +292,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         timeText = `${t('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
         break;
     }
-    console.log(timeText)
+    // console.log(timeText)
     return timeText
   }
 
