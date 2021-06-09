@@ -1566,6 +1566,8 @@ export class BoardStore extends ZoomController {
       this.controller.abort()
       this.controller = undefined
     }
+    // @ts-ignore
+    // this.iframe = null
     this.activeMap = {}
     this._personalResources = []
     this._resourcesList = []

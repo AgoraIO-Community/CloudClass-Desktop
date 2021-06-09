@@ -186,7 +186,7 @@ export class BoardClient extends EventEmitter {
 
   async destroy() {
     //@ts-ignore
-    this.room && this.room.dispose()
+    // this.room && this.room.dispose()
     if (this.room && !this.disconnected) {
       await this.room.disconnect()
       this.disconnected = true
