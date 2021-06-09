@@ -14,6 +14,7 @@
 .layout-content {
   @apply flex flex-row flex-1 h-full;
   position: relative;
+  width: 0;
 }
 
 .layout-header {
@@ -30,3 +31,5 @@
   gap: 4px;
   transform: translateX(2px);
 }
+
+
