@@ -896,8 +896,23 @@ export class BoardStore {
   async fetchRoomScenes() {
     const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
+      // for debugging info
+      this.logState("courseware", "none")
       return []
     }
+    // for debugging info
+    try {
+      const courseCopy = JSON.parse(JSON.stringify(firstCourseWare))
+      if(courseCopy && courseCopy.taskProgress){
+        courseCopy.taskProgress.convertedFileList = []
+        courseCopy.scenes = []
+      }
+      this.logState("courseware", JSON.stringify(courseCopy))
+    } catch(e) {
+      this.logState("courseware", `copy failed: ${e.message}`)
+    }
+
+
     // await this.startDownload(`${firstCourseWare.taskUuid}`)
     // const items = this.appStore.params.config.courseWareList
     if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
@@ -912,7 +927,15 @@ export class BoardStore {
         taskUuid: firstCourseWare.taskUuid
       }, true)
       return scenes
+    } else {
+      return []
     }
+  }
+
+  logState(key: string, value: string) {
+    this.room.setGlobalState({
+      [`debug_${key}`]: value
+    })
   }
 
   async refreshState() {
@@ -1002,6 +1025,8 @@ export class BoardStore {
       throw e
     }
 
+    // ATODO loading太卡
+    // ATODO 课件不应该用name做标识
     this.ready = true
 
     // 老师
@@ -2470,6 +2495,7 @@ export class BoardStore {
         cacheInfo.skip = true
         this.abortDownload(taskUuid, cacheInfo)
         this.cacheMap.set(taskUuid, cacheInfo)
+        this.logState(`skip-${taskUuid}`, `true`)
       }
     }
   }
@@ -2651,14 +2677,17 @@ export class BoardStore {
   }
 
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) && !this.room.state.sceneState.scenes[0].ppt) {
+    if (!isEmpty(this.room.state.sceneState.scenes) && this.room.state.sceneState.scenes[this.room.state.sceneState.index].ppt) {
+      this.room.scalePptToFit()
+    } else {
+      if(this.room.state.broadcastState.mode === ViewMode.Freedom) {
         this.room.moveCamera({
-            centerX: 0,
-            centerY: 0,
-            scale: 1,
+          centerX: 0,
+          centerY: 0,
+          scale: 1,
         })
+      }
     }
-    this.room.scalePptToFit();
   }
 
   @computed
