@@ -26,7 +26,7 @@ const generateClassName = createGenerateClassName({
 export const LiveRoom = ({store}: RoomConfigProps<AppStore>) => {
   
   return (
-    <StylesProvider injectFirst>
+    <StylesProvider injectFirst generateClassName={generateClassName}>
       <RoomContainer
         mainPath={store.params.mainPath}
         routes={routes}

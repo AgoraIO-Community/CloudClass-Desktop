@@ -156,7 +156,7 @@ const DiskContainer = observer((props: any) => {
 
 export const StorageDisk = (props: any) => {
   return (
-    <StylesProvider injectFirst>
+    <StylesProvider injectFirst generateClassName={generateClassName}>
       <Provider store={props.store}>
         <DiskContainer />
       </Provider>

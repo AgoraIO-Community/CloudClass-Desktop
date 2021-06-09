@@ -11,6 +11,7 @@ import {
   AcadsocRoomStore,
   PretestStore,
   DiskStore,
+  StatisticsStore,
 } from '@/stores/app';
 
 export type appContext = Record<string, AppStore>
@@ -28,6 +29,11 @@ export const useUIStore = (): UIStore => {
 export const useBoardStore = (): BoardStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.boardStore
+}
+
+export const useStatsStore = (): StatisticsStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.statisticsStore
 }
 
 export const useMediaStore = (): MediaStore => {
