@@ -253,7 +253,7 @@ export class AgoraEduSDK {
         rtmUid: option.userUuid,
         rtmToken: option.rtmToken,
       })
-      const data = await retry(eduSDKApi.getConfig, 2)
+      const data = await retry(() => eduSDKApi.getConfig(), 2)
 
       // let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
       let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页

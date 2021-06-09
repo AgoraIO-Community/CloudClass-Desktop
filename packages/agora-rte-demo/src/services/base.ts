@@ -56,12 +56,8 @@ export abstract class ApiBase {
     this.rtmToken = info.rtmToken
   }
 
-  async fetch (params: AgoraFetchParams) {
-
-  }
-
   // 接口请求
-  async _fetch (params: AgoraFetchParams) {
+  async fetch (params: AgoraFetchParams) {
     const {
       method,
       token,
