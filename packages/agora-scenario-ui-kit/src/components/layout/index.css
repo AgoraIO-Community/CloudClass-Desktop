@@ -12,8 +12,7 @@
 }
 
 .layout-content {
-  @apply flex flex-row h-full;
-  width: calc(100% - 19rem);
+  @apply flex flex-row flex-1 h-full;
   position: relative;
 }
 
@@ -24,11 +23,10 @@
 
 .layout-aside {
   @apply flex flex-col border-l border-gray-100 h-full;
-  width: 19rem;
-  /* min-width: 18rem; */
+  /* width: 19rem; */
+  min-width: 18rem;
   border-left: none;
   @apply overflow-hidden;
   gap: 4px;
   transform: translateX(2px);
-  flex-shrink: 0 !important;
 }
