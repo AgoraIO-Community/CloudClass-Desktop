@@ -12,6 +12,7 @@ import { controller } from './controller';
 import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
 import { checkConfigParams, checkDiskOption, checkLaunchOption, checkReplayOption } from './validator';
 import {globalConfigs} from '@/utils/configs'
+import { retry } from '@/utils/utils';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -252,7 +253,7 @@ export class AgoraEduSDK {
         rtmUid: option.userUuid,
         rtmToken: option.rtmToken,
       })
-      const data = await eduSDKApi.getConfig()
+      const data = await retry(eduSDKApi.getConfig, 2)
 
       // let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
       let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
