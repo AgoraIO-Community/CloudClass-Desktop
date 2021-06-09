@@ -50,7 +50,7 @@
   resolved "https://registry.nlark.com/@babel/compat-data/download/@babel/compat-data-7.14.4.tgz#45720fe0cecf3fd42019e1d12cc3d27fadc98d58"
   integrity sha1-RXIP4M7PP9QgGeHRLMPSf63JjVg=
 
-"@babel/core@7.12.3", "@babel/core@7.12.9", "@babel/core@7.13.15", "@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4", "@babel/core@^7.9.0":
+"@babel/core@7.12.10", "@babel/core@7.12.3", "@babel/core@7.12.9", "@babel/core@7.13.15", "@babel/core@^7.1.0", "@babel/core@^7.1.6", "@babel/core@^7.11.1", "@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4", "@babel/core@^7.9.0":
   version "7.13.15"
   resolved "https://registry.nlark.com/@babel/core/download/@babel/core-7.13.15.tgz#a6d40917df027487b54312202a06812c4f7792d0"
   integrity sha1-ptQJF98CdIe1QxIgKgaBLE93ktA=
@@ -903,7 +903,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-runtime@7.12.1", "@babel/plugin-transform-runtime@7.13.15":
+"@babel/plugin-transform-runtime@7.12.1", "@babel/plugin-transform-runtime@7.12.10", "@babel/plugin-transform-runtime@7.13.15":
   version "7.13.15"
   resolved "https://registry.nlark.com/@babel/plugin-transform-runtime/download/@babel/plugin-transform-runtime-7.13.15.tgz#2eddf585dd066b84102517e10a577f24f76a9cd7"
   integrity sha1-Lt31hd0Ga4QQJRfhCld/JPdqnNc=
@@ -1082,7 +1082,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.12.17"
     "@babel/plugin-transform-react-pure-annotations" "^7.12.1"
 
-"@babel/preset-typescript@7.12.1", "@babel/preset-typescript@7.13.0", "@babel/preset-typescript@^7.1.0", "@babel/preset-typescript@^7.12.7":
+"@babel/preset-typescript@7.12.1", "@babel/preset-typescript@7.12.7", "@babel/preset-typescript@7.13.0", "@babel/preset-typescript@^7.1.0", "@babel/preset-typescript@^7.12.7":
   version "7.13.0"
   resolved "https://registry.nlark.com/@babel/preset-typescript/download/@babel/preset-typescript-7.13.0.tgz#ab107e5f050609d806fbb039bec553b33462c60a"
   integrity sha1-qxB+XwUGCdgG+7A5vsVTszRixgo=
@@ -2555,18 +2555,18 @@
   resolved "https://registry.nlark.com/@netless/fetch-progress/download/@netless/fetch-progress-0.0.1.tgz#e4cc415b92f5acc610b6dd533947e40af39915ec"
   integrity sha1-5MxBW5L1rMYQtt1TOUfkCvOZFew=
 
-"@netless/iframe-bridge@2.0.13":
-  version "2.0.13"
-  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.0.13.tgz#c74cf807e9261427e1b561c371bf06cf8ec14ae7"
-  integrity sha1-x0z4B+kmFCfhtWHDcb8Gz47BSuc=
-  dependencies:
-    eventemitter2 "^6.4.3"
-    react "^16.13.1"
-
 "@netless/iframe-bridge@2.0.17":
   version "2.0.17"
   resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.0.17.tgz#e2c128ffa6d7ee693d4b96a6a3f323997f746375"
   integrity sha1-4sEo/6bX7mk9S5amo/MjmX90Y3U=
+  dependencies:
+    eventemitter2 "^6.4.3"
+    react "^16.13.1"
+
+"@netless/iframe-bridge@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.1.2.tgz#ca4e63fc9f3dd03a03d55c0bf2582a6dbeb3502f"
+  integrity sha1-yk5j/J890DoD1VwL8lgqbb6zUC8=
   dependencies:
     eventemitter2 "^6.4.3"
     react "^16.13.1"
@@ -5547,7 +5547,26 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
-agora-electron-sdk@2.9.107-rc.148, agora-electron-sdk@apaas:
+agora-electron-sdk@2.9.107-rc.148-build.68:
+  version "2.9.107-rc.148-build.68"
+  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148-build.68.tgz#1e201faf19e57d37d0de3901b1122c995e1c4fb5"
+  integrity sha1-HiAfrxnlfTfQ3jkBsRIsmV4cT7U=
+  dependencies:
+    bluebird "^3.7.1"
+    download "^7.1.0"
+    extract-zip "^1.6.7"
+    fs-extra "^8.1.0"
+    glob "^7.1.6"
+    just-task "^0.14.0"
+    lodash.isequal "^4.5.0"
+    nan "^2.14.0"
+    node-gyp "^5.1.0"
+    rimraf "^3.0.0"
+    shelljs "^0.8.3"
+    yuv-buffer "^1.0.0"
+    yuv-canvas "^1.2.1"
+
+agora-electron-sdk@apaas:
   version "2.9.107-rc.148"
   resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148.tgz#1ca54fb816a3c3c549313cc5dcc32ec3e11ec1a0"
   integrity sha1-HKVPuBajw8VJMTzF3MMuw+EewaA=
@@ -12037,7 +12056,7 @@ global@4.3.2:
     min-document "^2.19.0"
     process "~0.5.1"
 
-global@^4.3.1, global@^4.4.0, global@~4.4.0:
+global@4.4.0, global@^4.3.1, global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.npm.taobao.org/global/download/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha1-PnsQUXkAajI+1xqvyj6cV6XMZAY=
