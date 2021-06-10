@@ -290,6 +290,10 @@ export class MediaStore {
         })
       }
 
+      if (evt.resource === 'screen') {
+        this.appStore.boardStore.closeMaterial('/screenShare')
+      }
+
       if (evt.operation === 'pulled') {
         handleDevicePulled(evt)
       }
