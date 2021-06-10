@@ -546,15 +546,12 @@ export class BoardStore {
 
   controller: any = undefined
 
-  @observable
-  cacheMap = new Map<string, CacheInfo>()
-
   // cancelDownloading() {
   //   if (this.controller) {
   //     this.controller.abort()
   //     this.controller = undefined
   //     this.downloading = false
-  //     this.cacheMap.delete(this.currentTaskUuid)
+  //     this.appStore.statisticsStore.cacheMap.delete(this.currentTaskUuid)
   //     this.preloadingProgress = -1
   //   }
   // }
@@ -574,12 +571,12 @@ export class BoardStore {
   async startDownload(taskUuid: string) {
     try {
       this.currentTaskUuid = taskUuid
-      let cacheInfo = this.cacheMap.get(taskUuid)
+      let cacheInfo = this.appStore.statisticsStore.cacheMap.get(taskUuid)
       if (cacheInfo && cacheInfo.downloading) {
         return
       }
 
-      this.cacheMap.set(taskUuid, {
+      this.appStore.statisticsStore.cacheMap.set(taskUuid, {
         progress: 0,
         cached: false,
         skip: false,
@@ -593,7 +590,7 @@ export class BoardStore {
       await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
         this.preloadingProgress = progress
         // this.controller = controller
-        const cacheInfo = this.cacheMap.get(taskUuid)
+        const cacheInfo = this.appStore.statisticsStore.cacheMap.get(taskUuid)
 
         const currentProgress = get(cacheInfo, 'progress', 0)
         const skip = get(cacheInfo, 'skip', false)
@@ -603,7 +600,7 @@ export class BoardStore {
 
         const newProgress = Math.max(currentProgress, progress)
 
-        this.cacheMap.set(taskUuid, {
+        this.appStore.statisticsStore.cacheMap.set(taskUuid, {
           progress: newProgress,
           controller,
           cached: newProgress === 100,
@@ -612,18 +609,18 @@ export class BoardStore {
         })
       })
       EduLogger.info(`Download complete.... taskUuid: ${taskUuid}`)
-      cacheInfo = this.cacheMap.get(taskUuid)
+      cacheInfo = this.appStore.statisticsStore.cacheMap.get(taskUuid)
       if(cacheInfo){
         cacheInfo.downloading = false
-        this.cacheMap.set(taskUuid, cacheInfo)
+        this.appStore.statisticsStore.cacheMap.set(taskUuid, cacheInfo)
       }
       // this.downloading = false
     } catch (err) {
       EduLogger.info(`Download failed.... taskUuid: ${taskUuid}`)
-      let cacheInfo = this.cacheMap.get(taskUuid)
+      let cacheInfo = this.appStore.statisticsStore.cacheMap.get(taskUuid)
       if(cacheInfo){
         cacheInfo.downloading = false
-        this.cacheMap.set(taskUuid, cacheInfo)
+        this.appStore.statisticsStore.cacheMap.set(taskUuid, cacheInfo)
       }
       // this.downloading = false
     }
@@ -944,10 +941,10 @@ export class BoardStore {
       const item = courseWareList[i]
       if (item) {
         const res = await agoraCaches.hasTaskUUID(item.taskUuid)
-        const cacheInfo = this.cacheMap.get(item.taskUuid)
+        const cacheInfo = this.appStore.statisticsStore.cacheMap.get(item.taskUuid)
         const skip = get(cacheInfo, 'skip', false)
         const controller = get(cacheInfo, 'controller', undefined)
-        this.cacheMap.set(item.taskUuid, {
+        this.appStore.statisticsStore.cacheMap.set(item.taskUuid, {
           progress: res === true ? 100 : 0,
           cached: res,
           skip: skip,
@@ -2267,12 +2264,11 @@ export class BoardStore {
     //   this.controller.abort()
     //   this.controller = undefined
     // }
-    for (let [taskUuid, cacheInfo] of this.cacheMap) {
+    for (let [taskUuid, cacheInfo] of this.appStore.statisticsStore.cacheMap) {
       if(cacheInfo.controller) {
         this.abortDownload(taskUuid, cacheInfo)
       }
     }
-    this.cacheMap = new Map<string, CacheInfo>()
     // this.publicResources = []
     this._personalResources = []
     this._resourcesList = []
@@ -2467,13 +2463,13 @@ export class BoardStore {
   @observable
   preloadingProgress: number = -1
 
-  @computed
-  get isLoading() {
-    if (!this.ready) {
-      return 'preparing'
-    }
-    return this.loadingStatus
-  }
+  // @computed
+  // get isLoading() {
+  //   if (!this.ready) {
+  //     return 'preparing'
+  //   }
+  //   return this.loadingStatus
+  // }
 
   @observable
   currentTaskUuid: string = ''
@@ -2481,7 +2477,7 @@ export class BoardStore {
   @computed
   get downloading() {
     if (this.currentTaskUuid) {
-      const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
+      const cacheInfo = this.appStore.statisticsStore.cacheMap.get(this.currentTaskUuid)
       return cacheInfo?.downloading
     }
     return false
@@ -2490,39 +2486,39 @@ export class BoardStore {
   skipTask() {
     const taskUuid = this.currentTaskUuid
     if (taskUuid) {
-      const cacheInfo = this.cacheMap.get(taskUuid)
+      const cacheInfo = this.appStore.statisticsStore.cacheMap.get(taskUuid)
       if (cacheInfo) {
         cacheInfo.skip = true
         this.abortDownload(taskUuid, cacheInfo)
-        this.cacheMap.set(taskUuid, cacheInfo)
+        this.appStore.statisticsStore.cacheMap.set(taskUuid, cacheInfo)
         this.logState(`skip-${taskUuid}`, `true`)
       }
     }
   }
 
-  @computed
-  get loadingStatus() {
-    if (!this.ready) {
-      return {
-        type: 'preparing',
-        text: t("whiteboard.loading")
-      }
-    }
+  // @computed
+  // get loadingStatus() {
+  //   if (!this.ready) {
+  //     return {
+  //       type: 'preparing',
+  //       text: t("whiteboard.loading")
+  //     }
+  //   }
 
-    if (this.currentTaskUuid) {
-      const cacheInfo = this.cacheMap.get(this.currentTaskUuid)
-      if (cacheInfo && cacheInfo.skip !== true && cacheInfo.downloading && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
-        let progress = get(cacheInfo, 'progress', 0)
-        console.log(progress)
-        return {
-          type: 'downloading',
-          text: t("whiteboard.downloading", {reason: progress})
-        }
-      }
-    }
+  //   if (this.currentTaskUuid) {
+  //     const cacheInfo = this.appStore.statisticsStore.cacheMap.get(this.currentTaskUuid)
+  //     if (cacheInfo && cacheInfo.skip !== true && cacheInfo.downloading && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
+  //       let progress = get(cacheInfo, 'progress', 0)
+  //       console.log(progress)
+  //       return {
+  //         type: 'downloading',
+  //         text: t("whiteboard.downloading", {reason: progress})
+  //       }
+  //     }
+  //   }
 
-    return ''
-  }
+  //   return ''
+  // }
 
 
   toggleAClassLockBoard() {
