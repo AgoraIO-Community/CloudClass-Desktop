@@ -15,6 +15,7 @@ import React, { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
+import { get } from 'lodash'
 
 
 export const BigClassScenario = observer(() => {
@@ -57,6 +58,10 @@ export const BigClassScenario = observer(() => {
     'fullscreen': !!isFullScreen
   })
 
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
+
   return (
     <Layout
       className={cls}
@@ -90,7 +95,7 @@ export const BigClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="big-class-teacher"/>
           </div>
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
+          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />
