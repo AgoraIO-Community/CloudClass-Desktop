@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>老师端-人员列表-未上台</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="灵动课堂Guide-图标和图片" transform="translate(-1158.000000, -175.000000)">
+            <g id="编组-53备份" transform="translate(1158.000000, 175.000000)">
+                <rect id="矩形" stroke="#979797" fill="#D8D8D8" opacity="0" x="0" y="0" width="22" height="22"></rect>
+                <g id="编组-44" transform="translate(3.500000, 2.500000)" stroke="#7B88A0">
+                    <circle id="椭圆形" stroke-width="1.2" cx="8.5" cy="3" r="3"></circle>
+                    <path d="M12.5,12 C12.5,8.6862915 10.709139,6 8.5,6 C6.290861,6 4.5,8.6862915 4.5,12" id="形状" stroke-width="1.2"></path>
+                    <rect id="矩形" stroke-width="1.2" x="0" y="12" width="15" height="5" rx="1"></rect>
+                    <polyline id="路径-23" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="1.5 12 1.5 8.17285156 4.04760742 6"></polyline>
+                    <line x1="2.5" y1="7.34" x2="3.98649891" y2="6" id="路径-24" stroke-width="2" stroke-linecap="round"></line>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
