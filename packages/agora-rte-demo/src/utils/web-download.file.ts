@@ -10,6 +10,61 @@ configure({
 
 export type CacheResourceType = 'dynamicConvert' | 'staticConvert'
 
+
+function fetchMultiple(urls: string[], init?: any): Promise<Response> {
+    const {signal: fetchSignal} = init || {}
+    
+    return new Promise((resolve, reject) => {
+        let list: AbortController[] = [];
+        const fetchResolve = (response: Response, index: number) => {
+            console.log("success: ", response.url);
+            resolve(response);
+            list.forEach((v, i) => {
+                if (i == index) {
+                    console.log("not abort");
+                } else {
+                    v.abort();
+                }
+            });
+        };
+        const rejectList = [];
+        list = urls.map((v, index) => fetchWithAbort(v, init, index, fetchResolve, e => {
+            rejectList.push(e);
+            if (rejectList.length === list.length) {
+                console.log("fetch all fail");
+                reject();
+            }
+        }));
+    
+        if (fetchSignal) {
+            fetchSignal.addEventListener("abort", () => {
+            console.log("fetch fetchSignal")
+            list.forEach((v, i) => {
+                    v.abort();
+            });
+            })
+        }
+    });
+    }
+    
+function fetchWithAbort(url: string, init: any, i: number, resolve: (t: any, ii: number) => void, reject: (e: any) => void): AbortController {
+    var controller = new AbortController();
+    var signal = controller.signal;
+    fetch(url, {signal, ...init}).then(function(response) {
+        if (response.status >= 200 && response.status < 400) {
+            return response;
+        } else {
+            reject(new Error("not correct code"));
+        }
+    }).then(res => {
+        resolve(res, i);
+    }).catch(function(e) {
+        console.log("abort: ", e.name, url);
+        reject(e);
+    });
+    return controller;
+}
+
 const contentTypesByExtension = {
     "css": "text/css",
     "js": "application/javascript",
@@ -122,8 +177,9 @@ export class AgoraCaches {
         }
         const controller = new AbortController();
         const signal = controller.signal;
-        const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-        const res = await fetch(zipUrl, {
+        const url = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+        // const res = await fetch(zipUrl, {
+        const res = await fetchMultiple([url, url.replace("https://convertcdn.netless.link", "https://ap-convertcdn.netless.link")], {
             method: "get",
             signal: signal,
         }).then(fetchProgress({
@@ -212,6 +268,7 @@ export class AgoraCaches {
             return 0;
         }
     }
+
 }
 
 export type ProgressData = {

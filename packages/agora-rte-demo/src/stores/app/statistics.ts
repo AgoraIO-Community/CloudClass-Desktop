@@ -39,7 +39,7 @@ export class StatisticsStore {
         const cacheInfo = this.cacheMap.get(currentTaskUuid)
         if (cacheInfo && cacheInfo.skip !== true && cacheInfo.downloading && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
             let progress = get(cacheInfo, 'progress', 0)
-            console.log(progress)
+            // console.log(progress)
             return {
             type: 'downloading',
             text: t("whiteboard.downloading", {reason: progress})
