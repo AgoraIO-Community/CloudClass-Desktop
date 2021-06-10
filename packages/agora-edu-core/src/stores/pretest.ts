@@ -1,12 +1,12 @@
-import { LocalUserRenderer, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, GenericErrorWrapper, EduLogger, EduUser } from "agora-rte-sdk"
-import { get, isEmpty } from "lodash"
-import { observable, action, computed, reaction, runInAction } from "mobx"
-import { EduScenarioAppStore } from "."
-import { AgoraMediaDeviceEnum } from "../types"
-import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit"
-import {v4 as uuidv4} from 'uuid'
-import { Subject } from 'rxjs'
-import { DeviceErrorCallback } from "../context/type"
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer, MediaService } from "agora-rte-sdk";
+import { isEmpty } from "lodash";
+import { action, computed, observable, reaction, runInAction } from "mobx";
+import { Subject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { EduScenarioAppStore } from ".";
+import { DeviceErrorCallback } from "../context/type";
+import { AgoraMediaDeviceEnum } from "../types";
+import { getDeviceLabelFromStorage, GlobalStorage } from "../utilities/kit";
 
 export enum CustomizeDeviceLabel {
   Disabled = 'disabled'
@@ -105,7 +105,7 @@ export class PretestStore {
 
   @observable
   _microphoneId: string = '';
-
+  
   @computed
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
@@ -209,12 +209,21 @@ export class PretestStore {
     reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange)
   }
 
+  @action.bound
   onDeviceTestError(cb: DeviceErrorCallback) {
     this.error$ = new Subject<{type: 'video' | 'audio', error: boolean, info: string}>()
     this.error$.subscribe({
       next: (value: any) => cb(value)
     })
     return () => {
+      this.error$.complete()
+      this.error$ = null as any
+    }
+  }
+
+  @action.bound
+  stopDeviceTestError() {
+    if (this.error$) {
       this.error$.complete()
       this.error$ = null as any
     }
@@ -327,74 +336,105 @@ export class PretestStore {
     audioDeviceInit: false
   }
 
-  init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
-    if (option.video) {
-      const videoDeviceInit = this.initRecords.videoDeviceInit
-      if (!this.initRecords.videoDeviceInit) {
-        this.initRecords.videoDeviceInit = true
-      }
-      this.mediaService.getCameras().then((list: any[]) => {
-        if (this.appStore.isElectron && this.cameraLabel !== CustomizeDeviceLabel.Disabled) {
-          const label = this.mediaService.getCameraLabel()
-          this.updateCameraLabel(label)
-          this.updateTestCameraLabel()
-        }
-        runInAction(() => {
-          if (videoDeviceInit && list.length > this._cameraList.length) {
-            const appStore = this.appStore
-            if (appStore.isNotInvisible) {
-              appStore.mediaStore.pretestNotice.next({
-                type: 'video',
-                info: 'device_changed',
-                id: uuidv4()
-              })
-            }
-            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
-          }
+  @action.bound
+  async getCameraList() {
+    this._cameraList = await this.mediaService.getCameras()
+    return this._cameraList
+  }
 
-          if (this.isElectron && !list.length) {
-            this.muteCamera()
+  @action.bound
+  async getMicrophoneList() {
+    this._microphoneList = await this.mediaService.getMicrophones()
+    return this._microphoneList
+  }
+
+  init = (option: {video?: boolean, audio?: boolean} = {video: true, audio: true}):Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let promises = []
+      if (option.video) {
+        promises.push(new Promise<void>((resolve, _) => {
+          const videoDeviceInit = this.initRecords.videoDeviceInit
+          if (!this.initRecords.videoDeviceInit) {
+            this.initRecords.videoDeviceInit = true
+          } else {
+            return resolve()
           }
-          if (this.isWeb) {
-            this.muteCamera()
-          }
-          this._cameraList = list
-        })
-      })
-    }
-    if (option.audio) {
-      const audioDeviceInit = this.initRecords.audioDeviceInit
-      if (!this.initRecords.audioDeviceInit) {
-        this.initRecords.audioDeviceInit = true
-      }
-      this.mediaService.getMicrophones().then((list: any[]) => {
-        if (this.appStore.isElectron && this.microphoneLabel !== CustomizeDeviceLabel.Disabled) {
-          const label = this.mediaService.getMicrophoneLabel()
-          this.updateMicrophoneLabel(label)
-          this.updateTestMicrophoneLabel()
-        }
-        runInAction(() => {
-          if (audioDeviceInit && list.length > this._microphoneList.length) {
-            const appStore = this.appStore
-            if (appStore.isNotInvisible) {
-              appStore.mediaStore.pretestNotice.next({
-                type: 'audio',
-                info: 'device_changed',
-                id: uuidv4()
-              })
+          this.mediaService.getCameras().then((list: any[]) => {
+            if (this.appStore.isElectron && this.cameraLabel !== CustomizeDeviceLabel.Disabled) {
+              const label = this.mediaService.getCameraLabel()
+              this.updateCameraLabel(label)
+              this.updateTestCameraLabel()
             }
-            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+            runInAction(() => {
+              if (videoDeviceInit && list.length > this._cameraList.length) {
+                const appStore = this.appStore
+                if (appStore.isNotInvisible) {
+                  appStore.mediaStore.pretestNotice.next({
+                    type: 'video',
+                    info: 'device_changed',
+                    id: uuidv4()
+                  })
+                }
+                this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+              }
+    
+              if (this.isElectron && !list.length) {
+                this.muteCamera()
+              }
+              if (this.isWeb) {
+                this.muteCamera()
+              }
+              this._cameraList = list
+            })
+          })
+          resolve()
+        }))
+      }
+      
+      if (option.audio) {
+        promises.push(new Promise<void>((resolve, _) => {
+          const audioDeviceInit = this.initRecords.audioDeviceInit
+          if (!this.initRecords.audioDeviceInit) {
+            this.initRecords.audioDeviceInit = true
+          } else {
+            return resolve()
           }
-          if (this.isElectron && !list.length) {
-            this.muteMicrophone()
-          }
-          if (this.isWeb) {
-            this.muteMicrophone()
-          }
-          this._microphoneList = list
-        })
+          this.mediaService.getMicrophones().then((list: any[]) => {
+            if (this.appStore.isElectron && this.microphoneLabel !== CustomizeDeviceLabel.Disabled) {
+              const label = this.mediaService.getMicrophoneLabel()
+              this.updateMicrophoneLabel(label)
+              this.updateTestMicrophoneLabel()
+            }
+            runInAction(() => {
+              if (audioDeviceInit && list.length > this._microphoneList.length) {
+                const appStore = this.appStore
+                if (appStore.isNotInvisible) {
+                  appStore.mediaStore.pretestNotice.next({
+                    type: 'audio',
+                    info: 'device_changed',
+                    id: uuidv4()
+                  })
+                }
+                this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+              }
+              if (this.isElectron && !list.length) {
+                this.muteMicrophone()
+              }
+              if (this.isWeb) {
+                this.muteMicrophone()
+              }
+              this._microphoneList = list
+            })
+          })
+          resolve()
+        }))
+      }
+      Promise.all(promises).then(() => {
+        resolve()
+      }).catch(e => {
+        reject(e)
       })
-    }
+    })
   }
 
   @observable
