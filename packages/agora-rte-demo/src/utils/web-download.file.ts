@@ -97,7 +97,7 @@ export class AgoraCaches {
         if (!this.agoraCaches) {
             this.agoraCaches = caches.open(cachesName);
             //@ts-ignore
-            window.agoraCaches = this.agoraCaches
+            // window.agoraCaches = this.agoraCaches
         }
         return this.agoraCaches;
     }
