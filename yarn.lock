@@ -2555,10 +2555,10 @@
   resolved "https://registry.nlark.com/@netless/fetch-progress/download/@netless/fetch-progress-0.0.1.tgz#e4cc415b92f5acc610b6dd533947e40af39915ec"
   integrity sha1-5MxBW5L1rMYQtt1TOUfkCvOZFew=
 
-"@netless/iframe-bridge@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.1.3.tgz#8f0208120407e2718f16657ffa6caf10a5f09faf"
-  integrity sha1-jwIIEgQH4nGPFmV/+myvEKXwn68=
+"@netless/iframe-bridge@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.nlark.com/@netless/iframe-bridge/download/@netless/iframe-bridge-2.1.4.tgz#16fe2c3aec5af872c7b8a0f4980c86d030b7f2b7"
+  integrity sha1-Fv4sOuxa+HLHuKD0mAyG0DC38rc=
   dependencies:
     eventemitter2 "^6.4.3"
     react "^16.13.1"
