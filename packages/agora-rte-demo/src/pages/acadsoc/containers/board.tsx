@@ -24,6 +24,7 @@ import { BoardFrontSizeType, BoardStore } from '@/stores/app/board'
 import { CourseWareMenuContainer } from './course-ware-menu'
 import { NetworkDisk } from './disk'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { BoardProgress } from '@/components/netless-board/loading'
 
 const StrokeListPanel = observer(() => {
 
@@ -99,7 +100,7 @@ export const BoardView = () => {
 export const EduWhiteBoard = observer(() => {
   const boardStore = useBoardStore()
   const ready = boardStore.ready
-  const { isLoading, loadingStatus, enableStatus } = boardStore
+  // const { isLoading, enableStatus } = boardStore
   const boardRef = useRef<HTMLDivElement | null>(null)
   const mountToDOM = useCallback((dom: any) => {
     if (dom) {
@@ -133,12 +134,9 @@ export const EduWhiteBoard = observer(() => {
       moveCameraText={t('tool.reset')}
     >
       {
-        loadingStatus ? <Progress
-        title={loadingStatus.text}
-        showSkip={loadingStatus.type === 'downloading'}
-        onSkip={() => {
-          boardStore.skipTask()
-        }} ></Progress> : null
+        <BoardProgress
+          onSkip={() => boardStore.skipTask()}
+        ></BoardProgress>
       }
       {
         ready ? 

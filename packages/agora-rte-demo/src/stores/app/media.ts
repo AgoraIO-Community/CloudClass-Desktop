@@ -271,7 +271,7 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       this.rendererOutputFrameRate[`${0}`] = evt.stats.encoderOutputFrameRate
-      BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+      // BizLogger.info("localVideoStats", " encoderOutputFrameRate " , evt.stats.encoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
     })
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       if (this.rendererOutputFrameRate.hasOwnProperty(evt.user.uid)) {
@@ -284,7 +284,7 @@ export class MediaStore {
           BizLogger.info(`freezeCount clear ${evt.user.uid}`)
           this.rendererFirstFrameRendered[`${evt.user.uid}`] = true
         }
-        BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
+        // BizLogger.info("remoteVideoStats", " decodeOutputFrameRate " , evt.stats.decoderOutputFrameRate, " renderOutput " , JSON.stringify(this.rendererOutputFrameRate))
       }
     })
 
