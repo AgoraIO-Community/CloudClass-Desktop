@@ -22,6 +22,21 @@ export const debounce = function(foo:any, t:number) {
   }
 }
 
+export const retry = async (func: any, times: number) => {
+  let res
+  for(let i = 0; i < times; i++) {
+    try {
+      res = await func()
+      return res
+    } catch(e) {
+      console.error(`[retry] execute func failed, retry ${i}`)
+      if(i === times - 1) {
+        throw e
+      }
+    }
+  }
+}
+
 export type BaseImageSize = {
   width: number,
   height: number,
