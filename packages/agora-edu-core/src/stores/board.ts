@@ -1077,7 +1077,14 @@ export class BoardStore extends ZoomController {
   @action.bound
   async leave() {
     if (this.boardClient && this.room) {
-      await this.boardClient.destroy()
+      try {
+        if (this.iframe) {
+          this.iframe.onDestroy()
+        }
+        await this.boardClient.destroy()
+      } catch (err) {
+        EduLogger.info("board leave error ", GenericErrorWrapper(err))
+      }
       this.room.bindHtmlElement(null)
       this.reset()
     }
@@ -1567,7 +1574,7 @@ export class BoardStore extends ZoomController {
       this.controller = undefined
     }
     // @ts-ignore
-    // this.iframe = null
+    this.iframe = null
     this.activeMap = {}
     this._personalResources = []
     this._resourcesList = []
