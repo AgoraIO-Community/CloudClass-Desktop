@@ -1418,8 +1418,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
    * @param param0 
    * @returns 
    */
-  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number}) {
-    const ret = this.client.setBeautyEffectOptions(true, {
+  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
+    const ret = this.client.setBeautyEffectOptions(isBeauty, {
       lighteningContrastLevel: 1,
       lighteningLevel,
       rednessLevel,

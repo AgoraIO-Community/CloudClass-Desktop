@@ -65,6 +65,12 @@ export const SettingContainer = observer(({ id }: any) => {
     } = useUIStore()
 
     const handleBeauty = () => {
+        setBeautyEffectOptions({
+            isBeauty: !isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        })
         setBeauty(!isBeauty)
     }
 

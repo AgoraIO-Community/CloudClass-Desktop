@@ -71,8 +71,9 @@ export class PretestStore {
   }
 
   @action.bound
-  setBeautyEffectOptions ({lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number}) {
+  setBeautyEffectOptions ({lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty: boolean}) {
     this.mediaService.setBeautyEffectOptions({
+      isBeauty,
       lighteningLevel: lighteningLevel / 100,
       rednessLevel: rednessLevel / 100,
       smoothnessLevel: smoothnessLevel / 100,

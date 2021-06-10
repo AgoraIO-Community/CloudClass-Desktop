@@ -139,6 +139,12 @@ export const PretestContainer = observer(() => {
     }
 
     const handleBeauty = () => {
+        setBeautyEffectOptions({
+            isBeauty: !isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        })
         setBeauty(!isBeauty)
     }
 

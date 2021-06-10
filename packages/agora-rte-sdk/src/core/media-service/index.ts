@@ -780,9 +780,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number}) {
+  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
     if (this.isElectron) {
       return (this.sdkWrapper as AgoraElectronRTCWrapper).setBeautyEffectOptions({
+        isBeauty,
         lighteningLevel,
         rednessLevel,
         smoothnessLevel
