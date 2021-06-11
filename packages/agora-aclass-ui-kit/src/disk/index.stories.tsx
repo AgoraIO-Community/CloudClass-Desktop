@@ -1,6 +1,7 @@
 import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { DiskButton } from './control/disk-button'
 import { DiskManagerDialog } from './dialog/manager'
+import { CourseReplacer } from './dialog/courseReplacer'
 import { Loading } from './control/loading'
 import TableEmpty from "./dialog/table-empty";
 import { UploadFile } from '../upload/index'
@@ -48,6 +49,12 @@ export default {
 //     </>
 //   )
 // }
+
+export const CourseReplacerDialog = (props: any) => {
+  return (
+    <CourseReplacer></CourseReplacer>
+  )
+}
 
 export const NetworkDisk = (props: any) => {
 
