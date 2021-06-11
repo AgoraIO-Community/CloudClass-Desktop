@@ -302,7 +302,7 @@ export class RoomStore extends SimpleInterval {
 
   @computed
   get flexProperties() {
-    return get(this.roomProperties, 'flexProps')
+    return get(this.roomProperties, 'flexProps', {})
   }
 
   @observable
@@ -1313,6 +1313,9 @@ export class RoomStore extends SimpleInterval {
               }
               BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
               if (this.sceneStore.joiningRTC) {
+                if (this.isTeacher) {
+                  return
+                }
                 if (this.sceneStore.cameraEduStream.hasVideo) {
                   await this.sceneStore.unmuteLocalCamera()
                   BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after openCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
@@ -1614,6 +1617,12 @@ export class RoomStore extends SimpleInterval {
             return true
           }
         }
+        if (sceneType === 2) {
+          const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
+          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+            return true
+          }
+        }
         return false
       }
 
@@ -1627,8 +1636,10 @@ export class RoomStore extends SimpleInterval {
           audioSourceType: EduAudioSourceType.mic,
           streamUuid: mainStream.streamUuid,
           streamName: '',
-          hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
-          hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
+          hasVideo: false,
+          hasAudio: false,
+          // hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
+          // hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
           userInfo: {} as EduUser
         })
         EduLogger.info("toast.publish_business_flow_successfully")

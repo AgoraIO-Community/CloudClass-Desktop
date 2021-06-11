@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Inline, Tooltip } from '~components';
+import { Button, Inline, Tooltip } from '~components';
 import { Icon, IconTypes } from '~components/icon';
 import { Header } from '~components/layout';
 import { Popover } from '~components/popover';
@@ -130,6 +130,10 @@ export const BizHeader: FC<BizHeaderProps> = ({
           <Tooltip title={transI18n('biz-header.exit')} placement="bottom">
             <Icon hover={true} type="exit" size={24} onClick={() => onClick('exit')} />
           </Tooltip>
+          <Button type="primary" onClick={() => onClick('start_preview')}>start_preview</Button>
+          <Button type="primary" onClick={() => onClick('stop_preview')}>stop_preview</Button>
+          <Button type="primary" onClick={() => onClick('start')}>start</Button>
+          <Button type="primary" onClick={() => onClick('stop')}>stop</Button>
         </div>
       </Header>
     </>

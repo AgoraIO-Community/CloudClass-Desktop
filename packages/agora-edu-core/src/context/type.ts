@@ -242,6 +242,22 @@ export type StreamListContext = {
      * @version v1.1.0
      */
     grantUserPermission: (userUuid: string) => void,
+    /**
+     * 打开本地摄像头采集
+     */
+    enableLocalVideo: () => void;
+    /**
+     * 打开本地摄像头采集
+     */
+    enableLocalAudio: () => void;
+    /**
+     * 关闭本地摄像头采集
+     */
+    disableLocalVideo: () => void;
+    /**
+     * 关闭本地摄像头采集
+     */
+    disableLocalAudio: () => void;
 }
 export type VolumeContext = {
     /**

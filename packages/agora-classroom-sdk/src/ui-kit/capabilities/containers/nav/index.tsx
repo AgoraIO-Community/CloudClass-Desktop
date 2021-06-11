@@ -1,6 +1,6 @@
 import { useUIStore } from '@/infra/hooks'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext, useStreamListContext, useUserListContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -15,7 +15,8 @@ export const NavigationBar = observer(() => {
   } = useRecordingContext()
   const {
     roomInfo,
-    liveClassStatus
+    liveClassStatus,
+    updateFlexRoomProperties
   } = useRoomContext()
 
   const {
@@ -40,9 +41,87 @@ export const NavigationBar = observer(() => {
     'record': () => addRecordDialog(),
   }
 
-  function handleClick (type: string) {
+  const {
+    localUserInfo
+  } = useUserListContext()
+
+  const {
+    muteVideo,
+    muteAudio,
+    unmuteAudio,
+    unmuteVideo,
+    enableLocalVideo,
+    enableLocalAudio,
+    disableLocalVideo,
+    disableLocalAudio,
+} = useStreamListContext()
+
+  const startClass = useCallback(async () => {
+    await updateFlexRoomProperties(
+      {ClassIsBgin: true},
+      {}
+    )
+  }, [])
+
+  const stopClass =  useCallback(async () => {
+    await updateFlexRoomProperties(
+      {ClassIsBgin: false},
+      {}
+    )
+  }, [])
+
+  const enableLocalVideoCallback = useCallback(async () => {
+    await enableLocalVideo()
+  }, [])
+
+  const enableLocalAudioCallback = useCallback(async () => {
+    await enableLocalAudio()
+  }, [])
+
+  const disableLocalVideoCallback = useCallback(async () => {
+    await disableLocalVideo()
+  }, [])
+
+  const disableLocalAudioCallback = useCallback(async () => {
+    await disableLocalAudio()
+  }, [])
+
+  const unmuteVideoCallback = useCallback(async () => {
+    await unmuteVideo(localUserInfo.userUuid, true)
+  }, [localUserInfo.userUuid])
+
+  const muteVideoCallback = useCallback(async () => {
+    await muteVideo(localUserInfo.userUuid, true)
+  }, [localUserInfo.userUuid])
+
+  const unmuteAudioCallback = useCallback(async () => {
+    await  unmuteAudio(localUserInfo.userUuid, true)
+  }, [localUserInfo.userUuid])
+
+  const muteAudioCallback = useCallback(async () => {
+    await  muteAudio(localUserInfo.userUuid, true)
+  }, [localUserInfo.userUuid])
+
+  async function handleClick (type: string) {
     const showDialog = bizHeaderDialogs[type]
-    showDialog && showDialog(type)
+    if (showDialog) {
+      showDialog(type)
+    } else {
+      if (type === 'start_preview') {
+        await Promise.all([enableLocalVideoCallback(), enableLocalAudioCallback()])
+      }
+      if (type === 'stop_preview') {
+        await Promise.all([disableLocalVideoCallback(), disableLocalAudioCallback()])
+      }
+      if (type === 'start') {
+        await startClass()
+        await Promise.all([unmuteVideoCallback(), unmuteAudioCallback()])
+      }
+      if (type === 'stop') {
+        await stopClass()
+        await Promise.all([muteVideoCallback(), muteAudioCallback()])
+      }
+    }
   }
 
   const classStatusText = useMemo(() => {

@@ -695,7 +695,8 @@ export class SceneStore extends SimpleInterval {
   @action.bound
   async disableLocalVideo() {
     if (this._cameraRenderer) {
-      await this.appStore.pretestStore.closeCamera()
+      await this.mediaService.enableLocalVideo(false)
+      // await this.appStore.pretestStore.closeCamera()
       this._cameraRenderer = undefined
     }
   }

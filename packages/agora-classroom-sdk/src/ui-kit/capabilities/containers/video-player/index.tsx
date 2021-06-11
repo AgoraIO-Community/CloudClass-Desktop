@@ -27,12 +27,27 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
   } = useUserListContext()
 
   const {
-    roomInfo
+    roomInfo,
+    // updateFlexProperties,
+    flexRoomProperties
   } = useRoomContext()
+
+  const visibleRenderer = useMemo(() => {
+    const ClassIsBegin = flexRoomProperties.ClassIsBegin ?? false
+    if (!ClassIsBegin) {
+      return true
+    }
+    if (ClassIsBegin && userStream.video) {
+      return true
+    }
+
+    return false
+  }, [JSON.stringify({flexRoomProperties, video: userStream.video})])
 
   const {
     eduRole2UIRole
   } = useUIStore()
+
 
   return (
     <VideoPlayer
@@ -72,7 +87,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
 
         <>
           {
-            userStream.renderer && userStream.video ?
+            userStream.renderer && visibleRenderer ?
             <RendererPlayer
               key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
             />

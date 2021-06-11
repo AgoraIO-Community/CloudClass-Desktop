@@ -68,7 +68,14 @@ export const useStreamListContext = (): StreamListContext => {
     teacherStream,
     studentStreams,
     streamList,
-    cameraEduStream
+    cameraEduStream,
+    enableLocalVideo,
+    enableLocalAudio,
+    enableLocalVideo2,
+    disableLocalAudio,
+    disableLocalVideo,
+    // disableLocalAudio2,
+    disableLocalVideo2
   } = sceneStore
 
   const {
@@ -92,6 +99,10 @@ export const useStreamListContext = (): StreamListContext => {
     unmuteVideo,
     revokeUserPermission,
     grantUserPermission,
+    enableLocalVideo: enableLocalVideo,
+    enableLocalAudio,
+    disableLocalAudio,
+    disableLocalVideo: disableLocalVideo,
   }
 }
 
