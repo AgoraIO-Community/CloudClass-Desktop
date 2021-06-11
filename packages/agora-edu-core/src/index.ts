@@ -2,6 +2,8 @@ export * from './context/provider'
 // export * from './api/index'
 export * from './context/media-context'
 
+export * from './context/classroom-stats-context'
+
 export * from './context/private-chat-context'
 
 export * from './context/app-plugin-context'
