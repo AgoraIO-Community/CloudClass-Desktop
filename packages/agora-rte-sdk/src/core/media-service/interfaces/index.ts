@@ -43,7 +43,8 @@ export declare interface ElectronWrapperInitOption {
   resolution?: {
     width: number,
     height: number,
-    frameRate: number
+    frameRate: number,
+    bitrate: number
   }
 }
 
@@ -91,6 +92,7 @@ export declare interface CameraOption {
     width: number,
     height: number,
     frameRate: number,
+    bitrate: number
   }
 }
 

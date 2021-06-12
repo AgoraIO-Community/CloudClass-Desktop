@@ -299,10 +299,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     const resolutionConfig = options.resolution
     const config: any = {
-      bitrate: 0,
       frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
       width: resolutionConfig ? resolutionConfig?.width : 320,
       height: resolutionConfig ? resolutionConfig?.height : 240,
+      bitrate: resolutionConfig ? resolutionConfig?.bitrate : 200
     }
 
     const videoEncoderConfiguration = Object.assign({
@@ -310,7 +310,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       height: config.height,
       frameRate: config.frameRate,
       minFrameRate: -1,
-      minBitrate: config.bitrate,
+      bitrate: config.bitrate
     })
     if (this._cefClient) {
       //@ts-ignore
@@ -319,7 +319,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           videoEncoderConfiguration.width,
           videoEncoderConfiguration.height,
         ),
-        videoEncoderConfiguration.frameRate
+        videoEncoderConfiguration.frameRate,
+        0,
+        videoEncoderConfiguration.bitrate
         )
       )
     } else {
@@ -986,7 +988,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
             option.encoderConfig.width,
             option.encoderConfig.height
           ),
-          option.encoderConfig.frameRate
+          option.encoderConfig.frameRate,
+          0,
+          option.encoderConfig.bitrate
           )
         ))
         if (ret < 0) {

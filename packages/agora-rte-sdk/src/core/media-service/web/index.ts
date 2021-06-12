@@ -971,6 +971,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
             frameRate: option.encoderConfig.frameRate,
             width: option.encoderConfig.width,
             height: option.encoderConfig.height,
+            bitrateMax: option.encoderConfig.bitrate
           }
         })
       }
@@ -997,8 +998,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
             frameRate: option.encoderConfig.frameRate,
             width: option.encoderConfig.width,
             height: option.encoderConfig.height,
+            bitrateMax: option.encoderConfig.bitrate
           }
         })
+        EduLogger.info("camera track bitrate ", option.encoderConfig.bitrate)
       }
       const trackId = this.cameraTrack.getTrackId()
       EduLogger.info("open camera create track ", trackId, " option " , JSON.stringify(option))
@@ -1083,7 +1086,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
         encoderConfig: {
           width: 320,
           height: 240,
-          frameRate: 15
+          frameRate: 15,
+          bitrate: 200
         }
       })
     }
