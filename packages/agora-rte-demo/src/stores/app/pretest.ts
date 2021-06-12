@@ -462,7 +462,7 @@ export class PretestStore {
         }
         return
       }
-      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15}})
+      await this.mediaService.openCamera({deviceId, encoderConfig: {width: 320, height: 240, frameRate: 15, bitrate: 200}})
       this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
       const label = this.mediaService.getCameraLabel()
       this.updateCameraLabel(label)

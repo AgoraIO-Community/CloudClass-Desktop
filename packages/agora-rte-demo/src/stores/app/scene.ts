@@ -20,7 +20,8 @@ const ms = 500
 export type SceneVideoConfiguration = {
   width: number,
   height: number,
-  frameRate: number
+  frameRate: number,
+  bitrate: number
 }
 
 export enum EduClassroomStateEnum {
@@ -96,7 +97,8 @@ export class SceneStore extends SimpleInterval {
     return {
       width: 320,
       height: 240,
-      frameRate: 15
+      frameRate: 15,
+      bitrate: 200
     }
   }
 
