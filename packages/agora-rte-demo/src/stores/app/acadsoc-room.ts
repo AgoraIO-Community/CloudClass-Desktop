@@ -32,6 +32,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum } from '@/types/global';
 import { filterChatText } from '@/utils/utils';
+import { controller } from '@/edu-sdk/controller'
 
 dayjs.extend(duration)
 
@@ -235,6 +236,8 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   rightContainerHeight: number = 0
+
+  lastUploadLogTime: number = 0
 
   @observable
   trophyFlyout: TrophyType = {
@@ -609,15 +612,11 @@ export class AcadsocRoomStore extends SimpleInterval {
           })
           break;
         case EduClassroomStateEnum.start:
-          // let dDurationToEnd = dayjs.duration(durationToEnd);
-          // [5, 1].forEach(min => {
-          //   if(dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
-          //     this.appStore.uiStore.addAcadsocToast(t('toast.time_interval_between_end', {reason: this.formatTimeCountdown(durationToEnd, TimeFormatType.Message)}))
-          //   }
-          // })
-          // if(dDurationToEnd.minutes() === 0 && dDurationToEnd.seconds() === 0 && durationToEnd >= 0) {
-          //   this.appStore.uiStore.addAcadsocToast(t('toast.class_is_end', {reason: this.formatTimeCountdown((this.classroomSchedule?.closeDelay || 0) * 1000, TimeFormatType.Message)}))
-          // }
+          let dInClassDuration = dayjs.duration(duration);
+          // every 10 mins after class start, upload log
+          if((dInClassDuration.minutes() % 10 === 0) && dInClassDuration.seconds() === 0) {
+            this.uploadLog()
+          }
           // break;
         case EduClassroomStateEnum.end:
           let dDurationToClose = dayjs.duration(durationToClose);
@@ -633,6 +632,17 @@ export class AcadsocRoomStore extends SimpleInterval {
           }
           break;
       }
+    }
+  }
+
+  uploadLog() {
+    let duration = new Date().getTime() - this.lastUploadLogTime
+    if(duration > 1000 * 60 * 3) {
+      BizLogger.info(`[log-uploader] ${this.classTimeText} begin log upload`)
+      controller.appController.uploadLog().then(BizLogger.info).catch(e => {BizLogger.error(e.message)})
+      this.lastUploadLogTime = new Date().getTime()
+    } else {
+      BizLogger.warn(`[log-uploader] ${this.classTimeText} skip log upload, last upload time ${this.lastUploadLogTime}`)
     }
   }
 

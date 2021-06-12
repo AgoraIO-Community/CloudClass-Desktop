@@ -172,9 +172,9 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   private fire(...params: any[]) {
     const [message, ...args] = params
-    if (!['local-audio-volume', 'volume-indication', 'watch-rtt', 'network-quality'].includes(message)) {
-      EduLogger.info(args[0], args)
-    }
+    // if (!['local-audio-volume', 'volume-indication', 'watch-rtt', 'network-quality'].includes(message)) {
+    //   EduLogger.info(args[0], args)
+    // }
     this.emit(message, ...args)
   }
 

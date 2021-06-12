@@ -13,6 +13,7 @@ export const Progress: React.FC<ProgressProps> = ({
   showSkip,
   onSkip
 }) => {
+  
   return (
     <div className="progress-cover">
       <div className="progress">
