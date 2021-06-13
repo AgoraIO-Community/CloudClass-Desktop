@@ -19,15 +19,19 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
 
   const [activeIdx, setActiveIdx] = useState<number>(0)
 
-  let totalPages = 4
+  let totalPages = 15
+  let maxVisiblePages = 10
+
+  let pagingWindowBeginIdx = Math.min(totalPages - maxVisiblePages, activeIdx)
 
   return (
     <div className={cls}>
       <div className={activeIdx !== 0 ? "" : "invisible"} onClick={() => {setActiveIdx(activeIdx - 1)}}>{"< 上一页"}</div>
       {
-        Array(totalPages).fill(0).map((_,i) => {
+        Array(maxVisiblePages).fill(0).map((_,i) => {
+          const pageIdx = pagingWindowBeginIdx + i
           return (
-            <div onClick={() => {setActiveIdx(i)}} className={i === activeIdx ? 'active':''}>{i + 1}</div>
+            <div onClick={() => {setActiveIdx(pageIdx)}} className={pageIdx === activeIdx ? 'active':''}>{pageIdx + 1}</div>
           )
         })
       }
