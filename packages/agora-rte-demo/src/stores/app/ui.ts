@@ -121,6 +121,9 @@ export class UIStore {
   @observable
   action: string = '';
 
+  @observable
+  courseReplacerVisible: boolean = false
+
   @action
   reset () {
     this.loading = false;

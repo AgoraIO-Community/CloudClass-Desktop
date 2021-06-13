@@ -3,6 +3,10 @@ import classnames from 'classnames'
 import './courseReplacer.css'
 
 
+export interface AClassCourseWareItem {
+  name: string
+}
+
 interface CoursePagingProps {
   style?: any,
   className?: string[]
@@ -22,14 +26,32 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
   let totalPages = 15
   let maxVisiblePages = 10
 
-  let pagingWindowBeginIdx = Math.min(totalPages - maxVisiblePages, activeIdx)
+  let rightEdge = Math.min(activeIdx + maxVisiblePages / 2, totalPages - 1)
+  let leftEdge = Math.max(activeIdx - (maxVisiblePages / 2 - 1), 0)
+
+  // get initial windowSize
+  let windowSize = (rightEdge - leftEdge) + 1
+
+  if((rightEdge === totalPages - 1 || leftEdge === 0) && windowSize < maxVisiblePages) {
+    // need more page elements
+    if(rightEdge === totalPages - 1) {
+      // if right edge reaches
+      leftEdge = Math.max(0, leftEdge - (maxVisiblePages - windowSize))
+    }
+    if(leftEdge === 0) {
+      rightEdge = Math.min(totalPages - 1, rightEdge + (maxVisiblePages - windowSize))
+    }
+  }
+
+  // updated windowSize
+  windowSize = (rightEdge - leftEdge) + 1
 
   return (
     <div className={cls}>
       <div className={activeIdx !== 0 ? "" : "invisible"} onClick={() => {setActiveIdx(activeIdx - 1)}}>{"< 上一页"}</div>
       {
-        Array(maxVisiblePages).fill(0).map((_,i) => {
-          const pageIdx = pagingWindowBeginIdx + i
+        Array(windowSize).fill(0).map((_,i) => {
+          const pageIdx = leftEdge + i
           return (
             <div onClick={() => {setActiveIdx(pageIdx)}} className={pageIdx === activeIdx ? 'active':''}>{pageIdx + 1}</div>
           )
@@ -43,28 +65,21 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
 
 interface CourseReplacerProps {
   style?: any,
-  className?: string[]
+  className?: string[],
+  items: AClassCourseWareItem[]
 }
 
 
 export const CourseReplacer: React.FC<CourseReplacerProps> = ({
   style,
-  className
+  className,
+  items
 }) => {
 
   const cls = classnames({
     ['course-replacer']: 1,
     [`${className}`]: !!className
   })
-
-  let items = [
-    {name: '202206PPT课件制作规范.pptx'},
-    {name: '202206PPT课件制作规范.pptx'},
-    {name: '202206PPT课件制作规范.pptx'},
-    {name: '202206PPT课件制作规范.pptx'},
-    {name: '202206PPT课件制作规范.pptx'},
-    {name: '202206PPT课件制作规范.pptx'}
-  ]
 
   return (
     <div style={style} className={cls}>

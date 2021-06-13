@@ -1011,6 +1011,7 @@ export class BoardStore {
 
       try {
         await this.refreshState()
+        throw new Error('test')
       }catch(e) {
         // ignore errors
         BizLogger.warn(`refresh state failed ${e.message}`)

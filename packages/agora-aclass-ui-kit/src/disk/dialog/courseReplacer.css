@@ -53,6 +53,10 @@
     height: 40px;
 }
 
+.course-replacer .course-replacer-body .course-replacer-tbl-row>.course-replacer-tbl-col {
+    cursor: pointer;
+}
+
 .course-replacer .course-replacer-body .course-replacer-tbl-row:nth-last-child(2) {
     border-bottom: 0;
 }
