@@ -1,4 +1,4 @@
-import AgoraRTM from 'agora-rtm-sdk'
+import AgoraRTM from 'agora-rtm-sdk-sp'
 
 export const RtmLogLevel = [
   AgoraRTM.LOG_FILTER_OFF,

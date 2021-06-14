@@ -1,5 +1,5 @@
 import AgoraRTC from 'agora-rtc-sdk-ng';
-import AgoraRTM from 'agora-rtm-sdk';
+import AgoraRTM from 'agora-rtm-sdk-sp';
 import { EduPeerMessageCmdType, EduTextMessage, EduCustomMessage } from '../interfaces';
 import { MessageSerializer } from './../core/rtm/message-serializer';
 import { EduLogger } from './../core/logger';
