@@ -1,6 +1,6 @@
 import { EduTextMessage, EduCustomMessage, EduStream, EduUser, EduStreamData, EduUserData } from './../../interfaces/index';
 import { EventEmitter } from 'events';
-import AgoraRTM from 'agora-rtm-sdk'
+import AgoraRTM from 'agora-rtm-sdk-sp'
 import { RtmLogLevel } from './constants';
 import { get } from 'lodash';
 import { EduLogger } from '../logger';

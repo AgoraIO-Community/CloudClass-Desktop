@@ -964,6 +964,7 @@ export class BoardStore {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
     try {
+      EduLogger.info("[aClass Board] Start Join Board..")
       await this.aClassJoinBoard({
         uuid: info.boardId,
         roomToken: info.boardToken,
@@ -973,8 +974,10 @@ export class BoardStore {
         disableCameraTransform: true,
         disableAutoResize: false
       })
+      EduLogger.info("[aClass Board] Netless Join Success..")
 
       if (await this.waitRoomReady(this.room)) {
+        EduLogger.info("[aClass Board] Room is ready..")
         // 默认只有老师不用禁止跟随
         if (this.userRole === EduRoleTypeEnum.teacher) {
           this.room.setViewMode(ViewMode.Broadcaster)
@@ -1001,8 +1004,10 @@ export class BoardStore {
             this.room.disableCameraTransform = false
           }
         }
+        EduLogger.info("[aClass Board] Netless configs done..")
       } else {
         // process errors
+        EduLogger.error(`[aClass Board] Netless not connected`)
         throw GenericErrorWrapper({
           code: 100,
           message: "join_board_not_connected"
@@ -1010,8 +1015,9 @@ export class BoardStore {
       }
 
       try {
+        EduLogger.info("[aClass Board] begin refresh cache state..")
         await this.refreshState()
-        throw new Error('test')
+        EduLogger.info("[aClass Board] end refresh cache state..")
       }catch(e) {
         // ignore errors
         BizLogger.warn(`refresh state failed ${e.message}`)
@@ -1025,6 +1031,7 @@ export class BoardStore {
 
     // ATODO loading太卡
     // ATODO 课件不应该用name做标识
+    EduLogger.info("[aClass Board] loading status set to ready..")
     this.ready = true
 
     // 老师
@@ -1032,29 +1039,30 @@ export class BoardStore {
       // 判断第一次登陆
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
-        EduLogger.info("老师第一次加入白板")
+        EduLogger.info("[aClass Board] teacher first time join..")
         await this.fetchRoomScenes()
       } else {
-        EduLogger.info("老师再次加入白板")
+        EduLogger.info("[aClass Board] teacher join again..")
       }
     }
     // 学生
     if (this.isStudent()) {
       // 判断第一次登陆
       if (!this.studentLogged()) {
-        EduLogger.info("学生第一次加入白板")
+        EduLogger.info("[aClass Board] student first time join..")
         this.studentFirstJoin()
         await this.fetchRoomScenes()
       } else {
-        EduLogger.info("学生再次加入白板")
+        EduLogger.info("[aClass Board] student join again..")
       }
     }
     if (!this.lockBoard) {
-      EduLogger.info("白板尚未锁定")
+      EduLogger.info("[aClass Board] whiteboard not locked..")
     } else {
-      EduLogger.info("白板已经锁定")
+      EduLogger.info("[aClass Board] whiteboard locked..")
     }
 
+    EduLogger.info("[aClass Board] prepare scenes..")
     this.updateLocalResourceList()
     this.updateLocalSceneState()
     this.updateSceneItems()
@@ -1063,6 +1071,8 @@ export class BoardStore {
     this.autoFetchDynamicTask()
     this.pptAutoFullScreen()
     this.moveCamera()
+    EduLogger.info("[aClass Board] prepare scenes done..")
+    EduLogger.info("[aClass Board] aClassInit all finished..")
   }
 
   pptAutoFullScreen() {

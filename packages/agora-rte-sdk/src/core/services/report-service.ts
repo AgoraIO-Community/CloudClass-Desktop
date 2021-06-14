@@ -46,7 +46,7 @@ const HB_RATE = 10 * 1000
 export class ReportService extends ApiBase {
     protected sid: string = ''
     protected rid: string = ''
-    protected version: string = '1.1.0'
+    protected version: string = '1.1.1.15'
     protected platform: "web" | "electron" = 'web'
     protected tickerMap = new Map<string, number>()
     protected connectionState: string = "CONNECTING"

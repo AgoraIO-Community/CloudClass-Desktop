@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "agora-rtc-sdk-ng": "file:../agora-rtc-sdk-ng",
-    "agora-rtm-sdk": "1.4.3",
+    "agora-rtm-sdk-sp": "file:../agora-rtm-sdk-sp",
     "lodash": "4.17.21"
   },
   "peerDependencies": {

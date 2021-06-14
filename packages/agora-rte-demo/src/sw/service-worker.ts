@@ -213,6 +213,8 @@ self.addEventListener('message', event => {
 
 self.addEventListener('activate', (event: any) => {
   swLog('worker activate event ', event)
+  // immediately claim to use
+  self.clients.claim()
 })
 
 self.addEventListener('install', (event: { waitUntil: (arg0: Promise<Cache> | undefined) => any; }) => {
