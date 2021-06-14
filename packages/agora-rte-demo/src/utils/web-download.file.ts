@@ -92,14 +92,31 @@ export class AgoraCaches {
         }
     }
 
-    private agoraCaches: Promise<Cache> | null = null;
+    private agoraCaches: Cache | null = null;
     public openCache = (cachesName: string): Promise<Cache> => {
-        if (!this.agoraCaches) {
-            this.agoraCaches = caches.open(cachesName);
-            //@ts-ignore
-            // window.agoraCaches = this.agoraCaches
-        }
-        return this.agoraCaches;
+        return new Promise<Cache>((resolve, reject) => {
+            if(this.agoraCaches) {
+                return resolve(this.agoraCaches)
+            }
+
+            let timerId = setTimeout(() => {
+                console.error(`[Cache] cache open timeout`)
+                reject(new Error('open_cache_timeout'))
+            },3000)
+
+            // start open cache...
+            console.log(`[Cache] start opening cache`)
+            caches.open(cachesName).then(cache => {
+                console.log(`[Cache] cache open success`)
+                this.agoraCaches = cache
+                clearTimeout(timerId)
+                resolve(cache)
+            }).catch((e => {
+                console.error(`[Cache] cache open failed: ${e.message}`)
+                clearTimeout(timerId)
+                reject(e)
+            }))
+        })
     }
 
     public deleteCache = async () => {
