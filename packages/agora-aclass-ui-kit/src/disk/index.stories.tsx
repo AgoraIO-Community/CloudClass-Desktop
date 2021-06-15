@@ -58,10 +58,29 @@ export const CourseReplacerDialog = (props: any) => {
     {name: '202206PPT课件制作规范.pptx'},
     {name: '202206PPT课件制作规范.pptx'},
     {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
     {name: '202206PPT课件制作规范.pptx'}
   ]
   return (
     <CourseReplacer items={items}></CourseReplacer>
+  )
+}
+
+export const EmptyCourseReplacerDialog = (props: any) => {
+  let items = [
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'},
+    {name: '202206PPT课件制作规范.pptx'}
+  ]
+  return (
+    <CourseReplacer items={[]}></CourseReplacer>
   )
 }
 

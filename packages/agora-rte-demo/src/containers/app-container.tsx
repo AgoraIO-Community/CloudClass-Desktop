@@ -10,6 +10,7 @@ import { BizLogger } from '@/utils/biz-logger';
 import { useBoardStore, useHomeUIStore } from '@/hooks';
 import { workerPath } from '@/edu-sdk/controller';
 import { useStorageSW } from '@/utils/utils';
+import { CourseReplacerContent } from '../components/course-replacer';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -66,6 +67,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
           <Toast />
           <AcadsocToast />
           <BrushToastContent />
+          <CourseReplacerContent />
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>

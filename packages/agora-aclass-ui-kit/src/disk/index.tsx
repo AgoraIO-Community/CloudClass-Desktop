@@ -1,5 +1,6 @@
 export * from './dialog/frame'
 export * from './dialog/manager'
+export * from './dialog/courseReplacer'
 export * from './dialog/table-cell'
 export * from './dialog/table-empty'
 export * from './dialog/tabs'

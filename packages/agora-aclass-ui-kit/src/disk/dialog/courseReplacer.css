@@ -6,6 +6,9 @@
     color: #273D75;
     padding: 15px;
     font-size: 16px;
+    height:535px;
+    display: flex;
+    flex-direction: column;
 }
 
 .course-replacer .course-replacer-header {
@@ -22,6 +25,9 @@
     padding: 10px 20px;
     text-align: left;
     font-size: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .course-replacer .course-replacer-body input {
@@ -57,7 +63,7 @@
     cursor: pointer;
 }
 
-.course-replacer .course-replacer-body .course-replacer-tbl-row:nth-last-child(2) {
+.course-replacer .course-replacer-body .course-replacer-tbl-row:last-child {
     border-bottom: 0;
 }
 
