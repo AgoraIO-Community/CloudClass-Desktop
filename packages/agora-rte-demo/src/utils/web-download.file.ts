@@ -102,7 +102,7 @@ export class AgoraCaches {
             let timerId = setTimeout(() => {
                 console.error(`[Cache] cache open timeout`)
                 reject(new Error('open_cache_timeout'))
-            },3000)
+            },2000)
 
             // start open cache...
             console.log(`[Cache] start opening cache`)
@@ -113,6 +113,27 @@ export class AgoraCaches {
                 resolve(cache)
             }).catch((e => {
                 console.error(`[Cache] cache open failed: ${e.message}`)
+                clearTimeout(timerId)
+                reject(e)
+            }))
+        })
+    }
+
+    private timeout_keys(cache:Cache):Promise<readonly Request[]> {
+        return new Promise((resolve, reject) => {
+            let timerId = setTimeout(() => {
+                console.error(`[Cache] cache.keys timeout`)
+                reject(new Error('cache_keys_timeout'))
+            },2000)
+
+            // start open cache...
+            console.log(`[Cache] start cache.keys`)
+            cache.keys().then(keys => {
+                console.log(`[Cache] cache.keys success`)
+                clearTimeout(timerId)
+                resolve(keys)
+            }).catch((e => {
+                console.error(`[Cache] cache.keys failed: ${e.message}`)
                 clearTimeout(timerId)
                 reject(e)
             }))
@@ -130,7 +151,7 @@ export class AgoraCaches {
      */
     public calculateCache = async (): Promise<number> => {
         const cache = await agoraCaches.openCache(cacheStorageKey);
-        const keys = await cache.keys();
+        const keys = await this.timeout_keys(cache);
         let size = 0;
         for (const request of keys) {
             const response = await cache.match(request)!;
@@ -143,7 +164,7 @@ export class AgoraCaches {
 
     public deleteTaskUUID = async (uuid: string) =>  {
         const cache = await this.openCache(cacheStorageKey);
-        const keys = await cache.keys();
+        const keys = await this.timeout_keys(cache);
         for (const request of keys) {
             if (request.url.indexOf(uuid) !== -1) {
                 await cache.delete(request);
@@ -158,7 +179,7 @@ export class AgoraCaches {
 
     public clearAllCache = async () => {
         const cache = await this.openCache(cacheStorageKey)
-        const keys = await cache.keys()
+        const keys = await this.timeout_keys(cache)
         keys.forEach((key) => {
             cache.delete(key)
         })
@@ -168,7 +189,7 @@ export class AgoraCaches {
 
     public hasTaskUUID = async (uuid: string): Promise<boolean> =>  {
       const cache = await this.openCache(cacheStorageKey);
-      const keys = await cache.keys();
+      const keys = await this.timeout_keys(cache);
       for (const request of keys) {
         if (request.url.indexOf(uuid) !== -1) {
           return true;
