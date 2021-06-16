@@ -1,3 +1,4 @@
+import { isElectron } from '@/infra/utils';
 import { ReactElement } from 'react';
 import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
 import { get } from "lodash"
@@ -618,6 +619,33 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
+  async enableLocalAudio2() {
+    try {
+      const deviceId = this.appStore.pretestStore.microphoneId
+      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
+        if (this._microphoneTrack) {
+          this._microphoneTrack.stop()
+          this._microphoneTrack = undefined
+        }
+        this.appStore.mediaStore.totalVolume = 0
+        this.appStore.pretestStore.muteMicrophone()
+      } else {
+        if (this.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper) {
+          this.mediaService.sdkWrapper.client.muteLocalAudioStream(true)
+        }
+        await this.mediaService.enableLocalAudio(false)
+        if (this.mediaService.isWeb) {
+          this._microphoneTrack = this.mediaService.web.microphoneTrack
+        }
+      }
+    } catch(err) {
+      const error = GenericErrorWrapper(err)
+      BizLogger.warn('[demo] action in enableLocalAudio >>> enableLocalAudio', error)
+      throw error
+    }
+  }
+
+  @action.bound
   async enableLocalAudio() {
     // if (this._microphoneTrack) {
     //   return BizLogger.warn('[demo] enableLocalAudio locking 1 already exists')
@@ -646,9 +674,9 @@ export class SceneStore extends SimpleInterval {
 
   @action.bound
   async enableLocalVideo() {
-    if (this._cameraRenderer) {
-      return BizLogger.warn('[demo] enableLocalVideo locking 1 already exists')
-    }
+    // if (this._cameraRenderer) {
+    //   return BizLogger.warn('[demo] enableLocalVideo locking 1 already exists')
+    // }
     try {
       const deviceId = this.appStore.pretestStore.cameraId
       if (deviceId === AgoraMediaDeviceEnum.Disabled) {
@@ -682,6 +710,9 @@ export class SceneStore extends SimpleInterval {
       if (deviceId === AgoraMediaDeviceEnum.Disabled) {
         this.appStore.pretestStore.muteCamera()
       } else {
+        if (this.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper) {
+          this.mediaService.sdkWrapper.client.muteLocalVideoStream(true)
+        }
         await this.mediaService.enableLocalVideo(true)
         this._cameraRenderer = this.mediaService.cameraRenderer
       }
@@ -719,6 +750,11 @@ export class SceneStore extends SimpleInterval {
   @action.bound
   async disableLocalAudio() {
     await this.appStore.pretestStore.closeMicrophone()
+  }
+
+  @action.bound
+  async disableLocalAudio2() {
+    await this.appStore.pretestStore.closeMicrophone2()
   }
 
   @action.bound

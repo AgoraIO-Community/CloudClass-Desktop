@@ -674,6 +674,13 @@ export class PretestStore {
   }
 
   @action.bound
+  async closeMicrophone2() {
+    await this.mediaService.enableLocalAudio(false)
+    this.appStore.mediaStore.totalVolume = 0
+    this.resetMicrophoneTrack()
+  }
+
+  @action.bound
   async changeElectronTestSpeaker(deviceId: string) {
     console.log('device id', deviceId)
   }

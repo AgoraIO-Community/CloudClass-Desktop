@@ -53,7 +53,7 @@ export const useMediaContext = (): MediaContext => {
       // // changeCamera('')
       // // changeMicrophone('')
       await sceneStore.enableLocalVideo2()
-      await sceneStore.enableLocalAudio()
+      await sceneStore.enableLocalAudio2()
     }
 
     const stopPreview = () => {
