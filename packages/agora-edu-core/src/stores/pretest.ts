@@ -327,73 +327,75 @@ export class PretestStore {
     audioDeviceInit: false
   }
 
-  init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
+  async init(option: {video?: boolean, audio?: boolean} = {video: true, audio: true}) {
     if (option.video) {
-      const videoDeviceInit = this.initRecords.videoDeviceInit
-      if (!this.initRecords.videoDeviceInit) {
-        this.initRecords.videoDeviceInit = true
-      }
-      this.mediaService.getCameras().then((list: any[]) => {
+      try {
+        const videoDeviceInit = this.initRecords.videoDeviceInit
+        if (!this.initRecords.videoDeviceInit) {
+          this.initRecords.videoDeviceInit = true
+        }
+        const cams = await this.mediaService.getCameras()
         if (this.appStore.isElectron && this.cameraLabel !== CustomizeDeviceLabel.Disabled) {
           const label = this.mediaService.getCameraLabel()
           this.updateCameraLabel(label)
           this.updateTestCameraLabel()
         }
-        runInAction(() => {
-          if (videoDeviceInit && list.length > this._cameraList.length) {
-            const appStore = this.appStore
-            if (appStore.isNotInvisible) {
-              appStore.mediaStore.pretestNotice.next({
-                type: 'video',
-                info: 'device_changed',
-                id: uuidv4()
-              })
-            }
-            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+        if (videoDeviceInit && cams.length > this._cameraList.length) {
+          const appStore = this.appStore
+          if (appStore.isNotInvisible) {
+            appStore.mediaStore.pretestNotice.next({
+              type: 'video',
+              info: 'device_changed',
+              id: uuidv4()
+            })
           }
+          this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+        }
 
-          if (this.isElectron && !list.length) {
-            this.muteCamera()
-          }
-          if (this.isWeb) {
-            this.muteCamera()
-          }
-          this._cameraList = list
-        })
-      })
+        if (this.isElectron && !cams.length) {
+          this.muteCamera()
+        }
+        if (this.isWeb) {
+          this.muteCamera()
+        }
+        this._cameraList = cams
+      } catch (err) {
+        console.log(err)
+      }
     }
     if (option.audio) {
-      const audioDeviceInit = this.initRecords.audioDeviceInit
-      if (!this.initRecords.audioDeviceInit) {
-        this.initRecords.audioDeviceInit = true
-      }
-      this.mediaService.getMicrophones().then((list: any[]) => {
+      try {
+        const audioDeviceInit = this.initRecords.audioDeviceInit
+        if (!this.initRecords.audioDeviceInit) {
+          this.initRecords.audioDeviceInit = true
+        }
+        const mics = await this.mediaService.getMicrophones();
         if (this.appStore.isElectron && this.microphoneLabel !== CustomizeDeviceLabel.Disabled) {
           const label = this.mediaService.getMicrophoneLabel()
           this.updateMicrophoneLabel(label)
           this.updateTestMicrophoneLabel()
         }
-        runInAction(() => {
-          if (audioDeviceInit && list.length > this._microphoneList.length) {
-            const appStore = this.appStore
-            if (appStore.isNotInvisible) {
-              appStore.mediaStore.pretestNotice.next({
-                type: 'audio',
-                info: 'device_changed',
-                id: uuidv4()
-              })
-            }
-            this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+        if (audioDeviceInit && mics.length > this._microphoneList.length) {
+          const appStore = this.appStore
+          if (appStore.isNotInvisible) {
+            appStore.mediaStore.pretestNotice.next({
+              type: 'audio',
+              info: 'device_changed',
+              id: uuidv4()
+            })
           }
-          if (this.isElectron && !list.length) {
-            this.muteMicrophone()
-          }
-          if (this.isWeb) {
-            this.muteMicrophone()
-          }
-          this._microphoneList = list
-        })
-      })
+          this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+        }
+        if (this.isElectron && !mics.length) {
+          this.muteMicrophone()
+        }
+        if (this.isWeb) {
+          this.muteMicrophone()
+        }
+        this._microphoneList = mics
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 
