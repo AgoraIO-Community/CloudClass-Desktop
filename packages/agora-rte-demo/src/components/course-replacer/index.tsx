@@ -13,7 +13,7 @@ export const CourseReplacerContent = observer(() => {
             display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:10
         }} className={uiStore.courseReplacerVisible ? 'visibility' : 'hidden'}>
             <CourseReplacer
-                items={[]}
+                items={[{name:'example courseware'}]}
                 onClose={() => {
                     uiStore.setCourseReplacerVisible(false)
                 }}

@@ -3,7 +3,25 @@ import classnames from 'classnames'
 import IconEmpty from '../assets/icon-empty.png'
 import CloseIcon from '../assets/close-button.png'
 import './courseReplacer.css'
+import IconPpt from '../assets/icon-ppt.png'
+import IconWord from '../assets/icon-word.png'
+import IconExcel from '../assets/icon-excel.png'
+import IconPdf from '../assets/icon-pdf.png'
+import IconVideo from '../assets/icon-video.png'
+import IconAudio from '../assets/icon-audio.png'
+import IconTxt from '../assets/icon-txt.png'
+import IconPicture from '../assets/icon-pic.png'
 
+export const iconMapper = {
+  ppt: IconPpt,
+  word: IconWord,
+  excel: IconExcel,
+  pdf: IconPdf,
+  video: IconVideo,
+  audio: IconAudio,
+  txt: IconTxt,
+  pic: IconPicture,
+}
 
 const CourseReplacerContext = React.createContext({
   activeIdx: 0,
@@ -11,7 +29,8 @@ const CourseReplacerContext = React.createContext({
 });
 
 export interface AClassCourseWareItem {
-  name: string
+  name: string,
+  type: 'ppt' | 'word' | 'excel' | 'pdf' | 'video' | 'audio' | 'txt' | 'pic'
 }
 
 interface CoursePagingProps {
@@ -129,6 +148,9 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
             {currentItems.length > 0 ? currentItems.map(item => {
               return (
                 <div className="course-replacer-tbl-row">
+                  <div className="course-replacer-tbl-col">
+                    <img src={iconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
+                  </div>
                   <div className="course-replacer-tbl-col">
                     {item.name}
                   </div>

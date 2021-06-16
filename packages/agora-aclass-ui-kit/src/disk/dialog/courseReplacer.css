@@ -73,10 +73,12 @@
     align-items: center;
     border-bottom: 1px solid #E3E3EC;
     height: 40px;
+    margin: 0 10px;
 }
 
 .course-replacer .course-replacer-body .course-replacer-tbl-row>.course-replacer-tbl-col {
     cursor: pointer;
+    margin-right: 5px;
 }
 
 .course-replacer .course-replacer-body .course-replacer-tbl-row:last-child {
