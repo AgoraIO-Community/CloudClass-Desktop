@@ -1,7 +1,7 @@
 import { INavigationItem, Navigation, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
 import React, { useCallback } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
-import { useAcadsocRoomStore, useSceneStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
+import { useAcadsocRoomStore, useSceneStore, useStatsStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
@@ -13,8 +13,9 @@ import { controller } from '@/edu-sdk/controller'
 import { AgoraEduEvent } from '@/edu-sdk/declare'
 
 const StartViewBox = observer(() => {
+  const statisticsStore = useStatsStore()
   const acadsocStore = useAcadsocRoomStore()
-  const startTime: string = acadsocStore.classTimeText
+  const startTime: string = statisticsStore.classTimeText
   return (
     <StartView text={startTime} isEnd={acadsocStore.isClassroomDelayed}/>
   )

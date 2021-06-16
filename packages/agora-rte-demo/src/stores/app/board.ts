@@ -270,9 +270,6 @@ export class BoardStore {
   totalPage: number = 0
 
   @observable
-  currentScene: any = '/init'
-
-  @observable
   hasBoardPermission: number = 0
 
   @observable
@@ -310,9 +307,6 @@ export class BoardStore {
 
   @observable
   roomToken: string = '';
-
-  @observable
-  sceneItems: SceneItem[] = [];
 
   @observable
   activeScenePath: string = '/init'
@@ -405,115 +399,6 @@ export class BoardStore {
     return this.appStore.userUuid
   }
 
-  @action
-  async fetchInit() {
-    let {
-      info
-    } = await this.boardService.getBoardInfo()
-    await this.join({
-      uuid: info.boardId,
-      roomToken: info.boardToken,
-      // $el: dom,
-      role: this.userRole,
-      isWritable: true,
-      disableDeviceInputs: true,
-      disableCameraTransform: true,
-      disableAutoResize: false
-    })
-    const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
-    const follow = get(this.room.state.globalState, 'follow', 0)
-    const globalState = this.room.state.globalState as any
-    this.grantUsers = grantUsers
-    const boardUser = this.grantUsers.includes(this.localUserUuid)
-    if (boardUser) {
-      this._grantPermission = true
-    }
-    this.follow = follow
-    this.updateFullScreen(globalState.isFullScreen)
-    // 默认只有老师不用禁止跟随
-    if (this.userRole !== EduRoleTypeEnum.teacher) {
-      if (this.boardClient.room && this.boardClient.room.isWritable) {
-        if (this.follow === FollowState.Follow) {
-          // await this.setWritable(true)
-          this.room.setViewMode(ViewMode.Broadcaster)
-          this.room.disableCameraTransform = true
-          this.room.disableDeviceInputs = true
-          this.lock = true
-        }
-        if (this.follow === FollowState.Freedom) {
-          // await this.setWritable(true)
-          this.room.setViewMode(ViewMode.Freedom)
-          this.room.disableCameraTransform = false
-          this.room.disableDeviceInputs = false
-          this.lock = false
-        }
-      }
-    } else {
-      this.room.disableCameraTransform = false
-    }
-
-    if (this.hasPermission) {
-      await this.setWritable(true)
-    } else {
-      await this.setWritable(this._grantPermission as boolean)
-    }
-    this.ready = true
-  }
-
-  @action
-  async init(info: {
-    boardId: string,
-    boardToken: string
-  }) {
-      await this.join({
-        uuid: info.boardId,
-        roomToken: info.boardToken,
-        // $el: dom,
-        role: this.userRole,
-        isWritable: true,
-        disableDeviceInputs: true,
-        disableCameraTransform: true,
-        disableAutoResize: false
-      })
-      const grantUsers = get(this.room.state.globalState, 'grantUsers', [])
-      const follow = get(this.room.state.globalState, 'follow', 0)
-      const isFullScreen = get(this.room.state.globalState, 'isFullScreen', false)
-      this.grantUsers = grantUsers
-      const boardUser = this.grantUsers.includes(this.localUserUuid)
-      if (boardUser) {
-        this._grantPermission = true
-      }
-      this.follow = follow
-      // 默认只有老师不用禁止跟随
-      if (this.userRole !== EduRoleTypeEnum.teacher) {
-        if (this.boardClient.room && this.boardClient.room.isWritable) {
-          if (this.follow === FollowState.Follow) {
-            // await this.setWritable(true)
-            this.room.setViewMode(ViewMode.Broadcaster)
-            this.room.disableCameraTransform = true
-            this.room.disableDeviceInputs = true
-            this.lock = true
-          }
-          if (this.follow === FollowState.Freedom) {
-            // await this.setWritable(true)
-            this.room.setViewMode(ViewMode.Freedom)
-            this.room.disableCameraTransform = false
-            this.room.disableDeviceInputs = false
-            this.lock = false
-          }
-        }
-      } else {
-        this.room.disableCameraTransform = false
-      }
-
-      if (this.hasPermission) {
-        await this.setWritable(true)
-      } else {
-        await this.setWritable(this._grantPermission as boolean)
-      }
-      this.ready = true
-  }
-
   async preloadCourseWare() {
 
   }
@@ -546,15 +431,7 @@ export class BoardStore {
 
   controller: any = undefined
 
-  // cancelDownloading() {
-  //   if (this.controller) {
-  //     this.controller.abort()
-  //     this.controller = undefined
-  //     this.downloading = false
-  //     this.appStore.statisticsStore.cacheMap.delete(this.currentTaskUuid)
-  //     this.preloadingProgress = -1
-  //   }
-  // }
+
   abortDownload(taskUuid: string, cacheInfo: CacheInfo) {
     if(!cacheInfo.controller) {
       BizLogger.warn(`[precache] no signal controller exists for task ${taskUuid}`)
@@ -832,7 +709,7 @@ export class BoardStore {
   @observable
   resourceName: string = '/'
 
-  updateLocalResourceList() {
+  loadRoomScenes() {
     const globalState: any = this.room.state.globalState
     const roomScenes = globalState.roomScenes
     if (!roomScenes) return
@@ -871,7 +748,7 @@ export class BoardStore {
     this._resourcesList = newList
   }
 
-  updateLocalSceneState() {
+  loadContextPath() {
     this.resourceName = this.getResourceName(this.room.state.sceneState.contextPath)
   }
 
@@ -890,7 +767,7 @@ export class BoardStore {
   }
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
-  async fetchRoomScenes() {
+  async loadCoursewareList() {
     const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
       // for debugging info
@@ -1040,7 +917,7 @@ export class BoardStore {
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
         EduLogger.info("[aClass Board] teacher first time join..")
-        await this.fetchRoomScenes()
+        await this.loadCoursewareList()
       } else {
         EduLogger.info("[aClass Board] teacher join again..")
       }
@@ -1051,7 +928,7 @@ export class BoardStore {
       if (!this.studentLogged()) {
         EduLogger.info("[aClass Board] student first time join..")
         this.studentFirstJoin()
-        await this.fetchRoomScenes()
+        await this.loadCoursewareList()
       } else {
         EduLogger.info("[aClass Board] student join again..")
       }
@@ -1063,8 +940,8 @@ export class BoardStore {
     }
 
     EduLogger.info("[aClass Board] prepare scenes..")
-    this.updateLocalResourceList()
-    this.updateLocalSceneState()
+    this.loadRoomScenes()
+    this.loadContextPath()
     this.updateSceneItems()
     this.updateCourseWareList()
 
@@ -1208,8 +1085,8 @@ export class BoardStore {
         this.updatePageHistory()
       }
       if (state.sceneState || state.globalState) {
-        this.updateLocalResourceList()
-        this.updateLocalSceneState()
+        this.loadRoomScenes()
+        this.loadContextPath()
         this.updateSceneItems()
       }
       if (state.globalState) {
@@ -1886,66 +1763,6 @@ export class BoardStore {
 
   @action
   updateSceneItems() {
-    const room = this.room
-
-    const path = room.state.sceneState.scenePath;
-    const ppt = room.state.sceneState.scenes[0].ppt;
-
-    const type = isEmpty(ppt) ? 'static' : 'dynamic';
-
-    // if (type !== 'dynamic') {
-    //   this.state = {
-    //     ...this.state,
-    //     currentHeight: 0,
-    //     currentWidth: 0
-    //   }
-    // } else {
-    //   this.state = {
-    //     ...this.state,
-    //     currentHeight: get(ppt, 'height', 0),
-    //     currentWidth: get(ppt, 'width', 0)
-    //   }
-    // }
-
-    const entriesScenes = room ? room.entireScenes() : {};
-
-    const paths = Object.keys(entriesScenes);
-
-    let scenes: any[] = [];
-    for (let dirPath of paths) {
-      const sceneInfo = {
-        path: dirPath,
-        file: {
-          name: this.getNameByScenePath(dirPath),
-          type: 'whiteboard'
-        },
-        type: 'static',
-        rootPath: '',
-      }
-      if (entriesScenes[dirPath]) {
-        sceneInfo.rootPath = ['/', '/init'].indexOf(dirPath) !== -1 ? '/init' : `${dirPath}/${entriesScenes[dirPath][0].name}`
-        sceneInfo.type = entriesScenes[dirPath][0].ppt ? 'dynamic' : 'static'
-        if (sceneInfo.type === 'dynamic') {
-          sceneInfo.file.type = 'ppt';
-        }
-      }
-      scenes.push(sceneInfo);
-    }
-
-    const _dirPath = pathName(path);
-    const currentScenePath = _dirPath === '' ? '/' : `/${_dirPath}`;
-
-    const _dirs: any[] = [];
-    scenes.forEach((it: any) => {
-      _dirs.push({
-        path: it.path,
-        rootPath: it.rootPath,
-        file: it.file
-      });
-    });
-
-    this.currentScene = currentScenePath
-    this.sceneItems = scenes
     this.updatePagination()
   }
 
@@ -2293,7 +2110,6 @@ export class BoardStore {
     this.sceneList = []
     this.currentPage = 0
     this.totalPage = 0
-    this.currentScene = '/init'
     this.hasBoardPermission = 0
     this.selector = ''
     this.converting = false
@@ -2474,14 +2290,6 @@ export class BoardStore {
   @observable
   preloadingProgress: number = -1
 
-  // @computed
-  // get isLoading() {
-  //   if (!this.ready) {
-  //     return 'preparing'
-  //   }
-  //   return this.loadingStatus
-  // }
-
   @observable
   currentTaskUuid: string = ''
 
@@ -2506,30 +2314,6 @@ export class BoardStore {
       }
     }
   }
-
-  // @computed
-  // get loadingStatus() {
-  //   if (!this.ready) {
-  //     return {
-  //       type: 'preparing',
-  //       text: t("whiteboard.loading")
-  //     }
-  //   }
-
-  //   if (this.currentTaskUuid) {
-  //     const cacheInfo = this.appStore.statisticsStore.cacheMap.get(this.currentTaskUuid)
-  //     if (cacheInfo && cacheInfo.skip !== true && cacheInfo.downloading && (!cacheInfo.cached || cacheInfo.progress !== 100)) {
-  //       let progress = get(cacheInfo, 'progress', 0)
-  //       console.log(progress)
-  //       return {
-  //         type: 'downloading',
-  //         text: t("whiteboard.downloading", {reason: progress})
-  //       }
-  //     }
-  //   }
-
-  //   return ''
-  // }
 
 
   toggleAClassLockBoard() {

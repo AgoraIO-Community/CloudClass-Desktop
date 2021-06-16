@@ -10,17 +10,9 @@ import DiskToast from '../control/toast'
 import TableEmpty from "../dialog/table-empty";
 import { DiskButton } from "../control/disk-button";
 import IconRefresh from '../assets/icon-refresh.png'
-
-import IconPpt from '../assets/icon-ppt.png'
-import IconWord from '../assets/icon-word.png'
-import IconExcel from '../assets/icon-excel.png'
-import IconPdf from '../assets/icon-pdf.png'
-import IconVideo from '../assets/icon-video.png'
-import IconAudio from '../assets/icon-audio.png'
-import IconTxt from '../assets/icon-txt.png'
-import IconPicture from '../assets/icon-pic.png'
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import {CourseIconMapper} from '../dialog/courseIcon'
 
 export interface Data {
   calories: any;
@@ -180,17 +172,6 @@ interface PrivateDiskTablesProps extends DiskTablesProps {
   removeTextVisible?: boolean
 }
 
-export const iconMapper = {
-  ppt: IconPpt,
-  word: IconWord,
-  excel: IconExcel,
-  pdf: IconPdf,
-  video: IconVideo,
-  audio: IconAudio,
-  txt: IconTxt,
-  pic: IconPicture,
-}
-
 const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
 
   const showText = props.showText
@@ -329,7 +310,7 @@ const PrivateDiskTables = (props: PrivateDiskTablesProps) => {
                   </DiskTableCell>
                   <DiskTableCell component="div" id={labelId} scope="row" padding="none">
                     <div style={{ display: 'flex' }}>
-                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+                      <img src={CourseIconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
                       <div style={{ marginLeft: 5 }}>{row.name}</div>
                     </div>
                   </DiskTableCell>

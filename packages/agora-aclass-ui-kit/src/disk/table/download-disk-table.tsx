@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Table, TableBody, TableHead, TableRow } from "@material-ui/core";
-import { iconMapper, DiskTablesProps, useDiskTableStyles } from "./private-disk-table";
+import { DiskTablesProps, useDiskTableStyles } from "./private-disk-table";
+import { CourseIconMapper } from '../dialog/courseIcon';
 
 import { DiskTableCell, DiskTableCellHead, DownloadTableCell } from "../dialog/table-cell";
 import { DiskButton } from "../control/disk-button";
@@ -84,7 +85,7 @@ const DownloadDiskTables = (props: DownloadDiskTablesProps) => {
       >
         <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={index} scope="row" padding="none">
           <div style={{ display: 'flex' }}>
-            <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+            <img src={CourseIconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
             <div style={{ 
               marginLeft: 5,
               width: 300,

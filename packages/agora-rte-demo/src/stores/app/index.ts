@@ -319,9 +319,9 @@ export class AppStore implements ClassRoomAbstractStore {
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
-        const data = toJS(this)
+        const roomInfo = toJS(this.roomInfo)
         GlobalStorage.save('agora_edu_room', {
-          roomInfo: data.roomInfo,
+          roomInfo,
         })
         this
       })
@@ -334,9 +334,9 @@ export class AppStore implements ClassRoomAbstractStore {
     }
 
     autorun(() => {
-      const data = toJS(this)
+      const deviceInfo = toJS(this.deviceInfo)
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo: data.deviceInfo
+        deviceInfo
       })
     })
 

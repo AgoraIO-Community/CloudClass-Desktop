@@ -2,6 +2,7 @@ import { t } from "@/i18n";
 import { AppStore, UIStore } from "@/stores/app/index";
 import { get } from "lodash";
 import { computed, observable } from "mobx";
+import { EduClassroomStateEnum } from "./scene";
 
 interface CacheInfo {
     progress: number,
@@ -10,6 +11,13 @@ interface CacheInfo {
     controller?: any,
     skip: boolean
   }
+
+
+
+export enum TimeFormatType {
+Timeboard,
+Message
+}
 
 export class StatisticsStore {
 
@@ -48,6 +56,32 @@ export class StatisticsStore {
         }
 
         return ''
+    }
+
+
+    @computed
+    get classTimeText() {
+        let timeText = ""
+        const duration = this.appStore.acadsocStore.classTimeDuration
+        const placeholder = `-- ${t('nav.short.minutes')} -- ${t('nav.short.seconds')}`
+
+        // duration is always >= 0, if it's smaller than 0, display placeholder
+        if(duration < 0) {
+        timeText = `${t('nav.to_start_in')}${placeholder}`
+        return timeText
+        }
+
+        switch(this.appStore.sceneStore.classState){
+        case EduClassroomStateEnum.beforeStart: 
+            timeText = `${t('nav.to_start_in')}${this.appStore.acadsocStore.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+            break;
+        case EduClassroomStateEnum.start:
+        case EduClassroomStateEnum.end:
+            timeText = `${t('nav.started_elapse')}${this.appStore.acadsocStore.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
+            break;
+        }
+        // console.log(timeText)
+        return timeText
     }
 
 }

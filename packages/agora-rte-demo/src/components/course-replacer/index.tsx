@@ -1,5 +1,5 @@
 import React from 'react'
-import { CourseReplacer } from "agora-aclass-ui-kit";
+import { AClassCourseWareItem, CourseReplacer } from "agora-aclass-ui-kit";
 import { useUIStore } from '@/hooks';
 import './index.scss'
 import { observer } from 'mobx-react';
@@ -13,9 +13,12 @@ export const CourseReplacerContent = observer(() => {
             display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:10
         }} className={uiStore.courseReplacerVisible ? 'visibility' : 'hidden'}>
             <CourseReplacer
-                items={[{name:'example courseware'}]}
+                items={[{name:'example courseware', type:'ppt'}]}
                 onClose={() => {
                     uiStore.setCourseReplacerVisible(false)
+                }}
+                onReplaceCourse={(item: AClassCourseWareItem) => {
+
                 }}
             ></CourseReplacer>
         </div>

@@ -5,11 +5,12 @@ import { DiskTableCell } from "../dialog/table-cell";
 import { DiskCheckbox } from "../control/checkbox";
 import { DiskButton } from "../control/disk-button";
 // disk table styles,  checkbox select function
-import { iconMapper, DiskTablesProps, useDiskTableStyles, useSearchStyles, getComparator, stableSort, createData, Order } from "./private-disk-table";
+import { DiskTablesProps, useDiskTableStyles, useSearchStyles, getComparator, stableSort, createData, Order } from "./private-disk-table";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SearchIcon from "@material-ui/icons/Search";
 import TableEmpty from "../dialog/table-empty";
 import dayjs from 'dayjs';
+import { CourseIconMapper } from '../dialog/courseIcon'
 
 interface PublicDiskTablesProps extends DiskTablesProps {
   publicList?: any,
@@ -125,7 +126,7 @@ const PublicDiskTables = (props: PublicDiskTablesProps) => {
                   </DiskTableCell> */}
                   <DiskTableCell component="div" style={{ paddingLeft: 15 }} id={labelId} padding="none">
                     <div style={{ display: 'flex', overflow: 'hidden', textOverflow: 'ellipse', maxWidth: 150, whiteSpace: 'nowrap' }}>
-                      <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+                      <img src={CourseIconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
                       <div style={{ marginLeft: 5, textOverflow: 'ellipsis', overflow: 'hidden' }}>{row.name}</div>
                     </div>
                   </DiskTableCell>

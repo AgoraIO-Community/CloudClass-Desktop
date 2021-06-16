@@ -3,6 +3,7 @@ import { StrategyHandler } from 'workbox-strategies/StrategyHandler'
 //@ts-ignore
 // import {createReader, ZipReader, BlobReader} from "@zip.js/zip.js/dist/zip.js";
 import { ZipReader, BlobReader, BlobWriter, configure } from '@zip.js/zip.js'
+import { throttle } from 'lodash'
 
 configure({
     useWebWorkers: false
@@ -217,16 +218,18 @@ export class AgoraCaches {
         const signal = controller.signal;
         const url = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
         // const res = await fetch(zipUrl, {
+
+        const throttledProgress = throttle((progress:any) => {
+            if (onProgress) {
+                this.downloadList.add(taskUuid)
+                onProgress(progress.percentage, controller)
+            }
+        }, 500)
         const res = await fetchMultiple([url, url.replace("https://convertcdn.netless.link", "https://ap-convertcdn.netless.link")], {
             method: "get",
             signal: signal,
         }).then(fetchProgress({
-            onProgress: (progress: any) => {
-                if (onProgress) {
-                    this.downloadList.add(taskUuid)
-                    onProgress(progress.percentage, controller);
-                }
-            },
+            onProgress: throttledProgress,
         }));
         if (res.status !== 200) {
             throw new Error(`download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`);

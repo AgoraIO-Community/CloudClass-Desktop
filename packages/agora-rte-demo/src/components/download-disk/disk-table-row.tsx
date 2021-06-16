@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableRow } from '@material-ui/core';
-import { iconMapper, DiskTableCell, DiskButton, DiskSingleProgress } from 'agora-aclass-ui-kit'
+import { CourseIconMapper, DiskTableCell, DiskButton, DiskSingleProgress } from 'agora-aclass-ui-kit'
 import {t} from '@/i18n'
 import { DownloadFileStatus } from '@/stores/storage';
 import { useStorageStore } from '@/hooks';
@@ -43,7 +43,7 @@ export const DownloadTableRow = observer((props: DownloadTableRowProps) => {
         scope="row"
         padding="none">
         <div style={{ display: 'flex' }}>
-          <img src={iconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
+          <img src={CourseIconMapper[row.type]} style={{ width: 22.4, height: 22.4 }} />
           <div style={{ 
             marginLeft: 5,
             width: 300,

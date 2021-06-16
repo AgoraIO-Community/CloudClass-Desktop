@@ -33,16 +33,12 @@ import duration from 'dayjs/plugin/duration'
 import { QuickTypeEnum } from '@/types/global';
 import { filterChatText } from '@/utils/utils';
 import { controller } from '@/edu-sdk/controller'
+import { TimeFormatType } from './statistics';
 
 dayjs.extend(duration)
 
 type ProcessType = {
   reward: number,
-}
-
-enum TimeFormatType {
-  Timeboard,
-  Message
 }
 
 type AcadsocRoomProperties = {
@@ -213,9 +209,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   roomJoined: boolean = false
 
   @observable
-  time: number = 0
-
-  @observable
   isStudentChatAllowed: boolean | undefined
 
   @observable
@@ -233,6 +226,9 @@ export class AcadsocRoomStore extends SimpleInterval {
   rightContainerClientY: number = 0
   @observable
   rightContainerClientWidth: number = 0
+
+  @observable
+  time: number = 0
 
   @observable
   rightContainerHeight: number = 0
@@ -272,31 +268,6 @@ export class AcadsocRoomStore extends SimpleInterval {
   @computed
   get roomReward() {
     return get(this.roomProperties, 'reward', {room: 0, config: {roomLimit: 6}})
-  }
-
-  @computed
-  get classTimeText() {
-    let timeText = ""
-    const duration = this.classTimeDuration
-    const placeholder = `-- ${t('nav.short.minutes')} -- ${t('nav.short.seconds')}`
-
-    // duration is always >= 0, if it's smaller than 0, display placeholder
-    if(duration < 0) {
-      timeText = `${t('nav.to_start_in')}${placeholder}`
-      return timeText
-    }
-
-    switch(this.sceneStore.classState){
-      case EduClassroomStateEnum.beforeStart: 
-        timeText = `${t('nav.to_start_in')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
-        break;
-      case EduClassroomStateEnum.start:
-      case EduClassroomStateEnum.end:
-        timeText = `${t('nav.started_elapse')}${this.formatTimeCountdown(duration, TimeFormatType.Timeboard)}`
-        break;
-    }
-    // console.log(timeText)
-    return timeText
   }
 
   @computed
@@ -421,10 +392,9 @@ export class AcadsocRoomStore extends SimpleInterval {
     this.messages = []
     this.joined = false
     this.roomJoined = false
-    this.time = 0
     this.classroomSchedule = undefined
     this.disposers.forEach(disposer => disposer())
-    clearTimeout(this.timer)
+    clearInterval(this.timer)
   }
 
   @action
@@ -573,8 +543,6 @@ export class AcadsocRoomStore extends SimpleInterval {
     // update time
     this.time = dayjs().valueOf()
     this.checkClassroomNotification()
-    clearTimeout(this.timer)
-    this.timer = setTimeout(() => {this.tickClassroom()}, 1000)
   }
 
   @action
@@ -638,11 +606,11 @@ export class AcadsocRoomStore extends SimpleInterval {
   uploadLog() {
     let duration = new Date().getTime() - this.lastUploadLogTime
     if(duration > 1000 * 60 * 3) {
-      BizLogger.info(`[log-uploader] ${this.classTimeText} begin log upload`)
+      BizLogger.info(`[log-uploader] ${this.appStore.statisticsStore.classTimeText} begin log upload`)
       controller.appController.uploadLog().then(BizLogger.info).catch(e => {BizLogger.error(e.message)})
       this.lastUploadLogTime = new Date().getTime()
     } else {
-      BizLogger.warn(`[log-uploader] ${this.classTimeText} skip log upload, last upload time ${this.lastUploadLogTime}`)
+      BizLogger.warn(`[log-uploader] ${this.appStore.statisticsStore.classTimeText} skip log upload, last upload time ${this.lastUploadLogTime}`)
     }
   }
 
@@ -741,7 +709,10 @@ export class AcadsocRoomStore extends SimpleInterval {
         duration: checkInResult.duration,
         closeDelay: checkInResult.closeDelay
       }
+
       this.tickClassroom()
+      clearInterval(this.timer)
+      this.timer = setInterval(this.tickClassroom.bind(this), 1000)
 
       this.sceneStore.isMuted = checkInResult.muteChat
       this.sceneStore.recordState = !!checkInResult.isRecording
