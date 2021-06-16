@@ -1,4 +1,4 @@
-import { useGlobalContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
+import { useGlobalContext, usePretestContext, useVolumeContext, useMediaContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -50,6 +50,10 @@ export const PretestContainer = observer(() => {
         pretestCameraRenderer,
         pretestOnly
     } = usePretestContext()
+    
+    const {
+        isNative
+    } = useMediaContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
         return (
@@ -139,7 +143,7 @@ export const PretestContainer = observer(() => {
                     microphoneId={microphoneId}
                     speakerList={speakerList}
                     speakerId={speakerList[0].deviceId}
-                    isNative={false}
+                    isNative={isNative}
                     videoComponent={<VideoPreviewPlayer />}
                     volumeComponent={<VolumeIndicationView />}
                 />
