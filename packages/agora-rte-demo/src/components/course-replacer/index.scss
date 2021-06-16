@@ -1,7 +1,11 @@
 .visibility {
     visibility: visible;
+    transition-duration: 0.3s;
+    opacity: 1;
 }
 
 .hidden {
     visibility: hidden;
+    transition-duration: 0.3s;
+    opacity: 0;
 }

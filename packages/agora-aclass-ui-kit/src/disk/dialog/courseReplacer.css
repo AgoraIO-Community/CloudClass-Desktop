@@ -15,8 +15,24 @@
     color: #9DAFE3;
     padding: 5px 10px;
     margin-bottom: 10px;
+    position: relative;
+}
+.course-replacer .course-replacer-header .course-replacer-close-btn {
+    position: absolute;
+    right: 0px;
+    top: -5px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
+.course-replacer .course-replacer-header .course-replacer-close-btn img {
+    width: 14px;
+    height: 14px;
+}
 
 .course-replacer .course-replacer-body {
     background-color: white;

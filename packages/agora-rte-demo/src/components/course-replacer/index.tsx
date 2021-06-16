@@ -14,6 +14,9 @@ export const CourseReplacerContent = observer(() => {
         }} className={uiStore.courseReplacerVisible ? 'visibility' : 'hidden'}>
             <CourseReplacer
                 items={[]}
+                onClose={() => {
+                    uiStore.setCourseReplacerVisible(false)
+                }}
             ></CourseReplacer>
         </div>
     )

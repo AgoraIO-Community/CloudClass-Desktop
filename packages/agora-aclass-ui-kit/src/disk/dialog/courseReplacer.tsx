@@ -1,6 +1,7 @@
 import React, { Dispatch, ReactEventHandler, SetStateAction, useState } from 'react'
 import classnames from 'classnames'
 import IconEmpty from '../assets/icon-empty.png'
+import CloseIcon from '../assets/close-button.png'
 import './courseReplacer.css'
 
 
@@ -85,14 +86,16 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
 interface CourseReplacerProps {
   style?: any,
   className?: string[],
-  items: AClassCourseWareItem[]
+  items: AClassCourseWareItem[],
+  onClose: () => any
 }
 
 
 export const CourseReplacer: React.FC<CourseReplacerProps> = ({
   style,
   className,
-  items
+  items,
+  onClose
 }) => {
 
   const cls = classnames({
@@ -109,12 +112,17 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
       changeActiveIdx: (idx:number) => {setActiveIdx(idx)}
     }}>
       <div style={style} className={cls}>
-        <div className="course-replacer-header">课件查询</div>
+        <div className="course-replacer-header">
+          <div>课件查询</div>
+          <div className="course-replacer-close-btn" onClick={onClose}>
+            <img src={CloseIcon} />
+          </div>
+        </div>
         <div className="course-replacer-body">
           <div>
             <input></input>
           </div>
-          <div style={{flex:1}}>
+          <div style={{flex:1,display:'flex',flexDirection:'column'}}>
             <div className="course-replacer-tbl-h">
               课件名
             </div>
