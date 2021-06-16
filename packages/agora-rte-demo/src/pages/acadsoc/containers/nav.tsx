@@ -157,6 +157,12 @@ const ActionBarContainer = observer(() => {
 
   const menuBars = [
     {
+      name: 'prepare',
+      clickEvent: () => {
+        uiStore.setCourseReplacerVisible(true)
+      }
+    },
+    {
       name: 'highlight',
       count: roomStore.highlightCount,
       clickEvent: () => {

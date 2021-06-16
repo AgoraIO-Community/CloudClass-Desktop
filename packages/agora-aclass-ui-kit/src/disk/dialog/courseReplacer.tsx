@@ -64,6 +64,7 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
                 : null
             }
             {
+              totalPages === 0 ? null :
               Array(windowSize).fill(0).map((_,i) => {
                 const pageIdx = leftEdge + i
                 return (
@@ -132,7 +133,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
               </div>
             )}
           </div>
-          <CoursePaging totalPages={parseInt(`${items.length / 9}`) + 1}></CoursePaging>
+          <CoursePaging totalPages={items.length === 0 ? 0 : parseInt(`${items.length / 9}`) + 1}></CoursePaging>
         </div>
       </div>
     </CourseReplacerContext.Provider>

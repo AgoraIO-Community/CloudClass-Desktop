@@ -181,6 +181,11 @@ export class UIStore {
   }
 
   @action
+  setCourseReplacerVisible(visible: boolean) {
+    this.courseReplacerVisible = visible
+  }
+
+  @action
   addBrushToast(ts: number, enabled: boolean) {
     this.brushToastQueue.push({ts, enabled})
   }
