@@ -13,7 +13,7 @@ import uuidv4 from 'uuid/v4';
 import { t } from '@/i18n';
 import { EduUser, EduRoleTypeEnum, EduLogger } from 'agora-rte-sdk';
 import { EnumBoardState } from '@/modules/services/board-api';
-import { CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
+import { AClassCourseWareItem, CustomMenuItemType, IToolItem } from 'agora-aclass-ui-kit';
 import {CursorTool} from '@netless/cursor-tool'
 import { fetchPPT } from '@/modules/course-ware';
 import { ConvertedFile, ConvertedFileList, CourseWareItem } from '@/edu-sdk';
@@ -42,7 +42,7 @@ const transformConvertedListToScenes = (taskProgress: any) => {
   return []
 }
 
-type MaterialItem = {
+export type MaterialItem = {
     ext: string,
     resourceName: string,
     resourceUuid: string,
@@ -752,7 +752,7 @@ export class BoardStore {
     this.resourceName = this.getResourceName(this.room.state.sceneState.contextPath)
   }
 
-  updateCourseWareList() {
+  loadSharedCourseWareList() {
     this.courseWareList = get(this, 'room.state.globalState.dynamicTaskUuidList', [])
     this._personalResources = get(this, 'room.state.globalState.materialList', [])
   }
@@ -767,7 +767,7 @@ export class BoardStore {
   }
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
-  async loadCoursewareList() {
+  async loadAppCourseWareList() {
     const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
       // for debugging info
@@ -917,7 +917,7 @@ export class BoardStore {
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
         EduLogger.info("[aClass Board] teacher first time join..")
-        await this.loadCoursewareList()
+        await this.loadAppCourseWareList()
       } else {
         EduLogger.info("[aClass Board] teacher join again..")
       }
@@ -928,7 +928,7 @@ export class BoardStore {
       if (!this.studentLogged()) {
         EduLogger.info("[aClass Board] student first time join..")
         this.studentFirstJoin()
-        await this.loadCoursewareList()
+        await this.loadAppCourseWareList()
       } else {
         EduLogger.info("[aClass Board] student join again..")
       }
@@ -942,8 +942,8 @@ export class BoardStore {
     EduLogger.info("[aClass Board] prepare scenes..")
     this.loadRoomScenes()
     this.loadContextPath()
-    this.updateSceneItems()
-    this.updateCourseWareList()
+    this.loadPagingInfo()
+    this.loadSharedCourseWareList()
 
     this.autoFetchDynamicTask()
     this.pptAutoFullScreen()
@@ -1087,10 +1087,10 @@ export class BoardStore {
       if (state.sceneState || state.globalState) {
         this.loadRoomScenes()
         this.loadContextPath()
-        this.updateSceneItems()
+        this.loadPagingInfo()
       }
       if (state.globalState) {
-        this.updateCourseWareList()
+        this.loadSharedCourseWareList()
         BizLogger.info(`[board] updateCourseWareList done`)
       }
 
@@ -1154,76 +1154,6 @@ export class BoardStore {
       return true
     }
     return false
-  }
-
-  @action
-  async join(params: any) {
-    const {role, ...data} = params
-    const identity = role === EduRoleTypeEnum.teacher ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
-    // this.boardClient.on('onPhaseChanged', (state: any) => {
-    //   if (state === 'disconnected') {
-    //     this.online = false
-    //   }
-    // })
-    this.boardClient.on('onMemberStateChanged', (state: any) => {
-    })
-    this.boardClient.on('onRoomStateChanged', (state: any) => {
-      if (state.broadcastState?.broadcasterId === undefined) {
-        if (this.room) {
-          this.room.scalePptToFit()
-        }
-      }
-      if (state.memberState) {
-        this.currentStroke = this.getCurrentStroke(state.memberState)
-        this.currentArrow = this.getCurrentArrow(state.memberState)
-        this.currentFontSize = this.getCurrentFontSize(state.memberState)
-      }
-      if (state.zoomScale) {
-        runInAction(() => {
-          this.scale = state.zoomScale
-        })
-      }
-      if (state.sceneState || state.globalState) {
-        this.updateSceneItems()
-      }
-      if (state.globalState) {
-        this.updateBoardState()
-      }
-    })
-    BizLogger.info("[breakout board] join", data)
-    const cursorAdapter = new CursorTool(); //新版鼠标追踪
-    await this.boardClient.join({
-      ...data,
-      cursorAdapter,
-      userPayload: {
-        userId: this.appStore.acadsocStore.roomInfo.userUuid,
-        avatar: ""
-      }
-    })
-    this.strokeColor = {
-      r: 252,
-      g: 58,
-      b: 63
-    }
-    BizLogger.info("[breakout board] after join", data)
-    // this.online = true
-    // this.updateSceneItems()
-    this.room.bindHtmlElement(null)
-    // const resizeCallback = () => {
-    //   if (this.online && this.room && this.room.isWritable) {
-    //     this.room.moveCamera({centerX: 0, centerY: 0});
-    //     this.room.refreshViewSize();
-    //   }
-    // }
-    // this.resizeCallback = resizeCallback
-    // window.addEventListener('resize', this.resizeCallback)
-    this.updateSceneItems()
-
-    this.lockBoard = this.getCurrentLock(this.room.state) as any
-    if (this.appStore.userRole === EduRoleTypeEnum.student) {
-      this.room.disableDeviceInputs = this.lockBoard
-    }
   }
 
   // lock阿卡索的白板
@@ -1684,7 +1614,7 @@ export class BoardStore {
     }
     if (force) {
       room.setSceneIndex(_idx);
-      this.updateSceneItems()
+      this.loadPagingInfo()
       return
     }
     if (this.sceneType === 'dynamic') {
@@ -1696,7 +1626,7 @@ export class BoardStore {
     } else {
       room.setSceneIndex(_idx);
     }
-    this.updateSceneItems()
+    this.loadPagingInfo()
   }
 
   @action
@@ -1721,7 +1651,7 @@ export class BoardStore {
           sceneMap: newSceneMap
         })
       }
-      this.updateSceneItems()
+      this.loadPagingInfo()
     }
   }
 
@@ -1762,12 +1692,7 @@ export class BoardStore {
   }
 
   @action
-  updateSceneItems() {
-    this.updatePagination()
-  }
-
-  @action
-  updatePagination() {
+  loadPagingInfo() {
     const room = this.room
     if(this.online && room) {
       this.currentPage = room.state.sceneState.index + 1;
@@ -2101,6 +2026,7 @@ export class BoardStore {
     this._personalResources = []
     this._resourcesList = []
     this.courseWareList = []
+    this.replaceResources = []
     this.localFullScreen = false
     this.fileLoading = false
     this.uploadingProgress = 0
@@ -2399,6 +2325,34 @@ export class BoardStore {
     }
   }
 
+  addReplaceResource(item: AClassCourseWareItem) {
+    this.replaceResources.push(item)
+  }
+
+  async openReplaceResource(item: AClassCourseWareItem, detail: MaterialItem) {
+    try {
+      console.log("openReplaceResource resource ", " uuid ", detail.resourceUuid, " url ", detail.url, " type", item.type)
+      const putCourseFileType = ["ppt", "word","pdf"]
+      if (putCourseFileType.includes(item.type)) {
+        const scenes = detail.scenes
+        this.updateBoardSceneItems({
+          scenes,
+          resourceName: detail.resourceName,
+          resourceUuid: detail.resourceUuid,
+          page: 0,
+          taskUuid: detail.taskUuid,
+        }, true)
+        this.room.putScenes(`/${detail.resourceName}`, detail.scenes)
+        this.room.setScenePath(`/${detail.resourceName}/${detail.scenes[0].name}`)
+
+        console.log(`open file type ${item.type} success`)
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
   async putSceneByResourceUuid(uuid: string) {
     try {
       const resource: any = this.allResources.find((resource: any) => resource.id === uuid)
@@ -2493,6 +2447,9 @@ export class BoardStore {
 
   @observable
   _personalResources: CourseWareItem[] = []
+
+  @observable
+  replaceResources: AClassCourseWareItem[] = []
 
   @computed
   get personalResources() {

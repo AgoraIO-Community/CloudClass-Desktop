@@ -12,7 +12,8 @@ const CourseReplacerContext = React.createContext({
 
 export interface AClassCourseWareItem {
   name: string,
-  type: 'ppt' | 'word' | 'excel' | 'pdf' | 'video' | 'audio' | 'txt' | 'pic'
+  type: 'ppt' | 'word' | 'excel' | 'pdf' | 'video' | 'audio' | 'txt' | 'pic',
+  id: number
 }
 
 interface CoursePagingProps {
