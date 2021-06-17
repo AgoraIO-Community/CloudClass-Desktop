@@ -100,8 +100,8 @@ export const getRegion = (region: string) => {
   }
 
   return {
-    rtcArea: rtcRegions[region] ?? rtcRegions["cn"],
-    rtmArea: rtmRegions[region] ?? rtmRegions["cn"],
+    rtcArea: rtcRegions[region] ?? rtcRegions["CN"],
+    rtmArea: rtmRegions[region] ?? rtmRegions["CN"],
   }
 }
 
