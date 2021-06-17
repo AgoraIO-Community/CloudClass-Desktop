@@ -41,6 +41,7 @@ import { reportService } from '@/services/report-service';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
 import { HomeStore } from './home';
 import { StatisticsStore } from './statistics';
+import { APIStore } from './api';
 
 type RoomInfoParams = {
   roomName: string
@@ -116,6 +117,7 @@ export class AppStore implements ClassRoomAbstractStore {
   // stores
   uiStore!: UIStore;
   boardStore!: BoardStore;
+  apiStore!: APIStore;
   statisticsStore!: StatisticsStore;
   mediaStore!: MediaStore;
   sceneStore!: SceneStore;
@@ -371,6 +373,7 @@ export class AppStore implements ClassRoomAbstractStore {
     this.pretestStore = new PretestStore(this)
     this.acadsocStore = new AcadsocRoomStore(this)
     this.statisticsStore = new StatisticsStore(this)
+    this.apiStore = new APIStore(this)
     this.boardStore = new BoardStore(this)
     this.sceneStore = new SceneStore(this)
     this.homeStore = new HomeStore(this)

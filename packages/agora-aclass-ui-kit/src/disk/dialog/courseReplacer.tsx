@@ -89,8 +89,9 @@ interface CourseReplacerProps {
   style?: any,
   className?: string[],
   items: AClassCourseWareItem[],
-  onClose: () => any,
-  onReplaceCourse: (item: AClassCourseWareItem) => any
+  onClose?: () => any,
+  onSearch?: (value:string) => any,
+  onReplaceCourse?: (item: AClassCourseWareItem) => any
 }
 
 
@@ -99,6 +100,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
   className,
   items,
   onClose,
+  onSearch,
   onReplaceCourse
 }) => {
 
@@ -108,6 +110,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
   })
 
   const [activeIdx, setActiveIdx] = useState<number>(0)
+  const [searchValue, setSearchValue] = useState<string>("")
   let currentItems = items.slice(activeIdx*9, (activeIdx+1) * 9)
 
   return (
@@ -124,7 +127,11 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
         </div>
         <div className="course-replacer-body">
           <div>
-            <input></input>
+            <input value={searchValue} onChange={(e) => {setSearchValue(e.currentTarget.value)}} onKeyPress={(event: React.KeyboardEvent) => {
+              if(event.key === 'Enter'){
+                onSearch && onSearch(searchValue)
+              }
+            }}></input>
           </div>
           <div style={{flex:1,display:'flex',flexDirection:'column'}}>
             <div className="course-replacer-tbl-h">
@@ -132,7 +139,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
             </div>
             {currentItems.length > 0 ? currentItems.map(item => {
               return (
-                <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse(item)}}>
+                <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>
                   <div className="course-replacer-tbl-col">
                     <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
                   </div>

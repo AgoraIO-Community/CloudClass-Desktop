@@ -15,7 +15,8 @@ export interface RoomComponentConfigProps<T> {
 export enum AgoraEduEvent {
   ready = 1,
   destroyed = 2,
-  menuclicked = 3
+  menuclicked = 3,
+  apicall = 4
 }
 
 

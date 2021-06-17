@@ -229,6 +229,7 @@
     "agora-rte-sdk": "1.0.0",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
+    "camelcase-keys": "^6.2.2",
     "fetch-progress": "1.3.0",
     "jszip": "3.6.0",
     "postcss": "8.2.6",

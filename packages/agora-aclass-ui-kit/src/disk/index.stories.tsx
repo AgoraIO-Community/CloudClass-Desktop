@@ -1,7 +1,7 @@
 import React, { Dispatch, ReactEventHandler, SetStateAction } from 'react'
 import { DiskButton } from './control/disk-button'
 import { DiskManagerDialog } from './dialog/manager'
-import { CourseReplacer } from './dialog/courseReplacer'
+import { AClassCourseWareItem, CourseReplacer } from './dialog/courseReplacer'
 import { Loading } from './control/loading'
 import TableEmpty from "./dialog/table-empty";
 import { UploadFile } from '../upload/index'
@@ -51,21 +51,21 @@ export default {
 // }
 
 export const CourseReplacerDialog = (props: any) => {
-  let items = [
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'},
-    {name: '202206PPT课件制作规范.pptx', type:'ppt'}
+  let items:AClassCourseWareItem[] = [
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:1},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:2},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:3},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:4},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:5},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:6},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:7},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:8},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:9},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:10},
+    {name: '202206PPT课件制作规范.pptx', type:'ppt', id:11}
   ]
   return (
-    <CourseReplacer items={items}></CourseReplacer>
+    <CourseReplacer onSearch={console.log} items={items}></CourseReplacer>
   )
 }
 

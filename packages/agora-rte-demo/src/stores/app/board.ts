@@ -760,14 +760,8 @@ export class BoardStore {
   @observable
   courseWareList: any[] = []
 
-
-  findFirstPPT() {
-    const list = this.appStore.params.config.courseWareList
-    const ppt = list.find((it: any) => {})
-  }
-
   // TODO: 首次进入房间加载整个动态ppt资源列表
-  async loadAppCourseWareList() {
+  async loadAppPublicCourseWareList() {
     const firstCourseWare = this.appStore.params.config.courseWareList[0]
     if (!firstCourseWare) {
       // for debugging info
@@ -917,7 +911,7 @@ export class BoardStore {
       if (!this.teacherLogged()) {
         this.teacherFirstJoin()
         EduLogger.info("[aClass Board] teacher first time join..")
-        await this.loadAppCourseWareList()
+        await this.loadAppPublicCourseWareList()
       } else {
         EduLogger.info("[aClass Board] teacher join again..")
       }
@@ -928,7 +922,7 @@ export class BoardStore {
       if (!this.studentLogged()) {
         EduLogger.info("[aClass Board] student first time join..")
         this.studentFirstJoin()
-        await this.loadAppCourseWareList()
+        await this.loadAppPublicCourseWareList()
       } else {
         EduLogger.info("[aClass Board] student join again..")
       }
@@ -1172,7 +1166,7 @@ export class BoardStore {
     })
   }
 
-  syncLocalPersonalCourseWareList() {
+  syncAppPersonalCourseWareList() {
     this.room.setGlobalState({
       materialList: this.internalResources.map(transformMaterialItem)
     })
@@ -1182,7 +1176,7 @@ export class BoardStore {
     this.resetBoardScenes()
     this.enroll()
     this.lockAClassBoard()
-    this.syncLocalPersonalCourseWareList()
+    this.syncAppPersonalCourseWareList()
   }
 
   studentFirstJoin() {
@@ -2026,7 +2020,6 @@ export class BoardStore {
     this._personalResources = []
     this._resourcesList = []
     this.courseWareList = []
-    this.replaceResources = []
     this.localFullScreen = false
     this.fileLoading = false
     this.uploadingProgress = 0
@@ -2325,31 +2318,22 @@ export class BoardStore {
     }
   }
 
-  addReplaceResource(item: AClassCourseWareItem) {
-    this.replaceResources.push(item)
-  }
-
-  async openReplaceResource(item: AClassCourseWareItem, detail: MaterialItem) {
-    try {
-      console.log("openReplaceResource resource ", " uuid ", detail.resourceUuid, " url ", detail.url, " type", item.type)
-      const putCourseFileType = ["ppt", "word","pdf"]
-      if (putCourseFileType.includes(item.type)) {
-        const scenes = detail.scenes
-        this.updateBoardSceneItems({
-          scenes,
-          resourceName: detail.resourceName,
-          resourceUuid: detail.resourceUuid,
-          page: 0,
-          taskUuid: detail.taskUuid,
-        }, true)
-        this.room.putScenes(`/${detail.resourceName}`, detail.scenes)
-        this.room.setScenePath(`/${detail.resourceName}/${detail.scenes[0].name}`)
-
-        console.log(`open file type ${item.type} success`)
-      }
-    } catch (err) {
-      throw err
+  async openReplaceResource(item: CourseWareItem) {
+    const resource: any = this.allResources.find((resource: any) => resource.id === item.resourceUuid)
+    if(!resource) {
+      // if not yet exists
+      this._personalResources.push(item)
     }
+
+    const globalState = this.room.state.globalState as any
+    const materialList = get(globalState, 'materialList', [])
+    this.room.setGlobalState({
+      materialList: uniqBy(materialList.concat([{
+        ...item
+      }]), 'resourceUuid')
+    })
+
+    await this.putSceneByResourceUuid(item.resourceUuid)
   }
 
 
@@ -2357,7 +2341,7 @@ export class BoardStore {
     try {
       const resource: any = this.allResources.find((resource: any) => resource.id === uuid)
       if (!resource) {
-        console.log('未找到uuid相关的课件', uuid)
+        throw GenericErrorWrapper(new Error('resource_not_exists'))
       }
       console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
       const putCourseFileType = ["ppt", "word","pdf"]
@@ -2447,9 +2431,6 @@ export class BoardStore {
 
   @observable
   _personalResources: CourseWareItem[] = []
-
-  @observable
-  replaceResources: AClassCourseWareItem[] = []
 
   @computed
   get personalResources() {

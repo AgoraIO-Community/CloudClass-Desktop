@@ -13,6 +13,7 @@ import {
   DiskStore,
   StatisticsStore,
 } from '@/stores/app';
+import { APIStore } from '@/stores/app/api';
 
 export type appContext = Record<string, AppStore>
 
@@ -34,6 +35,11 @@ export const useBoardStore = (): BoardStore => {
 export const useStatsStore = (): StatisticsStore => {
   const context = useContext<appContext>(MobXProviderContext)
   return context.store.statisticsStore
+}
+
+export const useAPIStore = (): APIStore => {
+  const context = useContext<appContext>(MobXProviderContext)
+  return context.store.apiStore
 }
 
 export const useMediaStore = (): MediaStore => {
