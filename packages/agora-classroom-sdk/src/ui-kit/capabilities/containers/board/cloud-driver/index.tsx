@@ -102,7 +102,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   const [activeKey, setActiveKey] = useState<string>('1')
 
   useEffect(() => {
-    if (activeKey === '2') {
+    if (activeKey === '2' || activeKey === '3') {
       refreshCloudResources()
     }
   }, [activeKey, refreshCloudResources])

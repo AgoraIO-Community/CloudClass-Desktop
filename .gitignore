@@ -1,6 +1,8 @@
 packages/agora-apaas-demo/public/bundle/bundle.js
 node_modules
 .env
+.env-dev
+*.txt
 .DS_Store
 *.sh
 *.sh~
