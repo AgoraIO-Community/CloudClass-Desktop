@@ -303,7 +303,7 @@ export const CourseReplacerContent = observer(() => {
         <div style={{
             width:'100%',height:'100%', position:"absolute", background: 'transparent',
             display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:25
-        }} className={uiStore.courseReplacerVisible ? 'visibility' : 'hidden'}>
+        }} className={uiStore.courseReplacerVisible ? 'course-replacer-visible' : 'course-replacer-hidden'}>
             <CourseReplacer
                 items={items}
                 onClose={() => {

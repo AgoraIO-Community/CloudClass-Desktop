@@ -1,11 +1,12 @@
-.visibility {
+.course-replacer-visible {
     visibility: visible;
-    transition-duration: 0.3s;
+    transition: all 0.2s ease-in-out; 
     opacity: 1;
 }
 
-.hidden {
+.course-replacer-hidden {
     visibility: hidden;
-    transition-duration: 0.3s;
+    transition: all 0.2s ease-in-out; 
+    transform: scale(0.8); 
     opacity: 0;
 }

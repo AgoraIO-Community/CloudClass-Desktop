@@ -120,6 +120,12 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
 
   const [activeIdx, setActiveIdx] = useState<number>(0)
   const [searchValue, setSearchValue] = useState<string>("")
+  const [maskVisible, setMaskVisible] = useState<boolean>(false)
+
+  const handleScroll = (e:any) => {
+    const bottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight <= 10;
+    setMaskVisible(!bottom)
+  }
 
   return (
     <CourseReplacerContext.Provider value={{
@@ -149,7 +155,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
               onSearchValueChange && onSearchValueChange(e.currentTarget.value)
             }}></input>
           </div>
-          <div style={{height: 'calc(100% - 72px)'}}>
+          <div style={{height: 'calc(100% - 72px)', position:'relative'}}>
             <div className="course-replacer-tbl-h">
               课件名
             </div>
@@ -159,25 +165,28 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
                 </div>
               ) :
               (
-                <div style={{height: 'calc(100% - 45px)', overflow: 'scroll'}}>
-                  {items.length > 0 ? items.map(item => {
-                    return (
-                      <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>
-                        <div className="course-replacer-tbl-col">
-                          <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
+                <>
+                  <div style={{height: 'calc(100% - 45px)', overflow: 'scroll'}} onScroll={handleScroll}>
+                    {items.length > 0 ? items.map(item => {
+                      return (
+                        <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>
+                          <div className="course-replacer-tbl-col">
+                            <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
+                          </div>
+                          <div className="course-replacer-tbl-col">
+                            {item.name}
+                          </div>
                         </div>
-                        <div className="course-replacer-tbl-col">
-                          {item.name}
-                        </div>
+                      )
+                    }) : (
+                      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+                        <img src={IconEmpty} />
+                        <div style={{ color: '#A9AEC5', fontSize: '14px' }}>未找到课件，您可以尝试搜索获取更多课件</div>
                       </div>
-                    )
-                  }) : (
-                    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-                      <img src={IconEmpty} />
-                      <div style={{ color: '#A9AEC5', fontSize: '14px' }}>未找到课件，您可以尝试搜索获取更多课件</div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                  {maskVisible ? <div className="mask"></div> : null}
+                </>
               )
             }
           </div>

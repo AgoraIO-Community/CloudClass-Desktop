@@ -65,7 +65,12 @@ export const CourseReplacerDialog = (props: any) => {
     {name: '202206PPT课件制作规范.pptx', type:'ppt', id:11}
   ]
   return (
-    <CourseReplacer loading={false} totalCount={11} onSearch={console.log} items={items}></CourseReplacer>
+    <div style={{
+      width:'100%',height:'100%', position:"absolute", background: 'transparent',
+      display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:25
+    }}>
+      <CourseReplacer loading={false} totalCount={11} onSearchValueChange={console.log} items={items}></CourseReplacer>
+    </div>
   )
 }
 
