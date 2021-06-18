@@ -76,6 +76,6 @@
   },
   "dependencies": {
     "dayjs": "1.10.4",
-    "agora-hx-chatroom": "file:/Users/lizg/CloudClass-Desktop/packages/agora-chat-widegt/"
+    "agora-chat-widget": "1.0.0"
   }
 }

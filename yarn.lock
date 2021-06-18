@@ -5909,17 +5909,6 @@ agora-electron-sdk@apaas:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
-"agora-hx-chatroom@file:packages/agora-chat-widegt":
-  version "0.1.0"
-  dependencies:
-    easemob-websdk "3.5.2"
-    react "17.0.0"
-    react-dom "17.0.0"
-    react-redux "7.2.4"
-    react-router "5.2.0"
-    react-router-dom "5.2.0"
-    twemoji "^13.1.0"
-
 agora-rtc-sdk-ng@4.4.0:
   version "4.4.0"
   resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.4.0.tgz?cache=0&sync_timestamp=1621929253059&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fagora-rtc-sdk-ng%2Fdownload%2Fagora-rtc-sdk-ng-4.4.0.tgz#ea036cab115f8f206e654e258ffce175548048ad"

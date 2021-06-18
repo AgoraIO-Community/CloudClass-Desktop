@@ -1,6 +1,6 @@
 {
-  "name": "agora-hx-chatroom",
-  "version": "0.1.0",
+  "name": "agora-chat-widget",
+  "version": "1.0.0",
   "private": true,
   "main": "lib/hx_im.bundle.js",
   "babel": {

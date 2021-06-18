@@ -11,7 +11,6 @@ WebIM.config = config;
 const data_key = localStorage.getItem('appkey') || ''
 export const appkey = data_key.toString();
 
-
 let options = {
     isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
     isDebug: WebIM.config.isDebug,
