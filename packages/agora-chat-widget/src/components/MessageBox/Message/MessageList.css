@@ -1,0 +1,119 @@
+.msg-text {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    color: #CDD1D9;
+    line-height: 20px;
+    word-break: break-all;
+    white-space: pre-wrap;
+    padding: 0 25px 0 0;
+}
+
+.admire-msg {
+    width: 126px;
+    height: 20px;
+    font-size: 14px;
+    font-family: ' PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #FF7F00;
+    line-height: 20px;
+    background: 'angular-gradient(270deg, #FFB319 0%, #FF6619 100%)';
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.msg-img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    position: relative;
+}
+
+.msg-img .mute-status{
+    position: absolute;
+    font-size: 12px;
+    right: -2px;
+    bottom: -2px;
+}
+
+.msg-img .avatar{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.msg-list-item {
+    margin-top: 16px !important;
+}
+
+.mask {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    outline: 0;
+    right: 0;
+    top: 0;
+    overflow: auto;
+    z-index: 1000;
+    background-color: #14161A;
+    opacity: .9;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.card {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    z-index: 9999999;
+    width: 280px;
+    height: 122px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    text-align: center;
+
+}
+
+.card-txt {
+   font-size: 16px;
+   font-weight: 500;
+   color: #333;
+   line-height: 22px;
+   padding: 24px 0 16px;
+
+}
+
+.cancle-btn, .ok-btn{
+    width: 104px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 22px;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancle-btn {
+    background: #F5F5F5;
+    color: #333333;
+    margin-right: 24px;
+}
+
+.ok-btn {
+    background: linear-gradient(90deg, #1DB4FE 0%, #028CFF 100%);
+    color: #FFFFFF;
+}
+
+
+.delete-icon {
+    margin-left: 5px;
+    width: 14px;
+    height: 14px;
+    color: white;
+    background: #000000;
+    cursor: pointer;
+}

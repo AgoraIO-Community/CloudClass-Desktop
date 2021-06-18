@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon_forbid</title>
+    <g id="辅导" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="辅导/直播/人数/禁言" transform="translate(-769.000000, -601.000000)">
+            <g id="Group-11" transform="translate(736.000000, 174.000000)">
+                <g id="Group-14-Copy-6" transform="translate(16.000000, 410.000000)">
+                    <g id="icon_forbid" transform="translate(18.000000, 18.000000)">
+                        <circle id="椭圆形" stroke="#1D2026" fill="#FF462D" transform="translate(5.000000, 5.000000) rotate(-360.000000) translate(-5.000000, -5.000000) " cx="5" cy="5" r="5.5"></circle>
+                        <circle id="椭圆形-copy" fill="#FFFFFF" transform="translate(5.000000, 5.000000) rotate(-360.000000) translate(-5.000000, -5.000000) " cx="5" cy="5" r="3"></circle>
+                        <line x1="1.82176054" y1="4.9222656" x2="8.08861888" y2="4.9222656" id="直线" stroke="#FF462D" stroke-width="2" fill="#D8D8D8" stroke-linecap="square" transform="translate(4.955190, 4.922266) rotate(-315.000000) translate(-4.955190, -4.922266) "></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

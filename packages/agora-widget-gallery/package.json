@@ -75,6 +75,7 @@
     "postcss-loader": "4.0.3"
   },
   "dependencies": {
-    "dayjs": "1.10.4"
+    "dayjs": "1.10.4",
+    "agora-chat-widget": "1.0.0"
   }
 }

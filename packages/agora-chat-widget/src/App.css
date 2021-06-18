@@ -1,0 +1,371 @@
+* {
+    box-sizing: border-box;
+    outline: 0;
+}
+
+/*---滚动条默认显示样式--*/
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+    height: 50px;
+    /* outline-offset: -2px; */
+    outline: 0;
+    -webkit-border-radius: 4px;
+    border: 0;
+}
+
+/*---鼠标点击滚动条显示样式--*/
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 50px;
+    -webkit-border-radius: 4px;
+}
+
+/*---滚动条大小--*/
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+/*---滚动框背景样式--*/
+::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    -webkit-border-radius: 0;
+}
+
+/* 滑轨两头的监听按钮颜色 */
+::-webkit-scrollbar-button {
+    background-color: transparent;
+}
+
+/* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+::-webkit-scrollbar-corner {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+
+/* @media screen and (min-width: 900px) {
+    .app {
+        transform: scale(4);
+        transform-origin: 0 0;
+    }
+} */
+
+.app {
+    position: absolute;
+    width: 100%;
+    background: #14161A;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+}
+
+.ant-alert-with-description .ant-alert-message {
+    display: block;
+    margin-bottom: 4px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 16px;
+}
+
+.ant-alert-message {
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.ant-popover-message {
+    position: relative;
+    padding: 4px 0 12px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+}
+
+.ant-popover-message>.anticon {
+    position: absolute;
+    top: 8.0005px;
+    color: #faad14;
+    font-size: 14px;
+}
+
+.ant-popover-message-title {
+    padding-left: 22px;
+}
+
+.ant-popover-rtl .ant-popover-message-title {
+    padding-right: 22px;
+    padding-left: 16px;
+}
+
+.ant-message {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum';
+    position: fixed;
+    top: 8px;
+    left: 0;
+    z-index: 1010;
+    width: 100%;
+    pointer-events: none;
+}
+
+.ant-message-notice {
+    padding: 8px;
+    text-align: center;
+}
+
+.ant-message-notice-content {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: all;
+}
+
+.ant-message-success .anticon {
+    color: #52c41a;
+}
+
+.ant-message-error .anticon {
+    color: #ff4d4f;
+}
+
+.ant-message-warning .anticon {
+    color: #faad14;
+}
+
+.ant-message-info .anticon,
+.ant-message-loading .anticon {
+    color: #1890ff;
+}
+
+.ant-message .anticon {
+    position: relative;
+    top: 1px;
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.ant-message-notice.move-up-leave.move-up-leave-active {
+    -webkit-animation-name: MessageMoveOut;
+    animation-name: MessageMoveOut;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+}
+
+.ant-message-rtl {
+    direction: rtl;
+}
+
+.ant-message-rtl span {
+    direction: rtl;
+}
+
+.ant-message-rtl .anticon {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+.ant-notification-notice-message {
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.ant-notification-notice-message-single-line-auto-margin {
+    display: block;
+    width: calc(384px - 24px * 2 - 24px - 48px - 100%);
+    max-width: 4px;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.ant-notification-notice-message-single-line-auto-margin::before {
+    display: block;
+    content: '';
+}
+
+.ant-notification-notice-message-single-line-auto-margin::before {
+    display: block;
+    content: '';
+}
+
+.ant-notification-notice-description {
+    font-size: 14px;
+}
+
+.ant-notification-notice-with-icon .ant-notification-notice-message {
+    margin-bottom: 4px;
+    margin-left: 48px;
+    font-size: 16px;
+}
+
+/* 重写rc-tootip样式 */
+.rc-tooltip-inner {
+    height: 24px;
+    min-height: 24px;
+    line-height: 18px;
+    background: #000000;
+    border-radius: 4px;
+    opacity: 0.8;
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+    padding: 3px 8px;
+    border: 0;
+    text-align: center;
+}
+
+.rc-tooltip-arrow {
+    display: none;
+}
+
+/* ant switch样式 */
+
+.ant-switch-checked {
+    background-color: #0099FF;
+}
+
+.ant-switch-loading,
+.ant-switch-disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.ant-switch-loading *,
+.ant-switch-disabled * {
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.ant-switch-inner {
+    display: block;
+    margin: 0 7px 0 25px;
+    color: #fff;
+    font-size: 12px;
+    transition: margin 0.2s;
+}
+
+.ant-switch-checked .ant-switch-inner {
+    margin: 0 25px 0 7px;
+}
+
+.ant-switch-handle {
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    transition: all 0.2s ease-in-out;
+}
+
+.ant-switch-handle::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    border-radius: 9px;
+    box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+    transition: all 0.2s ease-in-out;
+    content: '';
+}
+
+.ant-switch-checked .ant-switch-handle {
+    left: calc(100% - 18px - 2px);
+}
+
+.ant-switch:not(.ant-switch-disabled):active .ant-switch-handle::before {
+    right: -30%;
+    left: 0;
+}
+
+.ant-switch:not(.ant-switch-disabled):active.ant-switch-checked .ant-switch-handle::before {
+    right: 0;
+    left: -30%;
+}
+
+.ant-switch-loading-icon {
+    position: relative;
+    top: 2px;
+    color: rgba(0, 0, 0, 0.65);
+    vertical-align: top;
+}
+
+.ant-switch-checked .ant-switch-loading-icon {
+    color: #1890ff;
+}
+
+.ant-switch-small {
+    min-width: 24px;
+    height: 14px;
+    margin: 3px 0;
+}
+
+.ant-switch-small .ant-switch-inner {
+    margin: 0 5px 0 18px;
+    font-size: 12px;
+}
+
+.ant-switch-small .ant-switch-handle {
+    width: 12px;
+    height: 12px;
+}
+
+.ant-switch-small .ant-switch-loading-icon {
+    top: 1.5px;
+    font-size: 9px;
+}
+
+.ant-switch-small.ant-switch-checked .ant-switch-inner {
+    margin: 0 18px 0 5px;
+}
+
+.ant-switch-small.ant-switch-checked .ant-switch-handle {
+    left: calc(100% - 12px - 1px);
+}
+
+.ant-switch-rtl {
+    direction: rtl;
+}
+
+.ant-switch-rtl .ant-switch-inner {
+    margin: 0 25px 0 7px;
+}
+
+.ant-switch-rtl .ant-switch-handle {
+    right: 2px;
+    left: auto;
+}
+
+.ant-switch-rtl:not(.ant-switch-rtl-disabled):active .ant-switch-handle::before {
+    right: 0;
+    left: -30%;
+}
+
+.ant-switch-rtl:not(.ant-switch-rtl-disabled):active.ant-switch-checked .ant-switch-handle::before {
+    right: -30%;
+    left: 0;
+}
+
+.ant-switch-rtl.ant-switch-checked .ant-switch-inner {
+    margin: 0 7px 0 25px;
+}
+
+.ant-switch-rtl.ant-switch-checked .ant-switch-handle {
+    right: calc(100% - 18px - 2px);
+}
+
+.ant-switch-rtl.ant-switch-small.ant-switch-checked .ant-switch-handle {
+    right: calc(100% - 12px - 2px);
+}
+
+.flex-1 {
+    flex: 1;
+}
