@@ -1,0 +1,70 @@
+.qa-user-list {
+    width: 40px;
+    height: 40px;
+    background: #1D2026;
+    position: relative;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.qa-red-notice {
+    position: absolute;
+    border-radius: 50%;
+    background: #FF462D;
+    height: 6px;
+    width: 6px;
+    right: 5px;
+    top: 5px;
+    border: 1px solid #1D2026;
+    box-sizing: content-box;
+}
+
+.qa {
+    overflow-y: scroll;
+    width: 100%;
+    flex: 1;
+}
+
+.qa-msg {
+    padding-top: 16px;
+    padding-left: 12px;
+    width: 100%;
+}
+
+.qa-user-image {
+    background: #1D2026;
+    border-radius: 50%;
+    margin-top: 5px;
+    width: 28px;
+    height: 28px !important;
+    margin: auto !important;
+
+}
+
+.qa-msg-img {
+    width: 24px;
+    height: 24px;
+    background: #B2E0FF;
+    border-radius: 50%
+}
+
+.msg-img {
+    width: 24px;
+    height: 24px;
+    background: #B2E0FF;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.msg-sender {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #626773;
+    padding-right: 10px;
+}
+
+.student-qa-list {
+    flex: 1;
+    overflow: scroll;
+}

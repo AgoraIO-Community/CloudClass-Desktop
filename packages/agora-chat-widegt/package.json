@@ -1,0 +1,112 @@
+{
+  "name": "agora-hx-chatroom",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/hx_im.bundle.js",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      [
+        "@babel/preset-react",
+        {
+          "runtime": "automatic"
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-optional-chaining",
+      "@babel/plugin-proposal-nullish-coalescing-operator",
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  },
+  "devDependencies": {
+    "@ant-design/icons": "4.6.2",
+    "@babel/core": "7.13.15",
+    "@babel/plugin-proposal-class-properties": "7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.14.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.13.8",
+    "@babel/plugin-syntax-decorators": "7.12.13",
+    "@babel/plugin-syntax-dynamic-import": "7.8.3",
+    "@babel/plugin-transform-runtime": "7.13.15",
+    "@babel/preset-env": "7.13.15",
+    "@babel/preset-react": "7.13.13",
+    "@babel/preset-typescript": "7.13.0",
+    "@babel/runtime-corejs3": "7.13.10",
+    "@rebass/forms": "4.0.6",
+    "@rescripts/cli": "0.0.16",
+    "@testing-library/jest-dom": "5.11.4",
+    "@testing-library/react": "11.1.0",
+    "@testing-library/user-event": "12.1.10",
+    "antd": "4.15.5",
+    "babel-loader": "8.2.2",
+    "babel-plugin-dynamic-import-node": "2.3.3",
+    "babel-plugin-emotion": "10.0.33",
+    "babel-plugin-import": "1.13.0",
+    "classnames": "2.3.1",
+    "hard-source-webpack-plugin": "0.13.1",
+    "lodash": "4.17.21",
+    "qs": "6.10.1",
+    "react-scripts": "4.0.3",
+    "react-sticky": "6.0.3",
+    "rebass": "4.0.7",
+    "redux": "4.1.0",
+    "rescripts": "0.0.1-security",
+    "style-loader": "2.0.0",
+    "thread-loader": "2.1.3",
+    "web-vitals": "1.0.1",
+    "webpack-cli": "4.3.1"
+  },
+  "dependencies": {
+    "easemob-websdk": "3.5.2",
+    "react": "17.0.0",
+    "react-dom": "17.0.0",
+    "react-redux": "7.2.4",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
+    "twemoji": "^13.1.0"
+  },
+  "peerDependencies": {
+    "react": "17.0.0",
+    "react-dom": "17.0.0",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0"
+  },
+  "homepage": "./",
+  "scripts": {
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "build:lib": " webpack --mode='production'",
+    "test": "rescripts test",
+    "eject": "rescripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

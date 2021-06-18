@@ -1,0 +1,50 @@
+.footer {
+    height: 192px;
+    border-radius: 4px 4px 0px 0px;
+    background: #1D2026;
+}
+
+.footer-toolBar {
+    width: auto;
+    height: 36px;
+    box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.1);
+}
+
+.footer-toolBar .tb-switch-label {
+    margin-left: 4px;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #626773;
+}
+
+.header {
+    color: white;
+}
+
+.ant-switch {
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum';
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    min-width: 44px;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+    background-color: #2D3340;
+    border: 0;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

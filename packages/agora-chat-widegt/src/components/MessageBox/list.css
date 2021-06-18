@@ -1,0 +1,292 @@
+.message {
+    margin-top: 10px;
+    background: #1D2026;
+    border-radius: 8px;
+    height: calc(100% - 104px);
+}
+
+.message>.ant-tabs.ant-tabs-top {
+    height: calc(100% - 192px);
+}
+
+.message>.ant-tabs.ant-tabs-top>.ant-tabs-content-holder {
+    height: calc(100% - 45px);
+}
+
+.message>.ant-tabs.ant-tabs-top>.ant-tabs-content-holder>.ant-tabs-content {
+    height: 100%;
+}
+
+.message>.ant-tabs.ant-tabs-top>.ant-tabs-content-holder>.ant-tabs-content>.ant-tabs-tabpane {
+    height: 100%;
+}
+
+.message>.member-msg {
+    height: calc(100% - 192px);
+}
+
+.message-list,
+.member-msg,
+.qa-list {
+    /* min-height: 400px;
+    max-height: 400px; */
+    padding: 10px 15px;
+    overflow-y: scroll;
+    height: 100%;
+    white-space: pre-wrap;
+    overflow-x: hidden;
+}
+
+.qa-list {
+    overflow-y: hidden;
+    height: calc(100% + 36px);
+    padding: 10px 0 0 0
+}
+
+.message-list {
+    padding: 10px 12px;
+}
+
+.user-list {
+    padding: 16px 12px;
+    /* overflow-y: scroll; */
+    height: calc(100%);
+    background: #1D2026;
+}
+
+.user-border {
+    overflow-y: scroll;
+    border-right: 1px solid #22262E !important;
+    padding-top: 4px;
+}
+
+/* 历史记录加载 */
+.more-msg {
+    width: 120px;
+    height: 20px;
+    line-height: 20px;
+    background: #888;
+    color: #fff;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 12px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    cursor: pointer;
+}
+
+/* 历史记录加载动画 */
+.load {
+    position: relative;
+    border-radius: 50%;
+    margin: 0 auto;
+    width: 25px;
+    height: 25px;
+    border-top: 4px solid #f0f0f0;
+    border-left: 4px solid #f0f0f0;
+    border-right: 4px solid #f0f0f0;
+    border-bottom: 4px solid #1D2026;
+    animation: loading 2s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* 消息发送及接收者  */
+.msg-sender {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #626773;
+    padding-right: 10px;
+}
+
+.msg-text {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    color: #CDD1D9;
+    line-height: 20px;
+    word-break: break-all;
+    white-space: pre-wrap;
+    padding: 0 25px 0 0;
+}
+
+/* 无提问消息禁止点击 */
+.qa-mark {
+    width: calc(100% - 16px);
+    height: 151px;
+    position: absolute;
+    bottom: 8px;
+    text-align: center;
+    cursor: no-drop;
+}
+
+/* 成员头像 */
+.list-user-img {
+    width: 28px;
+    height: 28px;
+    background: #B6F0DD;
+    border-radius: 22px;
+}
+
+/* tag 标识 */
+.tags {
+    display: inline-block;
+    width: 56px;
+    height: 18px;
+    font-size: 12px;
+    line-height: 18px;
+    background: linear-gradient(90deg, #1DB4FE 0%, #028CFF 100%);
+    border-radius: 3px;
+    font-weight: 400;
+    color: #FFFFFF;
+    text-align: center;
+    margin-right: 4px;
+}
+
+.msg-list-item {
+    margin-top: 16px !important;
+}
+
+.msg-list-item:hover .message-tool-icon {
+    display: block;
+}
+
+/* 禁言图片 */
+.mute-img {
+    width: 14px !important;
+    height: 14px !important;
+    /* background-color: #000000; */
+    background-color: #959BA6;
+    margin-left: 5px !important;
+    cursor: pointer;
+}
+
+.message-tool-icon {
+    display: none;
+    width: 18px;
+    height: 18px;
+    padding: 2px;
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.message-tool-icon:hover {
+    background-color: #242933;
+    border-radius: 4px;
+}
+
+/* antd 样式 */
+.message_tab {
+    margin-top: 8px;
+    width: 280px;
+    height: 408px;
+    background: #1D2026;
+}
+
+.ant-tabs-nav {
+    border-bottom: 1px solid #22262E;
+}
+
+.ant-tabs-nav-list {
+    display: flex;
+    justify-content: space-between;
+    height: 44px;
+    border-radius: 8px 8px 0px 0px;
+    padding: 0 30px;
+    border-bottom: 1px solid #1D2026;
+    cursor: pointer;
+}
+
+.ant-tabs-nav-list :hover {
+    color: #CDD1D9;
+}
+
+.ant-tabs-ink-bar-animated {
+    display: none;
+}
+
+.ant-tabs-tab {
+    height: 44px;
+    line-height: 44px;
+    font-size: 14px;
+    font-family: "PingFangSC-Medium";
+    font-weight: 500;
+    color: #626773;
+    padding: 0 6px;
+    position: relative;
+}
+
+.ant-tabs-nav-operations-hidden {
+    display: none;
+}
+
+/* .ant-tabs-card>.ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab-active {
+    color: #1890ff;
+    background: #fff;
+} */
+
+/* .ant-tabs-card.ant-tabs-bottom>.ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-card.ant-tabs-bottom>div>.ant-tabs-nav .ant-tabs-tab-active {
+    border-top-color: #626773;
+} */
+
+.ant-tabs-tab.ant-tabs-tab-active {
+    color: #CDD1D9;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active::after {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #0099FF;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    /* color: #1890ff;
+    text-shadow: 0 0 0.25px currentColor; */
+}
+
+.msg-red-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #FF462D;
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    top: 11px;
+}
+
+.qa-student-tips {
+    height: 18px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #474D59;
+    line-height: 18px;
+    text-align: center;
+    margin-top: 10px;
+}
+.no-search{
+    font-size: 14px;
+    color: #626773;
+    display: inline-flex;
+    justify-content: center;
+    padding-top: 150px;
+    width: 100%;
+}
