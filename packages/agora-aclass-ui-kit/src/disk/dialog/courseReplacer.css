@@ -1,6 +1,6 @@
 .course-replacer {
     background: #021281;
-    width: 620px;
+    width: 680px;
     border-radius: 20px;
     border: 0;
     color: #273D75;
@@ -41,16 +41,14 @@
     padding: 10px 20px;
     text-align: left;
     font-size: 14px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    height: calc(100% - 62px);
 }
 
 .course-replacer .course-replacer-body input {
     height: 20px;
     width: 250px;
     border: 1px solid #D7D7E6;
-    padding: 3px 10px;
+    padding: 3px 10px 3px 30px;
     border-radius: 5px;
     outline: none;
     color: #7D8798;
@@ -59,6 +57,40 @@
 
 .course-replacer .course-replacer-body input:focus {
     border: 1px solid #5471FE;
+}
+
+.course-replacer .course-replacer-body .search-icon {
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course-replacer .course-replacer-body .search-icon img {
+    width: 18px;
+    height: 18px;
+}
+
+.course-replacer .course-replacer-body .clear-icon {
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    left: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course-replacer .course-replacer-body .clear-icon.invisible {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.course-replacer .course-replacer-body .clear-icon img {
+    width: 18px;
+    height: 18px;
 }
 
 .course-replacer .course-replacer-body .course-replacer-tbl-h {

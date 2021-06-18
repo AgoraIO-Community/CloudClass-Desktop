@@ -247,6 +247,7 @@ const en = {
   },
   'whiteboard': {
     'downloading': 'Downloading {reason}%...',
+    'downloading2': 'Downloading material, please wait...',
     'loading': 'Loading...',
     'converting': 'Converting...',
     'global_state_limit': 'globalState size limit size probably overflow',

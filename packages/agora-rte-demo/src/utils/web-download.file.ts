@@ -204,20 +204,7 @@ export class AgoraCaches {
             console.log("already downloaded")
             return
         }
-        const channel = new BroadcastChannel('onFetchProgress')
-        channel.onmessage = ({data}: any) => {
-        //   console.log('startDownload ', data.url)
-          if (data.url.match(taskUuid)) {
-            if (onProgress) {
-                this.downloadList.add(taskUuid)
-                onProgress(data.progress, controller);
-            }
-          }
-        }
-        const controller = new AbortController();
-        const signal = controller.signal;
-        const url = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-        // const res = await fetch(zipUrl, {
+
 
         const throttledProgress = throttle((progress:any) => {
             if (onProgress) {
@@ -225,6 +212,24 @@ export class AgoraCaches {
                 onProgress(progress.percentage, controller)
             }
         }, 500)
+
+        const throttledChannelProgress = throttle(({data}: any) => {
+            //   console.log('startDownload ', data.url)
+            if (data.url.match(taskUuid)) {
+            if (onProgress) {
+                this.downloadList.add(taskUuid)
+                onProgress(data.progress, controller);
+            }
+            }
+        }, 500)
+
+        const channel = new BroadcastChannel('onFetchProgress')
+        channel.onmessage = throttledChannelProgress
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const url = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+        // const res = await fetch(zipUrl, {
+
         const res = await fetchMultiple([url, url.replace("https://convertcdn.netless.link", "https://ap-convertcdn.netless.link")], {
             method: "get",
             signal: signal,

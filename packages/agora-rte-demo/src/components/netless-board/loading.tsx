@@ -1,5 +1,5 @@
 import React from 'react';
-import { Progress } from '../progress/progress';
+import { Progress, ProgressBar } from '../progress/progress';
 import { t } from '@/i18n';
 import { observer } from 'mobx-react';
 import { useBoardStore, useStatsStore } from '@/hooks';
@@ -25,12 +25,16 @@ export const BoardProgress = observer(({
 }) => {
   const statsStore = useStatsStore()
   return (
-    statsStore.loadingStatus ? <Progress
+    statsStore.loadingStatus ? 
+      statsStore.loadingStatus.type === 'downloading' ? <ProgressBar
       title={statsStore.loadingStatus.text}
       showSkip={statsStore.loadingStatus.type === 'downloading'}
+      progress={statsStore.downloadProgress}
       onSkip={() => {
         onSkip && onSkip()
-      }} ></Progress> : null
+      }} ></ProgressBar> : <Progress
+      title={statsStore.loadingStatus.text}
+      showSkip={false}></Progress> : null
   )
 })
 

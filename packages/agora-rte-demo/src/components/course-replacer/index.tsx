@@ -8,7 +8,7 @@ import CamelCaseKeys from 'camelcase-keys'
 import { controller } from '@/edu-sdk/controller'
 import { AgoraEduEvent } from '@/edu-sdk/declare'
 import { BizLogger } from '@/modules/utils/biz-logger';
-import { get } from 'lodash';
+import { debounce, get } from 'lodash';
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { GlobalStorage } from '@/utils/custom-storage';
 
@@ -260,27 +260,69 @@ export const CourseReplacerContent = observer(() => {
 
 
     const [items, setItems] = useState<AClassCourseWareItem[]>([])
+    const [currentSubject, setCurrentSubject] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
+    const [totalCount, setTotalCount] = useState<number>(0)
+
+    const debouncedSearch = debounce(async (value:string) => {
+        setLoading(true)
+        setTimeout(() => {
+            //@ts-ignore
+            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+        }, 3000)
+        try {
+            setCurrentSubject(value)
+            let result:any = await apiStore.callExternalAPI("SearchCourseInfoByName", {
+                subjectName: value,
+                pageSize: 10,
+                currentPage: 1
+            })
+
+            if(result.ErrorCode !== 0) {
+                throw GenericErrorWrapper(new Error(result.Msg))
+            }
+
+            let items = get(result, 'Body.ResultInfo', []).map((item:any) => {
+                return {
+                    id:item.SID,
+                    name: item.SubjectName,
+                    type: 'ppt'
+                }
+            })
+            let totalItems = get(result, 'Body.Count', 0)
+            setTotalCount(totalItems)
+            setItems(items)
+            setLoading(false)
+        }catch(e) {
+            setLoading(false)
+            BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
+        }
+    }, 500)
 
     return (
         <div style={{
             width:'100%',height:'100%', position:"absolute", background: 'transparent',
-            display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:10
+            display:'flex', 'alignItems':'center', 'justifyContent':'center',zIndex:25
         }} className={uiStore.courseReplacerVisible ? 'visibility' : 'hidden'}>
             <CourseReplacer
                 items={items}
                 onClose={() => {
                     uiStore.setCourseReplacerVisible(false)
                 }}
-                onSearch={async (value:string) => {
+                totalCount={totalCount}
+                loading={loading}
+                onSearchValueChange={debouncedSearch}
+                onChangePage={async (activeIdx:number) => {
+                    setLoading(true)
                     setTimeout(() => {
                         //@ts-ignore
                         window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
                     }, 3000)
                     try {
                         let result:any = await apiStore.callExternalAPI("SearchCourseInfoByName", {
-                            subjectName: value,
+                            subjectName: currentSubject,
                             pageSize: 10,
-                            currentPage: 1
+                            currentPage: activeIdx + 1
                         })
 
                         if(result.ErrorCode !== 0) {
@@ -294,12 +336,17 @@ export const CourseReplacerContent = observer(() => {
                                 type: 'ppt'
                             }
                         })
+                        let totalItems = get(result, 'Body.Count', 0)
+                        setTotalCount(totalItems)
                         setItems(items)
+                        setLoading(false)
                     }catch(e) {
+                        setLoading(false)
                         BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
                     }
                 }}
                 onReplaceCourse={async (item: AClassCourseWareItem) => {
+                    setLoading(true)
                     try {
                         setTimeout(() => {
                             //@ts-ignore
@@ -348,8 +395,9 @@ export const CourseReplacerContent = observer(() => {
                             throw GenericErrorWrapper(new Error('NO_COURSE_MATCHED'))
                         }
 
-                        
+                        setLoading(false)
                     }catch(e) {
+                        setLoading(false)
                         BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
                     }
                 }}
