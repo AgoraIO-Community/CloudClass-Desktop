@@ -92,6 +92,13 @@
                 window.globalStore.acadsocStore.highlightCount = parseInt(amount)
               }
           }
+        } else if(cmd === 'api-callback') {
+          if(window.globalStore && window.globalStore.apiStore) {
+            if(aData) {
+              const {seqId, err, result} = aData
+              window.globalStore.apiStore.externalAPICallback(seqId, err || null, result)
+            }
+          }
         }
       } else {
         if(!options || !appId) {
@@ -203,7 +210,7 @@
       <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
     </div>
   </div>
-  <div class="footer">v1.1.1.16</div>
+  <div class="footer">v1.1.2.1</div>
   <div id="root1"></div>
   <script src="./edu_sdk.bundle.js"></script>
 </body>

@@ -166,7 +166,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
               ) :
               (
                 <>
-                  <div style={{height: 'calc(100% - 45px)', overflow: 'scroll'}} onScroll={handleScroll}>
+                  <div style={{height: 'calc(100% - 45px)', overflowY: 'auto'}} onScroll={handleScroll}>
                     {items.length > 0 ? items.map(item => {
                       return (
                         <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>

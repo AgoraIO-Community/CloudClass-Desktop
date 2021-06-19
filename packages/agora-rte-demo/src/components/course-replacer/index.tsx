@@ -13,81 +13,157 @@ import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { GlobalStorage } from '@/utils/custom-storage';
 
 const listData = {
-    "Body": {
-        "ResultInfo": [
-            {
-                "CatID": 1293,
-                "SID": 140723,
-                "SubjectName": "China’s overheated school district housing market: causes and solutions"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140722,
-                "SubjectName": "L6 Village in the Snow"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140721,
-                "SubjectName": "L5 Castle Adventure"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140720,
-                "SubjectName": "L4 Gran"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140719,
-                "SubjectName": "L3 The Dragon Tree"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140718,
-                "SubjectName": "L2 Pirate Adventure"
-            },
-            {
-                "CatID": 1297,
-                "SID": 140717,
-                "SubjectName": "L1 The Magic key"
-            },
-            {
-                "CatID": 1275,
-                "SID": 140716,
-                "SubjectName": "Test 19"
-            },
-            {
-                "CatID": 1234,
-                "SID": 140715,
-                "SubjectName": "Part 1 Lesson 3 I Sense the Seasons — New Words"
-            },
-            {
-                "CatID": 1240,
-                "SID": 140714,
-                "SubjectName": "Part 2 Lesson 47 Phonics Focus：spl"
-            }
-        ],
-        "CurrentPage": 1,
-        "Count": 68257,
-        "PageSize": 10
-    },
-    "ErrorCode": 0,
-    "Msg": ""
+    "ResultInfo": [
+        {
+            "CatID": 1293,
+            "SID": 140723,
+            "SubjectName": "China’s overheated school district housing market: causes and solutions"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140722,
+            "SubjectName": "L6 Village in the Snow"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140721,
+            "SubjectName": "L5 Castle Adventure"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140720,
+            "SubjectName": "L4 Gran"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140719,
+            "SubjectName": "L3 The Dragon Tree"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140718,
+            "SubjectName": "L2 Pirate Adventure"
+        },
+        {
+            "CatID": 1297,
+            "SID": 140717,
+            "SubjectName": "L1 The Magic key"
+        },
+        {
+            "CatID": 1275,
+            "SID": 140716,
+            "SubjectName": "Test 19"
+        },
+        {
+            "CatID": 1234,
+            "SID": 140715,
+            "SubjectName": "Part 1 Lesson 3 I Sense the Seasons — New Words"
+        },
+        {
+            "CatID": 1240,
+            "SID": 140714,
+            "SubjectName": "Part 2 Lesson 47 Phonics Focus：spl"
+        }
+    ],
+    "CurrentPage": 1,
+    "Count": 68257,
+    "PageSize": 10
 }
 
 const detailData = {
-    "Body": {
-        "CourseWareList": [
-            {
-                "ResourceName": "Static_Sick Leave _1",
-                "ResourceUuid": "84774048_101899",
-                "Ext": "pdf",
-                "Url": "",
-                "Conversion": {
-                    "Type": "static"
+    "CourseWareList": [
+        {
+            "ResourceName": "Static_Sick Leave _1",
+            "ResourceUuid": "84774048_101899",
+            "Ext": "pdf",
+            "Url": "",
+            "Conversion": {
+                "Type": "static"
+            },
+            "Size": 9,
+            "UpdateTime": 0,
+            "Scenes": [
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/1.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 1"
                 },
-                "Size": 9,
-                "UpdateTime": 0,
-                "Scenes": [
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/2.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 2"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/3.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 3"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/4.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 4"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/5.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 5"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/6.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 6"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/7.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 7"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/8.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 8"
+                },
+                {
+                    "Ppt": {
+                        "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/9.jpg",
+                        "Width": 1600,
+                        "Height": 900
+                    },
+                    "Name": "Scene 9"
+                }
+            ],
+            "Convert": true,
+            "TaskUuid": "1c325eb0efdf11ea8e14f53e3889d73a",
+            "TaskToken": null,
+            "TaskProgress": {
+                "TotalPageSize": 9,
+                "ConvertedPageSize": 9,
+                "ConvertedPercentage": 100,
+                "ConvertedFileList": [
                     {
                         "Ppt": {
                             "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/1.jpg",
@@ -160,97 +236,14 @@ const detailData = {
                         },
                         "Name": "Scene 9"
                     }
-                ],
-                "Convert": true,
-                "TaskUuid": "1c325eb0efdf11ea8e14f53e3889d73a",
-                "TaskToken": null,
-                "TaskProgress": {
-                    "TotalPageSize": 9,
-                    "ConvertedPageSize": 9,
-                    "ConvertedPercentage": 100,
-                    "ConvertedFileList": [
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/1.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 1"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/2.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 2"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/3.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 3"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/4.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 4"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/5.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 5"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/6.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 6"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/7.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 7"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/8.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 8"
-                        },
-                        {
-                            "Ppt": {
-                                "Src": "https://agoracategroy.acadsoc.com.cn/staticConvert/1c325eb0efdf11ea8e14f53e3889d73a/9.jpg",
-                                "Width": 1600,
-                                "Height": 900
-                            },
-                            "Name": "Scene 9"
-                        }
-                    ]
-                }
+                ]
             }
-        ],
-        "ChangeNum": -110
-    },
-    "ErrorCode": 0,
-    "Msg": ""
+        }
+    ],
+    "ChangeNum": -110
 }
 
+let latestFetchListSeqId = -1
 
 export const CourseReplacerContent = observer(() => {
     const uiStore = useUIStore()
@@ -269,27 +262,30 @@ export const CourseReplacerContent = observer(() => {
         setTimeout(() => {
             //@ts-ignore
             window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-        }, 3000)
+        }, Math.floor(Math.random() * 3000))
         try {
             setCurrentSubject(value)
+            latestFetchListSeqId = apiStore.seqId
+            let seqId = apiStore.seqId
             let result:any = await apiStore.callExternalAPI("SearchCourseInfoByName", {
                 subjectName: value,
                 pageSize: 10,
                 currentPage: 1
             })
 
-            if(result.ErrorCode !== 0) {
-                throw GenericErrorWrapper(new Error(result.Msg))
+            if(seqId < latestFetchListSeqId) {
+                BizLogger.info(`[CourseReplacer] SeqId ${seqId} is older than ${latestFetchListSeqId}, ignored`)
+                return
             }
 
-            let items = get(result, 'Body.ResultInfo', []).map((item:any) => {
+            let items = get(result, 'ResultInfo', []).map((item:any) => {
                 return {
                     id:item.SID,
                     name: item.SubjectName,
                     type: 'ppt'
                 }
             })
-            let totalItems = get(result, 'Body.Count', 0)
+            let totalItems = get(result, 'Count', 0)
             setTotalCount(totalItems)
             setItems(items)
             setLoading(false)
@@ -317,26 +313,31 @@ export const CourseReplacerContent = observer(() => {
                     setTimeout(() => {
                         //@ts-ignore
                         window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-                    }, 3000)
+                    }, Math.floor(Math.random() * 3000))
                     try {
+                        // the next seqId callExternalAPI will use
+                        latestFetchListSeqId = apiStore.seqId
+                        let seqId = apiStore.seqId
                         let result:any = await apiStore.callExternalAPI("SearchCourseInfoByName", {
                             subjectName: currentSubject,
                             pageSize: 10,
                             currentPage: activeIdx + 1
                         })
 
-                        if(result.ErrorCode !== 0) {
-                            throw GenericErrorWrapper(new Error(result.Msg))
+                        if(seqId < latestFetchListSeqId) {
+                            BizLogger.info(`[CourseReplacer] SeqId ${seqId} is older than ${latestFetchListSeqId}, ignored`)
+                            return
                         }
 
-                        let items = get(result, 'Body.ResultInfo', []).map((item:any) => {
+
+                        let items = get(result, 'ResultInfo', []).map((item:any) => {
                             return {
                                 id:item.SID,
                                 name: item.SubjectName,
                                 type: 'ppt'
                             }
                         })
-                        let totalItems = get(result, 'Body.Count', 0)
+                        let totalItems = get(result, 'Count', 0)
                         setTotalCount(totalItems)
                         setItems(items)
                         setLoading(false)
@@ -348,10 +349,10 @@ export const CourseReplacerContent = observer(() => {
                 onReplaceCourse={async (item: AClassCourseWareItem) => {
                     setLoading(true)
                     try {
-                        setTimeout(() => {
-                            //@ts-ignore
-                            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
-                        }, 3000)
+                        // setTimeout(() => {
+                        //     //@ts-ignore
+                        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
+                        // }, 3000)
 
                         let userType = 0
 
@@ -368,10 +369,7 @@ export const CourseReplacerContent = observer(() => {
                             classToolType:2
                         })
 
-                        if(result.ErrorCode !== 0) {
-                            throw GenericErrorWrapper(new Error(result.Msg))
-                        }
-                        let list = get(result, 'Body.CourseWareList', [])
+                        let list = get(result, 'CourseWareList', [])
 
                         if(list.length > 0) {
                             let firstData = list[0]
