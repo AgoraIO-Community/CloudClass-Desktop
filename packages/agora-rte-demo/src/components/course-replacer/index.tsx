@@ -259,10 +259,10 @@ export const CourseReplacerContent = observer(() => {
 
     const debouncedSearch = debounce(async (value:string) => {
         setLoading(true)
-        setTimeout(() => {
-            //@ts-ignore
-            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-        }, Math.floor(Math.random() * 3000))
+        // setTimeout(() => {
+        //     //@ts-ignore
+        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+        // }, Math.floor(Math.random() * 1000))
         try {
             setCurrentSubject(value)
             latestFetchListSeqId = apiStore.seqId
@@ -310,10 +310,10 @@ export const CourseReplacerContent = observer(() => {
                 onSearchValueChange={debouncedSearch}
                 onChangePage={async (activeIdx:number) => {
                     setLoading(true)
-                    setTimeout(() => {
-                        //@ts-ignore
-                        window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-                    }, Math.floor(Math.random() * 3000))
+                    // setTimeout(() => {
+                    //     //@ts-ignore
+                    //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+                    // }, Math.floor(Math.random() * 1000))
                     try {
                         // the next seqId callExternalAPI will use
                         latestFetchListSeqId = apiStore.seqId
@@ -352,7 +352,7 @@ export const CourseReplacerContent = observer(() => {
                         // setTimeout(() => {
                         //     //@ts-ignore
                         //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
-                        // }, 3000)
+                        // }, 1000)
 
                         let userType = 0
 
@@ -394,6 +394,7 @@ export const CourseReplacerContent = observer(() => {
                         }
 
                         setLoading(false)
+                        uiStore.setCourseReplacerVisible(false)
                     }catch(e) {
                         setLoading(false)
                         BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)

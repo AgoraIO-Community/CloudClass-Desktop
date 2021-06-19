@@ -168,6 +168,15 @@ const zhCN: any = {
     'reduction':'还原',
     'reset':'居中',
   },
+  'tooltip': {
+    'courseReplace': '更换课件',
+    'refresh': '刷新',
+    'customerService': '客服',
+    'sos': '求救',
+    'device': '设备',
+    'prepare': '备课',
+    'highlight': '精彩时刻'
+  },
   'disk': {
     'open': '打开',
     'publicResources': '公共资源',

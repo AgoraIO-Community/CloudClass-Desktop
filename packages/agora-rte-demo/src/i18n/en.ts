@@ -182,6 +182,15 @@ const en = {
     'reduction': 'reduction',
     'reset': 'center',
   },
+  'tooltip': {
+    'courseReplace': 'Change Material',
+    'refresh': 'Refresh',
+    'customerService': 'Customer Service',
+    'sos': 'SOS',
+    'device': 'Device Settings',
+    'prepare': 'Prepare Lessons',
+    'highlight': 'Highlight Moments'
+  },
   'disk': {
     'open': 'Open',
     'publicResources': 'Public',

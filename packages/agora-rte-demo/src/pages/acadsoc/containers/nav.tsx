@@ -158,13 +158,15 @@ const ActionBarContainer = observer(() => {
 
   const menuBars = [
     {
-      name: 'prepare',
+      name: 'courseReplace',
+      tooltip: t('tooltip.courseReplace'),
       clickEvent: () => {
         uiStore.setCourseReplacerVisible(true)
       }
     },
     {
       name: 'highlight',
+      tooltip: t('tooltip.highlight'),
       count: roomStore.highlightCount,
       clickEvent: () => {
         let windows = roomStore.minimizeView
@@ -186,12 +188,14 @@ const ActionBarContainer = observer(() => {
     },
     {
       name: 'prepare',
+      tooltip: t('tooltip.prepare'),
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "prepare"})
       }
     },
     {
       name: 'sos',
+      tooltip: t('tooltip.sos'),
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
         controller.appController.uploadLog()
@@ -199,13 +203,22 @@ const ActionBarContainer = observer(() => {
           .catch(console.warn)
         },
     },
-    { name: 'refresh', clickEvent: onRefresh },
+    { 
+      name: 'refresh',
+      tooltip: t('tooltip.refresh'),
+      clickEvent: onRefresh
+    },
     { name: 'customerService',
+    tooltip: t('tooltip.customerService'),
       clickEvent: () => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "customerService"})
       }
     },
-    { name: 'equipmentDetection', clickEvent: handleSetting },
+    { 
+      name: 'equipmentDetection', 
+      tooltip: t('tooltip.device'),
+      clickEvent: handleSetting
+    },
   ]
 
   let buttonArr = roomStore.isAssistant ? 
@@ -213,7 +226,7 @@ const ActionBarContainer = observer(() => {
     menuBars
 
   buttonArr = roomStore.isStudent ?
-    buttonArr.filter(({name}: {name: string}) => !['prepare', 'highlight'].includes(name)) :
+    buttonArr.filter(({name}: {name: string}) => !['prepare', 'highlight', 'courseReplace'].includes(name)) :
     buttonArr
 
   return (

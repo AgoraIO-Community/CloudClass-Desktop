@@ -655,7 +655,13 @@ export class BoardStore {
     if (!isRootDir) {
       const item = this._resourcesList.find((item) => item.resourceName === resourceName)
       if (item && item.taskUuid) {
-        await this.startDownload(item.taskUuid)
+        let cacheInfo = this.appStore.statisticsStore.cacheMap.get(item.taskUuid)
+        if(cacheInfo && cacheInfo.cached) {
+          // ignore
+          BizLogger.info(`[Cache] Material ${item.taskUuid} exists, skip downloading`)
+        } else {
+          await this.startDownload(item.taskUuid)
+        }
       }
     }
   }
@@ -2334,6 +2340,7 @@ export class BoardStore {
     })
 
     await this.putSceneByResourceUuid(item.resourceUuid)
+    this.moveCamera()
   }
 
 

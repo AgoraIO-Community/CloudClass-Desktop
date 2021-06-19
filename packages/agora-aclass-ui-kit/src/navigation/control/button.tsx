@@ -1,6 +1,7 @@
 import React from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import customerService from '../assets/customerService.png'
+import courseReplace from '../assets/courseReplace.png'
 import sos from '../assets/sos.png'
 import prepare from '../assets/prepare.png'
 import highlight from '../assets/highlight.png'
@@ -11,6 +12,7 @@ import triangleUp from '../assets/triangleUp.png'
 import triangleDown from '../assets/triangleDown.png'
 import { CustomizeIconBtn, Button, ControlButtonIcon } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import { Tooltip } from '@material-ui/core'
 
 const defaultStyle = {
   width: 32,
@@ -20,6 +22,7 @@ export interface IControlButtonProps {
   icon?: ControlButtonIcon,
   iconStyle?: CSSProperties,
   styles?: CSSProperties,
+  tooltip?: string,
   count?: number,
   onClick?: () => any
 }
@@ -37,6 +40,7 @@ const buttonsMap = {
       <div style={{position:"absolute", fontSize:14, right:0, fontWeight:600, textShadow:'0px 0px 4px #122585'}}>{props.count}</div>
     </div>
   ),
+  'courseReplace': (props: any) => <CustomizeIconBtn icon={courseReplace} style={{ ...defaultStyle, ...props.style }} />,
   'prepare': (props: any) => <CustomizeIconBtn icon={prepare} style={{ ...defaultStyle, ...props.style }} />,
   'sos': (props: any) => <CustomizeIconBtn icon={sos} style={{ ...defaultStyle, ...props.style }} />,
   'customerService': (props: any) => <CustomizeIconBtn icon={customerService} style={{ ...defaultStyle, ...props.style }} />,
@@ -48,9 +52,23 @@ const buttonsMap = {
 
 }
 
-export const NavigationControlButton = ({ icon, iconStyle, onClick,styles, count }: IControlButtonProps) => {
+export const NavigationControlButton = ({ icon, iconStyle, onClick,styles, count, tooltip }: IControlButtonProps) => {
   const ControlIconButton = icon && buttonsMap[icon]
   return (
+    tooltip ? 
+    <Tooltip placement="bottom" title={tooltip || ''}>
+      <IconButton disableRipple component="div" style={{
+        width: 36,
+        height: 36,
+        padding: 0,
+        color: '#ffffff',
+        marginLeft: 15,
+        ...styles
+      }} onClick={onClick}
+      >
+        <ControlIconButton count={count} style={{ ...defaultStyle, ...iconStyle }} />
+      </IconButton >
+    </Tooltip> : 
     <IconButton disableRipple component="div" style={{
       width: 36,
       height: 36,
