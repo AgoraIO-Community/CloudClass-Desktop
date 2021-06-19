@@ -134,6 +134,7 @@
     "@netless/white-audio-plugin": "1.2.21",
     "@netless/white-video-plugin": "1.2.21",
     "@open-wc/webpack-import-meta-loader": "0.4.7",
+    "@svgr/webpack": "5.5.0",
     "@types/ali-oss": "6.0.4",
     "@types/axios": "0.14.0",
     "@types/deep-diff": "1.0.0",

@@ -305,6 +305,7 @@ export const CourseReplacerContent = observer(() => {
                 onClose={() => {
                     uiStore.setCourseReplacerVisible(false)
                 }}
+                onCancel={() => {setLoading(false)}}
                 totalCount={totalCount}
                 loading={loading}
                 onSearchValueChange={debouncedSearch}

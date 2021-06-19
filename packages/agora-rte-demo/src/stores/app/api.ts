@@ -24,6 +24,7 @@ export class APIStore {
         return new Promise((resolve, reject) => {
             let seqId = this.seqId++
             BizLogger.info(`[External API] API Call seq ${seqId} ${name}`)
+
             controller.appController.callback(
                 AgoraEduEvent.apicall, {
                     name,

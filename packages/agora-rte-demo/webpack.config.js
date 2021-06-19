@@ -120,13 +120,17 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
+        test: /\.(png|jpe?g|gif|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         // exclude: /node_modules/,
         loader: "url-loader",
         options: {
           esModule: false,
           // limit: 1024
         }
+      },
+      {
+        test: /\.svg$/,
+        loader: '@svgr/webpack'
       },
       // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
       {

@@ -1,5 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
+import './index.css'
 
 export const Loading = (props: any) => {
   const { width = '12px', height = '12px' } = props
@@ -32,6 +34,19 @@ export const Loading = (props: any) => {
   return (
     <div className={classes.box}>
       <span className={classes.load}></span>
+    </div>
+  )
+}
+
+export const Loading2 = (props: any) => {
+  return (
+    <div className="progress-cover">
+      <div className="progress">
+        <div className="content">
+          <CircularProgress className="circular"/>
+        </div>
+        {props.children}
+      </div>
     </div>
   )
 }

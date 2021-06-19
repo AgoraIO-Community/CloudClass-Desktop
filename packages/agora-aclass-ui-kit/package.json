@@ -72,7 +72,8 @@
     "typescript": "3.8.3",
     "webpack": "4.46.0",
     "webpack-bundle-analyzer": "4.3.0",
-    "webpack-cli": "4.3.1"
+    "webpack-cli": "4.3.1",
+    "@svgr/webpack": "5.5.0"
   },
   "dependencies": {
     "@material-ui/core": "4.11.3",

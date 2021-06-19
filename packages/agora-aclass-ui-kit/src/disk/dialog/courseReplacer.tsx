@@ -4,9 +4,9 @@ import IconEmpty from '../assets/icon-empty.png'
 import CloseIcon from '../assets/close-button.png'
 import './courseReplacer.css'
 import {CourseIconMapper} from './courseIcon'
-import { CircularProgress } from '@material-ui/core'
 import SearchIcon from '../assets/icon-search.png'
 import ClearIcon from '../assets/icon-clear.png'
+import { Loading2 } from '../../loading'
 
 const CourseReplacerContext = React.createContext({
   activeIdx: 0,
@@ -74,7 +74,7 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
               Array(windowSize).fill(0).map((_,i) => {
                 const pageIdx = leftEdge + i
                 return (
-                  <div onClick={() => {changeActiveIdx(pageIdx)}} className={pageIdx === activeIdx ? 'active':''}>{pageIdx + 1}</div>
+                  <div key={`paging-${i}`} onClick={() => {changeActiveIdx(pageIdx)}} className={pageIdx === activeIdx ? 'active':''}>{pageIdx + 1}</div>
                 )
               })
             }
@@ -97,6 +97,7 @@ interface CourseReplacerProps {
   onSearchValueChange?: (value:string) => any,
   onReplaceCourse?: (item: AClassCourseWareItem) => any,
   onChangePage?: (activeIndex: number) => any,
+  onCancel?: () => any,
   loading: boolean
 }
 
@@ -110,6 +111,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
   onSearchValueChange,
   onReplaceCourse,
   onChangePage,
+  onCancel,
   loading
 }) => {
 
@@ -137,7 +139,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
     }}>
       <div style={style} className={cls}>
         <div className="course-replacer-header">
-          <div>课件查询</div>
+          <div>Search Material</div>
           <div className="course-replacer-close-btn" onClick={onClose}>
             <img src={CloseIcon} />
           </div>
@@ -157,40 +159,39 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
           </div>
           <div style={{height: 'calc(100% - 72px)', position:'relative'}}>
             <div className="course-replacer-tbl-h">
-              课件名
+              Name
             </div>
             {loading ? (
-                <div style={{width: '100%', height: '100%', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                  <CircularProgress className="circular"/>
+                <div style={{width: '100%', height: '100%', display:'flex', alignItems:'center', justifyContent:'center', position: 'absolute'}}>
+                  <Loading2>
+                  <button onClick={onCancel}>Cancel</button>
+                  </Loading2>
                 </div>
-              ) :
-              (
-                <>
-                  <div style={{height: 'calc(100% - 45px)', overflowY: 'auto'}} onScroll={handleScroll}>
-                    {items.length > 0 ? items.map(item => {
-                      return (
-                        <div className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>
-                          <div className="course-replacer-tbl-col">
-                            <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
-                          </div>
-                          <div className="course-replacer-tbl-col">
-                            {item.name}
-                          </div>
+              ) : null}
+              <>
+                <div style={{height: 'calc(100% - 45px)', overflowY: 'auto'}} onScroll={handleScroll}>
+                  {items.length > 0 ? items.map(item => {
+                    return (
+                      <div key={item.id} className="course-replacer-tbl-row" onClick={() => {onReplaceCourse && onReplaceCourse(item)}}>
+                        <div className="course-replacer-tbl-col">
+                          <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
                         </div>
-                      )
-                    }) : (
-                      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
-                        <img src={IconEmpty} />
-                        <div style={{ color: '#A9AEC5', fontSize: '14px' }}>未找到课件，您可以尝试搜索获取更多课件</div>
+                        <div className="course-replacer-tbl-col">
+                          {item.name}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  {maskVisible ? <div className="mask"></div> : null}
-                </>
-              )
-            }
+                    )
+                  }) : (
+                    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+                      <img src={IconEmpty} />
+                      <div style={{ color: '#A9AEC5', fontSize: '14px' }}>No material yet, try searching for more.</div>
+                    </div>
+                  )}
+                </div>
+                {maskVisible ? <div className="mask"></div> : null}
+              </>
           </div>
-          {loading ? null : <CoursePaging totalPages={totalCount % 10 === 0 ? Math.floor(totalCount / 10) : Math.floor(totalCount / 10) + 1}></CoursePaging>}
+          <CoursePaging totalPages={totalCount % 10 === 0 ? Math.floor(totalCount / 10) : Math.floor(totalCount / 10) + 1}></CoursePaging>
         </div>
       </div>
     </CourseReplacerContext.Provider>

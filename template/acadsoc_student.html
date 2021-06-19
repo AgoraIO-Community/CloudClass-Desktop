@@ -15,8 +15,8 @@
                 iframe.setAttribute('allow', 'camera;microphone')
                 iframe.setAttribute('style', 'width:100%;height:100%;border:0;')
                 iframe.setAttribute('frameBorder', '0')
-                // iframe.setAttribute('src', './classroom.html')
-                iframe.setAttribute('src', 'https://solutions-apaas.agora.io/acadsoc/1.1.1.16/app/classroom.html')
+                iframe.setAttribute('src', './classroom.html')
+                // iframe.setAttribute('src', 'https://solutions-apaas.agora.io/acadsoc/1.1.1.16/app/classroom.html')
                 let body = document.getElementsByTagName('body')[0]
 
                 // let iframe = document.querySelector('#agoraproxy')
@@ -33,9 +33,9 @@
                     // let opts = JSON.parse(`{"userUuid":"UID_10018690","rtmToken":"006d2931ea1715c4bc9b36608770bcf6d01IACRFrBvPbW6JM3XD/GDgAUm0TFF2T3pcogFNP+VapSmzTlLOSEAAAAAEADFnn1JmTFOYAEA6AOpfUxg","rtmUid":"10018690","userName":"声网1","roomUuid":"09fe42f080bb11ebb1a3d35074fec6fb2","roleType":2,"roomType":0,"roomName":"75702143","language":"zh","translateLanguage":"auto","courseWareList":,"duration":1500,"pretest":true}`)
 
                     const teachers = [
-                        {userUuid: "user01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAK3XhF7Ipz4d40kE+ZwKc4WId/FxGXol6IgcNGRFD5iAgqSoEAAAAAEACUSSws45nIYAEA6APjmchg"},
-                        {userUuid: "user02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABg3lsjLujhq5XP6kfLJ75DoYStngWMkgNqo40Ew8Iu9rJ7QxgAAAAAEACUSSws7pnIYAEA6APumchg"},
-                        {userUuid: "user03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABqVDgN3A69yWvGom3KZKfX5L3caEDXQbBAm5smruBcKiRLRG8AAAAAEACUSSws+JnIYAEA6AP4mchg"}
+                        {userUuid: "user01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABXfi1/U1Vq1JWEZDkjObbsiSoHUovx0HSIXPO19S7dUggqSoEAAAAAEABlkRuCJgrPYAEA6AMmCs9g"},
+                        {userUuid: "user02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAC6Hy4obexGyS6aoIhB0f+a/N/hxyE/4QpLYsvsH3zxk7J7QxgAAAAAEABlkRuCMQrPYAEA6AMxCs9g"},
+                        {userUuid: "user03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAkVGMsTc/oy0eaTfQIU7vrs8UXmkXnHf1FtEPFuj3w8SRLRG8AAAAAEABlkRuCPQrPYAEA6AM9Cs9g"}
                     ]
 
                     const idx = document.querySelector('#userPicker').value

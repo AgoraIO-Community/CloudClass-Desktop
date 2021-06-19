@@ -152,3 +152,28 @@
     opacity: 0;
     pointer-events: none;
 }
+
+@keyframes rotation{
+from{
+    transform: rotate(0deg);
+}
+to{
+    transform: rotate(360deg);
+}
+}
+
+.course-replacer .course-replacer-body .progress button {
+    background: #DFB635;
+    border: 0;
+    color: white;
+    width: 64px;
+    height: 24px;
+    border-radius: 24px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* .course-replacer .loading .MuiCircularProgress-colorPrimary {
+    color: #576AFC;
+} */
