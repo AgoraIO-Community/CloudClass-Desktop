@@ -25,6 +25,7 @@ export default class App {
           startTime: new Date().getTime(),
           duration: 60 * 30,
           courseWareList: [],
+          recordUrl: '<Your Record Page Url>',
           listener: (evt) => {
             console.log("evt", evt)
           }
