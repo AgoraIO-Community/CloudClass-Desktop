@@ -219,6 +219,7 @@
     padding: 3px 8px;
     border: 0;
     text-align: center;
+    white-space: nowrap;
 }
 
 .rc-tooltip-arrow {
@@ -368,4 +369,12 @@
 
 .flex-1 {
     flex: 1;
+}
+
+.time-tag {
+    font-size: 12px;
+    font-weight: 400;
+    color: #626773;
+    line-height: 18px;
+    margin-right: 8px;
 }

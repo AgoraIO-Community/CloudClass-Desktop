@@ -5,11 +5,13 @@ import { Flex, Text, Button, Image } from 'rebass'
 import { LeftOutlined } from '@ant-design/icons'
 import { updateRoomNotice } from '../../api/chatroom'
 import iconLeft from '../../themes/img/icon-left.svg'
+import Modal from '../UIComponents/modal';
 
 
 const { TextArea } = Input;
 
 const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView, onEdit }) => {
+    const [showModal, setShowModal] = useState('none');
     const roomId = useSelector((state) => state.room.info.id);
     // 公告栏编辑字数
     const [count, setCount] = useState(0);
@@ -44,10 +46,12 @@ const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView, onEdit }) => {
                     <Button 
                         variant='primary' 
                         className='save-btn' 
-                        onClick={() => {updateRoomNotice(roomId, ""); onView();}} 
+                        onClick={() => {setShowModal('block')}} 
                     >删除</Button>
                 </div>
             }
+            {/* 弹窗 */}
+            <Modal show={showModal} content="确定删除公告吗？" setShow={setShowModal} onOk={() => { updateRoomNotice(roomId, ""); onView(); }}></Modal>
         </>
     )
 }

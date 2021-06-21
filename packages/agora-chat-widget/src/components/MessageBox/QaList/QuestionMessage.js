@@ -6,6 +6,7 @@ import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
 import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
+import { dateFormat } from '../../../utils';
 
 // 学生端 提问消息列表
 const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessages }) => {
@@ -37,6 +38,11 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                                             </Tag>}
                                             {/* 昵称/姓名 */}
                                             <Text className='msg-sender' color={(message.ext.role === 1 || message.ext.role === 3) && '#0099FF'}>{message.ext.nickName || message.from}</Text>
+                                            {/* 时间戳 */}
+                                            <Tag className="time-tag">
+                                                { dateFormat(Number(message.time), 'H:i')}
+                                                {/* { message.time } */}
+                                            </Tag>
                                         </Flex>
                                     </div>
                                     {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}

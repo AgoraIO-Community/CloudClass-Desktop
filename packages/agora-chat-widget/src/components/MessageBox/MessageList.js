@@ -188,33 +188,30 @@ const MessageList = ({ activeKey, setActiveKey }) => {
           }
         </Tabs>
       ) : (
-          isHiedQuestion 
-          ? (
-            <Flex flexDirection="column" className="member-msg">
+        <>
+        {/* 通过isHiedQuestion控制学生端消息列表/提问列表的显示隐藏 */}
+          <Flex flexDirection="column" className="member-msg" style={{display: isHiedQuestion ? '' : 'none'}}>
               {Number(isTeacher) === 2 && <div className="qa-student-tips">
                 提示：提问内容仅你和老师可见
               </div>}
               {isLoadGif && <div className='load'></div>}
               <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
             </Flex>
-          ) :  (
-              <>
-                <div className="member-msg" id="chat-box-tag">
-                  {isLoadGif && <div className='load'></div>}
-                  {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+            <div className="member-msg" id="chat-box-tag" style={{display: isHiedQuestion ? 'none' : ''}}>
+              {isLoadGif && <div className='load'></div>}
+              {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
 
-                  {
-                    messageList.length > 0 ? (
-                      <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
-                    ) : (
-                        <div>
-                          {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
-                        </div>
-                      )
-                  }
-                </div>
-              </>
-            )
+              {
+                messageList.length > 0 ? (
+                  <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
+                ) : (
+                    <div>
+                      {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
+                    </div>
+                  )
+              }
+            </div>
+          </>
         )}
       <ToolBar tabKey={tabKey} hide={hide} isTool={isTool} qaUser={qaUser} activeKey={activeKey} />
     </div>

@@ -19,7 +19,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
     const isTeacher = useSelector(state => state.loginInfo.ext)
     let roomMuteList = useSelector(state => state.room.muteList)
     const admins = useSelector(state => state.room.admins);
-    roomMuteList = _.difference(roomMuteList,admins);
+    roomMuteList = _.difference(roomMuteList, admins);
     // 聊天框禁言
     const onSetMute = (message) => {
         let options = {
@@ -68,9 +68,11 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                     <Flex className="msg-list-item">
                         <div className='msg-img'>
                             {/* 头像 */}
-                            <img className="avatar" src={message.ext.avatarUrl || avatarUrl}/>
+                            <img className="avatar" src={message.ext.avatarUrl || avatarUrl} />
                             {/* 是否禁言的状态标志 */}
-                            <img className="mute-status" src={iconForbid} style={{display: !roomMuteList.includes(message.from) ? 'none' : 'block'}}></img>
+                            {!isShowIcon && <img className="mute-status"
+                                src={iconForbid}
+                                style={{ display: !roomMuteList.includes(message.from) ? 'none' : 'block' }}></img>}
                         </div>
                         <Flex flexDirection="column" className="flex-1">
                             <Flex alignItems="center">
@@ -84,16 +86,16 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                                 {isShowIcon &&
                                     <>
                                         {!roomMuteList.includes(message.from) ? (
-                                            message.ext.role === 2 
+                                            message.ext.role === 2
                                             && <RcTooltip placement="top" overlay="禁言">
                                                 <img src={iconMute} className='message-tool-icon' onClick={() => { onSetMute(message) }} />
                                             </RcTooltip>
                                         ) : (
-                                            message.ext.role === 2 
-                                            && <RcTooltip placement="top" overlay="解除禁言">
-                                                <img src={iconChat} className='message-tool-icon' onClick={() => { onRemoveMute(message) }} />
-                                            </RcTooltip>
-                                        )}
+                                                message.ext.role === 2
+                                                && <RcTooltip placement="top" overlay="解除禁言">
+                                                    <img src={iconChat} className='message-tool-icon' onClick={() => { onRemoveMute(message) }} />
+                                                </RcTooltip>
+                                            )}
                                         <RcTooltip placement="top" overlay="删除消息">
                                             <img src={iconDelete} className='message-tool-icon' onClick={() => { openModal(message.id) }} />
                                         </RcTooltip>

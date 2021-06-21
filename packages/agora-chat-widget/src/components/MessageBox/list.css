@@ -22,15 +22,14 @@
 }
 
 .message>.member-msg {
-    height: calc(100% - 192px);
+    height: calc(100% - 202px);
 }
 
 .message-list,
 .member-msg,
 .qa-list {
-    /* min-height: 400px;
-    max-height: 400px; */
-    padding: 10px 15px;
+    padding: 0 15px 10px 15px;
+    margin-top: 10px;
     overflow-y: scroll;
     height: 100%;
     white-space: pre-wrap;

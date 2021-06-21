@@ -1,0 +1,59 @@
+.mask {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    outline: 0;
+    right: 0;
+    top: 0;
+    overflow: auto;
+    z-index: 1000;
+    background-color: #14161a;
+    opacity: 0.9;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .card {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    z-index: 9999999;
+    width: 280px;
+    height: 122px;
+    background: #ffffff;
+    border-radius: 12px;
+    text-align: center;
+  }
+  
+  .card-txt {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    line-height: 22px;
+    padding: 24px 0 16px;
+  }
+  
+  .cancle-btn,
+  .ok-btn {
+    width: 104px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 22px;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .cancle-btn {
+    background: #f5f5f5;
+    color: #333333;
+    margin-right: 24px;
+  }
+  
+  .ok-btn {
+    background: linear-gradient(90deg, #1db4fe 0%, #028cff 100%);
+    color: #ffffff;
+  }

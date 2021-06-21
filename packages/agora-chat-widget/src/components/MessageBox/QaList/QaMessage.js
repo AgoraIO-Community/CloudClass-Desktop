@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
+import { dateFormat } from '../../../utils';
 
 // 助教端 提问消息列表
 const QaMessage = (props) => {
@@ -13,9 +14,13 @@ const QaMessage = (props) => {
     }, [qaList[props.currentUser]])
 
     useEffect(() => {
+        scrollPageBottom()
+    }, [qaList[props.currentUser]])
+
+    const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')
         scrollElementToBottom(scrollElement)
-    }, [qaList[props.currentUser]])
+    }
 
     return (
         <div className='qa' id='qa-box-tag'>
@@ -30,10 +35,16 @@ const QaMessage = (props) => {
                                 {(message.ext.role === 1 || message.ext.role === 3) && <Tag className='tags'>
                                     {message.ext.role === 1 && '主讲老师'}{message.ext.role === 3 && '辅导老师'}
                                 </Tag>}
+                                {/* 昵称 */}
                                 <Text className='msg-sender' mb='5px' color={(message.ext.role === 1 || message.ext.role === 3) && '#0099FF'}>{message.ext.nickName || message.from}</Text>
+                                {/* 时间戳 */}
+                                <Tag className="time-tag">
+                                    { dateFormat(Number(message.time), 'H:i')}
+                                    {/* { message.time } */}
+                                </Tag>
                             </Flex>
                             {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                            {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} />}
+                            {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} />}
                         </div>
                     )
                 })

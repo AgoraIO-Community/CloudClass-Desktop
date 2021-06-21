@@ -101,7 +101,7 @@ const App = function (props) {
           }
           break;
         case "leaveChatRoom":
-          let num = parseInt((roomUserList.length) / ROOM_PAGESIZE)
+          let num = parseInt((roomUserList.length + ROOM_PAGESIZE - 1) / ROOM_PAGESIZE)
           getRoomUsers(num, ROOM_PAGESIZE, message.gid);
           // 成员数 - 1
           store.dispatch(roomUserCount({ type: 'remove', userCount: userCount }))
