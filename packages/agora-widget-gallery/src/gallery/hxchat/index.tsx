@@ -11,7 +11,6 @@ import { usePluginStore } from './hooks';
 import { get, set } from 'lodash';
 //@ts-ignore
 import * as hx from 'agora-chat-widget';
-import avatarUrl from '../../../../agora-chat-widget/src/themes/img/avatar-big@2x.png';
 
 type AppProps = {
   orgName: string;
@@ -24,8 +23,12 @@ const App: React.FC<AppProps> = observer((props) => {
   const chatroomId = get(pluginStore.props, 'chatroomId');
   const orgName = get(pluginStore.props, 'orgName');
   const appName = get(pluginStore.props, 'appName');
-  set(pluginStore, 'props.imAvatarUrl', avatarUrl);
-  set(pluginStore, 'props.imUserName', '固定测试');
+  set(
+    pluginStore,
+    'props.imAvatarUrl',
+    'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png',
+  );
+  // set(pluginStore, 'props.imUserName', userName);
 
   const domRef = useRef<HTMLDivElement>(null);
 
