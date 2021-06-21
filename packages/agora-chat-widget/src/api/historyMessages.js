@@ -18,17 +18,27 @@ export const getHistoryMessages = async (isQA) => {
                 store.dispatch(moreHistory(false))
                 stop = true;
             }
-            const histrotMsg = _.reverse(res)
-            histrotMsg.map((val, key) => {
-                const { ext: { msgtype, asker } } = val
-                const { time } = val
+            const historyMsg = _.reverse(res)
+            let deleteMsgId = [];
+            historyMsg.map((val, key) => {
+                const { ext: { msgtype, asker, msgId } } = val
+                const { time, action, id } = val
                 if (msgtype === 0) {
                     counts--;
-                    store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                    if (action == "DEL") {
+                        deleteMsgId.push(msgId)
+                        store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                    } else if (deleteMsgId.includes(id)) {
+                        return
+                    } else {
+                        store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                    }
                 } else if ([1, 2].includes(msgtype)) {
                     store.dispatch(qaMessages(val, asker, { showNotice: false, isHistory: true }, time))
                 }
             })
+
+
         },
         fail: function (err) {
             stop = true;

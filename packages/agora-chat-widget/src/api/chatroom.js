@@ -143,3 +143,14 @@ export const isChatRoomWhiteUser = (roomId, userId) => {
         store.dispatch(userMute(res.data.white))
     });
 }
+
+// 退出聊天室
+export const logoutChatroom = () => {
+    const roomId = store.getState().extData.chatroomId;
+    WebIM.conn.quitChatRoom({
+        roomId: roomId,// 聊天室id
+        success: function (res) {
+            console.log('quitChatRoom>>>', res)
+        }
+    });
+}
