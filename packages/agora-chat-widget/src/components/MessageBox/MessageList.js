@@ -26,6 +26,8 @@ const MessageList = ({ activeKey, setActiveKey }) => {
   // 控制 Toolbar 组件是否展示图片 
   const [isTool, setIsTool] = useState(false);
   const [qaUser, setQaUser] = useState('');
+  // 是否已登陆
+  const isLogin = useSelector(state => state.isLogin)
   // 获取当前登陆ID，RoomId，及成员数
   const userName = useSelector((state) => state.loginName);
   const roomId = useSelector(state => state.extData.chatRoomId)
@@ -109,7 +111,9 @@ const MessageList = ({ activeKey, setActiveKey }) => {
   })
 
   useEffect(() => {
-    getUserInfo(newRoomUsers)
+    if (isLogin) {
+      getUserInfo(newRoomUsers)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomUsers])
 
@@ -148,7 +152,7 @@ const MessageList = ({ activeKey, setActiveKey }) => {
         break;
     }
   })
-  const roomUserList = _.concat(speakerTeacher, coachTeacher,audience, student)
+  const roomUserList = _.concat(speakerTeacher, coachTeacher, audience, student)
 
   return (
     <div className='message'>
@@ -188,16 +192,16 @@ const MessageList = ({ activeKey, setActiveKey }) => {
           }
         </Tabs>
       ) : (
-        <>
-        {/* 通过isHiedQuestion控制学生端消息列表/提问列表的显示隐藏 */}
-          <Flex flexDirection="column" className="member-msg" style={{display: isHiedQuestion ? '' : 'none'}}>
+          <>
+            {/* 通过isHiedQuestion控制学生端消息列表/提问列表的显示隐藏 */}
+            <Flex flexDirection="column" className="member-msg" style={{ display: isHiedQuestion ? '' : 'none' }}>
               {Number(isTeacher) === 2 && <div className="qa-student-tips">
                 提示：提问内容仅你和老师可见
               </div>}
               {isLoadGif && <div className='load'></div>}
               <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
             </Flex>
-            <div className="member-msg" id="chat-box-tag" style={{display: isHiedQuestion ? 'none' : ''}}>
+            <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
               {isLoadGif && <div className='load'></div>}
               {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
 

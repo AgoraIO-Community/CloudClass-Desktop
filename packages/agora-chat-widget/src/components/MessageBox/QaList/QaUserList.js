@@ -23,13 +23,23 @@ const QaUserList = ({ getClickUser, tabKey }) => {
     // 根据 时间进行排序
     let sortArr = _.orderBy(newUser, ['time'], ['desc'])
 
-
     // 拿到需要回复提问者id
     const getUser = (user) => {
-        getClickUser(user)
+        // getClickUser(user)
         setCurrentUser(user)
         store.dispatch(removeShowRed(user))
     }
+
+    useEffect(() => {
+        if (currentUser === '') {
+            getClickUser(sortArr[0].id)
+            getUser(sortArr[0].id)
+        } else {
+            getClickUser(sortArr[0].id)
+            getUser(currentUser)
+        }
+    }, [tabKey === CHAT_TABS_KEYS.qa])
+
     // 在当前聊天页，收到新消息不展示红点
     useEffect(() => {
         if (qaList[currentUser]) {

@@ -3,6 +3,10 @@
 export const extData = data => {
     return { type: 'SAVE_EXT_DATA', data }
 }
+// 是否已登陆
+export const isLogin = data => {
+    return { type: 'IS_LOGIN', data }
+}
 // 登陆ID
 export const LoginName = data => {
     return { type: 'LOGIN_NAME', data }

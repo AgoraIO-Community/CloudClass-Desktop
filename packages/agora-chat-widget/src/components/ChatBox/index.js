@@ -137,12 +137,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         setContent(tempContent.join(""));
         setSendBtnDisabled(tempCount === 0 || tempCount > INPUT_SIZE ? true : false)
     }
-    
+
     // 发送消息
     const sendMessage = (roomId, content) => (e) => {
         e.preventDefault();
         // 禁止发送状态下 不允许发送
-        if (sendBtnDisabled === true){
+        if (sendBtnDisabled === true) {
             return false;
         }
 
@@ -230,22 +230,32 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 },                       // 接收消息对象
                 chatType: 'chatRoom',               // 设置为单聊
                 onFileUploadError: function (err) {      // 消息上传失败
-                    console.log('onFileUploadError', err);
+                    console.log('onFileUploadError>>>', err);
+                    if (err.type === 101) {
+                        message.error('文件过大，请重新选择小于10M的图片！')
+                    }
+                    setTimeout(() => {
+                        message.destroy();
+                    }, 2000);
+                    couterRef.current.value = null
                 },
                 onFileUploadComplete: function (res) {   // 消息上传成功
-                    console.log('onFileUploadComplete', res);
+                    console.log('onFileUploadComplete>>>', res);
                 },
                 success: function () {                // 消息发送成功
                     store.dispatch(qaMessages(msg.body, msg.body.ext.asker, { showRed: false }, msg.body.ext.time));
+                    couterRef.current.value = null
                 },
                 fail: function (e) {
-                    console.log("Fail", e);              //如禁言、拉黑后发送消息会失败
+                    //如禁言、拉黑后发送消息会失败
+                    couterRef.current.value = null
                 },
                 flashUpload: WebIM.flashUpload
             };
             msg.set(option);
             WebIM.conn.send(msg.body);
         } else {
+            couterRef.current.value = null
             message.error('不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！')
             // message.error({
             //     content: '不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！',
@@ -276,12 +286,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         <div className='chat-box'>
             {/* 是否全局禁言 */}
             {!isTeacher && isAllMute && !isQa && <Flex className='msg-box-mute' flexDirection="column">
-                <img src={iconMute} className="mute-state-icon"/>
+                <img src={iconMute} className="mute-state-icon" />
                 <Text className='mute-msg'>全员禁言中</Text>
             </Flex>}
             {/* 是否被禁言 */}
             {(!isTeacher && isUserMute) && !isQa && <Flex className='msg-box-mute' flexDirection="column">
-                <img src={iconMute} className="mute-state-icon"/>
+                <img src={iconMute} className="mute-state-icon" />
                 <Text className='mute-msg'>你已被老师禁言，请谨慎发言哦</Text>
             </Flex>}
             {/* 不禁言展示发送框 */}
@@ -295,24 +305,24 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 <Flex justifyContent='flex-start' alignItems='center'>
                     {isEmoji && <ShowEomji getEmoji={getEmoji} hideEmoji={hideEmoji} />}
                     <RcTooltip placement="top" overlay="表情">
-                        <img src={iconSmiley} onClick={showEmoji} className="chat-tool-item"/>
+                        <img src={iconSmiley} onClick={showEmoji} className="chat-tool-item" />
                     </RcTooltip>
-                    {isTool 
-                    && <RcTooltip placement="top" overlay="图片">
-                        <div onClick={updateImage} className="chat-tool-item">
+                    {isTool
+                        && <RcTooltip placement="top" overlay="图片">
+                            <div onClick={updateImage} className="chat-tool-item">
                                 <img src={iconImage} />
-                            {/* <Image src={icon_img} width='18px' background='#D3D6D8' ml='8px' /> */}
-                            <input
-                                id="uploadImage"
-                                onChange={sendImgMessage.bind(this, roomId)}
-                                type="file"
-                                ref={couterRef}
-                                style={{
-                                    display: 'none'
-                                }}
+                                {/* <Image src={icon_img} width='18px' background='#D3D6D8' ml='8px' /> */}
+                                <input
+                                    id="uploadImage"
+                                    onChange={sendImgMessage.bind(this, roomId)}
+                                    type="file"
+                                    ref={couterRef}
+                                    style={{
+                                        display: 'none'
+                                    }}
                                 />
-                        </div>
-                    </RcTooltip>}
+                            </div>
+                        </RcTooltip>}
                 </Flex>
                 <div>
                     {/* 输入框中placeholder：
