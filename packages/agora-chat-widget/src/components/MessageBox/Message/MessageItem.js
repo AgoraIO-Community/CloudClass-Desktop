@@ -51,7 +51,6 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
     let isCmdMsg = message.contentsType === 'COMMAND' || message.type === "cmd"
     let isShowIcon = (Number(isTeacher) === 1 || Number(isTeacher) === 3)
 
-
     return (
         <div key={message.id}>
             {
@@ -70,7 +69,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                             {/* 头像 */}
                             <img className="avatar" src={message.ext.avatarUrl || avatarUrl} />
                             {/* 是否禁言的状态标志 */}
-                            {!isShowIcon && <img className="mute-status"
+                            {!(message.ext.role === 1 || message.ext.role === 3) && <img className="mute-status"
                                 src={iconForbid}
                                 style={{ display: !roomMuteList.includes(message.from) ? 'none' : 'block' }}></img>}
                         </div>

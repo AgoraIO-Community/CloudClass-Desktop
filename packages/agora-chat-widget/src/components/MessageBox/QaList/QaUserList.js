@@ -31,12 +31,14 @@ const QaUserList = ({ getClickUser, tabKey }) => {
     }
 
     useEffect(() => {
-        if (currentUser === '') {
-            getClickUser(sortArr[0].id)
-            getUser(sortArr[0].id)
-        } else {
-            getClickUser(sortArr[0].id)
-            getUser(currentUser)
+        if (sortArr.length > 0) {
+            if (currentUser === '') {
+                getClickUser(sortArr[0].id)
+                getUser(sortArr[0].id)
+            } else {
+                getClickUser(sortArr[0].id)
+                getUser(currentUser)
+            }
         }
     }, [tabKey === CHAT_TABS_KEYS.qa])
 
