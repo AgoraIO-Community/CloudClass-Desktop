@@ -428,7 +428,9 @@ export class MediaStore {
           kind: 'toast',
           id: uuidv4()
         })
-        this.appStore.pretestStore.muteCamera()
+        if (this.appStore.pretestStore.cameraList.length === 1) {
+          this.appStore.pretestStore.muteCamera()
+        }
       }
     })
     this.mediaService.on('localAudioStateChanged', (evt: any) => {
