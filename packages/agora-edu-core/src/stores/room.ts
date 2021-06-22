@@ -1065,6 +1065,11 @@ export class RoomStore extends SimpleInterval {
         region: region,
         userProperties: this.appStore.params.config.userFlexProperties
       })
+
+      if (this.isAssistant) {
+        this.appStore.pretestStore.muteCamera()
+        this.appStore.pretestStore.muteMicrophone()
+      }
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
       this.classroomSchedule = {
@@ -1595,6 +1600,10 @@ export class RoomStore extends SimpleInterval {
       }
       // this.sceneStore.canChatting = !roomInfo.roomStatus.isStudentChatAllowed
 
+      // if (this.isAssistant) {
+      //   this.sceneStore.mediaService.disableLocalAudio()
+      //   this.sceneStore.mediaService.disableLocalVideo()
+      // }
       await this.sceneStore.joinRTC({
         uid: +mainStream.streamUuid,
         channel: roomInfo.roomInfo.roomUuid,

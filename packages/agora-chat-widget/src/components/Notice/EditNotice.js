@@ -43,7 +43,7 @@ const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView}) => {
             ></TextArea>
             {
                 hasEditPermisson && <div>
-                    <Flex justifyContent='flex-end' mb='16px' fontSize={12} color='#626773'>{count}/NOTICE_INPUT_LENGTH</Flex>
+                    <Flex justifyContent='flex-end' mb='16px' fontSize={12} color='#626773'>{count}/{NOTICE_INPUT_LENGTH}</Flex>
                     <Button disabled={count === 0 || count > 300} variant='primary' className='save-btn' onClick={() => {
                         updateRoomNotice(roomId, newContent);
                         onView();

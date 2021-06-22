@@ -11,7 +11,7 @@ const Modal = ({ show = 'none', setShow, content, onOk }) => {
   return (
     <div style={{ display: show }}>
       <div className="mask"></div>
-      <div className="card">
+      <div className="im-content-card">
         <div className="card-txt">{content}</div>
         <Flex justifyContent="center">
           <div className="cancle-btn" onClick={() => {setShow('none')}}>取消</div>

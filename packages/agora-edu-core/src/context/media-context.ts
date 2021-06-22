@@ -58,7 +58,7 @@ export const useMediaContext = (): MediaContext => {
 
     const stopPreview = () => {
       stopDeviceTestError()
-      sceneStore.disableLocalAudio()
+      sceneStore.disableLocalAudio2()
       sceneStore.disableLocalVideo2()
     }
   
