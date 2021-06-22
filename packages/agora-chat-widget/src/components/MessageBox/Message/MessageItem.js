@@ -51,6 +51,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
     let isCmdMsg = message.contentsType === 'COMMAND' || message.type === "cmd"
     let isShowIcon = (Number(isTeacher) === 1 || Number(isTeacher) === 3)
 
+
     return (
         <div key={message.id}>
             {
