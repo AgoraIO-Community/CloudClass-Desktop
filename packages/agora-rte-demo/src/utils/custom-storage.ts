@@ -113,6 +113,15 @@ export class PersistLocalStorage {
     }
   }
 
+  saveSkipGuide() {
+    this.storage.setItem("skip.guide.cr", "true")
+  }
+
+  getSkipGuide() {
+    const str = this.storage.getItem("skip.guide.cr")
+    return str === "true"
+  }
+
 }
 
 export const GlobalStorage = new CustomStorage();

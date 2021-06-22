@@ -34,6 +34,7 @@ import { QuickTypeEnum } from '@/types/global';
 import { filterChatText } from '@/utils/utils';
 import { controller } from '@/edu-sdk/controller'
 import { TimeFormatType } from './statistics';
+import { storage } from '@/utils/custom-storage';
 
 dayjs.extend(duration)
 
@@ -216,6 +217,15 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   @observable
   windowHeight: number = 0
+
+  @observable
+  actionBarClientX: number = 0
+
+  @observable
+  actionBarClientY: number = 0
+
+  @observable
+  actionBarClientHeight: number = 0
 
   @observable
   highlightCount: number = 0
@@ -1154,6 +1164,11 @@ export class AcadsocRoomStore extends SimpleInterval {
       }).then(() => {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
+
+      if(this.isTeacher && !storage.getSkipGuide()) {
+        // display guide if not yet skipped
+        this.appStore.uiStore.guideVisible = true
+      }
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()

@@ -11,6 +11,7 @@ import { useBoardStore, useHomeUIStore } from '@/hooks';
 import { workerPath } from '@/edu-sdk/controller';
 import { useStorageSW } from '@/utils/utils';
 import { CourseReplacerContent } from '../components/course-replacer';
+import { PopoverGuides } from '@/components/popover-guide';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -68,6 +69,7 @@ export const RoomContainer = (props: RoomContainerProps) => {
           <AcadsocToast />
           <BrushToastContent />
           <CourseReplacerContent />
+          <PopoverGuides />
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>

@@ -1,10 +1,10 @@
 import { INavigationItem, Navigation, ActionButtons, StartView, Assistant, ExitButton, ISignalStatus } from 'agora-aclass-ui-kit'
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useEffect } from 'react'
 import { dialogManager } from 'agora-aclass-ui-kit'
 import { useAcadsocRoomStore, useSceneStore, useStatsStore, useUIStore, useMediaStore,useAppStore } from '@/hooks'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
-import { get } from 'lodash'
+import { get, throttle } from 'lodash'
 import { SignalBar } from './signal/signal'
 import { EduManager, EduRoleTypeEnum } from 'agora-rte-sdk'
 import Button from '@material-ui/core/Button';
@@ -145,8 +145,32 @@ const SignalBarContainer = observer(() => {
 
 const ActionBarContainer = observer(() => {
   const uiStore = useUIStore()
-
   const roomStore = useAcadsocRoomStore()
+  const actionBarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if(actionBarRef.current) {
+      let rect = actionBarRef.current.getBoundingClientRect()
+      roomStore.actionBarClientHeight = rect.height
+      roomStore.actionBarClientX = rect.left
+      roomStore.actionBarClientY = rect.top
+    }
+
+    const onResize = () => {
+      if(actionBarRef.current) {
+        let rect = actionBarRef.current.getBoundingClientRect()
+        roomStore.actionBarClientHeight = rect.height
+        roomStore.actionBarClientX = rect.left
+        roomStore.actionBarClientY = rect.top
+      }
+    }
+    window.addEventListener('resize', throttle(onResize, 200))
+    onResize()
+    return () => {
+      window.removeEventListener('resize', onResize)
+    }
+  }, [actionBarRef.current])
+
 
   const handleSetting = useCallback(() => {
     if (uiStore.aclassVisible) {
@@ -230,7 +254,9 @@ const ActionBarContainer = observer(() => {
     buttonArr
 
   return (
-    <ActionButtons buttonArr={buttonArr} />
+    <div ref={actionBarRef}>
+      <ActionButtons buttonArr={buttonArr} />
+    </div>
   )
 })
 
@@ -245,9 +271,6 @@ const actionBar: IStatusBar = [{
   isComponent: true,
   componentKey: "exitButton",
   renderItem: () => {
-
-    const history = useHistory()
-    const acadsocRoomStore = useAcadsocRoomStore()
     const appStore = useAppStore()
 
     const onExitRoom = () => {

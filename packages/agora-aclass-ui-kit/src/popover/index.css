@@ -1,0 +1,27 @@
+.agpopover.rc-tooltip-placement-bottom {
+    opacity: 1;
+}
+
+.agpopover .rc-tooltip-inner {
+    background: #DEF4FF;
+}
+
+.agpopover.rc-tooltip-placement-bottom .rc-tooltip-arrow {
+    border-bottom-color: #DEF4FF;
+}
+
+.agpopover.rc-tooltip-placement-bottom.rc-tooltip-hidden {
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    display: block;
+}
+
+.agpopover.rc-tooltip-placement-bottom {
+    transform: translateY(0px);
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.2s ease-in-out;
+    display: block;
+}

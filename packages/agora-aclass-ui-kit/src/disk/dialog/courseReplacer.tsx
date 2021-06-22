@@ -66,7 +66,7 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
           <div className={cls}>
             {
               totalPages > 1 ? 
-                <div className={activeIdx !== 0 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx - 1)}}>{"< 上一页"}</div>
+                <div className={activeIdx !== 0 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx - 1)}}>{"< Prev"}</div>
                 : null
             }
             {
@@ -78,7 +78,7 @@ const CoursePaging: React.FC<CoursePagingProps> = ({
                 )
               })
             }
-            {totalPages > 1 ? <div className={activeIdx !== totalPages - 1 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx + 1)}}>{"下一页 >"}</div> : null}
+            {totalPages > 1 ? <div className={activeIdx !== totalPages - 1 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx + 1)}}>{"Next >"}</div> : null}
           </div>
         )
       }}
@@ -139,7 +139,7 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
     }}>
       <div style={style} className={cls}>
         <div className="course-replacer-header">
-          <div>Search Material</div>
+          <div>Courseware Query</div>
           <div className="course-replacer-close-btn" onClick={onClose}>
             <img src={CloseIcon} />
           </div>

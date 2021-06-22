@@ -22,6 +22,7 @@ let uid = 0
 
 const arrays = []
 
+
 export const Dialogs = () => {
   // const
   const onClick = () => {

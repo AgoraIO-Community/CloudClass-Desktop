@@ -17,6 +17,15 @@ type RoomTypesList = {
 }
 
 
+export type NoviceGuide = {
+  title:string,
+  content:string,
+  anchorX: number,
+  anchorY: number,
+  anchorWidth: number,
+  anchorHeight: number
+}
+
 export class UIStore {
 
   static roomTypes: RoomTypesList[] = [
@@ -105,6 +114,9 @@ export class UIStore {
 
   @observable
   dialogs: any[] = []
+
+  @observable
+  guideVisible: boolean = false
 
   @observable
   activeTab: string = 'chatroom'
