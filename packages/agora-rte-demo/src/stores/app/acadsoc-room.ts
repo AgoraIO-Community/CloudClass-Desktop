@@ -1165,9 +1165,13 @@ export class AcadsocRoomStore extends SimpleInterval {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
 
-      if(this.isTeacher && !storage.getSkipGuide()) {
-        // display guide if not yet skipped
-        this.appStore.uiStore.guideVisible = true
+      try {
+        if(this.isTeacher && !storage.getSkipGuide()) {
+          // display guide if not yet skipped
+          this.appStore.uiStore.guideVisible = true
+        }
+      } catch(e) {
+        BizLogger.info(`[demo] switching guide visible failed ${e.message}`)
       }
     } catch (err) {
       this.eduManager.removeAllListeners()
