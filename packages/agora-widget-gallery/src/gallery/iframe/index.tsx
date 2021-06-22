@@ -1,4 +1,5 @@
 import * as React from 'react';
+//@ts-ignore
 import type {AgoraWidgetHandle, AgoraWidgetContext, IAgoraWidget} from 'agora-edu-core'
 import { observer, Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
@@ -20,7 +21,8 @@ const App: React.FC<AppProps> = observer((props) => {
 
   return (
     <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-      <iframe style={{width:'100%',height:'100%'}} src={`https://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe>
+      {/* <iframe style={{width:'100%',height:'100%'}} src={`https://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe> */}
+      <iframe style={{width:'100%',height:'100%'}} src={`http://127.0.0.1:3001/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe>
     </div>
   )
 })

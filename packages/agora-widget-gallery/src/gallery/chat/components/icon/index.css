@@ -8,7 +8,7 @@
 }
 
 .iconfont {
-  font-family: 'iconfont' !important;
+  font-family: 'iconfont';
   font-size: 24px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -135,9 +135,9 @@
   content: '\e684';
 }
 
-.icon-pen:before {
+/* .icon-pen:before {
   content: '\e685';
-}
+} */
 
 .icon-exit:before {
   content: '\e686';
@@ -231,9 +231,9 @@
   content: '\e692';
 }
 
-.icon-line:before {
+/* .icon-line:before {
   content: '\e69b';
-}
+} */
 
 .icon-color:before {
   content: '\e69c';
@@ -252,13 +252,13 @@
   opacity: 0.5;
 }
 
-.icon-square:before {
+/* .icon-square:before {
   content: '\e69d';
 }
 
 .icon-circle:before {
   content: '\e69e';
-}
+} */
 
 .icon-close:before {
   content: '\e69f';
@@ -287,3 +287,5 @@
 .svg-icon {
   display: inline-flex;
 }
+
+@import "../icon/assets/jh-icon/iconfont.css";

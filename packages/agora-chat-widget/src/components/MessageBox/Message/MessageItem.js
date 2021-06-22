@@ -70,7 +70,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                             {/* 头像 */}
                             <img className="avatar" src={message.ext.avatarUrl || avatarUrl} />
                             {/* 是否禁言的状态标志 */}
-                            {!isShowIcon && <img className="mute-status"
+                            {!(message.ext.role === 1 || message.ext.role === 3) && <img className="mute-status"
                                 src={iconForbid}
                                 style={{ display: !roomMuteList.includes(message.from) ? 'none' : 'block' }}></img>}
                         </div>

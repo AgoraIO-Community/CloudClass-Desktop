@@ -2,10 +2,12 @@ import { Chat, SimpleChat } from './components/chat'
 import * as React from 'react';
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { get } from 'lodash';
+//@ts-ignore
 import type {AgoraWidgetHandle, IAgoraWidget} from 'agora-edu-core'
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
+//@ts-ignore
 import {AgoraWidgetContext} from 'agora-edu-core'
 import ReactDOM from 'react-dom';
 import { ChatEvent, ChatListType, Conversation, Message } from './components/chat/interface';

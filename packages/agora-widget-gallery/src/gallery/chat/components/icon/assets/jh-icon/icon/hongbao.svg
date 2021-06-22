@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>红包</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FF6680" offset="0%"></stop>
+            <stop stop-color="#FF3333" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FF6680" offset="0%"></stop>
+            <stop stop-color="#FF3333" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#FFE566" offset="0%"></stop>
+            <stop stop-color="#FFBB33" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="主讲" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="主讲/直播/屏幕共享" transform="translate(-678.000000, -659.000000)">
+            <g id="Group-16" transform="translate(8.000000, 640.000000)">
+                <g id="Group-7-Copy-5" transform="translate(652.000000, 13.000000)">
+                    <g id="红包" transform="translate(18.000000, 6.000000)">
+                        <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="20" height="20"></rect>
+                        <g id="Group-18-Copy">
+                            <rect id="Rectangle" fill="#D8D8D8" opacity="0" x="0" y="0" width="20" height="20"></rect>
+                            <rect id="Rectangle" fill="url(#linearGradient-1)" x="2.5" y="1.25" width="15" height="17.5" rx="2.5"></rect>
+                            <path d="M17.5,3.75 L17.5,6.875 L17.5,6.875 C16.8756283,6.875 16.3164781,7.052508 15.5718954,7.44961874 L15.2108902,7.64938594 L14.5288368,8.04265196 C12.9193999,8.96233023 11.7157797,9.375 10,9.375 C8.41620334,9.375 7.268803,9.02337606 5.83578568,8.2459282 L4.54072009,7.51047435 C4.50235815,7.48948374 4.46505123,7.46932362 4.42810458,7.44961874 C3.77659477,7.10214684 3.26705668,6.92280829 2.7315717,6.8834029 L2.5,6.875 L2.5,3.75 C2.5,2.36928813 3.61928813,1.25 5,1.25 L15,1.25 C16.3807119,1.25 17.5,2.36928813 17.5,3.75 Z" id="Path-23" fill="url(#linearGradient-2)"></path>
+                            <path d="M17.5,5.625 L17.5,6.875 C16.8756283,6.875 16.3164781,7.052508 15.5718954,7.44961874 L15.2108902,7.64938594 L14.5288368,8.04265196 C12.9193999,8.96233023 11.7157797,9.375 10,9.375 C8.41620334,9.375 7.268803,9.02337606 5.83578568,8.2459282 L4.54072009,7.51047435 C4.50235815,7.48948374 4.46505123,7.46932362 4.42810458,7.44961874 C3.77659477,7.10214684 3.26705668,6.92280829 2.7315717,6.8834029 L2.5,6.875 L2.5,5.625 C3.36173937,5.625 4.10651073,5.86143535 5.01633987,6.34667756 L5.40496459,6.5616202 L6.09133684,6.95734804 C7.52877487,7.7787412 8.53869638,8.125 10,8.125 C11.3395283,8.125 12.2997703,7.83404642 13.5577016,7.15287227 L14.8609981,6.41294482 C14.902534,6.39022645 14.9431723,6.36827108 14.9836601,6.34667756 C15.7923971,5.91535116 16.4707181,5.68061288 17.2166988,5.63377384 L17.5,5.625 Z" id="Path-23" fill="#FFFFFF" opacity="0.400000006"></path>
+                            <circle id="Oval" fill="url(#linearGradient-3)" cx="10" cy="8.75" r="2.5"></circle>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

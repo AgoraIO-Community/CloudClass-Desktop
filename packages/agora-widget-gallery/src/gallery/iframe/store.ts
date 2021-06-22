@@ -1,4 +1,5 @@
 import { action, observable, computed, runInAction, autorun } from 'mobx';
+//@ts-ignore
 import type {AgoraWidgetContext} from 'agora-edu-core'
 
 export class PluginStore {

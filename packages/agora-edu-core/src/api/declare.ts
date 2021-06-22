@@ -157,7 +157,14 @@ export type AppStoreConfigParams = {
   recordUrl: string,
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
-  userFlexProperties?: {[key: string]: any}
+  userFlexProperties?: {[key: string]: any},
+  mediaOptions?: {
+    videoEncoderConfiguration: {
+      width: number;
+      height: number;
+      frameRate: number;
+    }
+  }
 }
 
 export type LanguageEnum = "en" | "zh"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers } from './redux/aciton'
+import { isLogin,roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers } from './redux/aciton'
 import WebIM, { appkey } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -43,10 +43,14 @@ const App = function (props) {
 
   WebIM.conn.listen({
     onOpened: () => {
+      store.dispatch(isLogin(true))
       joinRoom();
       // setTimeout(() => {
       //   history.push(`/chatroom?chatRoomId=${iframeData.chatRoomId}&roomUuid=${iframeData.roomUuid}&roleType=${iframeData.roleType}&userUuid=${iframeData.userUuid}&avatarUrl=${iframeData.avatarUrl}&org=${iframeData.org}&apk=${iframeData.apk}&nickName=${iframeData.nickName}`)
       // }, 500);
+    },
+    onClosed: () => {
+      store.dispatch(isLogin(false))
     },
     // 文本消息
     onTextMessage: (message) => {

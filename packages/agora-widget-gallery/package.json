@@ -48,6 +48,7 @@
     "@types/ua-parser-js": "0.7.35",
     "@types/uuid": "8.3.0",
     "agora-classroom-sdk": "1.1.0",
+    "agora-edu-core": "1.1.2",
     "ali-oss": "6.13.1",
     "babel-loader": "8.2.2",
     "cross-env": "6.0.3",
@@ -75,7 +76,6 @@
     "postcss-loader": "4.0.3"
   },
   "dependencies": {
-    "dayjs": "1.10.4",
-    "agora-chat-widget": "1.0.0"
+    "dayjs": "1.10.4"
   }
 }

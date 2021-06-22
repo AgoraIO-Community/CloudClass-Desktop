@@ -200,6 +200,11 @@ export declare interface RTCProviderInitParams {
   electronLogPath?: {
     logPath: string;
     videoSourceLogPath: string;
+  };
+  resolution?: {
+    width: number;
+    height: number;
+    frameRate: number;
   }
 }
 

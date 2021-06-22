@@ -31,6 +31,7 @@ const QaUserList = ({ getClickUser, tabKey }) => {
     }
 
     useEffect(() => {
+       if (sortArr.length > 0) {
         if (currentUser === '') {
             getClickUser(sortArr[0].id)
             getUser(sortArr[0].id)
@@ -38,6 +39,7 @@ const QaUserList = ({ getClickUser, tabKey }) => {
             getClickUser(sortArr[0].id)
             getUser(currentUser)
         }
+       }
     }, [tabKey === CHAT_TABS_KEYS.qa])
 
     // 在当前聊天页，收到新消息不展示红点

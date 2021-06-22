@@ -67,7 +67,7 @@ export class EduManager extends EventEmitter {
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId,
       rtcArea: this.config.rtcArea ?? "GLOBAL",
-      rtmArea: this.config.rtmArea ?? "GLOBAL"
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -75,6 +75,7 @@ export class EduManager extends EventEmitter {
         videoSourceLogPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/videosource.log` : (window.videoSourceLogPath || ""),
       }
       buildOption.agoraSdk = this.config.agoraRtc
+      buildOption.resolution = this.config.resolution
     }
     this._mediaService = new MediaService(buildOption)
     if (EduManager._debug) {

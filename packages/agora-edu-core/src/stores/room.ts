@@ -1066,9 +1066,11 @@ export class RoomStore extends SimpleInterval {
         userProperties: this.appStore.params.config.userFlexProperties
       })
 
-      if (this.isAssistant) {
+      if (this.isAssistant || this.isStudent) {
         this.appStore.pretestStore.muteCamera()
         this.appStore.pretestStore.muteMicrophone()
+        this.appStore.pretestStore.mediaService.disableLocalAudio()
+        this.appStore.pretestStore.mediaService.disableLocalVideo()
       }
       EduLogger.info("## classroom ##: checkIn:  ", JSON.stringify(checkInResult))
       this.timeShift = checkInResult.ts - dayjs().valueOf()
@@ -1263,7 +1265,7 @@ export class RoomStore extends SimpleInterval {
           const tag = uuidv4()
           BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `, JSON.stringify(evt))
           if (evt.type === 'main') {
-            if (this.isAssistant) {
+            if (this.isAssistant || this.isStudent) {
               return
             }
             const localStream = roomManager.getLocalStreamData()
@@ -1791,6 +1793,14 @@ export class RoomStore extends SimpleInterval {
   @computed
   get isAssistant() {
     if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.assistant) {
+      return true
+    }
+    return false
+  }
+
+  @computed
+  get isStudent() {
+    if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
       return true
     }
     return false

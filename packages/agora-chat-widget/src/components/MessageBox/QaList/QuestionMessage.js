@@ -14,9 +14,13 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
     const idQaList = qaList[userName] !== undefined;
 
     useEffect(() => {
+        scrollPageBottom()
+    }, [qaList[userName]])
+
+    const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')
         scrollElementToBottom(scrollElement)
-    }, [qaList[userName]])
+    }
 
     return (
         <div className="student-qa-list" id="qa-box-tag">
@@ -46,7 +50,7 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                                         </Flex>
                                     </div>
                                     {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                                    {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} />}
+                                    {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} />}
                                 </Flex>
                             </Flex>
                         )

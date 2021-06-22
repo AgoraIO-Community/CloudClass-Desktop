@@ -205,7 +205,12 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
-        scenarioType: roomInfoParams?.roomType
+        scenarioType: roomInfoParams?.roomType,
+        resolution: {
+          width: this.params.config.mediaOptions!.videoEncoderConfiguration.width,
+          height: this.params.config.mediaOptions!.videoEncoderConfiguration.height,
+          frameRate: this.params.config.mediaOptions!.videoEncoderConfiguration.frameRate,
+        }
       })
     } else {
       this.eduManager = new EduManager({
@@ -220,16 +225,21 @@ export class EduScenarioAppStore {
         rtcArea: config.rtcArea,
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
-        scenarioType: roomInfoParams?.roomType
+        scenarioType: roomInfoParams?.roomType,
+        resolution: {
+          width: this.params.config.mediaOptions!.videoEncoderConfiguration.width,
+          height: this.params.config.mediaOptions!.videoEncoderConfiguration.height,
+          frameRate: this.params.config.mediaOptions!.videoEncoderConfiguration.frameRate,
+        }
       })
     }
 
     if (isEmpty(roomInfoParams)) {
       this.load()
       autorun(() => {
-        const data = toJS(this)
+        const roomInfo = toJS(this.roomInfo)
         GlobalStorage.save('agora_edu_room', {
-          roomInfo: data.roomInfo,
+          roomInfo: roomInfo,
         })
         this
       })
@@ -242,9 +252,9 @@ export class EduScenarioAppStore {
     }
 
     autorun(() => {
-      const data = toJS(this)
+      const deviceInfo = toJS(this.deviceInfo)
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo: data.deviceInfo
+        deviceInfo: deviceInfo
       })
     })
 
@@ -321,7 +331,7 @@ export class EduScenarioAppStore {
         sdkDomain: this.params.config.sdkDomain,
         rtmUid: this.params.config.rtmUid,
         rtmToken: this.params.config.rtmToken,
-        recordUrl: this.params.config.recordUrl
+        recordUrl: this.params.config.recordUrl,
       },
       mainPath: this.params.mainPath,
       roomPath: this.params.roomPath,

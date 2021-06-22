@@ -49,7 +49,8 @@ export class MediaService extends EventEmitter implements IMediaService {
         videoSourceLogPath: electronLogPath.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,
         appId: rtcProvider.appId,
-        area: rtcProvider.rtcArea
+        area: rtcProvider.rtcArea,
+        resolution: rtcProvider.resolution
       })
       window.ipc && window.ipc.once("initialize", (events: any, args: any) => {
         const logPath = args[0]
