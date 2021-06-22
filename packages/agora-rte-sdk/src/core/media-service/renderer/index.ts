@@ -123,11 +123,11 @@ export class LocalUserRenderer extends UserRenderer {
         // TODO: cef
         this.electron.client.setupLocalVideo(dom)
         //@ts-ignore
-        this.electron.client.setupViewContentMode(+this.uid, 0);
+        this.electron.client.setupViewContentMode('local', fit ? 1 : 0);
       } else {
         this.electron.client.setupLocalVideoSource(dom)
         //@ts-ignore
-        this.electron.client.setupViewContentMode('videosource', 1);
+        this.electron.client.setupViewContentMode('videosource', fit ? 1 : 0);
       }
       this.electron.client.setClientRole(1)
       EduLogger.info('Raw Message: setClientRole(1) in LocalUserRenderer')

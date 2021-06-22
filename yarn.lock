@@ -19650,7 +19650,7 @@ proto-list@~1.2.1:
   resolved "https://registry.npm.taobao.org/proto-list/download/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
   integrity sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=
 
-protobufjs@6.11.2:
+protobufjs@6.11.2, protobufjs@^6.11.2:
   version "6.11.2"
   resolved "https://registry.nlark.com/protobufjs/download/protobufjs-6.11.2.tgz?cache=0&sync_timestamp=1619804321279&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprotobufjs%2Fdownload%2Fprotobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
   integrity sha1-3jn6vU7TK+qgjpux4w0IVEwe34s=
@@ -26087,10 +26087,10 @@ white-web-sdk@2.12.14:
     uuid "^7.0.3"
     xml-js "^1.6.11"
 
-white-web-sdk@2.12.19:
-  version "2.12.19"
-  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.12.19.tgz#54b972fc0d74fe08400c977d99dcc9ed6552e6e8"
-  integrity sha1-VLly/A10/ghADJd9mdzJ7WVS5ug=
+white-web-sdk@2.13.6:
+  version "2.13.6"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.6.tgz#8e45d022af3deba20412081565d72cfaa6e522da"
+  integrity sha1-jkXQIq8966IEEggVZdcs+qblIto=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
@@ -26102,6 +26102,7 @@ white-web-sdk@2.12.19:
     mobx "^4.15.7"
     mobx-react "^5.4.4"
     numeric "^1.2.6"
+    protobufjs "^6.11.2"
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"

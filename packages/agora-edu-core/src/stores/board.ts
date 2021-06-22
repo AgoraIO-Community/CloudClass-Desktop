@@ -6,7 +6,7 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
-import { ConvertedFile, CourseWareItem } from '../api/declare';
+import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -65,7 +65,7 @@ export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index+1}`,
       componentCount: 1,
       ppt: {
@@ -362,7 +362,7 @@ export class BoardStore extends ZoomController {
   }
 
   loadScene(data: any[]): SceneDefinition[] {
-    return data.map((item: ConvertedFile, index: number) => ({
+    return data.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index + 1}`,
       componentCount: 1,
       ppt: {
