@@ -64,6 +64,7 @@ export const RecordPage = observer(() => {
       //   )
       // }
       // launchOption.extApps = [new AgoraExtAppCountDown(), new AgoraExtAppWhiteboard()]
+      //@ts-ignore
       roomRef.current = await AgoraEduSDK.launch(dom, {
         // ...launchOption,
         userUuid,

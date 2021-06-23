@@ -130,6 +130,13 @@ export type LaunchOption = {
   region?: AgoraRegion;
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
+  mediaOptions: {
+    videoEncoderConfiguration: {
+      width: number;
+      height: number;
+      frameRate: number;
+    }
+  }
 };
 
 export type ReplayOption = {
@@ -285,6 +292,7 @@ export class AgoraEduSDK {
           extApps: option.extApps,
           widgets: { ...{ chat: new AgoraHXChatWidget() }, ...option.widgets },
           userFlexProperties: option.userFlexProperties,
+          mediaOptions: option.mediaOptions,
         },
         language: option.language,
         startTime: option.startTime,
