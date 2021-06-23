@@ -103,6 +103,60 @@ module.exports = {
         // ]
       },
       {
+        test: /\.js(x)?$/i,
+        include: [
+          // path.resolve("src"),
+          path.resolve(__dirname, '../agora-chat-widget/src'),
+        ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    "useBuiltIns": "usage",
+                    "debug": false,
+                    "corejs": {
+                      "version": 3,
+                      "proposals": true
+                    }
+                  }
+                ],
+                [
+                  "@babel/preset-react",
+                  {
+                    "runtime": "automatic"
+                  }
+                ],
+                // "@babel/preset-react",
+              ],
+              plugins: [
+                "@babel/plugin-proposal-object-rest-spread",
+                "@babel/plugin-proposal-optional-chaining",
+                "@babel/plugin-proposal-nullish-coalescing-operator",
+                [
+                  "@babel/plugin-proposal-decorators",
+                  {
+                    "legacy": true
+                  }
+                ],
+                [
+                  "@babel/plugin-proposal-class-properties",
+                  {
+                    "loose": true
+                  }
+                ]
+              ]
+            }
+          },
+          {
+            loader: "thread-loader",
+          }
+        ],
+      },
+      {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -191,6 +245,7 @@ module.exports = {
       // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
       {
         test: /\.js$/,
+        exclude: [path.resolve(__dirname, '../agora-chat-widget/src')],
         loader: require.resolve('@open-wc/webpack-import-meta-loader'),
       }
     ],
