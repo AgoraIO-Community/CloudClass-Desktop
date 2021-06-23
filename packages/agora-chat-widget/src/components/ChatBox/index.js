@@ -64,7 +64,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     //  消息中的提问用户名
     let requestUser = '';
     //  当前登陆ID 
-    let loginId = WebIM.conn.context.userId;
+    let loginId = useSelector(state => state.loginName);
     //  从当前登陆用户取的属性头像
     let avatarUrl = userInfo.avatarurl;
     //  从当前登陆用户取的属性昵称
@@ -143,6 +143,9 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     // 发送消息
     const sendMessage = (roomId, content) => (e) => {
         e.preventDefault();
+        console.log('sendBtnDisabled>>',sendBtnDisabled);
+        console.log('roomId>>',roomId,'content>>',content);
+        
         // 禁止发送状态下 不允许发送
         if (sendBtnDisabled === true) {
             return false;
@@ -190,10 +193,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 } else {
                     store.dispatch(roomMessages(msg.body, { showNotice: !activeKey }));
                 }
+                
                 setContent('');
                 setCount(0);
             },                               // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
             fail: function (err) {
+                
                 if (err.type === 501) {
                     setIsShow(true);
                     setShowText(TEXT_ERROR)
