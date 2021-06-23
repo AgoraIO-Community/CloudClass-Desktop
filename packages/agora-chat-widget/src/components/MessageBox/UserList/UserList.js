@@ -79,9 +79,9 @@ const UserList = ({ roomUserList }) => {
         }
     }
 
-    useEffect(() => {
-        getRoomUsers(currentPage, ROOM_PAGESIZE, roomId)
-    }, [])
+    // useEffect(() => {
+    //     getRoomUsers(currentPage, ROOM_PAGESIZE, roomId)
+    // }, [])
 
     // 监听滚动条事件，滚动加载成员
     const userRef = useRef()
@@ -132,10 +132,10 @@ const UserList = ({ roomUserList }) => {
                                         <Image className='list-user-img'
                                             src={item.avatarurl || avatarUrl}
                                         />
-                                        {Number(item.ext) === 2 && muteMembers.includes(item.id)&&
-                                        <Image className='list-user-forbid'
-                                            src={forbid}
-                                        />}
+                                        {Number(item.ext) === 2 && muteMembers.includes(item.id) &&
+                                            <Image className='list-user-forbid'
+                                                src={forbid}
+                                            />}
                                     </div>
                                     <Flex ml='8px' alignItems='center'>
                                         {Number(item.ext) === 1 && <Tag className='tags' ><Text className='tags-txt' ml='4px' mt='1px'>主讲老师</Text></Tag>}
@@ -144,16 +144,16 @@ const UserList = ({ roomUserList }) => {
                                     </Flex>
                                 </Flex>
 
-                                {Number(item.ext) === 2 
-                                && <RcTooltip placement="top" overlay={muteMembers.includes(item.id) ? '解除禁言' : '禁言'} >
-                                    <div className='voice-img-box'>
-                                        <img
-                                        className='voice-img'
-                                        src={muteMembers.includes(item.id)? voiceNo : voiceOff}
-                                        onClick={onSetMute(item.id)}
-                                        />
-                                    </div>
-                                </RcTooltip>}
+                                {Number(item.ext) === 2
+                                    && <RcTooltip placement="top" overlay={muteMembers.includes(item.id) ? '解除禁言' : '禁言'} >
+                                        <div className='voice-img-box'>
+                                            <img
+                                                className='voice-img'
+                                                src={muteMembers.includes(item.id) ? voiceNo : voiceOff}
+                                                onClick={onSetMute(item.id)}
+                                            />
+                                        </div>
+                                    </RcTooltip>}
                             </Flex>
                         )
                         // }

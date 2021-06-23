@@ -65,7 +65,7 @@ textarea {
     cursor: pointer;
 }
 
-button.msg-btn:disabled{
+button.msg-btn:disabled {
     cursor: not-allowed;
     background: #7ECBFF;
 }
@@ -160,22 +160,21 @@ button.msg-btn:disabled{
         'PingFang SC';
     font-weight: 400;
     line-height: 20px;
-
+    padding: 2px;
     width: 196px;
-    height: 40px;
     background: rgba(0, 0, 0, 0.8);
     border-radius: 6px;
 }
 
 .show-error-msg {
     width: auto;
-    height: 20px;
+    /* height: 20px; */
     font-size: 14px;
     font-family: 'PingFangSC-Regular',
         'PingFang SC';
     font-weight: 400;
     color: #FFFFFF;
-    line-height: 20px;
+    /* line-height: 20px; */
 }
 
 .chat-tool-item {

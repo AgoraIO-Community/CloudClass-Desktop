@@ -34,4 +34,11 @@ export const ROOM_PAGESIZE = 20;
 // 输入框限制字符数
 export const INPUT_SIZE = 500;
 
+export const TEXT_ERROR = '发送失败,含有敏感词！'
+
+export const IMG_MAX_SIZE = '文件过大，请发小于10M的图片！'
+
+export const IMG_SUPPORT = '不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！'
+
+
 

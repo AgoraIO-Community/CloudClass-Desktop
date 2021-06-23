@@ -153,7 +153,6 @@ const MessageList = ({ activeKey, setActiveKey }) => {
     }
   })
   const roomUserList = _.concat(speakerTeacher, coachTeacher, audience, student)
-
   return (
     <div className='message'>
       {hasEditPermisson ? (
@@ -161,7 +160,7 @@ const MessageList = ({ activeKey, setActiveKey }) => {
           {
             CHAT_TABS.map(({ key, name, component: Component, className }) => (
               <TabPane tab={<Flex>
-                <Text whiteSpace="nowrap">{name === '成员' ? `${name}(${userCount - 1})` : name}</Text>
+                <Text whiteSpace="nowrap">{name === '成员' ? `${name}(${roomUsers.length - 1})` : name}</Text>
                 {name === '提问' && bool && bool.showRedNotice && (
                   // <Text ml="6px" whiteSpace="nowrap" color="red" fontSize='40px'>·</Text>
                   <div className="msg-red-dot"></div>

@@ -7,7 +7,7 @@ import WebIM from '../../utils/WebIM'
 import store from '../../redux/store'
 import { Emoji } from '../../utils/emoji'
 import { roomMessages, qaMessages } from '../../redux/aciton'
-import { CHAT_TABS_KEYS, INPUT_SIZE } from '../MessageBox/constants'
+import { CHAT_TABS_KEYS, INPUT_SIZE, TEXT_ERROR, IMG_MAX_SIZE, IMG_SUPPORT } from '../MessageBox/constants'
 import iconSmiley from '../../themes/img/icon-smiley.svg'
 import iconImage from '../../themes/img/icon-image.svg'
 import msgAvatarUrl from '../../themes/img/avatar-big@2x.png'
@@ -52,7 +52,9 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const [count, setCount] = useState(0);
     const [content, setContent] = useState('');
     const [isEmoji, setIsEmoji] = useState(false);
+    // 消息过滤提示
     const [isShow, setIsShow] = useState(false);
+    const [showText, setShowText] = useState('');
     const [sendBtnDisabled, setSendBtnDisabled] = useState(true);
 
 
@@ -194,9 +196,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
             fail: function (err) {
                 if (err.type === 501) {
                     setIsShow(true);
+                    setShowText(TEXT_ERROR)
                     setTimeout(() => {
                         setIsShow(false);
-                    }, 5000);
+                    }, 2500);
                 }
             }
         };
@@ -214,56 +217,55 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
             'png': true,
             'bmp': true
         };
-        if (file.filetype.toLowerCase() in allowType) {
-            var option = {
-                file: file,
-                length: '3000',                       // 视频文件时，单位(ms)
-                to: roomId,
-                ext: {
-                    msgtype: msgType,   // 消息类型
-                    roomUuid: roomUuid,
-                    asker: requestUser,
-                    role: roleType,
-                    avatarUrl: avatarUrl,
-                    nickName: userNickName,
-                    time: timestamp.toString()
-                },                       // 接收消息对象
-                chatType: 'chatRoom',               // 设置为单聊
-                onFileUploadError: function (err) {      // 消息上传失败
-                    console.log('onFileUploadError>>>', err);
-                    if (err.type === 101) {
-                        message.error('文件过大，请重新选择小于10M的图片！')
-                    }
-                    setTimeout(() => {
-                        message.destroy();
-                    }, 2000);
-                    couterRef.current.value = null
-                },
-                onFileUploadComplete: function (res) {   // 消息上传成功
-                    console.log('onFileUploadComplete>>>', res);
-                },
-                success: function () {                // 消息发送成功
-                    store.dispatch(qaMessages(msg.body, msg.body.ext.asker, { showRed: false }, msg.body.ext.time));
-                    couterRef.current.value = null
-                },
-                fail: function (e) {
-                    //如禁言、拉黑后发送消息会失败
-                    couterRef.current.value = null
-                },
-                flashUpload: WebIM.flashUpload
-            };
-            msg.set(option);
-            WebIM.conn.send(msg.body);
+        if (file.data.size < 10240000) {
+            if (file.filetype.toLowerCase() in allowType) {
+                var option = {
+                    file: file,
+                    length: '3000',                       // 视频文件时，单位(ms)
+                    to: roomId,
+                    ext: {
+                        msgtype: msgType,   // 消息类型
+                        roomUuid: roomUuid,
+                        asker: requestUser,
+                        role: roleType,
+                        avatarUrl: avatarUrl,
+                        nickName: userNickName,
+                        time: timestamp.toString()
+                    },                       // 接收消息对象
+                    chatType: 'chatRoom',               // 设置为单聊
+                    onFileUploadError: function (err) {      // 消息上传失败
+                        console.log('onFileUploadError>>>', err);
+                    },
+                    onFileUploadComplete: function (res) {   // 消息上传成功
+                        console.log('onFileUploadComplete>>>', res);
+                    },
+                    success: function () {                // 消息发送成功
+                        store.dispatch(qaMessages(msg.body, msg.body.ext.asker, { showRed: false }, msg.body.ext.time));
+                        couterRef.current.value = null
+                    },
+                    fail: function (e) {
+                        //如禁言、拉黑后发送消息会失败
+                        couterRef.current.value = null
+                    },
+                    flashUpload: WebIM.flashUpload
+                };
+                msg.set(option);
+                WebIM.conn.send(msg.body);
+            } else {
+                couterRef.current.value = null
+                setIsShow(true);
+                setShowText(IMG_SUPPORT)
+                setTimeout(() => {
+                    setIsShow(false);
+                }, 2500);
+            }
         } else {
             couterRef.current.value = null
-            message.error('不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！')
-            // message.error({
-            //     content: '不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！',
-            //     style: { width: '200px' }
-            // });
+            setIsShow(true);
+            setShowText(IMG_MAX_SIZE)
             setTimeout(() => {
-                message.destroy();
-            }, 2000);
+                setIsShow(false);
+            }, 2500);
         }
     }
 
@@ -299,7 +301,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 {
                     isShow && <Flex className='show-error' alignItems='center' justifyContent='center'>
                         <CloseCircleOutlined style={{ color: 'red', paddingLeft: '10px' }} />
-                        <Text ml='3px' className='show-error-msg' >发送失败,含有敏感词！</Text>
+                        <Text ml='3px' className='show-error-msg' >{showText}</Text>
                     </Flex>
                 }
                 <Flex justifyContent='flex-start' alignItems='center'>

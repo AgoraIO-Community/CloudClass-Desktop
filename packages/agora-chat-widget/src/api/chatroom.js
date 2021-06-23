@@ -4,6 +4,7 @@ import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute
 import store from '../redux/store'
 import { setUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
+import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 
 // 加入聊天室
 export const joinRoom = async () => {
@@ -35,10 +36,11 @@ export const getRoomInfo = (roomId) => {
         chatRoomId: roomId   // 聊天室id
     }
     WebIM.conn.getChatRoomDetails(options).then((res) => {
+        console.log('getRoomInfo>>>', res);
         store.dispatch(roomInfo(res.data[0]));
         getRoomNotice(roomId);
         getRoomAdmins(roomId);
-        //getRoomUsers(roomId);
+        getRoomUsers(1, ROOM_PAGESIZE, roomId);
         getRoomWhileList(roomId);
     })
 }

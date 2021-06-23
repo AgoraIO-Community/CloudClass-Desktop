@@ -25,21 +25,19 @@ const QaUserList = ({ getClickUser, tabKey }) => {
 
     // 拿到需要回复提问者id
     const getUser = (user) => {
-        // getClickUser(user)
+        getClickUser(user)
         setCurrentUser(user)
         store.dispatch(removeShowRed(user))
     }
 
     useEffect(() => {
-       if (sortArr.length > 0) {
-        if (currentUser === '') {
-            getClickUser(sortArr[0].id)
-            getUser(sortArr[0].id)
-        } else {
-            getClickUser(sortArr[0].id)
-            getUser(currentUser)
+        if (sortArr.length > 0) {
+            if (currentUser === '') {
+                getUser(sortArr[0].id)
+            } else {
+                getUser(currentUser)
+            }
         }
-       }
     }, [tabKey === CHAT_TABS_KEYS.qa])
 
     // 在当前聊天页，收到新消息不展示红点
