@@ -27,7 +27,8 @@ export interface RoomComponentConfigProps<T> {
 export enum AgoraEduEvent {
   ready = 1,
   destroyed = 2,
-  clicked = 3
+  clicked = 3,
+  pretest = 4
 }
 
 
@@ -45,7 +46,7 @@ export interface RoomParameters {
   roomType: number
 }
 
-export type ListenerCallback = (evt: AgoraEduEvent) => void
+export type ListenerCallback = (evt: AgoraEduEvent, params?:any) => void
 
 export type PPTDataType = {
   active: boolean,

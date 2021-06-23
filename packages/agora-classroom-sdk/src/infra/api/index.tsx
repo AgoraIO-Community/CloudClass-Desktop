@@ -109,6 +109,14 @@ export type LaunchOption = {
   userFlexProperties?: {[key: string]: any} //用户自订属性
 }
 
+/**
+ * PretestOption 接口
+ */
+ export type PretestOption = {
+  listener: ListenerCallback, // launch状态
+  language: LanguageEnum, // 国际化
+}
+
 export type ReplayOption = {
   // logoUrl: string
   whiteboardAppId: string
@@ -280,6 +288,80 @@ export class AgoraEduSDK {
         mainPath: mainPath,
         roomPath: roomPath,
         pretest: option.pretest,
+      }
+      controller.appController.create(
+        <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
+            <UIContextProvider>
+              <LiveRoom />
+            </UIContextProvider>
+        </CoreContextProvider>,
+        dom,
+        option.listener
+      )
+      unlock()
+    } catch (err) {
+      unlock()
+      throw GenericErrorWrapper(err)
+    }
+    
+    return controller.appController.getClassRoom()
+  }
+
+  /**
+   * 只开启设备检测页
+   * @param dom DOM元素
+   * @param option LaunchOption
+   */
+   static async pretest(dom: HTMLElement, option: PretestOption) {
+    console.log("pretest ", dom, " option ", option)
+
+    if (controller.appController.hasCalled) {
+      throw GenericErrorWrapper("already launched")
+    }
+
+    const unlock = controller.appController.acquireLock()
+    try {
+      const mainPath = BizPagePath.PretestPagePath
+
+      const DUMMY = "dummy"
+
+      const params = {
+        config: {
+          rtcArea: globalConfigs.sdkArea.rtcArea,
+          rtmArea: globalConfigs.sdkArea.rtmArea,
+          recordUrl: DUMMY,
+          agoraAppId: sdkConfig.configParams.appId,
+          agoraNetlessAppId: DUMMY,
+          enableLog: true,
+          sdkDomain: `${globalConfigs.sdkDomain}`,
+          courseWareList: [],
+          personalCourseWareList: [],
+          vid: -1,
+          oss: {
+            region: DUMMY,
+            bucketName: DUMMY,
+            folder: DUMMY,
+            accessKey: DUMMY,
+            secretKey: DUMMY,
+            endpoint: DUMMY
+          },
+          rtmUid: DUMMY,
+          rtmToken: DUMMY,
+          pretestOnly: true
+        },
+        language: option.language,
+        startTime: undefined,
+        duration: undefined,
+        roomInfoParams: {
+          roomUuid: DUMMY,
+          userUuid: DUMMY,
+          roomName: DUMMY,
+          userName: DUMMY,
+          userRole: 0,
+          roomType: 0,
+        },
+        resetRoomInfo: false,
+        mainPath: mainPath,
       }
       controller.appController.create(
         <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
