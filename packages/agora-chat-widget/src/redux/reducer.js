@@ -276,6 +276,8 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 isLoadGif: data
             };
+        case 'CLEAR_STORE':
+            return defaultState;
         default:
             return state;
     }

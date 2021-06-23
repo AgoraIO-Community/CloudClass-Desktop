@@ -97,3 +97,8 @@ export const moreHistory = (data) => {
 export const loadGif = (data) => {
     return { type: 'LOAD_GIF', data }
 }
+
+// 退出清空store
+export const clearStore = (data) => {
+    return { type: 'CLEAR_STORE', data }
+}

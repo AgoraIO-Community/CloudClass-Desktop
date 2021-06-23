@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers,clearStore } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -55,6 +55,7 @@ const App = function (props) {
       onClosed: (err) => {
         console.log('退出', err);
         store.dispatch(isLogin(false))
+        store.dispatch(clearStore({}))
       },
       // 文本消息
       onTextMessage: (message) => {
