@@ -3,15 +3,11 @@ import config from './WebIMConfig'
 import { getPageQuery } from './index'
 
 
-// export default initWeIm = new Promise((resolve, reject)=>{
-
-// })
-
-
 export const initIMSDK = (appkey) => {
     let WebIM = window.WebIM || {}
     WebIM.config = config;
-    
+    WebIM.config.appkey = appkey;
+
     let options = {
         isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
         isDebug: WebIM.config.isDebug,
@@ -26,7 +22,7 @@ export const initIMSDK = (appkey) => {
         //公有云 isHttpDNS 默认配置为true
         isHttpDNS: WebIM.config.isHttpDNS,
     }
-    
+
     WebIM.conn = new websdk.connection(options)
 }
 

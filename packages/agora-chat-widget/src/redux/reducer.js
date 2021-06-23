@@ -22,6 +22,7 @@ const defaultState = {
             [CHAT_TABS_KEYS.qa]: false
         }
     },
+    activeKey: CHAT_TABS_KEYS.chat,
     isUserMute: false,   //单人禁言
     isMoreHistory: true, //展示更多
     isLoadGif: false,
@@ -51,6 +52,11 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 loginName: data
+            };
+        case 'IS_TABS':
+            return {
+                ...state,
+                activeKey: data
             };
         // 聊天室详情
         case 'GET_ROOM_INFO':
@@ -151,6 +157,7 @@ const reducer = (state = defaultState, action) => {
             if (data.ext.msgId) {
                 msgs = msgs.filter((item) => item.id !== data.ext.msgId)
             }
+            console.log('data>>', data, 'showNotice>>', showNotice);
             return {
                 ...state,
                 messages: {

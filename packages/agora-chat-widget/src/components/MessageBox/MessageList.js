@@ -9,7 +9,7 @@ import MessageItem from './Message/index'
 import QuestionMessage from './QaList/QuestionMessage'
 import { CHAT_TABS, CHAT_TABS_KEYS, HISTORY_COUNT } from './constants'
 import store from '../../redux/store'
-import { roomMessages, qaMessages, removeChatNotification, moreHistory, loadGif } from '../../redux/aciton'
+import { roomMessages, qaMessages, removeChatNotification, isTabs } from '../../redux/aciton'
 import { getUserInfo } from '../../api/userInfo'
 import { getHistoryMessages } from '../../api/historyMessages'
 import scrollElementToBottom from '../../utils/scrollElementToBottom'
@@ -20,7 +20,7 @@ import './list.css'
 const { TabPane } = Tabs;
 
 // 列表项
-const MessageList = ({ activeKey, setActiveKey }) => {
+const MessageList = ({ activeKey }) => {
   // 控制 Toolbar 组件是否展示
   const [hide, sethide] = useState(true);
   // 控制 Toolbar 组件是否展示图片 
@@ -69,21 +69,21 @@ const MessageList = ({ activeKey, setActiveKey }) => {
   }, [activeKey])
   // 切换 tab 
   const handleTabChange = (key) => {
-    setActiveKey(key)
+    setTabKey(key)
     switch (key) {
       case "CHAT":
-        setTabKey(CHAT_TABS_KEYS.chat);
+        store.dispatch(isTabs(CHAT_TABS_KEYS.chat))
         sethide(true);
         setIsTool(false);
         store.dispatch(removeChatNotification(false))
         break;
       case "QA":
-        setTabKey(CHAT_TABS_KEYS.qa);
+        store.dispatch(isTabs(CHAT_TABS_KEYS.qa))
         sethide(true);
         setIsTool(true);
         break;
       case "USER":
-        setTabKey(CHAT_TABS_KEYS.user);
+        store.dispatch(isTabs(CHAT_TABS_KEYS.user))
         sethide(false)
         break;
       default:
@@ -112,7 +112,9 @@ const MessageList = ({ activeKey, setActiveKey }) => {
 
   useEffect(() => {
     if (isLogin) {
-      getUserInfo(newRoomUsers)
+      setTimeout(() => {
+        getUserInfo(newRoomUsers)
+      }, 500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomUsers])

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useEffect } from 'react';
 import type {
   AgoraWidgetHandle,
   AgoraWidgetContext,
@@ -24,6 +24,20 @@ const App: React.FC<AppProps> = observer((props) => {
   const chatroomId = get(pluginStore.props, 'chatroomId');
   const orgName = get(pluginStore.props, 'orgName');
   const appName = get(pluginStore.props, 'appName');
+
+  const { events, actions } = pluginStore.context;
+
+  useEffect(() => {
+    events.global.subscribe((state: any) => {
+      pluginStore.globalContext = state;
+    });
+    return () => {
+      events.global.unsubscribe();
+    };
+  }, []);
+
+  const { isJoined } = pluginStore.globalContext;
+
   set(
     pluginStore,
     'props.imAvatarUrl',
@@ -33,12 +47,12 @@ const App: React.FC<AppProps> = observer((props) => {
 
   const domRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    if (domRef.current) {
+  useEffect(() => {
+    if (domRef.current && isJoined) {
       //@ts-ignore
       hx.renderHXChatRoom(domRef.current, pluginStore);
     }
-  }, [domRef.current]);
+  }, [domRef.current, isJoined]);
 
   return (
     <div

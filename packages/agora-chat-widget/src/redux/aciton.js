@@ -11,6 +11,11 @@ export const isLogin = data => {
 export const LoginName = data => {
     return { type: 'LOGIN_NAME', data }
 }
+
+// 选中的Tab
+export const isTabs = data => {
+    return { type: 'IS_TABS', data }
+}
 // 聊天室详情
 export const roomInfo = data => {
     return { type: 'GET_ROOM_INFO', data }
@@ -50,6 +55,7 @@ export const userMute = data => {
 export const isQa = data => {
     return { type: 'QA_MESSAGE_SWITCH', data }
 }
+
 // 是否隐藏赞赏消息
 export const isReward = data => {
     return { type: 'REWARD_MESSAGE_SWITCH', data }

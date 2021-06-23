@@ -153,6 +153,7 @@ export const logoutChatroom = () => {
         roomId: roomId,// 聊天室id
         success: function (res) {
             console.log('quitChatRoom>>>', res)
+            WebIM.conn.close()
         }
     });
 }
