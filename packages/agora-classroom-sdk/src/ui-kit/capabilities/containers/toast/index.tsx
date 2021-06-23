@@ -10,7 +10,7 @@ type ToastType = any
 
 export const ToastContainer = observer(() => {
   const {toastQueue, addToast, removeToast} = useUIStore()
-  const {isJoiningRoom} = useRoomContext()
+  const {joined} = useRoomContext()
   const {toastEventObserver} = useGlobalContext()
 
   const toast = (desc: string, props?: any, toastType: 'success' | 'warning' | 'error' = 'success') => addToast(transI18n(desc, props), toastType)
@@ -77,11 +77,11 @@ export const ToastContainer = observer(() => {
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
   }
 
-  const roomRef = useRef<boolean>(isJoiningRoom)
+  const roomRef = useRef<boolean>(joined)
 
   useEffect(() => {
-    roomRef.current = isJoiningRoom
-  }, [isJoiningRoom])
+    roomRef.current = joined
+  }, [joined])
   
 
   useEffect(() => {

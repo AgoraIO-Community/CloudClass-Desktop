@@ -7,20 +7,20 @@ import { useCallback } from 'react'
 export const SettingContainer = observer(({ id }: any) => {
 
     const {
+        isNative
+    } = useMediaContext()
+
+    const {
         cameraList,
         microphoneList,
         speakerList,
         cameraId,
         speakerId,
         microphoneId,
-        changeCamera,
-        changeMicrophone,
-        changeSpeakerVolume,
-        changeMicrophoneVolume,
-        isNative
-    } = useMediaContext()
-
-    const {
+        changeTestCamera: changeCamera,
+        changeTestMicrophone: changeMicrophone,
+        changeTestSpeakerVolume: changeSpeakerVolume,
+        changeTestMicrophoneVolume: changeMicrophoneVolume,
         isMirror,
         setMirror,
         isBeauty,

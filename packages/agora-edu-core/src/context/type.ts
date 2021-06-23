@@ -424,6 +424,10 @@ export type ScreenShareContext = {
 }
 export type RoomContext = {
     /**
+     * 是否成功加入了房间
+     */
+    joined: boolean, 
+    /**
      * 场景类型
      * @version v1.1.0
      */
