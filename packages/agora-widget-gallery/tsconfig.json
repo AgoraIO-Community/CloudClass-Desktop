@@ -3,6 +3,9 @@
     "baseUrl": ".",
     "outDir": "lib",
     "target": "es6",
+    "paths": {
+      "agora-chat-widget": ["../agora-chat-widget/src"],
+    },
     "experimentalDecorators": true,
     "module": "commonjs",
     "lib": [

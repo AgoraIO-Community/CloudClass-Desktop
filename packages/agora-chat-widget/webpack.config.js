@@ -46,7 +46,7 @@ const babelConfig = packageInfo.babel
 
 module.exports = {
   entry: {
-    hx_im: './src/index_lib.js',
+    hx_im: './src/index.js',
     // edu_sdk: "./src/infra/api/index.tsx",
   },
   mode: "production",

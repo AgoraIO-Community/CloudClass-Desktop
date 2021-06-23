@@ -10,6 +10,7 @@ import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { get, set } from 'lodash';
 //@ts-ignore
+// const hx = require()
 import * as hx from 'agora-chat-widget';
 
 type AppProps = {
@@ -34,6 +35,7 @@ const App: React.FC<AppProps> = observer((props) => {
 
   useLayoutEffect(() => {
     if (domRef.current) {
+      //@ts-ignore
       hx.renderHXChatRoom(domRef.current, pluginStore);
     }
   }, [domRef.current]);
@@ -68,6 +70,7 @@ export class AgoraHXChatWidget implements IAgoraWidget {
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}
   widgetWillUnload(): void {
     console.log('widgetWillUnload>>>>');
+    //@ts-ignore
     hx.logout();
   }
 }

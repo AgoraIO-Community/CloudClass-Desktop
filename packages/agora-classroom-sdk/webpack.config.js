@@ -57,7 +57,7 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", "*.jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
       ['@']: path.resolve(__dirname, 'src'),
       '~core': path.resolve(__dirname, 'src/core'),
@@ -70,6 +70,7 @@ module.exports = {
       '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
       'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
       'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
+      'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
       'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
       'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
     }

@@ -1,10 +1,12 @@
 import { parse, stringify } from "qs";
 
 export function getPageQuery() {
+  console.log('window. getuery323')
   return parse(window.location.href.split("?")[1]);
 }
 
 export function getQueryPath(path = "", query = {}) {
+  console.log('window. ')
   const search = stringify(query);
   if (search.length) {
     return `${path}?${search}`;

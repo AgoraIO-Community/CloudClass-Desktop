@@ -1,20 +1,34 @@
 import React from 'react';
-import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
 import store from './redux/store'
 import App from './App';
-import { BrowserRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
+import { logoutChatroom } from './api/chatroom'
+import { logoutIM } from './api/logout'
 
 import './index.css'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-  ,
-  document.getElementById('root')
-);
+export const HXChatRoom = (pluginStore) => {
+    return (
+        <React.StrictMode>
+            <Provider store={store}>
+                <MemoryRouter>
+                    <App pluginStore={pluginStore} />
+                </MemoryRouter>
+            </Provider>
+        </React.StrictMode>
+    )
+}
+
+export const renderHXChatRoom = (dom, pluginStore) => {
+    ReactDOM.render(
+        <HXChatRoom pluginStore={pluginStore} />,
+        dom
+    );
+}
+
+export const logout = () => {
+    logoutChatroom()
+    logoutIM()
+}

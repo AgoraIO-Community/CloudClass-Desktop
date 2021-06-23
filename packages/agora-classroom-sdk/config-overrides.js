@@ -185,7 +185,7 @@ const useOptimizeBabelConfig = () => config => {
   //     })
   // );
   const rule = {
-    test: /\.(ts)x?$/i,
+    test: /\.(ts|tsx)$/i,
     include: [
       path.resolve("src")
     ],
@@ -194,14 +194,66 @@ const useOptimizeBabelConfig = () => config => {
       'thread-loader', 'cache-loader', getBabelLoader(config).loader,
     ],
     exclude: /node_modules|(\.(stories.ts)x?$)/,
-    // exclude: [
-    //   path.resolve("node_modules"),
-    //   path.resolve("src/sw"),
-    // ],
+  }
+
+  const rule2 = {
+    test: /\.(js|jsx)$/i,
+    include: [
+      // path.resolve("src"),
+      path.resolve(__dirname, '../agora-chat-widget/src'),
+    ],
+    // exclude: /\.(stories.ts)x?$/i,
+    use: [
+      'thread-loader', 'cache-loader', 
+      {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            [
+              "@babel/preset-env",
+              {
+                "useBuiltIns": "usage",
+                "debug": false,
+                "corejs": {
+                  "version": 3,
+                  "proposals": true
+                }
+              }
+            ],
+            [
+              "@babel/preset-react",
+              {
+                "runtime": "automatic"
+              }
+            ],
+            // "@babel/preset-react",
+          ],
+          plugins: [
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-proposal-optional-chaining",
+            "@babel/plugin-proposal-nullish-coalescing-operator",
+            [
+              "@babel/plugin-proposal-decorators",
+              {
+                "legacy": true
+              }
+            ],
+            [
+              "@babel/plugin-proposal-class-properties",
+              {
+                "loose": true
+              }
+            ]
+          ]
+        }
+      },
+    ],
+    exclude: /node_modules|(\.(stories.ts)x?$)/,
   }
 
   for (let _rule of config.module.rules) {
     if (_rule.oneOf) {
+      _rule.oneOf.unshift(rule2);
       _rule.oneOf.unshift(rule);
       break;
     }
@@ -355,6 +407,7 @@ const webpackConfig = override(
     '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
     'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
     'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
+    'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
     'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
     'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
   }),
