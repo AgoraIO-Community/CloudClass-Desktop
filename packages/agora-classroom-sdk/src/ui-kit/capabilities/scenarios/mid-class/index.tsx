@@ -17,6 +17,7 @@ import { useUIStore } from '@/infra/hooks'
 
 import { ToastContainer } from "~capabilities/containers/toast"
 import { get } from 'lodash'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 
 export const MidClassScenario = observer(() => {
@@ -64,6 +65,10 @@ export const MidClassScenario = observer(() => {
   const orgName = get(roomProperties, 'im.huanxin.orgName')
   const appName = get(roomProperties, 'im.huanxin.appName')
 
+  const { roomInfo : {userRole}} = useRoomContext()
+
+  const visible = userRole !== EduRoleTypeEnum.invisible
+
   return (
     <Layout
       className={cls}
@@ -98,7 +103,7 @@ export const MidClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="mid-class-teacher"/>
           </div>
-          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
+          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
           {/* <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/> */}
         </Aside>
       </Layout>
