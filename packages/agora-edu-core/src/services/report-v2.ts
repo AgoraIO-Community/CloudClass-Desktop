@@ -2,7 +2,7 @@ import { ApiBase, ApiBaseInitializerParams } from './base';
 import md5 from "js-md5";
 import { GenericErrorWrapper } from "agora-rte-sdk";
 import { HttpClient } from "../utilities/net";
-import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../protobuf';
+// import { ApaasUserJoin, ApaasUserQuit, ApaasUserReconnect, ScreenShareStar, ScreenShareEnd} from '../protobuf';
 import { reportService } from './report';
 type ReportParams = {
     /**
@@ -114,45 +114,45 @@ export class ReportServiceV2 extends ApiBase {
         }
         return btoa(result);
     }
-    protected buildUserJoinPaylod(payloadParams: ReportUserParams): string{
-        let errMsg = ApaasUserJoin.verify(payloadParams);
-        if (errMsg)
-            throw Error(errMsg);
-        let message = ApaasUserJoin.create(payloadParams);
-        let buffer = ApaasUserJoin.encode(message).finish();
-        return this.Uint8ToBase64(buffer);
+    protected buildUserJoinPaylod(payloadParams: ReportUserParams): any{
+        // let errMsg = ApaasUserJoin.verify(payloadParams);
+        // if (errMsg)
+        //     throw Error(errMsg);
+        // let message = ApaasUserJoin.create(payloadParams);
+        // let buffer = ApaasUserJoin.encode(message).finish();
+        // return this.Uint8ToBase64(buffer);
     }
-    protected buildUserQuitPaylod(payloadParams: ReportUserParams): string{
-        let errMsg = ApaasUserQuit.verify(payloadParams);
-        if (errMsg)
-            throw Error(errMsg);
-        let message = ApaasUserQuit.create(payloadParams);
-        let buffer = ApaasUserQuit.encode(message).finish();
-        return this.Uint8ToBase64(buffer);
+    protected buildUserQuitPaylod(payloadParams: ReportUserParams): any{
+        // let errMsg = ApaasUserQuit.verify(payloadParams);
+        // if (errMsg)
+        //     throw Error(errMsg);
+        // let message = ApaasUserQuit.create(payloadParams);
+        // let buffer = ApaasUserQuit.encode(message).finish();
+        // return this.Uint8ToBase64(buffer);
     }
-    protected buildUserReconnectPaylod(payloadParams: ReportUserParams): string{
-        let errMsg = ApaasUserReconnect.verify(payloadParams);
-        if (errMsg)
-            throw Error(errMsg);
-        let message = ApaasUserReconnect.create(payloadParams);
-        let buffer = ApaasUserReconnect.encode(message).finish();
-        return this.Uint8ToBase64(buffer);
+    protected buildUserReconnectPaylod(payloadParams: ReportUserParams): any{
+        // let errMsg = ApaasUserReconnect.verify(payloadParams);
+        // if (errMsg)
+        //     throw Error(errMsg);
+        // let message = ApaasUserReconnect.create(payloadParams);
+        // let buffer = ApaasUserReconnect.encode(message).finish();
+        // return this.Uint8ToBase64(buffer);
     }
-    protected buildScreenShareStar(payloadParams: ReportUserParams): string{
-        let errMsg = ScreenShareStar.verify(payloadParams);
-        if (errMsg)
-            throw Error(errMsg);
-        let message = ScreenShareStar.create(payloadParams);
-        let buffer = ScreenShareStar.encode(message).finish();
-        return this.Uint8ToBase64(buffer);
+    protected buildScreenShareStar(payloadParams: ReportUserParams): any{
+        // let errMsg = ScreenShareStar.verify(payloadParams);
+        // if (errMsg)
+        //     throw Error(errMsg);
+        // let message = ScreenShareStar.create(payloadParams);
+        // let buffer = ScreenShareStar.encode(message).finish();
+        // return this.Uint8ToBase64(buffer);
     }
-    protected buildScreenShareEnd(payloadParams: ReportUserParams): string{
-        let errMsg = ScreenShareEnd.verify(payloadParams);
-        if (errMsg)
-            throw Error(errMsg);
-        let message = ScreenShareEnd.create(payloadParams);
-        let buffer = ScreenShareEnd.encode(message).finish();
-        return this.Uint8ToBase64(buffer);
+    protected buildScreenShareEnd(payloadParams: ReportUserParams): any{
+        // let errMsg = ScreenShareEnd.verify(payloadParams);
+        // if (errMsg)
+        //     throw Error(errMsg);
+        // let message = ScreenShareEnd.create(payloadParams);
+        // let buffer = ScreenShareEnd.encode(message).finish();
+        // return this.Uint8ToBase64(buffer);
     }
     protected buildBaseParams(id: number,src: string, payload: string): ReportParams {
         const qos = this.qos;
