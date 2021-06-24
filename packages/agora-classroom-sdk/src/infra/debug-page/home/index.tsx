@@ -144,6 +144,9 @@ export const HomePage = observer(() => {
         language={language}
         onChangeLanguage={onChangeLanguage}
         onClickTest={async () => {
+          AgoraEduSDK.config({
+            appId: `${REACT_APP_AGORA_APP_ID}`
+          })
           AgoraEduSDK.pretest(document.querySelector("#pretest")!, {
             language: language as LanguageEnum,
             listener: (evt, params) => {
