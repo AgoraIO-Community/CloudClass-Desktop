@@ -6,6 +6,8 @@ import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { Volume } from '~components/volume'
 import {v4 as uuidv4} from 'uuid'
+import { controller } from '@/infra/api/controller'
+import { AgoraEduEvent } from '@/infra/api'
 
 
 const VolumeIndicationView = observer(() => {
@@ -46,6 +48,7 @@ export const PretestContainer = observer(() => {
         stopPretestMicrophone,
         pretestNoticeChannel,
         pretestCameraRenderer,
+        pretestOnly
     } = usePretestContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
@@ -98,11 +101,16 @@ export const PretestContainer = observer(() => {
 
     const history = useHistory()
 
-    const handleOk = () => {
+    const handleOk = useCallback(() => {
         stopPretestCamera()
         stopPretestMicrophone()
-        history.push(global?.params?.roomPath ?? '/classroom/1v1')
-    }
+        controller.appController.callback(AgoraEduEvent.pretest, {
+            cameraError, microphoneError
+        })
+        if(!pretestOnly) {
+            history.push(global?.params?.roomPath ?? '/classroom/1v1')
+        }
+    }, [cameraError, global?.params?.roomPath, history, microphoneError, pretestOnly, stopPretestCamera, stopPretestMicrophone])
 
     
     return (

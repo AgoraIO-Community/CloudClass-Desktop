@@ -164,7 +164,8 @@ export type AppStoreConfigParams = {
       height: number;
       frameRate: number;
     }
-  }
+  },
+  pretestOnly?: boolean
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -213,7 +214,8 @@ export interface RoomComponentConfigProps<T> {
 export enum AgoraEduEvent {
   ready = 1,
   destroyed = 2,
-  clicked = 3
+  clicked = 3,
+  pretest = 4
 }
 
 
