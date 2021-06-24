@@ -286,6 +286,7 @@
     "zlib": "1.0.5"
   },
   "dependencies": {
+    "electron-screenshots": "0.0.13",
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.0.13",
     "@tailwindcss/forms": "0.2.1",
