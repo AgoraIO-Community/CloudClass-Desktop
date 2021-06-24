@@ -1,7 +1,5 @@
 const {ipcRenderer: ipc, app} = require('electron');
 
-const activeWindow = require('active-win');
-
 const AgoraRtcEngine = require('agora-electron-sdk').default;
 
 const child_process = require('child_process')
@@ -17,8 +15,6 @@ window.electron = require('electron')
 const platform = process.platform
 
 const rtcEngine = new AgoraRtcEngine();
-
-window.activeWindow = activeWindow;
 
 window.isElectron = true
 

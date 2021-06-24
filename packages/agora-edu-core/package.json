@@ -25,7 +25,7 @@
     "build:dev:bundle": "cross-env NODE_ENV=development BABEL_NODE=development webpack --mode='development'",
     "build:release:bundle:js": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "build:js": "run-s proto build:release:bundle:js build:types",
-    "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
+    "protojs": "pbjs -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
     "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
     "proto": "run-s protojs protots"
   },
