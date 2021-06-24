@@ -1,17 +1,29 @@
-
-import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Flex, Image, Text } from 'rebass'
+import { useState, useEffect } from 'react'
 import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
 import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import { dateFormat } from '../../../utils';
+import AntModal from 'react-modal'
 
 // 学生端 提问消息列表
 const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessages }) => {
+    const [maxImg, setMaxImg] = useState(false);
+    const [maxImgUrl, setMaxImgUrl] = useState('');
     const qaList = useSelector(state => state.messages.qaList) || [];
     const idQaList = qaList[userName] !== undefined;
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    };
 
     useEffect(() => {
         scrollPageBottom()
@@ -20,6 +32,11 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
     const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')
         scrollElementToBottom(scrollElement)
+    }
+
+    const showMaximumPicture = (message) => {
+        setMaxImgUrl(message.url || message.body.url)
+        setMaxImg(true)
     }
 
     return (
@@ -44,13 +61,13 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                                             <Text className='msg-sender' color={(message.ext.role === 1 || message.ext.role === 3) && '#0099FF'}>{message.ext.nickName || message.from}</Text>
                                             {/* 时间戳 */}
                                             <Tag className="time-tag">
-                                                { dateFormat(Number(message.time), 'H:i')}
+                                                {dateFormat(Number(message.time), 'H:i')}
                                                 {/* { message.time } */}
                                             </Tag>
                                         </Flex>
                                     </div>
                                     {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                                    {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} />}
+                                    {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={() => showMaximumPicture(message)} />}
                                 </Flex>
                             </Flex>
                         )
@@ -59,6 +76,13 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                         <></>
                     )
             }
+            <AntModal
+                isOpen={maxImg}
+                onRequestClose={() => { setMaxImg(false) }}
+                style={customStyles}
+            >
+                <img src={maxImgUrl} alt="picture load failed" />
+            </AntModal>
         </div>
     )
 }
