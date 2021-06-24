@@ -48,6 +48,31 @@
     personalCourseWareList = [],
   } = useParams(window.location)
 
+  const reportReady = async () => {
+    const opts = {
+      method: "post",
+      headers: {
+        'Content-Type': 'application/json',
+        'x-agora-token': rtmToken,
+        'x-agora-uid': rtmUid,
+      }
+    }
+    let resp = await fetch(`https://api-solutions-dev.bj2.agoralab.co/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, opts)
+
+    return resp
+  }
+
+  const wait = (time) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  }
+
+  const reportReady = async () => {
+    fetch()
+  }
   // const options = paramsObject
   // if(!options) {
   //     document.querySelector("#root1").textContent = "options missing"
@@ -84,8 +109,19 @@
           console.log("evt", evt, args);
         }
       }
-  ).then(() => {
+  ).then(async () => {
     console.log('start launch')
+    let reported = false
+    while(!reported) {
+      try {
+        await reportReady()
+        reported = true
+      }catch(e) {
+        // wait for 5 seconds
+        await wait(5000)
+      }
+
+    }
   })
   // }
   </script>
