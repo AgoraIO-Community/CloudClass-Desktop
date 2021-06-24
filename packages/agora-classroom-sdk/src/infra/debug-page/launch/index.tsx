@@ -126,12 +126,6 @@ export const LaunchPage = observer(() => {
           }
         }
       })
-      // roomRef.current = await AgoraEduSDK.pretest(dom, {
-      //   language: 'zh',
-      //   listener: (evt:AgoraEduEvent, params:any) => {
-      //     console.log(evt, params)
-      //   }
-      // })
     }
     return () => {
       if (roomRef.current) {

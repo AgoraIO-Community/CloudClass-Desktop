@@ -155,8 +155,7 @@ export const usePretestContext = (): PretestContext => {
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
     pretestNoticeChannel: appStore.pretestNotice$,
-    installDevices: pretestStore.init,
-    pretestOnly: appStore.params.config.pretestOnly || false 
+    installDevices: pretestStore.init
   }
 }
 

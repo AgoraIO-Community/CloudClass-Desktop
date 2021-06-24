@@ -384,10 +384,6 @@ export type PretestContext = {
      */
     pretestNoticeChannel: Subject<any>;
     installDevices: (option: {video?: boolean, audio?: boolean}) => Promise<void>
-    /**
-     * 当前页面是否为设备检测独立页面，若未true则设备检测结束后不会转到教室
-     */
-    pretestOnly: boolean
 }
 export type ScreenShareContext = {
     /**
