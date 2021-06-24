@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    outline: 0;
+    outline: 0 !important;
 }
 
 /*---滚动条默认显示样式--*/
