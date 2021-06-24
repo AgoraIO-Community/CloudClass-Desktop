@@ -5,7 +5,6 @@ import { audioPlugin2 } from '@netless/white-audio-plugin2';
 import { get } from 'lodash';
 import { BizLogger } from './biz-logger';
 import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
-import { SyncBox, SyncBoxWrapper } from "@netless/sync-box";
 export interface SceneFile {
   name: string
   type: string
@@ -46,8 +45,8 @@ export class BoardClient extends EventEmitter {
   init () {
     this.client = new WhiteWebSdk({
         // 其他参数
-      invisiblePlugins: [SyncBox, IframeBridge],
-      wrappedComponents: [SyncBoxWrapper, IframeWrapper],
+      invisiblePlugins: [IframeBridge],
+      wrappedComponents: [IframeWrapper],
       pptParams: {
         useServerWrap: true
       },
@@ -93,15 +92,6 @@ export class BoardClient extends EventEmitter {
         this.emit('onPPTLoadProgress', {uuid, progress})
       },
     })
-    let syncBox = this.room.getInvisiblePlugin(SyncBox.kind) as SyncBox;
-    if (!syncBox) {
-        syncBox = await SyncBox.create({ room: this.room, width: 480, height: 320 });
-    }
-    const div = document.createElement("div");
-    div.style.cssText = "height: 100%;width: 100%;background-color: gray;";
-    syncBox.onReady(() => {
-        syncBox.bind(div);
-    });
     if (isAssistant) {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
