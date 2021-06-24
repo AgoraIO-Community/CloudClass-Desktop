@@ -113,9 +113,6 @@ export class EduScenarioAppStore {
   delay: number = 0
 
   @observable
-  time: number = 0
-
-  @observable
   cpuRate: number = 0
 
   @observable
@@ -157,7 +154,6 @@ export class EduScenarioAppStore {
     this.roomManager = undefined
     this.groupClassroomManager = undefined
     this.delay = 0
-    this.time = 0
     this.cpuRate = 0
     this.waitingShare = false
     this._screenVideoRenderer = undefined;
@@ -363,19 +359,7 @@ export class EduScenarioAppStore {
   updateCpuRate(rate: number) {
     this.cpuRate = rate
   }
-
-  updateTime(startTime: number) {
-    if (startTime) {
-      const preState = Math.abs(Date.now() - startTime)
-      this.time = preState
-    }
-  }
   
-
-  resetTime() {
-    this.time = 0
-  }
-
   @action.bound
   updateDeviceInfo(info: {
     cameraName: string
