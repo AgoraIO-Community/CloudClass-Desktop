@@ -207,9 +207,9 @@ export class EduScenarioAppStore {
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
         resolution: {
-          width: this.params.config.mediaOptions!.videoEncoderConfiguration.width,
-          height: this.params.config.mediaOptions!.videoEncoderConfiguration.height,
-          frameRate: this.params.config.mediaOptions!.videoEncoderConfiguration.frameRate,
+          width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
+          height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
+          frameRate: this.params.config.mediaOptions?.videoEncoderConfiguration.frameRate || 15,
         }
       })
     } else {
@@ -227,9 +227,9 @@ export class EduScenarioAppStore {
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
         resolution: {
-          width: this.params.config.mediaOptions!.videoEncoderConfiguration.width,
-          height: this.params.config.mediaOptions!.videoEncoderConfiguration.height,
-          frameRate: this.params.config.mediaOptions!.videoEncoderConfiguration.frameRate,
+          width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
+          height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
+          frameRate: this.params.config.mediaOptions?.videoEncoderConfiguration.frameRate || 15,
         }
       })
     }

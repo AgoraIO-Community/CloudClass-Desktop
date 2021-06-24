@@ -1008,8 +1008,8 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
-      wrappedComponents: [IframeWrapper],
-      invisiblePlugins: [IframeBridge]
+    //   wrappedComponents: [IframeWrapper],
+    //   invisiblePlugins: [IframeBridge]
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {

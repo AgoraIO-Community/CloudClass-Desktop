@@ -9,7 +9,7 @@ export enum EduSDKInternalStateEnum {
   Destroyed = "destroyed"
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent, params?: any) => any
 
 export abstract class ClassRoomAbstractStore {
 

@@ -25,6 +25,7 @@ export interface HomeAttributes {
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
+  onClickTest?: () => void | Promise<void>;
   version: string;
   SDKVersion: string;
   publishDate: string;
@@ -54,7 +55,8 @@ export const Home: React.FC<HomeProps> = ({
   onChangeUserName,
   onChangeRoomName,
   onChangeDebug,
-  onClick
+  onClick,
+  onClickTest
 }) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
@@ -302,7 +304,10 @@ export const Home: React.FC<HomeProps> = ({
                 {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
               </Col>
             </Row>
-            
+          {debug ?
+            <Button id="btn_test" className="mt-4" type="primary" size="lg" onClick={onClickTest}>test</Button>
+            : null
+          }  
           <Button id="btn_join" className="mt-4" type="primary" size="lg" onClick={onClick} disabled={!(!!userId && !!roomId && !!userName && !!roomName && !!role && !!scenario && /^[a-zA-Z0-9]{1,20}$/.test(roomName) && /^[a-zA-Z0-9]{1,20}$/.test(userName))}>{transI18n('home.enter_classroom')}</Button>
           <Row className="text-center home-align-center">
             <div onClick={() => {
