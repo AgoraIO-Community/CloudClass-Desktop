@@ -199,12 +199,14 @@ const en = {
 
     'upload': 'upload',
     'uploadSuccess':'File uploaded successfully',
+    'uploadFailed':'File uploaded failed: {reason}',
     'downloadAll': 'download all',
     'clearCache': 'clear cache',
     'download': 'download',
     'delete': 'delete',
     'deleteSuccess': 'File deleted successfully!',
     'deleteFailed': 'Failed to delete file!',
+    'openFailed': 'Material open failed: {reason}',
     'notSupported':'Uploading this type of file is not supported at present',
 
     'all': 'all',

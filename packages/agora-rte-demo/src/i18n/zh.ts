@@ -185,12 +185,14 @@ const zhCN: any = {
 
     'upload': '上传',
     'uploadSuccess':'文件上传成功',
+    'uploadFailed':'文件上传失败: {reason}',
     'downloadAll': '全部下载',
     'clearCache': '清空缓存',
     'download': '下载',
     'delete': '删除',
     'deleteSuccess': '删除文件成功！',
     'deleteFailed': '删除文件失败！',
+    'openFailed': '打开文件失败: {reason}',
     'notSupported':'暂不支持上传该类型的文件',
 
     'all': '全部',

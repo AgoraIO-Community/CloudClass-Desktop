@@ -237,6 +237,19 @@
   width: 100%;
   justify-content: flex-start;
   left: 5px;
+
+  >div {
+    user-select: none;
+  }
+
+  >div:hover {
+    opacity:0.8;
+  }
+
+  >div:active {
+    opacity: 1;
+  }
+
   .no {
     display: flex;
     justify-content: center;

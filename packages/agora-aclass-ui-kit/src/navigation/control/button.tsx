@@ -37,7 +37,7 @@ const buttonsMap = {
   'highlight': (props: any) => (
     <div style={{display:'flex', alignItems:'center'}}>
       <CustomizeIconBtn icon={highlight} style={{ height:32, width: 56 }}></CustomizeIconBtn>
-      <div style={{position:"absolute", fontSize:14, right:0, fontWeight:600, textShadow:'0px 0px 4px #122585'}}>{props.count}</div>
+      <div style={{position:"absolute", fontSize:14, right:8, fontWeight:600, textShadow:'0px 0px 4px #122585'}}>{props.count}</div>
     </div>
   ),
   'courseReplace': (props: any) => <CustomizeIconBtn icon={courseReplace} style={{ ...defaultStyle, ...props.style }} />,
@@ -58,11 +58,11 @@ export const NavigationControlButton = ({ icon, iconStyle, onClick,styles, count
     tooltip ? 
     <Tooltip placement="bottom" title={tooltip || ''}>
       <IconButton disableRipple component="div" style={{
-        width: 36,
+        width: icon === 'highlight' ? 52 : 36,
         height: 36,
         padding: 0,
         color: '#ffffff',
-        marginLeft: 15,
+        marginLeft: 10,
         ...styles
       }} onClick={onClick}
       >
@@ -70,11 +70,11 @@ export const NavigationControlButton = ({ icon, iconStyle, onClick,styles, count
       </IconButton >
     </Tooltip> : 
     <IconButton disableRipple component="div" style={{
-      width: 36,
+      width: icon === 'highlight' ? 52 : 36,
       height: 36,
       padding: 0,
       color: '#ffffff',
-      marginLeft: 15,
+      marginLeft: 10,
       ...styles
     }} onClick={onClick}
     >

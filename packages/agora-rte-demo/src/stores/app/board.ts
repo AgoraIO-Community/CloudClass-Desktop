@@ -328,7 +328,7 @@ export class BoardStore {
   @observable
   localFullScreen: boolean = false
 
-  updateFullScreen(screen: boolean = false) {
+  readFullScreenValue(screen: boolean = false) {
     // if (this.userRole === EduRoleTypeEnum.teacher || screen) {
       this.localFullScreen = screen
     // }
@@ -528,6 +528,7 @@ export class BoardStore {
   }
 
   changeSceneItem(resourceName: string, currentPage: number) {
+    EduLogger.info(`[WhiteAction] changeSceneItem ${resourceName} ${currentPage}`)
     let targetPath = resourceName
     if (resourceName === "/init" || resourceName === "/" || resourceName === "init") {
       targetPath = "/"
@@ -537,6 +538,7 @@ export class BoardStore {
 
     const sceneIsChanged = targetPath !== this.room.state.sceneState.contextPath
     if (sceneIsChanged) {
+      EduLogger.info(`[WhiteAction] changeSceneItem sceneIsChanged ${sceneIsChanged}`)
       if (targetPath === "/") {
         if (currentPage === 0) {
           this.room.setScenePath(`/init`)
@@ -570,10 +572,12 @@ export class BoardStore {
       })
     }
     this.resourceName = resourceName
+    EduLogger.info(`[WhiteAction] end changeSceneItem`)
   }
 
   // 更新白板
   updateBoardSceneItems ({scenes, resourceUuid, resourceName, page, taskUuid}: any, setScene: boolean) {
+    EduLogger.info(`[WhiteState] updateBoardSceneItems begin setScene: ${setScene}`)
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
     // const dynamicTaskUuidList = get(this.room.state.globalState, 'dynamicTaskUuidList', [])
@@ -597,6 +601,7 @@ export class BoardStore {
       this.room.putScenes(sceneName, scenes)
       this.room.setScenePath(scenePath)
     }
+    EduLogger.info(`[WhiteState] updateBoardSceneItems end`)
   }
 
   findResourcePage (resourceName: string) {
@@ -647,14 +652,17 @@ export class BoardStore {
   }
 
   async autoFetchDynamicTask() {
+    EduLogger.info(`[WhiteState] begin autoFetchDynamicTask`)
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
     // const globalState = this.room.state.globalState as any
     // const materialList = get(globalState, 'materialList', []) as MaterialItem[]
     const isRootDir = ["init", "/", "", "/init"].includes(resourceName)
     if (!isRootDir) {
+      EduLogger.info(`[WhiteState] autoFetchDynamicTask: ${resourceName} is not root directory`)
       const item = this._resourcesList.find((item) => item.resourceName === resourceName)
       if (item && item.taskUuid) {
+        EduLogger.info(`[WhiteState] autoFetchDynamicTask: exists ${item.taskUuid}`)
         let cacheInfo = this.appStore.statisticsStore.cacheMap.get(item.taskUuid)
         if(cacheInfo && cacheInfo.cached) {
           // ignore
@@ -664,9 +672,11 @@ export class BoardStore {
         }
       }
     }
+    EduLogger.info(`[WhiteState] end autoFetchDynamicTask`)
   }
 
   updatePageHistory() {
+    EduLogger.info(`[WhiteState] begin updatePageHistory`)
     const currentSceneState = this.room.state.sceneState
     const resourceName = this.getResourceName(currentSceneState.contextPath)
 
@@ -699,6 +709,7 @@ export class BoardStore {
     
     const courseWare = this.courseWareList.find((item: any) => item.resourceName === name)
     if (courseWare) {
+      EduLogger.info(`[WhiteState] updateBoardSceneItems name: ${name}`)
       this.updateBoardSceneItems({
         scenes: sceneState.scenes,
         resourceUuid: courseWare.resourceUuid,
@@ -707,6 +718,7 @@ export class BoardStore {
         taskUuid: courseWare.taskUuid,
       }, false)
     }
+    EduLogger.info(`[WhiteState] end updatePageHistory`)
   }
 
   @observable
@@ -1046,9 +1058,10 @@ export class BoardStore {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
       if (state.globalState) {
+        EduLogger.info(`[WhiteState] onRoomStateChanged globalState`)
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
-        this.updateFullScreen(state.globalState.isFullScreen)
+        this.readFullScreenValue(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           const enableStatus = get(state, 'globalState.granted', 'disable')
           if(this.enableStatus !== enableStatus) {
@@ -1067,11 +1080,13 @@ export class BoardStore {
         }
       }
       if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
+        EduLogger.info(`[WhiteState] onRoomStateChanged check broadcastState`)
         if (this.room) {
           this.room.scalePptToFit()
         }
       }
       if (state.memberState) {
+        EduLogger.info(`[WhiteState] onRoomStateChanged check broadcastState`)
         this.currentStroke = this.getCurrentStroke(state.memberState)
         this.currentArrow = this.getCurrentArrow(state.memberState)
         this.currentFontSize = this.getCurrentFontSize(state.memberState)
@@ -1082,6 +1097,7 @@ export class BoardStore {
         })
       }
       if (state.sceneState) {
+        EduLogger.info(`[WhiteState] onRoomStateChanged update page history`)
         this.updatePageHistory()
       }
       if (state.sceneState || state.globalState) {
@@ -1242,13 +1258,16 @@ export class BoardStore {
   changeFooterMenu(itemName: string) {
     this.activeFooterItem = itemName
     const room = this.room
+    EduLogger.info(`[WhiteAction] item: ${itemName}, room: ${!!room}, writable: ${room ? room.isWritable : false}`)
     if (!room || !room.isWritable) return
     switch(this.activeFooterItem) {
       case 'first_page': {
+        EduLogger.info(`[WhiteAction] ${room.phase} begin first_page`)
         this.changePage(0, true)
         return
       }
       case 'last_page': {
+        EduLogger.info(`[WhiteAction] ${room.phase} begin last_page`)
         this.changePage(this.totalPage-1, true)
         return
       }
@@ -1262,6 +1281,7 @@ export class BoardStore {
         //   return
         // }
         // this.changePage(room.state.sceneState.index + 1)
+        EduLogger.info(`[WhiteAction] ${room.phase} begin pptNextStep`)
         this.room.pptNextStep()
         return
       }
@@ -1275,6 +1295,7 @@ export class BoardStore {
         //   return
         // }
         // this.changePage(room.state.sceneState.index - 1)
+        EduLogger.info(`[WhiteAction] ${room.phase} begin pptPreviousStep`)
         this.room.pptPreviousStep()
         return
       }
@@ -1693,11 +1714,14 @@ export class BoardStore {
 
   @action
   loadPagingInfo() {
+    EduLogger.info(`[WhiteState] begin loadPagingInfo`)
     const room = this.room
     if(this.online && room) {
       this.currentPage = room.state.sceneState.index + 1;
       this.totalPage = room.state.sceneState.scenes.length;
+      EduLogger.info(`[WhiteState] page: ${this.currentPage} ${this.totalPage}`)
     }
+    EduLogger.info(`[WhiteState] end loadPagingInfo`)
   }
 
   @action
@@ -2179,24 +2203,24 @@ export class BoardStore {
     if (this.userRole === EduRoleTypeEnum.teacher) {
       this.setFullScreen(type === 'fullscreen')
       if (type === 'fullscreen') {
-        this.updateFullScreen(true)
+        this.readFullScreenValue(true)
         return
       }
       
       if (type === 'fullscreenExit') {
-        this.updateFullScreen(false)
+        this.readFullScreenValue(false)
         return
       }
     } else {
       const globalState = this.room.state.globalState as any
       if (!globalState.isFullScreen) {
         if (type === 'fullscreen') {
-          this.updateFullScreen(true)
+          this.readFullScreenValue(true)
           return
         }
         
         if (type === 'fullscreenExit') {
-          this.updateFullScreen(false)
+          this.readFullScreenValue(false)
           return
         }
       }
@@ -2325,6 +2349,7 @@ export class BoardStore {
   }
 
   async openReplaceResource(item: CourseWareItem) {
+    EduLogger.info(`[CourseReplace] begin openReplaceResource ${item.resourceUuid}`)
     const resource: any = this.allResources.find((resource: any) => resource.id === item.resourceUuid)
     if(!resource) {
       // if not yet exists
@@ -2341,32 +2366,36 @@ export class BoardStore {
 
     await this.putSceneByResourceUuid(item.resourceUuid)
     this.moveCamera()
+    EduLogger.info(`[CourseReplace] end openReplaceResource`)
   }
 
 
   async putSceneByResourceUuid(uuid: string) {
+    EduLogger.info(`[WhiteAction] begin putSceneByResourceUuid ${uuid}`)
     try {
       const resource: any = this.allResources.find((resource: any) => resource.id === uuid)
       if (!resource) {
         throw GenericErrorWrapper(new Error('resource_not_exists'))
       }
-      console.log("putSceneByResourceUuid resource ", " uuid ", uuid, " url ", resource.url, " type", resource.type)
+
+      EduLogger.info(`[WhiteAction] putSceneByResourceUuid ${uuid} ${resource.url} ${resource.type}`)
       const putCourseFileType = ["ppt", "word","pdf"]
       if (putCourseFileType.includes(resource.type)) {
         await this.putCourseResource(uuid)
-        console.log(`打开文件成功,文件类型${resource.type}`)
+        EduLogger.info(`[WhiteAction] putSceneByResourceUuid putCourseResource success ${resource.type}`)
       }
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type)
-        console.log("打开音视频成功")
+        EduLogger.info(`[WhiteAction] putSceneByResourceUuid putAV success`)
       }  
       if (["pic"].includes(resource.type)) {
         await this.putImage(resource.url)
-        console.log("打开图片成功")
+        EduLogger.info(`[WhiteAction] putSceneByResourceUuid putImage success`)
       }
     } catch (err) {
       throw err
     }
+    EduLogger.info(`[WhiteAction] end putSceneByResourceUuid`)
   }
 
   async getFileInQueryMateria(fileName: string) {
@@ -2376,7 +2405,8 @@ export class BoardStore {
     })
   }
 
-  async handleUpload(payload: any) {    
+  async handleUpload(payload: any) {
+    EduLogger.info(`[FileUpload] begin handleUpload`)
     try {
       this.fileLoading = true
       let res =await this.appStore.uploadService.handleUpload({
@@ -2402,7 +2432,9 @@ export class BoardStore {
     } catch (err) {
       console.error(err)
       this.fileLoading = false
+      throw GenericErrorWrapper(err)
     }
+    EduLogger.info(`[FileUpload] end handleUpload`)
   }
 
   async cancelUpload() {

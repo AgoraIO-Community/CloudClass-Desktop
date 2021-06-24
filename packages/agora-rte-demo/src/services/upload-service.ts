@@ -481,10 +481,10 @@ export class UploadService extends ApiBase {
         ...data
       }
     } else {
-      throw new Error(`upload to ali oss error, status is ${res.res.status}`);
+      throw GenericErrorWrapper(new Error(`upload to ali oss error, status is ${res.res.status}`));
     }
   }catch (err) {
-      console.log('error', err)
+    throw GenericErrorWrapper(err);
     }
 }
 

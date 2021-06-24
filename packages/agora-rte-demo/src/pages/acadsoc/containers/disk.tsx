@@ -163,7 +163,13 @@ const NetworkDisk = observer(() => {
     if (ext === 'pptx') {
       EduLogger.info("upload dynamic pptx")
     }
-    await boardStore.handleUpload(payload)
+    try {
+      await boardStore.handleUpload(payload)
+    } catch(e) {
+      EduLogger.error(`handleUpload failed: ${e.message}`)
+      prepareToast('error', t('disk.uploadFailed', {reason: e.message}))
+      showToast()
+    }
   }
   const cancelUpload = async () => {
     setIsUploadFile(false)
@@ -244,9 +250,14 @@ const NetworkDisk = observer(() => {
   }
 
   const handleOpenCourse = async (resourceUuid: any) => {
-    await boardStore.putSceneByResourceUuid(resourceUuid)
-    boardStore.openDisk = false
-    hideToast()
+    try{
+      await boardStore.putSceneByResourceUuid(resourceUuid)
+      boardStore.openDisk = false
+      hideToast()
+    }catch(e) {
+      prepareToast('error', t('disk.openFailed', {reason: e.message}))
+      showToast()
+    }
   }
 
   const handleRefresh = async () => {
