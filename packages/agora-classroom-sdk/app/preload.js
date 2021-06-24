@@ -10,6 +10,7 @@ const os = require('os')
 
 const path = require('path');
 const fs = require('fs');
+window.electron = require('electron')
 
 const platform = process.platform
 

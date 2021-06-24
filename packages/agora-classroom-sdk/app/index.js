@@ -5,6 +5,8 @@ const {ipcMain} = electron;
 
 const { crashReporter } = require('electron');
 
+const ShortcutCapture = require("electron-screenshots");
+
 // const bt = require('backtrace-node');
 
 // workaround for resizable issue in mac os
@@ -295,6 +297,29 @@ async function createWindow() {
         return;
       }
       currentWindow.close()
+    });
+
+    var shortcutCapture = new ShortcutCapture.default();
+
+    shortcutCapture.on('ok', (e,{dataURL,viewer}) =>{
+			mainWindow.show();
+			mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
+    });
+    shortcutCapture.on('finish', (e,{dataURL,viewer}) =>{
+			mainWindow.show();
+			mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
+		});
+    const showScreenShot = (event) => {
+      if(shortcutCapture){
+        shortcutCapture.startCapture();
+      }
+    }
+    ipcMain.on("shortcutcapture", (event, args) => {
+      mainWindow.hide();
+      if(!shortcutCapture) {
+        shortcutCapture = new ShortcutCapture.default();
+      }
+      showScreenShot(event);
     });
 }
 
