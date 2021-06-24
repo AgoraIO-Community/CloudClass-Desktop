@@ -9,6 +9,7 @@ import { CheckBox } from '~ui-kit/components/table';
 interface DeviceProps {
     deviceId: string;
     label: string;
+    i18n?: boolean;
 }
 
 export interface SettingProps extends BaseProps {
@@ -50,9 +51,9 @@ export const Setting: FC<SettingProps> = ({
         [`setting`]: 1,
         [`${className}`]: !!className,
     });
-    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
-    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
-    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId, i18n: true}))
+    const cameraOptions = cameraList.map(item => ({label: item.label, value: item.deviceId, i18n: item.i18n ?? false}))
+    const microphoneOptions = microphoneList.map(item => ({label: item.label, value: item.deviceId, i18n: item.i18n ?? false}))
+    const speakerOptions = speakerList.map(item => ({label: item.label, value: item.deviceId, i18n: item.i18n ?? false}))
     return (
         <div className={cls} {...restProps} style={{width: 318}}>
             <div className="device-choose">

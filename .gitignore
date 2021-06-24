@@ -8,6 +8,8 @@ release
 build
 dist
 .env
+.env-dev
+*.txt
 *.ts~
 *.*~
 pkgs/
