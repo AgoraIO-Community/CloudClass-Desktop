@@ -589,11 +589,6 @@ export class AppStore implements ClassRoomAbstractStore {
   }
 
   @action
-  updateCourseWareList(courseWareList: CourseWareItem[]) {
-    this.params.config.courseWareList = courseWareList
-  }
-
-  @action
   showScreenShareWindowWithItems () {
     if (this.isElectron) {
       this.mediaService.prepareScreenShare().then((items: any) => {

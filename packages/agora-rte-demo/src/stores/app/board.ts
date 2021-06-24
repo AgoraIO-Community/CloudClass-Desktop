@@ -328,7 +328,7 @@ export class BoardStore {
   @observable
   localFullScreen: boolean = false
 
-  readFullScreenValue(screen: boolean = false) {
+  setFullScreenValue(screen: boolean = false) {
     // if (this.userRole === EduRoleTypeEnum.teacher || screen) {
       this.localFullScreen = screen
     // }
@@ -784,6 +784,7 @@ export class BoardStore {
     if (!firstCourseWare) {
       // for debugging info
       this.logState("courseware", "none")
+      EduLogger.warn(`[WhiteState] No Public Courseware Exists ${JSON.stringify(this.appStore.params.config.courseWareList)}`)
       return []
     }
     // for debugging info
@@ -1061,7 +1062,7 @@ export class BoardStore {
         EduLogger.info(`[WhiteState] onRoomStateChanged globalState`)
         // 判断锁定白板
         this.lockBoard = this.getCurrentLock(state) as any
-        this.readFullScreenValue(state.globalState.isFullScreen)
+        this.setFullScreenValue(state.globalState.isFullScreen)
         if ([EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole) && !this.loading) {
           const enableStatus = get(state, 'globalState.granted', 'disable')
           if(this.enableStatus !== enableStatus) {
@@ -1086,7 +1087,6 @@ export class BoardStore {
         }
       }
       if (state.memberState) {
-        EduLogger.info(`[WhiteState] onRoomStateChanged check broadcastState`)
         this.currentStroke = this.getCurrentStroke(state.memberState)
         this.currentArrow = this.getCurrentArrow(state.memberState)
         this.currentFontSize = this.getCurrentFontSize(state.memberState)
@@ -2203,24 +2203,24 @@ export class BoardStore {
     if (this.userRole === EduRoleTypeEnum.teacher) {
       this.setFullScreen(type === 'fullscreen')
       if (type === 'fullscreen') {
-        this.readFullScreenValue(true)
+        this.setFullScreenValue(true)
         return
       }
       
       if (type === 'fullscreenExit') {
-        this.readFullScreenValue(false)
+        this.setFullScreenValue(false)
         return
       }
     } else {
       const globalState = this.room.state.globalState as any
       if (!globalState.isFullScreen) {
         if (type === 'fullscreen') {
-          this.readFullScreenValue(true)
+          this.setFullScreenValue(true)
           return
         }
         
         if (type === 'fullscreenExit') {
-          this.readFullScreenValue(false)
+          this.setFullScreenValue(false)
           return
         }
       }
