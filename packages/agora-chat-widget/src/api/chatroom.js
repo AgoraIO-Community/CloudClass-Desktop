@@ -16,6 +16,7 @@ export const joinRoom = async () => {
         message: 'reason'   // 原因（可选参数）
     }
     await setUserInfo();
+    WebIM.conn.mr_cache = [];
     await WebIM.conn.joinChatRoom(options).then((res) => {
         message.success('已成功加入聊天室！');
         setTimeout(() => {

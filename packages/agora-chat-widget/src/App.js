@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers,clearStore } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -160,7 +160,7 @@ const App = function (props) {
       onCmdMessage: (message) => {
         console.log('onCmdMessage', message);
         if (new_IM_Data.chatroomId == message.to) {
-          store.dispatch(roomMessages(message, { showNotice: activeKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
+          store.dispatch(roomMessages(message, { showNotice: store.getState().activeKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
         }
       },
     })
