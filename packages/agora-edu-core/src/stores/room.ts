@@ -1716,7 +1716,11 @@ export class RoomStore extends SimpleInterval {
         /**
          * apaas房间id，与rtc/rtm channelName相同
          */
-        roomId: this.roomInfo.roomUuid
+        roomId: this.roomInfo.roomUuid,
+        /**
+         * 房间创建的时间戳
+         */
+        roomCreateTs: userAndRoomdata!.room!.createTime
       };
       reportServiceV2.initReportUserParams(reportUserParams);
       reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);

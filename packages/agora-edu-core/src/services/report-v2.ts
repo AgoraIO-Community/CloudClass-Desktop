@@ -92,7 +92,11 @@ type ReportUserParams = {
     /**
      * apaas房间id，与rtc/rtm channelName相同
      */
-    roomId: string
+    roomId: string,
+    /**
+     * 房间创建的时间戳
+     */
+    roomCreateTs: number // 房间创建时间
 }
 export class ReportServiceV2 extends ApiBase {
     reportUserParams: ReportUserParams = ({} as any);
