@@ -3,17 +3,30 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
+import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
-import '../../UIComponents/modal/index.css'
-
 
 // 助教端 提问消息列表
 const QaMessage = (props) => {
     const qaList = useSelector(state => state.messages.qaList) || [];
     const [newUser, setNewUser] = useState([]);
-    const [maxImg, setMaxImg] = useState('none');
+    const [maxImg, setMaxImg] = useState(false);
     const [maxImgUrl, setMaxImgUrl] = useState('');
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    };
 
+    const showMaximumPicture = (message) => {
+        setMaxImgUrl(message.url || message.body.url)
+        setMaxImg(true)
+    }
 
     useEffect(() => {
         setNewUser(qaList[props.currentUser]?.msg)
@@ -26,12 +39,6 @@ const QaMessage = (props) => {
     const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')
         scrollElementToBottom(scrollElement)
-    }
-
-    const showMaxImg = (message) => () => {
-        setMaxImg('block')
-        let url = message.url || message.body.url
-        setMaxImgUrl(url)
     }
 
     return (
@@ -56,18 +63,18 @@ const QaMessage = (props) => {
                                 </Tag>
                             </Flex>
                             {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                            {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={showMaxImg(message)} />}
+                            {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={() => showMaximumPicture(message)} />}
                         </div>
                     )
                 })
             }
-            {/* 单击展示大图 */}
-            <div style={{ display: maxImg }}>
-                <div className="mask" onClick={() => { setMaxImg('none') }}></div>
-                <div className="im-content-card">
-                    <img src={maxImgUrl}></img>
-                </div>
-            </div>
+            <AntModal
+                isOpen={maxImg}
+                onRequestClose={() => { setMaxImg(false) }}
+                style={customStyles}
+            >
+                <img src={maxImgUrl} alt="picture load failed" />
+            </AntModal>
         </div>
     )
 }

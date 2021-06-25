@@ -16,6 +16,7 @@ import RcTooltip from 'rc-tooltip'
 import 'rc-tooltip/assets/bootstrap_white.css'
 import checkInputStringRealLength from '../../utils/checkStringRealLength'
 import iconMute from '../../themes/img/icon-mute.svg'
+import iconScreen from '../../themes/img/icon-caijian.svg'
 
 // 展示表情
 const ShowEomji = ({ getEmoji, hideEmoji }) => {
@@ -56,6 +57,42 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const [isShow, setIsShow] = useState(false);
     const [showText, setShowText] = useState('');
     const [sendBtnDisabled, setSendBtnDisabled] = useState(true);
+    const isElectron = window.navigator.userAgent.indexOf("Electron") !== -1;
+    if(isElectron){
+        const ipcRenderer = window.electron.ipcRenderer;
+        const dataURLtoBlob = (dataurl) => {
+            var arr = dataurl.split(","),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+        
+        ipcRenderer.removeAllListeners("shortcutCaptureDone");
+        ipcRenderer.on(
+            "shortcutCaptureDone",
+            (event,dataURL, bounds) => {
+                console.log("shortcutCaptureDone>>>",dataURL,"bounds>>>",bounds)
+                const blob = dataURLtoBlob(dataURL);
+                //dataURL = window.URL.createObjectURL(blob);
+                console.log("blob>>>",blob)
+                let file = {
+					url: dataURL,
+					data: blob,
+					filename: `截图文件${new Date().getTime()}.png`,
+					filetype: "png",
+					// 该参数用来标识图片发送对象的来源，主要告诉拦截器如果是截图，就不要在输入框生成缩略图了
+					from: "screenShot",
+					imgsrc: dataURL
+                }
+                sendImgMessage(roomId,'',file)
+            }
+        );
+    }
 
 
     // 整体都要改
@@ -212,10 +249,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         WebIM.conn.send(msg.body);
     }
     // 发送图片
-    const sendImgMessage = (roomId, e) => {
+    const sendImgMessage = (roomId, e,type) => {
         var id = WebIM.conn.getUniqueId();                   // 生成本地消息id
         var msg = new WebIM.message('img', id);        // 创建图片消息
-        let file = WebIM.utils.getFileUrl(e.target)     // 将图片转化为二进制文件
+        let file = type ?type : WebIM.utils.getFileUrl(e.target)     // 将图片转化为二进制文件
         var allowType = {
             'jpeg': true,
             'jpg': true,
@@ -288,6 +325,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         setIsEmoji(false)
     }
 
+    // 点击截图
+    const captureScreen = (e) => {
+        e.preventDefault();
+        window.electron && window.electron.ipcRenderer.send("shortcutcapture");
+    }
+
     // 禁言后，判断权限是否遮盖输入框
     return (
         <div className='chat-box'>
@@ -313,7 +356,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     {isEmoji && <ShowEomji getEmoji={getEmoji} hideEmoji={hideEmoji} />}
                     <RcTooltip placement="top" overlay="表情">
                         <img src={iconSmiley} onClick={showEmoji} className="chat-tool-item" />
-                    </RcTooltip>
+                    </RcTooltip>                    
                     {isTool
                         && <RcTooltip placement="top" overlay="图片">
                             <div onClick={updateImage} className="chat-tool-item">
@@ -330,6 +373,9 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                                 />
                             </div>
                         </RcTooltip>}
+                    {isTool && isElectron && <RcTooltip placement="top" overlay="截图">
+                        <img src={iconScreen} onClick={captureScreen} className="chat-tool-item" />
+                    </RcTooltip>}
                 </Flex>
                 <div>
                     {/* 输入框中placeholder：

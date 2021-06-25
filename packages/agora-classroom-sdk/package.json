@@ -148,7 +148,10 @@
     "pack:win": "cross-env ELECTRON_PROD_URL=https://webdemo.agora.io/main_land npm run electron:build && electron-builder --win",
     "bundle:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
     "pack:npm": "run-s bundle:npm build:types",
-    "doc": "typedoc --o"
+    "doc": "typedoc --o",
+    "protojs": "pbjs -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
+    "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
+    "proto": "run-s protojs protots"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -283,12 +286,12 @@
     "zlib": "1.0.5"
   },
   "dependencies": {
+    "electron-screenshots": "0.0.13",
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.0.13",
     "@tailwindcss/forms": "0.2.1",
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",
-    "active-win": "7.5.0",
     "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.1.2",

@@ -98,6 +98,7 @@
   "homepage": "https://github.com/agoraio-community/CloudClass-Desktop#readme",
   "dependencies": {
     "agora-edu-core": "1.1.2",
+    "react-modal": "^3.14.3",
     "type-fest": "^1.1.3"
   }
 }
