@@ -697,12 +697,18 @@ export class PretestStore {
     throw new Error('Method not implemented.');
   }
 
+  @action.bound
   async changeTestSpeakerVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if (this.mediaService.isElectron){
+      this.mediaService.electron.client.adjustRecordingSignalVolume(value);
+    }
   }
 
+  @action.bound
   async changeTestMicrophoneVolume(value: any) {
-    throw new Error('Method not implemented.');
+    if (this.mediaService.isElectron){
+      this.mediaService.electron.client.adjustPlaybackSignalVolume(value)
+    }
   }
 
 
