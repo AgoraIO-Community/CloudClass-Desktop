@@ -944,7 +944,7 @@ export class BoardStore extends ZoomController {
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
-      if (state.cameraState || state.zoomScale) {
+      if (state.cameraState) {
         // runInAction(() => {
         if (state.cameraState && state.cameraState.scale) {
           this.scale = state.cameraState.scale
@@ -957,11 +957,11 @@ export class BoardStore extends ZoomController {
         this.isFullScreen = state.globalState?.isFullScreen ?? false
         this.updateBoardState(state.globalState)
       }
-      if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
-        if (this.room) {
-          this.scaleToFit()
-        }
-      }
+      // if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
+      //   if (this.room) {
+      //     this.scaleToFit()
+      //   }
+      // }
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
       }
@@ -973,7 +973,7 @@ export class BoardStore extends ZoomController {
       if (state.sceneState) {
         this.updatePageHistory()
         this.autoFetchDynamicTask()
-        this.moveCamera()
+        // this.moveCamera()
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList()
@@ -1041,7 +1041,7 @@ export class BoardStore extends ZoomController {
     const room = this.room
     if (this.canSyncCameraState && room) {
       const path = room.state.sceneState.contextPath
-      if (path === "/") {
+      if (path === "/" || path === "") {
         this.room.setGlobalState({
           cameraState: {
             //@ts-ignore
@@ -1197,9 +1197,9 @@ export class BoardStore extends ZoomController {
   @observable
   shape: string = 'pencil';
 
-  getCurrentPath() {
+  getCurrentContextPath() {
     const path = this.room.state.sceneState.contextPath
-    if (path === "/") {
+    if (path === "/" || path === '') {
       return "/init"
     }
     return path
@@ -1209,12 +1209,15 @@ export class BoardStore extends ZoomController {
   setScenePath(path: string) {
     this.room.setScenePath(path)
     const scenesCameraMap = (this.room.state.globalState as any).cameraState
-    if (this.canSyncCameraState && scenesCameraMap && scenesCameraMap.hasOwnProperty(path)) {
-      const cameraState = scenesCameraMap[path]
+    const contextPath = this.getCurrentContextPath()
+    if (this.canSyncCameraState && scenesCameraMap && scenesCameraMap.hasOwnProperty(contextPath) && scenesCameraMap[contextPath]) {
+      const cameraState = scenesCameraMap[contextPath]
       this.room.moveCamera({
         animationMode: AnimationMode.Immediately,
         ...cameraState
       })
+    } else {
+      this.room.scalePptToFit()
     }
   }
 
@@ -1428,7 +1431,7 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       this.room.moveCamera({scale})
     }
-    this.scale = this.room.state.zoomScale
+    this.scale = this.room.state.cameraState.scale
   }
 
   @computed 
@@ -1764,7 +1767,9 @@ export class BoardStore extends ZoomController {
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
           this.room.moveCamera({centerX: 0, centerY: 0});
-          this.moveCamera()
+          // this.moveCamera()
+          this.room.scalePptToFit()
+          this.updateCameraState(this.room.state.cameraState)
           this.room.refreshViewSize();
         }
       })
@@ -2154,15 +2159,30 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   scaleToFit() {
-    if (this.isH5IFrame) {
-      if(this.iframe){
-        this.iframe.scaleIframeToFit()
+    // if (this.isH5IFrame) {
+    //   if(this.iframe){
+    //     this.iframe.scaleIframeToFit()
+    //   } else {
+    //       //@ts-ignore
+    //       this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+    //   }
+    // }
+
+    const scenesCameraMap = (this.room.state.globalState as any).cameraState
+    const contextPath = this.getCurrentContextPath()
+    if (this.canSyncCameraState) {
+      if(scenesCameraMap 
+        && scenesCameraMap.hasOwnProperty(contextPath) && scenesCameraMap[contextPath]) {
+        const cameraState = scenesCameraMap[contextPath]
+        this.room.moveCamera({
+          animationMode: AnimationMode.Immediately,
+          ...cameraState
+        })
       } else {
-          //@ts-ignore
-          this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+        this.room.scalePptToFit()
+        this.updateCameraState(this.room.state.cameraState)
       }
     }
-    this.room.scalePptToFit()
   } 
 
   @action.bound
