@@ -16,7 +16,8 @@ export const SettingContainer = observer(({ id }: any) => {
         changeCamera,
         changeMicrophone,
         changeSpeakerVolume,
-        changeMicrophoneVolume
+        changeMicrophoneVolume,
+        isNative
     } = useMediaContext()
 
     const changeDevice = async (deviceType: string, value: any) => {
@@ -73,6 +74,7 @@ export const SettingContainer = observer(({ id }: any) => {
                 onChangeAudioVolume={changeAudioVolume}
                 hasMicrophoneVolume={false}
                 hasSpeakerVolume={false}
+                isNative={isNative}
             />
         </Modal>
     )

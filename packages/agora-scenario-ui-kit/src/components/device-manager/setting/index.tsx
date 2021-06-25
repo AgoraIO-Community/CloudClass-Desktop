@@ -86,13 +86,13 @@ export const Setting: FC<SettingProps> = ({
                     
                 </Select>
                 {
-                hasMicrophoneVolume ? 
+                isNative ? 
                     (
                         <div className="device-volume">
                             <span className="device-text">{t('device.microphone_volume')}</span>
                             <Slider
                                 min={0}
-                                max={100}
+                                max={255}
                                 defaultValue={microphoneVolume}
                                 step={1}
                                 onChange={async value => {
@@ -116,13 +116,13 @@ export const Setting: FC<SettingProps> = ({
                 >
                 </Select>
                 {
-                    hasSpeakerVolume ? 
+                    isNative ? 
                     (
                         <div className="device-volume">
                             <span className="device-text">{t('device.speaker_volume')}</span>
                             <Slider
                                 min={0}
-                                max={100}
+                                max={255}
                                 defaultValue={speakerVolume}
                                 step={1}
                                 onChange={async value => {
