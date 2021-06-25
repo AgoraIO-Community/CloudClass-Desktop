@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgoraFlexibleClassroomDemo</title>
+  <style>
+    #root1 {
+      width: 100%;
+      height: 100%;
+    }
+    .spinner {
+      animation: rotate 1.25s infinite ease;
+      border:8px solid rgba(100,100,100,0.6);
+      border-top-color: rgba(200,200,200,0.6);
+      border-radius:50%;
+      display:block;
+      font-size:0;
+      height: 30px;
+      left:50%;
+      margin:-1em 0 0 -1em;
+      top:50%;
+      width: 30px;
+    }
+    @keyframes rotate {
+      0% { transform:rotate(0deg) }
+      100%   { transform:rotate(360deg) }
+    }
+
+    .loading-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: #959595;
+    }
+
+    .loading-container .loading-block {
+      width: 400px;height: 200px;display: flex;align-items: center;justify-content: flex-start;flex-direction: column;
+      font-size: 12px;
+    }
+
+    body{
+      width:100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    .footer {
+      position: absolute;
+      right: 10px;
+      bottom: 5px;
+      font-size: 12px;
+      color: #ddd;
+    }
+
+  </style>
+  <script>
+    let readyState = {
+        dns: false,
+        dom: false,
+        lib: false,
+        params: false
+    }
+
+    let readyValue = {
+      dns: -1,
+      dom: -1,
+      lib: -1,
+      params: null
+    }
+    window.addEventListener('message', function(e) {  
+      if (e.source != window.parent)   
+          return;
+      let data = e.data
+      let {appId, options, cachePath, cmd, data:aData} = JSON.parse(data)
+
+      if(cmd) {
+        if(cmd === 'screenshot') {
+          if(window.globalStore 
+            && window.globalStore.acadsocStore) {
+              if(aData) {
+                const {amount = 0} = aData
+                window.globalStore.acadsocStore.highlightCount = parseInt(amount)
+              }
+          }
+        } else if(cmd === 'api-callback') {
+          if(window.globalStore && window.globalStore.apiStore) {
+            if(aData) {
+              const {seqId, err, result} = aData
+              window.globalStore.apiStore.externalAPICallback(seqId, err || null, result)
+            }
+          }
+        }
+      } else {
+        if(!options || !appId) {
+          document.querySelector("#root1").textContent = "launchOption/appid missing"
+        } else {
+            readyValue.params = {appId, options, cachePath}
+            readyState.params = true
+
+            // ack
+            window.parent.postMessage(JSON.stringify({loadevent:{params: true}}), '*');
+        }
+      }
+          
+    }, false);
+
+
+    const update_status = (status) => {
+      let div = document.getElementById('status-label')
+      if(div) {
+        div.textContent = status
+      }
+    }
+
+    const update_launch_status = (status) => {
+      update_status([
+        `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
+        `Library ${!window.AgoraEduSDK ? 'loading...' : 'loaded'}`,
+        `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
+        `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
+        `Resource ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
+        `${status}`
+      ].join('\r\n'))
+    }
+
+
+    const launchApplication = ({appId, cachePath, options}) => {
+      return new Promise((resolve, reject) => {
+        if(AgoraEduSDK.setParameters) {
+          AgoraEduSDK.setParameters(JSON.stringify({
+              "edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co",
+              "edu.logUrl":"https://api-solutions-dev.bj2.agoralab.co"
+          }))
+          console.log(`AgoraEduSDK setParameters called`)
+        } 
+        AgoraEduSDK.config({
+          appId,
+          cachePath
+        })
+
+        options["userUuid"] = options["rtmUid"]
+        
+        Object.assign(options, {
+          listener: (evt, args) => {
+            console.log("evt", evt, args)
+            window.parent.postMessage(JSON.stringify({classevent:{evt, args}}), '*');
+          }
+        })
+        AgoraEduSDK.launch(
+          document.querySelector("#root1"), options
+        ).then(resolve).catch(reject)
+      })
+    }
+
+    let rootDom = null
+
+    const collectPerformance = () => {
+      if (performance === undefined) {
+        update_status('Loading...Unknown Environment')
+        return;
+      }
+      let entries = performance.getEntries();
+      let results = []
+      for(let i = 0; i < entries.length; i++) {
+        let entry = entries[i].toJSON()
+        if(entry.entryType === 'navigation') {
+          readyValue.dom = entry.duration
+          readyValue.dns = (entry.domainLookupEnd - entry.domainLookupStart)
+          readyState.dom = entry.loadEventEnd !== undefined
+          readyState.dns = entry.domainLookupEnd !== undefined
+        } else if(entry.entryType === 'resource' && entry.name.includes('edu_sdk.bundle.js')) {
+          readyValue.lib = entry.duration
+          readyState.lib = entry.responseEnd !== undefined
+        }
+      }
+
+
+      if(!rootDom) {
+        rootDom = document.querySelector("#root1")
+      }
+
+      if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom || !window.AgoraEduSDK) {
+        update_launch_status('Waiting to launch..')
+        setTimeout(collectPerformance, 200)
+      } else {
+        update_launch_status('Application Launching...')
+        launchApplication(readyValue.params).then(() => {
+          update_launch_status('Application Launch Success...')
+        }).catch((e) => {
+          update_launch_status(`Application Launch Failed: ${e.message}`)
+        })
+      }
+    }
+
+    collectPerformance()
+  </script>
+</head>
+
+<body>
+  <div class="loading-container">
+    <div class="loading-block">
+      <div class="spinner">Loading...</div>
+      <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
+    </div>
+  </div>
+  <div class="footer">v1.1.2.2</div>
+  <div id="root1"></div>
+  <script src="./edu_sdk.bundle.js"></script>
+</body>
+
+</html>
