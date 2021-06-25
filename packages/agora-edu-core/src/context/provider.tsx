@@ -150,6 +150,7 @@ export const usePretestContext = (): PretestContext => {
     startPretestMicrophone: pretestStore.openTestMicrophone,
     stopPretestMicrophone: pretestStore.closeTestMicrophone,
     changeTestCamera: pretestStore.changeTestCamera,
+    changeTestSpeaker: pretestStore.changeTestSpeaker,
     changeTestMicrophone: pretestStore.changeTestMicrophone,
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,

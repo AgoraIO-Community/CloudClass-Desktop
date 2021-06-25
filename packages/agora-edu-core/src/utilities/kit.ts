@@ -385,7 +385,7 @@ export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) 
 export const getDeviceLabelFromStorage = (type: string) => {
   const mediaDeviceStorage = GlobalStorage.read("mediaDevice") || {}
 
-  if (!['cameraLabel', 'microphoneLabel'].includes(type)) {
+  if (!['cameraLabel', 'microphoneLabel', 'speakerLabe'].includes(type)) {
     return AgoraMediaDeviceEnum.Default
   }
   return mediaDeviceStorage[type]

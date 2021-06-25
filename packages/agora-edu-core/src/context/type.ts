@@ -362,6 +362,10 @@ export type PretestContext = {
      */
     changeTestMicrophone: (deviceId: string) => Promise<void>,
     /**
+     * 切换扬声器设备
+     */
+     changeTestSpeaker: (deviceId: string) => Promise<void>,
+    /**
      * 改变麦克风设备的音量
      * @param deviceId 麦克风设备ID
      * @version v1.1.0
@@ -1345,6 +1349,11 @@ export type MediaContext = {
      * @version v1.1.2
      */
     changeMicrophone: (deviceId: string) => Promise<void>
+    /**
+     * 切换扬声器
+     * @version v1.1.2
+     */
+     changeSpeaker: (deviceId: string) => Promise<void>
     /**
      * 设置扬声器设备音量，仅electron
      * @version v1.1.2

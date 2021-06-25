@@ -36,6 +36,7 @@ export const PretestContainer = observer(() => {
         microphoneList,
         speakerList,
         cameraId,
+        speakerId,
         microphoneId,
         isMirror,
         setMirror,
@@ -44,6 +45,7 @@ export const PretestContainer = observer(() => {
         installPretest,
         changeTestCamera,
         changeTestMicrophone,
+        changeTestSpeaker,
         stopPretestCamera,
         stopPretestMicrophone,
         pretestNoticeChannel,
@@ -83,6 +85,10 @@ export const PretestContainer = observer(() => {
             }
             case 'microphone': {
                 await changeTestMicrophone(value)
+                break;
+            }
+            case 'speaker': {
+                await changeTestSpeaker(value)
                 break;
             }
         }
@@ -142,7 +148,7 @@ export const PretestContainer = observer(() => {
                     microphoneList={microphoneList}
                     microphoneId={microphoneId}
                     speakerList={speakerList}
-                    speakerId={speakerList[0].deviceId}
+                    speakerId={speakerId}
                     isNative={isNative}
                     videoComponent={<VideoPreviewPlayer />}
                     volumeComponent={<VolumeIndicationView />}

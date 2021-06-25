@@ -35,6 +35,7 @@ export const useMediaContext = (): MediaContext => {
       // cameraRenderer,
       changeCamera,
       changeMicrophone,
+      changeTestSpeaker,
       changeSpeakerVolume,
       stopDeviceTestError,
       changeMicrophoneVolume,
@@ -105,6 +106,7 @@ export const useMediaContext = (): MediaContext => {
         speakerId,
         changeDevice,
         changeAudioVolume,
+        changeSpeaker: changeTestSpeaker,
         // removeDialog
         changeSpeakerVolume,
         changeMicrophoneVolume,
