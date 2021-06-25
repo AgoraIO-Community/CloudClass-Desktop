@@ -107,23 +107,23 @@
         duration: +duration,
         courseWareList,
         personalCourseWareList,
-        listener: (evt, args) => {
-          console.log("evt", evt, args);
+        listener: async (evt, args) => {
+          if(evt === 1) {
+            let reported = false
+            while(!reported) {
+              try {
+                await reportReady()
+                reported = true
+              }catch(e) {
+                // wait for 5 seconds
+                await wait(10 * 1000)
+              }
+            }
+          }
         }
       }
   ).then(async () => {
     console.log('start launch')
-    let reported = false
-    while(!reported) {
-      try {
-        await reportReady()
-        reported = true
-      }catch(e) {
-        // wait for 5 seconds
-        await wait(10 * 1000)
-      }
-
-    }
   })
   // }
   </script>
