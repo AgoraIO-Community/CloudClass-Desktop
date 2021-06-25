@@ -57,7 +57,11 @@
         'x-agora-uid': rtmUid,
       }
     }
-    let resp = await fetch(`https://api-test.agora.io/preview/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, opts)
+    let resp = await fetch(`https://api-solutions-pre.bj2.agoralab.co/edu/acadsoc/apps/${appId}/v1/rooms/${roomUuid}/records/ready`, opts)
+
+    if(resp.status !== 200) {
+      throw new Error(`request failed: ${resp.status}`)
+    }
 
     return resp
   }
@@ -116,7 +120,7 @@
         reported = true
       }catch(e) {
         // wait for 5 seconds
-        await wait(5000)
+        await wait(10 * 1000)
       }
 
     }
