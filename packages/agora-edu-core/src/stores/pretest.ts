@@ -98,6 +98,9 @@ export class PretestStore {
 
   @observable
   microphoneLabel: string = getDeviceLabelFromStorage('microphoneLabel');
+
+  @observable
+  speakerLabel1: string = getDeviceLabelFromStorage('speakerLabe');
   _totalVolume: any;
 
   @observable
@@ -106,6 +109,9 @@ export class PretestStore {
   @observable
   _microphoneId: string = '';
   
+  @observable
+  _speakerId: string = '';
+
   @computed
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
@@ -128,6 +134,14 @@ export class PretestStore {
 
   @computed
   get speakerId(): string {
+    if(this.isElectron){
+      // const defaultValue = AgoraMediaDeviceEnum.Default
+      const idx = this.speakerList.findIndex((it: any) => it.label === this.speakerLabel1)
+      if (this.speakerList[idx]) {
+        return this.speakerList[idx].deviceId
+      }
+      return 'web_default'
+    }
     return 'web_default'
   }
 
@@ -320,20 +334,32 @@ export class PretestStore {
   
   @computed
   get speakerList(): any[] {
-    // if (this.appStore.uiStore.isElectron) {
-    //   return this._speakerList
-    // }
+    if(this.isElectron){
+      return this._speakerList
+    }
     return [{
       label: 'browser default',
       deviceId: 'web_default'
     }]
-    // return this._speakerList
   }
 
   @observable
   private initRecords: Record<'videoDeviceInit' | 'audioDeviceInit', boolean> = {
     videoDeviceInit: false,
     audioDeviceInit: false
+  }
+
+  @action.bound
+  getSpeakerList(){
+    if(this.isElectron){
+      this._speakerList = (this.mediaService.electron.client.getAudioPlaybackDevices()).map((item: any)=>{
+        return {
+          deviceId: item.deviceid,
+          label: item.devicename
+        }
+      });
+    }
+    return this._speakerList
   }
 
   @action.bound
@@ -404,6 +430,7 @@ export class PretestStore {
               const label = this.mediaService.getMicrophoneLabel()
               this.updateMicrophoneLabel(label)
               this.updateTestMicrophoneLabel()
+              this.updateTestSpeakerLabel();
             }
             runInAction(() => {
               if (audioDeviceInit && list.length > this._microphoneList.length) {
@@ -426,6 +453,7 @@ export class PretestStore {
               this._microphoneList = list
             })
           })
+          this.getSpeakerList();
           resolve()
         }))
       }
@@ -581,6 +609,11 @@ export class PretestStore {
     this._cameraId = this.cameraId
   }
 
+  updateTestSpeakerLabel(){
+    this.speakerLabel1 = this.mediaService.getSpeakerLabel();
+    this._speakerId = this.speakerId;
+  }
+
   @action.bound
   async changeTestMicrophone(deviceId: string) {
     try {
@@ -682,7 +715,8 @@ export class PretestStore {
 
   @action.bound
   async changeElectronTestSpeaker(deviceId: string) {
-    console.log('device id', deviceId)
+    this.mediaService.electron.client.setAudioPlaybackDevice(deviceId);
+    this.updateTestSpeakerLabel();
   }
 
   @action.bound

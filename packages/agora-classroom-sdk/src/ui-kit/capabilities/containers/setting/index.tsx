@@ -15,6 +15,7 @@ export const SettingContainer = observer(({ id }: any) => {
         microphoneId,
         changeCamera,
         changeMicrophone,
+        changeSpeaker,
         changeSpeakerVolume,
         changeMicrophoneVolume,
         isNative
@@ -28,6 +29,10 @@ export const SettingContainer = observer(({ id }: any) => {
             }
             case 'microphone': {
                 await changeMicrophone(value)
+                break;
+            }
+            case 'speaker': {
+                await changeSpeaker(value)
                 break;
             }
         }

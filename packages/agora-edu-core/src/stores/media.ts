@@ -302,6 +302,9 @@ export class MediaStore {
     this.mediaService.on('audio-device-changed', debounce(async (info: any) => {
       BizLogger.info("audio device changed ", info)
       this.appStore.pretestStore.getMicrophoneList();
+      this.appStore.pretestStore.getSpeakerList();
+      this.appStore.pretestStore.updateTestSpeakerLabel();
+      this.appStore.pretestStore.updateTestMicrophoneLabel();
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
         //@ts-ignore
@@ -342,6 +345,7 @@ export class MediaStore {
       //   }
       // }
       this.appStore.pretestStore.getCameraList();
+      this.appStore.pretestStore.updateTestCameraLabel();
       if (appStore.isElectron) {
         const {deviceId, type, state} = info
         //@ts-ignore
