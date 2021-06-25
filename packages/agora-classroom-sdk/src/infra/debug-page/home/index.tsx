@@ -147,11 +147,12 @@ export const HomePage = observer(() => {
           AgoraEduSDK.config({
             appId: `${REACT_APP_AGORA_APP_ID}`
           })
-          AgoraEduSDK.pretest(document.querySelector("#pretest")!, {
+          let classroom = await AgoraEduSDK.pretest(document.querySelector("#pretest")!, {
             language: language as LanguageEnum,
             listener: (evt, params) => {
               if(evt === AgoraEduEvent.pretest) {
                 alert(`cam ${params.cameraError || 'ok'}, mic ${params.microphoneError || 'ok'}`)
+                classroom.destroy()
               }
             }
           })
