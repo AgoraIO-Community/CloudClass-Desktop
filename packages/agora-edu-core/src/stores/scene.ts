@@ -1615,9 +1615,6 @@ export class SceneStore extends SimpleInterval {
     const roomType = this.roomInfo?.roomType ?? 1
     let tools:ControlTool[] = []
     
-    if([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType)) {
-      tools.push(ControlTool.offPodiumAll)
-    }
     if(roomType === EduRoomType.SceneTypeMiddleClass) {
       tools.push(ControlTool.offPodiumAll)
     }

@@ -616,6 +616,7 @@ export class AgoraEduApi extends ApiBase {
         startTime: get(entryRoomData, 'room.roomState.startTime'),
         state: get(entryRoomData, 'room.roomState.state'),
         properties: get(entryRoomData, 'room.roomProperties'),
+        createTime: get(entryRoomData, 'room.roomState.createTime')
       },
       user: {
         uuid: get(entryRoomData, 'user.userUuid'),
