@@ -40,7 +40,7 @@
     pretest = false,
     rtmUid,
     rtmToken,
-    language,
+    language = "zh",
     translateLanguage = 'auto',
     startTime,
     duration,
@@ -57,7 +57,7 @@
         'x-agora-uid': rtmUid,
       }
     }
-    let resp = await fetch(`https://api-solutions-dev.bj2.agoralab.co/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, opts)
+    let resp = await fetch(`https://api-test.agora.io/preview/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, opts)
 
     return resp
   }
@@ -68,10 +68,6 @@
         resolve()
       }, time)
     })
-  }
-
-  const reportReady = async () => {
-    fetch()
   }
   // const options = paramsObject
   // if(!options) {
@@ -93,10 +89,12 @@
         userUuid,
         userName,
         roomUuid,
-        roleType: +userRole,
+        // record always use invisible role
+        roleType: 0,
         roomType: +roomType,
         roomName,
-        pretest,
+        // record always disable 
+        pretest: false,
         rtmUid,
         rtmToken,
         language,
