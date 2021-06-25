@@ -891,7 +891,7 @@ export class BoardStore extends ZoomController {
     this.updateBoardState(this.room.state.globalState as CustomizeGlobalState)
     this.updateCourseWareList()
 
-    this.pptAutoFullScreen()
+    // this.pptAutoFullScreen()
 
     this.updateLocalResourceList()
     this.updateLocalSceneState()
@@ -906,6 +906,7 @@ export class BoardStore extends ZoomController {
       if (scene && scene.ppt) {
         const width = scene.ppt.width;
         const height = scene.ppt.height;
+        // TODO: camera rectangle, can be alternative use scalePptToFit
         room.moveCameraToContain({
           originX: -width / 2,
           originY: -height / 2,
