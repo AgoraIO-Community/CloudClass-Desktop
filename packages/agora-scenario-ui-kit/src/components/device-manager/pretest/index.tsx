@@ -53,8 +53,8 @@ const PretestComponent: React.FC<PretestProps> = ({
     speakerList = [],
     speakerId,
     isNative = false,
-    microphoneVolume,
-    speakerVolume = 50,
+    microphoneVolume = 100,
+    speakerVolume = 100,
     speakerTestUrl,
     speakerLevel = 0,
     cameraError = false,
@@ -262,7 +262,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                             <span className="device-text">{transI18n('media.microphone_volume')}</span>
                             <Slider
                                 min={0}
-                                max={100}
+                                max={255}
                                 defaultValue={microphoneVolume}
                                 step={1}
                                 onChange={async value => {
@@ -294,7 +294,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                 <span className="device-text">{t('media.volume')}</span>
                                 <Slider
                                     min={0}
-                                    max={100}
+                                    max={255}
                                     defaultValue={speakerVolume}
                                     step={1}
                                     onChange={async value => {

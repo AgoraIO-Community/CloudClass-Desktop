@@ -700,27 +700,28 @@ export class PretestStore {
   @action.bound
   async changeTestSpeakerVolume(value: any) {
     if (this.mediaService.isElectron){
-      this.mediaService.electron.client.adjustRecordingSignalVolume(value);
+      this.mediaService.electron.client.setAudioPlaybackVolume(value);
     }
   }
 
   @action.bound
   async changeTestMicrophoneVolume(value: any) {
     if (this.mediaService.isElectron){
-      this.mediaService.electron.client.adjustPlaybackSignalVolume(value)
+      this.mediaService.electron.client.setAudioRecordingVolume(value)
     }
   }
 
-
+  @action.bound
   async changeSpeakerVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.adjustPlaybackSignalVolume(value)
+      this.mediaService.electron.client.setAudioPlaybackVolume(value)
     }
   }
-
+  
+  @action.bound
   async changeMicrophoneVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.adjustRecordingSignalVolume(value)
+      this.mediaService.electron.client.setAudioRecordingVolume(value)
     }
   }
 
