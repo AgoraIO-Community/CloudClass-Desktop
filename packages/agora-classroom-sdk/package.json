@@ -283,6 +283,7 @@
     "zlib": "1.0.5"
   },
   "dependencies": {
+    "active-win": "7.5.0",
     "electron-screenshots": "0.0.13",
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.0.13",
