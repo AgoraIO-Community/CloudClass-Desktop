@@ -14,6 +14,7 @@ message ApaasUserJoin {
   string streamSid = 11; // rtc sid
   string rtmSid = 12; // rtm sid
   string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+  int64 roomCreateTs = 14; // 房间创建时间
 }
 // id = 9013
 message ApaasUserQuit {
@@ -30,6 +31,7 @@ message ApaasUserQuit {
   string streamSid = 11; // rtc sid
   string rtmSid = 12; // rtm sid
   string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+  int64 roomCreateTs = 14; // 房间创建时间
 }
 // id = 9014
 message ApaasUserReconnect {
@@ -46,6 +48,7 @@ message ApaasUserReconnect {
   string streamSid = 11; // rtc sid
   string rtmSid = 12; // rtm sid
   string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+  int64 roomCreateTs = 14; // 房间创建时间
 }
 // id = 9017
 message ScreenShareStar {
@@ -62,6 +65,7 @@ message ScreenShareStar {
   string streamSid = 11; // rtc sid
   string rtmSid = 12; // rtm sid
   string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+  int64 roomCreateTs = 14; // 房间创建时间
 }
 // id = 9019
 message ScreenShareEnd {
@@ -78,4 +82,5 @@ message ScreenShareEnd {
   string streamSid = 11; // rtc sid
   string rtmSid = 12; // rtm sid
   string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+  int64 roomCreateTs = 14; // 房间创建时间
 }
