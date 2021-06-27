@@ -97,10 +97,19 @@ export class PretestStore {
   cameraLabel: string = getDeviceLabelFromStorage('cameraLabel');
 
   @observable
+  cameraIdLabel: string = getDeviceLabelFromStorage('cameraLabel');
+
+  @observable
   microphoneLabel: string = getDeviceLabelFromStorage('microphoneLabel');
 
   @observable
+  microphoneIdLabel: string = getDeviceLabelFromStorage('microphoneLabel');
+
+  @observable
   speakerLabel1: string = getDeviceLabelFromStorage('speakerLabe');
+
+  @observable
+  speakerIdLabel1: string = getDeviceLabelFromStorage('speakerLabe');
   _totalVolume: any;
 
   @observable
@@ -116,6 +125,9 @@ export class PretestStore {
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel)
+    if(this.isElectron&&this.cameraIdLabel){
+      return this.cameraIdLabel.split(":::")[1];
+    }
     if (this.cameraList[idx]) {
       return this.cameraList[idx].deviceId
     }
@@ -126,6 +138,9 @@ export class PretestStore {
   get microphoneId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel)
+    if(this.isElectron&&this.microphoneIdLabel){
+      return this.microphoneIdLabel.split(":::")[1];
+    }
     if (this.microphoneList[idx]) {
       return this.microphoneList[idx].deviceId
     }
@@ -136,6 +151,9 @@ export class PretestStore {
   get speakerId(): string {
     if(this.isElectron){
       // const defaultValue = AgoraMediaDeviceEnum.Default
+      if(this.speakerIdLabel1){
+        return this.speakerIdLabel1.split(":::")[1];
+      }
       const idx = this.speakerList.findIndex((it: any) => it.label === this.speakerLabel1)
       if (this.speakerList[idx]) {
         return this.speakerList[idx].deviceId
@@ -290,6 +308,8 @@ export class PretestStore {
     this.resolutionIdx = 0
     this.cameraLabel = getDeviceLabelFromStorage('cameraLabel')
     this.microphoneLabel =  getDeviceLabelFromStorage('microphoneLabel')
+    this.cameraIdLabel = getDeviceLabelFromStorage('cameraLabel')
+    this.microphoneIdLabel =  getDeviceLabelFromStorage('microphoneLabel')
     this.web.reset()
     this.resetCameraTrack()
     this.resetMicrophoneTrack()
@@ -355,7 +375,8 @@ export class PretestStore {
       this._speakerList = (this.mediaService.electron.client.getAudioPlaybackDevices()).map((item: any)=>{
         return {
           deviceId: item.deviceid,
-          label: item.devicename
+          label: item.devicename,
+          idLabel: item.devicename + ":::" + item.deviceid
         }
       });
     }
@@ -364,13 +385,29 @@ export class PretestStore {
 
   @action.bound
   async getCameraList() {
-    this._cameraList = await this.mediaService.getCameras()
+    const _cameraList = await this.mediaService.getCameras();
+    this._cameraList = _cameraList.map((item: any)=>{
+      return {
+        ...item,
+        deviceId: item.deviceId,
+        label: item.label,
+        idLabel: item.label + ":::" + item.deviceId
+      }
+    })
     return this._cameraList
   }
 
   @action.bound
   async getMicrophoneList() {
-    this._microphoneList = await this.mediaService.getMicrophones()
+    const _microphoneList = await this.mediaService.getMicrophones()
+    this._microphoneList = _microphoneList.map((item: any)=>{
+      return {
+        ...item,
+        deviceId: item.deviceId,
+        label: item.label,
+        idLabel: item.label + ":::" + item.deviceId
+      }
+    })
     return this._microphoneList
   }
 
@@ -405,7 +442,14 @@ export class PretestStore {
         if (this.isWeb) {
           this.muteCamera()
         }
-        this._cameraList = cams
+        this._cameraList = cams.map((item: any)=>{
+          return {
+            ...item,
+            deviceId: item.deviceId,
+            label: item.label,
+            idLabel: item.label + ":::" + item.deviceId
+          }
+        })
       } catch (err) {
         console.log(err)
       }
@@ -441,7 +485,14 @@ export class PretestStore {
         if (this.isWeb) {
           this.muteMicrophone()
         }
-        this._microphoneList = mics
+        this._microphoneList = mics.map((item: any)=>{
+          return {
+            ...item,
+            deviceId: item.deviceId,
+            label: item.label,
+            idLabel: item.label + ":::" + item.deviceId
+          }
+        })
       } catch (err) {
         console.log(err)
       }
@@ -475,6 +526,7 @@ export class PretestStore {
     this._microphoneId = AgoraMediaDeviceEnum.Disabled
     this.mediaService.disableLocalAudio()
     if (this.isElectron) {
+      this.microphoneIdLabel = this.microphoneLabel + ":::" + this._microphoneId;
       this.mediaService.electron.client.stopAudioRecordingDeviceTest()
     }
     this.appStore.mediaStore.totalVolume = 0
@@ -483,6 +535,9 @@ export class PretestStore {
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
     this._cameraId = AgoraMediaDeviceEnum.Disabled
+    if(this.isElectron){
+      this.cameraIdLabel = this.cameraLabel + ":::" + this._cameraId;
+    }
     this.mediaService.disableLocalVideo()
     if (this._cameraRenderer) {
       this._cameraRenderer.stop()
@@ -497,6 +552,9 @@ export class PretestStore {
       this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getTestCameraLabel()
       this._cameraId = this.cameraId
+      if(this.isElectron){
+        this.cameraIdLabel = this.mediaService.getTestCameraLabel() + ":::" + this.mediaService.electron.client.getCurrentVideoDevice();
+      }
     } catch(err) {
       const error = GenericErrorWrapper(err)
       this.muteCamera()
@@ -555,6 +613,9 @@ export class PretestStore {
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
       this._microphoneId = this.microphoneId
+      if(this.isElectron){
+        this.microphoneIdLabel = this.mediaService.getTestMicrophoneLabel() + ":::" + this.mediaService.electron.client.getCurrentAudioRecordingDevice();
+      }
     } catch(err) {
       this.muteMicrophone()
       const error = GenericErrorWrapper(err)
@@ -573,27 +634,42 @@ export class PretestStore {
   }
 
   updateCameraLabel(label: string) {
+    if(this.isElectron){
+      this.cameraIdLabel = this.mediaService.getTestCameraLabel() + ":::" + this.mediaService.electron.client.getCurrentVideoDevice();
+    }
     this.cameraLabel = label
     this._cameraId = this.cameraId
   }
 
   updateMicrophoneLabel(label: string) {
+    if(this.isElectron){
+      this.microphoneIdLabel = this.mediaService.getTestMicrophoneLabel() + ":::" + this.mediaService.electron.client.getCurrentAudioRecordingDevice();
+    }
     this.microphoneLabel = label
     this._microphoneId = this.microphoneId
   }
 
   updateTestMicrophoneLabel() {
+    if(this.isElectron){
+      this.microphoneIdLabel = this.mediaService.getTestMicrophoneLabel() + ":::" + this.mediaService.electron.client.getCurrentAudioRecordingDevice();
+    }
     this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
     this._microphoneId = this.microphoneId
   }
 
   updateTestCameraLabel() {
     // this._cameraRenderer = this.mediaService.cameraRenderer
+    if(this.isElectron){
+      this.cameraIdLabel = this.mediaService.getTestCameraLabel() + ":::" + this.mediaService.electron.client.getCurrentVideoDevice();
+    }
     this.cameraLabel = this.mediaService.getTestCameraLabel()
     this._cameraId = this.cameraId
   }
 
   updateTestSpeakerLabel(){
+    if(this.isElectron){
+      this.speakerIdLabel1 = this.mediaService.getSpeakerLabel() + ":::" + this.mediaService.electron.client.getCurrentAudioPlaybackDevice();
+    }
     this.speakerLabel1 = this.mediaService.getSpeakerLabel();
     this._speakerId = this.speakerId;
   }
@@ -679,6 +755,9 @@ export class PretestStore {
       this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this.appStore.deviceInfo.cameraName = this.cameraLabel
+      if(this.isElectron){
+        this.cameraIdLabel = this.mediaService.getTestCameraLabel() + ":::" + this.mediaService.electron.client.getCurrentVideoDevice();
+      }
       this._cameraId = this.cameraId
     }
   }
@@ -777,6 +856,9 @@ export class PretestStore {
       }
       this.microphoneLabel = this.mediaService.getMicrophoneLabel()
       this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+      if(this.isElectron){
+        this.microphoneIdLabel = this.mediaService.getTestMicrophoneLabel() + ":::" + this.mediaService.electron.client.getCurrentAudioRecordingDevice();
+      }
       this._microphoneId = this.microphoneId
     }
   }
