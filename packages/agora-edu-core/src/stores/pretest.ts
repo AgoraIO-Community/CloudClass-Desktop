@@ -543,8 +543,8 @@ export class PretestStore {
           await this.mediaService.setCameraDevice(deviceId)
         } else {
           if (this.mediaService.isElectron) {
-            await this.mediaService.enableLocalVideo(true)
             await this.mediaService.setCameraDevice(deviceId)
+            await this.mediaService.enableLocalVideo(true)
           } else {
             this.mediaService.web.videoDeviceConfig.set('cameraRenderer', deviceId)
             await this.mediaService.enableLocalVideo(true)
