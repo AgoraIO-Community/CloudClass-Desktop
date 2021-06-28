@@ -1655,11 +1655,11 @@ export class RoomStore extends SimpleInterval {
               await this.sceneStore.muteLocalCamera()
             }
             if (this.sceneStore._cameraEduStream.hasAudio) {
-              BizLogger.info('open microphone')
               await this.sceneStore.unmuteLocalMicrophone()
+              BizLogger.info('open microphone')
             } else {
-              BizLogger.info('close microphone')
               await this.sceneStore.muteLocalMicrophone()
+              BizLogger.info('close microphone')
             }
           }
         } catch (err) {
