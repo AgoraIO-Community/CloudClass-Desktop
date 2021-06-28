@@ -6,6 +6,7 @@ import { registerRoute } from 'workbox-routing/registerRoute';
 import { agoraCaches, CacheResourceType } from '../web-download.file';
 import { StrategyHandler } from 'workbox-strategies/StrategyHandler';
 import { ZipReader, BlobReader, BlobWriter, getMimeType, configure } from '@zip.js/zip.js';
+import {BroadcastChannel} from 'broadcast-channel'
 
 configure({
   useWebWorkers: false

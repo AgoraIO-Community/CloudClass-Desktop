@@ -1,5 +1,6 @@
 import fetchProgress from "fetch-progress"
 import { ZipReader, BlobReader, BlobWriter, configure } from '@zip.js/zip.js'
+import {BroadcastChannel} from 'broadcast-channel'
 
 configure({
     useWebWorkers: false
