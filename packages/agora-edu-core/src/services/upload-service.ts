@@ -374,6 +374,7 @@ export class UploadService extends ApiBase {
         kind: payload.kind,
         taskToken: uploadResult.taskToken,
         region: this.region,
+        checkProgressTimeout: 10 * 1000 * 60,
         callbacks: {
           onProgressUpdated: progress => {
             console.log(' onProgressUpdated ', progress)
