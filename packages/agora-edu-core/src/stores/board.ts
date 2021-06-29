@@ -1765,12 +1765,14 @@ export class BoardStore extends ZoomController {
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-        if (this.online && this.room) {
-          this.room.moveCamera({centerX: 0, centerY: 0});
-          // this.moveCamera()
-          this.room.scalePptToFit()
-          this.updateCameraState(this.room.state.cameraState)
-          this.room.refreshViewSize();
+        if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+          if (this.online && this.room) {
+            this.room.moveCamera({centerX: 0, centerY: 0});
+            // this.moveCamera()
+            this.room.scalePptToFit()
+            this.updateCameraState(this.room.state.cameraState)
+            this.room.refreshViewSize();
+          }
         }
       })
       this.resizeObserver.observe(dom)
