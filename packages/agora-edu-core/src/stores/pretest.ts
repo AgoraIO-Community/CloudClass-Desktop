@@ -766,28 +766,28 @@ export class PretestStore {
   @action.bound
   async changeTestSpeakerVolume(value: any) {
     if (this.mediaService.isElectron){
-      this.mediaService.electron.client.setAudioPlaybackVolume(value);
+      this.mediaService.electron.client.setAudioPlaybackVolume(Math.round(value*2.55));
     }
   }
 
   @action.bound
   async changeTestMicrophoneVolume(value: any) {
     if (this.mediaService.isElectron){
-      this.mediaService.electron.client.setAudioRecordingVolume(value)
+      this.mediaService.electron.client.setAudioRecordingVolume(Math.round(value*2.55))
     }
   }
 
   @action.bound
   async changeSpeakerVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.setAudioPlaybackVolume(value)
+      this.mediaService.electron.client.setAudioPlaybackVolume(Math.round(value*2.55))
     }
   }
   
   @action.bound
   async changeMicrophoneVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.setAudioRecordingVolume(value)
+      this.mediaService.electron.client.setAudioRecordingVolume(Math.round(value*2.55))
     }
   }
 
@@ -830,5 +830,21 @@ export class PretestStore {
       }
       this._microphoneId = this.microphoneId
     }
+  }
+
+  @action.bound
+  getAudioRecordingVolume(){
+    if(this.isElectron){
+      return Math.round(this.mediaService.electron.client.getAudioRecordingVolume()/2.55);
+    }
+    return 50;
+  }
+
+  @action.bound
+  getAudioPlaybackVolume(){
+    if(this.isElectron){
+      return Math.round(this.mediaService.electron.client.getAudioPlaybackVolume()/2.55);
+    }
+    return 50;
   }
 }

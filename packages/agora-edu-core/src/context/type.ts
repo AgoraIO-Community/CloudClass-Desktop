@@ -367,16 +367,16 @@ export type PretestContext = {
      changeTestSpeaker: (deviceId: string) => Promise<void>,
     /**
      * 改变麦克风设备的音量
-     * @param deviceId 麦克风设备ID
+     * @param value 麦克采集的音量
      * @version v1.1.0
      */
-    changeTestMicrophoneVolume: (deviceId: string) => Promise<void>,
+    changeTestMicrophoneVolume: (value: number) => Promise<void>,
     /**
      * 改变扬声器设备的音量
-     * @param value 扬声器设备ID
+     * @param value 扬声器播放的音量
      * @version v1.1.0
      */
-    changeTestSpeakerVolume: (value: any) => Promise<void>
+    changeTestSpeakerVolume: (value: number) => Promise<void>
     /**
      * 预置阶段摄像头渲染器
      * @version v1.1.0
@@ -1435,7 +1435,15 @@ export type MediaContext = {
      microphoneLevel: number;
      installDevices: (option: {video?: boolean, audio?: boolean}) => Promise<void>
      getCameraList: () => Promise<any[]>,
-     getMicrophoneList: () => Promise<any[]>
+     getMicrophoneList: () => Promise<any[]>,
+     /**
+     * 获取麦克风采集声音的音量
+     */
+    getAudioRecordingVolume: () => number,
+    /**
+     * 获取扬声器播放声音的音量
+     */
+    getAudioPlaybackVolume: () => number
 }
 
 export type ReportContext = {

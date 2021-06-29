@@ -2,7 +2,7 @@ import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useUIStore } from '@/infra/hooks'
 import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 export const SettingContainer = observer(({ id }: any) => {
 
@@ -18,7 +18,9 @@ export const SettingContainer = observer(({ id }: any) => {
         changeSpeaker,
         changeSpeakerVolume,
         changeMicrophoneVolume,
-        isNative
+        isNative,
+        getAudioRecordingVolume,
+        getAudioPlaybackVolume,
     } = useMediaContext()
 
     const changeDevice = async (deviceType: string, value: any) => {
@@ -54,7 +56,8 @@ export const SettingContainer = observer(({ id }: any) => {
     const {
         removeDialog
     } = useUIStore()
-
+    const [ speakerVolume ] = useState<number>(getAudioPlaybackVolume());
+    const [ microphoneVolume ] = useState<number>(getAudioRecordingVolume());
     return (
         <Modal
             title={t('pretest.settingTitle')}
@@ -80,6 +83,8 @@ export const SettingContainer = observer(({ id }: any) => {
                 hasMicrophoneVolume={false}
                 hasSpeakerVolume={false}
                 isNative={isNative}
+                speakerVolume={speakerVolume}
+                microphoneVolume={microphoneVolume}
             />
         </Modal>
     )

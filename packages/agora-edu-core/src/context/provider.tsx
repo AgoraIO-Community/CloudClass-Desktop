@@ -157,7 +157,7 @@ export const usePretestContext = (): PretestContext => {
     pretestCameraRenderer: pretestStore.cameraRenderer,
     pretestNoticeChannel: appStore.pretestNotice$,
     installDevices: pretestStore.init,
-    pretestOnly: appStore.params.config.pretestOnly || false 
+    pretestOnly: appStore.params.config.pretestOnly || false
   }
 }
 
