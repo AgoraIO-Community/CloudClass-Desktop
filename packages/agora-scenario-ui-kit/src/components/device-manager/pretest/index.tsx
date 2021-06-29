@@ -262,7 +262,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                             <span className="device-text">{transI18n('media.microphone_volume')}</span>
                             <Slider
                                 min={0}
-                                max={255}
+                                max={100}
                                 defaultValue={microphoneVolume}
                                 step={1}
                                 onChange={async value => {
@@ -294,7 +294,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                 <span className="device-text">{t('media.volume')}</span>
                                 <Slider
                                     min={0}
-                                    max={255}
+                                    max={100}
                                     defaultValue={speakerVolume}
                                     step={1}
                                     onChange={async value => {

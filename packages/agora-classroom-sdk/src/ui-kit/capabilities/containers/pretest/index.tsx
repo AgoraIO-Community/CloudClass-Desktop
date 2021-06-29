@@ -1,6 +1,6 @@
 import { useGlobalContext, usePretestContext, useVolumeContext, useMediaContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
@@ -54,7 +54,9 @@ export const PretestContainer = observer(() => {
     } = usePretestContext()
     
     const {
-        isNative
+        isNative,
+        getAudioRecordingVolume,
+        getAudioPlaybackVolume,
     } = useMediaContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
@@ -122,7 +124,8 @@ export const PretestContainer = observer(() => {
         }
     }, [cameraError, global?.params?.roomPath, history, microphoneError, pretestOnly, stopPretestCamera, stopPretestMicrophone])
 
-    
+    const [ speakerVolume ] = useState<number>(getAudioPlaybackVolume());
+    const [ microphoneVolume ] = useState<number>(getAudioRecordingVolume());
     return (
         <div className="fixed-container">
             <Modal
@@ -152,6 +155,8 @@ export const PretestContainer = observer(() => {
                     isNative={isNative}
                     videoComponent={<VideoPreviewPlayer />}
                     volumeComponent={<VolumeIndicationView />}
+                    speakerVolume={speakerVolume}
+                    microphoneVolume={microphoneVolume}
                 />
             </Modal>
         </div>

@@ -129,6 +129,8 @@ export const useMediaContext = (): MediaContext => {
         microphoneLevel: 0,
         getCameraList,
         getMicrophoneList,
-        installDevices
+        installDevices,
+        getAudioRecordingVolume: pretestStore.getAudioRecordingVolume,
+        getAudioPlaybackVolume: pretestStore.getAudioPlaybackVolume
     }
 }

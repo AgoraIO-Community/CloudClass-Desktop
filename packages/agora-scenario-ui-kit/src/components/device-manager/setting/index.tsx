@@ -92,7 +92,7 @@ export const Setting: FC<SettingProps> = ({
                             <span className="device-text">{t('device.microphone_volume')}</span>
                             <Slider
                                 min={0}
-                                max={255}
+                                max={100}
                                 defaultValue={microphoneVolume}
                                 step={1}
                                 onChange={async value => {
@@ -122,7 +122,7 @@ export const Setting: FC<SettingProps> = ({
                             <span className="device-text">{t('device.speaker_volume')}</span>
                             <Slider
                                 min={0}
-                                max={255}
+                                max={100}
                                 defaultValue={speakerVolume}
                                 step={1}
                                 onChange={async value => {
