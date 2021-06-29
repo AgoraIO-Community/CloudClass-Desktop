@@ -8,6 +8,7 @@ import { ClassRoom, ClassRoomAbstractStore, controller } from '@/edu-sdk/control
 import { AppStore } from '@/stores/app'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
+import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 
 //@ts-ignore
 window.controller = controller
@@ -31,10 +32,22 @@ export const LaunchPage = observer(() => {
 
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
-      AgoraEduSDK.setParameters(JSON.stringify({"edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co"}))
+      // AgoraEduSDK.setParameters(JSON.stringify({"edu.apiUrl":"https://api-solutions-dev.bj2.agoralab.co"}))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
       })
+
+      const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`
+      if(appCertificate) {
+        launchOption.rtmToken = RtmTokenBuilder.buildToken(
+          `${REACT_APP_AGORA_APP_ID}`,
+          appCertificate,
+          launchOption.userUuid,
+          RtmRole.Rtm_User,
+          0
+        )
+      }
+
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {

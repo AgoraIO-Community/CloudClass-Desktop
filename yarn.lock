@@ -6061,6 +6061,14 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+agora-access-token@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npm.taobao.org/agora-access-token/download/agora-access-token-2.0.4.tgz#6a6d5996011f6000035d923342296c2594d94f82"
+  integrity sha1-am1ZlgEfYAADXZIzQilsJZTZT4I=
+  dependencies:
+    crc-32 "1.2.0"
+    cuint "0.2.2"
+
 "agora-cef-sdk@file:./packages/agora-rte-demo/vendor/agora-cef-sdk":
   version "3.1.1"
 
@@ -9082,6 +9090,14 @@ cpy@^8.1.1:
     p-filter "^2.1.0"
     p-map "^3.0.0"
 
+crc-32@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/crc-32/download/crc-32-1.2.0.tgz#cb2db6e29b88508e32d9dd0ec1693e7b41a18208"
+  integrity sha1-yy224puIUI4y2d0OwWk+e0Ghggg=
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
+
 create-ecdh@^4.0.0:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/create-ecdh/-/create-ecdh-4.0.4.tgz#d6e7f4bffa66736085a0762fd3a632684dabcc4e"
@@ -9530,6 +9546,11 @@ csstype@^3.0.2, csstype@^3.0.6:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.7.tgz#2a5fb75e1015e84dd15692f71e89a1450290950b"
   integrity sha512-KxnUB0ZMlnUWCsx2Z8MUsr6qV6ja1w9ArPErJaJaF8a5SOWoHLIszeCTKGRGRgtLgYrs1E8CHkNSP1VZTTPc9g==
+
+cuint@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.nlark.com/cuint/download/cuint-0.2.2.tgz#408086d409550c2631155619e9fa7bcadc3b991b"
+  integrity sha1-QICG1AlVDCYxFVYZ6fp7ytw7mRs=
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -11277,6 +11298,11 @@ execa@^5.0.0:
     onetime "^5.1.2"
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
+
+exit-on-epipe@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/exit-on-epipe/download/exit-on-epipe-1.0.1.tgz#0bdd92e87d5285d267daa8171d0eb06159689692"
+  integrity sha1-C92S6H1ShdJn2qgXHQ6wYVlolpI=
 
 exit@^0.1.2:
   version "0.1.2"
@@ -19597,6 +19623,11 @@ pretty-hrtime@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz#b7e3ea42435a4c9b2759d99e0f201eb195802ee1"
   integrity sha1-t+PqQkNaTJsnWdmeDyAesZWALuE=
+
+printj@~1.1.0:
+  version "1.1.2"
+  resolved "https://registry.npm.taobao.org/printj/download/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
+  integrity sha1-2Q3rKXWoufYA+zoclOP0xTx4oiI=
 
 prismjs@^1.21.0, prismjs@~1.23.0:
   version "1.23.0"
