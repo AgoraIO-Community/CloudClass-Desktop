@@ -11,7 +11,7 @@ yarn bootstrap
 
 ## config
 ```bash
-# copy config template to agora-rte-demo project
+# copy config template to agora-classroom-sdk project
 cp .env.example packages/agora-classroom-sdk/.env
 
 # fill the config with your agora.io development environment
@@ -27,5 +27,3 @@ yarn dev
 yarn build:ui-kit
 yarn build:classroom:sdk
 ```
-
-+ [Electron QuickStart](./packages/agora-electron-edu-demo/README.md)

@@ -15,7 +15,7 @@ lerna bootstrap
 ## config
 ```bash
 # 拷贝配置文件到demo目录
-cp .env.example packages/agora-rte-demo/.env
+cp .env.example packages/agora-classroom-sdk/.env
 
 # 按照模板配置你的项目
 ```
@@ -25,5 +25,3 @@ cp .env.example packages/agora-rte-demo/.env
 # 构建sdk并且运行项目
 npm run dev
 ```
-
-+ [Electron 项目快速开始](./packages/agora-electron-edu-demo/README.zh.md)
