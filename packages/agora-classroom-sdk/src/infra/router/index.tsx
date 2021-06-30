@@ -8,6 +8,7 @@ import * as React from 'react';
 import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
 import {BigClassScenario} from '~capabilities/scenarios/big-class';
+import {BigClassH5Scenario} from '~capabilities/scenarios/big-class-h5';
 import { RecordPage } from '../debug-page/record';
 
 export type AppRouteComponent = {
@@ -18,7 +19,7 @@ export type AppRouteComponent = {
 export const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
   const room = scenarioRoomPath[roomType]
   if (!room) {
-    return BizPagePath.OneToOnePath
+    return BizPagePath.OneToOnePath;
   }
   return room.path
 }
@@ -45,6 +46,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.BigClass]: {
     path: '/classroom/big',
     component: () => PageSFC(BigClassScenario)
+  },
+  [BizPageRouter.BigClassIncognito]: {
+    path: '/incognito/big',
+    component: () => PageSFC(BigClassH5Scenario)
   },
   // [BizPageRouter.SmallClassIncognito]: {
   //   path: '/incognito/small',

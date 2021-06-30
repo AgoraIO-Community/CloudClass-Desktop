@@ -65,7 +65,7 @@ export const BigClassScenario = observer(() => {
         height: '100vh'
       }}
     >
-      <NavigationBar />
+      <NavigationBar hasMore />
       <Layout className="horizontal">
         <Content className="column">
           <VideoMarqueeStudentContainer />

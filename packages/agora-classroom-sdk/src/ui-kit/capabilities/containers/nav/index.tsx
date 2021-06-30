@@ -6,10 +6,10 @@ import { observer } from 'mobx-react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
 import { BizHeader, transI18n, BizClassStatus } from '~ui-kit'
-import { Exit, Record } from '../dialog'
+import { Exit, Record, MoreInfo } from '../dialog'
 import { SettingContainer } from '../setting'
 
-export const NavigationBar = observer(() => {
+export const NavigationBar = observer(({hasMore}:any) => {
   const {
     isRecording
   } = useRecordingContext()
@@ -38,6 +38,7 @@ export const NavigationBar = observer(() => {
     'setting': () => addDialog(SettingContainer),
     'exit': () => addDialog(Exit),
     'record': () => addRecordDialog(),
+    'more': () => addDialog(MoreInfo),
   }
 
   function handleClick (type: string) {
@@ -73,6 +74,7 @@ export const NavigationBar = observer(() => {
     <BizHeader
       userType={userType}
       isNative={isNative}
+      hasMore={hasMore}
       classStatusText={classStatusText}
       classState={liveClassStatus.classState as BizClassStatus}
       isRecording={isRecording}

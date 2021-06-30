@@ -18,6 +18,10 @@ export interface MessageListProps extends BaseProps {
      */
     chatText?: string;
     /**
+     *限制输入字符数
+     */
+    limitWords?: boolean;
+    /**
      * 禁止输入框
      */
     disableChat: boolean;
@@ -39,6 +43,7 @@ export const MessageList: FC<MessageListProps> = ({
     className,
     messages = [],
     chatText,
+    limitWords = false,
     disableChat,
     onPullFresh,
     onText,
@@ -120,6 +125,7 @@ export const MessageList: FC<MessageListProps> = ({
                 <textarea
                     value={disableChat ? '' : chatText}
                     className="chat-texting-message"
+                    style={limitWords?{paddingRight: '80px'}:{}}
                     placeholder={disableChat ? transI18n('placeholder.muted_chat') : transI18n('placeholder.input_message')}
                     disabled={disableChat}
                     onChange={(e) => onText(e.currentTarget.value)}

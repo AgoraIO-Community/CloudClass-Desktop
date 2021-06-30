@@ -69,4 +69,5 @@ export type IconTypes =
   | 'laser-pointer'
   | 'recording'
   | 'clicker'
-  | 'countdown';
+  | 'countdown'
+  | 'more-info';

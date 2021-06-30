@@ -11,6 +11,7 @@ const routes: BizPageRouter[] = [
   BizPageRouter.OneToOne,
   BizPageRouter.MidClass,
   BizPageRouter.BigClass,
+  BizPageRouter.BigClassIncognito,
 ]
 
 export const LiveRoom = observer(() => {

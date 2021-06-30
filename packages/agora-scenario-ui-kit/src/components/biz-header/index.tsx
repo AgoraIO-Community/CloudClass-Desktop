@@ -72,6 +72,11 @@ export interface BizHeaderProps {
   classStatusText: string;
 
   /**
+   * 是否显示更多按钮
+   */
+  hasMore: boolean;
+
+  /**
    * 
    */
   onClick: (itemType: string) => void;
@@ -83,6 +88,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
   classState,
   isRecording = false,
   isNative = false,
+  hasMore = false,
   signalQuality,
   title,
   classStatusText,
@@ -113,6 +119,15 @@ export const BizHeader: FC<BizHeaderProps> = ({
           </div>
         </div>
         <div className="header-actions">
+          {hasMore && userType === 'teacher' ? 
+          <Tooltip title={transI18n('biz-header.more')} placement="bottom">
+            <Icon 
+              hover={true} 
+              type={"more-info"}
+              size={24} 
+              onClick={() => onClick('more')} 
+            />
+          </Tooltip> : null}
           {userType === 'teacher' ? 
           <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
             <Icon 
