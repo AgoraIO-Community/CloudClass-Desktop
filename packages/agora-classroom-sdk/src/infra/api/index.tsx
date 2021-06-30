@@ -227,14 +227,17 @@ export class AgoraEduSDK {
       const data = await eduSDKApi.getConfig()
 
       //@ts-ignore
-      let mainPath = getLiveRoomPath(option.roomType)
+      let mainPath = getLiveRoomPath(option.roomType, option.roleType)
+      if(option.userFlexProperties?.h5share){
+        mainPath = BizPagePath.BigClassIncognitoPath
+      }
       console.log('mainPath ', mainPath)
       //@ts-ignore
       let roomPath = mainPath
 
       console.log("main Path", mainPath, " room Path", roomPath)
 
-      if (option.pretest) {
+      if (option.pretest && mainPath !== BizPagePath.BigClassIncognitoPath) {
         mainPath = BizPagePath.PretestPagePath
       }
 

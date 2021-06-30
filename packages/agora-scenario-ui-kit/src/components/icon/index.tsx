@@ -17,6 +17,7 @@ const svgDict: string[] = [
   'share-screen',
   'checked',
   'close',
+  'more-info',
   'student-authorized',
   'student-whiteboard',
   'teacher-authorized',
@@ -50,7 +51,7 @@ export const Icon: FC<IconProps> = ({
   ...restProps
 }) => {
 
-  if (type === 'clicker') {
+  if (type === 'clicker' || type === 'more-info') {
     useSvg = true
   }
 

@@ -179,7 +179,7 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer = observer(({children}: any) => {
+export const WhiteboardContainer = observer(({h5share, children}: any) => {
 
   const {
     addDialog
@@ -242,7 +242,7 @@ export const WhiteboardContainer = observer(({children}: any) => {
 
   const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
 
-  const [showToolBar, showZoomControl] = showBoardTool
+  const [showToolBar, showZoomControl] = h5share?[false,false]:showBoardTool
 
   // const [showToolBar, showZoomControl] = useMemo(() => {
   //   if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {

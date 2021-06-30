@@ -16,6 +16,7 @@ export enum BizPageRouter {
   BigClass = 'big',
   OneToOneIncognito = '1v1_incognito',
   SmallClassIncognito = 'small_incognito',
+  BigClassIncognito = 'big_incognito',
   LaunchPage = 'launch',
   PretestPage = 'pretest',
   TestHomePage = 'test_home',
@@ -27,6 +28,7 @@ export enum BizPagePath {
   OneToOnePath = '/classroom/1v1',
   MidClassPath = '/classroom/mid',
   BigClassPath = '/classroom/big',
+  BigClassIncognitoPath = '/incognito/big',
   PretestPagePath = '/pretest',
 }
 

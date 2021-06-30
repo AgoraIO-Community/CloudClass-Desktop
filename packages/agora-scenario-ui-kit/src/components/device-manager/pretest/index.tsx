@@ -111,9 +111,9 @@ const PretestComponent: React.FC<PretestProps> = ({
         [`${className}`]: !!className,
     })
 
-    const cameraOptions = cameraList.map(item => ({ label: item.label, value: item.deviceId, i18n: false }))
-    const microphoneOptions = microphoneList.map(item => ({ label: item.label, value: item.deviceId, i18n: false }))
-    const speakerOptions = speakerList.map(item => ({ label: item.label, value: item.deviceId, i18n: false }))
+    const cameraOptions = cameraList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
+    const microphoneOptions = microphoneList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
+    const speakerOptions = speakerList.map(item => ({ label: item.label, value: item.deviceId, i18n: true }))
 
     const [noticeMessage, setMessage] = useState<{ id: string, type: 'video' | 'audio' }[]>([])
 

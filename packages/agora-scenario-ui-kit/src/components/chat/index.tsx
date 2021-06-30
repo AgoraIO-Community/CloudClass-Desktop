@@ -32,6 +32,14 @@ export interface ChatProps extends AffixProps {
    */
   isHost?: boolean;
   /**
+  * 是否游客身份观看直播
+  */
+  isGuest?: boolean;
+   /**
+  * 讨论人数
+  */
+  talkNumber?: number;
+  /**
    * 当前用户 uid
    */
   uid: string | number;
@@ -51,7 +59,7 @@ export interface ChatProps extends AffixProps {
    * 刷新聊天消息列表
    */
 
-  onPullRefresh: (evt:ChatEvent) => Promise<void> | void;
+  onPullRefresh: (evt: ChatEvent) => Promise<void> | void;
   /**
    *  禁言状态改变的回调
    */
@@ -59,11 +67,11 @@ export interface ChatProps extends AffixProps {
   /**
    * 输入框发生变化的回调
    */
-  onText: (evt:ChatEvent, content: string) => void;
+  onText: (evt: ChatEvent, content: string) => void;
   /**
    * 点击发送按钮的回调
    */
-  onSend: (evt:ChatEvent) => void | Promise<void>;
+  onSend: (evt: ChatEvent) => void | Promise<void>;
   /**
    * 点击最小化的聊天图标
    */
@@ -94,7 +102,7 @@ export const SimpleChat: FC<ChatProps> = ({
   ...resetProps
 }) => {
   const cls = classnames({
-      [`${className}`]: !!className,
+    [`${className}`]: !!className,
   })
 
   return (
@@ -127,21 +135,21 @@ export const SimpleChat: FC<ChatProps> = ({
         </div>
 
         {!canChatting ? (
-            <div className="chat-notice">
+          <div className="chat-notice">
             <span>
-                <Icon type="red-caution" />
-                <span>{transI18n('placeholder.enable_chat_muted')}</span>
+              <Icon type="red-caution" />
+              <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
-            </div>
+          </div>
         ) : null}
         <MessageList
           className={'room chat-history'}
           messages={messages}
           disableChat={!isHost && !canChatting}
           chatText={chatText}
-          onPullFresh={() => {onPullRefresh({type:'room'})}}
-          onSend={() => {onSend({type:'room'})}}
-          onText={(content:string) => {onText({type:'room'}, content)}}
+          onPullFresh={() => { onPullRefresh({ type: 'room' }) }}
+          onSend={() => { onSend({ type: 'room' }) }}
+          onText={(content: string) => { onText({ type: 'room' }, content) }}
         />
       </div>
     </Affix>
@@ -155,6 +163,8 @@ export const Chat: FC<ChatProps> = ({
   canChatting,
   uid,
   isHost,
+  isGuest = false,
+  talkNumber = 0,
   chatText,
   showCloseIcon = false,
   unreadCount = 0,
@@ -172,7 +182,7 @@ export const Chat: FC<ChatProps> = ({
 
   const { t } = useTranslation()
   const cls = classnames({
-      [`${className}`]: !!className,
+    [`${className}`]: !!className,
   })
 
   // const totalCount = useMemo(() => {
@@ -189,8 +199,8 @@ export const Chat: FC<ChatProps> = ({
   // }, [JSON.stringify(conversations)])
 
   const messageListUnread = useMemo(() => {
-    for(let i = 0; i < messages.length; i++) {
-      if(messages[i].unread) {
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i].unread) {
         return true
       }
     }
@@ -198,8 +208,8 @@ export const Chat: FC<ChatProps> = ({
   }, [JSON.stringify(messages)])
 
   const conversationListUnread = useMemo(() => {
-    for(let i = 0; i < conversations.length; i++) {
-      if(conversations[i].unread) {
+    for (let i = 0; i < conversations.length; i++) {
+      if (conversations[i].unread) {
         return true
       }
     }
@@ -209,7 +219,7 @@ export const Chat: FC<ChatProps> = ({
   const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined)
 
   const getActiveConversationMessages = () => {
-    if(!activeConversation) {
+    if (!activeConversation) {
       return []
     }
     let conversation = conversations.filter(c => c.userUuid === activeConversation.userUuid)[0]
@@ -217,16 +227,18 @@ export const Chat: FC<ChatProps> = ({
   }
 
   useEffect(() => {
-    if(activeConversation) {
-      onPullRefresh({type:'conversation', conversation: activeConversation})
+    if (activeConversation) {
+      onPullRefresh({ type: 'conversation', conversation: activeConversation })
     }
   }, [activeConversation])
 
   useEffect(() => {
-    if(singleConversation) {
-      onPullRefresh({type:'conversation', conversation: singleConversation})
+    if (singleConversation) {
+      onPullRefresh({ type: 'conversation', conversation: singleConversation })
     }
   }, [singleConversation])
+
+  const userImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAACeUlEQVQ4T63UQUgUURgH8P/3drf1bWmSeZCK6hIVUbK7o0cjKinrEOGpIoQMooIiKN1ZMmN3FAk6eIgwsehgKUEQdC8KkZ2VEhFKoQ5FBLWUuTOru/O+mCXFRVc7OMf/fPN773sz3xBW6aJVcrAIqr38s8wplTEiNDJQRqAhpVhPdgSGl1u0AAqdZx9V2m8A+s3g20p5Ul5SJ5lwXQg+zIp8AFdNZdMvP3RV/lkIF0Ba1G4Cq2tp76fgePue2blCTbdaGGhgEgPEqhmMCsBTbxr+sbmaAiis270EfEnEZdvC1apb7G0+wZOJCenHIDmabnUw45BpBMJFIKubGU7SCFxZCAUjM3sFqbdmXJa6eehGar3wlvxSPlmZvEU/3KxgR8GofcDDPJh1KPSuU37OY20sNCfTD/BsIhY440Y1UXs7M3+cmZHlo3covQhyg3CrdZcETgN4wIwUASdAtMFmp27MWPdd060tzHhEwLeEETi1ZGtzYTiSOQJyGsFUxsCQ7ZP3x9tpWtPtHoDPAchB0cFEh3y1NOS2kbMaQOI4wDvB8AP4ysBroXKPaTqbzZXLXeS4u8RFMJpNI/CkoLWa1swOJVQ/4L5aPGWm90JwhhW2EtFRMNeyoKtmTPa6DwYj0/UC4plSonqks2Qyf9j7dGvTGiDJRA8tT8nN8Xaa/4bm243a+6HUAAmhJ2Kyx821SLqPSWTMuLyQhzTd7mNWwjTWnl1uDLRWuw4CL8SUtXm4u2KqJpo5ppi7zLjc/Q+yUgwaJPDESkPMYJ3J25SM+Z+HIukqAummEbiUh8K6fQ/MG1dC8vcJrNgTGzH8o0Vn7b+gIkWr9j/6C6qLDCJb/HRvAAAAAElFTkSuQmCC"
 
   return (
     <Affix
@@ -252,16 +264,26 @@ export const Chat: FC<ChatProps> = ({
             {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
               <img src={chatMinBtn} />
             </span>) : null}
-
+            {/* {isGuest ? (
+              <span
+                style={{
+                  fontSize: '13px',
+                  color: '#191919',
+                  lineHeight: '18px'
+                }}
+              >
+                <img src={userImage} style={{display: 'inline-block'}} /> {talkNumber}
+              </span>
+            ) : null} */}
           </span>
         </div>
         <Tabs onChange={(activeKey: string) => {
-          if(activeKey === '0') {
+          if (activeKey === '0') {
             onChangeActiveTab && onChangeActiveTab('room')
-          } else if(singleConversation) {
+          } else if (singleConversation) {
             // no list
             onChangeActiveTab && onChangeActiveTab('conversation', singleConversation)
-          } else if(activeConversation) {
+          } else if (activeConversation) {
             // already in list
             onChangeActiveTab && onChangeActiveTab('conversation', activeConversation)
           } else {
@@ -270,47 +292,48 @@ export const Chat: FC<ChatProps> = ({
         }}>
           <TabPane tab={
             <span className="message-tab tab-title">
-              {transI18n("message")}
+              {transI18n(isGuest?"discuss":"message")}
               {messageListUnread ? <span className="new-message-notice"></span> : null}
             </span>
           } key="0">
             {!canChatting ? (
-                <div className="chat-notice with-tab">
+              <div className="chat-notice with-tab">
                 <span>
-                    <Icon type="red-caution" />
-                    <span>{transI18n('placeholder.enable_chat_muted')}</span>
+                  <Icon type="red-caution" />
+                  <span>{transI18n('placeholder.enable_chat_muted')}</span>
                 </span>
-                </div>
+              </div>
             ) : null}
             <MessageList
               className={'room chat-history'}
               messages={messages}
               disableChat={!isHost && !canChatting}
               chatText={chatText}
-              onPullFresh={() => {onPullRefresh({type:'room'})}}
-              onSend={() => {onSend({type:'room'})}}
-              onText={(content:string) => {onText({type:'room'}, content)}}
+              limitWords={isGuest}
+              onPullFresh={() => { onPullRefresh({ type: 'room' }) }}
+              onSend={() => { onSend({ type: 'room' }) }}
+              onText={(content: string) => { onText({ type: 'room' }, content) }}
             />
           </TabPane>
-          <TabPane 
-          tab={
-            <span className="question tab-title">
-              {transI18n("quiz")}
-              {conversationListUnread ? <span className="new-message-notice"></span> : null}
-              {/* <span className="question-count">{totalCount}</span> */}
-            </span>
-          } 
-          key="1">
-            {singleConversation ? 
+          {isGuest ? null : (<TabPane
+            tab={
+              <span className="question tab-title">
+                {transI18n("quiz")}
+                {conversationListUnread ? <span className="new-message-notice"></span> : null}
+                {/* <span className="question-count">{totalCount}</span> */}
+              </span>
+            }
+            key="1">
+            {singleConversation ?
               <>
                 <MessageList
                   className={'conversation no-header chat-history'}
                   messages={singleConversation.messages}
                   disableChat={false}
                   chatText={chatText}
-                  onPullFresh={() => {onPullRefresh({type:'conversation', conversation:singleConversation})}}
-                  onSend={() => {onSend({type:'conversation', conversation:singleConversation})}}
-                  onText={(content:string) => onText({type:'conversation', conversation:singleConversation}, content)}
+                  onPullFresh={() => { onPullRefresh({ type: 'conversation', conversation: singleConversation }) }}
+                  onSend={() => { onSend({ type: 'conversation', conversation: singleConversation }) }}
+                  onText={(content: string) => onText({ type: 'conversation', conversation: singleConversation }, content)}
                 />
               </>
               :
@@ -330,13 +353,13 @@ export const Chat: FC<ChatProps> = ({
                     messages={getActiveConversationMessages()}
                     disableChat={false}
                     chatText={chatText}
-                    onPullFresh={() => {onPullRefresh({type:'conversation', conversation:activeConversation})}}
-                    onSend={() => {onSend({type:'conversation', conversation:activeConversation})}}
-                    onText={(content:string) => onText({type:'conversation', conversation:activeConversation}, content)}
+                    onPullFresh={() => { onPullRefresh({ type: 'conversation', conversation: activeConversation }) }}
+                    onSend={() => { onSend({ type: 'conversation', conversation: activeConversation }) }}
+                    onText={(content: string) => onText({ type: 'conversation', conversation: activeConversation }, content)}
                   />
                 </>
-              : 
-                <ChatList 
+                :
+                <ChatList
                   conversations={conversations}
                   onPullRefresh={onPullRefresh}
                   onClickConversation={(conversation) => {
@@ -344,8 +367,8 @@ export const Chat: FC<ChatProps> = ({
                     onChangeActiveTab && onChangeActiveTab('conversation', conversation)
                   }}>
                 </ChatList>
-              }
-          </TabPane>
+            }
+          </TabPane>)}
         </Tabs>
       </div>
     </Affix>

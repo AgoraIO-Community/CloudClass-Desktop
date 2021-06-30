@@ -39,6 +39,8 @@ const App = observer(() => {
     isFullScreen,
     joined
   } = pluginStore.globalContext
+  console.log('pluginStore.globalContext:',pluginStore.globalContext);
+  
 
   const {
     getHistoryChatMessage,
@@ -165,6 +167,8 @@ const App = observer(() => {
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
+          isGuest={ (/^guest[0-9]{10}2$/).test(pluginStore.context.localUserInfo.userUuid)}
+          talkNumber={0}
           uid={pluginStore.context.localUserInfo.userUuid}
           messages={pluginStore.convertedMessageList}
           conversations={pluginStore.convertedConversationList}

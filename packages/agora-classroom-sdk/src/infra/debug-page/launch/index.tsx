@@ -1,16 +1,17 @@
 import { AgoraEduSDK, AgoraEduEvent} from '../../api'
-import { globalConfigs } from 'agora-edu-core'
+import { globalConfigs, homeApi, LanguageEnum } from 'agora-edu-core'
 import {ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
 import { useHomeStore } from '@/infra/hooks'
 import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import {generatePath} from 'react-router'
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 import MD5 from 'js-md5'
+import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-rte-sdk'
 
 //@ts-ignore
 window.controller = controller
@@ -25,14 +26,57 @@ export const LaunchPage = observer(() => {
 
   const roomRef = useRef<ClassRoom<ClassRoomAbstractStore> | null>(null)
 
+  const location = useLocation();
+
+  const querys = location.search.substr(1).split('&')
+  
+  const getQuery = (key: string)=>{
+    for (let i = 0; i < querys.length; i++) {
+      const ele:string = querys[i];
+      if(ele.startsWith(key)){
+        return ele.substr(key.length+1);
+      }
+    }
+    return '';
+  }
+
   useEffect(() => {
     if (!launchOption || isEmpty(launchOption)) {
-      history.push('/')
+      if (getQuery('h5share')==='' || getQuery('roomid')==='') {
+        history.push('/')
+      }
       return 
     }
   }, [])
-
+  
   const mountLaunch = useCallback(async (dom: any) => {
+    let tempOption:any = {}
+    if(getQuery('h5share')){
+      let roomUuid = getQuery('roomid');
+      let roomName = getQuery('roomname') || roomUuid;
+      let userUuid = "guest"+(''+new Date().getTime()).substr(3);
+      let {rtmToken} = await homeApi.login(userUuid);
+      console.log('## rtm Token', rtmToken)
+      let language = getQuery('lang') || "zh";
+      tempOption = {
+        // rtmUid: userUuid,
+        pretest: false,
+        courseWareList: [],
+        language: language as LanguageEnum,
+        userUuid: `${userUuid}` + EduRoleTypeEnum.student,
+        rtmToken,
+        roomUuid: `${roomUuid}`,
+        roomType: EduRoomTypeEnum.RoomBigClass,
+        roomName: `${roomName}`,
+        userName: userUuid,
+        roleType: EduRoleTypeEnum.student,
+        startTime: +(new Date()),
+        duration: 30 * 60,
+        userFlexProperties: {"avatar": "test", "h5share": true}
+      };
+      homeStore.setLaunchConfig(tempOption)
+    }
+
     if (dom) {
       AgoraEduSDK.setParameters(JSON.stringify({
         'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
@@ -50,7 +94,7 @@ export const LaunchPage = observer(() => {
         launchOption.rtmToken = RtmTokenBuilder.buildToken(
           `${REACT_APP_AGORA_APP_ID}`,
           appCertificate,
-          launchOption.userUuid,
+          launchOption.userUuid || tempOption?.userUuid,
           RtmRole.Rtm_User,
           0
         )
@@ -65,6 +109,7 @@ export const LaunchPage = observer(() => {
 
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
+        ...tempOption,
         // TODO:  这里需要传递开发者自己发布的录制页面地址
         recordUrl: AGORA_APAAS_BRANCH_PATH ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page` : `https://webdemo.agora.io/flexible-classroom/record_page`,
         courseWareList: [

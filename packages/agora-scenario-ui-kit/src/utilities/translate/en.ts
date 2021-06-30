@@ -215,6 +215,11 @@ export const en = {
     'reward_limit': 'The maximum number of trophies in the room has been reached',
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
+    'more': 'More',
+    'share_url': 'Invitation link',
+    'copy': 'Copy',
+    'copy_success': 'Copy Success.',
+    'media_auto_play_tip':"Click on the screen to watch the live broadcast."
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -245,6 +250,7 @@ export const en = {
     'user_list': 'User List'
   },
   'message': 'Message',
+  'discuss': 'Discuss',
   'quiz': 'Question',
   'en': 'English',
   'cloud': {
@@ -318,6 +324,7 @@ export const en = {
     'teacher_device_may_not_work': "There is something wrong with the teacher's device",
   },
   'biz-header': {
+    'more': 'More',
     'setting': 'Setting',
     'exit': 'Exit',
     'recording': 'Recording',

@@ -5,6 +5,7 @@ import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk'
 import classnames from 'classnames'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useState } from 'react'
+import copy from 'copy-to-clipboard';
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
 import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
@@ -391,6 +392,56 @@ export const Exit: React.FC<BaseDialogProps> = observer(({id}) => {
         color: 'rgb(88, 99, 118)',
         padding: '15px 0'
       }}>{t('toast.quit_room')}</p>
+    </Modal>
+  )
+})
+
+export const MoreInfo: React.FC<BaseDialogProps> = observer(({id}) => {
+  const {removeDialog, addToast} = useUIStore()
+  const { roomInfo } = useRoomContext()
+
+  //@ts-ignore
+  const share_url = window.location.href + '?h5share=true&roomid=' + roomInfo.roomUuid
+  const onCancel = () => {
+    removeDialog(id)
+  }
+  const onOK = async () => {
+    copy(share_url)
+    addToast(transI18n('toast.copy_success'), 'success')
+  }
+  return (
+    <Modal
+      width={360}
+      closable={true}
+      onCancel={onCancel}
+      title={t('toast.more')}>
+      <div style={{
+          width: '320px',
+        }}>
+        <p style={{
+          fontSize: 12,
+          color: '#586376',
+          padding: '10px 0'
+        }}>{t('toast.share_url')}</p>
+        <div>
+          <span style={{
+            display: 'inline-block',
+            fontSize: 13,
+            color: '#191919',
+            padding: '0 10px',
+            width: '220px',
+            height: '30px',
+            lineHeight: '30px',
+            marginRight: '10px',
+            background: '#F9F9FC',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            verticalAlign: 'middle'
+          }}>{share_url}</span><Button type={'primary'} onClick={onOK}>{t('toast.copy')}</Button>
+        </div>
+      </div>
     </Modal>
   )
 })

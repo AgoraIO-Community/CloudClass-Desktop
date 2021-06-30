@@ -214,6 +214,11 @@ export const zh = {
     'reward_limit': '奖杯已全部发完',
     'chat_enable': '禁言模式开启',
     'chat_disable': '禁言模式关闭',
+    'more': '更多',
+    'share_url': '邀请链接',
+    'copy': '复制',
+    'copy_success': '已复制。',
+    'media_auto_play_tip':"点击屏幕开始直播"
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -286,12 +291,14 @@ export const zh = {
     'teacher_device_may_not_work': '老师视频可能出现问题！',
   },
   'biz-header': {
+    'more': '更多',
     'setting': '设置',
     'exit': '退出',
     'recording': '录制中',
     'start_record': '开启录制'
   },
   'message': '消息',
+  'discuss': '讨论区',
   'quiz': '提问',
   'zh': '中文',
   'nav': {
@@ -395,5 +402,23 @@ export const zh = {
     'seconds': '秒',
     'start': '开始',
     'restart': '重新开始'
+  },
+  'answer': {
+    'appName': '答题器',
+    'start': '开始答题',
+    'submit': '提交答案',
+    'change': '修改答案',
+    'number-answered': '已答题人数',
+    'acc': '正确率',
+    'right-key': '正确答案',
+    'my-answer': '我的答案',
+    'over': '结束答题',
+    'student-name': '学生姓名',
+    'answer-time': '答题用时',
+    'selected-answer': '所选答案',
+    'restart': '重新开始'
+  },
+  'vote': {
+    'appName': '投票',
   }
 }
