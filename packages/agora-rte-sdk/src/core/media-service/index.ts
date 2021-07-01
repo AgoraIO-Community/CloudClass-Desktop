@@ -7,7 +7,7 @@ import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption,
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
-import { reportService } from '../services/report-service';
+import { rteReportService } from '../services/report-service';
 import { EduManager } from '../../manager';
 // import packageJson from '../../../package.json';
 
@@ -543,7 +543,7 @@ export class MediaService extends EventEmitter implements IMediaService {
   async join(option: JoinOption): Promise<any> {
     try {
       // REPORT
-      reportService.startTick('joinRoom', 'rtc', 'joinChannel')
+      rteReportService.startTick('joinRoom', 'rtc', 'joinChannel')
       await this._join(option);
       let reportUserParams = {
         vid: this.eduManager.vid,
@@ -576,9 +576,9 @@ export class MediaService extends EventEmitter implements IMediaService {
          */
         roomId: option.data?.room.uuid
       };
-      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
+      rteReportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
     } catch (e) {
-      reportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
+      rteReportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
       throw e
     }
   }

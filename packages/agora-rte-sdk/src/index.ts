@@ -26,6 +26,8 @@ export {
   EnumOnlineState,
 } from './core/services/interface';
 
+export { rteReportService } from './core/services/report-service'
+
 export { EduLogger } from './core/logger/index';
 export { EduManager } from './manager/index';
 export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
