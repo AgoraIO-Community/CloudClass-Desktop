@@ -33,6 +33,7 @@ const zhCN: any = {
     "confirm": {
       "exit": "确定退出教室吗？",
       "endClass": "结束教室",
+      "open": "打开",
       "yes": "确定",
       "no": "取消",
       "refresh": "刷新"
@@ -344,7 +345,8 @@ const zhCN: any = {
     'reward_limit': '奖杯已全部发完',
     'chat_disable': '禁言模式开启',
     'chat_enable': '禁言模式关闭',
-    'not_enough_window': '请先打开所有折叠的视频窗口'
+    'not_enough_window': '请先打开所有折叠的视频窗口',
+    'opening_courseware': '是否打开 {reason}?'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

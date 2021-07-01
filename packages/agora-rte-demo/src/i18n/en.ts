@@ -35,6 +35,7 @@ const en = {
       "endClass": "Quit Classroom",
       "yes": "Confirm",
       "no": "Cancel",
+      "open": "Open",
       "refresh": "Refresh"
     },
     "board": {
@@ -358,7 +359,8 @@ const en = {
     'reward_limit': 'The maximum number of trophies in the room has been reached',
     'chat_disable': 'Turn on mute mode',
     'chat_enable': 'Turn off mute mode',
-    'not_enough_window': 'Please expand all video windows first before continue'
+    'not_enough_window': 'Please expand all video windows first before continue',
+    'opening_courseware': 'Do you want to open {reason}?'
   },
   'end_class_confirm': 'Are you sure to end class room？',
   'notice': {

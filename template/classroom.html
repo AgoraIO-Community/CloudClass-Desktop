@@ -48,6 +48,46 @@
       font-size: 12px;
     }
 
+    .loading-container.done .status-label {
+      visibility: hidden;
+    }
+
+    a.bn11 {
+      display: inline-block;
+      padding: 0.5em 1.7em;
+      margin: 0 0.1em 0.1em 0;
+      border: 0.16em solid rgba(255, 255, 255, 0);
+      background-color: #C0392B;
+      border-radius: 2em;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-weight: 300;
+      color: #ffffff;
+      text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+      width: 80px;
+    }
+
+    a.bn11:hover {
+      border-color: rgb(255, 255, 255);
+    }
+
+    .timeout {
+      opacity: 0;
+      transition: all 0.5s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateY(5px);
+    }
+
+    .timeout.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     body{
       width:100%;
       height: 100%;
@@ -63,7 +103,69 @@
     }
 
   </style>
+  <script src='./i18n.min.js'></script>
   <script>
+    const zh = {
+      values: {
+        'system.check':'浏览器环境检测 %{result}',
+        'result.pass':'通过',
+        'result.system.fail':'失败, 请升级你的应用版本',
+        'result.loading':'加载中...',
+        'configs':'配置信息',
+        'libs':'依赖库加载',
+        'dns':'域名解析',
+        'documents':'页面加载',
+        'resources':'资源下载',
+        'launch.wait':'等待应用加载...',
+        'launch.launching':'加载完成,应用启动中...',
+        'launch.success':'应用启动成功',
+        'launch.fail':'应用刚启动失败 %{reason}',
+        'timeout.label':'无法进入教室? 您可以尝试点击下面的按钮刷新',
+        'timeout.btn':'刷新'
+      }
+    }
+
+    const en = {
+      values: {
+        'system.check':'System Check %{result}',
+        'result.pass':'Passed',
+        'result.system.fail':'Failed, please upgrade your application version',
+        'result.loading':'Loading...',
+        'configs':'Configuration',
+        'libs':'Library',
+        'dns':'DNS',
+        'documents':'Document',
+        'resources':'Resource',
+        'launch.wait':'Waiting to launch...',
+        'launch.launching':'Application Launching...',
+        'launch.success':'Application Launch Success',
+        'launch.fail':'Application Launch Failed %{reason}',
+        'timeout.label':'Cannot enter classroom? Try Refreshing.',
+        'timeout.btn':'Refresh'
+      }
+    }
+    
+    const lang = navigator.language || navigator.userLanguage
+    const translator = lang === "zh-CN" ? i18n.create(zh) : i18n.create(en)
+
+    window.__agora_i18n = translator
+
+
+    function checkSpread() {
+      try { 
+        var obj = {a:true}
+        var spreadobj = {b:true, ...obj}
+      } catch (e) { return false; }
+
+      return true;
+    }
+    function checkBroadcastChannel() {
+      return (typeof BroadcastChannel !== 'undefined')
+    }
+    window.__agora_platform_supported = checkSpread() && checkBroadcastChannel()
+  </script>
+  <script>
+    const ts = new Date().getTime()
     let readyState = {
         dns: false,
         dom: false,
@@ -122,15 +224,45 @@
       }
     }
 
-    const update_launch_status = (status) => {
+    const loading_done = () => {
+      let div = document.getElementById('loading-container')
+      if(div) {
+        div.className="loading-container done"
+      }
+    }
+
+    const update_launcher_status = (status) => {
+      let div = document.getElementById('launcher-label')
+      if(div) {
+        div.textContent = status
+      }
+    }
+
+    const show_timeout = () => {
+      let div = document.getElementById('timeout')
+      if(div) {
+        let label = document.getElementById('refresh-label')
+        if(label){
+          label.textContent=__agora_i18n('timeout.label')
+        }
+        let btn = document.getElementById('refresh-btn')
+        if(btn){
+          btn.textContent=__agora_i18n('timeout.btn')
+        }
+        div.classList.add('visible')
+      }
+    }
+
+    const update_loading_status = (status) => {
       update_status([
-        `Configurations ${!readyState.params ? 'loading...' : 'loaded'}`,
-        `Library ${!window.AgoraEduSDK ? 'loading...' : 'loaded'}`,
-        `DNS ${!readyState.dns ? 'loading...' : readyValue.dns.toFixed(2) +'ms'}`,
-        `Document ${!readyState.dom ? 'loading...' : readyValue.dom.toFixed(2)+'ms'}`,
-        `Resource ${!readyState.lib ? 'loading...' : readyValue.lib.toFixed(2)+'ms'}`,
-        `${status}`
+        `${window.__agora_platform_supported ? '✅' : '⚠️'} ${__agora_i18n('system.check', {result:window.__agora_platform_supported ? __agora_i18n('result.pass') : __agora_i18n('result.system.fail')})}`,
+        `${!readyState.params ? '⏳' : '✅'} ${__agora_i18n('configs')} ${!readyState.params ? __agora_i18n('result.loading') : __agora_i18n('result.pass')}`,
+        `${!window.AgoraEduSDK ? '⏳' : '✅'} ${__agora_i18n('libs')} ${!window.AgoraEduSDK ? __agora_i18n('result.loading') : __agora_i18n('result.pass')}`,
+        `${!readyState.dns ? '⏳' : '✅'} ${__agora_i18n('dns')} ${!readyState.dns ? __agora_i18n('result.loading') : readyValue.dns.toFixed(2) +'ms'}`,
+        `${!readyState.dom ? '⏳' : '✅'} ${__agora_i18n('documents')} ${!readyState.dom ? __agora_i18n('result.loading') : readyValue.dom.toFixed(2)+'ms'}`,
+        `${!readyState.lib ? '⏳' : '✅'} ${__agora_i18n('resources')} ${!readyState.lib ? __agora_i18n('result.loading') : readyValue.lib.toFixed(2)+'ms'}`
       ].join('\r\n'))
+      update_launcher_status(status)
     }
 
 
@@ -183,14 +315,19 @@
       }
 
       if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom || !window.AgoraEduSDK) {
-        update_launch_status('Waiting to launch..')
+        update_loading_status(__agora_i18n('launch.wait'))
+        let currenttime = new Date().getTime()
+        if(currenttime - ts > 20 * 1000) {
+          show_timeout()
+        }
         setTimeout(collectPerformance, 200)
       } else {
-        update_launch_status('Application Launching...')
+        update_loading_status(__agora_i18n('launch.launching'))
         launchApplication(readyValue.params).then(() => {
-          update_launch_status('Application Launch Success...')
+          update_loading_status(__agora_i18n('launch.success'))
+          loading_done()
         }).catch((e) => {
-          update_launch_status(`Application Launch Failed: ${e.message}`)
+          update_loading_status(__agora_i18n('launch.fail', {reason:e.message}))
         })
       }
     }
@@ -200,13 +337,18 @@
 </head>
 
 <body>
-  <div class="loading-container">
+  <div id="loading-container" class="loading-container">
     <div class="loading-block">
       <div class="spinner">Loading...</div>
-      <div id="status-label" style="text-align: center;margin-top:5px;white-space: pre;"></div>
+      <div id="status-label" class="status-label" style="position:absolute; bottom:20px; left: 20px; white-space: pre;"></div>
+      <div id="launcher-label" class="launcher-label" style="text-align:center; margin-top: 10px; white-space: pre;"></div>
+      <div id="timeout" class="timeout">
+        <div id="refresh-label" class="refresh-label"></div>
+        <a id="refresh-btn" onclick="window.location.reload();" class="bn11" style="margin-top:10px"></a>
+      </div>
     </div>
   </div>
-  <div class="footer">v1.1.2.2</div>
+  <div class="footer">v1.1.2.3</div>
   <div id="root1"></div>
   <script src="./edu_sdk.bundle.js"></script>
 </body>

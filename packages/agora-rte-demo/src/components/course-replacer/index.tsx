@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { AClassCourseWareItem, CourseReplacer } from "agora-aclass-ui-kit";
+import { AClassCourseWareItem, CourseReplacer, dialogManager } from "agora-aclass-ui-kit";
 import { useAPIStore, useAppStore, useBoardStore, useUIStore } from '@/hooks';
 import './index.scss'
 import { observer } from 'mobx-react';
@@ -11,6 +11,7 @@ import { BizLogger } from '@/modules/utils/biz-logger';
 import { debounce, get } from 'lodash';
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { GlobalStorage } from '@/utils/custom-storage';
+import { t } from '@/i18n';
 
 const listData = {
     "ResultInfo": [
@@ -258,11 +259,14 @@ export const CourseReplacerContent = observer(() => {
     const [totalCount, setTotalCount] = useState<number>(0)
 
     const debouncedSearch = debounce(async (value:string) => {
+        if(!value) {
+            return
+        }
         setLoading(true)
-        // setTimeout(() => {
-        //     //@ts-ignore
-        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-        // }, Math.floor(Math.random() * 1000))
+        setTimeout(() => {
+            //@ts-ignore
+            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+        }, Math.floor(Math.random() * 1000))
         try {
             setCurrentSubject(value)
             latestFetchListSeqId = apiStore.seqId
@@ -295,6 +299,52 @@ export const CourseReplacerContent = observer(() => {
         }
     }, 500)
 
+    const openCourse = async (item: AClassCourseWareItem) => {
+        setTimeout(() => {
+            //@ts-ignore
+            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
+        }, 1000)
+
+        let userType = 0
+
+        if(appStore.params.roomInfoParams?.userRole === 0 || appStore.params.roomInfoParams?.userRole === 1) {
+            userType = appStore.params.roomInfoParams?.userRole
+        }
+
+        let result:any = await apiStore.callExternalAPI("ChangeSidByLessonInfo", {
+            clid:parseInt(appStore.params.roomInfoParams?.roomName || "0"),
+            userid:parseInt(appStore.params.roomInfoParams?.userUuid || "0"),
+            changedSid: item.id,
+            userType,
+            //2 represents agora
+            classToolType:2
+        })
+
+        let list = get(result, 'CourseWareList', [])
+
+        if(list.length > 0) {
+            let firstData = list[0]
+            let lowerData:any = CamelCaseKeys(firstData, {deep:true})
+            let courseWare:CourseWareItem = {
+                resourceName: lowerData.resourceName,
+                resourceUuid: lowerData.resourceUuid,
+                ext: lowerData.ext,
+                url: lowerData.url,
+                size: lowerData.size,
+                scenes: lowerData.scenes,
+                updateTime: lowerData.updateTime,
+                convert: lowerData.convert,
+                taskUuid: lowerData.taskUuid,
+                taskToken: lowerData.taskToken,
+                taskProgress: lowerData.taskProgress,
+                conversion: lowerData.conversion
+            }
+            await boardStore.openReplaceResource(courseWare)
+        } else {
+            throw GenericErrorWrapper(new Error('NO_COURSE_MATCHED'))
+        }
+    }
+
     return (
         <div style={{
             width:'100%',height:'100%', position:"absolute", background: 'transparent',
@@ -311,10 +361,10 @@ export const CourseReplacerContent = observer(() => {
                 onSearchValueChange={debouncedSearch}
                 onChangePage={async (activeIdx:number) => {
                     setLoading(true)
-                    // setTimeout(() => {
-                    //     //@ts-ignore
-                    //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-                    // }, Math.floor(Math.random() * 1000))
+                    setTimeout(() => {
+                        //@ts-ignore
+                        window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+                    }, Math.floor(Math.random() * 1000))
                     try {
                         // the next seqId callExternalAPI will use
                         latestFetchListSeqId = apiStore.seqId
@@ -347,59 +397,30 @@ export const CourseReplacerContent = observer(() => {
                         BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
                     }
                 }}
-                onReplaceCourse={async (item: AClassCourseWareItem) => {
-                    setLoading(true)
-                    try {
-                        // setTimeout(() => {
-                        //     //@ts-ignore
-                        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
-                        // }, 1000)
-
-                        let userType = 0
-
-                        if(appStore.params.roomInfoParams?.userRole === 0 || appStore.params.roomInfoParams?.userRole === 1) {
-                            userType = appStore.params.roomInfoParams?.userRole
+                onReplaceCourse={(item: AClassCourseWareItem) => {
+                    dialogManager.show({
+                        text: t(`toast.opening_courseware`, {reason: item.name}),
+                        showConfirm: true,
+                        showCancel: true,
+                        confirmText: t('aclass.confirm.open'),
+                        visible: true,
+                        cancelText: t('aclass.confirm.no'),
+                        onConfirm: () => {
+                            setLoading(true)
+                            setTimeout(async () => {
+                                try {
+                                    await openCourse(item)
+                                    setLoading(false)
+                                    uiStore.setCourseReplacerVisible(false)
+                                }catch(e) {
+                                    setLoading(false)
+                                    BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
+                                }
+                            }, 0)
+                        },
+                        onCancel: () => {
                         }
-
-                        let result:any = await apiStore.callExternalAPI("ChangeSidByLessonInfo", {
-                            clid:parseInt(appStore.params.roomInfoParams?.roomName || "0"),
-                            userid:parseInt(appStore.params.roomInfoParams?.userUuid || "0"),
-                            changedSid: item.id,
-                            userType,
-                            //2 represents agora
-                            classToolType:2
-                        })
-
-                        let list = get(result, 'CourseWareList', [])
-
-                        if(list.length > 0) {
-                            let firstData = list[0]
-                            let lowerData:any = CamelCaseKeys(firstData, {deep:true})
-                            let courseWare:CourseWareItem = {
-                                resourceName: lowerData.resourceName,
-                                resourceUuid: lowerData.resourceUuid,
-                                ext: lowerData.ext,
-                                url: lowerData.url,
-                                size: lowerData.size,
-                                scenes: lowerData.scenes,
-                                updateTime: lowerData.updateTime,
-                                convert: lowerData.convert,
-                                taskUuid: lowerData.taskUuid,
-                                taskToken: lowerData.taskToken,
-                                taskProgress: lowerData.taskProgress,
-                                conversion: lowerData.conversion
-                            }
-                            await boardStore.openReplaceResource(courseWare)
-                        } else {
-                            throw GenericErrorWrapper(new Error('NO_COURSE_MATCHED'))
-                        }
-
-                        setLoading(false)
-                        uiStore.setCourseReplacerVisible(false)
-                    }catch(e) {
-                        setLoading(false)
-                        BizLogger.error(`[CourseReplacer] Search failed: ${e.message}`)
-                    }
+                    })
                 }}
             ></CourseReplacer>
         </div>
