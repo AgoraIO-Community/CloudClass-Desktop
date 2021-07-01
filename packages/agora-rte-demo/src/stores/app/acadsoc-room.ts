@@ -1185,6 +1185,10 @@ export class AcadsocRoomStore extends SimpleInterval {
       }).then(() => {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
+
+      // upload logs if possible for join failure
+      this.uploadLog()
+
       throw GenericErrorWrapper(err)
     }
   }
