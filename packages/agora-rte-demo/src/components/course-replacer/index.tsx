@@ -263,10 +263,10 @@ export const CourseReplacerContent = observer(() => {
             return
         }
         setLoading(true)
-        setTimeout(() => {
-            //@ts-ignore
-            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-        }, Math.floor(Math.random() * 1000))
+        // setTimeout(() => {
+        //     //@ts-ignore
+        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+        // }, Math.floor(Math.random() * 1000))
         try {
             setCurrentSubject(value)
             latestFetchListSeqId = apiStore.seqId
@@ -300,10 +300,10 @@ export const CourseReplacerContent = observer(() => {
     }, 500)
 
     const openCourse = async (item: AClassCourseWareItem) => {
-        setTimeout(() => {
-            //@ts-ignore
-            window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
-        }, 1000)
+        // setTimeout(() => {
+        //     //@ts-ignore
+        //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, detailData)
+        // }, 1000)
 
         let userType = 0
 
@@ -361,10 +361,10 @@ export const CourseReplacerContent = observer(() => {
                 onSearchValueChange={debouncedSearch}
                 onChangePage={async (activeIdx:number) => {
                     setLoading(true)
-                    setTimeout(() => {
-                        //@ts-ignore
-                        window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
-                    }, Math.floor(Math.random() * 1000))
+                    // setTimeout(() => {
+                    //     //@ts-ignore
+                    //     window.globalStore.apiStore.externalAPICallback(apiStore.seqId - 1, null, listData)
+                    // }, Math.floor(Math.random() * 1000))
                     try {
                         // the next seqId callExternalAPI will use
                         latestFetchListSeqId = apiStore.seqId
