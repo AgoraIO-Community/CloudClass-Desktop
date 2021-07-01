@@ -264,7 +264,7 @@ export const Chat: FC<ChatProps> = ({
             {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
               <img src={chatMinBtn} />
             </span>) : null}
-            {/* {isGuest ? (
+            {isGuest ? (
               <span
                 style={{
                   fontSize: '13px',
@@ -272,9 +272,9 @@ export const Chat: FC<ChatProps> = ({
                   lineHeight: '18px'
                 }}
               >
-                <img src={userImage} style={{display: 'inline-block'}} /> {talkNumber}
+                <img src={userImage} style={{display: 'inline-block',position: 'relative', top: '-1px'}} /> {talkNumber}
               </span>
-            ) : null} */}
+            ) : null}
           </span>
         </div>
         <Tabs onChange={(activeKey: string) => {

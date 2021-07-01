@@ -1,5 +1,5 @@
 import { useUIStore } from "@/infra/hooks"
-import { useChatContext, useGlobalContext, useRoomContext } from "agora-edu-core"
+import { useChatContext, useGlobalContext, useRoomContext, useUserListContext } from "agora-edu-core"
 import { useEffect, useState } from "react"
 import { BehaviorSubject } from "rxjs"
 
@@ -34,7 +34,10 @@ export const Adapter = () => {
         roomInfo
     } = useRoomContext()
 
-
+    const {
+        teacherInfo,
+        rosterUserList
+    } = useUserListContext()
     
     const {
         isFullScreen,
@@ -51,8 +54,8 @@ export const Adapter = () => {
     }, [])
 
     useEffect(() => {
-        globalEvents.next({isFullScreen, isJoined})
-    }, [isFullScreen, globalEvents, isJoined])
+        globalEvents.next({isFullScreen, isJoined, userNumber:(rosterUserList.length + (teacherInfo?.userUuid ? 1 : 0))})
+    }, [isFullScreen, globalEvents, isJoined, rosterUserList, teacherInfo])
 
     useEffect(() => {
         roomEvents.next({roomInfo})
