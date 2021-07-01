@@ -548,6 +548,7 @@ export class BoardStore {
       } else {
         const targetResource = this.allResources.find((item => item.name === resourceName))
         if (targetResource) {
+          EduLogger.info(`[WhiteAction] setScenePath targetResource`)
           const scenePath = targetResource!.scenes![currentPage].name
           this.room.setScenePath(`${targetPath}/${scenePath}`)
         }
@@ -615,7 +616,11 @@ export class BoardStore {
 
   getResourceName(str: string) {
     if (str === "/") return "/init"
-    return str.split('/')[1]
+
+    let items = str.split('/')
+    items.shift()
+
+    return items.join('/')
   }
 
   @computed
