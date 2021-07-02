@@ -4,9 +4,9 @@ import { useDebugValue } from 'react';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps, MidClassVideoMarqueeList } from '~components/video-player';
 
-const config = {"muted":true,"deviceState":1,"online":true,"onPodium":true,"userType":"teacher","hasStream":true,"isLocal":false,"type":"microphone","uid":"3232","disabled":true}
+const config = { "muted": true, "deviceState": 1, "online": true, "onPodium": true, "userType": "teacher", "hasStream": true, "isLocal": false, "type": "microphone", "uid": "3232", "disabled": true }
 const meta: Meta = {
   title: 'Components/VideoPlayer',
   component: VideoPlayer,
@@ -40,7 +40,7 @@ const meta: Meta = {
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
-  
+
   return (
     <div className="m-10">
       <Button onClick={() => {
@@ -83,11 +83,11 @@ const student = {
   ),
 }
 
-export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, size, ...restProps }) => {
+export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({ children, size, ...restProps }) => {
 
   const [userType, setUserType] = useState<string>('teacher')
 
-  const list_ = [...'.'.repeat(2)].map((_, i: number) => ({
+  const list_ = [...'.'.repeat(10)].map((_, i: number) => ({
     ...student,
     username: `${i}-${student.username}`,
     uid: `uuid-${i}`,
@@ -110,7 +110,7 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
   useDebugValue(list, JSON.stringify)
 
   const roles = ['teacher', 'assistant', 'student', 'invisible']
-    
+
   return (
     //@ts-ignore
     <>
@@ -120,13 +120,13 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
       <Button onClick={() => {
         changeLanguage('en')
       }}>英文</Button>
-        <Button onClick={() => {
-          const role = roles[roles.indexOf(userType) + 1 % roles.length]
-          list.forEach((it: any) => {
-            it.userType = role
-          })
-          setList([...list])
-          setUserType(role)
+      <Button onClick={() => {
+        const role = roles[roles.indexOf(userType) + 1 % roles.length]
+        list.forEach((it: any) => {
+          it.userType = role
+        })
+        setList([...list])
+        setUserType(role)
         // setUserType('teacher')
       }}>{userType}</Button>
       <VideoMarqueeList
@@ -175,20 +175,51 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
           ])
           console.log('off podium', uid)
         }}
-        onSendStar={(uid, ) => {
-        return new Promise((resolve) => {
-          list.forEach(item => {
-            if (item.uid === uid) {
-              item.stars += 1
-            }
+        onSendStar={(uid,) => {
+          return new Promise((resolve) => {
+            list.forEach(item => {
+              if (item.uid === uid) {
+                item.stars += 1
+              }
+            })
+            setList([
+              ...list
+            ])
+            resolve('send star')
           })
-          setList([
-            ...list
-          ])
-          resolve('send star')
-        })
-      }}>
+        }}
+      >
       </VideoMarqueeList>
+    </>
+  )
+}
+
+export const DocsMidClassCarousel = () => {
+  const [studentList, setStudentList] = useState([])
+  return (
+    <>
+      <div style={{
+        position: 'fixed',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: 'auto'
+      }}>
+        <Button onClick={() => {
+          setStudentList([
+            ...studentList,
+            Date.now()
+          ])
+        }}>上台</Button>
+        <Button onClick={() => {
+          const copyArr = [...studentList]
+          copyArr.splice(0, 1)
+          setStudentList([...copyArr])
+        }}>下台</Button>
+      </div>
+      <MidClassVideoMarqueeList
+        videoStreamList={studentList}
+      />
     </>
   )
 }

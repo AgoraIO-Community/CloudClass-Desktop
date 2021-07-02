@@ -534,3 +534,29 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     </div>
   )
 }
+
+export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
+
+}
+
+export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> = ({
+  videoStreamList = []
+}) => {
+  return (
+    <div className="mid-class-carousel">
+      <div className="carousel-item video-teacher">teacher</div>
+      <div className="video-students">
+        {videoStreamList.length ? videoStreamList.map((item, index) => (
+          <div 
+            className={['carousel-item', `video-student`].join(' ')}
+            key={index}
+            onAnimationEnd={(e: any) => {
+              e.target.style.opacity = 1
+              e.target.style.width = 204 + 'px'
+            }}
+          >student</div>
+        )) : null}
+      </div>
+    </div>
+  )
+}
