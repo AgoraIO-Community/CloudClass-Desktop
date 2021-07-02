@@ -58,7 +58,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const [showText, setShowText] = useState('');
     const [sendBtnDisabled, setSendBtnDisabled] = useState(true);
     const isElectron = window.navigator.userAgent.indexOf("Electron") !== -1;
-    if(isElectron){
+    if (isElectron) {
         const ipcRenderer = window.electron.ipcRenderer;
         const dataURLtoBlob = (dataurl) => {
             var arr = dataurl.split(","),
@@ -66,30 +66,30 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 bstr = atob(arr[1]),
                 n = bstr.length,
                 u8arr = new Uint8Array(n);
-            while(n--){
+            while (n--) {
                 u8arr[n] = bstr.charCodeAt(n);
             }
             return new Blob([u8arr], { type: mime });
         }
-        
+
         ipcRenderer.removeAllListeners("shortcutCaptureDone");
         ipcRenderer.on(
             "shortcutCaptureDone",
-            (event,dataURL, bounds) => {
-                console.log("shortcutCaptureDone>>>",dataURL,"bounds>>>",bounds)
+            (event, dataURL, bounds) => {
+                console.log("shortcutCaptureDone>>>", dataURL, "bounds>>>", bounds)
                 const blob = dataURLtoBlob(dataURL);
                 //dataURL = window.URL.createObjectURL(blob);
-                console.log("blob>>>",blob)
+                console.log("blob>>>", blob)
                 let file = {
-					url: dataURL,
-					data: blob,
-					filename: `截图文件${new Date().getTime()}.png`,
-					filetype: "png",
-					// 该参数用来标识图片发送对象的来源，主要告诉拦截器如果是截图，就不要在输入框生成缩略图了
-					from: "screenShot",
-					imgsrc: dataURL
+                    url: dataURL,
+                    data: blob,
+                    filename: `截图文件${new Date().getTime()}.png`,
+                    filetype: "png",
+                    // 该参数用来标识图片发送对象的来源，主要告诉拦截器如果是截图，就不要在输入框生成缩略图了
+                    from: "screenShot",
+                    imgsrc: dataURL
                 }
-                sendImgMessage(roomId,'',file)
+                sendImgMessage(roomId, '', file)
             }
         );
     }
@@ -106,8 +106,6 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     let avatarUrl = userInfo.avatarurl;
     //  从当前登陆用户取的属性昵称
     let userNickName = userInfo.nickname;
-    //  获取当前时间，在ext 中携带，便于排序
-    let timestamp = new Date().getTime()
     //  isTool 是控制是否显示图片标签
     if (isTool) {
         msgType = 2;
@@ -180,9 +178,9 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     // 发送消息
     const sendMessage = (roomId, content) => (e) => {
         e.preventDefault();
-        console.log('sendBtnDisabled>>',sendBtnDisabled);
-        console.log('roomId>>',roomId,'content>>',content);
-        
+        console.log('sendBtnDisabled>>', sendBtnDisabled);
+        console.log('roomId>>', roomId, 'content>>', content);
+
         // 禁止发送状态下 不允许发送
         if (sendBtnDisabled === true) {
             return false;
@@ -218,11 +216,11 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 role: roleType,
                 avatarUrl: avatarUrl,
                 nickName: userNickName,
-                time: timestamp.toString()
             },                         // 扩展消息
             success: function (id, serverId) {
                 msg.id = serverId;
                 msg.body.id = serverId;
+                msg.body.time = (new Date().getTime()).toString()
                 if (msg.body.ext.msgtype === 2) {
                     store.dispatch(qaMessages(msg.body, msg.body.ext.asker, { showNotice: false }, msg.body.ext.time));
                 } else if (msg.body.ext.msgtype === 1) {
@@ -230,12 +228,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 } else {
                     store.dispatch(roomMessages(msg.body, { showNotice: !activeKey }));
                 }
-                
+
                 setContent('');
                 setCount(0);
             },                               // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
             fail: function (err) {
-                
+
                 if (err.type === 501) {
                     setIsShow(true);
                     setShowText(TEXT_ERROR)
@@ -249,10 +247,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         WebIM.conn.send(msg.body);
     }
     // 发送图片
-    const sendImgMessage = (roomId, e,type) => {
+    const sendImgMessage = (roomId, e, type) => {
         var id = WebIM.conn.getUniqueId();                   // 生成本地消息id
         var msg = new WebIM.message('img', id);        // 创建图片消息
-        let file = type ?type : WebIM.utils.getFileUrl(e.target)     // 将图片转化为二进制文件
+        let file = type ? type : WebIM.utils.getFileUrl(e.target)     // 将图片转化为二进制文件
         var allowType = {
             'jpeg': true,
             'jpg': true,
@@ -272,7 +270,6 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                         role: roleType,
                         avatarUrl: avatarUrl,
                         nickName: userNickName,
-                        time: timestamp.toString()
                     },                       // 接收消息对象
                     chatType: 'chatRoom',               // 设置为单聊
                     onFileUploadError: function (err) {      // 消息上传失败
@@ -281,7 +278,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     onFileUploadComplete: function (res) {   // 消息上传成功
                         console.log('onFileUploadComplete>>>', res);
                     },
-                    success: function () {                // 消息发送成功
+                    success: function (id, serverId) {                // 消息发送成功
+                        msg.id = serverId;
+                        msg.body.id = serverId;
+                        msg.body.time = (new Date().getTime()).toString()
                         store.dispatch(qaMessages(msg.body, msg.body.ext.asker, { showRed: false }, msg.body.ext.time));
                         couterRef.current.value = null
                     },
@@ -356,7 +356,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     {isEmoji && <ShowEomji getEmoji={getEmoji} hideEmoji={hideEmoji} />}
                     <RcTooltip placement="top" overlay="表情">
                         <img src={iconSmiley} onClick={showEmoji} className="chat-tool-item" />
-                    </RcTooltip>                    
+                    </RcTooltip>
                     {isTool
                         && <RcTooltip placement="top" overlay="图片">
                             <div onClick={updateImage} className="chat-tool-item">

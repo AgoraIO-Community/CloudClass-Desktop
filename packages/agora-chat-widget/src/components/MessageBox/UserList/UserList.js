@@ -118,7 +118,7 @@ const UserList = ({ roomUserList }) => {
                 </Flex>
             }
             {
-                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' }} ref={userRef} onScroll={handleUser}>
+                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' }} ref={userRef}>
                     {/* 是否展示搜索列表 */}
                     {searchUser && <SearchList roomListInfo={roomListInfo} searchUser={searchUser} onSetMute={onSetMute} muteMembers={muteMembers} />}
                     {!searchUser && isMute && <MuteList roomListInfo={roomListInfo} muteMembers={muteMembers} onSetMute={onSetMute} />}

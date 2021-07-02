@@ -6,6 +6,7 @@ import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
+import { getUserInfo } from './api/userInfo'
 import Notice from './components/Notice'
 import MessageBox from './components/MessageBox/MessageList'
 import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants'
@@ -17,8 +18,6 @@ import './App.css'
 const App = function (props) {
   const history = useHistory();
   const isRoomAllMute = useSelector(state => state.isRoomAllMute)
-  //const new_IM_Data = useSelector(state => state.extData)
-  // const roomUserList = useSelector(state => state.room.users)
   const [isEditNotice, isEditNoticeChange] = useState(0) // 0 显示公告  1 编辑公告  2 展示更多内容
   const activeKey = useSelector(state => state.activeKey)
 
@@ -45,7 +44,8 @@ const App = function (props) {
       store.dispatch(roomAllMute(false))
     }
   }, [isRoomAllMute])
-
+  let arr = []
+  let intervalId;
   const createListen = (new_IM_Data, appkey) => {
     WebIM.conn.listen({
       onOpened: () => {
@@ -101,23 +101,31 @@ const App = function (props) {
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
-            store.dispatch(roomUsers({ member: message.from }, 'addMember'))
+            arr.push(message.from)
+            intervalId && clearInterval(intervalId);
+            intervalId = setTimeout(() => {
+              let users = _.cloneDeep(arr);
+              arr = [];
+              getUserInfo(users)
+            }, 500);
+
+
             let ary = []
             roomUserList.map((v, k) => {
-              ary.push(v.member)
+              ary.push(v)
             })
             if (!(ary.includes(message.from))) {
+              store.dispatch(roomUsers(message.from, 'addMember'))
               store.dispatch(roomUserCount({ type: 'add', userCount: userCount }))
             }
             break;
           case "leaveChatRoom":
             let num = parseInt((roomUserList.length + ROOM_PAGESIZE - 1) / ROOM_PAGESIZE)
-            getRoomUsers(num, ROOM_PAGESIZE, message.gid);
             // 成员数 - 1
             store.dispatch(roomUserCount({ type: 'remove', userCount: userCount }))
 
             // 移除成员
-            store.dispatch(roomUsers({ member: message.from }, 'removeMember'))
+            store.dispatch(roomUsers(message.from, 'removeMember'))
             break;
           case "updateAnnouncement":
             getRoomNotice(message.gid)

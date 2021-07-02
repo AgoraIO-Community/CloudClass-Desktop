@@ -2,7 +2,7 @@ import WebIM from "../utils/WebIM";
 import { message } from 'antd'
 import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute } from '../redux/aciton'
 import store from '../redux/store'
-import { setUserInfo } from './userInfo'
+import { setUserInfo, getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
 import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 
@@ -17,18 +17,19 @@ export const joinRoom = async () => {
     }
     await setUserInfo();
     WebIM.conn.mr_cache = [];
-    await WebIM.conn.joinChatRoom(options).then((res) => {
-        message.success('已成功加入聊天室！');
-        setTimeout(() => {
-            message.destroy();
-        }, 3000);
-        if (Number(roleType) === 2 || Number(roleType) === 0) {
-            isChatRoomWhiteUser(roomId, userUuid)
-        }
-        getRoomInfo(options.roomId);
-        getHistoryMessages(false);
-    })
-
+    setTimeout(() => {
+        WebIM.conn.joinChatRoom(options).then((res) => {
+            message.success('已成功加入聊天室！');
+            setTimeout(() => {
+                message.destroy();
+            }, 3000);
+            if (Number(roleType) === 2 || Number(roleType) === 0) {
+                isChatRoomWhiteUser(roomId, userUuid)
+            }
+            getRoomInfo(options.roomId);
+            getHistoryMessages(false);
+        })
+    }, 500);
 };
 
 // 获取聊天室详情
@@ -37,11 +38,19 @@ export const getRoomInfo = (roomId) => {
         chatRoomId: roomId   // 聊天室id
     }
     WebIM.conn.getChatRoomDetails(options).then((res) => {
-        console.log('getRoomInfo>>>', res);
         store.dispatch(roomInfo(res.data[0]));
+        let newArr = [];
+        (res.data[0].affiliations).map((item) => {
+            if (item.owner) {
+                return
+            } else {
+                newArr.push(item.member)
+            }
+        })
+        store.dispatch(roomUsers(newArr));
+        getUserInfo(newArr);
         getRoomNotice(roomId);
         getRoomAdmins(roomId);
-        getRoomUsers(1, ROOM_PAGESIZE, roomId);
         getRoomWhileList(roomId);
     })
 }
@@ -64,17 +73,6 @@ export const getRoomNotice = (roomId) => {
     })
 };
 
-// 识别网址
-// let newNotice = '';
-// function httpString(str) {
-//     var textR = str;
-//     var reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-)+)/g;
-//     if (reg.exec('')) {
-//     } else {
-//         newNotice = textR.replace(reg, "<a href='$1$2'>$1$2</a>");
-//         return newNotice
-//     }
-// }
 
 // 上传/修改 群组公告
 export const updateRoomNotice = (roomId, noticeCentent) => {
@@ -111,7 +109,15 @@ export const getRoomUsers = (pageNum, pageSize, roomId) => {
         chatRoomId: roomId,
     }
     WebIM.conn.listChatRoomMember(options).then((res) => {
-        store.dispatch(roomUsers(res.data));
+        // 遍历群组成员，过滤owner
+        let newRoomUsers = [];
+        (res.data).map((item, key) => {
+            if (item.owner) {
+                return null
+            }
+            return newRoomUsers.push(item.member);
+        })
+        store.dispatch(roomUsers(newRoomUsers));
     })
 }
 
@@ -142,7 +148,6 @@ export const isChatRoomWhiteUser = (roomId, userId) => {
         userName: userId         // 要查询的成员
     }
     WebIM.conn.isChatRoomWhiteUser(options).then((res) => {
-        console.log('isChatRoomWhiteUser', res);
         store.dispatch(userMute(res.data.white))
     });
 }
@@ -153,7 +158,11 @@ export const logoutChatroom = () => {
     WebIM.conn.quitChatRoom({
         roomId: roomId,// 聊天室id
         success: function (res) {
-            console.log('quitChatRoom>>>', res)
+            console.log('quitChatRoom_Success>>>', res)
+            WebIM.conn.close()
+        },
+        error: function (err) {
+            console.log('quitChatRoom_Error>>>', err)
             WebIM.conn.close()
         }
     });

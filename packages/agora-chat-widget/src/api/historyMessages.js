@@ -2,6 +2,7 @@ import WebIM from "../utils/WebIM";
 import store from '../redux/store'
 import { roomMessages, qaMessages, moreHistory, loadGif } from '../redux/aciton'
 import { HISTORY_COUNT } from '../components/MessageBox/constants'
+import { getQAReadMsg } from './qaReadMsg'
 import _ from 'lodash'
 
 export const getHistoryMessages = async (isQA) => {
@@ -34,7 +35,12 @@ export const getHistoryMessages = async (isQA) => {
                         store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
                     }
                 } else if ([1, 2].includes(msgtype)) {
-                    store.dispatch(qaMessages(val, asker, { showNotice: false, isHistory: true }, time))
+                    let readMsgId = getQAReadMsg()[asker] || 0;
+                    if (readMsgId < id) {
+                        store.dispatch(qaMessages(val, asker, { showNotice: true, isHistory: true, unRead: true }, time))
+                    } else {
+                        store.dispatch(qaMessages(val, asker, { showNotice: false, isHistory: true, unRead: false }, time))
+                    }
                 }
             })
 

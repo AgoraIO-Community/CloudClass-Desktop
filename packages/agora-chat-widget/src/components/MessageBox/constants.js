@@ -29,7 +29,7 @@ export const CHAT_TABS = [{
 export const HISTORY_COUNT = 50;
 
 // 分页获取成员数
-export const ROOM_PAGESIZE = 20;
+export const ROOM_PAGESIZE = 500;
 
 // 输入框限制字符数
 export const INPUT_SIZE = 500;

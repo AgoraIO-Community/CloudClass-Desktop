@@ -5,10 +5,12 @@ import { Tag } from 'antd'
 import scrollElementToBottom from '../../../utils/scrollElementToBottom'
 import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
+import { saveReadMsgID } from '../../../api/qaReadMsg'
 
 // 助教端 提问消息列表
-const QaMessage = (props) => {
+const QaMessage = () => {
     const qaList = useSelector(state => state.messages.qaList) || [];
+    const currentUser = useSelector(state => state.currentUser);
     const [newUser, setNewUser] = useState([]);
     const [maxImg, setMaxImg] = useState(false);
     const [maxImgUrl, setMaxImgUrl] = useState('');
@@ -29,12 +31,18 @@ const QaMessage = (props) => {
     }
 
     useEffect(() => {
-        setNewUser(qaList[props.currentUser]?.msg)
-    }, [qaList[props.currentUser]])
+        const currentMsg = qaList[currentUser]?.msg
+        const option = {
+            lastUserId: currentUser,
+            lastUserMsg: currentMsg && (currentMsg[currentMsg.length - 1].id)
+        }
+        setNewUser(currentMsg)
+        saveReadMsgID(option)
+    }, [qaList[currentUser]])
 
     useEffect(() => {
         scrollPageBottom()
-    }, [qaList[props.currentUser]])
+    }, [qaList[currentUser]])
 
     const scrollPageBottom = () => {
         let scrollElement = document.getElementById('qa-box-tag')

@@ -102,3 +102,8 @@ export const loadGif = (data) => {
 export const clearStore = (data) => {
     return { type: 'CLEAR_STORE', data }
 }
+
+// 设置当前提问人
+export const setCurrentUser = (data) => {
+    return {type: 'SAVE_CURRENT_USER',data}
+}

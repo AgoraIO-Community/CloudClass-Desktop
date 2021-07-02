@@ -5,7 +5,6 @@ import store from './redux/store'
 import App from './App';
 import { MemoryRouter } from 'react-router-dom'
 import { logoutChatroom } from './api/chatroom'
-import { logoutIM } from './api/logout'
 
 import './index.css'
 
@@ -30,5 +29,4 @@ export const renderHXChatRoom = (dom, pluginStore) => {
 
 export const logout = () => {
     logoutChatroom()
-    logoutIM()
 }
