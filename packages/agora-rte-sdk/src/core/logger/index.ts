@@ -189,7 +189,7 @@ export class EduLogger {
     //   )
     // }
     await db.readAndDeleteBy(now)
-    EduLogger.info(`完成日志上传，文件名: ${file.name}, 上传时间: ${now}, 日志上传，res: ${JSON.stringify(res)}`)
+    EduLogger.info(`log upload done: ${file.name}, ts: ${now}, res: ${JSON.stringify(res)}`)
     return res;
   }
 }
