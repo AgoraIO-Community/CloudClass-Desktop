@@ -541,7 +541,15 @@ export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
 
 export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> = ({
   teacherStream,
-  videoStreamList = []
+  videoStreamList = [],
+  hideStars,
+  onCameraClick,
+  onMicClick,
+  onOffPodiumClick,
+  onWhiteboardClick,
+  onSendStar,
+  userType,
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
   useWatch(videoStreamList, prev => {
     if (videoStreamList.length < (prev?.length || 0)) {
@@ -566,8 +574,7 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
             </span>
           </div>
         ) : null}
-        {/* 这里和之前的视频列表学生流类似，把div替换下VideoPlayer */}
-        {videoStreamList.length ? videoStreamList.map((item, index) => (
+        {videoStreamList.length ? videoStreamList.map((videoStream, index) => (
           <div
             className={['carousel-item', `video-student`].join(' ')}
             key={index}
@@ -577,9 +584,22 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
             }}
           >
             <VideoPlayer
-              {...item}
+              {...videoStream}
               controlPlacement={'bottom'}
               placement={'bottom'}
+              hideStars={hideStars}
+              showGranted={true}
+              userType={userType}
+              onCameraClick={onCameraClick}
+              onMicClick={onMicClick}
+              onOffPodiumClick={onOffPodiumClick}
+              onWhiteboardClick={onWhiteboardClick}
+              onSendStar={async () => {
+                await onSendStar(videoStream.uid)
+              }}
+              onPrivateChat={async () => {
+                await onPrivateChat(videoStream.uid)
+              }}
             ></VideoPlayer>
           </div>
         )) : null}
