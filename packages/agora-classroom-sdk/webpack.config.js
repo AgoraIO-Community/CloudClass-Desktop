@@ -243,6 +243,7 @@ module.exports = {
       AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
       REACT_APP_REPORT_URL: config.hasOwnProperty('REACT_APP_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_REPORT_URL}`) : JSON.stringify(""),
       REACT_APP_REPORT_QOS: config.hasOwnProperty('REACT_APP_REPORT_QOS') ? JSON.stringify(`${config.REACT_APP_REPORT_QOS}`) : JSON.stringify(""),  
+      REACT_APP_V1_REPORT_URL: config.hasOwnProperty('REACT_APP_V1_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_V1_REPORT_URL}`) : JSON.stringify(""),
     }),
     // new webpack.DefinePlugin({
     //   REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),

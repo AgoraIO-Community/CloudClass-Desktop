@@ -72,6 +72,11 @@ export class ReportService extends ApiBase {
         this.rtmUid = params.uid
     }
 
+    setReportSdkDomain(sdkDomain: string){
+        this.sdkDomain = sdkDomain;
+        this.prefix = `${this.sdkDomain}`
+    }
+
     guardParams() {
         if (!!this.appId && !!this.rtmUid) {
             return true

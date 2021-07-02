@@ -1,4 +1,6 @@
 import { reportServiceV2 } from "../services/report-v2"
+import { reportService } from '../services/report'
+import { rteReportService } from 'agora-rte-sdk'
 class GlobalConfigs {
   sdkDomain: string = 'https://api.agora.io/%region%'
   reportDomain: string = 'https://api.agora.io'
@@ -18,10 +20,13 @@ class GlobalConfigs {
   }
 
   public setReportConfig(config= {
-    sdkDomain: 'https://test-rest-argus.bj2.agoralab.co',
-    qos: 101
+    sdkDomain: 'https://rest-argus-ad.agoralab.co',
+    qos: 1,
+    v1SdkDomain: 'https://api.agora.io/cn/v1.0/projects/%app_id%/app-dev-report'
   }){
     reportServiceV2.initReportConfig(config)
+    reportService.setReportSdkDomain(config.v1SdkDomain);
+    rteReportService.setReportSdkDomain(config.v1SdkDomain);
   }
 
   get sdkArea() {

@@ -181,10 +181,11 @@ export class AgoraEduSDK {
       if(json["edu.apiUrl"]) {
         globalConfigs.setSDKDomain(json["edu.apiUrl"])
       }
-      if(json["reportUrl"] && json["reportQos"]) {
+      if(json["reportUrl"] && json["reportQos"] && json["reportV1Url"]) {
         globalConfigs.setReportConfig({
           sdkDomain: json['reportUrl'],
-          qos: +(json['reportQos'])
+          qos: +(json['reportQos']),
+          v1SdkDomain: json['reportV1Url']
         })
       }else{
         globalConfigs.setReportConfig();
