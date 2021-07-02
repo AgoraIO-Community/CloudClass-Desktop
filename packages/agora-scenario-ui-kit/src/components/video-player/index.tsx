@@ -550,6 +550,7 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
   })
   return (
     <div className="mid-class-carousel">
+      {/* 这里之后处理老师的流 把div换成VideoPlayer */}
       <div className="carousel-item video-teacher">teacher</div>
       <div className="video-students">
         {videoStreamList.length > 6 ? (
@@ -559,6 +560,7 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
             </span>
           </div>
         ) : null}
+        {/* 这里和之前的视频列表学生流类似，把div替换下VideoPlayer */}
         {videoStreamList.length ? videoStreamList.map((item, index) => (
           <div
             className={['carousel-item', `video-student`].join(' ')}
