@@ -293,8 +293,13 @@
   margin-left: 2px;
 }
 
+.carousel-item .video-player{
+  width: 100%;
+  height: 100%;
+}
+
 .video-teacher {
-  background: red;
+  background-color: red;
 }
 
 .video-students {

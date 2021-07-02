@@ -208,7 +208,21 @@ export const DocsMidClassCarousel = () => {
         <Button onClick={() => {
           setStudentList([
             ...studentList,
-            Date.now()
+            {
+              username: `student`,
+              uid: `uuid-student`,
+              micEnabled: false,
+              cameraEnabled: false,
+              whiteboardGranted: true,
+              cameraDevice: 2,
+              micDevice: 1,
+              hasStream: true,
+              online: true,
+              isLocal: true,
+              isOnPodium: false,
+              userType: 'student',
+              children: (<></>)
+            }
           ])
         }}>上台</Button>
         <Button onClick={() => {
@@ -218,6 +232,21 @@ export const DocsMidClassCarousel = () => {
         }}>下台</Button>
       </div>
       <MidClassVideoMarqueeList
+        teacherStream={{
+          username: `teacher`,
+          uid: `uuid-teacher`,
+          micEnabled: false,
+          cameraEnabled: false,
+          whiteboardGranted: true,
+          cameraDevice: 2,
+          micDevice: 1,
+          hasStream: true,
+          online: true,
+          isLocal: true,
+          isOnPodium: false,
+          userType: 'teacher',
+          children: (<></>)
+        }}
         videoStreamList={studentList}
       />
     </>

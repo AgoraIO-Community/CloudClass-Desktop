@@ -536,10 +536,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 }
 
 export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
-
+  teacherStream: any
 }
 
 export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> = ({
+  teacherStream,
   videoStreamList = []
 }) => {
   useWatch(videoStreamList, prev => {
@@ -550,8 +551,13 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
   })
   return (
     <div className="mid-class-carousel">
-      {/* 这里之后处理老师的流 把div换成VideoPlayer */}
-      <div className="carousel-item video-teacher">teacher</div>
+      <div className="carousel-item video-teacher">
+        <VideoPlayer
+          {...teacherStream}
+          controlPlacement={'bottom'}
+          placement={'bottom'}
+        ></VideoPlayer>
+      </div>
       <div className="video-students">
         {videoStreamList.length > 6 ? (
           <div className="left-container scroll-btn">
@@ -570,7 +576,11 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
               e.target.style.width = 204 + 'px'
             }}
           >
-            student - {index + 1}
+            <VideoPlayer
+              {...item}
+              controlPlacement={'bottom'}
+              placement={'bottom'}
+            ></VideoPlayer>
           </div>
         )) : null}
         {videoStreamList.length > 6 ? (
