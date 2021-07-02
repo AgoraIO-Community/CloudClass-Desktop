@@ -269,6 +269,10 @@
   background-image: url('../icon/assets/svg/private-call-default.svg');
 }
 
+/*
+  轮播css开始
+*/
+
 .mid-class-carousel {
   display: flex;
   align-items: center;
@@ -294,11 +298,20 @@
 }
 
 .video-students {
+  position: relative;
   display: flex;
   align-items: center;
   height: 100%;
   margin-left: 2px;
   max-width: calc(100% - 204px - 2px);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none;
+}
+
+.video-students::-webkit-scrollbar {
+  display: none;
 }
 
 .video-students .carousel-item {
@@ -308,6 +321,13 @@
 
 .video-students .carousel-item.leave {
   animation: hide .5s linear 1 forwards;
+}
+
+.mid-class-carousel .left-container, .mid-class-carousel .right-container {
+  height: 116px !important;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 @keyframes show {
