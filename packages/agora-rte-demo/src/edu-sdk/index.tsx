@@ -4,7 +4,7 @@ import { LiveRoom } from "@/monolithic/live-room";
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { AppStore } from "@/stores/app";
 import { StorageStore } from '@/stores/storage';
-import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import { EduLogger, EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
@@ -240,7 +240,7 @@ export class AgoraEduSDK {
    * @param option LaunchOption
    */
   static async launch(dom: Element, option: LaunchOption) {
-    console.log("launch ", dom, " option ", option)
+    EduLogger.info(`launch with courses ${JSON.stringify(option.courseWareList || [])}`)
 
     if (controller.appController.hasCalled) {
       throw GenericErrorWrapper("already launched")
@@ -260,7 +260,7 @@ export class AgoraEduSDK {
       let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
       let roomPath = mainPath
 
-      console.log("main Path", mainPath, " room Path", roomPath)
+      EduLogger.info("main Path", mainPath, " room Path", roomPath)
 
       if (option.pretest) {
         mainPath = '/pretest'

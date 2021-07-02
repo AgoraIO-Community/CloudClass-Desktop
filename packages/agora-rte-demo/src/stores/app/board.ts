@@ -859,7 +859,7 @@ export class BoardStore {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
     try {
-      EduLogger.info("[aClass Board] Start Join Board..")
+      EduLogger.info(`[aClass Board] Start Join Board.., ${info.boardId} ${info.boardToken}`)
       await this.aClassJoinBoard({
         uuid: info.boardId,
         roomToken: info.boardToken,
