@@ -315,7 +315,7 @@ async function createWindow() {
       }
     }
     ipcMain.on("shortcutcapture", (event, args) => {
-      mainWindow.hide();
+      // mainWindow.hide();
       if(!shortcutCapture) {
         shortcutCapture = new ShortcutCapture.default();
       }
