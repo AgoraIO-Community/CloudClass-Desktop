@@ -12,6 +12,7 @@ import { workerPath } from '@/edu-sdk/controller';
 import { useStorageSW } from '@/utils/utils';
 import { CourseReplacerContent } from '../components/course-replacer';
 import { PopoverGuides } from '@/components/popover-guide';
+import { EduLogger } from 'agora-rte-sdk';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -59,7 +60,13 @@ export const RouteContainer = (props: RouteContainerProps) => {
 
 export const RoomContainer = (props: RoomContainerProps) => {
 
-  useStorageSW(workerPath)
+  try {
+    useStorageSW(workerPath)
+  } catch(e) {
+    EduLogger.info(`[Service Worker] Failed to register service worker ${e.message}`)
+  }
+
+  EduLogger.info(`[Service Worker] Service Worker Registered`)
 
   return (
     <Provider store={props.store}>

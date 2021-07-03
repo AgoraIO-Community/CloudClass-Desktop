@@ -360,7 +360,7 @@ export class AppStore implements ClassRoomAbstractStore {
     }
 
     if (config.enableLog) {
-      EduManager.enableDebugLog(true);
+      EduManager.enableDebugLog(config.agoraAppId, true);
     }
 
     this.mediaStore = new MediaStore(this)

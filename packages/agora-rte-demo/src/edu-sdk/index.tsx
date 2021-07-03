@@ -4,7 +4,7 @@ import { LiveRoom } from "@/monolithic/live-room";
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { AppStore } from "@/stores/app";
 import { StorageStore } from '@/stores/storage';
-import { EduLogger, EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import { EduLogger, EduManager, EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import React from 'react';
 import { SceneDefinition } from 'white-web-sdk';
@@ -13,6 +13,7 @@ import { AgoraEduSDKConfigParams, ListenerCallback } from "./declare";
 import { checkConfigParams, checkDiskOption, checkLaunchOption, checkReplayOption } from './validator';
 import {globalConfigs} from '@/utils/configs'
 import { retry } from '@/utils/utils';
+import { get } from 'lodash';
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -240,7 +241,6 @@ export class AgoraEduSDK {
    * @param option LaunchOption
    */
   static async launch(dom: Element, option: LaunchOption) {
-    EduLogger.info(`launch with courses ${JSON.stringify(option.courseWareList || [])}`)
 
     if (controller.appController.hasCalled) {
       throw GenericErrorWrapper("already launched")
@@ -248,19 +248,27 @@ export class AgoraEduSDK {
 
     const unlock = controller.appController.acquireLock()
     try {
+      const appId = get(sdkConfig, 'configParams.appId', '')
+      if(!appId) {
+        throw GenericErrorWrapper(new Error(`critical - appId not configured`))
+      }
+      //enable log workerappId
+      EduManager.enableDebugLog(appId, true)
       checkLaunchOption(dom, option)
+      EduLogger.info(`[laucnher] launch with courses ${JSON.stringify(option.courseWareList || [])}`)
       eduSDKApi.updateRtmInfo({
         rtmUid: option.userUuid,
         rtmToken: option.rtmToken,
       })
       // const data = await retry(() => eduSDKApi.getConfig(), 2)
       const data = await eduSDKApi.getConfig()
+      EduLogger.info(`[laucnher] fetch config success`)
 
       // let mainPath = roomTypes[option.roomType]?.path || '/classroom/one-to-one'
       let mainPath = '/acadsoc/one-to-one' // TODO: 阿卡索主页
       let roomPath = mainPath
 
-      EduLogger.info("main Path", mainPath, " room Path", roomPath)
+      EduLogger.info("[laucnher] main Path", mainPath, " room Path", roomPath)
 
       if (option.pretest) {
         mainPath = '/pretest'
@@ -305,6 +313,7 @@ export class AgoraEduSDK {
         pretest: option.pretest,
       })
       // stores.set("app", store)
+      EduLogger.info("[laucnher] begin creating liveroom")
       controller.appController.create(store, <LiveRoom store={store} />, dom, option.listener)
       //@ts-ignore
       window.globalStore = controller.appController.store
