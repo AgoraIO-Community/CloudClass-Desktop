@@ -119,7 +119,7 @@
         'launch.wait':'等待应用加载...',
         'launch.launching':'加载完成,应用启动中...',
         'launch.success':'应用启动成功',
-        'launch.fail':'应用刚启动失败 %{reason}',
+        'launch.fail':'应用启动失败 %{reason}',
         'timeout.label':'无法进入教室? 您可以尝试点击下面的按钮刷新',
         'timeout.btn':'刷新'
       }
@@ -317,7 +317,7 @@
       if(!readyState.dom || !readyState.lib || !readyState.params || !rootDom || !window.AgoraEduSDK) {
         update_loading_status(__agora_i18n('launch.wait'))
         let currenttime = new Date().getTime()
-        if(currenttime - ts > 20 * 1000) {
+        if(currenttime - ts > 15 * 1000) {
           show_timeout()
         }
         setTimeout(collectPerformance, 200)
