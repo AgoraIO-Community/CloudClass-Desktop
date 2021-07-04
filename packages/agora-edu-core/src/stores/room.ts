@@ -2070,7 +2070,7 @@ export class RoomStore extends SimpleInterval {
       roomUuid: this.roomInfo.roomUuid,
       range: 1,
       type: 1,
-      interval: 30,
+      interval: 10,
       count: 6
     })
   }
