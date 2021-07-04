@@ -208,7 +208,9 @@ export const useRoomContext = (): RoomContext => {
     liveClassStatus,
     roomProperties,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
+    startCarousel,
+    stopCarousel
   } = useRoomStore()
 
   const {
@@ -250,7 +252,9 @@ export const useRoomContext = (): RoomContext => {
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
-    flexRoomProperties: flexProperties
+    flexRoomProperties: flexProperties,
+    startCarousel,
+    stopCarousel
   }
 }
 

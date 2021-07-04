@@ -1,7 +1,7 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext } from 'agora-edu-core';
+import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext, eduSDKApi } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
@@ -39,7 +39,9 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         // unmuteVideo,
         // muteUserChat,
         // unmuteUserChat,
-        roomInfo
+        roomInfo,
+        startCarousel,
+        stopCarousel
     } = useRoomContext()
 
     const {
@@ -148,6 +150,24 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     return (
         <Roster
             isDraggable={true}
+            carousel={userType === 'teacher'}
+            carouselProps={{
+                modeValue: 'all',
+                changeModeValue: () => {
+          
+                },
+                randomValue: 'random',
+                changeRandomValue: () => {
+          
+                },
+                times: 10,
+                sendCarousel() {
+                    startCarousel()
+                },
+                stopCarousel() {
+                    stopCarousel()
+                }
+            }}
             localUserUuid={localUserInfo.userUuid}
             teacherName={teacherInfo?.userName || ''}
             dataSource={dataList}

@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
 import { v4 as uuidv4 } from 'uuid';
 import { usePrevious, useWatch } from '~utilities/hooks';
+import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group'
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -209,7 +210,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title="32333" placement="bottom">
+      <Tooltip title="" placement="bottom">
         <MediaIcon
           {...getMediaIconProps({
             muted: !!micEnabled,
@@ -390,6 +391,11 @@ export interface VideoMarqueeListProps {
    * video stream list
    */
   videoStreamList: BaseVideoPlayerProps[],
+  // teacherStream: any,
+  /**
+   * teacher stream
+   */
+   teacherStreams: any[],
   /**
   * 点击摄像头的按钮时的回调
   */
@@ -422,6 +428,8 @@ export interface VideoMarqueeListProps {
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   hideStars,
+  // teacherStream,
+  teacherStreams = [],
   videoStreamList,
   onCameraClick,
   onMicClick,
@@ -497,15 +505,67 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     }
   }, [videoContainerRef.current])
 
+  // const [animated, startAnimate] = useState<boolean>(false)
+
+  // useWatch([teacherStreams, videoStreamList], prev => {
+  //   if (teacherStreams.length !== videoStreamList.length) {
+  //     startAnimate(true)
+  //   }
+  // })
+
   return (
-    <div className="video-container" ref={mountDOM}>
+    <div className="marque-video-container" >
+      {/* <CSSTransition
+        in={animated}
+        timeout={500}
+      > */}
+      <>
+      <TransitionGroup className="video-list">
+      {
+        teacherStreams.map((videoStream: BaseVideoPlayerProps, idx: number) =>
+        <CSSTransition
+          key={`teacher-${idx}`}
+          // key={videoStream.uid}
+          timeout={500}
+          classNames="video-player-animates"
+        >
+          <div className="video-item" key={idx} ref={attachVideoItem}>
+            <VideoPlayer
+              {...videoStream}
+              hideStars={true}
+              showGranted={false}
+              userType={userType}
+              onCameraClick={onCameraClick}
+              onMicClick={onMicClick}
+              onOffPodiumClick={onOffPodiumClick}
+              onWhiteboardClick={onWhiteboardClick}
+              onSendStar={async () => {
+                await onSendStar(videoStream.uid)
+              }}
+              onPrivateChat={async () => {
+                await onPrivateChat(videoStream.uid)
+              }}
+            ></VideoPlayer>
+          </div>
+          </CSSTransition>
+        )
+      }
+      </TransitionGroup>
+      <div className="video-container" ref={mountDOM}>
       <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
         <span className="offset">
           <Icon type="backward"></Icon>
         </span>
       </div>
+      <TransitionGroup className="video-list">
       {
         videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
+        <CSSTransition
+          key={`student-${idx}`}
+          // key={videoStream.uid}
+          timeout={500}
+          classNames="video-player-animates"
+        >
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
@@ -524,13 +584,19 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               }}
             ></VideoPlayer>
           </div>
+          </CSSTransition>
         )
       }
+      </TransitionGroup>
+
       <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
         <span className="offset">
           <Icon type="forward"></Icon>
         </span>
       </div>
+      </div>
+      </>
+      {/* </CSSTransition> */}
     </div>
   )
 }

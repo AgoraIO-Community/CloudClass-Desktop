@@ -5,6 +5,10 @@ import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
 import { VideoMarqueeList, VideoPlayer, VideoPlayerProps, MidClassVideoMarqueeList } from '~components/video-player';
+import {CSSTransition } from 'react-transition-group';
+//@ts-ignore
+import {AspectRatio} from 'react-aspect-ratio'
+import { useEffect } from 'react';
 
 const config = { "muted": true, "deviceState": 1, "online": true, "onPodium": true, "userType": "teacher", "hasStream": true, "isLocal": false, "type": "microphone", "uid": "3232", "disabled": true }
 const meta: Meta = {
@@ -209,7 +213,7 @@ export const DocsMidClassCarousel = () => {
           setStudentList([
             ...studentList,
             {
-              username: `student`,
+              username: `student-${studentList.length}`,
               uid: `uuid-student`,
               micEnabled: false,
               cameraEnabled: false,
@@ -250,6 +254,161 @@ export const DocsMidClassCarousel = () => {
         videoStreamList={studentList}
       />
     </>
+  )
+}
+
+export const DocsClassVideoPlayer = () => {
+  const [studentList, setStudentList] = useState([])
+
+  const [teacherList, setTeacherList] = useState([])
+
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setStream([
+  //       {
+  //         username: `teacher-${studentList.length}`,
+  //         uid: `uuid-teacher`,
+  //         micEnabled: false,
+  //         cameraEnabled: false,
+  //         whiteboardGranted: true,
+  //         cameraDevice: 2,
+  //         micDevice: 1,
+  //         hasStream: true,
+  //         online: true,
+  //         isLocal: true,
+  //         isOnPodium: false,
+  //         userType: 'teacher',
+  //         children: (<></>)
+  //       }]
+  //     )
+  //   }, 2500)
+  // }, [])
+
+  return (
+    <div>
+        <Button onClick={() => {
+          setTeacherList([
+            ...teacherList,
+            {
+              username: `teacher-${teacherList.length}`,
+              uid: `uuid-teacher`,
+              micEnabled: false,
+              cameraEnabled: false,
+              whiteboardGranted: true,
+              cameraDevice: 2,
+              micDevice: 1,
+              hasStream: true,
+              online: true,
+              isLocal: true,
+              isOnPodium: false,
+              userType: 'teacher',
+              children: (<></>)
+            }
+          ])
+        }}>老师上台</Button>
+        <Button onClick={() => {
+          const copyArr = [...teacherList]
+          copyArr.splice(0, 1)
+          setTeacherList([...copyArr])
+        }}>老师下台</Button>
+        <Button onClick={() => {
+          setStudentList([
+            ...studentList,
+            {
+              username: `student-${studentList.length}`,
+              uid: `uuid-student`,
+              micEnabled: false,
+              cameraEnabled: false,
+              whiteboardGranted: true,
+              cameraDevice: 2,
+              micDevice: 1,
+              hasStream: true,
+              online: true,
+              isLocal: true,
+              isOnPodium: false,
+              userType: 'student',
+              children: (<></>)
+            }
+          ])
+        }}>上台</Button>
+        <Button onClick={() => {
+          const copyArr = [...studentList]
+          copyArr.splice(0, 1)
+          setStudentList([...copyArr])
+        }}>下台</Button>
+        <VideoMarqueeList
+        teacherStream={teacherList[0]}
+        teacherStreams={teacherList}
+        videoStreamList={studentList}
+        onCameraClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.cameraEnabled = !item.cameraEnabled
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onCameraClick uid', uid)
+        }}
+        onMicClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.micEnabled = !item.micEnabled
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onMicrophoneClick uid', uid)
+        }}
+        onWhiteboardClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.whiteboardGranted = !item.whiteboardGranted
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onWhiteboard Click', uid)
+        }}
+        onOffPodiumClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.isOnPodium = !item.isOnPodium
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('off podium', uid)
+        }}
+        onSendStar={(uid,) => {
+          // return new Promise((resolve) => {
+          //   list.forEach(item => {
+          //     if (item.uid === uid) {
+          //       item.stars += 1
+          //     }
+          //   })
+          //   setList([
+          //     ...list
+          //   ])
+          //   resolve('send star')
+          // })
+        }}
+      >
+      </VideoMarqueeList>
+        {/* {studentList.map((e: any, idx: number) => (
+          <CSSVideoPlayer key={idx} {...e} />
+        ))} */}
+    </div>
+    // <AspectRatio ratio="16/9" style={{display: 'flex', maxWidth: 320, minHeight: 180}}>
+    // <div style={{backgroundColor: 'red'}}>
+    //   1
+    // </div>
+    // </AspectRatio>
   )
 }
 

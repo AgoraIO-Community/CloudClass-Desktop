@@ -29,6 +29,7 @@ export enum CoVideoActionType {
   teacherRefuse = 3,
   studentCancel = 4,
   teacherReplayTimeout = 7,
+  carousel = 10
 }
 
 export type CauseOperator = {
@@ -1963,6 +1964,10 @@ export class RoomStore extends SimpleInterval {
             console.log('学生取消')
             break;
           }
+          case CoVideoActionType.carousel: {
+            console.log('[CAROUSEL] message ',  JSON.stringify(data))
+            break;
+          }
           // case CoVideoActionType.teacherReplayTimeout: {
           //   this.appStore.fireToast(transI18n("co_video.received_message_timeout"), 'error')
           //   console.log('超时')
@@ -2057,5 +2062,22 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  @action.bound
+  async startCarousel() {
+    await eduSDKApi.startCarousel({
+      roomUuid: this.roomInfo.roomUuid,
+      range: 1,
+      type: 1,
+      interval: 30,
+      count: 6
+    })
+  }
+  @action.bound
+  async stopCarousel() {
+    await eduSDKApi.stopCarousel({
+      roomUuid: this.roomInfo.roomUuid,
+    })
   }
 }

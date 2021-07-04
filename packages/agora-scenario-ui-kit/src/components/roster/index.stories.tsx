@@ -73,8 +73,42 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
     return item
   }
 
+  const [carouselState, setCarouselState] = useState<any>({
+    modeValue: 'all',
+    randomValue: 'random',
+    times: 10
+  })
+
   return (
-    <Roster userType="student" dataSource={list} columns={defaultColumns} {...restProps} onClick={handleClick} />
+    <Roster userType="student" dataSource={list} columns={defaultColumns} {...restProps} carousel carouselProps={{
+      modeValue: carouselState.modeValue,
+      changeModeValue: (value: any) => {
+        setCarouselState({
+          ...carouselState,
+          modeValue: value
+        })
+      },
+      randomValue: carouselState.randomValue,
+      changeRandomValue: (value: any) => {
+        setCarouselState({
+          ...carouselState,
+          randomValue: value
+        })
+      },
+      times: carouselState.times,
+      changeTimes: (value: any) => {
+        setCarouselState({
+          ...carouselState,
+          times: value
+        })
+      },
+      startCarousel() {
+        console.log("sendCarousel")
+      },
+      stopCarousel() {
+        console.log("stopCarousel")
+      }
+    }} onClick={handleClick} />
   )
 };
 

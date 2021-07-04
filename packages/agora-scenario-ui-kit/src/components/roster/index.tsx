@@ -9,6 +9,8 @@ import './index.css';
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import { canOperate, ProfileRole, studentListSort } from './base';
 import { Search } from '../input';
+import { Button, Select } from '~ui-kit';
+import { useEffect } from 'react';
 
 export * from './user-list';
 
@@ -99,6 +101,14 @@ export interface RosterProps extends ModalProps {
    */
   onClose?: () => void;
   onChange: (evt: any) => void;
+  /**
+   * 开启轮播
+   */
+  carousel: boolean;
+  /**
+   * 轮播相关配置项
+   */
+  carouselProps: any;
 }
 
 export const Roster: FC<RosterProps> = ({
@@ -111,9 +121,111 @@ export const Roster: FC<RosterProps> = ({
   localUserUuid,
   title,
   isDraggable = true,
+  carousel = false,
+  carouselProps,
   userType = 'student',
-  onChange
+  onChange,
 }) => {
+
+  const CarouselMenu = ({modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, sendCarousel, stopCarousel}: any) => {
+
+    return (
+      <div>
+        <p>
+          <span>
+          模式
+          <Select
+            value={modeValue}
+            onChange={changeModeValue}
+            options={[
+              {
+                label: '全部',
+                value: 'all'
+              },
+              {
+                label: '非禁用',
+                value: 'available'
+              },
+            ]}
+          >
+          </Select>
+          </span>
+          <span>
+            顺序
+            <Select
+            value={randomValue}
+            onChange={changeRandomValue}
+            options={[
+              {
+                label: '顺序',
+                value: 'sort'
+              },
+              {
+                label: '随机',
+                value: 'random'
+              },
+            ]}
+          >
+          </Select>
+          </span>
+          {/* <span>
+            <label>模式</label>
+            <input type="text" value={modeValue} />
+          </span> */}
+          {/* <span>
+            <label>顺序、随机</label>
+            <input type="text" value={randomValue} />
+          </span> */}
+          <span>
+            <label>次数</label>
+            <input type="number" value={times} onChange={(e: any) => {
+              changeTimes(e.target.value)
+            }} />
+            
+          </span>
+          <Button onClick={() => {
+            sendCarousel({
+              modeValue,
+              randomValue,
+              times
+            })
+          }}>开启轮播</Button>
+          <Button type="secondary" onClick={() => {
+            stopCarousel({
+              modeValue,
+              randomValue,
+              times
+            })
+          }}>开启轮播</Button>
+        </p>
+        <p>
+          {/* <span>学生</span>
+          <Select
+            value={value}
+            onChange={async value => {
+                await onCarouselOptionChange(value)
+            }}
+            options={[
+              {
+                label: '顺序',
+                value: 'sort'
+              },
+              {
+                label: '随机',
+                value: 'random'
+              },
+            ]}
+          >
+          </Select> */}
+        </p>
+        <p>
+          {/* <span>轮播</span>
+          <input type="number" value={times} />
+          <span>秒/次数</span> */}
+        </p>
+      </div>
+    )
+  }
 
   const studentList = studentListSort(dataSource)
 
@@ -136,6 +248,7 @@ export const Roster: FC<RosterProps> = ({
         </div>
         <div className="roster-container">
           <div className="search-header roster-header">
+            {carousel && <CarouselMenu {...carouselProps} />}
             <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
               <span title={teacherName} className="roster-username">{teacherName}</span>

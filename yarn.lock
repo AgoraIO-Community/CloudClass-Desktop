@@ -19629,6 +19629,11 @@ react-app-rewired@2.1.8:
   dependencies:
     semver "^5.6.0"
 
+react-aspect-ratio@^1.0.49:
+  version "1.0.49"
+  resolved "https://registry.nlark.com/react-aspect-ratio/download/react-aspect-ratio-1.0.49.tgz#346863ebb7eec542b8a5a4d6548440bf95a88608"
+  integrity sha1-NGhj67fuxUK4paTWVIRAv5Wohgg=
+
 react-colorful@^5.0.1:
   version "5.2.2"
   resolved "https://registry.nlark.com/react-colorful/download/react-colorful-5.2.2.tgz#0a69d0648db47e51359d343854d83d250a742243"

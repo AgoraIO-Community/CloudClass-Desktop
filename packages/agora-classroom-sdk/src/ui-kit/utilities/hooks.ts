@@ -4,6 +4,8 @@ import type { RendererPlayerProps } from '~utilities/renderer-player';
 import { DependencyList } from 'react';
 import { useLocalStore } from 'mobx-react';
 import { useLayoutEffect } from 'react';
+import { useUIStore } from '@/infra/hooks';
+import { useVideoControlContext, useStreamListContext, useUserListContext, useRoomContext } from 'agora-edu-core';
 
 export const useReaction = <T>(
   expression: (reaction: IReactionPublic) => T,

@@ -44,5 +44,8 @@
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "storybook": "6.2.8",
     "tailwindcss": "2.0.3"
+  },
+  "dependencies": {
+    "react-aspect-ratio": "^1.0.49"
   }
 }
