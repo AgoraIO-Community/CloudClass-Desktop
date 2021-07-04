@@ -450,6 +450,7 @@ export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessag
 export type BytesType = number | string
 
 export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
+  if (`${fileBytes}` === '- -') return '- -';
   const bytes = +fileBytes
   if(bytes == 0) return '- -';
   const k = 1000,

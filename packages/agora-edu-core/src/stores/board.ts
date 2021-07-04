@@ -6,7 +6,7 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
-import { ConvertedFile, CourseWareItem } from '../api/declare';
+import { ConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -2124,9 +2124,52 @@ export class BoardStore extends ZoomController {
     this.scaleToFit()
   }
 
+  @observable
+  _extraResources: CourseWareItem[] = []
+
+  @observable
+  _resourcesMap: Map<string, CourseWareItem> = new Map()
+
+  resolveResource(item: any) {
+    const id = item.resourceUuid || item.id
+    const resourceRecord = this._resourcesMap.has(id)
+    if (resourceRecord) {
+      const targetResource = this._resourcesMap.get(id)
+      return targetResource
+    }
+
+    return item
+  }
+
+  @computed
+  get extraResources() {
+    return this._extraResources
+    .map((item: any) => ({
+      ...this.resolveResource(item),
+    }))
+    .map(transDataToResource)
+  }
+
+  @action.bound
+  upsertResources(items: CourseWareItem[]) {
+    for (let item of items) {
+      this._resourcesMap.set(item.resourceUuid, item)
+      const exists = this.allResources.find((resource: any) => resource.id === item.resourceUuid)
+      if (!exists) {
+        this._extraResources.push(item)
+      }
+    }
+  }
+
   @computed
   get publicResources() {
-    return this.appStore.params.config.courseWareList.map(transDataToResource)
+    return this.appStore.params.config.courseWareList
+    .map((item: any) => ({
+      ...item,
+      ...this.resolveResource(item),
+      access: 'public',
+    }))
+    .map(transDataToResource)
   }
 
   @computed
@@ -2139,12 +2182,17 @@ export class BoardStore extends ZoomController {
 
   @computed
   get personalResources() {
-    return this._personalResources.map(transDataToResource)
+    return this._personalResources.map((item: any) => ({
+      ...item,
+      ...this.resolveResource(item),
+      access: 'private',
+    }))
+    .map(transDataToResource)
   }
 
   @computed
   get allResources() {
-    return this.publicResources.concat(this.personalResources)
+    return this.publicResources.concat(this.personalResources).concat(this.extraResources)
   }
 
   @computed

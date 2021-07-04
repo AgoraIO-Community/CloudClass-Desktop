@@ -84,6 +84,13 @@ export type ConvertedFile = {
 
 export type ConvertedFileList = ConvertedFile[]
 
+export type TaskProgressInfo = {
+  totalPageSize?: number,
+  convertedPageSize?: number,
+  convertedPercentage?: number,
+  convertedFileList: ConvertedFileList
+}
+
 
 export type CourseWareItem = {
   resourceName: string,
@@ -99,12 +106,8 @@ export type CourseWareItem = {
   convert?: boolean,
   taskUuid?: string,
   taskToken?: string,
-  taskProgress?: {
-    totalPageSize?: number,
-    convertedPageSize?: number,
-    convertedPercentage?: number,
-    convertedFileList: ConvertedFileList
-  }
+  taskProgress?: TaskProgressInfo
+  access?: 'public' | 'private'
 }
 
 export type CourseWareList = CourseWareItem[]

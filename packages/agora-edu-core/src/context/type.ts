@@ -1,6 +1,6 @@
 import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum } from 'agora-rte-sdk'
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
-import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
+import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare'
 import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
@@ -1407,4 +1407,14 @@ export type CloudDriveContext = {
      * @version v1.1.2
      */
     doUpload: (payload: any) => Promise<void>,
+    /**
+     * 修改或更新课件
+     * @param CourseWareItem 课件
+     * @version v1.1.4
+     */
+    upsertResources(items: CourseWareItem[]): void,
+    /**
+     * 全部资源
+     */
+    allResources: MaterialDataResource[],
 }

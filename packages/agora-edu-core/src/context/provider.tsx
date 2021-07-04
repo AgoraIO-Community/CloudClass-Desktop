@@ -427,9 +427,11 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources,
+    // personalResources,
     handleUpload,
     publicResources,
+    upsertResources,
+    allResources
   } = useBoardStore()
 
 
@@ -443,9 +445,11 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources,
-    publicResources,
+    personalResources: allResources.filter((item: any) => item.access === 'private'),
+    publicResources: allResources.filter((item: any) => item.access === 'public'),
     doUpload: handleUpload,
+    allResources,
+    upsertResources
   }
 }
 

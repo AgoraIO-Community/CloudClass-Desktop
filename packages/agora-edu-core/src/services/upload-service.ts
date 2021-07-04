@@ -47,7 +47,8 @@ export type MaterialDataResource = {
   url: string,
   convertedPercentage?: number,
   updateTime: number,
-  scenes?: any[]
+  scenes?: any[],
+  access?: string
 }
 
 export const transDataToResource = (data: CourseWareItem): MaterialDataResource => {
@@ -55,7 +56,8 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
   if (data.ext === 'h5') {
     return {
       id: data.resourceUuid,
-      name: data.resourceName,
+      //@ts-ignore
+      name: data.resourceName || data.name,
       ext: data.ext,
       type: mapFileType(data.ext),
       size: fileSizeConversionUnit(data.size) || 0,
@@ -65,13 +67,15 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       convertedPercentage: 100,
       updateTime: data.updateTime,
       scenes: data.scenes,
+      access: data.access,
     }
   }
 
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
-      name: data.resourceName,
+      //@ts-ignore
+      name: data.resourceName || data.name,
       ext: data.ext,
       type: mapFileType(data.ext),
       size: fileSizeConversionUnit(data.size) || 0,
@@ -80,11 +84,13 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
+      access: data.access,
     }
   }
   return {
     id: data.resourceUuid,
-    name: data.resourceName,
+    //@ts-ignore
+    name: data.resourceName || data.name,
     ext: data.ext,
     type: mapFileType(data.ext),
     size: fileSizeConversionUnit(data.size) || 0,
@@ -94,6 +100,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
     convertedPercentage: data.taskProgress!.convertedPercentage,
     updateTime: data.updateTime,
     scenes: data.scenes,
+    access: data.access,
   }
 }
 
