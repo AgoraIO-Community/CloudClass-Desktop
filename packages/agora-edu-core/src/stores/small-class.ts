@@ -117,38 +117,39 @@ export class SmallClassStore {
           stars: +get(this.studentsMap, `${acceptedUser.userUuid}.reward`, 0),
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${acceptedUser.userUuid}`),
         })
+      } else {
+        const localUser = this.sceneStore.localUser
+
+        const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole)
+    
+        if (this.sceneStore.cameraEduStream && isStudent) {
+          const props = this.sceneStore.getLocalPlaceHolderProps()
+          acc.push({
+            local: true,
+            isLocal: true,
+            online: true,
+            onPodium: true,
+            micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
+            cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
+            account: localUser.userName,
+            userUuid: this.sceneStore.cameraEduStream.userInfo.userUuid as string,
+            streamUuid: this.sceneStore.cameraEduStream.streamUuid,
+            video: this.sceneStore.cameraEduStream.hasVideo,
+            audio: this.sceneStore.cameraEduStream.hasAudio,
+            hasStream: !!this.sceneStore.cameraEduStream,
+            renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
+            hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
+            holderState: props.holderState,
+            placeHolderText: props.text,
+            stars: +get(this.studentsMap, `${this.roomInfo.userUuid}.reward`, 0),
+            whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
+            micVolume: this.sceneStore.localVolume,
+          } as any)
+          // .concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
+        }
       }
       return acc
     }, [])
-
-    const localUser = this.sceneStore.localUser
-
-    const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole)
-
-    if (this.sceneStore.cameraEduStream && isStudent) {
-      const props = this.sceneStore.getLocalPlaceHolderProps()
-      streamList = [{
-        local: true,
-        isLocal: true,
-        online: true,
-        onPodium: true,
-        micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
-        cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
-        account: localUser.userName,
-        userUuid: this.sceneStore.cameraEduStream.userInfo.userUuid as string,
-        streamUuid: this.sceneStore.cameraEduStream.streamUuid,
-        video: this.sceneStore.cameraEduStream.hasVideo,
-        audio: this.sceneStore.cameraEduStream.hasAudio,
-        hasStream: !!this.sceneStore.cameraEduStream,
-        renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
-        hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
-        holderState: props.holderState,
-        placeHolderText: props.text,
-        stars: +get(this.studentsMap, `${this.roomInfo.userUuid}.reward`, 0),
-        whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
-        micVolume: this.sceneStore.localVolume,
-      } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
-    }
     if (streamList.length) {
       return streamList  
     }
