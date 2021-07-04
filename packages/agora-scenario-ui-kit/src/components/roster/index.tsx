@@ -130,10 +130,9 @@ export const Roster: FC<RosterProps> = ({
   const CarouselMenu = ({modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, sendCarousel, stopCarousel}: any) => {
 
     return (
-      <div>
-        <p>
-          <span>
-          模式
+      <div className="carousel-table">
+          <span className="carousel-item">
+          <label>模式</label>
           <Select
             value={modeValue}
             onChange={changeModeValue}
@@ -150,8 +149,8 @@ export const Roster: FC<RosterProps> = ({
           >
           </Select>
           </span>
-          <span>
-            顺序
+          <span className="carousel-item">
+            <label>顺序</label>
             <Select
             value={randomValue}
             onChange={changeRandomValue}
@@ -168,22 +167,14 @@ export const Roster: FC<RosterProps> = ({
           >
           </Select>
           </span>
-          {/* <span>
-            <label>模式</label>
-            <input type="text" value={modeValue} />
-          </span> */}
-          {/* <span>
-            <label>顺序、随机</label>
-            <input type="text" value={randomValue} />
-          </span> */}
-          <span>
+          <span className="carousel-item">
             <label>次数</label>
             <input type="number" value={times} onChange={(e: any) => {
               changeTimes(e.target.value)
             }} />
             
           </span>
-          <Button onClick={() => {
+          {/* <Button onClick={() => {
             sendCarousel({
               modeValue,
               randomValue,
@@ -196,33 +187,7 @@ export const Roster: FC<RosterProps> = ({
               randomValue,
               times
             })
-          }}>开启轮播</Button>
-        </p>
-        <p>
-          {/* <span>学生</span>
-          <Select
-            value={value}
-            onChange={async value => {
-                await onCarouselOptionChange(value)
-            }}
-            options={[
-              {
-                label: '顺序',
-                value: 'sort'
-              },
-              {
-                label: '随机',
-                value: 'random'
-              },
-            ]}
-          >
-          </Select> */}
-        </p>
-        <p>
-          {/* <span>轮播</span>
-          <input type="number" value={times} />
-          <span>秒/次数</span> */}
-        </p>
+          }}>开启轮播</Button> */}
       </div>
     )
   }
@@ -248,10 +213,12 @@ export const Roster: FC<RosterProps> = ({
         </div>
         <div className="roster-container">
           <div className="search-header roster-header">
-            {carousel && <CarouselMenu {...carouselProps} />}
-            <div className="search-teacher-name">
-              <label>{t('roster.teacher_name')}</label>
-              <span title={teacherName} className="roster-username">{teacherName}</span>
+            <div className="roster-table roster-user-wrap">
+              <div className="search-teacher-name">
+                <label>{t('roster.teacher_name')}</label>
+                <span title={teacherName} className="roster-username">{teacherName}</span>
+              </div>
+              {carousel && <CarouselMenu {...carouselProps} />}
             </div>
             {
               userType === 'teacher' ?
