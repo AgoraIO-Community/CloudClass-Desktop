@@ -91,7 +91,7 @@ export const MidClassScenario = observer(() => {
           "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="mid-class-teacher"/>
+            <VideoPlayerTeacher className="mid-class-teacher" controlPlacement="bottom" placement="bottom"/>
           </div>
           <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>

@@ -4,6 +4,7 @@ import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "re
 import { CSSTransition } from "react-transition-group";
 import { Card, Icon, Popover, t, Tooltip } from "~components";
 import { BaseHandsUpProps, HandsUpState, StudentInfo } from "./types";
+import { SvgImg } from "../svg-img";
 
 export type HandleUpClick = (action: 'confirm' | 'cancel', student: StudentInfo) => Promise<void> | void;
 
@@ -24,7 +25,7 @@ export interface HandsUpManagerProps extends BaseHandsUpProps {
 
 export const HandsUpManager: FC<HandsUpManagerProps> = ({
   width = 108,
-  height = 41,
+  height = 38,
   borderRadius = 20,
   state = 'default',
   timeout = 1500,
@@ -92,11 +93,13 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           >
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon 
+              <SvgImg 
                 size={28} 
                 onClick={handleClick} 
                 type={processUserCount ?(popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'} 
-                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']} 
+                style={{
+                  color: processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']
+                }}
               />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
@@ -138,8 +141,8 @@ export const StudentHandsUp: FC<StudentHandsUpProps> = ({
         <div className="student-box">
           <span className="student-name">{student?.userName}</span>
           <span>
-            <Icon hover={true} type="checked" color="#0073FF" onClick={() => onClick('confirm', student!.userUuid)} />
-            <Icon hover={true} type="close" style={{ marginLeft: 6 }} onClick={() => onClick('cancel', student!.userUuid)} />
+            <SvgImg  type="checked" style={{color: '#0073FF'}} onClick={() => onClick('confirm', student!.userUuid)} />
+            <SvgImg  type="close" style={{ marginLeft: 6 }} onClick={() => onClick('cancel', student!.userUuid)} />
           </span>
         </div>
       </Card>
@@ -175,14 +178,12 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
             <div className="student-item" key={index}>
               <span className="student-name">{item?.userName}</span>
               <span className="operation-icon-wrap">
-                <Icon 
+                <SvgImg 
                   type="checked"
-                  useSvg
                   onClick={() => onClick("confirm", item)}
                 />
-                <Icon 
+                <SvgImg 
                   type="close" 
-                  useSvg
                   onClick={() => onClick("cancel", item)}
                 />
               </span>

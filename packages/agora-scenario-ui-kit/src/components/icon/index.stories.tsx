@@ -393,14 +393,6 @@ export const Docs = () => (
       </div>
       <div>recording</div>
     </div>
-    <div className="p-4 w-40 text-center">
-      <div>
-        <SvgIcon type="grant-board" onClick={() => {
-          console.log('board icon')
-        }} />
-      </div>
-      <div>svg grant board icon</div>
-    </div>
   </div>
 );
 

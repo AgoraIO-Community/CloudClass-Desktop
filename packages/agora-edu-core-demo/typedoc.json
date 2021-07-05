@@ -1,0 +1,10 @@
+{
+  "out": "./docs/dist/",
+  "readme": "none",
+  "exclude": [
+    "**/node_modules/**"
+  ],
+  "mode": "file",
+  "includeDeclarations": true,
+  "hideGenerator": true
+}

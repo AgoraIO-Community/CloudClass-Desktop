@@ -1,5 +1,5 @@
 .toolbar {
-  width: 42px;
+  width: 38px;
   background-color: white;
 }
 
@@ -11,6 +11,7 @@
 
 .toolbar .menu {
   @apply flex justify-center items-center cursor-pointer;
+  transform: translateX(-2px);
 }
 
 .toolbar .menu.fold {
@@ -111,7 +112,7 @@
   background: #f0f0f7;
 }
 
-.tool > .iconfont {
+.tool > svg {
   font-size: 28px;
 }
 
@@ -141,7 +142,7 @@
   width: 18px;
 }
 
-.expand-tool > .iconfont {
+.expand-tool > svg {
   font-size: 26px;
   color: #7b88a0;
 }

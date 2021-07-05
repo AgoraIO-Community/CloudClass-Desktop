@@ -43,6 +43,7 @@
     "node-downloader-helper": "1.0.17",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "storybook": "6.2.8",
+    "svg-sprite-loader": "^6.0.7",
     "tailwindcss": "2.0.3"
   }
 }

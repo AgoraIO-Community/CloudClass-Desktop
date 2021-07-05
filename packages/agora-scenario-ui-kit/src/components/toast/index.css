@@ -1,18 +1,16 @@
 .toast {
     min-width: 260px;
-    width: 341px;
     height: 44px;
     color: #191919;
     font-size: 14px;
     box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    padding: 0 8px;
-    @apply cursor-pointer flex items-center box-border relative;
+    padding: 0 14px;
+    @apply cursor-pointer flex items-center justify-center box-border relative;
 }
 
-.toast i {
-    margin-left: 8px;
-    margin-right: 2px;
+.toast svg {
+    margin-right: 6px;
 }
 
 .toast-success {

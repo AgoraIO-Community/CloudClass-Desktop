@@ -8,8 +8,9 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
 import { SvgaPlayer } from '~components/svga-player'
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { usePrevious } from '~utilities/hooks';
+import { SvgImg } from '~components/svg-img';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -78,6 +79,9 @@ export interface BaseVideoPlayerProps {
 
   privateCallEnabled?: boolean;
 
+  /**
+   * 控制条中svg tooltip的位置
+   */
   placement?: any;
 
   /**
@@ -129,7 +133,7 @@ export interface VideoPlayerProps extends VideoPlayerType {
   /**
    * 私密语音聊天
    */
-  onPrivateChat?: (uid:string | number) => Promise<any>;
+  onPrivateChat?: (uid: string | number) => Promise<any>;
 }
 
 interface AnimSvga {
@@ -176,7 +180,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const previousState = usePrevious<{stars: number, uid: string | number}>({stars: stars, uid: `${uid}`})
+  const previousState = usePrevious<{ stars: number, uid: string | number }>({ stars: stars, uid: `${uid}` })
   const animListCb = useCallback(() => {
     setAnimList([
       ...animList,
@@ -209,7 +213,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const tools = (
     <div className={`video-player-tools ${isHost ? 'host' : ''}`}>
-      <Tooltip title="32333" placement="bottom">
       <MediaIcon
         {...getMediaIconProps({
           muted: !!micEnabled,
@@ -229,7 +232,6 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           }
         }}
       />
-      </Tooltip>
       <MediaIcon
         {...getMediaIconProps({
           muted: !!cameraEnabled,
@@ -253,37 +255,57 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <>
           {hideOffAllPodium ? null : (
             <Tooltip title={t('Clear Podiums')} placement={placement}>
-              <Icon
-                hover={canHoverHideOffAllPodium}
-                type="invite-to-podium"
-                onClick={() => onOffAllPodiumClick()}
-              />
+              <span>
+                <SvgImg
+                  canHover={canHoverHideOffAllPodium}
+                  style={{color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA'}}
+                  type="invite-to-podium"
+                  size={22}
+                  onClick={() => onOffAllPodiumClick()}
+                />
+              </span>
             </Tooltip>
           )}
           {hideOffPodium ? null : (
             <Tooltip title={t('Clear Podium')} placement={placement}>
-              <Icon
-                hover={true}
-                type="invite-to-podium"
-                className={isOnPodium ? 'podium' : 'no_podium'}
-                onClick={() => onOffPodiumClick(uid)}
-              />
+              <span>
+                <SvgImg
+                  canHover
+                  type="invite-to-podium"
+                  className={isOnPodium ? 'podium' : 'no_podium'}
+                  style={{color: '#357BF6'}}
+                  size={22}
+                  onClick={() => onOffPodiumClick(uid)}
+                />
+              </span>
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-          <Tooltip title={whiteboardGranted ? t('Close Whiteboard'): t('Open Whiteboard')} placement={placement}>
-            <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
-          </Tooltip>
+            <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
+              <span>
+                <SvgImg
+                  type="no-authorized"
+                  style={{color: whiteboardGranted ? '#357BF6' : '#7B88A0'}}
+                  onClick={() => onWhiteboardClick(uid)}
+                  size={22}
+                  canHover
+                />
+              </span>
+            </Tooltip>
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon 
-                hover={true}
-                type="star-outline" 
-                onClick={() => {
-                  onSendStar(uid)
-                }} 
-              />
+              <span>
+                <SvgImg
+                  canHover
+                  type="star-outline"
+                  onClick={() => {
+                    onSendStar(uid)
+                  }}
+                  size={22}
+                  style={{color: '#7B88A0'}}
+                />
+              </span>
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
@@ -291,7 +313,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
               }}></div>
-          </Tooltip>
+            </Tooltip>
           )}
         </>
       ) : null}
@@ -299,6 +321,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   );
   return (
     <Popover
+      // trigger={'click'} // 调试使用
       align={{
         offset: [-8, 0],
       }}
@@ -310,10 +333,10 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         {placeholder ? <>{placeholder}</> : null}
         {animList.length ? (
           animList.map((item) => (
-            <div key={item.id} className="center-reward" style={{width: 200, height: 200}}>
-              <SvgaPlayer 
-                type="reward" 
-                width={200} 
+            <div key={item.id} className="center-reward" style={{ width: 200, height: 200 }}>
+              <SvgaPlayer
+                type="reward"
+                width={200}
                 height={200}
                 audio="reward"
                 duration={2000}
@@ -325,7 +348,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <div className="top-right-info">
           {stars > 0 ? (
             <>
-              <Icon hover={true} className="stars" type="star" />
+              <SvgImg className="stars" type="star" canHover />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}
@@ -348,7 +371,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 disabled: true,
               })}
               volumeIndicator={true}
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </div>
           <span title={username} className="username">{username}</span>
@@ -367,12 +390,12 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
 export const VideoPlaceHolder = () => {
   return (
     <div className="placeholder-video">
-      <img src="" alt=""/>
+      <img src="" alt="" />
     </div>
   )
 }
 
-export type VideoItemProps = Omit<VideoPlayerProps, 
+export type VideoItemProps = Omit<VideoPlayerProps,
   | 'onCameraClick'
   | 'onMicClick'
   | 'onOffPodiumClick'
@@ -440,10 +463,10 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement
     if (!videoDOM) return
     const offsetWidth = videoDOM.offsetWidth
-    if(direction === 'left') {
+    if (direction === 'left') {
       videoContainer.scrollLeft -= offsetWidth
     }
-    if(direction === 'right') {
+    if (direction === 'right') {
       videoContainer.scrollLeft += offsetWidth
     }
   }, [videoContainerRef.current])
@@ -499,13 +522,13 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   return (
     <div className="video-container" ref={mountDOM}>
-      <div className="left-container scroll-btn" onClick={() => {scroll('left')}}>
-      <span className="offset">
-        <Icon type="backward"></Icon>
-      </span> 
+      <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+        <span className="offset">
+          <SvgImg type="backward" />
+        </span>
       </div>
       {
-        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => 
+        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
               {...videoStream}
@@ -522,14 +545,14 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               onPrivateChat={async () => {
                 await onPrivateChat(videoStream.uid)
               }}
-              ></VideoPlayer>
+            ></VideoPlayer>
           </div>
         )
       }
-      <div className="right-container scroll-btn" onClick={() => {scroll('right')}}>
+      <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
         <span className="offset">
-          <Icon type="forward"></Icon>
-        </span> 
+          <SvgImg type="forward" />
+        </span>
       </div>
     </div>
   )

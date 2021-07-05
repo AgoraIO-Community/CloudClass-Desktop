@@ -13,6 +13,7 @@ import { Toast } from '~components/toast';
 import { useMounted, useTimeout } from '~utilities/hooks';
 import { Volume } from '~components/volume';
 import './index.css';
+import { SvgImg } from '~ui-kit/components/svg-img';
 
 interface DeviceProps {
     deviceId: string;
@@ -278,7 +279,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         </div>
                     ) : ""}
                     <div className="device-volume-test">
-                        <Icon type="microphone-on-outline" color="#0073FF" />
+                        <SvgImg type="microphone-on-outline" style={{color: "#0073FF"}}/>
                         {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
                     </div>
                 </div>
@@ -311,7 +312,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         </>
                     ) : ""}
                     <div className="device-volume-test">
-                        <Icon type="speaker" color="#0073FF" />
+                        <SvgImg type="speaker" style={{color: "#0073FF"}}/>
                         <Volume
                             currentVolume={testLevel}
                             maxLength={33}

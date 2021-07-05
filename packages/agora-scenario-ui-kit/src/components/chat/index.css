@@ -92,7 +92,13 @@
   z-index: 1;
 }
 
-.chat-notice .iconfont {
+.chat-notice span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-notice svg {
   margin-right: 5px;
   font-size: 17px;
   color: #f04c36;

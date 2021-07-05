@@ -4,6 +4,7 @@ import RcTabs, { TabsProps as RcTabsProps } from 'rc-tabs';
 import { EditableConfig } from 'rc-tabs/lib/interface';
 import classNames from 'classnames';
 import { Icon } from '~components/icon';
+import { SvgImg } from '../svg-img';
 
 export type TabsType = 'line' | 'card' | 'editable-card';
 
@@ -29,7 +30,7 @@ export const Tabs: FC<TabsProps> = ({
 }) => {
   const {
     prefixCls: customizePrefixCls,
-    moreIcon = <Icon type="more" />,
+    moreIcon = <SvgImg type="more" />,
   } = props;
   const prefixCls = customizePrefixCls ?? 'tabs';
 
@@ -41,7 +42,7 @@ export const Tabs: FC<TabsProps> = ({
         onEdit?.(editType === 'add' ? event : key!, editType);
       },
       showAdd: false,
-      removeIcon: <Icon type="close" />,
+      removeIcon: <SvgImg type="close" />,
     };
   }
   const rootPrefixCls = 'tabs';

@@ -70,11 +70,11 @@
     /* animation: move-card 0.8s 0.2s ease-in-out; */
     animation: change-card-bg 0.5s linear 0s 3;
 }
-.received-card-enter .icon-hands-up {
+.received-card-enter .prefix-hands-up {
     /* animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out; */
 }
 
-.received-card-enter .icon-hands-up:before {
+.received-card-enter .prefix-hands-up:before {
     animation: change-icon-content 0.5s linear 0s 3;
 }
 

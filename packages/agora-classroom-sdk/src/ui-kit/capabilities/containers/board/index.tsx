@@ -8,7 +8,7 @@ import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
 import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabilities/containers/dialog'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController, SvgImg } from '~ui-kit'
 import { useEffect } from 'react'
 import classnames from 'classnames'
 import { useUIStore } from '@/infra/hooks'
@@ -131,7 +131,7 @@ const TabsContainer = observer(() => {
     if (key === 0) {
       return (
         <>
-          <Icon type="whiteboard" />
+          <SvgImg type="whiteboard" />
           {transI18n("tool.board_name")}
         </>
       )
@@ -140,7 +140,7 @@ const TabsContainer = observer(() => {
     if (resourceUuid === 'screenShare') {
       return (
         <>
-          <Icon className={panelCls} type="share-screen" />
+          <SvgImg className={panelCls} type="share-screen" />
           {transI18n("tool.screen_share")}
         </>
       )
@@ -163,13 +163,13 @@ const TabsContainer = observer(() => {
             TabPaneIcon(item.file.name, item.resourceUuid, key)
           }
           closeIcon={
-            <Icon type="close"
+            <SvgImg type="close"
               onClick={() => {
                 addDialog(CloseConfirm, {
                   resourceUuid: item.resourceUuid,
                 })
               }}
-            ></Icon>
+            />
           }
           closable={key !== 0}
         >

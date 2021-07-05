@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React, { FC } from 'react';
 import { Icon } from '~components/icon';
 import { BaseProps } from '~components/interface/base-props';
+import { SvgImg } from '~ui-kit';
 import './index.css';
 
 type WindowId = string | number;
@@ -50,7 +51,7 @@ export const ScreenShare: FC<ScreenShareProps> = ({
                         <div className="program-item-img" style={item.image ? {backgroundImage: `url(data:image/png;base64,${item.image})`} : {}}>
                         </div>
                         <div className="program-item-title">
-                            {item.id === currentActiveId  ? ( <Icon type="checked" size={16} color={'#357BF6'}/>) : ""}
+                            {item.id === currentActiveId  ? ( <SvgImg type="checked" size={16} style={{color: '#357BF6'}}/>) : ""}
                             <div className="title-text">{item.title}</div>
                         </div>
                     </div>

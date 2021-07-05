@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
+import { SvgImg } from '../svg-img';
 import {canOperate, getCameraState, getChatState, getMicrophoneState} from './base';
 
 export const defaultColumns: Column[] = [
@@ -21,7 +22,7 @@ export const defaultColumns: Column[] = [
         [`${podiumStatus}`]: 1,
       })
       return (
-        <Icon type={type} className={cls} iconhover={canOperate} onClick={onClick}/>
+        <SvgImg type={type} className={cls} onClick={onClick} canHover={canOperate}/>
       );
     }
   },
@@ -30,7 +31,7 @@ export const defaultColumns: Column[] = [
     name: 'roster.granted',
     action: 'whiteboard',
     render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const type =  userType + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
+      const type = (!!profile.whiteboardGranted === true ? 'authorized' : 'no-authorized');
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
@@ -39,7 +40,7 @@ export const defaultColumns: Column[] = [
         ['icon-flex']: 1
       })
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22} onClick={onClick}/>
+        <SvgImg type={type as any} className={cls} size={22} onClick={onClick} canHover={canOperate} />
       )
     },
   },
@@ -140,7 +141,7 @@ export const defaultColumns: Column[] = [
       })
       return (
         <div>
-          <Icon type={'star-outline'} className={cls} iconhover={canOperate} onClick={onClick}/>
+          <SvgImg type={'star-outline'} className={cls} onClick={onClick} canHover={canOperate} />
           <span className="star-nums">&nbsp;x{text}</span>
         </div>
       )
@@ -157,7 +158,7 @@ export const defaultColumns: Column[] = [
         [`${operateStatus}`]: 1,
       })
       return (
-        <Icon type={'exit'} className={cls} iconhover={canOperate} onClick={onClick} />
+        <SvgImg type={'exit'} className={cls} onClick={onClick} canHover={canOperate}/>
       )
     },
   },
