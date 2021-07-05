@@ -18,6 +18,7 @@
     "noEmitHelpers": true,
     "noEmitOnError": false,
     "emitDeclarationOnly": true,
+    "isolatedModules": true,
     "experimentalDecorators": true,
     "allowJs": false
   },

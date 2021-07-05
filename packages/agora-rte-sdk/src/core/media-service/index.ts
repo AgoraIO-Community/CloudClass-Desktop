@@ -3,7 +3,7 @@ import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
-import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume } from './interfaces';
+import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume, MediaEncryptionConfig } from './interfaces';
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
@@ -540,6 +540,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
+  prepare() {
+    return this.sdkWrapper.prepare()
+  }
+
   async join(option: JoinOption): Promise<any> {
     try {
       // REPORT
@@ -761,6 +765,10 @@ export class MediaService extends EventEmitter implements IMediaService {
       return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1)
     }
     return 100;
+  }
+
+  enableMediaEncryptionConfig(enabled:boolean, config: MediaEncryptionConfig) {
+    return this.sdkWrapper.enableMediaEncryptionConfig(enabled, config)
   }
 
   reset(): void {

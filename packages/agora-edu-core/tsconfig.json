@@ -19,6 +19,7 @@
     "noEmitOnError": false,
     "emitDeclarationOnly": true,
     "experimentalDecorators": true,
+    "isolatedModules": true,
     "allowJs": false,
     "jsx": "react-jsx"
   },

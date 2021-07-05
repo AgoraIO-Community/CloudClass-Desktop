@@ -136,6 +136,36 @@ export declare interface MicrophoneOption {
   deviceId: string
 }
 
+export enum MediaEncryptionMode {
+  /** 1: (Default) 128-bit AES encryption, XTS mode.
+   */
+  AES_128_XTS = 1,
+  /** 2: 128-bit AES encryption, ECB mode.
+   */
+  AES_128_ECB = 2,
+  /** 3: 256-bit AES encryption, XTS mode.
+   */
+  AES_256_XTS = 3,
+  /** 4: Reserved property.
+   */
+  SM4_128_ECB = 4,
+  /** 5: 128-bit AES encryption, GCM mode.
+   *
+   * @since v3.3.1
+   */
+  AES_128_GCM = 5,
+  /** 6: 256-bit AES encryption, GCM mode.
+   *
+   * @since v3.3.1
+   */
+  AES_256_GCM = 6
+}
+
+export declare interface MediaEncryptionConfig {
+  mode: MediaEncryptionMode,
+  key: string
+}
+
 /**
  * 
  */
@@ -144,6 +174,7 @@ export declare interface IAgoraRTCModule {
   init(): void
   release(): void
 
+  prepare(): any
   join(option: Option): Promise<any>
   leave(): Promise<any>
 
@@ -167,6 +198,8 @@ export declare interface IAgoraRTCModule {
   stopScreenShare(): Promise<any>
 
   changePlaybackVolume(volume: number): void;
+
+  enableMediaEncryptionConfig(enabled: boolean, config:MediaEncryptionConfig): void;
 
   // muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any>
 

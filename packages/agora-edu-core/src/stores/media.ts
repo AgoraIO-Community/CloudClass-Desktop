@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import {v4 as uuidv4} from 'uuid';
 import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction, autorun } from 'mobx';
-import { LocalUserRenderer, EduLogger } from 'agora-rte-sdk';
+import { LocalUserRenderer, EduLogger, LocalVideoRenderState, MediaEncryptionConfig } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
@@ -600,5 +600,9 @@ export class MediaStore {
     this.networkQuality = 'unknown'
     this.autoplay = false
     this._delay = 0
+  }
+
+  enableMediaEncryption(enabled: boolean, config: MediaEncryptionConfig): number {
+    return this.mediaService.enableMediaEncryptionConfig(enabled, config)
   }
 }

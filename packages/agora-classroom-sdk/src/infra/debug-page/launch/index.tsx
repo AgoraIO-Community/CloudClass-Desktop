@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom'
+import { MediaEncryptionMode } from 'agora-rte-sdk'
 import {generatePath} from 'react-router'
 //@ts-ignore
 import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
@@ -21,7 +22,7 @@ export const LaunchPage = observer(() => {
 
   const history = useHistory()
 
-  const launchOption = homeStore.launchOption
+  const launchOption = homeStore.launchOption || {}
 
   const roomRef = useRef<ClassRoom<ClassRoomAbstractStore> | null>(null)
 

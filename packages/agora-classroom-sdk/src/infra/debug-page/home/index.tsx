@@ -1,4 +1,4 @@
-import { useHomeStore } from "@/infra/hooks"
+import { useAudienceParams, useHomeStore } from "@/infra/hooks"
 import { changeLanguage, Home } from "~ui-kit"
 import {storage} from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
@@ -8,10 +8,12 @@ import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
 import AgoraRTC from 'agora-rtc-sdk-ng'
+import { HomeLaunchOption } from "@/infra/stores/app/home"
 
 export const HomePage = observer(() => {
 
   const homeStore = useHomeStore()
+  const params = useAudienceParams()
 
   const [roomId, setRoomId] = useState<string>('')
   const [userId, setUserId] = useState<string>('')
@@ -22,7 +24,7 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
-  const [region, setRegion] = useState<AgoraRegion>('CN')
+  const [region, setRegion] = useState<AgoraRegion>(homeStore.region)
   const [debug, setDebug] = useState<boolean>(false)
 
   useEffect(() => {
@@ -30,8 +32,10 @@ export const HomePage = observer(() => {
     setLanguage(language)
   }, [])
 
-  const onChangeRegion = (region: string) => {
-    setRegion(region as AgoraRegion)
+  const onChangeRegion = (r: string) => {
+    let region = r as AgoraRegion
+    setRegion(region)
+    homeStore.region = region
   }
 
   const onChangeLanguage = (language: string) => {
@@ -146,7 +150,7 @@ export const HomePage = observer(() => {
       onClick={async () => {
         let {rtmToken} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
-        homeStore.setLaunchConfig({
+        let config: HomeLaunchOption = {
           // rtmUid: userUuid,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
@@ -161,9 +165,17 @@ export const HomePage = observer(() => {
           roleType: role,
           startTime: +(new Date()),
           region,
-          duration: duration * 60,
-          userFlexProperties: {"avatar": "test"}
-        })
+          duration: duration * 60
+        }
+        if(params && params['encryptionKey'] && params['encryptionMode']) {
+          config.mediaOptions = {
+            encryptionConfig: {
+              key: params['encryptionKey'],
+              mode: parseInt(params['encryptionMode'])
+            }
+          }
+        }
+        homeStore.setLaunchConfig(config)
         history.push('/launch')
       }}
     />

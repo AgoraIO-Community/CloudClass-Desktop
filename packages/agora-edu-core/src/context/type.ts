@@ -1334,6 +1334,11 @@ export type MediaContext = {
      * @version v1.1.2
      */
     changeMicrophoneVolume: (v: number) => Promise<void>
+    /**
+     * 设置视频加密
+     * @version v1.1.4
+     */
+    enableMediaEncryption(enabled: boolean, config: any): number 
 }
 
 export type ReportContext = {

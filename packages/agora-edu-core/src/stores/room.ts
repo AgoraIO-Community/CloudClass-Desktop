@@ -1592,12 +1592,23 @@ export class RoomStore extends SimpleInterval {
       }
       // this.sceneStore.canChatting = !roomInfo.roomStatus.isStudentChatAllowed
 
+      this.sceneStore.prepareRTC()
+
+      // where you can customize your rtc
+      let encryptionConfig = get(this.appStore.params.config, 'mediaOptions.encryptionConfig', null)
+      if(encryptionConfig) {
+        BizLogger.info(`[aPaaS RTC] enable media encryption`)
+        this.appStore.mediaStore.enableMediaEncryption(true, encryptionConfig)
+      }
+
+
       await this.sceneStore.joinRTC({
         uid: +mainStream.streamUuid,
         channel: roomInfo.roomInfo.roomUuid,
         token: mainStream.rtcToken,
         data: userAndRoomdata
       })
+
 
       const localStreamData = roomManager.data.localStreamData
 

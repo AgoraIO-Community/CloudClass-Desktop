@@ -12,6 +12,7 @@ export const useMediaContext = (): MediaContext => {
         networkQuality,
         delay,
         localPacketLostRate,
+        enableMediaEncryption
     } = mediaStore;
     // const {
     //   removeDialog
@@ -77,10 +78,10 @@ export const useMediaContext = (): MediaContext => {
         cameraRenderer,
         changeDevice,
         changeAudioVolume,
-        // removeDialog
         changeSpeakerVolume,
         changeMicrophoneVolume,
         changeCamera,
         changeMicrophone,
+        enableMediaEncryption
     }
 }
