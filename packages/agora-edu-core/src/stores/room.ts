@@ -1687,6 +1687,12 @@ export class RoomStore extends SimpleInterval {
       }
       this.joined = true
       this.roomJoined = true
+      const userRoleMap: Record<number, string> = {
+        0: "invisible",
+        1: "teacher",
+        2: "student",
+        3: "assistant"
+      }
       let reportUserParams = {
         vid: this.eduManager.vid,
         ver: packageJson.version,
@@ -1704,7 +1710,7 @@ export class RoomStore extends SimpleInterval {
         /**
          * apaas角色
          */
-        role: ""+this.appStore.userRole,
+        role: userRoleMap[this.appStore.userRole],
         /**
          * rtc sid
          */
