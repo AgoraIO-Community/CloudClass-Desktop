@@ -96,8 +96,6 @@
 
 
 .roster-header {
-  display: flex;
-  align-items: center;
   font-size: 13px;
   color: #191919;
   padding: 11px 19px;
@@ -256,7 +254,7 @@
 
 .search-teacher-name {
   height: 30px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -284,7 +282,7 @@
 }
 
 .carousel-menu {
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 

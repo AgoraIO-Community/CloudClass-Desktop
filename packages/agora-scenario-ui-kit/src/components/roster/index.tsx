@@ -124,7 +124,7 @@ export const Roster: FC<RosterProps> = ({
   isDraggable = true,
   carousel = false,
   carouselProps,
-  userType = 'student',
+  userType = 'teacher',
   onChange,
 }) => {
 
