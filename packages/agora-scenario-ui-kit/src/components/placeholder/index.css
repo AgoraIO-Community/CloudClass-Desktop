@@ -14,9 +14,12 @@
   position: relative;
   height: 100%;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.camera-placeholder.camera-disabled-placeholder::before, .camera-placeholder.camera-broken-placeholder::before, .camera-placeholder.camera-muted-placeholder::before{
+/* .camera-placeholder.camera-disabled-placeholder::before, .camera-placeholder.camera-broken-placeholder::before, .camera-placeholder.camera-muted-placeholder::before{
   content: ' ';
   background-image: url('./assets/camera-disabled.png');
   background-position: center;
@@ -53,4 +56,4 @@
 .camera-placeholder.camera-muted-placeholder::before {
   background-size: 96px 96px;
   background-image: url('./assets/camera-close.png');
-}
+} */

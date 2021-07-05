@@ -30,7 +30,7 @@
   @apply flex;
 }
 
-.header-actions > .iconfont {
+.header-actions > svg{
   margin-left: 27px;
   font-size: 29px;
   color: #3f5c8f;
@@ -80,6 +80,7 @@
 .biz-col {
   font-size: 13px;
   font-weight: 400;
+  display: flex;
 }
 
 .biz-col > label {
@@ -87,5 +88,11 @@
 }
 
 .biz-col > span {
+  color: #191919;
+}
+.biz-col > .label-info-list{
+  color: #191919;
+}
+.biz-col > .label-info-list > span{
   color: #191919;
 }

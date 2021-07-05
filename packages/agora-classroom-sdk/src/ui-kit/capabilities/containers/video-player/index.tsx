@@ -6,7 +6,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
 
-export const VideoPlayerTeacher = observer(({style, className}: any) => {
+export const VideoPlayerTeacher = observer(({style, className, controlPlacement = 'left', placement = 'left'}: any) => {
   const {
     // teacherStream: userStream,
     onCameraClick,
@@ -61,8 +61,8 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
-      controlPlacement={'left'}
-      placement={'left'}
+      controlPlacement={controlPlacement}
+      placement={placement}
       onOffPodiumClick={onOffPodiumClick}
       userType={eduRole2UIRole(roomInfo.userRole)}
       className={className}

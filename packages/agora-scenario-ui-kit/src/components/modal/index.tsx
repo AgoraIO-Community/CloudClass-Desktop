@@ -4,6 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import Notification from 'rc-notification'
 import './index.css';
+import { SvgImg } from '../svg-img';
 export interface ModalProps extends BaseProps {
     /** 宽度 */
     width?: string | number;
@@ -21,6 +22,10 @@ export interface ModalProps extends BaseProps {
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调 */
     onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
     component?: React.ReactNode;
+    /**
+     * 是否有蒙层
+     */
+    hasMask?: boolean
     // TODO: need support
     maskClosable?: boolean;
     contentClassName?: string;
@@ -46,7 +51,8 @@ export const Modal: ModalType = ({
     component,
     contentClassName,
     modalType = 'normal',
-    maskClosable,
+    hasMask = true,
+    maskClosable = false,
     btnId,
     ...restProps
 }) => {
@@ -70,7 +76,7 @@ export const Modal: ModalType = ({
         [`${contentClassName}`]: !!contentClassName,
     })
 
-    return (
+    const modalJsx = (
         <div className={cls} {...restProps} style={{ ...style, width }}>
             <div className={["modal-title", modalType === 'back' ? "back-modal-title" : ""].join(" ")}>
                 {modalType === 'normal' ? (
@@ -78,12 +84,12 @@ export const Modal: ModalType = ({
                         <div className="modal-title-text">
                             {title}
                         </div>
-                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#586376" size={20}/></div>) : ""}
+                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><SvgImg type="close" size={20} style={{color: '#586376'}}/></div>) : ""}
                     </>
                 ) : null}
                 {modalType === 'back' ? (
                     <>
-                        <div style={{cursor: 'pointer'}} className="back-icon" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="backward" color="#586376" /></div>
+                        <div style={{cursor: 'pointer'}} className="back-icon" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><SvgImg type="backward" style={{color: '#586376'}}/></div>
                         <div className="back-title">
                             {title}
                         </div>
@@ -111,6 +117,14 @@ export const Modal: ModalType = ({
             </div>
         </div>
     )
+
+    return hasMask
+    ? (
+        <div className="modal-mask">
+            {modalJsx}
+        </div>
+    )
+    : modalJsx
 }
 
 Modal.show = (

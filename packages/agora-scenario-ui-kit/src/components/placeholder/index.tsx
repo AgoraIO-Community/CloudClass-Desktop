@@ -9,6 +9,7 @@ import noBody from './assets/no-body.png';
 import noFile from './assets/no-file.png';
 import cameraDisabled from './assets/camera-disabled.png';
 import noQuestion from './assets/noquestion.svg';
+import { SvgImg } from '../svg-img';
 
 type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
 
@@ -20,6 +21,26 @@ const placeholderImgDict = {
   noFile,
   cameraDisabled,
   noQuestion,
+}
+
+const svgTypeDict = {
+  emptyHistory: 'placeholder-no-message',
+  cameraBroken: 'placeholder-camera-broken',
+  cameraClose: 'placeholder-camera-off',
+  noBody: 'placeholder-no-body',
+  noFile: 'placeholder-no-file',
+  cameraDisabled: 'placeholder-camera-off',
+  noQuestion: 'placeholder-no-ask',
+}
+
+const svgSizeDict = {
+  emptyHistory: 120,
+  cameraBroken: 120,
+  cameraClose: 120,
+  noBody: 120,
+  noFile: 120,
+  cameraDisabled: 120,
+  noQuestion: 120,
 }
 
 export interface PlaceholderProps extends BaseProps {
@@ -42,12 +63,27 @@ export const Placeholder: FC<PlaceholderProps> = ({
   return (
     <div className={cls} {...restProps} style={{backgroundColor}}>
       <div>
-        <img src={placeholderImgDict[placeholderType]} alt="no messages" />
+        {/* <img src={placeholderImgDict[placeholderType]} alt="no messages" /> */}
+        <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]}/>
       </div>
       {placeholderDesc ? (<div className="placeholder-desc">{placeholderDesc}</div>) : ""}
     </div>
   )
 };
+
+const cameraSvgTypeDict = {
+  loading: 'placeholder-no-body',
+  broken: 'placeholder-camera-broken',
+  muted: 'placeholder-camera-off',
+  disabled: 'placeholder-camera-disabled'
+}
+
+const cameraSvgSizeDict = {
+  loading: 90,
+  broken: 90,
+  muted: 90,
+  disabled: 90
+}
 
 export interface CameraPlaceHolderProps extends BaseProps {
   state?: 'loading' | 'broken' | 'muted' | 'disabled',
@@ -67,7 +103,8 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
 
   return (
     <div className={cls}>
-      {children}
+      {/* {children} */}
+      <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]}/>
     </div>
   )
 }
