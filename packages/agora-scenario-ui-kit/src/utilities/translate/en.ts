@@ -50,6 +50,14 @@ export const en = {
     'reward': 'Reward',
     'kick': 'Kick',
     'granted': 'Auth',
+    'shift': 'Shift',
+    'everyone': 'Everyone',
+    'available': 'Available',
+    'students_in': 'students in',
+    'sequence': 'sequence',
+    'random': 'random',
+    'order_every': 'order every',
+    'seconds': 'seconds'
   },
   'hands_up': 'Hands Up',
   'co_video': {

@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useCallback } from 'react';
-import { t, transI18n } from '~components/i18n';
+import { t, transI18n, getLanguage } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { ModalProps } from '~components/modal';
 import { Table, TableHeader, Row, Col, CheckBox } from '~components/table';
@@ -118,16 +118,14 @@ export const Roster: FC<RosterProps> = ({
   dataSource = [],
   onClick,
   onClose = () => console.log("onClose"),
-  // userType,
   localUserUuid,
   title,
   isDraggable = true,
   carousel = false,
   carouselProps,
-  userType = 'teacher',
+  userType = 'student', // 只有老师可以开启轮播以及查找学生
   onChange,
 }) => {
-
   const CarouselMenu = ({ modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, isOpenCarousel, changeCarousel }: any) => {
     return (
       <div className="carousel-menu">
@@ -137,36 +135,36 @@ export const Roster: FC<RosterProps> = ({
             checked={isOpenCarousel}
             onChange={changeCarousel}
           />
-          <span className="carousel-desc">开启</span>
+          <span className="carousel-desc">{transI18n('roster.shift')}</span>
         </div>
-        <div className="disable-flag">
+        <div className="disable-flag" style={{width: 105}}>
           <Select
             value={modeValue}
             options={[
               {
-                label: '全部',
+                label: transI18n('roster.everyone'),
                 value: 'all'
               },
               {
-                label: '非禁用',
-                value: 'no-disabled'
+                label: transI18n('roster.available'),
+                value: 'available'
               }
             ]}
             onChange={changeModeValue}
           />
         </div>
         <div className="student-order">
-          <span>学生</span>
+          <span>{transI18n('roster.students_in')}</span>
           <Select
             className="order-select"
             value={randomValue}
             options={[
               {
-                label: '顺序',
+                label: transI18n('roster.sequence'),
                 value: 'sort'
               },
               {
-                label: '随机',
+                label: transI18n('roster.random'),
                 value: 'random'
               }
             ]}
@@ -174,11 +172,11 @@ export const Roster: FC<RosterProps> = ({
           />
         </div>
         <div className="carousel-frequency">
-          <span className="">轮播</span>
+          <span className="">{transI18n('roster.order_every')}</span>
           <div className="carousel-frequency-input">
             <Input type='number' value={times} onChange={changeTimes}/>
           </div>
-          <span className="">秒/次</span>
+          <span className="">{transI18n('roster.seconds')}</span>
         </div>
       </div>
     )
@@ -194,7 +192,7 @@ export const Roster: FC<RosterProps> = ({
 
   return (
     <DraggableContainer cancel={".search-header"} >
-      <div className="agora-board-resources roster-wrap">
+      <div className="agora-board-resources roster-wrap" style={{width: 755}}>
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
             onClose()
@@ -209,15 +207,19 @@ export const Roster: FC<RosterProps> = ({
               <label>{t('roster.teacher_name')}</label>
               <span title={teacherName} className="roster-username">{teacherName}</span>
             </div>
-            {carousel && <CarouselMenu {...carouselProps} />}
+            {(userType === 'teacher' && carousel) && <CarouselMenu {...carouselProps} />}
             {
               userType === 'teacher' ?
-                <Search
-                  onSearch={onChange}
-                  prefix={<img src={SearchSvg} />}
-                  inputPrefixWidth={32}
-                  placeholder={transI18n('scaffold.search')}
-                /> : null
+                (
+                  <div style={{marginTop: carousel ? 5 : 0}}>
+                    <Search
+                      onSearch={onChange}
+                      prefix={<img src={SearchSvg} />}
+                      inputPrefixWidth={32}
+                      placeholder={transI18n('scaffold.search')}
+                    />
+                  </div>
+                ) : null
             }
           </div>
           <Table className="roster-table">
