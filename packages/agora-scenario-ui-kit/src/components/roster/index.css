@@ -96,6 +96,8 @@
 
 
 .roster-header {
+  display: flex;
+  align-items: center;
   font-size: 13px;
   color: #191919;
   padding: 11px 19px;
@@ -279,4 +281,36 @@
   left: -10px;
   margin-right: -10px;
   opacity: 0.5;
+}
+
+.carousel-menu {
+  display: flex;
+  align-items: center;
+}
+
+.carousel-flag {
+  margin-left: 35px;
+}
+.carousel-flag .form-checkbox {
+  margin-right: 3px !important;
+}
+
+.disable-flag {
+  width: 85px;
+  margin-left: 10px;
+}
+
+.student-order, .carousel-frequency{
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+.order-select {
+  margin-left: 6px;
+  width: 70px;
+}
+
+.carousel-frequency-input {
+  width: 70px;
+  margin: 0 6px;
 }

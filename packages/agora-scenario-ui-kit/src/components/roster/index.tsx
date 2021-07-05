@@ -2,14 +2,15 @@ import React, { FC, ReactNode, useCallback } from 'react';
 import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { ModalProps } from '~components/modal';
-import { Table, TableHeader, Row, Col } from '~components/table';
+import { Table, TableHeader, Row, Col, CheckBox } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import { canOperate, ProfileRole, studentListSort } from './base';
 import { Search } from '../input';
-import { Button, Select } from '~ui-kit';
+import { Select } from '~components/select';
+import { Input } from '~components/input'
 import { useEffect } from 'react';
 
 export * from './user-list';
@@ -28,13 +29,13 @@ export enum MediaDeviceState {
   available = 1
 }
 
-export type ColumnKey = 
-  | 'name' 
-  | 'onPodium' 
-  | 'whiteboardGranted' 
-  | 'cameraEnabled' 
-  | 'micEnabled' 
-  | 'stars' 
+export type ColumnKey =
+  | 'name'
+  | 'onPodium'
+  | 'whiteboardGranted'
+  | 'cameraEnabled'
+  | 'micEnabled'
+  | 'stars'
   | 'chat'
   | 'kickOut'
 
@@ -127,16 +128,20 @@ export const Roster: FC<RosterProps> = ({
   onChange,
 }) => {
 
-  const CarouselMenu = ({modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, sendCarousel, stopCarousel}: any) => {
-
+  const CarouselMenu = ({ modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, isOpenCarousel, changeCarousel }: any) => {
     return (
-      <div>
-        <p>
-          <span>
-          模式
+      <div className="carousel-menu">
+        <div className="carousel-flag">
+          <CheckBox
+            style={{ width: 12, height: 12 }}
+            checked={isOpenCarousel}
+            onChange={changeCarousel}
+          />
+          <span className="carousel-desc">开启</span>
+        </div>
+        <div className="disable-flag">
           <Select
             value={modeValue}
-            onChange={changeModeValue}
             options={[
               {
                 label: '全部',
@@ -144,67 +149,17 @@ export const Roster: FC<RosterProps> = ({
               },
               {
                 label: '非禁用',
-                value: 'available'
-              },
+                value: 'no-disabled'
+              }
             ]}
-          >
-          </Select>
-          </span>
-          <span>
-            顺序
-            <Select
-            value={randomValue}
-            onChange={changeRandomValue}
-            options={[
-              {
-                label: '顺序',
-                value: 'sort'
-              },
-              {
-                label: '随机',
-                value: 'random'
-              },
-            ]}
-          >
-          </Select>
-          </span>
-          {/* <span>
-            <label>模式</label>
-            <input type="text" value={modeValue} />
-          </span> */}
-          {/* <span>
-            <label>顺序、随机</label>
-            <input type="text" value={randomValue} />
-          </span> */}
-          <span>
-            <label>次数</label>
-            <input type="number" value={times} onChange={(e: any) => {
-              changeTimes(e.target.value)
-            }} />
-            
-          </span>
-          <Button onClick={() => {
-            sendCarousel({
-              modeValue,
-              randomValue,
-              times
-            })
-          }}>开启轮播</Button>
-          <Button type="secondary" onClick={() => {
-            stopCarousel({
-              modeValue,
-              randomValue,
-              times
-            })
-          }}>开启轮播</Button>
-        </p>
-        <p>
-          {/* <span>学生</span>
+            onChange={changeModeValue}
+          />
+        </div>
+        <div className="student-order">
+          <span>学生</span>
           <Select
-            value={value}
-            onChange={async value => {
-                await onCarouselOptionChange(value)
-            }}
+            className="order-select"
+            value={randomValue}
             options={[
               {
                 label: '顺序',
@@ -213,23 +168,25 @@ export const Roster: FC<RosterProps> = ({
               {
                 label: '随机',
                 value: 'random'
-              },
+              }
             ]}
-          >
-          </Select> */}
-        </p>
-        <p>
-          {/* <span>轮播</span>
-          <input type="number" value={times} />
-          <span>秒/次数</span> */}
-        </p>
+            onChange={changeRandomValue}
+          />
+        </div>
+        <div className="carousel-frequency">
+          <span className="">轮播</span>
+          <div className="carousel-frequency-input">
+            <Input type='number' value={times} onChange={changeTimes}/>
+          </div>
+          <span className="">秒/次</span>
+        </div>
       </div>
     )
   }
 
   const studentList = studentListSort(dataSource)
 
-  const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
+  const cols = columns.filter(({ visibleRoles = [] }: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
 
   const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
     return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
@@ -248,66 +205,66 @@ export const Roster: FC<RosterProps> = ({
         </div>
         <div className="roster-container">
           <div className="search-header roster-header">
-            {carousel && <CarouselMenu {...carouselProps} />}
             <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
               <span title={teacherName} className="roster-username">{teacherName}</span>
             </div>
+            {carousel && <CarouselMenu {...carouselProps} />}
             {
               userType === 'teacher' ?
-              <Search
-                onSearch={onChange}
-                prefix={<img src={SearchSvg} />}
-                inputPrefixWidth={32}
-                placeholder={transI18n('scaffold.search')}
-              /> : null
+                <Search
+                  onSearch={onChange}
+                  prefix={<img src={SearchSvg} />}
+                  inputPrefixWidth={32}
+                  placeholder={transI18n('scaffold.search')}
+                /> : null
             }
           </div>
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{ justifyContent: 'center' }}>{transI18n(col.name)}</Col>
               ))}
             </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: Profile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
-                    <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
-                      {idx === 0 ? 
+                    <Col key={col.key} style={{ justifyContent: idx !== 0 ? 'center' : 'flex-start' }}>
+                      {idx === 0 ?
                         <span
                           className={
                             `${idx === 0 ? 'roster-username' : ''}`
                           }
-                          title = {(data as any)[col.key]}
+                          title={(data as any)[col.key]}
                           style={{
                             paddingLeft: 25
                           }}
                           onClick={
                             canOperate(userType, localUserUuid, data, col)
                               ? () =>
-                                  col.action &&
-                                  onClick &&
-                                  onClick(col.action, data.uid)
+                                col.action &&
+                                onClick &&
+                                onClick(col.action, data.uid)
                               : undefined
                           }>
                           {(data as any)[col.key]}
                         </span>
-                      : 
-                          <span
-                            style={{
-                              paddingLeft: 0
-                            }}
-                          >
-                            {col.render
+                        :
+                        <span
+                          style={{
+                            paddingLeft: 0
+                          }}
+                        >
+                          {col.render
                             ? col.render((data as any)[col.key], data, canOperate(userType, localUserUuid, data, col), userType, (canOperate(userType, localUserUuid, data, col)
-                            ? () =>
+                              ? () =>
                                 col.action &&
                                 onClick &&
                                 onClick(col.action, data.uid)
-                            : undefined))
+                              : undefined))
                             : (data as any)[col.key]}
-                          </span>
+                        </span>
                       }
                     </Col>
                   ))}
