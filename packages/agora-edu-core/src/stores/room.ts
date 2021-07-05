@@ -2064,6 +2064,24 @@ export class RoomStore extends SimpleInterval {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
 
+  @observable
+  carouselState: {
+    isOpenCarousel: boolean; // 是否开启轮播
+    modeValue: 'all' | 'available'; // 所有人 ｜ 非禁用
+    randomValue: 'sort' | 'random'; // 顺序 ｜ 随机
+    times: number; // xxx 秒/次
+  } = {
+    isOpenCarousel: false, 
+    modeValue: 'all',
+    randomValue: 'sort',
+    times: 10, 
+  }
+
+  @action.bound
+  setCarouselState (carouselState: any) {
+    this.carouselState = Object.assign({}, this.carouselState, carouselState)
+  }
+
   @action.bound
   async startCarousel() {
     await eduSDKApi.startCarousel({

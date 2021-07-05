@@ -40,6 +40,8 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         // muteUserChat,
         // unmuteUserChat,
         roomInfo,
+        carouselState,
+        setCarouselState,
         startCarousel,
         stopCarousel
     } = useRoomContext()
@@ -152,21 +154,28 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             isDraggable={true}
             carousel={userType === 'teacher'}
             carouselProps={{
-                modeValue: 'all',
-                changeModeValue: () => {
-          
+                isOpenCarousel: carouselState.isOpenCarousel,
+                changeCarousel: (e: any) => {
+                    
                 },
-                randomValue: 'random',
-                changeRandomValue: () => {
-          
+                modeValue: carouselState.modeValue,
+                changeModeValue: (value: any) => {
+                    
                 },
-                times: 10,
-                sendCarousel() {
-                    startCarousel()
+                randomValue: carouselState.randomValue,
+                changeRandomValue: (value: any) => {
+                     
                 },
-                stopCarousel() {
-                    stopCarousel()
-                }
+                times: carouselState.times,
+                changeTimes: (value: any) => {
+                    
+                },
+                // sendCarousel() {
+                //     startCarousel()
+                // },
+                // stopCarousel() {
+                //     stopCarousel()
+                // }
             }}
             localUserUuid={localUserInfo.userUuid}
             teacherName={teacherInfo?.userName || ''}

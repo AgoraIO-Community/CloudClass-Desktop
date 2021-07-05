@@ -137,7 +137,7 @@ export const Roster: FC<RosterProps> = ({
           />
           <span className="carousel-desc">{transI18n('roster.shift')}</span>
         </div>
-        <div className="disable-flag" style={{width: 105}}>
+        <div className="disable-flag" style={{ width: 105 }}>
           <Select
             value={modeValue}
             options={[
@@ -174,7 +174,7 @@ export const Roster: FC<RosterProps> = ({
         <div className="carousel-frequency">
           <span className="">{transI18n('roster.order_every')}</span>
           <div className="carousel-frequency-input">
-            <Input type='number' value={times} onChange={changeTimes}/>
+            <Input type='number' value={times} onChange={changeTimes} />
           </div>
           <span className="">{transI18n('roster.seconds')}</span>
         </div>
@@ -192,7 +192,7 @@ export const Roster: FC<RosterProps> = ({
 
   return (
     <DraggableContainer cancel={".search-header"} >
-      <div className="agora-board-resources roster-wrap" style={{width: 755}}>
+      <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
         <div className="btn-pin">
           <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
             onClose()
@@ -211,7 +211,7 @@ export const Roster: FC<RosterProps> = ({
             {
               userType === 'teacher' ?
                 (
-                  <div style={{marginTop: carousel ? 5 : 0}}>
+                  <div style={{ marginTop: carousel ? 5 : 0 }}>
                     <Search
                       onSearch={onChange}
                       prefix={<img src={SearchSvg} />}
