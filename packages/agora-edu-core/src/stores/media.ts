@@ -290,6 +290,11 @@ export class MediaStore {
         })
       }
 
+      if (evt.screen) {
+        // TODO: rtc screen end stop screen share stream
+        this.appStore.roomStore.sceneStore.stopWebSharing()
+      }
+
       if (evt.operation === 'pulled') {
         handleDevicePulled(evt)
       }
