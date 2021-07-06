@@ -2067,13 +2067,13 @@ export class RoomStore extends SimpleInterval {
   @observable
   carouselState: {
     isOpenCarousel: boolean; // 是否开启轮播
-    modeValue: 'all' | 'available'; // 所有人 ｜ 非禁用
-    randomValue: 'sort' | 'random'; // 顺序 ｜ 随机
+    modeValue: '1' | '2'; // 所有人 ｜ 非禁用
+    randomValue: '1' | '2'; // 顺序 ｜ 随机
     times: number; // xxx 秒/次
   } = {
     isOpenCarousel: false, 
-    modeValue: 'all',
-    randomValue: 'sort',
+    modeValue: '1',
+    randomValue: '1',
     times: 10, 
   }
 
@@ -2086,9 +2086,9 @@ export class RoomStore extends SimpleInterval {
   async startCarousel() {
     await eduSDKApi.startCarousel({
       roomUuid: this.roomInfo.roomUuid,
-      range: 1,
-      type: 1,
-      interval: 10,
+      range: this.carouselState.modeValue,
+      type: this.carouselState.randomValue,
+      interval: this.carouselState.times,
       count: 6
     })
   }
