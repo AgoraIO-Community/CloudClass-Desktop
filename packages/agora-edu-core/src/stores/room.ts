@@ -2086,9 +2086,9 @@ export class RoomStore extends SimpleInterval {
   async startCarousel() {
     await eduSDKApi.startCarousel({
       roomUuid: this.roomInfo.roomUuid,
-      range: this.carouselState.modeValue,
-      type: this.carouselState.randomValue,
-      interval: this.carouselState.times,
+      range: Number(this.carouselState.modeValue),
+      type: Number(this.carouselState.randomValue),
+      interval: Number(this.carouselState.times),
       count: 6
     })
   }
