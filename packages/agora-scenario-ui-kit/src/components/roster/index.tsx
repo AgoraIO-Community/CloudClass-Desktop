@@ -126,61 +126,61 @@ export const Roster: FC<RosterProps> = ({
   userType = 'student', // 只有老师可以开启轮播以及查找学生
   onChange,
 }) => {
-  const CarouselMenu = ({ modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, isOpenCarousel, changeCarousel }: any) => {
-    return (
-      <div className="carousel-menu">
-        <div className="carousel-flag">
-          <CheckBox
-            style={{ width: 12, height: 12 }}
-            checked={isOpenCarousel}
-            onChange={changeCarousel}
-          />
-          <span className="carousel-desc">{transI18n('roster.shift')}</span>
-        </div>
-        <div className="disable-flag" style={{ width: 105 }}>
-          <Select
-            value={modeValue}
-            options={[
-              {
-                label: transI18n('roster.everyone'),
-                value: 'all'
-              },
-              {
-                label: transI18n('roster.available'),
-                value: 'available'
-              }
-            ]}
-            onChange={changeModeValue}
-          />
-        </div>
-        <div className="student-order">
-          <span>{transI18n('roster.students_in')}</span>
-          <Select
-            className="order-select"
-            value={randomValue}
-            options={[
-              {
-                label: transI18n('roster.sequence'),
-                value: 'sort'
-              },
-              {
-                label: transI18n('roster.random'),
-                value: 'random'
-              }
-            ]}
-            onChange={changeRandomValue}
-          />
-        </div>
-        <div className="carousel-frequency">
-          <span className="">{transI18n('roster.order_every')}</span>
-          <div className="carousel-frequency-input">
-            <Input type='number' value={times} onChange={changeTimes} />
-          </div>
-          <span className="">{transI18n('roster.seconds')}</span>
-        </div>
-      </div>
-    )
-  }
+  // const CarouselMenu = React.memo(({ modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, isOpenCarousel, changeCarousel }: any) => {
+  //   return (
+  //     <div className="carousel-menu">
+  //       <div className="carousel-flag">
+  //         <CheckBox
+  //           style={{ width: 12, height: 12 }}
+  //           checked={isOpenCarousel}
+  //           onChange={changeCarousel}
+  //         />
+  //         <span className="carousel-desc">{transI18n('roster.shift')}</span>
+  //       </div>
+  //       <div className="disable-flag" style={{ width: 105 }}>
+  //         <Select
+  //           value={modeValue}
+  //           options={[
+  //             {
+  //               label: transI18n('roster.everyone'),
+  //               value: 'all'
+  //             },
+  //             {
+  //               label: transI18n('roster.available'),
+  //               value: 'available'
+  //             }
+  //           ]}
+  //           onChange={changeModeValue}
+  //         />
+  //       </div>
+  //       <div className="student-order">
+  //         <span>{transI18n('roster.students_in')}</span>
+  //         <Select
+  //           className="order-select"
+  //           value={randomValue}
+  //           options={[
+  //             {
+  //               label: transI18n('roster.sequence'),
+  //               value: 'sort'
+  //             },
+  //             {
+  //               label: transI18n('roster.random'),
+  //               value: 'random'
+  //             }
+  //           ]}
+  //           onChange={changeRandomValue}
+  //         />
+  //       </div>
+  //       <div className="carousel-frequency">
+  //         <span className="">{transI18n('roster.order_every')}</span>
+  //         <div className="carousel-frequency-input">
+  //           <Input type='number' value={times} onChange={changeTimes} />
+  //         </div>
+  //         <span className="">{transI18n('roster.seconds')}</span>
+  //       </div>
+  //     </div>
+  //   )
+  // })
 
   const studentList = studentListSort(dataSource)
 
@@ -207,7 +207,60 @@ export const Roster: FC<RosterProps> = ({
               <label>{t('roster.teacher_name')}</label>
               <span title={teacherName} className="roster-username">{teacherName}</span>
             </div>
-            {(userType === 'teacher' && carousel) && <CarouselMenu {...carouselProps} />}
+            {/* {carousel && <CarouselMenu {...carouselProps} />} */}
+            {carousel && (
+              <div className="carousel-menu">
+                <div className="carousel-flag">
+                  <CheckBox
+                    style={{ width: 12, height: 12 }}
+                    checked={carouselProps.isOpenCarousel}
+                    onChange={carouselProps.changeCarousel}
+                  />
+                  <span className="carousel-desc">{transI18n('roster.shift')}</span>
+                </div>
+                <div className="disable-flag" style={{ width: 105 }}>
+                  <Select
+                    value={carouselProps.modeValue}
+                    options={[
+                      {
+                        label: transI18n('roster.everyone'),
+                        value: 'all'
+                      },
+                      {
+                        label: transI18n('roster.available'),
+                        value: 'available'
+                      }
+                    ]}
+                    onChange={carouselProps.changeModeValue}
+                  />
+                </div>
+                <div className="student-order">
+                  <span>{transI18n('roster.students_in')}</span>
+                  <Select
+                    className="order-select"
+                    value={carouselProps.randomValue}
+                    options={[
+                      {
+                        label: transI18n('roster.sequence'),
+                        value: 'sort'
+                      },
+                      {
+                        label: transI18n('roster.random'),
+                        value: 'random'
+                      }
+                    ]}
+                    onChange={carouselProps.changeRandomValue}
+                  />
+                </div>
+                <div className="carousel-frequency">
+                  <span className="">{transI18n('roster.order_every')}</span>
+                  <div className="carousel-frequency-input">
+                    <Input type='number' value={carouselProps.times} onChange={carouselProps.changeTimes} />
+                  </div>
+                  <span className="">{transI18n('roster.seconds')}</span>
+                </div>
+              </div>
+            )}
             {
               userType === 'teacher' ?
                 (

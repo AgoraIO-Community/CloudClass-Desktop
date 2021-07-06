@@ -156,26 +156,34 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
             carouselProps={{
                 isOpenCarousel: carouselState.isOpenCarousel,
                 changeCarousel: (e: any) => {
-                    
+                    const isOpenCarousel = e.target.checked
+                    isOpenCarousel ? startCarousel() : stopCarousel()
+                    setCarouselState({
+                        ...carouselState,
+                        isOpenCarousel
+                    })
                 },
                 modeValue: carouselState.modeValue,
                 changeModeValue: (value: any) => {
-                    
+                    setCarouselState({
+                        ...carouselState,
+                        modeValue: value
+                    })
                 },
                 randomValue: carouselState.randomValue,
                 changeRandomValue: (value: any) => {
-                     
+                    setCarouselState({
+                        ...carouselState,
+                        randomValue: value
+                    })
                 },
                 times: carouselState.times,
-                changeTimes: (value: any) => {
-                    
+                changeTimes: (e: any) => {
+                    setCarouselState({
+                        ...carouselState,
+                        times: e.target.value
+                    })
                 },
-                // sendCarousel() {
-                //     startCarousel()
-                // },
-                // stopCarousel() {
-                //     stopCarousel()
-                // }
             }}
             localUserUuid={localUserInfo.userUuid}
             teacherName={teacherInfo?.userName || ''}
