@@ -5,9 +5,9 @@ import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
 import { VideoMarqueeList, VideoPlayer, VideoPlayerProps, MidClassVideoMarqueeList } from '~components/video-player';
-import {CSSTransition } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 //@ts-ignore
-import {AspectRatio} from 'react-aspect-ratio'
+import { AspectRatio } from 'react-aspect-ratio'
 import { useEffect } from 'react';
 
 const config = { "muted": true, "deviceState": 1, "online": true, "onPodium": true, "userType": "teacher", "hasStream": true, "isLocal": false, "type": "microphone", "uid": "3232", "disabled": true }
@@ -287,57 +287,57 @@ export const DocsClassVideoPlayer = () => {
 
   return (
     <div>
-        <Button onClick={() => {
-          setTeacherList([
-            ...teacherList,
-            {
-              username: `teacher-${teacherList.length}`,
-              uid: `uuid-teacher`,
-              micEnabled: false,
-              cameraEnabled: false,
-              whiteboardGranted: true,
-              cameraDevice: 2,
-              micDevice: 1,
-              hasStream: true,
-              online: true,
-              isLocal: true,
-              isOnPodium: false,
-              userType: 'teacher',
-              children: (<></>)
-            }
-          ])
-        }}>老师上台</Button>
-        <Button onClick={() => {
-          const copyArr = [...teacherList]
-          copyArr.splice(0, 1)
-          setTeacherList([...copyArr])
-        }}>老师下台</Button>
-        <Button onClick={() => {
-          setStudentList([
-            ...studentList,
-            {
-              username: `student-${studentList.length}`,
-              uid: `uuid-student`,
-              micEnabled: false,
-              cameraEnabled: false,
-              whiteboardGranted: true,
-              cameraDevice: 2,
-              micDevice: 1,
-              hasStream: true,
-              online: true,
-              isLocal: true,
-              isOnPodium: false,
-              userType: 'student',
-              children: (<></>)
-            }
-          ])
-        }}>上台</Button>
-        <Button onClick={() => {
-          const copyArr = [...studentList]
-          copyArr.splice(0, 1)
-          setStudentList([...copyArr])
-        }}>下台</Button>
-        <VideoMarqueeList
+      <Button onClick={() => {
+        setTeacherList([
+          ...teacherList,
+          {
+            username: `teacher-${teacherList.length}`,
+            uid: `uuid-teacher`,
+            micEnabled: false,
+            cameraEnabled: false,
+            whiteboardGranted: true,
+            cameraDevice: 2,
+            micDevice: 1,
+            hasStream: true,
+            online: true,
+            isLocal: true,
+            isOnPodium: false,
+            userType: 'teacher',
+            children: (<></>)
+          }
+        ])
+      }}>老师上台</Button>
+      <Button onClick={() => {
+        const copyArr = [...teacherList]
+        copyArr.splice(0, 1)
+        setTeacherList([...copyArr])
+      }}>老师下台</Button>
+      <Button onClick={() => {
+        setStudentList([
+          ...studentList,
+          {
+            username: `student-${studentList.length}`,
+            uid: `uuid-student`,
+            micEnabled: false,
+            cameraEnabled: false,
+            whiteboardGranted: true,
+            cameraDevice: 2,
+            micDevice: 1,
+            hasStream: true,
+            online: true,
+            isLocal: true,
+            isOnPodium: false,
+            userType: 'student',
+            children: (<></>)
+          }
+        ])
+      }}>上台</Button>
+      <Button onClick={() => {
+        const copyArr = [...studentList]
+        copyArr.splice(0, 1)
+        setStudentList([...copyArr])
+      }}>下台</Button>
+      <VideoMarqueeList
         teacherStream={teacherList[0]}
         teacherStreams={teacherList}
         videoStreamList={studentList}
@@ -400,7 +400,7 @@ export const DocsClassVideoPlayer = () => {
         }}
       >
       </VideoMarqueeList>
-        {/* {studentList.map((e: any, idx: number) => (
+      {/* {studentList.map((e: any, idx: number) => (
           <CSSVideoPlayer key={idx} {...e} />
         ))} */}
     </div>
@@ -409,6 +409,37 @@ export const DocsClassVideoPlayer = () => {
     //   1
     // </div>
     // </AspectRatio>
+  )
+}
+
+export const DocsAnimTest = () => {
+  const [students, setStudents] = useState([])
+  return (
+    <div>
+      <h1>Anim Test</h1>
+      <Button onClick={() => {
+        setStudents([
+          ...students,
+          Date.now()
+        ])
+      }}>学生上台</Button>
+      <div id="wrap">
+        <div className="video-teacher">
+          <div className="video-item"></div>
+        </div>
+        <div className="video-students-wrap" style={{
+          width: `calc(100% / 7 * ${students.length})`
+        }}>
+          {students.map((item, index) => (
+            <div className="video-student" key={index} style={{
+              width: students.length <= 6 ? `calc(100% / ${students.length})` : `calc(100% / 6)`
+            }}>
+              <div className="video-item"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

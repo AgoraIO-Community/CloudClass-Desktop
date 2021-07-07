@@ -402,3 +402,32 @@
   transition: width .5s linear;
   /* animation: hide .5s linear 1 forwards; */
 }
+
+/* test-demo */
+#wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#wrap .video-teacher{
+  width: calc(100% / 7);
+}
+#wrap .video-item {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  box-sizing: border-box;
+  border: 2px solid black;
+  background-color:red;
+}
+#wrap .video-students-wrap {
+  overflow: auto;
+  display: flex;
+  max-width: calc(100% / 7 * 6);
+}
+#wrap .video-students-wrap .video-student {
+  flex-shrink: 0;
+}
+#wrap .video-student .video-item {
+  background-color: blue;
+}
