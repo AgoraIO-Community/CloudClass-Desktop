@@ -68,9 +68,11 @@ export const MidClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
+      <Layout className="layout layout-row layout-video">
+        <MidVideoMarqueeContainer />
+      </Layout>
       <Layout className="horizontal">
         <Content className="column">
-          <MidVideoMarqueeContainer />
           <div className="board-box">
             <WhiteboardContainer>
               <ScreenSharePlayerContainer />

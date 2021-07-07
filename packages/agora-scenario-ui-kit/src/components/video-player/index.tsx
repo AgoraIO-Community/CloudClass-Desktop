@@ -520,7 +520,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
         timeout={500}
       > */}
       <>
-      <TransitionGroup className="video-list">
+      {/* <TransitionGroup className="video-list">
       {
         teacherStreams.map((videoStream: BaseVideoPlayerProps, idx: number) =>
         <CSSTransition
@@ -550,7 +550,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           </CSSTransition>
         )
       }
-      </TransitionGroup>
+      </TransitionGroup> */}
       <div className="video-container" ref={mountDOM}>
       <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
         <span className="offset">
@@ -559,7 +559,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
       </div>
       <TransitionGroup className="video-list">
       {
-        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
+        teacherStreams.concat(videoStreamList).map((videoStream: BaseVideoPlayerProps, idx: number) =>
         <CSSTransition
           key={`student-${idx}`}
           // key={videoStream.uid}
