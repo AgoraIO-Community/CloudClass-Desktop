@@ -610,7 +610,7 @@ export class BoardStore extends ZoomController {
     return !!this.isBoardScreenShare
   }
 
-  removeScreenShareScene() {
+  private clearScreenSharePath() {
     const roomScenes = (this.room.state.globalState as any).roomScenes
     const restRoomScenes = {...roomScenes, [`${screenSharePath}`]: undefined}
     const room = this.room
@@ -625,7 +625,10 @@ export class BoardStore extends ZoomController {
     if (hasScreenShare) {
       room.removeScenes(sharePath)
     }
+  }
 
+  removeScreenShareScene() {
+    this.clearScreenSharePath()
     this.setScenePath('')
   }
 
@@ -1103,7 +1106,8 @@ export class BoardStore extends ZoomController {
   }
 
   resetBoardPath() {
-    this.removeScreenShareScene()
+    this.clearScreenSharePath()
+    // this.removeScreenShareScene()
   }
 
   // reset board scenes
