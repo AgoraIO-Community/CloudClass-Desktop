@@ -414,18 +414,37 @@ export const DocsClassVideoPlayer = () => {
 
 export const DocsAnimTest = () => {
   const [students, setStudents] = useState([])
+  const [showTeacher, setShowTeacher] = useState(true)
   return (
     <div>
       <h1>Anim Test</h1>
       <Button onClick={() => {
+        setShowTeacher(true)
+      }}>
+        老师上台
+      </Button>
+      <Button onClick={() => {
+        setShowTeacher(false)
+      }}>
+        老师下台
+      </Button>
+      <Button onClick={() => {
         setStudents([
           ...students,
-          Date.now()
+          true
         ])
       }}>学生上台</Button>
       <div id="wrap">
         <div className="video-teacher">
-          <div className="video-item"></div>
+          <CSSTransition
+            in={showTeacher}
+            timeout={1000}
+            classNames='fade'
+            unmountOnExit
+            appear={true}
+          >
+            <div className="video-item"></div>
+          </CSSTransition>
         </div>
         <div className="video-students-wrap" style={{
           width: `calc(100% / 7 * ${students.length})`
@@ -434,7 +453,15 @@ export const DocsAnimTest = () => {
             <div className="video-student" key={index} style={{
               width: students.length <= 6 ? `calc(100% / ${students.length})` : `calc(100% / 6)`
             }}>
-              <div className="video-item"></div>
+              <CSSTransition
+                in={item}
+                timeout={1000}
+                classNames='fade'
+                unmountOnExit
+                appear={true}
+              >
+                <div className="video-item"></div>
+              </CSSTransition>
             </div>
           ))}
         </div>
