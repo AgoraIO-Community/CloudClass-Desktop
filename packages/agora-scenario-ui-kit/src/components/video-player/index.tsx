@@ -514,43 +514,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   // })
 
   return (
-    <div className="marque-video-container" >
-      {/* <CSSTransition
-        in={animated}
-        timeout={500}
-      > */}
+    <div className="marque-video-container">
       <>
-      {/* <TransitionGroup className="video-list">
-      {
-        teacherStreams.map((videoStream: BaseVideoPlayerProps, idx: number) =>
-        <CSSTransition
-          key={`teacher-${idx}`}
-          // key={videoStream.uid}
-          timeout={500}
-          classNames="video-player-animates"
-        >
-          <div className="video-item" key={idx} ref={attachVideoItem}>
-            <VideoPlayer
-              {...videoStream}
-              hideStars={true}
-              showGranted={false}
-              userType={userType}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(videoStream.uid)
-              }}
-              onPrivateChat={async () => {
-                await onPrivateChat(videoStream.uid)
-              }}
-            ></VideoPlayer>
-          </div>
-          </CSSTransition>
-        )
-      }
-      </TransitionGroup> */}
       <div className="video-container" ref={mountDOM}>
       <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
         <span className="offset">
@@ -596,7 +561,6 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
       </div>
       </div>
       </>
-      {/* </CSSTransition> */}
     </div>
   )
 }
