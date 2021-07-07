@@ -434,13 +434,19 @@ export const DocsAnimTest = () => {
           true
         ])
       }}>学生上台</Button>
+      <Button onClick={() => {
+        const copy = [...students]
+        copy[0] = false
+        setStudents(copy)
+      }}>
+        学生下台
+      </Button>
       <div id="wrap">
         <div className="video-teacher">
           <CSSTransition
             in={showTeacher}
             timeout={1000}
             classNames='fade'
-            unmountOnExit
             appear={true}
           >
             <div className="video-item"></div>
@@ -457,8 +463,12 @@ export const DocsAnimTest = () => {
                 in={item}
                 timeout={1000}
                 classNames='fade'
-                unmountOnExit
                 appear={true}
+                onExited={() => {
+                  const copy = [...students]
+                  copy.splice(0, 1)
+                  setStudents(copy)
+                }}
               >
                 <div className="video-item"></div>
               </CSSTransition>
