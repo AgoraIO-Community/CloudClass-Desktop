@@ -425,6 +425,9 @@
   display: flex;
   max-width: calc(100% / 7 * 6);
 }
+#wrap .video-students-wrap::-webkit-scrollbar {
+  display: none;
+}
 #wrap .video-students-wrap .video-student {
   flex-shrink: 0;
 }
