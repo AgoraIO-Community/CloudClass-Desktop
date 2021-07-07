@@ -5,8 +5,8 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
-import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
-import { ConvertedFile, CourseWareItem } from '../api/declare';
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase, CameraState } from 'white-web-sdk';
+import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -65,7 +65,7 @@ export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index+1}`,
       componentCount: 1,
       ppt: {
@@ -362,7 +362,7 @@ export class BoardStore extends ZoomController {
   }
 
   loadScene(data: any[]): SceneDefinition[] {
-    return data.map((item: ConvertedFile, index: number) => ({
+    return data.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index + 1}`,
       componentCount: 1,
       ppt: {
@@ -418,13 +418,13 @@ export class BoardStore extends ZoomController {
     if (sceneIsChanged) {
       if (targetPath === "init") {
         if (currentPage === 0) {
-          this.room.setScenePath(`/init`)
+          this.setScenePath(`/init`)
         } else {
-          this.room.setScenePath(`/${currentPage}`)
+          this.setScenePath(`/${currentPage}`)
         }
       }
       else if (targetPath === "screenShare") {
-        this.room.setScenePath(`/${targetPath}`)
+        this.setScenePath(`/${targetPath}`)
       }
       else {
         const targetResource = this.allResources.find((item => item.id === resourceUuid))
@@ -453,7 +453,7 @@ export class BoardStore extends ZoomController {
             return
           }
           const scenePath = targetResource!.scenes![currentPage].name
-          this.room.setScenePath(`${targetPath}/${scenePath}`)
+          this.setScenePath(`${targetPath}/${scenePath}`)
         }
       }
     }
@@ -515,7 +515,7 @@ export class BoardStore extends ZoomController {
     })
     if (setScene) {
       this.room.putScenes(sceneName, scenes)
-      this.room.setScenePath(scenePath)
+      this.setScenePath(scenePath)
     }
   }
 
@@ -626,7 +626,7 @@ export class BoardStore extends ZoomController {
       room.removeScenes(sharePath)
     }
 
-    room.setScenePath('')
+    this.setScenePath('')
   }
 
   @action.bound
@@ -660,7 +660,7 @@ export class BoardStore extends ZoomController {
           }
         }
       })
-      this.room.setScenePath('')
+      this.setScenePath('')
     }
   }
 
@@ -814,27 +814,27 @@ export class BoardStore extends ZoomController {
   }
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
-  async fetchRoomScenes() {
-    const firstCourseWare = this.appStore.params.config.courseWareList[0]
-    if (!firstCourseWare) {
-      return []
-    }
-    await this.startDownload(`${firstCourseWare.taskUuid}`)
-    // const items = this.appStore.params.config.courseWareList
-    if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
-      const scenes = firstCourseWare.taskProgress!.convertedFileList
-      const resourceName = `${firstCourseWare.resourceName}`
-      const page = this.findResourcePage(resourceName)
-      this.updateBoardSceneItems({
-        scenes,
-        resourceName,
-        resourceUuid: firstCourseWare.resourceUuid,
-        page,
-        taskUuid: firstCourseWare.taskUuid
-      }, true)
-      return scenes
-    }
-  }
+  // async fetchRoomScenes() {
+  //   const firstCourseWare = this.appStore.params.config.courseWareList[0]
+  //   if (!firstCourseWare) {
+  //     return []
+  //   }
+  //   await this.startDownload(`${firstCourseWare.taskUuid}`)
+  //   // const items = this.appStore.params.config.courseWareList
+  //   if (firstCourseWare.convert && firstCourseWare.taskProgress && firstCourseWare.taskProgress!.convertedPercentage === 100) {
+  //     const scenes = firstCourseWare.taskProgress!.convertedFileList
+  //     const resourceName = `${firstCourseWare.resourceName}`
+  //     const page = this.findResourcePage(resourceName)
+  //     this.updateBoardSceneItems({
+  //       scenes,
+  //       resourceName,
+  //       resourceUuid: firstCourseWare.resourceUuid,
+  //       page,
+  //       taskUuid: firstCourseWare.taskUuid
+  //     }, true)
+  //     return scenes
+  //   }
+  // }
 
   // TODO: aclass board init
   @action.bound
@@ -891,7 +891,7 @@ export class BoardStore extends ZoomController {
     this.updateBoardState(this.room.state.globalState as CustomizeGlobalState)
     this.updateCourseWareList()
 
-    this.pptAutoFullScreen()
+    // this.pptAutoFullScreen()
 
     this.updateLocalResourceList()
     this.updateLocalSceneState()
@@ -906,6 +906,7 @@ export class BoardStore extends ZoomController {
       if (scene && scene.ppt) {
         const width = scene.ppt.width;
         const height = scene.ppt.height;
+        // TODO: camera rectangle, can be alternative use scalePptToFit
         room.moveCameraToContain({
           originX: -width / 2,
           originY: -height / 2,
@@ -943,28 +944,36 @@ export class BoardStore extends ZoomController {
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      if (state.cameraState) {
+        // runInAction(() => {
+        if (state.cameraState && state.cameraState.scale) {
+          this.scale = state.cameraState.scale
+        }
+        // })
+        this.updateCameraState(state.cameraState as CameraState)
+      }
       if (state.globalState) {
         // 判断锁定白板
         this.isFullScreen = state.globalState?.isFullScreen ?? false
         this.updateBoardState(state.globalState)
       }
-      if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
-        if (this.room) {
-          this.scaleToFit()
-        }
-      }
+      // if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
+      //   if (this.room) {
+      //     this.scaleToFit()
+      //   }
+      // }
       if (state.memberState) {
         this.currentStrokeWidth = this.getCurrentStroke(state.memberState)
       }
-      if (state.zoomScale) {
-        runInAction(() => {
-          this.scale = state.zoomScale
-        })
-      }
+      // if (state.zoomScale) {
+      //   runInAction(() => {
+      //     this.scale = state.zoomScale
+      //   })
+      // }
       if (state.sceneState) {
         this.updatePageHistory()
         this.autoFetchDynamicTask()
-        this.moveCamera()
+        // this.moveCamera()
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList()
@@ -1008,8 +1017,8 @@ export class BoardStore extends ZoomController {
       isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
-      wrappedComponents: [IframeWrapper],
-      invisiblePlugins: [IframeBridge]
+    //   wrappedComponents: [IframeWrapper],
+    //   invisiblePlugins: [IframeBridge]
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
@@ -1028,6 +1037,30 @@ export class BoardStore extends ZoomController {
     this.room.bindHtmlElement(null)
   }
 
+  updateCameraState(cameraState: CameraState) {
+    const room = this.room
+    if (this.canSyncCameraState && room) {
+      const path = room.state.sceneState.contextPath
+      if (path === "/" || path === "") {
+        this.room.setGlobalState({
+          cameraState: {
+            //@ts-ignore
+            ...this.room.state.globalState.cameraState,
+            ["/init"]: cameraState
+          }
+        })
+      } else {
+        this.room.setGlobalState({
+          cameraState: {
+            //@ts-ignore
+            ...this.room.state.globalState.cameraState,
+            [path]: cameraState
+          }
+        })
+      }
+    }
+  }
+
   @computed
   get roleIsTeacher(): boolean {
     return this.isTeacher()
@@ -1036,6 +1069,15 @@ export class BoardStore extends ZoomController {
   @computed
   get roleIsStudent(): boolean {
     return this.isStudent()
+  }
+
+  @computed
+  get canSyncCameraState(): boolean {
+    const roles = [EduRoleTypeEnum.teacher]
+    if (roles.includes(this.appStore.roomInfo.userRole)) {
+      return true
+    }
+    return false
   }
 
   isTeacher(): boolean {
@@ -1077,14 +1119,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async leave() {
     if (this.boardClient && this.room) {
-      try {
-        if (this.iframe) {
-          this.iframe.onDestroy()
-        }
-        await this.boardClient.destroy()
-      } catch (err) {
-        EduLogger.info("board leave error ", GenericErrorWrapper(err))
-      }
+      await this.boardClient.destroy()
       this.room.bindHtmlElement(null)
       this.reset()
     }
@@ -1162,6 +1197,30 @@ export class BoardStore extends ZoomController {
   @observable
   shape: string = 'pencil';
 
+  getCurrentContextPath() {
+    const path = this.room.state.sceneState.contextPath
+    if (path === "/" || path === '') {
+      return "/init"
+    }
+    return path
+  }
+
+  @action.bound
+  setScenePath(path: string) {
+    this.room.setScenePath(path)
+    const scenesCameraMap = (this.room.state.globalState as any).cameraState
+    const contextPath = this.getCurrentContextPath()
+    if (this.canSyncCameraState && scenesCameraMap && scenesCameraMap.hasOwnProperty(contextPath) && scenesCameraMap[contextPath]) {
+      const cameraState = scenesCameraMap[contextPath]
+      this.room.moveCamera({
+        animationMode: AnimationMode.Immediately,
+        ...cameraState
+      })
+    } else {
+      this.room.scalePptToFit()
+    }
+  }
+
   @action.bound
   setTool(tool: string) {
     if (!this.boardRoomIsAvailable) return
@@ -1170,7 +1229,7 @@ export class BoardStore extends ZoomController {
       case 'blank-page': {
         const room = this.room
         if (room.isWritable) {
-          room.setScenePath('/init')
+          this.setScenePath('/init')
           const newIndex = room.state.sceneState.scenes.length
           room.putScenes("/", [{name: `${newIndex}`}], newIndex)
           room.setSceneIndex(newIndex)
@@ -1372,7 +1431,7 @@ export class BoardStore extends ZoomController {
     if (this.room && this.online) {
       this.room.moveCamera({scale})
     }
-    this.scale = this.room.state.zoomScale
+    this.scale = this.room.state.cameraState.scale
   }
 
   @computed 
@@ -1573,8 +1632,6 @@ export class BoardStore extends ZoomController {
       this.controller.abort()
       this.controller = undefined
     }
-    // @ts-ignore
-    this.iframe = null
     this.activeMap = {}
     this._personalResources = []
     this._resourcesList = []
@@ -1708,10 +1765,14 @@ export class BoardStore extends ZoomController {
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-        if (this.online && this.room) {
-          this.room.moveCamera({centerX: 0, centerY: 0});
-          this.moveCamera()
-          this.room.refreshViewSize();
+        if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+          if (this.online && this.room) {
+            this.room.moveCamera({centerX: 0, centerY: 0});
+            // this.moveCamera()
+            this.room.scalePptToFit()
+            this.updateCameraState(this.room.state.cameraState)
+            this.room.refreshViewSize();
+          }
         }
       })
       this.resizeObserver.observe(dom)
@@ -1827,7 +1888,7 @@ export class BoardStore extends ZoomController {
         }
       })
       if (includeRoomScenes) {
-        this.room.setScenePath('')
+        this.setScenePath('')
       }
       this._personalResources = this._personalResources.filter((e => !resourceUuids.includes(e.resourceUuid)))
       EduLogger.info("remove removeMaterialList success", res)
@@ -1867,10 +1928,10 @@ export class BoardStore extends ZoomController {
       })
       const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`]
       if (sceneExists) {
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+        this.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
       } else {
         this.room.putScenes(`/${resource.id}`, resource.scenes)
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+        this.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
       }
     }
   }
@@ -1910,7 +1971,7 @@ export class BoardStore extends ZoomController {
       }
     })
     room.putScenes(sharePath, [{name: "0"}])
-    room.setScenePath(sharePath)
+    this.setScenePath(sharePath)
   }
 
   iframe: IframeBridge = null as any;
@@ -1963,7 +2024,7 @@ export class BoardStore extends ZoomController {
         useClicker: true
       })
       this.putCourseResource(resourceUuid)
-      // room.setScenePath(scenePath)
+      // this.setScenePath(scenePath)
     }
     // if (bridge) {
       
@@ -1972,7 +2033,7 @@ export class BoardStore extends ZoomController {
       //     room.putScenes(scenePath, genH5Scenes(totalPage));
       // }
       // if (room.state.sceneState.contextPath !== scenePath) {
-      //     room.setScenePath(scenePath);
+      //     this.setScenePath(scenePath);
       // }
     // }
   }
@@ -2100,27 +2161,42 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   scaleToFit() {
-    if (this.isH5IFrame) {
-      if(this.iframe){
-        this.iframe.scaleIframeToFit()
+    // if (this.isH5IFrame) {
+    //   if(this.iframe){
+    //     this.iframe.scaleIframeToFit()
+    //   } else {
+    //       //@ts-ignore
+    //       this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+    //   }
+    // }
+
+    const scenesCameraMap = (this.room.state.globalState as any).cameraState
+    const contextPath = this.getCurrentContextPath()
+    if (this.canSyncCameraState) {
+      if(scenesCameraMap 
+        && scenesCameraMap.hasOwnProperty(contextPath) && scenesCameraMap[contextPath]) {
+        const cameraState = scenesCameraMap[contextPath]
+        this.room.moveCamera({
+          animationMode: AnimationMode.Immediately,
+          ...cameraState
+        })
       } else {
-          //@ts-ignore
-          this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit()
+        this.room.scalePptToFit()
+        this.updateCameraState(this.room.state.cameraState)
       }
     }
-    this.room.scalePptToFit()
   } 
 
   @action.bound
   moveCamera() {
-    if (!isEmpty(this.room.state.sceneState.scenes) 
-    && !this.room.state.sceneState.scenes[0].ppt) {
-      this.room.moveCamera({
-        centerX: 0,
-        centerY: 0,
-        scale: 1,
-      })
-    }
+    // if (!isEmpty(this.room.state.sceneState.scenes) 
+    // && !this.room.state.sceneState.scenes[0].ppt) {
+    //   this.room.moveCamera({
+    //     centerX: 0,
+    //     centerY: 0,
+    //     scale: 1,
+    //   })
+    // }
     this.scaleToFit()
   }
 
