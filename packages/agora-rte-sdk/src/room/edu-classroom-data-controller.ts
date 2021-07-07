@@ -1,5 +1,5 @@
 import { diff } from 'deep-diff';
-import { cloneDeep, get, isEmpty, pick, set, setWith } from 'lodash';
+import { cloneDeep, get, isEmpty, merge, pick, set, setWith } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { EduLogger } from '../core/logger';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
@@ -411,7 +411,7 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.roomChatState: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
               EduLogger.info(`EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`)
               this.fire('room-chat-message', {
@@ -419,7 +419,7 @@ export class EduClassroomDataController {
                 operator
               })
             }
-          // }
+          }
           break;
         }
 
@@ -427,12 +427,12 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.customMessage: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             this.fire('room-message', {
               textMessage,
               operator
             })
-          // }
+          }
           break;
         }
       }
@@ -1340,7 +1340,7 @@ export class EduClassroomDataController {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
         // TODO: refactor use memory pool
-        setWith(properties, key, changedProperties[key])
+        // setWith(properties, key, changedProperties[key])
         // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
         // const value = changedProperties[key]
         // merge(properties, newObject)
@@ -1348,6 +1348,40 @@ export class EduClassroomDataController {
         //   assign(properties, newObject)
         // }
         // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
+        let paths = key.split('.')
+
+        if(paths.length === 0) {
+          console.error(`[rte] invalid key when batch set room properties ${key}`)
+          return properties
+        }
+
+        let cursor = properties
+        // initialize structs
+        for(let path of paths) {
+          cursor[path] = cursor[path] || {}
+          cursor = cursor[path]
+        }
+
+        let anchor = get(properties, paths.join('.'))
+        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'))
+        
+        const isObject = (val:any) => (typeof val === 'object' && val !== null)
+        const changedValue = changedProperties[key]
+
+
+        if(!isObject(anchor)) {
+          // if anchor is not an object, overwrite anyway
+          parent[[...paths].pop()!] = changedValue
+        } else {
+          // anchor is an object
+          if(!isObject(changedValue)) {
+            // if changed value is not an object, overwrite as well
+            parent[[...paths].pop()!] = changedValue
+          } else {
+            // changed value is an object, merge it
+            merge(anchor, changedValue)
+          }
+        }
       }
       console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
       console.log('### properties ', properties)
