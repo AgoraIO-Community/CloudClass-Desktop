@@ -406,7 +406,8 @@
 }
 
 #wrap .video-teacher {
-  width: calc(100% / 7);
+  box-sizing: border-box;
+  width: calc(100vw / 7);
 }
 
 #wrap .video-item {
@@ -416,6 +417,11 @@
   box-sizing: border-box;
   border: 2px solid black;
   background-color: red;
+}
+#wrap .video-item:after {
+  display: block;
+  width: calc(100vw / 7);
+  content: ' '
 }
 
 #wrap .video-students-wrap {
@@ -429,6 +435,7 @@
 }
 
 #wrap .video-students-wrap .video-student {
+  box-sizing: border-box;
   flex-shrink: 0;
 }
 
@@ -437,52 +444,60 @@
 }
 
 /*入场动画开始*/
-.fade-enter {
+.fade-enter, .fade-enter .video-item {
   transform: scale(0);
+  /* width: 0; */
   opacity: 0;
 }
 
 /*入场动画过程*/
-.fade-enter-active {
+.fade-enter-active, .fade-enter-active .video-item {
   transform: scale(1);
+  /* width: 100%; */
   opacity: 1;
   transition: 1s ease-in;
 }
 
 /*入场动画结束*/
-.fade-enter-done {
+.fade-enter-done, .fade-enter-done .video-item {
   transform: scale(1);
+  /* width: 100%; */
   opacity: 1;
 }
 
 /*离场动画开始*/
-.fade-exit {
+.fade-exit, .fade-exit .video-item {
   transform: scale(1);
+  /* width: 100%; */
   opacity: 1;
 }
 
 /*离场动画过程*/
-.fade-exit-active {
+.fade-exit-active, .fade-exit-active .video-item {
   transform: scale(0);
+  /* width: 0; */
   opacity: 0;
   transition: 1s ease-in;
 }
 
 /*离场动画结束*/
-.fade-exit-done {
+.fade-exit-done,  .fade-exit-done .video-item{
   transform: scale(0);
+  /* width: 0; */
   opacity: 0;
 }
 
 /*页面第一次加载时的开始状态*/
-.fade-appear {
+.fade-appear,  .fade-appear .video-item{
   transform: scale(0);
+  /* width: 0; */
   opacity: 0;
 }
 
 /*页面第一次加载时的动画过程*/
-.fade-appear-active {
+.fade-appear-active, .fade-appear-active .video-item {
   transform: scale(1);
+  /* width: 100%; */
   opacity: 1;
   transition: 1s ease-in;
 }

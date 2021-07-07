@@ -5,7 +5,7 @@ import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
 import { VideoMarqueeList, VideoPlayer, VideoPlayerProps, MidClassVideoMarqueeList } from '~components/video-player';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 //@ts-ignore
 import { AspectRatio } from 'react-aspect-ratio'
 import { useEffect } from 'react';
@@ -431,12 +431,14 @@ export const DocsAnimTest = () => {
       <Button onClick={() => {
         setStudents([
           ...students,
-          true
+          {
+            id: Date.now()
+          }
         ])
       }}>学生上台</Button>
       <Button onClick={() => {
         const copy = [...students]
-        copy[0] = false
+        copy.splice(0, 1)
         setStudents(copy)
       }}>
         学生下台
@@ -452,29 +454,21 @@ export const DocsAnimTest = () => {
             <div className="video-item"></div>
           </CSSTransition>
         </div>
-        <div className="video-students-wrap" style={{
-          width: `calc(100% / 7 * ${students.length})`
-        }}>
-          {students.map((item, index) => (
-            <div className="video-student" key={index} style={{
-              width: students.length <= 6 ? `calc(100% / ${students.length})` : `calc(100% / 6)`
-            }}>
-              <CSSTransition
-                in={item}
-                timeout={1000}
-                classNames='fade'
-                appear={true}
-                onExited={() => {
-                  const copy = [...students]
-                  copy.splice(0, 1)
-                  setStudents(copy)
-                }}
-              >
+
+        <TransitionGroup className="video-students-wrap">
+          {students.map((item) => (
+            <CSSTransition
+              key={item.id}
+              timeout={1000}
+              classNames='fade'
+            >
+              <div className="video-student">
                 <div className="video-item"></div>
-              </CSSTransition>
-            </div>
+              </div>
+            </CSSTransition>
           ))}
-        </div>
+        </TransitionGroup>
+
       </div>
     </div>
   )
