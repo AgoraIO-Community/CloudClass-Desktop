@@ -411,7 +411,7 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.roomChatState: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
               EduLogger.info(`EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`)
               this.fire('room-chat-message', {
@@ -419,7 +419,7 @@ export class EduClassroomDataController {
                 operator
               })
             }
-          }
+          // }
           break;
         }
 
@@ -427,12 +427,12 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.customMessage: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             this.fire('room-message', {
               textMessage,
               operator
             })
-          }
+          // }
           break;
         }
       }

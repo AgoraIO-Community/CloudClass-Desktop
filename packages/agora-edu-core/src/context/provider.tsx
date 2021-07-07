@@ -757,3 +757,14 @@ export const useReportContext = (): ReportContext => {
     eduManger: core.eduManager
   }
 }
+
+export const useDebugContext = () => {
+
+  const roomStore = useRoomStore()
+
+  const uploadRoomLog = roomStore.uploadRoomLog
+
+  return {
+    uploadRoomLog,
+  }
+}

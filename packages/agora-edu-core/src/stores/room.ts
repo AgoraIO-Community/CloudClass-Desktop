@@ -19,6 +19,8 @@ import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
+import { globalConfigs } from "../utilities/config"
+import {EduManager} from 'agora-rte-sdk'
 // import packageJson from "../../package.json"
 const packageJson = require('../../package.json')
 
@@ -2057,5 +2059,10 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  @action.bound
+  async uploadRoomLog() {
+    return await EduManager.uploadLog(this.roomInfo.roomUuid)
   }
 }

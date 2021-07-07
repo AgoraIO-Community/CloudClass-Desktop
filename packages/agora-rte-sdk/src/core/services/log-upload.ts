@@ -133,7 +133,7 @@ export class LogUpload {
     file: any
   ) {
     const res = await this.uploadToOss(roomId, file, 'log')
-    await this.uploadCefLogFile(roomId)
+    // await this.uploadCefLogFile(roomId)
     return res;
   }
 
