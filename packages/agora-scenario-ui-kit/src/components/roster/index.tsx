@@ -12,6 +12,7 @@ import { Search } from '../input';
 import { Select } from '~components/select';
 import { Input } from '~components/input'
 import { useEffect } from 'react';
+import {debounce} from 'lodash'
 
 export * from './user-list';
 

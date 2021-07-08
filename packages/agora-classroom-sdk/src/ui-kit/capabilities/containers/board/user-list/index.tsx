@@ -165,24 +165,39 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                 },
                 modeValue: carouselState.modeValue,
                 changeModeValue: (value: any) => {
-                    setCarouselState({
-                        ...carouselState,
-                        modeValue: value
-                    })
+                    if (value !== carouselState.modeValue) {
+                        setCarouselState({
+                            ...carouselState,
+                            modeValue: value
+                        })
+                        if (carouselState.isOpenCarousel) {
+                            startCarousel()
+                        }
+                    }
                 },
                 randomValue: carouselState.randomValue,
                 changeRandomValue: (value: any) => {
-                    setCarouselState({
-                        ...carouselState,
-                        randomValue: value
-                    })
+                    if (value !== carouselState.randomValue) {
+                        setCarouselState({
+                            ...carouselState,
+                            randomValue: value
+                        })
+                        if (carouselState.isOpenCarousel) {
+                            startCarousel()
+                        }
+                    }
                 },
                 times: carouselState.times,
                 changeTimes: (e: any) => {
-                    setCarouselState({
-                        ...carouselState,
-                        times: e.target.value
-                    })
+                    if (e.target.value !== carouselState.times) {
+                        setCarouselState({
+                            ...carouselState,
+                            times: e.target.value
+                        })
+                        if (carouselState.isOpenCarousel) {
+                            startCarousel()
+                        }
+                    }
                 },
             }}
             localUserUuid={localUserInfo.userUuid}
