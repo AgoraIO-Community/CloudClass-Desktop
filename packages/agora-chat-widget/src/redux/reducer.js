@@ -13,6 +13,7 @@ let defaultState = {
         users: [],      //成员
         admins: [],     //管理员
         muteList: [],    //禁言列表
+        owner: "",      //聊天室创建者
     },
     messages: {         //消息
         list: [],       //TXT/TEXT 消息、CMD 消息、CUSTOM 消息
@@ -295,6 +296,14 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 currentUser: data
+            }
+        case 'GET_ROOM_OWNER':
+            return {
+                ...state,
+                room: {
+                    ...room,
+                    owner:data
+                }
             }
         default:
             return state;

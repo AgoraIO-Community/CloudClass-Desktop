@@ -107,3 +107,8 @@ export const clearStore = (data) => {
 export const setCurrentUser = (data) => {
     return {type: 'SAVE_CURRENT_USER',data}
 }
+
+// 聊天室创建者
+export const roomOwner = (data) => {
+    return {type: 'GET_ROOM_OWNER',data}
+}

@@ -98,8 +98,12 @@ const App = function (props) {
         }
         const userCount = _.get(store.getState(), 'room.info.affiliations_count')
         const roomUserList = _.get(store.getState(), 'room.users')
+        const roomOwner = _.get(store.getState(), 'room.owner');
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
+            if(roomOwner === message.from) {
+              return;
+            }
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
             arr.push(message.from)
             intervalId && clearInterval(intervalId);

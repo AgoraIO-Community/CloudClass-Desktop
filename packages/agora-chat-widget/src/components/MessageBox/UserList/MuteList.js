@@ -6,6 +6,7 @@ import voiceOff from '../../../themes/img/icon-mute.svg'
 import voiceNo from '../../../themes/img/icon-chat.svg'
 import forbid from '../../../themes/img/icon_forbid.svg'
 import RcTooltip from 'rc-tooltip'
+import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
 const MuteList = ({ roomListInfo, muteMembers, onSetMute,searchUser }) => {
@@ -24,7 +25,7 @@ const MuteList = ({ roomListInfo, muteMembers, onSetMute,searchUser }) => {
                     return <Flex className="user-item" justifyContent='space-between' alignItems='center' mt='16px' key={key}>
                         <Flex alignItems='center'>
                             <div className='list-user-box'>
-                                <Image src={(_.get(roomListInfo[member], 'avatarurl'))} className='list-user-img' />
+                                <Image src={(_.get(roomListInfo[member], 'avatarurl')) || avatarUrl} className='list-user-img' />
                                 <Image className='list-user-forbid'
                                     src={forbid}
                                 />
