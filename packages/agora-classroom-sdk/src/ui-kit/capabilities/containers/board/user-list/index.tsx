@@ -188,11 +188,11 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                     }
                 },
                 times: carouselState.times,
-                changeTimes: (e: any) => {
-                    if (e.target.value !== carouselState.times) {
+                changeTimes: (value: any) => {
+                    if (value !== carouselState.times) {
                         setCarouselState({
                             ...carouselState,
-                            times: e.target.value
+                            times: value
                         })
                         if (carouselState.isOpenCarousel) {
                             startCarousel()
