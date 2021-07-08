@@ -533,8 +533,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
         >
           <div className="video-item" key={idx} ref={attachVideoItem}>
             <VideoPlayer
-              {...videoStream}
               hideStars={hideStars}
+              {...videoStream}
               showGranted={true}
               userType={userType}
               onCameraClick={onCameraClick}

@@ -383,7 +383,10 @@ export const MidVideoMarqueeContainer = observer(() => {
       isOnPodium: stream.onPodium,
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
-      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideBoardGranted: true,
+      hideOffPodium: true,
+      hideStars: true,
       children: (
         <>
         {
