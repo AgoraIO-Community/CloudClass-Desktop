@@ -25,7 +25,7 @@ const MuteList = ({ roomListInfo, muteMembers, onSetMute,searchUser }) => {
                     return <Flex className="user-item" justifyContent='space-between' alignItems='center' mt='16px' key={key}>
                         <Flex alignItems='center'>
                             <div className='list-user-box'>
-                                <Image src={(_.get(roomListInfo[member], 'avatarurl')) || avatarUrl} className='list-user-img' />
+                                <Image src={(_.get(roomListInfo[member], 'avatarurl',avatarUrl))} className='list-user-img' />
                                 <Image className='list-user-forbid'
                                     src={forbid}
                                 />

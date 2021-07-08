@@ -80,8 +80,12 @@ const QaMessage = () => {
                 isOpen={maxImg}
                 onRequestClose={() => { setMaxImg(false) }}
                 style={customStyles}
+                appElement={document.body}
             >
-                <img src={maxImgUrl} alt="picture load failed" />
+                 <div>
+                    <img src={maxImgUrl} style={{maxHeight: 900}} alt="picture load failed" />
+                    <button className='close-btn' onClick={()=>{ setMaxImg(false) }}>X</button>
+                </div>
             </AntModal>
         </div>
     )
