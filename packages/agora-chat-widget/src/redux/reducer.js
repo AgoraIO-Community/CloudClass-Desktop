@@ -301,7 +301,7 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 room: {
-                    ...room,
+                    ...state.room,
                     owner:data
                 }
             }
