@@ -22,6 +22,8 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
+            height: 'calc(100% - 100px)',
+            width:'calc(100% - 100px);'
         },
     };
 
@@ -83,8 +85,8 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                 style={customStyles}
                 appElement={document.body}
             >
-                <div>
-                    <img src={maxImgUrl} style={{maxHeight: 900}} alt="picture load failed" />
+                <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    <img src={maxImgUrl} style={{objectFit:'revert',width:'70%'}} alt="picture load failed" />
                     <button className='close-btn' onClick={()=>{ setMaxImg(false) }}>X</button>
                 </div>
             </AntModal>
