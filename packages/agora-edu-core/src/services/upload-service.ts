@@ -34,6 +34,8 @@ export const mapFileType = (type: string): any => {
   return 'excel'
 }
 
+export type MaterialAccess = 'public' | 'private' | 'extra'
+
 export type MaterialDataResource = {
   id: string,
   name: string,
@@ -45,10 +47,11 @@ export type MaterialDataResource = {
   url: string,
   convertedPercentage?: number,
   updateTime: number,
-  scenes?: any[]
+  scenes?: any[],
+  access: MaterialAccess
 }
 
-export const transDataToResource = (data: CourseWareItem): MaterialDataResource => {
+export const transDataToResource = (data: CourseWareItem, access: MaterialAccess): MaterialDataResource => {
   if (!data.taskUuid) {
     return {
       id: data.resourceUuid,
@@ -61,6 +64,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
+      access
     }
   }
   return {
@@ -75,6 +79,7 @@ export const transDataToResource = (data: CourseWareItem): MaterialDataResource 
     convertedPercentage: data.taskProgress!.convertedPercentage,
     updateTime: data.updateTime,
     scenes: data.scenes,
+    access
   }
 }
 

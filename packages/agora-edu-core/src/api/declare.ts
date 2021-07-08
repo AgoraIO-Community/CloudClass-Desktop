@@ -107,7 +107,6 @@ export type CourseWareItem = {
   taskUuid?: string,
   taskToken?: string,
   taskProgress?: TaskProgressInfo
-  access?: 'public' | 'private'
 }
 
 export type CourseWareList = CourseWareItem[]

@@ -2147,7 +2147,7 @@ export class BoardStore extends ZoomController {
     .map((item: any) => ({
       ...this.resolveResource(item),
     }))
-    .map(transDataToResource)
+    .map((item:any) => transDataToResource(item, 'extra'))
   }
 
   @action.bound
@@ -2166,10 +2166,9 @@ export class BoardStore extends ZoomController {
     return this.appStore.params.config.courseWareList
     .map((item: any) => ({
       ...item,
-      ...this.resolveResource(item),
-      access: 'public',
+      ...this.resolveResource(item)
     }))
-    .map(transDataToResource)
+    .map((item:any) => transDataToResource(item, 'public'))
   }
 
   @computed
@@ -2184,10 +2183,9 @@ export class BoardStore extends ZoomController {
   get personalResources() {
     return this._personalResources.map((item: any) => ({
       ...item,
-      ...this.resolveResource(item),
-      access: 'private',
+      ...this.resolveResource(item)
     }))
-    .map(transDataToResource)
+    .map((item:any) => transDataToResource(item, 'private'))
   }
 
   @computed
