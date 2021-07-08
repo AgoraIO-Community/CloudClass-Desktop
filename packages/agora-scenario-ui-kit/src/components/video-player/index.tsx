@@ -395,7 +395,7 @@ export interface VideoMarqueeListProps {
   /**
    * teacher stream
    */
-   teacherStreams: any[],
+  teacherStreams: any[],
   /**
   * 点击摄像头的按钮时的回调
   */
@@ -424,6 +424,11 @@ export interface VideoMarqueeListProps {
    * 用户类型
    */
   userType: 'teacher' | 'student' | 'assistant';
+
+  /**
+   * 轮播功能开启轮播需要隐藏箭头
+   */
+  openCarousel?: boolean
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -437,6 +442,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   onWhiteboardClick,
   onSendStar,
   userType,
+  openCarousel = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
 
@@ -516,50 +522,50 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   return (
     <div className="marque-video-container">
       <>
-      <div className="video-container" ref={mountDOM}>
-      <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
-        <span className="offset">
-          <Icon type="backward"></Icon>
-        </span>
-      </div>
-      <TransitionGroup className="video-list">
-      {
-        teacherStreams.concat(videoStreamList).map((videoStream: BaseVideoPlayerProps, idx: number) =>
-        <CSSTransition
-          key={`student-${idx}`}
-          // key={videoStream.uid}
-          timeout={500}
-          classNames="video-player-animates"
-        >
-          <div className="video-item" key={idx} ref={attachVideoItem}>
-            <VideoPlayer
-              hideStars={hideStars}
-              {...videoStream}
-              showGranted={true}
-              userType={userType}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(videoStream.uid)
-              }}
-              onPrivateChat={async () => {
-                await onPrivateChat(videoStream.uid)
-              }}
-            ></VideoPlayer>
-          </div>
-          </CSSTransition>
-        )
-      }
-      </TransitionGroup>
+        <div className="video-container" ref={mountDOM}>
+          {!openCarousel && (<div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+            <span className="offset">
+              <Icon type="backward"></Icon>
+            </span>
+          </div>)}
+          <TransitionGroup className="video-list">
+            {
+              teacherStreams.concat(videoStreamList).map((videoStream: BaseVideoPlayerProps, idx: number) =>
+                <CSSTransition
+                  key={`student-${idx}`}
+                  // key={videoStream.uid}
+                  timeout={500}
+                  classNames="video-player-animates"
+                >
+                  <div className="video-item" key={idx} ref={attachVideoItem}>
+                    <VideoPlayer
+                      hideStars={hideStars}
+                      {...videoStream}
+                      showGranted={true}
+                      userType={userType}
+                      onCameraClick={onCameraClick}
+                      onMicClick={onMicClick}
+                      onOffPodiumClick={onOffPodiumClick}
+                      onWhiteboardClick={onWhiteboardClick}
+                      onSendStar={async () => {
+                        await onSendStar(videoStream.uid)
+                      }}
+                      onPrivateChat={async () => {
+                        await onPrivateChat(videoStream.uid)
+                      }}
+                    ></VideoPlayer>
+                  </div>
+                </CSSTransition>
+              )
+            }
+          </TransitionGroup>
 
-      <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
-        <span className="offset">
-          <Icon type="forward"></Icon>
-        </span>
-      </div>
-      </div>
+          {!openCarousel && (<div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
+            <span className="offset">
+              <Icon type="forward"></Icon>
+            </span>
+          </div>)}
+        </div>
       </>
     </div>
   )

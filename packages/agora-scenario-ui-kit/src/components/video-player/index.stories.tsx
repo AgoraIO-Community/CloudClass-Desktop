@@ -134,6 +134,7 @@ export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({ children, s
         // setUserType('teacher')
       }}>{userType}</Button>
       <VideoMarqueeList
+        openCarousel={false}
         videoStreamList={list}
         onCameraClick={(uid: any) => {
           list.forEach(item => {
