@@ -7,6 +7,8 @@ import {
   IAgoraExtApp,
   IAgoraWidget,
   globalConfigs,
+  MediaOptions,
+  BoardOptions
 } from 'agora-edu-core';
 import {
   EduRoleTypeEnum,
@@ -130,13 +132,8 @@ export type LaunchOption = {
   region?: AgoraRegion;
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
-  mediaOptions: {
-    videoEncoderConfiguration: {
-      width: number;
-      height: number;
-      frameRate: number;
-    }
-  }
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
 };
 
 /**
@@ -301,6 +298,7 @@ export class AgoraEduSDK {
           widgets: { ...{ chat: new AgoraHXChatWidget() }, ...option.widgets },
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
+          boardOptions: option.boardOptions
         },
         language: option.language,
         startTime: option.startTime,

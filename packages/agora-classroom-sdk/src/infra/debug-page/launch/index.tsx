@@ -65,13 +65,18 @@ export const LaunchPage = observer(() => {
 
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
-        mediaOptions: {
-          videoEncoderConfiguration: {
-            width: 1280,
-            height: 720,
-            frameRate: 30,
-          }
-        },
+        // mediaOptions: {
+        //   videoEncoderConfiguration: {
+        //     width: 1280,
+        //     height: 720,
+        //     frameRate: 30,
+        //   }
+        // },
+        // boardOptions: {
+        //   userPayload: {
+        //     cursorName: ""
+        //   }
+        // },
         // TODO:  这里需要传递开发者自己发布的录制页面地址
         recordUrl: AGORA_APAAS_BRANCH_PATH ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page` : `https://webdemo.agora.io/flexible-classroom/record_page`,
         courseWareList: [
