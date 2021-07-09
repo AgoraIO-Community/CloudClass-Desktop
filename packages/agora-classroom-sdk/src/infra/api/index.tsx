@@ -3,7 +3,7 @@ import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgora
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement, useState, ReactChild } from 'react';
-import { AgoraChatWidget } from 'agora-widget-gallery';
+import { AgoraHXChatWidget } from 'agora-widget-gallery';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
@@ -263,7 +263,7 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
+          widgets: {...{ chat: new AgoraHXChatWidget() }, ...option.widgets },
           userFlexProperties: option.userFlexProperties
         },
         language: option.language,
