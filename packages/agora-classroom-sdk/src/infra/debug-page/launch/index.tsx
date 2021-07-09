@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 import {generatePath} from 'react-router'
 //@ts-ignore
-import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
+import { AgoraExtAppCountDown, AgoraExtAppWhiteboard,AgoraExtAppAnswer,AgoraExtAppVote } from 'agora-plugin-gallery'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
 import MD5 from 'js-md5'
 import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-rte-sdk'
@@ -100,7 +100,7 @@ export const LaunchPage = observer(() => {
         )
       }
 
-      launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any)]
+      launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any),new AgoraExtAppAnswer(launchOption.language as any)]
       const genH5Scenes = (size: number) => {
         return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
       }

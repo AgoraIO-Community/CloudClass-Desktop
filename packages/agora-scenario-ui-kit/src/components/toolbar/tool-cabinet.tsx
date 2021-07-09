@@ -36,7 +36,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
             {cabinetList.map((item) => (
                 <div className={`cabinet-item ${activeItem === item.id ? 'active' : ''}` } key={item.id} onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
                     {item.icon}
-                    <span>{['countdown'].includes(item.name) ? transI18n(`${item.name}.appName`) : item.name}</span>
+                    <span>{['countdown','answer','vote'].includes(item.name) ? transI18n(`${item.name}.appName`) : item.name}</span>
                 </div>
             ))}
         </div>

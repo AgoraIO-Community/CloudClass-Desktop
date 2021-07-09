@@ -63,11 +63,8 @@ export const ToolCabinetContainer = observer(() => {
                 name: t('scaffold.laser_pointer'),
             },
             ...appPlugins.map((p:IAgoraExtApp) => {
-                return {
-                    id: p.appIdentifier,
-                    icon:<Icon type="countdown" useSvg size={24}/>,
-                    name: p.appName
-                }
+                //@ts-ignore
+                return {id: p.appIdentifier,icon:<Icon type={p.appName} useSvg size={24}/>,name: p.appName}
             })
         ]
 

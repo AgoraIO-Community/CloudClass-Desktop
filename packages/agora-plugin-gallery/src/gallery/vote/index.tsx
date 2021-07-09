@@ -30,22 +30,16 @@ const App = observer(() => {
         height: '100%'
       }}
       className={classnames({
-        [`countdown-modal`]: 1,
-        [`countdown-modal-hover`]: !pluginStore.showSetting && pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher
+        [`vote-modal`]: 1,
+        [`vote-modal-hover`]: !pluginStore.showSetting && pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher
       })}
     >
       <div className="restart-wrap">
         <Button
           onClick={() => {
-            pluginStore.setResult(0)
-            pluginStore.setPlay(false)
-            pluginStore.setShowSetting(true)
-            pluginStore.changeRoomProperties({
-              state: '2',
-              pauseTime: (Math.floor(Date.now() / 1000)).toString(),
-            })
+            
           }}
-        >{transI18n('countdown.restart')}</Button>
+        >{transI18n('vote.restart')}</Button>
       </div>
       <div className="numbers-wrap">
         <Countdown
@@ -65,7 +59,7 @@ const App = observer(() => {
               onChange={(e: any) => { pluginStore.setNumber(e.target.value.replace(/\D+/g, '')) }}
               suffix={<span style={{
                 color: (pluginStore.number != undefined && pluginStore.number <= 3600) ? '#333' : '#F04C36'
-              }}>({transI18n('countdown.seconds')})</span>}
+              }}>({transI18n('vote.seconds')})</span>}
               maxNumber={3600}
               style={{
                 color: (pluginStore.number != undefined && pluginStore.number <= 3600)  ? '#333' : '#F04C36'
@@ -80,19 +74,10 @@ const App = observer(() => {
           }}>
             <Button
               onClick={() => {
-                const result = Date.now() + (pluginStore.number != undefined ? pluginStore.number : 0) * 1000
-                pluginStore.setResult(result)
-                pluginStore.setShowSetting(false)
-                pluginStore.setPlay(true)
-                pluginStore.changeRoomProperties({
-                  state: '1',
-                  startTime: (Math.floor(Date.now() / 1000)).toString(),
-                  duration: pluginStore.number != undefined ? pluginStore.number.toString() : '0',
-                  commonState: 1
-                })
+                
               }}
               disabled={pluginStore.number !== undefined && pluginStore.number > 3600}
-            >{transI18n('countdown.start')}</Button>
+            >{transI18n('vote.start')}</Button>
           </div>
         </div>
       ) : null}
@@ -102,10 +87,10 @@ const App = observer(() => {
 })
 
 
-export class AgoraExtAppCountDown implements IAgoraExtApp {
+export class AgoraExtAppVote implements IAgoraExtApp {
 
-  appIdentifier = "io.agora.countdown"
-  appName = 'countdown'
+  appIdentifier = "io.agora.vote"
+  appName = 'vote'
   width = 258
   height = 168 // 开始倒计时后高度为 55
 
@@ -133,15 +118,6 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): void {
-    if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-      this.store?.changeRoomProperties({
-        state: '0',
-        startTime: '0',
-        pauseTime: '0',
-        duration: '0',
-        commonState: 0
-      })
-    }
   }
 }
 
