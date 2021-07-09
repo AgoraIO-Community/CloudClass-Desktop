@@ -5,10 +5,11 @@ import { useUserListContext, useStreamListContext, useBoardContext, useGlobalCon
 import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StudentRoster } from '~ui-kit/components';
 import { KickDialog } from '../../dialog';
 import { useUIStore } from '@/infra/hooks';
+import { useDebounce } from '~ui-kit/utilities/hooks';
 
 export type UserListContainerProps = {
     onClose: () => void
@@ -149,6 +150,16 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         return 'student'
     }, [roomInfo.userRole])
 
+    const debouncedCarouselState = useDebounce(carouselState, 500)
+
+    useEffect(() => {
+        if (debouncedCarouselState.isOpenCarousel) {
+            startCarousel()
+        } else {
+            stopCarousel()
+        }
+    }, [debouncedCarouselState])
+
     return (
         <Roster
             isDraggable={true}
@@ -157,7 +168,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                 isOpenCarousel: carouselState.isOpenCarousel,
                 changeCarousel: (e: any) => {
                     const isOpenCarousel = e.target.checked
-                    isOpenCarousel ? startCarousel() : stopCarousel()
                     setCarouselState({
                         ...carouselState,
                         isOpenCarousel
@@ -170,9 +180,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                             ...carouselState,
                             modeValue: value
                         })
-                        if (carouselState.isOpenCarousel) {
-                            startCarousel()
-                        }
                     }
                 },
                 randomValue: carouselState.randomValue,
@@ -182,9 +189,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                             ...carouselState,
                             randomValue: value
                         })
-                        if (carouselState.isOpenCarousel) {
-                            startCarousel()
-                        }
                     }
                 },
                 times: carouselState.times,
@@ -194,9 +198,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
                             ...carouselState,
                             times: value
                         })
-                        if (carouselState.isOpenCarousel) {
-                            startCarousel()
-                        }
                     }
                 },
             }}
