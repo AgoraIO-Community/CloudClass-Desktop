@@ -3,6 +3,12 @@
   box-sizing: border-box;
 }
 
+.layout-video {
+  min-height: 200px;
+  align-items: center;
+  justify-content: center;
+}
+
 .chat-border {
   border: 1px solid #ECECF1;
   transform: translateY(-2px);

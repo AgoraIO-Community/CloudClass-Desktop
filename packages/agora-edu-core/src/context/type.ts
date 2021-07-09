@@ -567,6 +567,16 @@ export type RoomContext = {
      * @version v1.1.2
      */
     flexRoomProperties: any;
+    carouselState: any;
+    setCarouselState: any;
+    /**
+     * startCarousel
+     */
+     startCarousel: () => Promise<any>;
+    /**
+     * stopCarousel
+     */
+    stopCarousel: () => Promise<any>;
 }
 export type RoomDiagnosisContext = {
     /**

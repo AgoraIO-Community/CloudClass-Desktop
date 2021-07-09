@@ -29,6 +29,7 @@ export enum CoVideoActionType {
   teacherRefuse = 3,
   studentCancel = 4,
   teacherReplayTimeout = 7,
+  carousel = 10
 }
 
 export type CauseOperator = {
@@ -1963,6 +1964,10 @@ export class RoomStore extends SimpleInterval {
             console.log('学生取消')
             break;
           }
+          case CoVideoActionType.carousel: {
+            console.log('[CAROUSEL] message ',  JSON.stringify(data))
+            break;
+          }
           // case CoVideoActionType.teacherReplayTimeout: {
           //   this.appStore.fireToast(transI18n("co_video.received_message_timeout"), 'error')
           //   console.log('超时')
@@ -2057,5 +2062,40 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  @observable
+  carouselState: {
+    isOpenCarousel: boolean; // 是否开启轮播
+    modeValue: '1' | '2'; // 所有人 ｜ 非禁用
+    randomValue: '1' | '2'; // 顺序 ｜ 随机
+    times: number; // xxx 秒/次
+  } = {
+    isOpenCarousel: false, 
+    modeValue: '1',
+    randomValue: '1',
+    times: 10, 
+  }
+
+  @action.bound
+  setCarouselState (carouselState: any) {
+    this.carouselState = Object.assign({}, this.carouselState, carouselState)
+  }
+
+  @action.bound
+  async startCarousel() {
+    await eduSDKApi.startCarousel({
+      roomUuid: this.roomInfo.roomUuid,
+      range: Number(this.carouselState.modeValue),
+      type: Number(this.carouselState.randomValue),
+      interval: Number(this.carouselState.times),
+      count: 6
+    })
+  }
+  @action.bound
+  async stopCarousel() {
+    await eduSDKApi.stopCarousel({
+      roomUuid: this.roomInfo.roomUuid,
+    })
   }
 }

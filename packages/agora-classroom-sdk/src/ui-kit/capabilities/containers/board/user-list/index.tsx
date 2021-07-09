@@ -1,14 +1,15 @@
 import { Roster } from '~ui-kit';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext } from 'agora-edu-core';
+import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext, eduSDKApi } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { get } from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StudentRoster } from '~ui-kit/components';
 import { KickDialog } from '../../dialog';
 import { useUIStore } from '@/infra/hooks';
+import { useDebounce } from '~ui-kit/utilities/hooks';
 
 export type UserListContainerProps = {
     onClose: () => void
@@ -39,7 +40,11 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         // unmuteVideo,
         // muteUserChat,
         // unmuteUserChat,
-        roomInfo
+        roomInfo,
+        carouselState,
+        setCarouselState,
+        startCarousel,
+        stopCarousel
     } = useRoomContext()
 
     const {
@@ -145,9 +150,57 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         return 'student'
     }, [roomInfo.userRole])
 
+    const debouncedCarouselState = useDebounce(carouselState, 500)
+
+    useEffect(() => {
+        if (debouncedCarouselState.isOpenCarousel) {
+            startCarousel()
+        } else {
+            stopCarousel()
+        }
+    }, [debouncedCarouselState])
+
     return (
         <Roster
             isDraggable={true}
+            carousel={userType === 'teacher'}
+            carouselProps={{
+                isOpenCarousel: carouselState.isOpenCarousel,
+                changeCarousel: (e: any) => {
+                    const isOpenCarousel = e.target.checked
+                    setCarouselState({
+                        ...carouselState,
+                        isOpenCarousel
+                    })
+                },
+                modeValue: carouselState.modeValue,
+                changeModeValue: (value: any) => {
+                    if (value !== carouselState.modeValue) {
+                        setCarouselState({
+                            ...carouselState,
+                            modeValue: value
+                        })
+                    }
+                },
+                randomValue: carouselState.randomValue,
+                changeRandomValue: (value: any) => {
+                    if (value !== carouselState.randomValue) {
+                        setCarouselState({
+                            ...carouselState,
+                            randomValue: value
+                        })
+                    }
+                },
+                times: carouselState.times,
+                changeTimes: (value: any) => {
+                    if (value !== carouselState.times) {
+                        setCarouselState({
+                            ...carouselState,
+                            times: value
+                        })
+                    }
+                },
+            }}
             localUserUuid={localUserInfo.userUuid}
             teacherName={teacherInfo?.userName || ''}
             dataSource={dataList}
