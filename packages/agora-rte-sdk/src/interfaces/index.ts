@@ -4,6 +4,7 @@ import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { EnumOnlineState } from '../core/services/interface';
 import { isEmpty, set, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
+import { VideoRenderState } from '../core/media-service/renderer';
 
 export enum EduCourseState {
   EduCourseStatePending = 0,
@@ -843,9 +844,9 @@ declare function event_remote_stream_updated(remoteStream: EduStream, count: num
 
 declare function event_remote_stream_removed(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
 
-declare function event_local_first_frame_render(value: boolean): void;
+declare function event_local_first_frame_render(state: VideoRenderState): void;
 
-declare function event_remote_first_frame_render(key: string, value: boolean): void;
+declare function event_remote_first_frame_render(state: VideoRenderState, uid: string): void;
 export interface IEduClassroomManager {
 
   // emit once
@@ -872,7 +873,8 @@ export interface IEduClassroomManager {
   on(event: 'network-quality', listener: typeof event_network_quality): void;
   on(event: 'connection-state-change', listener: typeof event_connection_state_changed): void
 
-  on(event: 'first-frame-render', listener: typeof event_local_first_frame_render | typeof event_remote_first_frame_render): void
+  on(event: 'local-video-state-update', listener: typeof event_local_first_frame_render): void
+  on(event: 'remote-video-state-update', listener: typeof event_local_first_frame_render): void
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;

@@ -72,10 +72,13 @@ export abstract class UserRenderer implements IMediaRenderer {
   }
 }
 
-export enum LocalVideoRenderState {
-  Init = 0,
-  Playing = 1,
-  Failed = 2
+export enum VideoRenderState {
+  Idle = 0,
+  Prepare = 1,
+  FirstFrameRendered = 2,
+  Playing = 3,
+  Freezing = 4,
+  Failed = -1
 }
 
 export class LocalUserRenderer extends UserRenderer {
@@ -83,28 +86,39 @@ export class LocalUserRenderer extends UserRenderer {
   private el: HTMLCanvasElement | undefined;
   renderFrameRate: number = 0;
   freezeCount: number = 0;
-  renderState: LocalVideoRenderState = LocalVideoRenderState.Init
+  renderState: VideoRenderState = VideoRenderState.Idle
 
   constructor(config: UserRendererInit) {
     super(config)
     this.local = true
   }
 
+  updateVideoRenderState(state: VideoRenderState) {
+    this.renderState = state
+    this.context.fireLocalVideoStateUpdated(state)
+  }
+
   setFPS(fps: number) {
     this.renderFrameRate = fps
-    if(this.renderState === LocalVideoRenderState.Init) {
-      if(fps > 0) {
-        this.renderState = LocalVideoRenderState.Playing
-      } else {
+    // if preparing
+    if(this.renderState === VideoRenderState.Prepare) {
+      if(fps === 0) {
         this.freezeCount++
-
         if(this.freezeCount > 3) {
-          this.renderState = LocalVideoRenderState.Failed
+          this.updateVideoRenderState(VideoRenderState.Failed)
         }
       }
-    }
-    if(fps > 0) {
-      this.renderState = LocalVideoRenderState.Playing
+    } else if(this.renderState === VideoRenderState.Playing) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Freezing)
+        }
+      }
+    } else if(this.renderState === VideoRenderState.Freezing) {
+      if(fps > 0) {
+        this.updateVideoRenderState(VideoRenderState.Playing)
+      }
     }
   }
 
@@ -112,12 +126,14 @@ export class LocalUserRenderer extends UserRenderer {
     // clear flag when re-play
     this.renderFrameRate = 0
     this.freezeCount = 0
+    this.updateVideoRenderState(VideoRenderState.Prepare)
     if (this.isWeb) {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
         dom.querySelector('video')?.addEventListener('loadeddata', () => {
           // 本地 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
-          this.context.fireFirstFrameRender(true)
+          this.updateVideoRenderState(VideoRenderState.FirstFrameRendered)
+          setTimeout(() => {this.updateVideoRenderState(VideoRenderState.Playing)}, 0)
         }, {
           once: true
         })
@@ -158,6 +174,7 @@ export class LocalUserRenderer extends UserRenderer {
         this.electron.client.setClientRole(2)
       }
     }
+    this.updateVideoRenderState(VideoRenderState.Idle)
     this._playing = false
   }
 
@@ -167,18 +184,12 @@ export class LocalUserRenderer extends UserRenderer {
   }
 }
 
-export enum RemoteVideoRenderState {
-  Init = 0,
-  Playing = 1,
-  Failed = 2
-}
-
 export class RemoteUserRenderer extends UserRenderer {
 
   private el: HTMLCanvasElement | undefined
   renderFrameRate: number = 0;
   freezeCount: number = 0;
-  renderState: RemoteVideoRenderState = RemoteVideoRenderState.Init
+  renderState: VideoRenderState = VideoRenderState.Idle
 
   constructor(config: UserRendererInit) {
     super(config)
@@ -187,36 +198,46 @@ export class RemoteUserRenderer extends UserRenderer {
     this.channel = config.channel
   }
 
+  updateVideoRenderState(state: VideoRenderState) {
+    this.renderState = state
+    this.context.fireRemoteVideoStateUpdated(state, this.uid)
+  }
+
   setFPS(fps: number) {
     this.renderFrameRate = fps
-    if(this.renderState === RemoteVideoRenderState.Init) {
-      if(fps > 0) {
-        this.renderState = RemoteVideoRenderState.Playing
-      } else {
+    // if preparing
+    if(this.renderState === VideoRenderState.Prepare) {
+      if(fps === 0) {
         this.freezeCount++
-
         if(this.freezeCount > 3) {
-          this.renderState = RemoteVideoRenderState.Failed
+          this.updateVideoRenderState(VideoRenderState.Failed)
         }
       }
-    }
-    if(fps > 0) {
-      this.renderState = RemoteVideoRenderState.Playing
-      this.freezeCount = 0
+    } else if(this.renderState === VideoRenderState.Playing) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Freezing)
+        }
+      }
+    } else if(this.renderState === VideoRenderState.Freezing) {
+      if(fps > 0) {
+        this.updateVideoRenderState(VideoRenderState.Playing)
+      }
     }
   }
 
   play(dom: HTMLElement, fit?: boolean) {
+    this.renderFrameRate = 0
+    this.freezeCount = 0
+    this.updateVideoRenderState(VideoRenderState.Prepare)
     if (this.isWeb) {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
         dom.querySelector('video')?.addEventListener('loadeddata', () => {
-          // 远端 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
-          this.context.fireFirstFrameRender({
-            key: this.uid,
-            value: true,
-          })
+          this.updateVideoRenderState(VideoRenderState.FirstFrameRendered)
+          setTimeout(() => {this.updateVideoRenderState(VideoRenderState.Playing)}, 0)
         }, {
           once: true
         })
@@ -252,6 +273,7 @@ export class RemoteUserRenderer extends UserRenderer {
         this.electron.client.destroyRender(+this.uid, null)
       }
     }
+    this.updateVideoRenderState(VideoRenderState.Idle)
     this._playing = false
   }
 

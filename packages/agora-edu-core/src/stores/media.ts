@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import {v4 as uuidv4} from 'uuid';
 import { debounce, uniq } from 'lodash';
 import { observable, action, computed, reaction, autorun } from 'mobx';
-import { LocalUserRenderer, EduLogger } from 'agora-rte-sdk';
+import { LocalUserRenderer, EduLogger, VideoRenderState } from 'agora-rte-sdk';
 import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
@@ -107,19 +107,19 @@ const networkQualities: { [key: string]: string } = {
 export class MediaStore {
 
   @observable
-  localFirstFrameRender: boolean = false
+  localVideoRenderState: VideoRenderState = VideoRenderState.Idle
 
   @action.bound
-  setLocalFirstFrameRender (value: boolean) {
-    this.localFirstFrameRender = value
+  setLocalVideoRenderState (value: VideoRenderState) {
+    this.localVideoRenderState = value
   }
   
   @observable
-  remoteFirstFrameRenderMap: Record<string, boolean> = {}
+  remoteVideoRenderStateMap: Record<string, VideoRenderState> = {}
 
   @action.bound
-  setRemoteFirstFrameRenderMap (key: string, value: boolean) {
-    this.remoteFirstFrameRenderMap[key] = value
+  setRemoteFirstFrameRenderMap (uid: string, state: VideoRenderState) {
+    this.remoteVideoRenderStateMap[uid] = state
   }
 
   @observable
@@ -271,15 +271,16 @@ export class MediaStore {
       }
     }
 
-    this.mediaService.on('first-frame-render', (evt: any) => {
-      if (typeof evt === 'boolean') {
-        // 本地
-        this.setLocalFirstFrameRender(evt)
-      }
-      if (typeof evt === 'object') {
-        // 远端
-        this.setRemoteFirstFrameRenderMap(evt.key, evt.value)
-      }
+    this.mediaService.on('local-video-state-update', (evt:any) => {
+      const {state} = evt
+      this.setLocalVideoRenderState(state)
+      BizLogger.info(`[core] local-video-state-update ${state}`)
+    })
+
+    this.mediaService.on('remote-video-state-update', (evt: any) => {
+      const {state, uid} = evt
+      this.setRemoteFirstFrameRenderMap(uid, state)
+      BizLogger.info(`[core] remote-video-state-update ${uid} ${state}`)
     })
 
     this.mediaService.on('rtcStats', (evt: any) => {
@@ -403,9 +404,7 @@ export class MediaStore {
     this.mediaService.on('user-unpublished', (evt: any) => {
       this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
       EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
-      const uid = evt.user.uid
       console.log('sdkwrapper update user-unpublished', evt)
-      this.setRemoteFirstFrameRenderMap(uid, false)
     })
     this.mediaService.on('network-quality', (evt: any) => {
       let defaultQuality = 'unknown'

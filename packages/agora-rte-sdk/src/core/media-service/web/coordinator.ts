@@ -29,6 +29,9 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
     rtcAudioStreams: Map<string,IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
     subscribeOptions: StreamSubscribeOptions = {}
 
+    rtcVideoStreamsToDelete: Map<string, IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
+    rtcAudioStreamsToDelete: Map<string, IAgoraRTCRemoteUser> = new Map<string,IAgoraRTCRemoteUser>()
+
     queueTasks: StreamUpdateTask[] = []
     currentTask?: StreamUpdateTask
 
@@ -57,9 +60,11 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
         let snapshot = this.beginUpdate()
         if (mediaType === 'audio') {
             this.rtcAudioStreams.delete(`${user.uid}`)
+            this.rtcAudioStreamsToDelete.set(`${user.uid}`, user)
         }
         if (mediaType === 'video') {
             this.rtcVideoStreams.delete(`${user.uid}`)
+            this.rtcVideoStreamsToDelete.set(`${user.uid}`, user)
         }
         this.endUpdate(snapshot)
     }
@@ -211,8 +216,9 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
             let promises:Promise<boolean>[] = []
 
             offlineVideoStreams.forEach(streamUuid => {
-                if(this.rtcVideoStreams.has(streamUuid)) {
-                    let user = this.rtcVideoStreams.get(streamUuid)!
+                if(this.rtcVideoStreamsToDelete.has(streamUuid)) {
+                    let user = this.rtcVideoStreamsToDelete.get(streamUuid)!
+                    this.rtcVideoStreamsToDelete.delete(streamUuid)
                     promises.push(new Promise(async (resolve) => {
                         try {
                             await this.client?.unsubscribe(user, "video")
@@ -227,8 +233,9 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
             })
 
             offlineAudioStreams.forEach(streamUuid => {
-                if(this.rtcAudioStreams.has(streamUuid)) {
-                    let user = this.rtcAudioStreams.get(streamUuid)!
+                if(this.rtcAudioStreamsToDelete.has(streamUuid)) {
+                    let user = this.rtcAudioStreamsToDelete.get(streamUuid)!
+                    this.rtcAudioStreamsToDelete.delete(streamUuid)
                     promises.push(new Promise(async (resolve) => {
                         try {
                             await this.client?.unsubscribe(user, "audio")
