@@ -1358,12 +1358,12 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if(stats && stats.renderFrameRate === 0) {
-      return {
-        holderState: 'loading',
-        text: `placeholder.loading`
-      }
-    }
+    // if(stats && stats.renderFrameRate === 0) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: `placeholder.loading`
+    //   }
+    // }
 
 
     return {
