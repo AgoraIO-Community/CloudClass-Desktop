@@ -5,6 +5,11 @@ import { MediaService } from '../index';
 import { AgoraWebRtcWrapper } from "../web";
 import { EduLogger } from './../../logger/index';
 
+
+const flat = (arr: any[]) => {
+  return arr.reduce((arr, elem) => arr.concat(elem), []);
+};
+
 type SourceType = 'default' | 'screen';
 
 export interface IMediaRenderer {
@@ -251,6 +256,32 @@ export class RemoteUserRenderer extends UserRenderer {
       } else {
         //@ts-ignore
         this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+      }
+      const electron_renderer = this.electron.client._getRenderer(1, +this.uid, this.channel)
+      const remote_renderer = this
+      if(electron_renderer) {
+        if(this.renderState === VideoRenderState.Prepare) {
+          // only do this if it's preparing video
+          // @ts-ignore
+          if(!electron_renderer._drawFrame) {
+            // @ts-ignore
+            electron_renderer._drawFrame = electron_renderer.drawFrame
+            const proxy = (context: any, method: any) => {
+              return function(...args: any[]) {
+                // let args = 
+                flat(args).join('');
+                remote_renderer.updateVideoRenderState.apply(remote_renderer, [VideoRenderState.FirstFrameRendered])
+                setTimeout(() => {remote_renderer.updateVideoRenderState.apply(remote_renderer, [VideoRenderState.Playing])}, 0)
+                method.apply(context, args);
+                // @ts-ignore
+                electron_renderer.drawFrame = electron_renderer._drawFrame
+                // @ts-ignore
+                delete electron_renderer._drawFrame
+              };
+            }
+            electron_renderer.drawFrame = proxy(electron_renderer, electron_renderer['drawFrame'])
+          }
+        }
       }
     }
     this._playing = true
