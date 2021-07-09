@@ -1,5 +1,5 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, globalConfigs, MediaOptions } from 'agora-edu-core';
+import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, globalConfigs, MediaOptions, BoardOptions } from 'agora-edu-core';
 import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
 import 'promise-polyfill/src/polyfill';
 import { ReactElement, useState, ReactChild } from 'react';
@@ -107,7 +107,8 @@ export type LaunchOption = {
   region?: AgoraRegion
   widgets?: {[key: string]: IAgoraWidget}
   userFlexProperties?: {[key: string]: any} //用户自订属性
-  mediaOptions?: MediaOptions
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
 }
 
 export type ReplayOption = {
@@ -266,7 +267,8 @@ export class AgoraEduSDK {
           extApps: option.extApps,
           widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
           userFlexProperties: option.userFlexProperties,
-          mediaOptions: option.mediaOptions
+          mediaOptions: option.mediaOptions,
+          boardOptions: option.boardOptions
         },
         language: option.language,
         startTime: option.startTime,
