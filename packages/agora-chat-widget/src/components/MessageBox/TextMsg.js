@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag, Popover } from 'antd'
-import { ROLE, RECALL, DELETE, MSG_TYPE } from '../../contants'
+import { ROLE, DELETE, MSG_TYPE } from '../../contants'
 import store from '../../redux/store'
 import { messageAction } from '../../redux/actions/messageAction'
-import recall_icon from '../../themes/img/recall.png'
 import delete_icon from '../../themes/img/delete.png'
 import './index.css'
 
@@ -20,8 +19,9 @@ export const TextMsg = ({ item }) => {
     const sender = item?.from === loginUser;
     const tagNmae = item?.ext.role === ROLE.teacher.id;
     const msgData = item?.msg || item?.data;
-    const avatarUrl = item?.ext.avatarUrl;
-    const nickName = item?.ext.nickName
+    const useAvatarUrl = item?.ext.avatarUrl;
+    const userNickName = item?.ext.nickName
+    const loginNickName = state?.loginUserInfo.nickname
     const isTeacher = state.propsData.roleType === ROLE.teacher.id
 
     // 删除消息
@@ -38,7 +38,7 @@ export const TextMsg = ({ item }) => {
                 roomUuid: roomUuid,
                 msgId: recallId,
                 role: roleType,
-                nickName: nickName,
+                nickName: loginNickName,
             },    //用户自扩展的消息内容（群聊用法相同）
             success: function (id, serverId) {
                 msg.id = serverId;
@@ -67,11 +67,11 @@ export const TextMsg = ({ item }) => {
             {sender && <div>
                 <div className="msg-user-me">
                     {tagNmae && <Tag className="msg-tag" >{ROLE.teacher.tag}</Tag>}
-                    <span>{nickName}</span>
-                    <img src={avatarUrl} className="msg-avatar" />
+                    <span>{userNickName}</span>
+                    <img src={useAvatarUrl} className="msg-avatar" />
                 </div>
                 <div className="msg-border">
-                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={recall_icon} />{RECALL}</div>}
+                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={delete_icon} />{DELETE}</div>}
                         trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
                         <div className="msg-text msg-text-me">
                             <span> {msgData}</span>
@@ -81,8 +81,8 @@ export const TextMsg = ({ item }) => {
             </div>}
             {!sender && <div>
                 <div className="msg-user-other">
-                    <img src={avatarUrl} className="msg-avatar" />
-                    <span>{nickName}</span>
+                    <img src={useAvatarUrl} className="msg-avatar" />
+                    <span>{userNickName}</span>
                     {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
                 </div>
                 {isTeacher && <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}

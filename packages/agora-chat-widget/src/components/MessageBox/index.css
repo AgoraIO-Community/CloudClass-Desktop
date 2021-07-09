@@ -1,94 +1,12 @@
 .message-box {
     margin-top: 3px;
     overflow-y: scroll;
-}
-
-/* @media screen and (max-height: 1127px) {
-
-    .message-box {
-        height: 640px;
-    }
-} */
-
-
-@media screen and (max-height: 1027px) {
-
-    .message-box {
-        height: 640px;
-    }
-}
-
-@media screen and (max-height: 977px) {
-
-    .message-box {
-        height: 560px;
-    }
-}
-
-@media screen and (max-height: 927px) {
-
-    .message-box {
-        height: 420px;
-    }
-}
-
-@media screen and (max-height: 827px) {
-
-    .message-box {
-        height: 375px;
-    }
-}
-
-@media screen and (max-height: 727px) {
-
-    .message-box {
-        height: 295px;
-    }
-}
-
-@media screen and (max-height: 677px) {
-
-    .message-box {
-        height: 235px;
-    }
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 180px);
 }
 
 
-/* user */
-@media screen and (max-height: 1027px) {
-    .user {
-        height: 750px;
-    }
-}
-
-@media screen and (max-height: 927px) {
-    .user {
-        height: 650px;
-    }
-}
-
-@media screen and (max-height: 827px) {
-    .user {
-        height: 550px;
-    }
-}
-
-@media screen and (max-height: 727px) {
-    .user {
-        height: 450px;
-    }
-}
-
-@media screen and (max-height: 677px) {
-    .user {
-        height: 361px;
-    }
-}
-
-.user {
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
 
 .msg {
     margin: 10px 5px 5px 8px;
@@ -140,7 +58,6 @@
 .msg-text-other {
     background: #FFFFFF;
     border: 1px solid #ECECF1;
-    float: left;
 }
 
 .no-msgs {
@@ -165,77 +82,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-}
-
-
-
-/* UserList 样式 */
-.user-list {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    width: auto;
-    height: 48px;
-}
-
-.user-avatar {
-    width: 36px;
-    height: 36px;
-}
-
-.user-text {
-    /* width: 43px; */
-    height: 18px;
-    font-size: 13px;
-    font-family: 'PingFangSC-Regular',
-        'PingFang SC';
-    font-weight: 400;
-    color: #191919;
-    line-height: 18px;
-    margin: 0 5px;
-
-}
-
-.user-tag {
-    /* display: inline-block !important; */
-    /* width: 36px !important;
-    height: 16px !important; */
-    border-radius: 8px !important;
-    opacity: 0.3 !important;
-    text-align: center !important;
-    /* padding: 0 !important; */
-}
-
-.teacher-tag {
-    border: 1px solid #3C86F7 !important;
-    color: #3C86F7 !important;
-}
-
-.student-tag {
-    border: 1px solid #ABB1BA !important;
-}
-
-.tag-text {
-    width: 28px;
-    height: 10px;
-    font-size: 12px;
-    font-family: 'PingFangSC-Regular',
-        'PingFang SC';
-    font-weight: 400;
-    line-height: 10px;
-}
-
-.teacher-text {
-    color: #357BF6;
-}
-
-.mute-icon {
     cursor: pointer;
 }

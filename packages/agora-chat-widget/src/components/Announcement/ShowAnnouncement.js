@@ -29,7 +29,7 @@ export const ShowAnnouncement = () => {
     return <div className="announcement">
         {
             Announcement.length > 0 ?
-                <div>
+                <div className="announcement-box">
                     {
                         isTeacher && <div className="menu">
                             <span className="update-content" onClick={() => { onChangeStatus() }}>修改</span>
@@ -37,7 +37,7 @@ export const ShowAnnouncement = () => {
                         </div>
                     }
                     <div className="announcement-content">
-                        <span>{Announcement}</span>
+                        {Announcement}
                     </div>
                 </div> : <div className="no-announcement">
                     <img src={announcement} alt="公告" className="announcement-icon" />

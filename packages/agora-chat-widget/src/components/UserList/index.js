@@ -7,7 +7,7 @@ import _ from 'lodash'
 import avatarUrl from '../../themes/img/avatar-big@2x.png'
 import muteNo from '../../themes/img/muteNo.png'
 import muteOff from '../../themes/img/muteOff.png'
-import '../MessageBox/index.css'
+import './index.css'
 
 // 禁言
 const mute = (roomId, val, userId) => {
