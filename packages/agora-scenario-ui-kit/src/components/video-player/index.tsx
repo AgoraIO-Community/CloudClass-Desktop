@@ -532,7 +532,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             {
               teacherStreams.concat(videoStreamList).map((videoStream: BaseVideoPlayerProps, idx: number) =>
                 <CSSTransition
-                  key={`student-${idx}`}
+                  key={`student-${videoStream.uid}`}
                   // key={videoStream.uid}
                   timeout={500}
                   classNames="video-player-animates"
