@@ -319,6 +319,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.emit(message, ...args)
   }
 
+  fireFirstFrameRender (result: any) {
+    this.fire('first-frame-render', result)
+  }
+
   get isWeb(): boolean {
     return this.sdkWrapper instanceof AgoraWebRtcWrapper
   }

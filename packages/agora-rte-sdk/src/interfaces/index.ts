@@ -843,6 +843,9 @@ declare function event_remote_stream_updated(remoteStream: EduStream, count: num
 
 declare function event_remote_stream_removed(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
 
+declare function event_local_first_frame_render(value: boolean): void;
+
+declare function event_remote_first_frame_render(key: string, value: boolean): void;
 export interface IEduClassroomManager {
 
   // emit once
@@ -868,6 +871,8 @@ export interface IEduClassroomManager {
   // state
   on(event: 'network-quality', listener: typeof event_network_quality): void;
   on(event: 'connection-state-change', listener: typeof event_connection_state_changed): void
+
+  on(event: 'first-frame-render', listener: typeof event_local_first_frame_render | typeof event_remote_first_frame_render): void
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;

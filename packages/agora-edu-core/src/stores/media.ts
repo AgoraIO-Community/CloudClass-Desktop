@@ -107,6 +107,22 @@ const networkQualities: { [key: string]: string } = {
 export class MediaStore {
 
   @observable
+  localFirstFrameRender: boolean = false
+
+  @action.bound
+  setLocalFirstFrameRender (value: boolean) {
+    this.localFirstFrameRender = value
+  }
+  
+  @observable
+  remoteFirstFrameRenderMap: Record<string, boolean> = {}
+
+  @action.bound
+  setRemoteFirstFrameRenderMap (key: string, value: boolean) {
+    this.remoteFirstFrameRenderMap[key] = value
+  }
+
+  @observable
   autoplay: boolean = false;
 
   @observable
@@ -255,6 +271,17 @@ export class MediaStore {
       }
     }
 
+    this.mediaService.on('first-frame-render', (evt: any) => {
+      if (typeof evt === 'boolean') {
+        // 本地
+        this.setLocalFirstFrameRender(evt)
+      }
+      if (typeof evt === 'object') {
+        // 远端
+        this.setRemoteFirstFrameRenderMap(evt.key, evt.value)
+      }
+    })
+
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
@@ -378,6 +405,7 @@ export class MediaStore {
       EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map((e => e.uid))}`)
       const uid = evt.user.uid
       console.log('sdkwrapper update user-unpublished', evt)
+      this.setRemoteFirstFrameRenderMap(uid, false)
     })
     this.mediaService.on('network-quality', (evt: any) => {
       let defaultQuality = 'unknown'
