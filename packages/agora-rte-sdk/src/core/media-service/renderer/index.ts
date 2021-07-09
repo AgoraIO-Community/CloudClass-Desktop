@@ -113,14 +113,14 @@ export class LocalUserRenderer extends UserRenderer {
     this.renderFrameRate = 0
     this.freezeCount = 0
     if (this.isWeb) {
-      dom.addEventListener('loadeddata', () => {
-        // 本地 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
-        this.context.fireFirstFrameRender(true)
-      }, {
-        once: true
-      })
       if (this.videoTrack) {
         this.videoTrack.play(dom)
+        dom.querySelector('video')?.addEventListener('loadeddata', () => {
+          // 本地 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
+          this.context.fireFirstFrameRender(true)
+        }, {
+          once: true
+        })
       }
     }
     if (this.isElectron) {
@@ -208,18 +208,18 @@ export class RemoteUserRenderer extends UserRenderer {
 
   play(dom: HTMLElement, fit?: boolean) {
     if (this.isWeb) {
-      dom.addEventListener('loadeddata', () => {
-        // 远端 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
-        this.context.fireFirstFrameRender({
-          key: this.uid,
-          value: true,
-        })
-      }, {
-        once: true
-      })
       if (this.videoTrack) {
         this.videoTrack.play(dom)
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
+        dom.querySelector('video')?.addEventListener('loadeddata', () => {
+          // 远端 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
+          this.context.fireFirstFrameRender({
+            key: this.uid,
+            value: true,
+          })
+        }, {
+          once: true
+        })
       }
     }
     if (this.isElectron) {

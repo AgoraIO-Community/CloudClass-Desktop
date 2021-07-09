@@ -1364,8 +1364,8 @@ export class SceneStore extends SimpleInterval {
     //     text: `placeholder.loading`
     //   }
     // }
-    
-    if (!this.appStore.mediaStore.remoteFirstFrameRenderMap[userUuid]) {
+
+    if (!this.appStore.mediaStore.remoteFirstFrameRenderMap[stream.streamUuid]) {
       return {
         holderState: 'loading',
         text: `placeholder.loading`
