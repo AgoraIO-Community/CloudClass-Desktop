@@ -81,6 +81,8 @@ export const zh = {
     'lose': '丢包率',
     'status': '网络状态',
     'CPU': 'CPU',
+    'receive': '收到',
+    'send': '发出'
   },
   'error': {
     'banned': '禁止进入',

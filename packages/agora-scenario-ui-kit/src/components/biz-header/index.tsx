@@ -35,6 +35,22 @@ export interface MonitorInfo {
    * 丢包率, 单位: %
    */
   packetLostRate: number;
+  /**
+   * 音视频下行丢包率， 单位：%
+   */
+  rxPacketLossRate: number;
+  /**
+   * 音视频上行丢包率， 单位：%
+   */
+  txPacketLossRate: number;
+  /**
+   * 下行网路质量
+   */
+  rxNetworkQuality: string;
+  /**
+   * 上行网路质量
+   */
+  txNetworkQuality: string;
 }
 
 export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
