@@ -415,6 +415,7 @@ export class SceneStore extends SimpleInterval {
             title: item.name,
             id: item.windowId,
             image: item.image,
+            isCurrent: type === ScreenShareType.Screen ? undefined : item.processId === window.main_pid
             // image: CustomBtoa(item.image),
           }))
           if (items.length) {

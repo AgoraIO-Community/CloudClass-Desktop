@@ -5,6 +5,7 @@ interface Window {
   isElectron: boolean
   setNodeAddonLogPath: string
   setNodeAddonVideoSourceLogPath: string
+  main_pid: number
   ipc: {
     once(event: string, callback: (...args: any) => void): void
   }
