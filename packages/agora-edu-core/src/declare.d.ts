@@ -24,6 +24,7 @@ interface CustomGlobalUtils {
     send: CallableFunction,
     once: (evt: string, callback: CallableFunction) => any
   }
+  main_pid: number
   doGzip: CallableFunction
   logsStr: string // debug only
   videoSourceLogPath: string

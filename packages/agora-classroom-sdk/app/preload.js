@@ -1,4 +1,4 @@
-const {ipcRenderer: ipc, app} = require('electron');
+const {ipcRenderer: ipc, app, remote} = require('electron');
 
 const activeWindow = require('active-win');
 
@@ -33,6 +33,7 @@ window.os_platform = platform
 window.isMacOS = () => process.platform === 'darwin'
 
 window.openPrivacyForCaptureScreen = () => window.child_process.execSync(`open "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"`)
+window.main_pid = remote.process.pid
 
 const AdmZip = require('adm-zip');
 
