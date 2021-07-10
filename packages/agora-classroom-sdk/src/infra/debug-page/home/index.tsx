@@ -164,6 +164,7 @@ export const HomePage = observer(() => {
           duration: duration * 60,
           userFlexProperties: {"avatar": "test"}
         })
+        window.ipc && window.ipc.send('changWindowSize')
         history.push('/launch')
       }}
     />
