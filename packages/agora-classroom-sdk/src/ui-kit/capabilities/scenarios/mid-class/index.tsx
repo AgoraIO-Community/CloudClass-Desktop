@@ -7,7 +7,7 @@ import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-
 import {WhiteboardContainer} from '~capabilities/containers/board'
 import {DialogContainer} from '~capabilities/containers/dialog'
 import {LoadingContainer} from '~capabilities/containers/loading'
-import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
+import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import { useEffectOnce } from '@/infra/hooks/utils'
 import React from 'react'
@@ -77,9 +77,11 @@ export const MidClassScenario = observer(() => {
       }}
     >
       <NavigationBar />
+      <Layout className="layout layout-row layout-video">
+        <MidVideoMarqueeContainer />
+      </Layout>
       <Layout className="horizontal">
         <Content className="column">
-          <VideoMarqueeStudentContainer />
           <div className="board-box">
             <WhiteboardContainer>
               <ScreenSharePlayerContainer />
@@ -99,9 +101,6 @@ export const MidClassScenario = observer(() => {
           "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
           "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
-          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="mid-class-teacher"/>
-          </div>
           {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
         </Aside>
       </Layout>

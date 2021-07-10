@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
+import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer, VideoRenderState } from "agora-rte-sdk"
 import { get } from "lodash"
 import { observable, computed, action, runInAction } from "mobx"
 import { EduScenarioAppStore } from "."
@@ -1351,24 +1351,33 @@ export class SceneStore extends SimpleInterval {
     }
 
     const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
-    if (isFreeze) {
-      return {
-        holderState: 'broken',
-        text: 'placeholder.noAvailableCamera'
+
+    // if(stats && stats.renderFrameRate === 0) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: `placeholder.loading`
+    //   }
+    // }
+    if (stream 
+      && !!stream.hasVideo === true) {
+      if (isFreeze) {
+        return {
+          holderState: 'broken',
+          text: 'placeholder.noAvailableCamera'
+        }
+      }
+      if (this.appStore.mediaStore.remoteVideoRenderStateMap[stream.streamUuid] !== VideoRenderState.Prepare &&
+        this.appStore.mediaStore.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid)) {
+        return {
+          holderState: 'none',
+          text: ''
+        }
       }
     }
-
-    if(stats && stats.renderFrameRate === 0) {
-      return {
-        holderState: 'loading',
-        text: `placeholder.loading`
-      }
-    }
-
 
     return {
-      holderState: 'none',
-      text: ''
+      holderState: 'loading',
+      text: `placeholder.loading`
     }
   }
 
@@ -1465,16 +1474,13 @@ export class SceneStore extends SimpleInterval {
       if (this.appStore.mediaStore.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
         return false
       }
-      const freezeCount = this.cameraRenderer?.freezeCount ?? 0
-      return freezeCount < 3
+      return this.appStore.mediaStore.localVideoRenderState !== VideoRenderState.Freezing
     } else {
       // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
       // if(render) {
       //   return render.renderFrameRate > 0
       // }
-      const stats = this.getRemoteVideoStatsBy(`${uid}`)
-      let freezeCount = stats ? stats.freezeCount : 0
-      return freezeCount < 3
+      return this.appStore.mediaStore.remoteVideoRenderStateMap[`${uid}`] !== VideoRenderState.Freezing
     }
   }
 

@@ -57,7 +57,7 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", "*.jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
       ['@']: path.resolve(__dirname, 'src'),
       '~core': path.resolve(__dirname, 'src/core'),
@@ -90,6 +90,66 @@ module.exports = {
               // ]
             }
           }, 
+          {
+            loader: "thread-loader",
+          }
+        ],
+        // exclude: /node_modules|(\.(stories.ts)x?$)/,
+        // exclude: [
+        //   // path.resolve('node_modules'),
+        //   {
+        //     test: /\.stories.ts?x$/i,
+        //   }
+        // ]
+      },
+      {
+        test: /\.js(x)?$/i,
+        include: [
+          path.resolve(__dirname, '../agora-chat-widget/src'),
+        ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    "useBuiltIns": "usage",
+                    "debug": false,
+                    "corejs": {
+                      "version": 3,
+                      "proposals": true
+                    }
+                  }
+                ],
+                [
+                  "@babel/preset-react",
+                  {
+                    "runtime": "automatic"
+                  }
+                ],
+                // "@babel/preset-react",
+              ],
+              plugins: [
+                "@babel/plugin-proposal-object-rest-spread",
+                "@babel/plugin-proposal-optional-chaining",
+                "@babel/plugin-proposal-nullish-coalescing-operator",
+                [
+                  "@babel/plugin-proposal-decorators",
+                  {
+                    "legacy": true
+                  }
+                ],
+                [
+                  "@babel/plugin-proposal-class-properties",
+                  {
+                    "loose": true
+                  }
+                ]
+              ]
+            }
+          },
           {
             loader: "thread-loader",
           }

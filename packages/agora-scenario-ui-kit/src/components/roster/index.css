@@ -254,7 +254,7 @@
 
 .search-teacher-name {
   height: 30px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -279,4 +279,36 @@
   left: -10px;
   margin-right: -10px;
   opacity: 0.5;
+}
+
+.carousel-menu {
+  display: inline-flex;
+  align-items: center;
+}
+
+.carousel-flag {
+  margin-left: 35px;
+}
+.carousel-flag .form-checkbox {
+  margin-right: 3px !important;
+}
+
+.disable-flag {
+  width: 85px;
+  margin-left: 10px;
+}
+
+.student-order, .carousel-frequency{
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+.order-select {
+  margin-left: 6px;
+  width: 100px;
+}
+
+.carousel-frequency-input {
+  width: 70px;
+  margin: 0 6px;
 }

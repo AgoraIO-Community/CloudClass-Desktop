@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
-import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
+import { LocalUserRenderer, VideoRenderState, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
 import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume } from './interfaces';
 import { AgoraElectronRTCWrapper } from './electron';
@@ -96,6 +96,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid && it.channel === evt.channel)
       if (userIndex !== -1) {
         const userRenderer = this.remoteUsersRenderer[userIndex]
+        userRenderer.updateVideoRenderState(VideoRenderState.Idle)
         this.remoteUsersRenderer = this.remoteUsersRenderer.filter((it: any) => it !== userRenderer)
         this.fire('user-unpublished', {
           user,
@@ -317,6 +318,14 @@ export class MediaService extends EventEmitter implements IMediaService {
       EduLogger.info(args[0], args)
     }
     this.emit(message, ...args)
+  }
+
+  fireLocalVideoStateUpdated (state: VideoRenderState) {
+    this.fire('local-video-state-update', {state})
+  }
+
+  fireRemoteVideoStateUpdated (state: VideoRenderState, uid:string) {
+    this.fire('remote-video-state-update', {state, uid})
   }
 
   get isWeb(): boolean {
