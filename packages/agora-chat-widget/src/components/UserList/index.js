@@ -10,11 +10,11 @@ import muteOff from '../../themes/img/muteOff.png'
 import './index.css'
 
 // 禁言
-const mute = (roomId, val, userId) => {
+const mute = (val, userId) => {
     if (val) {
-        removeUserMute(roomId, userId)
+        removeUserMute(userId)
     } else {
-        setUserMute(roomId, userId)
+        setUserMute(userId)
     }
 }
 
@@ -22,7 +22,6 @@ const mute = (roomId, val, userId) => {
 export const UserList = ({ roomUserList }) => {
     const state = useSelector(state => state);
     // 改成枚举
-    const roomId = state?.room.info.id;
     const muteList = state?.room.muteList;
 
     return <div className="user">
@@ -48,7 +47,7 @@ export const UserList = ({ roomUserList }) => {
                         </div>
                         {!isTeacher && <Tooltip placement="leftBottom" overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
                             <div className="mute-icon">
-                                <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(roomId, showMuteIcon, item.id) }} />
+                                <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(showMuteIcon, item.id) }} />
                             </div>
                         </Tooltip>}
                     </div>

@@ -25,7 +25,7 @@ export const joinRoom = async () => {
             getRoomInfo(options.roomId);
             if (roleType === ROLE.student.id) {
                 setTimeout(() => {
-                    isChatRoomWhiteUser(roomId, userUuid)
+                    isChatRoomWhiteUser(userUuid)
                 }, 300);
             }
             getHistoryMessages(roomId);
