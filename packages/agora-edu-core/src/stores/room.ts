@@ -1479,10 +1479,21 @@ export class RoomStore extends SimpleInterval {
           // update scene store
           if (newClassState !== undefined && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState
-            if(this.classroomSchedule) {
-              this.classroomSchedule.startTime = get(classroom, 'roomStatus.startTime', 0)
-            }
           }
+
+          // update startTime
+          if(this.classroomSchedule) {
+            let newStartTime = get(newRoomProperties, 'schedule.startTime')
+            if(newStartTime) {
+              this.classroomSchedule.startTime = newStartTime
+            }
+            let newDuration = get(newRoomProperties, 'schedule.duration')
+            if(newDuration) {
+              this.classroomSchedule.duration = newDuration
+            }
+            BizLogger.info(`[core] classroom startTime changed to ${this.classroomSchedule.startTime}, duration: ${this.classroomSchedule.duration}`)
+          }
+
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
           console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom)
           this.sceneStore._canChatting = isStudentChatAllowed
