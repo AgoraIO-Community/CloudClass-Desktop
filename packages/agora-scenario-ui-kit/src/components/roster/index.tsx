@@ -256,9 +256,12 @@ export const Roster: FC<RosterProps> = ({
                 <div className="carousel-frequency">
                   <span className="">{transI18n('roster.order_every')}</span>
                   <div className="carousel-frequency-input">
-                    <Input type='number' value={carouselProps.times} onChange={e => {
-                      carouselProps.changeTimes(e.target.value)
-                    }} />
+                    <Input 
+                      value={carouselProps.times} 
+                      onChange={e => {
+                        carouselProps.changeTimes(e.target.value.replace(/\D+/g, ''))
+                      }} 
+                    />
                   </div>
                   <span className="">{transI18n('roster.seconds')}</span>
                 </div>

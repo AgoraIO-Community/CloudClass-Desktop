@@ -154,6 +154,18 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
     useEffect(() => {
         if (debouncedCarouselState.isOpenCarousel) {
+            if (Number(debouncedCarouselState.times) < 10) {
+                setCarouselState({
+                    ...carouselState,
+                    times: 10
+                })
+            }
+            if (Number(debouncedCarouselState.times) > 99) {
+                setCarouselState({
+                    ...carouselState,
+                    times: 99
+                })
+            }
             startCarousel()
         } else {
             stopCarousel()
