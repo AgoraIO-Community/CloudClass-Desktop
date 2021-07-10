@@ -71,7 +71,7 @@ export const getAnnouncement = (roomId) => {
 };
 
 // 上传/修改 群组公告
-export const updateAnnouncement = (roomId, noticeCentent) => {
+export const updateAnnouncement = (roomId, noticeCentent, callback) => {
     if (noticeCentent.length > 500) {
         return message.error('公告内容不能超过500！')
     }
@@ -82,6 +82,7 @@ export const updateAnnouncement = (roomId, noticeCentent) => {
     WebIM.conn.updateChatRoomAnnouncement(options).then((res) => {
         getAnnouncement(res.data.id);
         store.dispatch(announcementStatus(true))
+        callback && callback()
     })
 }
 

@@ -46,7 +46,7 @@ export const UserList = ({ roomUserList }) => {
                                     </span>
                                 </Tag>}
                         </div>
-                        {!isTeacher && <Tooltip placement="top" overlay={muteList.includes(item.id) ? '解除禁言' : '禁言'}>
+                        {!isTeacher && <Tooltip placement="leftBottom" overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
                             <div className="mute-icon">
                                 <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(roomId, showMuteIcon, item.id) }} />
                             </div>

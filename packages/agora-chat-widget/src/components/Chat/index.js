@@ -12,6 +12,7 @@ import { isShowChat } from '../../redux/actions/propsAction'
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction'
 import minimize from '../../themes/img/minimize.png'
 import notice from '../../themes/img/notice.png'
+import _ from 'lodash'
 
 const { TabPane } = Tabs;
 
@@ -32,12 +33,12 @@ export const Chat = () => {
     const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat)
     const [roomUserList, setRoomUserList] = useState([])
     const state = useSelector(state => state)
-    const isLogin = state?.isLogin;
-    const announcement = state?.room.announcement;
-    const showRed = state?.showRed;
-    const roleType = state?.loginUserInfo.ext;
-    const roomUsers = state?.room.roomUsers;
-    const roomUsersInfo = state?.room.roomUsersInfo;
+    const isLogin = _.get(state, 'isLogin')
+    const announcement = _.get(state, 'room.announcement', '')
+    const showRed = _.get(state, 'showRed')
+    const roleType = _.get(state, 'loginUserInfo.ext', '')
+    const roomUsers = _.get(state, 'room.roomUsers', [])
+    const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {})
     // 直接在 propsData 中取值
     const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
     useEffect(() => {
@@ -48,11 +49,13 @@ export const Chat = () => {
             let val
             roomUsers.map((item) => {
                 if (item === "系统管理员") return
+                console.log('roomUsersInfo>>>', roomUsersInfo);
                 if (Object.keys(roomUsersInfo).length > 0) {
                     val = roomUsersInfo[item]
                 }
                 let newVal
-                switch (val && JSON.parse(val?.ext).role) {
+                let role = val && JSON.parse(val?.ext).role
+                switch (role) {
                     case 1:
                         newVal = _.assign(val, { id: item })
                         _speakerTeacher.push(newVal)
@@ -105,9 +108,11 @@ export const Chat = () => {
             <Tabs renderTabBar={renderTabBar} onChange={onTabChange} activeKey={tabKey}>
                 <TabPane tab="聊天" key={CHAT_TABS_KEYS.chat}>
                     {
-                        announcement && announcement.length > 0 && <div className="notice" onClick={() => { toTabKey() }}>
+                        announcement && <div className="notice" onClick={() => { toTabKey() }}>
                             <img src={notice} alt="通知" className="notice-icon" />
-                            <span className="notice-text">{announcement}</span>
+                            <span className="notice-text">
+                                {announcement}
+                            </span>
                         </div>
                     }
                     <MessageBox />

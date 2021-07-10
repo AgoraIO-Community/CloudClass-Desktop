@@ -43,6 +43,8 @@ export const LOGIN_SUCCESS = "登陆IM成功！"
 export const JOIN_ROOM_SUCCESS = "加入聊天室成功！"
 // 删除消息
 export const DELETE = "删除"
+export const DELETE_CONFIRM = "删除确认"
+export const DELETE_CONTENT = "确认删除此公告？"
 // 撤回消息
 export const RECALL = "撤回"
 
