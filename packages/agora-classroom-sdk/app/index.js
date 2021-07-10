@@ -14,9 +14,16 @@ const release = os.release()
 const type = os.type()
 // Module to control application life.
 
+/**
+ *  （桌面端）登陆页默认&最小尺寸范围：960*640
+ *  （桌面端）课堂内默认&最小尺寸范围：1280*720
+ */
+
 const realSize = {
   width: 960,
-  height: 540
+  height: 640,
+  changeWidth: 1280,
+  changeHeight: 720
 }
 const { app, Menu, netLog } = electron;
 
@@ -303,6 +310,10 @@ async function createWindow() {
     }
     currentWindow.close()
   });
+
+  ipcMain.on('changWindowSize', () =>
+    mainWindow.setSize(realSize.changeWidth, realSize.changeHeight)
+  )
 }
 
 // This method will be called when Electron has finished
