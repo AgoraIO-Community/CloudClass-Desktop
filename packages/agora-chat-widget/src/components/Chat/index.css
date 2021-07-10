@@ -56,7 +56,6 @@
 }
 
 .notice-text {
-    width: 224px;
     height: 12px;
     font-size: 12px;
     font-family: 'PingFangSC-Regular',
@@ -65,13 +64,13 @@
     color: #191919;
     line-height: 12px;
     margin-left: 3px;
-
     overflow: hidden;
     text-overflow: ellipsis;
     display: '-webkit-box';
     -webkit-line-clamp: 2;
     -webkit-box-orient: 'vertical';
-    white-space: 'break-spaces'
+    white-space: pre-wrap;
+    text-align: center;
 }
 
 .red-notice {

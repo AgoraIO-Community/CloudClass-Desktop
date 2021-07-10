@@ -37,6 +37,7 @@ const App = function (props) {
     loginIM(appkey);
   }, [])
 
+  // 最小化窗口设置
   const onChangeModal = () => {
     store.dispatch(isShowChat(true))
     store.dispatch(isShowChatRed(false))
@@ -47,15 +48,22 @@ const App = function (props) {
   const createListen = (new_IM_Data, appkey) => {
     WebIM.conn.listen({
       onOpened: () => {
+        console.log('onOpened>>>');
         store.dispatch(statusAction(true))
         message.success(LOGIN_SUCCESS);
         setUserInfo()
         joinRoom()
       },
-      onClosed: (err) => {
-        console.log('onClosed>>>', err);
+      onClosed: () => {
+        console.log('onClosed>>>');
         store.dispatch(statusAction(false))
         store.dispatch(clearStore({}))
+      },
+      onOnline: (network) => {
+        console.log('onOnline>>>', network);
+      },
+      onOffline: (network) => {
+        console.log('onOffline>>>', network);
       },
       onError: (message) => {
         console.log('onError>>>', message);

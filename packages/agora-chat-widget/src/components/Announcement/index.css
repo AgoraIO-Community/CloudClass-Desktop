@@ -137,3 +137,48 @@
     border-radius: 15px !important;
     border: 1px solid #4b4b58 !important;
 }
+
+
+/* 修改antd 默认样式 */
+.delete-modal .ant-modal-header {
+    height: 40px !important;
+    padding: 8px 24px !important;
+    background: #F9F9FC !important;
+    border-radius: 4px 4px 0px 0px !important;
+    border: 1px solid #E1E1EA !important;
+}
+
+.delete-modal .ant-modal-title {
+    font-size: 14px !important;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC' !important;
+    font-weight: 400 !important;
+    color: #333333 !important;
+    line-height: 20px !important;
+}
+
+.delete-modal .ant-modal-close {
+    top: 11px !important;
+    right: 30px !important;
+}
+
+.delete-modal .ant-modal-close-x {
+    width: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+.delete-modal .ant-modal-body {
+    text-align: center;
+}
+
+.delete-modal .ant-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    border: none !important;
+}
+
+.delete-modal .ant-btn {
+    border-radius: 15px !important;
+    border: 1px solid #D2D2E2;
+}

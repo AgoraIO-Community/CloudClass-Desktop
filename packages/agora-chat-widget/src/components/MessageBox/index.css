@@ -3,7 +3,7 @@
     overflow-y: scroll;
     position: absolute;
     width: 100%;
-    height: calc(100% - 180px);
+    height: calc(100% - 200px);
 }
 
 
@@ -51,6 +51,7 @@
     white-space: pre-wrap;
 }
 
+
 .msg-text-me {
     background: #E1EBFC;
 }
@@ -58,6 +59,7 @@
 .msg-text-other {
     background: #FFFFFF;
     border: 1px solid #ECECF1;
+    display: inline-block;
 }
 
 .no-msgs {

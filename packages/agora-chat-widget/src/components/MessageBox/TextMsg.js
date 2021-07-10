@@ -71,11 +71,13 @@ export const TextMsg = ({ item }) => {
                     <img src={useAvatarUrl} className="msg-avatar" />
                 </div>
                 <div className="msg-border">
-                    <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn"><img src={delete_icon} />{DELETE}</div>}
+                    <div className="msg-text msg-text-me" onContextMenu={() => setVisible(true)}>
+                        <span> {msgData}</span>
+                    </div>
+                    <Popover placement="top" content={
+                        <div onClick={() => deleteMsg(item.id)} className="delete-btn">
+                            <img src={delete_icon} />{DELETE}</div>}
                         trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
-                        <div className="msg-text msg-text-me">
-                            <span> {msgData}</span>
-                        </div>
                     </Popover>
                 </div>
             </div>}
@@ -85,12 +87,16 @@ export const TextMsg = ({ item }) => {
                     <span>{userNickName}</span>
                     {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
                 </div>
-                {isTeacher && <Popover placement="top" content={<div onClick={() => { deleteMsg(item.id) }} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
-                    trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
-                    <div className="msg-text msg-text-other">
-                        <span> {msgData}</span>
-                    </div>
-                </Popover>}
+                {isTeacher &&
+                    <>
+                        <div className="msg-text msg-text-other" onContextMenu={() => setVisible(true)}>
+                            <span> {msgData}</span>
+                        </div>
+                        <Popover placement="top" content={<div onClick={() => deleteMsg(item.id)} className="delete-btn" ><img src={delete_icon} />{DELETE}</div>}
+                            trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
+                        </Popover>
+                    </>
+                }
                 {!isTeacher && <div className="msg-text msg-text-other">
                     {msgData}
                 </div>}
