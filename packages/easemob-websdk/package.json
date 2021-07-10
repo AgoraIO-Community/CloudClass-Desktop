@@ -1,0 +1,11 @@
+{
+	"name": "easemob-websdk",
+	"version": "3.5.2",
+	"description": "Easemob IM websdk",
+	"main": "websdk3.5.2",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "easemob",
+	"license": "ISC"
+}

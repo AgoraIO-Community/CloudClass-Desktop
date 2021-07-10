@@ -14,7 +14,8 @@ import React from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { useLayoutEffect } from 'react'
 import { useUIStore } from '@/infra/hooks'
-
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { get } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
 
 
@@ -59,6 +60,14 @@ export const MidClassScenario = observer(() => {
     'fullscreen': !!isFullScreen
   })
 
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
+
+  const { roomInfo : {userRole}} = useRoomContext()
+
+  const visible = userRole !== EduRoleTypeEnum.invisible
+
   return (
     <Layout
       className={cls}
@@ -92,10 +101,7 @@ export const MidClassScenario = observer(() => {
           "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
           "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
-          {/* <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="mid-class-teacher"/>
-          </div> */}
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
+          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />
