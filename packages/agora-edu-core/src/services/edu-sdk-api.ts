@@ -518,6 +518,41 @@ export class EduSDKApi extends ApiBase {
     })
     return res.data;
   }
+
+  /**
+   * 开始轮播
+   */
+   async startCarousel(payload: any) {
+    let res = await this.fetch({
+      url: `/v2/rooms/${payload.roomUuid}/carousels/states/1`,
+      method: 'put',
+      data: {
+        range: payload?.range ?? 1,
+        type: payload?.type ?? 1,
+        interval: payload?.interval ?? 10,
+        count: 6
+      }
+    })
+    return res.data;
+  }
+
+  /**
+   * 停止轮播
+   */
+  async stopCarousel(payload: any) {
+    let res = await this.fetch({
+      // full_url: ``,
+      url: `/v2/rooms/${payload.roomUuid}/carousels/states/0`,
+      method: 'put',
+      // data: {
+      //   range: payload?.range ?? 1,
+      //   type: payload?.type ?? 1,
+      //   interval: payload?.interval ?? 30,
+      //   count: 6
+      // }
+    })
+    return res.data;
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({

@@ -50,6 +50,14 @@ export const zh = {
     'reward': '奖励',
     'kick': '踢人',
     'granted': '授权',
+    'shift': '开启',
+    'everyone': '全部',
+    'available': '非禁用',
+    'students_in': '学生',
+    'sequence': '顺序',
+    'random': '随机',
+    'order_every': '轮播',
+    'seconds': '秒'
   },
   'hands_up': '举手',
   'co_video': {
