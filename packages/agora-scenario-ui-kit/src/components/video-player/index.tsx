@@ -541,7 +541,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                     <VideoPlayer
                       hideStars={hideStars}
                       {...videoStream}
-                      showGranted={true}
+                      // showGranted={true}
                       userType={userType}
                       onCameraClick={onCameraClick}
                       onMicClick={onMicClick}

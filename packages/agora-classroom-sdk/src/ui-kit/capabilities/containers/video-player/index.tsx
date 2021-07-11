@@ -364,30 +364,36 @@ export const MidVideoMarqueeContainer = observer(() => {
     eduRole2UIRole
   } = useUIStore()
 
+  const {
+    onOffAllPodiumClick,
+  } = useVideoControlContext()
+
   const teacherVideoList = useMemo(() => {
     return [userStream].map((stream: EduMediaStream) => ({
       isHost: isHost,
+      hideOffPodium: true,
       username: stream.account,
       stars: stream.stars,
       uid: stream.userUuid,
       micEnabled: stream.audio,
       cameraEnabled: stream.video,
-      whiteboardGranted: stream.whiteboardGranted,
-      micVolume: stream.micVolume,
-      controlPlacement: 'bottom' as any,
-      placement: 'bottom' as any,
       hideControl: stream.hideControl,
-      canHoverHideOffAllPodium: true,
-      hasStream: stream.hasStream,
-      online: stream.online,
-      isLocal: stream.isLocal,
-      isOnPodium: stream.onPodium,
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
-      // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      isLocal: stream.isLocal,
+      online: stream.online,
+      isOnPodium: stream.onPodium,
+      hasStream: stream.hasStream,
+      whiteboardGranted: false,
       hideBoardGranted: true,
-      hideOffPodium: true,
       hideStars: true,
+      micVolume: stream.micVolume,
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      controlPlacement: 'bottom' as any,
+      placement: 'bottom' as any,
+      canHoverHideOffAllPodium: true,
+      onOffAllPodiumClick: onOffAllPodiumClick,
+      // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
         {
@@ -403,6 +409,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       }))
   }, [
     userStream,
+    onOffAllPodiumClick,
     // studentStreams,
     isHost,
     controlTools.includes(ControlTool.offPodium)
