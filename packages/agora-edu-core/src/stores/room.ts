@@ -2,7 +2,7 @@ import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneTy
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { get } from "lodash"
-import { action, computed, IReactionDisposer, observable, reaction, runInAction } from "mobx"
+import { action, computed, IReactionDisposer, IReactionPublic, IValueDidChange, observable, observe, reaction, runInAction } from "mobx"
 import { Subject } from "rxjs"
 import { v4 as uuidv4 } from 'uuid'
 import { EduScenarioAppStore } from "."
@@ -16,7 +16,7 @@ import { UploadService } from "../services/upload-service"
 import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
-import { EduClassroomStateEnum, SimpleInterval } from "./scene"
+import { EduClassroomStateEnum, EduMediaStream, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
 // import packageJson from "../../package.json"
@@ -495,6 +495,10 @@ export class RoomStore extends SimpleInterval {
   smallClassStore: SmallClassStore;
 
   coVideoUsers: Record<string, any> = {};
+
+  // if edu stream should sync with media state, by default media state should respect edu stream state
+  @observable
+  autoSyncStreamState = true
 
   constructor(appStore: EduScenarioAppStore) {
     super()
@@ -1024,6 +1028,7 @@ export class RoomStore extends SimpleInterval {
     try {
       this.joining = true
       this.disposers.push(reaction(() => this.sceneStore.classState, this.onClassStateChanged.bind(this)))
+      this.disposers.push(reaction(() => this.autoSyncStreamState, this.onAutoSyncStreamStateChanged.bind(this)))
 
       this.startJoining()
       this.roomApi = new RoomApi({
@@ -1256,94 +1261,66 @@ export class RoomStore extends SimpleInterval {
           const streamList = roomManager.getFullStreamList()
           this.sceneStore.updateStreamList(streamList)
           if (!this.sceneStore.joiningRTC) {
+            BizLogger.info(`[core] joiningRTC ${false} return`)
             return
           }
           const tag = uuidv4()
-          BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `, JSON.stringify(evt))
+          BizLogger.info(`[core][${tag}], seq[${evt.seqId}] time: ${Date.now()} local-stream-updated`)
           if (evt.type === 'main') {
+            BizLogger.info(`[core][${tag}] process main stream`)
+            // TODO JH special logic, don't process main stream for students & assistant
             if (this.isAssistant || this.isStudent) {
+              BizLogger.info(`[core] JH process, return and stop process`)
               return
             }
             const localStream = roomManager.getLocalStreamData()
-            BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             const causeCmd = cause?.cmd ?? 0
             if (localStream && localStream.state !== 0) {
+              // show stream control toast
               if (causeCmd === 501) {
+                // open media via co-video by teacher
+                BizLogger.info(`[core] co-video by teacher`)
                 const roleMap: Record<string, string> = {
                   'host': 'role.teacher',
                   'assistant': 'role.assistant'
                 }
                 const role = roleMap[operator.userRole] ?? 'unknown'
                 this.appStore.fireToast(`roster.open_student_co_video`, { teacher: role })
-              }
-              BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC)
-              if (this.sceneStore._cameraEduStream) {
-                if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
-                  console.log("### [demo] localStream.stream.hasVideo ", localStream.stream.hasVideo, "this.sceneStore._cameraEduStream.hasVideo ", this.sceneStore._cameraEduStream.hasVideo)
-                  this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo
-                  if (causeCmd !== 501) {
+              } else {
+                // sync stream publish state
+                const {videoChanged, audioChanged} = this.syncEduLocalStreamState(localStream)
+                if(this.sceneStore._cameraEduStream) {
+                  if(videoChanged) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
                     this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
-                  // this.operator = {
-                  //   ...operator,
-                  //   cmd: cause?.cmd ?? 0,
-                  //   action: 'video'
-                  // }
-                }
-                if (!!localStream.stream.hasAudio !== !!this.sceneStore._cameraEduStream.hasAudio) {
-                  console.log("### [demo] localStream.stream.hasAudio ", localStream.stream.hasAudio, "this.sceneStore._cameraEduStream.hasAudio ", this.sceneStore._cameraEduStream.hasAudio)
-                  this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio
-                  if (causeCmd !== 501) {
+                  if (audioChanged) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
                     this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
-                  // this.operator = {
-                  //   ...operator,
-                  //   cmd: cause?.cmd ?? 0,
-                  //   action: 'audio'
-                  // }
-                }
-              } else {
-                this.sceneStore._cameraEduStream = localStream.stream
-                // this.operator = {
-                //   ...operator,
-                //   cmd: cause?.cmd ?? 0,
-                //   action: 'all'
-                // }
-              }
-              BizLogger.info(`[demo] tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
-              if (this.sceneStore.joiningRTC) {
-                if (this.isTeacher) {
-                  return
-                }
-                if (this.sceneStore.cameraEduStream.hasVideo) {
-                  await this.sceneStore.unmuteLocalCamera()
-                  BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after openCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
-                } else {
-                  await this.sceneStore.muteLocalCamera()
-                  BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeCamera  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
-                }
-                // if (this.sceneStore._hasMicrophone) {
-                if (this.sceneStore.cameraEduStream.hasAudio) {
-                  BizLogger.info('open microphone')
-                  await this.sceneStore.unmuteLocalMicrophone()
-                  BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()} after openMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
-                } else {
-                  BizLogger.info('close local-stream-updated microphone')
-                  await this.sceneStore.muteLocalMicrophone()
-                  BizLogger.info(`[demo] local-stream-updated tag: ${tag}, seq[${evt.seqId}], time: ${Date.now()}  after closeMicrophone  local-stream-updated, main stream is online`, ' _hasCamera', this.sceneStore._hasCamera, ' _hasMicrophone ', this.sceneStore._hasMicrophone, this.sceneStore.joiningRTC, ' _eduStream', JSON.stringify(this.sceneStore._cameraEduStream))
                 }
               }
+              
+
+              // // TODO JH special logic, don't process main stream for teacher
+              // if (this.isTeacher) {
+              //   BizLogger.info(`[core] JH process, is teacher return and process`)
+              //   return
+              // }
+
+              // sync media service state
+              await this.syncMediaLocalStreamState()
+
             } else {
-              BizLogger.info("reset camera edu stream", JSON.stringify(localStream), localStream && localStream.state)
+              BizLogger.info("[core] reset camera edu stream")
               this.sceneStore._cameraEduStream = undefined
             }
           }
 
           if (evt.type === 'screen') {
+            BizLogger.info(`[core][${tag}] process screen stream`)
             if (this.roomInfo.userRole === EduRoleTypeEnum.teacher) {
               const screenStream = roomManager.getLocalScreenData()
               BizLogger.info("local-stream-updated getLocalScreenData#screenStream ", JSON.stringify(screenStream))
@@ -1502,10 +1479,21 @@ export class RoomStore extends SimpleInterval {
           // update scene store
           if (newClassState !== undefined && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState
-            if(this.classroomSchedule) {
-              this.classroomSchedule.startTime = get(classroom, 'roomStatus.startTime', 0)
-            }
           }
+
+          // update startTime
+          if(this.classroomSchedule) {
+            let newStartTime = get(newRoomProperties, 'schedule.startTime')
+            if(newStartTime) {
+              this.classroomSchedule.startTime = newStartTime
+            }
+            let newDuration = get(newRoomProperties, 'schedule.duration')
+            if(newDuration) {
+              this.classroomSchedule.duration = newDuration
+            }
+            BizLogger.info(`[core] classroom startTime changed to ${this.classroomSchedule.startTime}, duration: ${this.classroomSchedule.duration}`)
+          }
+
           const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true
           console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom)
           this.sceneStore._canChatting = isStudentChatAllowed
@@ -1743,7 +1731,7 @@ export class RoomStore extends SimpleInterval {
     }
   }
 
-  async onClassStateChanged(state: EduClassroomStateEnum) {
+  async onClassStateChanged(state: number) {
     if (state === EduClassroomStateEnum.close) {
       try {
         await this.appStore.releaseRoom()
@@ -1769,6 +1757,22 @@ export class RoomStore extends SimpleInterval {
           });
         }
       }
+    }
+
+    if(state === EduClassroomStateEnum.beforeStart) {
+      // unlink edustream and media stream before class starts
+      this.autoSyncStreamState = false
+    } else {
+      // link if class started
+      this.autoSyncStreamState = true
+    }
+  }
+
+  onAutoSyncStreamStateChanged(autoSyncStreamState: boolean) {
+    EduLogger.info(`[core] autoSyncStreamState changed to ${autoSyncStreamState}`)
+    if(autoSyncStreamState) {
+      // when autoSyncStreamState is set to true, sync state once
+      this.syncMediaLocalStreamState()
     }
   }
 
@@ -2065,5 +2069,55 @@ export class RoomStore extends SimpleInterval {
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
+  }
+
+  syncEduLocalStreamState(localStream: any): {videoChanged: boolean, audioChanged: boolean} {
+    let videoChanged = false, audioChanged = false
+    if (this.sceneStore._cameraEduStream) {
+      if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
+        console.log("### [demo] localStream.stream.hasVideo ", localStream.stream.hasVideo, "this.sceneStore._cameraEduStream.hasVideo ", this.sceneStore._cameraEduStream.hasVideo)
+        this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo
+      }
+      if (!!localStream.stream.hasAudio !== !!this.sceneStore._cameraEduStream.hasAudio) {
+        console.log("### [demo] localStream.stream.hasAudio ", localStream.stream.hasAudio, "this.sceneStore._cameraEduStream.hasAudio ", this.sceneStore._cameraEduStream.hasAudio)
+        this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio
+      }
+    } else {
+      this.sceneStore._cameraEduStream = localStream.stream
+    }
+    return {videoChanged, audioChanged}
+  }
+
+  async syncMediaLocalStreamState() {
+    if(!this.autoSyncStreamState) {
+      BizLogger.error(`[core] syncMediaLocalStreamState ignore as autoSyncStreamState is false`)
+      return
+    }
+    if (this.sceneStore.cameraEduStream.hasVideo) {
+      try{
+        await this.sceneStore.unmuteLocalCamera(false)
+      } catch(e) {
+        BizLogger.error(`[core] unmuteLocalCamera failed ${e.message}`)
+      }
+    } else {
+      try {
+        await this.sceneStore.muteLocalCamera(false)
+      } catch(e) {
+        BizLogger.error(`[core] muteLocalCamera failed ${e.message}`)
+      }
+    }
+    if (this.sceneStore.cameraEduStream.hasAudio) {
+      try {
+        await this.sceneStore.unmuteLocalMicrophone(false) 
+      } catch(e) {
+        BizLogger.error(`[core] unmuteLocalMicrophone failed ${e.message}`)
+      }
+    } else {
+      try {
+        await this.sceneStore.muteLocalMicrophone(false)
+      } catch(e) {
+        BizLogger.error(`[core] muteLocalMicrophone failed ${e.message}`)
+      }
+    }
   }
 }

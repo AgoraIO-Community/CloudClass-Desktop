@@ -19,6 +19,11 @@ export type FireTrackEndedAction = {
   trackId: string
 }
 
+interface TrackState {
+  enabled: boolean,
+  deviceId: string
+}
+
 type AgoraWebSDK = IAgoraRTC & {
   setParameter: (key: 'AUDIO_SOURCE_AVG_VOLUME_DURATION' | 'AUDIO_VOLUME_INDICATION_INTERVAL', value: number) => void
 };
@@ -952,6 +957,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   videoTrackMap: Map<string, ICameraVideoTrack | undefined> = new Map()
   audioTrackMap: Map<string, IMicrophoneAudioTrack | undefined> = new Map()
+  videoTrackStateMap: Map<string, TrackState | undefined> = new Map()
+  audioTrackStateMap: Map<string, TrackState | undefined> = new Map()
 
   async acquireCameraTrack(type: 'cameraTestRenderer' | 'cameraRenderer') {
     const track = this.videoTrackMap.get(type)
@@ -962,6 +969,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
       const trackId = videoTrack.getTrackId()
       this.videoTrackMap.set(type, videoTrack)
+      // new track is enabled by default
+      this.videoTrackStateMap.set(type, {enabled: true, deviceId: this.videoDeviceConfig.get(type)})
       videoTrack.on('track-ended', () => {
         this.fireTrackEnd({ resource: 'video', tag: type, trackId })
         if (videoTrack) {
@@ -969,6 +978,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
           videoTrack.close()
         }
         this.videoTrackMap.set(type, undefined)
+        this.videoTrackStateMap.set(type, undefined)
       })
     }
   }
@@ -979,6 +989,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       track.isPlaying && track.stop()
       track.close()
       this.videoTrackMap.set(type, undefined)
+      this.videoTrackStateMap.set(type, undefined)
     }
   }
 
@@ -999,6 +1010,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
       if (audioTrack) {
         this.audioTrackMap.set(type, audioTrack)
+        this.audioTrackStateMap.set(type, {enabled: true, deviceId: microphoneId})
         audioTrack.stop()
         this.addInterval((track: ILocalAudioTrack) => {
           if (track) {
@@ -1013,6 +1025,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
             audioTrack.close()
           }
           this.audioTrackMap.set(type, undefined)
+          this.audioTrackStateMap.set(type, undefined)
         })
       }
     }
@@ -1024,6 +1037,7 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       this.closeInterval('test-volume')
       track.close()
       this.audioTrackMap.set(type, undefined)
+      this.audioTrackStateMap.set(type, undefined)
     }
   }
 
@@ -1110,10 +1124,21 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
 
     const published = this.audioTrackPublished.get('microphoneTrack')
+    const state:TrackState = this.audioTrackStateMap.get('microphoneTrack') as TrackState
     if (published) {
-      await track.setEnabled(!v)
-      if (deviceId) {
+      if(state.enabled !== !v) {
+        await track.setEnabled(!v)
+        this.audioTrackStateMap.set('microphoneTrack', {
+          ...state,
+          enabled: !v
+        })
+      }
+      if (deviceId && deviceId !== state.deviceId) {
         await this.setMicrophoneDevice(deviceId)
+        this.audioTrackStateMap.set('microphoneTrack', {
+          ...state,
+          deviceId
+        })
       }
     } else {
       const oldAudioTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'audio')
@@ -1121,6 +1146,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       await this.client.publish([track])
       this.audioTrackPublished.set('microphoneTrack', true)
       await track.setEnabled(!v)
+      this.audioTrackStateMap.set('microphoneTrack', {
+        ...state,
+        enabled: !v
+      })
     }
   }
 
@@ -1147,10 +1176,21 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     }
     
     const published = this.videoTrackPublished.get('cameraRenderer')
+    const state:TrackState = this.videoTrackStateMap.get('cameraRenderer') as TrackState
     if (published) {
-      await track.setEnabled(!v)
-      if (deviceId) {
+      if(state.enabled !== !v) {
+        await track.setEnabled(!v)
+        this.videoTrackStateMap.set('cameraRenderer', {
+          ...state,
+          enabled: !v
+        })
+      }
+      if (deviceId && deviceId !== state.deviceId) {
         await this.setCameraDevice(deviceId)
+        this.videoTrackStateMap.set('cameraRenderer', {
+          ...state,
+          deviceId
+        })
       }
     } else {
       const oldVideoTracks = this.client.localTracks.filter((e: ILocalTrack) => e.trackMediaType === 'video')
@@ -1158,6 +1198,10 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       await this.client.publish([track])
       this.videoTrackPublished.set('cameraRenderer', true)
       await track.setEnabled(!v)
+      this.videoTrackStateMap.set('cameraRenderer', {
+        ...state,
+        enabled: !v
+      })
     }
   }
 

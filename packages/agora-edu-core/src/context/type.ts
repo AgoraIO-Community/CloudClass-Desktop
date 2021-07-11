@@ -7,7 +7,7 @@ import { MaterialDataResource } from "../services/upload-service"
 import { RosterUserInfo } from '../stores/small-class';
 import { ScreenShareType } from 'agora-rte-sdk';
 
-export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
+export type DeviceErrorCallback = (evt: { type: 'video' | 'audio', error: boolean }) => void
 
 export type Resource = {
     file: {
@@ -78,7 +78,7 @@ export type ChatContext = {
     getHistoryChatMessage: (data: {
         nextId: string;
         sort: number;
-    })=>Promise<any>,
+    }) => Promise<any>,
     /**
      * 消息列表
      * @version v1.1.0
@@ -169,12 +169,12 @@ export type ChatContext = {
      * 操作指定用户聊天禁言
      * @version v1.1.2
      */
-    muteUserChat: (userUuid:string) => Promise<void>
+    muteUserChat: (userUuid: string) => Promise<void>
     /**
      * 操作指定用户聊天解禁
      * @version v1.1.2
      */
-    unmuteUserChat: (userUuid:string) => Promise<void>
+    unmuteUserChat: (userUuid: string) => Promise<void>
 }
 export type StreamListContext = {
     /**
@@ -414,7 +414,7 @@ export type ScreenShareContext = {
      * @param type 分享类型, 默认为窗口
      * @version v1.1.0
      */
-    startOrStopSharing: (type?:ScreenShareType) => Promise<void>
+    startOrStopSharing: (type?: ScreenShareType) => Promise<void>
     /**
      * 当前正在共享屏幕
      * @version v1.1.2
@@ -979,27 +979,27 @@ export type UserListContext = {
      * @param whiteboardGranted 给与/不给与权限
      * @version v1.1.2
      */
-    toggleWhiteboardPermission: (userUuid:string, whiteboardGranted: boolean) => Promise<any>,
+    toggleWhiteboardPermission: (userUuid: string, whiteboardGranted: boolean) => Promise<any>,
     /**
      * 切换视频开关
      * @param userUuid 用户uuid
      * @param enabled 打开/关闭
      * @version v1.1.2
      */
-    toggleCamera: (userUuid:string, enabled: boolean) => Promise<any>,
+    toggleCamera: (userUuid: string, enabled: boolean) => Promise<any>,
     /**
      * 切换音频开关
      * @param userUuid 用户uuid
      * @param enabled 打开/关闭
      * @version v1.1.2
      */
-    toggleMic: (userUuid:string, enabled: boolean) => Promise<any>,
+    toggleMic: (userUuid: string, enabled: boolean) => Promise<any>,
     /**
      * 踢人
      * @param userUuid 用户uuid
      * @version v1.1.2
      */
-    kick: (userUuid:string) => Promise<any>,
+    kick: (userUuid: string) => Promise<any>,
     /**
      * 可用的人员控制工具
      * @version v1.1.2
@@ -1271,26 +1271,6 @@ export type MediaContext = {
      */
     isNative: boolean,
     /**
-     * CPU使用情况
-     * @version v1.1.0
-     */
-    cpuUsage: number,
-    /**
-     * 网络质量
-     * @version v1.1.0
-     */
-    networkQuality: string,
-    /**
-     * 网络延迟毫秒数
-     * @version v1.1.0
-     */
-    networkLatency: number,
-    /**
-     * 网络丢包率百分比
-     * @version v1.1.0
-     */
-    packetLostRate:   number,
-    /**
      * 摄像头设备列表
      * @version v1.1.0
      */
@@ -1517,4 +1497,48 @@ export type CloudDriveContext = {
      * @version v1.1.2
      */
     doUpload: (payload: any) => Promise<void>,
+}
+
+export type ClassroomStatsContext = {
+    /**
+     * CPU使用情况
+     * @version v1.3.0
+     */
+    cpuUsage: number,
+    /**
+     * 网络质量
+     * @version v1.3.0
+     */
+    networkQuality: string,
+    /**
+     * 网络延迟毫秒数
+     * @version v1.3.0
+     */
+    networkLatency: number,
+    /**
+     * 网络丢包率百分比
+     * @version v1.3.0
+     */
+    packetLostRate: number,
+    /**
+     * 音视频下行丢包率
+     * @version v1.3.0
+     */
+    rxPacketLossRate: number
+    /**
+     * 音视频上行丢包率
+     * @version v1.3.0
+     */
+    txPacketLossRate: number
+    /**
+     * 下行网络质量
+     * @version v1.3.0
+     * 
+     */
+    rxNetworkQuality: string
+    /**
+     * 上行网络质量
+     * @version v1.3.0
+     */
+    txNetworkQuality: string
 }

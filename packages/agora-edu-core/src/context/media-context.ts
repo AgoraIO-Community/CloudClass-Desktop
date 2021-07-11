@@ -6,22 +6,13 @@ export const useMediaContext = (): MediaContext => {
     const appStore = useCoreContext();
 
     const {
-      mediaStore,
-      isElectron, 
-      pretestNotice$,
       pretestStore,
       sceneStore
     } = appStore
 
     const {
-        cpuUsage,
-        networkQuality,
-        delay,
-        localPacketLostRate,
-    } = mediaStore;
-    // const {
-    //   removeDialog
-    // } = useUIStore()
+        isElectron
+    } = useCoreContext();
   
     // const pretestStore = usePretestStore()
   
@@ -94,10 +85,6 @@ export const useMediaContext = (): MediaContext => {
     }, [pretestStore])
     return {
         isNative: isElectron,
-        cpuUsage,
-        networkQuality,
-        networkLatency: delay,
-        packetLostRate:localPacketLostRate,
         cameraList,
         microphoneList,
         speakerList,

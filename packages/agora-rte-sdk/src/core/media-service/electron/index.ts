@@ -1096,17 +1096,16 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           ownerName: it.ownerName,
           name: `Screen ${idx+1}`,
           windowId: it.displayId,
-          image: CustomBtoa(it.image),
+          image: CustomBtoa(it.image)
         }))
       }
-      //@ts-ignore
-      const currentWindow = await window.activeWindow();
       return items.map((it: any) => ({
         ownerName: it.ownerName,
         name: it.name,
         windowId: it.windowId,
         image: CustomBtoa(it.image),
-      })).filter(item=>item.windowId !== currentWindow.id);
+        processId: it.processId
+      }));
     } catch (err) {
       throw GenericErrorWrapper(err)
     }
