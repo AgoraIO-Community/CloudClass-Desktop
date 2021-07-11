@@ -315,7 +315,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
     this.client.enableAudioVolumeIndication(300, 3, true)
-    this.client.monitorDeviceChange && this.client.monitorDeviceChange(true)
+    this.client.monitorDeviceChange(true)
     // this.client.setVideoProfile(20)
 
     const resolutionConfig = options.resolution
@@ -1096,7 +1096,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           ownerName: it.ownerName,
           name: `Screen ${idx+1}`,
           windowId: it.displayId,
-          image: CustomBtoa(it.image)
+          image: CustomBtoa(it.image),
         }))
       }
       return items.map((it: any) => ({
@@ -1104,8 +1104,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         name: it.name,
         windowId: it.windowId,
         image: CustomBtoa(it.image),
-        processId: it.processId
-      }));
+      }))
     } catch (err) {
       throw GenericErrorWrapper(err)
     }
