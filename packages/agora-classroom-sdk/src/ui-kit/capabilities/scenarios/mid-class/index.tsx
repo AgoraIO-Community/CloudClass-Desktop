@@ -101,7 +101,7 @@ export const MidClassScenario = observer(() => {
           "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
           "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
-          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
+          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />
