@@ -146,6 +146,12 @@ type RoomProperties = {
     selected: number,
   },
   students: Record<string, ProcessType>,
+  carousel: {
+    state: 1 | 0, // 1-开启 0-关闭
+    type: 1 | 2, // 1-顺序 2-随机
+    range: 1 | 2, // 1-全部 2-非禁用
+    interval: number
+  }
 }
 
 type MinimizeType = {
@@ -268,6 +274,12 @@ export class RoomStore extends SimpleInterval {
         streamUuid: '',
         userUuid: '',
         selected: 0
+      },
+      carousel: {
+        state: 0,
+        type: 1,
+        range: 1,
+        interval: 10
       }
     }
   }
@@ -298,6 +310,12 @@ export class RoomStore extends SimpleInterval {
       streamUuid: '',
       userUuid: '',
       selected: 0
+    },
+    carousel: {
+      state: 0,
+      type: 1,
+      range: 1,
+      interval: 10
     }
   }
 
@@ -2066,31 +2084,18 @@ export class RoomStore extends SimpleInterval {
     return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause)
   }
 
-  @observable
-  carouselState: {
-    isOpenCarousel: boolean; // 是否开启轮播
-    modeValue: '1' | '2'; // 所有人 ｜ 非禁用
-    randomValue: '1' | '2'; // 顺序 ｜ 随机
-    times: number; // xxx 秒/次
-  } = {
-    isOpenCarousel: false, 
-    modeValue: '1',
-    randomValue: '1',
-    times: 10, 
-  }
-
   @action.bound
-  setCarouselState (carouselState: any) {
-    this.carouselState = Object.assign({}, this.carouselState, carouselState)
+  setCarouselState (key: 'state' | 'type' | 'range' | 'interval', value: any) {
+    this.roomProperties.carousel[key] = value
   }
 
   @action.bound
   async startCarousel() {
     await eduSDKApi.startCarousel({
       roomUuid: this.roomInfo.roomUuid,
-      range: Number(this.carouselState.modeValue),
-      type: Number(this.carouselState.randomValue),
-      interval: Number(this.carouselState.times),
+      range: this.roomProperties.carousel.range,
+      type: this.roomProperties.carousel.type,
+      interval: this.roomProperties.carousel.interval,
       count: 6
     })
   }

@@ -41,7 +41,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         // muteUserChat,
         // unmuteUserChat,
         roomInfo,
-        carouselState,
+        roomProperties,
         setCarouselState,
         startCarousel,
         stopCarousel
@@ -141,75 +141,64 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
 
     const dataList = useMemo(() => {
         return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-      }, [keyword, rosterUserList])
+    }, [keyword, rosterUserList])
 
-      const userType = useMemo(() => {
+    const userType = useMemo(() => {
         if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
             return 'teacher'
         }
         return 'student'
     }, [roomInfo.userRole])
 
-    const debouncedCarouselState = useDebounce(carouselState, 500)
+    // const debouncedCarousel = useDebounce(roomProperties.carousel, 500)
 
-    useEffect(() => {
-        if (debouncedCarouselState.isOpenCarousel) {
-            if (Number(debouncedCarouselState.times) < 10) {
-                setCarouselState({
-                    ...carouselState,
-                    times: 10
-                })
-            }
-            if (Number(debouncedCarouselState.times) > 99) {
-                setCarouselState({
-                    ...carouselState,
-                    times: 99
-                })
-            }
-            startCarousel()
-        } else {
-            stopCarousel()
-        }
-    }, [debouncedCarouselState])
+    // useEffect(() => {
+    //     if (debouncedCarousel.state) {
+    //         if (Number(debouncedCarousel.interval) < 10) {
+    //             setCarouselState('interval', 10)
+    //         }
+    //         if (Number(debouncedCarousel.interval) > 99) {
+    //             setCarouselState('interval', 99)
+    //         }
+    //         startCarousel()
+    //     } else {
+    //         stopCarousel()
+    //     }
+    // }, [debouncedCarousel])
 
     return (
         <Roster
             isDraggable={true}
             carousel={userType === 'teacher'}
             carouselProps={{
-                isOpenCarousel: carouselState.isOpenCarousel,
+                isOpenCarousel: roomProperties.carousel?.state,
                 changeCarousel: (e: any) => {
-                    const isOpenCarousel = e.target.checked
-                    setCarouselState({
-                        ...carouselState,
-                        isOpenCarousel
-                    })
+                    setCarouselState('state', Number(e.target.checked))
+                    if (roomProperties.carousel.state) {
+                        startCarousel()
+                    } else {
+                        stopCarousel()
+                    }
                 },
-                modeValue: carouselState.modeValue,
+                modeValue: roomProperties.carousel?.range || 1,
                 changeModeValue: (value: any) => {
-                    if (value !== carouselState.modeValue) {
-                        setCarouselState({
-                            ...carouselState,
-                            modeValue: value
-                        })
+                    setCarouselState('range', value)
+                    if (roomProperties.carousel.state) {
+                        startCarousel()
                     }
                 },
-                randomValue: carouselState.randomValue,
+                randomValue: roomProperties.carousel?.type || 1,
                 changeRandomValue: (value: any) => {
-                    if (value !== carouselState.randomValue) {
-                        setCarouselState({
-                            ...carouselState,
-                            randomValue: value
-                        })
+                    setCarouselState('type', value)
+                    if (roomProperties.carousel.state) {
+                        startCarousel()
                     }
                 },
-                times: carouselState.times,
+                times: roomProperties.carousel?.interval || 10,
                 changeTimes: (value: any) => {
-                    if (value !== carouselState.times) {
-                        setCarouselState({
-                            ...carouselState,
-                            times: value
-                        })
+                    setCarouselState('interval', Number(value))
+                    if (roomProperties.carousel.state) {
+                        startCarousel()
                     }
                 },
             }}
@@ -263,17 +252,17 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
 
     function checkDisable(user: any, role: EduRoleTypeEnum): boolean {
         if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
-          return false
+            return false
         }
-    
-        if (role === EduRoleTypeEnum.student 
+
+        if (role === EduRoleTypeEnum.student
             && roomInfo.userUuid === user.userUuid
             && acceptedIds.includes(user.userUuid)
-          ) {
-          return false
+        ) {
+            return false
         }
         return true
-      }
+    }
 
     function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean, userList: EduUser[]) {
         return {
@@ -300,7 +289,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
 
     const dataList = useMemo(() => {
         return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-      }, [keyword, rosterUserList])
+    }, [keyword, rosterUserList])
 
     const onClick = useCallback(async (actionType: any, uid: any) => {
         const userList = dataList

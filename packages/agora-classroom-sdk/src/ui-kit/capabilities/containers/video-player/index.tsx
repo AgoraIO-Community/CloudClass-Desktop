@@ -357,7 +357,7 @@ export const MidVideoMarqueeContainer = observer(() => {
 
   const {
     roomInfo,
-    carouselState
+    roomProperties,
   } = useRoomContext()
 
   const {
@@ -423,7 +423,7 @@ export const MidVideoMarqueeContainer = observer(() => {
     videoStreamList.length || teacherVideoList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
-          openCarousel={carouselState.isOpenCarousel}
+          openCarousel={roomProperties.carousel?.state}
           teacherStreams={teacherVideoList.length ? teacherVideoList : []}
           hideStars={sceneType === 2}
           videoStreamList={videoStreamList.length ? videoStreamList : []}
