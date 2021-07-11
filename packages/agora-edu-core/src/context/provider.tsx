@@ -209,7 +209,6 @@ export const useRoomContext = (): RoomContext => {
     roomProperties,
     updateFlexProperties,
     flexProperties,
-    carouselState,
     setCarouselState,
     startCarousel,
     stopCarousel
@@ -255,7 +254,6 @@ export const useRoomContext = (): RoomContext => {
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
     flexRoomProperties: flexProperties,
-    carouselState,
     setCarouselState,
     startCarousel,
     stopCarousel

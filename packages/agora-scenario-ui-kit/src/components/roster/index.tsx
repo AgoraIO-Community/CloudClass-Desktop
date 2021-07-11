@@ -225,11 +225,11 @@ export const Roster: FC<RosterProps> = ({
                     options={[
                       {
                         label: transI18n('roster.everyone'),
-                        value: '1'
+                        value: 1
                       },
                       {
                         label: transI18n('roster.available'),
-                        value: '2'
+                        value: 2
                       }
                     ]}
                     onChange={carouselProps.changeModeValue}
@@ -243,11 +243,11 @@ export const Roster: FC<RosterProps> = ({
                     options={[
                       {
                         label: transI18n('roster.sequence'),
-                        value: '1'
+                        value: 1
                       },
                       {
                         label: transI18n('roster.random'),
-                        value: '2'
+                        value: 2
                       }
                     ]}
                     onChange={carouselProps.changeRandomValue}
