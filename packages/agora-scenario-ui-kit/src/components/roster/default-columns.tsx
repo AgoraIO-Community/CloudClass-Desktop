@@ -108,28 +108,28 @@ export const defaultColumns: Column[] = [
       )
     },
   },
-  {
-    key: 'chat',
-    name: 'roster.chat',
-    action: 'chat',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const {
-        operateStatus,
-        chatStatus,
-        type,
-      } = getChatState(profile, canOperate);
-      const cls = classnames({
-        ["icon-hover"]: canOperate,
-        ["icon-disable"]: !canOperate,
-        ["icon-flex"]: 1,
-      })
-      return (
-        <div className={cls} onClick={onClick}>
-          <i className={chatStatus}></i>
-        </div>
-      )
-    },
-  },
+  // {
+  //   key: 'chat',
+  //   name: 'roster.chat',
+  //   action: 'chat',
+  //   render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
+  //     const {
+  //       operateStatus,
+  //       chatStatus,
+  //       type,
+  //     } = getChatState(profile, canOperate);
+  //     const cls = classnames({
+  //       ["icon-hover"]: canOperate,
+  //       ["icon-disable"]: !canOperate,
+  //       ["icon-flex"]: 1,
+  //     })
+  //     return (
+  //       <div className={cls} onClick={onClick}>
+  //         <i className={chatStatus}></i>
+  //       </div>
+  //     )
+  //   },
+  // },
   {
     key: 'stars',
     name: 'roster.reward',

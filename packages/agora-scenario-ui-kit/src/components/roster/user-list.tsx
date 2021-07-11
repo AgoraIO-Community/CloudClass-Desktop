@@ -137,28 +137,28 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       )
     },
   },
-  {
-    key: 'chat',
-    name: 'roster.chat',
-    action: 'chat',
-    render: (_, profile, canOperate, userType, onClick) => {
-      const {
-        operateStatus,
-        chatStatus,
-        type,
-      } = getChatState(profile, canOperate);
-      const cls = classnames({
-        ["icon-hover"]: canOperate,
-        ["icon-disable"]: !canOperate,
-        ["icon-flex"]: 1,
-      })
-      return (
-        <div className={cls} onClick={onClick}>
-          <i className={chatStatus}></i>
-        </div>
-      )
-    },
-  },
+  // {
+  //   key: 'chat',
+  //   name: 'roster.chat',
+  //   action: 'chat',
+  //   render: (_, profile, canOperate, userType, onClick) => {
+  //     const {
+  //       operateStatus,
+  //       chatStatus,
+  //       type,
+  //     } = getChatState(profile, canOperate);
+  //     const cls = classnames({
+  //       ["icon-hover"]: canOperate,
+  //       ["icon-disable"]: !canOperate,
+  //       ["icon-flex"]: 1,
+  //     })
+  //     return (
+  //       <div className={cls} onClick={onClick}>
+  //         <i className={chatStatus}></i>
+  //       </div>
+  //     )
+  //   },
+  // },
   {
     key: 'kickOut',
     name: 'student.operation',

@@ -1339,6 +1339,8 @@ export class EduClassroomDataController {
   setRoomBatchProperties(newProperties: any, operator?: OperatorUser, cause?: CauseType) {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
+
+        console.log("1] arrayPropCursor ", key , " changedProperties", changedProperties)
         // TODO: refactor use memory pool
         // setWith(properties, key, changedProperties[key])
         // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
@@ -1352,7 +1354,7 @@ export class EduClassroomDataController {
 
         if(originalPaths.length === 0) {
           console.error(`[rte] invalid key when batch set room properties ${key}`)
-          return properties
+          continue
         }
 
 
@@ -1388,22 +1390,24 @@ export class EduClassroomDataController {
         let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
 
         const isObject = (val:any) => (typeof val === 'object' && val !== null)
-        const changedValue = changedProperties[key]
+        const changedValue = cloneDeep(changedProperties[key])
 
         if (changedValue && Array.isArray(changedValue)) {
-          let arrayPropCurosr: any = properties
+          let arrayPropCursor: any = properties
           for (let path of paths) {
             if (path === lastPath) {
-              arrayPropCurosr[path] = changedValue
+              // console.log(" arrayPropCursor ", path, JSON.stringify(arrayPropCursor[path]), ' changedValue ', JSON.stringify(changedValue), ' key ', key, ' changeProperties ', changedProperties[key], ' changedProperties', JSON.stringify(changedProperties))
+              arrayPropCursor[path] = changedValue
             } else {
-              arrayPropCurosr = arrayPropCurosr[path]
+              arrayPropCursor = arrayPropCursor[path]
             }
           }
-          console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
-          console.log('### properties ', properties)
-          console.log(" #### newProperties", JSON.stringify(newProperties))
-          console.log(" #### changeProperties", JSON.stringify(changedProperties))
-          return properties
+          // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
+          // console.log('### properties ', properties, " arrayPropCursor " ,JSON.stringify(arrayPropCursor))
+          // console.log(" #### newProperties", JSON.stringify(newProperties))
+          // console.log(" #### changeProperties", JSON.stringify(changedProperties))
+          continue;
+          // return properties
         }
 
         if(!isObject(anchor)) {
@@ -1419,10 +1423,10 @@ export class EduClassroomDataController {
           }
         }
       }
-      console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
-      console.log('### properties ', properties)
-      console.log(" #### newProperties", JSON.stringify(newProperties))
-      console.log(" #### changeProperties", JSON.stringify(changedProperties))
+      // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
+      // console.log('### properties ', properties)
+      // console.log(" #### newProperties", JSON.stringify(newProperties))
+      // console.log(" #### changeProperties", JSON.stringify(changedProperties))
       return properties
     }
 
