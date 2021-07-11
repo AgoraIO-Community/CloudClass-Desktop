@@ -1340,7 +1340,7 @@ export class EduClassroomDataController {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
 
-        console.log("1] arrayPropCursor ", key , " changedProperties", changedProperties)
+        // console.log("1] arrayPropCursor ", key , " changedProperties", changedProperties)
         // TODO: refactor use memory pool
         // setWith(properties, key, changedProperties[key])
         // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
