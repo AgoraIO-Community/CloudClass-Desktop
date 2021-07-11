@@ -13,7 +13,7 @@ import { eduSDKApi } from "../services/edu-sdk-api"
 import { reportService } from "../services/report"
 import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
-import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
+import { ChatConversation, ChatMessage, DeviceStateEnum, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, EduMediaStream, SimpleInterval } from "./scene"
@@ -1023,6 +1023,26 @@ export class RoomStore extends SimpleInterval {
   @observable
   joining: boolean = false;
 
+  @computed
+  get visibleCameraToast() {
+    if (![DeviceStateEnum.Disabled].includes(this.appStore.sceneStore.localCameraDeviceState) 
+      || this.autoSyncStreamState === false
+    ) {
+      return false
+    }
+    return true
+  }
+
+  @computed
+  get visibleMicrophoneToast() {
+    if (![DeviceStateEnum.Disabled].includes(this.appStore.sceneStore.localMicrophoneDeviceState) 
+      || this.autoSyncStreamState === false
+    ) {
+      return false
+    }
+    return true
+  }
+
   @action.bound
   async join() {
     try {
@@ -1293,12 +1313,12 @@ export class RoomStore extends SimpleInterval {
                   if(videoChanged) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-                    this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    this.visibleCameraToast && this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                   if (audioChanged) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-                    this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    this.visibleMicrophoneToast && this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                 }
               }
