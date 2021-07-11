@@ -10,10 +10,11 @@ import { SET_ALL_MUTE, REMOVE_ALL_MUTE } from '../contants'
 */
 
 // 单人禁言
-export const setUserMute = (roomId, val) => {
+export const setUserMute = (userId) => {
+    const roomId = store.getState().propsData.chatroomId;
     let options = {
         chatRoomId: roomId,   // 聊天室id
-        users: [val]   // 成员id列表
+        users: [userId]   // 成员id列表
     };
     WebIM.conn.addUsersToChatRoomWhitelist(options).then((res) => {
         console.log('mute fail>>>', res);
@@ -22,10 +23,11 @@ export const setUserMute = (roomId, val) => {
 }
 
 // 移除个人禁言
-export const removeUserMute = (roomId, val) => {
+export const removeUserMute = (userId) => {
+    const roomId = store.getState().propsData.chatroomId;
     let options = {
         chatRoomId: roomId,  // 群组id
-        userName: val           // 要移除的成员
+        userName: userId           // 要移除的成员
     }
     WebIM.conn.rmUsersFromChatRoomWhitelist(options).then((res) => {
         getRoomWhileList(roomId)
@@ -35,7 +37,6 @@ export const removeUserMute = (roomId, val) => {
 // 获取禁言列表 
 export const getRoomWhileList = (roomId) => {
     const owner = store.getState()?.room.info.owner;
-
     let options = {
         chatRoomId: roomId  // 聊天室id
     }
@@ -49,18 +50,18 @@ export const getRoomWhileList = (roomId) => {
         store.dispatch(roomUserMute(newMuteList));
     });
 }
-
 // 判断当前登陆账号是否在白名单
-export const isChatRoomWhiteUser = (roomId, userId) => {
+export const isChatRoomWhiteUser = (userId) => {
+    const roomId = store.getState().propsData.chatroomId;
     let options = {
         chatRoomId: roomId, // 聊天室id
         userName: userId         // 要查询的成员
     }
     WebIM.conn.isChatRoomWhiteUser(options).then((res) => {
         store.dispatch(isUserMute(res.data.white))
+        return res.data.white
     });
 }
-
 // 一键禁言
 export const setAllmute = (roomId, sendCmdMsg) => {
     let options = {
