@@ -498,7 +498,7 @@ export class RoomStore extends SimpleInterval {
 
   // if edu stream should sync with media state, by default media state should respect edu stream state
   @observable
-  autoSyncStreamState = true
+  autoSyncStreamState = false
 
   constructor(appStore: EduScenarioAppStore) {
     super()

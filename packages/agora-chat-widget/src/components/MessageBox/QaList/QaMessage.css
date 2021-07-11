@@ -68,3 +68,13 @@
     flex: 1;
     overflow: scroll;
 }
+.close-btn{
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background-color: #bdbdbd;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+}

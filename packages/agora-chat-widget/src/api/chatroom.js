@@ -1,6 +1,6 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
-import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute } from '../redux/aciton'
+import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner } from '../redux/aciton'
 import store from '../redux/store'
 import { setUserInfo, getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
@@ -42,6 +42,7 @@ export const getRoomInfo = (roomId) => {
         let newArr = [];
         (res.data[0].affiliations).map((item) => {
             if (item.owner) {
+                store.dispatch(roomOwner(item.owner))
                 return
             } else {
                 newArr.push(item.member)

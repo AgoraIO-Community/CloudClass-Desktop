@@ -15,7 +15,7 @@ const SearchList = ({ roomListInfo, searchUser, onSetMute, muteMembers }) => {
     useEffect(() => {
         setDataLength(false)
     }, [searchUser])
-    const roomOwner = useSelector((state) => state.room.info.owner);
+    const roomOwner = useSelector((state) => state.room.owner);
     const roomUsers = useSelector(state => state.room.users)
     // const roomAdmins = useSelector((state) => state.room.admins);
     // 新的空数组，存用户头像，昵称，环信ID

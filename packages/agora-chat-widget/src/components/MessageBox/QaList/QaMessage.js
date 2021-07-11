@@ -22,6 +22,7 @@ const QaMessage = () => {
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
+            height: 'calc(100% - 100px)'
         },
     };
 
@@ -80,8 +81,12 @@ const QaMessage = () => {
                 isOpen={maxImg}
                 onRequestClose={() => { setMaxImg(false) }}
                 style={customStyles}
+                appElement={document.body}
             >
-                <img src={maxImgUrl} alt="picture load failed" />
+                <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    <img src={maxImgUrl} style={{objectFit:'revert',width:'70%'}} alt="picture load failed" />
+                    <button className='close-btn' onClick={()=>{ setMaxImg(false) }}>X</button>
+                </div>
             </AntModal>
         </div>
     )
