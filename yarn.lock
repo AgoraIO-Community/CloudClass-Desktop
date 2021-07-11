@@ -5938,10 +5938,10 @@ agora-edu-core@1.0.0:
     uuid "3.3.3"
     white-web-sdk "2.12.14"
 
-agora-electron-sdk@2.9.107-rc.148:
-  version "2.9.107-rc.148"
-  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-2.9.107-rc.148.tgz#1ca54fb816a3c3c549313cc5dcc32ec3e11ec1a0"
-  integrity sha512-T0yyhrknTLd6e2x/kMKF/+UiggHtnEyoNFBjYpnL/0DFjGpeviBugwwQHIvXzI6+RxXN6WTY4KOo28gywaRl+w==
+agora-electron-sdk@2.9.107-rc.148-build.79:
+  version "2.9.107-rc.148-build.79"
+  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148-build.79.tgz#4963d1cc2b04c1ab3c27cedc1f1d716504ce3558"
+  integrity sha1-SWPRzCsEwas8J87cHx1xZQTONVg=
   dependencies:
     bluebird "^3.7.1"
     download "^7.1.0"
