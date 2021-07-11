@@ -13,7 +13,7 @@ import { eduSDKApi } from "../services/edu-sdk-api"
 import { reportService } from "../services/report"
 import { RoomApi } from "../services/room-api"
 import { UploadService } from "../services/upload-service"
-import { ChatConversation, ChatMessage, QuickTypeEnum } from "../types"
+import { ChatConversation, ChatMessage, DeviceStateEnum, QuickTypeEnum } from "../types"
 import { escapeExtAppIdentifier } from "../utilities/ext-app"
 import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
@@ -1282,7 +1282,8 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasVideo ? 'co_video.remote_open_camera' : 'co_video.remote_close_camera'
-                    this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    ![DeviceStateEnum.Disabled].includes(this.appStore.sceneStore.localCameraDeviceState) 
+                      && this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                   // this.operator = {
                   //   ...operator,
@@ -1296,7 +1297,8 @@ export class RoomStore extends SimpleInterval {
                   if (causeCmd !== 501) {
                     const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant'
                     const operation = this.sceneStore._cameraEduStream.hasAudio ? 'co_video.remote_open_microphone' : 'co_video.remote_close_microphone'
-                    this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
+                    ![DeviceStateEnum.Disabled].includes(this.appStore.sceneStore.localMicrophoneDeviceState) 
+                    && this.appStore.fireToast(operation, { reason: `role.${i18nRole}` })
                   }
                   // this.operator = {
                   //   ...operator,
