@@ -22,6 +22,35 @@ export declare interface WebRtcWrapperInitOption {
 
 export type RTCWrapperProvider = AgoraWebRtcWrapper | AgoraElectronRTCWrapper
 
+export declare interface MediaEncryptionConfig {
+  mode: MediaEncryptionMode,
+  key: string
+}
+
+export enum MediaEncryptionMode {
+  /** 1: (Default) 128-bit AES encryption, XTS mode.
+   */
+  AES_128_XTS = 1,
+  /** 2: 128-bit AES encryption, ECB mode.
+   */
+  AES_128_ECB = 2,
+  /** 3: 256-bit AES encryption, XTS mode.
+   */
+  AES_256_XTS = 3,
+  /** 4: Reserved property.
+   */
+  SM4_128_ECB = 4,
+  /** 5: 128-bit AES encryption, GCM mode.
+   *
+   * @since v3.3.1
+   */
+  AES_128_GCM = 5,
+  /** 6: 256-bit AES encryption, GCM mode.
+   *
+   * @since v3.3.1
+   */
+  AES_256_GCM = 6
+}
 
 /**
  * IElectronRTCWrapper
@@ -157,6 +186,8 @@ export declare interface IAgoraRTCModule {
   muteLocalAudio(val: boolean, deviceId?: string): Promise<any>
   muteRemoteVideo(uid: any, val: boolean): Promise<any>
   muteRemoteAudio(uid: any, val: boolean): Promise<any>
+  enableLocalVideo(val: boolean): Promise<any>
+  enableLocalAudio(val: boolean): Promise<any>
 
   getCameras(): Promise<any[]>
 
@@ -198,6 +229,11 @@ export declare interface RTCProviderInitParams {
   electronLogPath?: {
     logPath: string;
     videoSourceLogPath: string;
+  };
+  resolution?: {
+    width: number;
+    height: number;
+    frameRate: number;
   }
 }
 

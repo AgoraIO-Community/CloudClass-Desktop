@@ -71,11 +71,6 @@ export class ReportService extends ApiBase {
         this.rtmUid = params.uid
     }
 
-    setReportSdkDomain(sdkDomain: string){
-        this.sdkDomain = sdkDomain;
-        this.prefix = `${this.sdkDomain}`
-    }
-
     initReportRoomParams(params: {
         rid: string
     }) {
@@ -244,7 +239,7 @@ export class ReportService extends ApiBase {
     }
 }
 
-export const rteReportService = new ReportService({
+export const reportService = new ReportService({
   sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
   appId: '',
   rtmToken: '',

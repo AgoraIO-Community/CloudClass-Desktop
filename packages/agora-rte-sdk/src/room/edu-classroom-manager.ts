@@ -1,6 +1,6 @@
 import { EduClassroomDataController } from './edu-classroom-data-controller';
 import { EduUserService } from '../user/edu-user-service';
-import { rteReportService } from '../core/services/report-service'
+import { reportService } from '../core/services/report-service'
 import { EduLogger } from '../core/logger';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { EventEmitter } from 'events';
@@ -49,7 +49,7 @@ export class EduClassroomManager {
     this._userService = undefined
     this._rtmObserver = undefined
     this.bus = new EventEmitter()
-    // rteReportService.initReportParams()
+    // reportService.initReportParams()
     // this._mediaService = new MediaService(payload.rtcProvider)
   }
 
@@ -138,12 +138,12 @@ export class EduClassroomManager {
   async join(params: any) {
     try {
       // REPORT
-      rteReportService.startTick('joinRoom', 'end')
+      reportService.startTick('joinRoom', 'end')
       let data = await this._join(params)
-      rteReportService.reportElapse('joinRoom', 'end', { result: true })
+      reportService.reportElapse('joinRoom', 'end', { result: true })
       return data;
     } catch (e) {
-      rteReportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${e.code || e.message}` })
+      reportService.reportElapse('joinRoom', 'end', { result: false, errCode: `${e.code || e.message}` })
       throw e
     }
   }

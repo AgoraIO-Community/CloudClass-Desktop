@@ -26,15 +26,13 @@ export {
   EnumOnlineState,
 } from './core/services/interface';
 
-export { rteReportService } from './core/services/report-service'
-
 export { EduLogger } from './core/logger/index';
 export { EduManager } from './manager/index';
 export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
 export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
 export { AgoraWebRtcWrapper } from './core/media-service/web/index';
 export type { StreamSubscribeOptions } from './core/media-service/web/coordinator';
-export { VideoRenderState } from './core/media-service/renderer/index';
+export { LocalVideoRenderState, RemoteVideoRenderState } from './core/media-service/renderer/index';
 
 export type { LocalUserRenderer, UserRenderer, RemoteUserRenderer } from './core/media-service/renderer/index';
 export type { EduClassroomManager } from './room/edu-classroom-manager';

@@ -12,7 +12,7 @@ import { EduConfiguration } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { GenericErrorWrapper } from '../core/utils/generic-error';
 import {v4 as uuidv4} from 'uuid';
-import { rteReportService } from '../core/services/report-service';
+import { reportService } from '../core/services/report-service';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
@@ -67,7 +67,7 @@ export class EduManager extends EventEmitter {
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId,
       rtcArea: this.config.rtcArea ?? "GLOBAL",
-      rtmArea: this.config.rtmArea ?? "GLOBAL"
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -75,6 +75,7 @@ export class EduManager extends EventEmitter {
         videoSourceLogPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/videosource.log` : (window.videoSourceLogPath || ""),
       }
       buildOption.agoraSdk = this.config.agoraRtc
+      buildOption.resolution = this.config.resolution
     }
     this._mediaService = new MediaService(buildOption)
     if (EduManager._debug) {
@@ -95,11 +96,11 @@ export class EduManager extends EventEmitter {
         sdkDomain: this.config.sdkDomain
       }
     )
-    rteReportService.updateRtmConfig({
+    reportService.updateRtmConfig({
       rtmToken: this.config.rtmToken,
       rtmUid: this.config.rtmUid,
     })
-    rteReportService.setAppId(this.config.appId)
+    reportService.setAppId(this.config.appId)
   }
 
   updateRtmConfig(info: {
@@ -183,13 +184,13 @@ export class EduManager extends EventEmitter {
   async login(userUuid: string) {
     try {
       // REPORT
-      rteReportService.initReportUserParams({sid: this._sessionId, appId: this.config.appId, uid: userUuid})
-      rteReportService.startTick('init', 'rtm', 'login')
+      reportService.initReportUserParams({sid: this._sessionId, appId: this.config.appId, uid: userUuid})
+      reportService.startTick('init', 'rtm', 'login')
       await this._login(userUuid)
-      rteReportService.reportElapse('init', 'rtm', {api: 'login', result: true})
-      rteReportService.startHB()
+      reportService.reportElapse('init', 'rtm', {api: 'login', result: true})
+      reportService.startHB()
     }catch(e) {
-      rteReportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
+      reportService.reportElapse('init', 'rtm', {api: 'login', result: false, errCode: `${e.message}`})
       throw e
     }
   }
@@ -212,7 +213,7 @@ export class EduManager extends EventEmitter {
             }
           }
         }
-        rteReportService.updateConnectionState(rtmWrapper.connectionState)
+        reportService.updateConnectionState(rtmWrapper.connectionState)
         this.fire('ConnectionStateChanged', evt)
       })
       rtmWrapper.on('MessageFromPeer', (evt: any) => {
@@ -268,8 +269,8 @@ export class EduManager extends EventEmitter {
       await this.rtmWrapper.destroyRtm()
       this.removeAllListeners()
       this._rtmWrapper = undefined
-      rteReportService.stopHB()
-      rteReportService.resetParams()
+      reportService.stopHB()
+      reportService.resetParams()
       // refresh session id when logout to ensure next login get a new sid
       this._sessionId = uuidv4()
     }
@@ -279,7 +280,7 @@ export class EduManager extends EventEmitter {
 
     const roomUuid = params.roomUuid
     
-    rteReportService.initReportRoomParams({rid: roomUuid})
+    reportService.initReportRoomParams({rid: roomUuid})
     let classroomManager = new EduClassroomManager({
       roomUuid: roomUuid,
       roomName: params.roomName,

@@ -5,7 +5,7 @@ import { EduUser, StreamType, DeleteStreamType, AgoraFetchParams, ClassroomState
 import { EduLogger } from '../logger';
 import { HttpClient } from '../utils/http-client';
 import { EntryRequestParams, UserStreamResponseData, UserStreamList, EduJoinRoomParams, JoinRoomResponseData } from "./interface";
-import { rteReportService } from "./report-service";
+import { reportService } from "./report-service";
 
 export type CauseType = Record<string, any>
 
@@ -330,7 +330,7 @@ export class AgoraEduApi extends ApiBase {
 
   async entryRoom(params: EntryRequestParams): Promise<any> {
     // REPORT
-    rteReportService.startTick('joinRoom', 'http', 'entry')
+    reportService.startTick('joinRoom', 'http', 'entry')
     const data = {
       userName: params.userName,
       role: params.role,
@@ -346,7 +346,7 @@ export class AgoraEduApi extends ApiBase {
     })
     const statusCode = resp['__status']
     const {code} = resp
-    rteReportService.reportHttp('joinRoom', 'http', 'entry', statusCode, statusCode === 200, code)
+    reportService.reportHttp('joinRoom', 'http', 'entry', statusCode, statusCode === 200, code)
 
     return resp.data
   }
@@ -616,7 +616,6 @@ export class AgoraEduApi extends ApiBase {
         startTime: get(entryRoomData, 'room.roomState.startTime'),
         state: get(entryRoomData, 'room.roomState.state'),
         properties: get(entryRoomData, 'room.roomProperties'),
-        createTime: get(entryRoomData, 'room.roomState.createTime')
       },
       user: {
         uuid: get(entryRoomData, 'user.userUuid'),

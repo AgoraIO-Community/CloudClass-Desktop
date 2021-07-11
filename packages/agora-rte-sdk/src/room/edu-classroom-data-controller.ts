@@ -1,5 +1,5 @@
 import { diff } from 'deep-diff';
-import { cloneDeep, get, isEmpty, merge, pick, set, setWith } from 'lodash';
+import { cloneDeep, get, isEmpty, pick, set, setWith } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { EduLogger } from '../core/logger';
 import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator';
@@ -411,7 +411,7 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.roomChatState: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
               EduLogger.info(`EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`)
               this.fire('room-chat-message', {
@@ -419,7 +419,7 @@ export class EduClassroomDataController {
                 operator
               })
             }
-          // }
+          }
           break;
         }
 
@@ -427,12 +427,12 @@ export class EduClassroomDataController {
         case EduChannelMessageCmdType.customMessage: {
           const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
           const operator: OperatorUser = data?.operator ?? {}
-          // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
+          if (this.userIds.includes(textMessage.fromUser.userUuid)) {
             this.fire('room-message', {
               textMessage,
               operator
             })
-          // }
+          }
           break;
         }
       }
@@ -1340,7 +1340,7 @@ export class EduClassroomDataController {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
         // TODO: refactor use memory pool
-        // setWith(properties, key, changedProperties[key])
+        setWith(properties, key, changedProperties[key])
         // const newObject = transformDotStrToObject(key, changedProperties[key]) as any
         // const value = changedProperties[key]
         // merge(properties, newObject)
@@ -1348,76 +1348,6 @@ export class EduClassroomDataController {
         //   assign(properties, newObject)
         // }
         // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
-        let originalPaths = key.split('.')
-
-        if(originalPaths.length === 0) {
-          console.error(`[rte] invalid key when batch set room properties ${key}`)
-          return properties
-        }
-
-
-
-
-        const paths = originalPaths.filter((path: string) => path)
-        let cursor = properties
-        // initialize structs
-        // for(let path of paths) {
-        //   cursor[path] = cursor[path] || {}
-        //   cursor = cursor[path]
-        // }
-        let lastPath = ''
-        for (let path of paths) {
-          cursor[path] = cursor[path] || {}
-          cursor = cursor[path]
-          lastPath = path
-        }
-        // try {
-        //   for (let i = 0; i < paths.length; i++) {
-        //     const curPath = paths[i]
-        //     // pathResult += curPath
-        //     console.log('[SDK] curPath ', curPath)
-        //     const newPathValue = get(changedProperties, pathResult, {})
-        //     cursor[curPath] = cursor[curPath] || cloneDeep(newPathValue)
-        //     cursor = cursor[curPath]
-        //   }
-        // } catch (e) {
-        //   console.log(e);
-        // }
-
-        let anchor = get(properties, paths.join('.'))
-        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
-
-        const isObject = (val:any) => (typeof val === 'object' && val !== null)
-        const changedValue = changedProperties[key]
-
-        if (changedValue && Array.isArray(changedValue)) {
-          let arrayPropCurosr: any = properties
-          for (let path of paths) {
-            if (path === lastPath) {
-              arrayPropCurosr[path] = changedValue
-            } else {
-              arrayPropCurosr = arrayPropCurosr[path]
-            }
-          }
-          console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
-          console.log('### properties ', properties)
-          console.log(" #### newProperties", JSON.stringify(newProperties))
-          console.log(" #### changeProperties", JSON.stringify(changedProperties))
-          return properties
-        }
-
-        if(!isObject(anchor)) {
-          // if anchor is not an object, overwrite anyway
-          parent[[...paths].pop()!] = changedValue
-        } else {
-          // anchor is an object
-          if(!isObject(changedValue)) {
-            // if changed value is not an object, overwrite as well
-            parent[[...paths].pop()!] = changedValue
-          } else {
-              merge(anchor, changedValue)
-          }
-        }
       }
       console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
       console.log('### properties ', properties)

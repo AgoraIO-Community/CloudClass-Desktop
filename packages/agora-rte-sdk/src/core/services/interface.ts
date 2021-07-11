@@ -123,8 +123,7 @@ export interface JoinRoomResponseData {
     }
     startTime: number
     state: number
-    properties: any,
-    createTime: number,
+    properties: any
   }
   user: {
     uuid: string
