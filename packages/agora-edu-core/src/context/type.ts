@@ -592,6 +592,7 @@ export type RoomContext = {
      * @version v1.1.2
      */
     flexRoomProperties: any;
+    setAutoSyncStreamState: (val:boolean) => void
 }
 export type RoomDiagnosisContext = {
     /**
