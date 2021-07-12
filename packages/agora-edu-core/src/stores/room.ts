@@ -500,6 +500,8 @@ export class RoomStore extends SimpleInterval {
   @observable
   autoSyncStreamState = false
 
+
+
   constructor(appStore: EduScenarioAppStore) {
     super()
     this.appStore = appStore
@@ -2094,12 +2096,22 @@ export class RoomStore extends SimpleInterval {
 
   async syncMediaLocalStreamState() {
     if(!this.autoSyncStreamState) {
-      BizLogger.error(`[core] syncMediaLocalStreamState ignore as autoSyncStreamState is false`)
+      BizLogger.warn(`[core] syncMediaLocalStreamState ignore as autoSyncStreamState is false`)
       return
     }
+
+    if (!this.sceneStore.cameraEduStream){
+      BizLogger.warn(`[core] camera edu stream not exists`)
+      return
+    }
+
     if (this.sceneStore.cameraEduStream.hasVideo) {
       try{
-        await this.sceneStore.unmuteLocalCamera(false)
+        if (!this.sceneStore._cameraRenderer) {
+          await this.sceneStore.unmuteLocalCamera(false)
+        } else {
+          BizLogger.warn(`[core] ignore unmute as it's already unmuted`)
+        }
       } catch(e) {
         BizLogger.error(`[core] unmuteLocalCamera failed ${e.message}`)
       }
