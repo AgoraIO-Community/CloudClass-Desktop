@@ -66,7 +66,8 @@ async function createWindow() {
     width: realSize.width,
     height: realSize.height,
     center: true,
-    // resizable: false,
+    resizable: false,
+    fullscreen: false,
     // show: true,
     webPreferences: {
       autoplayPolicy: 'no-user-gesture-required',
