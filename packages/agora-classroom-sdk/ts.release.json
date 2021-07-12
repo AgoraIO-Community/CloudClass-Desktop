@@ -21,7 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",

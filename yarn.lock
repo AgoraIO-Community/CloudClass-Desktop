@@ -5545,7 +5545,7 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
-agora-electron-sdk@2.9.107-rc.148-build.68, agora-electron-sdk@apaas:
+agora-electron-sdk@apaas:
   version "2.9.107-rc.148-build.68"
   resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-2.9.107-rc.148-build.68.tgz#1e201faf19e57d37d0de3901b1122c995e1c4fb5"
   integrity sha1-HiAfrxnlfTfQ3jkBsRIsmV4cT7U=
