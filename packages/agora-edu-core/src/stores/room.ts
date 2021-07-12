@@ -954,6 +954,10 @@ export class RoomStore extends SimpleInterval {
     return +this.roomInfo.roomType === EduRoomType.SceneTypeBigClass && userRole === EduRoleTypeEnum.student
   }
 
+  @action
+  setAutoSyncStreamState(val: boolean) {
+    this.autoSyncStreamState = val
+  }
 
   updateRewardInfo() {
 
@@ -1637,10 +1641,10 @@ export class RoomStore extends SimpleInterval {
           audioSourceType: EduAudioSourceType.mic,
           streamUuid: mainStream.streamUuid,
           streamName: '',
-          hasVideo: false,
-          hasAudio: false,
-          // hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
-          // hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
+          // hasVideo: false,
+          // hasAudio: false,
+          hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : false,
+          hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : false,
           userInfo: {} as EduUser
         })
         EduLogger.info("toast.publish_business_flow_successfully")
