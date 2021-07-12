@@ -49,7 +49,6 @@ export const Chat = () => {
             let val
             roomUsers.map((item) => {
                 if (item === "系统管理员") return
-                console.log('roomUsersInfo>>>', roomUsersInfo);
                 if (Object.keys(roomUsersInfo).length > 0) {
                     val = roomUsersInfo[item]
                 }
@@ -104,31 +103,31 @@ export const Chat = () => {
     }
     return <div>
         {showRed && <div className="red-notice"></div>}
-        <StickyContainer>
-            <Tabs renderTabBar={renderTabBar} onChange={onTabChange} activeKey={tabKey}>
-                <TabPane tab="聊天" key={CHAT_TABS_KEYS.chat}>
-                    {
-                        announcement && <div className="notice" onClick={() => { toTabKey() }}>
-                            <img src={notice} alt="通知" className="notice-icon" />
-                            <span className="notice-text">
-                                {announcement}
-                            </span>
-                        </div>
-                    }
-                    <MessageBox />
-                    <InputBox />
-                </TabPane>
-                {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
-                    <UserList roomUserList={roomUserList} />
-                </TabPane>}
-                <TabPane tab="公告" key={CHAT_TABS_KEYS.notice}>
-                    <Announcement />
-                </TabPane>
-            </Tabs>
-            <div className="mini-icon">
-                <img src={minimize} onClick={() => { showChatModal() }} />
-            </div>
-        </StickyContainer>
+        {/* <StickyContainer> */}
+        <Tabs onChange={onTabChange} activeKey={tabKey}>
+            <TabPane tab="聊天" key={CHAT_TABS_KEYS.chat}>
+                {
+                    announcement && <div className="notice" onClick={() => { toTabKey() }}>
+                        <img src={notice} alt="通知" className="notice-icon" />
+                        <span className="notice-text">
+                            {announcement}
+                        </span>
+                    </div>
+                }
+                <MessageBox />
+                <InputBox />
+            </TabPane>
+            {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
+                <UserList roomUserList={roomUserList} />
+            </TabPane>}
+            <TabPane tab="公告" key={CHAT_TABS_KEYS.notice}>
+                <Announcement />
+            </TabPane>
+        </Tabs>
+        <div className="mini-icon">
+            <img src={minimize} onClick={() => { showChatModal() }} />
+        </div>
+        {/* </StickyContainer> */}
         <div>
         </div>
 
