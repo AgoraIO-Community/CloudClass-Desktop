@@ -190,6 +190,7 @@
 
 .video-container::-webkit-scrollbar {
   width: 0;
+  display: none;
 }
 /* 
 .video-item {
