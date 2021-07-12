@@ -4,7 +4,6 @@
 }
 
 .layout-video {
-  min-height: 200px;
   align-items: center;
   justify-content: center;
 }
@@ -355,9 +354,9 @@
 }
 
 .video-marquee-pin {
-  position: absolute;
+  /* position: absolute;
   height: 165px;
-  width: 100%;
+  width: 100%; */
 }
 
 .video-marquee-pin ~ .board-box {
