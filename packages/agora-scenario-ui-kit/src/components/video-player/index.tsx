@@ -511,18 +511,38 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     }
   }, [videoContainerRef.current])
 
-  // const [animated, startAnimate] = useState<boolean>(false)
-
-  // useWatch([teacherStreams, videoStreamList], prev => {
-  //   if (teacherStreams.length !== videoStreamList.length) {
-  //     startAnimate(true)
-  //   }
-  // })
-
   return (
     <div className="marque-video-container">
       <>
+        <CSSTransition
+          // key={`student-${teacherStreams[0].uid}`}
+          // key={videoStream.uid}
+          in={!!teacherStreams[0]?.uid}
+          timeout={500}
+          classNames="video-player-animates"
+        >
+          <div className="video-item" ref={attachVideoItem}>
+            {teacherStreams[0] &&
+            <VideoPlayer
+              hideStars={hideStars}
+              {...teacherStreams[0]}
+              // showGranted={true}
+              userType={userType}
+              onCameraClick={onCameraClick}
+              onMicClick={onMicClick}
+              onOffPodiumClick={onOffPodiumClick}
+              onWhiteboardClick={onWhiteboardClick}
+              onSendStar={async () => {
+                await onSendStar(teacherStreams[0].uid)
+              }}
+              onPrivateChat={async () => {
+                await onPrivateChat(teacherStreams[0].uid)
+              }}
+            ></VideoPlayer>}
+          </div>
+        </CSSTransition>
         <div className="video-container" ref={mountDOM}>
+          {/* {teacherStreams[0] ?  */}
           {!openCarousel && (<div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
             <span className="offset">
               <Icon type="backward"></Icon>
@@ -530,7 +550,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           </div>)}
           <TransitionGroup className="video-list">
             {
-              teacherStreams.concat(videoStreamList).map((videoStream: BaseVideoPlayerProps, idx: number) =>
+              videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
                 <CSSTransition
                   key={`student-${videoStream.uid}`}
                   // key={videoStream.uid}

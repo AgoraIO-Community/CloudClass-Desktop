@@ -293,7 +293,7 @@ export const DocsClassVideoPlayer = () => {
           ...teacherList,
           {
             username: `teacher-${teacherList.length}`,
-            uid: `uuid-teacher`,
+            uid: `teacher-${teacherList.length}`,
             micEnabled: false,
             cameraEnabled: false,
             whiteboardGranted: true,
@@ -318,7 +318,7 @@ export const DocsClassVideoPlayer = () => {
           ...studentList,
           {
             username: `student-${studentList.length}`,
-            uid: `uuid-student`,
+            uid: `student-${studentList.length}`,
             micEnabled: false,
             cameraEnabled: false,
             whiteboardGranted: true,
