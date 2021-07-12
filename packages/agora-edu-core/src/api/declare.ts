@@ -132,6 +132,15 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type MediaOptions = {
+  screenShareEncoderConfigurations: {
+    width: number;
+    height: number;
+    frameRate: number;
+    bitrate: number
+  }
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -158,6 +167,7 @@ export type AppStoreConfigParams = {
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
   userFlexProperties?: {[key: string]: any}
+  mediaOptions?: MediaOptions
 }
 
 export type LanguageEnum = "en" | "zh"
