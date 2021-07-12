@@ -514,9 +514,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   return (
     <div className="marque-video-container">
       <>
-        <CSSTransition
-          // key={`student-${teacherStreams[0].uid}`}
-          // key={videoStream.uid}
+      <CSSTransition
           in={!!teacherStreams[0]?.uid}
           timeout={500}
           classNames="video-player-animates"
@@ -526,7 +524,6 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             <VideoPlayer
               hideStars={hideStars}
               {...teacherStreams[0]}
-              // showGranted={true}
               userType={userType}
               onCameraClick={onCameraClick}
               onMicClick={onMicClick}

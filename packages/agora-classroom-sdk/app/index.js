@@ -20,10 +20,10 @@ const type = os.type()
  */
 
 const realSize = {
-  width: 960,
-  height: 640,
-  changeWidth: 1280,
-  changeHeight: 720
+  width: 1280,
+  height: 720,
+  // changeWidth: 1280,
+  // changeHeight: 720
 }
 const { app, Menu, netLog } = electron;
 
@@ -66,7 +66,8 @@ async function createWindow() {
     width: realSize.width,
     height: realSize.height,
     center: true,
-    // resizable: false,
+    resizable: false,
+    fullscreen: false,
     // show: true,
     webPreferences: {
       autoplayPolicy: 'no-user-gesture-required',
@@ -311,9 +312,9 @@ async function createWindow() {
     currentWindow.close()
   });
 
-  ipcMain.on('changWindowSize', () =>
-    mainWindow.setSize(realSize.changeWidth, realSize.changeHeight)
-  )
+  // ipcMain.on('changWindowSize', () =>
+  //   mainWindow.setSize(realSize.changeWidth, realSize.changeHeight)
+  // )
 }
 
 // This method will be called when Electron has finished
