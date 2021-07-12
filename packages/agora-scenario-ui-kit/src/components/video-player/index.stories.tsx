@@ -215,7 +215,7 @@ export const DocsMidClassCarousel = () => {
             ...studentList,
             {
               username: `student-${studentList.length}`,
-              uid: `uuid-student`,
+              uid: `student-${studentList.length}`,
               micEnabled: false,
               cameraEnabled: false,
               whiteboardGranted: true,
@@ -239,7 +239,7 @@ export const DocsMidClassCarousel = () => {
       <MidClassVideoMarqueeList
         teacherStream={{
           username: `teacher`,
-          uid: `uuid-teacher`,
+          uid: `teacher-${studentList.length}`,
           micEnabled: false,
           cameraEnabled: false,
           whiteboardGranted: true,
