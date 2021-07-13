@@ -1,4 +1,3 @@
-//import { isElectron } from '@/infra/utils';
 import { ReactElement } from 'react';
 import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer } from "agora-rte-sdk"
 import { get } from "lodash"
