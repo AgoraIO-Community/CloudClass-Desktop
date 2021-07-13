@@ -318,9 +318,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.monitorDeviceChange(true)
     // this.client.setVideoProfile(20)
 
-    const resolutionConfig = options.resolution
+    const resolutionConfig = options.cameraEncoderConfiguration
     const config: any = {
-      bitrate: 0,
+      bitrate: resolutionConfig ? resolutionConfig?.bitrate : 0,
       frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
       width: resolutionConfig ? resolutionConfig?.width : 320,
       height: resolutionConfig ? resolutionConfig?.height : 240,
