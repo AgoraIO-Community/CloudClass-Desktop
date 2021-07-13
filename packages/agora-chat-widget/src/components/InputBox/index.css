@@ -103,6 +103,7 @@ textarea {
     display: flex;
     justify-content: flex-end;
     margin-top: 3px;
+    padding: 0 8px;
 }
 
 /* .send-btn {

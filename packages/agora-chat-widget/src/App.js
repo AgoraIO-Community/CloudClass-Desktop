@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
-import { propsAction, isShowChat, isShowChatRed } from './redux/actions/propsAction'
+import { propsAction, isShowChat } from './redux/actions/propsAction'
 import { statusAction, clearStore } from './redux/actions/userAction'
 import { messageAction, showRedNotification } from './redux/actions/messageAction'
 import { roomAllMute, roomUsers, isUserMute } from './redux/actions/roomAction'
@@ -21,7 +21,7 @@ import 'antd/dist/antd.css'
 const App = function (props) {
   const state = useSelector(state => state)
   const showChat = state?.showChat
-  const showChatRed = state?.showChatRed
+  const showRed = state?.showRed
   useEffect(() => {
     let im_Data = props.pluginStore.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '')
@@ -40,7 +40,7 @@ const App = function (props) {
   // 最小化窗口设置
   const onChangeModal = () => {
     store.dispatch(isShowChat(true))
-    store.dispatch(isShowChatRed(false))
+    store.dispatch(showRedNotification(false))
   }
 
   let arr = []
@@ -85,15 +85,10 @@ const App = function (props) {
       },
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
-        const isShowChat = _.get(store.getState(), 'showChat')
         if (new_IM_Data.chatroomId === message.to) {
           store.dispatch(messageAction(message, { isHistory: false }))
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed))
-          if (!isShowChat) {
-            console.log('执行了>>>');
-            store.dispatch(isShowChatRed(true))
-          }
         }
 
       },
@@ -101,6 +96,8 @@ const App = function (props) {
         console.log('onCmdMessaeg>>>', message);
         if (new_IM_Data.chatroomId === message.to) {
           store.dispatch(messageAction(message, { showNotice: store.getState().isTabKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
+          const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
+          store.dispatch(showRedNotification(isShowRed))
         }
       },
       onPresence: (message) => {
@@ -171,7 +168,7 @@ const App = function (props) {
         <div className="chat">
           <div className="show-chat-icon" onClick={() => { onChangeModal() }}>
             <img src={showChat_icon} />
-            {showChatRed && <div className="chat-notice"></div>}
+            {showRed && <div className="chat-notice"></div>}
           </div>
         </div>}
     </div >
