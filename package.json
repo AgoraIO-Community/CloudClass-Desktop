@@ -24,7 +24,7 @@
     "typescript": "4.2.3"
   },
   "agora_electron": {
-    "electron_version": "7.1.2",
+    "electron_version": "12.0.0",
     "prebuilt": true
   },
   "description": "[English](README.zh.md)*",
