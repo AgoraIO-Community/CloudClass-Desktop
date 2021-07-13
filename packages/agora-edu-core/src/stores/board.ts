@@ -6,7 +6,7 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
-import { ConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
+import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -65,7 +65,7 @@ export type {Resource};
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: ConvertedFile, index: number) => ({
+    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index+1}`,
       componentCount: 1,
       ppt: {
@@ -362,7 +362,7 @@ export class BoardStore extends ZoomController {
   }
 
   loadScene(data: any[]): SceneDefinition[] {
-    return data.map((item: ConvertedFile, index: number) => ({
+    return data.map((item: AgoraConvertedFile, index: number) => ({
       name: `${index + 1}`,
       componentCount: 1,
       ppt: {
@@ -934,7 +934,8 @@ export class BoardStore extends ZoomController {
   async aClassJoinBoard(params: any) {
     const {role, ...data} = params
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
+    const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
+    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
         this.online = false
@@ -1994,25 +1995,58 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async putAV(url: string, type: string) {
+  async putAV(url: string, type: string, mimeType: string) {
     console.log("open media ", url, " type", type)
+
+    /**
+     * Mimetypes
+     *
+     * @see http://hul.harvard.edu/ois/////systems/wax/wax-public-help/mimetypes.htm
+     * @typedef Mimetypes~Kind
+     * @enum
+     */
+    const MimeTypesKind: Record<string, string> = {
+      opus: 'video/ogg',
+      ogv: 'video/ogg',
+      mp4: 'video/mp4',
+      mov: 'video/mp4',
+      m4v: 'video/mp4',
+      mkv: 'video/x-matroska',
+      m4a: 'audio/mp4',
+      mp3: 'audio/mpeg',
+      aac: 'audio/aac',
+      caf: 'audio/x-caf',
+      flac: 'audio/flac',
+      oga: 'audio/ogg',
+      wav: 'audio/wav',
+      m3u8: 'application/x-mpegURL',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      gif: 'image/gif',
+      png: 'image/png',
+      svg: 'image/svg+xml',
+      webp: 'image/webp'
+    };
+
     if (type === 'video') {
+      const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4'
       netlessInsertVideoOperation(this.room, {
         url: url,
         originX: 0,
         originY: 0,
         width: 480,
         height: 270,
-      })
+      }, videoMimeType)
     }
     if (type === 'audio') {
+      const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg'
       netlessInsertAudioOperation(this.room, {
         url: url,
         originX: 0,
         originY: 0,
         width: 480,
         height: 86,
-      })
+      }, audioMimeType)
     }
   }
 
@@ -2028,7 +2062,7 @@ export class BoardStore extends ZoomController {
         await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
-        await this.putAV(resource.url, resource.type)
+        await this.putAV(resource.url, resource.type, resource.name)
       }  
       if (["image"].includes(resource.type)) {
         await this.putImage(resource.url)

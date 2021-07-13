@@ -78,7 +78,7 @@ async function createWindow() {
       webviewTag: true,
       nativeWindowOpen: true,
       backgroundThrottling: false,
-      nodeIntegrationInSubFrames: true,
+      // nodeIntegrationInSubFrames: true,
       // autoplayPolicy: 'no-user-gesture-required',
       // nodeIntegration: true,
       // nodeIntegrationInWorker: true,

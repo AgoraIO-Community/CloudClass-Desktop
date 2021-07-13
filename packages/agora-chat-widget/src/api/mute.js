@@ -45,7 +45,7 @@ export const getRoomWhileList = (roomId) => {
         chatRoomId: roomId  // 聊天室id
     }
     WebIM.conn.getChatRoomWhitelist(options).then((res) => {
-        console.log('getRoomWhileList success>>>', res);
+        // console.log('getRoomWhileList success>>>', res);
         let newMuteList = [];
         (res.data).map((item) => {
             if (item === owner) return

@@ -1,3 +1,4 @@
+import { PluginId } from '@netless/video-js-plugin';
 import { EventEmitter } from 'events';
 import { AgoraMediaDeviceEnum } from "../types"
 import { EduRoleTypeEnum, EduTextMessage } from "agora-rte-sdk"
@@ -342,43 +343,47 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
-
-
-  console.log("video file", file.url)
-
+export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
   room.insertPlugin(
-    'video2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-          src: file.url
-          // isNavigationDisable: false
+          src: file.url,
+          type: mimeType
+          // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
       }
     }
   )
 }
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
-
-  console.log("audio file", file.url)
-
+export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
   room.insertPlugin(
-    'audio2',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-        src: file.url
-          // isNavigationDisable: false
+        src: file.url,
+        type: mimeType
       }
     }
   )
+}
+
+export const getStorage = (label: string) => {
+  const beautyOption = GlobalStorage.read(label) || {
+    isBeauty: 0,
+    lighteningLevel: 0.5,
+    rednessLevel: 0.5,
+    smoothnessLevel: 0.5,
+  }
+  return beautyOption
 }
 
 // media device helper
@@ -450,7 +455,6 @@ export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessag
 export type BytesType = number | string
 
 export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
-  if (`${fileBytes}` === '- -') return '- -';
   const bytes = +fileBytes
   if(bytes == 0) return '- -';
   const k = 1000,

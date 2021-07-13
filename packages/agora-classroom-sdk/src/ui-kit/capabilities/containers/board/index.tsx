@@ -12,6 +12,7 @@ import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } fro
 import { useEffect } from 'react'
 import classnames from 'classnames'
 import { useUIStore } from '@/infra/hooks'
+import "video.js/dist/video-js.css";
 
 export const allTools: ToolItem[] = [
   {
