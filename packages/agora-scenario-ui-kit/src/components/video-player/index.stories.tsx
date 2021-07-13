@@ -199,64 +199,64 @@ export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({ children, s
   )
 }
 
-export const DocsMidClassCarousel = () => {
-  const [studentList, setStudentList] = useState([])
-  return (
-    <>
-      <div style={{
-        position: 'fixed',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        margin: 'auto'
-      }}>
-        <Button onClick={() => {
-          setStudentList([
-            ...studentList,
-            {
-              username: `student-${studentList.length}`,
-              uid: `student-${studentList.length}`,
-              micEnabled: false,
-              cameraEnabled: false,
-              whiteboardGranted: true,
-              cameraDevice: 2,
-              micDevice: 1,
-              hasStream: true,
-              online: true,
-              isLocal: true,
-              isOnPodium: false,
-              userType: 'student',
-              children: (<></>)
-            }
-          ])
-        }}>上台</Button>
-        <Button onClick={() => {
-          const copyArr = [...studentList]
-          copyArr.splice(0, 1)
-          setStudentList([...copyArr])
-        }}>下台</Button>
-      </div>
-      <MidClassVideoMarqueeList
-        teacherStream={{
-          username: `teacher`,
-          uid: `teacher-${studentList.length}`,
-          micEnabled: false,
-          cameraEnabled: false,
-          whiteboardGranted: true,
-          cameraDevice: 2,
-          micDevice: 1,
-          hasStream: true,
-          online: true,
-          isLocal: true,
-          isOnPodium: false,
-          userType: 'teacher',
-          children: (<></>)
-        }}
-        videoStreamList={studentList}
-      />
-    </>
-  )
-}
+// export const DocsMidClassCarousel = () => {
+//   const [studentList, setStudentList] = useState([])
+//   return (
+//     <>
+//       <div style={{
+//         position: 'fixed',
+//         left: 0,
+//         right: 0,
+//         bottom: 0,
+//         margin: 'auto'
+//       }}>
+//         <Button onClick={() => {
+//           setStudentList([
+//             ...studentList,
+//             {
+//               username: `student-${studentList.length}`,
+//               uid: `student-${studentList.length}`,
+//               micEnabled: false,
+//               cameraEnabled: false,
+//               whiteboardGranted: true,
+//               cameraDevice: 2,
+//               micDevice: 1,
+//               hasStream: true,
+//               online: true,
+//               isLocal: true,
+//               isOnPodium: false,
+//               userType: 'student',
+//               children: (<></>)
+//             }
+//           ])
+//         }}>上台</Button>
+//         <Button onClick={() => {
+//           const copyArr = [...studentList]
+//           copyArr.splice(0, 1)
+//           setStudentList([...copyArr])
+//         }}>下台</Button>
+//       </div>
+//       <MidClassVideoMarqueeList
+//         teacherStream={{
+//           username: `teacher`,
+//           uid: `teacher-${studentList.length}`,
+//           micEnabled: false,
+//           cameraEnabled: false,
+//           whiteboardGranted: true,
+//           cameraDevice: 2,
+//           micDevice: 1,
+//           hasStream: true,
+//           online: true,
+//           isLocal: true,
+//           isOnPodium: false,
+//           userType: 'teacher',
+//           children: (<></>)
+//         }}
+//         videoStreamList={studentList}
+//       />
+//     </>
+//   )
+// }
 
 export const DocsClassVideoPlayer = () => {
   const [studentList, setStudentList] = useState([])
@@ -339,6 +339,7 @@ export const DocsClassVideoPlayer = () => {
         setStudentList([...copyArr])
       }}>下台</Button>
       <VideoMarqueeList
+        openCarousel={false}
         teacherStream={teacherList[0]}
         teacherStreams={teacherList}
         videoStreamList={studentList}

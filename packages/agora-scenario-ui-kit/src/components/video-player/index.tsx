@@ -540,11 +540,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
         </CSSTransition>
         <div className="video-container" ref={mountDOM}>
           {/* {teacherStreams[0] ?  */}
-          {!openCarousel && (<div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+          {openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
             <span className="offset">
               <Icon type="backward"></Icon>
             </span>
-          </div>)}
+          </div> : null}
           <TransitionGroup className="video-list">
             {
               videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
@@ -577,11 +577,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             }
           </TransitionGroup>
 
-          {!openCarousel && (<div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
+          {openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
             <span className="offset">
               <Icon type="forward"></Icon>
             </span>
-          </div>)}
+          </div> : null}
         </div>
       </>
     </div>
@@ -604,12 +604,6 @@ export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
   userType,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
 }) => {
-  useWatch(videoStreamList, prev => {
-    if (videoStreamList.length < (prev?.length || 0)) {
-      // 学生列表长度减少
-      console.log('想在这里处理消失动画, 在此处打断点后发现是在页面渲染后执行，所以没法追加消失动画的类名')
-    }
-  })
   return (
     <div className="mid-class-carousel">
       <div className="carousel-item video-teacher">
