@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback } from 'react';
+import React, { FC, ReactNode, useCallback, useState } from 'react';
 import { t, transI18n, getLanguage } from '~components/i18n';
 import { Icon } from '~components/icon';
 import { ModalProps } from '~components/modal';
@@ -11,8 +11,6 @@ import { canOperate, ProfileRole, studentListSort } from './base';
 import { Search } from '../input';
 import { Select } from '~components/select';
 import { Input } from '~components/input'
-import { useEffect } from 'react';
-import {debounce} from 'lodash'
 
 export * from './user-list';
 
@@ -191,6 +189,18 @@ export const Roster: FC<RosterProps> = ({
     return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
   }, [isDraggable])
 
+  const [currentTimes, setCurrentTimes] = useState(carouselProps.times)
+
+  const changeTimesFn = (e: any) => {
+    let result = e.target.value.replace(/\D+/g, '')
+    if (Number(result) > 99) {
+      result = 99
+    }
+    setCurrentTimes(result)
+    carouselProps.changeTimes(result)
+  }
+
+
   return (
     <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
@@ -256,11 +266,9 @@ export const Roster: FC<RosterProps> = ({
                 <div className="carousel-frequency">
                   <span className="">{transI18n('roster.order_every')}</span>
                   <div className="carousel-frequency-input">
-                    <Input 
-                      value={carouselProps.times} 
-                      onChange={e => {
-                        carouselProps.changeTimes(e.target.value.replace(/\D+/g, ''))
-                      }} 
+                    <Input
+                      value={currentTimes}
+                      onChange={changeTimesFn}
                     />
                   </div>
                   <span className="">{transI18n('roster.seconds')}</span>
