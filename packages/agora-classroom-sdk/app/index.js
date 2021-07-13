@@ -27,7 +27,7 @@ const realSize = {
 }
 const { app, Menu, netLog } = electron;
 
-// app.allowRendererProcessReuse = false;
+app.allowRendererProcessReuse = false;
 // Menu template
 const isMac = platform === 'darwin'
 
@@ -66,12 +66,24 @@ async function createWindow() {
     width: realSize.width,
     height: realSize.height,
     center: true,
-    resizable: false,
+    resizable: true,
     fullscreen: false,
     // show: true,
     webPreferences: {
-      autoplayPolicy: 'no-user-gesture-required',
+      autoplayPolicy: "no-user-gesture-required",
       nodeIntegration: true,
+      contextIsolation: false,
+      // preload: runtime.preloadPath,
+      webSecurity: false,
+      webviewTag: true,
+      nativeWindowOpen: true,
+      backgroundThrottling: false,
+      nodeIntegrationInSubFrames: true,
+      // autoplayPolicy: 'no-user-gesture-required',
+      // nodeIntegration: true,
+      // nodeIntegrationInWorker: true,
+      // nodeIntegrationInSubFrames: true,
+      // contextIsolation: false,
       preload: path.join(__dirname, './preload')
     }
   });
@@ -99,11 +111,11 @@ async function createWindow() {
   const videoSourceAddonLogPath = path.join(appLogPath, `log`, `video_source_addon_agora_sdk.log`)
 
   mainWindow.webContents.on("did-finish-load", (event, args) => {
-    event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath])
+    // event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath])
   })
 
   mainWindow.webContents.once("did-finish-load", () => {
-    mainWindow.webContents.send('initialize', [logPath, dstPath, videoSourceLogPath, videoSourceAddonLogPath])
+    // mainWindow.webContents.send('initialize', [logPath, dstPath, videoSourceLogPath, videoSourceAddonLogPath])
   })
 
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {

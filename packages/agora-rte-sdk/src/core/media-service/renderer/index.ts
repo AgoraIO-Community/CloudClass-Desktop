@@ -257,7 +257,7 @@ export class RemoteUserRenderer extends UserRenderer {
         //@ts-ignore
         this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
       }
-      const electron_renderer = this.electron.client._getRenderer(1, +this.uid, this.channel)
+      const electron_renderer: any = this.electron.client._getRenderers(1, +this.uid, this.channel)
       const remote_renderer = this
       if(electron_renderer) {
         if(this.renderState === VideoRenderState.Prepare) {
