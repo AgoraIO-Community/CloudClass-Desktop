@@ -1,7 +1,8 @@
 import WebIM from "../utils/WebIM";
 import store from '../redux/store'
 import { roomAllMute, roomUserMute, isUserMute } from '../redux/actions/roomAction'
-import { SET_ALL_MUTE, REMOVE_ALL_MUTE } from '../contants'
+import { SET_ALL_MUTE, REMOVE_ALL_MUTE, MUTE_USER, UNMUTE_USER } from '../contants'
+import { sendCmdMsg } from './message'
 
 
 /*
@@ -17,7 +18,8 @@ export const setUserMute = (userId) => {
         users: [userId]   // 成员id列表
     };
     WebIM.conn.addUsersToChatRoomWhitelist(options).then((res) => {
-        console.log('mute fail>>>', res);
+        console.log('setUserMute success>>>', res);
+        sendCmdMsg(MUTE_USER, res.data.user)
         getRoomWhileList(roomId)
     })
 }
@@ -30,6 +32,8 @@ export const removeUserMute = (userId) => {
         userName: userId           // 要移除的成员
     }
     WebIM.conn.rmUsersFromChatRoomWhitelist(options).then((res) => {
+        console.log('removeUserMute success>>>', res);
+        sendCmdMsg(UNMUTE_USER, res.data.user)
         getRoomWhileList(roomId)
     });
 }
@@ -41,7 +45,7 @@ export const getRoomWhileList = (roomId) => {
         chatRoomId: roomId  // 聊天室id
     }
     WebIM.conn.getChatRoomWhitelist(options).then((res) => {
-        console.log('mute success>>>', res);
+        console.log('getRoomWhileList success>>>', res);
         let newMuteList = [];
         (res.data).map((item) => {
             if (item === owner) return
@@ -63,7 +67,7 @@ export const isChatRoomWhiteUser = (userId) => {
     });
 }
 // 一键禁言
-export const setAllmute = (roomId, sendCmdMsg) => {
+export const setAllmute = (roomId) => {
     let options = {
         chatRoomId: roomId  // 聊天室id
     };
@@ -73,7 +77,7 @@ export const setAllmute = (roomId, sendCmdMsg) => {
     })
 }
 // 解除一键禁言
-export const removeAllmute = (roomId, sendCmdMsg) => {
+export const removeAllmute = (roomId) => {
     let options = {
         chatRoomId: roomId  // 聊天室id
     };

@@ -31,11 +31,15 @@ export const ANNOUNCEMENT_SIZE = 500
 // 超过限制
 export const MORE_SIZE = "最多可输入500字符"
 
-// 禁言 aciton
+// 一键禁言 aciton
 export const SET_ALL_MUTE = "setAllMute"
 export const REMOVE_ALL_MUTE = "removeAllMute"
 export const SET_ALL_MUTE_MSG = "已开启全体学生禁言"
 export const REMOVE_ALL_MUTE_MSG = "已关闭全体学生禁言"
+
+// 单人禁言
+export const MUTE_USER = "mute"
+export const UNMUTE_USER = "unmute"
 
 // 登陆提示
 export const LOGIN_SUCCESS = "登陆IM成功！"
