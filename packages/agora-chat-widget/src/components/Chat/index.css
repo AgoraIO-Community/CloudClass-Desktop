@@ -50,9 +50,6 @@
     cursor: pointer;
     background: rgb(251 242 230);
     cursor: pointer;
-    position: absolute;
-    z-index: 9999;
-    top: 45px;
 }
 
 .notice-icon {

@@ -87,8 +87,12 @@ const App = function (props) {
         console.log('onTextMessage>>>', message);
         if (new_IM_Data.chatroomId === message.to) {
           store.dispatch(messageAction(message, { isHistory: false }))
+          const showChat = store.getState().showChat
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed))
+          if (!showChat) {
+            store.dispatch(showRedNotification(true))
+          }
         }
 
       },
@@ -96,8 +100,12 @@ const App = function (props) {
         console.log('onCmdMessaeg>>>', message);
         if (new_IM_Data.chatroomId === message.to) {
           store.dispatch(messageAction(message, { showNotice: store.getState().isTabKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
+          const showChat = store.getState().showChat
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed))
+          if (!showChat) {
+            store.dispatch(showRedNotification(true))
+          }
         }
       },
       onPresence: (message) => {

@@ -59,6 +59,7 @@
     display: flex;
     justify-content: flex-end;
     cursor: pointer;
+    padding: 0 20px;
 }
 
 .tips-content {

@@ -104,7 +104,7 @@ export const Chat = () => {
     return <div>
         {showRed && <div className="red-notice"></div>}
         {/* <StickyContainer> */}
-        <Tabs onChange={onTabChange} activeKey={tabKey}>
+        <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
             <TabPane tab="聊天" key={CHAT_TABS_KEYS.chat}>
                 {
                     announcement && <div className="notice" onClick={() => { toTabKey() }}>
