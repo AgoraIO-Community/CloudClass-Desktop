@@ -74,8 +74,8 @@ export const Docs: Story<RosterProps> = ({dataSource, ...restProps}) => {
   }
 
   const [carouselState, setCarouselState] = useState<any>({
-    modeValue: 'all',
-    randomValue: 'random',
+    modeValue: 1,
+    randomValue: 1,
     times: 10
   })
 
