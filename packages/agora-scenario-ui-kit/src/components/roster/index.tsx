@@ -192,7 +192,7 @@ export const Roster: FC<RosterProps> = ({
   const [currentTimes, setCurrentTimes] = useState(carouselProps.times)
 
   const changeTimesFn = (e: any) => {
-    let result = e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi,'')
+    let result = e.target.value.replace(/\D+/g, '')
     if (Number(result) > 99) {
       result = 99
     }
