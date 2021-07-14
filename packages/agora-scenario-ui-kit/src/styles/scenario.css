@@ -194,7 +194,7 @@
   /* border-bottom: 2px solid white; */
 }
 
-.edu-room .video-player.teacher-1v1 {
+.video-player.teacher-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: .5s;
@@ -224,7 +224,7 @@
   /* bottom: 0; */
 }
 
-.edu-room .video-player.student-1v1 {
+.video-player.student-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: .5s;

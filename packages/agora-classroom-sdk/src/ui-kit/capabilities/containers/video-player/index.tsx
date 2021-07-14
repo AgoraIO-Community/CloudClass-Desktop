@@ -423,7 +423,7 @@ export const MidVideoMarqueeContainer = observer(() => {
     videoStreamList.length || teacherVideoList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
-          openCarousel={roomProperties.carousel?.state}
+          openCarousel={!!roomProperties.carousel?.state}
           teacherStreams={teacherVideoList.length ? teacherVideoList : []}
           hideStars={sceneType === 2}
           videoStreamList={videoStreamList.length ? videoStreamList : []}
