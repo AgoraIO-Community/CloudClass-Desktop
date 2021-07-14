@@ -264,7 +264,7 @@
 
 .edu-room .layout {
   position: relative;
-  transform: translateY(2px);
+  /* transform: translateY(2px); */
 }
 
 .material-menu {
