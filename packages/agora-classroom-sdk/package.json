@@ -85,7 +85,6 @@
     "artifactName": "${productName}-${version}.${ext}",
     "mac": {
       "target": [
-        "dmg",
         "zip"
       ],
       "icon": "icons/favicon.png",
