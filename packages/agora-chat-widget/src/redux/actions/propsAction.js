@@ -7,7 +7,3 @@ export const propsAction = (data) => {
 export const isShowChat = (data) => {
     return { type: 'IS_SHOW_CHAT', data }
 }
-// 控制窗口最小化，消息提示
-export const isShowChatRed = (data) => {
-    return { type: 'IS_SHOW_CHAT_RED', data }
-}

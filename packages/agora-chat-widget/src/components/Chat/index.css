@@ -44,9 +44,11 @@
     align-items: center;
     justify-content: center;
     /* 宽度自定义 */
-    width: auto;
+    width: 100%;
     height: 32px;
-    background: rgba(240, 201, 150, 0.1);
+    /* background: rgba(240, 201, 150, 0.1); */
+    cursor: pointer;
+    background: rgb(251 242 230);
     cursor: pointer;
 }
 

@@ -18,7 +18,6 @@ let defaultState = {
     messages: [],           // 消息列表
     isTabKey: CHAT_TABS_KEYS.chat,  // 当前选中的Tab
     showRed: false,         // 不在聊天Tab消息提示
-    showChatRed: false,     // 窗口最小化提示
     announcementStatus: true   // 公告编辑状态
 }
 const reducer = (state = defaultState, action) => {
@@ -33,11 +32,6 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 showChat: data
-            };
-        case 'IS_SHOW_CHAT_RED':
-            return {
-                ...state,
-                showChatRed: data
             };
         case 'STATUS_ACTION':
             return {
