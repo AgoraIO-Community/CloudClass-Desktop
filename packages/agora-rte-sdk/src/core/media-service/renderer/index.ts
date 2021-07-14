@@ -242,7 +242,9 @@ export class RemoteUserRenderer extends UserRenderer {
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
         dom.querySelector('video')?.addEventListener('loadeddata', () => {
           this.updateVideoRenderState(VideoRenderState.FirstFrameRendered)
-          setTimeout(() => {this.updateVideoRenderState(VideoRenderState.Playing)}, 0)
+          Promise.resolve().then(() => {
+            this.updateVideoRenderState(VideoRenderState.Playing)
+          })
         }, {
           once: true
         })
@@ -257,9 +259,10 @@ export class RemoteUserRenderer extends UserRenderer {
         //@ts-ignore
         this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
       }
-      const electron_renderer: any = this.electron.client._getRenderers(1, +this.uid, this.channel)
+      let electron_renderer: any = this.electron.client._getRenderers(1, +this.uid, this.channel)
       const remote_renderer = this
-      if(electron_renderer) {
+      if(electron_renderer && electron_renderer[0]) {
+        electron_renderer = electron_renderer[0]
         if(this.renderState === VideoRenderState.Prepare) {
           // only do this if it's preparing video
           // @ts-ignore
