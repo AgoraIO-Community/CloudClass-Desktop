@@ -7945,14 +7945,14 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30001244"
-  resolved "https://registry.nlark.com/caniuse-db/download/caniuse-db-1.0.30001244.tgz#a6dff32473648df0b0ae0f99d98797adfb7cf459"
-  integrity sha1-pt/zJHNkjfCwrg+Z2YeXrft89Fk=
+  version "1.0.30001245"
+  resolved "https://registry.nlark.com/caniuse-db/download/caniuse-db-1.0.30001245.tgz#2ee3377f4f623c30f21e23494bae57209684a5c4"
+  integrity sha1-LuM3f09iPDDyHiNJS65XIJaEpcQ=
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000929, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001125, caniuse-lite@^1.0.30001196, caniuse-lite@^1.0.30001219:
-  version "1.0.30001244"
-  resolved "https://registry.nlark.com/caniuse-lite/download/caniuse-lite-1.0.30001244.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcaniuse-lite%2Fdownload%2Fcaniuse-lite-1.0.30001244.tgz#a6dc49ad5fa02d81d04373ec3f5ceabc3da06abf"
-  integrity sha1-ptxJrV+gLYHQQ3PsP1zqvD2gar8=
+  version "1.0.30001245"
+  resolved "https://registry.nlark.com/caniuse-lite/download/caniuse-lite-1.0.30001245.tgz?cache=0&sync_timestamp=1626238601288&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcaniuse-lite%2Fdownload%2Fcaniuse-lite-1.0.30001245.tgz#45b941bbd833cb0fa53861ff2bae746b3c6ca5d4"
+  integrity sha1-RblBu9gzyw+lOGH/K650azxspdQ=
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -13374,7 +13374,7 @@ humanize-plus@^1.8.1:
 
 i18next@20.1.0:
   version "20.1.0"
-  resolved "https://registry.nlark.com/i18next/download/i18next-20.1.0.tgz#397dce9ad230ea822f487dc62d6128df5b678456"
+  resolved "https://registry.nlark.com/i18next/download/i18next-20.1.0.tgz?cache=0&sync_timestamp=1626246675649&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fi18next%2Fdownload%2Fi18next-20.1.0.tgz#397dce9ad230ea822f487dc62d6128df5b678456"
   integrity sha1-OX3OmtIw6oIvSH3GLWEo31tnhFY=
   dependencies:
     "@babel/runtime" "^7.12.0"
@@ -24717,7 +24717,7 @@ typedoc@0.20.36:
 
 typescript@4.2.3:
   version "4.2.3"
-  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1626160650090&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
+  resolved "https://registry.nlark.com/typescript/download/typescript-4.2.3.tgz?cache=0&sync_timestamp=1626247113458&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
   integrity sha1-OQYtgBmRLUNyYpjwlJPVmASMHOM=
 
 ua-parser-js@0.7.22:
