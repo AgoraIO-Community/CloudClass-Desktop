@@ -184,7 +184,8 @@ export interface EduConfiguration {
   sdkDomain?: string
   rtmUid: string
   rtmToken: string,
-  scenarioType?: number
+  scenarioType?: number,
+  cameraEncoderConfigurations?: EduVideoEncoderConfiguration
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
@@ -357,11 +358,6 @@ export enum EduRenderMode {
 
 export interface EduRenderConfig {
   renderMode: EduRenderMode;
-}
-
-export interface EduVideoConfig {
-  resolution?: any;
-  fps?: string;
 }
 
 export interface EduStreamConfig {

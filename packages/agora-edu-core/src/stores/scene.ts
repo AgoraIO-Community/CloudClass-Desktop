@@ -859,7 +859,7 @@ export class SceneStore extends SimpleInterval {
         width: 1280,
         height: 720,
         frameRate: 5,
-        bitrate: 800
+        bitrate: 1000
       }
       await this.mediaService.prepareScreenShare({
         shareAudio: 'auto',

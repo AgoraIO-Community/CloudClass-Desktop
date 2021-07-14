@@ -134,7 +134,8 @@ export class EduSDKApi extends ApiBase {
       data: {
         mode: 'web',
         webRecordConfig: {
-          rootUrl: params.url
+          rootUrl: params.url,
+          videoBitrate: 3000
         },
         backupCount: 0
       }

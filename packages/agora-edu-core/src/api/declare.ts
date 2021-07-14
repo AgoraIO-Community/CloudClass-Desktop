@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -133,12 +133,8 @@ export type AgoraRegionString =
   | 'ns'
 
 export type MediaOptions = {
-  screenShareEncoderConfigurations: {
-    width: number;
-    height: number;
-    frameRate: number;
-    bitrate: number
-  }
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
+  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration
 }
 
 export type AppStoreConfigParams = {

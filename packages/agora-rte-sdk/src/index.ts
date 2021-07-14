@@ -63,7 +63,6 @@ export type {
   EduClassroomAttrs,
   EduClassroom,
   EduRenderConfig,
-  EduVideoConfig,
   EduStreamConfig,
   EduVideoEncoderConfiguration,
   EduUserInfo,
