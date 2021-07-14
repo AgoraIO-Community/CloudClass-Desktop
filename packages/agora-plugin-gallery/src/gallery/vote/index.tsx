@@ -1,5 +1,5 @@
 import 'promise-polyfill/src/polyfill';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
@@ -7,7 +7,10 @@ import { Provider, observer } from 'mobx-react';
 import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core'
 import {
   Button,
-  Countdown,
+  Table,
+  TableHeader,
+  Col,
+  Row,
   Input,
   transI18n,
   I18nProvider,
@@ -15,84 +18,122 @@ import {
 } from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import "./index.css"
+import { spawn } from 'child_process';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
-const App = observer(() => {
+const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => void, onTitle: (title: string) => void }) => {
   const pluginStore = usePluginStore()
 
   useEffect(() => {
-  }, [])
+    onHeight(pluginStore.height || 0)
+  }, [pluginStore.height])
+
+  // useEffect(() => {
+  //   onTitle(transI18n('vote.appName')+ ' ' + pluginStore.currentTime)
+  // }, [pluginStore.currentTime])
+
+  const subDis = useMemo(() => {
+    if (pluginStore.status === 'config') {
+      return !pluginStore.title || (pluginStore.answer?.includes('') || false)
+    } else if (pluginStore.status === 'answer') {
+      return (pluginStore.selAnswer?.length || 0) === 0
+    }
+    return false;
+  }, [pluginStore.status, pluginStore.title, pluginStore.answer, pluginStore.selAnswer])
 
   return (
-    <div 
+    <div
       style={{
         width: '100%',
         height: '100%'
       }}
       className={classnames({
-        [`vote-modal`]: 1,
-        [`vote-modal-hover`]: !pluginStore.showSetting && pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher
+        [`vote-modal`]: 1
       })}
     >
-      <div className="restart-wrap">
-        <Button
-          onClick={() => {
-            
-          }}
-        >{transI18n('vote.restart')}</Button>
-      </div>
-      <div className="numbers-wrap">
-        <Countdown
-          style={{ transform: 'scale(0.4)' }}
-          endDate={pluginStore.result}
-          theme={2}
-          type={2}
-          timeUnit={[':', ':', ':']}
-          play={pluginStore.play}
+      {pluginStore.status !== 'config' ? <span className='vote-title-tip'>{transI18n(pluginStore.mulChoice ? 'vote.mul-sel' : 'vote.single-sel')}</span> : null}
+      <div>
+        <textarea
+          value={pluginStore.title}
+          className="vote-title"
+          placeholder={transI18n('vote.input-tip')}
+          disabled={pluginStore.status !== 'config'}
+          maxLength={100}
+          onChange={(e: any) => { pluginStore.status === 'config' && (pluginStore.title = e.target.value) }}
         />
-      </div>    
-      {pluginStore.showSetting ? (
-        <div className="setting-wrap">
-          <div>
-            <Input
-              value={pluginStore.number}
-              onChange={(e: any) => { pluginStore.setNumber(e.target.value.replace(/\D+/g, '')) }}
-              suffix={<span style={{
-                color: (pluginStore.number != undefined && pluginStore.number <= 3600) ? '#333' : '#F04C36'
-              }}>({transI18n('vote.seconds')})</span>}
-              maxNumber={3600}
-              style={{
-                color: (pluginStore.number != undefined && pluginStore.number <= 3600)  ? '#333' : '#F04C36'
-              }}
-            />
+        {pluginStore.status === 'config' ? <>
+          <span className='vote-limit' >{pluginStore.title?.length || 0}/100</span>
+          <div className="vote-mulchoice" >
+            <label ><input type="radio" name='sel' checked={!pluginStore.mulChoice} onChange={() => { }} onClick={() => { pluginStore.status === 'config' && (pluginStore.mulChoice = false) }} />{transI18n('vote.single-sel')}</label>
+            <label ><input type="radio" name='sel' checked={pluginStore.mulChoice} onChange={() => { }} onClick={() => { pluginStore.status === 'config' && (pluginStore.mulChoice = true) }} />{transI18n('vote.mul-sel')}</label>
           </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-          }}>
-            <Button
-              onClick={() => {
-                
-              }}
-              disabled={pluginStore.number !== undefined && pluginStore.number > 3600}
-            >{transI18n('vote.start')}</Button>
-          </div>
-        </div>
-      ) : null}
-
+        </> : null}
+        <Table>
+          {pluginStore.answer?.map((col: string, idx: number) => (
+            <Row key={idx} style={{ padding: '0 10px' }}>
+              {pluginStore.status === 'end' || pluginStore.status === 'info' ? <span
+                style={{
+                  color: '#677386',
+                  fontSize: '14px',
+                  position: 'relative',
+                  top: '7px',
+                  display: 'inline-block',
+                  width: '20px'
+                }}>{idx + 1}.</span> : null}
+              <Input
+                className="vote-item"
+                prefix={pluginStore.status === 'answer' ?
+                  <input
+                    type="radio"
+                    checked={pluginStore.selAnswer?.includes(col)} onChange={() => { }}
+                    onClick={() => { pluginStore.changeSelAnswer(col, pluginStore.mulChoice) }}
+                  /> : pluginStore.status === 'config' ? <span
+                    style={{
+                      color: '#677386',
+                      fontSize: '14px'
+                    }}>{idx + 1}.</span> : null}
+                suffix={pluginStore.status === 'end' || pluginStore.status === 'info' ? <span style={{
+                  color: '#677386',
+                  fontSize: '14px'
+                }}>{pluginStore.answerInfo ? pluginStore.answerInfo[idx] : ''}</span> : null}
+                value={pluginStore.answer && pluginStore.answer[idx]}
+                disabled={pluginStore.status !== 'config'}
+                placeholder={transI18n('vote.item-tip')}
+                onChange={(e: any) => { pluginStore.changeAnswer(idx, e.target.value) }}>
+              </Input>
+              {pluginStore.status === 'info' || pluginStore.status === 'end' ? <span className="vote-process"
+                style={{ width: pluginStore.answerInfo ? ('calc(' + pluginStore.answerInfo[idx].split(' ')[1] + " - 20px)") : '0' }} ></span> : null}
+            </Row>
+          ))}
+        </Table>
+      </div>
+      {pluginStore.ui?.includes('subs') ? <div className="vote-submit">
+        <span onClick={() => {
+          pluginStore.addAnswer()
+        }} style={{ visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 6) ? 'hidden' : 'visible' }} >+</span>
+        <Button
+          disabled={pluginStore.status === 'config' ? (!pluginStore.title || (pluginStore.answer?.includes('') || false))
+            : (pluginStore.status === 'answer' ? (pluginStore.selAnswer?.length || 0) === 0 : false)}
+          onClick={() => {
+            pluginStore.onSubClick();
+          }}
+        >{transI18n(pluginStore?.buttonName || '')}</Button>
+        <span onClick={() => {
+          pluginStore.subAnswer()
+        }} style={{ visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) < 3) ? 'hidden' : 'visible' }}>-</span>
+      </div> : null}
     </div>
   )
 })
 
 
 export class AgoraExtAppVote implements IAgoraExtApp {
-
   appIdentifier = "io.agora.vote"
   appName = 'vote'
-  width = 258
-  height = 168 // 开始倒计时后高度为 55
+  width = 370
+  height = 310
+  title = transI18n('vote.appName')
 
   store?: PluginStore
 
@@ -102,11 +143,14 @@ export class AgoraExtAppVote implements IAgoraExtApp {
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle)
-    this.height = this.store.showSetting ? 168 : 55
     ReactDOM.render((
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
-          <App />
+          <App onHeight={(height: number) => {
+            this.height = height
+          }} onTitle={(title: string) => {
+            this.title = title
+          }} />
         </Provider>
       </I18nProvider>
     ),
@@ -114,10 +158,12 @@ export class AgoraExtAppVote implements IAgoraExtApp {
     );
   }
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.height = this.store?.showSetting ? 168 : 55
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): void {
+    if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+      this.store?.onSubClick(true)
+    }
   }
 }
 

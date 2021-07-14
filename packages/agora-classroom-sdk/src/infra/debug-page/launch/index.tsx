@@ -100,7 +100,7 @@ export const LaunchPage = observer(() => {
         )
       }
 
-      launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any),new AgoraExtAppAnswer(launchOption.language as any)]
+      launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any),new AgoraExtAppAnswer(launchOption.language as any),new AgoraExtAppVote(launchOption.language as any)]
       const genH5Scenes = (size: number) => {
         return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
       }

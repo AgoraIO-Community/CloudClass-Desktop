@@ -16,7 +16,6 @@ const formatTime = (long: number) => {
 export class PluginStore {
     context: AgoraExtAppContext
     handle: AgoraExtAppHandle
-    extapp: any
 
     @observable
     height?: number = 144
@@ -161,8 +160,6 @@ export class PluginStore {
 
     @action
     onReceivedProps(properties: any, cause: any) {
-        console.log('roomProperties:',properties);
-        
         this.context.properties = properties
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             if (properties.state === 'start' || properties.state === 'end') {

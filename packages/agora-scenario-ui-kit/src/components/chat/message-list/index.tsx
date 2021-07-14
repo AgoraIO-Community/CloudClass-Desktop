@@ -128,6 +128,7 @@ export const MessageList: FC<MessageListProps> = ({
                     style={limitWords?{paddingRight: '80px'}:{}}
                     placeholder={disableChat ? transI18n('placeholder.muted_chat') : transI18n('placeholder.input_message')}
                     disabled={disableChat}
+                    maxLength={limitWords?80:300}
                     onChange={(e) => onText(e.currentTarget.value)}
                     onFocus={handleFocus}
                     onBlur={handleBlur}

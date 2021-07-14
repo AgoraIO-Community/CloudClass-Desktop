@@ -105,7 +105,7 @@ export const zh = {
     'add_screen_share': '老师开启了屏幕共享',
     'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',
-    'revoke_board_success': '收回白板成功', 
+    'revoke_board_success': '收回白板成功',
     'create_screen_share_failed': '创建屏幕分享失败',
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
@@ -218,7 +218,7 @@ export const zh = {
     'share_url': '邀请链接',
     'copy': '复制',
     'copy_success': '已复制。',
-    'media_auto_play_tip':"点击屏幕开始直播"
+    'media_auto_play_tip': "点击屏幕开始直播"
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -233,7 +233,7 @@ export const zh = {
     'straight': '直线',
     'circle': '圆圈',
     'rectangle': '矩形',
-    'clicker':'鼠标',
+    'clicker': '鼠标',
     'selector': '选择',
     'eraser': '橡皮擦',
     'color': '颜色',
@@ -424,5 +424,14 @@ export const zh = {
   },
   'vote': {
     'appName': '投票',
+    'start': '开始投票',
+    'restart': '重新开始',
+    'over': '结束投票',
+    'submit': '投票',
+    'change': '修改投票',
+    'input-tip': '请输入投票问题',
+    'item-tip': '请输入选项内容',
+    'single-sel': '单选',
+    'mul-sel': '多选',
   }
 }
