@@ -448,6 +448,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null)
 
+  const videoContainerParentRef = useRef<HTMLDivElement | null>(null)
+
   const scroll = useCallback((direction: 'left' | 'right') => {
     const videoContainer = videoContainerRef.current
     if (!videoContainer) return
@@ -463,25 +465,28 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   }, [videoContainerRef.current])
 
   const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
-    const targetOffsetWidth = target.offsetWidth
+    // const targetOffsetWidth = target.offsetWidth
     const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item')
-    if (videoItems && videoItems[0]) {
-      const contentOffsetWidth = videoItems[0].offsetWidth * videoItems.length
-      return contentOffsetWidth > targetOffsetWidth
+    if (videoItems && videoItems.length && videoItems[0].offsetWidth) {
+      return videoItems.length >= 6
     }
     return false
   }
 
-  const mountDOM = useCallback((dom: HTMLDivElement | null) => {
+  const mountDOM = useCallback((_dom: HTMLDivElement | null) => {
+  
+    const dom: HTMLDivElement = _dom?.querySelector("#animation-group")!
+    
     if (dom) {
       videoContainerRef.current = dom
+      videoContainerParentRef.current = _dom!
 
-      if (videoContainerRef.current) {
+      if (videoContainerRef.current && videoContainerParentRef.current) {
         const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
         if (satisfied) {
-          videoContainerRef.current.classList.add('show-scroll')
+          videoContainerParentRef.current.classList.add('show-scroll')
         } else {
-          videoContainerRef.current.classList.remove('show-scroll')
+          videoContainerParentRef.current.classList.remove('show-scroll')
         }
       }
       const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -496,7 +501,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           }
         }
       })
-      observer.observe(dom)
+      observer.observe(videoContainerParentRef.current)
     }
   }, [])
 
@@ -538,14 +543,17 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             ></VideoPlayer>}
           </div>
         </CSSTransition>
-        <div className="video-container" ref={mountDOM}>
+        <div className="video-flex-container"
+          ref={mountDOM}
+        >
           {/* {teacherStreams[0] ?  */}
-          {openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+          {!openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
             <span className="offset">
               <Icon type="backward"></Icon>
             </span>
           </div> : null}
-          <TransitionGroup className="video-list">
+          <TransitionGroup id="animation-group" className="video-list video-container">
+            {/* <div className="video-container" ref={mountDOM}> */}
             {
               videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
                 <CSSTransition
@@ -575,9 +583,9 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                 </CSSTransition>
               )
             }
+            {/* </div> */}
           </TransitionGroup>
-
-          {openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
+          {!openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
             <span className="offset">
               <Icon type="forward"></Icon>
             </span>

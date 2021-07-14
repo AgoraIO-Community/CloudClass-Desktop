@@ -162,7 +162,7 @@
   visibility: unset !important;
 }
 
-.video-container .scroll-btn {
+.video-flex-container .scroll-btn {
   opacity: 0;
   visibility: hidden;
 }
@@ -175,6 +175,13 @@
   /* scroll-behavior: smooth; */
   /* -ms-overflow-style: none; */
   /* scrollbar-width: none; */
+}
+
+.video-flex-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 }
 
 .video-container {
