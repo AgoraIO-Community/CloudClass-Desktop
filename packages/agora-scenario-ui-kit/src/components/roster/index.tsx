@@ -200,6 +200,16 @@ export const Roster: FC<RosterProps> = ({
     carouselProps.changeTimes(result)
   }
 
+  const blurTimesFn = (e: any) => {
+    let result = e.target.value.replace(/\D+/g, '')
+    if (result === '') return // blur时为空的时候不做处理
+    if (Number(result) < 10) {
+      result = 10
+      setCurrentTimes(result)
+      carouselProps.changeTimes(result)
+    }
+  }
+
 
   return (
     <DraggableContainer cancel={".search-header"} >
@@ -269,6 +279,7 @@ export const Roster: FC<RosterProps> = ({
                     <Input
                       value={currentTimes}
                       onChange={changeTimesFn}
+                      onBlur={blurTimesFn}
                     />
                   </div>
                   <span className="">{transI18n('roster.seconds')}</span>
