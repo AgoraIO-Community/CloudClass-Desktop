@@ -192,8 +192,8 @@ export const Roster: FC<RosterProps> = ({
   const [currentTimes, setCurrentTimes] = useState(carouselProps.times)
 
   const changeTimesFn = (e: any) => {
-    let result = e.target.value.replace(/\D+/g, '')
-    if (Number(result) > 99) {
+    let result = Number(e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi,''))
+    if (result > 99) {
       result = 99
     }
     setCurrentTimes(result)
@@ -201,13 +201,12 @@ export const Roster: FC<RosterProps> = ({
   }
 
   const blurTimesFn = (e: any) => {
-    let result = e.target.value.replace(/\D+/g, '')
-    if (result === '') return // blur时为空的时候不做处理
-    if (Number(result) < 10) {
+    let result = Number(e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi,''))
+    if (result < 10) {
       result = 10
-      setCurrentTimes(result)
-      carouselProps.changeTimes(result)
     }
+    setCurrentTimes(result)
+    carouselProps.changeTimes(result)
   }
 
 
