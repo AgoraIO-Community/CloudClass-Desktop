@@ -77,7 +77,7 @@
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
-    "white-web-sdk": "2.12.21"
+    "white-web-sdk": "2.13.10"
   },
   "browserslist": {
     "production": [

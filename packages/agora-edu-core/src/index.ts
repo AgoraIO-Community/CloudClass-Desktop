@@ -8,7 +8,8 @@ export * from './context/app-plugin-context'
 
 export * from './context/widget-context'
 
-export * from 'white-web-sdk'
+export {ApplianceNames,PPTKind} from 'white-web-sdk'
+export type {SceneDefinition,Room} from 'white-web-sdk'
 
 export {
   mapFileType
