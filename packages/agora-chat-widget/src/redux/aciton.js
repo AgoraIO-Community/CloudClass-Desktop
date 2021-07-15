@@ -105,10 +105,15 @@ export const clearStore = (data) => {
 
 // 设置当前提问人
 export const setCurrentUser = (data) => {
-    return {type: 'SAVE_CURRENT_USER',data}
+    return { type: 'SAVE_CURRENT_USER', data }
 }
 
 // 聊天室创建者
 export const roomOwner = (data) => {
-    return {type: 'GET_ROOM_OWNER',data}
+    return { type: 'GET_ROOM_OWNER', data }
+}
+
+// 接收自定义消息回调
+export const registerMsgCallback = (data) => {
+    return { type: 'REGISTER_MSG_CALLBACK', data }
 }

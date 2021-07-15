@@ -31,7 +31,8 @@ let defaultState = {
     isQa: false,         //是否为提问消息开关
     isReward: false,     //是否隐藏赞赏消息开关
     userListInfo: {},    //成员信息
-    isRoomAllMute: false  //全局禁言
+    isRoomAllMute: false,  //全局禁言
+    customMsg: {},
 
 }
 const reducer = (state = defaultState, action) => {
@@ -302,7 +303,14 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 room: {
                     ...state.room,
-                    owner:data
+                    owner: data
+                }
+            }
+        case 'REGISTER_MSG_CALLBACK':
+            return {
+                ...state,
+                customMsg: {
+                    receiveCallback: data
                 }
             }
         default:

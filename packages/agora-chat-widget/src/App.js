@@ -10,6 +10,7 @@ import { getUserInfo } from './api/userInfo'
 import Notice from './components/Notice'
 import MessageBox from './components/MessageBox/MessageList'
 import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants'
+import { _onCustomMsg } from './api/message'
 import { getPageQuery } from './utils'
 import _ from 'lodash'
 
@@ -101,7 +102,7 @@ const App = function (props) {
         const roomOwner = _.get(store.getState(), 'room.owner');
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
-            if(roomOwner === message.from) {
+            if (roomOwner === message.from) {
               return;
             }
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
@@ -160,6 +161,7 @@ const App = function (props) {
         if (new_IM_Data.chatroomId == message.to) {
           store.dispatch(roomMessages(message, { showNotice: activeKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
         }
+        store.getState().customMsg?.receiveCallback(message)
       },
       //  收到图片消息
       onPictureMessage: (message) => {
