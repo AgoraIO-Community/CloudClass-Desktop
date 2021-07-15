@@ -77,7 +77,28 @@ export const PretestContainer = observer(() => {
         pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
     }
 
-    useEffect(() => installPretest(handleError), [])
+    useEffect(() => {
+        installPretest(handleError)
+        // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
+        const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions')
+        const {isBeauty, lighteningLevel, rednessLevel, smoothnessLevel} = beautyEffectOptionsStr ? JSON.parse(beautyEffectOptionsStr) : {
+            isBeauty: false,
+            lighteningLevel: 70,
+            rednessLevel: 10,
+            smoothnessLevel: 50
+        }
+        setBeauty(isBeauty)
+        setWhitening(lighteningLevel)
+        setBuffing(smoothnessLevel)
+        setRuddy(rednessLevel)
+        if (isBeauty) {
+            setBeautyEffectOptions({
+                lighteningLevel,
+                rednessLevel,
+                smoothnessLevel
+            })
+        }
+    }, [])
 
     const onChangeDevice = async (type: string, value: any) => {
         switch (type) {
@@ -122,6 +143,12 @@ export const PretestContainer = observer(() => {
             rednessLevel: ruddy,
             smoothnessLevel: buffing
         })
+        window.localStorage.setItem('beautyEffectOptions', JSON.stringify({
+            isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        }))
     }
 
     const global = useGlobalContext()
@@ -145,6 +172,12 @@ export const PretestContainer = observer(() => {
             rednessLevel: ruddy,
             smoothnessLevel: buffing
         })
+        window.localStorage.setItem('beautyEffectOptions', JSON.stringify({
+            isBeauty: !isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        }))
         setBeauty(!isBeauty)
     }
 

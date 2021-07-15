@@ -2,7 +2,7 @@ import { Button, Modal, Setting, t } from '~ui-kit'
 import { observer } from 'mobx-react'
 import { useUIStore } from '@/infra/hooks'
 import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
 export const SettingContainer = observer(({ id }: any) => {
 
@@ -33,6 +33,28 @@ export const SettingContainer = observer(({ id }: any) => {
         setRuddy,
         setBeautyEffectOptions,
     } = usePretestContext()
+
+    useEffect(() => {
+        // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
+        const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions')
+        const {isBeauty, lighteningLevel, rednessLevel, smoothnessLevel} = beautyEffectOptionsStr ? JSON.parse(beautyEffectOptionsStr) : {
+            isBeauty: false,
+            lighteningLevel: 70,
+            rednessLevel: 10,
+            smoothnessLevel: 50
+        }
+        setBeauty(isBeauty)
+        setWhitening(lighteningLevel)
+        setBuffing(smoothnessLevel)
+        setRuddy(rednessLevel)
+        if (isBeauty) {
+            setBeautyEffectOptions({
+                lighteningLevel,
+                rednessLevel,
+                smoothnessLevel
+            })
+        }
+    }, [])
 
     const changeDevice = async (deviceType: string, value: any) => {
         switch (deviceType) {
@@ -71,6 +93,12 @@ export const SettingContainer = observer(({ id }: any) => {
             rednessLevel: ruddy,
             smoothnessLevel: buffing
         })
+        window.localStorage.setItem('beautyEffectOptions', JSON.stringify({
+            isBeauty: !isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        }))
         setBeauty(!isBeauty)
     }
 
@@ -95,6 +123,12 @@ export const SettingContainer = observer(({ id }: any) => {
             rednessLevel: ruddy,
             smoothnessLevel: buffing
         })
+        window.localStorage.setItem('beautyEffectOptions', JSON.stringify({
+            isBeauty,
+            lighteningLevel: whitening,
+            rednessLevel: ruddy,
+            smoothnessLevel: buffing
+        }))
     }
 
     return (
