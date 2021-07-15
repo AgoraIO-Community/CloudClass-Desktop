@@ -69,7 +69,7 @@
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
     "@netless/iframe-bridge": "2.1.4",
-    "@netless/video-js-plugin": "0.3.0",
+    "@netless/video-js-plugin": "0.3.2",
     "agora-rte-sdk": "1.1.2",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",
