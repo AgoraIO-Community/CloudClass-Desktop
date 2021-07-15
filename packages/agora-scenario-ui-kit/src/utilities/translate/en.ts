@@ -311,6 +311,7 @@ export const en = {
     'fullScreen': 'full screen',
     'reduction': 'reduction',
     'reset': 'center',
+    'preview': 'page preview',
   },
   'pretest': {
     'title': 'Device Test',

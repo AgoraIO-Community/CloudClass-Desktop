@@ -351,6 +351,7 @@ export const zh = {
     'fullScreen': '全屏',
     'reduction': '还原',
     'reset': '居中',
+    'preview': '预览',
   },
   'send': '发送',
   'home': {

@@ -12,6 +12,7 @@ import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } fro
 import { useEffect } from 'react'
 import classnames from 'classnames'
 import { useUIStore } from '@/infra/hooks'
+import { PreView } from './preview'
 
 export const allTools: ToolItem[] = [
   {
@@ -194,6 +195,7 @@ export const WhiteboardContainer = observer(({h5share, children}: any) => {
   } = useRoomContext()
 
   const {
+    room,
     zoomValue,
     currentPage,
     totalPage,
@@ -275,6 +277,7 @@ export const WhiteboardContainer = observer(({h5share, children}: any) => {
       },
       'forward': () => changeFooterMenu('next_page'),
       'backward': () => changeFooterMenu('prev_page'),
+      'preview': () => {addDialog(PreView,{room})},
     }
     toolbarMap[type] && toolbarMap[type]()
   }

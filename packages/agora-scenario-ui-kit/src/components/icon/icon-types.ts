@@ -72,4 +72,5 @@ export type IconTypes =
   | 'countdown'
   | 'answer'
   | 'vote'
+  | 'preview'
   | 'more-info';

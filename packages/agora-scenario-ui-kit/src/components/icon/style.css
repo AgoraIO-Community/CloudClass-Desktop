@@ -67,6 +67,12 @@
   background-image: url('./assets/svg/icon-more-info.svg');
 }
 
+.icon-preview {
+  width: 28px;
+  height: 28px;
+  background-image: url('./assets/svg/icon-preview.svg');
+}
+
 .active .icon-clicker {
   background-image: url('./assets/svg/select-actived.svg');
 }

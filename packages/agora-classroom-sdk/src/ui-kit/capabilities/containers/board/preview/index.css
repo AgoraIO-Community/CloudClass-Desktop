@@ -1,0 +1,14 @@
+.menu-annex-body {
+  height: calc(100vh - 82px) !important;
+}
+
+.preview-cells-box {
+  height: 100% !important;
+}
+.bm-menu-wrap {
+  width: 260px !important;
+}
+
+.menu-annex-box {
+  overflow: auto;
+}

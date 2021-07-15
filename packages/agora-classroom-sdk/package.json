@@ -284,6 +284,7 @@
   "dependencies": {
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.1.4",
+    "@netless/preview-controller": "^0.0.9",
     "@tailwindcss/forms": "0.2.1",
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",

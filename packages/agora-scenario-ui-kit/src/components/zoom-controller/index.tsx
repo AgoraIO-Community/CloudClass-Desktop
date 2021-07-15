@@ -13,6 +13,7 @@ export type ZoomItemType =
     | 'zoom-in'
     | 'backward'
     | 'forward'
+    | 'preview'
 
 export interface ZoomControllerProps extends BaseProps {
     zoomValue?: number;
@@ -64,6 +65,9 @@ export const ZoomController: FC<ZoomControllerProps> = ({
             </span>
             <Tooltip title={t('tool.next')} placement="top">
                 <Icon type="forward" size={fontSize} color={fontColor} onClick={() => clickHandler('forward')} />   
+            </Tooltip>
+            <Tooltip title={t('tool.preview')} placement="top">
+                <Icon type="preview" size={fontSize} color={fontColor} onClick={() => clickHandler('preview')} />   
             </Tooltip>
         </div>
     )

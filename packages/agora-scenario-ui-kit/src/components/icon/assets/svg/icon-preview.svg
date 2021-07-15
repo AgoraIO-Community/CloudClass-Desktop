@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>page</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="切图" transform="translate(-88.000000, -260.000000)" stroke="#444E60">
+            <rect id="矩形" x="94" y="268" width="10" height="10" rx="2"></rect>
+            <path d="M98,266 L104,266 C105.104569,266 106,266.895431 106,268 L106,274" id="矩形备份-3"></path>
+        </g>
+    </g>
+</svg>
