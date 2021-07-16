@@ -1,3 +1,5 @@
+import { MediaMimeType } from './../stores/app/board';
+import { PluginId } from '@netless/video-js-plugin';
 import { useEffect } from 'react';
 import { workerPath } from './../edu-sdk/controller';
 import { AgoraMediaDeviceEnum } from "@/types/global"
@@ -154,14 +156,16 @@ export type NetlessMediaFile = {
 
 export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
   room.insertPlugin(
-    'video',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-          pluginVideoUrl: file.url
+        src: file.url,
+        type: MediaMimeType.VideoMp4,
+          // pluginVideoUrl: file.url
           // isNavigationDisable: false
       }
     }
@@ -170,14 +174,16 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) 
 
 export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
   room.insertPlugin(
-    'audio',
+    PluginId,
     {
       originX: file.originX,
       originY: file.originY,
       width: file.width,
       height: file.height,
       attributes: {
-          pluginAudioUrl: file.url
+        src: file.url,
+        type: MediaMimeType.AudioMp3,
+          // pluginAudioUrl: file.url
           // isNavigationDisable: false
       }
     }

@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { Room, WhiteWebSdk, DeviceType, createPlugins, Plugins, JoinRoomParams, Player, ReplayRoomParams, ViewMode, RoomState, ApplianceNames } from 'white-web-sdk';
-import { videoPlugin } from '@netless/white-video-plugin';
-import { audioPlugin } from '@netless/white-audio-plugin';
+import {PluginId, videoJsPlugin} from '@netless/video-js-plugin';
 import { get } from 'lodash';
 import { BizLogger } from '@/utils/biz-logger';
 
@@ -35,10 +34,16 @@ export class BoardClient extends EventEmitter {
   }
 
   initPlugins (identity: string) {
-    const plugins = createPlugins({"video": videoPlugin, "audio": audioPlugin});
+    // const plugins = createPlugins({"video": videoPlugin, "audio": audioPlugin});
+    const plugins = createPlugins({
+      [PluginId]: videoJsPlugin()
+    })
 
-    plugins.setPluginContext("video", {identity});
-    plugins.setPluginContext("audio", {identity});
+    const enable = identity === 'host' ? true : false
+
+    plugins.setPluginContext(PluginId, {enable, verbose: true})
+    // plugins.setPluginContext("video", {identity});
+    // plugins.setPluginContext("audio", {identity});
     this.plugins = plugins;
   }
   

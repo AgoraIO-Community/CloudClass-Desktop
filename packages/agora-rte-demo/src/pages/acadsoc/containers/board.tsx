@@ -25,6 +25,7 @@ import { CourseWareMenuContainer } from './course-ware-menu'
 import { NetworkDisk } from './disk'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { BoardProgress } from '@/components/netless-board/loading'
+import "video.js/dist/video-js.css";
 
 const StrokeListPanel = observer(() => {
 
