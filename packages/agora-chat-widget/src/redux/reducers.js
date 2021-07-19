@@ -18,7 +18,8 @@ let defaultState = {
     messages: [],           // 消息列表
     isTabKey: CHAT_TABS_KEYS.chat,  // 当前选中的Tab
     showRed: false,         // 不在聊天Tab消息提示
-    announcementStatus: true   // 公告编辑状态
+    announcementStatus: true,  // 公告编辑状态
+    showEmoji: false
 }
 const reducer = (state = defaultState, action) => {
     const { type, data } = action;
@@ -159,16 +160,21 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 isTabKey: data
-            }
+            };
         case 'SHOW_RED_NOTIFICSTION':
             return {
                 ...state,
                 showRed: data
-            }
+            };
         case 'ANNOUNCEMENT_STATUS':
             return {
                 ...state,
                 announcementStatus: data
+            };
+        case 'SHOW_EMOJI_ACTION':
+            return {
+                ...state,
+                showEmoji: data
             }
         default:
             break;

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { Switch, Tooltip, Input, Button, message } from 'antd';
+import { Switch, Tooltip, Input, Button, message, Modal } from 'antd';
 import { MSG_TYPE } from '../../contants'
 import store from '../../redux/store'
-import { messageAction } from '../../redux/actions/messageAction'
+import { messageAction, showEmojiAction } from '../../redux/actions/messageAction'
 import { setAllmute, removeAllmute } from '../../api/mute'
 import { Emoji } from '../../utils/emoji'
 
@@ -11,17 +11,14 @@ import emojiIcon from '../../themes/img/emoji.png'
 import './index.css'
 
 // 展示表情
-const ShowEomji = ({ getEmoji, hideEmoji }) => {
+export const ShowEomji = ({ getEmoji }) => {
     return (
         <>
-            <div className='emoji-mask' onClick={hideEmoji}></div>
-            <div className='emoji-all'>
-                {Emoji.map((emoji, key) => {
-                    return <span className='emoji-content' key={key}
-                        onClick={getEmoji}
-                    >{emoji}</span>
-                })}
-            </div>
+            {Emoji.map((emoji, key) => {
+                return <span className='emoji-content' key={key}
+                    onClick={getEmoji}
+                >{emoji}</span>
+            })}
         </>
     )
 }
@@ -36,27 +33,21 @@ export const InputMsg = ({ isTeacher }) => {
     const userAvatarUrl = state?.loginUserInfo.avatarurl;
     const userNickName = state?.loginUserInfo.nickname;
     const isAllMute = state?.room.allMute;
+    const isShowEmoji = state?.showEmoji
+
     // 管理输入框内容
     const [content, setContent] = useState('')
-    // 控制表情
-    const [isEmoji, setIsEmoji] = useState(false);
     // 输入框焦点
-    const inputRef = React.useRef(null);
+    const inputRef = useRef(null);
 
-
-    // 控制显示/隐藏 表情框
+    // 显示表情框
     const showEmoji = () => {
-        if (!isEmoji) {
-            setIsEmoji(true)
-        } else {
-            hideEmoji()
-        }
+        store.dispatch(showEmojiAction(true))
     }
-
     // 隐藏表情框
-    const hideEmoji = () => {
-        setIsEmoji(false)
-    }
+    const handleCancel = () => {
+        store.dispatch(showEmojiAction(false))
+    };
 
     // 获取到点击的表情，加入到输入框
     const getEmoji = (e) => {
@@ -109,7 +100,7 @@ export const InputMsg = ({ isTeacher }) => {
                 nickName: userNickName,
             },                         // 扩展消息
             success: function (id, serverId) {
-                hideEmoji()
+                handleCancel()
                 msg.id = serverId;
                 msg.body.id = serverId;
                 msg.body.time = (new Date().getTime()).toString()
@@ -129,33 +120,45 @@ export const InputMsg = ({ isTeacher }) => {
     }
 
 
-    return <div>
-        <div className="chat-icon">
-            {isEmoji && <ShowEomji getEmoji={getEmoji} hideEmoji={hideEmoji} />}
-            <Tooltip title="表情">
-                <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
-            </Tooltip>
-            {isTeacher && <div>
-                <span className="all-mute-text">全体禁言</span>
-                <Switch
-                    size="small"
-                    checked={isAllMute}
-                    onClick={() => { onChangeMute(isAllMute) }}
-                />
-            </div>}
 
+    return <>
+        <div>
+            <div className="chat-icon">
+                <Tooltip title="表情">
+                    <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+                </Tooltip>
+                {isTeacher && <div>
+                    <span className="all-mute-text">全体禁言</span>
+                    <Switch
+                        size="small"
+                        checked={isAllMute}
+                        onClick={() => { onChangeMute(isAllMute) }}
+                    />
+                </div>}
+            </div>
+            <Input.TextArea
+                placeholder="请输入消息"
+                className="input-chat"
+                autoFocus
+                onChange={(e) => changeMsg(e)}
+                value={content}
+                onPressEnter={sendTextMessage()}
+                ref={inputRef}
+            />
+            <div className="input-btn">
+                <Button type="primary" shape="round" onClick={sendTextMessage()}>发送</Button>
+            </div>
         </div>
-        <Input.TextArea
-            placeholder="请输入消息"
-            className="input-chat"
-            autoFocus
-            onChange={(e) => changeMsg(e)}
-            value={content}
-            onPressEnter={sendTextMessage()}
-            ref={inputRef}
-        />
-        <div className="input-btn">
-            <Button type="primary" shape="round" onClick={sendTextMessage()}>发送</Button>
-        </div>
-    </div>
+        <Modal
+            visible={isShowEmoji}
+            onCancel={() => { handleCancel() }}
+            width={280}
+            footer={''}
+            closable={false}
+            style={{ width: '280px', position: 'absolute', bottom: '110px', right: '10px' }}
+            className="emoji-modal"
+        >
+            <ShowEomji getEmoji={getEmoji} />
+        </Modal>
+    </>
 }

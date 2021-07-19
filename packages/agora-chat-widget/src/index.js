@@ -11,13 +11,11 @@ import './index.css'
 
 export const HXChatRoom = (pluginStore) => {
     return (
-        <React.StrictMode>
-            <Provider store={store}>
-                <MemoryRouter>
-                    <App pluginStore={pluginStore} />
-                </MemoryRouter>
-            </Provider>
-        </React.StrictMode>
+        <Provider store={store}>
+            <MemoryRouter>
+                <App pluginStore={pluginStore} />
+            </MemoryRouter>
+        </Provider>
     )
 }
 
