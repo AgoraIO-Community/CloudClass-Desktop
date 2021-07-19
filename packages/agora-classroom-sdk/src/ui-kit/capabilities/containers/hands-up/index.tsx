@@ -3,6 +3,8 @@ import { useHandsUpContext, useRoomContext } from 'agora-edu-core'
 import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo, transI18n } from '~ui-kit';
 import { useUIStore } from '@/infra/hooks';
+import { useState, useEffect } from 'react';
+import { useEffectOnce } from '@/infra/hooks/utils';
 
 export const HandsUpManagerContainer = observer(() => {
 
@@ -54,18 +56,50 @@ export const HandsUpReceiverContainer = observer(() => {
         teacherUuid
     } = useHandsUpContext()
 
+    const [animate,setAnimate] = useState<number>(0)
+
+    const [timer,setTimer] = useState<any>(null)
+
+    useEffectOnce(()=>{
+        return ()=>{
+            if (timer) {
+                clearInterval(timer)
+                setTimer(null)
+                setAnimate(0)
+            }
+        }
+    })
+
+    useEffect(()=>{
+        if (animate > 0) {
+            if (!timer) {
+                setTimer(setInterval(()=>{setAnimate(n => n - 1)},1000))
+            }
+        }else{
+            if (timer) {
+                clearInterval(timer)
+                setTimer(null)
+            }
+            if (handsUpState === 'actived') {
+                studentCancelHandsUp()
+            }
+        }
+    },[animate,timer,handsUpState])
+
     const handleClick = async () => {
-        switch(handsUpState) {
-            case 'default': {
-                await studentHandsUp(teacherUuid)
-                addToast(transI18n('co_video.hands_up_requsted'), 'success')
-                break;
+        if (handsUpState !== 'forbidden') {
+            if (animate > 0) {
+                setAnimate(3)
+            }else{
+                try {
+                    await studentHandsUp(teacherUuid)
+                    setAnimate(3)
+                } catch (error) {
+                    addToast(transI18n('co_video.received_message_timeout'), 'warning')
+                }
             }
-            case 'actived': {
-                await studentCancelHandsUp()
-                addToast(transI18n('co_video.hands_up_cancelled'), 'warning')
-                break;
-            }
+        }else{
+            setAnimate(0)
         }
     }
 
@@ -73,6 +107,7 @@ export const HandsUpReceiverContainer = observer(() => {
         <HandsUpSender
             state={handsUpState as any}
             onClick={handleClick}
+            animate={animate}
         />
     )
 })

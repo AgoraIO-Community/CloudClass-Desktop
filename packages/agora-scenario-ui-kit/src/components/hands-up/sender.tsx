@@ -6,9 +6,10 @@ import { BaseProps } from '~components/interface/base-props'
 export interface HandsUpSenderProps extends BaseProps {
   state?: 'default' | 'actived' | 'forbidden';
   onClick: () => Promise<void> | void;
+  animate?: number
 }
 
-export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'default'}) => {
+export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'default', animate = 0}) => {
 
   const mapping = {
     'default': "#7B88A0",
@@ -27,6 +28,7 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'd
     >
       {/*TODO: fix hover */}
       <Icon type={state === 'default' ? "hands-up-student" : "hands-up"} color={color} onClick={onClick} />
+      {animate?<span className={animate%2?'handtip':'handtip handtip-1'} onClick={onClick} >{animate}</span>:null} 
     </Card>
   )
 }

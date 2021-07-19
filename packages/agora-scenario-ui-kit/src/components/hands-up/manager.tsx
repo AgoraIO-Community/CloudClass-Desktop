@@ -38,7 +38,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
 }) => {
   const cls = classnames({
     [`hands-up hands-up-manager`]: 1,
-    ['can-not-hover']: processUserCount === 0,
+    ['can-not-hover']: onlineUserCount === 0,
     [`${className}`]: !!className
   });
 
@@ -50,7 +50,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   const [animStart, setAnimStart] = useState<boolean>(false);
 
   useWatch(processUserCount, prev => {
-    if (prev !== undefined && processUserCount > prev) {
+    if (prev === undefined || processUserCount > prev) {
       setAnimStart(true)
     } else {
       setAnimStart(false)
@@ -69,7 +69,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   return (
     <div className={cls} {...restProps}>
       <CSSTransition
-        in={!animStart}
+        in={animStart}
         timeout={timeout}
         classNames={'received-card'}
         onEntered={() => {

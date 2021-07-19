@@ -12,7 +12,8 @@
 }
 
 .students-hands-up .card {
-    @apply block overflow-y-scroll;
+    @apply block;
+    overflow-y: auto;
 }
 
 .students-hands-up .student-item {
@@ -78,6 +79,10 @@
     animation: change-icon-content 0.5s linear 0s 3;
 }
 
+.received-card-enter .hands-apply-inline-box {
+    animation: change-student-count-color 0.5s linear 0s 3;
+}
+
 @keyframes change-card-bg {
    from {
        background: #fff;
@@ -90,11 +95,21 @@
 
 @keyframes change-icon-content {
     from {
-        content: '\e696';
+        content: '\e699';
+        color: #357BF6;
     }
     to {
-        content: '\e699';
-        color: "#fff";
+        content: '\e696';
+        color: #fff;
+    }
+}
+
+@keyframes change-student-count-color {
+    from {
+        color: #357BF6;
+    } 
+    to {
+        color: #fff;
     }
 }
 
@@ -139,6 +154,25 @@
 
 .hands-up-sender {
     cursor: pointer;
+}
+
+.hands-up-sender .handtip {
+    position: absolute;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    background: #357BF6;
+    box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+    font-size: 17px;
+    color: #FFFFFF;
+    line-height: 40px;
+    text-align: center;
+    user-select: none;
+}
+
+.hands-up-sender .handtip-1 {
+    background: #FFFFFF;
+    color: #357BF6;
 }
 
 .sender-can-hover:hover {
