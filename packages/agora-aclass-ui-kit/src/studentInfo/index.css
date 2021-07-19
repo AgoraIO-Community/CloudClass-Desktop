@@ -1,0 +1,18 @@
+.student-info {
+    background: white;
+    width: 680px;
+    border-radius: 20px;
+    border: 0;
+    color: #273D75;
+    padding: 15px;
+    font-size: 16px;
+    max-height:540px;
+    height:70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-info .info-container {
+    padding: 20px 10px;
+    
+}
