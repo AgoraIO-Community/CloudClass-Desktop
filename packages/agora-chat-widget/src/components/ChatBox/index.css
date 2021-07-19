@@ -1,6 +1,7 @@
 .chat-box {
     padding: 16px 12px;
     border-top: 1px solid #22262E;
+    position: relative;
 }
 
 textarea {
@@ -188,4 +189,41 @@ button.msg-btn:disabled {
 .chat-tool-item:hover {
     background-color: #242933;
     border-radius: 4px;
+}
+.check-style{
+    position: absolute;
+    top: -10px;
+    color: #9a9da5;
+    padding: 0 5px;
+}
+.ant-checkbox-wrapper{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: "tnum";
+    display: inline-flex;
+    align-items: baseline;
+    line-height: unset;
+    cursor: pointer;
+    position: relative;
+    z-index: 20;
+}
+.check-mask{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+.icon-style{
+    color: #5d5d5d;
+    position: relative;
+    left: -7px;
+    font-size: 13px;
+    cursor: pointer;
 }

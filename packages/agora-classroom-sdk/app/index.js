@@ -300,26 +300,40 @@ async function createWindow() {
     });
 
     var shortcutCapture = new ShortcutCapture.default();
-
+    let isCapturing = false;
+    let stopScreen = () => {
+      mainWindow.show();
+      isCapturing = false;
+    };
     shortcutCapture.on('ok', (e,{dataURL,viewer}) =>{
-			mainWindow.show();
-			mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
+      mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
+      stopScreen();
     });
     shortcutCapture.on('finish', (e,{dataURL,viewer}) =>{
-			mainWindow.show();
-			mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
-		});
+      mainWindow.webContents.send("shortcutCaptureDone", dataURL, viewer);
+      stopScreen();
+    });
+    shortcutCapture.on('cancel',(e) => {
+      stopScreen();
+    });
+    shortcutCapture.on('save',(e) => {
+      stopScreen();
+    })
     const showScreenShot = (event) => {
       if(shortcutCapture){
         shortcutCapture.startCapture();
       }
     }
-    ipcMain.on("shortcutcapture", (event, args) => {
-      // mainWindow.hide();
-      if(!shortcutCapture) {
-        shortcutCapture = new ShortcutCapture.default();
+    ipcMain.on("shortcutcapture", (event, {hideWindow}) => {
+      if(!isCapturing) {
+        isCapturing = true;
+        hideWindow && mainWindow.hide();
+        if(!shortcutCapture) {
+          shortcutCapture = new ShortcutCapture.default();
+        }
+        showScreenShot(event);
       }
-      showScreenShot(event);
+      
     });
 }
 
