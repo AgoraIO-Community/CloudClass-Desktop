@@ -136,6 +136,16 @@ export type MediaOptions = {
   encryptionConfig?: MediaEncryptionConfig
 }
 
+export type BoardOptionUserPayload = {
+  avatar?: string,
+  cursorName?: string,
+  disappearCursor?: boolean
+}
+
+export type BoardOptions = {
+  userPayload?: BoardOptionUserPayload
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -162,7 +172,8 @@ export type AppStoreConfigParams = {
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
   userFlexProperties?: {[key: string]: any},
-  mediaOptions?: MediaOptions
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
 }
 
 export type LanguageEnum = "en" | "zh"
