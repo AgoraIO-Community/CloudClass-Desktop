@@ -166,7 +166,12 @@
     ]
   },
   "peerDependencies": {
-    "agora-electron-sdk": "2.9.107-rc.148-build.68"
+    "agora-electron-sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "agora-electron-sdk": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "agora-edu-core": "1.1.2",
@@ -285,20 +290,16 @@
     "webpack-cli": "4.3.1",
     "workbox-webpack-plugin": "6.1.1",
     "worker-loader": "2.0.0",
-    "zlib": "1.0.5"
-  },
-  "dependencies": {
+    "zlib": "1.0.5",
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.1.4",
-    "@tailwindcss/forms": "0.2.1",
     "@types/react-transition-group": "4.4.1",
+    "@tailwindcss/forms": "0.2.1",
     "@zip.js/zip.js": "2.2.22",
-    "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
     "broadcast-channel": "^3.7.0",
-    "classnames": "2.2.6",
     "fetch-progress": "1.3.0",
     "i18next": "20.1.0",
     "jszip": "3.6.0",
@@ -321,5 +322,9 @@
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1"
+  },
+  "dependencies": {
+    "adm-zip": "0.4.14",
+    "agora-electron-sdk": "2.9.107-rc.148-build.68"
   }
 }
