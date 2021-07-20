@@ -10,12 +10,16 @@ import {Adapter} from './adapter'
 export interface WidgetProps extends BaseProps {
     widgetComponent: IAgoraWidget;
     widgetProps?: any;
+    sendMsg?: any;
+    onReceivedMsg?: any;
 }
 
 export const Widget: FC<WidgetProps> = ({
     className,
     widgetComponent,
     widgetProps = {},
+    sendMsg,
+    onReceivedMsg,
     ...restProps
 }) => {
     const ref = useRef<HTMLDivElement | null>(null)
@@ -43,7 +47,11 @@ export const Widget: FC<WidgetProps> = ({
     useEffect(() => {
         if (ref.current && widgetComponent) {
             // only run for very first time
-            widgetComponent.widgetDidLoad(ref.current, context, widgetProps)
+            widgetComponent.widgetDidLoad(ref.current, context, {
+                ...widgetProps,
+                sendMsg,
+                onReceivedMsg
+            })
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, widgetComponent])

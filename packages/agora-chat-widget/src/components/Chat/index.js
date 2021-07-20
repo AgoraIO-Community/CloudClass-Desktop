@@ -29,7 +29,7 @@ const renderTabBar = (props, DefaultTabBar) => (
 
 
 // 主页面，定义 tabs
-export const Chat = () => {
+export const Chat = ({onReceivedMsg}) => {
     const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat)
     const [roomUserList, setRoomUserList] = useState([])
     const state = useSelector(state => state)
@@ -125,7 +125,13 @@ export const Chat = () => {
             </TabPane>
         </Tabs>
         <div className="mini-icon">
-            <img src={minimize} onClick={() => { showChatModal() }} />
+            <img src={minimize} onClick={() => { 
+                // 最小化聊天
+                onReceivedMsg && onReceivedMsg({
+                    isShowChat: false
+                })
+                showChatModal()
+             }} />
         </div>
         {/* </StickyContainer> */}
         <div>
