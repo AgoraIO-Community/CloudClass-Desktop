@@ -41,3 +41,13 @@
     top: 5px;
     right: 5px;
 }
+
+/* 表情 modal 样式， antd */
+.emoji-modal .ant-modal-content {
+    position: absolute;
+    bottom: 20px;
+}
+
+.emoji-modal .ant-modal-body {
+    padding: 5px 5px 15px 5px;
+}
