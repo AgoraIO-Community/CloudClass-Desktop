@@ -388,23 +388,24 @@ export class UploadService extends ApiBase {
                 isTransFile: true,
               })
             },
-            onTaskFail: () => {
-              console.log(' onTaskFail ')
-              payload.onProgress({
-                phase: 'finish',
-                progress: 1,
-                isTransFile: true,
-              })
-            },
-            onTaskSuccess: () => {
-              console.log(' onTaskSuccess ')
-              payload.onProgress({
-                phase: 'finish',
-                progress: 1,
-                isTransFile: true,
-              })
-            },
-        }
+          onTaskFail: () => {
+            console.log(' onTaskFail ')
+            payload.onProgress({
+              phase: 'finish',
+              progress: 1,
+              isTransFile: true,
+            })
+          },
+          onTaskSuccess: () => {
+            console.log(' onTaskSuccess ')
+            payload.onProgress({
+              phase: 'finish',
+              progress: 1,
+              isTransFile: true,
+            })
+          }
+        },
+        checkProgressTimeout: 20 * 60 * 1000
       })
   
       const ppt = await resp.checkUtilGet();

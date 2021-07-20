@@ -10,7 +10,7 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { useLayoutEffect } from 'react'
 import { useUIStore } from '@/infra/hooks'
@@ -47,9 +47,11 @@ export const MidClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  const { 
-    chatCollapse 
-  }  = useUIStore()
+  // const { 
+  //   chatCollapse 
+  // }  = useUIStore()
+
+  const [chatCollapse, setChatCollapse] = useState(false)
 
   useEffectOnce(() => {
     joinRoom()
@@ -98,11 +100,18 @@ export const MidClassScenario = observer(() => {
         </Content>
         <Aside className={classnames({
           "mid-class-aside": 1,
-          // "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
-          // "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
-          "mid-class-aside-full-collapse": isFullScreen
+          "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
+          "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
         })}>
-          {chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
+          {chatroomId ? (
+          <Widget 
+            className="chat-panel" 
+            widgetComponent={chatWidget} 
+            widgetProps={{chatroomId, orgName, appName}}
+            onReceivedMsg={(msg: any) => {
+              setChatCollapse(!msg.isShowChat)
+            }}
+          />) : null}
         </Aside>
       </Layout>
       <DialogContainer />

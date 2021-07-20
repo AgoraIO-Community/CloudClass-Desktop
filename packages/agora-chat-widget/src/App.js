@@ -168,13 +168,19 @@ const App = function (props) {
   }
 
   return (
-    <div >
+    <div>
       {showChat ?
         <div className="app">
-          <Chat />
+          <Chat onReceivedMsg={props.pluginStore.pluginStore.props.onReceivedMsg}/>
         </div> :
         <div className="chat">
-          <div className="show-chat-icon" onClick={() => { onChangeModal() }}>
+          <div className="show-chat-icon" onClick={() => { 
+            // 展开聊天
+            props.pluginStore.pluginStore.props.onReceivedMsg && props.pluginStore.pluginStore.props.onReceivedMsg({
+              isShowChat: true
+            })
+            onChangeModal()
+           }}>
             <img src={showChat_icon} />
             {showRed && <div className="chat-notice"></div>}
           </div>
