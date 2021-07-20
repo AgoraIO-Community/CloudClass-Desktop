@@ -41,13 +41,13 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
         return () => app.extAppWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, app])
-    const { studentStreams } = useSmallClassVideoControlContext()
+    // const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
           handle=".modal-title" 
           defaultPosition={{x: window.innerWidth / 2 - app.width / 2, y: window.innerHeight / 2 - app.height / 2 - 100}} 
-          bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
-          positionOffset={{x: 0, y: ['countdown'].includes(app.appName) ? (studentStreams.length ? 40 + 170 : 40) : 0}}
+          bounds={'body'}
+          positionOffset={{x: 0, y: 0}}
         >
             <Modal 
               title={transI18n(`${app.appName}.appName`)} 
@@ -66,7 +66,7 @@ export const AppPluginContainer = observer(() => {
   const {roomInfo} = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
   return (
-    <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0}}>
+    <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
         <AppPluginItem 
           key={app.appIdentifier} 

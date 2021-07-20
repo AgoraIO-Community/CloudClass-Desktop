@@ -928,10 +928,10 @@ export class RoomStore extends SimpleInterval {
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间 注意: closeDelay undefined null 改为0
           let durationToClose = Number(this.classroomSchedule.closeDelay || 0)*1000 - this.classTimeDuration
-          console.log('checkClassroomNotification', {
-            closeDelay: Number(this.classroomSchedule.closeDelay || 0),
-            durationToClose
-          })
+          // console.log('checkClassroomNotification', {
+          //   closeDelay: Number(this.classroomSchedule.closeDelay || 0),
+          //   durationToClose
+          // })
           let dDurationToClose = dayjs.duration(durationToClose)
           if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.fireToast(
