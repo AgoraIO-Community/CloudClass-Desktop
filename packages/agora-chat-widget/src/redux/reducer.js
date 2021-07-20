@@ -303,7 +303,8 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 room: {
                     ...state.room,
-                    owner: data
+                    owner: data,
+                    users:state.room.users.filter((item) => {item != data})
                 }
             }
         case 'REGISTER_MSG_CALLBACK':
