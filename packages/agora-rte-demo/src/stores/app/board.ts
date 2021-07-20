@@ -1,3 +1,4 @@
+import { PluginId } from '@netless/video-js-plugin';
 import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { UploadManager, PPTProgressListener } from '@/utils/upload-manager';
 import { AppStore } from '@/stores/app';
@@ -22,7 +23,10 @@ import fetchProgress from 'fetch-progress';
 import { transDataToResource } from '@/services/upload-service';
 import { fetchNetlessImageByUrl, netlessInsertAudioOperation, netlessInsertImageOperation, netlessInsertVideoOperation } from '@/utils/utils';
 import { reportService } from '@/services/report-service';
-import { createRef } from 'react';
+export enum MediaMimeType {
+  VideoMp4 = 'video/mp4',
+  AudioMp3 = 'audio/mpeg'
+}
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
@@ -1900,26 +1904,28 @@ export class BoardStore {
         const type = fileType.split(".")[1];
         if (url && this.online && room) {
           if (type.toLowerCase() === 'mp4') {
-            const res = room.insertPlugin('video', {
+            const res = room.insertPlugin(PluginId, {
               originX: 0,
               originY: 0,
               width: 480,
               height: 270,
               attributes: {
-                pluginVideoUrl: url,
-                isNavigationDisable: false
+                src: url,
+                type: MediaMimeType.VideoMp4,
+                // isNavigationDisable: false
               },
             });
           }
           if (type.toLowerCase() === 'mp3') {
-            const res = room.insertPlugin('audio', {
+            const res = room.insertPlugin(PluginId, {
               originX: 0,
               originY: 0,
               width: 480,
               height: 86,
               attributes: {
-                pluginAudioUrl: url,
-                isNavigationDisable: false
+                src: url,
+                type: MediaMimeType.AudioMp3,
+                // isNavigationDisable: false
               },
             });
           }
