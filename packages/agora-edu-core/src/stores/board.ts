@@ -569,14 +569,20 @@ export class BoardStore extends ZoomController {
     if (this.isBoardScreenShare) {
       showZoomControl = false
     } else {
-      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+      if ([
+        EduRoleTypeEnum.teacher,
+        // EduRoleTypeEnum.assistant
+      ].includes(roomInfo.userRole)) {
         showZoomControl = true
       } else {
         showZoomControl = this.hasPermission
       }
     }
     // TODO: need refactor
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+    if ([
+      EduRoleTypeEnum.teacher,
+      // EduRoleTypeEnum.assistant
+    ].includes(roomInfo.userRole)) {
       return [true, showZoomControl]
     }
     else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
@@ -877,7 +883,10 @@ export class BoardStore extends ZoomController {
     }
 
     if (this.online && this.room) {
-      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
+      if ([
+        EduRoleTypeEnum.teacher,
+        // EduRoleTypeEnum.assistant
+      ].includes(this.appStore.roomInfo.userRole)) {
         await this.room.setWritable(true)
         this.room.disableDeviceInputs = false
       }
@@ -1013,10 +1022,12 @@ export class BoardStore extends ZoomController {
         userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: "",
         cursorName: this.appStore.roomStore.roomInfo.userName,
-        disappearCursor: this.appStore.roomStore.isAssistant,
+        disappearCursor: false,
+        // disappearCursor: this.appStore.roomStore.isAssistant,
       },
       floatBar: true,
-      isAssistant: this.appStore.roomStore.isAssistant,
+      isAssistant: false,
+      // isAssistant: this.appStore.roomStore.isAssistant,
       region,
       disableNewPencil: false,
     //   wrappedComponents: [IframeWrapper],
@@ -1729,7 +1740,10 @@ export class BoardStore extends ZoomController {
 
   @computed
   get hasPermission(): boolean {
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
+    if ([
+      EduRoleTypeEnum.teacher, 
+      // EduRoleTypeEnum.assistant
+    ].includes(this.userRole)) {
       return true
     }
     return this._grantPermission as boolean
@@ -1988,7 +2002,10 @@ export class BoardStore extends ZoomController {
     const room = this.room
     // const iframe = this.iframeList.get(scenePath)
     const iframe = this.iframe
-    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
+    if ([
+      EduRoleTypeEnum.assistant, 
+      // EduRoleTypeEnum.assistant
+    ].includes(this.appStore.userRole)) {
       // TODO: workaround.
       // Cause probably is readonly state, so the IframeBridge cannot operate.
       await this.room.setWritable(true)

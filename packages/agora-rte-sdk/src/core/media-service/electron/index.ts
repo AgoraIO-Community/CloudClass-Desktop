@@ -535,6 +535,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           user: {
             uid: +uid,
           },
+          channel: this.channel,
           mediaType: 'video',
         })
       }
@@ -544,6 +545,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           user: {
             uid: +uid,
           },
+          channel: this.channel,
           mediaType: 'video',
         })
       }
@@ -557,6 +559,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           user: {
             uid,
           },
+          channel: this.channel,
           mediaType: 'audio',
         })
       }
