@@ -1901,7 +1901,7 @@ export class BoardStore {
         } else {
           url = res.replace("http", "https");
         }
-        const type = fileType.split(".")[1];
+        const type = fileType.split(".").pop() || '';
         if (url && this.online && room) {
           if (type.toLowerCase() === 'mp4') {
             const res = room.insertPlugin(PluginId, {
