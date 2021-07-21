@@ -10,7 +10,7 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { useLayoutEffect } from 'react'
 import { useUIStore } from '@/infra/hooks'
@@ -100,8 +100,9 @@ export const MidClassScenario = observer(() => {
         </Content>
         <Aside className={classnames({
           "mid-class-aside": 1,
-          "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
-          "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
+          // "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
+          // "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
+          "mid-class-aside-full-collapse": isFullScreen,
         })}>
           {chatroomId ? (
           <Widget 
@@ -111,6 +112,7 @@ export const MidClassScenario = observer(() => {
             onReceivedMsg={(msg: any) => {
               setChatCollapse(!msg.isShowChat)
             }}
+            sendMsg={{isFullScreen}}
           />) : null}
         </Aside>
       </Layout>
