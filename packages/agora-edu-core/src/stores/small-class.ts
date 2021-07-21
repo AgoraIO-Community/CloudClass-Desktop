@@ -114,7 +114,7 @@ export class SmallClassStore {
           holderState: props.holderState,
           placeHolderText: props.text,
           micVolume: volumeLevel,
-          stars: +get(this.studentsMap, `${acceptedUser.userUuid}.reward`, 0),
+          stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${acceptedUser.userUuid}`),
         })
       } else {
@@ -392,7 +392,7 @@ export class SmallClassStore {
       // whiteboardGranted: !!get,
       canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
-      stars: +get(this.studentsMap, `${user.userUuid}.reward`, 0),
+      stars: this.appStore.roomStore.getRewardByUid(user.userUuid),
       disabled: this.checkDisable(user, role, stream)
       // disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
     }
