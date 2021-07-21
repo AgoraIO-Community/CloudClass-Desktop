@@ -21,12 +21,21 @@ const getStudentInfo = (info: any) => {
     return info;
 }
 
+export const c2h = (count: number)=>{
+    if (count > 60) {
+      return 120;
+    }else if(count > 40){
+      return 90
+    }
+    return 75
+  }
+
 export class PluginStore {
     context: AgoraExtAppContext
     handle: AgoraExtAppHandle
 
     @observable
-    height?: number = 310
+    height?: number = 283
     @observable
     title?: string = ''
     @observable
@@ -134,7 +143,7 @@ export class PluginStore {
                 this.context.properties.students && this.context.properties.students.map((ele: string) => {
                     propers.push('student' + ele)
                 })
-                console.log('clear:',this.context.properties.students,propers,this.context.properties);
+                console.log('clearStudent:',this.context.properties.students,propers,this.context.properties);
                 await this.handle.deleteRoomProperties(propers, {})
                 return;
             }
@@ -159,8 +168,8 @@ export class PluginStore {
                             sels.push(sel)
                         }
                     })
+                    //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
                     this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: sels, commonState: 1 })
-                    this.changeRoomProperties({ state: 'clearStudent' })
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
@@ -199,7 +208,7 @@ export class PluginStore {
                     this.answerInfo && (this.answerInfo[index] = `(${selNumber[index]}) ${Math.floor(selNumber[index]*100/(properties.students.length||1))}%`)
                 })
                 this.status = properties.state === 'end' ? 'end' : 'info'
-                this.height = 510 - (7-(this.answer?.length||0))*40 - (properties.state === 'end' ? 70 : 0) - 40
+                this.height = c2h(properties.title?.length || 0) + (this.answer?.length||0)*50 - 10 + (properties.state === 'end' ? 0 : 116)
                 this.buttonName = properties.state === 'end' ? 'vote.restart' : 'vote.over'
                 this.ui = properties.state === 'end' ? ['users', 'infos'] : ['users', 'infos', 'subs']
             } else {
@@ -209,7 +218,7 @@ export class PluginStore {
                 this.currentTime = ''
                 this.students = []
                 this.status = 'config'
-                this.height = 310
+                this.height = 283
                 this.buttonName = 'vote.start'
                 this.ui = ['sels', 'subs']
             }
@@ -219,7 +228,7 @@ export class PluginStore {
                 this.answer = properties.items
                 this.mulChoice = properties.mulChoice
                 this.status = 'answer'
-                this.height = 510 - (7-(this.answer?.length||0))*40 - (properties.state === 'end' ? 70 : 0) - 40
+                this.height = c2h(properties.title?.length || 0) + (this.answer?.length||0)*50 - 10 + 116
                 this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'vote.submit' : 'vote.change'
                 this.ui = ['sels', 'subs']
             } else if (properties.state === 'end' || properties.state === 'start') {
@@ -228,7 +237,7 @@ export class PluginStore {
                 this.mulChoice = properties.mulChoice
                 this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 this.status = 'info'
-                this.height = 510 - (7-(this.answer?.length||0))*40 - 70 - 40
+                this.height = c2h(properties.title?.length || 0) + (this.answer?.length||0)*50 - 10 + 20
                 this.ui = ['infos']
 
                 let selNumber = [0,0,0,0,0,0,0,0,0,0];
@@ -263,7 +272,7 @@ export class PluginStore {
     addAnswer() {
         if (this.answer && this.answer.length < 8) {
             this.answer.push('')
-            this.height = 510 - (7-this.answer.length)*40
+            this.height = 433 - (5-this.answer.length)*50
         }
     }
 
@@ -271,7 +280,7 @@ export class PluginStore {
     subAnswer() {
         if (this.answer && this.answer.length > 2) {
             this.answer.splice(this.answer.length - 1, 1)
-            this.height = 510 - (7-this.answer.length)*40
+            this.height = 433 - (5-this.answer.length)*50
         }
     }
 
