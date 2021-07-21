@@ -124,7 +124,7 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
                 <Announcement />
             </TabPane>
         </Tabs>
-        {sendMsg.isFullScreen && (
+        {/* {sendMsg.isFullScreen && (
             <div className="mini-icon">
                 <img src={minimize} onClick={() => { 
                     // 最小化聊天
@@ -134,7 +134,7 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
                     showChatModal()
                 }} />
             </div>
-        )}
+        )} */}
         {/* </StickyContainer> */}
         <div>
         </div>
