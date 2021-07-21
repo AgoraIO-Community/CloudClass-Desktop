@@ -47,6 +47,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
+          defaultClassName={app?.className || undefined}
           handle=".modal-title" 
           defaultPosition={{x: window.innerWidth / 2 - app.width / 2, y: window.innerHeight / 2 - app.height / 2 - 100}} 
           bounds={['countdown','answer','vote'].includes(app.appName) ? '.whiteboard' : 'body'}

@@ -108,6 +108,12 @@
 .icon-countdown.countdown{
   background-image: url('./assets/svg/icon-countdown.svg');
 }
+.icon-answer.answer{
+  background-image: url('./assets/svg/icon-answer.svg');
+}
+.icon-vote.vote{
+  background-image: url('./assets/svg/icon-vote.svg');
+}
 
 /* .can-hover .icon-microphone-on-outline,
 .can-hover .icon-camera,

@@ -19,7 +19,8 @@ import {
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import "./index.css"
-import { spawn } from 'child_process';
+import reduceSvg from './reduce.svg';
+import addSvg from './add.svg';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void ,onTitle: (title: string) => void }) => {
@@ -44,8 +45,8 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
       })}
     >
       {pluginStore.ui?.includes('sels') ? <div className="answer-items" >
-        {pluginStore.answer?.map((ele: string) => {
-          return (<span style={pluginStore.selAnswer?.includes(ele) ? { background: '#357BF6', color: '#fff' } : {}} onClick={() => {
+        {pluginStore.answer?.map((ele: string, idx: number) => {
+          return (<span key={idx} style={pluginStore.selAnswer?.includes(ele) ? { background: '#357BF6', color: '#fff' } : {}} onClick={() => {
             pluginStore.changeSelAnswer(ele)
           }}>{ele}</span>)
         })}
@@ -62,7 +63,7 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
               {pluginStore.students?.map((student: any) => (
                 <Row className={'border-bottom-width-1'} key={student.uid}>
                   {['name', 'replyTime', 'answer'].map((col: string, idx: number) => (
-                    <Col key={col} style={{ justifyContent: idx !== 0 ? 'center' : 'flex-start',padding: '0 10px' }}>
+                    <Col key={col} style={{ justifyContent: 'center', color:idx===2?(student[col]===(pluginStore.context.properties.answer?.join('')||'')?'#3AB449':'#F04C36'):'#191919' }}>
                       {
                         <span
                           title={student[col]}
@@ -90,7 +91,7 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
       {pluginStore.ui?.includes('subs') ? <div className="answer-submit">
         <span onClick={() => {
           pluginStore.addAnswer()
-        }} style={{ visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 7) ? 'hidden' : 'visible' }} >+</span>
+        }} style={{ backgroundImage: `url(${addSvg})`,visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 7) ? 'hidden' : 'visible' }} ></span>
         <Button
           disabled = { pluginStore.ui.includes('sels') && (pluginStore.selAnswer?.length || 0) === 0 }
           onClick={() => {
@@ -99,7 +100,7 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
         >{transI18n(pluginStore?.buttonName || '')}</Button>
         <span onClick={() => {
           pluginStore.subAnswer()
-        }} style={{ visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) < 2) ? 'hidden' : 'visible' }}>-</span>
+        }} style={{ backgroundImage: `url(${reduceSvg})`,visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) < 2) ? 'hidden' : 'visible' }}></span>
       </div> : null}
     </div>
   )
@@ -109,8 +110,9 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
 export class AgoraExtAppAnswer implements IAgoraExtApp {
   appIdentifier = "io.agora.answer"
   appName = 'answer'
+  className = 'answer-dialog'
   width = 360
-  height = 144 // 超过4个选项高度为228
+  height = 150 // 超过4个选项高度为220
   title = transI18n('answer.appName')
 
   store?: PluginStore

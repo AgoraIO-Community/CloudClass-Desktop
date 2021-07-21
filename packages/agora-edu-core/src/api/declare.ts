@@ -31,6 +31,7 @@ export interface IAgoraExtApp {
   language: string
   appIdentifier: string
   appName: string
+  className?: string
   width: number
   height: number
   title?: string

@@ -7,7 +7,7 @@
   flex-wrap: wrap;
   border-radius: 4px;
   border: 1px solid #eeeef7;
-  padding: 0 6px;
+  padding: 9px 12px;
 }
 .answer-items span {
   width: 50px;
@@ -18,7 +18,8 @@
   color: #bdbdca;
   line-height: 50px;
   text-align: center;
-  margin: 13px 13px;
+  margin: 10px 13px;
+  box-shadow: 0px -1px 3px 0px rgba(255, 255, 255, 0.5);
 }
 
 .answer-submit {
@@ -30,12 +31,6 @@
 .answer-submit span {
   width: 30px;
   height: 30px;
-  border-radius: 18px;
-  border: 1px solid #eeeef7;
-  font-size: 26px;
-  color: #7b88a0;
-  line-height: 26px;
-  text-align: center;
 }
 
 .answer-submit .btn {
@@ -47,24 +42,69 @@
   height: 200px;
   border-radius: 4px;
   border: 1px solid #eeeef7;
+  overflow: hidden;
 }
 
 .answer-table .table-container .table-row-item .table-col-item {
-    color: #191919;
     height: 40px;
 }
-
 .answer-info{
-  margin: 10px 0 10px 100px;
+  margin: 30px 0 0px 110px;
 }
 .answer-info-line{
-  height: 28px;
-  line-height: 28px;
+  height: 18px;
+  line-height: 18px;
   font-size: 13px;
+  margin: 10px 0 0;
+}
+.answer-table .table-header{
+  padding-left: 0;
 }
 .answer-info-tab{
   color: #7B88A0;
 }
 .answer-info-value{
   color: #191919;
+}
+.answer-dialog{
+  padding: 0;
+}
+.answer-dialog .icon-close{
+  font-size: 24px !important;
+  color: #a7a7ca !important;
+}
+.answer-dialog .modal-content{
+  padding: 20px 14px 29px;
+}
+.answer-dialog .modal-title {
+  padding-right: 18px;
+}
+.answer-dialog button:disabled{
+  background: #C0D6FF !important;
+  color: #FFFFFF !important;
+  border: 0 !important;
+  opacity: 1 !important;
+}
+
+.answer-table .table-container::-webkit-scrollbar {
+  width : 13px;
+}
+.answer-table .table-container::-webkit-scrollbar-thumb {
+  background: #E7E7F3;
+  border-radius: 999px;
+  background-image: -webkit-linear-gradient(
+    0deg,
+    #EEEEF7 7.7%,
+    #FFFFFF 7.7%,
+    #FFFFFF 23.1%,
+    transparent 23.1%,
+    transparent 76.9%,
+    #FFFFFF 76.9%,
+    #FFFFFF
+);
+}
+.answer-table .table-container::-webkit-scrollbar-track {
+  background: #FFFFFF;
+  border-radius: 0px 0px 5px 0px;
+  border-left: 1px solid #EEEEF7;
 }

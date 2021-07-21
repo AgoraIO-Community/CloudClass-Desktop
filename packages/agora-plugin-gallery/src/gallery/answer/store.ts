@@ -13,12 +13,19 @@ const formatTime = (long: number) => {
     return h + ':' + m + ':' + s;
 }
 
+const getStudentInfo = (info: any) => {
+    if (info === null || typeof info === 'undefined' || info === 'deleted' || JSON.stringify(info) === "{}") {
+        return null;
+    }
+    return info;
+}
+
 export class PluginStore {
     context: AgoraExtAppContext
     handle: AgoraExtAppHandle
 
     @observable
-    height?: number = 144
+    height?: number = 150
     @observable
     title?: string = ''
     @observable
@@ -115,13 +122,16 @@ export class PluginStore {
                 roomProperties['endTime'] = 0
                 roomProperties['items'] = []
                 roomProperties['answer'] = []
+
+                this.changeRoomProperties({ state: 'clearStudent' })
+            } else if (state === "clearStudent") {
                 let propers: string[] = [];
                 this.context.properties.students && this.context.properties.students.map((ele: string) => {
                     propers.push('student' + ele)
                 })
-                console.log('clear:',this.context.properties.students,propers,this.context.properties);
-                
+                console.log('clearStudent:',this.context.properties.students,propers,this.context.properties);
                 await this.handle.deleteRoomProperties(propers, {})
+                return;
             }
             await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {})
         } else {
@@ -144,6 +154,7 @@ export class PluginStore {
                             sels.push(sel)
                         }
                     })
+                    //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
                     this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), items: this.answer, answer: sels, commonState: 1 })
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
@@ -176,7 +187,7 @@ export class PluginStore {
                         'replyTime': '',
                         'answer': ''
                     }
-                    let answer = properties['student' + student]
+                    let answer = getStudentInfo(properties['student' + student])
                     if (answer) {
                         ++answeredNumber;
                         info.answer = answer.answer?.join('') || '';
@@ -189,9 +200,9 @@ export class PluginStore {
                 })
                 this.answerInfo = { 'number-answered': '' + answeredNumber + '/' + properties.students.length, 'acc': '' + Math.floor(100 * rightNumber / (properties.students.length || 1)) + '%', 'right-key': properties.answer?.join('、') || '', 'my-answer': '' }
                 this.status = properties.state === 'end' ? 'end' : 'info'
-                this.height = properties.state === 'end' ? 290 : 360
+                this.height = properties.state === 'end' ? 366 : 366
                 this.buttonName = properties.state === 'end' ? 'answer.restart' : 'answer.over'
-                this.ui = properties.state === 'end' ? ['users', 'infos'] : ['users', 'infos', 'subs']
+                this.ui = properties.state === 'end' ? ['users', 'infos', 'subs'] : ['users', 'infos', 'subs']
                 this.updateTime();
             } else {
                 this.title = ""
@@ -200,7 +211,7 @@ export class PluginStore {
                 this.currentTime = ''
                 this.students = []
                 this.status = 'config'
-                this.height = 144
+                this.height = 150
                 this.buttonName = 'answer.start'
                 this.ui = ['sels', 'subs']
             }
@@ -210,21 +221,17 @@ export class PluginStore {
                 this.answer = properties.items
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'answer'
-                this.height = (this.answer?.length || 0) > 4 ? 228 : 144
-                this.buttonName = typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined' ? 'answer.submit' : 'answer.change'
+                this.height = (this.answer?.length || 0) > 4 ? 220 : 150
+                this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
                 this.ui = ['sels', 'subs']
                 if (this.status !== 'answer') {
-                    if (typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined') {
-                        this.selAnswer = []
-                    } else {
-                        this.selAnswer = properties['student' + this.context.localUserInfo.userUuid].answer || []
-                    }
+                    this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 }
                 this.updateTime();
             } else if (properties.state === 'end') {
                 this.title = ""
                 this.answer = properties.answer
-                this.selAnswer = typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined' ? [] : properties['student' + this.context.localUserInfo.userUuid].answer
+                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'info'
                 this.height = 120
@@ -238,7 +245,7 @@ export class PluginStore {
                         'replyTime': '',
                         'answer': ''
                     }
-                    let answer = properties['student' + student]
+                    let answer = getStudentInfo(properties['student' + student])
                     if (answer) {
                         ++answeredNumber;
                         info.answer = answer.answer?.join('') || '';
@@ -258,7 +265,7 @@ export class PluginStore {
                 this.currentTime = ''
                 this.students = []
                 this.status = 'config'
-                this.height = 144
+                this.height = 150
                 this.buttonName = 'answer.submit'
                 this.ui = ['infos']
             }
@@ -270,7 +277,7 @@ export class PluginStore {
         const answer = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         if (this.answer && this.answer.length < 8) {
             this.answer.push(answer[this.answer.length])
-            this.height = this.answer.length > 4 ? 228 : 144
+            this.height = this.answer.length > 4 ? 220 : 150
         }
     }
 
@@ -278,7 +285,7 @@ export class PluginStore {
     subAnswer() {
         if (this.answer && this.answer.length > 2) {
             this.answer.splice(this.answer.length - 1, 1)
-            this.height = this.answer.length > 4 ? 228 : 144
+            this.height = this.answer.length > 4 ? 220 : 150
         }
     }
 
@@ -290,7 +297,7 @@ export class PluginStore {
             this.selAnswer?.push(sel)
         }
         if (this.selAnswer) {
-            this.selAnswer = this.selAnswer?.sort()
+            this.selAnswer = this.selAnswer?.slice().sort()
         }
     }
 }

@@ -14,6 +14,13 @@ const formatTime = (long: number) => {
     return h + ':' + m + ':' + s;
 }
 
+const getStudentInfo = (info: any) => {
+    if (info === null || typeof info === 'undefined' || info === 'deleted' || JSON.stringify(info) === "{}") {
+        return null;
+    }
+    return info;
+}
+
 export class PluginStore {
     context: AgoraExtAppContext
     handle: AgoraExtAppHandle
@@ -121,13 +128,15 @@ export class PluginStore {
                 roomProperties['title'] = ''
                 roomProperties['items'] = []
                 roomProperties['answer'] = []
+                this.changeRoomProperties({ state: 'clearStudent' })
+            } else if (state === "clearStudent") {
                 let propers: string[] = [];
                 this.context.properties.students && this.context.properties.students.map((ele: string) => {
                     propers.push('student' + ele)
                 })
                 console.log('clear:',this.context.properties.students,propers,this.context.properties);
-                
                 await this.handle.deleteRoomProperties(propers, {})
+                return;
             }
             await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {})
         } else {
@@ -151,6 +160,7 @@ export class PluginStore {
                         }
                     })
                     this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: sels, commonState: 1 })
+                    this.changeRoomProperties({ state: 'clearStudent' })
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
@@ -176,7 +186,7 @@ export class PluginStore {
                 this.students = []
                 let selNumber = [0,0,0,0,0,0,0,0,0,0];
                 properties.students.map((student: string, index: number) => {
-                    let answer = properties['student' + student]
+                    let answer = getStudentInfo(properties['student' + student])
                     if (answer && answer.answer) {
                         answer.answer.map((sel:string)=>{
                             let idx = properties.items.indexOf(sel)
@@ -204,26 +214,26 @@ export class PluginStore {
                 this.ui = ['sels', 'subs']
             }
         } else {
-            if (properties.state === 'start' && typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined') {
+            if (properties.state === 'start' && !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])) {
                 this.title = properties.title
                 this.answer = properties.items
                 this.mulChoice = properties.mulChoice
                 this.status = 'answer'
                 this.height = 510 - (7-(this.answer?.length||0))*40 - (properties.state === 'end' ? 70 : 0) - 40
-                this.buttonName = typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined' ? 'vote.submit' : 'vote.change'
+                this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'vote.submit' : 'vote.change'
                 this.ui = ['sels', 'subs']
             } else if (properties.state === 'end' || properties.state === 'start') {
                 this.title = properties.title
                 this.answer = properties.items
                 this.mulChoice = properties.mulChoice
-                this.selAnswer = typeof properties['student' + this.context.localUserInfo.userUuid] === 'undefined' ? [] : properties['student' + this.context.localUserInfo.userUuid].answer
+                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 this.status = 'info'
                 this.height = 510 - (7-(this.answer?.length||0))*40 - 70 - 40
                 this.ui = ['infos']
 
                 let selNumber = [0,0,0,0,0,0,0,0,0,0];
                 properties.students.map((student: string, index: number) => {
-                    let answer = properties['student' + student]
+                    let answer = getStudentInfo(properties['student' + student])
                     if (answer && answer.answer) {
                         answer.answer.map((sel:string)=>{
                             let idx = properties.items.indexOf(sel)
