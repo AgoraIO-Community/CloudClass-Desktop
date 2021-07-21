@@ -23,7 +23,7 @@ const App = function (props) {
   const showChat = state?.showChat
   const showRed = state?.showRed
   useEffect(() => {
-    let im_Data = props.pluginStore.pluginStore;
+    let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '')
     let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
     let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
@@ -171,12 +171,12 @@ const App = function (props) {
     <div>
       {showChat ?
         <div className="app">
-          <Chat onReceivedMsg={props.pluginStore.pluginStore.props.onReceivedMsg}/>
+          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg}/>
         </div> :
         <div className="chat">
           <div className="show-chat-icon" onClick={() => { 
             // 展开聊天
-            props.pluginStore.pluginStore.props.onReceivedMsg && props.pluginStore.pluginStore.props.onReceivedMsg({
+            props.onReceivedMsg && props.onReceivedMsg({
               isShowChat: true
             })
             onChangeModal()

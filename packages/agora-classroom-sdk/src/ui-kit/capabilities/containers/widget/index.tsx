@@ -47,11 +47,7 @@ export const Widget: FC<WidgetProps> = ({
     useEffect(() => {
         if (ref.current && widgetComponent) {
             // only run for very first time
-            widgetComponent.widgetDidLoad(ref.current, context, {
-                ...widgetProps,
-                sendMsg,
-                onReceivedMsg
-            })
+            widgetComponent.widgetDidLoad(ref.current, context, widgetProps, sendMsg, onReceivedMsg)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, widgetComponent])

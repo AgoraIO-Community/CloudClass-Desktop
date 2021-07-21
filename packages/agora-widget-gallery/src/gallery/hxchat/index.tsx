@@ -16,6 +16,8 @@ import * as hx from 'agora-chat-widget';
 type AppProps = {
   orgName: string;
   appName: string;
+  sendMsg?: any;
+  onReceivedMsg?: any;
 };
 
 const App: React.FC<AppProps> = observer((props) => {
@@ -51,7 +53,7 @@ const App: React.FC<AppProps> = observer((props) => {
     if (domRef.current && isJoined) {
       //@ts-ignore
       console.log("store-----",pluginStore)
-      hx.renderHXChatRoom(domRef.current, pluginStore);
+      hx.renderHXChatRoom(domRef.current, pluginStore, props.sendMsg, props.onReceivedMsg);
     }
   }, [domRef.current, isJoined]);
 
@@ -71,13 +73,17 @@ export class AgoraHXChatWidget implements IAgoraWidget {
 
   constructor() {}
 
-  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any): void {
+  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any, sendMsg?: any, onReceivedMsg?: any): void {
     this.store = new PluginStore(ctx, props);
     console.log('widgetDidLoad', props);
     // hx.renderHXChatRoom(dom)
     ReactDOM.render(
       <Provider store={this.store}>
-        <App {...props} />
+        <App 
+          {...props} 
+          sendMsg={sendMsg}
+          onReceivedMsg={onReceivedMsg}
+        />
       </Provider>,
       dom,
     );
