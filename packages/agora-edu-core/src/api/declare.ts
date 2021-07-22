@@ -32,6 +32,7 @@ export interface IAgoraExtApp {
   appName: string
   width: number
   height: number
+  icon?: any
   extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle):void
   extAppRoomPropertiesDidUpdate(properties:any, cause: any):void
   extAppWillUnload():void

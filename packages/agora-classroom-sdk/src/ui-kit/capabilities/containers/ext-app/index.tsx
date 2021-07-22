@@ -74,14 +74,6 @@ export const AppPluginContainer = observer(() => {
           properties={appPluginProperties(app)} 
           closable={closable}
           onCancel={async () => {
-            await eduSDKApi.updateExtAppProperties(contextInfo.roomUuid, app.appIdentifier, {
-              state: '0',
-              startTime: '0',
-              pauseTime: '0',
-              duration: '0'
-            }, {
-              state: 0
-            }, {})
             onShutdownAppPlugin(app.appIdentifier)
           }}
         ></AppPluginItem>

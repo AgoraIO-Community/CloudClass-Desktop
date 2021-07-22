@@ -65,7 +65,7 @@ export const ToolCabinetContainer = observer(() => {
             ...appPlugins.map((p:IAgoraExtApp) => {
                 return {
                     id: p.appIdentifier,
-                    icon:<Icon type="countdown" useSvg size={24}/>,
+                    icon: p.icon,
                     name: p.appName
                 }
             })
