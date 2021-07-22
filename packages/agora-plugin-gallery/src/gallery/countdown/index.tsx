@@ -11,7 +11,8 @@ import {
   Input,
   transI18n,
   I18nProvider,
-  changeLanguage
+  changeLanguage,
+  Icon
 } from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
@@ -106,6 +107,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
 
   appIdentifier = "io.agora.countdown"
   appName = 'countdown'
+  icon = <Icon type="countdown" useSvg size={24}/>
   width = 258
   height = 168 // 开始倒计时后高度为 55
 
@@ -133,6 +135,13 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): void {
+    this.store!.changeRoomProperties({
+      state: '0',
+      startTime: '0',
+      pauseTime: '0',
+      duration: '0',
+      commonState: 0
+    })
   }
 }
 
