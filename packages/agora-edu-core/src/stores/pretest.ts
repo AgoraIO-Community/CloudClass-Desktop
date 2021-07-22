@@ -142,11 +142,6 @@ export class PretestStore {
     return this.mediaService.getPlaybackVolume()
   }
 
-  @computed
-  get microphoneLevel() {
-    return this.appStore.mediaStore.totalVolume
-  }
-
   @observable
   _playbackVolume: number = 0
 
@@ -166,11 +161,6 @@ export class PretestStore {
   @computed
   get cameraRenderer(): LocalUserRenderer | undefined {
     return this._cameraRenderer;
-  }
-
-  @computed
-  get totalVolume(): number {
-    return this.appStore.mediaStore.totalVolume
   }
 
   queryVideoFrameIsNotFrozen(streamUuid: number) {

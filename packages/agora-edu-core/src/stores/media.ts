@@ -239,9 +239,21 @@ export class MediaStore {
   //   return this.appStore.uiStore;
   // }
 
+  @observable
+  localUid: number = 0;
+
   constructor(appStore: EduScenarioAppStore) {
     console.log("[ID] mediaStore ### ", this.id)
     this.appStore = appStore
+
+    const updateSpeaker = (payload: string) => {
+      const {localUid, totalVolume} = JSON.parse(payload)
+      if (localUid) {
+        this.updateSpeaker(localUid, totalVolume)
+      }
+    }
+
+    reaction(() => JSON.stringify({localUid: this.localUid, totalVolume: this.totalVolume}), updateSpeaker)
 
     const handleDevicePulled = (evt: {resource: string}) => {
       const notice = MediaDeviceState.getNotice(evt.resource)

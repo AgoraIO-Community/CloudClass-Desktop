@@ -5,7 +5,7 @@ import { get } from "lodash"
 
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
-import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore} from "./core"
+import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useMediaStore} from "./core"
 import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
@@ -96,10 +96,12 @@ export const useStreamListContext = (): StreamListContext => {
 }
 
 export const useVolumeContext = (): VolumeContext => {
-  const pretestStore = usePretestStore()
+  const mediaStore = useMediaStore()
+
+  // const volume = pretestStore
 
   return {
-    microphoneLevel: pretestStore.microphoneLevel
+    microphoneLevel: mediaStore.totalVolume,
   }
 }
 

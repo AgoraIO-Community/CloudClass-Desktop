@@ -53,7 +53,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       whiteboardGranted={userStream.whiteboardGranted}
       hideBoardGranted={true}
       hideStars={true}
-      micVolume={userStream.micVolume}
+      streamUuid={userStream.streamUuid}
       hideOffAllPodium={!controlTools.includes(ControlTool.offPodiumAll)}
       canHoverHideOffAllPodium={canHoverHideOffAllPodium}
       onOffAllPodiumClick={onOffAllPodiumClick!}
@@ -135,7 +135,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       hasStream={userStream.hasStream}
       whiteboardGranted={userStream.whiteboardGranted}
       hideStars={true}
-      micVolume={userStream.micVolume}
+      streamUuid={userStream.streamUuid}
       hideControl={userStream.hideControl}
       onCameraClick={onCameraClick}
       onMicClick={onMicClick}
@@ -194,7 +194,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
       micEnabled: stream.audio,
       cameraEnabled: stream.video,
       whiteboardGranted: stream.whiteboardGranted,
-      micVolume: stream.micVolume,
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
@@ -205,6 +204,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
       isOnPodium: stream.onPodium,
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
+      streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
@@ -305,7 +305,6 @@ export const MidVideoMarqueeContainer = observer(() => {
       micEnabled: stream.audio,
       cameraEnabled: stream.video,
       whiteboardGranted: stream.whiteboardGranted,
-      micVolume: stream.micVolume,
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,
       hideControl: stream.hideControl,
@@ -316,6 +315,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       isOnPodium: stream.onPodium,
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
+      streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
@@ -387,7 +387,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       whiteboardGranted: false,
       hideBoardGranted: true,
       hideStars: true,
-      micVolume: stream.micVolume,
+      streamUuid: stream.streamUuid,
       hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,

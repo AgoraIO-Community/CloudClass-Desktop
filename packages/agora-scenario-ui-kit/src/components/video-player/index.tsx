@@ -1,16 +1,31 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { useRoomContext, useVolumeContext } from 'agora-edu-core';
 import classnames from 'classnames';
-import { BaseProps } from '../interface/base-props';
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { v4 as uuidv4 } from 'uuid';
 import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Popover } from '~components/popover';
-import { Tooltip } from '~components/tooltip'
+import { SvgaPlayer } from '~components/svga-player';
+import { Tooltip } from '~components/tooltip';
+import { usePrevious } from '~utilities/hooks';
+import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
+import { BaseProps } from '../interface/base-props';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
-import { useTranslation } from 'react-i18next';
-import { SvgaPlayer } from '~components/svga-player'
-import { v4 as uuidv4 } from 'uuid';
-import { usePrevious, useWatch } from '~utilities/hooks';
-import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group'
+
+export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
+
+  const {speakers} = useMediaStore()
+
+  const speaker = speakers.get(+streamUuid)
+
+  const currentVolume = speaker ?? 0
+
+  return (
+    <VolumeIndicator volume={currentVolume} />
+  )
+}
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -18,6 +33,10 @@ export interface BaseVideoPlayerProps {
    * 用户的唯一标识
    */
   uid: string | number;
+  /**
+   * 用户的流id
+   */
+  streamUuid: string;
   /**
    * 摄像头关闭时的占位图
    */
@@ -146,7 +165,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   stars = 0,
   username,
   micEnabled,
-  micVolume,
+  streamUuid,
+  // micVolume,
   cameraEnabled,
   whiteboardGranted,
   isHost = false,
@@ -333,7 +353,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? <VolumeIndicator volume={micVolume} /> : null}
+            {micEnabled && micDevice === 1 ? <StreamVolumeIndicator streamUuid={streamUuid} /> : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({

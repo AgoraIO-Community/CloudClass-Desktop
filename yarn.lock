@@ -2648,10 +2648,10 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/video-js-plugin@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.0.tgz#5c66c5d0228351a2a3b0e3ffcf0205c36e0f8b98"
-  integrity sha1-XGbF0CKDUaKjsOP/zwIFw24Pi5g=
+"@netless/video-js-plugin@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.2.tgz#e88e9bc87e3a45f14c12768239b2a369ade30ef8"
+  integrity sha1-6I6byH46RfFMEnaCObKjaa3jDvg=
 
 "@netless/white-audio-plugin2@2.0.5":
   version "2.0.5"
@@ -10366,8 +10366,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"easemob-websdk@file:packages/easemob-websdk":
-  version "3.5.2"
+easemob-websdk@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.0.tgz#784d8c9802b31d55eb23c0ebf9eda1f04fd04d9c"
+  integrity sha1-eE2MmAKzHVXrI8Dr+e2h8E/QTZw=
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -11192,7 +11194,7 @@ eventemitter3@^3.1.0:
   resolved "https://registry.nlark.com/eventemitter3/download/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha1-LT1I+cNGaY/Og6hdfWZOmFNd9uc=
 
-eventemitter3@^4.0.0:
+eventemitter3@^4.0.0, eventemitter3@^4.0.7:
   version "4.0.7"
   resolved "https://registry.nlark.com/eventemitter3/download/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha1-Lem2j2Uo1WRO9cWVJqG0oHMGFp8=
@@ -16240,7 +16242,7 @@ math-random@^1.0.1:
   resolved "https://registry.npm.taobao.org/math-random/download/math-random-1.0.4.tgz?cache=0&sync_timestamp=1596773205522&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmath-random%2Fdownload%2Fmath-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha1-XdaUPJOFSCZwFtTjTwV1gwgMUUw=
 
-mathjs@^6.2.2:
+mathjs@6.6.5:
   version "6.6.5"
   resolved "https://registry.nlark.com/mathjs/download/mathjs-6.6.5.tgz#6bbad1fa3ac09e8f7106ef64af8d3908f877b8e8"
   integrity sha1-a7rR+jrAno9xBu9kr405CPh3uOg=
@@ -26008,10 +26010,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.10:
-  version "2.13.10"
-  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.10.tgz#233ce4cb0c161fc25cd6d99d0d895a616e19a439"
-  integrity sha1-IzzkywwWH8Jc1tmdDYlaYW4ZpDk=
+white-web-sdk@2.13.11:
+  version "2.13.11"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.11.tgz#70455ca04a8ca28f16e7cac33d82bb9915883c47"
+  integrity sha1-cEVcoEqMoo8W58rDPYK7mRWIPEc=
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     atob "^2.1.0"
@@ -26019,7 +26021,8 @@ white-web-sdk@2.13.10:
     color "^3.1.0"
     detect-it "^3.0.5"
     es6-symbol "^3.1.1"
-    mathjs "^6.2.2"
+    eventemitter3 "^4.0.7"
+    mathjs "6.6.5"
     mobx "^4.15.7"
     mobx-react "^5.4.4"
     numeric "^1.2.6"

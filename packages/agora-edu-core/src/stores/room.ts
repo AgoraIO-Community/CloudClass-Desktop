@@ -1559,7 +1559,7 @@ export class RoomStore extends SimpleInterval {
       })
 
       const { sceneType, userRole } = this.getSessionConfig()
-      const userAndRoomdata = await roomManager.join({
+      const userAndRoomData = await roomManager.join({
         userRole: userRole,
         roomUuid,
         userName: `${this.roomInfo.userName}`,
@@ -1617,8 +1617,10 @@ export class RoomStore extends SimpleInterval {
         uid: +mainStream.streamUuid,
         channel: roomInfo.roomInfo.roomUuid,
         token: mainStream.rtcToken,
-        data: userAndRoomdata
+        data: userAndRoomData
       })
+
+      this.appStore.mediaStore.localUid = +mainStream.streamUuid
 
       const localStreamData = roomManager.data.localStreamData
 
@@ -1741,7 +1743,7 @@ export class RoomStore extends SimpleInterval {
         /**
          * 房间创建的时间戳
          */
-        roomCreateTs: userAndRoomdata!.room!.createTime
+        roomCreateTs: userAndRoomData!.room!.createTime
       };
       reportServiceV2.initReportUserParams(reportUserParams);
       reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
