@@ -1,16 +1,15 @@
-import { AgoraEduSDK, AgoraEduEvent} from '../../api'
-import { globalConfigs } from 'agora-edu-core'
-import {ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
 import { useHomeStore } from '@/infra/hooks'
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token'
+import {AgoraChatWidget} from 'agora-widget-gallery'
+//@ts-ignore
+import { AgoraExtAppCountDown } from 'agora-plugin-gallery'
+import MD5 from 'js-md5'
 import { isEmpty } from 'lodash'
 import { observer } from 'mobx-react'
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import {generatePath} from 'react-router'
-//@ts-ignore
-import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-gallery'
-import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
-import MD5 from 'js-md5'
+import { AgoraEduEvent, AgoraEduSDK, scenarioRoomPath } from '../../api'
+import { ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller'
 
 //@ts-ignore
 window.controller = controller
@@ -39,6 +38,11 @@ export const LaunchPage = observer(() => {
         'reportUrl': `${REACT_APP_REPORT_URL}`,
         'reportQos': `${REACT_APP_REPORT_QOS}`,
         'reportV1Url': `${REACT_APP_V1_REPORT_URL}`,
+        'edu.routesMap': {
+          'pretestPath': '/pretest',
+          'defaultRoutePath': scenarioRoomPath[0],
+          'routesPath': scenarioRoomPath
+        }
       }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,
@@ -66,6 +70,7 @@ export const LaunchPage = observer(() => {
 
       roomRef.current = await AgoraEduSDK.launch(dom, {
         ...launchOption,
+        widgets: {...{'chat':new AgoraChatWidget()}},
         // mediaOptions: {
         //   cameraEncoderConfiguration: {
         //     width: 160,

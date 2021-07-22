@@ -1,6 +1,12 @@
 import { reportServiceV2 } from "../services/report-v2"
 import { reportService } from '../services/report'
 import { rteReportService } from 'agora-rte-sdk'
+
+export type RoutesMapType = {
+  pretestPath: string,
+  defaultRoutePath: string,
+  routesPath: Record<string, {path: string}>
+}
 class GlobalConfigs {
   sdkDomain: string = 'https://api.agora.io/%region%'
   reportDomain: string = 'https://api.agora.io'
@@ -8,6 +14,12 @@ class GlobalConfigs {
   appId: string = '';
 
   _region: string = '';
+
+  routesMap!: RoutesMapType
+
+  public setRoutesMap(routesMap: RoutesMapType) {
+    this.routesMap = routesMap
+  }
 
   public setRegion(region: string): void {
     const regionDomain = getSDKDomain(this.sdkDomain, region)

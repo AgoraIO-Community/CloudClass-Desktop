@@ -1,5 +1,5 @@
 import { GlobalStorage } from '../../utils';
-import { LaunchOption } from "@/infra/api";
+import { LaunchOption } from "agora-edu-core";
 
 export class HomeStore {
 

@@ -30,5 +30,7 @@ export type {
   Resource
 } from './stores/board'
 
+export * from './api/infra/index'
+
 export * from './services/edu-sdk-api'
 export * from './services/home-api'

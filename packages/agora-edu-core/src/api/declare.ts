@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, EduVideoEncoderConfiguration } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration, EduRoomTypeEnum } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -71,7 +71,7 @@ export interface IAgoraWidget {
   widgetWillUnload():void
 }
 
-export type ConvertedFile = {
+export type AgoraConvertedFile = {
   width: number,
   height: number,
   ppt: {
@@ -82,7 +82,7 @@ export type ConvertedFile = {
   conversionFileUrl: string,
 }
 
-export type ConvertedFileList = ConvertedFile[]
+export type ConvertedFileList = AgoraConvertedFile[]
 
 
 export type CourseWareItem = {
@@ -215,9 +215,37 @@ export enum AgoraEduEvent {
   clicked = 3
 }
 
+/**
+ * LaunchOption 接口
+ */
+ export type LaunchOption = {
+  userUuid: string, // 用户uuid
+  userName: string, // 用户昵称
+  roomUuid: string, // 房间uuid
+  roleType: EduRoleTypeEnum, // 角色
+  roomType: EduRoomTypeEnum, // 房间类型
+  roomName: string, // 房间名称
+  listener: ListenerCallback, // launch状态
+  pretest: boolean, // 开启设备检测
+  // rtmUid: string
+  rtmToken: string, // rtmToken
+  language: LanguageEnum, // 国际化
+  startTime: number, // 房间开始时间
+  duration: number, // 课程时长
+  courseWareList: CourseWareList, // 课件列表
+  personalCourseWareList?: CourseWareList, // 个人课件列表
+  recordUrl?: string, // 回放页地址
+  extApps?: IAgoraExtApp[] // app插件
+  region?: AgoraRegion
+  widgets?: {[key: string]: IAgoraWidget}
+  userFlexProperties?: {[key: string]: any} //用户自订属性
+  mediaOptions?: MediaOptions
+}
+
 
 export type AgoraEduSDKConfigParams = {
-  appId: string
+  appId: string;
+  region?: string;
 }
 
 export interface RoomParameters {

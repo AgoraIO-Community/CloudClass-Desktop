@@ -15,14 +15,6 @@ export type AppRouteComponent = {
   component: React.FC<any>
 }
 
-export const getLiveRoomPath = (roomType: EduRoomTypeEnum) => {
-  const room = scenarioRoomPath[roomType]
-  if (!room) {
-    return BizPagePath.OneToOnePath
-  }
-  return room.path
-}
-
 // TODO: need fix tsx
 const PageSFC = (Component: React.FC<any>) => {
   return <Component />
