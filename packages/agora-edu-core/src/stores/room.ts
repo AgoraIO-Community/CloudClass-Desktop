@@ -1,4 +1,4 @@
-import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, OperatorUser, StreamSubscribeOptions } from "agora-rte-sdk"
+import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, OperatorUser, StreamSubscribeOptions, AgoraElectronRTCWrapper } from "agora-rte-sdk"
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { get } from "lodash"
@@ -956,9 +956,16 @@ export class RoomStore extends SimpleInterval {
     return +this.roomInfo.roomType === EduRoomType.SceneTypeBigClass && userRole === EduRoleTypeEnum.student
   }
 
-  @action
+  @action.bound
   setAutoSyncStreamState(val: boolean) {
     this.autoSyncStreamState = val
+    if(!val){
+      // if media should not sync with stream state, always mute media av
+      if (this.appStore.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper) {
+        this.appStore.mediaService.sdkWrapper.client.muteLocalVideoStream(true)
+        this.appStore.mediaService.sdkWrapper.client.muteLocalAudioStream(true)
+      }
+    }
   }
 
   updateRewardInfo() {
@@ -1787,10 +1794,10 @@ export class RoomStore extends SimpleInterval {
 
     if(state === EduClassroomStateEnum.beforeStart) {
       // unlink edustream and media stream before class starts
-      this.autoSyncStreamState = false
+      this.setAutoSyncStreamState(false)
     } else {
       // link if class started
-      this.autoSyncStreamState = true
+      this.setAutoSyncStreamState(true)
     }
   }
 
