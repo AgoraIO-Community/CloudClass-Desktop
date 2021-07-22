@@ -10,6 +10,9 @@ import noFile from './assets/no-file.png';
 import cameraDisabled from './assets/camera-disabled.png';
 import noQuestion from './assets/noquestion.svg';
 import { SvgImg } from '../svg-img';
+import boardDisconnected from './assets/board-disconnected.png'
+import {transI18n} from '~components/i18n'
+import { Button } from '~components/button'
 
 type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
 
@@ -105,6 +108,29 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
     <div className={cls}>
       {/* {children} */}
       <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]}/>
+    </div>
+  )
+}
+
+export interface BoardPlaceHolderProps extends BaseProps {
+  onReconnectClick: any
+}
+
+export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
+  onReconnectClick,
+  className
+}) => {
+  const cls = classnames({
+    [`board-placeholder`]: 1,
+    [`${className}`]: !!className,
+  });
+  return (
+    <div className={cls}>
+      <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')}/>
+      <Button 
+        className="reconnect-btn"
+        onClick={onReconnectClick}
+      >{transI18n('whiteboard.disconnect-btn')}</Button>
     </div>
   )
 }

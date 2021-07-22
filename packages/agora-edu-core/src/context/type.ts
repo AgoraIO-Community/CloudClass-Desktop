@@ -646,6 +646,11 @@ export type GlobalContext = {
     dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
+    boardConnectionState: any
+    /**
+     * 加入白板
+     */
+    joinBoard: any,
     /**
      * 白板所在的房间
      * @version v1.1.0

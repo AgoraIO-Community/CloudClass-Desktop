@@ -1,6 +1,6 @@
 import React from 'react'
 import { Meta } from '@storybook/react';
-import { Placeholder, CameraPlaceHolder } from '~components/placeholder'
+import { Placeholder, CameraPlaceHolder, BoardPlaceHolder } from '~components/placeholder'
 
 const meta: Meta = {
     title: 'Components/Placeholder',
@@ -52,6 +52,16 @@ export const Docs = ({ placeholderDesc }: DocsProps) => (
                 placeholderDesc={placeholderDesc}
                 placeholderType="noFile"
             /> */}
+        </div>
+        <div 
+            className="mt-4" 
+            style={{
+                height: 500,
+            }}
+        >
+            <BoardPlaceHolder onReconnectClick={() => {
+                console.log('重新连接')
+            }}/>
         </div>
     </>
 )
