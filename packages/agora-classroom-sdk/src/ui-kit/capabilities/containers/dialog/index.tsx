@@ -421,7 +421,7 @@ export const MoreInfo: React.FC<BaseDialogProps> = observer(({id}) => {
         <p style={{
           fontSize: 12,
           color: '#586376',
-          padding: '10px 0'
+          padding: '3px 0 10px'
         }}>{t('toast.share_url')}</p>
         <div>
           <span style={{
@@ -429,7 +429,7 @@ export const MoreInfo: React.FC<BaseDialogProps> = observer(({id}) => {
             fontSize: 13,
             color: '#191919',
             padding: '0 10px',
-            width: '220px',
+            width: '240px',
             height: '30px',
             lineHeight: '30px',
             marginRight: '10px',
@@ -439,7 +439,9 @@ export const MoreInfo: React.FC<BaseDialogProps> = observer(({id}) => {
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             verticalAlign: 'middle'
-          }}>{share_url}</span><Button type={'primary'} onClick={onOK}>{t('toast.copy')}</Button>
+          }}>{share_url}</span><Button type={'primary'} style={{
+            width: '70px',
+            borderRadius: '4px'}} onClick={onOK}>{t('toast.copy')}</Button>
         </div>
       </div>
     </Modal>

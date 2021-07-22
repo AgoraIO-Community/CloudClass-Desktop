@@ -114,7 +114,15 @@
 .icon-vote.vote{
   background-image: url('./assets/svg/icon-vote.svg');
 }
-
+.icon-user-svg{
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+  width: 18px;
+  height: 18px;
+  background-image: url('./assets/svg/icon-user.svg');
+}
 /* .can-hover .icon-microphone-on-outline,
 .can-hover .icon-camera,
 .can-hover .icon-microphone-off-outline,

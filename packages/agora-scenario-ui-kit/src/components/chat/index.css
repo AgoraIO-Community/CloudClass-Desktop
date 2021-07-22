@@ -238,3 +238,7 @@
 .simple-chat .chat-history{
   margin-top: 44px;
 }
+
+.guest-tab-title .tabs-ink-bar{
+  display: none;
+}

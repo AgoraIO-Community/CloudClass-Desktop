@@ -238,8 +238,6 @@ export const Chat: FC<ChatProps> = ({
     }
   }, [singleConversation])
 
-  const userImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAACeUlEQVQ4T63UQUgUURgH8P/3drf1bWmSeZCK6hIVUbK7o0cjKinrEOGpIoQMooIiKN1ZMmN3FAk6eIgwsehgKUEQdC8KkZ2VEhFKoQ5FBLWUuTOru/O+mCXFRVc7OMf/fPN773sz3xBW6aJVcrAIqr38s8wplTEiNDJQRqAhpVhPdgSGl1u0AAqdZx9V2m8A+s3g20p5Ul5SJ5lwXQg+zIp8AFdNZdMvP3RV/lkIF0Ba1G4Cq2tp76fgePue2blCTbdaGGhgEgPEqhmMCsBTbxr+sbmaAiis270EfEnEZdvC1apb7G0+wZOJCenHIDmabnUw45BpBMJFIKubGU7SCFxZCAUjM3sFqbdmXJa6eehGar3wlvxSPlmZvEU/3KxgR8GofcDDPJh1KPSuU37OY20sNCfTD/BsIhY440Y1UXs7M3+cmZHlo3covQhyg3CrdZcETgN4wIwUASdAtMFmp27MWPdd060tzHhEwLeEETi1ZGtzYTiSOQJyGsFUxsCQ7ZP3x9tpWtPtHoDPAchB0cFEh3y1NOS2kbMaQOI4wDvB8AP4ysBroXKPaTqbzZXLXeS4u8RFMJpNI/CkoLWa1swOJVQ/4L5aPGWm90JwhhW2EtFRMNeyoKtmTPa6DwYj0/UC4plSonqks2Qyf9j7dGvTGiDJRA8tT8nN8Xaa/4bm243a+6HUAAmhJ2Kyx821SLqPSWTMuLyQhzTd7mNWwjTWnl1uDLRWuw4CL8SUtXm4u2KqJpo5ppi7zLjc/Q+yUgwaJPDESkPMYJ3J25SM+Z+HIukqAummEbiUh8K6fQ/MG1dC8vcJrNgTGzH8o0Vn7b+gIkWr9j/6C6qLDCJb/HRvAAAAAElFTkSuQmCC"
-
   return (
     <Affix
       {...resetProps}
@@ -247,7 +245,7 @@ export const Chat: FC<ChatProps> = ({
       collapse={collapse}
       content={<ChatMin unreadCount={unreadCount}
       />}>
-      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
+      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', isGuest ? 'guest-tab-title' : '', cls].join(' ')}>
         <div className="chat-header with-tab">
           <span style={{
             display: 'flex',
@@ -272,7 +270,7 @@ export const Chat: FC<ChatProps> = ({
                   lineHeight: '18px'
                 }}
               >
-                <img src={userImage} style={{display: 'inline-block',position: 'relative', top: '-1px'}} /> {talkNumber}
+                <span className='icon-user-svg' /> {talkNumber}
               </span>
             ) : null}
           </span>
