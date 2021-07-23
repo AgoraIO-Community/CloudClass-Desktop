@@ -954,6 +954,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   async join(option: any): Promise<any> {
     try {
+      //设置为RTC为直播模式
+      this.client.setChannelProfile(1);
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
       EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
       if (ret < 0) {

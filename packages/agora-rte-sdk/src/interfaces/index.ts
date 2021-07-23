@@ -184,7 +184,8 @@ export interface EduConfiguration {
   sdkDomain?: string
   rtmUid: string
   rtmToken: string,
-  scenarioType?: number,
+  scenarioType?: EduRoomTypeEnum,
+  userRole?: EduRoleTypeEnum
   resolution?: {
     width: number;
     height: number;

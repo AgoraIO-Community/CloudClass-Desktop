@@ -206,6 +206,7 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
+        userRole: roomInfoParams?.userRole,
         resolution: {
           width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
           height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
@@ -226,6 +227,7 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
+        userRole: roomInfoParams?.userRole,
         resolution: {
           width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
           height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
