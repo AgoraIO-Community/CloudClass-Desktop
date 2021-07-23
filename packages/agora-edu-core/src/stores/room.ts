@@ -1004,7 +1004,7 @@ export class RoomStore extends SimpleInterval {
       return EduRoleTypeEnum.invisible
     } else if (userRole === 'assistant') {
       return EduRoleTypeEnum.assistant
-    } else if (userRole === 'teacher') {
+    } else if (userRole === 'host') {
       return EduRoleTypeEnum.teacher
     }
     return EduRoleTypeEnum.student
