@@ -4,6 +4,7 @@ import { AgoraElectronRTCWrapper } from '../electron';
 import IAgoraRtcEngine from 'agora-electron-sdk';
 import { LocalUserRenderer, RemoteUserRenderer } from '../renderer';
 import { AgoraWebRtcWrapper } from '../web';
+import { EduRoleType, EduRoleTypeEnum, EduRoomTypeEnum } from '../../../interfaces';
 
 export declare function event_device_changed (evt: any): void;
 
@@ -16,7 +17,8 @@ export declare interface WebRtcWrapperInitOption {
   webConfig: {
     mode: string,
     codec: string,
-    role: string
+    role: string,
+    clientRoleOptions: ClientRoleOptions,
   }
 }
 
@@ -107,7 +109,12 @@ export declare interface WebRtcWrapperInitOption {
     mode: string;
     codec: string;
     role: string;
+    clientRoleOptions: ClientRoleOptions;
   }
+}
+
+export type ClientRoleOptions = {
+  level: 1 | 2
 }
 
 export enum ScreenShareType {
@@ -228,6 +235,8 @@ export declare interface RTCProviderInitParams {
   codec: string;
   appId: string;
   rtcArea: AREA_CODE;
+  scenarioType?: EduRoomTypeEnum;
+  userRole?: EduRoleTypeEnum;
   electronLogPath?: {
     logPath: string;
     videoSourceLogPath: string;

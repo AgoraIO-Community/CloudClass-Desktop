@@ -67,7 +67,9 @@ export class EduManager extends EventEmitter {
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId,
       rtcArea: this.config.rtcArea ?? "GLOBAL",
-      rtmArea: this.config.rtmArea ?? "GLOBAL"
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
+      scenarioType: this.config.scenarioType,
+      userRole: this.config.userRole,
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
