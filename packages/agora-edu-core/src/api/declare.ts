@@ -134,6 +134,11 @@ export type AgoraRegionString =
 
 export type MediaOptions = {
   encryptionConfig?: MediaEncryptionConfig
+  videoEncoderConfiguration: {
+    width: number;
+    height: number;
+    frameRate: number;
+  }
 }
 
 export type BoardOptionUserPayload = {
