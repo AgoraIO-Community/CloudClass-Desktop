@@ -37,3 +37,7 @@ export const isUserMute = (data) => {
 export const announcementStatus = (data) => {
     return { type: 'ANNOUNCEMENT_STATUS', data }
 }
+// 聊天室公告更新通知
+export const announcementNotice = (data) => {
+    return { type: 'ANNOUNCEMENT_NOTICE', data }
+}

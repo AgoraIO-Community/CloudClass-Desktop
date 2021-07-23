@@ -86,6 +86,10 @@
     user-select: none;
 }
 
+.emoji-modal {
+    user-select: none;
+}
+
 textarea {
     outline: none !important;
     resize: none !important;

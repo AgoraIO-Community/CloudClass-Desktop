@@ -63,7 +63,7 @@ var config = {
      * will auto connect the websocket server autoReconnectNumMax times in background when client is offline.
      * won't auto connect if autoReconnectNumMax=0.
      */
-    autoReconnectNumMax: 5,
+    autoReconnectNumMax: 10,
     /**
      * webrtc supports WebKit and https only
      */

@@ -5,7 +5,7 @@ import store from './redux/store'
 import { propsAction, isShowChat } from './redux/actions/propsAction'
 import { statusAction, clearStore } from './redux/actions/userAction'
 import { messageAction, showRedNotification } from './redux/actions/messageAction'
-import { roomAllMute, roomUsers, isUserMute } from './redux/actions/roomAction'
+import { roomAllMute, roomUsers, isUserMute, announcementNotice } from './redux/actions/roomAction'
 import { loginIM } from './api/login'
 import { setUserInfo, getUserInfo } from './api/userInfo'
 import { joinRoom, getAnnouncement } from './api/chatroom'
@@ -22,6 +22,7 @@ const App = function (props) {
   const state = useSelector(state => state)
   const showChat = state?.showChat
   const showRed = state?.showRed
+  const showAnnouncementNotice = state?.showAnnouncementNotice
   useEffect(() => {
     let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '')
@@ -67,11 +68,13 @@ const App = function (props) {
       },
       onError: (message) => {
         console.log('onError>>>', message);
+        if (message.type === 16) {
+          return message.error('请重新登陆！');
+        }
+        if (message.type === 604) return
         const type = JSON.parse(_.get(message, 'data.data')).error_description;
         const resetName = store.getState().propsData.userUuid;
-        if (message.type === '16') {
-          return
-        } else if (type === "user not found") {
+        if (type === "user not found") {
           let options = {
             username: resetName.toLocaleLowerCase(),
             password: resetName,
@@ -110,10 +113,12 @@ const App = function (props) {
       },
       onPresence: (message) => {
         console.log('onPresence>>>', message);
+        const activeTabKey = store.getState().isTabKey !== CHAT_TABS_KEYS.notice
         if (new_IM_Data.chatroomId !== message.gid) {
           return
         }
         const roomUserList = _.get(store.getState(), 'room.roomUsers')
+        const showChat = store.getState().showChat
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
             if (message.from === "系统管理员") return
@@ -139,9 +144,17 @@ const App = function (props) {
             break;
           case "updateAnnouncement":
             getAnnouncement(message.gid)
+            store.dispatch(announcementNotice(activeTabKey))
+            if (!showChat) {
+              store.dispatch(showRedNotification(true))
+            }
             break;
           case "deleteAnnouncement":
             getAnnouncement(message.gid)
+            store.dispatch(announcementNotice(activeTabKey))
+            if (!showChat) {
+              store.dispatch(showRedNotification(true))
+            }
             break;
           case 'muteChatRoom':
             store.dispatch(roomAllMute(true))
@@ -171,18 +184,18 @@ const App = function (props) {
     <div>
       {showChat ?
         <div className="app">
-          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg}/>
+          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
         </div> :
         <div className="chat">
-          <div className="show-chat-icon" onClick={() => { 
+          <div className="show-chat-icon" onClick={() => {
             // 展开聊天
             props.onReceivedMsg && props.onReceivedMsg({
               isShowChat: true
             })
             onChangeModal()
-           }}>
+          }}>
             <img src={showChat_icon} />
-            {showRed && <div className="chat-notice"></div>}
+            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>}
     </div >

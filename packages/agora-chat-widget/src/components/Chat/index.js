@@ -10,6 +10,7 @@ import { ROLE, CHAT_TABS_KEYS } from '../../contants'
 import store from '../../redux/store'
 import { isShowChat } from '../../redux/actions/propsAction'
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction'
+import { announcementNotice } from '../../redux/actions/roomAction'
 import minimize from '../../themes/img/minimize.png'
 import notice from '../../themes/img/notice.png'
 import _ from 'lodash'
@@ -29,16 +30,18 @@ const renderTabBar = (props, DefaultTabBar) => (
 
 
 // 主页面，定义 tabs
-export const Chat = ({onReceivedMsg, sendMsg}) => {
+export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat)
     const [roomUserList, setRoomUserList] = useState([])
     const state = useSelector(state => state)
     const isLogin = _.get(state, 'isLogin')
     const announcement = _.get(state, 'room.announcement', '')
     const showRed = _.get(state, 'showRed')
+    const showAnnouncementNotice = _.get(state, 'showAnnouncementNotice')
     const roleType = _.get(state, 'loginUserInfo.ext', '')
     const roomUsers = _.get(state, 'room.roomUsers', [])
     const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {})
+    const isTabKey = state?.isTabKey
     // 直接在 propsData 中取值
     const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
     useEffect(() => {
@@ -74,9 +77,12 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [roomUsers, roomUsersInfo])
 
-    const showChatModal = () => {
+    const hideChatModal = () => {
         store.dispatch(isShowChat(false))
+        store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat))
     }
+
+
 
     // 监听 Tab 切换
     const onTabChange = (key) => {
@@ -91,6 +97,7 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
                 break;
             case "ANNOUNCEMENT":
                 setTabKey(CHAT_TABS_KEYS.notice)
+                store.dispatch(announcementNotice(false))
                 break;
             default:
                 break;
@@ -102,10 +109,13 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
         setTabKey(CHAT_TABS_KEYS.notice)
     }
     return <div>
-        {showRed && <div className="red-notice"></div>}
+
         {/* <StickyContainer> */}
         <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
-            <TabPane tab="聊天" key={CHAT_TABS_KEYS.chat}>
+            <TabPane tab={<div>
+                {showRed && <div className="red-notice"></div>}
+                聊天
+            </div>} key={CHAT_TABS_KEYS.chat}>
                 {
                     announcement && <div className="notice" onClick={() => { toTabKey() }}>
                         <img src={notice} alt="通知" className="notice-icon" />
@@ -120,7 +130,12 @@ export const Chat = ({onReceivedMsg, sendMsg}) => {
             {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
                 <UserList roomUserList={roomUserList} />
             </TabPane>}
-            <TabPane tab="公告" key={CHAT_TABS_KEYS.notice}>
+            <TabPane tab={<div>
+                {showAnnouncementNotice && <div className="red-notice"></div>}
+                公告
+            </div>
+            } key={CHAT_TABS_KEYS.notice}>
+
                 <Announcement />
             </TabPane>
         </Tabs>
