@@ -46,11 +46,13 @@ export const InputMsg = ({ isTeacher }) => {
     }
     // 隐藏表情框
     const handleCancel = () => {
+        Modal.destroyAll();
         store.dispatch(showEmojiAction(false))
     };
 
     // 获取到点击的表情，加入到输入框
     const getEmoji = (e) => {
+        e.preventDefault()
         // 监听表情输入后，自动获取输入框焦点
         inputRef.current.focus({
             cursor: 'end',
@@ -110,7 +112,6 @@ export const InputMsg = ({ isTeacher }) => {
                 console.log('fail>>>', err);
                 if (err.type === 501) {
                     message.error("消息内容包含敏感词，请重新发送！")
-
                 }
             }
         };
@@ -124,9 +125,10 @@ export const InputMsg = ({ isTeacher }) => {
     return <>
         <div>
             <div className="chat-icon">
-                <Tooltip title="表情">
-                    <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
-                </Tooltip>
+                {/* <Tooltip title="表情">
+                    
+                </Tooltip> */}
+                <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
                 {isTeacher && <div>
                     <span className="all-mute-text">全体禁言</span>
                     <Switch
@@ -157,6 +159,8 @@ export const InputMsg = ({ isTeacher }) => {
             closable={false}
             style={{ width: '280px', position: 'absolute', bottom: '110px', right: '10px' }}
             className="emoji-modal"
+            destroyOnClose
+            maskStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}
         >
             <ShowEomji getEmoji={getEmoji} />
         </Modal>

@@ -40,6 +40,7 @@ export const ShowAnnouncement = () => {
     };
 
     const hideModal = () => {
+        Modal.destroyAll();
         setVisible(false)
     };
 
@@ -72,6 +73,7 @@ export const ShowAnnouncement = () => {
             width={250}
             className="delete-modal"
             style={{ top: '40%' }}
+            destroyOnClose
             getContainer={document.getElementById('hx-chatroom')}
         ><span>{DELETE_CONTENT}</span></Modal>
     </div>

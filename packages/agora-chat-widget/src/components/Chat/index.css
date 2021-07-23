@@ -82,7 +82,5 @@
     height: 6px;
     width: 6px;
     left: 45px;
-    top: 13px;
-    /* border: 1px solid #1D2026; */
-    box-sizing: content-box;
+    top: 10px;
 }
