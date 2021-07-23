@@ -12,6 +12,10 @@
     margin-bottom: 10px;
 }
 
+.en .setting .beauty-text {
+    width: 55px;
+}
+
 .setting .device-volume, .setting .beauty-value {
     margin-top: 15px;
     @apply flex;
@@ -20,6 +24,13 @@
 .setting .device-volume .slider, .setting .beauty-value .slider{
     margin-left: 6px;
     @apply flex-1;
+}
+
+.setting .beauty-show-number {
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #586376;
 }
 
 

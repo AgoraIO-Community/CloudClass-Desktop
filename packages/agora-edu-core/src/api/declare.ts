@@ -133,7 +133,12 @@ export type AgoraRegionString =
   | 'ns'
 
 export type MediaOptions = {
-  encryptionConfig?: MediaEncryptionConfig
+  encryptionConfig?: MediaEncryptionConfig,
+  videoEncoderConfiguration: {
+    width: number;
+    height: number;
+    frameRate: number;
+  }
 }
 
 export type BoardOptionUserPayload = {

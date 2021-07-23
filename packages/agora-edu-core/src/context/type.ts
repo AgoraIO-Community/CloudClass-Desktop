@@ -251,6 +251,15 @@ export type VolumeContext = {
     microphoneLevel: number,
 }
 export type PretestContext = {
+    isBeauty: boolean,
+    setBeauty: (isBeauty: boolean) => void,
+    whitening: number,
+    buffing: number,
+    ruddy: number,
+    setWhitening: (whitening: number) => void,
+    setBuffing: (buffing: number) => void,
+    setRuddy: (ruddy: number) => void,
+    setBeautyEffectOptions: any,
     /**
      * 摄像头是否错误
      * @version v1.1.0
@@ -414,6 +423,10 @@ export type ScreenShareContext = {
     canSharingScreen: boolean;
 }
 export type RoomContext = {
+    /**
+     * 是否成功加入了房间
+     */
+    joined: boolean, 
     /**
      * 场景类型
      * @version v1.1.0
@@ -633,6 +646,14 @@ export type GlobalContext = {
     dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
+    /**
+     * 白板连接状态
+     */
+    boardConnectionState: string,
+    /**
+     * 加入白板
+     */
+    joinBoard: any,
     /**
      * 白板所在的房间
      * @version v1.1.0

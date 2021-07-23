@@ -1,6 +1,6 @@
 import { useAudienceParams, useHomeStore } from "@/infra/hooks"
 import { changeLanguage, Home } from "~ui-kit"
-import {storage} from '@/infra/utils'
+import { storage } from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
@@ -64,14 +64,14 @@ export const HomePage = observer(() => {
   }, [curScenario])
 
   const userUuid = useMemo(() => {
-    if(!debug) {
+    if (!debug) {
       return `${userName}${role}`
     }
     return `${userId}`
   }, [role, userName, debug, userId])
 
   const roomUuid = useMemo(() => {
-    if(!debug) {
+    if (!debug) {
       return `${roomName}${scenario}`
     }
     return `${roomId}`
@@ -167,14 +167,19 @@ export const HomePage = observer(() => {
           roleType: role,
           startTime: +(new Date()),
           region,
-          duration: duration * 60
-        }
-        if(params && params['encryptionKey'] && params['encryptionMode']) {
-          config.mediaOptions = {
-            encryptionConfig: {
-              key: params['encryptionKey'],
-              mode: parseInt(params['encryptionMode'])
+          duration: duration * 60,
+          mediaOptions: {
+            videoEncoderConfiguration: {
+              width: 320,
+              height: 240,
+              frameRate: 15,
             }
+          },
+        }
+        if (params && params['encryptionKey'] && params['encryptionMode']) {
+          config!.mediaOptions!.encryptionConfig = {
+            key: params['encryptionKey'],
+            mode: parseInt(params['encryptionMode'])
           }
         }
         homeStore.setLaunchConfig(config)

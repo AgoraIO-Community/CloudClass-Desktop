@@ -96,6 +96,15 @@
 .icon-countdown.countdown{
   background-image: url('./assets/svg/icon-countdown.svg');
 }
+.icon-whitening.whitening {
+  background-image: url('./assets/svg/whitening.svg');
+}
+.icon-buffing.buffing {
+  background-image: url('./assets/svg/buffing.svg');
+}
+.icon-ruddy.ruddy {
+  background-image: url('./assets/svg/ruddy.svg');
+}
 
 /* .can-hover .icon-microphone-on-outline,
 .can-hover .icon-camera,

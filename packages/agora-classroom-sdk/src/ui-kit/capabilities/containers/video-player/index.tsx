@@ -1,4 +1,4 @@
-import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, usePretestContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -34,8 +34,11 @@ export const VideoPlayerTeacher = observer(({style, className, controlPlacement 
     eduRole2UIRole
   } = useUIStore()
 
+  const {isMirror} = usePretestContext()
+
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -117,9 +120,12 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
   const {
     isHost
   } = useUserListContext()
+
+  const {isMirror} = usePretestContext()
   
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
