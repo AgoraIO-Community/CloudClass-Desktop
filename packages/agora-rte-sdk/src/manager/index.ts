@@ -17,6 +17,7 @@ import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
 import { getSDKDomain, setAppScenario } from '../core/media-service/utils';
+import { RTCProviderInitParams } from '../core/media-service/interfaces';
 
 export type ClassroomInitParams = {
   roomUuid: string
@@ -59,7 +60,7 @@ export class EduManager extends EventEmitter {
     super()
     setAppScenario(config.scenarioType)
     this.config = config
-    const buildOption: any = {
+    const buildOption: RTCProviderInitParams = {
       eduManager: this,
       platform: this.config.platform,
       cefClient: this.config.cefClient,
@@ -67,7 +68,13 @@ export class EduManager extends EventEmitter {
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId,
       rtcArea: this.config.rtcArea ?? "GLOBAL",
-      rtmArea: this.config.rtmArea ?? "GLOBAL"
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
+      cameraEncoderConfiguration: this.config.cameraEncoderConfigurations ?? {
+        width: 320,
+        height: 240,
+        frameRate: 15,
+        bitrate: 200
+      }
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {

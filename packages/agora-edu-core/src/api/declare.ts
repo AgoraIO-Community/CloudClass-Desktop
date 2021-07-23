@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -135,6 +135,11 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type MediaOptions = {
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
+  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration
+}
+
 export type AppStoreConfigParams = {
   agoraAppId: string,
   agoraNetlessAppId: string,
@@ -161,6 +166,7 @@ export type AppStoreConfigParams = {
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
   userFlexProperties?: {[key: string]: any}
+  mediaOptions?: MediaOptions
 }
 
 export type LanguageEnum = "en" | "zh"
