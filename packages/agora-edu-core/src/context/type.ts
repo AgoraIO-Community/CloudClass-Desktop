@@ -646,7 +646,10 @@ export type GlobalContext = {
     dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
-    boardConnectionState: any
+    /**
+     * 白板连接状态
+     */
+    boardConnectionState: string,
     /**
      * 加入白板
      */
