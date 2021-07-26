@@ -1,6 +1,6 @@
 import { useGlobalContext, useMediaContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
@@ -57,7 +57,11 @@ export const PretestContainer = observer(() => {
         setBeautyEffectOptions,
     } = usePretestContext()
 
-    const {isNative} = useMediaContext()
+    const {
+        isNative,
+        getAudioRecordingVolume,
+        getAudioPlaybackVolume
+    } = useMediaContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
         return (
@@ -181,6 +185,9 @@ export const PretestContainer = observer(() => {
         setBeauty(!isBeauty)
     }
 
+    const [ speakerVolume ] = useState<number>(getAudioPlaybackVolume());
+    const [ microphoneVolume ] = useState<number>(getAudioRecordingVolume());
+
     return (
         <div className="fixed-container">
             <Modal
@@ -214,6 +221,8 @@ export const PretestContainer = observer(() => {
                     buffing={buffing}
                     ruddy={ruddy}
                     onChangeBeauty={onChangeBeauty}
+                    speakerVolume={speakerVolume}
+                    microphoneVolume={microphoneVolume}
                 />
             </Modal>
         </div>
