@@ -1,10 +1,12 @@
-import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, useVolumeContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
+import { VolumeIndicator } from '~ui-kit/components/video-player/volume-indicator';
+import { StreamVolumeIndicator } from './volume-indicator';
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
@@ -67,6 +69,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       userType={eduRole2UIRole(roomInfo.userRole)}
       className={className}
       style={style}
+      renderVolumeIndicator={StreamVolumeIndicator}
     >
       {
 
@@ -148,6 +151,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       className={className}
       showGranted={true}
       userType={eduRole2UIRole(roomInfo.userRole)}
+      renderVolumeIndicator={StreamVolumeIndicator}
     >
       {
         <>

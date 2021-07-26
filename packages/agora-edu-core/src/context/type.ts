@@ -249,6 +249,11 @@ export type VolumeContext = {
      * @version v1.1.2
      */
     microphoneLevel: number,
+    /**
+     * 获取房间内的全部音量
+     * @version v1.1.2-rc.2
+     */
+    speakers: Map<number, number>,
 }
 export type PretestContext = {
     /**

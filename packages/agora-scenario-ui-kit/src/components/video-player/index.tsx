@@ -1,4 +1,3 @@
-import { useRoomContext, useVolumeContext } from 'agora-edu-core';
 import classnames from 'classnames';
 import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,21 +8,13 @@ import { Popover } from '~components/popover';
 import { SvgaPlayer } from '~components/svga-player';
 import { Tooltip } from '~components/tooltip';
 import { usePrevious } from '~utilities/hooks';
-import { useMediaStore } from 'agora-edu-core';
 import { BaseProps } from '../interface/base-props';
 import './index.css';
-import { VolumeIndicator } from './volume-indicator';
+import { VolumeIndicator, VolumeIndicatorProps } from './volume-indicator';
 
-export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
-
-  const {speakers} = useMediaStore()
-
-  const speaker = speakers.get(+streamUuid)
-
-  const currentVolume = speaker ?? 0
-
+export const CustomizeVolumeIndicator = ({streamUuid, volume}: {streamUuid: any, volume: number}) => {
   return (
-    <VolumeIndicator volume={currentVolume} />
+    <VolumeIndicator volume={volume} />
   )
 }
 
@@ -114,6 +105,7 @@ export interface BaseVideoPlayerProps {
   cameraDevice?: number;
   micDevice?: number;
   showGranted?: boolean;
+  renderVolumeIndicator?: typeof CustomizeVolumeIndicator;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps
@@ -166,7 +158,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   username,
   micEnabled,
   streamUuid,
-  // micVolume,
+  micVolume = 100,
   cameraEnabled,
   whiteboardGranted,
   isHost = false,
@@ -194,6 +186,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hidePrivateChat = true,
   showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  renderVolumeIndicator = CustomizeVolumeIndicator,
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([])
@@ -353,7 +346,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? <StreamVolumeIndicator streamUuid={streamUuid} /> : null}
+            {micEnabled && micDevice === 1 ? renderVolumeIndicator({volume: micVolume, streamUuid}) : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({
