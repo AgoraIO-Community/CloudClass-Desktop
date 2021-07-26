@@ -9,7 +9,7 @@ import { Popover } from '~components/popover';
 import { SvgaPlayer } from '~components/svga-player';
 import { Tooltip } from '~components/tooltip';
 import { usePrevious } from '~utilities/hooks';
-import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
+import { useMediaStore } from 'agora-edu-core';
 import { BaseProps } from '../interface/base-props';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
