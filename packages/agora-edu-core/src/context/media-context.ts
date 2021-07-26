@@ -82,6 +82,8 @@ export const useMediaContext = (): MediaContext => {
         changeMicrophoneVolume,
         changeCamera,
         changeMicrophone,
-        enableMediaEncryption
+        enableMediaEncryption,
+        getAudioRecordingVolume: pretestStore.getAudioRecordingVolume,
+        getAudioPlaybackVolume: pretestStore.getAudioPlaybackVolume
     }
 }

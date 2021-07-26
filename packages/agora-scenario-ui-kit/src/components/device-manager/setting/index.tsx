@@ -179,7 +179,7 @@ export const Setting: FC<SettingProps> = ({
                     
                 </Select>
                 {
-                hasMicrophoneVolume ? 
+                isNative ? 
                     (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('device.microphone_volume')}</span>
@@ -209,7 +209,7 @@ export const Setting: FC<SettingProps> = ({
                 >
                 </Select>
                 {
-                    hasSpeakerVolume ? 
+                    isNative ? 
                     (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('device.speaker_volume')}</span>

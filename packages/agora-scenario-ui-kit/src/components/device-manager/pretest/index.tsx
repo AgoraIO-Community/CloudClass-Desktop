@@ -360,7 +360,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         >
                         </Select>
                     </div>
-                    {/* {isNative ? (
+                    {isNative ? (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('media.microphone_volume')}</span>
                             <Slider
@@ -373,7 +373,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                 }}
                             ></Slider>
                         </div>
-                    ) : ""} */}
+                    ) : ""}
                     <div className="device-volume-test">
                         <SvgImg type="microphone-on-outline" style={{color: "#0073FF"}}/>
                         {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
@@ -391,7 +391,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         options={speakerOptions}
                     >
                     </Select>
-                    {/* {isNative ? (
+                    {isNative ? (
                         <div className="device-volume">
                             <span className="device-text">{transI18n('media.volume')}</span>
                             <Slider
@@ -404,7 +404,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                                 }}
                             ></Slider>
                         </div>
-                    ) : ""} */}
+                    ) : ""}
                     <div className="device-volume-test">
                         <SvgImg type="speaker" style={{color: "#0073FF"}}/>
                         <Volume
