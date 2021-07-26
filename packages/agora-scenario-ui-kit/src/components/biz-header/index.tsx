@@ -6,6 +6,7 @@ import { Popover } from '~components/popover';
 import { transI18n } from '../i18n';
 import './index.css';
 import { SignalContent } from './signal-content';
+import { SvgImg } from '~components/svg-img'
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   excellent: 'good-signal',
@@ -98,7 +99,7 @@ export const BizHeader: FC<BizHeaderProps> = ({
           content={<SignalContent {...monitor} isNative={isNative} />}
           placement="bottomLeft">
           <div className={`biz-signal-quality ${signalQuality}`}>
-            <Icon
+            <SvgImg
               className="cursor-pointer"
               type={SIGNAL_QUALITY_ICONS[signalQuality] as IconTypes}
               size={24}
@@ -115,20 +116,21 @@ export const BizHeader: FC<BizHeaderProps> = ({
         <div className="header-actions">
           {userType === 'teacher' ? 
           <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
-            <Icon 
-              hover={true} 
+            <SvgImg
+              canHover
               type={isRecording ? "recording" : "record"} 
-              color={isRecording ? '#2962F4': undefined} 
+              style={{
+                color: isRecording ? '#2962F4': undefined
+              }}
               size={24} 
-              useSvg={isRecording ? true : false}
               onClick={() => onClick('record')} 
             />
           </Tooltip> : null}
           <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
-            <Icon hover={true} type="set" size={24} onClick={() => onClick('setting')}  />
+            <SvgImg canHover type="set" size={24} onClick={() => onClick('setting')}  />
           </Tooltip>
           <Tooltip title={transI18n('biz-header.exit')} placement="bottom">
-            <Icon hover={true} type="exit" size={24} onClick={() => onClick('exit')} />
+            <SvgImg canHover type="exit" size={24} onClick={() => onClick('exit')} />
           </Tooltip>
         </div>
       </Header>

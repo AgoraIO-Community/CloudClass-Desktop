@@ -107,6 +107,15 @@ export class BoardClient extends EventEmitter {
       })
     }
 
+    // 修复无法在极简 demo 中复现的跟随模式视野范围不一致的问题，暂时使用该 hack 手段处理，已尽可能减少影响面
+    if (this.room.state.broadcastState.mode === ViewMode.Follower) {
+      setTimeout(() => {
+        console.log("ViewMode.Freedom")
+        this.room.setViewMode(ViewMode.Freedom);
+        this.room.setViewMode(ViewMode.Follower);      
+      }, 1);
+    }
+
     BizLogger.info('[breakout board] board client join')
     this.disconnected = false
   }

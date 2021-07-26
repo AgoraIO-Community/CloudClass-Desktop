@@ -107,7 +107,6 @@ export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore()
   const appStore = useCoreContext()
   // const uiStore = useUIStore()
-  const [isMirror, setMirror] = useState<boolean>(false)
 
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
@@ -133,9 +132,9 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: 0,
-    isMirror: isMirror,
-    setMirror,
+    microphoneLevel: pretestStore.microphoneLevel,
+    isMirror: pretestStore.isMirror,
+    setMirror: pretestStore.setMirror,
     installPretest,
     startPretestCamera: pretestStore.openTestCamera,
     stopPretestCamera: pretestStore.closeTestCamera,
@@ -146,7 +145,16 @@ export const usePretestContext = (): PretestContext => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
-    pretestNoticeChannel: appStore.pretestNotice$
+    pretestNoticeChannel: appStore.pretestNotice$,
+    isBeauty: pretestStore.isBeauty,
+    setBeauty: pretestStore.setBeauty,
+    whitening: pretestStore.whitening,
+    buffing: pretestStore.buffing,
+    ruddy: pretestStore.ruddy,
+    setWhitening: pretestStore.setWhitening,
+    setBuffing: pretestStore.setBuffing,
+    setRuddy: pretestStore.setRuddy,
+    setBeautyEffectOptions: pretestStore.setBeautyEffectOptions
   }
 }
 
@@ -208,7 +216,8 @@ export const useRoomContext = (): RoomContext => {
     liveClassStatus,
     roomProperties,
     updateFlexProperties,
-    flexProperties
+    flexProperties,
+    joined
   } = useRoomStore()
 
   const {
@@ -250,7 +259,8 @@ export const useRoomContext = (): RoomContext => {
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
-    flexRoomProperties: flexProperties
+    flexRoomProperties: flexProperties,
+    joined
   }
 }
 
@@ -338,7 +348,9 @@ export const useBoardContext = (): BoardContext => {
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
-    isBoardScreenShare
+    isBoardScreenShare,
+    boardConnectionState,
+    joinBoard
   } = useBoardStore()
 
   const {
@@ -413,6 +425,8 @@ export const useBoardContext = (): BoardContext => {
     personalResources,
     doUpload: handleUpload,
     publicResources,
+    boardConnectionState,
+    joinBoard
   }
 }
 

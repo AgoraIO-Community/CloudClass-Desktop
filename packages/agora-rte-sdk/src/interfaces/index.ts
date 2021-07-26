@@ -184,8 +184,14 @@ export interface EduConfiguration {
   sdkDomain?: string
   rtmUid: string
   rtmToken: string,
-  scenarioType?: number,
   cameraEncoderConfigurations?: EduVideoEncoderConfiguration
+  scenarioType?: EduRoomTypeEnum,
+  userRole?: EduRoleTypeEnum
+  resolution?: {
+    width: number;
+    height: number;
+    frameRate: number;
+  }
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {

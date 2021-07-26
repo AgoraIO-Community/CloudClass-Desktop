@@ -9,6 +9,7 @@ import './index.css';
 import SearchSvg from '~components/icon/assets/svg/search.svg'
 import { canOperate, ProfileRole, studentListSort } from './base';
 import { Search } from '../input';
+import { SvgImg } from '../svg-img';
 
 export * from './user-list';
 
@@ -127,9 +128,9 @@ export const Roster: FC<RosterProps> = ({
     <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-wrap">
         <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+          <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onClose()
-          }}></Icon>
+          }}/>
         </div>
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}

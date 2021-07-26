@@ -143,3 +143,50 @@
     margin-left: -10px;
     z-index: 2;
 }
+
+.beauty-operation-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    border-radius: 0px 0px 4px 4px;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .65);
+}
+.beauty-operation-top {
+    display: flex;
+    width: 80%;
+    margin-top: 16px;
+    justify-content: center;
+    align-items: center;
+}
+.beauty-operation-top .slider {
+    width: 100%;
+}
+.beauty-operation-top .beauty-show-number {
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+}
+
+.beauty-operation-bottom {
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+}
+.beauty-operation-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.beauty-operation-item .operation-item-desc {
+    margin-left: 4px;
+    font-size: 12px;
+    color: #FFFFFF;
+}

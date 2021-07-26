@@ -9,7 +9,7 @@ import './index.css';
 const { Handle } = RCSlider
 
 
-type tooltipPositionProps = 'top' | 'bottom'
+type tooltipPositionProps = 'top' | 'bottom' | ''
 export interface SliderProps extends BaseProps {
     defaultValue?: number;
     disabled?: boolean;

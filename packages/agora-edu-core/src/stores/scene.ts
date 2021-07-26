@@ -1076,6 +1076,10 @@ export class SceneStore extends SimpleInterval {
     return this.recordState
   }
   
+  prepareRTC() {
+    this.mediaService.prepare()
+  }
+
   async joinRTC(args: any) {
     try {
       await this.mediaService.join(args)

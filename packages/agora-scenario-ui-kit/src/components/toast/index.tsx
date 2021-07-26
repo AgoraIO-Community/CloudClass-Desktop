@@ -6,6 +6,7 @@ import { IconTypes } from '~components/icon/icon-types';
 import Notification from 'rc-notification'
 import './index.css';
 import { useTimeout } from '~utilities/hooks';
+import { SvgImg } from '../svg-img';
 
 export type ToastCategory = 'success' | 'error' | 'warning'
 
@@ -81,11 +82,13 @@ export const Toast: ToastType = ({
   
   return (
     <div className={cls} {...restProps} ref={toastEl}>
-      <Icon
+      <SvgImg
         type={toastDict[type].iconType}
-        color={toastDict[type].color}
+        style={{color: toastDict[type].color}}
       />
-      {children}
+      <div>
+        {children}  
+      </div>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Popover } from '~components/popover';
 import { ToolItem } from './tool';
 import { Slider } from '~components/slider'
 import { Tooltip } from '~components/tooltip';
+import { SvgImg } from '~components/svg-img'
 
 const defaultColors = [
   '#ffffff',
@@ -95,8 +96,7 @@ export const Colors: FC<ColorsProps> = ({
           <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor === '#ffffff' ? '#E1E1EA' : activeColor, 0.5)}`}}>
             <div className="circle" style={{backgroundColor: activeColor}}></div>
           </div>
-          {/* <Icon type="circle" hover={hover} color={activeColor} /> */}
-          <Icon type="triangle-down" className="triangle-icon"/>
+          <SvgImg type="triangle-down" className="triangle-icon"/>
         </div>  
       </Popover>
     </Tooltip>

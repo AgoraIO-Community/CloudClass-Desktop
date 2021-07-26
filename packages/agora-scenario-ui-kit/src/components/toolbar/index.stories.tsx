@@ -2,6 +2,7 @@ import { Meta } from '@storybook/react';
 import React, { FC, useState, useRef } from 'react';
 import { Icon } from '~components/icon';
 import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
+import { SvgImg } from '~components/svg-img'
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -112,12 +113,12 @@ export const Docs: FC<ToolbarProps> = (props) => {
             cabinetList={[
               {
                 id: 'screenShare',
-                icon: <Icon type="tools"/>,
+                icon: <SvgImg type="tools"/>,
                 name: '屏幕共享'
               },
               {
                 id: 'laserPoint',
-                icon: <Icon type="tools"/>,
+                icon: <SvgImg type="tools"/>,
                 name: '激光笔'
               },
             ]}

@@ -88,7 +88,7 @@ export const BigClassScenario = observer(() => {
           "big-class-aside-full-collapse": (isFullScreen && chatCollapse)
         })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="big-class-teacher"/>
+            <VideoPlayerTeacher className="big-class-teacher" controlPlacement="bottom" placement="bottom"/>
           </div>
           <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
         </Aside>

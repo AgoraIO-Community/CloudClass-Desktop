@@ -1,4 +1,4 @@
-import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader, transI18n } from '~ui-kit'
+import { CheckBox, Col, IconBox, Inline, Placeholder, Row, t, Table, TableHeader, transI18n, SvgImg } from '~ui-kit'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import * as React from 'react';
@@ -108,7 +108,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
             <Col style={{cursor: 'pointer'}} onClick={() => {
               onResourceClick(id)
             }}>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
+              <SvgImg type={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>
             <Col>

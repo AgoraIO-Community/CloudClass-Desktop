@@ -96,6 +96,15 @@
 .icon-countdown.countdown{
   background-image: url('./assets/svg/icon-countdown.svg');
 }
+.icon-whitening.whitening {
+  background-image: url('./assets/svg/whitening.svg');
+}
+.icon-buffing.buffing {
+  background-image: url('./assets/svg/buffing.svg');
+}
+.icon-ruddy.ruddy {
+  background-image: url('./assets/svg/ruddy.svg');
+}
 
 /* .can-hover .icon-microphone-on-outline,
 .can-hover .icon-camera,
@@ -112,44 +121,44 @@
   cursor: none !important;
 } */
 
-.icon-microphone-on-outline.rtc-state-available,
-.icon-camera.rtc-state-available,
-.icon-microphone-on.rtc-state-available
+.prefix-microphone-on-outline.rtc-state-available,
+.prefix-camera.rtc-state-available,
+.prefix-microphone-on.rtc-state-available
 {
   color: #357BF6 !important;
 }
 
-.icon-microphone-off-outline.rtc-state-available,
-.icon-camera-off.rtc-state-available,
-.icon-microphone-off.rtc-state-available
+.prefix-microphone-off-outline.rtc-state-available,
+.prefix-camera-off.rtc-state-available,
+.prefix-microphone-off.rtc-state-available
 {
   color: #F04C36 !important;
 }
 
-.icon-microphone-on-outline.rtc-state-available,
-.icon-camera.rtc-state-available,
-.icon-microphone-off-outline.rtc-state-available,
-.icon-camera-off.rtc-state-available{
+.prefix-microphone-on-outline.rtc-state-available,
+.prefix-camera.rtc-state-available,
+.prefix-microphone-off-outline.rtc-state-available,
+.prefix-camera-off.rtc-state-available{
   cursor: pointer !important;
 }
 
-.icon-microphone-on-outline.rtc-state-not-available,
-.icon-microphone-off-outline.rtc-state-not-available,
-.icon-camera.rtc-state-not-available,
-.icon-camera-off.rtc-state-not-available,
-.icon-microphone-on.rtc-state-not-available,
-.icon-microphone-off.rtc-state-not-available
+.prefix-microphone-on-outline.rtc-state-not-available,
+.prefix-microphone-off-outline.rtc-state-not-available,
+.prefix-camera.rtc-state-not-available,
+.prefix-camera-off.rtc-state-not-available,
+.prefix-microphone-on.rtc-state-not-available,
+.prefix-microphone-off.rtc-state-not-available
 {
   color: #BDBDCA !important;
   user-select: none !important;
 }
 
-.icon-microphone-on-outline.rtc-state-not-permitted,
-.icon-microphone-off-outline.rtc-state-not-permitted,
-.icon-camera.rtc-state-not-permitted,
-.icon-camera-off.rtc-state-not-permitted,
-.icon-microphone-on.rtc-state-not-permitted,
-.icon-microphone-off.rtc-state-not-permitted
+.prefix-microphone-on-outline.rtc-state-not-permitted,
+.prefix-microphone-off-outline.rtc-state-not-permitted,
+.prefix-camera.rtc-state-not-permitted,
+.prefix-camera-off.rtc-state-not-permitted,
+.prefix-microphone-on.rtc-state-not-permitted,
+.prefix-microphone-off.rtc-state-not-permitted
 {
   color: #BDBDCA !important;
   user-select: none !important;

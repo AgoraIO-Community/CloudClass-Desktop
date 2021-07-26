@@ -4,6 +4,7 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 import { transI18n } from '~components/i18n';
+import { SvgImg } from '~components/svg-img'
 
 export interface CabinetItem {
     id: string;
@@ -51,8 +52,8 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
                 content={content}
                 placement="right">
                 <div className="tool">
-                    <Icon type="tools" hover={hover} />
-                    <Icon type="triangle-down" className="triangle-icon"/>
+                    <SvgImg type="tools" />
+                    <SvgImg type="triangle-down" className="triangle-icon" style={{position: 'absolute'}}/>
                 </div>
             </Popover>
         </Tooltip>

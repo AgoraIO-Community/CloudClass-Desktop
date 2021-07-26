@@ -2,6 +2,7 @@ import React, { FC, ReactEventHandler } from 'react';
 import { t } from '~components/i18n';
 import { Icon, IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
+import { SvgImg } from '~components/svg-img'
 
 export interface ToolItem {
   value: string;
@@ -31,7 +32,7 @@ export const Tool: FC<ToolProps> = (props) => {
           <div
             className={`tool ${isActive ? 'active' : ''}`}
             >
-            {icon ? <Icon hover={hover} type={icon} onClick={() => handleToolClick && handleToolClick(value)}></Icon> : null}
+            {icon ? <SvgImg type={icon} onClick={() => handleToolClick && handleToolClick(value)} /> : null}
           </div>
         </Tooltip>
       )}

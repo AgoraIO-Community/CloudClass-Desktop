@@ -4,6 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { Icon } from '~components/icon'
 import './index.css';
 import { t } from '~components/i18n';
+import { SvgImg } from '../svg-img';
 
 export interface HomeAboutProps extends BaseProps {
     version?: string;
@@ -42,19 +43,19 @@ export const HomeAbout: FC<HomeAboutProps> = ({
                     <div className="main-text">{t('home-about.privacy-policy')}</div>
                     <div className="main-desc main-operation operation-click" onClick={() => {
                         onLookPrivate && onLookPrivate()
-                    }}><span>{t('home-about.check')} </span><Icon type="forward"/></div>
+                    }}><span>{t('home-about.check')} </span><SvgImg type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.product-disclaimer')}</div>
                     <div className="main-desc main-operation operation-click" onClick={() => {
                         onLookDeclare && onLookDeclare()
-                    }}><span>{t('home-about.check')}</span><Icon type="forward"/></div>
+                    }}><span>{t('home-about.check')}</span><SvgImg type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.sign-up')}</div>
                     <div className="main-desc main-operation operation-click" onClick={() => {
                         onRegiste && onRegiste()
-                    }}><span>{t('home-about.register')}</span><Icon type="forward"/></div>
+                    }}><span>{t('home-about.register')}</span><SvgImg type="forward"/></div>
                 </div>
                 <div className="about-main-item">
                     <div className="main-text">{t('home-about.version-time')}</div>

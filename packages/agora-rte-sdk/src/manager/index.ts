@@ -74,7 +74,9 @@ export class EduManager extends EventEmitter {
         height: 240,
         frameRate: 15,
         bitrate: 200
-      }
+      },
+      scenarioType: this.config.scenarioType,
+      userRole: this.config.userRole,
     }
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {

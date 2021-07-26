@@ -1,6 +1,6 @@
-import { useHomeStore } from "@/infra/hooks"
+import { useAudienceParams, useHomeStore } from "@/infra/hooks"
 import { changeLanguage, Home } from "~ui-kit"
-import {storage} from '@/infra/utils'
+import { storage } from '@/infra/utils'
 import { homeApi, LanguageEnum } from "agora-edu-core"
 import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
 import { observer } from "mobx-react"
@@ -8,10 +8,12 @@ import React, { useState, useMemo, useEffect } from "react"
 import { useHistory } from "react-router"
 import { AgoraRegion } from "@/infra/api"
 import AgoraRTC from 'agora-rtc-sdk-ng'
+import { HomeLaunchOption } from "@/infra/stores/app/home"
 
 export const HomePage = observer(() => {
 
   const homeStore = useHomeStore()
+  const params = useAudienceParams()
 
   const [roomId, setRoomId] = useState<string>('')
   const [userId, setUserId] = useState<string>('')
@@ -22,7 +24,7 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30)
   const [startDate, setStartDate] = useState<Date>(new Date())
   const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
-  const [region, setRegion] = useState<AgoraRegion>('CN')
+  const [region, setRegion] = useState<AgoraRegion>(homeStore.region)
   const [debug, setDebug] = useState<boolean>(false)
 
   useEffect(() => {
@@ -30,8 +32,10 @@ export const HomePage = observer(() => {
     setLanguage(language)
   }, [])
 
-  const onChangeRegion = (region: string) => {
-    setRegion(region as AgoraRegion)
+  const onChangeRegion = (r: string) => {
+    let region = r as AgoraRegion
+    setRegion(region)
+    homeStore.region = region
   }
 
   const onChangeLanguage = (language: string) => {
@@ -60,14 +64,14 @@ export const HomePage = observer(() => {
   }, [curScenario])
 
   const userUuid = useMemo(() => {
-    if(!debug) {
+    if (!debug) {
       return `${userName}${role}`
     }
     return `${userId}`
   }, [role, userName, debug, userId])
 
   const roomUuid = useMemo(() => {
-    if(!debug) {
+    if (!debug) {
       return `${roomName}${scenario}`
     }
     return `${roomId}`
@@ -144,10 +148,12 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        let {rtmToken} = await homeApi.login(userUuid)
+        homeApi.setRegion(region)
+        let {rtmToken, appId} = await homeApi.login(userUuid)
         console.log('## rtm Token', rtmToken)
-        homeStore.setLaunchConfig({
+        let config: HomeLaunchOption = {
           // rtmUid: userUuid,
+          appId,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
           personalCourseWareList: courseWareList.slice(1, courseWareList.length),
@@ -162,8 +168,21 @@ export const HomePage = observer(() => {
           startTime: +(new Date()),
           region,
           duration: duration * 60,
-          userFlexProperties: {"avatar": "test"}
-        })
+          mediaOptions: {
+            videoEncoderConfiguration: {
+              width: 320,
+              height: 240,
+              frameRate: 15,
+            }
+          },
+        }
+        if (params && params['encryptionKey'] && params['encryptionMode']) {
+          config!.mediaOptions!.encryptionConfig = {
+            key: params['encryptionKey'],
+            mode: parseInt(params['encryptionMode'])
+          }
+        }
+        homeStore.setLaunchConfig(config)
         history.push('/launch')
       }}
     />

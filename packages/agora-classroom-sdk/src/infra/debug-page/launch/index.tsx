@@ -20,7 +20,7 @@ export const LaunchPage = observer(() => {
 
   const history = useHistory()
 
-  const launchOption = homeStore.launchOption
+  const launchOption = homeStore.launchOption || {}
 
   const roomRef = useRef<ClassRoom<ClassRoomAbstractStore> | null>(null)
 
@@ -34,7 +34,7 @@ export const LaunchPage = observer(() => {
   const mountLaunch = useCallback(async (dom: any) => {
     if (dom) {
       AgoraEduSDK.setParameters(JSON.stringify({
-        'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+        // 'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
         'reportUrl': `${REACT_APP_REPORT_URL}`,
         'reportQos': `${REACT_APP_REPORT_QOS}`,
         'reportV1Url': `${REACT_APP_V1_REPORT_URL}`,
@@ -45,7 +45,7 @@ export const LaunchPage = observer(() => {
         }
       }))
       AgoraEduSDK.config({
-        appId: `${REACT_APP_AGORA_APP_ID}`,
+        appId: launchOption.appId ?? `${REACT_APP_AGORA_APP_ID}`,
         region: launchOption.region ?? "CN",
       })
       // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.

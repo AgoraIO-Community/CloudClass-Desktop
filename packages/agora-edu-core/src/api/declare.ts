@@ -135,6 +135,20 @@ export type AgoraRegionString =
 export type MediaOptions = {
   cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
   screenShareEncoderConfiguration?: EduVideoEncoderConfiguration
+  encryptionConfig?: {
+    mode: number,
+    key: string
+  },
+}
+
+export type BoardOptionUserPayload = {
+  avatar?: string,
+  cursorName?: string,
+  disappearCursor?: boolean
+}
+
+export type BoardOptions = {
+  userPayload?: BoardOptionUserPayload
 }
 
 export type AppStoreConfigParams = {
@@ -162,8 +176,9 @@ export type AppStoreConfigParams = {
   recordUrl: string,
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
-  userFlexProperties?: {[key: string]: any}
-  mediaOptions?: MediaOptions
+  userFlexProperties?: {[key: string]: any},
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -177,7 +192,7 @@ export type AppStoreInitParams = {
   pretest?: boolean,
   mainPath?: string,
   roomPath?: string,
-  resetRoomInfo: boolean,
+  resetRoomInfo: boolean
 }
 
 export type RoomInfo = {

@@ -1,6 +1,6 @@
 import { useCloudDriveContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
-import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, Table, TableHeader, transI18n } from '~ui-kit'
+import { Button, Col, IconBox, Inline, Placeholder, Progress, Row, Table, TableHeader, transI18n, SvgImg } from '~ui-kit'
 
 export const DownloadContainer = observer(() => {
 
@@ -29,7 +29,7 @@ export const DownloadContainer = observer(() => {
             <Col style={{cursor: 'pointer', paddingLeft:19}} onClick={() => {
               onResourceClick(id)
             }}>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
+              <SvgImg type={type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919">{name}</Inline>
             </Col>
             <Col>

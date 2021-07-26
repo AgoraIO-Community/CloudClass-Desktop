@@ -10,23 +10,31 @@ export const SignalContent: FC<SignalContentProps> = (monitor) => (
   <>
     <div className="biz-signal-content-row">
       <span className="biz-col padding-right-27">
-        <label>{transI18n('signal.delay')}:&nbsp;</label>
-        <span>{monitor.networkLatency}ms</span>
-      </span>
-      <span className="biz-col">
-        <label>{transI18n('signal.lose')}:&nbsp;</label>
-        <span>{monitor.packetLostRate}%</span>
+        <label>{transI18n('signal.status')}:&nbsp;</label>
+        <span>{monitor.networkQuality}</span>
       </span>
     </div>
     <div className="biz-signal-content-row margin-top-9">
       <span className="biz-col padding-right-27">
-        <label>{transI18n('signal.status')}:&nbsp;</label>
-        <span>{monitor.networkQuality}</span>
+        <label>{transI18n('signal.delay')}:&nbsp;</label>
+        <span>{monitor.networkLatency}ms</span>
       </span>
-      {monitor.isNative ? <span className="biz-col">
+    </div>
+    {monitor.isNative ? <div className="biz-signal-content-row margin-top-9">
+      <span className="biz-col">
         <label>{transI18n('signal.CPU')}:&nbsp;</label>
         <span>{monitor.cpuUsage}%</span>
-      </span> : null}
+      </span> 
+    </div>: null}
+    <div className="biz-signal-content-row margin-top-9">
+      <span className="biz-col">
+        <label>{transI18n('signal.lose')}:&nbsp;</label>
+        <span className="label-info-list">
+          <div>收到丢包率</div>
+          <div>发送丢包率</div>
+        </span>
+        {/* <span>{monitor.packetLostRate}%</span> */}
+      </span>
     </div>
   </>
 );

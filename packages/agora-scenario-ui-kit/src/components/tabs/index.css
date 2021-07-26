@@ -329,7 +329,7 @@
   transition: all 0.3s;
 }
 
-.tabs-dropdown-menu-item .iconfont {
+.tabs-dropdown-menu-item svg {
   font-size: 22px;
   margin-right: 4px;
 }
@@ -361,8 +361,8 @@
   background: #fff;
 }
 
-.tabs-card > .tabs-nav .tabs-tab-active .iconfont,
-.tabs-card > div > .tabs-nav .tabs-tab-active .iconfont {
+.tabs-card > .tabs-nav .tabs-tab-active svg,
+.tabs-card > div > .tabs-nav .tabs-tab-active svg {
   color: #75a7ff;
 }
 
@@ -608,12 +608,12 @@
 .tabs-tab .tabs-tab-remove:hover {
   background-color: #cccccc;
 }
-.tabs-tab .tabs-tab-remove:hover .iconfont,
-.tabs-tab.tabs-tab-active .tabs-tab-remove:hover .iconfont {
+.tabs-tab .tabs-tab-remove:hover svg,
+.tabs-tab.tabs-tab-active .tabs-tab-remove:hover svg {
   color: #fff;
 }
 
-.tabs-tab.tabs-tab-active .tabs-tab-remove .iconfont {
+.tabs-tab.tabs-tab-active .tabs-tab-remove svg {
   color: #b9b9d5;
 }
 .tabs-tab .tabs-tab-remove {
@@ -622,12 +622,12 @@
   width: 18px;
   line-height: 18px;
 }
-.tabs-tab .tabs-tab-remove .iconfont {
+.tabs-tab .tabs-tab-remove svg {
   color: #b9b9d5;
   font-size: 18px;
   margin: 0;
 }
-.tabs-tab .iconfont {
+.tabs-tab svg {
   margin-right: 4px;
   font-size: 22px;
 }

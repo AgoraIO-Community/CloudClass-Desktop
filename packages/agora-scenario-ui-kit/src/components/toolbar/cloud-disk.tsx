@@ -2,6 +2,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
+import { SvgImg } from '../svg-img';
 import { ToolItem } from './tool';
 
 export interface CloudDiskProps extends ToolItem {
@@ -36,7 +37,7 @@ export const CloudDisk: FC<CloudDiskProps> = ({ label, children }) => {
         content={<Content />}
         placement="right"> */}
       <div className="tool">
-        <Icon type="cloud" />
+        <SvgImg type="cloud" />
       </div>
       {/* </Popover> */}
     </Tooltip>

@@ -6,6 +6,7 @@ import RcDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.min.css'
 import dayjs from 'dayjs'
 import { Icon } from '~components';
+import { SvgImg } from '~components/svg-img'
 
 export interface CalendarProps extends BaseProps {
   className?: string
@@ -85,8 +86,8 @@ export const Calendar: FC<CalendarProps> = ({
           <div className="ag-calendar-header">
             {dayjs(date).format('YYYY年MM月')}
             <div className="ag-calendar-header-btn-groups">
-              <Icon className="rotated" type="backward" onClick={() => decreaseMonth()} />
-              <Icon className="rotated" type="forward" onClick={() => increaseMonth()}/>
+              <SvgImg className="rotated" type="backward" onClick={() => decreaseMonth()} />
+              <SvgImg className="rotated" type="forward" onClick={() => increaseMonth()}/>
             </div>
           </div>
         )}
