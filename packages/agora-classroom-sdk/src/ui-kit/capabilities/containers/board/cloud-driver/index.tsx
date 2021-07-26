@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Draggable from 'react-draggable';
 import { BehaviorSubject } from 'rxjs';
-import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast, transI18n } from '~ui-kit';
+import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast, transI18n, SvgImg } from '~ui-kit';
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
 import { UploadContainer } from './upload';
@@ -217,9 +217,9 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
         className="agora-board-resources cloud-wrap"
       >
         <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} onClick={() => {
+          <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onCancel()
-          }}></Icon>
+          }} />
         </div>
         <Tabs activeKey={activeKey} onChange={handleChange}>
           <TabPane tab={transI18n('cloud.publicResources')} key="1">

@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, EduVideoEncoderConfiguration } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration, MediaEncryptionConfig } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -135,9 +135,20 @@ export type AgoraRegionString =
   | 'ap'
   | 'ns'
 
+export type BoardOptionUserPayload = {
+  avatar?: string,
+  cursorName?: string,
+  disappearCursor?: boolean
+}
+
+export type BoardOptions = {
+  userPayload?: BoardOptionUserPayload
+}
+
 export type MediaOptions = {
   cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
-  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration
+  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration,
+  encryptionConfig?: MediaEncryptionConfig,
 }
 
 export type AppStoreConfigParams = {
@@ -166,7 +177,8 @@ export type AppStoreConfigParams = {
   extApps?: IAgoraExtApp[],
   widgets?: {[key:string]: IAgoraWidget},
   userFlexProperties?: {[key: string]: any}
-  mediaOptions?: MediaOptions
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
 }
 
 export type LanguageEnum = "en" | "zh"
@@ -180,7 +192,7 @@ export type AppStoreInitParams = {
   pretest?: boolean,
   mainPath?: string,
   roomPath?: string,
-  resetRoomInfo: boolean,
+  resetRoomInfo: boolean
 }
 
 export type RoomInfo = {

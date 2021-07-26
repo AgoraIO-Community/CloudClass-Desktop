@@ -3,12 +3,13 @@ import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, VideoRenderState, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
-import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume } from './interfaces';
+import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume, MediaEncryptionConfig } from './interfaces';
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { rteReportService } from '../services/report-service';
 import { EduManager } from '../../manager';
+import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../interfaces'
 // import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
@@ -62,13 +63,17 @@ export class MediaService extends EventEmitter implements IMediaService {
         this.electron.enableLogPersist()
       })
     } else {
+      // 默认为观众 如果是1V1场景或者是老师角色 则设置为主播。
       this.sdkWrapper = new AgoraWebRtcWrapper({
         uploadLog: true,
         agoraWebSdk: rtcProvider.agoraSdk,
         webConfig: {
           mode: 'live',
           codec: rtcProvider.codec,
-          role: 'host',
+          role: (rtcProvider.userRole === EduRoleTypeEnum.teacher || rtcProvider.scenarioType === EduRoomTypeEnum.Room1v1Class) ? 'host': 'audience',
+          clientRoleOptions: {
+            level: 1
+          }
         },
         cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration,
         appId: rtcProvider.appId,
@@ -207,6 +212,30 @@ export class MediaService extends EventEmitter implements IMediaService {
       }
       AgoraRTC.onAudioAutoplayFailed = () => {
         this.fire('audio-autoplay-failed')
+      }
+    }
+  }
+    
+  async setRtcRole(roleType: string){
+    if(this.isElectron){
+      if(roleType === 'host'){
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(1, {
+          audienceLatencyLevel: 1
+        })
+      }else{
+        (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
+          audienceLatencyLevel: 1
+        })
+      }
+    }else{
+      if(roleType === 'host'){
+        (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
+      }else{
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
+          level: 1
+        })
       }
     }
   }
@@ -551,6 +580,10 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
+  prepare() {
+    return this.sdkWrapper.prepare()
+  }
+
   async join(option: JoinOption): Promise<any> {
     try {
       // REPORT
@@ -774,12 +807,27 @@ export class MediaService extends EventEmitter implements IMediaService {
     return 100;
   }
 
+  enableMediaEncryptionConfig(enabled:boolean, config: MediaEncryptionConfig) {
+    return this.sdkWrapper.enableMediaEncryptionConfig(enabled, config)
+  }
+
   reset(): void {
     if (this.isWeb) {
       this.web.reset()
     }
     if (this.isElectron) {
       this.electron.reset()
+    }
+  }
+
+  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
+    if (this.isElectron) {
+      return (this.sdkWrapper as AgoraElectronRTCWrapper).setBeautyEffectOptions({
+        isBeauty,
+        lighteningLevel,
+        rednessLevel,
+        smoothnessLevel
+      })
     }
   }
 }

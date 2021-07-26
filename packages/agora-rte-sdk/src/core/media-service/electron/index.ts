@@ -3,6 +3,7 @@ import { convertUid, paramsConfig, wait } from '../utils';
 import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode, PrepareScreenShareParams, ScreenShareType } from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
+// import {ENCRYPTION_MODE, MediaEncryptionConfig} from 'agora-electron-sdk/types/Api/native_type';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import { truncate } from 'lodash';
@@ -315,7 +316,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
     this.client.enableAudioVolumeIndication(300, 3, true)
-    // this.client.monitorDeviceChange(true)
+    // @ts-ignore
+    this.client.monitorDeviceChange && this.client.monitorDeviceChange(true)
     // this.client.setVideoProfile(20)
 
     const resolutionConfig = options.cameraEncoderConfiguration
@@ -946,8 +948,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
   
+  prepare() {
+    return this.client
+  }
+
   async join(option: any): Promise<any> {
     try {
+      //设置为RTC为直播模式
+      this.client.setChannelProfile(1);
       let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
       EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
       if (ret < 0) {
@@ -1393,6 +1401,35 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     const ret = this.client.setAudioRecordingDevice(deviceId)
     if (ret < 0) {
       throw 'setMicrophoneDevice failure'
+    }
+    return ret
+  }
+
+  //@ts-ignore
+  enableMediaEncryptionConfig(enabled: boolean, config: any): number {
+    //@ts-ignore
+    return this.client.enableEncryption(enabled, {
+      encryptionMode: config.mode,
+      encryptionKey: config.key
+    })
+  }  
+  /**
+   * 设置美颜效果
+   * lighteningLevel 美白
+   * rednessLevel 红润
+   * smoothnessLevel 磨皮
+   * @param param0 
+   * @returns 
+   */
+  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
+    const ret = this.client.setBeautyEffectOptions(isBeauty, {
+      lighteningContrastLevel: 1,
+      lighteningLevel,
+      rednessLevel,
+      smoothnessLevel
+    })
+    if (ret < 0) {
+      throw 'setBeautyEffectOptions failure'
     }
     return ret
   }

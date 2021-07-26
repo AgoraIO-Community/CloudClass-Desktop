@@ -8,7 +8,7 @@ import './index.css';
 import './style.css';
 import { Tooltip, TooltipPlacement } from '../tooltip';
 import { transI18n } from '../i18n';
-import { EduLogger } from 'agora-rte-sdk';
+import { SvgImg } from '../svg-img';
 
 export type { IconTypes } from './icon-types';
 
@@ -24,6 +24,9 @@ const svgDict: string[] = [
   'teacher-whiteboard',
   'countdown',
   'clicker',
+  'whitening',
+  'buffing',
+  'ruddy'
 ]
 
 export interface IconProps extends BaseProps {
@@ -63,7 +66,7 @@ export const Icon: FC<IconProps> = ({
     [`use-svg ${type}`]: useSvg
   });
   const iconAssets = (svgDict.includes(type) && useSvg) ? (
-    <div 
+    <div
       className={cls}
       style={{
         width: size,
@@ -74,7 +77,7 @@ export const Icon: FC<IconProps> = ({
     >
     </div>
   ) : (
-    <i  
+    <i
       id={id}
       className={cls}
       style={{
@@ -134,7 +137,7 @@ export const IconBox: FC<IconBoxProps> = ({
   const color = getIconInfo(iconType)
   const type = `format-${iconType}` as IconTypes
   return (
-    <Icon style={style} color={color} type={type} {...restProps}></Icon>
+    <SvgImg style={Object.assign({}, style, { color })} type={type} {...restProps} />
   )
 }
 
@@ -148,7 +151,7 @@ const svgIconTable = {
   'h5': IconH5
 }
 
-export const SvgIcon: React.FC<SvgIconProps> = ({type, onClick, ...restProps}) => {
+export const SvgIcon: React.FC<SvgIconProps> = ({ type, onClick, ...restProps }) => {
   const cls = classnames({
     [`svg-icon`]: true,
     ['resource-type']: ['h5'].includes(type),
@@ -157,7 +160,7 @@ export const SvgIcon: React.FC<SvgIconProps> = ({type, onClick, ...restProps}) =
   const svgSrc = svgIconTable[type]
   return (
     <i className={cls} {...restProps} >
-      <img src={svgSrc} alt=""/>
+      <img src={svgSrc} alt="" />
     </i>
   );
 }
@@ -320,7 +323,7 @@ type MediaIconProps = {
   onClick: (evt: any) => any
 }
 
-export const MediaIcon = ({className, hover, state, streamState = false, volumeIndicator = false, placement = '', type, onClick}: MediaIconProps) => {
+export const MediaIcon = ({ className, hover, state, streamState = false, volumeIndicator = false, placement = '', type, onClick }: MediaIconProps) => {
   const cls = classnames({
     [`rtc-state-${state}`]: 1,
     [`${className ? className : ''}`]: !!className
@@ -354,8 +357,7 @@ export const MediaIcon = ({className, hover, state, streamState = false, volumeI
       }
     }
     return (
-      <Icon
-        hover={false}
+      <SvgImg
         className={cls}
         type={volumeMapType[state][type]}
       />
@@ -386,22 +388,24 @@ export const MediaIcon = ({className, hover, state, streamState = false, volumeI
     }, [title])
     return (
       <Tooltip overlay={<OverLayView />} placement={`${placement}` as TooltipPlacement}>
-        <Icon
-          key={title}
-          hover={hover}
-          className={cls}
-          type={mapType[state][type]}
-          onClick={onClick}
-        />
+        <span>
+          <SvgImg
+            className={cls}
+            type={mapType[state][type]}
+            onClick={onClick}
+            size={22}
+            canHover
+          />
+        </span>
       </Tooltip>
     )
   }
-  
+
   return (
-    <Icon
-      hover={hover}
+    <SvgImg
       className={cls}
       type={mapType[state][type]}
+      size={22}
       onClick={onClick}
     />
   )

@@ -1,10 +1,8 @@
-import { AREA_CODE } from './../core/media-service/interfaces/index';
-import { AgoraEduApi } from '../core/services/edu-api';
-import { IAgoraRTC } from 'agora-rtc-sdk-ng';
-import { EnumOnlineState } from '../core/services/interface';
-import { isEmpty, set, setWith } from 'lodash';
+import { isEmpty, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
 import { VideoRenderState } from '../core/media-service/renderer';
+import { AgoraEduApi } from '../core/services/edu-api';
+import { EnumOnlineState } from '../core/services/interface';
 
 export enum EduCourseState {
   EduCourseStatePending = 0,
@@ -186,7 +184,8 @@ export interface EduConfiguration {
   rtmUid: string
   rtmToken: string,
   scenarioType?: number,
-  cameraEncoderConfigurations?: EduVideoEncoderConfiguration
+  cameraEncoderConfigurations?: EduVideoEncoderConfiguration,
+  userRole?: EduRoleTypeEnum
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {

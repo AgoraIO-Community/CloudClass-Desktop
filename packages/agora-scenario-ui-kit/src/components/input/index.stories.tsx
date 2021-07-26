@@ -4,6 +4,7 @@ import { Input, Search } from '~components/input'
 import { Icon } from '~components/icon'
 import { Button } from '~components/button'
 import SearchSvg from '~components/icon/assets/svg/search.svg'
+import { SvgImg } from '~components/svg-img'
 
 const meta: Meta = {
     title: 'Components/Input',
@@ -43,7 +44,7 @@ export const Docs = () => {
             <div className="mt-4">
                 <Input
                     placeholder='前置是icon的placeholder'
-                    prefix={<Icon type="pen" color="skyblue" />}
+                    prefix={<SvgImg type="pen"/>}
                     value={input2}
                     onChange={e => {
                         setInput2(e.target.value)

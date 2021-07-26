@@ -206,7 +206,8 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        userRole: roomInfoParams?.userRole,
       })
     } else {
       this.eduManager = new EduManager({
@@ -222,7 +223,8 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        userRole: roomInfoParams?.userRole,
       })
     }
 

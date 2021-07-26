@@ -5,6 +5,7 @@ import { Icon } from '~components/icon';
 import { Tooltip } from '~components/tooltip'
 import './index.css';
 import { t } from '~components/i18n';
+import { SvgImg } from '~ui-kit';
 
 export type ZoomItemType =
     | 'max'
@@ -41,29 +42,29 @@ export const ZoomController: FC<ZoomControllerProps> = ({
         <div className={cls} {...restProps}>
             { maximum ?
                 <Tooltip title={t('tool.fullScreen')} placement="top">
-                    <Icon type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
+                    <SvgImg style={{color: fontColor}} canHover type="max" size={fontSize}  onClick={() => clickHandler('max')} />
                 </Tooltip>
                 :
                 <Tooltip title={t('tool.reduction')} placement="top">
-                    <Icon type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
+                    <SvgImg style={{color: fontColor}} canHover type="min" size={fontSize}  onClick={() => clickHandler('min')} />
                 </Tooltip>
             }
             <Tooltip title={t('tool.zoomOut')} placement="top">
-                <Icon type="zoom-out" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-out')} />
+                <SvgImg style={{color: fontColor}} canHover type="zoom-out" size={fontSize}  onClick={() => clickHandler('zoom-out')} />
             </Tooltip>
             <span className="zoom-value">{zoomValue}%</span>
             <Tooltip title={t('tool.zoomIn')} placement="top">
-                <Icon type="zoom-in" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-in')} />   
+                <SvgImg style={{color: fontColor}} canHover type="zoom-in" size={fontSize}  onClick={() => clickHandler('zoom-in')} />   
             </Tooltip>
             <span className="line"></span>
             <Tooltip title={t('tool.prev')} placement="top">
-                <Icon type="backward" size={fontSize} color={fontColor} onClick={() => clickHandler('backward')} />
+                <SvgImg style={{color: fontColor}} canHover type="backward" size={fontSize}  onClick={() => clickHandler('backward')} />
             </Tooltip>
             <span className="page-info">
                 {currentPage}/{totalPage}
             </span>
             <Tooltip title={t('tool.next')} placement="top">
-                <Icon type="forward" size={fontSize} color={fontColor} onClick={() => clickHandler('forward')} />   
+                <SvgImg style={{color: fontColor}} canHover type="forward" size={fontSize}  onClick={() => clickHandler('forward')} />   
             </Tooltip>
         </div>
     )

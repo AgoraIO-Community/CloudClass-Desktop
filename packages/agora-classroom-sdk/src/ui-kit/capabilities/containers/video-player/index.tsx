@@ -1,4 +1,4 @@
-import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, usePretestContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -6,7 +6,7 @@ import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
 
-export const VideoPlayerTeacher = observer(({style, className}: any) => {
+export const VideoPlayerTeacher = observer(({style, className, controlPlacement = 'left', placement = 'left'}: any) => {
   const {
     // teacherStream: userStream,
     onCameraClick,
@@ -34,8 +34,11 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
     eduRole2UIRole
   } = useUIStore()
 
+  const {isMirror} = usePretestContext()
+
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}
@@ -61,8 +64,8 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       onMicClick={onMicClick}
       onWhiteboardClick={onWhiteboardClick}
       onSendStar={onSendStar}
-      controlPlacement={'left'}
-      placement={'left'}
+      controlPlacement={controlPlacement}
+      placement={placement}
       onOffPodiumClick={onOffPodiumClick}
       userType={eduRole2UIRole(roomInfo.userRole)}
       className={className}
@@ -117,9 +120,12 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
   const {
     isHost
   } = useUserListContext()
+
+  const {isMirror} = usePretestContext()
   
   return (
     <VideoPlayer
+      isMirror={isMirror}
       isHost={isHost}
       hideOffPodium={true}
       username={userStream.account}

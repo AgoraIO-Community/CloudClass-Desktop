@@ -1,6 +1,4 @@
-import { IconTypes } from "../icon/icon-types"
-import { Profile } from '~components/roster';
-import { StudentRosterProfile } from '~components/roster/user-list'
+import { IconTypes } from "../icon/icon-types";
 const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible'

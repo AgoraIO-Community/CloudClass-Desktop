@@ -106,7 +106,7 @@ export const MidClassScenario = observer(() => {
         })}>
           {chatroomId ? (
           <Widget 
-            className="chat-panel" 
+            className="chat-panel chat-border" 
             widgetComponent={chatWidget} 
             widgetProps={{chatroomId, orgName, appName}}
             onReceivedMsg={(msg: any) => {

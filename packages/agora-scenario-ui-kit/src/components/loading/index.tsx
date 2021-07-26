@@ -8,6 +8,7 @@ import './index.css';
 
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
+import { SvgImg } from '~ui-kit';
 
 interface UploadItem {
     iconType?: string;
@@ -58,7 +59,7 @@ export const Loading: FC<LoadingProps> = ({
                     {uploadItemList.map((item, index) => (
                         <div className="loading-upload-item" key={index}>
                             <div>
-                                <Icon type={item.iconType as any} color="#F6B081"/>
+                                <SvgImg type={item.iconType as any} style={{color: '#F6B081'}}/>
                             </div>
                             <div className="loading-file-name">
                                 {item.fileName}
@@ -80,7 +81,7 @@ export const Loading: FC<LoadingProps> = ({
                                 )}
                             </div>
                             <div>
-                                {restProps.noCloseBtn ? "" :(<Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
+                                {restProps.noCloseBtn ? "" :(<SvgImg type="delete"  style={{marginLeft: 60,cursor: 'pointer', color: '#273D75'}}  onClick={() =>
                                     onClick && onClick(index.toString(), 'delete')
                               }/>)}
                             </div>

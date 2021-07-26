@@ -9,6 +9,7 @@ import SearchSvg from '~components/icon/assets/svg/search.svg'
 import PodiumSvg from '~components/icon/assets/svg/podium.svg'
 import { canOperate, getCameraState, getChatState, getMicrophoneState, ProfileRole, studentListSort } from './base'
 import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
+import { SvgImg } from '../svg-img'
 
 export type StudentRosterColumn = {
   key: StudentRosterColumnKey;
@@ -171,7 +172,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       } = profile
       return (
         <span className="kick-out" onClick={onClick}>
-          <Icon iconhover={hover} type="exit" />
+          <SvgImg type="exit" canHover/>
         </span>
       )
     },
@@ -204,9 +205,9 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
     <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-user-list-wrap">
         <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+          <SvgImg type="close" canHover onClick={() => {
             onClose()
-          }}></Icon>
+          }}/>
         </div>
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}

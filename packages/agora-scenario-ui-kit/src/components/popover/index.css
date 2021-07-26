@@ -83,7 +83,7 @@
   color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
 }
-.popover-message > .iconfont {
+.popover-message > svg {
   position: absolute;
   top: 8.0005px;
   color: #faad14;

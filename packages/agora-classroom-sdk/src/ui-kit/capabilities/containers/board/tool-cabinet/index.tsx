@@ -1,10 +1,9 @@
-import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet'
-import { useBoardContext, useAppPluginContext, IAgoraExtApp, useRoomContext, useScreenShareContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useBoardContext, useRoomContext, useScreenShareContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { observer } from 'mobx-react'
 import { useCallback } from 'react'
-import { Icon, t, ToolCabinet } from '~ui-kit'
-import {observer} from 'mobx-react'
-import { ScreenShareType } from 'agora-rte-sdk'
+import { SvgImg, t, ToolCabinet } from '~ui-kit'
+import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet'
 
 export const ToolCabinetContainer = observer(() => {
 
@@ -52,20 +51,20 @@ export const ToolCabinetContainer = observer(() => {
     const getCabinetList = useCallback(() => {
         const screenShareTool: CabinetItem[] = [{
             id: 'screenShare',
-            icon: <Icon type="share-screen" useSvg size={24} />,
+            icon: <SvgImg type="share-screen" size={24} />,
             name: t('scaffold.screen_share'),
         }]
 
         const restTools: CabinetItem[] = [
             {
                 id: 'laser',
-                icon: <Icon type="laser-pointer" />,
+                icon: <SvgImg type="laser-pointer" />,
                 name: t('scaffold.laser_pointer'),
             },
             ...appPlugins.map((p:IAgoraExtApp) => {
                 return {
                     id: p.appIdentifier,
-                    icon: p.icon,
+                    icon:<SvgImg type="countdown" size={24}/>,
                     name: p.appName
                 }
             })

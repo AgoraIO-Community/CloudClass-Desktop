@@ -13,6 +13,7 @@ import { ChatList } from './chat-list';
 import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg'
 import backBtn from '../icon/assets/svg/conversation-back.svg'
 import { transI18n } from '../i18n';
+import { SvgImg } from '~components/svg-img'
 
 export interface ChatProps extends AffixProps {
   /**
@@ -129,7 +130,7 @@ export const SimpleChat: FC<ChatProps> = ({
         {!canChatting ? (
             <div className="chat-notice">
             <span>
-                <Icon type="red-caution" />
+                <SvgImg type="red-caution" />
                 <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
             </div>
@@ -277,7 +278,7 @@ export const Chat: FC<ChatProps> = ({
             {!canChatting ? (
                 <div className="chat-notice with-tab">
                 <span>
-                    <Icon type="red-caution" />
+                    <SvgImg type="red-caution" />
                     <span>{transI18n('placeholder.enable_chat_muted')}</span>
                 </span>
                 </div>

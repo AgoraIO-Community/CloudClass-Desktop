@@ -3,8 +3,8 @@ const path = require('path')
 const disableEsLint = (e) => {
   return e.module.rules.filter(e =>
     e.use && e.use.some(e => e.options && void 0 !== e.options.useEslintrc)).forEach(s => {
-      e.module.rules = e.module.rules.filter(e => e !== s)
-    }), e
+    e.module.rules = e.module.rules.filter(e => e !== s)
+  }), e
 }
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
         presets: [
           '@babel/preset-typescript',
           [
-            '@babel/preset-react', 
+            '@babel/preset-react',
             {
               runtime: 'automatic',
             },
@@ -46,32 +46,37 @@ module.exports = {
     });
     config.module.rules.push({
       test: /\.css$/,
-      use: [
-        {
-          loader: 'postcss-loader',
-          options: {
-            // ident: 'postcss',
-            postcssOptions: {
-              plugins: [
-                require('tailwindcss'),
-                require('autoprefixer')
-              ]
-            }
+      use: [{
+        loader: 'postcss-loader',
+        options: {
+          // ident: 'postcss',
+          postcssOptions: {
+            plugins: [
+              require('tailwindcss'),
+              require('autoprefixer')
+            ]
           }
         }
-      ],
+      }],
       include: path.resolve(__dirname, '../'),
     })
     config.module.rules.push({
       test: /\.js$/,
       loader: require.resolve('@open-wc/webpack-import-meta-loader'),
     })
-    // config.module.rules.push(
-    //   {
-    //     test: /\.svg$/,
-    //     use: ['@svgr/webpack'],
+    // config.module.rules.push({
+    //   test: /\.(svg)$/,
+    //   exclude: path.resolve(__dirname, "../src/icons"),
+    //   loader: "url-loader"
+    // })
+    // config.module.rules.push({
+    //   test: /\.svg$/,
+    //   loader: 'svg-sprite-loader',
+    //   include: path.resolve(__dirname, "../src/icons"), //只处理指定svg的文件(所有使用的svg文件放到该文件夹下)
+    //   options: {
+    //     symbolId: "icon-[name]" //symbolId和use使用的名称对应      <use xlinkHref={"#icon-" + iconClass} />
     //   }
-    // )
+    // })
     config.resolve.alias = {
       ...config.resolve.alias,
       ['@']: path.resolve(__dirname, '../src'),
@@ -83,7 +88,7 @@ module.exports = {
       '~capabilities/containers': path.resolve(__dirname, '../src/capabilities/containers'),
       '~capabilities/hooks': path.resolve(__dirname, '../src/capabilities/hooks'),
     }
-  
+
     config.resolve.modules = [
       path.resolve(__dirname, '../', 'node_modules'),
       'node_modules',

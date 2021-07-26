@@ -4,6 +4,7 @@ import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
+import { SvgImg } from '~components/svg-img'
 
 const defaultPens = [
     'pen',
@@ -42,7 +43,7 @@ export const Pens: FC<PensProps> = ({
                     onClick={() => handleClick(pen)}
                     className="expand-tool pen"
                 >
-                    <Icon type={pen as any} className={activePen === pen ? 'active': ''} iconhover={true}/>
+                    <SvgImg type={pen as any} className={activePen === pen ? 'active' : ''} canHover/>
                     <div className={activePen === pen ? "current-pen" : ""} style={{ width: 3, height: 3 }}></div>
                 </div>
             ))}
@@ -51,14 +52,11 @@ export const Pens: FC<PensProps> = ({
 
     const handleClickTool = useCallback((pen: string) => {
         if (!isActive) {
-          handleClick(pen)
+            handleClick(pen)
         }
     }, [handleClick, isActive])
     return (
         <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
-            <div className="tool" onClick={() => {
-                handleClickTool(activePen)
-            }}>
             <Popover
                 visible={popoverVisible}
                 onVisibleChange={(visible) => {
@@ -68,11 +66,13 @@ export const Pens: FC<PensProps> = ({
                 trigger="hover"
                 content={content}
                 placement="right">
-                <Icon hover={hover} type={activePen as any} className={isActive ? 'active' : ''} />
-                <Icon type="triangle-down" className="triangle-icon" />
+                <div className="tool" onClick={() => {
+                    handleClickTool(activePen)
+                }}>
+                    <SvgImg type={activePen as any} className={isActive ? 'active' : ''} />
+                    <SvgImg type="triangle-down" className="triangle-icon" style={{position: 'absolute'}}/>
+                </div>
             </Popover>
-            </div>
-
         </Tooltip>
     );
 };

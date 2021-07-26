@@ -1,16 +1,16 @@
 import React, { FC, ReactNode, useCallback, useState } from 'react';
-import { t, transI18n, getLanguage } from '~components/i18n';
-import { Icon } from '~components/icon';
-import { ModalProps } from '~components/modal';
-import { Table, TableHeader, Row, Col, CheckBox } from '~components/table';
-import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
-import './index.css';
-import SearchSvg from '~components/icon/assets/svg/search.svg'
-import { canOperate, ProfileRole, studentListSort } from './base';
-import { Search } from '../input';
+import { t, transI18n } from '~components/i18n';
+import SearchSvg from '~components/icon/assets/svg/search.svg';
+import { Input } from '~components/input';
+import { ModalProps } from '~components/modal';
 import { Select } from '~components/select';
-import { Input } from '~components/input'
+import { CheckBox, Col, Row, Table, TableHeader } from '~components/table';
+import { Search } from '../input';
+import { SvgImg } from '../svg-img';
+import { canOperate, studentListSort } from './base';
+import { defaultColumns } from './default-columns';
+import './index.css';
 
 export * from './user-list';
 
@@ -214,9 +214,9 @@ export const Roster: FC<RosterProps> = ({
     <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
         <div className="btn-pin">
-          <Icon type="close" style={{ cursor: 'pointer' }} hover onClick={() => {
+          <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => {
             onClose()
-          }}></Icon>
+          }}/>
         </div>
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}

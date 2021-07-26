@@ -1,4 +1,3 @@
-import { useRoomContext, useVolumeContext } from 'agora-edu-core';
 import classnames from 'classnames';
 import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +10,11 @@ import { Tooltip } from '~components/tooltip';
 import { usePrevious } from '~utilities/hooks';
 import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
 import { BaseProps } from '../interface/base-props';
+import { SvgImg } from '../svg-img';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 
+// TODO: 优化音量条
 export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
 
   const {speakers} = useMediaStore()
@@ -28,6 +29,10 @@ export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
 }
 
 export interface BaseVideoPlayerProps {
+  /**
+   * 是否镜像
+   */
+  isMirror?: boolean;
   isHost?: boolean;
   /**
    * 用户的唯一标识
@@ -98,6 +103,9 @@ export interface BaseVideoPlayerProps {
 
   privateCallEnabled?: boolean;
 
+  /**
+   * 控制条中svg tooltip的位置
+   */
   placement?: any;
 
   /**
@@ -157,6 +165,7 @@ interface AnimSvga {
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
+  isMirror = false,
   uid,
   children,
   className,
@@ -221,6 +230,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
+    [`mirror`]: !!isMirror,
     [`${className}`]: !!className,
   });
   const micStateCls = classnames({
@@ -274,37 +284,57 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <>
           {hideOffAllPodium ? null : (
             <Tooltip title={t('Clear Podiums')} placement={placement}>
-              <Icon
-                hover={canHoverHideOffAllPodium}
-                type="invite-to-podium"
-                onClick={() => onOffAllPodiumClick()}
-              />
+              <span>
+                <SvgImg
+                  canHover={canHoverHideOffAllPodium}
+                  style={{color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA'}}
+                  type="invite-to-podium"
+                  size={22}
+                  onClick={() => onOffAllPodiumClick()}
+                />
+              </span>
             </Tooltip>
           )}
           {hideOffPodium ? null : (
             <Tooltip title={t('Clear Podium')} placement={placement}>
-              <Icon
-                hover={true}
-                type="invite-to-podium"
-                className={isOnPodium ? 'podium' : 'no_podium'}
-                onClick={() => onOffPodiumClick(uid)}
-              />
+              <span>
+                <SvgImg
+                  canHover
+                  type="invite-to-podium"
+                  className={isOnPodium ? 'podium' : 'no_podium'}
+                  style={{color: '#357BF6'}}
+                  size={22}
+                  onClick={() => onOffPodiumClick(uid)}
+                />
+              </span>
             </Tooltip>
           )}
           {hideBoardGranted ? null :
             <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
-              <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
+              <span>
+                <SvgImg
+                  type="no-authorized"
+                  style={{color: whiteboardGranted ? '#357BF6' : '#7B88A0'}}
+                  onClick={() => onWhiteboardClick(uid)}
+                  size={22}
+                  canHover
+                />
+              </span>
             </Tooltip>
           }
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
-              <Icon
-                hover={true}
-                type="star-outline"
-                onClick={() => {
-                  onSendStar(uid)
-                }}
-              />
+              <span>
+                <SvgImg
+                  canHover
+                  type="star-outline"
+                  onClick={() => {
+                    onSendStar(uid)
+                  }}
+                  size={22}
+                  style={{color: '#7B88A0'}}
+                />
+              </span>
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
@@ -320,6 +350,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   );
   return (
     <Popover
+      // trigger={'click'} // 调试使用
       align={{
         offset: [-8, 0],
       }}
@@ -346,7 +377,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <div className="top-right-info">
           {stars > 0 ? (
             <>
-              <Icon hover={true} className="stars" type="star" />
+              <SvgImg className="stars" type="star" canHover />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}

@@ -2,6 +2,7 @@ import React from 'react'
 import { Card } from '~components/card'
 import { Icon } from '~components/icon'
 import { BaseProps } from '~components/interface/base-props'
+import { SvgImg } from '../svg-img'
 
 export interface HandsUpSenderProps extends BaseProps {
   state?: 'default' | 'actived' | 'forbidden';
@@ -26,7 +27,7 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'd
       borderRadius={40}
     >
       {/*TODO: fix hover */}
-      <Icon type={state === 'default' ? "hands-up-student" : "hands-up"} color={color} onClick={onClick} />
+      <SvgImg type={state === 'default' ? "hands-up-student" : "hands-up"} onClick={onClick} style={{color}}/>
     </Card>
   )
 }

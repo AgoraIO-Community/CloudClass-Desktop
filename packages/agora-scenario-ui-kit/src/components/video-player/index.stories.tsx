@@ -1,14 +1,10 @@
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
-import { useDebugValue } from 'react';
+import React, { FC, useDebugValue, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps, MidClassVideoMarqueeList } from '~components/video-player';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-//@ts-ignore
-import { AspectRatio } from 'react-aspect-ratio'
-import { useEffect } from 'react';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
 const config = { "muted": true, "deviceState": 1, "online": true, "onPodium": true, "userType": "teacher", "hasStream": true, "isLocal": false, "type": "microphone", "uid": "3232", "disabled": true }
 const meta: Meta = {
@@ -47,12 +43,6 @@ export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
 
   return (
     <div className="m-10">
-      <Button onClick={() => {
-        changeLanguage('zh')
-      }}>中文</Button>
-      <Button onClick={() => {
-        changeLanguage('en')
-      }}>英文</Button>
       <VideoPlayer {...restProps} userType="teacher">{children}</VideoPlayer>
     </div>
   );

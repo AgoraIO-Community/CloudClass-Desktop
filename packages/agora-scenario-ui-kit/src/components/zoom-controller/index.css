@@ -1,12 +1,12 @@
 .zoom-controller {
-    height: 40px;
+    height: 38px;
     background: #FFFFFF;
     box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
     border-radius: 20px;
     padding: 0px 15px;
     @apply inline-flex items-center justify-center;
 }
-.zoom-controller .iconfont {
+.zoom-controller svg {
     cursor: pointer;
 }
 
@@ -40,10 +40,10 @@
     margin-right: 5px;
 }
 
-.zoom-controller .iconfont::before{
+.zoom-controller svg::before{
     border-radius: 50%;
 } 
 
-.zoom-controller .iconfont:hover::before {
+.zoom-controller svg:hover::before {
     background-color: #f0f0f7;
 }

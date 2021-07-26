@@ -3,6 +3,8 @@ import { Meta } from '@storybook/react';
 import { Affix, AffixProps } from '~components/affix';
 import { Icon } from '~components/icon';
 import { Button } from '~components/button';
+import { SvgImg } from '~components/svg-img'
+
 
 const meta: Meta = {
   title: 'Components/Affix',
@@ -19,7 +21,7 @@ export const Docs: FC<AffixProps> = (props) => {
         left="20%"
         collapse={collapse}
         onCollapse={() => setCollapse(false)}
-        content={<Icon type="chat" />}
+        content={<SvgImg type="chat" />}
       >
         <>
           <div>content</div>

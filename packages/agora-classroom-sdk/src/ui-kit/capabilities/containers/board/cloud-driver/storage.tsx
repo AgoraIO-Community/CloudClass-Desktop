@@ -1,7 +1,7 @@
 import { useCloudDriveContext } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
-import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n } from '~ui-kit';
+import { Col, IconBox, Inline, Placeholder, Row, Table, TableHeader, transI18n, SvgImg } from '~ui-kit';
 
 export const StorageContainer = observer(() => {
 
@@ -20,7 +20,7 @@ export const StorageContainer = observer(() => {
           <Col style={{cursor: 'pointer', paddingLeft: 19}} onClick={async () => {
             await openCloudResource(id)
           }}>
-            <IconBox iconType={type} style={{ marginRight: '6px' }} />
+            <SvgImg type={type} style={{ marginRight: '6px' }} />
             <Inline className="filename" color="#191919">{name}</Inline>
           </Col>
           <Col>
