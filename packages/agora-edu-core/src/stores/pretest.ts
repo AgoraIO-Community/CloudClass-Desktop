@@ -147,6 +147,18 @@ export class PretestStore {
   cameraLabel: string = getDeviceLabelFromStorage('cameraLabel');
 
   @observable
+  rtcCameraId: string = "";
+
+  @observable
+  rtcMicrophoneId: string = "";
+
+  @observable
+  rtcSpeakerId: string = "";
+
+  @observable
+  speakerLabel: string = ''
+
+  @observable
   microphoneLabel: string = getDeviceLabelFromStorage('microphoneLabel');
   _totalVolume: any;
 
@@ -160,6 +172,9 @@ export class PretestStore {
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel)
+    if(this.isElectron&&this.rtcCameraId){
+      return this.rtcCameraId;
+    }
     if (this.cameraList[idx]) {
       return this.cameraList[idx].deviceId
     }
@@ -170,6 +185,9 @@ export class PretestStore {
   get microphoneId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default
     const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel)
+    if(this.isElectron&&this.rtcMicrophoneId){
+      return this.rtcMicrophoneId;
+    }
     if (this.microphoneList[idx]) {
       return this.microphoneList[idx].deviceId
     }
@@ -178,6 +196,16 @@ export class PretestStore {
 
   @computed
   get speakerId(): string {
+    if(this.isElectron){
+      if(this.rtcSpeakerId){
+        return this.rtcSpeakerId;
+      }
+      const idx = this.speakerList.findIndex((it: any) => it.label === this.speakerLabel)
+      if (this.speakerList[idx]) {
+        return this.speakerList[idx].deviceId
+      }
+      return 'web_default'
+    }
     return 'web_default'
   }
 
@@ -317,6 +345,8 @@ export class PretestStore {
     this.resolutionIdx = 0
     this.cameraLabel = getDeviceLabelFromStorage('cameraLabel')
     this.microphoneLabel =  getDeviceLabelFromStorage('microphoneLabel')
+    this.rtcCameraId = ''
+    this.rtcMicrophoneId = ''
     this.web.reset()
     this.resetCameraTrack()
     this.resetMicrophoneTrack()
@@ -476,6 +506,7 @@ export class PretestStore {
     this._microphoneId = AgoraMediaDeviceEnum.Disabled
     this.mediaService.disableLocalAudio()
     if (this.isElectron) {
+      this.rtcMicrophoneId = this._microphoneId;
       this.mediaService.electron.client.stopAudioRecordingDeviceTest()
     }
     this.appStore.mediaStore.totalVolume = 0
@@ -484,6 +515,9 @@ export class PretestStore {
   muteCamera() {
     this.cameraLabel = CustomizeDeviceLabel.Disabled
     this._cameraId = AgoraMediaDeviceEnum.Disabled
+    if(this.isElectron){
+      this.rtcCameraId = this._cameraId;
+    }
     this.mediaService.disableLocalVideo()
     if (this._cameraRenderer) {
       this._cameraRenderer.stop()
@@ -498,6 +532,9 @@ export class PretestStore {
       this._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getTestCameraLabel()
       this._cameraId = this.cameraId
+      if(this.isElectron){
+        this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
+      }
     } catch(err) {
       const error = GenericErrorWrapper(err)
       this.muteCamera()
@@ -556,6 +593,9 @@ export class PretestStore {
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
       this._microphoneId = this.microphoneId
+      if(this.isElectron){
+        this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+      }
     } catch(err) {
       this.muteMicrophone()
       const error = GenericErrorWrapper(err)
@@ -574,24 +614,44 @@ export class PretestStore {
   }
 
   updateCameraLabel(label: string) {
+    if(this.isElectron){
+      this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
+    }
     this.cameraLabel = label
     this._cameraId = this.cameraId
   }
 
   updateMicrophoneLabel(label: string) {
+    if(this.isElectron){
+      this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+    }
     this.microphoneLabel = label
     this._microphoneId = this.microphoneId
   }
 
   updateTestMicrophoneLabel() {
+    if(this.isElectron){
+      this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+    }
     this.microphoneLabel = this.mediaService.getTestMicrophoneLabel()
     this._microphoneId = this.microphoneId
   }
 
   updateTestCameraLabel() {
     // this._cameraRenderer = this.mediaService.cameraRenderer
+    if(this.isElectron){
+      this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
+    }
     this.cameraLabel = this.mediaService.getTestCameraLabel()
     this._cameraId = this.cameraId
+  }
+
+  updateTestSpeakerLabel(){
+    if(this.isElectron){
+      this.rtcSpeakerId = `${this.mediaService.electron.client.getCurrentAudioPlaybackDevice()}`;
+    }
+    this.speakerLabel = this.mediaService.getSpeakerLabel();
+    // this._speakerId = this.speakerId;
   }
 
   @action.bound
@@ -675,6 +735,9 @@ export class PretestStore {
       this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer
       this.cameraLabel = this.mediaService.getCameraLabel()
       this.appStore.deviceInfo.cameraName = this.cameraLabel
+      if(this.isElectron){
+        this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
+      }
       this._cameraId = this.cameraId
     }
   }
@@ -763,25 +826,11 @@ export class PretestStore {
       }
       this.microphoneLabel = this.mediaService.getMicrophoneLabel()
       this.appStore.deviceInfo.microphoneName = this.microphoneLabel
+      if(this.isElectron){
+        this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+      }
       this._microphoneId = this.microphoneId
     }
-  }
-  /// live room camera operator
-
-  // @action.bound
-  // async changeTestResolution(resolution: any) {
-  //   await this.mediaService.changeTestResolution(resolution)
-  //   runInAction(() => {
-  //     this.resolution = resolution
-  //   })
-  // }
-
-  @computed
-  get speakerLabel(): string {
-    if (this.appStore.isElectron) {
-      return this.appStore.eduManager.mediaService.getSpeakerLabel()
-    }
-    return '默认'
   }
 
   @action.bound
