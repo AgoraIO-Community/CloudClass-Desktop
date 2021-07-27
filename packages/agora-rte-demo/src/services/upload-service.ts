@@ -415,24 +415,33 @@ export class UploadService extends ApiBase {
         taskUuid: taskResult?.uuid,
       }
     } else {
-      const uploadResult = await this.addFileToOss(
-       this.ossClient,
-        key,
-        payload.file,
-        (...args: any[]) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress:args[1],
-            isLastProgress:true
-          })
-        },
-        {
-          callbackBody: ossConfig.callbackBody,
-          contentType: ossConfig.callbackContentType,
-          roomUuid: payload.roomUuid,
-          userUuid: payload.userUuid,
-          appId: this.appId
-        })
+
+      let uploadResult = null;
+
+      try {
+        uploadResult = await this.addFileToOss(
+          this.ossClient,
+           key,
+           payload.file,
+           (...args: any[]) => {
+             payload.onProgress({
+               phase: 'finish',
+               progress:args[1],
+               isLastProgress:true
+             })
+           },
+           {
+             callbackBody: ossConfig.callbackBody,
+             contentType: ossConfig.callbackContentType,
+             roomUuid: payload.roomUuid,
+             userUuid: payload.userUuid,
+             appId: this.appId
+           })
+        reportService.reportElapse('uploadResource', 'oss', {api: 'addFileToOss', result: true})
+      } catch(e) {
+        reportService.reportElapse('uploadResource', 'oss', {api: 'addFileToOss', result: false, errCode: `${e.code || e.message}`})
+        throw e
+      }
 
       const result: CourseWareUploadResult = {
         resourceUuid: resourceUuid,

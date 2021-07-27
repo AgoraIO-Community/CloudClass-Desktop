@@ -349,6 +349,8 @@ export class BoardStore {
   // @observable
   // downloading: boolean = false
 
+  whiteBoardContainer?: HTMLDivElement
+
   @action
   changeScenePath(path: string) {
     this.activeScenePath = path
@@ -2187,6 +2189,7 @@ export class BoardStore {
   }
 
   mount(dom: any) {
+    this.whiteBoardContainer = dom
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
@@ -2194,6 +2197,7 @@ export class BoardStore {
   }
 
   unmount() {
+    this.whiteBoardContainer = undefined
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null)
     }
@@ -2331,9 +2335,9 @@ export class BoardStore {
       width: imageInfo.width,
       height: imageInfo.height,
       //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
+      coordinateX: this.whiteBoardContainer?.clientWidth / 2,
       //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateY: this.whiteBoardContainer?.clientHeight / 2,
     })
   }
 
