@@ -177,10 +177,11 @@ export const HomePage = observer(() => {
           region,
           duration: duration * 60,
           mediaOptions: {
-            videoEncoderConfiguration: {
+            cameraEncoderConfiguration: {
               width: 320,
               height: 240,
               frameRate: 15,
+              bitrate: 1000,
             },
           },
         };
