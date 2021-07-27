@@ -1258,6 +1258,7 @@ export class AgoraElectronRTCWrapper
         name: it.name,
         windowId: it.windowId,
         image: CustomBtoa(it.image),
+        processId: it.processId,
       }));
     } catch (err) {
       throw GenericErrorWrapper(err);
