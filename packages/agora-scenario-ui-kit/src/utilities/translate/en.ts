@@ -408,5 +408,33 @@ export const en = {
     'seconds': 'seconds',
     'start': 'Start',
     'restart': 'Restart'
+  },
+  'hands_up_tag': '-hands',
+  'answer': {
+    'appName': 'Answer',
+    'start': 'Start',
+    'submit': 'Submit',
+    'change': 'Change',
+    'number-answered': 'Answered',
+    'acc': 'Acc',
+    'right-key': 'Right Key',
+    'my-answer': 'My Answer',
+    'over': 'Over',
+    'student-name': 'Name',
+    'answer-time': 'Time',
+    'selected-answer': 'Selected',
+    'restart': 'Restart'
+  },
+  'vote': {
+    'appName': 'Vote',
+    'start':'Start',
+    'restart':'Restart',
+    'over':'Over',
+    'submit':'Submit',
+    'change':'Change',
+    'input-tip':'Please enter a voting question',
+    'item-tip':'Please enter the option content',
+    'single-sel':'Single',
+    'mul-sel':'Multiple',
   }
 }

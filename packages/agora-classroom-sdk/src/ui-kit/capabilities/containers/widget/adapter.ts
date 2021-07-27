@@ -54,7 +54,7 @@ export const Adapter = () => {
     }, [])
 
     useEffect(() => {
-        globalEvents.next({isFullScreen, isJoined, userNumber:(rosterUserList.length + (teacherInfo?.userUuid ? 1 : 0))})
+        globalEvents.next({isFullScreen, isJoined, rosterUserList,userNumber:(rosterUserList.length + (teacherInfo?.userUuid ? 1 : 0))})
     }, [isFullScreen, globalEvents, isJoined, rosterUserList, teacherInfo])
 
     useEffect(() => {

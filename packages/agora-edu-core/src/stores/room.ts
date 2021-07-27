@@ -1931,9 +1931,9 @@ export class RoomStore extends SimpleInterval {
       if (process === 'handsUp') {
         switch (data.actionType) {
           case CoVideoActionType.studentHandsUp: {
-            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.fireToast("co_video.received_student_hands_up")
-            }
+            // if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+            //   this.appStore.fireToast("co_video.received_student_hands_up")
+            // }
             console.log('学生举手')
             break;
           }
@@ -1957,9 +1957,9 @@ export class RoomStore extends SimpleInterval {
             break;
           }
           case CoVideoActionType.studentCancel: {
-            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
-              this.appStore.fireToast("co_video.received_student_cancel")
-            }
+            // if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+            //   this.appStore.fireToast("co_video.received_student_cancel")
+            // }
             console.log('学生取消')
             break;
           }

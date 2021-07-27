@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>举手</title>
+    <defs>
+        <filter x="-25.0%" y="-23.2%" width="150.0%" height="146.4%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0509803922   0 0 0 0 0.11372549   0 0 0 0 0.239215686  0 0 0 0.39860652 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="V1.1.3_举手功能/electron端—设备设置" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="举手">
+            <rect id="矩形" x="0" y="0" width="40" height="40"></rect>
+            <g filter="url(#filter-1)" transform="translate(6.000000, 6.000000)" fill="#FFF500" fill-rule="nonzero" id="路径">
+                <path d="M26,6.34310339 L26,23.0798818 C26,25.620713 23.7724474,28 20.926006,28 L11.3633929,28 C9.96698323,28 8.67334936,27.2022508 7.70591677,26.3247267 C7.70591677,26.3247267 1.28243249,17.5335304 0.466929263,16.2471598 C-0.960759939,13.9995014 1.16848546,12.5834966 3.04972851,13.762171 C3.28209107,13.9077602 6.60442885,17.3959187 6.60442885,17.3959187 L6.60442885,4.61597635 C6.60442883,3.9978645 6.97385082,3.42670559 7.57353712,3.11764966 C8.17322342,2.80859372 8.91206741,2.80859372 9.51175371,3.11764966 C10.11144,3.42670559 10.480862,3.9978645 10.480862,4.61597635 L10.480862,12.6931871 L11.7789644,12.6931871 L11.7789644,1.73011859 C11.7789644,0.774600479 12.6467335,0 13.7171809,0 C14.7876284,0 15.6553975,0.774600479 15.6553975,1.73011859 L15.6553975,12.6931871 L16.9490314,12.6931871 L16.9490314,2.8828662 C16.9490313,2.26475434 17.3184533,1.69359542 17.9181396,1.38453948 C18.5178259,1.07548355 19.2566699,1.07548355 19.8563562,1.38453948 C20.4560425,1.69359542 20.8254645,2.26475434 20.8254645,2.8828662 L20.8254645,12.6931871 L22.1190984,12.6931871 L22.1190984,6.34310339 C22.1190984,5.38779871 22.9859895,4.61597635 24.0606663,4.61597635 C25.1353432,4.61597635 26,5.38779871 26,6.34310339 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

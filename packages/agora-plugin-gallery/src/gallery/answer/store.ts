@@ -46,6 +46,8 @@ export class PluginStore {
     ui?: string[] = ['sels']//'sels','users','infos','subs'
     @observable
     timehandle?: any = null
+    @observable
+    globalContext: any = {}
 
     constructor(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
         this.context = ctx
@@ -96,7 +98,7 @@ export class PluginStore {
     }) => {
         let roomProperties: any = {}
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-            state && (roomProperties['state'] = state)
+            ['start','end'].includes(state||'') && (roomProperties['state'] = state)
             canChange && (roomProperties['canChange'] = canChange)
             mulChoice && (roomProperties['mulChoice'] = mulChoice)
             startTime && (roomProperties['startTime'] = startTime)
@@ -112,14 +114,41 @@ export class PluginStore {
                         roomProperties['studentNames'].push(user.name)
                     }
                 });
+            } else if (state === "updateStudent") {
+                if (this.globalContext.rosterUserList) {
+                    let users:any = []
+                    this.context.userList?.map((user: any) => {
+                        if (!(/^guest[0-9]{10}2$/).test(user.uid || '')) {
+                            users.push(user.uid)
+                        }
+                    });
+
+                    roomProperties['students'] = []
+                    roomProperties['studentNames'] = []
+                    this.globalContext.rosterUserList?.map((user: any) => {
+                        if (!(/^guest[0-9]{10}2$/).test(user.uid || '')) {
+                            roomProperties['students'].push(user.uid)
+                            roomProperties['studentNames'].push(user.name)
+                        }
+                    }); 
+                    if (JSON.stringify(users.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
+                        this.context.userList = this.globalContext.rosterUserList
+                        console.log(roomProperties);
+                        
+                    }else{
+                        return;
+                    }
+                }else{
+                    return;
+                }
             } else if (state === "clear") {
                 roomProperties['students'] = []
                 roomProperties['studentNames'] = []
-                roomProperties['state'] = 0
+                roomProperties['state'] = ''
                 roomProperties['canChange'] = true
                 roomProperties['mulChoice'] = true
-                roomProperties['startTime'] = 0
-                roomProperties['endTime'] = 0
+                roomProperties['startTime'] = ''
+                roomProperties['endTime'] = ''
                 roomProperties['items'] = []
                 roomProperties['answer'] = []
 
@@ -298,6 +327,16 @@ export class PluginStore {
         }
         if (this.selAnswer) {
             this.selAnswer = this.selAnswer?.slice().sort()
+        }
+    }
+
+    @action
+    updateGlobalContext(state:any) {
+        if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+            this.globalContext = state
+            if (this.status !== 'config') {
+                this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
+            }
         }
     }
 }

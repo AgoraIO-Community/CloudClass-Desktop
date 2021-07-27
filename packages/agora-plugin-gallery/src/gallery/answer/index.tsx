@@ -26,6 +26,14 @@ import addSvg from './add.svg';
 const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void ,onTitle: (title: string) => void }) => {
   const pluginStore = usePluginStore()
 
+  const {events} = pluginStore.context
+
+  useEffect(() => {
+    events.global.subscribe((state:any) => {
+      pluginStore.updateGlobalContext(state)
+    })
+  }, [])
+
   useEffect(() => {
     onHeight(pluginStore.height || 0)
   }, [pluginStore.height])

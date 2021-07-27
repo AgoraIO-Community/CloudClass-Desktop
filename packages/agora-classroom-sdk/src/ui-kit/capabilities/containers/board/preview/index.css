@@ -44,3 +44,52 @@
 .bm-item::-webkit-scrollbar-track {
   background: #FFFFFF;
 }
+
+.menu-title-line{
+  height: 28px;
+  margin-top:20px;
+}
+
+.menu-head-btn > img[alt='addPage'],.menu-head-btn > img[alt='close'],.page-box-under-right > img[alt='deleteIcon']{
+  height: 0;
+}
+
+.menu-title-left .menu-head-btn {
+  width: 28px;
+  height: 28px;
+}
+
+.menu-title-left .menu-head-btn::after{
+  content: '';
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.page-box-under-right::after{
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.menu-head-btn:first-child::after{
+  background: url('./add.svg') no-repeat center;
+}
+
+.menu-head-btn:last-child::after{
+  background: url('./close.svg') no-repeat center;
+}
+
+.page-box-under-right::after {
+  background: url('./delete.svg') no-repeat center;
+}
+
+.page-box-under-left,.menu-title-text-box{
+  color: #191919;
+  font-size: 13px;
+}
+
+.page-box[style="border-color: rgb(113, 195, 252);"]{
+  border-color: #357BF6 !important;
+}

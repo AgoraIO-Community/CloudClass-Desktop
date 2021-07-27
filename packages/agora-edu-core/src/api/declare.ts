@@ -19,7 +19,8 @@ export type AgoraExtAppContext = {
   localUserInfo: AgoraExtAppUserInfo,
   userList?: any[],
   roomInfo: AgoraExtAppRoomInfo,
-  language: string
+  language: string,
+  events: any
 }
 
 export type AgoraExtAppHandle = {

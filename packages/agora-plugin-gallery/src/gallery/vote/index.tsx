@@ -30,18 +30,13 @@ const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => voi
     onHeight(pluginStore.height || 0)
   }, [pluginStore.height])
 
-  // useEffect(() => {
-  //   onTitle(transI18n('vote.appName')+ ' ' + pluginStore.currentTime)
-  // }, [pluginStore.currentTime])
+  const {events} = pluginStore.context
 
-  const subDis = useMemo(() => {
-    if (pluginStore.status === 'config') {
-      return !pluginStore.title || (pluginStore.answer?.includes('') || false)
-    } else if (pluginStore.status === 'answer') {
-      return (pluginStore.selAnswer?.length || 0) === 0
-    }
-    return false;
-  }, [pluginStore.status, pluginStore.title, pluginStore.answer, pluginStore.selAnswer])
+  useEffect(() => {
+    events.global.subscribe((state:any) => {
+      pluginStore.updateGlobalContext(state)
+    })
+  }, [])
 
   return (
     <div

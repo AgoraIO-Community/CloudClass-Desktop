@@ -18,3 +18,10 @@ export type StudentInfo = {
   userName: string,
   coVideo: boolean
 }
+
+export type HandsStudentInfo = {
+  userUuid: string,
+  userName: string,
+  coVideo: boolean,
+  hands: boolean
+}

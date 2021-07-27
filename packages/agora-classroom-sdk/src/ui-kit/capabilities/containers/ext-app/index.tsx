@@ -6,6 +6,7 @@ import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
 import { Modal, transI18n } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import {Adapter} from '../widget/adapter'
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
@@ -15,7 +16,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     const {roomInfo} = useRoomContext()
 
     const {userUuid, userName, userRole, roomName, roomUuid, roomType, language} = contextInfo
-
+    const {events} = Adapter()
     useEffect(() => {
         if (ref.current) {
             // only run for very first time
@@ -31,7 +32,8 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               roomInfo: {
                 roomName,roomUuid,roomType
               },
-              language: language
+              language: language,
+              events
             }, {
               updateRoomProperty: async (properties: any, common: any, cause: {}) => {
                 return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)

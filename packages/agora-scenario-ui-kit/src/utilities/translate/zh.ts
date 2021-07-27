@@ -105,7 +105,7 @@ export const zh = {
     'add_screen_share': '老师开启了屏幕共享',
     'remove_screen_share': '老师关闭了屏幕共享',
     'granted_board_success': '授权白板成功',
-    'revoke_board_success': '收回白板成功',
+    'revoke_board_success': '收回白板成功', 
     'create_screen_share_failed': '创建屏幕分享失败',
     'kick_by_other_side': '被其他端踢出',
     'screen_share': '屏幕共享',
@@ -408,6 +408,7 @@ export const zh = {
     'start': '开始',
     'restart': '重新开始'
   },
+  'hands_up_tag': '-举手中',
   'answer': {
     'appName': '答题器',
     'start': '开始答题',
@@ -425,14 +426,14 @@ export const zh = {
   },
   'vote': {
     'appName': '投票',
-    'start': '开始投票',
-    'restart': '重新开始',
-    'over': '结束投票',
-    'submit': '投票',
-    'change': '修改投票',
-    'input-tip': '请输入投票问题',
-    'item-tip': '请输入选项内容',
-    'single-sel': '单选',
-    'mul-sel': '多选',
+    'start':'开始投票',
+    'restart':'重新开始',
+    'over':'结束投票',
+    'submit':'投票',
+    'change':'修改投票',
+    'input-tip':'请输入投票问题',
+    'item-tip':'请输入选项内容',
+    'single-sel':'单选',
+    'mul-sel':'多选',
   }
 }

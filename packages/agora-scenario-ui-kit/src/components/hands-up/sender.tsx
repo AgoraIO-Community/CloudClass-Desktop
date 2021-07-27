@@ -17,18 +17,18 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({onClick, state = 'd
     'forbidden': "#BDBDCA"
   }
 
-  const color = mapping[state || 'default']
+  const color = mapping[state==='forbidden'?'default':state]
 
   return (
     <Card
-      className={["hands-up-sender", state === 'forbidden' ? '' : 'sender-can-hover'].join(" ")}
+      className={["hands-up-sender", 'sender-can-hover'].join(" ")}
       width={40}
       height={40}
       borderRadius={40}
     >
       {/*TODO: fix hover */}
-      <Icon type={state === 'default' ? "hands-up-student" : "hands-up"} color={color} onClick={onClick} />
-      {animate?<span className={animate%2?'handtip':'handtip handtip-1'} onClick={onClick} >{animate}</span>:null} 
+      <Icon type={state === 'actived' ? "hands-up" : "hands-up-student"} color={color} onClick={onClick} />
+      {animate && state!=='forbidden'?<span className='handtip' onClick={onClick} >{animate}</span>:null} 
     </Card>
   )
 }

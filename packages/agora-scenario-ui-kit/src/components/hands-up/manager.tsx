@@ -3,7 +3,8 @@ import classnames from "classnames";
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { Card, Icon, Popover, t, Tooltip } from "~components";
-import { BaseHandsUpProps, HandsUpState, StudentInfo } from "./types";
+import { transI18n } from '~components/i18n';
+import { BaseHandsUpProps, HandsUpState, StudentInfo, HandsStudentInfo } from "./types";
 
 export type HandleUpClick = (action: 'confirm' | 'cancel', student: StudentInfo) => Promise<void> | void;
 
@@ -16,8 +17,9 @@ export interface HandsUpManagerProps extends BaseHandsUpProps {
   state?: HandsUpState;
   timeout?: number;
   onClick: HandleUpClick;
+  onClear: ()=>void;
   unreadCount?: number;
-  studentList: StudentInfo[];
+  studentList: HandsStudentInfo[];
   processUserCount: number;
   onlineUserCount: number;
 }
@@ -34,6 +36,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   onlineUserCount = 0,
   processUserCount = 0,
   onClick,
+  onClear,
   ...restProps
 }) => {
   const cls = classnames({
@@ -57,7 +60,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
     }
   })
 
-  const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo)
+  const coVideoList = studentList//.filter((student: StudentInfo) => !student.coVideo)
 
   const content = useCallback(() => {
     return (<StudentsHandsUpList
@@ -79,6 +82,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
         <Popover
           visible={popoverVisible}
           onVisibleChange={(visible) => {
+            onClear()
             setPopoverVisible(visible)
           }}
           overlayClassName="customize-dialog-popover"
@@ -148,7 +152,7 @@ export const StudentHandsUp: FC<StudentHandsUpProps> = ({
 }
 
 export interface StudentsHandsUpListProps extends BaseHandsUpProps {
-  students: StudentInfo[];
+  students: HandsStudentInfo[];
   onClick: HandleUpClick
 }
 
@@ -172,19 +176,12 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
       >
         {
           students.map((item, index) => (
-            <div className="student-item" key={index}>
-              <span className="student-name">{item?.userName}</span>
-              <span className="operation-icon-wrap">
-                <Icon 
-                  type="checked"
-                  useSvg
-                  onClick={() => onClick("confirm", item)}
-                />
-                <Icon 
-                  type="close" 
-                  useSvg
-                  onClick={() => onClick("cancel", item)}
-                />
+            <div className={item.hands?"student-item student-item-hands":"student-item"} key={index}>
+              <span className="student-name">{item?.userName}{item.hands?transI18n('hands_up_tag'):''}</span>
+              <span className={classnames({
+                ["operation-icon-wrap"]:1,
+                ["operation-icon-disable"]:item.coVideo
+              })} onClick={() => onClick("confirm", item)} >
               </span>
             </div>
           ))

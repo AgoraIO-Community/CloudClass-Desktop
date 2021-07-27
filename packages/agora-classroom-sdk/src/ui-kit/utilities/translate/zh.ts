@@ -404,6 +404,7 @@ export const zh = {
     'start': '开始',
     'restart': '重新开始'
   },
+  'hands_up_tag': '-举手中',
   'answer': {
     'appName': '答题器',
     'start': '开始答题',

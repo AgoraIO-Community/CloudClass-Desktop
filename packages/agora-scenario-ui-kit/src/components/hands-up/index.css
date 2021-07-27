@@ -18,8 +18,9 @@
 
 .students-hands-up .student-item {
     width: 100%;
-    padding: 4px 10px 4px 16px;
+    padding: 5px 7px 5px 15px;
     @apply box-border flex justify-between items-center;
+    height: 40px;
 }
 
 .hands-up {
@@ -32,10 +33,30 @@
 
 .student-box .student-name,
 .student-item .student-name {
-    font-size: 14px;
-    color: #586376;
+    font-size: 13px;
+    color: #191919;
 }
 
+.student-item-hands, .student-item-hands .student-name{
+    color: #0073FF;
+}
+
+.operation-icon-wrap{
+    background-image: url('./hands.svg');
+}
+
+.student-item-hands .operation-icon-wrap{
+    background-image: url('./hands-hot.svg');
+}
+
+.operation-icon-disable{
+    background-image: url('./hands-video.svg');
+    pointer-events: none;
+}
+
+.student-item-hands .operation-icon-disable{
+    background-image: url('./hands-video-hot.svg');
+}
 
 .students-hands-up .hands-up-card {
     min-height: 37px !important;
@@ -189,9 +210,11 @@
 }
 
 .operation-icon-wrap {
-    display: flex;
-    width: 62px;
-    justify-content: space-between;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .operation-icon-wrap div.use-svg {

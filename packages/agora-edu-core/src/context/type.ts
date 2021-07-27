@@ -1041,6 +1041,15 @@ export type HandsUpContext = {
         coVideo: boolean;
     }[],
     /**
+     * 请求上台的学生列表
+     * @version v1.1.0
+     */
+    applyCoVideoUserList: {
+        userUuid: string;
+        userName: string;
+        coVideo: boolean;
+    }[],
+    /**
      * 已上台用户列表
      * @version v1.1.0
      */
