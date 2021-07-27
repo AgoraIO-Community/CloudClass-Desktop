@@ -18,7 +18,6 @@ import {
 import 'promise-polyfill/src/polyfill';
 import { ReactElement, useState, ReactChild } from 'react';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
-import {} from 'agora-chat-widget';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
@@ -289,7 +288,15 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat': option.region === 'CN' ? new AgoraHXChatWidget() : new AgoraChatWidget()}, ...option.widgets},
+          widgets: {
+            ...{
+              chat:
+                option.region === 'CN'
+                  ? new AgoraHXChatWidget()
+                  : new AgoraChatWidget(),
+            },
+            ...option.widgets,
+          },
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
           boardOptions: option.boardOptions,
