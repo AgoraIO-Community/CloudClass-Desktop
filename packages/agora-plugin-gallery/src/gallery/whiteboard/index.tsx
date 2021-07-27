@@ -1,69 +1,74 @@
 import 'promise-polyfill/src/polyfill';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { PluginStore } from './store'
-import { usePluginStore } from './hooks'
+import { PluginStore } from './store';
+import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type {IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext} from 'agora-edu-core'
-import {BoardClient} from './board'
+import type {
+  IAgoraExtApp,
+  AgoraExtAppHandle,
+  AgoraExtAppContext,
+} from 'agora-edu-core';
+import { BoardClient } from './board';
 import { I18nProvider } from '~ui-kit';
 
 const App = observer(() => {
-  const pluginStore = usePluginStore()
+  const pluginStore = usePluginStore();
   useEffect(() => {
     let client = new BoardClient({
-      identity: "host",
-      appIdentifier: "<netless app identifier>",
-      dependencies: pluginStore.context.dependencies
-    })
-    client.join({
-      uuid: "<netless room uuid>",
-      roomToken: "<netless roomToken>"
-    }).then(() => {
-      let container = document.getElementById("netless-white") as HTMLDivElement
-      if(container) {
-        client.room.bindHtmlElement(container);
-      }
-    })
-  },[])
+      identity: 'host',
+      appIdentifier: '<netless app identifier>',
+      dependencies: pluginStore.context.dependencies,
+    });
+    client
+      .join({
+        uuid: '<netless room uuid>',
+        roomToken: '<netless roomToken>',
+      })
+      .then(() => {
+        let container = document.getElementById(
+          'netless-white',
+        ) as HTMLDivElement;
+        if (container) {
+          client.room.bindHtmlElement(container);
+        }
+      });
+  }, []);
 
   return (
-    <div id="netless-white" style={{display:'flex', width: '100%', height: '100%'}}>
-    </div>
-  )
-})
-
+    <div
+      id="netless-white"
+      style={{ display: 'flex', width: '100%', height: '100%' }}></div>
+  );
+});
 
 export class AgoraExtAppWhiteboard implements IAgoraExtApp {
-  appIdentifier = "io.agora.whiteboard"
-  appName = "Whiteboard"
-  width = 640
-  height= 480
+  appIdentifier = 'io.agora.whiteboard';
+  appName = 'Whiteboard';
+  width = 640;
+  height = 480;
 
-  store?:PluginStore
+  store?: PluginStore;
 
-  constructor(public readonly language: any = 'en'){
-  }
+  constructor(public readonly language: any = 'en') {}
 
-  extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
-    this.store = new PluginStore(ctx, handle)
-    ReactDOM.render((
+  extAppDidLoad(
+    dom: Element,
+    ctx: AgoraExtAppContext,
+    handle: AgoraExtAppHandle,
+  ): void {
+    this.store = new PluginStore(ctx, handle);
+    ReactDOM.render(
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
-          <App/>
+          <App />
         </Provider>
-      </I18nProvider>
-    ),
-      dom
+      </I18nProvider>,
+      dom,
     );
   }
-  extAppRoomPropertiesDidUpdate(properties:any, cause:any): void {
-    this.store?.onReceivedProps(properties, cause)
+  extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
+    this.store?.onReceivedProps(properties, cause);
   }
-  extAppWillUnload(): void {
-  }
+  extAppWillUnload(): void {}
 }
-
-
-
-

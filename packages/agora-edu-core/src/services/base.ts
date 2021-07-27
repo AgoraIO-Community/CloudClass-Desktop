@@ -1,92 +1,82 @@
-import { GenericErrorWrapper } from "agora-rte-sdk";
-import { HttpClient } from "../utilities/net";
+import { GenericErrorWrapper } from 'agora-rte-sdk';
+import { HttpClient } from '../utilities/net';
 
 export interface AgoraFetchParams {
-  url?: string
-  method: string
-  data?: any
-  token?: string
-  full_url?: string
-  type?: string
-  restToken?: string
+  url?: string;
+  method: string;
+  data?: any;
+  token?: string;
+  full_url?: string;
+  type?: string;
+  restToken?: string;
 }
 
 export type ApiInitParams = {
-  userToken: string
-  sdkDomain: string
-  appId: string
-  rtmToken: string
-  rtmUid: string
-  prefix: string
-  roomUuid: string
-}
+  userToken: string;
+  sdkDomain: string;
+  appId: string;
+  rtmToken: string;
+  rtmUid: string;
+  prefix: string;
+  roomUuid: string;
+};
 
 export type ApiBaseInitializerParams = {
-  sdkDomain: string
-  appId: string
-  rtmToken: string
-  rtmUid: string
-}
+  sdkDomain: string;
+  appId: string;
+  rtmToken: string;
+  rtmUid: string;
+};
 
 export abstract class ApiBase {
-  protected rtmToken: string = ''
-  protected rtmUid: string = ''
-  protected appId: string = ''
+  protected rtmToken: string = '';
+  protected rtmUid: string = '';
+  protected appId: string = '';
   protected sdkDomain: string = '';
   protected userToken: string = '';
-  
-  protected prefix!: string
+
+  protected prefix!: string;
 
   constructor(params: ApiBaseInitializerParams) {
-    this.appId = params.appId
-    this.sdkDomain = params.sdkDomain
-    this.rtmToken = params.rtmToken
-    this.rtmUid = params.rtmUid
+    this.appId = params.appId;
+    this.sdkDomain = params.sdkDomain;
+    this.rtmToken = params.rtmToken;
+    this.rtmUid = params.rtmUid;
   }
 
-  updateRtmConfig(info: {
-    rtmUid: string
-    rtmToken: string
-  }) {
-    this.rtmUid = info.rtmUid
-    this.rtmToken = info.rtmToken
+  updateRtmConfig(info: { rtmUid: string; rtmToken: string }) {
+    this.rtmUid = info.rtmUid;
+    this.rtmToken = info.rtmToken;
   }
 
   // 接口请求
-  async fetch (params: AgoraFetchParams) {
-    const {
-      method,
-      token,
-      data,
-      full_url,
-      url,
-      restToken
-    } = params
+  async fetch(params: AgoraFetchParams) {
+    const { method, token, data, full_url, url, restToken } = params;
     const opts: any = {
       method,
       headers: {
         'Content-Type': 'application/json',
         'x-agora-token': this.rtmToken,
         'x-agora-uid': this.rtmUid,
-      }
-    }
+      },
+    };
     if (data) {
       opts.body = JSON.stringify(data);
     }
     if (token) {
-      opts.headers['token'] = token
+      opts.headers['token'] = token;
     } else {
       if (this.userToken) {
-        opts.headers['token'] = this.userToken
+        opts.headers['token'] = this.userToken;
       }
     }
 
     if (restToken) {
-      delete opts.headers['x-agora-token']
-      delete opts.headers['x-agora-uid']
+      delete opts.headers['x-agora-token'];
+      delete opts.headers['x-agora-uid'];
       Object.assign(opts.headers, {
-        'authorization': `Basic ${restToken}`
-      })
+        authorization: `Basic ${restToken}`,
+      });
     }
     let resp: any;
     if (full_url) {
@@ -94,58 +84,54 @@ export abstract class ApiBase {
     } else {
       resp = await HttpClient(`${this.prefix}${url}`, opts);
     }
-    
+
     if (resp.code !== 0) {
-      if(resp.code === undefined) {
+      if (resp.code === undefined) {
         // code is not available when server is not properly return response
-        throw GenericErrorWrapper({message: resp.error})
+        throw GenericErrorWrapper({ message: resp.error });
       } else {
-        throw GenericErrorWrapper({message: resp.message || resp.msg}, {errCode: `${resp.code}`})
+        throw GenericErrorWrapper(
+          { message: resp.message || resp.msg },
+          { errCode: `${resp.code}` },
+        );
       }
     }
-    return resp
+    return resp;
   }
 
   // 接口请求上传文件
-  async fetchFormData (params: AgoraFetchParams) {
-    const {
-      method,
-      token,
-      data,
-      full_url,
-      url,
-      restToken
-    } = params
+  async fetchFormData(params: AgoraFetchParams) {
+    const { method, token, data, full_url, url, restToken } = params;
     const opts: any = {
       method,
       headers: {
         'Content-Type': 'multipart/form-data',
         'x-agora-token': this.rtmToken,
         'x-agora-uid': this.rtmUid,
-      }
-    }
+      },
+    };
 
-    const formData = new FormData()
+    const formData = new FormData();
     for (let key in data) {
-      formData.append(key, data[key])
+      formData.append(key, data[key]);
     }
     if (data) {
-      opts.body = formData
+      opts.body = formData;
     }
     if (token) {
-      opts.headers['token'] = token
+      opts.headers['token'] = token;
     } else {
       if (this.userToken) {
-        opts.headers['token'] = this.userToken
+        opts.headers['token'] = this.userToken;
       }
     }
 
     if (restToken) {
-      delete opts.headers['x-agora-token']
-      delete opts.headers['x-agora-uid']
+      delete opts.headers['x-agora-token'];
+      delete opts.headers['x-agora-uid'];
       Object.assign(opts.headers, {
-        'authorization': `Basic ${restToken}`
-      })
+        authorization: `Basic ${restToken}`,
+      });
     }
     let resp: any;
     if (full_url) {
@@ -154,8 +140,8 @@ export abstract class ApiBase {
       resp = await HttpClient(`${this.prefix}${url}`, opts);
     }
     if (resp.code !== 0) {
-      throw GenericErrorWrapper({message: resp.message || resp.msg})
+      throw GenericErrorWrapper({ message: resp.message || resp.msg });
     }
-    return resp
+    return resp;
   }
 }

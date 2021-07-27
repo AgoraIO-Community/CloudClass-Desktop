@@ -1,6 +1,15 @@
 import { EventEmitter } from 'events';
 import { convertUid, paramsConfig, wait } from '../utils';
-import { CameraOption, StartScreenShareParams, MicrophoneOption, ElectronWrapperInitOption, IElectronRTCWrapper, convertNativeAreaCode, PrepareScreenShareParams, ScreenShareType } from '../interfaces/index';
+import {
+  CameraOption,
+  StartScreenShareParams,
+  MicrophoneOption,
+  ElectronWrapperInitOption,
+  IElectronRTCWrapper,
+  convertNativeAreaCode,
+  PrepareScreenShareParams,
+  ScreenShareType,
+} from '../interfaces/index';
 // @ts-ignore
 import IAgoraRtcEngine from 'agora-electron-sdk';
 // import {ENCRYPTION_MODE, MediaEncryptionConfig} from 'agora-electron-sdk/types/Api/native_type';
@@ -117,7 +126,7 @@ export class CEFVideoEncoderConfiguration {
     minBitrate: number = -1,
     orientationMode: number = 0,
     degradationPreference: number = 0,
-    mirrorMode: number = 0
+    mirrorMode: number = 0,
   ) {
     this.dimensions = dimensions;
     this.frameRate = frameRate;
@@ -147,52 +156,58 @@ export class CEFVideoDimensions {
 }
 
 interface ScreenShareOption {
-  profile: number,
-  windowId: number,
-  joinInfo?: string,
-  appId: string,
-  uid: number,
-  channel: string,
-  token: string,
+  profile: number;
+  windowId: number;
+  joinInfo?: string;
+  appId: string;
+  uid: number;
+  channel: string;
+  token: string;
   rect: {
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  },
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   param: {
-    width: number,
-    height: number,
-    bitrate: number,
-    frameRate: number
-  }
+    width: number;
+    height: number;
+    bitrate: number;
+    frameRate: number;
+  };
 }
 
 interface IAgoraRtcChannel {
-  id: string
-  on(event: 'userJoined', listener: (uid: number) => void): void
-  on(event: 'userOffline', listener: (uid: number) => void): void
-  on(event: 'channelError', listener: (error: number, message: string) => void): void
-  on(event: 'channelWarning', listener: (warn: number, message: string) => void): void
-  on(event: 'joinChannelSuccess', listener: (...args: any[]) => void): void
-  off(event: string, listener: Function): void
-  removeAllListeners(): void
-  joinChannel(...args: any[]): number
-  leaveChannel(): number
-  setClientRole(role: number): number
+  id: string;
+  on(event: 'userJoined', listener: (uid: number) => void): void;
+  on(event: 'userOffline', listener: (uid: number) => void): void;
+  on(
+    event: 'channelError',
+    listener: (error: number, message: string) => void,
+  ): void;
+  on(
+    event: 'channelWarning',
+    listener: (warn: number, message: string) => void,
+  ): void;
+  on(event: 'joinChannelSuccess', listener: (...args: any[]) => void): void;
+  off(event: string, listener: Function): void;
+  removeAllListeners(): void;
+  joinChannel(...args: any[]): number;
+  leaveChannel(): number;
+  setClientRole(role: number): number;
 }
 
 interface SubChannelClient {
-  client: IAgoraRtcChannel
-  handleUserOnline: Function
-  handleUserOffline: Function
-  handleJoinSuccess: Function
+  client: IAgoraRtcChannel;
+  handleUserOnline: Function;
+  handleUserOffline: Function;
+  handleJoinSuccess: Function;
 }
 
 export function CustomBtoa(input: any) {
   let keyStr =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-  let output = "";
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let output = '';
   let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
   let i = 0;
 
@@ -220,113 +235,125 @@ export function CustomBtoa(input: any) {
   return output;
 }
 
-export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRTCWrapper {
+export class AgoraElectronRTCWrapper
+  extends EventEmitter
+  implements IElectronRTCWrapper
+{
   client!: IAgoraRtcEngine;
   logPath: string;
   videoSourceLogPath: string;
 
-  role: number
-  joined: boolean
+  role: number;
+  joined: boolean;
 
-  videoMuted: boolean
-  audioMuted: boolean
+  videoMuted: boolean;
+  audioMuted: boolean;
 
-  localUid?: number
-  channel?: number
-  appId: string
+  localUid?: number;
+  channel?: number;
+  appId: string;
 
-  subscribedList: number[] = []
+  subscribedList: number[] = [];
 
-  superChannel: any
-  userJoinedEvent: any
-  userOfflineEvent: any
+  superChannel: any;
+  userJoinedEvent: any;
+  userOfflineEvent: any;
 
-  cameraList: any[] = []
-  microphoneList: any[] = []
+  cameraList: any[] = [];
+  microphoneList: any[] = [];
 
   _subClient: Record<string, any>;
   _localAudioStats: {
-    audioLossRate: number
+    audioLossRate: number;
   };
   _localVideoStats: {
-    videoLossRate: number
+    videoLossRate: number;
   };
   _remoteVideoStats: Record<number, any>;
   _remoteAudioStats: Record<number, any>;
   _cefClient: any;
 
   get deviceList(): any[] {
-    return this.cameraList.concat(this.microphoneList)
+    return this.cameraList.concat(this.microphoneList);
   }
 
-  cpuUsage: number = 0
-  gatewayRtt: number = 0
-  lastMileDelay: number = 0
+  cpuUsage: number = 0;
+  gatewayRtt: number = 0;
+  lastMileDelay: number = 0;
 
   published: boolean = false;
 
   constructor(options: ElectronWrapperInitOption) {
     super();
-    this._cefClient = options.cefClient
-    this.logPath = options.logPath
-    this.videoSourceLogPath = options.videoSourceLogPath
-    EduLogger.info(`[electron-log], logPath: ${this.logPath}, videoSourceLogPath: ${this.videoSourceLogPath}, appId: ${options.appId}`)
-    this.role = 2
-    this.joined = false
-    this.videoMuted = false
-    this.audioMuted = false
-    this.localUid = 0
-    this.channel = 0
-    this.appId = options.appId
-    this.subscribedList = []
-    this._subClient = {}
-    this._remoteVideoStats = {}
-    this._remoteAudioStats = {}
+    this._cefClient = options.cefClient;
+    this.logPath = options.logPath;
+    this.videoSourceLogPath = options.videoSourceLogPath;
+    EduLogger.info(
+      `[electron-log], logPath: ${this.logPath}, videoSourceLogPath: ${this.videoSourceLogPath}, appId: ${options.appId}`,
+    );
+    this.role = 2;
+    this.joined = false;
+    this.videoMuted = false;
+    this.audioMuted = false;
+    this.localUid = 0;
+    this.channel = 0;
+    this.appId = options.appId;
+    this.subscribedList = [];
+    this._subClient = {};
+    this._remoteVideoStats = {};
+    this._remoteAudioStats = {};
     this._localVideoStats = {
-      videoLossRate: 0
-    }
+      videoLossRate: 0,
+    };
     this._localAudioStats = {
-      audioLossRate: 0
-    }
+      audioLossRate: 0,
+    };
     //@ts-ignore
-    this.client = options.AgoraRtcEngine
-    let ret = -1
+    this.client = options.AgoraRtcEngine;
+    let ret = -1;
     if (this._cefClient) {
-      ret = this.client.initialize(this._cefClient)
+      ret = this.client.initialize(this._cefClient);
     } else {
-      //@ts-ignore
-      ret = this.client.initialize(this.appId, convertNativeAreaCode(`${options.area}`))
+      ret = this.client.initialize(
+        this.appId,
+        //@ts-ignore
+        convertNativeAreaCode(`${options.area}`),
+      );
     }
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,
-        code: ret
-      })
+        code: ret,
+      });
     }
 
     if (this.logPath) {
-      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
-      this.client.setLogFile(this.logPath)
+      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`);
+      this.client.setLogFile(this.logPath);
     }
-    
-    console.log("set Parameters result: ", JSON.stringify(paramsConfig), this.client.setParameters(JSON.stringify(paramsConfig)))
-    this.init()
-    this.client.setChannelProfile(1)
-    this.client.enableVideo()
-    this.client.enableAudio()
-    this.client.enableWebSdkInteroperability(true)
-    this.client.enableAudioVolumeIndication(300, 3, true)
+
+    console.log(
+      'set Parameters result: ',
+      JSON.stringify(paramsConfig),
+      this.client.setParameters(JSON.stringify(paramsConfig)),
+    );
+    this.init();
+    this.client.setChannelProfile(1);
+    this.client.enableVideo();
+    this.client.enableAudio();
+    this.client.enableWebSdkInteroperability(true);
+    this.client.enableAudioVolumeIndication(300, 3, true);
     // @ts-ignore
-    this.client.monitorDeviceChange && this.client.monitorDeviceChange(true)
+    this.client.monitorDeviceChange && this.client.monitorDeviceChange(true);
     // this.client.setVideoProfile(20)
 
-    const resolutionConfig = options.resolution
+    const resolutionConfig = options.resolution;
     const config: any = {
       bitrate: 0,
       frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
       width: resolutionConfig ? resolutionConfig?.width : 320,
       height: resolutionConfig ? resolutionConfig?.height : 240,
-    }
+    };
 
     const videoEncoderConfiguration = Object.assign({
       width: config.width,
@@ -334,22 +361,23 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       frameRate: config.frameRate,
       minFrameRate: -1,
       minBitrate: config.bitrate,
-    })
+    });
     if (this._cefClient) {
-      //@ts-ignore
-      this.client.setVideoEncoderConfiguration(new CEFVideoEncoderConfiguration(
-        new CEFVideoDimensions(
-          videoEncoderConfiguration.width,
-          videoEncoderConfiguration.height,
+      this.client.setVideoEncoderConfiguration(
+        //@ts-ignore
+        new CEFVideoEncoderConfiguration(
+          new CEFVideoDimensions(
+            videoEncoderConfiguration.width,
+            videoEncoderConfiguration.height,
+          ),
+          videoEncoderConfiguration.frameRate,
         ),
-        videoEncoderConfiguration.frameRate
-        )
-      )
+      );
     } else {
-      this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
+      this.client.setVideoEncoderConfiguration(videoEncoderConfiguration);
     }
-    console.log("[electron] video encoder config ", JSON.stringify(config))
-    this.client.setClientRole(2)
+    console.log('[electron] video encoder config ', JSON.stringify(config));
+    this.client.setClientRole(2);
     //TODO: set cef client log path
     if (this._cefClient) {
       // window.getCachePath((path: string) => {
@@ -359,114 +387,139 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       // })
     }
   }
-  muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
+  muteRemoteVideoByClient(
+    client: any,
+    uid: string,
+    val: boolean,
+  ): Promise<any> {
     throw new Error('Method not implemented.');
   }
-  muteRemoteAudioByClient(client: any, uid: string, val: boolean): Promise<any> {
+  muteRemoteAudioByClient(
+    client: any,
+    uid: string,
+    val: boolean,
+  ): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
-  public setAddonLogPath(payload: {logPath: string, videoSourceLogPath: string}) {
-    this.logPath = payload.logPath
-    this.videoSourceLogPath = payload.videoSourceLogPath
+  public setAddonLogPath(payload: {
+    logPath: string;
+    videoSourceLogPath: string;
+  }) {
+    this.logPath = payload.logPath;
+    this.videoSourceLogPath = payload.videoSourceLogPath;
   }
 
   public enableLogPersist() {
     if (this.logPath) {
-      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
-      this.client.setLogFile(this.logPath)
-      window.setNodeAddonLogPath = this.logPath
+      EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`);
+      this.client.setLogFile(this.logPath);
+      window.setNodeAddonLogPath = this.logPath;
     }
   }
-  
+
   changePlaybackVolume(volume: number): void {
-    let decibel = +((volume / 100) * 255).toFixed(0)
-    let ret = this.client.setAudioPlaybackVolume(decibel)
-    EduLogger.info("setAudioPlaybackVolume ret", ret)
+    let decibel = +((volume / 100) * 255).toFixed(0);
+    let ret = this.client.setAudioPlaybackVolume(decibel);
+    EduLogger.info('setAudioPlaybackVolume ret', ret);
   }
-  
+
   async muteRemoteVideo(uid: any, val: boolean): Promise<any> {
-    let ret = this.client.muteRemoteVideoStream(uid, val)
-    EduLogger.info("muteRemoteVideoStream ret", ret)
+    let ret = this.client.muteRemoteVideoStream(uid, val);
+    EduLogger.info('muteRemoteVideoStream ret', ret);
   }
 
   async muteRemoteAudio(uid: any, val: boolean): Promise<any> {
-    let ret = this.client.muteRemoteAudioStream(uid, val)
-    EduLogger.info("muteRemoteAudioStream ret", ret)
+    let ret = this.client.muteRemoteAudioStream(uid, val);
+    EduLogger.info('muteRemoteAudioStream ret', ret);
   }
 
   releaseAllClient() {
-    EduLogger.info("call electron media service releaseAllClient")
+    EduLogger.info('call electron media service releaseAllClient');
     if (this.client) {
-      EduLogger.info("call electron media service main client removeAllListeners")
-      this.client.removeAllListeners()
+      EduLogger.info(
+        'call electron media service main client removeAllListeners',
+      );
+      this.client.removeAllListeners();
     }
-    this.releaseSubChannels()
+    this.releaseSubChannels();
   }
 
   releaseSubChannels() {
     if (this._subClient) {
       for (let key of Object.keys(this._subClient)) {
         if (this._subClient[key]) {
-          this._subClient[key].client.removeAllListeners()
-          EduLogger.info(`call electron media service screenClient sub client ${key} removeAllListeners`)
-          delete this._subClient[key]
+          this._subClient[key].client.removeAllListeners();
+          EduLogger.info(
+            `call electron media service screenClient sub client ${key} removeAllListeners`,
+          );
+          delete this._subClient[key];
         }
       }
-      this._subClient = {}
+      this._subClient = {};
     }
   }
 
   resetState() {
-    this.role = 2
-    this.joined = false
-    this.videoMuted = false
-    this.audioMuted = false
-    this.localUid = undefined
-    this.channel = undefined
-    this.subscribedList = []
-    this.cpuUsage = 0
-    this.gatewayRtt = 0
-    this.lastMileDelay = 0
-    this.releaseSubChannels()
+    this.role = 2;
+    this.joined = false;
+    this.videoMuted = false;
+    this.audioMuted = false;
+    this.localUid = undefined;
+    this.channel = undefined;
+    this.subscribedList = [];
+    this.cpuUsage = 0;
+    this.gatewayRtt = 0;
+    this.lastMileDelay = 0;
+    this.releaseSubChannels();
   }
 
   reset() {
-    this.resetState()
+    this.resetState();
     // this.releaseAllClient()
   }
 
   private fire(...eventArgs: any[]) {
-    const [eventName, ...args] = eventArgs
+    const [eventName, ...args] = eventArgs;
 
     if (['user-unpublished', 'user-published'].includes(eventName)) {
-      EduLogger.info(`[agora-apaas] ${eventName} ${JSON.stringify(args)}`)
+      EduLogger.info(`[agora-apaas] ${eventName} ${JSON.stringify(args)}`);
     }
-    this.emit(eventName, ...args)
+    this.emit(eventName, ...args);
   }
 
   init() {
-    EduLogger.info("electron start event observer")
+    EduLogger.info('electron start event observer');
     this.client.on('error', (err: any) => {
-      this.fire('exception', err)
-    })
-    this.client.on('groupAudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
-      this.fire('local-audio-volume', {
-        totalVolume: +totalVolume
-      })
-      this.fire('volume-indication', {
-        speakers, speakerNumber: +speakerNumber, totalVolume: +totalVolume
-      })
-    })
-    this.client.on('AudioVolumeIndication', (speakers: any[], speakerNumber: number, totalVolume: number) => {
-      // console.log("AudioVolumeIndication ", JSON.stringify({speakers, speakerNumber, totalVolume}))
-      this.fire('local-audio-volume', {
-        totalVolume: +totalVolume
-      })
-      this.fire('volume-indication', {
-        speakers, speakerNumber: +speakerNumber, totalVolume: +totalVolume
-      })
-    })
+      this.fire('exception', err);
+    });
+    this.client.on(
+      'groupAudioVolumeIndication',
+      (speakers: any[], speakerNumber: number, totalVolume: number) => {
+        this.fire('local-audio-volume', {
+          totalVolume: +totalVolume,
+        });
+        this.fire('volume-indication', {
+          speakers,
+          speakerNumber: +speakerNumber,
+          totalVolume: +totalVolume,
+        });
+      },
+    );
+    this.client.on(
+      'AudioVolumeIndication',
+      (speakers: any[], speakerNumber: number, totalVolume: number) => {
+        // console.log("AudioVolumeIndication ", JSON.stringify({speakers, speakerNumber, totalVolume}))
+        this.fire('local-audio-volume', {
+          totalVolume: +totalVolume,
+        });
+        this.fire('volume-indication', {
+          speakers,
+          speakerNumber: +speakerNumber,
+          totalVolume: +totalVolume,
+        });
+      },
+    );
     // this.client.on('videoDeviceStateChanged', (evt: any) => {
     //   console.log('videodevicestatechanged ', JSON.stringify(evt))
     // })
@@ -488,30 +541,30 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     //   })
     // })
     this.client.on('userjoined', (uid: number, elapsed: number) => {
-      EduLogger.info("userjoined", uid)
+      EduLogger.info('userjoined', uid);
       this.fire('user-published', {
         user: {
           uid: convertUid(uid),
         },
-        channel: this.channel
-      })
-    })
+        channel: this.channel,
+      });
+    });
     //or event removeStream
     this.client.on('removestream', (uid: number, elapsed: number) => {
-      EduLogger.info("removestream", uid)
+      EduLogger.info('removestream', uid);
       this.fire('user-unpublished', {
         user: {
           uid: convertUid(uid),
         },
-        channel: this.channel
-      })
-    })
+        channel: this.channel,
+      });
+    });
     this.client.on('connectionStateChanged', (state: any, reason: any) => {
       this.fire('connection-state-change', {
         curState: state,
-        reason
-      })
-    })
+        reason,
+      });
+    });
     this.client.on('networkquality', (...args: any[]) => {
       // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
@@ -522,134 +575,146 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         rtt: this.lastMileDelay,
         localPacketLoss: {
           audioStats: this._localAudioStats,
-          videoStats: this._localVideoStats
+          videoStats: this._localVideoStats,
         },
-        remotePacketLoss:{
+        remotePacketLoss: {
           audioStats: this._remoteAudioStats,
-          videoStats: this._remoteVideoStats
+          videoStats: this._remoteVideoStats,
+        },
+      });
+    });
+    this.client.on(
+      'remoteVideoStateChanged',
+      (uid: number, state: number, reason: any) => {
+        EduLogger.info('remoteVideoStateChanged ', reason, uid);
+        if (reason === 5) {
+          this.fire('user-unpublished', {
+            user: {
+              uid: +uid,
+            },
+            mediaType: 'video',
+          });
         }
-      })
-    })
-    this.client.on('remoteVideoStateChanged', (uid: number, state: number, reason: any) => {
-      EduLogger.info('remoteVideoStateChanged ', reason, uid)
-      if (reason === 5) {
-        this.fire('user-unpublished', {
-          user: {
-            uid: +uid,
-          },
-          mediaType: 'video',
-        })
-      }
 
-      if (reason === 6) {
-        this.fire('user-published', {
-          user: {
-            uid: +uid,
-          },
-          mediaType: 'video',
-        })
-      }
-    })
-    this.client.on('remoteAudioStateChanged', (uid: number, state: number, reason: any) => {
-      EduLogger.info('remoteAudioStateChanged ', reason, uid)
+        if (reason === 6) {
+          this.fire('user-published', {
+            user: {
+              uid: +uid,
+            },
+            mediaType: 'video',
+          });
+        }
+      },
+    );
+    this.client.on(
+      'remoteAudioStateChanged',
+      (uid: number, state: number, reason: any) => {
+        EduLogger.info('remoteAudioStateChanged ', reason, uid);
 
-      // remote user disable audio
-      if (reason === 5) {
-        this.fire('user-unpublished', {
-          user: {
-            uid,
-          },
-          mediaType: 'audio',
-        })
-      }
+        // remote user disable audio
+        if (reason === 5) {
+          this.fire('user-unpublished', {
+            user: {
+              uid,
+            },
+            mediaType: 'audio',
+          });
+        }
 
-      if (reason === 6) {
-        EduLogger.info('user-published audio', uid)
-        // this.fire('user-published', {
-        //   user: {
-        //     uid,
-        //   },
-        //   mediaType: 'audio',
+        if (reason === 6) {
+          EduLogger.info('user-published audio', uid);
+          // this.fire('user-published', {
+          //   user: {
+          //     uid,
+          //   },
+          //   mediaType: 'audio',
+          // })
+        }
+        // this.fire('user-info-updated', {
+        //   uid,
+        //   msg: reason,
+        //   type: 'audio',
+        //   state
         // })
-      }
-      // this.fire('user-info-updated', {
-      //   uid,
-      //   msg: reason,
-      //   type: 'audio',
-      //   state
-      // })
-    })
+      },
+    );
     this.client.on('joinedchannel', (channel: string, uid: number) => {
-      EduLogger.info('joinedchannel', uid)
-    })
+      EduLogger.info('joinedchannel', uid);
+    });
     this.client.on('localVideoStateChanged', (state: number, error: number) => {
       this.fire('localVideoStateChanged', {
         // uid: convertUid(this.localUid),
         state,
         type: 'video',
-        msg: error
-      })
+        msg: error,
+      });
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,
         type: 'video',
-        msg: error
-      })
-    })
+        msg: error,
+      });
+    });
     this.client.on('localAudioStateChanged', (state: number, error: number) => {
       this.fire('localAudioStateChanged', {
         state,
         type: 'audio',
-        msg: error
-      })
+        msg: error,
+      });
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,
         type: 'audio',
-        msg: error
-      })
-    })
+        msg: error,
+      });
+    });
     this.client.on('tokenPrivilegeWillExpire', () => {
-      this.fire('token-privilege-will-expire')
-    })
+      this.fire('token-privilege-will-expire');
+    });
     this.client.on('tokenPrivilegeDidExpire', () => {
-      this.fire('token-privilege-did-expire')
-    })
-    this.client.on('localPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
-      this.fire('stream-fallback', {
-        uid: convertUid(this.localUid),
-        isFallbackOrRecover
-      })
-    })
-    this.client.on('remoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
-      this.fire('stream-fallback', {
-        uid: convertUid(uid),
-        isFallbackOrRecover
-      })
-    })
+      this.fire('token-privilege-did-expire');
+    });
+    this.client.on(
+      'localPublishFallbackToAudioOnly',
+      (isFallbackOrRecover: any) => {
+        this.fire('stream-fallback', {
+          uid: convertUid(this.localUid),
+          isFallbackOrRecover,
+        });
+      },
+    );
+    this.client.on(
+      'remoteSubscribeFallbackToAudioOnly',
+      (uid: any, isFallbackOrRecover: boolean) => {
+        this.fire('stream-fallback', {
+          uid: convertUid(uid),
+          isFallbackOrRecover,
+        });
+      },
+    );
     this.client.on('rtcStats', (evt: any) => {
-      this.cpuUsage = evt.cpuTotalUsage
-      this.gatewayRtt = evt.gatewayRtt
-      this.lastMileDelay = evt.lastmileDelay
-      this.fire('rtcStats', evt)
-    })
+      this.cpuUsage = evt.cpuTotalUsage;
+      this.gatewayRtt = evt.gatewayRtt;
+      this.lastMileDelay = evt.lastmileDelay;
+      this.fire('rtcStats', evt);
+    });
     this.client.on('localAudioStats', (evt: any) => {
       this._localAudioStats = {
         audioLossRate: evt.txPacketLossRate ?? 0,
-      }
-    })
+      };
+    });
     this.client.on('localVideoStats', (evt: any) => {
       this._localVideoStats = {
         videoLossRate: evt.txPacketLossRate ?? 0,
-      }
-    })
+      };
+    });
     this.client.on('remoteVideoStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      const uid = convertUid(evt.uid)
+      const uid = convertUid(evt.uid);
       this._remoteVideoStats[uid] = {
         videoLossRate: evt.packetLossRate,
-        videoReceiveDelay: evt.delay
-      }
+        videoReceiveDelay: evt.delay,
+      };
 
       this.fire('remoteVideoStats', {
         user: {
@@ -657,22 +722,22 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         },
         stats: {
           uid: convertUid(uid),
-          ...evt
-        }
-      })
-    })
+          ...evt,
+        },
+      });
+    });
     this.client.on('remoteAudioStats', (evt: any) => {
       // record the data but do not fire it, these will be together fired by network quality callback
-      const uid = convertUid(+evt.uid)
+      const uid = convertUid(+evt.uid);
       this._remoteAudioStats[uid] = {
         audioLossRate: evt.audioLossRate,
-        audioReceiveDelay: evt.networkTransportDelay
-      }
-    })
+        audioReceiveDelay: evt.networkTransportDelay,
+      };
+    });
 
     // TODO: CEF event handlers
     this.client.on('UserJoined', (uid: number, elapsed: number) => {
-      EduLogger.info('[agora-apaas] cef platform UserJoined ', uid, elapsed)
+      EduLogger.info('[agora-apaas] cef platform UserJoined ', uid, elapsed);
       this.fire('user-published', {
         user: {
           uid: convertUid(uid),
@@ -680,13 +745,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         caller: {
           name: 'UserJoined',
           uid,
-          elapsed
-        }
-      })
-    })
+          elapsed,
+        },
+      });
+    });
     //or event removeStream
     this.client.on('UserOffline', (uid: number, elapsed: number) => {
-      EduLogger.info('[agora-apaas] cef platform UserOffline ', uid, elapsed)
+      EduLogger.info('[agora-apaas] cef platform UserOffline ', uid, elapsed);
       this.fire('user-unpublished', {
         user: {
           uid: convertUid(uid),
@@ -694,18 +759,25 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         caller: {
           name: 'UserOffline',
           uid,
-          elapsed
-        }
-      })
-    })
+          elapsed,
+        },
+      });
+    });
     this.client.on('ConnectionStateChanged', (state: any, reason: any) => {
       this.fire('connection-state-change', {
         curState: state,
-        reason
-      })
-    })
+        reason,
+      });
+    });
     this.client.on('NetworkQuality', (...args: any[]) => {
-      console.log("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
+      console.log(
+        'network-quality, uid: ',
+        args[0],
+        ' downlinkNetworkQuality: ',
+        args[1],
+        ' uplinkNetworkQuality ',
+        args[2],
+      );
       // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       // EduLogger.info( "remoteAudioStats: ", this._remoteAudioStats)
       // EduLogger.info( "remoteVideoStats: ", this._remoteVideoStats)
@@ -715,33 +787,33 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         cpuUsage: this.cpuUsage,
         localPacketLoss: {
           audioStats: this._localAudioStats,
-          videoStats: this._localVideoStats
+          videoStats: this._localVideoStats,
         },
-        remotePacketLoss:{
+        remotePacketLoss: {
           audioStats: this._remoteAudioStats,
-          videoStats: this._remoteVideoStats
-        }
-      })
-    })
+          videoStats: this._remoteVideoStats,
+        },
+      });
+    });
     this.client.on('RemoteVideoStats', (evt: any) => {
       this._remoteVideoStats[evt.uid] = {
         videoLossRate: evt.packetLossRate,
-        videoReceiveDelay: evt.delay
-      }
+        videoReceiveDelay: evt.delay,
+      };
       this.fire('remoteVideoStats', {
         user: {
           uid: convertUid(evt.uid),
         },
         stats: {
           ...evt,
-          uid: convertUid(evt.uid)
-        }
-      })
-    })
+          uid: convertUid(evt.uid),
+        },
+      });
+    });
     this.client.on('LocalVideoStats', (evt: any[]) => {
       this.fire('localVideoStats', {
         stats: {
-          ...evt
+          ...evt,
           // sentBitrate,
           // sentFrameRate,
           // encoderOutputFrameRate,
@@ -757,328 +829,397 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
           // txPacketLossRate,
           // captureFrameRate,
           // captureBrightnessLevel
-        }
-      })
-    })
-    this.client.on('RemoteVideoStats', (uid: number, delay: number, width: number, height: number, receivedBitrate: number, decoderOutputFrameRate: number, rendererOutputFrameRate: number, packetLossRate: number, rxStreamType: number, frozenRate: number, totalActiveTime: number, publishDuration: number) => {
-      this._remoteVideoStats[uid] = {
-        videoLossRate: packetLossRate,
-        videoReceiveDelay: delay
-      }
-      this.fire('remoteVideoStats', {
-        user: {
-          uid: convertUid(uid),
         },
-        stats: {
-          uid: convertUid(uid),
-          delay,
-          width,
-          height,
-          receivedBitrate,
-          decoderOutputFrameRate,
-          rendererOutputFrameRate,
-          packetLossRate,
-          rxStreamType,
-          frozenRate, 
-          totalActiveTime,
-          publishDuration
+      });
+    });
+    this.client.on(
+      'RemoteVideoStats',
+      (
+        uid: number,
+        delay: number,
+        width: number,
+        height: number,
+        receivedBitrate: number,
+        decoderOutputFrameRate: number,
+        rendererOutputFrameRate: number,
+        packetLossRate: number,
+        rxStreamType: number,
+        frozenRate: number,
+        totalActiveTime: number,
+        publishDuration: number,
+      ) => {
+        this._remoteVideoStats[uid] = {
+          videoLossRate: packetLossRate,
+          videoReceiveDelay: delay,
+        };
+        this.fire('remoteVideoStats', {
+          user: {
+            uid: convertUid(uid),
+          },
+          stats: {
+            uid: convertUid(uid),
+            delay,
+            width,
+            height,
+            receivedBitrate,
+            decoderOutputFrameRate,
+            rendererOutputFrameRate,
+            packetLossRate,
+            rxStreamType,
+            frozenRate,
+            totalActiveTime,
+            publishDuration,
+          },
+        });
+      },
+    );
+    this.client.on(
+      'RemoteVideoStateChanged',
+      (uid: number, state: number, reason: any) => {
+        EduLogger.info(
+          '[agora-apaas] cef platform remoteVideoStateChanged ',
+          reason,
+          uid,
+        );
+        if ([5, 7, 8].includes(reason)) {
+          this.fire('user-unpublished', {
+            user: {
+              uid: convertUid(uid),
+            },
+            mediaType: 'video',
+            caller: {
+              name: 'RemoteVideoStateChanged',
+              uid,
+              state,
+              reason,
+            },
+          });
         }
-      })
-    })
-    this.client.on('RemoteVideoStateChanged', (uid: number, state: number, reason: any) => {
-      EduLogger.info('[agora-apaas] cef platform remoteVideoStateChanged ', reason, uid)
-      if ([5, 7, 8].includes(reason)) {
-        this.fire('user-unpublished', {
-          user: {
-            uid: convertUid(uid),
-          },
-          mediaType: 'video',
-          caller: {
-            name: 'RemoteVideoStateChanged',
-            uid, 
-            state,
-            reason
-          }
-        })
-      }
 
-      if ([6, 9].includes(reason)) {
-        this.fire('user-published', {
-          user: {
-            uid: convertUid(uid),
-          },
-          mediaType: 'video',
-          caller: {
-            name: 'RemoteVideoStateChanged',
-            uid, 
-            state,
-            reason
-          }
-        })
-      }
-    })
-    this.client.on('RemoteAudioStateChanged', (uid: number, state: number, reason: any) => {
-      console.log('remoteAudioStateChanged ', reason, uid)
+        if ([6, 9].includes(reason)) {
+          this.fire('user-published', {
+            user: {
+              uid: convertUid(uid),
+            },
+            mediaType: 'video',
+            caller: {
+              name: 'RemoteVideoStateChanged',
+              uid,
+              state,
+              reason,
+            },
+          });
+        }
+      },
+    );
+    this.client.on(
+      'RemoteAudioStateChanged',
+      (uid: number, state: number, reason: any) => {
+        console.log('remoteAudioStateChanged ', reason, uid);
 
-      // remote user disable audio
-      if (reason === 5) {
-        // this.fire('user-unpublished', {
-        //   user: {
-        //     uid: convertUid(uid),
-        //   },
-        //   mediaType: 'audio',
-        //   caller: {
-        //     name: 'RemoteAudioStateChanged',
-        //     reason,
-        //     state,
-        //   }
+        // remote user disable audio
+        if (reason === 5) {
+          // this.fire('user-unpublished', {
+          //   user: {
+          //     uid: convertUid(uid),
+          //   },
+          //   mediaType: 'audio',
+          //   caller: {
+          //     name: 'RemoteAudioStateChanged',
+          //     reason,
+          //     state,
+          //   }
+          // })
+        }
+
+        if (reason === 6) {
+          // console.log('user-published audio', uid)
+          // this.fire('user-published', {
+          //   user: {
+          //     uid,
+          //   },
+          //   mediaType: 'audio',
+          // })
+        }
+        // this.fire('user-info-updated', {
+        //   uid,
+        //   msg: reason,
+        //   type: 'audio',
+        //   state
         // })
-      }
-
-      if (reason === 6) {
-        // console.log('user-published audio', uid)
-        // this.fire('user-published', {
-        //   user: {
-        //     uid,
-        //   },
-        //   mediaType: 'audio',
-        // })
-      }
-      // this.fire('user-info-updated', {
-      //   uid,
-      //   msg: reason,
-      //   type: 'audio',
-      //   state
-      // })
-    })
+      },
+    );
     this.client.on('JoinChannelSuccess', (channel: string, uid: number) => {
-      console.log('joinedchannel', uid)
-    })
+      console.log('joinedchannel', uid);
+    });
     this.client.on('LocalVideoStateChanged', (...args: any[]) => {
-      console.log(" ## native ## localVideoStateChanged", JSON.stringify(args))
+      console.log(' ## native ## localVideoStateChanged', JSON.stringify(args));
       this.fire('localVideoStateChanged', {
         // uid: convertUid(this.localUid),
         state: args[0],
         type: 'video',
-        msg: args[1]
-      })
+        msg: args[1],
+      });
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state: args[0],
         type: 'video',
-        msg: args[1]
-      })
-    })
+        msg: args[1],
+      });
+    });
     this.client.on('LocalAudioStateChanged', (state: number, error: number) => {
       this.fire('user-info-updated', {
         uid: convertUid(this.localUid),
         state,
         type: 'audio',
-        msg: error
-      })
-    })
+        msg: error,
+      });
+    });
     this.client.on('TokenPrivilegeWillExpire', () => {
-      this.fire('token-privilege-will-expire')
-    })
+      this.fire('token-privilege-will-expire');
+    });
     this.client.on('tokenPrivilegeDidExpire', () => {
-      this.fire('token-privilege-did-expire')
-    })
-    this.client.on('LocalPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
-      this.fire('stream-fallback', {
-        uid: convertUid(this.localUid),
-        isFallbackOrRecover
-      })
-    })
-    this.client.on('RemoteSubscribeFallbackToAudioOnly', (uid: any, isFallbackOrRecover: boolean) => {
-      this.fire('stream-fallback', {
-        uid: convertUid(uid),
-        isFallbackOrRecover
-      })
-    })
+      this.fire('token-privilege-did-expire');
+    });
+    this.client.on(
+      'LocalPublishFallbackToAudioOnly',
+      (isFallbackOrRecover: any) => {
+        this.fire('stream-fallback', {
+          uid: convertUid(this.localUid),
+          isFallbackOrRecover,
+        });
+      },
+    );
+    this.client.on(
+      'RemoteSubscribeFallbackToAudioOnly',
+      (uid: any, isFallbackOrRecover: boolean) => {
+        this.fire('stream-fallback', {
+          uid: convertUid(uid),
+          isFallbackOrRecover,
+        });
+      },
+    );
     this.client.on('RtcStats', (evt: any) => {
       // only electron
-      this.cpuUsage = evt.cpuAppUsage
-      this.fire('rtcStats', evt)
-    })
+      this.cpuUsage = evt.cpuAppUsage;
+      this.fire('rtcStats', evt);
+    });
   }
-  
+
   async joinSubChannel(option: any): Promise<any> {
     try {
-      EduLogger.info(`ELECTRON ### ${JSON.stringify({...option})} subChannel: ${Object.keys(this._subClient)}`)
-      const subChannel = this.client.createChannel(option.channel)!
+      EduLogger.info(
+        `ELECTRON ### ${JSON.stringify({
+          ...option,
+        })} subChannel: ${Object.keys(this._subClient)}`,
+      );
+      const subChannel = this.client.createChannel(option.channel)!;
       const handleUserOnline = (uid: number, elapsed: number) => {
-        EduLogger.info('ELECTRON user-published channel ', uid, option.channel)
+        EduLogger.info('ELECTRON user-published channel ', uid, option.channel);
         this.fire('user-published', {
           user: {
             uid: convertUid(uid),
           },
-          channel: option.channel
-        })
-      }
+          channel: option.channel,
+        });
+      };
       const handleUserOffline = (uid: number, elapsed: number) => {
-        EduLogger.info('ELECTRON user-unpublished channel ', uid, option.channel)
+        EduLogger.info(
+          'ELECTRON user-unpublished channel ',
+          uid,
+          option.channel,
+        );
         this.fire('user-unpublished', {
           user: {
             uid: convertUid(uid),
           },
-          channel: option.channel
-        })
-      }
+          channel: option.channel,
+        });
+      };
       const handleJoinSuccess = (uid: number, elapsed: number) => {
-        EduLogger.info("ELECTRON joinChannelSuccess", uid)
-      }
+        EduLogger.info('ELECTRON joinChannelSuccess', uid);
+      };
       this._subClient[option.channel] = {
-        id: "",
+        id: '',
         client: subChannel,
         handleUserOnline,
         handleUserOffline,
-        handleJoinSuccess
-      }
-      EduLogger.info(`ELECTRON subChannel joinChannelSuccess: ${subChannel}`)
-      subChannel.on('joinChannelSuccess', this._subClient[option.channel].handleJoinSuccess)
-      EduLogger.info(`ELECTRON subChannel userJoined: ${subChannel}`)
-      subChannel.on('userJoined', this._subClient[option.channel].handleUserOnline)
-      EduLogger.info(`ELECTRON subChannel userOffline: ${subChannel}`)
-      subChannel.on('userOffline', this._subClient[option.channel].handleUserOffline)
-      subChannel.setClientRole(1)
-      let ret = subChannel.joinChannel(option.token, option.info, option.uid, {} as any)
-      EduLogger.info(`ELECTRON joinChannel: ret: ${ret}`)
-    } catch(err) {
-      throw GenericErrorWrapper(err)
+        handleJoinSuccess,
+      };
+      EduLogger.info(`ELECTRON subChannel joinChannelSuccess: ${subChannel}`);
+      subChannel.on(
+        'joinChannelSuccess',
+        this._subClient[option.channel].handleJoinSuccess,
+      );
+      EduLogger.info(`ELECTRON subChannel userJoined: ${subChannel}`);
+      subChannel.on(
+        'userJoined',
+        this._subClient[option.channel].handleUserOnline,
+      );
+      EduLogger.info(`ELECTRON subChannel userOffline: ${subChannel}`);
+      subChannel.on(
+        'userOffline',
+        this._subClient[option.channel].handleUserOffline,
+      );
+      subChannel.setClientRole(1);
+      let ret = subChannel.joinChannel(
+        option.token,
+        option.info,
+        option.uid,
+        {} as any,
+      );
+      EduLogger.info(`ELECTRON joinChannel: ret: ${ret}`);
+    } catch (err) {
+      throw GenericErrorWrapper(err);
     }
   }
-  
+
   prepare() {
-    return this.client
+    return this.client;
   }
 
   async join(option: any): Promise<any> {
     try {
       //设置为RTC为直播模式
       this.client.setChannelProfile(1);
-      let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid)
-      EduLogger.info("electron.joinChannel ", ret, ` params: `, JSON.stringify(option))
+      let ret = this.client.joinChannel(
+        option.token,
+        option.channel,
+        option.info,
+        option.uid,
+      );
+      EduLogger.info(
+        'electron.joinChannel ',
+        ret,
+        ` params: `,
+        JSON.stringify(option),
+      );
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `joinSubChannel failure`,
-          code: ret
-        })
+          code: ret,
+        });
       }
       this.joined = true;
-      this.client.setClientRole(1)
-      return
-    } catch(err) {
-      throw GenericErrorWrapper(err)
+      this.client.setClientRole(1);
+      return;
+    } catch (err) {
+      throw GenericErrorWrapper(err);
     }
   }
 
   async leaveSubChannel(channelName: string): Promise<any> {
-    EduLogger.info(`[ELECTRON] call leaveSubChannel: ${channelName}`)
+    EduLogger.info(`[ELECTRON] call leaveSubChannel: ${channelName}`);
     try {
-      const subChannel = this._subClient[channelName]
+      const subChannel = this._subClient[channelName];
       if (subChannel) {
-        let ret = subChannel.client.leaveChannel()
-        EduLogger.info("ELECTRON leaveSubChannel ", ret, " channelName ", channelName)
-        subChannel.client.off('userJoined', subChannel.handleUserOnline)
-        subChannel.client.off('userOffline', subChannel.handleUserOffline)
-        delete this._subClient[channelName]
+        let ret = subChannel.client.leaveChannel();
+        EduLogger.info(
+          'ELECTRON leaveSubChannel ',
+          ret,
+          ' channelName ',
+          channelName,
+        );
+        subChannel.client.off('userJoined', subChannel.handleUserOnline);
+        subChannel.client.off('userOffline', subChannel.handleUserOffline);
+        delete this._subClient[channelName];
       }
-      return
-    } catch(err) {
-      throw GenericErrorWrapper(err)
+      return;
+    } catch (err) {
+      throw GenericErrorWrapper(err);
     }
   }
 
   async leave(): Promise<any> {
     try {
-      let ret = this.client.setClientRole(2)
+      let ret = this.client.setClientRole(2);
       // if (ret < 0) {
       //   throw GenericErrorWrapper({
       //     message: `setClientRole failure`,
       //     code: ret
       //   })
       // }
-      EduLogger.info("electron.setClientRole ", ret)
+      EduLogger.info('electron.setClientRole ', ret);
       if (this.joined === false) {
-        EduLogger.info("electron.leave already left")
-        return
+        EduLogger.info('electron.leave already left');
+        return;
       }
-      ret = this.client.leaveChannel()
-      EduLogger.info("electron.already leaveChannel, ret ", ret)
+      ret = this.client.leaveChannel();
+      EduLogger.info('electron.already leaveChannel, ret ', ret);
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `leaveSubChannel failure`,
-          code: ret
-        })
+          code: ret,
+        });
       }
-      this.joined = false
-      return
-    } catch(err) {
-      throw GenericErrorWrapper(err)
+      this.joined = false;
+      return;
+    } catch (err) {
+      throw GenericErrorWrapper(err);
     }
   }
 
   release() {
-    let ret = this.client.release()
+    let ret = this.client.release();
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `release failure`,
-        code: ret
-      })
+        code: ret,
+      });
     }
-    this.reset()
+    this.reset();
   }
 
-  async getMicrophones (): Promise<any[]> {
-    let list: any[] = []
+  async getMicrophones(): Promise<any[]> {
+    let list: any[] = [];
     if (this._cefClient) {
       //@ts-ignore
       list = this.client.audioDeviceManager.enumerateRecordingDevices();
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
         devicename: it.deviceName,
-        kind: 'audioinput'
-      }))
+        kind: 'audioinput',
+      }));
     } else {
       list = this.client.getAudioRecordingDevices();
     }
     const genList: any[] = list.map((it: any) => ({
       deviceId: it.deviceid,
       label: it.devicename,
-      kind: 'audioinput'
-    }))
-    this.microphoneList = genList
-    return genList
+      kind: 'audioinput',
+    }));
+    this.microphoneList = genList;
+    return genList;
   }
 
   async getCameras(): Promise<any[]> {
-    let list: any = []
+    let list: any = [];
     if (this._cefClient) {
       //@ts-ignore
-      list = this.client.videoDeviceManager.enumerateVideoDevices()
+      list = this.client.videoDeviceManager.enumerateVideoDevices();
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
         devicename: it.deviceName,
-        kind: 'videoinput'
-      }))
+        kind: 'videoinput',
+      }));
     } else {
-      list = this.client.getVideoDevices()
+      list = this.client.getVideoDevices();
     }
     // const list = this.client.getVideoDevices()
     const genList: any[] = list.map((it: any) => ({
       deviceId: it.deviceid,
       label: it.devicename,
-      kind: 'videoinput'
-    }))
-    this.cameraList = genList
-    return genList
+      kind: 'videoinput',
+    }));
+    this.cameraList = genList;
+    return genList;
   }
 
   async changeResolution(config: any): Promise<any> {
-    EduLogger.warn('changeResolution need implement', config)
+    EduLogger.warn('changeResolution need implement', config);
     // try {
     //   let ret = this.client.setVideoEncoderConfiguration({
-    //     height: 
+    //     height:
     //   })
     //   if (ret < 0) {
     //     throw {
@@ -1091,30 +1232,35 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     // }
   }
 
-  async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
+  async prepareScreenShare(
+    params: PrepareScreenShareParams = {},
+  ): Promise<any> {
     try {
       //@ts-ignore
-      let items = params.type === ScreenShareType.Screen ? this.client.getScreenDisplaysInfo() : this.client.getScreenWindowsInfo()
-      const noImageSize = items.filter((it: any) => !it.image).length
+      let items =
+        params.type === ScreenShareType.Screen
+          ? this.client.getScreenDisplaysInfo()
+          : this.client.getScreenWindowsInfo();
+      const noImageSize = items.filter((it: any) => !it.image).length;
       if (noImageSize) {
-        throw {code: 'ELECTRON_PERMISSION_DENIED'}
+        throw { code: 'ELECTRON_PERMISSION_DENIED' };
       }
-      if(params.type === ScreenShareType.Screen){
-        return items.map((it: any, idx:number) => ({
+      if (params.type === ScreenShareType.Screen) {
+        return items.map((it: any, idx: number) => ({
           ownerName: it.ownerName,
-          name: `Screen ${idx+1}`,
+          name: `Screen ${idx + 1}`,
           windowId: it.displayId,
           image: CustomBtoa(it.image),
-        }))
+        }));
       }
       return items.map((it: any) => ({
         ownerName: it.ownerName,
         name: it.name,
         windowId: it.windowId,
         image: CustomBtoa(it.image),
-      }))
+      }));
     } catch (err) {
-      throw GenericErrorWrapper(err)
+      throw GenericErrorWrapper(err);
     }
   }
 
@@ -1122,24 +1268,27 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     const startScreenPromise = new Promise((resolve, reject) => {
       const config = options.config || {
         profile: 50,
-        rect: {x: 0, y: 0, width: 0, height: 0},
+        rect: { x: 0, y: 0, width: 0, height: 0 },
         param: {
-          width: 0, height: 0, bitrate: 1500, frameRate: 5
-        }
-      }
-      EduLogger.info('startScreenShare#options', options)
-      EduLogger.info('startScreenShare ', JSON.stringify(config))
+          width: 0,
+          height: 0,
+          bitrate: 1500,
+          frameRate: 5,
+        },
+      };
+      EduLogger.info('startScreenShare#options', options);
+      EduLogger.info('startScreenShare ', JSON.stringify(config));
       try {
-        let ret = this.client.videoSourceInitialize(this.appId)
+        let ret = this.client.videoSourceInitialize(this.appId);
         if (ret < 0) {
           reject({
             message: `videoSourceInitialize with APPID: ${this.appId} failured`,
-            code: ret
-          })
+            code: ret,
+          });
         }
         // this.client.
-        this.client.videoSourceSetChannelProfile(1)
-        this.client.videoSourceEnableWebSdkInteroperability(true)
+        this.client.videoSourceSetChannelProfile(1);
+        this.client.videoSourceEnableWebSdkInteroperability(true);
         // this.client.videoSourceSetVideoProfile(config && config.profile ? config.profile : 50, false)
 
         // this.client.videoSourceSetVideoEncoderConfiguration({
@@ -1153,97 +1302,128 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         //   orientationMode: 0,
         //   mirrorMode: 0
         // })
-        EduLogger.info(`[electron-log-path] checkout videoSourceLogPath: ${this.videoSourceLogPath}`)
+        EduLogger.info(
+          `[electron-log-path] checkout videoSourceLogPath: ${this.videoSourceLogPath}`,
+        );
         if (this.videoSourceLogPath) {
-          this.client.videoSourceSetLogFile(this.videoSourceLogPath)
-          window.setNodeAddonVideoSourceLogPath = this.videoSourceLogPath
-          EduLogger.info(`[electron-log-path] set videoSourceLogPath: ${this.videoSourceLogPath}`)
+          this.client.videoSourceSetLogFile(this.videoSourceLogPath);
+          window.setNodeAddonVideoSourceLogPath = this.videoSourceLogPath;
+          EduLogger.info(
+            `[electron-log-path] set videoSourceLogPath: ${this.videoSourceLogPath}`,
+          );
         }
         const handleVideoSourceJoin = (uid: number) => {
-          this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin)
-          EduLogger.info("startScreenShare#options uid, ", uid, "  options", options)
-          if(options.type === ScreenShareType.Window) {
-            this.client.videoSourceStartScreenCaptureByWindow(options.shareId as number, config.rect, config.param)
+          this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin);
+          EduLogger.info(
+            'startScreenShare#options uid, ',
+            uid,
+            '  options',
+            options,
+          );
+          if (options.type === ScreenShareType.Window) {
+            this.client.videoSourceStartScreenCaptureByWindow(
+              options.shareId as number,
+              config.rect,
+              config.param,
+            );
           } else {
-            this.client.videoSourceStartScreenCaptureByScreen(options.shareId, config.rect, config.param)
+            this.client.videoSourceStartScreenCaptureByScreen(
+              options.shareId,
+              config.rect,
+              config.param,
+            );
           }
-          this.client.startScreenCapturePreview()
-          resolve(uid)
-        }
-        this.client.on('videoSourceJoinedSuccess', handleVideoSourceJoin)
-        const params = options.params
-        ret = this.client.videoSourceJoin(params.token, params.channel, params.joinInfo ? params.joinInfo : '', params.uid)
-        EduLogger.info("videoSourceJoin ret", ret, params)
+          this.client.startScreenCapturePreview();
+          resolve(uid);
+        };
+        this.client.on('videoSourceJoinedSuccess', handleVideoSourceJoin);
+        const params = options.params;
+        ret = this.client.videoSourceJoin(
+          params.token,
+          params.channel,
+          params.joinInfo ? params.joinInfo : '',
+          params.uid,
+        );
+        EduLogger.info('videoSourceJoin ret', ret, params);
         if (ret < 0) {
-          this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin)
+          this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin);
           reject({
             message: 'videoSourceJoin failure',
-            code: ret
-          })
+            code: ret,
+          });
         }
       } catch (err) {
-        this.client.off('videoSourceJoinedSuccess', () => {})
-        reject(err)
+        this.client.off('videoSourceJoinedSuccess', () => {});
+        reject(err);
       }
-    })
+    });
 
-    return await Promise.race([startScreenPromise])
+    return await Promise.race([startScreenPromise]);
   }
 
   async stopScreenShare(): Promise<any> {
     const stopScreenSharePromise = new Promise((resolve, reject) => {
       const handleVideoSourceLeaveChannel = (evt: any) => {
-        this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-        const release = this.client.videoSourceRelease()
-        EduLogger.info(' videoSourceLeave Channel', release)
-        setTimeout(resolve, 1)
-      }
+        this.client.off(
+          'videoSourceLeaveChannel',
+          handleVideoSourceLeaveChannel,
+        );
+        const release = this.client.videoSourceRelease();
+        EduLogger.info(' videoSourceLeave Channel', release);
+        setTimeout(resolve, 1);
+      };
       try {
-        this.client.on('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-        let ret = this.client.videoSourceLeave()
-        EduLogger.info("stopScreenShare leaveSubChannel", ret)
+        this.client.on(
+          'videoSourceLeaveChannel',
+          handleVideoSourceLeaveChannel,
+        );
+        let ret = this.client.videoSourceLeave();
+        EduLogger.info('stopScreenShare leaveSubChannel', ret);
         // wait(8000).catch((err: any) => {
         //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         //   reject(err)
         // })
-      } catch(err) {
-        this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
-        reject(err)
+      } catch (err) {
+        this.client.off(
+          'videoSourceLeaveChannel',
+          handleVideoSourceLeaveChannel,
+        );
+        reject(err);
       }
-    })
+    });
 
     try {
-      await stopScreenSharePromise
-    } catch(err) {
-      throw GenericErrorWrapper(err)
+      await stopScreenSharePromise;
+    } catch (err) {
+      throw GenericErrorWrapper(err);
     }
   }
 
   async publish(): Promise<any> {
-    EduLogger.info('Raw Message: media-service#publish, prepare')
+    EduLogger.info('Raw Message: media-service#publish, prepare');
     if (this.joined) {
-      EduLogger.info('Raw Message: media-service#publish, publish')
-      this.client.setClientRole(1)
+      EduLogger.info('Raw Message: media-service#publish, publish');
+      this.client.setClientRole(1);
     } else {
-      EduLogger.info("before invoke publish, please join channel first")
+      EduLogger.info('before invoke publish, please join channel first');
     }
   }
 
   async unpublish(): Promise<any> {
     if (this.joined) {
-      this.client.setClientRole(2)
+      this.client.setClientRole(2);
     } else {
-      EduLogger.info("before invoke unpublish, please join channel first")
+      EduLogger.info('before invoke unpublish, please join channel first');
     }
   }
 
   async muteLocalAudioStream(v: boolean) {
-    let ret = this.client.muteLocalAudioStream(v)
+    let ret = this.client.muteLocalAudioStream(v);
     if (ret < 0) {
       throw {
         name: 'muteLocalAudioStream stage muteLocalAudioStream failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
     // ret = this.client.stopAudioRecordingDeviceTest()
     // if (ret < 0) {
@@ -1255,154 +1435,154 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   }
 
   async muteLocalVideoStream(v: boolean) {
-    let ret = this.client.muteLocalVideoStream(v)
+    let ret = this.client.muteLocalVideoStream(v);
     if (ret < 0) {
       throw {
         name: 'muteLocalVideoStream stage muteLocalVideoStream failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
   }
 
   /**
    * 开启音频采集
-   * @param v 
+   * @param v
    */
   async enableLocalVideo(v: boolean) {
-    const ret = this.client.enableLocalVideo(v)
+    const ret = this.client.enableLocalVideo(v);
     if (ret < 0) {
       throw {
         name: 'enableLocalVideo failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    return ret
+    return ret;
   }
 
   /**
    * 设置摄像头设备
-   * @param deviceId 
-   * @returns 
+   * @param deviceId
+   * @returns
    */
   async enableLocalAudio(v: boolean) {
-    const ret = this.client.enableLocalAudio(v)
+    const ret = this.client.enableLocalAudio(v);
     if (ret < 0) {
       throw {
         name: 'enableLocalAudio failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    return ret
+    return ret;
   }
 
   /**
    * 关闭音频发流
-   * @param v 
-   * @returns 
+   * @param v
+   * @returns
    */
   async muteLocalAudio(v: boolean, deviceId?: string) {
-    let ret = this.client.enableLocalAudio(!v)
+    let ret = this.client.enableLocalAudio(!v);
     if (ret < 0) {
       throw {
         name: 'enableLocalAudio failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    ret = this.client.muteLocalAudioStream(v)
+    ret = this.client.muteLocalAudioStream(v);
     if (ret < 0) {
       throw {
         name: 'muteLocalAudio failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
     if (deviceId) {
-      ret = this.client.setAudioRecordingDevice(deviceId)
+      ret = this.client.setAudioRecordingDevice(deviceId);
     }
     if (ret < 0) {
       throw {
         name: 'setAudioRecordingDevice failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    return ret
+    return ret;
   }
-  
+
   /**
    * 关闭视频发流
-   * @param v 
-   * @returns 
+   * @param v
+   * @returns
    */
   async muteLocalVideo(v: boolean, deviceId?: string) {
-    let ret = this.client.enableLocalVideo(!v)
+    let ret = this.client.enableLocalVideo(!v);
     if (ret < 0) {
       throw {
         name: 'enableLocalVideo failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    ret = this.client.muteLocalVideoStream(v)
+    ret = this.client.muteLocalVideoStream(v);
     if (ret < 0) {
       throw {
         name: 'muteLocalVideo failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
     if (deviceId) {
-      ret = this.client.setVideoDevice(deviceId)
+      ret = this.client.setVideoDevice(deviceId);
     }
     if (ret < 0) {
       throw {
         name: 'setVideoDevice failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
-    return ret
+    return ret;
   }
 
   disableLocalVideo() {
-    const ret = this.client.enableLocalVideo(false)
+    const ret = this.client.enableLocalVideo(false);
     if (ret < 0) {
       throw {
         name: 'disableLocalVideo failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
   }
 
   disableLocalAudio() {
-    const ret = this.client.enableLocalAudio(false)
+    const ret = this.client.enableLocalAudio(false);
     if (ret < 0) {
       throw {
         name: 'disableLocalAudio failure',
-        code: ret
-      }
+        code: ret,
+      };
     }
   }
 
   /**
    * 设置摄像头设备
-   * @param deviceId 
-   * @returns 
+   * @param deviceId
+   * @returns
    */
   async setCameraDevice(deviceId: string) {
-    const ret = this.client.setVideoDevice(deviceId)
+    const ret = this.client.setVideoDevice(deviceId);
     if (ret < 0) {
-      throw 'setCameraDevice failure'
+      throw 'setCameraDevice failure';
     }
-    return ret
+    return ret;
   }
-  
+
   /**
    * 设置麦克风设备
-   * @param deviceId 
-   * @returns 
+   * @param deviceId
+   * @returns
    */
   async setMicrophoneDevice(deviceId: string) {
-    const ret = this.client.setAudioRecordingDevice(deviceId)
+    const ret = this.client.setAudioRecordingDevice(deviceId);
     if (ret < 0) {
-      throw 'setMicrophoneDevice failure'
+      throw 'setMicrophoneDevice failure';
     }
-    return ret
+    return ret;
   }
 
   //@ts-ignore
@@ -1410,27 +1590,37 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     //@ts-ignore
     return this.client.enableEncryption(enabled, {
       encryptionMode: config.mode,
-      encryptionKey: config.key
-    })
-  }  
+      encryptionKey: config.key,
+    });
+  }
   /**
    * 设置美颜效果
    * lighteningLevel 美白
    * rednessLevel 红润
    * smoothnessLevel 磨皮
-   * @param param0 
-   * @returns 
+   * @param param0
+   * @returns
    */
-  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
+  setBeautyEffectOptions({
+    lighteningLevel = 0.7,
+    rednessLevel = 0.1,
+    smoothnessLevel = 0.5,
+    isBeauty = true,
+  }: {
+    lighteningLevel: number;
+    rednessLevel: number;
+    smoothnessLevel: number;
+    isBeauty?: boolean;
+  }) {
     const ret = this.client.setBeautyEffectOptions(isBeauty, {
       lighteningContrastLevel: 1,
       lighteningLevel,
       rednessLevel,
-      smoothnessLevel
-    })
+      smoothnessLevel,
+    });
     if (ret < 0) {
-      throw 'setBeautyEffectOptions failure'
+      throw 'setBeautyEffectOptions failure';
     }
-    return ret
+    return ret;
   }
 }

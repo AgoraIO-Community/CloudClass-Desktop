@@ -17,7 +17,7 @@ Install deps from project root `yarn` or `npm i`
 
 `yarn start:dev` or `npm run start:dev`
 
-It's possible to use a different port by specifying this first like so: 
+It's possible to use a different port by specifying this first like so:
 
 `CVA_PORT=7788 yarn start:dev` to start with port 7788. Same for npm just include `CVA_PORT=7788` at the beginning.
 
@@ -27,5 +27,5 @@ It's possible to use a different port by specifying this first like so:
 
 ### Ways you may add to this
 
-+ Add jsx and react - Or just use create react app instead!
-+ Add a .env for project specific environment values
+- Add jsx and react - Or just use create react app instead!
+- Add a .env for project specific environment values

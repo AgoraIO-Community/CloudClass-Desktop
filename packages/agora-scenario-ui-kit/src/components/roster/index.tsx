@@ -6,7 +6,7 @@ import { Table, TableHeader, Row, Col } from '~components/table';
 import { defaultColumns } from './default-columns';
 import Draggable from 'react-draggable';
 import './index.css';
-import SearchSvg from '~components/icon/assets/svg/search.svg'
+import SearchSvg from '~components/icon/assets/svg/search.svg';
 import { canOperate, ProfileRole, studentListSort } from './base';
 import { Search } from '../input';
 import { SvgImg } from '../svg-img';
@@ -24,18 +24,18 @@ export type ActionTypes =
 
 export enum MediaDeviceState {
   not_available = 0,
-  available = 1
+  available = 1,
 }
 
-export type ColumnKey = 
-  | 'name' 
-  | 'onPodium' 
-  | 'whiteboardGranted' 
-  | 'cameraEnabled' 
-  | 'micEnabled' 
-  | 'stars' 
+export type ColumnKey =
+  | 'name'
+  | 'onPodium'
+  | 'whiteboardGranted'
+  | 'cameraEnabled'
+  | 'micEnabled'
+  | 'stars'
   | 'chat'
-  | 'kickOut'
+  | 'kickOut';
 
 export interface Profile {
   uid: string | number;
@@ -61,9 +61,14 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => ReactNode;
+  render?: (
+    text: string,
+    profile: Profile,
+    canOperate: boolean,
+    userType: string,
+    onClick: any,
+  ) => ReactNode;
 }
-
 
 export interface RosterProps extends ModalProps {
   isDraggable?: boolean;
@@ -107,30 +112,43 @@ export const Roster: FC<RosterProps> = ({
   columns = defaultColumns,
   dataSource = [],
   onClick,
-  onClose = () => console.log("onClose"),
+  onClose = () => console.log('onClose'),
   // userType,
   localUserUuid,
   title,
   isDraggable = true,
   userType = 'student',
-  onChange
+  onChange,
 }) => {
+  const studentList = studentListSort(dataSource);
 
-  const studentList = studentListSort(dataSource)
+  const cols = columns.filter(
+    ({ visibleRoles = [] }: Column) =>
+      visibleRoles.length === 0 || visibleRoles.includes(userType),
+  );
 
-  const cols = columns.filter(({visibleRoles = []}: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
-
-  const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
-    return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
-  }, [isDraggable])
+  const DraggableContainer = useCallback(
+    ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
+      return isDraggable ? (
+        <Draggable cancel={cancel}>{children}</Draggable>
+      ) : (
+        <>{children}</>
+      );
+    },
+    [isDraggable],
+  );
 
   return (
-    <DraggableContainer cancel={".search-header"} >
+    <DraggableContainer cancel={'.search-header'}>
       <div className="agora-board-resources roster-wrap">
         <div className="btn-pin">
-          <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => {
-            onClose()
-          }}/>
+          <SvgImg
+            type="close"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              onClose();
+            }}
+          />
         </div>
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}
@@ -139,37 +157,42 @@ export const Roster: FC<RosterProps> = ({
           <div className="search-header roster-header">
             <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
-              <span title={teacherName} className="roster-username">{teacherName}</span>
+              <span title={teacherName} className="roster-username">
+                {teacherName}
+              </span>
             </div>
-            {
-              userType === 'teacher' ?
+            {userType === 'teacher' ? (
               <Search
                 onSearch={onChange}
                 prefix={<img src={SearchSvg} />}
                 inputPrefixWidth={32}
                 placeholder={transI18n('scaffold.search')}
-              /> : null
-            }
+              />
+            ) : null}
           </div>
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key} style={{justifyContent: 'center'}}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{ justifyContent: 'center' }}>
+                  {transI18n(col.name)}
+                </Col>
               ))}
             </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: Profile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
-                    <Col key={col.key} style={{justifyContent: idx !== 0 ? 'center' : 'flex-start'}}>
-                      {idx === 0 ? 
+                    <Col
+                      key={col.key}
+                      style={{
+                        justifyContent: idx !== 0 ? 'center' : 'flex-start',
+                      }}>
+                      {idx === 0 ? (
                         <span
-                          className={
-                            `${idx === 0 ? 'roster-username' : ''}`
-                          }
-                          title = {(data as any)[col.key]}
+                          className={`${idx === 0 ? 'roster-username' : ''}`}
+                          title={(data as any)[col.key]}
                           style={{
-                            paddingLeft: 25
+                            paddingLeft: 25,
                           }}
                           onClick={
                             canOperate(userType, localUserUuid, data, col)
@@ -181,22 +204,27 @@ export const Roster: FC<RosterProps> = ({
                           }>
                           {(data as any)[col.key]}
                         </span>
-                      : 
-                          <span
-                            style={{
-                              paddingLeft: 0
-                            }}
-                          >
-                            {col.render
-                            ? col.render((data as any)[col.key], data, canOperate(userType, localUserUuid, data, col), userType, (canOperate(userType, localUserUuid, data, col)
-                            ? () =>
-                                col.action &&
-                                onClick &&
-                                onClick(col.action, data.uid)
-                            : undefined))
+                      ) : (
+                        <span
+                          style={{
+                            paddingLeft: 0,
+                          }}>
+                          {col.render
+                            ? col.render(
+                                (data as any)[col.key],
+                                data,
+                                canOperate(userType, localUserUuid, data, col),
+                                userType,
+                                canOperate(userType, localUserUuid, data, col)
+                                  ? () =>
+                                      col.action &&
+                                      onClick &&
+                                      onClick(col.action, data.uid)
+                                  : undefined,
+                              )
                             : (data as any)[col.key]}
-                          </span>
-                      }
+                        </span>
+                      )}
                     </Col>
                   ))}
                 </Row>

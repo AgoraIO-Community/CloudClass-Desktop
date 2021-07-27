@@ -4,7 +4,7 @@ import babel from '@rollup/plugin-babel';
 import clear from 'rollup-plugin-clear';
 import typescript from 'rollup-plugin-typescript2';
 
-import pkg from './package.json'
+import pkg from './package.json';
 
 const isProd = process.env.NODE_ENV === 'production';
 export default {
@@ -22,7 +22,7 @@ export default {
   // 需要引入的插件
   plugins: [
     clear({
-      targets: ['lib']
+      targets: ['lib'],
     }),
     commonjs({
       include: /node_modules/,
@@ -34,17 +34,14 @@ export default {
     }),
     typescript({
       verbosity: true,
-      check: false
-    })
+      check: false,
+    }),
   ],
   // 将模块视为外部模块，不会打包在库中
-  external: [
-    "react",
-    "react-dom",
-  ],
+  external: ['react', 'react-dom'],
   // 文件监听
   watch: {
     include: 'src/**',
-    clearScreen: true
-  }
+    clearScreen: true,
+  },
 };

@@ -44,59 +44,62 @@ const meta: Meta = {
     ],
     conversations: [
       {
-        userName: "testuser1",
-        userUuid: "12345",
+        userName: 'testuser1',
+        userUuid: '12345',
         unreadMessageCount: 50,
-        messages: [{
-          id: 'fjdjjdjd4',
-          uid: '2',
-          username: 'Victor Tsoi',
-          timestamp: Date.now(),
-          content:
-            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
-        }],
+        messages: [
+          {
+            id: 'fjdjjdjd4',
+            uid: '2',
+            username: 'Victor Tsoi',
+            timestamp: Date.now(),
+            content:
+              '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
+          },
+        ],
       },
       {
-        userName: "testuser2",
-        userUuid: "123456",
+        userName: 'testuser2',
+        userUuid: '123456',
         unreadMessageCount: 100,
-        messages: [{
-          id: 'fjdjjdjd4',
-          uid: '2',
-          username: 'Victor Tsoi',
-          timestamp: Date.now(),
-          content:
-            '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
-        }],
-      }
-    ]
+        messages: [
+          {
+            id: 'fjdjjdjd4',
+            uid: '2',
+            username: 'Victor Tsoi',
+            timestamp: Date.now(),
+            content:
+              '今天随便讲讲,今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲今天随便讲讲',
+          },
+        ],
+      },
+    ],
   },
 };
 
-let count = 10
+let count = 10;
 
 export const Docs: FC<ChatProps> = (props) => {
   const [text, setText] = useState<string>();
   const [collapse, setCollapse] = useState(true);
 
-
-  const [messages, updateMessages] = useState<any[]>([])
-  const [conversations, updateConversations] = useState<any[]>(meta.args.conversations)
+  const [messages, updateMessages] = useState<any[]>([]);
+  const [conversations, updateConversations] = useState<any[]>(
+    meta.args.conversations,
+  );
 
   const newMessageList = () => {
-    if (!count) return []
-    --count
+    if (!count) return [];
+    --count;
 
-    return [
-      ...'.'.repeat(4)
-    ].map((_, idx: number) => ({
+    return [...'.'.repeat(4)].map((_, idx: number) => ({
       id: `${idx}${Date.now()}`,
       uid: `1`,
       username: 'test',
       timestamp: +Date.now(),
-      content: `test-${+Date.now()}-refreshed`
-    }))
-  }
+      content: `test-${+Date.now()}-refreshed`,
+    }));
+  };
 
   return (
     <div className="h-screen w-screen bg-black">
@@ -113,9 +116,7 @@ export const Docs: FC<ChatProps> = (props) => {
           messages={messages}
           collapse={collapse}
           onPullFresh={() => {
-            updateMessages([...newMessageList().concat(
-              ...messages
-            )])
+            updateMessages([...newMessageList().concat(...messages)]);
           }}
           singleConversation={conversations[0]}
           onCollapse={() => {
@@ -125,49 +126,53 @@ export const Docs: FC<ChatProps> = (props) => {
           left="40%"
           chatText={text}
           onText={(val) => setText(val)}
-          onSend={
-            () => {
-              updateMessages([...messages.concat({
+          onSend={() => {
+            updateMessages([
+              ...messages.concat({
                 id: Date.now(),
                 uid: `1`,
                 username: 'test',
                 timestamp: +Date.now(),
-                content: text
-              })])
-              setText('')
-            }
-          } 
-          onClickMiniChat={() => {
-            
+                content: text,
+              }),
+            ]);
+            setText('');
           }}
+          onClickMiniChat={() => {}}
           canChatting={false}
           showCloseIcon={true}
           onConversationText={(conversation, val) => setText(val)}
-          onConversationSend={
-            (conversation) => {
-              let idx = conversations.map(c => c.userUuid).indexOf(conversation.userUuid)
-              if(idx !== -1) {
-                let copy = [...conversations]
-                copy[idx].messages = conversations[idx].messages.concat([{
+          onConversationSend={(conversation) => {
+            let idx = conversations
+              .map((c) => c.userUuid)
+              .indexOf(conversation.userUuid);
+            if (idx !== -1) {
+              let copy = [...conversations];
+              copy[idx].messages = conversations[idx].messages.concat([
+                {
                   id: Date.now(),
                   uid: `1`,
                   username: 'test',
                   timestamp: +Date.now(),
-                  content: text
-                }])
-                updateConversations(copy)
-              } else {
-                updateConversations([...conversations].concat([conversation]))
-              }
-              setText('')
+                  content: text,
+                },
+              ]);
+              updateConversations(copy);
+            } else {
+              updateConversations([...conversations].concat([conversation]));
             }
-          }
+            setText('');
+          }}
           onConversationPullFresh={(conversation) => {
-            let idx = conversations.map(c => c.userUuid).indexOf(conversation.userUuid)
-            if(idx !== -1) {
-              let copy = [...conversations]
-              copy[idx].messages = newMessageList().concat(conversations[idx].messages)
-              updateConversations(copy)
+            let idx = conversations
+              .map((c) => c.userUuid)
+              .indexOf(conversation.userUuid);
+            if (idx !== -1) {
+              let copy = [...conversations];
+              copy[idx].messages = newMessageList().concat(
+                conversations[idx].messages,
+              );
+              updateConversations(copy);
             }
           }}
         />

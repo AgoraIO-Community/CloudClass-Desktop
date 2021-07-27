@@ -1,36 +1,48 @@
 import { getLiveRoomPath } from '@/infra/router/index';
-import { CoreContextProvider, CourseWareList, eduSDKApi, SceneDefinition, IAgoraExtApp, IAgoraWidget, globalConfigs, MediaOptions, BoardOptions } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduRoomTypeEnum, GenericErrorWrapper } from "agora-rte-sdk";
+import {
+  CoreContextProvider,
+  CourseWareList,
+  eduSDKApi,
+  SceneDefinition,
+  IAgoraExtApp,
+  IAgoraWidget,
+  globalConfigs,
+  MediaOptions,
+  BoardOptions,
+} from 'agora-edu-core';
+import {
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  GenericErrorWrapper,
+} from 'agora-rte-sdk';
 import 'promise-polyfill/src/polyfill';
 import { ReactElement, useState, ReactChild } from 'react';
 import { AgoraChatWidget } from 'agora-widget-gallery';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 import { controller } from './controller';
-import { AgoraEduSDKConfigParams, AgoraRegion, ListenerCallback } from "./declare";
+import {
+  AgoraEduSDKConfigParams,
+  AgoraRegion,
+  ListenerCallback,
+} from './declare';
 import { checkConfigParams, checkLaunchOption } from './validator';
-import { UIContext } from '@/infra/hooks'
-import { UIStore } from '@/infra/stores/app/ui'
+import { UIContext } from '@/infra/hooks';
+import { UIStore } from '@/infra/stores/app/ui';
 
-export const UIContextProvider = ({ children }: { children: ReactChild}) => {
+export const UIContextProvider = ({ children }: { children: ReactChild }) => {
+  const [store] = useState<UIStore>(() => new UIStore());
 
-  const [store] = useState<UIStore>(() => new UIStore())
-
-  return (
-    <UIContext.Provider value={store}>
-      {children}
-    </UIContext.Provider>
-  )
-}
+  return <UIContext.Provider value={store}>{children}</UIContext.Provider>;
+};
 
 export interface AliOSSBucket {
-  key: string
-  secret: string
-  name: string
-  folder: string
-  cdn: string
+  key: string;
+  secret: string;
+  name: string;
+  folder: string;
+  cdn: string;
 }
-
 
 export const scenarioRoomPath = {
   [EduRoomTypeEnum.Room1v1Class]: {
@@ -41,28 +53,27 @@ export const scenarioRoomPath = {
   },
   [EduRoomTypeEnum.RoomBigClass]: {
     path: BizPagePath.BigClassPath,
-  }
-}
-
+  },
+};
 
 export interface WhiteboardOSSConfig {
-  bucket: AliOSSBucket
+  bucket: AliOSSBucket;
 }
 
 export interface ApplicationConfigParameters {
-  gtmId: string
+  gtmId: string;
   agora: {
-    appId: string
-    whiteboardAppId: string
-  }
-  appToken: string
-  enableLog: boolean
-  ossConfig?: WhiteboardOSSConfig
+    appId: string;
+    whiteboardAppId: string;
+  };
+  appToken: string;
+  enableLog: boolean;
+  ossConfig?: WhiteboardOSSConfig;
 }
 
 type SDKConfig = {
-  configParams: AgoraEduSDKConfigParams
-}
+  configParams: AgoraEduSDKConfigParams;
+};
 
 const sdkConfig: SDKConfig = {
   configParams: {
@@ -77,135 +88,147 @@ const sdkConfig: SDKConfig = {
     // appId: '',
     // whiteboardAppId: '',
     // rtmUid: '',
-  }
-} 
+  },
+};
 
-export type LanguageEnum = "en" | "zh"
-export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
+export type LanguageEnum = 'en' | 'zh';
+export type TranslateEnum =
+  | ''
+  | 'auto'
+  | 'zh-CHS'
+  | 'en'
+  | 'ja'
+  | 'ko'
+  | 'fr'
+  | 'es'
+  | 'pt'
+  | 'it'
+  | 'ru'
+  | 'vi'
+  | 'de'
+  | 'ar';
 
 /**
  * LaunchOption 接口
  */
 export type LaunchOption = {
-  userUuid: string, // 用户uuid
-  userName: string, // 用户昵称
-  roomUuid: string, // 房间uuid
-  roleType: EduRoleTypeEnum, // 角色
-  roomType: EduRoomTypeEnum, // 房间类型
-  roomName: string, // 房间名称
-  listener: ListenerCallback, // launch状态
-  pretest: boolean, // 开启设备检测
+  userUuid: string; // 用户uuid
+  userName: string; // 用户昵称
+  roomUuid: string; // 房间uuid
+  roleType: EduRoleTypeEnum; // 角色
+  roomType: EduRoomTypeEnum; // 房间类型
+  roomName: string; // 房间名称
+  listener: ListenerCallback; // launch状态
+  pretest: boolean; // 开启设备检测
   // rtmUid: string
-  rtmToken: string, // rtmToken
-  language: LanguageEnum, // 国际化
-  startTime: number, // 房间开始时间
-  duration: number, // 课程时长
-  courseWareList: CourseWareList, // 课件列表
-  personalCourseWareList?: CourseWareList, // 个人课件列表
-  recordUrl?: string, // 回放页地址
-  extApps?: IAgoraExtApp[] // app插件
-  region?: AgoraRegion
-  widgets?: {[key: string]: IAgoraWidget}
-  userFlexProperties?: {[key: string]: any} //用户自订属性
-  mediaOptions?: MediaOptions,
-  boardOptions?: BoardOptions
-}
+  rtmToken: string; // rtmToken
+  language: LanguageEnum; // 国际化
+  startTime: number; // 房间开始时间
+  duration: number; // 课程时长
+  courseWareList: CourseWareList; // 课件列表
+  personalCourseWareList?: CourseWareList; // 个人课件列表
+  recordUrl?: string; // 回放页地址
+  extApps?: IAgoraExtApp[]; // app插件
+  region?: AgoraRegion;
+  widgets?: { [key: string]: IAgoraWidget };
+  userFlexProperties?: { [key: string]: any }; //用户自订属性
+  mediaOptions?: MediaOptions;
+  boardOptions?: BoardOptions;
+};
 
 export type ReplayOption = {
   // logoUrl: string
-  whiteboardAppId: string
-  videoUrl: string
-  whiteboardId: string
-  whiteboardToken: string
-  beginTime: number
-  endTime: number
-  listener: ListenerCallback
-  language: LanguageEnum
-}
+  whiteboardAppId: string;
+  videoUrl: string;
+  whiteboardId: string;
+  whiteboardToken: string;
+  beginTime: number;
+  endTime: number;
+  listener: ListenerCallback;
+  language: LanguageEnum;
+};
 
 export type OpenDiskOption = {
-  listener: ListenerCallback, // launch状态
-  language: LanguageEnum, // 国际化
-  courseWareList: CourseWareList // 课件列表
-}
+  listener: ListenerCallback; // launch状态
+  language: LanguageEnum; // 国际化
+  courseWareList: CourseWareList; // 课件列表
+};
 
-export type AgoraEduBoardScene = SceneDefinition
+export type AgoraEduBoardScene = SceneDefinition;
 
 export type AgoraEduCourseWare = {
-  resourceUuid: string,
-  resourceName: string,
-  scenePath: string,
-  scenes: AgoraEduBoardScene[],
-  url: string,
-  type: string,
-}
+  resourceUuid: string;
+  resourceName: string;
+  scenePath: string;
+  scenes: AgoraEduBoardScene[];
+  url: string;
+  type: string;
+};
 
 export type DiskOption = {
-  courseWareList: AgoraEduCourseWare[]
-}
+  courseWareList: AgoraEduCourseWare[];
+};
 
-const devicePath = '/pretest'
+const devicePath = '/pretest';
 export class AgoraEduSDK {
-
   static get version(): string {
-    return '1.1.0'
+    return '1.1.0';
   }
 
-  static _debug: boolean = false 
+  static _debug: boolean = false;
 
-  static _list: AgoraEduCourseWare[]
+  static _list: AgoraEduCourseWare[];
 
   // @internal
   static configCourseWares(list: AgoraEduCourseWare[]) {
-    this._list = list
+    this._list = list;
   }
 
-  static config (params: AgoraEduSDKConfigParams) {
-
+  static config(params: AgoraEduSDKConfigParams) {
     checkConfigParams(params);
 
-    Object.assign(sdkConfig.configParams, params)
+    Object.assign(sdkConfig.configParams, params);
 
-    globalConfigs.setRegion(params.region ?? 'GLOBAL')
+    globalConfigs.setRegion(params.region ?? 'GLOBAL');
 
-    console.log('# set config ', sdkConfig.configParams, ' params ', params)
+    console.log('# set config ', sdkConfig.configParams, ' params ', params);
     // globalConfigs should only be copied here
-    eduSDKApi.updateConfig({ 
+    eduSDKApi.updateConfig({
       sdkDomain: globalConfigs.sdkDomain,
       appId: sdkConfig.configParams.appId,
-    })
+    });
   }
 
   // @internal
   static setParameters(params: string) {
     try {
-      let json = JSON.parse(params)
-      if(json["edu.apiUrl"]) {
-        globalConfigs.setSDKDomain(json["edu.apiUrl"])
+      let json = JSON.parse(params);
+      if (json['edu.apiUrl']) {
+        globalConfigs.setSDKDomain(json['edu.apiUrl']);
       }
-      if(json["reportUrl"] && json["reportQos"] && json["reportV1Url"]) {
+      if (json['reportUrl'] && json['reportQos'] && json['reportV1Url']) {
         globalConfigs.setReportConfig({
           sdkDomain: json['reportUrl'],
-          qos: +(json['reportQos']),
-          v1SdkDomain: json['reportV1Url']
-        })
-      }else{
+          qos: +json['reportQos'],
+          v1SdkDomain: json['reportV1Url'],
+        });
+      } else {
         globalConfigs.setReportConfig();
       }
-      console.info(`setParameters ${params}`)
-    }catch(e) {
-      console.error(`parse private params failed ${params}`)
+      console.info(`setParameters ${params}`);
+    } catch (e) {
+      console.error(`parse private params failed ${params}`);
     }
   }
 
-  static _launchTime = 0
+  static _launchTime = 0;
 
-  static _replayTime = 0
+  static _replayTime = 0;
 
-  private static appNode: ReactElement | null = null
+  private static appNode: ReactElement | null = null;
 
-  static setAppNode (appNode: ReactElement) {
-    this.appNode = appNode
+  static setAppNode(appNode: ReactElement) {
+    this.appNode = appNode;
   }
 
   /**
@@ -214,31 +237,31 @@ export class AgoraEduSDK {
    * @param option LaunchOption
    */
   static async launch(dom: HTMLElement, option: LaunchOption) {
-    console.log("launch ", dom, " option ", option)
+    console.log('launch ', dom, ' option ', option);
 
     if (controller.appController.hasCalled) {
-      throw GenericErrorWrapper("already launched")
+      throw GenericErrorWrapper('already launched');
     }
 
-    const unlock = controller.appController.acquireLock()
+    const unlock = controller.appController.acquireLock();
     try {
-      checkLaunchOption(dom, option)
+      checkLaunchOption(dom, option);
       eduSDKApi.updateRtmInfo({
         rtmUid: option.userUuid,
         rtmToken: option.rtmToken,
-      })
-      const data = await eduSDKApi.getConfig()
+      });
+      const data = await eduSDKApi.getConfig();
 
       //@ts-ignore
-      let mainPath = getLiveRoomPath(option.roomType)
-      console.log('mainPath ', mainPath)
+      let mainPath = getLiveRoomPath(option.roomType);
+      console.log('mainPath ', mainPath);
       //@ts-ignore
-      let roomPath = mainPath
+      let roomPath = mainPath;
 
-      console.log("main Path", mainPath, " room Path", roomPath)
+      console.log('main Path', mainPath, ' room Path', roomPath);
 
       if (option.pretest) {
-        mainPath = BizPagePath.PretestPagePath
+        mainPath = BizPagePath.PretestPagePath;
       }
 
       const params = {
@@ -259,16 +282,16 @@ export class AgoraEduSDK {
             folder: data.netless.oss.folder,
             accessKey: data.netless.oss.accessKey,
             secretKey: data.netless.oss.secretKey,
-            endpoint: data.netless.oss.endpoint
+            endpoint: data.netless.oss.endpoint,
           },
           rtmUid: option.userUuid,
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
+          widgets: { ...{ chat: new AgoraChatWidget() }, ...option.widgets },
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
-          boardOptions: option.boardOptions
+          boardOptions: option.boardOptions,
         },
         language: option.language,
         startTime: option.startTime,
@@ -285,23 +308,26 @@ export class AgoraEduSDK {
         mainPath: mainPath,
         roomPath: roomPath,
         pretest: option.pretest,
-      }
+      };
       controller.appController.create(
-        <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
-            <UIContextProvider>
-              <LiveRoom />
-            </UIContextProvider>
+        <CoreContextProvider
+          params={params}
+          dom={dom}
+          controller={controller.appController}>
+          <UIContextProvider>
+            <LiveRoom />
+          </UIContextProvider>
         </CoreContextProvider>,
         dom,
-        option.listener
-      )
-      unlock()
+        option.listener,
+      );
+      unlock();
     } catch (err) {
-      unlock()
-      throw GenericErrorWrapper(err)
+      unlock();
+      throw GenericErrorWrapper(err);
     }
-    
-    return controller.appController.getClassRoom()
+
+    return controller.appController.getClassRoom();
   }
 }
 

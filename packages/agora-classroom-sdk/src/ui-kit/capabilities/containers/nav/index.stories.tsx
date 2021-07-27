@@ -1,15 +1,9 @@
-import { Story } from "@storybook/react"
+import { Story } from '@storybook/react';
 
 // export default {
 //   title: 'Containers/NavigationBar'
 // }
 
 export const NavStory: Story<any> = () => {
-
-
-  return (
-    <div>
-      {/* <NavigationBar /> */}
-    </div>
-  )
-}
+  return <div>{/* <NavigationBar /> */}</div>;
+};

@@ -1,5 +1,3 @@
 export const DiskContainer = () => {
-  return (
-    <></>
-  )
-}
+  return <></>;
+};

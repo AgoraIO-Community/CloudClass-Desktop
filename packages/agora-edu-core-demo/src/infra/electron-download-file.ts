@@ -1,7 +1,7 @@
-import { existsSync, ensureDirSync, copySync, removeSync } from "fs-extra";
-import { DownloaderHelper, Stats } from "node-downloader-helper";
-import extract from "extract-zip";
-const path = require("path")
+import { existsSync, ensureDirSync, copySync, removeSync } from 'fs-extra';
+import { DownloaderHelper, Stats } from 'node-downloader-helper';
+import extract from 'extract-zip';
+const path = require('path');
 
 /**
  * 解压 zip 文件, electron
@@ -9,7 +9,10 @@ const path = require("path")
  * @param {string} extractDirectory - 解压的目录，默认为和 zip 同目录下的同名文件夹，如:(test.zip -> test/)
  * @return {Promise<void>}
  */
-export const extractZip = (filePath: string, extractDirectory: string): Promise<void> => {
+export const extractZip = (
+  filePath: string,
+  extractDirectory: string,
+): Promise<void> => {
   return extract(filePath, {
     dir: extractDirectory,
   });
@@ -20,9 +23,8 @@ interface Runtime {
 }
 
 export const runtime: Runtime = {
-  downloadsDirectory: "",
+  downloadsDirectory: '',
 };
-
 
 export class ElectronDownloadFile {
   private readonly url: string;
@@ -30,14 +32,14 @@ export class ElectronDownloadFile {
   private readonly downloaderHelper: DownloaderHelper;
 
   constructor(url: string, directory?: string) {
-    this.url = url
+    this.url = url;
 
     if (directory) {
-      this.downloadDIR = directory
+      this.downloadDIR = directory;
     }
 
     // 确保文件夹目录存在
-    ensureDirSync(this.downloadDIR)
+    ensureDirSync(this.downloadDIR);
 
     this.downloaderHelper = new DownloaderHelper(this.url, this.downloadDIR, {
       override: true,
@@ -46,7 +48,7 @@ export class ElectronDownloadFile {
 
   static new(...args: any[]) {
     // @ts-ignore
-    return new this(...args)
+    return new this(...args);
   }
 
   /**
@@ -54,7 +56,9 @@ export class ElectronDownloadFile {
    * @param {function} progressCallback - 进度回调
    */
   public onProgress(progressCallback: (progress: Stats) => any): void {
-    this.downloaderHelper.on("progress", progress => progressCallback(progress));
+    this.downloaderHelper.on('progress', (progress) =>
+      progressCallback(progress),
+    );
   }
 
   /**
@@ -62,7 +66,7 @@ export class ElectronDownloadFile {
    * @param {function} endCallback - 结束回调
    */
   public onEnd(endCallback: (end: any) => any): void {
-    this.downloaderHelper.on("end", d => {
+    this.downloaderHelper.on('end', (d) => {
       endCallback(d);
     });
   }
@@ -72,7 +76,7 @@ export class ElectronDownloadFile {
    * @param {function} errorCallback - 失败回调
    */
   public onError(errorCallback: (error: Error) => any): void {
-    this.downloaderHelper.on("error", error => errorCallback(error));
+    this.downloaderHelper.on('error', (error) => errorCallback(error));
   }
 
   /**
@@ -90,31 +94,31 @@ export class ElectronDownloadFile {
     return existsSync(path.join(this.downloadDIR, filename));
   }
 }
-  // 下载进度
-  // 下载错误回调
-  // 下载结束
+// 下载进度
+// 下载错误回调
+// 下载结束
 
 export const electronDownload = (downloadDirectory: string) => {
-  const download = ElectronDownloadFile.new()
+  const download = ElectronDownloadFile.new();
 
-  download.onProgress((callback: { progress: number; }) => {
+  download.onProgress((callback: { progress: number }) => {
     // 下载进度
-    const progress = Math.round(callback.progress)
-  })
+    const progress = Math.round(callback.progress);
+  });
 
   download.onError((callback: any) => {
-    console.log('callback error', callback)
-  })
+    console.log('callback error', callback);
+  });
 
   download.onEnd((callback: any) => {
-    console.log('callback end', callback)
+    console.log('callback end', callback);
 
     extractZip(callback.filePath, downloadDirectory).then(() => {
       // file target path
       // var targetPath = path.join(pptUUid ....)
 
       // remove original download zip file
-      removeSync(callback.filePath)
+      removeSync(callback.filePath);
 
       // copy unzip file to download directory
       //
@@ -122,6 +126,6 @@ export const electronDownload = (downloadDirectory: string) => {
 
       // delete unzip file
       // removeSync()
-    })
-  })
-}
+    });
+  });
+};

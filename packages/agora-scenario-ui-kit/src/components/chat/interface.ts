@@ -18,9 +18,9 @@ export interface Conversation {
   unread: boolean;
 }
 
-export type ChatListType = 'room' | 'conversation' | 'conversation-list'
+export type ChatListType = 'room' | 'conversation' | 'conversation-list';
 
 export type ChatEvent = {
-  type: ChatListType,
-  conversation?: Conversation
-}
+  type: ChatListType;
+  conversation?: Conversation;
+};

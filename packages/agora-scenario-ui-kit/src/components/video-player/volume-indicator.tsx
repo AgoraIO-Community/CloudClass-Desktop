@@ -10,10 +10,10 @@ export interface VolumeIndicatorProps {
 
 export const VolumeIndicator: FC<VolumeIndicatorProps> = ({ volume = 0 }) => {
   return (
-    <div className="volume-indicators">{
-      list(volume * 10).map((key: number) => (
+    <div className="volume-indicators">
+      {list(volume * 10).map((key: number) => (
         <div className="v-indicator" key={key}></div>
-      ))
-    }</div>
-  )
+      ))}
+    </div>
+  );
 };

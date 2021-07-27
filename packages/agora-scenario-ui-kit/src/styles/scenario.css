@@ -4,16 +4,16 @@
 }
 
 .chat-border {
-  border: 1px solid #ECECF1;
+  border: 1px solid #ececf1;
   transform: translateY(-2px);
 }
 
 .whiteboard {
   display: flex;
   flex-direction: column;
-  height: 100%; 
+  height: 100%;
   width: 100%;
-  border: 1px solid #ECECF1;
+  border: 1px solid #ececf1;
   border-radius: 4px;
   background: white;
 }
@@ -37,7 +37,7 @@
   position: absolute;
   right: 15px;
   bottom: 20px;
-  transition: .5s;
+  transition: 0.5s;
   z-index: 2;
 }
 
@@ -57,17 +57,17 @@
 }
 
 .mid-class-aside {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: 0;
 }
 
 .mid-class-aside-full-collapse {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: -300px;
 }
 
 .mid-class-aside-full-not-collapse {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: 0;
 }
 
@@ -86,13 +86,13 @@
   height: auto;
   opacity: 0;
   transform: scale(0.9);
-  transition: .5s;
+  transition: 0.5s;
 }
 .mid-class-aside .video-wrap {
   height: auto;
   opacity: 1;
   transform: scale(1);
-  transition: .5s;
+  transition: 0.5s;
 }
 
 .chat-panel {
@@ -131,17 +131,17 @@
 }
 
 .big-class-aside {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: 0;
 }
 
 .big-class-aside-full-collapse {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: -300px;
 }
 
 .big-class-aside-full-not-collapse {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: 0;
 }
 
@@ -160,16 +160,16 @@
   height: 0;
   opacity: 0;
   transform: scale(0.9);
-  transition: .5s;
+  transition: 0.5s;
 }
 .mid-class-aside .video-wrap {
   height: auto;
   opacity: 1;
   transform: scale(1);
-  transition: .5s;
+  transition: 0.5s;
 }
 
-.toolbar-biz{
+.toolbar-biz {
   border-radius: 0px 21px 21px 0px;
 }
 
@@ -185,31 +185,31 @@
 .full-teacher-1v1 {
   opacity: 0;
   transform: scale(0.9);
-  transition: .5s;
+  transition: 0.5s;
   /* border-bottom: 2px solid white; */
 }
 
 .edu-room .video-player.teacher-1v1 {
   opacity: 1;
   transform: scale(1);
-  transition: .5s;
+  transition: 0.5s;
   /* border-bottom: 2px solid white; */
-  margin-top: 0px !important
+  margin-top: 0px !important;
 }
 
 .full-student-1v1 {
   opacity: 0;
   transform: scale(0.9);
-  transition: .5s;
+  transition: 0.5s;
 }
 
 .one-class-aside {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: 0;
 }
 
 .one-class-aside-full {
-  transition: .5s;
+  transition: 0.5s;
   margin-right: -300px;
 }
 
@@ -222,7 +222,7 @@
 .edu-room .video-player.student-1v1 {
   opacity: 1;
   transform: scale(1);
-  transition: .5s;
+  transition: 0.5s;
   margin-top: -2px !important;
 }
 
@@ -236,7 +236,6 @@
   bottom: 20px;
   height: 514px;
 }
-
 
 .rtc-video {
   width: 100%;
@@ -253,7 +252,7 @@
   background: black;
 }
 
-.rtc-screen-share video{
+.rtc-screen-share video {
   object-fit: contain !important;
 }
 
@@ -319,15 +318,15 @@
   left: 0;
 }
 
-.agora-board-resources input[type=file] {
+.agora-board-resources input[type='file'] {
   display: none;
 }
 
-.mirror canvas{
+.mirror canvas {
   transform: scaleX(1) !important;
 }
 
-.mirror video{
+.mirror video {
   transform: scaleX(1) !important;
 }
 

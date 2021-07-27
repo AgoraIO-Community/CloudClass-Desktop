@@ -4,9 +4,24 @@ import { useDebugValue } from 'react';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
-import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
+import {
+  VideoMarqueeList,
+  VideoPlayer,
+  VideoPlayerProps,
+} from '~components/video-player';
 
-const config = {"muted":true,"deviceState":1,"online":true,"onPodium":true,"userType":"teacher","hasStream":true,"isLocal":false,"type":"microphone","uid":"3232","disabled":true}
+const config = {
+  muted: true,
+  deviceState: 1,
+  online: true,
+  onPodium: true,
+  userType: 'teacher',
+  hasStream: true,
+  isLocal: false,
+  type: 'microphone',
+  uid: '3232',
+  disabled: true,
+};
 const meta: Meta = {
   title: 'Components/VideoPlayer',
   component: VideoPlayer,
@@ -40,10 +55,11 @@ const meta: Meta = {
 };
 
 export const Docs: FC<VideoPlayerProps> = ({ children, ...restProps }) => {
-  
   return (
     <div className="m-10">
-      <VideoPlayer {...restProps} userType="teacher">{children}</VideoPlayer>
+      <VideoPlayer {...restProps} userType="teacher">
+        {children}
+      </VideoPlayer>
     </div>
   );
 };
@@ -75,11 +91,14 @@ const student = {
     //   }}
     // />
   ),
-}
+};
 
-export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, size, ...restProps }) => {
-
-  const [userType, setUserType] = useState<string>('teacher')
+export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({
+  children,
+  size,
+  ...restProps
+}) => {
+  const [userType, setUserType] = useState<string>('teacher');
 
   const list_ = [...'.'.repeat(2)].map((_, i: number) => ({
     ...student,
@@ -96,95 +115,93 @@ export const DocsSmall: FC<VideoPlayerProps & {size: number}> = ({ children, siz
     isLocal: i === 0,
     isOnPodium: false,
     userType: userType,
-    children: (<></>)
-  })) as any[]
+    children: <></>,
+  })) as any[];
 
-  const [list, setList] = useState(list_)
+  const [list, setList] = useState(list_);
 
-  useDebugValue(list, JSON.stringify)
+  useDebugValue(list, JSON.stringify);
 
-  const roles = ['teacher', 'assistant', 'student', 'invisible']
-    
+  const roles = ['teacher', 'assistant', 'student', 'invisible'];
+
   return (
     //@ts-ignore
     <>
-      <Button onClick={() => {
-        changeLanguage('zh')
-      }}>中文</Button>
-      <Button onClick={() => {
-        changeLanguage('en')
-      }}>英文</Button>
-        <Button onClick={() => {
-          const role = roles[roles.indexOf(userType) + 1 % roles.length]
+      <Button
+        onClick={() => {
+          changeLanguage('zh');
+        }}>
+        中文
+      </Button>
+      <Button
+        onClick={() => {
+          changeLanguage('en');
+        }}>
+        英文
+      </Button>
+      <Button
+        onClick={() => {
+          const role = roles[roles.indexOf(userType) + (1 % roles.length)];
           list.forEach((it: any) => {
-            it.userType = role
-          })
-          setList([...list])
-          setUserType(role)
-        // setUserType('teacher')
-      }}>{userType}</Button>
+            it.userType = role;
+          });
+          setList([...list]);
+          setUserType(role);
+          // setUserType('teacher')
+        }}>
+        {userType}
+      </Button>
       <VideoMarqueeList
         videoStreamList={list}
         onCameraClick={(uid: any) => {
-          list.forEach(item => {
+          list.forEach((item) => {
             if (item.uid === uid) {
-              item.cameraEnabled = !item.cameraEnabled
+              item.cameraEnabled = !item.cameraEnabled;
             }
-          })
-          setList([
-            ...list
-          ])
-          console.log('onCameraClick uid', uid)
+          });
+          setList([...list]);
+          console.log('onCameraClick uid', uid);
         }}
         onMicClick={(uid: any) => {
-          list.forEach(item => {
+          list.forEach((item) => {
             if (item.uid === uid) {
-              item.micEnabled = !item.micEnabled
+              item.micEnabled = !item.micEnabled;
             }
-          })
-          setList([
-            ...list
-          ])
-          console.log('onMicrophoneClick uid', uid)
+          });
+          setList([...list]);
+          console.log('onMicrophoneClick uid', uid);
         }}
         onWhiteboardClick={(uid: any) => {
-          list.forEach(item => {
+          list.forEach((item) => {
             if (item.uid === uid) {
-              item.whiteboardGranted = !item.whiteboardGranted
+              item.whiteboardGranted = !item.whiteboardGranted;
             }
-          })
-          setList([
-            ...list
-          ])
-          console.log('onWhiteboard Click', uid)
+          });
+          setList([...list]);
+          console.log('onWhiteboard Click', uid);
         }}
         onOffPodiumClick={(uid: any) => {
-          list.forEach(item => {
+          list.forEach((item) => {
             if (item.uid === uid) {
-              item.isOnPodium = !item.isOnPodium
+              item.isOnPodium = !item.isOnPodium;
             }
-          })
-          setList([
-            ...list
-          ])
-          console.log('off podium', uid)
+          });
+          setList([...list]);
+          console.log('off podium', uid);
         }}
-        onSendStar={(uid, ) => {
-        return new Promise((resolve) => {
-          list.forEach(item => {
-            if (item.uid === uid) {
-              item.stars += 1
-            }
-          })
-          setList([
-            ...list
-          ])
-          resolve('send star')
-        })
-      }}>
-      </VideoMarqueeList>
+        onSendStar={(uid) => {
+          return new Promise((resolve) => {
+            list.forEach((item) => {
+              if (item.uid === uid) {
+                item.stars += 1;
+              }
+            });
+            setList([...list]);
+            resolve('send star');
+          });
+        }}></VideoMarqueeList>
     </>
-  )
-}
+  );
+};
 
 export default meta;

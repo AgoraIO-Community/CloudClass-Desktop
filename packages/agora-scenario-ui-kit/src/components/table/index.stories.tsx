@@ -3,16 +3,23 @@ import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
 import { Button, Modal } from '~components';
 import { Icon, IconBox } from '~components/icon';
-import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';
+import {
+  CheckBox,
+  Col,
+  Inline,
+  Row,
+  Table,
+  TableHeader,
+} from '~components/table';
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
-import { Placeholder } from '~components/placeholder'
-import { Loading } from '~components/loading'
+import { Placeholder } from '~components/placeholder';
+import { Loading } from '~components/loading';
 
 const meta: Meta = {
   title: 'Components/Table',
-  component: Table
+  component: Table,
 };
 
 const list = [
@@ -88,15 +95,14 @@ const list = [
     date: '2021-02-15',
     checked: false,
   },
-]
+];
 
 export type CloudStorageProps = {
-  size: number
-}
+  size: number;
+};
 
 export const CloudStorage = ({ size }: CloudStorageProps) => {
-
-  const itemList = resizeList(list, size)
+  const itemList = resizeList(list, size);
   // itemList.length = 0;
   // console.log(itemList)
 
@@ -109,8 +115,8 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
       </TableHeader>
       <Table className="table-container">
         {itemList.length ? (
-          itemList.map(({ name, progress, date, type }: any, idx: number) =>
-            <Row height={10} border={1} key={idx} >
+          itemList.map(({ name, progress, date, type }: any, idx: number) => (
+            <Row height={10} border={1} key={idx}>
               <Col>
                 <IconBox iconType={type} style={{ marginRight: '6px' }} />
                 <Inline color="#191919">{name}</Inline>
@@ -122,33 +128,33 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
                 <Inline color="#586376">{date}</Inline>
               </Col>
             </Row>
-          )
-        ) : <Placeholder placeholderType="noFile" />}
-
+          ))
+        ) : (
+          <Placeholder placeholderType="noFile" />
+        )}
       </Table>
     </Table>
-  )
-}
+  );
+};
 
 CloudStorage.args = {
-  size: 1
-}
+  size: 1,
+};
 
 export type UploadListProps = {
-  progress: number,
-  size: number,
-}
+  progress: number;
+  size: number;
+};
 
 const resizeList = (items: any[], number: number): any[] => {
   if (number < 0) {
-    return items
+    return items;
   }
-  return items.concat(resizeList(items, number - 1))
-}
+  return items.concat(resizeList(items, number - 1));
+};
 
 export const UploadList = ({ size, progress }: UploadListProps) => {
-
-  const itemList = resizeList(list, size)
+  const itemList = resizeList(list, size);
 
   itemList.length = 0;
 
@@ -160,67 +166,94 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
         <Col>操作</Col>
       </TableHeader>
       <Table className="table-container">
-        {itemList.length ? (itemList.map(({ name, progress, type }: any, idx: number) =>
-          <Row height={10} border={1} key={idx}>
-            <Col>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
-            </Col>
-            <Col>
-              <Progress width={60} type="download" progress={progress} />
-            </Col>
-            <Col>
-              <Row className="btn-group no-padding" gap={10}>
-                <Button type="secondary" onClick={() => {
-                  action('download')
-                }}>下载</Button>
-                <Button type="ghost" onClick={() => {
-                  action('deleted')
-                }}>删除</Button>
-              </Row>
-            </Col>
-          </Row>
-        )) : <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字" />}
-
+        {itemList.length ? (
+          itemList.map(({ name, progress, type }: any, idx: number) => (
+            <Row height={10} border={1} key={idx}>
+              <Col>
+                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <Inline color="#191919">{name}</Inline>
+              </Col>
+              <Col>
+                <Progress width={60} type="download" progress={progress} />
+              </Col>
+              <Col>
+                <Row className="btn-group no-padding" gap={10}>
+                  <Button
+                    type="secondary"
+                    onClick={() => {
+                      action('download');
+                    }}>
+                    下载
+                  </Button>
+                  <Button
+                    type="ghost"
+                    onClick={() => {
+                      action('deleted');
+                    }}>
+                    删除
+                  </Button>
+                </Row>
+              </Col>
+            </Row>
+          ))
+        ) : (
+          <Placeholder
+            placeholderType="noFile"
+            placeholderDesc="自己定义的文字"
+          />
+        )}
       </Table>
     </Table>
-  )
-}
+  );
+};
 
 UploadList.args = {
   progress: 0,
-  size: 0
-}
+  size: 0,
+};
 
 const CheckList = ({ size, progress }: UploadListProps) => {
-
-  const [items, updateItems] = React.useState<any[]>(list)
+  const [items, updateItems] = React.useState<any[]>(list);
 
   const hasSelected = useMemo(() => {
-    return !!items.find((item: any) => item.checked === true)
-  }, [items])
+    return !!items.find((item: any) => item.checked === true);
+  }, [items]);
 
   const isSelectAll = useMemo(() => {
-    return items.filter((item: any) => item.checked === true).length === items.length
-  }, [items])
+    return (
+      items.filter((item: any) => item.checked === true).length === items.length
+    );
+  }, [items]);
 
-  const handleSelectAll = React.useCallback((evt: any) => {
-    if (!isSelectAll) {
-      const changedItems = items.map((item: any) => ({ ...item, checked: true }))
-      updateItems(changedItems)
-    } else {
-      const changedItems = items.map((item: any) => ({ ...item, checked: false }))
-      updateItems(changedItems)
-    }
-  }, [items, updateItems, isSelectAll])
+  const handleSelectAll = React.useCallback(
+    (evt: any) => {
+      if (!isSelectAll) {
+        const changedItems = items.map((item: any) => ({
+          ...item,
+          checked: true,
+        }));
+        updateItems(changedItems);
+      } else {
+        const changedItems = items.map((item: any) => ({
+          ...item,
+          checked: false,
+        }));
+        updateItems(changedItems);
+      }
+    },
+    [items, updateItems, isSelectAll],
+  );
 
-  const changeChecked = useCallback((id: any, checked: boolean) => {
-    const idx = items.findIndex((item: any) => item.id === id)
-    if (idx >= 0) {
-      items[idx].checked = checked
-      updateItems([...items])
-    }
-  }, [items, updateItems])
+  const changeChecked = useCallback(
+    (id: any, checked: boolean) => {
+      const idx = items.findIndex((item: any) => item.id === id);
+      if (idx >= 0) {
+        items[idx].checked = checked;
+        updateItems([...items]);
+      }
+    },
+    [items, updateItems],
+  );
 
   // items.length = 0;
 
@@ -228,7 +261,10 @@ const CheckList = ({ size, progress }: UploadListProps) => {
     <Table>
       <TableHeader>
         <Col width={9}>
-          <CheckBox checked={isSelectAll} indeterminate={isSelectAll ? false : hasSelected} onClick={handleSelectAll}></CheckBox>
+          <CheckBox
+            checked={isSelectAll}
+            indeterminate={isSelectAll ? false : hasSelected}
+            onClick={handleSelectAll}></CheckBox>
         </Col>
         <Col>文件</Col>
         {/* <Col></Col> */}
@@ -236,52 +272,59 @@ const CheckList = ({ size, progress }: UploadListProps) => {
         <Col>修改时间</Col>
       </TableHeader>
       <Table className="table-container table-container-upload">
-        {items.length ? (items.map(({ id, name, size, date, type, checked }: any, idx: number) =>
-          <Row height={10} border={1} key={idx}>
-            <Col width={9}>
-              <CheckBox className="checkbox" onClick={(evt: any) => {
-                changeChecked(id, evt.currentTarget.checked)
-              }} checked={checked}></CheckBox>
-            </Col>
-            <Col>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline color="#191919">{name}</Inline>
-            </Col>
-            {/* <Col>
+        {items.length ? (
+          items.map(
+            ({ id, name, size, date, type, checked }: any, idx: number) => (
+              <Row height={10} border={1} key={idx}>
+                <Col width={9}>
+                  <CheckBox
+                    className="checkbox"
+                    onClick={(evt: any) => {
+                      changeChecked(id, evt.currentTarget.checked);
+                    }}
+                    checked={checked}></CheckBox>
+                </Col>
+                <Col>
+                  <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                  <Inline color="#191919">{name}</Inline>
+                </Col>
+                {/* <Col>
               <div style={{width: 30}}></div>
             </Col> */}
-            <Col>
-              <Inline color="#586376">{formatFileSize(size)}</Inline>
-            </Col>
-            <Col>
-              <Inline color="#586376">{date}</Inline>
-            </Col>
-          </Row>
-        )) : <Placeholder placeholderType="noFile" placeholderDesc="没有文件" />}
-
+                <Col>
+                  <Inline color="#586376">{formatFileSize(size)}</Inline>
+                </Col>
+                <Col>
+                  <Inline color="#586376">{date}</Inline>
+                </Col>
+              </Row>
+            ),
+          )
+        ) : (
+          <Placeholder placeholderType="noFile" placeholderDesc="没有文件" />
+        )}
       </Table>
     </Table>
-  )
-}
+  );
+};
 
 CheckList.args = {
   progress: 0,
-  size: 0
-}
+  size: 0,
+};
 
 type CourseWareManagerProps = {
   onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
   onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
-}
+};
 
 export const CourseWareManager = ({
   onOk = (e) => console.log('onOK'),
   onCancel = (e) => console.log('onCancel'),
 }: CourseWareManagerProps) => {
-
   const handleChange = (activeKey: string) => {
-    console.log('change Key', activeKey)
-  }
+    console.log('change Key', activeKey);
+  };
 
   return (
     <div className="agora-board-resources">
@@ -290,11 +333,9 @@ export const CourseWareManager = ({
       </div>
       <Tabs defaultActiveKey="2" onChange={handleChange}>
         <TabPane tab="公共资源" key="1">
-          <CloudStorage
-            size={1}
-          />
+          <CloudStorage size={1} />
         </TabPane>
-        <TabPane tab="我的资源" key="2" style={{position: 'relative'}}> 
+        <TabPane tab="我的资源" key="2" style={{ position: 'relative' }}>
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
@@ -306,29 +347,26 @@ export const CourseWareManager = ({
               position: 'absolute',
               top: '50%',
               left: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
+              transform: 'translate(-50%, -50%)',
+            }}>
             <Loading
               hasLoadingGif={false}
-              uploadItemList={
-                [
-                  {
-                    iconType: 'format-pdf',
-                    fileName: 'pdf文件33333333',
-                    fileSize: '1.3M',
-                    uploadComplete: false,
-                    currentProgress: 50
-                  },
-                  {
-                    iconType: 'format-ppt',
-                    fileName: 'ppt文件',
-                    fileSize: '1.3M',
-                    uploadComplete: false,
-                    currentProgress: 50
-                  }
-                ]
-              }
+              uploadItemList={[
+                {
+                  iconType: 'format-pdf',
+                  fileName: 'pdf文件33333333',
+                  fileSize: '1.3M',
+                  uploadComplete: false,
+                  currentProgress: 50,
+                },
+                {
+                  iconType: 'format-ppt',
+                  fileName: 'ppt文件',
+                  fileSize: '1.3M',
+                  uploadComplete: false,
+                  currentProgress: 50,
+                },
+              ]}
             />
           </Modal>
           <CheckList size={1} progress={20} />
@@ -338,8 +376,8 @@ export const CourseWareManager = ({
         </TabPane>
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
 export const CheckBoxShowCase = ({ size, progress }: UploadListProps) => {
   return (
@@ -347,40 +385,37 @@ export const CheckBoxShowCase = ({ size, progress }: UploadListProps) => {
       onClick={() => {
         Modal.show({
           closable: true,
-          onOk: () => { console.log('ok') },
-          onCancel: () => { console.log('cancel') },
-          component: (
-            <CourseWareManager />
-          )
-        })
-      }}
-    >
+          onOk: () => {
+            console.log('ok');
+          },
+          onCancel: () => {
+            console.log('cancel');
+          },
+          component: <CourseWareManager />,
+        });
+      }}>
       show checklist
     </Button>
-  )
-}
+  );
+};
 
 CheckBoxShowCase.args = {
   progress: 0,
-  size: 0
-}
+  size: 0,
+};
 
 export const UploadProgress = () => {
   return (
     <div className="">
-      <header className="">
-
-      </header>
-      <section>
-
-      </section>
+      <header className=""></header>
+      <section></section>
     </div>
-  )
-}
+  );
+};
 
 UploadProgress.args = {
   progress: 0,
-  size: 0
-}
+  size: 0,
+};
 
 export default meta;
