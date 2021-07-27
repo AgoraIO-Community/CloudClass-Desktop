@@ -90,9 +90,21 @@
 .biz-col > span {
   color: #191919;
 }
+.biz-col > span {
+  color: #191919;
+}
 .biz-col > .label-info-list{
   color: #191919;
 }
 .biz-col > .label-info-list > span{
   color: #191919;
+}
+.biz-col > .right-gap{
+  margin-right: 5px;
+}
+.biz-col > .left-gap{
+  margin-left: 5px
+}
+.fr{
+  float: right;
 }

@@ -1,6 +1,6 @@
 import { useUIStore } from '@/infra/hooks'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useClassroomStatsContext, useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -20,11 +20,18 @@ export const NavigationBar = observer(() => {
 
   const {
     isNative,
+  } = useMediaContext()
+
+  const {
     cpuUsage,
     networkQuality,
     networkLatency,
-    packetLostRate
-  } = useMediaContext()
+    packetLostRate,
+    txPacketLossRate,
+    rxPacketLossRate,
+    rxNetworkQuality,
+    txNetworkQuality,
+  } = useClassroomStatsContext()
 
   const {
     addDialog
@@ -83,6 +90,10 @@ export const NavigationBar = observer(() => {
         networkLatency: networkLatency,
         networkQuality: networkQuality,
         packetLostRate: packetLostRate,
+        rxPacketLossRate: rxPacketLossRate,
+        txPacketLossRate: txPacketLossRate,
+        rxNetworkQuality: rxNetworkQuality,
+        txNetworkQuality: txNetworkQuality,
       }}
       onClick={handleClick}
     />

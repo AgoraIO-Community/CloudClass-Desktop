@@ -149,6 +149,18 @@ export class MediaStore {
     }
   }
 
+  @observable
+  rxPacketLossRate: number = 0
+
+  @observable
+  txPacketLossRate: number = 0
+
+  @action
+  updateRxTxLostRate(rxPacketLossRate: number, txPacketLossRate: number) {
+    this.rxPacketLossRate = rxPacketLossRate;
+    this.txPacketLossRate = txPacketLossRate;
+  }
+
   @action
   updateNetworkPacketLostRate(localPacketLoss: unknown) {
     this.localPacketLoss = localPacketLoss as LocalPacketLoss
@@ -257,6 +269,7 @@ export class MediaStore {
 
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
+      this.updateRxTxLostRate(evt.rxPacketLossRate, evt.txPacketLossRate)
     })
     this.mediaService.on('track-ended', (evt: any) => {
       if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
@@ -399,6 +412,8 @@ export class MediaStore {
       //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
       // }
       this.updateNetworkQuality(qualityStr || defaultQuality)
+      this.updateRxNetworkQuality(networkQualityLevel[downlinkNetworkQuality] || defaultQuality)
+      this.updateTxNetworkQuality(networkQualityLevel[uplinkNetworkQuality] || defaultQuality)
       const {
         remotePacketLoss: { audioStats, videoStats },
         localPacketLoss
@@ -558,9 +573,25 @@ export class MediaStore {
   @observable
   networkQuality: string = 'unknown'
 
+  @observable
+  txNetworkQuality: string = "unknown"
+
+  @observable
+  rxNetworkQuality: string = "unknown"
+
   @action
   updateNetworkQuality(v: string) {
     this.networkQuality = v
+  }
+
+  @action
+  updateRxNetworkQuality(v: string) {
+    this.rxNetworkQuality = v
+  }
+
+  @action
+  updateTxNetworkQuality(v: string) {
+    this.txNetworkQuality = v
   }
 
   reset() {
