@@ -21,6 +21,7 @@ import { AgoraWebStreamCoordinator } from '../core/media-service/web/coordinator
 import { get } from 'lodash';
 import { AgoraWebRtcWrapper } from '../core/media-service/web';
 import { getSDKDomain, setAppScenario } from '../core/media-service/utils';
+import { RTCProviderInitParams } from '../core/media-service/interfaces';
 
 export type ClassroomInitParams = {
   roomUuid: string;
@@ -57,19 +58,27 @@ export class EduManager extends EventEmitter {
   public readonly _mediaService: MediaService;
   private _sessionId: string = uuidv4();
 
-  constructor(config: EduConfiguration) {
-    super();
-    setAppScenario(config.scenarioType);
-    this.config = config;
-    const buildOption: any = {
+  constructor(
+    config: EduConfiguration
+  ) {
+    super()
+    setAppScenario(config.scenarioType)
+    this.config = config
+    const buildOption: RTCProviderInitParams = {
       eduManager: this,
       platform: this.config.platform,
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId,
-      rtcArea: this.config.rtcArea ?? 'GLOBAL',
-      rtmArea: this.config.rtmArea ?? 'GLOBAL',
+      rtcArea: this.config.rtcArea ?? "GLOBAL",
+      rtmArea: this.config.rtmArea ?? "GLOBAL",
+      cameraEncoderConfiguration: this.config.cameraEncoderConfigurations ?? {
+        width: 320,
+        height: 240,
+        frameRate: 15,
+        bitrate: 200
+      },
       scenarioType: this.config.scenarioType,
       userRole: this.config.userRole,
     };

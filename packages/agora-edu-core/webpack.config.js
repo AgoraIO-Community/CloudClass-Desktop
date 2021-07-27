@@ -95,25 +95,25 @@ module.exports = {
     //   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(''),
     //   // 'process': 'utils'
     // }),
-    new HardSourceWebpackPlugin({
-      root: process.cwd(),
-      directories: [],
-      environmentHash: {
-        root: process.cwd(),
-        directories: [],
-        files: [
-          'package.json',
-          'package-lock.json',
-          'yarn.lock',
-          '.env',
-          '.env.local',
-          'env.local',
-          'config-overrides.js',
-          'webpack.config.js',
-          'tsconfig.json',
-        ],
-      },
-    }),
+    // new HardSourceWebpackPlugin({
+    //   root: process.cwd(),
+    //   directories: [],
+    //   environmentHash: {
+    //     root: process.cwd(),
+    //     directories: [],
+    //     files: [
+    //       'package.json',
+    //       'package-lock.json',
+    //       'yarn.lock',
+    //       '.env',
+    //       '.env.local',
+    //       'env.local',
+    //       'config-overrides.js',
+    //       'webpack.config.js',
+    //       'tsconfig.json',
+    //     ],
+    //   }
+    // })
   ],
   externals: {
     'white-web-sdk': 'white-web-sdk',

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
-import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
+import { LocalUserRenderer, VideoRenderState, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
 import {
   IMediaService,
@@ -64,19 +64,17 @@ export class MediaService extends EventEmitter implements IMediaService {
         AgoraRtcEngine: rtcProvider.agoraSdk,
         appId: rtcProvider.appId,
         area: rtcProvider.rtcArea,
-      });
-      window.ipc &&
-        window.ipc.once('initialize', (events: any, args: any) => {
-          const logPath = args[0];
-          const videoSourceLogPath = args[2];
-          window.videoSourceLogPath = videoSourceLogPath;
-          window.logPath = logPath;
-          EduLogger.info(
-            `[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`,
-          );
-          this.electron.setAddonLogPath({ logPath, videoSourceLogPath });
-          this.electron.enableLogPersist();
-        });
+        cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration
+      })
+      window.ipc && window.ipc.once("initialize", (events: any, args: any) => {
+        const logPath = args[0]
+        const videoSourceLogPath = args[2];
+        window.videoSourceLogPath = videoSourceLogPath;
+        window.logPath = logPath
+        EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`)
+        this.electron.setAddonLogPath({ logPath, videoSourceLogPath })
+        this.electron.enableLogPersist()
+      })
     } else {
       // 默认为观众 如果是1V1场景或者是老师角色 则设置为主播。
       this.sdkWrapper = new AgoraWebRtcWrapper({
@@ -94,6 +92,7 @@ export class MediaService extends EventEmitter implements IMediaService {
             level: 1,
           },
         },
+        cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration,
         appId: rtcProvider.appId,
         area: rtcProvider.rtcArea,
       });
@@ -122,10 +121,9 @@ export class MediaService extends EventEmitter implements IMediaService {
         (it: any) => it.uid === user.uid && it.channel === evt.channel,
       );
       if (userIndex !== -1) {
-        const userRenderer = this.remoteUsersRenderer[userIndex];
-        this.remoteUsersRenderer = this.remoteUsersRenderer.filter(
-          (it: any) => it !== userRenderer,
-        );
+        const userRenderer = this.remoteUsersRenderer[userIndex]
+        userRenderer.updateVideoRenderState(VideoRenderState.Idle)
+        this.remoteUsersRenderer = this.remoteUsersRenderer.filter((it: any) => it !== userRenderer)
         this.fire('user-unpublished', {
           user,
           remoteUserRender: userRenderer,
@@ -395,6 +393,14 @@ export class MediaService extends EventEmitter implements IMediaService {
       EduLogger.info(args[0], args);
     }
     this.emit(message, ...args);
+  }
+
+  fireLocalVideoStateUpdated (state: VideoRenderState) {
+    this.fire('local-video-state-update', {state})
+  }
+
+  fireRemoteVideoStateUpdated (state: VideoRenderState, uid:string) {
+    this.fire('remote-video-state-update', {state, uid})
   }
 
   get isWeb(): boolean {

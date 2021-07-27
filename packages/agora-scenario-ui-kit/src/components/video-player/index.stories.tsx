@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
-import React, { FC, useState } from 'react';
-import { useDebugValue } from 'react';
+import React, { FC, useDebugValue, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
@@ -10,18 +10,7 @@ import {
   VideoPlayerProps,
 } from '~components/video-player';
 
-const config = {
-  muted: true,
-  deviceState: 1,
-  online: true,
-  onPodium: true,
-  userType: 'teacher',
-  hasStream: true,
-  isLocal: false,
-  type: 'microphone',
-  uid: '3232',
-  disabled: true,
-};
+const config = { "muted": true, "deviceState": 1, "online": true, "onPodium": true, "userType": "teacher", "hasStream": true, "isLocal": false, "type": "microphone", "uid": "3232", "disabled": true }
 const meta: Meta = {
   title: 'Components/VideoPlayer',
   component: VideoPlayer,
@@ -100,7 +89,7 @@ export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({
 }) => {
   const [userType, setUserType] = useState<string>('teacher');
 
-  const list_ = [...'.'.repeat(2)].map((_, i: number) => ({
+  const list_ = [...'.'.repeat(10)].map((_, i: number) => ({
     ...student,
     username: `${i}-${student.username}`,
     uid: `uuid-${i}`,
@@ -152,6 +141,7 @@ export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({
         {userType}
       </Button>
       <VideoMarqueeList
+        openCarousel={false}
         videoStreamList={list}
         onCameraClick={(uid: any) => {
           list.forEach((item) => {
@@ -203,5 +193,282 @@ export const DocsSmall: FC<VideoPlayerProps & { size: number }> = ({
     </>
   );
 };
+
+// export const DocsMidClassCarousel = () => {
+//   const [studentList, setStudentList] = useState([])
+//   return (
+//     <>
+//       <div style={{
+//         position: 'fixed',
+//         left: 0,
+//         right: 0,
+//         bottom: 0,
+//         margin: 'auto'
+//       }}>
+//         <Button onClick={() => {
+//           setStudentList([
+//             ...studentList,
+//             {
+//               username: `student-${studentList.length}`,
+//               uid: `student-${studentList.length}`,
+//               micEnabled: false,
+//               cameraEnabled: false,
+//               whiteboardGranted: true,
+//               cameraDevice: 2,
+//               micDevice: 1,
+//               hasStream: true,
+//               online: true,
+//               isLocal: true,
+//               isOnPodium: false,
+//               userType: 'student',
+//               children: (<></>)
+//             }
+//           ])
+//         }}>上台</Button>
+//         <Button onClick={() => {
+//           const copyArr = [...studentList]
+//           copyArr.splice(0, 1)
+//           setStudentList([...copyArr])
+//         }}>下台</Button>
+//       </div>
+//       <MidClassVideoMarqueeList
+//         teacherStream={{
+//           username: `teacher`,
+//           uid: `teacher-${studentList.length}`,
+//           micEnabled: false,
+//           cameraEnabled: false,
+//           whiteboardGranted: true,
+//           cameraDevice: 2,
+//           micDevice: 1,
+//           hasStream: true,
+//           online: true,
+//           isLocal: true,
+//           isOnPodium: false,
+//           userType: 'teacher',
+//           children: (<></>)
+//         }}
+//         videoStreamList={studentList}
+//       />
+//     </>
+//   )
+// }
+
+export const DocsClassVideoPlayer = () => {
+  const [studentList, setStudentList] = useState([])
+
+  const [teacherList, setTeacherList] = useState([])
+
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setStream([
+  //       {
+  //         username: `teacher-${studentList.length}`,
+  //         uid: `uuid-teacher`,
+  //         micEnabled: false,
+  //         cameraEnabled: false,
+  //         whiteboardGranted: true,
+  //         cameraDevice: 2,
+  //         micDevice: 1,
+  //         hasStream: true,
+  //         online: true,
+  //         isLocal: true,
+  //         isOnPodium: false,
+  //         userType: 'teacher',
+  //         children: (<></>)
+  //       }]
+  //     )
+  //   }, 2500)
+  // }, [])
+
+  return (
+    <div>
+      <Button onClick={() => {
+        setTeacherList([
+          ...teacherList,
+          {
+            username: `teacher-${teacherList.length}`,
+            uid: `teacher-${teacherList.length}`,
+            micEnabled: false,
+            cameraEnabled: false,
+            whiteboardGranted: true,
+            cameraDevice: 2,
+            micDevice: 1,
+            hasStream: true,
+            online: true,
+            isLocal: true,
+            isOnPodium: false,
+            userType: 'teacher',
+            children: (<></>)
+          }
+        ])
+      }}>老师上台</Button>
+      <Button onClick={() => {
+        const copyArr = [...teacherList]
+        copyArr.splice(0, 1)
+        setTeacherList([...copyArr])
+      }}>老师下台</Button>
+      <Button onClick={() => {
+        setStudentList([
+          ...studentList,
+          {
+            username: `student-${studentList.length}`,
+            uid: `student-${studentList.length}`,
+            micEnabled: false,
+            cameraEnabled: false,
+            whiteboardGranted: true,
+            cameraDevice: 2,
+            micDevice: 1,
+            hasStream: true,
+            online: true,
+            isLocal: true,
+            isOnPodium: false,
+            userType: 'student',
+            children: (<></>)
+          }
+        ])
+      }}>上台</Button>
+      <Button onClick={() => {
+        const copyArr = [...studentList]
+        copyArr.splice(0, 1)
+        setStudentList([...copyArr])
+      }}>下台</Button>
+      <VideoMarqueeList
+        openCarousel={false}
+        teacherStream={teacherList[0]}
+        teacherStreams={teacherList}
+        videoStreamList={studentList}
+        onCameraClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.cameraEnabled = !item.cameraEnabled
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onCameraClick uid', uid)
+        }}
+        onMicClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.micEnabled = !item.micEnabled
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onMicrophoneClick uid', uid)
+        }}
+        onWhiteboardClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.whiteboardGranted = !item.whiteboardGranted
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('onWhiteboard Click', uid)
+        }}
+        onOffPodiumClick={(uid: any) => {
+          // list.forEach(item => {
+          //   if (item.uid === uid) {
+          //     item.isOnPodium = !item.isOnPodium
+          //   }
+          // })
+          // setList([
+          //   ...list
+          // ])
+          // console.log('off podium', uid)
+        }}
+        onSendStar={(uid,) => {
+          // return new Promise((resolve) => {
+          //   list.forEach(item => {
+          //     if (item.uid === uid) {
+          //       item.stars += 1
+          //     }
+          //   })
+          //   setList([
+          //     ...list
+          //   ])
+          //   resolve('send star')
+          // })
+        }}
+      >
+      </VideoMarqueeList>
+      {/* {studentList.map((e: any, idx: number) => (
+          <CSSVideoPlayer key={idx} {...e} />
+        ))} */}
+    </div>
+    // <AspectRatio ratio="16/9" style={{display: 'flex', maxWidth: 320, minHeight: 180}}>
+    // <div style={{backgroundColor: 'red'}}>
+    //   1
+    // </div>
+    // </AspectRatio>
+  )
+}
+
+export const DocsAnimTest = () => {
+  const [students, setStudents] = useState([])
+  const [showTeacher, setShowTeacher] = useState(true)
+  return (
+    <div>
+      <h1>Anim Test</h1>
+      <Button onClick={() => {
+        setShowTeacher(true)
+      }}>
+        老师上台
+      </Button>
+      <Button onClick={() => {
+        setShowTeacher(false)
+      }}>
+        老师下台
+      </Button>
+      <Button onClick={() => {
+        setStudents([
+          ...students,
+          {
+            id: Date.now()
+          }
+        ])
+      }}>学生上台</Button>
+      <Button onClick={() => {
+        const copy = [...students]
+        copy.splice(0, 1)
+        setStudents(copy)
+      }}>
+        学生下台
+      </Button>
+      <div id="wrap">
+        <div className="video-teacher">
+          <CSSTransition
+            in={showTeacher}
+            timeout={1000}
+            classNames='fade'
+            appear={true}
+          >
+            <div className="video-item"></div>
+          </CSSTransition>
+        </div>
+
+        <TransitionGroup className="video-students-wrap">
+          {students.map((item) => (
+            <CSSTransition
+              key={item.id}
+              timeout={1000}
+              classNames='fade'
+            >
+              <div className="video-student">
+                <div className="video-item"></div>
+              </div>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
+
+      </div>
+    </div>
+  )
+}
 
 export default meta;

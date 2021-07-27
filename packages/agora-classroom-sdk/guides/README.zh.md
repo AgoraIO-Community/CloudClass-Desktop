@@ -146,19 +146,18 @@
 成功运行结束后会生成一个 release 目录，里面包含一个 dmg 安装文件，正常打开移动到 Application 目录即可完成安装，然后可以执行程序。
 
 ### Windows
-
-1. 安装 electron 7.1.14: 先找到 `package.json` 里的 `agora_electron` 按照如下结构替换
+1. 安装 electron 12.0.0: 先找到 `package.json` 里的 `agora_electron` 按照如下结构替换
    ```
    "agora_electron": {
-     "electron_version": "7.1.2",
+     "electron_version": "12.0.0",
      "prebuilt": true,
      "platform": "win32",
      "arch": "ia32"
    },
    ```
-   再手动安装 electron 7.1.14
+   再手动安装 electron 12.0.0
    ```
-   npm install electron@7.1.14 --arch=ia32 --save-dev
+   npm install electron@12.0.0 --arch=ia32 --save-dev
    ```
 2. 安装 npm
 

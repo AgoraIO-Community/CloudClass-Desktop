@@ -1,16 +1,12 @@
-import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet';
 import {
-  useBoardContext,
-  useAppPluginContext,
-  IAgoraExtApp,
-  useRoomContext,
-  useScreenShareContext,
+  IAgoraExtApp, useAppPluginContext, useBoardContext, useRoomContext,
+  useScreenShareContext
 } from 'agora-edu-core';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
-import { useCallback } from 'react';
-import { Icon, t, ToolCabinet, SvgImg } from '~ui-kit';
 import { observer } from 'mobx-react';
-import { ScreenShareType } from 'agora-rte-sdk';
+import { useCallback } from 'react';
+import { SvgImg, t, ToolCabinet } from '~ui-kit';
+import { CabinetItem } from '~ui-kit/components/toolbar/tool-cabinet';
 
 export const ToolCabinetContainer = observer(() => {
   const { setLaserPoint, currentSelector } = useBoardContext();

@@ -1,46 +1,25 @@
-import { eduSDKApi } from '../services/edu-sdk-api';
-import { homeApi } from '../services/home-api';
-import { StorageCourseWareItem } from '../types';
+import { EduStream, EduUser } from 'agora-rte-sdk';
 import { get } from 'lodash';
-
-import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-rte-sdk';
 import { useCallback, useState } from 'react';
+import { eduSDKApi } from '../services/edu-sdk-api';
+import { StorageCourseWareItem } from '../types';
+import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
 import {
-  useCoreContext,
-  useSceneStore,
-  useBoardStore,
-  useSmallClassStore,
-  usePretestStore,
-  useRoomStore,
+  useBoardStore, useCoreContext, useMediaStore, usePretestStore,
+  useRoomStore, useSceneStore, useSmallClassStore
 } from './core';
 import {
-  VideoControlContext,
-  ChatContext,
-  /*StreamContext, */ PretestContext,
-  ScreenShareContext,
-  RoomContext,
-  RoomDiagnosisContext,
-  GlobalContext,
-  UserListContext,
-  RecordingContext,
-  HandsUpContext,
-  BoardContext,
-  SmallClassVideoControlContext,
-  StreamListContext,
-  CloudDriveContext,
-  VolumeContext,
-  DeviceErrorCallback,
-  ReportContext,
-  StreamContext,
-  ControlTool,
+  BoardContext, ChatContext, CloudDriveContext, ControlTool, DeviceErrorCallback, GlobalContext, HandsUpContext,
+/*StreamContext, */ PretestContext, RecordingContext, ReportContext, RoomContext,
+  RoomDiagnosisContext, ScreenShareContext, SmallClassVideoControlContext, StreamContext, StreamListContext, UserListContext, VideoControlContext, VolumeContext
 } from './type';
-import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
 
-export { ControlTool } from './type';
-
-export type { CoreAppContext } from './core';
 
 export { CoreContext, CoreContextProvider } from './core';
+export type { CoreAppContext } from './core';
+export { ControlTool } from './type';
+
+
 
 /**
  *
@@ -111,12 +90,14 @@ export const useStreamListContext = (): StreamListContext => {
 };
 
 export const useVolumeContext = (): VolumeContext => {
-  const pretestStore = usePretestStore();
+  const mediaStore = useMediaStore()
+
+  // const volume = pretestStore
 
   return {
-    microphoneLevel: pretestStore.microphoneLevel,
-  };
-};
+    microphoneLevel: mediaStore.totalVolume,
+  }
+}
 
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore();
@@ -226,8 +207,11 @@ export const useRoomContext = (): RoomContext => {
     roomProperties,
     updateFlexProperties,
     flexProperties,
-    joined,
-  } = useRoomStore();
+    setCarouselState,
+    startCarousel,
+    stopCarousel,
+    joined
+  } = useRoomStore()
 
   const {
     handsUpStudentList,
@@ -277,9 +261,12 @@ export const useRoomContext = (): RoomContext => {
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
     flexRoomProperties: flexProperties,
-    joined,
-  };
-};
+    setCarouselState,
+    startCarousel,
+    stopCarousel,
+    joined
+  }
+}
 
 export const useRoomDiagnosisContext = (): RoomDiagnosisContext => {
   const { navigationState } = useRoomStore();
@@ -449,10 +436,13 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources,
+    // personalResources,
     handleUpload,
     publicResources,
-  } = useBoardStore();
+    upsertResources,
+    allResources
+  } = useBoardStore()
+
 
   return {
     downloadList: downloadList.filter(
@@ -466,11 +456,13 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources,
-    publicResources,
+    personalResources: allResources.filter((item: any) => item.access === 'private'),
+    publicResources: allResources.filter((item: any) => item.access === 'public'),
     doUpload: handleUpload,
-  };
-};
+    allResources,
+    upsertResources
+  }
+}
 
 export const useStreamContext = (): StreamContext => {
   const { streamList } = useSceneStore();

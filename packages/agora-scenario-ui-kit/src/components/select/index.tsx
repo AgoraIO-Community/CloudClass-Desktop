@@ -7,9 +7,9 @@ import './index.css';
 import { transI18n } from '~components/i18n';
 
 export type SelectOption = {
-  label: string;
-  value: string;
-};
+    label: string;
+    value: string | number;
+}
 export interface SelectProps extends BaseProps {
   value?: string | undefined;
   placeholder?: string;
@@ -53,7 +53,7 @@ export const Select: FC<SelectProps> = ({
         isSearchable={isSearchable}
         // @ts-ignore
         onChange={(option: SelectOption) => {
-          onChange && onChange(option.value);
+          onChange && onChange(option.value as any);
         }}
         defaultMenuIsOpen={defaultMenuIsOpen}
         {...restProps}

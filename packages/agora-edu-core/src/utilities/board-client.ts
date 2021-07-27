@@ -17,7 +17,8 @@ import { videoPlugin2 } from '@netless/white-video-plugin2';
 import { audioPlugin2 } from '@netless/white-audio-plugin2';
 import { get } from 'lodash';
 import { BizLogger } from './biz-logger';
-import { IframeBridge, IframeWrapper } from '@netless/iframe-bridge';
+import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
+import {PluginId, Version, videoJsPlugin} from '@netless/video-js-plugin'
 
 export interface SceneFile {
   name: string;
@@ -41,26 +42,23 @@ export class BoardClient extends EventEmitter {
 
   private appIdentifier!: string;
 
-  constructor(
-    config: { identity: string; appIdentifier: string } = {
-      identity: 'guest',
-      appIdentifier: '',
-    },
-  ) {
-    super();
-    this.appIdentifier = config.appIdentifier;
-    this.initPlugins(config.identity);
-    this.init();
+  constructor(config: {identity: string, appIdentifier: string, enable: boolean} = {identity: 'guest', appIdentifier: '', enable: false}) {
+    super()
+    this.appIdentifier = config.appIdentifier
+    this.initPlugins(config.identity, config.enable)
+    this.init()
   }
 
-  initPlugins(identity: string) {
+  initPlugins (identity: string, enable: boolean) {
     const plugins = createPlugins({
-      video2: videoPlugin2,
-      audio2: audioPlugin2,
+      // "video2": videoPlugin2,
+      // "audio2": audioPlugin2,
+      [PluginId]: videoJsPlugin()
     });
 
-    plugins.setPluginContext('video2', { identity });
-    plugins.setPluginContext('audio2', { identity });
+    // plugins.setPluginContext("video2", {identity});
+    // plugins.setPluginContext("audio2", {identity});
+    plugins.setPluginContext(PluginId, { enable, verbose: true });
     this.plugins = plugins;
   }
 
@@ -75,6 +73,7 @@ export class BoardClient extends EventEmitter {
       deviceType: DeviceType.Surface,
       plugins: this.plugins,
       appIdentifier: this.appIdentifier,
+      preloadDynamicPPT: true,
       loggerOptions: {
         reportQualityMode: LoggerReportMode.AlwaysReport,
         reportDebugLogMode: LoggerReportMode.AlwaysReport,

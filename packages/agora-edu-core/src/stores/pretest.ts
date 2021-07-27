@@ -1,20 +1,15 @@
 import {
-  LocalUserRenderer,
-  MediaService,
-  AgoraWebRtcWrapper,
-  AgoraElectronRTCWrapper,
-  GenericErrorWrapper,
-  EduLogger,
-  EduUser,
+  AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer,
+  MediaService
 } from 'agora-rte-sdk';
-import { get, isEmpty } from 'lodash';
-import { observable, action, computed, reaction, runInAction } from 'mobx';
+import { isEmpty } from 'lodash';
+import { action, computed, observable, reaction } from 'mobx';
+import { Subject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 import { EduScenarioAppStore } from '.';
+import { DeviceErrorCallback } from '../context/type';
 import { AgoraMediaDeviceEnum } from '../types';
 import { getDeviceLabelFromStorage, GlobalStorage } from '../utilities/kit';
-import { v4 as uuidv4 } from 'uuid';
-import { Subject } from 'rxjs';
-import { DeviceErrorCallback } from '../context/type';
 
 export enum CustomizeDeviceLabel {
   Disabled = 'disabled',

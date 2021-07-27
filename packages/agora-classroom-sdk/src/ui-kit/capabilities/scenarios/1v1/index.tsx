@@ -1,22 +1,23 @@
-import { Layout, Content, Aside } from '~components/layout';
-import { observer } from 'mobx-react';
-import classnames from 'classnames';
+import { useEffectOnce } from '@/infra/hooks/utils';
 import {
   useAppPluginContext,
   useGlobalContext,
   useRoomContext,
-  useWidgetContext,
+  useWidgetContext
 } from 'agora-edu-core';
-import { NavigationBar } from '~capabilities/containers/nav';
-import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
+import classnames from 'classnames';
+import { get } from 'lodash';
+import { observer } from 'mobx-react';
+import { useLayoutEffect } from 'react';
 import { WhiteboardContainer } from '~capabilities/containers/board';
 import { DialogContainer } from '~capabilities/containers/dialog';
 import { LoadingContainer } from '~capabilities/containers/loading';
-import { VideoList } from '~capabilities/containers/video-player';
-import { useEffectOnce } from '@/infra/hooks/utils';
+import { NavigationBar } from '~capabilities/containers/nav';
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
 import { ToastContainer } from '~capabilities/containers/toast';
+import { VideoList } from '~capabilities/containers/video-player';
 import { Widget } from '~capabilities/containers/widget';
-import { useLayoutEffect } from 'react';
+import { Aside, Content, Layout } from '~components/layout';
 
 export const OneToOneScenario = observer(() => {
   const { isFullScreen } = useGlobalContext();
@@ -46,6 +47,10 @@ export const OneToOneScenario = observer(() => {
     'edu-room': 1,
   });
 
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
+
   const className = 'normal';
 
   return (
@@ -68,10 +73,10 @@ export const OneToOneScenario = observer(() => {
             'one-class-aside-full': isFullScreen,
           })}>
           <VideoList />
-          <Widget
-            className="chat-panel chat-border"
-            widgetComponent={chatWidget}
-          />
+          {chatroomId ?
+            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
+            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
+          }
         </Aside>
       </Layout>
       <DialogContainer />

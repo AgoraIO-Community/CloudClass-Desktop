@@ -228,19 +228,9 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-        resolution: {
-          width:
-            this.params.config.mediaOptions?.videoEncoderConfiguration.width ||
-            320,
-          height:
-            this.params.config.mediaOptions?.videoEncoderConfiguration.height ||
-            240,
-          frameRate:
-            this.params.config.mediaOptions?.videoEncoderConfiguration
-              .frameRate || 15,
-        },
-      });
+      })
     } else {
       this.eduManager = new EduManager({
         vid: config.vid,
@@ -255,19 +245,9 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-        resolution: {
-          width:
-            this.params.config.mediaOptions?.videoEncoderConfiguration.width ||
-            320,
-          height:
-            this.params.config.mediaOptions?.videoEncoderConfiguration.height ||
-            240,
-          frameRate:
-            this.params.config.mediaOptions?.videoEncoderConfiguration
-              .frameRate || 15,
-        },
-      });
+      })
     }
 
     if (isEmpty(roomInfoParams)) {
@@ -276,9 +256,8 @@ export class EduScenarioAppStore {
         const roomInfo = toJS(this.roomInfo);
         GlobalStorage.save('agora_edu_room', {
           roomInfo: roomInfo,
-        });
-        this;
-      });
+        })
+      })
     } else {
       this.setRoomInfo({
         rtmUid: this.params.config.rtmUid,
@@ -290,9 +269,9 @@ export class EduScenarioAppStore {
     autorun(() => {
       const deviceInfo = toJS(this.deviceInfo);
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo,
-      });
-    });
+        deviceInfo: deviceInfo
+      })
+    })
 
     const deviceStorage = GlobalStorage.read('agora_edu_device');
     if (deviceStorage || !isEmpty(deviceStorage)) {

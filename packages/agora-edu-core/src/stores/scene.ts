@@ -12,6 +12,7 @@ import {
   AgoraWebRtcWrapper,
   AgoraElectronRTCWrapper,
   CameraOption,
+  VideoRenderState,
   PrepareScreenShareParams,
   EduRoomType,
   EduRoleType,
@@ -920,18 +921,25 @@ export class SceneStore extends SimpleInterval {
   @action.bound
   async startWebSharing() {
     try {
-      this.waitingShare = true;
+      this.waitingShare = true
+      const encoderConfig = this.appStore.params.config.mediaOptions || {
+        width: 1280,
+        height: 720,
+        frameRate: 5,
+        bitrate: 800
+      }
       await this.mediaService.prepareScreenShare({
         shareAudio: 'auto',
-        encoderConfig: '720p',
-      });
-      await this.roomManager?.userService.startShareScreen();
-      this.appStore.boardStore.setScreenShareScenePath();
+        encoderConfig
+      })
+      await this.roomManager?.userService.startShareScreen()
+      this.appStore.boardStore.setScreenShareScenePath()
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
         token: this.roomManager?.userService.screenStream.token,
-      };
+        encoderConfig
+      }
 
       await this.mediaService.startScreenShare({
         params,
@@ -1478,26 +1486,35 @@ export class SceneStore extends SimpleInterval {
       };
     }
 
-    const isFreeze =
-      this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false;
-    if (isFreeze) {
-      return {
-        holderState: 'broken',
-        text: 'placeholder.noAvailableCamera',
-      };
-    }
+    const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
 
-    if (stats && stats.renderFrameRate === 0) {
-      return {
-        holderState: 'loading',
-        text: `placeholder.loading`,
-      };
+    // if(stats && stats.renderFrameRate === 0) {
+    //   return {
+    //     holderState: 'loading',
+    //     text: `placeholder.loading`
+    //   }
+    // }
+    if (stream 
+      && !!stream.hasVideo === true) {
+      if (isFreeze) {
+        return {
+          holderState: 'broken',
+          text: 'placeholder.noAvailableCamera'
+        }
+      }
+      if (this.appStore.mediaStore.remoteVideoRenderStateMap[stream.streamUuid] !== VideoRenderState.Prepare &&
+        this.appStore.mediaStore.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid)) {
+        return {
+          holderState: 'none',
+          text: ''
+        }
+      }
     }
 
     return {
-      holderState: 'none',
-      text: '',
-    };
+      holderState: 'loading',
+      text: `placeholder.loading`
+    }
   }
 
   getFixAudioVolume(streamUuid: number): number {
@@ -1607,16 +1624,13 @@ export class SceneStore extends SimpleInterval {
       ) {
         return false;
       }
-      const freezeCount = this.cameraRenderer?.freezeCount ?? 0;
-      return freezeCount < 3;
+      return this.appStore.mediaStore.localVideoRenderState !== VideoRenderState.Freezing
     } else {
       // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
       // if(render) {
       //   return render.renderFrameRate > 0
       // }
-      const stats = this.getRemoteVideoStatsBy(`${uid}`);
-      let freezeCount = stats ? stats.freezeCount : 0;
-      return freezeCount < 3;
+      return this.appStore.mediaStore.remoteVideoRenderStateMap[`${uid}`] !== VideoRenderState.Freezing
     }
   }
 
@@ -1684,7 +1698,7 @@ export class SceneStore extends SimpleInterval {
         holderState: holderState,
         placeHolderText: text,
         whiteboardGranted: true,
-        micVolume: this.localVolume,
+        // micVolume: this.localVolume,
         isLocal: true,
         online: true,
         onPodium: true,
@@ -1721,7 +1735,7 @@ export class SceneStore extends SimpleInterval {
         holderState: props.holderState,
         placeHolderText: props.text,
         whiteboardGranted: true,
-        micVolume: volumeLevel,
+        // micVolume: volumeLevel,
         online: !!teacherStream.streamUuid,
         onPodium: true,
         hasStream: !!teacherStream,
@@ -1755,8 +1769,8 @@ export class SceneStore extends SimpleInterval {
       cameraDevice: 1,
       placeHolderText: this.defaultTeacherPlaceholder.text,
       holderState: this.defaultTeacherPlaceholder.holderState,
-      micVolume: 0,
-    } as any;
+      // micVolume: 0,
+    } as any
   }
 
   @computed
@@ -1951,10 +1965,8 @@ export class SceneStore extends SimpleInterval {
           hideControl: this.hideControl(user.userUuid),
           holderState: props.holderState,
           placeHolderText: props.text,
-          micVolume: volumeLevel,
-          whiteboardGranted: this.appStore.boardStore.checkUserPermission(
-            `${user.userUuid}`,
-          ),
+          // micVolume: volumeLevel,
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
           online: this.queryUserIsOnline(user.userUuid),
           onPodium: this.queryUserIsOnPodium(stream.streamUuid),
           cameraDevice: this.queryRemoteCameraDeviceState(
@@ -1980,60 +1992,52 @@ export class SceneStore extends SimpleInterval {
     const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole);
 
     if (this.cameraEduStream && isStudent) {
-      const props = this.getLocalPlaceHolderProps();
-      streamList = [
-        {
-          local: true,
-          account: localUser.userName,
-          userUuid: this.cameraEduStream.userInfo.userUuid as string,
-          streamUuid: this.cameraEduStream.streamUuid,
-          video: this.cameraEduStream.hasVideo,
-          audio: this.cameraEduStream.hasAudio,
-          renderer: this.cameraRenderer as LocalUserRenderer,
-          hideControl: this.hideControl(this.appStore.userUuid),
-          holderState: props.holderState,
-          placeHolderText: props.text,
-          micVolume: this.localVolume,
-          whiteboardGranted: this.appStore.boardStore.checkUserPermission(
-            `${this.appStore.userUuid}`,
-          ),
-          online: true,
-          onPodium: true,
-          micDevice: this.localMicrophoneDeviceState,
-          cameraDevice: this.localCameraDeviceState,
-          isLocal: true,
-          hasStream: !!this.cameraEduStream,
-        } as any,
-      ].concat(
-        streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid),
-      );
+      const props = this.getLocalPlaceHolderProps()
+      streamList = [{
+        local: true,
+        account: localUser.userName,
+        userUuid: this.cameraEduStream.userInfo.userUuid as string,
+        streamUuid: this.cameraEduStream.streamUuid,
+        video: this.cameraEduStream.hasVideo,
+        audio: this.cameraEduStream.hasAudio,
+        renderer: this.cameraRenderer as LocalUserRenderer,
+        hideControl: this.hideControl(this.appStore.userUuid),
+        holderState: props.holderState,
+        placeHolderText: props.text,
+        // micVolume: this.localVolume,
+        whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
+        online: true,
+        onPodium: true,
+        micDevice: this.localMicrophoneDeviceState,
+        cameraDevice: this.localCameraDeviceState,
+        isLocal: true,
+        hasStream: !!this.cameraEduStream,
+      } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
     }
     if (streamList.length) {
       return streamList;
     }
-    return [
-      {
-        local: false,
-        account: 'student',
-        userUuid: '',
-        streamUuid: '',
-        video: false,
-        audio: false,
-        renderer: undefined,
-        hideControl: true,
-        placeHolderText: this.defaultStudentPlaceholder.text,
-        holderState: this.defaultStudentPlaceholder.holderState,
-        micVolume: 0,
-        whiteboardGranted: false,
-        defaultStream: true,
-        online: false,
-        onPodium: false,
-        micDevice: 1,
-        cameraDevice: 1,
-        isLocal: false,
-        hasStream: false,
-      } as any,
-    ];
+    return [{
+      local: false,
+      account: 'student',
+      userUuid: '',
+      streamUuid: '',
+      video: false,
+      audio: false,
+      renderer: undefined,
+      hideControl: true,
+      placeHolderText: this.defaultStudentPlaceholder.text,
+      holderState: this.defaultStudentPlaceholder.holderState,
+      // micVolume: 0,
+      whiteboardGranted: false,
+      defaultStream: true,
+      online:false,
+      onPodium: false,
+      micDevice: 1,
+      cameraDevice: 1,
+      isLocal: false,
+      hasStream: false,
+    } as any]
   }
 
   @action.bound

@@ -13,9 +13,9 @@ import IAgoraRtcEngine from 'agora-electron-sdk';
 import { LocalUserRenderer, RemoteUserRenderer } from '../renderer';
 import { AgoraWebRtcWrapper } from '../web';
 import {
-  EduRoleType,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  EduVideoEncoderConfiguration,
 } from '../../../interfaces';
 
 export declare function event_device_changed(evt: any): void;
@@ -43,6 +43,7 @@ export type RTCWrapperProvider = AgoraWebRtcWrapper | AgoraElectronRTCWrapper;
 export declare interface IElectronRTCWrapper extends IAgoraRTCModule {
   client: IAgoraRtcEngine;
 }
+
 /**
  * ElectronWrapperInitOption
  * 主要用于初始化构造electron rtc wrapper
@@ -54,11 +55,7 @@ export declare interface ElectronWrapperInitOption {
   appId: string;
   cefClient: any;
   area: AREA_CODE;
-  resolution?: {
-    width: number;
-    height: number;
-    frameRate: number;
-  };
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration
 }
 
 export const convertNativeAreaCode = (codeName: string) => {
@@ -115,6 +112,7 @@ export declare interface WebRtcWrapperInitOption {
   uploadLog: boolean;
   agoraWebSdk: IAgoraRTC;
   area: AREA_CODE;
+  cameraEncoderConfiguration: EduVideoEncoderConfiguration;
   webConfig: {
     mode: string;
     codec: string;
@@ -258,6 +256,8 @@ export declare interface RTCProviderInitParams {
   codec: string;
   appId: string;
   rtcArea: AREA_CODE;
+  rtmArea: AREA_CODE;
+  cameraEncoderConfiguration: EduVideoEncoderConfiguration;
   scenarioType?: EduRoomTypeEnum;
   userRole?: EduRoleTypeEnum;
   electronLogPath?: {

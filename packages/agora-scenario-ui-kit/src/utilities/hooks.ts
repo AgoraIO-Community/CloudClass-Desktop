@@ -1,9 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IReactionOptions, IReactionPublic, observable, reaction } from 'mobx';
 import type { RendererPlayerProps } from '~utilities/renderer-player';
-import { DependencyList } from 'react';
-import { useLocalStore } from 'mobx-react';
-import { useLayoutEffect } from 'react';
 
 export const useReaction = <T>(
   expression: (reaction: IReactionPublic) => T,
@@ -156,5 +153,16 @@ export const useRendererPlayer = <T extends HTMLElement>(
     [ref, props.track, props.fitMode, props.preview],
   );
 
-  return ref;
-};
+  return ref
+}
+
+export const useDebounce = <T>(value: T, delay?: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedValue(value), delay)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [value, delay])
+  return debouncedValue
+}

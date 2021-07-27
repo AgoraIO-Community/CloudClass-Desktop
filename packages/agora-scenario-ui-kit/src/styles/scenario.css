@@ -3,6 +3,11 @@
   box-sizing: border-box;
 }
 
+.layout-video {
+  align-items: center;
+  justify-content: center;
+}
+
 .chat-border {
   border: 1px solid #ececf1;
   transform: translateY(-2px);
@@ -189,7 +194,7 @@
   /* border-bottom: 2px solid white; */
 }
 
-.edu-room .video-player.teacher-1v1 {
+.video-player.teacher-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: 0.5s;
@@ -219,7 +224,7 @@
   /* bottom: 0; */
 }
 
-.edu-room .video-player.student-1v1 {
+.video-player.student-1v1 {
   opacity: 1;
   transform: scale(1);
   transition: 0.5s;
@@ -258,7 +263,7 @@
 
 .edu-room .layout {
   position: relative;
-  transform: translateY(2px);
+  /* transform: translateY(2px); */
 }
 
 .material-menu {
@@ -348,9 +353,9 @@
 }
 
 .video-marquee-pin {
-  position: absolute;
+  /* position: absolute;
   height: 165px;
-  width: 100%;
+  width: 100%; */
 }
 
 .video-marquee-pin ~ .board-box {

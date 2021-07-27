@@ -1,0 +1,86 @@
+.tab-class {
+    height: 44px !important;
+    margin-bottom: 2px !important;
+}
+
+.ant-tabs-tab {
+    /* 宽度自定义 */
+    width: 70px !important;
+    justify-content: center;
+}
+
+.ant-tabs-tab-btn {
+    width: 35px !important;
+    height: 18px !important;
+    font-size: 13px !important;
+    font-family: 'PingFangSC-Regular',
+        ' PingFang SC' !important;
+    font-weight: 400 !important;
+    color: #7B88A0 !important;
+    line-height: 18px !important;
+}
+
+.ant-tabs-ink-bar-animated {
+    /* 宽度自定义 */
+    width: 70px !important;
+    height: 2px !important;
+    background: #357BF6 !important;
+    border-radius: 1px !important;
+}
+
+.mini-icon {
+    /* 宽度自定义 */
+    position: absolute;
+    right: 2px;
+    top: 10px;
+    cursor: pointer;
+    width: 24px;
+    border: 1px dashed #ECECF1;
+}
+
+
+.notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 宽度自定义 */
+    width: 100%;
+    height: 32px;
+    /* background: rgba(240, 201, 150, 0.1); */
+    cursor: pointer;
+    background: rgb(251 242 230);
+    cursor: pointer;
+}
+
+.notice-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.notice-text {
+    height: 12px;
+    font-size: 12px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #191919;
+    line-height: 12px;
+    margin-left: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: '-webkit-box';
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: 'vertical';
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.red-notice {
+    position: absolute;
+    border-radius: 50%;
+    background: #FF462D;
+    height: 6px;
+    width: 6px;
+    left: 45px;
+    top: 10px;
+}

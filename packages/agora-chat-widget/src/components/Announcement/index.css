@@ -1,0 +1,185 @@
+.announcement {
+    height: 100%;
+}
+
+.no-announcement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.announcement-icon {
+    width: 106px;
+    height: 117px;
+}
+
+.no-notice {
+    width: 178px;
+    height: 18px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #7D8798;
+    line-height: 18px;
+
+    overflow: hidden;
+    text-overflow: 'ellipsis';
+    display: '-webkit-box';
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: 'vertical';
+    white-space: 'break-spaces'
+}
+
+.announcement-box {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 100px);
+}
+
+.edit {
+    color: #4591F8;
+    cursor: pointer;
+}
+
+.edit-content {
+    margin-top: 8px;
+}
+
+.input-content {
+    margin: 0 3px !important;
+    width: 290px !important;
+    height: 232px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ECECF1 !important;
+}
+
+.menu {
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
+.tips-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 8px;
+}
+
+.more-message {
+    width: 121px;
+    height: 18px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #F04C36;
+    line-height: 18px;
+}
+
+.count-content {
+    /* width: 178px; */
+    height: 18px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #7D8798;
+    line-height: 18px;
+}
+
+.announcement-content {
+    width: 290px;
+    /* height: 235px; */
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #191919;
+    line-height: 25px;
+    padding: 8px;
+    word-break: break-all;
+    white-space: pre-wrap;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.update-content {
+    width: 26px;
+    height: 18px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #3C86F7;
+    line-height: 18px;
+    margin: 8px
+}
+
+
+.btn-content {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 8px;
+}
+
+.save-btn {
+    width: 94px;
+    height: 30px;
+    background: #357BF6;
+    border-radius: 15px !important;
+}
+
+.cancel-btn {
+    width: 94px;
+    height: 30px;
+    border-radius: 15px !important;
+    border: 1px solid #4b4b58 !important;
+}
+
+
+/* 修改antd 默认样式 */
+.delete-modal .ant-modal-header {
+    height: 40px !important;
+    padding: 8px 24px !important;
+    background: #F9F9FC !important;
+    border-radius: 4px 4px 0px 0px !important;
+    border: 1px solid #E1E1EA !important;
+}
+
+.delete-modal .ant-modal-title {
+    font-size: 14px !important;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC' !important;
+    font-weight: 400 !important;
+    color: #333333 !important;
+    line-height: 20px !important;
+}
+
+.delete-modal .ant-modal-close {
+    top: 11px !important;
+    right: 30px !important;
+}
+
+.delete-modal .ant-modal-close-x {
+    width: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+.delete-modal .ant-modal-body {
+    text-align: center;
+}
+
+.delete-modal .ant-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    border: none !important;
+}
+
+.delete-modal .ant-btn {
+    border-radius: 15px !important;
+    border: 1px solid #D2D2E2;
+}

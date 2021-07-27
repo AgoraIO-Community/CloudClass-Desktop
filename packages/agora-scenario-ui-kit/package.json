@@ -45,5 +45,8 @@
     "storybook": "6.2.8",
     "svg-sprite-loader": "^6.0.7",
     "tailwindcss": "2.0.3"
+  },
+  "dependencies": {
+    "react-aspect-ratio": "^1.0.49"
   }
 }

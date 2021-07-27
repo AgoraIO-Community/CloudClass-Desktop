@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, MediaEncryptionConfig } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduVideoEncoderConfiguration, MediaEncryptionConfig } from 'agora-rte-sdk';
 import { SceneDefinition } from 'white-web-sdk';
 
 export type AgoraExtAppUserInfo = {
@@ -136,15 +136,6 @@ export const regionMap = {
 
 export type AgoraRegionString = 'cn' | 'ap' | 'ns';
 
-export type MediaOptions = {
-  encryptionConfig?: MediaEncryptionConfig;
-  videoEncoderConfiguration: {
-    width: number;
-    height: number;
-    frameRate: number;
-  };
-};
-
 export type BoardOptionUserPayload = {
   avatar?: string;
   cursorName?: string;
@@ -154,6 +145,12 @@ export type BoardOptionUserPayload = {
 export type BoardOptions = {
   userPayload?: BoardOptionUserPayload;
 };
+
+export type MediaOptions = {
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration,
+  screenShareEncoderConfiguration?: EduVideoEncoderConfiguration,
+  encryptionConfig?: MediaEncryptionConfig,
+}
 
 export type AppStoreConfigParams = {
   agoraAppId: string;
@@ -170,22 +167,22 @@ export type AppStoreConfigParams = {
   personalCourseWareList?: CourseWareList;
   vid?: number;
   oss?: {
-    region: string;
-    bucketName: string;
-    folder: string;
-    accessKey: string;
-    secretKey: string;
-    endpoint: string;
-  };
-  recordUrl: string;
-  extApps?: IAgoraExtApp[];
-  widgets?: { [key: string]: IAgoraWidget };
-  userFlexProperties?: { [key: string]: any };
-  mediaOptions?: MediaOptions;
-  boardOptions?: BoardOptions;
-};
+    region: string,
+    bucketName: string,
+    folder: string,
+    accessKey: string,
+    secretKey: string,
+    endpoint: string,
+  },
+  recordUrl: string,
+  extApps?: IAgoraExtApp[],
+  widgets?: {[key:string]: IAgoraWidget},
+  userFlexProperties?: {[key: string]: any}
+  mediaOptions?: MediaOptions,
+  boardOptions?: BoardOptions
+}
 
-export type LanguageEnum = 'en' | 'zh';
+export type LanguageEnum = "en" | "zh"
 
 export type AppStoreInitParams = {
   roomInfoParams?: RoomInfoParams;

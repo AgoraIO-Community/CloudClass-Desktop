@@ -1,29 +1,26 @@
-import { Layout, Content, Aside } from '~components/layout';
-import { observer } from 'mobx-react';
-import classnames from 'classnames';
+import { useUIStore } from '@/infra/hooks';
+import { useEffectOnce } from '@/infra/hooks/utils';
 import {
-  useRoomContext,
-  useGlobalContext,
-  useChatContext,
-  useWidgetContext,
-  useAppPluginContext,
+  useAppPluginContext, useGlobalContext, useRoomContext, useWidgetContext
 } from 'agora-edu-core';
-import { NavigationBar } from '~capabilities/containers/nav';
-import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import classnames from 'classnames';
+import { get } from 'lodash';
+import { observer } from 'mobx-react';
+import React, { useLayoutEffect } from 'react';
 import { WhiteboardContainer } from '~capabilities/containers/board';
 import { DialogContainer } from '~capabilities/containers/dialog';
+import { HandsUpContainer } from '~capabilities/containers/hands-up';
 import { LoadingContainer } from '~capabilities/containers/loading';
+import { NavigationBar } from '~capabilities/containers/nav';
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
+import { ToastContainer } from '~capabilities/containers/toast';
 import {
   VideoMarqueeStudentContainer,
-  VideoPlayerTeacher,
+  VideoPlayerTeacher
 } from '~capabilities/containers/video-player';
-import { HandsUpContainer } from '~capabilities/containers/hands-up';
-import { RoomChat } from '~capabilities/containers/room-chat';
-import { useEffectOnce } from '@/infra/hooks/utils';
-import React, { useLayoutEffect } from 'react';
 import { Widget } from '~capabilities/containers/widget';
-import { ToastContainer } from '~capabilities/containers/toast';
-import { useUIStore } from '@/infra/hooks';
+import { Aside, Content, Layout } from '~components/layout';
 
 export const BigClassScenario = observer(() => {
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
@@ -55,6 +52,14 @@ export const BigClassScenario = observer(() => {
     'edu-room': 1,
     fullscreen: !!isFullScreen,
   });
+
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
+
+  const { roomInfo : {userRole}} = useRoomContext()
+
+  const visible = userRole !== EduRoleTypeEnum.invisible
 
   return (
     <Layout
@@ -92,10 +97,10 @@ export const BigClassScenario = observer(() => {
               placement="bottom"
             />
           </div>
-          <Widget
-            className="chat-panel chat-border"
-            widgetComponent={chatWidget}
-          />
+          {chatroomId ?
+            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
+            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
+          }
         </Aside>
       </Layout>
       <DialogContainer />

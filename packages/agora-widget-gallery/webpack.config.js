@@ -112,25 +112,25 @@ module.exports = {
     ],
   },
   plugins: [
-    new HardSourceWebpackPlugin({
-      root: process.cwd(),
-      directories: [],
-      environmentHash: {
-        root: process.cwd(),
-        directories: [],
-        files: [
-          'package.json',
-          'package-lock.json',
-          'yarn.lock',
-          '.env',
-          '.env.local',
-          'env.local',
-          'config-overrides.js',
-          'webpack.config.js',
-          'tsconfig.json',
-        ],
-      },
-    }),
+    // new HardSourceWebpackPlugin({
+    //   root: process.cwd(),
+    //   directories: [],
+    //   environmentHash: {
+    //     root: process.cwd(),
+    //     directories: [],
+    //     files: [
+    //       'package.json',
+    //       'package-lock.json',
+    //       'yarn.lock',
+    //       '.env',
+    //       '.env.local',
+    //       'env.local',
+    //       'config-overrides.js',
+    //       'webpack.config.js',
+    //       'tsconfig.json',
+    //     ],
+    //   }
+    // }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'index.html'),
     }),

@@ -1,3 +1,4 @@
+import { PluginId } from '@netless/video-js-plugin';
 import { EventEmitter } from 'events';
 import { AgoraMediaDeviceEnum } from '../types';
 import { EduRoleTypeEnum, EduTextMessage } from 'agora-rte-sdk';
@@ -6,8 +7,6 @@ import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { ApplianceNames, Room } from 'white-web-sdk';
 import { agoraCaches } from './cache';
-import OSS from 'ali-oss';
-import { get } from 'lodash';
 
 const OSS_PREFIX = '';
 
@@ -362,48 +361,55 @@ export const netlessInsertImageOperation = async (
 };
 
 export type NetlessMediaFile = {
-  url: string;
-  originX: number;
-  originY: number;
-  width: number;
-  height: number;
-};
+  url: string,
+  originX: number,
+  originY: number,
+  width: number,
+  height: number,
+}
 
-export const netlessInsertVideoOperation = (
-  room: Room,
-  file: NetlessMediaFile,
-) => {
-  console.log('video file', file.url);
+export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
+  room.insertPlugin(
+    PluginId,
+    {
+      originX: file.originX,
+      originY: file.originY,
+      width: file.width,
+      height: file.height,
+      attributes: {
+          src: file.url,
+          type: mimeType
+          // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
+      }
+    }
+  )
+}
 
-  room.insertPlugin('video2', {
-    originX: file.originX,
-    originY: file.originY,
-    width: file.width,
-    height: file.height,
-    attributes: {
-      src: file.url,
-      // isNavigationDisable: false
-    },
-  });
-};
+export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
+  room.insertPlugin(
+    PluginId,
+    {
+      originX: file.originX,
+      originY: file.originY,
+      width: file.width,
+      height: file.height,
+      attributes: {
+        src: file.url,
+        type: mimeType
+      }
+    }
+  )
+}
 
-export const netlessInsertAudioOperation = (
-  room: Room,
-  file: NetlessMediaFile,
-) => {
-  console.log('audio file', file.url);
-
-  room.insertPlugin('audio2', {
-    originX: file.originX,
-    originY: file.originY,
-    width: file.width,
-    height: file.height,
-    attributes: {
-      src: file.url,
-      // isNavigationDisable: false
-    },
-  });
-};
+export const getStorage = (label: string) => {
+  const beautyOption = GlobalStorage.read(label) || {
+    isBeauty: 0,
+    lighteningLevel: 0.5,
+    rednessLevel: 0.5,
+    smoothnessLevel: 0.5,
+  }
+  return beautyOption
+}
 
 // media device helper
 export const getDeviceLabelFromStorage = (type: string) => {

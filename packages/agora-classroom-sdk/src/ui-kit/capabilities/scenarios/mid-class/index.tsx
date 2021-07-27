@@ -14,6 +14,7 @@ import { WhiteboardContainer } from '~capabilities/containers/board';
 import { DialogContainer } from '~capabilities/containers/dialog';
 import { LoadingContainer } from '~capabilities/containers/loading';
 import {
+  MidVideoMarqueeContainer,
   VideoMarqueeStudentContainer,
   VideoPlayerTeacher,
 } from '~capabilities/containers/video-player';
@@ -25,6 +26,8 @@ import { useLayoutEffect } from 'react';
 import { useUIStore } from '@/infra/hooks';
 
 import { ToastContainer } from '~capabilities/containers/toast';
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { get } from 'lodash';
 
 export const MidClassScenario = observer(() => {
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
@@ -57,6 +60,14 @@ export const MidClassScenario = observer(() => {
     fullscreen: !!isFullScreen,
   });
 
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
+  const orgName = get(roomProperties, 'im.huanxin.orgName')
+  const appName = get(roomProperties, 'im.huanxin.appName')
+
+  const { roomInfo : {userRole}} = useRoomContext()
+
+  const visible = userRole !== EduRoleTypeEnum.invisible
+
   return (
     <Layout
       className={cls}
@@ -65,9 +76,11 @@ export const MidClassScenario = observer(() => {
         height: '100vh',
       }}>
       <NavigationBar />
+      <Layout className="layout layout-row layout-video">
+        <MidVideoMarqueeContainer />
+      </Layout>
       <Layout className="horizontal">
         <Content className="column">
-          <VideoMarqueeStudentContainer />
           <div className="board-box">
             <WhiteboardContainer>
               <ScreenSharePlayerContainer />
@@ -94,10 +107,10 @@ export const MidClassScenario = observer(() => {
               placement="bottom"
             />
           </div>
-          <Widget
-            className="chat-panel chat-border"
-            widgetComponent={chatWidget}
-          />
+          {chatroomId ?
+            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
+            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
+          }
         </Aside>
       </Layout>
       <DialogContainer />

@@ -1,9 +1,8 @@
-import { AREA_CODE } from './../core/media-service/interfaces/index';
-import { AgoraEduApi } from '../core/services/edu-api';
-import { IAgoraRTC } from 'agora-rtc-sdk-ng';
-import { EnumOnlineState } from '../core/services/interface';
-import { isEmpty, set, setWith } from 'lodash';
+import { isEmpty, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
+import { VideoRenderState } from '../core/media-service/renderer';
+import { AgoraEduApi } from '../core/services/edu-api';
+import { EnumOnlineState } from '../core/services/interface';
 
 export enum EduCourseState {
   EduCourseStatePending = 0,
@@ -172,17 +171,13 @@ export interface EduConfiguration {
   agoraElectron?: any;
   logLevel: LogLevel;
   logDirectoryPath: string;
-  codec?: string;
-  sdkDomain?: string;
-  rtmUid: string;
-  rtmToken: string;
-  scenarioType?: EduRoomTypeEnum;
-  userRole?: EduRoleTypeEnum;
-  resolution?: {
-    width: number;
-    height: number;
-    frameRate: number;
-  };
+  codec?: string
+  sdkDomain?: string
+  rtmUid: string
+  rtmToken: string,
+  scenarioType?: number,
+  cameraEncoderConfigurations?: EduVideoEncoderConfiguration,
+  userRole?: EduRoleTypeEnum
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
@@ -353,11 +348,6 @@ export enum EduRenderMode {}
 
 export interface EduRenderConfig {
   renderMode: EduRenderMode;
-}
-
-export interface EduVideoConfig {
-  resolution?: any;
-  fps?: string;
 }
 
 export interface EduStreamConfig {
@@ -882,6 +872,9 @@ declare function event_remote_stream_removed(
   fromClassroom: EduClassroom,
 ): void;
 
+declare function event_local_first_frame_render(state: VideoRenderState): void;
+
+declare function event_remote_first_frame_render(state: VideoRenderState, uid: string): void;
 export interface IEduClassroomManager {
   // emit once
   once(
@@ -927,6 +920,9 @@ export interface IEduClassroomManager {
     event: 'connection-state-change',
     listener: typeof event_connection_state_changed,
   ): void;
+
+  on(event: 'local-video-state-update', listener: typeof event_local_first_frame_render): void
+  on(event: 'remote-video-state-update', listener: typeof event_local_first_frame_render): void
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;

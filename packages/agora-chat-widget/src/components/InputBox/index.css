@@ -1,0 +1,121 @@
+.input-box {
+    /* position: relative; */
+    margin: 5px 0;
+    width: 100%;
+    height: 115px;
+    background: #F9F9FC;
+    border-radius: 6px 6px 4px 4px;
+    border: 1px solid #ECECF1;
+    position: fixed;
+    bottom: 3px;
+}
+
+.all-mute {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.all-mute-text {
+    width: 53px;
+    height: 17px;
+    font-size: 13px;
+    font-family: 'PingFangSC-Regular',
+        'PingFang SC';
+    font-weight: 400;
+    color: #7D8798;
+    line-height: 18px;
+}
+
+.chat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    padding: 0 5px;
+}
+
+.emoji-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.emoji-mask {
+    width: 100%;
+    bottom: 0;
+    top: 0;
+    position: fixed;
+    opacity: .3;
+    text-align: center;
+    margin: 0 auto;
+    left: 0;
+    right: calc(100% - 280px);
+    z-index: 1000;
+}
+
+.emoji-content {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 16px 0 0px 16px;
+    font-size: 20px;
+    vertical-align: sub;
+    cursor: pointer;
+}
+
+.emoji-all {
+    position: absolute;
+    left: 0;
+    bottom: 115px;
+    background: #1D2026;
+    box-shadow: 0px -8px 32px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid #22262E;
+    padding-bottom: 16px;
+    z-index: 1000;
+    -moz-user-select: none;
+    /*火狐*/
+    -webkit-user-select: none;
+    /*webkit浏览器*/
+    -ms-user-select: none;
+    /*IE10*/
+    -khtml-user-select: none;
+    /*早期浏览器*/
+    user-select: none;
+}
+
+.emoji-modal {
+    user-select: none;
+}
+
+textarea {
+    outline: none !important;
+    resize: none !important;
+    border: none !important;
+}
+
+.input-chat {
+    background: #F9F9FC !important;
+    outline: none !important;
+    resize: none !important;
+    border: none !important;
+}
+
+
+.input-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3px;
+    padding: 0 8px;
+}
+
+/* .send-btn {
+    width: 80px;
+    height: 30px !important;
+    background: #357BF6;
+    border-radius: 15px !important;
+    display: flex;
+    justify-content: flex-end;
+} */

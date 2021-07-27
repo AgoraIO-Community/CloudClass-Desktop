@@ -13,9 +13,21 @@ const platform = os.platform();
 const release = os.release();
 const type = os.type();
 // Module to control application life.
+
+/**
+ *  （桌面端）登陆页默认&最小尺寸范围：960*640
+ *  （桌面端）课堂内默认&最小尺寸范围：1280*720
+ */
+
+const realSize = {
+  width: 1280,
+  height: 720,
+  // changeWidth: 1280,
+  // changeHeight: 720
+}
 const { app, Menu, netLog } = electron;
 
-// app.allowRendererProcessReuse = false;
+app.allowRendererProcessReuse = false;
 // Menu template
 const isMac = platform === 'darwin';
 
@@ -35,8 +47,8 @@ async function createWindow() {
       submitURL: process.env.REACT_APP_CRASH_REPORT_URL,
       uploadToServer: true,
       extra: {
-        version: '6.0.0',
-      },
+        version: '6.0.0'
+      }
     });
   }
 
@@ -47,106 +59,107 @@ async function createWindow() {
   //   });
   // }
 
+
   mainWindow = new BrowserWindow({
     frame: true,
-    width: 1035,
-    height: 720,
+    width: realSize.width,
+    height: realSize.height,
     center: true,
-    // resizable: false,
+    resizable: true,
+    fullscreen: false,
     // show: true,
     webPreferences: {
-      autoplayPolicy: 'no-user-gesture-required',
+      autoplayPolicy: "no-user-gesture-required",
       nodeIntegration: true,
-      preload: path.join(__dirname, './preload'),
-    },
+      contextIsolation: false,
+      // preload: runtime.preloadPath,
+      webSecurity: false,
+      webviewTag: true,
+      nativeWindowOpen: true,
+      backgroundThrottling: false,
+      // nodeIntegrationInSubFrames: true,
+      // autoplayPolicy: 'no-user-gesture-required',
+      // nodeIntegration: true,
+      // nodeIntegrationInWorker: true,
+      // nodeIntegrationInSubFrames: true,
+      // contextIsolation: false,
+      preload: path.join(__dirname, './preload')
+    }
   });
 
-  const prodUrl = process.env.ELECTRON_PROD_URL;
+  mainWindow.setAspectRatio(16/9, realSize);
 
-  const startUrl =
-    process.env.ELECTRON_START_URL ||
-    `file://${path.resolve(__dirname, '../../app.asar/build')}/index.html`;
+  const prodUrl = process.env.ELECTRON_PROD_URL
+
+  const startUrl = (process.env.ELECTRON_START_URL ||
+    `file://${path.resolve(
+      __dirname,
+      '../../app.asar/build'
+    )}/index.html`);
 
   mainWindow.center();
 
   // and load the index.html of the app.
   mainWindow.loadURL(startUrl);
 
-  const appLogPath = app.getPath('logs');
+  const appLogPath = app.getPath('logs')
 
-  const logPath = path.join(appLogPath, `log`, `agora_sdk.log`);
-  const dstPath = path.join(appLogPath, `log`, `agora_sdk.log.zip`);
-  const videoSourceLogPath = path.join(
-    appLogPath,
-    `log`,
-    `video_source_agora_sdk.log`,
-  );
-  const videoSourceAddonLogPath = path.join(
-    appLogPath,
-    `log`,
-    `video_source_addon_agora_sdk.log`,
-  );
+  const logPath = path.join(appLogPath, `log`, `agora_sdk.log`)
+  const dstPath = path.join(appLogPath, `log`, `agora_sdk.log.zip`)
+  const videoSourceLogPath = path.join(appLogPath, `log`, `video_source_agora_sdk.log`)
+  const videoSourceAddonLogPath = path.join(appLogPath, `log`, `video_source_addon_agora_sdk.log`)
 
-  mainWindow.webContents.on('did-finish-load', (event, args) => {
-    event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath]);
-  });
+  mainWindow.webContents.on("did-finish-load", (event, args) => {
+    // event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath])
+  })
 
-  mainWindow.webContents.once('did-finish-load', () => {
-    mainWindow.webContents.send('initialize', [
-      logPath,
-      dstPath,
-      videoSourceLogPath,
-      videoSourceAddonLogPath,
-    ]);
-  });
+  mainWindow.webContents.once("did-finish-load", () => {
+    // mainWindow.webContents.send('initialize', [logPath, dstPath, videoSourceLogPath, videoSourceAddonLogPath])
+  })
 
-  mainWindow.webContents.on(
-    'new-window',
-    (event, url, frameName, disposition, options, additionalFeatures) => {},
-  );
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+  })
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    const currentWindow = BrowserWindow.getFocusedWindow();
+    const currentWindow = BrowserWindow.getFocusedWindow()
     if (currentWindow === mainWindow) {
-      mainWindow = null;
+      mainWindow = null
     }
     // mainWindow = null
-  });
+  })
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
-  });
+  })
 
   // TODO: electron menu template
   // More details please see: https://www.electronjs.org/docs/api/menu#menubuildfromtemplatetemplate
   const template = [
     // { role: 'appMenu' }
-    ...(isMac
-      ? [
-          {
-            label: app.name,
-            submenu: [
-              // { role: 'about' },
-              { type: 'separator' },
-              { role: 'services' },
-              { type: 'separator' },
-              { role: 'hide' },
-              { role: 'hideothers' },
-              { role: 'unhide' },
-              { type: 'separator' },
-              { role: 'quit' },
-            ],
-          },
-        ]
-      : []),
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        // { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }] : []),
     // { role: 'fileMenu' }
     {
       label: 'File',
-      submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
+      submenu: [
+        isMac ? { role: 'close' } : { role: 'quit' }
+      ]
     },
     // { role: 'editMenu' }
     {
@@ -158,18 +171,23 @@ async function createWindow() {
         { role: 'cut' },
         { role: 'copy' },
         { role: 'paste' },
-        ...(isMac
-          ? [
-              { role: 'pasteAndMatchStyle' },
-              { role: 'delete' },
-              { role: 'selectAll' },
-              { type: 'separator' },
-              {
-                label: 'Speech',
-                submenu: [{ role: 'startspeaking' }, { role: 'stopspeaking' }],
-              },
+        ...(isMac ? [
+          { role: 'pasteAndMatchStyle' },
+          { role: 'delete' },
+          { role: 'selectAll' },
+          { type: 'separator' },
+          {
+            label: 'Speech',
+            submenu: [
+              { role: 'startspeaking' },
+              { role: 'stopspeaking' }
             ]
-          : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
+          }
+        ] : [
+          { role: 'delete' },
+          { type: 'separator' },
+          { role: 'selectAll' }
+        ])
       ],
     },
     // { role: 'viewMenu' }
@@ -184,8 +202,8 @@ async function createWindow() {
         { role: 'zoomin' },
         { role: 'zoomout' },
         { type: 'separator' },
-        { role: 'togglefullscreen' },
-      ],
+        { role: 'togglefullscreen' }
+      ]
     },
     // { role: 'windowMenu' }
     {
@@ -193,15 +211,15 @@ async function createWindow() {
       submenu: [
         { role: 'minimize' },
         { role: 'zoom' },
-        ...(isMac
-          ? [
-              { type: 'separator' },
-              { role: 'front' },
-              { type: 'separator' },
-              { role: 'window' },
-            ]
-          : [{ role: 'close' }]),
-      ],
+        ...(isMac ? [
+          { type: 'separator' },
+          { role: 'front' },
+          { type: 'separator' },
+          { role: 'window' }
+        ] : [
+          { role: 'close' }
+        ])
+      ]
     },
     {
       label: 'Log',
@@ -209,10 +227,10 @@ async function createWindow() {
         {
           label: 'export log',
           click: async () => {
-            mainWindow.webContents.send('export-log', [logPath, dstPath]);
-          },
-        },
-      ],
+            mainWindow.webContents.send("export-log", [logPath, dstPath])
+          }
+        }
+      ]
     },
     {
       label: 'About Agora',
@@ -220,19 +238,19 @@ async function createWindow() {
         {
           label: 'more info',
           click: async () => {
-            const { shell } = require('electron');
-            await shell.openExternal('https://www.agora.io');
-          },
-        },
-      ],
-    },
-  ];
+            const { shell } = require('electron')
+            await shell.openExternal('https://www.agora.io')
+          }
+        }
+      ]
+    }
+  ]
 
-  const menu = Menu.buildFromTemplate(template);
+  const menu = Menu.buildFromTemplate(template)
 
   if (platform === 'darwin') {
-    mainWindow.excludedFromShownWindowsMenu = true;
-    Menu.setApplicationMenu(menu);
+    mainWindow.excludedFromShownWindowsMenu = true
+    Menu.setApplicationMenu(menu)
   }
 
   if (platform === 'win32') {
@@ -297,13 +315,17 @@ async function createWindow() {
   // });
 
   ipcMain.on('close', () => {
-    const currentWindow = BrowserWindow.getFocusedWindow() || mainWindow;
+    const currentWindow = BrowserWindow.getFocusedWindow() || mainWindow
     if (currentWindow === mainWindow) {
-      app.quit();
+      app.quit()
       return;
     }
-    currentWindow.close();
+    currentWindow.close()
   });
+
+  // ipcMain.on('changWindowSize', () =>
+  //   mainWindow.setSize(realSize.changeWidth, realSize.changeHeight)
+  // )
 }
 
 // This method will be called when Electron has finished
@@ -325,16 +347,16 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   // if (process.platform !== 'darwin') {
-  app.quit();
+  app.quit()
   // }
 });
 
 app.on('activate', function () {
-  console.log('main process activate');
+  console.log("main process activate");
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow();
+    createWindow()
   }
 
   if (mainWindow) {

@@ -5,6 +5,11 @@ import { MediaService } from '../index';
 import { AgoraWebRtcWrapper } from '../web';
 import { EduLogger } from './../../logger/index';
 
+
+const flat = (arr: any[]) => {
+  return arr.reduce((arr, elem) => arr.concat(elem), []);
+};
+
 type SourceType = 'default' | 'screen';
 
 export interface IMediaRenderer {
@@ -72,48 +77,72 @@ export abstract class UserRenderer implements IMediaRenderer {
   }
 }
 
-export enum LocalVideoRenderState {
-  Init = 0,
-  Playing = 1,
-  Failed = 2,
+export enum VideoRenderState {
+  Idle = 0,
+  Prepare = 1,
+  FirstFrameRendered = 2,
+  Playing = 3,
+  Freezing = 4,
+  Failed = -1
 }
 
 export class LocalUserRenderer extends UserRenderer {
   private el: HTMLCanvasElement | undefined;
   renderFrameRate: number = 0;
   freezeCount: number = 0;
-  renderState: LocalVideoRenderState = LocalVideoRenderState.Init;
+  renderState: VideoRenderState = VideoRenderState.Idle
 
   constructor(config: UserRendererInit) {
     super(config);
     this.local = true;
   }
 
-  setFPS(fps: number) {
-    this.renderFrameRate = fps;
-    if (this.renderState === LocalVideoRenderState.Init) {
-      if (fps > 0) {
-        this.renderState = LocalVideoRenderState.Playing;
-      } else {
-        this.freezeCount++;
+  updateVideoRenderState(state: VideoRenderState) {
+    this.renderState = state
+    this.context.fireLocalVideoStateUpdated(state)
+  }
 
-        if (this.freezeCount > 3) {
-          this.renderState = LocalVideoRenderState.Failed;
+  setFPS(fps: number) {
+    this.renderFrameRate = fps
+    // if preparing
+    if(this.renderState === VideoRenderState.Prepare) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Failed)
         }
       }
-    }
-    if (fps > 0) {
-      this.renderState = LocalVideoRenderState.Playing;
+    } else if(this.renderState === VideoRenderState.Playing) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Freezing)
+        }
+      }
+    } else if(this.renderState === VideoRenderState.Freezing) {
+      if(fps > 0) {
+        this.updateVideoRenderState(VideoRenderState.Playing)
+      }
     }
   }
 
   play(dom: HTMLElement, fit?: boolean): void {
     // clear flag when re-play
-    this.renderFrameRate = 0;
-    this.freezeCount = 0;
+    this.renderFrameRate = 0
+    this.freezeCount = 0
+    this.updateVideoRenderState(VideoRenderState.Prepare)
     if (this.isWeb) {
       if (this.videoTrack) {
-        this.videoTrack.play(dom);
+        this.videoTrack.play(dom)
+        dom.querySelector('video')?.addEventListener('loadeddata', () => {
+          // 本地 media中的首帧已经加载。fire xxx事件 在edu-core中监听事件
+          this.updateVideoRenderState(VideoRenderState.FirstFrameRendered)
+          Promise.resolve().then(() => {
+            this.updateVideoRenderState(VideoRenderState.Playing)
+          })
+        }, {
+          once: true
+        })
       }
     }
     if (this.isElectron) {
@@ -151,7 +180,8 @@ export class LocalUserRenderer extends UserRenderer {
         this.electron.client.setClientRole(2);
       }
     }
-    this._playing = false;
+    this.updateVideoRenderState(VideoRenderState.Idle)
+    this._playing = false
   }
 
   getUuid() {
@@ -159,17 +189,11 @@ export class LocalUserRenderer extends UserRenderer {
   }
 }
 
-export enum RemoteVideoRenderState {
-  Init = 0,
-  Playing = 1,
-  Failed = 2,
-}
-
 export class RemoteUserRenderer extends UserRenderer {
   private el: HTMLCanvasElement | undefined;
   renderFrameRate: number = 0;
   freezeCount: number = 0;
-  renderState: RemoteVideoRenderState = RemoteVideoRenderState.Init;
+  renderState: VideoRenderState = VideoRenderState.Idle
 
   constructor(config: UserRendererInit) {
     super(config);
@@ -178,37 +202,51 @@ export class RemoteUserRenderer extends UserRenderer {
     this.channel = config.channel;
   }
 
-  setFPS(fps: number) {
-    this.renderFrameRate = fps;
-    if (this.renderState === RemoteVideoRenderState.Init) {
-      if (fps > 0) {
-        this.renderState = RemoteVideoRenderState.Playing;
-      } else {
-        this.freezeCount++;
+  updateVideoRenderState(state: VideoRenderState) {
+    this.renderState = state
+    this.context.fireRemoteVideoStateUpdated(state, this.uid)
+  }
 
-        if (this.freezeCount > 3) {
-          this.renderState = RemoteVideoRenderState.Failed;
+  setFPS(fps: number) {
+    this.renderFrameRate = fps
+    // if preparing
+    if(this.renderState === VideoRenderState.Prepare) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Failed)
         }
       }
-    }
-    if (fps > 0) {
-      this.renderState = RemoteVideoRenderState.Playing;
-      this.freezeCount = 0;
+    } else if(this.renderState === VideoRenderState.Playing) {
+      if(fps === 0) {
+        this.freezeCount++
+        if(this.freezeCount > 3) {
+          this.updateVideoRenderState(VideoRenderState.Freezing)
+        }
+      }
+    } else if(this.renderState === VideoRenderState.Freezing) {
+      if(fps > 0) {
+        this.updateVideoRenderState(VideoRenderState.Playing)
+      }
     }
   }
 
   play(dom: HTMLElement, fit?: boolean) {
+    this.renderFrameRate = 0
+    this.freezeCount = 0
+    this.updateVideoRenderState(VideoRenderState.Prepare)
     if (this.isWeb) {
       if (this.videoTrack) {
-        this.videoTrack.play(dom);
-        console.log(
-          'played remote this.videoTrack trackId: ',
-          this.videoTrack.getTrackId(),
-          ' dom ',
-          dom.id,
-          ' videoTrack',
-          this.videoTrack,
-        );
+        this.videoTrack.play(dom)
+        console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
+        dom.querySelector('video')?.addEventListener('loadeddata', () => {
+          this.updateVideoRenderState(VideoRenderState.FirstFrameRendered)
+          Promise.resolve().then(() => {
+            this.updateVideoRenderState(VideoRenderState.Playing)
+          })
+        }, {
+          once: true
+        })
       }
     }
     if (this.isElectron) {
@@ -219,6 +257,33 @@ export class RemoteUserRenderer extends UserRenderer {
       } else {
         //@ts-ignore
         this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
+      }
+      let electron_renderer: any = this.electron.client._getRenderers(1, +this.uid, this.channel)
+      const remote_renderer = this
+      if(electron_renderer && electron_renderer[0]) {
+        electron_renderer = electron_renderer[0]
+        if(this.renderState === VideoRenderState.Prepare) {
+          // only do this if it's preparing video
+          // @ts-ignore
+          if(!electron_renderer._drawFrame) {
+            // @ts-ignore
+            electron_renderer._drawFrame = electron_renderer.drawFrame
+            const proxy = (context: any, method: any) => {
+              return function(...args: any[]) {
+                // let args = 
+                flat(args).join('');
+                remote_renderer.updateVideoRenderState.apply(remote_renderer, [VideoRenderState.FirstFrameRendered])
+                setTimeout(() => {remote_renderer.updateVideoRenderState.apply(remote_renderer, [VideoRenderState.Playing])}, 0)
+                method.apply(context, args);
+                // @ts-ignore
+                electron_renderer.drawFrame = electron_renderer._drawFrame
+                // @ts-ignore
+                delete electron_renderer._drawFrame
+              };
+            }
+            electron_renderer.drawFrame = proxy(electron_renderer, electron_renderer['drawFrame'])
+          }
+        }
       }
     }
     this._playing = true;
@@ -241,7 +306,8 @@ export class RemoteUserRenderer extends UserRenderer {
         this.electron.client.destroyRender(+this.uid, null);
       }
     }
-    this._playing = false;
+    this.updateVideoRenderState(VideoRenderState.Idle)
+    this._playing = false
   }
 
   getUuid() {

@@ -16,8 +16,9 @@ import {
   transI18n,
   I18nProvider,
   changeLanguage,
-} from '~ui-kit';
-import classnames from 'classnames';
+  Icon
+} from '~ui-kit'
+import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
@@ -133,10 +134,11 @@ const App = observer(() => {
 export class AgoraExtAppCountDown implements IAgoraExtApp {
   appIdentifier = 'io.agora.countdown';
   appName = 'countdown';
+  icon = <Icon type="countdown" useSvg size={24}/>
   width = 258;
   height = 168; // 开始倒计时后高度为 55
 
-  store?: PluginStore;
+  store?: PluginStore
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
@@ -159,8 +161,16 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     );
   }
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.height = this.store?.showSetting ? 168 : 55;
-    this.store?.onReceivedProps(properties, cause);
+    this.height = this.store?.showSetting ? 168 : 55
+    this.store?.onReceivedProps(properties, cause)
   }
-  extAppWillUnload(): void {}
+  extAppWillUnload(): void {
+    this.store!.changeRoomProperties({
+      state: '0',
+      startTime: '0',
+      pauseTime: '0',
+      duration: '0',
+      commonState: 0
+    })
+  }
 }

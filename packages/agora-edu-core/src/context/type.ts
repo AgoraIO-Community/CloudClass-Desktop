@@ -1,24 +1,13 @@
 import {
-  UserRenderer,
-  LocalUserRenderer,
-  EduUser,
-  EduStream,
-  EduRoleTypeEnum,
+  EduStream, EduUser, LocalUserRenderer, ScreenShareType, UserRenderer
 } from 'agora-rte-sdk';
+import { Subject } from 'rxjs';
 import {
-  AnimationMode,
-  ApplianceNames,
-  MemberState,
-  Room,
-  SceneDefinition,
-  ViewMode,
+  Room
 } from 'white-web-sdk';
-import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { StorageCourseWareItem } from '../types';
+import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';
 import { MaterialDataResource } from '../services/upload-service';
-import { RosterUserInfo } from '../stores/small-class';
-import { ScreenShareType } from 'agora-rte-sdk';
+import { StorageCourseWareItem } from '../types';
 
 export type DeviceErrorCallback = (evt: {
   type: 'video' | 'audio';
@@ -48,7 +37,7 @@ export type EduMediaStream = {
   video: boolean;
   hideControl: boolean;
   whiteboardGranted: boolean;
-  micVolume: number;
+  // micVolume: number;
   placement: string;
   stars: number;
   isLocal: boolean;
@@ -444,172 +433,173 @@ export type ScreenShareContext = {
   canSharingScreen: boolean;
 };
 export type RoomContext = {
-  /**
-   * 是否成功加入了房间
-   */
-  joined: boolean;
-  /**
-   * 场景类型
-   * @version v1.1.0
-   */
-  sceneType: number;
-  /**
-   * 销毁房间
-   * @version v1.1.0
-   */
-  destroyRoom: () => Promise<void>;
-  /**
-   * 加入房间
-   * @version v1.1.0
-   */
-  joinRoom: () => Promise<void>;
-  /**
-   * 屏幕分享
-   * @param windowId 窗口ID
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 ScreenShareContext 中的同名方法
-   */
-  startNativeScreenShareBy: (windowId: number) => Promise<void>;
-  /**
-   * 关闭屏幕分享展示窗口
-   * @version v1.1.0
-   */
-  removeScreenShareWindow: () => void;
-  /**
-   * 教师接受举手
-   * @param userUuid 举手用户uuid
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
-   */
-  teacherAcceptHandsUp: (userUuid: string) => Promise<void>;
-  /**
-   * 教师拒绝举手
-   * @param userUuid 举手用户uuid
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
-   */
-  teacherRejectHandsUp: (userUuid: string) => Promise<void>;
-  /**
-   * 举手学生列表
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
-   */
-  handsUpStudentList: any[];
-  /**
-   * 申请上台的用户总数
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
-   */
-  processUserCount: number;
-  /**
-   * 房间信息
-   * @version v1.1.0
-   */
-  roomInfo: RoomInfo;
-  /**
-   * 是否开始上课
-   * @version v1.1.0
-   */
-  isCourseStart: boolean;
-  /**
-   * 踢人，禁止再次进入教室
-   * @param userUuid 用户uuid
-   * @param roomUuid 房间uuid
-   * @version v1.1.0
-   */
-  kickOutBan: (userUuid: string, roomUuid: string) => Promise<void>;
-  /**
-   * 踢人，进移出教室一次
-   * @param userUuid 用户uuid
-   * @param roomUuid 房间uuid
-   * @version v1.1.0
-   */
-  kickOutOnce: (userUuid: string, roomUuid: string) => Promise<void>;
-  /**
-   * 课程状态
-   * @version v1.1.0
-   */
-  liveClassStatus: {
-    classState: string;
-    duration: number;
-  };
-  /**
-   * 禁用视频
-   * @param userUuid 用户uuid
-   * @param isLocal 是否为本地用户
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
-   */
-  muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>;
-  /**
-   * 取消禁用视频
-   * @param userUuid 用户uuid
-   * @param isLocal 是否为本地用户
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
-   */
-  unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>;
-  /**
-   * 禁用音频
-   * @param userUuid 用户uuid
-   * @param isLocal 是否为本地用户
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
-   */
-  muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>;
-  /**
-   * 取消禁用音频
-   * @param userUuid 用户uuid
-   * @param isLocal 是否为本地用户
-   * @version v1.1.0
-   * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
-   */
-  unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>;
-  /**
-   * 查询摄像头设备状态
-   * @param userList 查询的用户列表
-   * @param userUuid 查询目标用户Uuid
-   * @param streamUuid 查询目标用户流Uuid
-   * @version v1.1.2
-   */
-  queryCameraDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
-  /**
-   * 查询麦克风设备状态
-   * @param userList 查询的用户列表
-   * @param userUuid 查询目标用户Uuid
-   * @param streamUuid 查询目标用户流Uuid
-   * @version v1.1.2
-   */
-  queryMicrophoneDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
-  /**
-   * 是否正在加载房间
-   * @version v1.1.2
-   */
-  isJoiningRoom: boolean;
-  /**
-   * 当前房间属性
-   * @version v1.1.2
-   */
-  roomProperties: any;
-  /**
-   * 更新flexProps
-   * @version v1.1.2
-   */
-  updateFlexRoomProperties: (properties: any, cause: any) => Promise<any>;
-  /**
-   * 获取flexProps
-   * @version v1.1.2
-   */
-  flexRoomProperties: any;
-};
+    /**
+     * 是否成功加入了房间
+     */
+    joined: boolean, 
+    /**
+     * 场景类型
+     * @version v1.1.0
+     */
+    sceneType: number,
+    /**
+     * 销毁房间
+     * @version v1.1.0
+     */
+    destroyRoom: () => Promise<void>,
+    /**
+     * 加入房间
+     * @version v1.1.0
+     */
+    joinRoom: () => Promise<void>,
+    /**
+     * 屏幕分享
+     * @param windowId 窗口ID
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 ScreenShareContext 中的同名方法
+     */
+    startNativeScreenShareBy: (windowId: number) => Promise<void>,
+    /**
+     * 关闭屏幕分享展示窗口
+     * @version v1.1.0
+     */
+    removeScreenShareWindow: () => void,
+    /**
+     * 教师接受举手
+     * @param userUuid 举手用户uuid
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    teacherAcceptHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 教师拒绝举手
+     * @param userUuid 举手用户uuid
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    teacherRejectHandsUp: (userUuid: string) => Promise<void>,
+    /**
+     * 举手学生列表
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    handsUpStudentList: any[],
+    /**
+     * 申请上台的用户总数
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 HandsUpContext 中的同名方法
+     */
+    processUserCount: number,
+    /**
+     * 房间信息
+     * @version v1.1.0
+     */
+    roomInfo: RoomInfo,
+    /**
+     * 是否开始上课
+     * @version v1.1.0
+     */
+    isCourseStart: boolean,
+    /**
+     * 踢人，禁止再次进入教室
+     * @param userUuid 用户uuid
+     * @param roomUuid 房间uuid
+     * @version v1.1.0
+     */
+    kickOutBan: (userUuid: string, roomUuid: string) => Promise<void>,
+    /**
+     * 踢人，进移出教室一次
+     * @param userUuid 用户uuid
+     * @param roomUuid 房间uuid
+     * @version v1.1.0
+     */
+    kickOutOnce: (userUuid: string, roomUuid: string) => Promise<void>,
+    /**
+     * 课程状态
+     * @version v1.1.0
+     */
+    liveClassStatus: {
+        classState: string;
+        duration: number;
+    },
+    /**
+     * 禁用视频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    muteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 取消禁用视频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    unmuteVideo: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 禁用音频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    muteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 取消禁用音频
+     * @param userUuid 用户uuid
+     * @param isLocal 是否为本地用户
+     * @version v1.1.0
+     * @deprecated 该方法已在1.1.2废弃，请使用 StreamListContext 中的同名方法
+     */
+    unmuteAudio: (userUuid: string, isLocal: boolean) => Promise<void>,
+    /**
+     * 查询摄像头设备状态
+     * @param userList 查询的用户列表
+     * @param userUuid 查询目标用户Uuid
+     * @param streamUuid 查询目标用户流Uuid
+     * @version v1.1.2
+     */
+    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+    /**
+     * 查询麦克风设备状态
+     * @param userList 查询的用户列表
+     * @param userUuid 查询目标用户Uuid
+     * @param streamUuid 查询目标用户流Uuid
+     * @version v1.1.2
+     */
+    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+    /**
+     * 是否正在加载房间
+     * @version v1.1.2
+     */
+    isJoiningRoom: boolean,
+    /**
+     * 当前房间属性
+     * @version v1.1.2
+     */
+    roomProperties: any
+    /**
+     * 更新flexProps
+     * @version v1.1.2
+     */
+    updateFlexRoomProperties: (properties: any, cause: any) => Promise<any>;
+    /**
+     * 获取flexProps
+     * @version v1.1.2
+     */
+    flexRoomProperties: any;
+    setCarouselState: any;
+    /**
+     * startCarousel
+     */
+     startCarousel: () => Promise<any>;
+    /**
+     * stopCarousel
+     */
+    stopCarousel: () => Promise<any>;
+}
 export type RoomDiagnosisContext = {
   /**
    * 当前实时网络质量诊断
@@ -1387,114 +1377,80 @@ export type ReportContext = {
 };
 
 export type CloudDriveContext = {
-  /**
-   * 可下载的云盘资源列表
-   * @version v1.1.2
-   */
-  downloadList: StorageCourseWareItem[];
-  /**
-   * 打开课件资源
-   * @param uuid 资源uuid
-   * @version v1.1.2
-   */
-  openCloudResource: (uuid: string) => Promise<void>;
-  /**
-   * 下载课件资源
-   * @param taskUuid 课件taskUuid
-   * @version v1.1.2
-   */
-  startDownload: (taskUuid: string) => Promise<void>;
-  /**
-   * 删除课件资源
-   * @param taskUuid 课件taskUuid
-   * @version v1.1.2
-   */
-  deleteSingle: (taskUuid: string) => Promise<void>;
-  /**
-   * 云盘个人资源列表
-   * @version v1.1.2
-   */
-  personalResources: MaterialDataResource[];
-  /**
-   * 云盘公共资源列表
-   * @version v1.1.2
-   */
-  publicResources: MaterialDataResource[];
-  /**
-   * 所有云盘课件资源列表
-   * @version v1.1.2
-   */
-  resourcesList: Resource[];
-  /**
-   * 更新云盘资源列表
-   * @version v1.1.2
-   */
-  refreshCloudResources: () => Promise<void>;
-  /**
-   * 移除云盘课件资源
-   * @param resourceUuids 课件资源uuid
-   * @version v1.1.2
-   */
-  removeMaterialList: (resourceUuids: string[]) => Promise<void>;
-  /**
-   * 取消上传
-   * @version v1.1.2
-   */
-  cancelUpload: () => Promise<void>;
-  /**
-   * 关闭课件资源
-   * @param resourceUuid 资源uuid
-   * @version v1.1.2
-   */
-  closeMaterial: (resourceUuid: string) => void;
-  /**
-   * 上传云盘课件资源
-   * @param payload 上传的资源参数
-   * @version v1.1.2
-   */
-  doUpload: (payload: any) => Promise<void>;
-};
-
-export type ClassroomStatsContext = {
-  /**
-   * CPU使用情况
-   * @version v1.3.0
-   */
-  cpuUsage: number;
-  /**
-   * 网络质量
-   * @version v1.3.0
-   */
-  networkQuality: string;
-  /**
-   * 网络延迟毫秒数
-   * @version v1.3.0
-   */
-  networkLatency: number;
-  /**
-   * 网络丢包率百分比
-   * @version v1.3.0
-   */
-  packetLostRate: number;
-  /**
-   * 音视频下行丢包率
-   * @version v1.3.0
-   */
-  rxPacketLossRate: number;
-  /**
-   * 音视频上行丢包率
-   * @version v1.3.0
-   */
-  txPacketLossRate: number;
-  /**
-   * 下行网络质量
-   * @version v1.3.0
-   *
-   */
-  rxNetworkQuality: string;
-  /**
-   * 上行网络质量
-   * @version v1.3.0
-   */
-  txNetworkQuality: string;
-};
+    /**
+     * 可下载的云盘资源列表
+     * @version v1.1.2
+     */
+    downloadList: StorageCourseWareItem[],
+    /**
+     * 打开课件资源
+     * @param uuid 资源uuid
+     * @version v1.1.2
+     */
+    openCloudResource: (uuid: string) => Promise<void>,
+    /**
+     * 下载课件资源
+     * @param taskUuid 课件taskUuid
+     * @version v1.1.2
+     */
+    startDownload: (taskUuid: string) => Promise<void>,
+    /**
+     * 删除课件资源
+     * @param taskUuid 课件taskUuid
+     * @version v1.1.2
+     */
+    deleteSingle: (taskUuid: string) => Promise<void>,
+    /**
+     * 云盘个人资源列表
+     * @version v1.1.2
+     */
+    personalResources: MaterialDataResource[],
+    /**
+     * 云盘公共资源列表
+     * @version v1.1.2
+     */
+    publicResources: MaterialDataResource[],
+    /**
+     * 所有云盘课件资源列表
+     * @version v1.1.2
+     */
+    resourcesList: Resource[],
+    /**
+     * 更新云盘资源列表
+     * @version v1.1.2
+     */
+    refreshCloudResources: () => Promise<void>,
+    /**
+     * 移除云盘课件资源
+     * @param resourceUuids 课件资源uuid
+     * @version v1.1.2
+     */
+    removeMaterialList: (resourceUuids: string[]) => Promise<void>,
+    /**
+     * 取消上传
+     * @version v1.1.2
+     */
+    cancelUpload: () => Promise<void>,
+    /**
+     * 关闭课件资源
+     * @param resourceUuid 资源uuid
+     * @version v1.1.2
+     */
+    closeMaterial: (resourceUuid: string) => void,
+    /**
+     * 上传云盘课件资源
+     * @param payload 上传的资源参数
+     * @version v1.1.2
+     */
+    doUpload: (payload: any) => Promise<void>,
+    /**
+     * 修改或更新课件
+     * @param CourseWareItem 课件
+     * @version v1.1.4
+     */
+    upsertResources(items: CourseWareItem[]): void,
+    /**
+     * 全部资源
+     */
+    allResources: MaterialDataResource[],
+}
