@@ -1,97 +1,97 @@
 .modal {
-    box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
-    border-radius: 8px;
-    border: 1px solid #E1E1EA;
-    padding-bottom: 20px;
-    @apply box-border bg-white;
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 8px;
+  border: 1px solid #e1e1ea;
+  padding-bottom: 20px;
+  @apply box-border bg-white;
 }
 
 .radio-container {
-    flex-direction: column;
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    height: 75px;
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 75px;
 }
 
 .customize-radio {
-    font-size: 13px;
-    color: #191919;
-    display: flex;
-    justify-content: center;
-    @apply items-center inline-flex justify-center;
+  font-size: 13px;
+  color: #191919;
+  display: flex;
+  justify-content: center;
+  @apply items-center inline-flex justify-center;
 }
 
 .customize-radio {
-    margin-top: 13px;
+  margin-top: 13px;
 }
 
-.customize-radio input[type=radio] {
-    height: 14px;
-    color: #586376 !important;
+.customize-radio input[type='radio'] {
+  height: 14px;
+  color: #586376 !important;
 }
 
-.customize-radio input[type=radio] ~ span {
-    color: #586376 !important;
+.customize-radio input[type='radio'] ~ span {
+  color: #586376 !important;
 }
 
-.customize-radio input[type=radio]:checked ~ span {
-    color: #191919 !important;
+.customize-radio input[type='radio']:checked ~ span {
+  color: #191919 !important;
 }
 
 .rc-notification-mask {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
 }
 
 .modal-title {
-    @apply box-border flex justify-between items-center relative;
-    height: 40px;
-    background-color: #F9F9FC;
-    padding: 0 20px;
-    border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid #EEEEF7;
-    z-index: 1;
+  @apply box-border flex justify-between items-center relative;
+  height: 40px;
+  background-color: #f9f9fc;
+  padding: 0 20px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #eeeef7;
+  z-index: 1;
 }
 
 .modal-title-text {
-    color: #333333;
-    font-size: 14px;
+  color: #333333;
+  font-size: 14px;
 }
 
 .modal-title-close {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .modal-content {
-    @apply box-border flex flex-col justify-center items-center;
-    padding: 17px 20px;
+  @apply box-border flex flex-col justify-center items-center;
+  padding: 17px 20px;
 }
 
 .modal-footer {
-    @apply flex justify-center items-center;
+  @apply flex justify-center items-center;
 }
 
 .btn-div {
-    margin: 0 7px;
+  margin: 0 7px;
 }
 
 .back-title {
-    font-size: 14px;
-    font-weight: 400;
-    color: #191919;
+  font-size: 14px;
+  font-weight: 400;
+  color: #191919;
 }
 
 .modal-mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 255, 255, .6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.6);
 }

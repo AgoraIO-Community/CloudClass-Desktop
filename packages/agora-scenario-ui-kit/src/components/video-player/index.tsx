@@ -1,13 +1,20 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
 import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Popover } from '~components/popover';
-import { Tooltip } from '~components/tooltip'
+import { Tooltip } from '~components/tooltip';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { useTranslation } from 'react-i18next';
-import { SvgaPlayer } from '~components/svga-player'
+import { SvgaPlayer } from '~components/svga-player';
 import { v4 as uuidv4 } from 'uuid';
 import { usePrevious } from '~utilities/hooks';
 import { SvgImg } from '~components/svg-img';
@@ -94,7 +101,7 @@ export interface BaseVideoPlayerProps {
   hidePrivateChat?: boolean;
   /**
    * 在线状态
-  */
+   */
   online?: boolean;
   hasStream?: boolean;
   userType?: 'student' | 'teacher' | 'assistant';
@@ -104,7 +111,7 @@ export interface BaseVideoPlayerProps {
   showGranted?: boolean;
 }
 
-type VideoPlayerType = BaseVideoPlayerProps & BaseProps
+type VideoPlayerType = BaseVideoPlayerProps & BaseProps;
 
 export interface VideoPlayerProps extends VideoPlayerType {
   /**
@@ -141,7 +148,7 @@ export interface VideoPlayerProps extends VideoPlayerType {
 }
 
 interface AnimSvga {
-  id: string
+  id: string;
 }
 
 export const VideoPlayer: FC<VideoPlayerProps> = ({
@@ -175,7 +182,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   cameraDevice = 1,
   onCameraClick,
   onMicClick,
-  onOffAllPodiumClick = () => console.log("on clear podiums"),
+  onOffAllPodiumClick = () => console.log('on clear podiums'),
   onOffPodiumClick,
   onWhiteboardClick,
   onSendStar,
@@ -184,28 +191,32 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
   ...restProps
 }) => {
-  const [animList, setAnimList] = useState<AnimSvga[]>([])
-  const previousState = usePrevious<{ stars: number, uid: string | number }>({ stars: stars, uid: `${uid}` })
+  const [animList, setAnimList] = useState<AnimSvga[]>([]);
+  const previousState = usePrevious<{ stars: number; uid: string | number }>({
+    stars: stars,
+    uid: `${uid}`,
+  });
   const animListCb = useCallback(() => {
     setAnimList([
       ...animList,
       {
         id: uuidv4(),
-      }
-    ])
-  }, [animList, setAnimList])
+      },
+    ]);
+  }, [animList, setAnimList]);
 
-  const onClose = useCallback((id) => {
-    setAnimList(
-      [...animList.filter((it: any) => it.id !== id)]
-    )
-  }, [animList, setAnimList])
+  const onClose = useCallback(
+    (id) => {
+      setAnimList([...animList.filter((it: any) => it.id !== id)]);
+    },
+    [animList, setAnimList],
+  );
 
   useEffect(() => {
     if (`${uid}` === `${previousState.uid}` && +stars > +previousState.stars) {
-      animListCb()
+      animListCb();
     }
-  }, [stars, previousState.uid, previousState.stars, animListCb])
+  }, [stars, previousState.uid, previousState.stars, animListCb]);
   const { t } = useTranslation();
   const cls = classnames({
     [`video-player`]: 1,
@@ -234,7 +245,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         placement={placement}
         onClick={() => {
           if (micDevice === 1) {
-            onMicClick(uid)
+            onMicClick(uid);
           }
         }}
       />
@@ -253,7 +264,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         placement={placement}
         onClick={() => {
           if (cameraDevice === 1) {
-            onCameraClick(uid)
+            onCameraClick(uid);
           }
         }}
       />
@@ -264,7 +275,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <span>
                 <SvgImg
                   canHover={canHoverHideOffAllPodium}
-                  style={{color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA'}}
+                  style={{
+                    color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA',
+                  }}
                   type="invite-to-podium"
                   size={22}
                   onClick={() => onOffAllPodiumClick()}
@@ -279,26 +292,30 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                   canHover
                   type="invite-to-podium"
                   className={isOnPodium ? 'podium' : 'no_podium'}
-                  style={{color: '#357BF6'}}
+                  style={{ color: '#357BF6' }}
                   size={22}
                   onClick={() => onOffPodiumClick(uid)}
                 />
               </span>
             </Tooltip>
           )}
-          {hideBoardGranted ? null :
-            <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
+          {hideBoardGranted ? null : (
+            <Tooltip
+              title={
+                whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')
+              }
+              placement={placement}>
               <span>
                 <SvgImg
                   type="no-authorized"
-                  style={{color: whiteboardGranted ? '#357BF6' : '#7B88A0'}}
+                  style={{ color: whiteboardGranted ? '#357BF6' : '#7B88A0' }}
                   onClick={() => onWhiteboardClick(uid)}
                   size={22}
                   canHover
                 />
               </span>
             </Tooltip>
-          }
+          )}
           {hideStars ? null : (
             <Tooltip title={t('Star')} placement={placement}>
               <span>
@@ -306,19 +323,31 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                   canHover
                   type="star-outline"
                   onClick={() => {
-                    onSendStar(uid)
+                    onSendStar(uid);
                   }}
                   size={22}
-                  style={{color: '#7B88A0'}}
+                  style={{ color: '#7B88A0' }}
                 />
               </span>
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
-            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
-              <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
-                onPrivateChat(uid)
-              }}></div>
+            <Tooltip
+              title={
+                privateCallEnabled
+                  ? t('Close Private Call')
+                  : t('Open Private Call')
+              }
+              placement={placement}>
+              <div
+                className={
+                  privateCallEnabled
+                    ? 'private-call-active'
+                    : 'private-call-default'
+                }
+                onClick={() => {
+                  onPrivateChat(uid);
+                }}></div>
             </Tooltip>
           )}
         </>
@@ -337,20 +366,23 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       <div className={cls} {...restProps}>
         {children ? children : null}
         {placeholder ? <>{placeholder}</> : null}
-        {animList.length ? (
-          animList.map((item) => (
-            <div key={item.id} className="center-reward" style={{ width: 200, height: 200 }}>
-              <SvgaPlayer
-                type="reward"
-                width={200}
-                height={200}
-                audio="reward"
-                duration={2000}
-                onClose={() => onClose(item.id)}
-              />
-            </div>
-          ))
-        ) : ""}
+        {animList.length
+          ? animList.map((item) => (
+              <div
+                key={item.id}
+                className="center-reward"
+                style={{ width: 200, height: 200 }}>
+                <SvgaPlayer
+                  type="reward"
+                  width={200}
+                  height={200}
+                  audio="reward"
+                  duration={2000}
+                  onClose={() => onClose(item.id)}
+                />
+              </div>
+            ))
+          : ''}
         <div className="top-right-info">
           {stars > 0 ? (
             <>
@@ -361,7 +393,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? <VolumeIndicator volume={micVolume} /> : null}
+            {micEnabled && micDevice === 1 ? (
+              <VolumeIndicator volume={micVolume} />
+            ) : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({
@@ -377,13 +411,15 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 disabled: true,
               })}
               volumeIndicator={true}
-              onClick={() => { }}
+              onClick={() => {}}
             />
           </div>
-          <span title={username} className="username">{username}</span>
+          <span title={username} className="username">
+            {username}
+          </span>
         </div>
         <div className="bottom-right-info">
-          {(whiteboardGranted && showGranted) ? (
+          {whiteboardGranted && showGranted ? (
             <div className="bottom-right-granted"></div>
           ) : null}
         </div>
@@ -392,23 +428,23 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   );
 };
 
-
 export const VideoPlaceHolder = () => {
   return (
     <div className="placeholder-video">
       <img src="" alt="" />
     </div>
-  )
-}
+  );
+};
 
-export type VideoItemProps = Omit<VideoPlayerProps,
+export type VideoItemProps = Omit<
+  VideoPlayerProps,
   | 'onCameraClick'
   | 'onMicClick'
   | 'onOffPodiumClick'
   | 'onWhiteboardClick'
   | 'onSendStar'
   | 'onPrivateChat'
->
+>;
 
 export interface VideoMarqueeListProps {
   /**
@@ -418,26 +454,26 @@ export interface VideoMarqueeListProps {
   /**
    * video stream list
    */
-  videoStreamList: BaseVideoPlayerProps[],
+  videoStreamList: BaseVideoPlayerProps[];
   /**
-  * 点击摄像头的按钮时的回调
-  */
+   * 点击摄像头的按钮时的回调
+   */
   onCameraClick: (uid: string | number) => Promise<any>;
   /**
-  * 点击麦克风按钮时的回调
-  */
+   * 点击麦克风按钮时的回调
+   */
   onMicClick: (uid: string | number) => Promise<any>;
   /**
-  * 下讲台
-  */
+   * 下讲台
+   */
   onOffPodiumClick: (uid: string | number) => Promise<any>;
   /**
-  * 点击白板操作授权按钮时的回调
-  */
+   * 点击白板操作授权按钮时的回调
+   */
   onWhiteboardClick: (uid: string | number) => Promise<any>;
   /**
-  * 发送星星给学生
-  */
+   * 发送星星给学生
+   */
   onSendStar: (uid: string | number) => Promise<any>;
   /**
    * 开启私密语音聊天
@@ -458,108 +494,124 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   onWhiteboardClick,
   onSendStar,
   userType,
-  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
 }) => {
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const videoContainerRef = useRef<HTMLDivElement | null>(null)
+  const scroll = useCallback(
+    (direction: 'left' | 'right') => {
+      const videoContainer = videoContainerRef.current;
+      if (!videoContainer) return;
+      const videoDOM = videoContainer.querySelector(
+        '.video-item',
+      ) as HTMLDivElement;
+      if (!videoDOM) return;
+      const offsetWidth = videoDOM.offsetWidth;
+      if (direction === 'left') {
+        videoContainer.scrollLeft -= offsetWidth;
+      }
+      if (direction === 'right') {
+        videoContainer.scrollLeft += offsetWidth;
+      }
+    },
+    [videoContainerRef.current],
+  );
 
-  const scroll = useCallback((direction: 'left' | 'right') => {
-    const videoContainer = videoContainerRef.current
-    if (!videoContainer) return
-    const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement
-    if (!videoDOM) return
-    const offsetWidth = videoDOM.offsetWidth
-    if (direction === 'left') {
-      videoContainer.scrollLeft -= offsetWidth
-    }
-    if (direction === 'right') {
-      videoContainer.scrollLeft += offsetWidth
-    }
-  }, [videoContainerRef.current])
-
-  const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
-    const targetOffsetWidth = target.offsetWidth
-    const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item')
+  const checkTargetScrollElementSatisfied = (
+    target: HTMLDivElement,
+  ): boolean => {
+    const targetOffsetWidth = target.offsetWidth;
+    const videoItems: NodeListOf<HTMLDivElement> =
+      target.querySelectorAll('.video-item');
     if (videoItems && videoItems[0]) {
-      const contentOffsetWidth = videoItems[0].offsetWidth * videoItems.length
-      return contentOffsetWidth > targetOffsetWidth
+      const contentOffsetWidth = videoItems[0].offsetWidth * videoItems.length;
+      return contentOffsetWidth > targetOffsetWidth;
     }
-    return false
-  }
+    return false;
+  };
 
   const mountDOM = useCallback((dom: HTMLDivElement | null) => {
     if (dom) {
-      videoContainerRef.current = dom
+      videoContainerRef.current = dom;
 
       if (videoContainerRef.current) {
-        const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
+        const satisfied = checkTargetScrollElementSatisfied(
+          videoContainerRef.current,
+        );
         if (satisfied) {
-          videoContainerRef.current.classList.add('show-scroll')
+          videoContainerRef.current.classList.add('show-scroll');
         } else {
-          videoContainerRef.current.classList.remove('show-scroll')
+          videoContainerRef.current.classList.remove('show-scroll');
         }
       }
       const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-        const current = entries[0]
-        const target = current.target as HTMLDivElement
+        const current = entries[0];
+        const target = current.target as HTMLDivElement;
         if (target) {
-          const satisfied = checkTargetScrollElementSatisfied(target)
+          const satisfied = checkTargetScrollElementSatisfied(target);
           if (satisfied) {
-            target.classList.add('show-scroll')
+            target.classList.add('show-scroll');
           } else {
-            target.classList.remove('show-scroll')
+            target.classList.remove('show-scroll');
           }
         }
-      })
-      observer.observe(dom)
+      });
+      observer.observe(dom);
     }
-  }, [])
+  }, []);
 
   const attachVideoItem = useCallback(() => {
     if (videoContainerRef.current) {
-      const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
+      const satisfied = checkTargetScrollElementSatisfied(
+        videoContainerRef.current,
+      );
       if (satisfied) {
-        videoContainerRef.current.classList.add('show-scroll')
+        videoContainerRef.current.classList.add('show-scroll');
       } else {
-        videoContainerRef.current.classList.remove('show-scroll')
+        videoContainerRef.current.classList.remove('show-scroll');
       }
     }
-  }, [videoContainerRef.current])
+  }, [videoContainerRef.current]);
 
   return (
     <div className="video-container" ref={mountDOM}>
-      <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+      <div
+        className="left-container scroll-btn"
+        onClick={() => {
+          scroll('left');
+        }}>
         <span className="offset">
           <SvgImg type="backward" />
         </span>
       </div>
-      {
-        videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
-          <div className="video-item" key={idx} ref={attachVideoItem}>
-            <VideoPlayer
-              {...videoStream}
-              hideStars={hideStars}
-              showGranted={true}
-              userType={userType}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(videoStream.uid)
-              }}
-              onPrivateChat={async () => {
-                await onPrivateChat(videoStream.uid)
-              }}
-            ></VideoPlayer>
-          </div>
-        )
-      }
-      <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
+      {videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => (
+        <div className="video-item" key={idx} ref={attachVideoItem}>
+          <VideoPlayer
+            {...videoStream}
+            hideStars={hideStars}
+            showGranted={true}
+            userType={userType}
+            onCameraClick={onCameraClick}
+            onMicClick={onMicClick}
+            onOffPodiumClick={onOffPodiumClick}
+            onWhiteboardClick={onWhiteboardClick}
+            onSendStar={async () => {
+              await onSendStar(videoStream.uid);
+            }}
+            onPrivateChat={async () => {
+              await onPrivateChat(videoStream.uid);
+            }}></VideoPlayer>
+        </div>
+      ))}
+      <div
+        className="right-container scroll-btn"
+        onClick={() => {
+          scroll('right');
+        }}>
         <span className="offset">
           <SvgImg type="forward" />
         </span>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,1 +1,1 @@
-export const screenSharePath = 'screenShare'
+export const screenSharePath = 'screenShare';

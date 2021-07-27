@@ -1,8 +1,8 @@
 const { app, BrowserWindow } = require('electron');
-const { format: formatUrl} = require('url')
+const { format: formatUrl } = require('url');
 
 const path = require('path');
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const createWindow = () => {
   // Create the browser window.
@@ -16,20 +16,23 @@ const createWindow = () => {
     webPreferences: {
       autoplayPolicy: 'no-user-gesture-required',
       nodeIntegration: true,
-      preload: path.resolve(path.join(__dirname, "preload.js")),
-    }
+      preload: path.resolve(path.join(__dirname, 'preload.js')),
+    },
   });
 
   if (isDevelopment) {
-    console.log(" port ", process.env.ELECTRON_WEBPACK_WDS_PORT)
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
-  }
-  else {
-    mainWindow.loadURL(formatUrl({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file',
-      slashes: true
-    }))
+    console.log(' port ', process.env.ELECTRON_WEBPACK_WDS_PORT);
+    mainWindow.loadURL(
+      `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
+    );
+  } else {
+    mainWindow.loadURL(
+      formatUrl({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file',
+        slashes: true,
+      }),
+    );
   }
 
   // and load the index.html of the app.

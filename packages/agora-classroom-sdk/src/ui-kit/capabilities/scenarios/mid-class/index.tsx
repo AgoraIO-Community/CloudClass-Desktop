@@ -1,72 +1,69 @@
-import { Layout, Content, Aside } from '~components/layout'
-import { observer } from 'mobx-react'
-import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
-import {NavigationBar} from '~capabilities/containers/nav'
-import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
-import {WhiteboardContainer} from '~capabilities/containers/board'
-import {DialogContainer} from '~capabilities/containers/dialog'
-import {LoadingContainer} from '~capabilities/containers/loading'
-import {VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
-import {HandsUpContainer} from '~capabilities/containers/hands-up'
-import { useEffectOnce } from '@/infra/hooks/utils'
-import React from 'react'
-import { Widget } from '~capabilities/containers/widget'
-import { useLayoutEffect } from 'react'
-import { useUIStore } from '@/infra/hooks'
+import { Layout, Content, Aside } from '~components/layout';
+import { observer } from 'mobx-react';
+import classnames from 'classnames';
+import {
+  useRoomContext,
+  useGlobalContext,
+  useChatContext,
+  useWidgetContext,
+  useAppPluginContext,
+} from 'agora-edu-core';
+import { NavigationBar } from '~capabilities/containers/nav';
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
+import { WhiteboardContainer } from '~capabilities/containers/board';
+import { DialogContainer } from '~capabilities/containers/dialog';
+import { LoadingContainer } from '~capabilities/containers/loading';
+import {
+  VideoMarqueeStudentContainer,
+  VideoPlayerTeacher,
+} from '~capabilities/containers/video-player';
+import { HandsUpContainer } from '~capabilities/containers/hands-up';
+import { useEffectOnce } from '@/infra/hooks/utils';
+import React from 'react';
+import { Widget } from '~capabilities/containers/widget';
+import { useLayoutEffect } from 'react';
+import { useUIStore } from '@/infra/hooks';
 
-import { ToastContainer } from "~capabilities/containers/toast"
-
+import { ToastContainer } from '~capabilities/containers/toast';
 
 export const MidClassScenario = observer(() => {
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 
-  const {
-    onLaunchAppPlugin,
-    onShutdownAppPlugin
-  } = useAppPluginContext()
-
+  const { onLaunchAppPlugin, onShutdownAppPlugin } = useAppPluginContext();
 
   useLayoutEffect(() => {
     if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 1) {
       // 开启倒计时
-      onLaunchAppPlugin('io.agora.countdown')
+      onLaunchAppPlugin('io.agora.countdown');
     } else if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 0) {
       // 关闭倒计时
-      onShutdownAppPlugin('io.agora.countdown')
+      onShutdownAppPlugin('io.agora.countdown');
     }
-  }, [roomProperties])
+  }, [roomProperties]);
 
-  const {
-    isFullScreen,
-  } = useGlobalContext()
+  const { isFullScreen } = useGlobalContext();
 
-  const {
-    widgets
-  } = useWidgetContext()
-  const chatWidget = widgets['chat']
+  const { widgets } = useWidgetContext();
+  const chatWidget = widgets['chat'];
 
-  const { 
-    chatCollapse 
-  }  = useUIStore()
+  const { chatCollapse } = useUIStore();
 
   useEffectOnce(() => {
-    joinRoom()
-  })
+    joinRoom();
+  });
 
   const cls = classnames({
     'edu-room': 1,
-    'fullscreen': !!isFullScreen
-  })
+    fullscreen: !!isFullScreen,
+  });
 
   return (
     <Layout
       className={cls}
       direction="col"
       style={{
-        height: '100vh'
-      }}
-    >
+        height: '100vh',
+      }}>
       <NavigationBar />
       <Layout className="horizontal">
         <Content className="column">
@@ -78,27 +75,34 @@ export const MidClassScenario = observer(() => {
           </div>
           <div
             className={classnames({
-              'pin-right': 1
+              'pin-right': 1,
             })}
-            style={{display:'flex'}}
-          >
+            style={{ display: 'flex' }}>
             <HandsUpContainer />
           </div>
         </Content>
-        <Aside className={classnames({
-          "mid-class-aside": 1,
-          "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
-          "mid-class-aside-full-collapse": (isFullScreen && chatCollapse)
-        })}>
+        <Aside
+          className={classnames({
+            'mid-class-aside': 1,
+            'mid-class-aside-full-not-collapse': isFullScreen && !chatCollapse,
+            'mid-class-aside-full-collapse': isFullScreen && chatCollapse,
+          })}>
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher className="mid-class-teacher" controlPlacement="bottom" placement="bottom"/>
+            <VideoPlayerTeacher
+              className="mid-class-teacher"
+              controlPlacement="bottom"
+              placement="bottom"
+            />
           </div>
-          <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/>
+          <Widget
+            className="chat-panel chat-border"
+            widgetComponent={chatWidget}
+          />
         </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
       <ToastContainer />
     </Layout>
-  )
-})
+  );
+});

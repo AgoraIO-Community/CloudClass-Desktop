@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from 'react';
 import { BaseProps } from '~components/interface/base-props';
 import { CSSTransition } from 'react-transition-group';
 
-import './index.css'
+import './index.css';
 
 export interface AffixProps extends BaseProps {
   top?: number | string;
@@ -23,13 +23,9 @@ export const Affix: FC<AffixProps> = ({
   onCollapse,
 }) => {
   return (
-    <CSSTransition
-      in={!collapse}
-      timeout={500}
-      classNames="collapse"
-    >
+    <CSSTransition in={!collapse} timeout={500} classNames="collapse">
       {!collapse ? (
-         children
+        children
       ) : (
         <div
           className={className}

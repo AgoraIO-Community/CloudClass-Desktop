@@ -26,9 +26,13 @@ export interface PlacementsConfig {
   autoAdjustOverflow?: boolean | AdjustOverflow;
 }
 
-export function getOverflowOptions(autoAdjustOverflow?: boolean | AdjustOverflow) {
+export function getOverflowOptions(
+  autoAdjustOverflow?: boolean | AdjustOverflow,
+) {
   if (typeof autoAdjustOverflow === 'boolean') {
-    return autoAdjustOverflow ? autoAdjustOverflowEnabled : autoAdjustOverflowDisabled;
+    return autoAdjustOverflow
+      ? autoAdjustOverflowEnabled
+      : autoAdjustOverflowDisabled;
   }
   return {
     ...autoAdjustOverflowDisabled,
@@ -93,7 +97,7 @@ export default function getPlacements(config: PlacementsConfig) {
       offset: [-4, verticalArrowShift + arrowWidth],
     },
   };
-  Object.keys(placementMap).forEach(key => {
+  Object.keys(placementMap).forEach((key) => {
     placementMap[key] = config.arrowPointAtCenter
       ? {
           ...placementMap[key],

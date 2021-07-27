@@ -2,7 +2,12 @@ import classnames from 'classnames';
 import { getMediaIconProps, Icon, MediaIcon } from '~components/icon';
 import { Column, Profile } from '~components/roster';
 import { SvgImg } from '../svg-img';
-import {canOperate, getCameraState, getChatState, getMicrophoneState} from './base';
+import {
+  canOperate,
+  getCameraState,
+  getChatState,
+  getMicrophoneState,
+} from './base';
 
 export const defaultColumns: Column[] = [
   {
@@ -13,42 +18,77 @@ export const defaultColumns: Column[] = [
     key: 'onPodium',
     name: 'roster.student_co_video',
     action: 'podium',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const type =  !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
-      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
-      const podiumStatus= !!profile.onPodium === true ? 'icon-active' : 'un-active';
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
+      const type =
+        !!profile.onPodium === true ? 'on-podium' : 'invite-to-podium';
+      const operateStatus =
+        !!canOperate === true ? 'operate-status' : 'un-operate-status';
+      const podiumStatus =
+        !!profile.onPodium === true ? 'icon-active' : 'un-active';
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${podiumStatus}`]: 1,
-      })
+      });
       return (
-        <SvgImg type={type} className={cls} onClick={onClick} canHover={canOperate}/>
+        <SvgImg
+          type={type}
+          className={cls}
+          onClick={onClick}
+          canHover={canOperate}
+        />
       );
-    }
+    },
   },
   {
     key: 'whiteboardGranted',
     name: 'roster.granted',
     action: 'whiteboard',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const type = (!!profile.whiteboardGranted === true ? 'authorized' : 'no-authorized');
-      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
-      const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
+      const type =
+        !!profile.whiteboardGranted === true ? 'authorized' : 'no-authorized';
+      const operateStatus =
+        !!canOperate === true ? 'operate-status' : 'un-operate-status';
+      const whiteboardStatus =
+        !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${whiteboardStatus}`]: 1,
-        ['icon-flex']: 1
-      })
+        ['icon-flex']: 1,
+      });
       return (
-        <SvgImg type={type as any} className={cls} size={22} onClick={onClick} canHover={canOperate} />
-      )
+        <SvgImg
+          type={type as any}
+          className={cls}
+          size={22}
+          onClick={onClick}
+          canHover={canOperate}
+        />
+      );
     },
   },
   {
     key: 'cameraEnabled',
     name: 'roster.camera_state',
     action: 'camera',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
       const {
         cameraEnabled,
         cameraDevice,
@@ -57,7 +97,7 @@ export const defaultColumns: Column[] = [
         hasStream,
         isLocal,
         uid,
-      } = profile
+      } = profile;
       return (
         <MediaIcon
           {...getMediaIconProps({
@@ -73,15 +113,20 @@ export const defaultColumns: Column[] = [
           })}
           onClick={() => onClick && onClick(uid)}
         />
-      )
+      );
     },
   },
   {
     key: 'micEnabled',
     name: 'roster.microphone_state',
     action: 'mic',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
       const {
         micEnabled,
         micDevice,
@@ -90,7 +135,7 @@ export const defaultColumns: Column[] = [
         hasStream,
         isLocal,
         uid,
-      } = profile
+      } = profile;
       return (
         <MediaIcon
           {...getMediaIconProps({
@@ -106,45 +151,62 @@ export const defaultColumns: Column[] = [
           })}
           onClick={() => onClick && onClick(uid)}
         />
-      )
+      );
     },
   },
   {
     key: 'chat',
     name: 'roster.chat',
     action: 'chat',
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const {
-        operateStatus,
-        chatStatus,
-        type,
-      } = getChatState(profile, canOperate);
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
+      const { operateStatus, chatStatus, type } = getChatState(
+        profile,
+        canOperate,
+      );
       const cls = classnames({
-        ["icon-hover"]: canOperate,
-        ["icon-disable"]: !canOperate,
-        ["icon-flex"]: 1,
-      })
+        ['icon-hover']: canOperate,
+        ['icon-disable']: !canOperate,
+        ['icon-flex']: 1,
+      });
       return (
         <div className={cls} onClick={onClick}>
           <i className={chatStatus}></i>
         </div>
-      )
+      );
     },
   },
   {
     key: 'stars',
     name: 'roster.reward',
-    render: (text: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
+    render: (
+      text: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
+      const operateStatus =
+        !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,
-      })
+      });
       return (
         <div>
-          <SvgImg type={'star-outline'} className={cls} onClick={onClick} canHover={canOperate} />
+          <SvgImg
+            type={'star-outline'}
+            className={cls}
+            onClick={onClick}
+            canHover={canOperate}
+          />
           <span className="star-nums">&nbsp;x{text}</span>
         </div>
-      )
+      );
     },
   },
   {
@@ -152,14 +214,26 @@ export const defaultColumns: Column[] = [
     name: 'roster.kick',
     action: 'kickOut',
     visibleRoles: ['assistant', 'teacher'],
-    render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
+    render: (
+      _: string,
+      profile: Profile,
+      canOperate: boolean,
+      userType: string,
+      onClick: any,
+    ) => {
+      const operateStatus =
+        !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const cls = classnames({
         [`${operateStatus}`]: 1,
-      })
+      });
       return (
-        <SvgImg type={'exit'} className={cls} onClick={onClick} canHover={canOperate}/>
-      )
+        <SvgImg
+          type={'exit'}
+          className={cls}
+          onClick={onClick}
+          canHover={canOperate}
+        />
+      );
     },
   },
 ];

@@ -4,12 +4,8 @@
   "compilerOptions": {
     "outDir": "./lib",
     "jsx": "react-jsx",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
-  "files": [
-    "../agora-classroom-sdk/src/react-app-env.d.ts"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "files": ["../agora-classroom-sdk/src/react-app-env.d.ts"],
+  "include": ["src/**/*"]
 }

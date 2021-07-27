@@ -1,9 +1,9 @@
 import { useCoreContext } from './core';
 
 export const useWidgetContext = () => {
-  const {widgetStore} = useCoreContext()
+  const { widgetStore } = useCoreContext();
 
   return {
-    widgets: widgetStore.widgets
-  }
-}
+    widgets: widgetStore.widgets,
+  };
+};

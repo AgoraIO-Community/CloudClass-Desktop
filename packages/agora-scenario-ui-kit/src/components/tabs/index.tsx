@@ -28,10 +28,8 @@ export const Tabs: FC<TabsProps> = ({
   centered,
   ...props
 }) => {
-  const {
-    prefixCls: customizePrefixCls,
-    moreIcon = <SvgImg type="more" />,
-  } = props;
+  const { prefixCls: customizePrefixCls, moreIcon = <SvgImg type="more" /> } =
+    props;
   const prefixCls = customizePrefixCls ?? 'tabs';
 
   let editable: EditableConfig | undefined;

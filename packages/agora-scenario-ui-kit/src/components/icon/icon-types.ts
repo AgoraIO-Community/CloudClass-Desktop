@@ -63,8 +63,6 @@ export type IconTypes =
   | 'register'
   | 'laser-pointer'
   | 'recording'
-
-  
   | 'kick-out'
   | 'clicker'
   | 'countdown'

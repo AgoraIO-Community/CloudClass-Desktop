@@ -2,9 +2,9 @@ import React, { FC, useCallback, useState } from 'react';
 import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { ToolItem } from './tool';
-import { Slider } from '~components/slider'
+import { Slider } from '~components/slider';
 import { Tooltip } from '~components/tooltip';
-import { SvgImg } from '~components/svg-img'
+import { SvgImg } from '~components/svg-img';
 
 const defaultColors = [
   '#ffffff',
@@ -22,9 +22,18 @@ const defaultColors = [
 ];
 
 export const hexToRgbaString = (hex: string, opacity: number): string => {
-  return 'rgba(' + parseInt('0x' + hex.slice(1, 3)) + ',' + parseInt('0x' + hex.slice(3, 5)) + ','
-          + parseInt('0x' + hex.slice(5, 7)) + ',' + opacity + ')';
-}
+  return (
+    'rgba(' +
+    parseInt('0x' + hex.slice(1, 3)) +
+    ',' +
+    parseInt('0x' + hex.slice(3, 5)) +
+    ',' +
+    parseInt('0x' + hex.slice(5, 7)) +
+    ',' +
+    opacity +
+    ')'
+  );
+};
 export interface ColorsProps extends ToolItem {
   colors?: string[];
   activeColor?: string;
@@ -47,44 +56,53 @@ export const Colors: FC<ColorsProps> = ({
   colorSliderStep = 1,
   hover = false,
   onClick,
-  onSliderChange
+  onSliderChange,
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const handleClick = (color: string) => {
     setPopoverVisible(!popoverVisible);
     onClick && onClick(color);
   };
-  const content = useCallback(() => 
-    (<div className={`expand-tools colors`}>
-      <Slider
-        style={{width: '100%'}}
-        defaultValue={colorSliderDefault}
-        min={colorSliderMin}
-        max={colorSliderMax}
-        step={colorSliderStep}
-        onChange={onSliderChange}
-      />
-      {colors.map((color) => (
-        <div
-          key={color}
-          onClick={() => handleClick(color)}
-          className="expand-tool color"
-          style={{
-            border: activeColor === color ? `1px solid ${color === '#ffffff' ? '#E1E1EA' : color}` : 'none', // 选中的才有边框颜色
-          }}>
-          <div 
-            className="circle" 
-            style={{ 
-              backgroundColor: color,
-              border: color === '#ffffff' ? '1px solid #E1E1EA' : 'none'
-            }} 
-          />
-        </div>
-      ))}
-    </div>
-  ), [colors, activeColor]);
+  const content = useCallback(
+    () => (
+      <div className={`expand-tools colors`}>
+        <Slider
+          style={{ width: '100%' }}
+          defaultValue={colorSliderDefault}
+          min={colorSliderMin}
+          max={colorSliderMax}
+          step={colorSliderStep}
+          onChange={onSliderChange}
+        />
+        {colors.map((color) => (
+          <div
+            key={color}
+            onClick={() => handleClick(color)}
+            className="expand-tool color"
+            style={{
+              border:
+                activeColor === color
+                  ? `1px solid ${color === '#ffffff' ? '#E1E1EA' : color}`
+                  : 'none', // 选中的才有边框颜色
+            }}>
+            <div
+              className="circle"
+              style={{
+                backgroundColor: color,
+                border: color === '#ffffff' ? '1px solid #E1E1EA' : 'none',
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    ),
+    [colors, activeColor],
+  );
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+    <Tooltip
+      title={label}
+      placement="bottom"
+      overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -93,11 +111,20 @@ export const Colors: FC<ColorsProps> = ({
         content={content}
         placement="right">
         <div className="tool">
-          <div className="circle-border" style={{border: `1px solid ${hexToRgbaString(activeColor === '#ffffff' ? '#E1E1EA' : activeColor, 0.5)}`}}>
-            <div className="circle" style={{backgroundColor: activeColor}}></div>
+          <div
+            className="circle-border"
+            style={{
+              border: `1px solid ${hexToRgbaString(
+                activeColor === '#ffffff' ? '#E1E1EA' : activeColor,
+                0.5,
+              )}`,
+            }}>
+            <div
+              className="circle"
+              style={{ backgroundColor: activeColor }}></div>
           </div>
-          <SvgImg type="triangle-down" className="triangle-icon"/>
-        </div>  
+          <SvgImg type="triangle-down" className="triangle-icon" />
+        </div>
       </Popover>
     </Tooltip>
   );

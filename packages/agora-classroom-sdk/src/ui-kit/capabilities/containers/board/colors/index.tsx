@@ -1,22 +1,21 @@
-import { Colors, t } from '~ui-kit'
-import { observer } from 'mobx-react'
-import { useBoardContext } from 'agora-edu-core'
+import { Colors, t } from '~ui-kit';
+import { observer } from 'mobx-react';
+import { useBoardContext } from 'agora-edu-core';
 
 export const ColorsContainer = observer(() => {
-
   const {
     changeStroke,
     changeHexColor,
     setTool,
     currentColor,
-    currentStrokeWidth
-  } = useBoardContext()
+    currentStrokeWidth,
+  } = useBoardContext();
 
   return (
     <Colors
-      value='color'
+      value="color"
       label={t('scaffold.color')}
-      icon='color'
+      icon="color"
       colorSliderMin={1}
       colorSliderMax={31}
       colorSliderDefault={currentStrokeWidth}
@@ -24,9 +23,9 @@ export const ColorsContainer = observer(() => {
       onSliderChange={changeStroke}
       activeColor={currentColor}
       onClick={(value: any) => {
-        setTool('color')
-        changeHexColor(value)
+        setTool('color');
+        changeHexColor(value);
       }}
     />
-  )
-})
+  );
+});

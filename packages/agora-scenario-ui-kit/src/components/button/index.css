@@ -65,7 +65,7 @@
 }
 
 .btn.btn-sm[disabled] {
-  background-color: #FFFFFF;
-  border: 1px solid #C2C2C8; 
-  color: #C2C2C8;
+  background-color: #ffffff;
+  border: 1px solid #c2c2c8;
+  color: #c2c2c8;
 }

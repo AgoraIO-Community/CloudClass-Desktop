@@ -58,7 +58,6 @@
   background-image: url('./assets/camera-close.png');
 } */
 
-
 .maxiumn-wrap {
   position: relative;
   display: flex;
@@ -69,7 +68,7 @@
   background: #000;
   font-size: 13px;
   font-weight: 400;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .board-placeholder {

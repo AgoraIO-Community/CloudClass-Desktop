@@ -1,4 +1,4 @@
 export enum EduLogLevel {
   Debug = 'Debug',
-  None = 'None'
+  None = 'None',
 }
