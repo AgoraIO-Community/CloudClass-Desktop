@@ -18,6 +18,10 @@ import {
 //@ts-ignore
 window.controller = controller;
 
+const ChatWidgetFactory = (region: string) => {
+  return new AgoraChatWidget();
+};
+
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -43,6 +47,11 @@ export const LaunchPage = observer(() => {
             reportUrl: `${REACT_APP_REPORT_URL}`,
             reportQos: `${REACT_APP_REPORT_QOS}`,
             reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
+            'edu.routesMap': {
+              pretestPath: '/pretest',
+              defaultRoutePath: scenarioRoomPath[0],
+              routesPath: scenarioRoomPath,
+            },
           }),
         );
         AgoraEduSDK.config({
@@ -75,6 +84,11 @@ export const LaunchPage = observer(() => {
 
         roomRef.current = await AgoraEduSDK.launch(dom, {
           ...launchOption,
+          widgets: {
+            ...{
+              chat: ChatWidgetFactory(launchOption.region!),
+            },
+          },
           // boardOptions: {
           //   userPayload: {
           //     cursorName: ""

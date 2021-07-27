@@ -62,7 +62,7 @@ let params: AppStoreInitParams = {
     extApps: [],
     widgets: {
       ...{
-        /*'chat':new AgoraChatWidget()*/
+        // 'chat':new AgoraChatWidget()
       },
       ...{},
     },

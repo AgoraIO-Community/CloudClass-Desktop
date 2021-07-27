@@ -102,13 +102,6 @@ export const MidClassScenario = observer(() => {
             'mid-class-aside-full-not-collapse': isFullScreen && !chatCollapse,
             'mid-class-aside-full-collapse': isFullScreen && chatCollapse,
           })}>
-          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
-            <VideoPlayerTeacher
-              className="mid-class-teacher"
-              controlPlacement="bottom"
-              placement="bottom"
-            />
-          </div>
           {chatroomId ? (
             <Widget
               className="chat-panel"
