@@ -1,8 +1,9 @@
 import React from 'react'
 import { useVolumeContext } from 'agora-edu-core'
 import { VolumeIndicator } from '~ui-kit/components/video-player/volume-indicator'
+import { observer } from 'mobx-react'
 
-export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
+export const StreamVolumeIndicator = observer(({streamUuid}: {streamUuid: any}) => {
 
   const {speakers} = useVolumeContext()
 
@@ -13,4 +14,4 @@ export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
   return (
     <VolumeIndicator volume={currentVolume} />
   )
-}
+})

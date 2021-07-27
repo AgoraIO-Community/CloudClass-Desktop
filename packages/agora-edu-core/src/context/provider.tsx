@@ -6,7 +6,7 @@ import { get } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useMediaStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool, ClassRoomStats } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 
 export {
@@ -181,6 +181,16 @@ export const useScreenShareContext = (): ScreenShareContext => {
   }
 }
 
+export const useClassRoomStatsContext = (): ClassRoomStats => {
+  const {
+    liveClassStatus
+  } = useRoomStore()
+
+  return {
+    liveClassStatus
+  }
+}
+
 export const useRoomContext = (): RoomContext => {
 
   const {
@@ -208,7 +218,7 @@ export const useRoomContext = (): RoomContext => {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus,
+    // liveClassStatus,
     roomProperties,
     updateFlexProperties,
     flexProperties,
@@ -243,7 +253,7 @@ export const useRoomContext = (): RoomContext => {
     isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
-    liveClassStatus,
+    // liveClassStatus,
     // TO-REVIEW
     // ui context?
     removeScreenShareWindow,

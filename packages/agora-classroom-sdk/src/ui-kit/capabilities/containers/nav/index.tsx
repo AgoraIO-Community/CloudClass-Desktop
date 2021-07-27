@@ -1,6 +1,6 @@
 import { useUIStore } from '@/infra/hooks'
 import { formatCountDown, TimeFormatType } from '@/infra/utils'
-import { useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
+import { useClassRoomStatsContext, useGlobalContext, useMediaContext, useRecordingContext, useRoomContext } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
 import { useCallback } from 'react'
@@ -15,8 +15,11 @@ export const NavigationBar = observer(() => {
   } = useRecordingContext()
   const {
     roomInfo,
-    liveClassStatus
   } = useRoomContext()
+
+  const {
+    liveClassStatus
+  } = useClassRoomStatsContext()
 
   const {
     isNative,
