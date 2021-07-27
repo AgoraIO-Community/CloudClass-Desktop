@@ -10683,7 +10683,7 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-websdk@^3.6.0:
+easemob-websdk@3.6.0:
   version "3.6.0"
   resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.0.tgz#784d8c9802b31d55eb23c0ebf9eda1f04fd04d9c"
   integrity sha1-eE2MmAKzHVXrI8Dr+e2h8E/QTZw=
