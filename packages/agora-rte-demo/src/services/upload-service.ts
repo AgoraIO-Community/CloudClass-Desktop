@@ -12,6 +12,7 @@ import { get } from "lodash";
 import { CourseWareUploadResult, CreateMaterialParams } from "@/types/global";
 import { fileSizeConversionUnit } from "@/utils/utils";
 import { globalConfigs } from "@/utils/configs";
+import { reportService } from "./report-service";
 
 const formatExt = (ext: string) => {
   const typeMapper = {
@@ -342,35 +343,54 @@ export class UploadService extends ApiBase {
     const resourceUuid = fetchCallbackBody.resourceUuid
 
     if (payload.converting === true) {
-      const uploadResult = await this.addFileToOss(
-        this.ossClient,
-        key,
-        payload.file,
-        (...args: any) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress: args[1]
+      reportService.startTick('uploadResource', 'oss', 'addFileToOss')
+
+      let uploadResult = null
+
+      try {
+        uploadResult = await this.addFileToOss(
+          this.ossClient,
+          key,
+          payload.file,
+          (...args: any) => {
+            payload.onProgress({
+              phase: 'finish',
+              progress: args[1]
+            })
+          },
+          {
+            callbackBody: ossConfig.callbackBody,
+            contentType: ossConfig.callbackContentType,
+            roomUuid: payload.roomUuid,
+            // userUuid: payload.userUuid,
+            appId: this.appId
           })
-        },
-        {
-          callbackBody: ossConfig.callbackBody,
-          contentType: ossConfig.callbackContentType,
-          roomUuid: payload.roomUuid,
-          // userUuid: payload.userUuid,
-          appId: this.appId
-        })
+          reportService.reportElapse('uploadResource', 'oss', {api: 'addFileToOss', result: true})
+      } catch(e) {
+        reportService.reportElapse('uploadResource', 'oss', {api: 'addFileToOss', result: false, errCode: `${e.code || e.message}`})
+        throw e
+      }
+
       const pptConverter = payload.pptConverter
-      const taskResult: any = await pptConverter.convert({
-        url: uploadResult.ossURL,
-        kind: payload.kind,
-        onProgressUpdated: (...args: any[]) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress: args[0],
-            isTransFile: true,
-          })
-        },
-      })
+      let taskResult = null
+      try {
+        taskResult = await pptConverter.convert({
+          url: uploadResult.ossURL,
+          kind: payload.kind,
+          onProgressUpdated: (...args: any[]) => {
+            payload.onProgress({
+              phase: 'finish',
+              progress: args[0],
+              isTransFile: true,
+            })
+          },
+        })
+        reportService.reportElapse('uploadResource', 'board', {api: 'convert', result: true})
+      } catch(e) {
+        reportService.reportElapse('uploadResource', 'board', {api: 'convert', result: false, errCode: `${e.code || e.message}`})
+        throw e
+      }
+
       payload.onProgress({
         phase: 'finish',
         progress: 1,
@@ -378,38 +398,21 @@ export class UploadService extends ApiBase {
         isLastProgress: true
       })
 
-      let materialResult = await this.createMaterial({
-        taskUuid: taskResult.uuid,
-        url: uploadResult.ossURL,
-        roomUuid: payload.roomUuid,
-        // userUuid: payload.userUuid,
-        resourceName: payload.resourceName,
-        resourceUuid,
-        taskToken: taskResult.roomToken,
-        ext: taskResult.ext,
-        size: uploadResult.size,
-        taskProgress: {
-          totalPageSize: taskResult.scenes.length,
-          convertedPageSize: taskResult.scenes.length,
-          convertedPercentage: 100,
-          convertedFileList: taskResult.scenes
-        }
-      })
       return {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
         ext: uploadResult.ext,
         size: fetchCallbackBody.size,
         url: uploadResult.ossURL,
-        scenes: taskResult.scenes,
+        scenes: taskResult?.scenes,
         taskProgress: {
-          totalPageSize: taskResult.scenes.length,
-          convertedPageSize: taskResult.scenes.length,
+          totalPageSize: taskResult?.scenes.length,
+          convertedPageSize: taskResult?.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: taskResult.scenes
+          convertedFileList: taskResult?.scenes
         },
-        updateTime: materialResult.data.updateTime,
-        taskUuid: taskResult.uuid,
+        updateTime: uploadResult.updateTime,
+        taskUuid: taskResult?.uuid,
       }
     } else {
       const uploadResult = await this.addFileToOss(

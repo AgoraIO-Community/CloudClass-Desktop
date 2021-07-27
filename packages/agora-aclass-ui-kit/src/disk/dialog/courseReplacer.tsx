@@ -177,6 +177,9 @@ export const CourseReplacer: React.FC<CourseReplacerProps> = ({
                           <img src={CourseIconMapper[item.type]} style={{ width: 22.4, height: 22.4 }} />
                         </div>
                         <div className="course-replacer-tbl-col">
+                          {item.id} | 
+                        </div>
+                        <div className="course-replacer-tbl-col">
                           {item.name}
                         </div>
                       </div>
