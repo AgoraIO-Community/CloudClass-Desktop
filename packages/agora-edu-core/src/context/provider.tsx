@@ -5,21 +5,39 @@ import { eduSDKApi } from '../services/edu-sdk-api';
 import { StorageCourseWareItem } from '../types';
 import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
 import {
-  useBoardStore, useCoreContext, useMediaStore, usePretestStore,
-  useRoomStore, useSceneStore, useSmallClassStore
+  useBoardStore,
+  useCoreContext,
+  useMediaStore,
+  usePretestStore,
+  useRoomStore,
+  useSceneStore,
+  useSmallClassStore,
 } from './core';
 import {
-  BoardContext, ChatContext, CloudDriveContext, ControlTool, DeviceErrorCallback, GlobalContext, HandsUpContext,
-/*StreamContext, */ PretestContext, RecordingContext, ReportContext, RoomContext,
-  RoomDiagnosisContext, ScreenShareContext, SmallClassVideoControlContext, StreamContext, StreamListContext, UserListContext, VideoControlContext, VolumeContext
+  BoardContext,
+  ChatContext,
+  CloudDriveContext,
+  ControlTool,
+  DeviceErrorCallback,
+  GlobalContext,
+  HandsUpContext,
+  /*StreamContext, */ PretestContext,
+  RecordingContext,
+  ReportContext,
+  RoomContext,
+  RoomDiagnosisContext,
+  ScreenShareContext,
+  SmallClassVideoControlContext,
+  StreamContext,
+  StreamListContext,
+  UserListContext,
+  VideoControlContext,
+  VolumeContext,
 } from './type';
-
 
 export { CoreContext, CoreContextProvider } from './core';
 export type { CoreAppContext } from './core';
 export { ControlTool } from './type';
-
-
 
 /**
  *
@@ -90,14 +108,14 @@ export const useStreamListContext = (): StreamListContext => {
 };
 
 export const useVolumeContext = (): VolumeContext => {
-  const mediaStore = useMediaStore()
+  const mediaStore = useMediaStore();
 
   // const volume = pretestStore
 
   return {
     microphoneLevel: mediaStore.totalVolume,
-  }
-}
+  };
+};
 
 export const usePretestContext = (): PretestContext => {
   const pretestStore = usePretestStore();
@@ -210,8 +228,8 @@ export const useRoomContext = (): RoomContext => {
     setCarouselState,
     startCarousel,
     stopCarousel,
-    joined
-  } = useRoomStore()
+    joined,
+  } = useRoomStore();
 
   const {
     handsUpStudentList,
@@ -264,9 +282,9 @@ export const useRoomContext = (): RoomContext => {
     setCarouselState,
     startCarousel,
     stopCarousel,
-    joined
-  }
-}
+    joined,
+  };
+};
 
 export const useRoomDiagnosisContext = (): RoomDiagnosisContext => {
   const { navigationState } = useRoomStore();
@@ -440,9 +458,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     handleUpload,
     publicResources,
     upsertResources,
-    allResources
-  } = useBoardStore()
-
+    allResources,
+  } = useBoardStore();
 
   return {
     downloadList: downloadList.filter(
@@ -456,13 +473,17 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources: allResources.filter((item: any) => item.access === 'private'),
-    publicResources: allResources.filter((item: any) => item.access === 'public'),
+    personalResources: allResources.filter(
+      (item: any) => item.access === 'private',
+    ),
+    publicResources: allResources.filter(
+      (item: any) => item.access === 'public',
+    ),
     doUpload: handleUpload,
     allResources,
-    upsertResources
-  }
-}
+    upsertResources,
+  };
+};
 
 export const useStreamContext = (): StreamContext => {
   const { streamList } = useSceneStore();

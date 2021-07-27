@@ -300,7 +300,8 @@
   margin-left: 10px;
 }
 
-.student-order, .carousel-frequency{
+.student-order,
+.carousel-frequency {
   display: flex;
   align-items: center;
   margin-left: 20px;

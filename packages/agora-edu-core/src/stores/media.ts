@@ -110,19 +110,19 @@ const networkQualities: { [key: string]: string } = {
 
 export class MediaStore {
   @observable
-  localVideoRenderState: VideoRenderState = VideoRenderState.Idle
+  localVideoRenderState: VideoRenderState = VideoRenderState.Idle;
 
   @action.bound
-  setLocalVideoRenderState (value: VideoRenderState) {
-    this.localVideoRenderState = value
+  setLocalVideoRenderState(value: VideoRenderState) {
+    this.localVideoRenderState = value;
   }
-  
+
   @observable
-  remoteVideoRenderStateMap: Record<string, VideoRenderState> = {}
+  remoteVideoRenderStateMap: Record<string, VideoRenderState> = {};
 
   @action.bound
-  setRemoteFirstFrameRenderMap (uid: string, state: VideoRenderState) {
-    this.remoteVideoRenderStateMap[uid] = state
+  setRemoteFirstFrameRenderMap(uid: string, state: VideoRenderState) {
+    this.remoteVideoRenderStateMap[uid] = state;
   }
 
   @observable
@@ -276,17 +276,24 @@ export class MediaStore {
     this.appStore = appStore;
 
     const updateSpeaker = (payload: string) => {
-      const {localUid, totalVolume} = JSON.parse(payload)
+      const { localUid, totalVolume } = JSON.parse(payload);
       if (localUid) {
-        this.updateSpeaker(localUid, totalVolume)
+        this.updateSpeaker(localUid, totalVolume);
       }
-    }
+    };
 
-    reaction(() => JSON.stringify({localUid: this.localUid, totalVolume: this.totalVolume}), updateSpeaker)
+    reaction(
+      () =>
+        JSON.stringify({
+          localUid: this.localUid,
+          totalVolume: this.totalVolume,
+        }),
+      updateSpeaker,
+    );
 
-    const handleDevicePulled = (evt: {resource: string}) => {
-      const notice = MediaDeviceState.getNotice(evt.resource)
-      console.log('[handleDevicePulled] notice ', notice, ' evt ', evt)
+    const handleDevicePulled = (evt: { resource: string }) => {
+      const notice = MediaDeviceState.getNotice(evt.resource);
+      console.log('[handleDevicePulled] notice ', notice, ' evt ', evt);
       if (notice) {
         if (!this.pretestNotice.isStopped) {
           this.pretestNotice.next({
@@ -312,17 +319,17 @@ export class MediaStore {
       }
     };
 
-    this.mediaService.on('local-video-state-update', (evt:any) => {
-      const {state} = evt
-      this.setLocalVideoRenderState(state)
-      BizLogger.info(`[core] local-video-state-update ${state}`)
-    })
+    this.mediaService.on('local-video-state-update', (evt: any) => {
+      const { state } = evt;
+      this.setLocalVideoRenderState(state);
+      BizLogger.info(`[core] local-video-state-update ${state}`);
+    });
 
     this.mediaService.on('remote-video-state-update', (evt: any) => {
-      const {state, uid} = evt
-      this.setRemoteFirstFrameRenderMap(uid, state)
-      BizLogger.info(`[core] remote-video-state-update ${uid} ${state}`)
-    })
+      const { state, uid } = evt;
+      this.setRemoteFirstFrameRenderMap(uid, state);
+      BizLogger.info(`[core] remote-video-state-update ${uid} ${state}`);
+    });
 
     this.mediaService.on('rtcStats', (evt: any) => {
       this.appStore.updateCpuRate(evt.cpuTotalUsage);
@@ -479,10 +486,14 @@ export class MediaStore {
       console.log('sdkwrapper update user-pubilshed', evt);
     });
     this.mediaService.on('user-unpublished', (evt: any) => {
-      this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer
-      EduLogger.info(`[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map(((e: any) => e.uid))}`)
-      console.log('sdkwrapper update user-unpublished', evt)
-    })
+      this.remoteUsersRenderer = this.mediaService.remoteUsersRenderer;
+      EduLogger.info(
+        `[agora-apaas] [media#renderers] user-unpublished ${this.mediaService.remoteUsersRenderer.map(
+          (e: any) => e.uid,
+        )}`,
+      );
+      console.log('sdkwrapper update user-unpublished', evt);
+    });
     this.mediaService.on('network-quality', (evt: any) => {
       let defaultQuality = 'unknown';
 
@@ -522,34 +533,40 @@ export class MediaStore {
       BizLogger.info('connection-state-change', JSON.stringify(evt));
     });
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
-      const {state, msg} = evt
-      console.log('[RTE] localVideoStateChanged', evt)
-      this.localVideoState = state
-      if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
+      const { state, msg } = evt;
+      console.log('[RTE] localVideoStateChanged', evt);
+      this.localVideoState = state;
+      if (
+        this.localVideoState ===
+        LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED
+      ) {
         this.pretestNotice.next({
           type: 'error',
           info: 'pretest.device_not_working',
           kind: 'toast',
-          id: uuidv4()
-        })
+          id: uuidv4(),
+        });
         if (this.appStore.pretestStore.cameraList.length === 1) {
-          this.appStore.pretestStore.muteCamera()
+          this.appStore.pretestStore.muteCamera();
         }
       }
     });
     this.mediaService.on('localAudioStateChanged', (evt: any) => {
-      const {state, msg} = evt
-      console.log('[RTE] localAudioStateChanged', evt)
-      this.localAudioState = state
-      if (this.localAudioState === LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED) {
+      const { state, msg } = evt;
+      console.log('[RTE] localAudioStateChanged', evt);
+      this.localAudioState = state;
+      if (
+        this.localAudioState ===
+        LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED
+      ) {
         this.pretestNotice.next({
           type: 'error',
           info: 'pretest.device_not_working',
           kind: 'toast',
-          id: uuidv4()
-        })
+          id: uuidv4(),
+        });
         if (this.appStore.pretestStore.microphoneList.length === 1) {
-          this.appStore.pretestStore.muteMicrophone()
+          this.appStore.pretestStore.muteMicrophone();
         }
       }
     });

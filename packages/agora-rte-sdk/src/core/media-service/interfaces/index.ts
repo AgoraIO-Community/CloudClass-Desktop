@@ -55,7 +55,7 @@ export declare interface ElectronWrapperInitOption {
   appId: string;
   cefClient: any;
   area: AREA_CODE;
-  cameraEncoderConfiguration?: EduVideoEncoderConfiguration
+  cameraEncoderConfiguration?: EduVideoEncoderConfiguration;
 }
 
 export const convertNativeAreaCode = (codeName: string) => {

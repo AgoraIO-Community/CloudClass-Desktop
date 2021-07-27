@@ -22,6 +22,8 @@ export * from './api/declare';
 
 export type { EduMediaStream } from './stores/scene';
 
+export * from './api/infra/index';
+
 export type { Resource } from './stores/board';
 
 export * from './services/edu-sdk-api';

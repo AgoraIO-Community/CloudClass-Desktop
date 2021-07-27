@@ -109,6 +109,7 @@
    After running, a `release` folder that contains a dmg file will be generated. Open the dmg file and remove it to `Application` to install it.
 
 ### Windows
+
 1. Install electron 12.0.0: First, replace `agora_electron` in `package.json` with the following code snippet:
    ```
    "agora_electron": {
@@ -119,10 +120,10 @@
    },
    ```
    Manually install electron 12.0.0
-   ```  
+   ```
    npm install electron@12.0.0 --arch=ia32 --save-dev
    ```
-4. Release the Electron demo
+2. Release the Electron demo
    ```
    npm run pack:win
    ```

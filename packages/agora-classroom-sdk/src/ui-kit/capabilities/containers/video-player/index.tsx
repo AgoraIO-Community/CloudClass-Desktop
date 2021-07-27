@@ -280,10 +280,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
 });
 
 export const MidVideoMarqueeContainer = observer(() => {
-
-  const {
-    teacherStream: userStream
-  } = useStreamListContext()
+  const { teacherStream: userStream } = useStreamListContext();
 
   const {
     onCameraClick,
@@ -294,14 +291,11 @@ export const MidVideoMarqueeContainer = observer(() => {
     studentStreams,
     // sceneVideoConfig,
     // firstStudent
-  } = useSmallClassVideoControlContext()
+  } = useSmallClassVideoControlContext();
 
-  const {
-    isHost,
-    controlTools
-  } = useUserListContext()
+  const { isHost, controlTools } = useUserListContext();
 
-  const firstStudentStream = studentStreams[0]
+  const firstStudentStream = studentStreams[0];
 
   const videoStreamList = useMemo(() => {
     return studentStreams.map((stream: EduMediaStream) => ({
@@ -326,54 +320,47 @@ export const MidVideoMarqueeContainer = observer(() => {
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
-        {
-          stream.renderer && stream.video ?
-          <RendererPlayer
-            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
-          />
-          : null
-        }
-        <CameraPlaceHolder state={stream.holderState} />
+          {stream.renderer && stream.video ? (
+            <RendererPlayer
+              key={
+                stream.renderer && stream.renderer.videoTrack
+                  ? stream.renderer.videoTrack.getTrackId()
+                  : ''
+              }
+              track={stream.renderer}
+              id={stream.streamUuid}
+              className="rtc-video"
+            />
+          ) : null}
+          <CameraPlaceHolder state={stream.holderState} />
         </>
-      )
-      }))
+      ),
+    }));
   }, [
     firstStudentStream,
     studentStreams,
     isHost,
-    controlTools.includes(ControlTool.offPodium)
-  ])
+    controlTools.includes(ControlTool.offPodium),
+  ]);
 
-  const {
-    onStartPrivateChat,
-    onStopPrivateChat,
-    inPrivateConversation
-  } = usePrivateChatContext()
+  const { onStartPrivateChat, onStopPrivateChat, inPrivateConversation } =
+    usePrivateChatContext();
 
-  const onPrivateChat = async (toUuid:string | number) => {
-    if(inPrivateConversation) {
-      await onStopPrivateChat(`${toUuid}`)
+  const onPrivateChat = async (toUuid: string | number) => {
+    if (inPrivateConversation) {
+      await onStopPrivateChat(`${toUuid}`);
     } else {
-      await onStartPrivateChat(`${toUuid}`)
+      await onStartPrivateChat(`${toUuid}`);
     }
-  }
+  };
 
-  const {
-    sceneType
-  } = useRoomContext()
+  const { sceneType } = useRoomContext();
 
-  const {
-    roomInfo,
-    roomProperties,
-  } = useRoomContext()
+  const { roomInfo, roomProperties } = useRoomContext();
 
-  const {
-    eduRole2UIRole
-  } = useUIStore()
+  const { eduRole2UIRole } = useUIStore();
 
-  const {
-    onOffAllPodiumClick,
-  } = useVideoControlContext()
+  const { onOffAllPodiumClick } = useVideoControlContext();
 
   const teacherVideoList = useMemo(() => {
     return [userStream].map((stream: EduMediaStream) => ({
@@ -403,49 +390,52 @@ export const MidVideoMarqueeContainer = observer(() => {
       // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
         <>
-        {
-          stream.renderer && stream.video ?
-          <RendererPlayer
-            key={stream.renderer && stream.renderer.videoTrack ? stream.renderer.videoTrack.getTrackId() : ''} track={stream.renderer} id={stream.streamUuid} className="rtc-video"
-          />
-          : null
-        }
-        <CameraPlaceHolder state={stream.holderState} />
+          {stream.renderer && stream.video ? (
+            <RendererPlayer
+              key={
+                stream.renderer && stream.renderer.videoTrack
+                  ? stream.renderer.videoTrack.getTrackId()
+                  : ''
+              }
+              track={stream.renderer}
+              id={stream.streamUuid}
+              className="rtc-video"
+            />
+          ) : null}
+          <CameraPlaceHolder state={stream.holderState} />
         </>
-      )
-      }))
+      ),
+    }));
   }, [
     userStream,
     onOffAllPodiumClick,
     // studentStreams,
     isHost,
-    controlTools.includes(ControlTool.offPodium)
-  ])
+    controlTools.includes(ControlTool.offPodium),
+  ]);
 
   // const {
   //   teacherStream,
   // } = useTeacherVideoPlayerContext()
 
-  return (
-    videoStreamList.length || teacherVideoList.length ? 
-      <div className="video-marquee-pin">
-        <VideoMarqueeList
-          openCarousel={!!roomProperties.carousel?.state}
-          teacherStreams={teacherVideoList.length ? teacherVideoList : []}
-          hideStars={sceneType === 2}
-          videoStreamList={videoStreamList.length ? videoStreamList : []}
-          userType={eduRole2UIRole(roomInfo.userRole)}
-          onCameraClick={onCameraClick}
-          onMicClick={onMicClick}
-          onSendStar={onSendStar}
-          onWhiteboardClick={onWhiteboardClick}
-          onOffPodiumClick={onOffPodiumClick}
-          onPrivateChat={onPrivateChat}
-        />
-      </div>
-    : null
-  )
-})
+  return videoStreamList.length || teacherVideoList.length ? (
+    <div className="video-marquee-pin">
+      <VideoMarqueeList
+        openCarousel={!!roomProperties.carousel?.state}
+        teacherStreams={teacherVideoList.length ? teacherVideoList : []}
+        hideStars={sceneType === 2}
+        videoStreamList={videoStreamList.length ? videoStreamList : []}
+        userType={eduRole2UIRole(roomInfo.userRole)}
+        onCameraClick={onCameraClick}
+        onMicClick={onMicClick}
+        onSendStar={onSendStar}
+        onWhiteboardClick={onWhiteboardClick}
+        onOffPodiumClick={onOffPodiumClick}
+        onPrivateChat={onPrivateChat}
+      />
+    </div>
+  ) : null;
+});
 
 export const VideoList = observer(() => {
   const { isFullScreen } = useGlobalContext();

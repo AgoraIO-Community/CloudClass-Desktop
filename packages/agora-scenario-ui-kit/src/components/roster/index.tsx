@@ -121,7 +121,7 @@ export const Roster: FC<RosterProps> = ({
   columns = defaultColumns,
   dataSource = [],
   onClick,
-  onClose = () => console.log("onClose"),
+  onClose = () => console.log('onClose'),
   localUserUuid,
   title,
   isDraggable = true,
@@ -186,9 +186,12 @@ export const Roster: FC<RosterProps> = ({
   //   )
   // })
 
-  const studentList = studentListSort(dataSource)
+  const studentList = studentListSort(dataSource);
 
-  const cols = columns.filter(({ visibleRoles = [] }: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
+  const cols = columns.filter(
+    ({ visibleRoles = [] }: Column) =>
+      visibleRoles.length === 0 || visibleRoles.includes(userType),
+  );
 
   const DraggableContainer = useCallback(
     ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
@@ -201,29 +204,30 @@ export const Roster: FC<RosterProps> = ({
     [isDraggable],
   );
 
-  const [currentTimes, setCurrentTimes] = useState(carouselProps.times)
+  const [currentTimes, setCurrentTimes] = useState(carouselProps.times);
 
   const changeTimesFn = (e: any) => {
-    let result = e.target.value.replace(/\D+/g, '')
+    let result = e.target.value.replace(/\D+/g, '');
     if (Number(result) > 99) {
-      result = 99
+      result = 99;
     }
-    setCurrentTimes(result)
-    carouselProps.changeTimes(result)
-  }
+    setCurrentTimes(result);
+    carouselProps.changeTimes(result);
+  };
 
   const blurTimesFn = (e: any) => {
-    let result = Number(e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi,''))
+    let result = Number(
+      e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi, ''),
+    );
     if (result < 10) {
-      result = 10
+      result = 10;
     }
-    setCurrentTimes(result)
-    carouselProps.changeTimes(result)
-  }
-
+    setCurrentTimes(result);
+    carouselProps.changeTimes(result);
+  };
 
   return (
-    <DraggableContainer cancel={".search-header"} >
+    <DraggableContainer cancel={'.search-header'}>
       <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
         <div className="btn-pin">
           <SvgImg
@@ -254,7 +258,9 @@ export const Roster: FC<RosterProps> = ({
                     checked={carouselProps.isOpenCarousel}
                     onChange={carouselProps.changeCarousel}
                   />
-                  <span className="carousel-desc">{transI18n('roster.shift')}</span>
+                  <span className="carousel-desc">
+                    {transI18n('roster.shift')}
+                  </span>
                 </div>
                 <div className="disable-flag" style={{ width: 105 }}>
                   <Select
@@ -262,12 +268,12 @@ export const Roster: FC<RosterProps> = ({
                     options={[
                       {
                         label: transI18n('roster.everyone'),
-                        value: 1
+                        value: 1,
                       },
                       {
                         label: transI18n('roster.available'),
-                        value: 2
-                      }
+                        value: 2,
+                      },
                     ]}
                     onChange={carouselProps.changeModeValue}
                   />
@@ -280,12 +286,12 @@ export const Roster: FC<RosterProps> = ({
                     options={[
                       {
                         label: transI18n('roster.sequence'),
-                        value: 1
+                        value: 1,
                       },
                       {
                         label: transI18n('roster.random'),
-                        value: 2
-                      }
+                        value: 2,
+                      },
                     ]}
                     onChange={carouselProps.changeRandomValue}
                   />
@@ -303,36 +309,37 @@ export const Roster: FC<RosterProps> = ({
                 </div>
               </div>
             )}
-            {
-              userType === 'teacher' ?
-                (
-                  <div style={{ marginTop: carousel ? 5 : 0 }}>
-                    <Search
-                      onSearch={onChange}
-                      prefix={<img src={SearchSvg} />}
-                      inputPrefixWidth={32}
-                      placeholder={transI18n('scaffold.search')}
-                    />
-                  </div>
-                ) : null
-            }
+            {userType === 'teacher' ? (
+              <div style={{ marginTop: carousel ? 5 : 0 }}>
+                <Search
+                  onSearch={onChange}
+                  prefix={<img src={SearchSvg} />}
+                  inputPrefixWidth={32}
+                  placeholder={transI18n('scaffold.search')}
+                />
+              </div>
+            ) : null}
           </div>
           <Table className="roster-table">
             <TableHeader>
               {cols.map((col) => (
-                <Col key={col.key} style={{ justifyContent: 'center' }}>{transI18n(col.name)}</Col>
+                <Col key={col.key} style={{ justifyContent: 'center' }}>
+                  {transI18n(col.name)}
+                </Col>
               ))}
             </TableHeader>
             <Table className="table-container">
               {studentList?.map((data: Profile) => (
                 <Row className={'border-bottom-width-1'} key={data.uid}>
                   {cols.map((col: Column, idx: number) => (
-                    <Col key={col.key} style={{ justifyContent: idx !== 0 ? 'center' : 'flex-start' }}>
-                      {idx === 0 ?
+                    <Col
+                      key={col.key}
+                      style={{
+                        justifyContent: idx !== 0 ? 'center' : 'flex-start',
+                      }}>
+                      {idx === 0 ? (
                         <span
-                          className={
-                            `${idx === 0 ? 'roster-username' : ''}`
-                          }
+                          className={`${idx === 0 ? 'roster-username' : ''}`}
                           title={(data as any)[col.key]}
                           style={{
                             paddingLeft: 25,
@@ -340,29 +347,34 @@ export const Roster: FC<RosterProps> = ({
                           onClick={
                             canOperate(userType, localUserUuid, data, col)
                               ? () =>
-                                col.action &&
-                                onClick &&
-                                onClick(col.action, data.uid)
+                                  col.action &&
+                                  onClick &&
+                                  onClick(col.action, data.uid)
                               : undefined
                           }>
                           {(data as any)[col.key]}
                         </span>
-                        :
+                      ) : (
                         <span
                           style={{
-                            paddingLeft: 0
-                          }}
-                        >
+                            paddingLeft: 0,
+                          }}>
                           {col.render
-                            ? col.render((data as any)[col.key], data, canOperate(userType, localUserUuid, data, col), userType, (canOperate(userType, localUserUuid, data, col)
-                              ? () =>
-                                col.action &&
-                                onClick &&
-                                onClick(col.action, data.uid)
-                              : undefined))
+                            ? col.render(
+                                (data as any)[col.key],
+                                data,
+                                canOperate(userType, localUserUuid, data, col),
+                                userType,
+                                canOperate(userType, localUserUuid, data, col)
+                                  ? () =>
+                                      col.action &&
+                                      onClick &&
+                                      onClick(col.action, data.uid)
+                                  : undefined,
+                              )
                             : (data as any)[col.key]}
                         </span>
-                      }
+                      )}
                     </Col>
                   ))}
                 </Row>

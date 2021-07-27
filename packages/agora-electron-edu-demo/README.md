@@ -72,6 +72,7 @@ AgoraEduSDK.launch(
    After running, a `release` folder that contains a dmg file will be generated. Open the dmg file and remove it to `Application` to install it.
 
 ### Windows
+
 1. Install electron 12.0.0: First, replace `agora_electron` in `package.json` with the following code snippet:
    ```
    "agora_electron": {
@@ -82,7 +83,7 @@ AgoraEduSDK.launch(
    },
    ```
    Manually install electron 12.0.0
-   ```  
+   ```
    yarn add electron@12.0.0 --arch=ia32 --dev
    ```
 2. At first time, you need to use `npm`/`yarn` to install dependencies. recommand to use `yarn`

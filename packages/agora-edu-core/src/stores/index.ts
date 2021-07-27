@@ -228,9 +228,10 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations:
+          this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-      })
+      });
     } else {
       this.eduManager = new EduManager({
         vid: config.vid,
@@ -245,9 +246,10 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations:
+          this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-      })
+      });
     }
 
     if (isEmpty(roomInfoParams)) {
@@ -256,8 +258,8 @@ export class EduScenarioAppStore {
         const roomInfo = toJS(this.roomInfo);
         GlobalStorage.save('agora_edu_room', {
           roomInfo: roomInfo,
-        })
-      })
+        });
+      });
     } else {
       this.setRoomInfo({
         rtmUid: this.params.config.rtmUid,
@@ -269,9 +271,9 @@ export class EduScenarioAppStore {
     autorun(() => {
       const deviceInfo = toJS(this.deviceInfo);
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo: deviceInfo
-      })
-    })
+        deviceInfo: deviceInfo,
+      });
+    });
 
     const deviceStorage = GlobalStorage.read('agora_edu_device');
     if (deviceStorage || !isEmpty(deviceStorage)) {

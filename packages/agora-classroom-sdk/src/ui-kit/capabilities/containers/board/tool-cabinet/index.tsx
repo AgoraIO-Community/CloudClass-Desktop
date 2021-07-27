@@ -1,6 +1,9 @@
 import {
-  IAgoraExtApp, useAppPluginContext, useBoardContext, useRoomContext,
-  useScreenShareContext
+  IAgoraExtApp,
+  useAppPluginContext,
+  useBoardContext,
+  useRoomContext,
+  useScreenShareContext,
 } from 'agora-edu-core';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';

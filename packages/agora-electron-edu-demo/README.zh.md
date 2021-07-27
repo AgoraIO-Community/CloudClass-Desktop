@@ -87,6 +87,7 @@ AgoraEduSDK.launch(
 成功运行结束后会生成一个 release 目录，里面包含一个 dmg 安装文件，正常打开移动到 Application 目录即可完成安装，然后可以执行程序。
 
 ### Windows
+
 1. 首次安装 electron 12.0.0: 先找到 `package.json` 里的 `agora_electron` 按照如下结构替换
    ```
    "agora_electron": {

@@ -1,7 +1,10 @@
 import { useUIStore } from '@/infra/hooks';
 import { useEffectOnce } from '@/infra/hooks/utils';
 import {
-  useAppPluginContext, useGlobalContext, useRoomContext, useWidgetContext
+  useAppPluginContext,
+  useGlobalContext,
+  useRoomContext,
+  useWidgetContext,
 } from 'agora-edu-core';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import classnames from 'classnames';
@@ -17,7 +20,7 @@ import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-shar
 import { ToastContainer } from '~capabilities/containers/toast';
 import {
   VideoMarqueeStudentContainer,
-  VideoPlayerTeacher
+  VideoPlayerTeacher,
 } from '~capabilities/containers/video-player';
 import { Widget } from '~capabilities/containers/widget';
 import { Aside, Content, Layout } from '~components/layout';
@@ -53,13 +56,15 @@ export const BigClassScenario = observer(() => {
     fullscreen: !!isFullScreen,
   });
 
-  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
-  const orgName = get(roomProperties, 'im.huanxin.orgName')
-  const appName = get(roomProperties, 'im.huanxin.appName')
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId');
+  const orgName = get(roomProperties, 'im.huanxin.orgName');
+  const appName = get(roomProperties, 'im.huanxin.appName');
 
-  const { roomInfo : {userRole}} = useRoomContext()
+  const {
+    roomInfo: { userRole },
+  } = useRoomContext();
 
-  const visible = userRole !== EduRoleTypeEnum.invisible
+  const visible = userRole !== EduRoleTypeEnum.invisible;
 
   return (
     <Layout
@@ -97,10 +102,18 @@ export const BigClassScenario = observer(() => {
               placement="bottom"
             />
           </div>
-          {chatroomId ?
-            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
-            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
-          }
+          {chatroomId ? (
+            <Widget
+              className="chat-panel"
+              widgetComponent={chatWidget}
+              widgetProps={{ chatroomId, orgName, appName }}
+            />
+          ) : (
+            <Widget
+              className="chat-panel chat-border"
+              widgetComponent={chatWidget}
+            />
+          )}
         </Aside>
       </Layout>
       <DialogContainer />

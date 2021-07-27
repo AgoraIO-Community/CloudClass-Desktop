@@ -1,5 +1,12 @@
 import classnames from 'classnames';
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,18 +22,15 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 
 // TODO: 优化音量条
-export const StreamVolumeIndicator = ({streamUuid}: {streamUuid: any}) => {
+export const StreamVolumeIndicator = ({ streamUuid }: { streamUuid: any }) => {
+  const { speakers } = useMediaStore();
 
-  const {speakers} = useMediaStore()
+  const speaker = speakers.get(+streamUuid);
 
-  const speaker = speakers.get(+streamUuid)
+  const currentVolume = speaker ?? 0;
 
-  const currentVolume = speaker ?? 0
-
-  return (
-    <VolumeIndicator volume={currentVolume} />
-  )
-}
+  return <VolumeIndicator volume={currentVolume} />;
+};
 
 export interface BaseVideoPlayerProps {
   /**
@@ -260,7 +264,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           placement={placement}
           onClick={() => {
             if (micDevice === 1) {
-              onMicClick(uid)
+              onMicClick(uid);
             }
           }}
         />
@@ -409,7 +413,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? <StreamVolumeIndicator streamUuid={streamUuid} /> : null}
+            {micEnabled && micDevice === 1 ? (
+              <StreamVolumeIndicator streamUuid={streamUuid} />
+            ) : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({
@@ -468,12 +474,12 @@ export interface VideoMarqueeListProps {
   /**
    * video stream list
    */
-  videoStreamList: BaseVideoPlayerProps[],
+  videoStreamList: BaseVideoPlayerProps[];
   // teacherStream: any,
   /**
    * teacher stream
    */
-  teacherStreams: any[],
+  teacherStreams: any[];
   /**
    * 点击摄像头的按钮时的回调
    */
@@ -506,7 +512,7 @@ export interface VideoMarqueeListProps {
   /**
    * 轮播功能开启轮播需要隐藏箭头
    */
-  openCarousel?: boolean
+  openCarousel?: boolean;
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -521,49 +527,58 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   onSendStar,
   userType,
   openCarousel = false,
-  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
 }) => {
-  const videoContainerRef = useRef<HTMLDivElement | null>(null)
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const videoContainerParentRef = useRef<HTMLDivElement | null>(null)
+  const videoContainerParentRef = useRef<HTMLDivElement | null>(null);
 
-  const scroll = useCallback((direction: 'left' | 'right') => {
-    const videoContainer = videoContainerRef.current
-    if (!videoContainer) return
-    const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement
-    if (!videoDOM) return
-    const offsetWidth = videoDOM.offsetWidth
-    if (direction === 'left') {
-      videoContainer.scrollLeft -= offsetWidth
-    }
-    if (direction === 'right') {
-      videoContainer.scrollLeft += offsetWidth
-    }
-  }, [videoContainerRef.current])
+  const scroll = useCallback(
+    (direction: 'left' | 'right') => {
+      const videoContainer = videoContainerRef.current;
+      if (!videoContainer) return;
+      const videoDOM = videoContainer.querySelector(
+        '.video-item',
+      ) as HTMLDivElement;
+      if (!videoDOM) return;
+      const offsetWidth = videoDOM.offsetWidth;
+      if (direction === 'left') {
+        videoContainer.scrollLeft -= offsetWidth;
+      }
+      if (direction === 'right') {
+        videoContainer.scrollLeft += offsetWidth;
+      }
+    },
+    [videoContainerRef.current],
+  );
 
-  const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
+  const checkTargetScrollElementSatisfied = (
+    target: HTMLDivElement,
+  ): boolean => {
     // const targetOffsetWidth = target.offsetWidth
-    const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item')
+    const videoItems: NodeListOf<HTMLDivElement> =
+      target.querySelectorAll('.video-item');
     if (videoItems && videoItems.length && videoItems[0].offsetWidth) {
-      return videoItems.length >= 6
+      return videoItems.length >= 6;
     }
     return false;
   };
 
   const mountDOM = useCallback((_dom: HTMLDivElement | null) => {
-  
-    const dom: HTMLDivElement = _dom?.querySelector("#animation-group")!
-    
+    const dom: HTMLDivElement = _dom?.querySelector('#animation-group')!;
+
     if (dom) {
-      videoContainerRef.current = dom
-      videoContainerParentRef.current = _dom!
+      videoContainerRef.current = dom;
+      videoContainerParentRef.current = _dom!;
 
       if (videoContainerRef.current && videoContainerParentRef.current) {
-        const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current)
+        const satisfied = checkTargetScrollElementSatisfied(
+          videoContainerRef.current,
+        );
         if (satisfied) {
-          videoContainerParentRef.current.classList.add('show-scroll')
+          videoContainerParentRef.current.classList.add('show-scroll');
         } else {
-          videoContainerParentRef.current.classList.remove('show-scroll')
+          videoContainerParentRef.current.classList.remove('show-scroll');
         }
       }
       const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -577,8 +592,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             target.classList.remove('show-scroll');
           }
         }
-      })
-      observer.observe(videoContainerParentRef.current)
+      });
+      observer.observe(videoContainerParentRef.current);
     }
   }, []);
 
@@ -598,49 +613,53 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   return (
     <div className="marque-video-container">
       <>
-      <CSSTransition
+        <CSSTransition
           in={!!teacherStreams[0]?.uid}
           timeout={500}
-          classNames="video-player-animates"
-        >
+          classNames="video-player-animates">
           <div className="video-item" ref={attachVideoItem}>
-            {teacherStreams[0] &&
-            <VideoPlayer
-              hideStars={hideStars}
-              {...teacherStreams[0]}
-              userType={userType}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(teacherStreams[0].uid)
-              }}
-              onPrivateChat={async () => {
-                await onPrivateChat(teacherStreams[0].uid)
-              }}
-            ></VideoPlayer>}
+            {teacherStreams[0] && (
+              <VideoPlayer
+                hideStars={hideStars}
+                {...teacherStreams[0]}
+                userType={userType}
+                onCameraClick={onCameraClick}
+                onMicClick={onMicClick}
+                onOffPodiumClick={onOffPodiumClick}
+                onWhiteboardClick={onWhiteboardClick}
+                onSendStar={async () => {
+                  await onSendStar(teacherStreams[0].uid);
+                }}
+                onPrivateChat={async () => {
+                  await onPrivateChat(teacherStreams[0].uid);
+                }}></VideoPlayer>
+            )}
           </div>
         </CSSTransition>
-        <div className="video-flex-container"
-          ref={mountDOM}
-        >
+        <div className="video-flex-container" ref={mountDOM}>
           {/* {teacherStreams[0] ?  */}
-          {!openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
-            <span className="offset">
-              <Icon type="backward"></Icon>
-            </span>
-          </div> : null}
-          <TransitionGroup id="animation-group" className="video-list video-container">
+          {!openCarousel ? (
+            <div
+              className="left-container scroll-btn"
+              onClick={() => {
+                scroll('left');
+              }}>
+              <span className="offset">
+                <Icon type="backward"></Icon>
+              </span>
+            </div>
+          ) : null}
+          <TransitionGroup
+            id="animation-group"
+            className="video-list video-container">
             {/* <div className="video-container" ref={mountDOM}> */}
-            {
-              videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
+            {videoStreamList.map(
+              (videoStream: BaseVideoPlayerProps, idx: number) => (
                 <CSSTransition
                   key={`student-${videoStream.uid}`}
                   // key={videoStream.uid}
                   timeout={500}
-                  classNames="video-player-animates"
-                >
+                  classNames="video-player-animates">
                   <div className="video-item" key={idx} ref={attachVideoItem}>
                     <VideoPlayer
                       hideStars={hideStars}
@@ -652,99 +671,104 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                       onOffPodiumClick={onOffPodiumClick}
                       onWhiteboardClick={onWhiteboardClick}
                       onSendStar={async () => {
-                        await onSendStar(videoStream.uid)
+                        await onSendStar(videoStream.uid);
                       }}
                       onPrivateChat={async () => {
-                        await onPrivateChat(videoStream.uid)
-                      }}
-                    ></VideoPlayer>
+                        await onPrivateChat(videoStream.uid);
+                      }}></VideoPlayer>
                   </div>
                 </CSSTransition>
-              )
-            }
+              ),
+            )}
             {/* </div> */}
           </TransitionGroup>
-          {!openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
-            <span className="offset">
-              <Icon type="forward"></Icon>
-            </span>
-          </div> : null}
+          {!openCarousel ? (
+            <div
+              className="right-container scroll-btn"
+              onClick={() => {
+                scroll('right');
+              }}>
+              <span className="offset">
+                <Icon type="forward"></Icon>
+              </span>
+            </div>
+          ) : null}
         </div>
       </>
     </div>
-  )
-}
-
-export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
-  teacherStream: any
-}
-
-export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> = ({
-  teacherStream,
-  videoStreamList = [],
-  hideStars,
-  onCameraClick,
-  onMicClick,
-  onOffPodiumClick,
-  onWhiteboardClick,
-  onSendStar,
-  userType,
-  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid)
-}) => {
-  return (
-    <div className="mid-class-carousel">
-      <div className="carousel-item video-teacher">
-        <VideoPlayer
-          {...teacherStream}
-          controlPlacement={'bottom'}
-          placement={'bottom'}
-        ></VideoPlayer>
-      </div>
-      <div className="video-students">
-        {videoStreamList.length > 6 ? (
-          <div className="left-container scroll-btn">
-            <span className="offset">
-              <Icon type="backward"></Icon>
-            </span>
-          </div>
-        ) : null}
-        {videoStreamList.length ? videoStreamList.map((videoStream, index) => (
-          <div
-            className={['carousel-item', `video-student`].join(' ')}
-            key={index}
-            onAnimationEnd={(e: any) => {
-              e.target.style.opacity = 1
-              e.target.style.width = 204 + 'px'
-            }}
-          >
-            <VideoPlayer
-              {...videoStream}
-              controlPlacement={'bottom'}
-              placement={'bottom'}
-              hideStars={hideStars}
-              showGranted={true}
-              userType={userType}
-              onCameraClick={onCameraClick}
-              onMicClick={onMicClick}
-              onOffPodiumClick={onOffPodiumClick}
-              onWhiteboardClick={onWhiteboardClick}
-              onSendStar={async () => {
-                await onSendStar(videoStream.uid)
-              }}
-              onPrivateChat={async () => {
-                await onPrivateChat(videoStream.uid)
-              }}
-            ></VideoPlayer>
-          </div>
-        )) : null}
-        {videoStreamList.length > 6 ? (
-          <div className="right-container scroll-btn">
-            <span className="offset">
-              <Icon type="forward"></Icon>
-            </span>
-          </div>
-        ) : null}
-      </div>
-    </div>
   );
 };
+
+export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
+  teacherStream: any;
+}
+
+export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
+  ({
+    teacherStream,
+    videoStreamList = [],
+    hideStars,
+    onCameraClick,
+    onMicClick,
+    onOffPodiumClick,
+    onWhiteboardClick,
+    onSendStar,
+    userType,
+    onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  }) => {
+    return (
+      <div className="mid-class-carousel">
+        <div className="carousel-item video-teacher">
+          <VideoPlayer
+            {...teacherStream}
+            controlPlacement={'bottom'}
+            placement={'bottom'}></VideoPlayer>
+        </div>
+        <div className="video-students">
+          {videoStreamList.length > 6 ? (
+            <div className="left-container scroll-btn">
+              <span className="offset">
+                <Icon type="backward"></Icon>
+              </span>
+            </div>
+          ) : null}
+          {videoStreamList.length
+            ? videoStreamList.map((videoStream, index) => (
+                <div
+                  className={['carousel-item', `video-student`].join(' ')}
+                  key={index}
+                  onAnimationEnd={(e: any) => {
+                    e.target.style.opacity = 1;
+                    e.target.style.width = 204 + 'px';
+                  }}>
+                  <VideoPlayer
+                    {...videoStream}
+                    controlPlacement={'bottom'}
+                    placement={'bottom'}
+                    hideStars={hideStars}
+                    showGranted={true}
+                    userType={userType}
+                    onCameraClick={onCameraClick}
+                    onMicClick={onMicClick}
+                    onOffPodiumClick={onOffPodiumClick}
+                    onWhiteboardClick={onWhiteboardClick}
+                    onSendStar={async () => {
+                      await onSendStar(videoStream.uid);
+                    }}
+                    onPrivateChat={async () => {
+                      await onPrivateChat(videoStream.uid);
+                    }}></VideoPlayer>
+                </div>
+              ))
+            : null}
+          {videoStreamList.length > 6 ? (
+            <div className="right-container scroll-btn">
+              <span className="offset">
+                <Icon type="forward"></Icon>
+              </span>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    );
+  };

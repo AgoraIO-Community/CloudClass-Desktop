@@ -361,45 +361,47 @@ export const netlessInsertImageOperation = async (
 };
 
 export type NetlessMediaFile = {
-  url: string,
-  originX: number,
-  originY: number,
-  width: number,
-  height: number,
-}
+  url: string;
+  originX: number;
+  originY: number;
+  width: number;
+  height: number;
+};
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
-  room.insertPlugin(
-    PluginId,
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-          src: file.url,
-          type: mimeType
-          // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
-      }
-    }
-  )
-}
+export const netlessInsertVideoOperation = (
+  room: Room,
+  file: NetlessMediaFile,
+  mimeType: string,
+) => {
+  room.insertPlugin(PluginId, {
+    originX: file.originX,
+    originY: file.originY,
+    width: file.width,
+    height: file.height,
+    attributes: {
+      src: file.url,
+      type: mimeType,
+      // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
+    },
+  });
+};
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
-  room.insertPlugin(
-    PluginId,
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-        src: file.url,
-        type: mimeType
-      }
-    }
-  )
-}
+export const netlessInsertAudioOperation = (
+  room: Room,
+  file: NetlessMediaFile,
+  mimeType: string,
+) => {
+  room.insertPlugin(PluginId, {
+    originX: file.originX,
+    originY: file.originY,
+    width: file.width,
+    height: file.height,
+    attributes: {
+      src: file.url,
+      type: mimeType,
+    },
+  });
+};
 
 export const getStorage = (label: string) => {
   const beautyOption = GlobalStorage.read(label) || {
@@ -407,9 +409,9 @@ export const getStorage = (label: string) => {
     lighteningLevel: 0.5,
     rednessLevel: 0.5,
     smoothnessLevel: 0.5,
-  }
-  return beautyOption
-}
+  };
+  return beautyOption;
+};
 
 // media device helper
 export const getDeviceLabelFromStorage = (type: string) => {

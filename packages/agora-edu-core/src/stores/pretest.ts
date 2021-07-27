@@ -1,6 +1,9 @@
 import {
-  AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer,
-  MediaService
+  AgoraElectronRTCWrapper,
+  AgoraWebRtcWrapper,
+  GenericErrorWrapper,
+  LocalUserRenderer,
+  MediaService,
 } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';

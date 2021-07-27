@@ -153,16 +153,16 @@ export const useRendererPlayer = <T extends HTMLElement>(
     [ref, props.track, props.fitMode, props.preview],
   );
 
-  return ref
-}
+  return ref;
+};
 
 export const useDebounce = <T>(value: T, delay?: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value)
+  const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedValue(value), delay)
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
     return () => {
-      clearTimeout(timeout)
-    }
-  }, [value, delay])
-  return debouncedValue
-}
+      clearTimeout(timeout);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+};

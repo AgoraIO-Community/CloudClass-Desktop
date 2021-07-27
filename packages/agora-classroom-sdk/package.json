@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "1.1.3",
+  "version": "1.1.2-rc.3",
   "homepage": ".",
   "sideEffects": false,
   "keywords": [
@@ -11,7 +11,7 @@
     "Education"
   ],
   "main": "lib/edu_sdk.bundle.js",
-  "types": "lib/infra/api/index.d.ts",
+  "types": "lib/agora-classroom-sdk/src/infra/api/index.d.ts",
   "swSrcPath": "./src/infra/sw/service-worker.ts",
   "babel": {
     "presets": [
@@ -168,7 +168,18 @@
       "last 1 safari version"
     ]
   },
+  "peerDependencies": {
+    "agora-electron-sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "agora-electron-sdk": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "agora-edu-core": "1.1.2",
+    "agora-rte-sdk": "1.1.2",
+    "agora-widget-gallery": "1.0.0",
     "@babel/core": "7.13.15",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-proposal-object-rest-spread": "7.13.8",
@@ -282,24 +293,16 @@
     "webpack-cli": "4.3.1",
     "workbox-webpack-plugin": "6.1.1",
     "worker-loader": "2.0.0",
-    "zlib": "1.0.5"
-  },
-  "dependencies": {
+    "zlib": "1.0.5",
     "@netless/fetch-progress": "0.0.1",
     "@netless/iframe-bridge": "2.1.4",
-    "@tailwindcss/forms": "0.2.1",
     "@types/react-transition-group": "4.4.1",
+    "@tailwindcss/forms": "0.2.1",
     "@zip.js/zip.js": "2.2.22",
-    "adm-zip": "0.4.14",
     "agora-access-token": "2.0.4",
-    "agora-edu-core": "1.1.2",
-    "agora-electron-sdk": "3.4.6-build.722",
-    "agora-rte-sdk": "1.1.2",
-    "agora-widget-gallery": "1.0.0",
     "animate.css": "4.1.1",
     "bowser": "1.9.4",
     "broadcast-channel": "^3.7.0",
-    "classnames": "2.2.6",
     "fetch-progress": "1.3.0",
     "i18next": "20.1.0",
     "jszip": "3.6.0",
@@ -322,5 +325,9 @@
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1"
+  },
+  "dependencies": {
+    "adm-zip": "0.4.14",
+    "agora-electron-sdk": "2.9.107-rc.148-build.68"
   }
 }

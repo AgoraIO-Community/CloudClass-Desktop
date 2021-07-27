@@ -1,28 +1,28 @@
-const threadLoader = require("thread-loader");
-const webpack = require("webpack");
+const threadLoader = require('thread-loader');
+const webpack = require('webpack');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin');
 //const dayjs = require('dayjs')
-const path = require('path')
-const {DefinePlugin} = require('webpack')
-const autoprefixer = require('autoprefixer')
+const path = require('path');
+const { DefinePlugin } = require('webpack');
+const autoprefixer = require('autoprefixer');
 //const tailwindcss = require('tailwindcss')
 
-const packageInfo = require('./package.json')
+const packageInfo = require('./package.json');
 
 // const swSrcPath = packageInfo.swSrcPath
 
-let version = packageInfo.version
-let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
-if(apaasBuildEnv) {
+let version = packageInfo.version;
+let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV;
+if (apaasBuildEnv) {
   // const date = dayjs().format('YYMMDD')
   // const translator = short()
   // const hash = translator.new()
-  version = `${packageInfo.version}`
+  version = `${packageInfo.version}`;
   // if(apaasBuildEnv === 'test') {
   //   version=`test-${packageInfo.version}`
   // } else if(apaasBuildEnv === 'preprod') {
@@ -32,13 +32,13 @@ if(apaasBuildEnv) {
   // }
 }
 
-const config = require('dotenv').config().parsed
+const config = require('dotenv').config().parsed;
 
 // const packageInfo = require('./package.json')
 
 // const swSrcPath = packageInfo.swSrcPath
 
-const babelConfig = packageInfo.babel
+const babelConfig = packageInfo.babel;
 
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
 // const ModuleFederationPlugin = require("webpack").container
@@ -49,17 +49,17 @@ module.exports = {
     hx_im: './src/index.js',
     // edu_sdk: "./src/infra/api/index.tsx",
   },
-  mode: "production",
+  mode: 'production',
   output: {
     publicPath: '',
     filename: '[name].bundle.js',
-    libraryTarget: "umd",
+    libraryTarget: 'umd',
     // library: "HXIM",
     library: 'HxIm',
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: ['.js', '.jsx'],
     // alias: {
     //   ['@']: path.resolve(__dirname, 'src'),
     //   '~core': path.resolve(__dirname, 'src/core'),
@@ -82,18 +82,18 @@ module.exports = {
         test: /\.js(x)?$/i,
         use: [
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              ...babelConfig
+              ...babelConfig,
               // presets: [
               //   "@babel/preset-react",
               //   "@babel/preset-typescript"
               // ]
-            }
+            },
           },
           {
-            loader: "thread-loader",
-          }
+            loader: 'thread-loader',
+          },
         ],
         // exclude: /node_modules|(\.(stories.ts)x?$)/,
         // exclude: [
@@ -113,8 +113,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1 // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
-            }
+              importLoaders: 1, // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+            },
           },
           // {
           //   loader: "postcss-loader",
@@ -130,21 +130,21 @@ module.exports = {
           //   }
           // },
           {
-            loader: "thread-loader",
-          }
+            loader: 'thread-loader',
+          },
           // {
           //   loader: 'thread-loader',
           // }
-        ]
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         // exclude: /node_modules/,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           esModule: false,
           // limit: 1024
-        }
+        },
       },
       // {
       //   test: /\.svg$/,
@@ -207,23 +207,23 @@ module.exports = {
   },
   optimization: {
     minimizer: [
-        new TerserPlugin({
-            parallel: require('os').cpus().length,
-        }),
-        new OptimizeCssAssetsPlugin({
-            assetNameRegExp: /\.css$/g,
-            cssProcessorOptions: {
-                safe: true,
-                autoprefixer: { disable: true },
-                mergeLonghand: false,
-                discardComments: {
-                    removeAll: true
-                }
-            },
-            canPrint: true
-        })
-    ]
-},
+      new TerserPlugin({
+        parallel: require('os').cpus().length,
+      }),
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessorOptions: {
+          safe: true,
+          autoprefixer: { disable: true },
+          mergeLonghand: false,
+          discardComments: {
+            removeAll: true,
+          },
+        },
+        canPrint: true,
+      }),
+    ],
+  },
   plugins: [
     // new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin(),

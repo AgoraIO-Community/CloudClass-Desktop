@@ -52,8 +52,13 @@ const App: React.FC<AppProps> = observer((props) => {
   useEffect(() => {
     if (domRef.current && isJoined) {
       //@ts-ignore
-      console.log("store-----",pluginStore)
-      hx.renderHXChatRoom(domRef.current, pluginStore, props.sendMsg, props.onReceivedMsg);
+      console.log('store-----', pluginStore);
+      hx.renderHXChatRoom(
+        domRef.current,
+        pluginStore,
+        props.sendMsg,
+        props.onReceivedMsg,
+      );
     }
   }, [domRef.current, isJoined]);
 
@@ -73,17 +78,19 @@ export class AgoraHXChatWidget implements IAgoraWidget {
 
   constructor() {}
 
-  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any, sendMsg?: any, onReceivedMsg?: any): void {
+  widgetDidLoad(
+    dom: Element,
+    ctx: AgoraWidgetContext,
+    props: any,
+    sendMsg?: any,
+    onReceivedMsg?: any,
+  ): void {
     this.store = new PluginStore(ctx, props);
     console.log('widgetDidLoad', props);
     // hx.renderHXChatRoom(dom)
     ReactDOM.render(
       <Provider store={this.store}>
-        <App 
-          {...props} 
-          sendMsg={sendMsg}
-          onReceivedMsg={onReceivedMsg}
-        />
+        <App {...props} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg} />
       </Provider>,
       dom,
     );

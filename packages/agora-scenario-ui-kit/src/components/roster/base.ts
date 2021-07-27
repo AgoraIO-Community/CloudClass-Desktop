@@ -1,4 +1,4 @@
-import { IconTypes } from "../icon/icon-types";
+import { IconTypes } from '../icon/icon-types';
 const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible';

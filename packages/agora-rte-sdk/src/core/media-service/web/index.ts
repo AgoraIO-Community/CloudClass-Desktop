@@ -94,9 +94,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   public publishedAudio: boolean = false;
   public publishedVideo: boolean = false;
   public streamCoordinator?: AgoraWebStreamCoordinator;
-  private hasCamera?: boolean
-  private hasMicrophone?: boolean
-  private options: WebRtcWrapperInitOption
+  private hasCamera?: boolean;
+  private hasMicrophone?: boolean;
+  private options: WebRtcWrapperInitOption;
 
   _localAudioStats: {
     audioLossRate: number;
@@ -122,18 +122,18 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
 
   constructor(options: WebRtcWrapperInitOption) {
     super();
-    this.options = options
-    this.videoDeviceConfig.set('cameraTestRenderer', undefined)
-    this.videoDeviceConfig.set('cameraRenderer', undefined)
-    this.audioDeviceConfig.set('microphoneTestTrack', undefined)
-    this.audioDeviceConfig.set('microphoneTrack', undefined)
+    this.options = options;
+    this.videoDeviceConfig.set('cameraTestRenderer', undefined);
+    this.videoDeviceConfig.set('cameraRenderer', undefined);
+    this.audioDeviceConfig.set('microphoneTestTrack', undefined);
+    this.audioDeviceConfig.set('microphoneTrack', undefined);
 
-    this.videoTrackPublished.set('cameraTestRenderer', false)
-    this.videoTrackPublished.set('cameraRenderer', false)
-    this.audioTrackPublished.set('microphoneTestTrack', false)
-    this.audioTrackPublished.set('microphoneTrack', false)
-    this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK
-    this.agoraWebSdk.setArea([options.area as any])
+    this.videoTrackPublished.set('cameraTestRenderer', false);
+    this.videoTrackPublished.set('cameraRenderer', false);
+    this.audioTrackPublished.set('microphoneTestTrack', false);
+    this.audioTrackPublished.set('microphoneTrack', false);
+    this.agoraWebSdk = options.agoraWebSdk as AgoraWebSDK;
+    this.agoraWebSdk.setArea([options.area as any]);
     // this.agoraWebSdk.setArea(options.area)
     this.agoraWebSdk.setParameter('AUDIO_SOURCE_AVG_VOLUME_DURATION', 300);
     this.agoraWebSdk.setParameter('AUDIO_VOLUME_INDICATION_INTERVAL', 300);
@@ -1055,9 +1055,9 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       const videoTrack = await this.agoraWebSdk.createCameraVideoTrack({
         cameraId: this.videoDeviceConfig.get(type),
         encoderConfig: this.options.cameraEncoderConfiguration,
-      })
-      const trackId = videoTrack.getTrackId()
-      this.videoTrackMap.set(type, videoTrack)
+      });
+      const trackId = videoTrack.getTrackId();
+      this.videoTrackMap.set(type, videoTrack);
       videoTrack.on('track-ended', () => {
         this.fireTrackEnd({ resource: 'video', tag: type, trackId });
         if (videoTrack) {

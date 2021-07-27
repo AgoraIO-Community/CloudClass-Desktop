@@ -17,8 +17,8 @@ import { videoPlugin2 } from '@netless/white-video-plugin2';
 import { audioPlugin2 } from '@netless/white-audio-plugin2';
 import { get } from 'lodash';
 import { BizLogger } from './biz-logger';
-import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
-import {PluginId, Version, videoJsPlugin} from '@netless/video-js-plugin'
+import { IframeBridge, IframeWrapper } from '@netless/iframe-bridge';
+import { PluginId, Version, videoJsPlugin } from '@netless/video-js-plugin';
 
 export interface SceneFile {
   name: string;
@@ -42,18 +42,24 @@ export class BoardClient extends EventEmitter {
 
   private appIdentifier!: string;
 
-  constructor(config: {identity: string, appIdentifier: string, enable: boolean} = {identity: 'guest', appIdentifier: '', enable: false}) {
-    super()
-    this.appIdentifier = config.appIdentifier
-    this.initPlugins(config.identity, config.enable)
-    this.init()
+  constructor(
+    config: { identity: string; appIdentifier: string; enable: boolean } = {
+      identity: 'guest',
+      appIdentifier: '',
+      enable: false,
+    },
+  ) {
+    super();
+    this.appIdentifier = config.appIdentifier;
+    this.initPlugins(config.identity, config.enable);
+    this.init();
   }
 
-  initPlugins (identity: string, enable: boolean) {
+  initPlugins(identity: string, enable: boolean) {
     const plugins = createPlugins({
       // "video2": videoPlugin2,
       // "audio2": audioPlugin2,
-      [PluginId]: videoJsPlugin()
+      [PluginId]: videoJsPlugin(),
     });
 
     // plugins.setPluginContext("video2", {identity});

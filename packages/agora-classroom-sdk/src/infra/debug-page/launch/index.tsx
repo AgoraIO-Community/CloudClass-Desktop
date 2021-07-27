@@ -1,5 +1,6 @@
 import { useHomeStore } from '@/infra/hooks';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { AgoraChatWidget } from 'agora-widget-gallery';
 //@ts-ignore
 import { AgoraExtAppCountDown } from 'agora-plugin-gallery';
 import MD5 from 'js-md5';
@@ -7,7 +8,7 @@ import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AgoraEduEvent, AgoraEduSDK } from '../../api';
+import { AgoraEduEvent, AgoraEduSDK, scenarioRoomPath } from '../../api';
 import {
   ClassRoom,
   ClassRoomAbstractStore,

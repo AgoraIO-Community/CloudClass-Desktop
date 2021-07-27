@@ -921,25 +921,25 @@ export class SceneStore extends SimpleInterval {
   @action.bound
   async startWebSharing() {
     try {
-      this.waitingShare = true
+      this.waitingShare = true;
       const encoderConfig = this.appStore.params.config.mediaOptions || {
         width: 1280,
         height: 720,
         frameRate: 5,
-        bitrate: 800
-      }
+        bitrate: 1000,
+      };
       await this.mediaService.prepareScreenShare({
         shareAudio: 'auto',
-        encoderConfig
-      })
-      await this.roomManager?.userService.startShareScreen()
-      this.appStore.boardStore.setScreenShareScenePath()
+        encoderConfig,
+      });
+      await this.roomManager?.userService.startShareScreen();
+      this.appStore.boardStore.setScreenShareScenePath();
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
         token: this.roomManager?.userService.screenStream.token,
-        encoderConfig
-      }
+        encoderConfig,
+      };
 
       await this.mediaService.startScreenShare({
         params,
@@ -1486,7 +1486,8 @@ export class SceneStore extends SimpleInterval {
       };
     }
 
-    const isFreeze = this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false
+    const isFreeze =
+      this.queryVideoFrameIsNotFrozen(+stream.streamUuid) === false;
 
     // if(stats && stats.renderFrameRate === 0) {
     //   return {
@@ -1494,27 +1495,32 @@ export class SceneStore extends SimpleInterval {
     //     text: `placeholder.loading`
     //   }
     // }
-    if (stream 
-      && !!stream.hasVideo === true) {
+    if (stream && !!stream.hasVideo === true) {
       if (isFreeze) {
         return {
           holderState: 'broken',
-          text: 'placeholder.noAvailableCamera'
-        }
+          text: 'placeholder.noAvailableCamera',
+        };
       }
-      if (this.appStore.mediaStore.remoteVideoRenderStateMap[stream.streamUuid] !== VideoRenderState.Prepare &&
-        this.appStore.mediaStore.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +stream.streamUuid)) {
+      if (
+        this.appStore.mediaStore.remoteVideoRenderStateMap[
+          stream.streamUuid
+        ] !== VideoRenderState.Prepare &&
+        this.appStore.mediaStore.remoteUsersRenderer.find(
+          (it: RemoteUserRenderer) => +it.uid === +stream.streamUuid,
+        )
+      ) {
         return {
           holderState: 'none',
-          text: ''
-        }
+          text: '',
+        };
       }
     }
 
     return {
       holderState: 'loading',
-      text: `placeholder.loading`
-    }
+      text: `placeholder.loading`,
+    };
   }
 
   getFixAudioVolume(streamUuid: number): number {
@@ -1624,13 +1630,19 @@ export class SceneStore extends SimpleInterval {
       ) {
         return false;
       }
-      return this.appStore.mediaStore.localVideoRenderState !== VideoRenderState.Freezing
+      return (
+        this.appStore.mediaStore.localVideoRenderState !==
+        VideoRenderState.Freezing
+      );
     } else {
       // const render = this.remoteUsersRenderer.find((it: RemoteUserRenderer) => +it.uid === +uid) as RemoteUserRenderer
       // if(render) {
       //   return render.renderFrameRate > 0
       // }
-      return this.appStore.mediaStore.remoteVideoRenderStateMap[`${uid}`] !== VideoRenderState.Freezing
+      return (
+        this.appStore.mediaStore.remoteVideoRenderStateMap[`${uid}`] !==
+        VideoRenderState.Freezing
+      );
     }
   }
 
@@ -1770,7 +1782,7 @@ export class SceneStore extends SimpleInterval {
       placeHolderText: this.defaultTeacherPlaceholder.text,
       holderState: this.defaultTeacherPlaceholder.holderState,
       // micVolume: 0,
-    } as any
+    } as any;
   }
 
   @computed
@@ -1966,7 +1978,9 @@ export class SceneStore extends SimpleInterval {
           holderState: props.holderState,
           placeHolderText: props.text,
           // micVolume: volumeLevel,
-          whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(
+            `${user.userUuid}`,
+          ),
           online: this.queryUserIsOnline(user.userUuid),
           onPodium: this.queryUserIsOnPodium(stream.streamUuid),
           cameraDevice: this.queryRemoteCameraDeviceState(
@@ -1992,52 +2006,60 @@ export class SceneStore extends SimpleInterval {
     const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole);
 
     if (this.cameraEduStream && isStudent) {
-      const props = this.getLocalPlaceHolderProps()
-      streamList = [{
-        local: true,
-        account: localUser.userName,
-        userUuid: this.cameraEduStream.userInfo.userUuid as string,
-        streamUuid: this.cameraEduStream.streamUuid,
-        video: this.cameraEduStream.hasVideo,
-        audio: this.cameraEduStream.hasAudio,
-        renderer: this.cameraRenderer as LocalUserRenderer,
-        hideControl: this.hideControl(this.appStore.userUuid),
-        holderState: props.holderState,
-        placeHolderText: props.text,
-        // micVolume: this.localVolume,
-        whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
-        online: true,
-        onPodium: true,
-        micDevice: this.localMicrophoneDeviceState,
-        cameraDevice: this.localCameraDeviceState,
-        isLocal: true,
-        hasStream: !!this.cameraEduStream,
-      } as any].concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
+      const props = this.getLocalPlaceHolderProps();
+      streamList = [
+        {
+          local: true,
+          account: localUser.userName,
+          userUuid: this.cameraEduStream.userInfo.userUuid as string,
+          streamUuid: this.cameraEduStream.streamUuid,
+          video: this.cameraEduStream.hasVideo,
+          audio: this.cameraEduStream.hasAudio,
+          renderer: this.cameraRenderer as LocalUserRenderer,
+          hideControl: this.hideControl(this.appStore.userUuid),
+          holderState: props.holderState,
+          placeHolderText: props.text,
+          // micVolume: this.localVolume,
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(
+            `${this.appStore.userUuid}`,
+          ),
+          online: true,
+          onPodium: true,
+          micDevice: this.localMicrophoneDeviceState,
+          cameraDevice: this.localCameraDeviceState,
+          isLocal: true,
+          hasStream: !!this.cameraEduStream,
+        } as any,
+      ].concat(
+        streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid),
+      );
     }
     if (streamList.length) {
       return streamList;
     }
-    return [{
-      local: false,
-      account: 'student',
-      userUuid: '',
-      streamUuid: '',
-      video: false,
-      audio: false,
-      renderer: undefined,
-      hideControl: true,
-      placeHolderText: this.defaultStudentPlaceholder.text,
-      holderState: this.defaultStudentPlaceholder.holderState,
-      // micVolume: 0,
-      whiteboardGranted: false,
-      defaultStream: true,
-      online:false,
-      onPodium: false,
-      micDevice: 1,
-      cameraDevice: 1,
-      isLocal: false,
-      hasStream: false,
-    } as any]
+    return [
+      {
+        local: false,
+        account: 'student',
+        userUuid: '',
+        streamUuid: '',
+        video: false,
+        audio: false,
+        renderer: undefined,
+        hideControl: true,
+        placeHolderText: this.defaultStudentPlaceholder.text,
+        holderState: this.defaultStudentPlaceholder.holderState,
+        // micVolume: 0,
+        whiteboardGranted: false,
+        defaultStream: true,
+        online: false,
+        onPodium: false,
+        micDevice: 1,
+        cameraDevice: 1,
+        isLocal: false,
+        hasStream: false,
+      } as any,
+    ];
   }
 
   @action.bound

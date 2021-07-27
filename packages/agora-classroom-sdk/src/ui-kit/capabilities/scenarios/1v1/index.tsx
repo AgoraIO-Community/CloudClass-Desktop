@@ -3,7 +3,7 @@ import {
   useAppPluginContext,
   useGlobalContext,
   useRoomContext,
-  useWidgetContext
+  useWidgetContext,
 } from 'agora-edu-core';
 import classnames from 'classnames';
 import { get } from 'lodash';
@@ -47,9 +47,9 @@ export const OneToOneScenario = observer(() => {
     'edu-room': 1,
   });
 
-  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
-  const orgName = get(roomProperties, 'im.huanxin.orgName')
-  const appName = get(roomProperties, 'im.huanxin.appName')
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId');
+  const orgName = get(roomProperties, 'im.huanxin.orgName');
+  const appName = get(roomProperties, 'im.huanxin.appName');
 
   const className = 'normal';
 
@@ -73,10 +73,18 @@ export const OneToOneScenario = observer(() => {
             'one-class-aside-full': isFullScreen,
           })}>
           <VideoList />
-          {chatroomId ?
-            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
-            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
-          }
+          {chatroomId ? (
+            <Widget
+              className="chat-panel"
+              widgetComponent={chatWidget}
+              widgetProps={{ chatroomId, orgName, appName }}
+            />
+          ) : (
+            <Widget
+              className="chat-panel chat-border"
+              widgetComponent={chatWidget}
+            />
+          )}
         </Aside>
       </Layout>
       <DialogContainer />

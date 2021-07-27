@@ -558,31 +558,33 @@ export class EduClassroomDataController {
 
         // room chat message
         case EduChannelMessageCmdType.roomChatState: {
-          const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
-          const operator: OperatorUser = data?.operator ?? {}
+          const textMessage: EduTextMessage =
+            MessageSerializer.getEduTextMessage(data);
+          const operator: OperatorUser = data?.operator ?? {};
           // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
-            if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
-              EduLogger.info(
-                `EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`,
-              );
-              this.fire('room-chat-message', {
-                textMessage,
-                operator,
-              });
-            }
+          if (!this.isLocalUser(textMessage.fromUser.userUuid)) {
+            EduLogger.info(
+              `EDU-STATE [${this._id}], ${JSON.stringify(textMessage)}`,
+            );
+            this.fire('room-chat-message', {
+              textMessage,
+              operator,
+            });
+          }
           // }
           break;
         }
 
         // custom message
         case EduChannelMessageCmdType.customMessage: {
-          const textMessage: EduTextMessage = MessageSerializer.getEduTextMessage(data)
-          const operator: OperatorUser = data?.operator ?? {}
+          const textMessage: EduTextMessage =
+            MessageSerializer.getEduTextMessage(data);
+          const operator: OperatorUser = data?.operator ?? {};
           // if (this.userIds.includes(textMessage.fromUser.userUuid)) {
-            this.fire('room-message', {
-              textMessage,
-              operator
-            })
+          this.fire('room-message', {
+            textMessage,
+            operator,
+          });
           // }
           break;
         }
@@ -1841,7 +1843,6 @@ export class EduClassroomDataController {
   ) {
     const mergeRoomProperties = (properties: any, changedProperties: any) => {
       for (let key of Object.keys(changedProperties)) {
-
         // console.log("1] arrayPropCursor ", key , " changedProperties", changedProperties)
         // TODO: refactor use memory pool
         // setWith(properties, key, changedProperties[key])
@@ -1852,28 +1853,27 @@ export class EduClassroomDataController {
         //   assign(properties, newObject)
         // }
         // console.log('#### roomProperties key path: ', key, ' valuepath', changedProperties[key], ' newProperties ', newProperties , ' newObject ', newObject, ' properties ,', properties)
-        let originalPaths = key.split('.')
+        let originalPaths = key.split('.');
 
-        if(originalPaths.length === 0) {
-          console.error(`[rte] invalid key when batch set room properties ${key}`)
-          continue
+        if (originalPaths.length === 0) {
+          console.error(
+            `[rte] invalid key when batch set room properties ${key}`,
+          );
+          continue;
         }
 
-
-
-
-        const paths = originalPaths.filter((path: string) => path)
-        let cursor = properties
+        const paths = originalPaths.filter((path: string) => path);
+        let cursor = properties;
         // initialize structs
         // for(let path of paths) {
         //   cursor[path] = cursor[path] || {}
         //   cursor = cursor[path]
         // }
-        let lastPath = ''
+        let lastPath = '';
         for (let path of paths) {
-          cursor[path] = cursor[path] || {}
-          cursor = cursor[path]
-          lastPath = path
+          cursor[path] = cursor[path] || {};
+          cursor = cursor[path];
+          lastPath = path;
         }
         // try {
         //   for (let i = 0; i < paths.length; i++) {
@@ -1888,20 +1888,24 @@ export class EduClassroomDataController {
         //   console.log(e);
         // }
 
-        let anchor = get(properties, paths.join('.'))
-        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
+        let anchor = get(properties, paths.join('.'));
+        let parent = get(
+          properties,
+          [...paths].splice(0, paths.length - 1).join('.'),
+          {},
+        );
 
-        const isObject = (val:any) => (typeof val === 'object' && val !== null)
-        const changedValue = cloneDeep(changedProperties[key])
+        const isObject = (val: any) => typeof val === 'object' && val !== null;
+        const changedValue = cloneDeep(changedProperties[key]);
 
         if (changedValue && Array.isArray(changedValue)) {
-          let arrayPropCursor: any = properties
+          let arrayPropCursor: any = properties;
           for (let path of paths) {
             if (path === lastPath) {
               // console.log(" arrayPropCursor ", path, JSON.stringify(arrayPropCursor[path]), ' changedValue ', JSON.stringify(changedValue), ' key ', key, ' changeProperties ', changedProperties[key], ' changedProperties', JSON.stringify(changedProperties))
-              arrayPropCursor[path] = changedValue
+              arrayPropCursor[path] = changedValue;
             } else {
-              arrayPropCursor = arrayPropCursor[path]
+              arrayPropCursor = arrayPropCursor[path];
             }
           }
           // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
@@ -1912,16 +1916,16 @@ export class EduClassroomDataController {
           // return properties
         }
 
-        if(!isObject(anchor)) {
+        if (!isObject(anchor)) {
           // if anchor is not an object, overwrite anyway
-          parent[[...paths].pop()!] = changedValue
+          parent[[...paths].pop()!] = changedValue;
         } else {
           // anchor is an object
-          if(!isObject(changedValue)) {
+          if (!isObject(changedValue)) {
             // if changed value is not an object, overwrite as well
-            parent[[...paths].pop()!] = changedValue
+            parent[[...paths].pop()!] = changedValue;
           } else {
-              merge(anchor, changedValue)
+            merge(anchor, changedValue);
           }
         }
       }
@@ -1929,14 +1933,14 @@ export class EduClassroomDataController {
       // console.log('### properties ', properties)
       // console.log(" #### newProperties", JSON.stringify(newProperties))
       // console.log(" #### changeProperties", JSON.stringify(changedProperties))
-      return properties
-    }
+      return properties;
+    };
 
-    const prevState = cloneDeep(this._roomProperties)
-    const curState = mergeRoomProperties(prevState, newProperties)
+    const prevState = cloneDeep(this._roomProperties);
+    const curState = mergeRoomProperties(prevState, newProperties);
 
-    this._roomProperties = curState
-    EduLogger.info(">>> setRoomBatchProperties ", curState)
+    this._roomProperties = curState;
+    EduLogger.info('>>> setRoomBatchProperties ', curState);
     this.fire('classroom-property-updated', {
       classroom: this.classroom,
       operator: operator ?? defaultOperatorUser,

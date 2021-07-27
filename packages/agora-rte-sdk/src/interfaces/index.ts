@@ -171,13 +171,13 @@ export interface EduConfiguration {
   agoraElectron?: any;
   logLevel: LogLevel;
   logDirectoryPath: string;
-  codec?: string
-  sdkDomain?: string
-  rtmUid: string
-  rtmToken: string,
-  scenarioType?: number,
-  cameraEncoderConfigurations?: EduVideoEncoderConfiguration,
-  userRole?: EduRoleTypeEnum
+  codec?: string;
+  sdkDomain?: string;
+  rtmUid: string;
+  rtmToken: string;
+  cameraEncoderConfigurations?: EduVideoEncoderConfiguration;
+  scenarioType?: EduRoomTypeEnum;
+  userRole?: EduRoleTypeEnum;
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
@@ -874,7 +874,10 @@ declare function event_remote_stream_removed(
 
 declare function event_local_first_frame_render(state: VideoRenderState): void;
 
-declare function event_remote_first_frame_render(state: VideoRenderState, uid: string): void;
+declare function event_remote_first_frame_render(
+  state: VideoRenderState,
+  uid: string,
+): void;
 export interface IEduClassroomManager {
   // emit once
   once(
@@ -921,8 +924,14 @@ export interface IEduClassroomManager {
     listener: typeof event_connection_state_changed,
   ): void;
 
-  on(event: 'local-video-state-update', listener: typeof event_local_first_frame_render): void
-  on(event: 'remote-video-state-update', listener: typeof event_local_first_frame_render): void
+  on(
+    event: 'local-video-state-update',
+    listener: typeof event_local_first_frame_render,
+  ): void;
+  on(
+    event: 'remote-video-state-update',
+    listener: typeof event_local_first_frame_render,
+  ): void;
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;

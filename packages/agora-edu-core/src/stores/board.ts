@@ -21,7 +21,7 @@ import {
   RoomState,
   RoomPhase,
 } from 'white-web-sdk';
-import { CourseWareItem } from '../api/declare';
+import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
@@ -80,15 +80,17 @@ export type { Resource };
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
-      name: `${index+1}`,
-      componentCount: 1,
-      ppt: {
-        width: item.ppt.width,
-        height: item.ppt.height,
-        src: item.ppt.src,
-      }
-    }))
+    return taskProgress.convertedFileList.map(
+      (item: AgoraConvertedFile, index: number) => ({
+        name: `${index + 1}`,
+        componentCount: 1,
+        ppt: {
+          width: item.ppt.width,
+          height: item.ppt.height,
+          src: item.ppt.src,
+        },
+      }),
+    );
   }
   return [];
 };
@@ -418,15 +420,18 @@ export class BoardStore extends ZoomController {
   }
 
   loadScene(data: any[]): SceneDefinition[] {
-    return data.map((item: AgoraConvertedFile, index: number) => ({
-      name: `${index + 1}`,
-      componentCount: 1,
-      ppt: {
-        width: item.ppt.width,
-        height: item.ppt.height,
-        src: item.ppt.src,
-      }
-    } as SceneDefinition))
+    return data.map(
+      (item: AgoraConvertedFile, index: number) =>
+        ({
+          name: `${index + 1}`,
+          componentCount: 1,
+          ppt: {
+            width: item.ppt.width,
+            height: item.ppt.height,
+            src: item.ppt.src,
+          },
+        } as SceneDefinition),
+    );
   }
 
   @observable
@@ -1095,10 +1100,21 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   async aClassJoinBoard(params: any) {
-    const {role, ...data} = params
-    const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
-    const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
+    const { role, ...data } = params;
+    const identity = [
+      EduRoleTypeEnum.teacher /*, EduRoleTypeEnum.assistant*/,
+    ].includes(role)
+      ? 'host'
+      : 'guest';
+    const enable = [
+      EduRoleTypeEnum.teacher,
+      EduRoleTypeEnum.assistant,
+    ].includes(role);
+    this._boardClient = new BoardClient({
+      identity,
+      appIdentifier: this.appStore.params.config.agoraNetlessAppId,
+      enable,
+    });
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
         this.online = false;
@@ -2229,7 +2245,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   async putAV(url: string, type: string, mimeType: string) {
-    console.log("open media ", url, " type", type)
+    console.log('open media ', url, ' type', type);
 
     /**
      * Mimetypes
@@ -2258,28 +2274,36 @@ export class BoardStore extends ZoomController {
       gif: 'image/gif',
       png: 'image/png',
       svg: 'image/svg+xml',
-      webp: 'image/webp'
+      webp: 'image/webp',
     };
 
     if (type === 'video') {
-      const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4'
-      netlessInsertVideoOperation(this.room, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 270,
-      }, videoMimeType)
+      const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4';
+      netlessInsertVideoOperation(
+        this.room,
+        {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 270,
+        },
+        videoMimeType,
+      );
     }
     if (type === 'audio') {
-      const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg'
-      netlessInsertAudioOperation(this.room, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 86,
-      }, audioMimeType)
+      const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg';
+      netlessInsertAudioOperation(
+        this.room,
+        {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 86,
+        },
+        audioMimeType,
+      );
     }
   }
 
@@ -2296,11 +2320,11 @@ export class BoardStore extends ZoomController {
       if (putCourseFileType.includes(resource.type)) {
         await this.putCourseResource(uuid);
       }
-      if (["video", "audio"].includes(resource.type)) {
-        await this.putAV(resource.url, resource.type, resource.name)
-      }  
-      if (["image"].includes(resource.type)) {
-        await this.putImage(resource.url)
+      if (['video', 'audio'].includes(resource.type)) {
+        await this.putAV(resource.url, resource.type, resource.name);
+      }
+      if (['image'].includes(resource.type)) {
+        await this.putImage(resource.url);
       }
       if (['h5'].includes(resource.type)) {
         await this.insertH5(resource.url, uuid);
@@ -2400,38 +2424,40 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
-  _extraResources: CourseWareItem[] = []
+  _extraResources: CourseWareItem[] = [];
 
   @observable
-  _resourcesMap: Map<string, CourseWareItem> = new Map()
+  _resourcesMap: Map<string, CourseWareItem> = new Map();
 
   resolveResource(item: any) {
-    const id = item.resourceUuid || item.id
-    const resourceRecord = this._resourcesMap.has(id)
+    const id = item.resourceUuid || item.id;
+    const resourceRecord = this._resourcesMap.has(id);
     if (resourceRecord) {
-      const targetResource = this._resourcesMap.get(id)
-      return targetResource
+      const targetResource = this._resourcesMap.get(id);
+      return targetResource;
     }
 
-    return item
+    return item;
   }
 
   @computed
   get extraResources() {
     return this._extraResources
-    .map((item: any) => ({
-      ...this.resolveResource(item),
-    }))
-    .map((item:any) => transDataToResource(item, 'extra'))
+      .map((item: any) => ({
+        ...this.resolveResource(item),
+      }))
+      .map((item: any) => transDataToResource(item, 'extra'));
   }
 
   @action.bound
   upsertResources(items: CourseWareItem[]) {
     for (let item of items) {
-      this._resourcesMap.set(item.resourceUuid, item)
-      const exists = this.allResources.find((resource: any) => resource.id === item.resourceUuid)
+      this._resourcesMap.set(item.resourceUuid, item);
+      const exists = this.allResources.find(
+        (resource: any) => resource.id === item.resourceUuid,
+      );
       if (!exists) {
-        this._extraResources.push(item)
+        this._extraResources.push(item);
       }
     }
   }
@@ -2439,11 +2465,11 @@ export class BoardStore extends ZoomController {
   @computed
   get publicResources() {
     return this.appStore.params.config.courseWareList
-    .map((item: any) => ({
-      ...item,
-      ...this.resolveResource(item)
-    }))
-    .map((item:any) => transDataToResource(item, 'public'))
+      .map((item: any) => ({
+        ...item,
+        ...this.resolveResource(item),
+      }))
+      .map((item: any) => transDataToResource(item, 'public'));
   }
 
   @computed
@@ -2456,16 +2482,19 @@ export class BoardStore extends ZoomController {
 
   @computed
   get personalResources() {
-    return this._personalResources.map((item: any) => ({
-      ...item,
-      ...this.resolveResource(item)
-    }))
-    .map((item:any) => transDataToResource(item, 'private'))
+    return this._personalResources
+      .map((item: any) => ({
+        ...item,
+        ...this.resolveResource(item),
+      }))
+      .map((item: any) => transDataToResource(item, 'private'));
   }
 
   @computed
   get allResources() {
-    return this.publicResources.concat(this.personalResources).concat(this.extraResources)
+    return this.publicResources
+      .concat(this.personalResources)
+      .concat(this.extraResources);
   }
 
   @computed

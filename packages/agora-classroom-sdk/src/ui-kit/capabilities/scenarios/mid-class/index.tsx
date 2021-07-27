@@ -60,13 +60,15 @@ export const MidClassScenario = observer(() => {
     fullscreen: !!isFullScreen,
   });
 
-  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
-  const orgName = get(roomProperties, 'im.huanxin.orgName')
-  const appName = get(roomProperties, 'im.huanxin.appName')
+  const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId');
+  const orgName = get(roomProperties, 'im.huanxin.orgName');
+  const appName = get(roomProperties, 'im.huanxin.appName');
 
-  const { roomInfo : {userRole}} = useRoomContext()
+  const {
+    roomInfo: { userRole },
+  } = useRoomContext();
 
-  const visible = userRole !== EduRoleTypeEnum.invisible
+  const visible = userRole !== EduRoleTypeEnum.invisible;
 
   return (
     <Layout
@@ -107,10 +109,18 @@ export const MidClassScenario = observer(() => {
               placement="bottom"
             />
           </div>
-          {chatroomId ?
-            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
-            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
-          }
+          {chatroomId ? (
+            <Widget
+              className="chat-panel"
+              widgetComponent={chatWidget}
+              widgetProps={{ chatroomId, orgName, appName }}
+            />
+          ) : (
+            <Widget
+              className="chat-panel chat-border"
+              widgetComponent={chatWidget}
+            />
+          )}
         </Aside>
       </Layout>
       <DialogContainer />

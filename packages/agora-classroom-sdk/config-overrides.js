@@ -204,52 +204,53 @@ const useOptimizeBabelConfig = () => (config) => {
     ],
     // exclude: /\.(stories.ts)x?$/i,
     use: [
-      'thread-loader', 'cache-loader', 
+      'thread-loader',
+      'cache-loader',
       {
         loader: 'babel-loader',
         options: {
           presets: [
             [
-              "@babel/preset-env",
+              '@babel/preset-env',
               {
-                "useBuiltIns": "usage",
-                "debug": false,
-                "corejs": {
-                  "version": 3,
-                  "proposals": true
-                }
-              }
+                useBuiltIns: 'usage',
+                debug: false,
+                corejs: {
+                  version: 3,
+                  proposals: true,
+                },
+              },
             ],
             [
-              "@babel/preset-react",
+              '@babel/preset-react',
               {
-                "runtime": "automatic"
-              }
+                runtime: 'automatic',
+              },
             ],
             // "@babel/preset-react",
           ],
           plugins: [
-            "@babel/plugin-proposal-object-rest-spread",
-            "@babel/plugin-proposal-optional-chaining",
-            "@babel/plugin-proposal-nullish-coalescing-operator",
+            '@babel/plugin-proposal-object-rest-spread',
+            '@babel/plugin-proposal-optional-chaining',
+            '@babel/plugin-proposal-nullish-coalescing-operator',
             [
-              "@babel/plugin-proposal-decorators",
+              '@babel/plugin-proposal-decorators',
               {
-                "legacy": true
-              }
+                legacy: true,
+              },
             ],
             [
-              "@babel/plugin-proposal-class-properties",
+              '@babel/plugin-proposal-class-properties',
               {
-                "loose": true
-              }
-            ]
-          ]
-        }
+                loose: true,
+              },
+            ],
+          ],
+        },
       },
     ],
     exclude: /node_modules|(\.(stories.ts)x?$)/,
-  }
+  };
 
   for (let _rule of config.module.rules) {
     if (_rule.oneOf) {
@@ -460,8 +461,14 @@ const webpackConfig = override(
     ),
     'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
     'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
-    'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
-    'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
+    'agora-plugin-gallery': path.resolve(
+      __dirname,
+      '../agora-plugin-gallery/src',
+    ),
+    'agora-widget-gallery': path.resolve(
+      __dirname,
+      '../agora-widget-gallery/src',
+    ),
     'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
   }),
   removeModuleScopePlugin(),

@@ -1,5 +1,5 @@
 import { GlobalStorage } from '../../utils';
-import { AgoraRegion, LaunchOption } from '@/infra/api';
+import { LaunchOption, AgoraRegion } from 'agora-edu-core';
 import { autorun, observable } from 'mobx';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {

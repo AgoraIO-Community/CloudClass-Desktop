@@ -347,7 +347,7 @@ export class AgoraElectronRTCWrapper
     this.client.monitorDeviceChange && this.client.monitorDeviceChange(true);
     // this.client.setVideoProfile(20)
 
-    const resolutionConfig = options.cameraEncoderConfiguration
+    const resolutionConfig = options.cameraEncoderConfiguration;
     const config: any = {
       bitrate: resolutionConfig ? resolutionConfig?.bitrate : 0,
       frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,

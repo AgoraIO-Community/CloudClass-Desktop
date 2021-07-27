@@ -1,20 +1,14 @@
-
 {
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "lib",
     "target": "es6",
     "paths": {
-      "agora-chat-widget": ["../agora-chat-widget/src"],
+      "agora-chat-widget": ["../agora-chat-widget/src"]
     },
     "experimentalDecorators": true,
     "module": "commonjs",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "webworker"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "sourceMap": true,
     "declaration": true,
     "emitDeclarationOnly": true,
@@ -34,13 +28,7 @@
     "jsx": "react",
     "noFallthroughCasesInSwitch": true
   },
-  "files": [
-    "../agora-classroom-sdk/src/react-app-env.d.ts",
-  ],
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "files": ["../agora-classroom-sdk/src/react-app-env.d.ts"],
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
