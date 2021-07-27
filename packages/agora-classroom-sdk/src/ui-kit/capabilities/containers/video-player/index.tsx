@@ -76,6 +76,7 @@ export const VideoPlayerTeacher = observer(
         placement={placement}
         onOffPodiumClick={onOffPodiumClick}
         userType={eduRole2UIRole(roomInfo.userRole)}
+        streamUuid={userStream.streamUuid}
         className={className}
         style={style}>
         {
@@ -148,7 +149,8 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(
         hasStream={userStream.hasStream}
         whiteboardGranted={userStream.whiteboardGranted}
         hideStars={true}
-        micVolume={userStream.micVolume}
+        // micVolume={userStream.micVolume}
+        streamUuid={userStream.streamUuid}
         hideControl={userStream.hideControl}
         onCameraClick={onCameraClick}
         onMicClick={onMicClick}
@@ -265,6 +267,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
   return videoStreamList.length ? (
     <div className="video-marquee-pin">
       <VideoMarqueeList
+        teacherStreams={[]}
         hideStars={sceneType === 2}
         videoStreamList={videoStreamList}
         userType={eduRole2UIRole(roomInfo.userRole)}

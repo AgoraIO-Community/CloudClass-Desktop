@@ -15,22 +15,25 @@ import { Popover } from '~components/popover';
 import { SvgaPlayer } from '~components/svga-player';
 import { Tooltip } from '~components/tooltip';
 import { usePrevious } from '~utilities/hooks';
-import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
+// import { useMediaStore } from '../../../../agora-edu-core/src/context/core';
 import { BaseProps } from '../interface/base-props';
 import { SvgImg } from '../svg-img';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
+import { observer } from 'mobx-react';
 
 // TODO: 优化音量条
-export const StreamVolumeIndicator = ({ streamUuid }: { streamUuid: any }) => {
-  const { speakers } = useMediaStore();
+export const StreamVolumeIndicator = observer(
+  ({ streamUuid }: { streamUuid: any }) => {
+    const speakers = new Map<any, any>();
 
-  const speaker = speakers.get(+streamUuid);
+    const speaker = speakers.get(+streamUuid);
 
-  const currentVolume = speaker ?? 0;
+    const currentVolume = speaker ?? 0;
 
-  return <VolumeIndicator volume={currentVolume} />;
-};
+    return <VolumeIndicator volume={currentVolume} />;
+  },
+);
 
 export interface BaseVideoPlayerProps {
   /**

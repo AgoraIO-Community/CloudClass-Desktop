@@ -902,42 +902,6 @@ export class UploadService extends ApiBase {
     });
   }
 
-  addFileToAWS(file: File, onProgress: CallableFunction, ossParams: any) {
-    const prefix = ossParams.callbackHost;
-    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`;
-    return new Promise(async (resolve, reject) => {
-      let config = {
-        headers: {
-          'Content-Type': file.type,
-        },
-        onUploadProgress: (progressEvent: any) => {
-          let percentCompleted = Math.floor(
-            (progressEvent.loaded * 100) / progressEvent.total,
-          );
-          onProgress(percentCompleted / 100);
-        },
-      };
-      try {
-        await axios.put(ossParams.preSignedUrl, file, config);
-        const result = await axios.post(
-          callbackUrl,
-          JSON.parse(ossParams.callbackBody),
-          {
-            headers: {
-              ['content-type']: ossParams.contentType,
-            },
-          },
-        );
-        resolve({
-          ...result.data.data,
-          ossURL: result.data.data.url,
-        });
-      } catch (err) {
-        reject(err);
-      }
-    });
-  }
-
   async fetchImageInfo(file: File, x: number, y: number) {
     await new Promise((resolve) => {
       const image = new Image();

@@ -1469,3 +1469,47 @@ export type CloudDriveContext = {
    */
   allResources: MaterialDataResource[];
 };
+
+export type ClassroomStatsContext = {
+  /**
+   * CPU使用情况
+   * @version v1.3.0
+   */
+  cpuUsage: number;
+  /**
+   * 网络质量
+   * @version v1.3.0
+   */
+  networkQuality: string;
+  /**
+   * 网络延迟毫秒数
+   * @version v1.3.0
+   */
+  networkLatency: number;
+  /**
+   * 网络丢包率百分比
+   * @version v1.3.0
+   */
+  packetLostRate: number;
+  /**
+   * 音视频下行丢包率
+   * @version v1.3.0
+   */
+  rxPacketLossRate: number;
+  /**
+   * 音视频上行丢包率
+   * @version v1.3.0
+   */
+  txPacketLossRate: number;
+  /**
+   * 下行网络质量
+   * @version v1.3.0
+   *
+   */
+  rxNetworkQuality: string;
+  /**
+   * 上行网络质量
+   * @version v1.3.0
+   */
+  txNetworkQuality: string;
+};
