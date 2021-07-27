@@ -7,23 +7,23 @@ import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import * as React from 'react';
 import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
-import {BigClassScenario} from '~capabilities/scenarios/big-class';
+import { BigClassScenario } from '~capabilities/scenarios/big-class';
 import { RecordPage } from '../debug-page/record';
 
 export type AppRouteComponent = {
-  path: string
-  component: React.FC<any>
-}
+  path: string;
+  component: React.FC<any>;
+};
 
 // TODO: need fix tsx
 const PageSFC = (Component: React.FC<any>) => {
-  return <Component />
-}
+  return <Component />;
+};
 export const routesMap: Record<string, AppRouteComponent> = {
   // 一对一
   [BizPageRouter.OneToOne]: {
     path: '/classroom/1v1',
-    component: () => PageSFC(OneToOneScenario)
+    component: () => PageSFC(OneToOneScenario),
   },
   // 观众端
   // [BizPageRouter.OneToOneIncognito]: {
@@ -32,11 +32,11 @@ export const routesMap: Record<string, AppRouteComponent> = {
   // },
   [BizPageRouter.MidClass]: {
     path: '/classroom/mid',
-    component: () => PageSFC(MidClassScenario)
+    component: () => PageSFC(MidClassScenario),
   },
   [BizPageRouter.BigClass]: {
     path: '/classroom/big',
-    component: () => PageSFC(BigClassScenario)
+    component: () => PageSFC(BigClassScenario),
   },
   // [BizPageRouter.SmallClassIncognito]: {
   //   path: '/incognito/small',
@@ -44,11 +44,11 @@ export const routesMap: Record<string, AppRouteComponent> = {
   // },
   [BizPageRouter.TestRecordPage]: {
     path: '/record',
-    component: () => PageSFC(RecordPage)
+    component: () => PageSFC(RecordPage),
   },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
-    component: () => PageSFC(LaunchPage)
+    component: () => PageSFC(LaunchPage),
   },
   // 隐身模式，录屏功能
   // [BizPageRouter.Incognito]: {
@@ -57,10 +57,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   // },
   [BizPageRouter.PretestPage]: {
     path: '/pretest',
-    component: () => PageSFC(PretestScenarioPage)
+    component: () => PageSFC(PretestScenarioPage),
   },
   [BizPageRouter.TestHomePage]: {
     path: '/',
-    component: () => PageSFC(HomePage)
-  }
-}
+    component: () => PageSFC(HomePage),
+  },
+};

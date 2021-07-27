@@ -1,43 +1,46 @@
 import OSS from 'ali-oss';
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 const OSS_PREFIX = '';
 
-export function getOSSUrl (mediaUrl: string): string {
+export function getOSSUrl(mediaUrl: string): string {
   const res = `${OSS_PREFIX}/${mediaUrl}`;
   return res;
 }
 export interface OSSConfig {
-  accessKeyId: string,
-  accessKeySecret: string,
+  accessKeyId: string;
+  accessKeySecret: string;
   // region: string,
-  endpoint: string,
-  bucket: string,
-  folder: string,
+  endpoint: string;
+  bucket: string;
+  folder: string;
 }
 
 export interface UserAttrs {
-  uid: string
-  account: string
-  role: string
-  audio: number
-  video: number
-  chat: number
-  whiteboard_uid?: string
-  link_uid?: number
-  shared_uid?: number
-  mute_chat?: number
-  class_state?: number
+  uid: string;
+  account: string;
+  role: string;
+  audio: number;
+  video: number;
+  chat: number;
+  whiteboard_uid?: string;
+  link_uid?: number;
+  shared_uid?: number;
+  mute_chat?: number;
+  class_state?: number;
 }
 
 export const resolveFileInfo = (file: any) => {
   const fileName = encodeURI(file.name);
-  const fileType = fileName.substring(fileName.length, fileName.lastIndexOf('.'));
+  const fileType = fileName.substring(
+    fileName.length,
+    fileName.lastIndexOf('.'),
+  );
   return {
     fileName,
-    fileType
-  }
-}
+    fileType,
+  };
+};
 
 const level = [
   'unknown',
@@ -46,10 +49,13 @@ const level = [
   'poor',
   'bad',
   'very bad',
-  'down'
+  'down',
 ];
 
-export function NetworkQualityEvaluation(evt: { downlinkNetworkQuality: number, uplinkNetworkQuality: number }) {
+export function NetworkQualityEvaluation(evt: {
+  downlinkNetworkQuality: number;
+  uplinkNetworkQuality: number;
+}) {
   let defaultQuality = 'unknown';
   const val = Math.max(evt.downlinkNetworkQuality, evt.uplinkNetworkQuality);
   return level[val] ? level[val] : defaultQuality;
@@ -57,8 +63,8 @@ export function NetworkQualityEvaluation(evt: { downlinkNetworkQuality: number, 
 
 export function CustomBtoa(input: any) {
   let keyStr =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-  let output = "";
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let output = '';
   let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
   let i = 0;
 

@@ -1,0 +1,53 @@
+.app {
+  /* 宽度自定义 */
+  position: relative;
+  width: 300px;
+  min-height: 300px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 4px;
+  border: 1px solid #ececf1;
+}
+
+/* .chat {
+    position: relative;
+    height: 100%;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+} */
+
+.show-chat-icon {
+  position: fixed;
+  right: 8px;
+  bottom: 8px;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chat-notice {
+  position: absolute;
+  border-radius: 50%;
+  background: #ff462d;
+  height: 10px;
+  width: 10px;
+  top: 5px;
+  right: 5px;
+}
+
+/* 表情 modal 样式， antd */
+.emoji-modal .ant-modal-content {
+  position: absolute;
+  bottom: 20px;
+}
+
+.emoji-modal .ant-modal-body {
+  padding: 5px 5px 15px 5px;
+}

@@ -10,11 +10,18 @@ import noFile from './assets/no-file.png';
 import cameraDisabled from './assets/camera-disabled.png';
 import noQuestion from './assets/noquestion.svg';
 import { SvgImg } from '../svg-img';
-import boardDisconnected from './assets/board-disconnected.png'
-import {transI18n} from '~components/i18n'
-import { Button } from '~components/button'
+import boardDisconnected from './assets/board-disconnected.png';
+import { transI18n } from '~components/i18n';
+import { Button } from '~components/button';
 
-type PlaceholderType = 'emptyHistory' | 'cameraBroken' | 'cameraClose' | 'noBody' | 'noFile' | 'cameraDisabled' | 'noQuestion'
+type PlaceholderType =
+  | 'emptyHistory'
+  | 'cameraBroken'
+  | 'cameraClose'
+  | 'noBody'
+  | 'noFile'
+  | 'cameraDisabled'
+  | 'noQuestion';
 
 const placeholderImgDict = {
   emptyHistory,
@@ -24,7 +31,7 @@ const placeholderImgDict = {
   noFile,
   cameraDisabled,
   noQuestion,
-}
+};
 
 const svgTypeDict = {
   emptyHistory: 'placeholder-no-message',
@@ -34,7 +41,7 @@ const svgTypeDict = {
   noFile: 'placeholder-no-file',
   cameraDisabled: 'placeholder-camera-off',
   noQuestion: 'placeholder-no-ask',
-}
+};
 
 const svgSizeDict = {
   emptyHistory: 120,
@@ -44,7 +51,7 @@ const svgSizeDict = {
   noFile: 120,
   cameraDisabled: 120,
   noQuestion: 120,
-}
+};
 
 export interface PlaceholderProps extends BaseProps {
   placeholderDesc?: string;
@@ -53,8 +60,8 @@ export interface PlaceholderProps extends BaseProps {
 }
 
 export const Placeholder: FC<PlaceholderProps> = ({
-  placeholderDesc = "",
-  placeholderType = "emptyHistory",
+  placeholderDesc = '',
+  placeholderType = 'emptyHistory',
   backgroundColor = '#fff',
   className,
   ...restProps
@@ -64,32 +71,39 @@ export const Placeholder: FC<PlaceholderProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} {...restProps} style={{backgroundColor}}>
+    <div className={cls} {...restProps} style={{ backgroundColor }}>
       <div>
         {/* <img src={placeholderImgDict[placeholderType]} alt="no messages" /> */}
-        <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]}/>
+        <SvgImg
+          type={svgTypeDict[placeholderType]}
+          size={svgSizeDict[placeholderType]}
+        />
       </div>
-      {placeholderDesc ? (<div className="placeholder-desc">{placeholderDesc}</div>) : ""}
+      {placeholderDesc ? (
+        <div className="placeholder-desc">{placeholderDesc}</div>
+      ) : (
+        ''
+      )}
     </div>
-  )
+  );
 };
 
 const cameraSvgTypeDict = {
   loading: 'placeholder-no-body',
   broken: 'placeholder-camera-broken',
   muted: 'placeholder-camera-off',
-  disabled: 'placeholder-camera-disabled'
-}
+  disabled: 'placeholder-camera-disabled',
+};
 
 const cameraSvgSizeDict = {
   loading: 90,
   broken: 90,
   muted: 90,
-  disabled: 90
-}
+  disabled: 90,
+};
 
 export interface CameraPlaceHolderProps extends BaseProps {
-  state?: 'loading' | 'broken' | 'muted' | 'disabled',
+  state?: 'loading' | 'broken' | 'muted' | 'disabled';
   children?: React.ReactNode;
 }
 
@@ -107,18 +121,18 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   return (
     <div className={cls}>
       {/* {children} */}
-      <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]}/>
+      <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]} />
     </div>
-  )
-}
+  );
+};
 
 export interface BoardPlaceHolderProps extends BaseProps {
-  onReconnectClick: any
+  onReconnectClick: any;
 }
 
 export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
   onReconnectClick,
-  className
+  className,
 }) => {
   const cls = classnames({
     [`board-placeholder`]: 1,
@@ -126,11 +140,13 @@ export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
   });
   return (
     <div className={cls}>
-      <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')}/>
-      <Button 
-        className="reconnect-btn"
-        onClick={onReconnectClick}
-      >{transI18n('whiteboard.disconnect-btn')}</Button>
+      <img
+        src={boardDisconnected}
+        alt={transI18n('whiteboard.disconnect-img-alt')}
+      />
+      <Button className="reconnect-btn" onClick={onReconnectClick}>
+        {transI18n('whiteboard.disconnect-btn')}
+      </Button>
     </div>
-  )
-}
+  );
+};

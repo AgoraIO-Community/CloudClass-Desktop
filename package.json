@@ -17,14 +17,20 @@
     "@babel/runtime-corejs3": "7.13.10"
   },
   "devDependencies": {
+    "@commitlint/cli": "13.1.0",
+    "@commitlint/config-conventional": "13.1.0",
     "dayjs": "1.10.4",
+    "eslint-config-prettier": "^8.3.0",
+    "husky": "7.0.1",
     "just-scripts": "1.5.3",
     "lerna": "3.22.1",
+    "lint-staged": "^11.1.1",
     "npm-run-all": "4.1.5",
+    "prettier": "2.3.2",
     "typescript": "4.2.3"
   },
   "agora_electron": {
-    "electron_version": "7.1.2",
+    "electron_version": "12.0.0",
     "prebuilt": true
   },
   "description": "[English](README.zh.md)*",
@@ -51,6 +57,7 @@
     "pack:electron:win": "lerna exec --scope=agora-classroom-sdk npm run pack:win",
     "build:classroom:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
     "build:dev:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build:dev",
+    "build:chat-widget": "lerna exec --scope=agora-chat-widget yarn build:lib",
     "build:rte-sdk": "lerna exec --scope=agora-rte-sdk npm run build",
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:dev:widget": "lerna exec --scope=agora-widget-gallery npm run build:dev",
@@ -67,7 +74,8 @@
     "ci:build:web": "yarn release:demo",
     "ci:build:electron:win": "yarn release:electron:win",
     "ci:build:electron:mac": "yarn release:electron:mac",
-    "ci:build:classroom:sdk": "yarn release:classroom:sdk"
+    "ci:build:classroom:sdk": "yarn release:classroom:sdk",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -83,5 +91,14 @@
   "dependencies": {
     "agora-edu-core": "1.1.2",
     "type-fest": "^1.1.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

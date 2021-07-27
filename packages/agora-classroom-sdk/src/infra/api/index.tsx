@@ -1,33 +1,27 @@
 import { UIContext } from '@/infra/hooks';
 import { UIStore } from '@/infra/stores/app/ui';
 import { AgoraEduCoreSDK, LaunchOption } from 'agora-edu-core';
-import { EduRoomTypeEnum } from "agora-rte-sdk";
+import { EduRoomTypeEnum } from 'agora-rte-sdk';
 import 'promise-polyfill/src/polyfill';
 import { ReactChild, useState } from 'react';
 import { LiveRoom } from '../monolithic/live-room';
 import { BizPagePath } from '../types';
 
-export const UIContextProvider = ({ children }: { children: ReactChild}) => {
+export const UIContextProvider = ({ children }: { children: ReactChild }) => {
+  const [store] = useState<UIStore>(() => new UIStore());
 
-  const [store] = useState<UIStore>(() => new UIStore())
-
-  return (
-    <UIContext.Provider value={store}>
-      {children}
-    </UIContext.Provider>
-  )
-}
+  return <UIContext.Provider value={store}>{children}</UIContext.Provider>;
+};
 
 export interface AliOSSBucket {
-  key: string
-  secret: string
-  name: string
-  folder: string
-  cdn: string
+  key: string;
+  secret: string;
+  name: string;
+  folder: string;
+  cdn: string;
 }
 
-
-export const scenarioRoomPath: Record<string, {path: string}> = {
+export const scenarioRoomPath: Record<string, { path: string }> = {
   [EduRoomTypeEnum.Room1v1Class]: {
     path: BizPagePath.OneToOnePath,
   },
@@ -36,36 +30,51 @@ export const scenarioRoomPath: Record<string, {path: string}> = {
   },
   [EduRoomTypeEnum.RoomBigClass]: {
     path: BizPagePath.BigClassPath,
-  }
-}
+  },
+};
 
 export interface WhiteboardOSSConfig {
-  bucket: AliOSSBucket
+  bucket: AliOSSBucket;
 }
 
 export interface ApplicationConfigParameters {
-  gtmId: string
+  gtmId: string;
   agora: {
-    appId: string
-    whiteboardAppId: string
-  }
-  appToken: string
-  enableLog: boolean
-  ossConfig?: WhiteboardOSSConfig
+    appId: string;
+    whiteboardAppId: string;
+  };
+  appToken: string;
+  enableLog: boolean;
+  ossConfig?: WhiteboardOSSConfig;
 }
 
-export type LanguageEnum = "en" | "zh"
-export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar"
+export type LanguageEnum = 'en' | 'zh';
+export type TranslateEnum =
+  | ''
+  | 'auto'
+  | 'zh-CHS'
+  | 'en'
+  | 'ja'
+  | 'ko'
+  | 'fr'
+  | 'es'
+  | 'pt'
+  | 'it'
+  | 'ru'
+  | 'vi'
+  | 'de'
+  | 'ar';
 
-
-const devicePath = '/pretest'
+const devicePath = '/pretest';
 export class AgoraEduSDK extends AgoraEduCoreSDK {
   static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
-    return await super.launch(dom, option, 
+    return await super.launch(
+      dom,
+      option,
       <UIContextProvider>
         <LiveRoom />
-      </UIContextProvider>
-    )
+      </UIContextProvider>,
+    );
   }
 }
 

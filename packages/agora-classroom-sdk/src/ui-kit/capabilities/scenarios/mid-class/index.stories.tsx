@@ -1,5 +1,3 @@
 export const MidClassStory = () => {
-  return (
-    <div></div>
-  )
-}
+  return <div></div>;
+};

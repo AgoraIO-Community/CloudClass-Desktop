@@ -1,17 +1,27 @@
-import { useWatch } from "~ui-kit/utilities/hooks";
-import classnames from "classnames";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CSSTransition } from "react-transition-group";
-import { Card, Icon, Popover, t, Tooltip } from "~components";
-import { BaseHandsUpProps, HandsUpState, StudentInfo } from "./types";
-import { SvgImg } from "../svg-img";
+import { useWatch } from '~ui-kit/utilities/hooks';
+import classnames from 'classnames';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { Card, Icon, Popover, t, Tooltip } from '~components';
+import { BaseHandsUpProps, HandsUpState, StudentInfo } from './types';
+import { SvgImg } from '../svg-img';
 
-export type HandleUpClick = (action: 'confirm' | 'cancel', student: StudentInfo) => Promise<void> | void;
+export type HandleUpClick = (
+  action: 'confirm' | 'cancel',
+  student: StudentInfo,
+) => Promise<void> | void;
 
 const stateColorDict: Record<string, string> = {
   default: '#7B88A0',
   actived: '#357BF6',
-}
+};
 
 export interface HandsUpManagerProps extends BaseHandsUpProps {
   state?: HandsUpState;
@@ -40,32 +50,29 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   const cls = classnames({
     [`hands-up hands-up-manager`]: 1,
     ['can-not-hover']: processUserCount === 0,
-    [`${className}`]: !!className
+    [`${className}`]: !!className,
   });
 
-  const handleClick = () => {
-
-  }
+  const handleClick = () => {};
 
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const [animStart, setAnimStart] = useState<boolean>(false);
 
-  useWatch(processUserCount, prev => {
+  useWatch(processUserCount, (prev) => {
     if (prev !== undefined && processUserCount > prev) {
-      setAnimStart(true)
+      setAnimStart(true);
     } else {
-      setAnimStart(false)
+      setAnimStart(false);
     }
-  })
+  });
 
-  const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo)
+  const coVideoList = studentList.filter(
+    (student: StudentInfo) => !student.coVideo,
+  );
 
   const content = useCallback(() => {
-    return (<StudentsHandsUpList
-      onClick={onClick}
-      students={coVideoList}
-    />)
-  }, [coVideoList, onClick])
+    return <StudentsHandsUpList onClick={onClick} students={coVideoList} />;
+  }, [coVideoList, onClick]);
 
   return (
     <div className={cls} {...restProps}>
@@ -74,41 +81,50 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
         timeout={timeout}
         classNames={'received-card'}
         onEntered={() => {
-          setAnimStart(false)
-        }}
-      >
+          setAnimStart(false);
+        }}>
         <Popover
           visible={popoverVisible}
           onVisibleChange={(visible) => {
-            setPopoverVisible(visible)
+            setPopoverVisible(visible);
           }}
           overlayClassName="customize-dialog-popover"
           trigger="hover"
           content={content}
           placement="topRight">
-          <Card
-            width={width}
-            height={height}
-            borderRadius={borderRadius}
-          >
+          <Card width={width} height={height} borderRadius={borderRadius}>
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <SvgImg 
-                size={28} 
-                onClick={handleClick} 
-                type={processUserCount ?(popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'} 
+              <SvgImg
+                size={28}
+                onClick={handleClick}
+                type={
+                  processUserCount
+                    ? popoverVisible
+                      ? 'hands-up'
+                      : state === 'default'
+                      ? 'hands-up-student'
+                      : 'hands-up'
+                    : 'hands-up-student'
+                }
                 style={{
-                  color: processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']
+                  color: processUserCount
+                    ? popoverVisible
+                      ? '#639AFA'
+                      : stateColorDict[state]
+                    : stateColorDict['default'],
                 }}
               />
-              <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
+              <span className={'hands-apply-inline-box'}>
+                {processUserCount} / {onlineUserCount}
+              </span>
             </div>
           </Card>
         </Popover>
       </CSSTransition>
     </div>
-  )
-}
+  );
+};
 
 export interface StudentHandsUpProps extends BaseHandsUpProps {
   student?: StudentInfo;
@@ -133,26 +149,30 @@ export const StudentHandsUp: FC<StudentHandsUpProps> = ({
 
   return (
     <div className={cls} {...restProps}>
-      <Card
-        width={width}
-        height={height}
-        borderRadius={borderRadius}
-      >
+      <Card width={width} height={height} borderRadius={borderRadius}>
         <div className="student-box">
           <span className="student-name">{student?.userName}</span>
           <span>
-            <SvgImg  type="checked" style={{color: '#0073FF'}} onClick={() => onClick('confirm', student!.userUuid)} />
-            <SvgImg  type="close" style={{ marginLeft: 6 }} onClick={() => onClick('cancel', student!.userUuid)} />
+            <SvgImg
+              type="checked"
+              style={{ color: '#0073FF' }}
+              onClick={() => onClick('confirm', student!.userUuid)}
+            />
+            <SvgImg
+              type="close"
+              style={{ marginLeft: 6 }}
+              onClick={() => onClick('cancel', student!.userUuid)}
+            />
           </span>
         </div>
       </Card>
     </div>
-  )
-}
+  );
+};
 
 export interface StudentsHandsUpListProps extends BaseHandsUpProps {
   students: StudentInfo[];
-  onClick: HandleUpClick
+  onClick: HandleUpClick;
 }
 
 export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
@@ -167,30 +187,19 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
     [`students-hands-up`]: 1,
     [`${className}`]: !!className,
   });
-  return (
-    students.length ? <div className={cls} {...restProps}>
-      <Card
-        className={'hands-up-card'}
-        borderRadius={borderRadius}
-      >
-        {
-          students.map((item, index) => (
-            <div className="student-item" key={index}>
-              <span className="student-name">{item?.userName}</span>
-              <span className="operation-icon-wrap">
-                <SvgImg 
-                  type="checked"
-                  onClick={() => onClick("confirm", item)}
-                />
-                <SvgImg 
-                  type="close" 
-                  onClick={() => onClick("cancel", item)}
-                />
-              </span>
-            </div>
-          ))
-        }
+  return students.length ? (
+    <div className={cls} {...restProps}>
+      <Card className={'hands-up-card'} borderRadius={borderRadius}>
+        {students.map((item, index) => (
+          <div className="student-item" key={index}>
+            <span className="student-name">{item?.userName}</span>
+            <span className="operation-icon-wrap">
+              <SvgImg type="checked" onClick={() => onClick('confirm', item)} />
+              <SvgImg type="close" onClick={() => onClick('cancel', item)} />
+            </span>
+          </div>
+        ))}
       </Card>
-    </div> : null
-  )
-}
+    </div>
+  ) : null;
+};

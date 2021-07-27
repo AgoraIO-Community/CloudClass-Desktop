@@ -1,8 +1,5 @@
-import { PretestContainer } from '~capabilities/containers/pretest'
+import { PretestContainer } from '~capabilities/containers/pretest';
 
 export const PretestScenarioPage = () => {
-
-  return (
-    <PretestContainer />
-  )
-}
+  return <PretestContainer />;
+};

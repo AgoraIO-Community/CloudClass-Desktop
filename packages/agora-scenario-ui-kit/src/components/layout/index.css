@@ -1,6 +1,6 @@
 .layout {
   @apply flex;
-  background: #F9F9FC;
+  background: #f9f9fc;
 }
 
 .layout-row {
@@ -31,5 +31,3 @@
   gap: 4px;
   transform: translateX(2px);
 }
-
-

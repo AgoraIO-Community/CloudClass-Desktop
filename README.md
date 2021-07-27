@@ -1,15 +1,18 @@
-> *其他语言版本：[简体中文](README.zh.md)*
+> _其他语言版本：[简体中文](README.zh.md)_
 
 # This branch is still in development stage, PR is not accepted at this stage.
+
 ## CloudClass Desktop
 
-## Install  
+## Install
+
 ```bash
 # install all dependencies via lerna and npm
 yarn bootstrap
 ```
 
 ## config
+
 ```bash
 # copy config template to agora-classroom-sdk project
 cp .env.example packages/agora-classroom-sdk/.env
@@ -18,11 +21,13 @@ cp .env.example packages/agora-classroom-sdk/.env
 ```
 
 ## run
+
 ```bash
 yarn dev
 ```
 
 ## build classroom sdk
+
 ```bash
 yarn build:ui-kit
 yarn build:classroom:sdk

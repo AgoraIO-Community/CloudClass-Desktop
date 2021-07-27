@@ -1,17 +1,33 @@
 import { GenericErrorWrapper } from './generic-error';
-import { EduLogger } from "../logger";
+import { EduLogger } from '../logger';
 
 export const HttpClient = async (url: string, opts: any): Promise<any> => {
-  let fetchResponse: any = {}
+  let fetchResponse: any = {};
   try {
     fetchResponse = await fetch(url, opts);
-    const {status} = fetchResponse
+    const { status } = fetchResponse;
     const resp = await fetchResponse.json();
-    resp['__status'] = status
-    EduLogger.info(`[http] ${opts.method}#${url} response params: `, JSON.stringify(opts), ` response: `, JSON.stringify(resp), ' status: ', fetchResponse.status, ' statusText: ', fetchResponse.statusText)
+    resp['__status'] = status;
+    EduLogger.info(
+      `[http] ${opts.method}#${url} response params: `,
+      JSON.stringify(opts),
+      ` response: `,
+      JSON.stringify(resp),
+      ' status: ',
+      fetchResponse.status,
+      ' statusText: ',
+      fetchResponse.statusText,
+    );
     return resp;
   } catch (err) {
-    EduLogger.info(`[http] ${opts.method}#${url} request failed code: ${err.code}, msg: ${err.message}, params: `, JSON.stringify(opts), ' status: ', fetchResponse.status, ' statusText: ', fetchResponse.statusText)
-    throw GenericErrorWrapper(err)
+    EduLogger.info(
+      `[http] ${opts.method}#${url} request failed code: ${err.code}, msg: ${err.message}, params: `,
+      JSON.stringify(opts),
+      ' status: ',
+      fetchResponse.status,
+      ' statusText: ',
+      fetchResponse.statusText,
+    );
+    throw GenericErrorWrapper(err);
   }
-}
+};

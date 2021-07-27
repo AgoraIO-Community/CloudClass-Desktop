@@ -3,12 +3,7 @@
     "target": "es6",
     "experimentalDecorators": true,
     "module": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "webworker"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "outDir": "lib",
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -56,11 +51,6 @@
     "declaration": true,
     "emitDeclarationOnly": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*/*.stories.tsx"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*/*.stories.tsx"]
 }

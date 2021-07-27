@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-import { Meta } from '@storybook/react'
-import { BizHeader, BizHeaderProps, MonitorInfo } from '.'
-import dayjs from 'dayjs'
+import React, { FC } from 'react';
+import { Meta } from '@storybook/react';
+import { BizHeader, BizHeaderProps, MonitorInfo } from '.';
+import dayjs from 'dayjs';
 
 const monitor: MonitorInfo = {
   cpuUsage: 20,

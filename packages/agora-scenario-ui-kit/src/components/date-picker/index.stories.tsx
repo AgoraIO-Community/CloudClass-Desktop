@@ -7,18 +7,16 @@ const meta: Meta = {
   component: DatePicker,
 };
 
-type DocsProps = {
-}
+type DocsProps = {};
 
 export const Docs = ({}: DocsProps) => (
   <>
     <div>
-      <DatePicker/>
+      <DatePicker />
     </div>
   </>
 );
 
-Docs.args = {
-}
+Docs.args = {};
 
 export default meta;

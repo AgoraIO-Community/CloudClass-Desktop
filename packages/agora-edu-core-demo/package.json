@@ -154,7 +154,10 @@
     "proto": "run-s protojs protots"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "prettier"
+    ]
   },
   "browserslist": {
     "production": [

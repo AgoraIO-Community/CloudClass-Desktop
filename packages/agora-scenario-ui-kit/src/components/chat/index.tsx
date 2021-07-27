@@ -10,10 +10,10 @@ import classnames from 'classnames';
 import { TabPane, Tabs } from '../tabs';
 import { MessageList } from './message-list';
 import { ChatList } from './chat-list';
-import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg'
-import backBtn from '../icon/assets/svg/conversation-back.svg'
+import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg';
+import backBtn from '../icon/assets/svg/conversation-back.svg';
 import { transI18n } from '../i18n';
-import { SvgImg } from '~components/svg-img'
+import { SvgImg } from '~components/svg-img';
 
 export interface ChatProps extends AffixProps {
   /**
@@ -52,7 +52,7 @@ export interface ChatProps extends AffixProps {
    * 刷新聊天消息列表
    */
 
-  onPullRefresh: (evt:ChatEvent) => Promise<void> | void;
+  onPullRefresh: (evt: ChatEvent) => Promise<void> | void;
   /**
    *  禁言状态改变的回调
    */
@@ -60,11 +60,11 @@ export interface ChatProps extends AffixProps {
   /**
    * 输入框发生变化的回调
    */
-  onText: (evt:ChatEvent, content: string) => void;
+  onText: (evt: ChatEvent, content: string) => void;
   /**
    * 点击发送按钮的回调
    */
-  onSend: (evt:ChatEvent) => void | Promise<void>;
+  onSend: (evt: ChatEvent) => void | Promise<void>;
   /**
    * 点击最小化的聊天图标
    */
@@ -72,7 +72,10 @@ export interface ChatProps extends AffixProps {
   /**
    * 切换tab
    */
-  onChangeActiveTab?: (activeTab: ChatListType, activeConversation?: Conversation) => void | Promise<void>;
+  onChangeActiveTab?: (
+    activeTab: ChatListType,
+    activeConversation?: Conversation,
+  ) => void | Promise<void>;
 }
 
 export const SimpleChat: FC<ChatProps> = ({
@@ -95,60 +98,74 @@ export const SimpleChat: FC<ChatProps> = ({
   ...resetProps
 }) => {
   const cls = classnames({
-      [`${className}`]: !!className,
-  })
+    [`${className}`]: !!className,
+  });
 
   return (
     <Affix
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
-      content={<ChatMin unreadCount={unreadCount}
-      />}>
-      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
+      content={<ChatMin unreadCount={unreadCount} />}>
+      <div
+        className={[
+          'chat-panel',
+          showCloseIcon ? 'full-screen-chat' : '',
+          cls,
+        ].join(' ')}>
         <div className="chat-header">
           <span className="chat-header-title">{transI18n('message')}</span>
-          <span style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
+          <span
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             {isHost ? (
-              <span
-                onClick={() => onCanChattingChange(!!canChatting)}
-              >
-                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
+              <span onClick={() => onCanChattingChange(!!canChatting)}>
+                <i
+                  className={
+                    canChatting ? 'can-discussion-svg' : 'no-discussion-svg'
+                  }></i>
               </span>
             ) : null}
-            {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-              <img src={chatMinBtn} />
-            </span>) : null}
-
+            {showCloseIcon ? (
+              <span
+                style={{ cursor: 'pointer' }}
+                onClick={() => onCollapse && onCollapse()}>
+                <img src={chatMinBtn} />
+              </span>
+            ) : null}
           </span>
         </div>
 
         {!canChatting ? (
-            <div className="chat-notice">
+          <div className="chat-notice">
             <span>
-                <SvgImg type="red-caution" />
-                <span>{transI18n('placeholder.enable_chat_muted')}</span>
+              <SvgImg type="red-caution" />
+              <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
-            </div>
+          </div>
         ) : null}
         <MessageList
           className={'room chat-history'}
           messages={messages}
           disableChat={!isHost && !canChatting}
           chatText={chatText}
-          onPullFresh={() => {onPullRefresh({type:'room'})}}
-          onSend={() => {onSend({type:'room'})}}
-          onText={(content:string) => {onText({type:'room'}, content)}}
+          onPullFresh={() => {
+            onPullRefresh({ type: 'room' });
+          }}
+          onSend={() => {
+            onSend({ type: 'room' });
+          }}
+          onText={(content: string) => {
+            onText({ type: 'room' }, content);
+          }}
         />
       </div>
     </Affix>
   );
-}
-
+};
 
 export const Chat: FC<ChatProps> = ({
   messages = [],
@@ -170,11 +187,10 @@ export const Chat: FC<ChatProps> = ({
   className,
   ...resetProps
 }) => {
-
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const cls = classnames({
-      [`${className}`]: !!className,
-  })
+    [`${className}`]: !!className,
+  });
 
   // const totalCount = useMemo(() => {
   //   const res = conversations.reduce((sum: number, item: any) => {
@@ -190,162 +206,229 @@ export const Chat: FC<ChatProps> = ({
   // }, [JSON.stringify(conversations)])
 
   const messageListUnread = useMemo(() => {
-    for(let i = 0; i < messages.length; i++) {
-      if(messages[i].unread) {
-        return true
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i].unread) {
+        return true;
       }
     }
-    return false
-  }, [JSON.stringify(messages)])
+    return false;
+  }, [JSON.stringify(messages)]);
 
   const conversationListUnread = useMemo(() => {
-    for(let i = 0; i < conversations.length; i++) {
-      if(conversations[i].unread) {
-        return true
+    for (let i = 0; i < conversations.length; i++) {
+      if (conversations[i].unread) {
+        return true;
       }
     }
-    return false
-  }, [JSON.stringify(conversations)])
+    return false;
+  }, [JSON.stringify(conversations)]);
 
-  const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined)
+  const [activeConversation, setActiveConversation] = useState<
+    Conversation | undefined
+  >(undefined);
 
   const getActiveConversationMessages = () => {
-    if(!activeConversation) {
-      return []
+    if (!activeConversation) {
+      return [];
     }
-    let conversation = conversations.filter(c => c.userUuid === activeConversation.userUuid)[0]
-    return conversation ? conversation.messages : []
-  }
+    let conversation = conversations.filter(
+      (c) => c.userUuid === activeConversation.userUuid,
+    )[0];
+    return conversation ? conversation.messages : [];
+  };
 
   useEffect(() => {
-    if(activeConversation) {
-      onPullRefresh({type:'conversation', conversation: activeConversation})
+    if (activeConversation) {
+      onPullRefresh({ type: 'conversation', conversation: activeConversation });
     }
-  }, [activeConversation])
+  }, [activeConversation]);
 
   useEffect(() => {
-    if(singleConversation) {
-      onPullRefresh({type:'conversation', conversation: singleConversation})
+    if (singleConversation) {
+      onPullRefresh({ type: 'conversation', conversation: singleConversation });
     }
-  }, [singleConversation])
+  }, [singleConversation]);
 
   return (
     <Affix
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
-      content={<ChatMin unreadCount={unreadCount}
-      />}>
-      <div className={["chat-panel", showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
+      content={<ChatMin unreadCount={unreadCount} />}>
+      <div
+        className={[
+          'chat-panel',
+          showCloseIcon ? 'full-screen-chat' : '',
+          cls,
+        ].join(' ')}>
         <div className="chat-header with-tab">
-          <span style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
+          <span
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             {isHost ? (
-              <span
-                onClick={() => onCanChattingChange(!!canChatting)}
-              >
-                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
+              <span onClick={() => onCanChattingChange(!!canChatting)}>
+                <i
+                  className={
+                    canChatting ? 'can-discussion-svg' : 'no-discussion-svg'
+                  }></i>
               </span>
             ) : null}
-            {showCloseIcon ? (<span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-              <img src={chatMinBtn} />
-            </span>) : null}
-
+            {showCloseIcon ? (
+              <span
+                style={{ cursor: 'pointer' }}
+                onClick={() => onCollapse && onCollapse()}>
+                <img src={chatMinBtn} />
+              </span>
+            ) : null}
           </span>
         </div>
-        <Tabs onChange={(activeKey: string) => {
-          if(activeKey === '0') {
-            onChangeActiveTab && onChangeActiveTab('room')
-          } else if(singleConversation) {
-            // no list
-            onChangeActiveTab && onChangeActiveTab('conversation', singleConversation)
-          } else if(activeConversation) {
-            // already in list
-            onChangeActiveTab && onChangeActiveTab('conversation', activeConversation)
-          } else {
-            onChangeActiveTab && onChangeActiveTab('conversation-list')
-          }
-        }}>
-          <TabPane tab={
-            <span className="message-tab tab-title">
-              {transI18n("message")}
-              {messageListUnread ? <span className="new-message-notice"></span> : null}
-            </span>
-          } key="0">
+        <Tabs
+          onChange={(activeKey: string) => {
+            if (activeKey === '0') {
+              onChangeActiveTab && onChangeActiveTab('room');
+            } else if (singleConversation) {
+              // no list
+              onChangeActiveTab &&
+                onChangeActiveTab('conversation', singleConversation);
+            } else if (activeConversation) {
+              // already in list
+              onChangeActiveTab &&
+                onChangeActiveTab('conversation', activeConversation);
+            } else {
+              onChangeActiveTab && onChangeActiveTab('conversation-list');
+            }
+          }}>
+          <TabPane
+            tab={
+              <span className="message-tab tab-title">
+                {transI18n('message')}
+                {messageListUnread ? (
+                  <span className="new-message-notice"></span>
+                ) : null}
+              </span>
+            }
+            key="0">
             {!canChatting ? (
-                <div className="chat-notice with-tab">
+              <div className="chat-notice with-tab">
                 <span>
-                    <SvgImg type="red-caution" />
-                    <span>{transI18n('placeholder.enable_chat_muted')}</span>
+                  <SvgImg type="red-caution" />
+                  <span>{transI18n('placeholder.enable_chat_muted')}</span>
                 </span>
-                </div>
+              </div>
             ) : null}
             <MessageList
               className={'room chat-history'}
               messages={messages}
               disableChat={!isHost && !canChatting}
               chatText={chatText}
-              onPullFresh={() => {onPullRefresh({type:'room'})}}
-              onSend={() => {onSend({type:'room'})}}
-              onText={(content:string) => {onText({type:'room'}, content)}}
+              onPullFresh={() => {
+                onPullRefresh({ type: 'room' });
+              }}
+              onSend={() => {
+                onSend({ type: 'room' });
+              }}
+              onText={(content: string) => {
+                onText({ type: 'room' }, content);
+              }}
             />
           </TabPane>
-          <TabPane 
-          tab={
-            <span className="question tab-title">
-              {transI18n("quiz")}
-              {conversationListUnread ? <span className="new-message-notice"></span> : null}
-              {/* <span className="question-count">{totalCount}</span> */}
-            </span>
-          } 
-          key="1">
-            {singleConversation ? 
+          <TabPane
+            tab={
+              <span className="question tab-title">
+                {transI18n('quiz')}
+                {conversationListUnread ? (
+                  <span className="new-message-notice"></span>
+                ) : null}
+                {/* <span className="question-count">{totalCount}</span> */}
+              </span>
+            }
+            key="1">
+            {singleConversation ? (
               <>
                 <MessageList
                   className={'conversation no-header chat-history'}
                   messages={singleConversation.messages}
                   disableChat={false}
                   chatText={chatText}
-                  onPullFresh={() => {onPullRefresh({type:'conversation', conversation:singleConversation})}}
-                  onSend={() => {onSend({type:'conversation', conversation:singleConversation})}}
-                  onText={(content:string) => onText({type:'conversation', conversation:singleConversation}, content)}
+                  onPullFresh={() => {
+                    onPullRefresh({
+                      type: 'conversation',
+                      conversation: singleConversation,
+                    });
+                  }}
+                  onSend={() => {
+                    onSend({
+                      type: 'conversation',
+                      conversation: singleConversation,
+                    });
+                  }}
+                  onText={(content: string) =>
+                    onText(
+                      {
+                        type: 'conversation',
+                        conversation: singleConversation,
+                      },
+                      content,
+                    )
+                  }
                 />
               </>
-              :
-              activeConversation ?
-                <>
-                  <div className="conversation-header">
-                    <div className="back-btn" onClick={() => {
-                      setActiveConversation(undefined)
-                      onChangeActiveTab && onChangeActiveTab('conversation-list', undefined)
-                    }}><img src={backBtn} /></div>
-                    <div className="avatar">
-                    </div>
-                    <div className="name">{activeConversation.userName}</div>
+            ) : activeConversation ? (
+              <>
+                <div className="conversation-header">
+                  <div
+                    className="back-btn"
+                    onClick={() => {
+                      setActiveConversation(undefined);
+                      onChangeActiveTab &&
+                        onChangeActiveTab('conversation-list', undefined);
+                    }}>
+                    <img src={backBtn} />
                   </div>
-                  <MessageList
-                    className={'conversation chat-history'}
-                    messages={getActiveConversationMessages()}
-                    disableChat={false}
-                    chatText={chatText}
-                    onPullFresh={() => {onPullRefresh({type:'conversation', conversation:activeConversation})}}
-                    onSend={() => {onSend({type:'conversation', conversation:activeConversation})}}
-                    onText={(content:string) => onText({type:'conversation', conversation:activeConversation}, content)}
-                  />
-                </>
-              : 
-                <ChatList 
-                  conversations={conversations}
-                  onPullRefresh={onPullRefresh}
-                  onClickConversation={(conversation) => {
-                    setActiveConversation(conversation)
-                    onChangeActiveTab && onChangeActiveTab('conversation', conversation)
-                  }}>
-                </ChatList>
-              }
+                  <div className="avatar"></div>
+                  <div className="name">{activeConversation.userName}</div>
+                </div>
+                <MessageList
+                  className={'conversation chat-history'}
+                  messages={getActiveConversationMessages()}
+                  disableChat={false}
+                  chatText={chatText}
+                  onPullFresh={() => {
+                    onPullRefresh({
+                      type: 'conversation',
+                      conversation: activeConversation,
+                    });
+                  }}
+                  onSend={() => {
+                    onSend({
+                      type: 'conversation',
+                      conversation: activeConversation,
+                    });
+                  }}
+                  onText={(content: string) =>
+                    onText(
+                      {
+                        type: 'conversation',
+                        conversation: activeConversation,
+                      },
+                      content,
+                    )
+                  }
+                />
+              </>
+            ) : (
+              <ChatList
+                conversations={conversations}
+                onPullRefresh={onPullRefresh}
+                onClickConversation={(conversation) => {
+                  setActiveConversation(conversation);
+                  onChangeActiveTab &&
+                    onChangeActiveTab('conversation', conversation);
+                }}></ChatList>
+            )}
           </TabPane>
         </Tabs>
       </div>

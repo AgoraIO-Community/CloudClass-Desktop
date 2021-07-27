@@ -1,122 +1,127 @@
-import { useAudienceParams, useHomeStore } from "@/infra/hooks"
-import { changeLanguage, Home } from "~ui-kit"
-import { storage } from '@/infra/utils'
-import { homeApi, LanguageEnum } from "agora-edu-core"
-import { EduRoleTypeEnum, EduSceneType } from "agora-rte-sdk"
-import { observer } from "mobx-react"
-import React, { useState, useMemo, useEffect } from "react"
-import { useHistory } from "react-router"
-import { AgoraRegion } from "@/infra/api"
-import AgoraRTC from 'agora-rtc-sdk-ng'
-import { HomeLaunchOption } from "@/infra/stores/app/home"
+import { useAudienceParams, useHomeStore } from '@/infra/hooks';
+import { changeLanguage, Home } from '~ui-kit';
+import { storage } from '@/infra/utils';
+import { homeApi, LanguageEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk';
+import { observer } from 'mobx-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useHistory } from 'react-router';
+import { AgoraRegion } from '@/infra/api';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import { HomeLaunchOption } from '@/infra/stores/app/home';
 
 export const HomePage = observer(() => {
+  const homeStore = useHomeStore();
+  const params = useAudienceParams();
 
-  const homeStore = useHomeStore()
-  const params = useAudienceParams()
-
-  const [roomId, setRoomId] = useState<string>('')
-  const [userId, setUserId] = useState<string>('')
-  const [roomName, setRoomName] = useState<string>('')
-  const [userName, setUserName] = useState<string>('')
-  const [userRole, setRole] = useState<string>('')
-  const [curScenario, setScenario] = useState<string>('')
-  const [duration, setDuration] = useState<number>(30)
-  const [startDate, setStartDate] = useState<Date>(new Date())
-  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'en')
-  const [region, setRegion] = useState<AgoraRegion>(homeStore.region)
-  const [debug, setDebug] = useState<boolean>(false)
+  const [roomId, setRoomId] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
+  const [userRole, setRole] = useState<string>('');
+  const [curScenario, setScenario] = useState<string>('');
+  const [duration, setDuration] = useState<number>(30);
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [language, setLanguage] = useState<string>(
+    sessionStorage.getItem('language') || 'en',
+  );
+  const [region, setRegion] = useState<AgoraRegion>(homeStore.region);
+  const [debug, setDebug] = useState<boolean>(false);
 
   useEffect(() => {
-    changeLanguage(language)
-    setLanguage(language)
-  }, [])
+    changeLanguage(language);
+    setLanguage(language);
+  }, []);
 
   const onChangeRegion = (r: string) => {
-    let region = r as AgoraRegion
-    setRegion(region)
-    homeStore.region = region
-  }
+    let region = r as AgoraRegion;
+    setRegion(region);
+    homeStore.region = region;
+  };
 
   const onChangeLanguage = (language: string) => {
-    sessionStorage.setItem('language', language)
-    changeLanguage(language)
-    setLanguage(language)
-  }
+    sessionStorage.setItem('language', language);
+    changeLanguage(language);
+    setLanguage(language);
+  };
 
   const role = useMemo(() => {
     const roles = {
-      'teacher': EduRoleTypeEnum.teacher,
-      'assistant': EduRoleTypeEnum.assistant,
-      'student': EduRoleTypeEnum.student,
-      'incognito': EduRoleTypeEnum.invisible
-    }
-    return roles[userRole]
-  }, [userRole])
+      teacher: EduRoleTypeEnum.teacher,
+      assistant: EduRoleTypeEnum.assistant,
+      student: EduRoleTypeEnum.student,
+      incognito: EduRoleTypeEnum.invisible,
+    };
+    return roles[userRole];
+  }, [userRole]);
 
   const scenario = useMemo(() => {
     const scenes = {
       '1v1': EduSceneType.Scene1v1,
       'mid-class': EduSceneType.SceneMedium,
       'big-class': EduSceneType.SceneLarge,
-    }
-    return scenes[curScenario]
-  }, [curScenario])
+    };
+    return scenes[curScenario];
+  }, [curScenario]);
 
   const userUuid = useMemo(() => {
     if (!debug) {
-      return `${userName}${role}`
+      return `${userName}${role}`;
     }
-    return `${userId}`
-  }, [role, userName, debug, userId])
+    return `${userId}`;
+  }, [role, userName, debug, userId]);
 
   const roomUuid = useMemo(() => {
     if (!debug) {
-      return `${roomName}${scenario}`
+      return `${roomName}${scenario}`;
     }
-    return `${roomId}`
-  }, [scenario, roomName, debug, roomId])
+    return `${roomId}`;
+  }, [scenario, roomName, debug, roomId]);
 
   const onChangeRole = (value: string) => {
-    setRole(value)
-  }
+    setRole(value);
+  };
 
   const onChangeScenario = (value: string) => {
-    setScenario(value)
-  }
+    setScenario(value);
+  };
 
   const text: Record<string, CallableFunction> = {
-    'roomId': setRoomId,
-    'userName': setUserName,
-    'roomName': setRoomName,
-    'userId': setUserId,
-  }
+    roomId: setRoomId,
+    userName: setUserName,
+    roomName: setRoomName,
+    userId: setUserId,
+  };
 
   const onChangeRoomId = (newValue: string) => {
-    text['roomId'](newValue)
-  }
+    text['roomId'](newValue);
+  };
 
   const onChangeUserId = (newValue: string) => {
-    text['userId'](newValue)
-  }
+    text['userId'](newValue);
+  };
 
   const onChangeRoomName = (newValue: string) => {
-    text['roomName'](newValue)
-  }
+    text['roomName'](newValue);
+  };
 
   const onChangeUserName = (newValue: string) => {
-    text['userName'](newValue)
-  }
+    text['userName'](newValue);
+  };
 
   const onChangeDebug = (newValue: boolean) => {
-    setDebug(newValue)
-  }
+    setDebug(newValue);
+  };
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList())
-  // @ts-ignore
-  const SDKVersion = window.isElectron ? window.rtcEngine.getVersion().version : AgoraRTC.VERSION
+  const [courseWareList, updateCourseWareList] = useState<any[]>(
+    storage.getCourseWareSaveList(),
+  );
+  const SDKVersion = window.isElectron
+    ? // @ts-ignore
+      window.rtcEngine.getVersion().version
+    : AgoraRTC.VERSION;
   return (
     <Home
       version={REACT_APP_BUILD_VERSION}
@@ -143,20 +148,23 @@ export const HomePage = observer(() => {
       //   setStartDate(date)
       // }}
       onChangeDuration={(duration: number) => {
-        setDuration(duration)
+        setDuration(duration);
       }}
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        homeApi.setRegion(region)
-        let {rtmToken, appId} = await homeApi.login(userUuid)
-        console.log('## rtm Token', rtmToken)
+        homeApi.setRegion(region);
+        let { rtmToken, appId } = await homeApi.login(userUuid);
+        console.log('## rtm Token', rtmToken);
         let config: HomeLaunchOption = {
           // rtmUid: userUuid,
           appId,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
-          personalCourseWareList: courseWareList.slice(1, courseWareList.length),
+          personalCourseWareList: courseWareList.slice(
+            1,
+            courseWareList.length,
+          ),
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,
@@ -165,7 +173,7 @@ export const HomePage = observer(() => {
           roomName: `${roomName}`,
           userName: userName,
           roleType: role,
-          startTime: +(new Date()),
+          startTime: +new Date(),
           region,
           duration: duration * 60,
           mediaOptions: {
@@ -173,18 +181,18 @@ export const HomePage = observer(() => {
               width: 320,
               height: 240,
               frameRate: 15,
-            }
+            },
           },
-        }
+        };
         if (params && params['encryptionKey'] && params['encryptionMode']) {
           config!.mediaOptions!.encryptionConfig = {
             key: params['encryptionKey'],
-            mode: parseInt(params['encryptionMode'])
-          }
+            mode: parseInt(params['encryptionMode']),
+          };
         }
-        homeStore.setLaunchConfig(config)
-        history.push('/launch')
+        homeStore.setLaunchConfig(config);
+        history.push('/launch');
       }}
     />
-  )
-})
+  );
+});

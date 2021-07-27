@@ -1,119 +1,141 @@
-import { isArray, isBoolean, isEmpty, isFunction, isNumber, isString } from "lodash"
-import { AgoraEduSDKConfigParams, LaunchOption } from "../declare"
+import {
+  isArray,
+  isBoolean,
+  isEmpty,
+  isFunction,
+  isNumber,
+  isString,
+} from 'lodash';
+import { AgoraEduSDKConfigParams, LaunchOption } from '../declare';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
-const pattern = /^[0-9a-zA-Z!#$%&()+-:;<=.>?@[\]^_{}|~,]+$/
+const pattern = /^[0-9a-zA-Z!#$%&()+-:;<=.>?@[\]^_{}|~,]+$/;
 
 export class AgoraSDKError extends Error {
-
-  message: string
-  code?: string
+  message: string;
+  code?: string;
 
   constructor(args: any | string) {
-    super(args)
+    super(args);
     if (typeof args === 'string') {
-      this.message = args
+      this.message = args;
     } else {
-      this.message = args.message
-      this.code = args.code
+      this.message = args.message;
+      this.code = args.code;
     }
   }
 
   [Symbol.toPrimitive](hint: string) {
-    if (hint === "string") {
+    if (hint === 'string') {
       return `SDKError: ${JSON.stringify({
         name: this.name,
         code: this.code,
         message: this.message,
-        stack: this.stack
-      })}`
+        stack: this.stack,
+      })}`;
     }
   }
 }
 
 export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
   if (!dom) {
-    throw new AgoraSDKError('dom parameter cannot be empty')
+    throw new AgoraSDKError('dom parameter cannot be empty');
   }
 
   if (isEmpty(option)) {
-    throw new AgoraSDKError('option parameter cannot is invalid')
+    throw new AgoraSDKError('option parameter cannot is invalid');
   }
 
   if (!isBoolean(option.pretest)) {
-    throw new AgoraSDKError('pretest parameter is invalid should be boolean')
+    throw new AgoraSDKError('pretest parameter is invalid should be boolean');
   }
 
   if (!isNumber(option.roleType)) {
-    throw new AgoraSDKError('roleType parameter is invalid should be number')
+    throw new AgoraSDKError('roleType parameter is invalid should be number');
   }
 
   if (!isNumber(option.roomType)) {
-    throw new AgoraSDKError('roomType parameter is invalid should be number')
+    throw new AgoraSDKError('roomType parameter is invalid should be number');
   }
 
   if (!isString(option.roomName)) {
-    throw new AgoraSDKError('roomName parameter is invalid should be string')
+    throw new AgoraSDKError('roomName parameter is invalid should be string');
   }
 
   if (!isString(option.roomUuid)) {
-    throw new AgoraSDKError('roomUuid parameter is invalid should be string')
+    throw new AgoraSDKError('roomUuid parameter is invalid should be string');
   }
 
   if (!isString(option.userName)) {
-    throw new AgoraSDKError('userName parameter is invalid should be string')
+    throw new AgoraSDKError('userName parameter is invalid should be string');
   }
 
   if (!isString(option.userUuid)) {
-    throw new AgoraSDKError('userUuid parameter is invalid should be string')
+    throw new AgoraSDKError('userUuid parameter is invalid should be string');
   }
 
   if (!isString(option.language)) {
-    throw new AgoraSDKError('language parameter should be string')
+    throw new AgoraSDKError('language parameter should be string');
   }
 
   if (!['zh', 'en'].includes(option.language)) {
-    throw new AgoraSDKError(`${option.language} language is not supported`)
+    throw new AgoraSDKError(`${option.language} language is not supported`);
   }
 
   if (!option.listener) {
-    throw new AgoraSDKError('listener parameter is invalid cannot be empty')
+    throw new AgoraSDKError('listener parameter is invalid cannot be empty');
   }
 
   if (!isFunction(option.listener)) {
-    throw new AgoraSDKError('listener parameter should be a function')
+    throw new AgoraSDKError('listener parameter should be a function');
   }
 
-  if (![EduRoleTypeEnum.invisible, EduRoleTypeEnum.assistant, EduRoleTypeEnum.student, EduRoleTypeEnum.teacher].includes(option.roleType)) {
-    throw new AgoraSDKError(`${option.roleType}, roleType parameter is invalid`)
+  if (
+    ![
+      EduRoleTypeEnum.invisible,
+      EduRoleTypeEnum.assistant,
+      EduRoleTypeEnum.student,
+      EduRoleTypeEnum.teacher,
+    ].includes(option.roleType)
+  ) {
+    throw new AgoraSDKError(
+      `${option.roleType}, roleType parameter is invalid`,
+    );
   }
 
   if (![0, 2, 4].includes(option.roomType)) {
-    throw new AgoraSDKError(`${option.roomType}, roomType parameter is invalid`)
+    throw new AgoraSDKError(
+      `${option.roomType}, roomType parameter is invalid`,
+    );
   }
 
   if (isEmpty(option.roomName)) {
-    throw new AgoraSDKError('roomName parameter cannot be empty')
+    throw new AgoraSDKError('roomName parameter cannot be empty');
   }
 
   if (isEmpty(option.roomUuid)) {
-    throw new AgoraSDKError('roomUuid parameter cannot be empty')
+    throw new AgoraSDKError('roomUuid parameter cannot be empty');
   }
 
   if (isEmpty(option.userName)) {
-    throw new AgoraSDKError('userName parameter cannot be empty')
+    throw new AgoraSDKError('userName parameter cannot be empty');
   }
 
   if (isEmpty(option.userUuid)) {
-    throw new AgoraSDKError('userUuid parameter cannot be empty')
+    throw new AgoraSDKError('userUuid parameter cannot be empty');
   }
 
   if (!isArray(option.courseWareList)) {
-    throw new AgoraSDKError('courseWareList parameter should be valid array')
+    throw new AgoraSDKError('courseWareList parameter should be valid array');
   }
 
-  if (option.personalCourseWareList && !isArray(option.personalCourseWareList)) {
-    throw new AgoraSDKError('personalCourseWareList parameter should be valid array')
+  if (
+    option.personalCourseWareList &&
+    !isArray(option.personalCourseWareList)
+  ) {
+    throw new AgoraSDKError(
+      'personalCourseWareList parameter should be valid array',
+    );
   }
 
   // if (option.userUuid && option.userUuid.length > 89) {
@@ -125,19 +147,19 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
   // }
 
   if (!pattern.test(option.userUuid)) {
-    throw new AgoraSDKError('userUuid parameter is invalid')
+    throw new AgoraSDKError('userUuid parameter is invalid');
   }
 
   if (!pattern.test(option.roomUuid)) {
-    throw new AgoraSDKError('roomUuid parameter is invalid')
+    throw new AgoraSDKError('roomUuid parameter is invalid');
   }
-}
+};
 
 // export const checkDiskOption = (dom: Element, option: OpenDiskOption) => {
 //   if (!dom) {
 //     throw new AgoraSDKError('dom parameter cannot be empty')
 //   }
-  
+
 //   if (isEmpty(option)) {
 //     throw new AgoraSDKError('option parameter cannot be empty')
 //   }
@@ -151,13 +173,12 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 //   }
 // }
 
-
 // export const checkReplayOption = (dom:Element, option: ReplayOption) => {
 
 //   if (!dom) {
 //     throw new AgoraSDKError('dom parameter cannot be empty')
 //   }
-  
+
 //   if (isEmpty(option)) {
 //     throw new AgoraSDKError('option parameter cannot be empty')
 //   }
@@ -214,13 +235,13 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 
 export const checkConfigParams = (params: AgoraEduSDKConfigParams) => {
   if (isEmpty(params)) {
-    throw new AgoraSDKError('config parameter cannot be empty')
+    throw new AgoraSDKError('config parameter cannot be empty');
   }
-  
+
   if (isEmpty(params.appId)) {
-    throw new AgoraSDKError('appId parameter cannot be empty')
+    throw new AgoraSDKError('appId parameter cannot be empty');
   }
   if (params.appId.length !== 32) {
-    throw new AgoraSDKError('appId parameter is invalid')
+    throw new AgoraSDKError('appId parameter is invalid');
   }
-}
+};

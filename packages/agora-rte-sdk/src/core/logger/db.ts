@@ -1,11 +1,11 @@
-import { EduSDKLogger } from "./edu-sdk-logger"
+import { EduSDKLogger } from './edu-sdk-logger';
 
-let logDB: EduSDKLogger | null = null
+let logDB: EduSDKLogger | null = null;
 export const openDB = () => {
   if (!logDB) {
-    logDB = new EduSDKLogger()
+    logDB = new EduSDKLogger();
   }
-  return logDB
-}
+  return logDB;
+};
 
-export const db = openDB()
+export const db = openDB();

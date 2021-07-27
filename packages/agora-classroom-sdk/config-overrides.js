@@ -17,19 +17,19 @@ const {
   adjustStyleLoaders,
   removeModuleScopePlugin,
   // addWebpackTarget,
-} = require('customize-cra')
-const autoprefixer = require('autoprefixer')
-const tailwindcss = require('tailwindcss')
-const path = require('path')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin')
+} = require('customize-cra');
+const autoprefixer = require('autoprefixer');
+const tailwindcss = require('tailwindcss');
+const path = require('path');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const { GenerateSW, InjectManifest } = require('workbox-webpack-plugin');
 const short = require('short-uuid');
-const dayjs = require('dayjs')
-const fs = require('fs')
+const dayjs = require('dayjs');
+const fs = require('fs');
 
-const packageInfo = require('./package.json')
+const packageInfo = require('./package.json');
 
-const swSrcPath = packageInfo.swSrcPath
+const swSrcPath = packageInfo.swSrcPath;
 
 function findSWPrecachePlugin(element) {
   return element.constructor.name === 'GenerateSW';
@@ -64,24 +64,23 @@ const useSW = () => (config) => {
         /service-worker\.js$/,
         /sw\.js$/,
       ],
-    })
+    }),
   );
   return config;
-}
+};
 
-const dotenv = require('dotenv')
-const {DefinePlugin} = require('webpack')
-const addWebpackTarget = target => config => {
-  config.target = target
-  return config
-}
+const dotenv = require('dotenv');
+const { DefinePlugin } = require('webpack');
+const addWebpackTarget = (target) => (config) => {
+  config.target = target;
+  return config;
+};
 
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const isElectron = process.env.REACT_APP_RUNTIME_PLATFORM === 'electron';
 
-const isElectron = process.env.REACT_APP_RUNTIME_PLATFORM === 'electron'
-
-const {devDependencies} = require('./package.json');
+const { devDependencies } = require('./package.json');
 
 // TODO: You can customize your env
 // TODO: 这里你可以定制自己的env
@@ -102,18 +101,18 @@ const addStyleLoader = () => (config) => {
       // No need for "css-loader" nor "style-loader"
       // for CRA will later apply them anyways.
       {
-        loader: "postcss-loader",
+        loader: 'postcss-loader',
         options: {
           postcssOptions: {
             ident: 'postcss',
-            config: path.resolve(__dirname, './postcss.config.js')
+            config: path.resolve(__dirname, './postcss.config.js'),
             // plugins: [
             //   tailwindcss(),
             //   autoprefixer()
             // ]
-          }
-        }
-      }
+          },
+        },
+      },
     ],
   });
   // config.module.rules.push(
@@ -123,47 +122,48 @@ const addStyleLoader = () => (config) => {
   //   }
   // )
   return config;
-}
+};
 
-const webWorkerConfig = () => config => {
+const webWorkerConfig = () => (config) => {
   config.optimization = {
     ...config.optimization,
     noEmitOnErrors: false,
-  }
+  };
   config.output = {
     ...config.output,
     globalObject: 'this',
-  }
-  return config
-}
+  };
+  return config;
+};
 
-const sourceMap = () => config => {
+const sourceMap = () => (config) => {
   // TODO: Please use 'source-map' in production environment
   // TODO: 建议上发布环境用 'source-map'
-  console.log('node version', process.version)
+  console.log('node version', process.version);
   // config.devtool = 'none'
-  config.devtool = 'source-map'
+  config.devtool = 'source-map';
   return config;
-}
+};
 
-const setElectronDeps = isProd ? {
-  ...devDependencies,
-  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
-} : {
-  "agora-electron-sdk": "commonjs2 agora-electron-sdk"
-}
+const setElectronDeps = isProd
+  ? {
+      ...devDependencies,
+      'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+    }
+  : {
+      'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+    };
 
 // fix: https://github.com/gildas-lormeau/zip.js/issues/212#issuecomment-769766135
-const fixZipCodecIssue = () => config => {
+const fixZipCodecIssue = () => (config) => {
   config.module.rules.push({
     test: /\.js$/,
     loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-  })
-  return config
-}
+  });
+  return config;
+};
 
-const useOptimizeBabelConfig = () => config => {
-
+const useOptimizeBabelConfig = () => (config) => {
   // const plugins = [require('tailwindcss'), require('autoprefixer')]
 
   // const rules = config.module.rules.find(rule => Array.isArray(rule.oneOf))
@@ -186,55 +186,108 @@ const useOptimizeBabelConfig = () => config => {
   // );
   const rule = {
     test: /\.(ts)x?$/i,
-    include: [
-      path.resolve("src")
-    ],
+    include: [path.resolve('src')],
     // exclude: /\.(stories.ts)x?$/i,
-    use: [
-      'thread-loader', 'cache-loader', getBabelLoader(config).loader,
-    ],
+    use: ['thread-loader', 'cache-loader', getBabelLoader(config).loader],
     exclude: /node_modules|(\.(stories.ts)x?$)/,
     // exclude: [
     //   path.resolve("node_modules"),
     //   path.resolve("src/sw"),
     // ],
-  }
+  };
+
+  const rule2 = {
+    test: /\.(js|jsx)$/i,
+    include: [
+      // path.resolve("src"),
+      path.resolve(__dirname, '../agora-chat-widget/src'),
+    ],
+    // exclude: /\.(stories.ts)x?$/i,
+    use: [
+      'thread-loader',
+      'cache-loader',
+      {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                useBuiltIns: 'usage',
+                debug: false,
+                corejs: {
+                  version: 3,
+                  proposals: true,
+                },
+              },
+            ],
+            [
+              '@babel/preset-react',
+              {
+                runtime: 'automatic',
+              },
+            ],
+            // "@babel/preset-react",
+          ],
+          plugins: [
+            '@babel/plugin-proposal-object-rest-spread',
+            '@babel/plugin-proposal-optional-chaining',
+            '@babel/plugin-proposal-nullish-coalescing-operator',
+            [
+              '@babel/plugin-proposal-decorators',
+              {
+                legacy: true,
+              },
+            ],
+            [
+              '@babel/plugin-proposal-class-properties',
+              {
+                loose: true,
+              },
+            ],
+          ],
+        },
+      },
+    ],
+    exclude: /node_modules|(\.(stories.ts)x?$)/,
+  };
 
   for (let _rule of config.module.rules) {
     if (_rule.oneOf) {
+      _rule.oneOf.unshift(rule2);
       _rule.oneOf.unshift(rule);
       break;
     }
   }
   return config;
-}
+};
 
-const config = process.env
+const config = process.env;
 
 const getToday = () => {
-  const today = new Date()
-  return `${today.getFullYear()}${today.getMonth()+1}${today.getDate()}`
-}
+  const today = new Date();
+  return `${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}`;
+};
 
-const exportWebpackConfig = () => config => {
-  fs.writeFileSync("./webpack.cra.js", JSON.stringify(config))
+const exportWebpackConfig = () => (config) => {
+  fs.writeFileSync('./webpack.cra.js', JSON.stringify(config));
   return config;
-}
+};
 
-const removeEslint = () => config => {
+const removeEslint = () => (config) => {
   config.plugins = config.plugins.filter(
-    (plugin) => plugin.constructor.name !== "ESLintWebpackPlugin",
+    (plugin) => plugin.constructor.name !== 'ESLintWebpackPlugin',
   );
   return config;
-}
+};
 
-let version = packageInfo.version
-let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV
-if(apaasBuildEnv) {
+let version = packageInfo.version;
+let apaasBuildEnv = process.env.AGORA_APAAS_BUILD_ENV;
+if (apaasBuildEnv) {
   // const date = dayjs().format('YYMMDD')
   // const translator = short()
   // const hash = translator.new()
-  version = `${packageInfo.version}`
+  version = `${packageInfo.version}`;
   // if(apaasBuildEnv === 'test') {
   //   version=`test-${packageInfo.version}`
   // } else if(apaasBuildEnv === 'preprod') {
@@ -259,39 +312,79 @@ const webpackConfig = override(
   addWebpackExternals(setElectronDeps),
   adjustStyleLoaders((loader) => {
     loader.exclude = [
-      path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')
-    ]
+      path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat'),
+    ];
   }),
   addStyleLoader(),
-  addWebpackPlugin(new DefinePlugin({
-    // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
-    // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
-    REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
-    REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
-    REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
-    REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
-    REACT_APP_BUILD_VERSION: JSON.stringify(version),
-    REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
-    REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
-    REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
-    REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty('REACT_APP_AGORA_APP_CERTIFICATE') ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`) : JSON.stringify(""),
-    REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
-    REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
-    REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
-    REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
+  addWebpackPlugin(
+    new DefinePlugin({
+      // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
+      // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
+      REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(
+        config.REACT_APP_AGORA_APP_RECORD_URL,
+      ),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(
+        config.REACT_APP_AGORA_RESTFULL_TOKEN,
+      ),
+      REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(
+        config.REACT_APP_AGORA_RECORDING_OSS_URL,
+      ),
+      REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
+      REACT_APP_BUILD_VERSION: JSON.stringify(version),
+      REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
+      REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
+      REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
+      REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty(
+        'REACT_APP_AGORA_APP_CERTIFICATE',
+      )
+        ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`)
+        : JSON.stringify(''),
+      REACT_APP_AGORA_APP_TOKEN: JSON.stringify(
+        config.REACT_APP_AGORA_APP_TOKEN,
+      ),
+      REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(
+        config.REACT_APP_AGORA_CUSTOMER_ID,
+      ),
+      REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(
+        config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE,
+      ),
+      REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
 
-    REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
-    REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY),
-    REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET),
-    REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME),
-    REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE),
-    REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER),
-    REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
-    AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH') ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`) : JSON.stringify(""),
-    REACT_APP_REPORT_URL: config.hasOwnProperty('REACT_APP_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_REPORT_URL}`) : JSON.stringify(""),
-    REACT_APP_REPORT_QOS: config.hasOwnProperty('REACT_APP_REPORT_QOS') ? JSON.stringify(`${config.REACT_APP_REPORT_QOS}`) : JSON.stringify(""),
-    REACT_APP_V1_REPORT_URL: config.hasOwnProperty('REACT_APP_V1_REPORT_URL') ? JSON.stringify(`${config.REACT_APP_V1_REPORT_URL}`) : JSON.stringify(""),
-  })),
+      REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(
+        config.REACT_APP_AGORA_APP_SDK_DOMAIN,
+      ),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(
+        config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY,
+      ),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(
+        config.REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET,
+      ),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(
+        config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME,
+      ),
+      REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(
+        config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE,
+      ),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(
+        config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER,
+      ),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(
+        config.REACT_APP_AGORA_RESTFULL_TOKEN,
+      ),
+      AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH')
+        ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`)
+        : JSON.stringify(''),
+      REACT_APP_REPORT_URL: config.hasOwnProperty('REACT_APP_REPORT_URL')
+        ? JSON.stringify(`${config.REACT_APP_REPORT_URL}`)
+        : JSON.stringify(''),
+      REACT_APP_REPORT_QOS: config.hasOwnProperty('REACT_APP_REPORT_QOS')
+        ? JSON.stringify(`${config.REACT_APP_REPORT_QOS}`)
+        : JSON.stringify(''),
+      REACT_APP_V1_REPORT_URL: config.hasOwnProperty('REACT_APP_V1_REPORT_URL')
+        ? JSON.stringify(`${config.REACT_APP_V1_REPORT_URL}`)
+        : JSON.stringify(''),
+    }),
+  ),
   // addWebpackPlugin(
   //   new SimpleProgressWebpackPlugin()
   // ),
@@ -308,7 +401,7 @@ const webpackConfig = override(
   //   })
   // ),
   babelInclude([
-    path.resolve("src"),
+    path.resolve('src'),
     path.resolve(__dirname, '../agora-rte-sdk/src'),
     path.resolve(__dirname, '../agora-edu-core/src'),
     path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
@@ -316,31 +409,31 @@ const webpackConfig = override(
     path.resolve(__dirname, '../agora-widget-gallery/src'),
   ]),
   babelExclude([
-    path.resolve("node_modules"),
+    path.resolve('node_modules'),
     {
       test: /\.stories.ts?x$/i,
-    }
+    },
   ]),
-  addWebpackPlugin(
-    new HardSourceWebpackPlugin({
-      root: process.cwd(),
-      directories: [],
-      environmentHash: {
-        root: process.cwd(),
-        directories: [],
-        files: [
-          'package.json',
-          'package-lock.json',
-          'yarn.lock',
-          '.env',
-          '.env.local',
-          'env.local',
-          'config-overrides.js',
-          'webpack.config.js',
-        ],
-      }
-    })
-  ),
+  // addWebpackPlugin(
+  //   new HardSourceWebpackPlugin({
+  //     root: process.cwd(),
+  //     directories: [],
+  //     environmentHash: {
+  //       root: process.cwd(),
+  //       directories: [],
+  //       files: [
+  //         'package.json',
+  //         'package-lock.json',
+  //         'yarn.lock',
+  //         '.env',
+  //         '.env.local',
+  //         'env.local',
+  //         'config-overrides.js',
+  //         'webpack.config.js',
+  //       ],
+  //     }
+  //   })
+  // ),
   useSW(),
   fixZipCodecIssue(),
   useOptimizeBabelConfig(),
@@ -348,18 +441,37 @@ const webpackConfig = override(
     ['@']: path.resolve(__dirname, 'src'),
     '~core': path.resolve(__dirname, 'src/core'),
     '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
-    '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
+    '~components': path.resolve(
+      __dirname,
+      '../agora-scenario-ui-kit/src/components',
+    ),
     '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
-    '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
+    '~utilities': path.resolve(
+      __dirname,
+      '../agora-scenario-ui-kit/src/utilities',
+    ),
     '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
-    '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
-    '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
+    '~capabilities/containers': path.resolve(
+      __dirname,
+      'src/ui-kit/capabilities/containers',
+    ),
+    '~capabilities/hooks': path.resolve(
+      __dirname,
+      'src/ui-kit/capabilities/hooks',
+    ),
     'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
     'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
-    'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
-    'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
+    'agora-plugin-gallery': path.resolve(
+      __dirname,
+      '../agora-plugin-gallery/src',
+    ),
+    'agora-widget-gallery': path.resolve(
+      __dirname,
+      '../agora-widget-gallery/src',
+    ),
+    'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
   }),
-  removeModuleScopePlugin()
+  removeModuleScopePlugin(),
   // addBabelPresets(
   //   [
   //     "@babel/env",
@@ -368,6 +480,6 @@ const webpackConfig = override(
   //   "@babel/preset-react"
   // )
   // exportWebpackConfig()
-)
+);
 
-module.exports = webpackConfig
+module.exports = webpackConfig;

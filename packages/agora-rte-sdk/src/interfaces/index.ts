@@ -1,14 +1,13 @@
-import { AREA_CODE } from './../core/media-service/interfaces/index';
-import { AgoraEduApi } from '../core/services/edu-api';
-import { IAgoraRTC } from 'agora-rtc-sdk-ng';
-import { EnumOnlineState } from '../core/services/interface';
-import { isEmpty, set, setWith } from 'lodash';
+import { isEmpty, setWith } from 'lodash';
 import { EduLogger } from '../core/logger';
+import { VideoRenderState } from '../core/media-service/renderer';
+import { AgoraEduApi } from '../core/services/edu-api';
+import { EnumOnlineState } from '../core/services/interface';
 
 export enum EduCourseState {
   EduCourseStatePending = 0,
   EduCourseStateStart = 1,
-  EduCourseStateStop = 2
+  EduCourseStateStop = 2,
 }
 
 /**
@@ -21,7 +20,7 @@ export enum EduClassroomStateType {
   EduClassroomStateTypeAllStudentsChat = 0,
   EduClassroomStateTypeCourseState = 1,
   EduClassroomStateTypeRoomAttrs = 2,
-};
+}
 
 /**
  * 教室流动作
@@ -32,14 +31,14 @@ export enum EduClassroomStateType {
 export enum EduStreamAction {
   add = 1,
   modify = 2,
-  remove = 3
+  remove = 3,
 }
 
 /**
  * 房间属性
  */
 export interface EduRoomAttrs {
-  [key: string]: any
+  [key: string]: any;
 }
 
 /**
@@ -70,7 +69,7 @@ export enum EduPeerMessageCmdType {
   peer = 1,
   roomInfo = 2,
   userStream = 3,
-  customMessage = 99
+  customMessage = 99,
 }
 
 /**
@@ -113,7 +112,7 @@ export enum EduRoleType {
   student = 'broadcaster',
   invisible = 'invisible',
   assistant = 'assistant',
-  none = 'none'
+  none = 'none',
 }
 
 /**
@@ -135,12 +134,10 @@ export enum EduAudioSourceType {
 export enum EduVideoSourceType {
   none = 0,
   camera = 1,
-  screen = 2
+  screen = 2,
 }
 
-export enum ConnectionState {
-
-}
+export enum ConnectionState {}
 
 export enum EduUserStateType {
   EduUserStateTypeVideo = 0,
@@ -153,21 +150,15 @@ export enum NetworkQuality {
   NetworkQualityUnknown = -1,
   NetworkQualityHigh = 1,
   NetworkQualityMiddle = 2,
-  NetworkQualityLow = 3
+  NetworkQualityLow = 3,
 }
 
+export enum ConnectionChangeReason {}
 
-export enum ConnectionChangeReason {
-
-}
-
-
-export enum LogLevel {
-
-}
+export enum LogLevel {}
 
 export interface EduConfiguration {
-  vid?: number,
+  vid?: number;
   appId: string;
   cefClient?: any;
   // region: AREA_CODE;
@@ -180,27 +171,22 @@ export interface EduConfiguration {
   agoraElectron?: any;
   logLevel: LogLevel;
   logDirectoryPath: string;
-  codec?: string
-  sdkDomain?: string
-  rtmUid: string
-  rtmToken: string,
-  cameraEncoderConfigurations?: EduVideoEncoderConfiguration
-  scenarioType?: EduRoomTypeEnum,
-  userRole?: EduRoleTypeEnum
-  resolution?: {
-    width: number;
-    height: number;
-    frameRate: number;
-  }
+  codec?: string;
+  sdkDomain?: string;
+  rtmUid: string;
+  rtmToken: string;
+  cameraEncoderConfigurations?: EduVideoEncoderConfiguration;
+  scenarioType?: EduRoomTypeEnum;
+  userRole?: EduRoleTypeEnum;
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
-  authorization: string
+  authorization: string;
 }
 
 export interface EduClassroomManagerInit {
-  apiService: AgoraEduApi
-  config: EduClassroomConfiguration
+  apiService: AgoraEduApi;
+  config: EduClassroomConfiguration;
 }
 
 export enum EduSceneType {
@@ -208,20 +194,20 @@ export enum EduSceneType {
   SceneSmall = 1,
   SceneLarge = 2,
   // Scene = 2,
-  SceneMedium = 4
+  SceneMedium = 4,
 }
 
 export interface EduClassroomParams {
-  userName: string
-  userUuid: string
-  roomName: string
-  roomUuid: string
-  role: EduRoleType
+  userName: string;
+  userUuid: string;
+  roomName: string;
+  roomUuid: string;
+  role: EduRoleType;
 }
 
 export interface EduClassroomJoinOptions {
-  userName: string
-  userUuid: string
+  userName: string;
+  userUuid: string;
   // mediaOptions: EduClassroomMediaOptions
 }
 
@@ -232,15 +218,15 @@ export enum EduClassroomType {
 }
 
 export interface InitClassroomManagerConfig {
-  roomName: string
-  roomUuid: string
-  streamUuid: string
-  classType: EduClassroomType
+  roomName: string;
+  roomUuid: string;
+  streamUuid: string;
+  classType: EduClassroomType;
   limit?: {
-    teacherLimit: number
-    studentHostLimit: number
-    studentAudienceLimit: number
-  }
+    teacherLimit: number;
+    studentHostLimit: number;
+    studentAudienceLimit: number;
+  };
   // roleConfig: {
   //   admin: {
   //     limit: number
@@ -267,75 +253,75 @@ export interface EduClassroomJoinOptions {
 }
 
 export interface EduClassroomSubscribeOption {
-  autoSubscribeVideo: boolean
-  autoSubscribeAudio: boolean
+  autoSubscribeVideo: boolean;
+  autoSubscribeAudio: boolean;
 }
 
 export interface ClassroomStateParams {
-  courseState: number
-  muteAllChat: number
-  muteAllVideo: number
-  muteAllAudio: number
+  courseState: number;
+  muteAllChat: number;
+  muteAllVideo: number;
+  muteAllAudio: number;
 }
 
 export interface UserQueryParams {
-  nextId?: string
-  count: number
-  updateTimeOffset?: number
-  includeOffline?: number
+  nextId?: string;
+  count: number;
+  updateTimeOffset?: number;
+  includeOffline?: number;
 }
 
 export interface StreamQueryParams {
-  nextId?: string
-  count: number
-  updateTimeOffset?: number
-  includeOffline?: number
+  nextId?: string;
+  count: number;
+  updateTimeOffset?: number;
+  includeOffline?: number;
 }
 
 export interface AgoraFetchParams {
-  url?: string
-  method: string
-  data?: any
-  token?: string
-  full_url?: string
-  type?: string
-  restToken?: string
+  url?: string;
+  method: string;
+  data?: any;
+  token?: string;
+  full_url?: string;
+  type?: string;
+  restToken?: string;
 }
 
 export interface PeerMessageParams {
-  roomUuid: string
-  userId: string
-  msg: string
+  roomUuid: string;
+  userId: string;
+  msg: string;
 }
 
 export interface ChannelMessageParams {
-  msg: string
-  roomUuid: string
+  msg: string;
+  roomUuid: string;
 }
 
 export type EduClassroomInfo = {
-  roomUuid: string
-  roomName: string
-}
+  roomUuid: string;
+  roomName: string;
+};
 
 export interface InitEduRoomParams {
-  roomName: string
-  roomUuid: string
-  streamUuid: string
+  roomName: string;
+  roomUuid: string;
+  streamUuid: string;
   roleConfig: {
     host: {
-      limit: number
-    },
+      limit: number;
+    };
     broadcaster: {
-      limit: number
-    },
+      limit: number;
+    };
     audience: {
-      limit: number
-    },
+      limit: number;
+    };
     assistant: {
-      limit: number
-    }
-  }
+      limit: number;
+    };
+  };
 }
 
 export type EduClassroomStatus = {
@@ -343,7 +329,7 @@ export type EduClassroomStatus = {
   startTime: number;
   isStudentChatAllowed: boolean;
   onlineUsersCount: number;
-}
+};
 
 export interface EduClassroomAttrs {
   roomInfo: EduClassroomInfo;
@@ -358,9 +344,7 @@ export interface EduClassroom {
   roomStatus: EduClassroomStatus;
 }
 
-export enum EduRenderMode {
-
-}
+export enum EduRenderMode {}
 
 export interface EduRenderConfig {
   renderMode: EduRenderMode;
@@ -376,59 +360,55 @@ export interface EduStreamConfig {
   microphoneDeviceId: string;
 }
 
-export interface EduSubscribeOptions {
-  
-}
+export interface EduSubscribeOptions {}
 export interface EduBoard {
-  isPublisher: boolean
+  isPublisher: boolean;
 }
 
 export interface EduBoardOperator {
-  user: EduUser
-  board: EduBoard
+  user: EduUser;
+  board: EduBoard;
 }
 
 export interface EduBoardRoomModel {
-  boardOperators: Array<EduBoardOperator>
+  boardOperators: Array<EduBoardOperator>;
 }
 
 export interface EduReply {
-  appId: string
-  roomId: string
-  recordId: string
+  appId: string;
+  roomId: string;
+  recordId: string;
 }
 
 export interface EduVideoEncoderConfiguration {
-  width: number
-  height: number
-  frameRate: number
-  bitrate: number
+  width: number;
+  height: number;
+  frameRate: number;
+  bitrate: number;
 }
 
 export interface EduUserInfo {
-  userUuid: string
-  userName: string
-  role: string
+  userUuid: string;
+  userName: string;
+  role: string;
 }
 
 export interface EduCustomMessage {
-  fromUser: EduUserInfo
-  message: string
-  timestamp: number
+  fromUser: EduUserInfo;
+  message: string;
+  timestamp: number;
 }
 
 export interface EduTextMessage {
-  fromUser: EduUserInfo,
-  message: string,
-  messageId: string,
-  sensitiveWords: string[],
-  type: number,
-  timestamp: number,
+  fromUser: EduUserInfo;
+  message: string;
+  messageId: string;
+  sensitiveWords: string[];
+  type: number;
+  timestamp: number;
 }
 
-export interface EduRenderConfig {
-  
-}
+export interface EduRenderConfig {}
 
 export interface EduShareScreenConfig {
   streamUuid: string;
@@ -436,54 +416,52 @@ export interface EduShareScreenConfig {
 }
 
 export interface EduStreamParams {
-  streamUuid: string
-  userUuid: string
-  streamName: string
-  audioSourceType: EduAudioSourceType
-  videoSourceType: EduVideoSourceType
-  videoState: number
-  audioState: number
+  streamUuid: string;
+  userUuid: string;
+  streamName: string;
+  audioSourceType: EduAudioSourceType;
+  videoSourceType: EduVideoSourceType;
+  videoState: number;
+  audioState: number;
 }
 
-
 export interface EduUser {
-  userUuid: string
-  userName: string
-  role: EduRoleType
+  userUuid: string;
+  userName: string;
+  role: EduRoleType;
   // isChatAllowed: boolean
-  userProperties: Record<any, any>
+  userProperties: Record<any, any>;
   // muteChat: boolean
 }
 
 export interface EduUserAttrs extends EduUser {
-  state?: EnumOnlineState
-  updateTime?: number
-  streamUuid?: string
-  rtcToken?: string
-  screenRtcToken?: string
-  rtmToken?: string
-  type?: number
+  state?: EnumOnlineState;
+  updateTime?: number;
+  streamUuid?: string;
+  rtcToken?: string;
+  screenRtcToken?: string;
+  rtmToken?: string;
+  type?: number;
 }
 
 export class EduUserData {
+  private _user?: EduUser;
 
-  private _user?: EduUser
+  private _ts?: number;
 
-  private _ts?: number
+  private _state?: number;
 
-  private _state?: number
+  private _type?: number;
 
-  private _type?: number
+  private _streamUuid?: string;
 
-  private _streamUuid?: string
+  private _rtcToken?: string;
+  private _screenRtcToken?: string;
 
-  private _rtcToken?: string
-  private _screenRtcToken?: string
+  public _rtmToken?: string;
 
-  public _rtmToken?: string
-
-  get rtmToken(): string{
-    return this._rtmToken as string
+  get rtmToken(): string {
+    return this._rtmToken as string;
   }
 
   get type(): number {
@@ -491,63 +469,64 @@ export class EduUserData {
   }
 
   constructor(data: EduUserAttrs) {
-    this.updateUser(data)
+    this.updateUser(data);
     if (data.hasOwnProperty('rtcToken')) {
-      this._rtcToken = data.rtcToken
+      this._rtcToken = data.rtcToken;
     }
     if (data.hasOwnProperty('screenRtcToken')) {
-      this._screenRtcToken = data.screenRtcToken
+      this._screenRtcToken = data.screenRtcToken;
     }
     if (data.hasOwnProperty('rtmToken')) {
-      this._rtmToken = data.rtmToken
+      this._rtmToken = data.rtmToken;
     }
     if (data.hasOwnProperty('type')) {
-      this._type = data.type
+      this._type = data.type;
     }
   }
 
   updateUser(args: Partial<EduUserAttrs>) {
-    const {updateTime, state, streamUuid, rtcToken, screenRtcToken, ...user} = args
+    const { updateTime, state, streamUuid, rtcToken, screenRtcToken, ...user } =
+      args;
     // if (args.hasOwnProperty('user')) {
     this._user = user as any;
     // }
     if (args.hasOwnProperty('updateTime')) {
-      this._ts = updateTime
+      this._ts = updateTime;
     }
     if (args.hasOwnProperty('state')) {
-      this._state = state
+      this._state = state;
     }
     if (args.hasOwnProperty('streamUuid')) {
-      this._streamUuid = streamUuid
+      this._streamUuid = streamUuid;
     }
 
     if (rtcToken) {
-      this.setRtcToken(rtcToken)
+      this.setRtcToken(rtcToken);
     }
 
     if (screenRtcToken) {
-      this.setScreenRtcToken(screenRtcToken)
+      this.setScreenRtcToken(screenRtcToken);
     }
   }
 
   updateState(v: number) {
-    this._state = v
+    this._state = v;
   }
 
   setRtcToken(v: string) {
-    this._rtcToken = v
+    this._rtcToken = v;
   }
 
   setScreenRtcToken(v: string) {
-    this._screenRtcToken = v
+    this._screenRtcToken = v;
   }
 
   updateUserChatMute(v: boolean) {
-    setWith(this._user!, 'userProperties.mute.muteChat', !!v)
+    setWith(this._user!, 'userProperties.mute.muteChat', !!v);
   }
 
   updateUserDevice(path: 'device.camera' | 'device.mic', v: number) {
-    setWith(this._user!, `userProperties.${path}`, v)
+    setWith(this._user!, `userProperties.${path}`, v);
   }
 
   get rtcToken(): string {
@@ -563,7 +542,7 @@ export class EduUserData {
   }
 
   get user(): EduUser {
-    return this._user as EduUser
+    return this._user as EduUser;
   }
 
   get ts(): number {
@@ -574,51 +553,55 @@ export class EduUserData {
     return this._state as number;
   }
 
-  private _streamsMap: Record<any, any> = {}
+  private _streamsMap: Record<any, any> = {};
 
   get streams(): Record<any, any> {
     return this._streamsMap;
   }
 
   updateStreamsMap(map: any) {
-    this._streamsMap = map
+    this._streamsMap = map;
   }
 
   static fromArray(list: any[]): EduUserData[] {
     return list.reduce((acc: EduUserData[], item: any) => {
-      acc.push(new EduUserData({
-        state: item.state,
-        updateTime: item.updateTime,
-        userUuid: item.userUuid,
-        userName: item.userName,
-        role: item.role,
-        // muteChat: item.muteChat,
-        userProperties: item.userProperties,
-        // isChatAllowed: item.isChatAllowed,
-        streamUuid: item.streamUuid,
-        type: item.type,
-      }))
+      acc.push(
+        new EduUserData({
+          state: item.state,
+          updateTime: item.updateTime,
+          userUuid: item.userUuid,
+          userName: item.userName,
+          role: item.role,
+          // muteChat: item.muteChat,
+          userProperties: item.userProperties,
+          // isChatAllowed: item.isChatAllowed,
+          streamUuid: item.streamUuid,
+          type: item.type,
+        }),
+      );
       return acc;
     }, []);
   }
 
   static combineLatest(list: any[]): EduUserData[] {
-    const array = this.fromArray(list)
+    const array = this.fromArray(list);
     return array.reduce((acc: EduUserData[], it: EduUserData) => {
-      const idx = acc.findIndex((t: EduUserData) => t.user.userUuid === it.user.userUuid)
+      const idx = acc.findIndex(
+        (t: EduUserData) => t.user.userUuid === it.user.userUuid,
+      );
       if (idx !== -1) {
         acc[idx] = it;
       } else {
-        acc.push(it)
+        acc.push(it);
       }
-      return acc
-    }, [])
+      return acc;
+    }, []);
   }
 }
 
 export interface EduStreamEvent {
-  modifiedStream: EduStream
-  operatorUser: EduUser
+  modifiedStream: EduStream;
+  operatorUser: EduUser;
 }
 
 export interface EduStream {
@@ -629,10 +612,10 @@ export interface EduStream {
   hasVideo: boolean;
   hasAudio: boolean;
   userInfo: {
-    userUuid: string
-    userName: string
-    role: EduRoleType
-  }
+    userUuid: string;
+    userName: string;
+    role: EduRoleType;
+  };
 }
 
 export interface StreamType {
@@ -646,8 +629,8 @@ export interface StreamType {
 }
 
 export interface DeleteStreamType {
-  userUuid: string
-  streamUuid: string
+  userUuid: string;
+  streamUuid: string;
 }
 
 export interface UserGroup {
@@ -661,8 +644,8 @@ export interface UserGroup {
   }>;
   groupProperties?: {
     reward?: number;
-  }
-  interactOutGroups?: object
+  };
+  interactOutGroups?: object;
 }
 
 export interface RoomProperties {
@@ -673,66 +656,65 @@ export interface RoomProperties {
 }
 
 export interface EduStreamAttrs extends EduStream {
-  updateTime?: number
-  state?: EnumOnlineState
-  token?: string
+  updateTime?: number;
+  state?: EnumOnlineState;
+  token?: string;
 }
 
 export class EduStreamData {
+  private _stream?: EduStream;
 
-  private _stream?: EduStream
+  private _rtcToken?: string;
 
-  private _rtcToken?: string
+  private _ts?: number;
 
-  private _ts?: number
-
-  private _state?: number
+  private _state?: number;
 
   constructor(data: EduStreamAttrs) {
-    this.updateStream(data)
+    this.updateStream(data);
   }
 
   updateStreamUuid(uuid: string) {
     if (this._stream) {
-      this._stream.streamUuid = uuid
+      this._stream.streamUuid = uuid;
     }
   }
 
   updateMediaState(args: any) {
     if (this._stream) {
       if (args.hasOwnProperty('hasAudio')) {
-        this._stream.hasAudio = args['hasAudio']
+        this._stream.hasAudio = args['hasAudio'];
       }
       if (args.hasOwnProperty('hasVideo')) {
-        this._stream.hasVideo = args['hasVideo']
+        this._stream.hasVideo = args['hasVideo'];
       }
     }
   }
 
   updateStream(args: Partial<EduStreamAttrs>) {
-    const {updateTime, state, token, ...stream} = args
+    const { updateTime, state, token, ...stream } = args;
     if (!this._stream) {
-      this._stream = stream as any
+      this._stream = stream as any;
     } else {
       this._stream = {
         ...this._stream,
-        ...stream
-      }
+        ...stream,
+      };
     }
-    EduLogger.info("...stream", this._stream)
+    EduLogger.info('...stream', this._stream);
     if (args.hasOwnProperty('updateTime')) {
-      this._ts = updateTime
+      this._ts = updateTime;
     }
     if (args.hasOwnProperty('state')) {
-      this._state = state
+      this._state = state;
     }
     if (args.hasOwnProperty('token')) {
-      this._rtcToken = token
+      this._rtcToken = token;
     }
   }
 
   updateTime(time: number) {
-    this._ts = time
+    this._ts = time;
   }
 
   update(newData: EduStreamData) {
@@ -746,36 +728,36 @@ export class EduStreamData {
       audioSourceType: newData.stream.audioSourceType,
       hasVideo: newData.stream.hasVideo,
       hasAudio: newData.stream.hasAudio,
-      userInfo: newData.stream.userInfo
-    })
+      userInfo: newData.stream.userInfo,
+    });
   }
 
   modifyStream(args: Partial<EduStreamAttrs>) {
-    const {updateTime, state, token, ...stream} = args
+    const { updateTime, state, token, ...stream } = args;
     if (args.hasOwnProperty('updateTime')) {
-      this._ts = updateTime
+      this._ts = updateTime;
     }
     if (args.hasOwnProperty('state')) {
-      this._state = state
+      this._state = state;
     }
     if (args.hasOwnProperty('token')) {
-      this._rtcToken = token
+      this._rtcToken = token;
     }
 
     if (!isEmpty(stream)) {
       this._stream = {
-        ...this._stream as any,
-        ...stream
-      }
+        ...(this._stream as any),
+        ...stream,
+      };
     }
   }
 
   setRtcToken(token: string) {
-    this._rtcToken = token
+    this._rtcToken = token;
   }
 
   get token() {
-    return this._rtcToken as string
+    return this._rtcToken as string;
   }
 
   get state(): number {
@@ -783,7 +765,7 @@ export class EduStreamData {
   }
 
   get stream(): EduStream {
-    return this._stream as EduStream
+    return this._stream as EduStream;
   }
 
   get ts(): number {
@@ -792,84 +774,164 @@ export class EduStreamData {
 
   static fromArray(list: any[]): EduStreamData[] {
     return list.reduce((acc: EduStreamData[], item: any) => {
-      acc.push(new EduStreamData({
-        streamUuid: item.streamUuid,
-        streamName: item.streamName,
-        videoSourceType: item.videoSourceType,
-        audioSourceType: item.audioSourceType,
-        hasVideo: item.videoState,
-        hasAudio: item.audioState,
-        userInfo: item.userInfo,
-        // updateTime: item.updateTime,
-        state: item.state
-      }))
+      acc.push(
+        new EduStreamData({
+          streamUuid: item.streamUuid,
+          streamName: item.streamName,
+          videoSourceType: item.videoSourceType,
+          audioSourceType: item.audioSourceType,
+          hasVideo: item.videoState,
+          hasAudio: item.audioState,
+          userInfo: item.userInfo,
+          // updateTime: item.updateTime,
+          state: item.state,
+        }),
+      );
       return acc;
     }, []);
   }
 
   static combineLatest(list: any[]): EduStreamData[] {
-    const array = this.fromArray(list)
+    const array = this.fromArray(list);
     return array.reduce((acc: EduStreamData[], it: EduStreamData) => {
-      const idx = acc.findIndex((t: EduStreamData) => t.stream.streamUuid === it.stream.streamUuid)
+      const idx = acc.findIndex(
+        (t: EduStreamData) => t.stream.streamUuid === it.stream.streamUuid,
+      );
       if (idx !== -1) {
         acc[idx] = it;
       } else {
-        acc.push(it)
+        acc.push(it);
       }
-      return acc
-    }, [])
+      return acc;
+    }, []);
   }
 }
 
-declare function event_user_init_online(user: EduUser, count: number, fromClassroom: EduClassroom): void;
+declare function event_user_init_online(
+  user: EduUser,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_remote_user_joined (user: EduUser, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_user_joined(
+  user: EduUser,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_remote_user_left (user: EduUser, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_user_left(
+  user: EduUser,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_update_classroom (reason: EduClassroomStateType, fromClassroom: EduClassroom): void;
+declare function event_update_classroom(
+  reason: EduClassroomStateType,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_user_message (textMessage: EduTextMessage, fromClassroom: EduClassroom): void;
+declare function event_user_message(
+  textMessage: EduTextMessage,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_room_message (textMessage: EduTextMessage, fromClassroom: EduClassroom): void;
+declare function event_room_message(
+  textMessage: EduTextMessage,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_connection_state_changed (state: ConnectionState, reason: ConnectionChangeReason, fromClassroom: EduClassroom): void;
+declare function event_connection_state_changed(
+  state: ConnectionState,
+  reason: ConnectionChangeReason,
+  fromClassroom: EduClassroom,
+): void;
 
 declare function event_network_quality(quality: NetworkQuality): void;
 
-declare function event_remote_stream_init_online(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_stream_init_online(
+  remoteStream: EduStream,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_remote_stream_added(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_stream_added(
+  remoteStream: EduStream,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_remote_stream_updated(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_stream_updated(
+  remoteStream: EduStream,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
-declare function event_remote_stream_removed(remoteStream: EduStream, count: number, fromClassroom: EduClassroom): void;
+declare function event_remote_stream_removed(
+  remoteStream: EduStream,
+  count: number,
+  fromClassroom: EduClassroom,
+): void;
 
+declare function event_local_first_frame_render(state: VideoRenderState): void;
+
+declare function event_remote_first_frame_render(
+  state: VideoRenderState,
+  uid: string,
+): void;
 export interface IEduClassroomManager {
-
   // emit once
-  once(event: 'user-init-online', listener: typeof event_user_init_online): void
+  once(
+    event: 'user-init-online',
+    listener: typeof event_user_init_online,
+  ): void;
 
-  on(event: 'remote-user-joined', listener: typeof event_remote_user_joined): void
-  on(event: 'remote-user-left', listener: typeof event_remote_user_left): void
+  on(
+    event: 'remote-user-joined',
+    listener: typeof event_remote_user_joined,
+  ): void;
+  on(event: 'remote-user-left', listener: typeof event_remote_user_left): void;
 
   // message
-  on(event: 'room-message', listener: typeof event_room_message): void
-  on(event: 'user-message', listener: typeof event_user_message): void
+  on(event: 'room-message', listener: typeof event_room_message): void;
+  on(event: 'user-message', listener: typeof event_user_message): void;
 
   // stream
-  once(event: 'remote-stream-init-online', listener: typeof event_remote_stream_init_online): void
+  once(
+    event: 'remote-stream-init-online',
+    listener: typeof event_remote_stream_init_online,
+  ): void;
 
-  on(event: 'remote-stream-added', listener: typeof event_remote_stream_added): void
-  on(event: 'remote-stream-updated', listener: typeof event_remote_stream_updated): void
-  on(event: 'remote-stream-removed', listener: typeof event_remote_stream_removed): void
+  on(
+    event: 'remote-stream-added',
+    listener: typeof event_remote_stream_added,
+  ): void;
+  on(
+    event: 'remote-stream-updated',
+    listener: typeof event_remote_stream_updated,
+  ): void;
+  on(
+    event: 'remote-stream-removed',
+    listener: typeof event_remote_stream_removed,
+  ): void;
 
   // class room
-  on(event: 'update-classroom', listener: typeof event_update_classroom): void
+  on(event: 'update-classroom', listener: typeof event_update_classroom): void;
 
   // state
   on(event: 'network-quality', listener: typeof event_network_quality): void;
-  on(event: 'connection-state-change', listener: typeof event_connection_state_changed): void
+  on(
+    event: 'connection-state-change',
+    listener: typeof event_connection_state_changed,
+  ): void;
+
+  on(
+    event: 'local-video-state-update',
+    listener: typeof event_local_first_frame_render,
+  ): void;
+  on(
+    event: 'remote-video-state-update',
+    listener: typeof event_local_first_frame_render,
+  ): void;
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;
@@ -885,5 +947,5 @@ export interface IEduClassroomManager {
   joinClassroomAsStudent(option: EduClassroomJoinOptions): Promise<void>;
 
   // joinClassroom(config: EduClassroomSubscribeOption): Promise<EduUserService>;
-  leaveClassroom(): Promise<any>
+  leaveClassroom(): Promise<any>;
 }

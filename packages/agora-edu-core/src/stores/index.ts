@@ -1,23 +1,39 @@
-import { EduRoleTypeEnum, EduManager, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, EduClassroomManager, LocalUserRenderer, EduStream, GenericErrorWrapper, PrepareScreenShareParams } from 'agora-rte-sdk'
-import { isEmpty, get } from 'lodash'
-import { observable, action, autorun, toJS, computed, runInAction } from 'mobx'
-import { EduBoardService } from '../services/edu-board-service'
-import { EduRecordService } from '../services/edu-record-service'
-import { eduSDKApi } from '../services/edu-sdk-api'
-import { reportService } from '../services/report'
-import { UploadService } from '../services/upload-service'
-import { platform, GlobalStorage, BizLogger } from '../utilities/kit'
-import { BoardStore } from './board'
-import { MediaStore } from './media'
-import { PretestStore } from './pretest'
-import { RoomStore } from './room'
-import { SceneStore } from './scene'
+import {
+  EduRoleTypeEnum,
+  EduManager,
+  AgoraWebRtcWrapper,
+  AgoraElectronRTCWrapper,
+  EduClassroomManager,
+  LocalUserRenderer,
+  EduStream,
+  GenericErrorWrapper,
+  PrepareScreenShareParams,
+} from 'agora-rte-sdk';
+import { isEmpty, get } from 'lodash';
+import { observable, action, autorun, toJS, computed, runInAction } from 'mobx';
+import { EduBoardService } from '../services/edu-board-service';
+import { EduRecordService } from '../services/edu-record-service';
+import { eduSDKApi } from '../services/edu-sdk-api';
+import { reportService } from '../services/report';
+import { UploadService } from '../services/upload-service';
+import { platform, GlobalStorage, BizLogger } from '../utilities/kit';
+import { BoardStore } from './board';
+import { MediaStore } from './media';
+import { PretestStore } from './pretest';
+import { RoomStore } from './room';
+import { SceneStore } from './scene';
 // import { UIStore } from './ui'
-import { v4 as uuidv4} from 'uuid'
-import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo } from '../api/declare'
-import { WidgetStore } from './widget'
-import { reportServiceV2 } from '../services/report-v2'
-import { Subject } from 'rxjs'
+import { v4 as uuidv4 } from 'uuid';
+import {
+  AppStoreInitParams,
+  CourseWareItem,
+  DeviceInfo,
+  IAgoraExtApp,
+  RoomInfo,
+} from '../api/declare';
+import { WidgetStore } from './widget';
+import { reportServiceV2 } from '../services/report-v2';
+import { Subject } from 'rxjs';
 
 export class EduScenarioAppStore {
   // stores
@@ -39,10 +55,10 @@ export class EduScenarioAppStore {
   _recordService?: EduRecordService;
   _uploadService?: UploadService;
 
-  toast$: Subject<any> = new Subject<any>()
-  dialog$: Subject<any> = new Subject<any>()
-  seq$: Subject<any> = new Subject<any>()
-  
+  toast$: Subject<any> = new Subject<any>();
+  dialog$: Subject<any> = new Subject<any>();
+  seq$: Subject<any> = new Subject<any>();
+
   @observable
   speakers: Map<number, number> = new Map();
 
@@ -59,19 +75,19 @@ export class EduScenarioAppStore {
   }
 
   get mediaService() {
-    return this.eduManager.mediaService
+    return this.eduManager.mediaService;
   }
 
   get isWeb(): boolean {
-    return this.mediaService.sdkWrapper instanceof AgoraWebRtcWrapper
+    return this.mediaService.sdkWrapper instanceof AgoraWebRtcWrapper;
   }
 
   get isElectron(): boolean {
-    return this.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper
+    return this.mediaService.sdkWrapper instanceof AgoraElectronRTCWrapper;
   }
 
   @observable
-  deviceInfo!: DeviceInfo
+  deviceInfo!: DeviceInfo;
 
   private load() {
     // const storage = GlobalStorage.read('agora_edu_room')
@@ -82,111 +98,117 @@ export class EduScenarioAppStore {
     //     rtmToken: this.roomInfo.rtmToken,
     //   })
     // } else {
-      this.roomInfo = {
-        roomName: "",
-        roomUuid: "",
-        roomType: 0,
-        userName: "",
-        userRole: EduRoleTypeEnum.none,
-        userUuid: "",
-        rtmUid: "",
-        rtmToken: "",
-      }
+    this.roomInfo = {
+      roomName: '',
+      roomUuid: '',
+      roomType: 0,
+      userName: '',
+      userRole: EduRoleTypeEnum.none,
+      userUuid: '',
+      rtmUid: '',
+      rtmToken: '',
+    };
     // }
   }
 
   @observable
-  roomInfo!: RoomInfo
-  
+  roomInfo!: RoomInfo;
+
   get isNotInvisible() {
-    return this.roomInfo.userRole !== EduRoleTypeEnum.invisible
+    return this.roomInfo.userRole !== EduRoleTypeEnum.invisible;
   }
 
   @observable
-  params!: AppStoreInitParams
+  params!: AppStoreInitParams;
 
-  roomManager?: EduClassroomManager = undefined
+  roomManager?: EduClassroomManager = undefined;
 
-  groupClassroomManager?: EduClassroomManager = undefined
-
-  @observable
-  delay: number = 0
+  groupClassroomManager?: EduClassroomManager = undefined;
 
   @observable
-  time: number = 0
+  delay: number = 0;
 
   @observable
-  cpuRate: number = 0
+  time: number = 0;
 
   @observable
-  waitingShare: boolean = false
+  cpuRate: number = 0;
+
+  @observable
+  waitingShare: boolean = false;
 
   @observable
   _screenVideoRenderer?: LocalUserRenderer = undefined;
 
   @observable
-  _screenEduStream?: EduStream = undefined
+  _screenEduStream?: EduStream = undefined;
 
   @observable
-  sharing: boolean = false
-  
-  @observable
-  customScreenShareItems: any[] = []
+  sharing: boolean = false;
 
   @observable
-  allExtApps:IAgoraExtApp[]
+  customScreenShareItems: any[] = [];
 
   @observable
-  activeExtAppIds:string[] = []
+  allExtApps: IAgoraExtApp[];
 
-  pretestNotice$: Subject<any> = new Subject<any>()
+  @observable
+  activeExtAppIds: string[] = [];
+
+  pretestNotice$: Subject<any> = new Subject<any>();
 
   @computed
-  get activeExtApps():IAgoraExtApp[] {
-    return this.allExtApps.filter(app => this.activeExtAppIds.includes(app.appIdentifier))
+  get activeExtApps(): IAgoraExtApp[] {
+    return this.allExtApps.filter((app) =>
+      this.activeExtAppIds.includes(app.appIdentifier),
+    );
   }
 
   @observable
-  language: string = 'zh'
+  language: string = 'zh';
 
   @action.bound
   resetStates() {
-    this.mediaStore.resetRoomState()
-    this.resetRoomInfo()    
-    this.resetParams()
-    this.roomManager = undefined
-    this.groupClassroomManager = undefined
-    this.delay = 0
-    this.time = 0
-    this.cpuRate = 0
-    this.waitingShare = false
+    this.mediaStore.resetRoomState();
+    this.resetRoomInfo();
+    this.resetParams();
+    this.roomManager = undefined;
+    this.groupClassroomManager = undefined;
+    this.delay = 0;
+    this.time = 0;
+    this.cpuRate = 0;
+    this.waitingShare = false;
     this._screenVideoRenderer = undefined;
-    this._screenEduStream = undefined
-    this.sharing = false
-    this.customScreenShareItems = []
+    this._screenEduStream = undefined;
+    this.sharing = false;
+    this.customScreenShareItems = [];
   }
 
-  id: string = uuidv4()
+  id: string = uuidv4();
 
   appController: any;
 
-  private dom: HTMLElement
+  private dom: HTMLElement;
 
-  constructor(params: AppStoreInitParams, dom: HTMLElement, appController: any) {
-    this.params = params
-    this.dom = dom
+  constructor(
+    params: AppStoreInitParams,
+    dom: HTMLElement,
+    appController: any,
+  ) {
+    this.params = params;
+    this.dom = dom;
     if (appController) {
-      appController.bindStoreDestroy(this.destroy) 
-      console.log('bind store destroy success')
-      this.appController = appController
+      appController.bindStoreDestroy(this.destroy);
+      console.log('bind store destroy success');
+      this.appController = appController;
     }
     // console.log(" roomInfoParams ", params.roomInfoParams)
     // console.log(" config >>> params: ", {...this.params})
-    const {config, roomInfoParams, language} = this.params
+    const { config, roomInfoParams, language } = this.params;
 
-    const sdkDomain = config.sdkDomain
+    const sdkDomain = config.sdkDomain;
 
-    console.log("[ID] appStore ### ", this.id, " config", config)
+    console.log('[ID] appStore ### ', this.id, ' config', config);
 
     // const sdkDomain = config.sdkDomain.replace('%region%', this.params.config.region ?? 'cn')
 
@@ -206,9 +228,10 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations:
+          this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-      })
+      });
     } else {
       this.eduManager = new EduManager({
         vid: config.vid,
@@ -223,49 +246,50 @@ export class EduScenarioAppStore {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations:
+          this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
-      })
+      });
     }
 
     if (isEmpty(roomInfoParams)) {
-      this.load()
+      this.load();
       autorun(() => {
-        const roomInfo = toJS(this.roomInfo)
+        const roomInfo = toJS(this.roomInfo);
         GlobalStorage.save('agora_edu_room', {
           roomInfo: roomInfo,
-        })
-      })
+        });
+      });
     } else {
       this.setRoomInfo({
         rtmUid: this.params.config.rtmUid,
         rtmToken: this.params.config.rtmToken,
-        ...roomInfoParams!
-      })
+        ...roomInfoParams!,
+      });
     }
 
     autorun(() => {
-      const deviceInfo = toJS(this.deviceInfo)
+      const deviceInfo = toJS(this.deviceInfo);
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo
-      })
-    })
+        deviceInfo: deviceInfo,
+      });
+    });
 
-    const deviceStorage = GlobalStorage.read('agora_edu_device')
+    const deviceStorage = GlobalStorage.read('agora_edu_device');
     if (deviceStorage || !isEmpty(deviceStorage)) {
       this.deviceInfo = {
-        cameraName: "",
-        microphoneName: ""
-      }
+        cameraName: '',
+        microphoneName: '',
+      };
       this.updateDeviceInfo({
         cameraName: get(deviceStorage, 'deviceInfo.cameraName', ''),
-        microphoneName: get(deviceStorage, 'deviceInfo.microphoneName', '')
-      })
+        microphoneName: get(deviceStorage, 'deviceInfo.microphoneName', ''),
+      });
     } else {
       this.deviceInfo = {
-        cameraName: "",
-        microphoneName: ""
-      }
+        cameraName: '',
+        microphoneName: '',
+      };
     }
 
     if (config.enableLog) {
@@ -275,29 +299,29 @@ export class EduScenarioAppStore {
     // this.uiStore = new UIStore(this)
 
     if (language) {
-      this.language = language
+      this.language = language;
     }
 
-    this.pretestStore = new PretestStore(this)
-    this.roomStore = new RoomStore(this)
-    this.boardStore = new BoardStore(this)
-    this.sceneStore = new SceneStore(this)
-    this.mediaStore = new MediaStore(this)
-    this.widgetStore = new WidgetStore()
-    this.widgetStore.widgets = this.params.config.widgets || {}
-    this.allExtApps = this.params.config.extApps || []
+    this.pretestStore = new PretestStore(this);
+    this.roomStore = new RoomStore(this);
+    this.boardStore = new BoardStore(this);
+    this.sceneStore = new SceneStore(this);
+    this.mediaStore = new MediaStore(this);
+    this.widgetStore = new WidgetStore();
+    this.widgetStore.widgets = this.params.config.widgets || {};
+    this.allExtApps = this.params.config.extApps || [];
 
-    this._screenVideoRenderer = undefined
+    this._screenVideoRenderer = undefined;
   }
 
   @computed
-  get userRole (): EduRoleTypeEnum {
-    return this.roomInfo.userRole
+  get userRole(): EduRoleTypeEnum {
+    return this.roomInfo.userRole;
   }
 
   @computed
-  get roomType (): number {
-    return this.roomInfo.roomType
+  get roomType(): number {
+    return this.roomInfo.roomType;
   }
 
   @action.bound
@@ -307,10 +331,10 @@ export class EduScenarioAppStore {
         roomName: '',
         roomType: 0,
         userName: '',
-        userRole:EduRoleTypeEnum.none,
+        userRole: EduRoleTypeEnum.none,
         userUuid: '',
         roomUuid: '',
-        ...this.params.roomInfoParams
+        ...this.params.roomInfoParams,
       },
       language: this.params.language,
       startTime: this.params.startTime,
@@ -324,80 +348,73 @@ export class EduScenarioAppStore {
         sdkDomain: this.params.config.sdkDomain,
         rtmUid: this.params.config.rtmUid,
         rtmToken: this.params.config.rtmToken,
-        recordUrl: this.params.config.recordUrl
+        recordUrl: this.params.config.recordUrl,
       },
       mainPath: this.params.mainPath,
       roomPath: this.params.roomPath,
-      resetRoomInfo: this.params.resetRoomInfo
-    }
+      resetRoomInfo: this.params.resetRoomInfo,
+    };
   }
 
   @action.bound
   resetRoomInfo() {
     if (this.params.resetRoomInfo) {
       this.roomInfo = {
-        roomName: "",
-        roomUuid: "",
+        roomName: '',
+        roomUuid: '',
         roomType: 0,
-        userName: "",
+        userName: '',
         userRole: 0,
-        userUuid: "",
-        rtmUid: "",
-        rtmToken: "",
-      }
+        userUuid: '',
+        rtmUid: '',
+        rtmToken: '',
+      };
     }
   }
 
   get userUuid(): string {
-    return this.roomInfo.userUuid
+    return this.roomInfo.userUuid;
   }
 
   @action.bound
   updateCpuRate(rate: number) {
-    this.cpuRate = rate
+    this.cpuRate = rate;
   }
 
   updateTime(startTime: number) {
     if (startTime) {
-      const preState = Math.abs(Date.now() - startTime)
-      this.time = preState
+      const preState = Math.abs(Date.now() - startTime);
+      this.time = preState;
     }
   }
-  
 
   resetTime() {
-    this.time = 0
+    this.time = 0;
   }
 
   @action.bound
-  updateDeviceInfo(info: {
-    cameraName: string
-    microphoneName: string
-  }) {
-    this.deviceInfo.cameraName = info.cameraName
-    this.deviceInfo.microphoneName = info.microphoneName
+  updateDeviceInfo(info: { cameraName: string; microphoneName: string }) {
+    this.deviceInfo.cameraName = info.cameraName;
+    this.deviceInfo.microphoneName = info.microphoneName;
   }
 
   @action.bound
-  updateRtmInfo(info: {
-    rtmUid: string
-    rtmToken: string
-  }) {
-    this.params.config.rtmToken = info.rtmToken
-    this.params.config.rtmUid = info.rtmUid
+  updateRtmInfo(info: { rtmUid: string; rtmToken: string }) {
+    this.params.config.rtmToken = info.rtmToken;
+    this.params.config.rtmUid = info.rtmUid;
     this.eduManager.updateRtmConfig({
       rtmUid: this.params.config.rtmUid,
       rtmToken: this.params.config.rtmToken,
-    })
+    });
     eduSDKApi.updateRtmInfo({
       rtmToken: this.params.config.rtmToken,
       rtmUid: this.params.config.rtmUid,
-    })
+    });
     reportService.updateRtmConfig({
       rtmToken: this.params.config.rtmToken,
       rtmUid: this.params.config.rtmUid,
-    })
-    reportService.setAppId(this.params.config.agoraAppId)
+    });
+    reportService.setAppId(this.params.config.agoraAppId);
   }
 
   @action.bound
@@ -410,74 +427,77 @@ export class EduScenarioAppStore {
       userRole: payload.userRole,
       userUuid: payload.userUuid,
       rtmUid: payload.rtmUid,
-      rtmToken: payload.rtmToken
-    }
+      rtmToken: payload.rtmToken,
+    };
     this.updateRtmInfo({
       rtmUid: payload.rtmUid,
-      rtmToken: payload.rtmToken
-    })
+      rtmToken: payload.rtmToken,
+    });
   }
 
   @action.bound
   updateCourseWareList(courseWareList: CourseWareItem[]) {
-    this.params.config.courseWareList = courseWareList
+    this.params.config.courseWareList = courseWareList;
   }
 
   @action.bound
   reset() {
-    this._boardService = undefined
-    this._recordService = undefined
-    this._uploadService = undefined
+    this._boardService = undefined;
+    this._recordService = undefined;
+    this._uploadService = undefined;
     // this.roomInfo = {}
   }
 
   @action.bound
   async releaseRoom() {
     try {
-      await this.roomStore.leave()
-      reportService.stopHB()
+      await this.roomStore.leave();
+      reportService.stopHB();
       reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
-      this.resetStates()
+      this.resetStates();
     } catch (err) {
-      this.resetStates()
-      const exception = GenericErrorWrapper(err)
-      reportServiceV2.reportApaasUserQuit(new Date().getTime(), err.code || err.message);
-      throw exception
+      this.resetStates();
+      const exception = GenericErrorWrapper(err);
+      reportServiceV2.reportApaasUserQuit(
+        new Date().getTime(),
+        err.code || err.message,
+      );
+      throw exception;
     }
   }
 
   @action.bound
   async destroy() {
-    await this.releaseRoom()
+    await this.releaseRoom();
   }
 
   @action.bound
   async destroyRoom() {
-    await this.appController.destroy()
+    await this.appController.destroy();
   }
-  
+
   @action.bound
   fireToast(eventName: string, props?: any) {
     this.toast$.next({
       eventName,
       props,
-    })
+    });
   }
 
   @action.bound
   fireDialog(eventName: string, props?: any) {
-    console.log('fire dialog ', eventName, props)
+    console.log('fire dialog ', eventName, props);
     this.dialog$.next({
       eventName,
-      props
-    })
+      props,
+    });
   }
 
   @action.bound
   updateSeqId(props?: any) {
     this.seq$.next({
-      props
-    })
+      props,
+    });
   }
 }
 export { BoardStore } from './board';

@@ -1,32 +1,40 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IReactionOptions, IReactionPublic, observable, reaction } from 'mobx';
 import type { RendererPlayerProps } from '~utilities/renderer-player';
-import { DependencyList } from 'react';
-import { useLocalStore } from 'mobx-react';
-import { useLayoutEffect } from 'react';
 
 export const useReaction = <T>(
   expression: (reaction: IReactionPublic) => T,
   effect: (value: T, prev: T | null) => void,
   options?: IReactionOptions,
 ): void => {
+  const effectRef = useRef(effect);
 
-  const effectRef = useRef(effect)
+  const prevRef = useRef<T | null>(null);
 
-  const prevRef = useRef<T | null>(null)
-
-  useEffect(() => reaction(expression, (value: T, reaction: IReactionPublic) => {
-    effectRef.current(value, prevRef.current)
-    prevRef.current = value
-  }, options), [])
-}
+  useEffect(
+    () =>
+      reaction(
+        expression,
+        (value: T, reaction: IReactionPublic) => {
+          effectRef.current(value, prevRef.current);
+          prevRef.current = value;
+        },
+        options,
+      ),
+    [],
+  );
+};
 
 type UseWatchCallback<T> = (prev: T | undefined) => void;
 type UseWatchConfig = {
   immediate: boolean;
 };
 
-export const useWatch = <T>(dep: T, callback: UseWatchCallback<T>, config: UseWatchConfig = { immediate: false }) => {
+export const useWatch = <T>(
+  dep: T,
+  callback: UseWatchCallback<T>,
+  config: UseWatchConfig = { immediate: false },
+) => {
   const { immediate } = config;
 
   const prev = useRef<T>();
@@ -51,94 +59,110 @@ export const useWatch = <T>(dep: T, callback: UseWatchCallback<T>, config: UseWa
   return () => {
     stop.current = true;
   };
-}
+};
 
 export const useUnMount = (cb: CallableFunction) => {
   useEffect(() => {
-    return () => cb()
-  }, [])
-}
+    return () => cb();
+  }, []);
+};
 
 export const useMounted = () => {
-  const mounted = useRef<boolean>(true)
+  const mounted = useRef<boolean>(true);
 
   useEffect(() => {
     return () => {
-      mounted.current = false
-    }
-  }, [])
-  return mounted.current
-}
+      mounted.current = false;
+    };
+  }, []);
+  return mounted.current;
+};
 
 export const useTimeout = (fn: CallableFunction, delay: number) => {
-  const mounted = useMounted()
+  const mounted = useMounted();
 
-  const timer = useRef<any>(null)
+  const timer = useRef<any>(null);
 
   useEffect(() => {
     timer.current = setTimeout(() => {
-      fn && mounted && fn()
+      fn && mounted && fn();
       if (timer.current) {
-        clearTimeout(timer.current)
-        timer.current = null
+        clearTimeout(timer.current);
+        timer.current = null;
       }
-    }, delay)
+    }, delay);
 
     return () => {
       if (timer.current) {
-        clearTimeout(timer.current)
-        timer.current = null
+        clearTimeout(timer.current);
+        timer.current = null;
       }
-    }
-  }, [timer])
-}
+    };
+  }, [timer]);
+};
 
 export const useAudioPlayer = (url: string) => {
-
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useUnMount(() => {
     if (audioRef.current) {
-      audioRef.current.pause()
+      audioRef.current.pause();
     }
-  })
+  });
 
   useEffect(() => {
     const audioElement = new Audio(url);
-    audioElement.onended = () => {
-    }
-    audioElement.play()
-    audioRef.current = audioElement
-  }, [audioRef])
-}
+    audioElement.onended = () => {};
+    audioElement.play();
+    audioRef.current = audioElement;
+  }, [audioRef]);
+};
 
 export const usePrevious = <Type>(value: Type) => {
-
-  const previousValue = useRef<Type>(value)
+  const previousValue = useRef<Type>(value);
 
   useEffect(() => {
-    previousValue.current = value
-  }, [value])
+    previousValue.current = value;
+  }, [value]);
 
-  return previousValue.current
-}
+  return previousValue.current;
+};
 
-export const useRendererPlayer = <T extends HTMLElement>(props: RendererPlayerProps) => {
-  const ref = useRef<T | null>(null)
+export const useRendererPlayer = <T extends HTMLElement>(
+  props: RendererPlayerProps,
+) => {
+  const ref = useRef<T | null>(null);
 
-  const onRendererPlayer = <T extends HTMLElement>(dom: T, player: RendererPlayerProps) => {
+  const onRendererPlayer = <T extends HTMLElement>(
+    dom: T,
+    player: RendererPlayerProps,
+  ) => {
     if (dom && player.track) {
-      player.track.play && player.track.play(dom, player.fitMode)
+      player.track.play && player.track.play(dom, player.fitMode);
     }
     return () => {
-      player.track && player.track.stop && player.track.stop && player.track.stop(props.preview)
-    }
-  }
+      player.track &&
+        player.track.stop &&
+        player.track.stop &&
+        player.track.stop(props.preview);
+    };
+  };
 
   useEffect(
     () => onRendererPlayer<T>(ref.current!, props),
-    [ref, props.track, props.fitMode, props.preview]
-  )
+    [ref, props.track, props.fitMode, props.preview],
+  );
 
-  return ref
-}
+  return ref;
+};
+
+export const useDebounce = <T>(value: T, delay?: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+};
