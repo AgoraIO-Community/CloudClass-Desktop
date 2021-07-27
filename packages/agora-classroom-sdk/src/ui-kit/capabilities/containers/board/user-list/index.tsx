@@ -2,14 +2,14 @@ import { useUIStore } from '@/infra/hooks';
 import { RosterUserInfo } from '@/infra/stores/types';
 import { useWatch } from '@/ui-kit/utilities/hooks';
 import {
-  useBoardContext, useChatContext,
-  useHandsUpContext, useRoomContext, useStreamListContext, useUserListContext
+  useBoardContext,
+  useChatContext,
+  useHandsUpContext,
+  useRoomContext,
+  useStreamListContext,
+  useUserListContext,
 } from 'agora-edu-core';
-import {
-  EduRoleTypeEnum,
-  EduStream,
-  EduUser
-} from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-rte-sdk';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -32,20 +32,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer(
     const { addDialog } = useUIStore();
 
     const {
-<<<<<<< HEAD
-        // muteVideo,
-        // muteAudio,
-        // unmuteAudio,
-        // unmuteVideo,
-        // muteUserChat,
-        // unmuteUserChat,
-        roomInfo,
-        roomProperties,
-        setCarouselState,
-        startCarousel,
-        stopCarousel
-    } = useRoomContext()
-=======
       // muteVideo,
       // muteAudio,
       // unmuteAudio,
@@ -53,8 +39,11 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer(
       // muteUserChat,
       // unmuteUserChat,
       roomInfo,
+      roomProperties,
+      setCarouselState,
+      startCarousel,
+      stopCarousel,
     } = useRoomContext();
->>>>>>> flex
 
     const { muteUserChat, unmuteUserChat } = useChatContext();
 
@@ -169,17 +158,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer(
     const [keyword, setKeyword] = useState<string>('');
 
     const dataList = useMemo(() => {
-<<<<<<< HEAD
-        return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-    }, [keyword, rosterUserList])
-
-    const userType = useMemo(() => {
-        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-            return 'teacher'
-        }
-        return 'student'
-    }, [roomInfo.userRole])
-=======
       return rosterUserList.filter((item: any) =>
         item.name.toLowerCase().includes(keyword.toLowerCase()),
       );
@@ -195,67 +173,61 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer(
       }
       return 'student';
     }, [roomInfo.userRole]);
->>>>>>> flex
 
     const debouncedCarousel: any = useMemo(() => {
-        return {
-            state: roomProperties.carousel.state || 0,
-            range: roomProperties.carousel.range || 1,
-            type: roomProperties.carousel.type || 1,
-            interval: roomProperties.carousel.interval === undefined ? 10 : roomProperties.carousel.interval,
-        }
-    }, [JSON.stringify(roomProperties.carousel, ["state", "range", "type", 'interval'])])
+      return {
+        state: roomProperties.carousel.state || 0,
+        range: roomProperties.carousel.range || 1,
+        type: roomProperties.carousel.type || 1,
+        interval:
+          roomProperties.carousel.interval === undefined
+            ? 10
+            : roomProperties.carousel.interval,
+      };
+    }, [
+      JSON.stringify(roomProperties.carousel, [
+        'state',
+        'range',
+        'type',
+        'interval',
+      ]),
+    ]);
 
-
-    useWatch(JSON.stringify(debouncedCarousel, ["state", "range", "type", 'interval']), prev => {
+    useWatch(
+      JSON.stringify(debouncedCarousel, ['state', 'range', 'type', 'interval']),
+      (prev) => {
         if (debouncedCarousel.state) {
-            if (debouncedCarousel.interval === 0) return
-            const interval = debouncedCarousel.interval ?? 10
-            interval >= 10 && startCarousel()
+          if (debouncedCarousel.interval === 0) return;
+          const interval = debouncedCarousel.interval ?? 10;
+          interval >= 10 && startCarousel();
         } else {
-            stopCarousel()
+          stopCarousel();
         }
-    })
+      },
+    );
 
     return (
-<<<<<<< HEAD
-        <Roster
-            isDraggable={true}
-            carousel={userType === 'teacher'}
-            carouselProps={{
-                isOpenCarousel: roomProperties.carousel?.state,
-                changeCarousel: (e: any) => {
-                    setCarouselState('state', Number(e.target.checked))
-                    
-                },
-                modeValue: roomProperties.carousel?.range || 1,
-                changeModeValue: (value: any) => {
-                    setCarouselState('range', value)
-                },
-                randomValue: roomProperties.carousel?.type || 1,
-                changeRandomValue: (value: any) => {
-                    setCarouselState('type', value)
-                },
-                times: roomProperties.carousel?.interval || 10,
-                changeTimes: (value: any) => {
-                    setCarouselState('interval', Number(value))
-                },
-            }}
-            localUserUuid={localUserInfo.userUuid}
-            teacherName={teacherInfo?.userName || ''}
-            dataSource={dataList}
-            userType={userType}
-            onClick={onClick}
-            onClose={props.onClose}
-            onChange={(text: string) => {
-                setKeyword(text)
-            }}
-        />
-    )
-})
-=======
       <Roster
         isDraggable={true}
+        carousel={userType === 'teacher'}
+        carouselProps={{
+          isOpenCarousel: roomProperties.carousel?.state,
+          changeCarousel: (e: any) => {
+            setCarouselState('state', Number(e.target.checked));
+          },
+          modeValue: roomProperties.carousel?.range || 1,
+          changeModeValue: (value: any) => {
+            setCarouselState('range', value);
+          },
+          randomValue: roomProperties.carousel?.type || 1,
+          changeRandomValue: (value: any) => {
+            setCarouselState('type', value);
+          },
+          times: roomProperties.carousel?.interval || 10,
+          changeTimes: (value: any) => {
+            setCarouselState('interval', Number(value));
+          },
+        }}
         localUserUuid={localUserInfo.userUuid}
         teacherName={teacherInfo?.userName || ''}
         dataSource={dataList}
@@ -269,7 +241,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer(
     );
   },
 );
->>>>>>> flex
 
 export const StudentUserListContainer: React.FC<UserListContainerProps> =
   observer((props) => {
@@ -295,24 +266,9 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> =
       useUserListContext();
 
     function checkDisable(user: any, role: EduRoleTypeEnum): boolean {
-<<<<<<< HEAD
-        if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
-            return false
-        }
-
-        if (role === EduRoleTypeEnum.student
-            && roomInfo.userUuid === user.userUuid
-            && acceptedIds.includes(user.userUuid)
-        ) {
-            return false
-        }
-        return true
-    }
-=======
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
         return false;
       }
->>>>>>> flex
 
       if (
         role === EduRoleTypeEnum.student &&
@@ -362,15 +318,10 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> =
     const { rosterUserList } = useUserListContext();
 
     const dataList = useMemo(() => {
-<<<<<<< HEAD
-        return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
-    }, [keyword, rosterUserList])
-=======
       return rosterUserList.filter((item: any) =>
         item.name.toLowerCase().includes(keyword.toLowerCase()),
       );
     }, [keyword, rosterUserList]);
->>>>>>> flex
 
     const onClick = useCallback(
       async (actionType: any, uid: any) => {

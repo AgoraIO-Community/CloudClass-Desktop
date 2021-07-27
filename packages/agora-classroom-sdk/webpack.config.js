@@ -83,12 +83,6 @@ module.exports = {
       ),
       'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
       'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
-<<<<<<< HEAD
-      'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
-      'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
-      'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
-    }
-=======
       'agora-plugin-gallery': path.resolve(
         __dirname,
         '../agora-plugin-gallery/src',
@@ -97,8 +91,8 @@ module.exports = {
         __dirname,
         '../agora-widget-gallery/src',
       ),
+      'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
     },
->>>>>>> flex
   },
   module: {
     rules: [
@@ -129,55 +123,53 @@ module.exports = {
       },
       {
         test: /\.js(x)?$/i,
-        include: [
-          path.resolve(__dirname, '../agora-chat-widget/src'),
-        ],
+        include: [path.resolve(__dirname, '../agora-chat-widget/src')],
         use: [
           {
             loader: 'babel-loader',
             options: {
               presets: [
                 [
-                  "@babel/preset-env",
+                  '@babel/preset-env',
                   {
-                    "useBuiltIns": "usage",
-                    "debug": false,
-                    "corejs": {
-                      "version": 3,
-                      "proposals": true
-                    }
-                  }
+                    useBuiltIns: 'usage',
+                    debug: false,
+                    corejs: {
+                      version: 3,
+                      proposals: true,
+                    },
+                  },
                 ],
                 [
-                  "@babel/preset-react",
+                  '@babel/preset-react',
                   {
-                    "runtime": "automatic"
-                  }
+                    runtime: 'automatic',
+                  },
                 ],
                 // "@babel/preset-react",
               ],
               plugins: [
-                "@babel/plugin-proposal-object-rest-spread",
-                "@babel/plugin-proposal-optional-chaining",
-                "@babel/plugin-proposal-nullish-coalescing-operator",
+                '@babel/plugin-proposal-object-rest-spread',
+                '@babel/plugin-proposal-optional-chaining',
+                '@babel/plugin-proposal-nullish-coalescing-operator',
                 [
-                  "@babel/plugin-proposal-decorators",
+                  '@babel/plugin-proposal-decorators',
                   {
-                    "legacy": true
-                  }
+                    legacy: true,
+                  },
                 ],
                 [
-                  "@babel/plugin-proposal-class-properties",
+                  '@babel/plugin-proposal-class-properties',
                   {
-                    "loose": true
-                  }
-                ]
-              ]
-            }
+                    loose: true,
+                  },
+                ],
+              ],
+            },
           },
           {
-            loader: "thread-loader",
-          }
+            loader: 'thread-loader',
+          },
         ],
         // exclude: /node_modules|(\.(stories.ts)x?$)/,
         // exclude: [
