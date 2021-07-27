@@ -2,6 +2,15 @@ import fetchProgress from 'fetch-progress';
 import { ZipReader, BlobReader, BlobWriter, configure } from '@zip.js/zip.js';
 import { BroadcastChannel } from 'broadcast-channel';
 
+const timeout = (): Promise<any> =>
+  new Promise((resolve) => {
+    setTimeout(resolve, 1500 * 60);
+  });
+
+const attemptWith = (promise: Promise<any>): Promise<any[]> => {
+  return Promise.all([promise, timeout]);
+};
+
 configure({
   useWebWorkers: false,
 });
@@ -41,7 +50,7 @@ export class AgoraCaches {
       //@ts-ignore
       window.agoraCaches = this.agoraCaches;
     }
-    return this.agoraCaches;
+    return Promise.race([this.agoraCaches, timeout()]);
   };
 
   public deleteCache = async () => {
@@ -55,7 +64,7 @@ export class AgoraCaches {
    */
   public calculateCache = async (): Promise<number> => {
     const cache = await agoraCaches.openCache(cacheStorageKey);
-    const keys = await cache.keys();
+    const keys = await attemptWith(cache.keys());
     let size = 0;
     for (const request of keys) {
       const response = await cache.match(request)!;
@@ -68,7 +77,7 @@ export class AgoraCaches {
 
   public deleteTaskUUID = async (uuid: string) => {
     const cache = await this.openCache(cacheStorageKey);
-    const keys = await cache.keys();
+    const keys = await attemptWith(cache.keys());
     for (const request of keys) {
       if (request.url.indexOf(uuid) !== -1) {
         await cache.delete(request);
@@ -80,7 +89,7 @@ export class AgoraCaches {
 
   public clearAllCache = async () => {
     const cache = await this.openCache(cacheStorageKey);
-    const keys = await cache.keys();
+    const keys = await attemptWith(cache.keys());
     keys.forEach((key) => {
       cache.delete(key);
     });
@@ -90,7 +99,7 @@ export class AgoraCaches {
 
   public hasTaskUUID = async (uuid: string): Promise<boolean> => {
     const cache = await this.openCache(cacheStorageKey);
-    const keys = await cache.keys();
+    const keys = await attemptWith(cache.keys());
     for (const request of keys) {
       if (request.url.indexOf(uuid) !== -1) {
         return true;
