@@ -8,10 +8,6 @@ export const useMediaContext = (): MediaContext => {
         isElectron
     } = useCoreContext();
     const {
-        cpuUsage,
-        networkQuality,
-        delay,
-        localPacketLostRate,
         enableMediaEncryption
     } = mediaStore;
     // const {
@@ -65,10 +61,6 @@ export const useMediaContext = (): MediaContext => {
     }, [pretestStore])
     return {
         isNative: isElectron,
-        cpuUsage,
-        networkQuality,
-        networkLatency: delay,
-        packetLostRate:localPacketLostRate,
         cameraList,
         microphoneList,
         speakerList,

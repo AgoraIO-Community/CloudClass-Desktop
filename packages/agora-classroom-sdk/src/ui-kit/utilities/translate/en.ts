@@ -76,6 +76,8 @@ export const en = {
     'lose': 'Lose',
     'status': 'Status',
     'CPU': 'CPU',
+    'receive': 'Receive',
+    'send': "Send"
   },
   'placeholder': {
     'muted_chat': 'Muted Chat',

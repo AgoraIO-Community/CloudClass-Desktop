@@ -14,7 +14,7 @@ const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   bad: 'bad-signal',
   unknown: 'unknown-signal',
 };
-const CLASS_STATUS_TEXT_COLOR : { [key: string]: string } = {
+const CLASS_STATUS_TEXT_COLOR: { [key: string]: string } = {
   'pre-class': '#677386',
   'in-class': '#677386',
   'end-class': '#F04C36',
@@ -36,6 +36,22 @@ export interface MonitorInfo {
    * 丢包率, 单位: %
    */
   packetLostRate: number;
+  /**
+   * 音视频下行丢包率， 单位：%
+   */
+  rxPacketLossRate: number;
+  /**
+   * 音视频上行丢包率， 单位：%
+   */
+  txPacketLossRate: number;
+  /**
+   * 下行网路质量
+   */
+  rxNetworkQuality: string;
+  /**
+   * 上行网路质量
+   */
+  txNetworkQuality: string;
 }
 
 export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
@@ -49,7 +65,7 @@ export interface BizHeaderProps {
   /**
    * 课程状态
    */
-   classState: BizClassStatus;
+  classState: BizClassStatus;
   /**
    * 课程是否正在录制
    */
@@ -114,20 +130,20 @@ export const BizHeader: FC<BizHeaderProps> = ({
           </div>
         </div>
         <div className="header-actions">
-          {userType === 'teacher' ? 
-          <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
-            <SvgImg
-              canHover
-              type={isRecording ? "recording" : "record"} 
-              style={{
-                color: isRecording ? '#2962F4': undefined
-              }}
-              size={24} 
-              onClick={() => onClick('record')} 
-            />
-          </Tooltip> : null}
+          {userType === 'teacher' ?
+            <Tooltip title={isRecording ? transI18n('biz-header.recording') : transI18n('biz-header.start_record')} placement="bottom">
+              <SvgImg
+                canHover
+                type={isRecording ? "recording" : "record"}
+                style={{
+                  color: isRecording ? '#2962F4' : undefined
+                }}
+                size={24}
+                onClick={() => onClick('record')}
+              />
+            </Tooltip> : null}
           <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
-            <SvgImg canHover type="set" size={24} onClick={() => onClick('setting')}  />
+            <SvgImg canHover type="set" size={24} onClick={() => onClick('setting')} />
           </Tooltip>
           <Tooltip title={transI18n('biz-header.exit')} placement="bottom">
             <SvgImg canHover type="exit" size={24} onClick={() => onClick('exit')} />
