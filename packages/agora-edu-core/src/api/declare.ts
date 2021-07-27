@@ -117,6 +117,7 @@ export type CourseWareItem = {
     convertedPercentage?: number;
     convertedFileList: ConvertedFileList;
   };
+  isActive?: boolean;
 };
 
 export type CourseWareList = CourseWareItem[];

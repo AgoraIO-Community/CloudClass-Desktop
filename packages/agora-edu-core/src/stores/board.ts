@@ -2473,6 +2473,29 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
+  get initCourseWare() {
+    return this.publicResources.filter((item) => item.isActive)[0];
+  }
+
+  @observable
+  initCourseWareLoading: boolean = false;
+
+  @observable
+  initCourseWareProgress: number = 0;
+
+  async openInitCourseWare() {
+    const courseWare = this.initCourseWare;
+    if (courseWare) {
+      this.initCourseWareLoading = true;
+      await this.putSceneByResourceUuid(courseWare.id);
+      await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
+      await this.refreshState();
+      await this.startDownload(courseWare.taskUuid);
+      this.initCourseWareLoading = false;
+    }
+  }
+
+  @computed
   get internalResources(): CourseWareItem[] {
     return this.appStore.params.config.personalCourseWareList ?? [];
   }
@@ -2571,6 +2594,9 @@ export class BoardStore extends ZoomController {
         (progress: number, controller: any) => {
           const newProgress = this.progressMap[taskUuid] ?? 0;
           if (progress >= newProgress) {
+            if (taskUuid === this.initCourseWare.taskUuid) {
+              this.initCourseWareProgress = progress;
+            }
             const info: any = {
               progress,
             };
