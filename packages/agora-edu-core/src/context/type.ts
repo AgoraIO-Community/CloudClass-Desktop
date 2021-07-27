@@ -1468,6 +1468,18 @@ export type CloudDriveContext = {
    * 全部资源
    */
   allResources: MaterialDataResource[];
+  /**
+   * 初始课件加载进度
+   */
+  initCourseWareProgress: number;
+  /**
+   * 是否正在加在初始课件
+   */
+  initCourseWareLoading: boolean;
+  /**
+   * 初始课件
+   */
+  initCourseWare: MaterialDataResource;
 };
 
 export type ClassroomStatsContext = {

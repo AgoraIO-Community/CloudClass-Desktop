@@ -52,6 +52,8 @@ export type MaterialDataResource = {
   updateTime: number;
   scenes?: any[];
   access: MaterialAccess;
+  isActive?: boolean;
+  progress?: number;
 };
 
 export const transDataToResource = (
@@ -60,6 +62,7 @@ export const transDataToResource = (
 ): MaterialDataResource => {
   if (!data.taskUuid) {
     return {
+      isActive: data.isActive,
       id: data.resourceUuid,
       name: data.resourceName,
       ext: data.ext,
@@ -74,6 +77,7 @@ export const transDataToResource = (
     };
   }
   return {
+    isActive: data.isActive,
     id: data.resourceUuid,
     name: data.resourceName,
     ext: data.ext,

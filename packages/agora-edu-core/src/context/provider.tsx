@@ -459,6 +459,9 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     publicResources,
     upsertResources,
     allResources,
+    initCourseWareProgress,
+    initCourseWareLoading,
+    initCourseWare,
   } = useBoardStore();
 
   return {
@@ -482,6 +485,9 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     doUpload: handleUpload,
     allResources,
     upsertResources,
+    initCourseWareProgress,
+    initCourseWareLoading,
+    initCourseWare,
   };
 };
 

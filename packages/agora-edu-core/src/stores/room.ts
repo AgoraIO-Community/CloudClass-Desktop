@@ -2030,6 +2030,8 @@ export class RoomStore extends SimpleInterval {
       }
       this.joined = true;
       this.roomJoined = true;
+      // 初始化打开课件
+      await this.appStore.boardStore.openInitCourseWare();
       const userRoleMap: Record<number, string> = {
         0: 'invisible',
         1: 'teacher',

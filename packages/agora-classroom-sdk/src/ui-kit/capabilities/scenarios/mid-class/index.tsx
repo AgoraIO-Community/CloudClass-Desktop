@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import {
   useRoomContext,
+  useCloudDriveContext,
   useGlobalContext,
   useChatContext,
   useWidgetContext,
@@ -28,8 +29,12 @@ import { useUIStore } from '@/infra/hooks';
 import { ToastContainer } from '~capabilities/containers/toast';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { get } from 'lodash';
+import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 
 export const MidClassScenario = observer(() => {
+  const { initCourseWareProgress, initCourseWareLoading } =
+    useCloudDriveContext();
+
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 
   const { onLaunchAppPlugin, onShutdownAppPlugin } = useAppPluginContext();
@@ -119,6 +124,9 @@ export const MidClassScenario = observer(() => {
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
       <ToastContainer />
+      <LoadingPptContainer
+        initCourseWareProgress={initCourseWareProgress}
+        initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
     </Layout>
   );
 });

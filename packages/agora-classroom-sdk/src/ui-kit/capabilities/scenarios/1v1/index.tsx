@@ -1,6 +1,7 @@
 import { useEffectOnce } from '@/infra/hooks/utils';
 import {
   useAppPluginContext,
+  useCloudDriveContext,
   useGlobalContext,
   useRoomContext,
   useWidgetContext,
@@ -18,8 +19,12 @@ import { ToastContainer } from '~capabilities/containers/toast';
 import { VideoList } from '~capabilities/containers/video-player';
 import { Widget } from '~capabilities/containers/widget';
 import { Aside, Content, Layout } from '~components/layout';
+import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 
 export const OneToOneScenario = observer(() => {
+  const { initCourseWareProgress, initCourseWareLoading } =
+    useCloudDriveContext();
+
   const { isFullScreen } = useGlobalContext();
 
   const { widgets } = useWidgetContext();
@@ -90,6 +95,9 @@ export const OneToOneScenario = observer(() => {
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
       <ToastContainer />
+      <LoadingPptContainer
+        initCourseWareProgress={initCourseWareProgress}
+        initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
     </Layout>
   );
 });
