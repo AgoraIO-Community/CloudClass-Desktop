@@ -1,40 +1,38 @@
-import { Roster } from '~ui-kit';
+import { useUIStore } from '@/infra/hooks';
+import { RosterUserInfo } from '@/infra/stores/types';
+import { useWatch } from '@/ui-kit/utilities/hooks';
+import {
+  useBoardContext, useChatContext,
+  useHandsUpContext, useRoomContext, useStreamListContext, useUserListContext
+} from 'agora-edu-core';
+import {
+  EduRoleTypeEnum,
+  EduStream,
+  EduUser
+} from 'agora-rte-sdk';
+import { get } from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useUserListContext, useStreamListContext, useBoardContext, useGlobalContext, useRoomContext, useChatContext, useHandsUpContext, eduSDKApi } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream, EduUser, EduVideoSourceType } from 'agora-rte-sdk';
-import { RosterUserInfo } from '@/infra/stores/types';
-import { get } from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { Roster } from '~ui-kit';
 import { StudentRoster } from '~ui-kit/components';
 import { KickDialog } from '../../dialog';
-import { useUIStore } from '@/infra/hooks';
-import { useDebounce } from '~ui-kit/utilities/hooks';
-import { useWatch } from '@/ui-kit/utilities/hooks';
 
 export type UserListContainerProps = {
-    onClose: () => void
-}
+  onClose: () => void;
+};
 
-export const UserListContainer: React.FC<UserListContainerProps> = observer((props) => {
-    const {
-        revokeBoardPermission,
-        grantBoardPermission,
-    } = useBoardContext()
+export const UserListContainer: React.FC<UserListContainerProps> = observer(
+  (props) => {
+    const { revokeBoardPermission, grantBoardPermission } = useBoardContext();
 
-    const {
-        streamList,
-        muteVideo,
-        muteAudio,
-        unmuteAudio,
-        unmuteVideo
-    } = useStreamListContext()
+    const { streamList, muteVideo, muteAudio, unmuteAudio, unmuteVideo } =
+      useStreamListContext();
+
+    const { addDialog } = useUIStore();
 
     const {
-        addDialog,
-    } = useUIStore()
-
-    const {
+<<<<<<< HEAD
         // muteVideo,
         // muteAudio,
         // unmuteAudio,
@@ -47,100 +45,131 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         startCarousel,
         stopCarousel
     } = useRoomContext()
+=======
+      // muteVideo,
+      // muteAudio,
+      // unmuteAudio,
+      // unmuteVideo,
+      // muteUserChat,
+      // unmuteUserChat,
+      roomInfo,
+    } = useRoomContext();
+>>>>>>> flex
 
-    const {
-        muteUserChat,
-        unmuteUserChat
-    } = useChatContext()
+    const { muteUserChat, unmuteUserChat } = useChatContext();
 
-    const {
-        localUserInfo,
-        teacherInfo,
-        rosterUserList
-    } = useUserListContext()
+    const { localUserInfo, teacherInfo, rosterUserList } = useUserListContext();
 
-    const {
-        teacherAcceptHandsUp,
-        teacherRevokeCoVideo
-    } = useHandsUpContext()
+    const { teacherAcceptHandsUp, teacherRevokeCoVideo } = useHandsUpContext();
 
-    const onClick = useCallback(async (actionType: any, uid: any) => {
-        const userList = rosterUserList
-        const user = userList.find((user: RosterUserInfo) => user.uid === uid)
+    const onClick = useCallback(
+      async (actionType: any, uid: any) => {
+        const userList = rosterUserList;
+        const user = userList.find((user: RosterUserInfo) => user.uid === uid);
 
         if (!user) {
-            return
+          return;
         }
         switch (actionType) {
-            case 'podium': {
-                if (user.onPodium) {
-                    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await teacherRevokeCoVideo(user.uid)
-                    }
-                } else {
-                    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                        await teacherAcceptHandsUp(user.uid)
-                    }
-                }
-                break;
+          case 'podium': {
+            if (user.onPodium) {
+              if (
+                [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+                  roomInfo.userRole,
+                )
+              ) {
+                await teacherRevokeCoVideo(user.uid);
+              }
+            } else {
+              if (
+                [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+                  roomInfo.userRole,
+                )
+              ) {
+                await teacherAcceptHandsUp(user.uid);
+              }
             }
-            case 'whiteboard': {
-                if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                    if (user.whiteboardGranted) {
-                        await revokeBoardPermission(uid)
-                    } else {
-                        await grantBoardPermission(uid)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'whiteboard': {
+            if (
+              [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+                roomInfo.userRole,
+              )
+            ) {
+              if (user.whiteboardGranted) {
+                await revokeBoardPermission(uid);
+              } else {
+                await grantBoardPermission(uid);
+              }
             }
-            case 'camera': {
-                const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === uid)
-                if (targetStream) {
-                    const isLocal = roomInfo.userUuid === uid
-                    if (targetStream.hasVideo) {
-                        await muteVideo(uid, isLocal)
-                    } else {
-                        await unmuteVideo(uid, isLocal)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'camera': {
+            const targetStream = streamList.find(
+              (stream: EduStream) =>
+                get(stream.userInfo, 'userUuid', 0) === uid,
+            );
+            if (targetStream) {
+              const isLocal = roomInfo.userUuid === uid;
+              if (targetStream.hasVideo) {
+                await muteVideo(uid, isLocal);
+              } else {
+                await unmuteVideo(uid, isLocal);
+              }
             }
-            case 'chat': {
-                const targetUser = rosterUserList.find((user) => get(user, 'uid', '') === uid)
-                if (targetUser) {
-                    if (targetUser.chatEnabled) {
-                        await muteUserChat(uid)
-                    } else {
-                        await unmuteUserChat(uid)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'chat': {
+            const targetUser = rosterUserList.find(
+              (user) => get(user, 'uid', '') === uid,
+            );
+            if (targetUser) {
+              if (targetUser.chatEnabled) {
+                await muteUserChat(uid);
+              } else {
+                await unmuteUserChat(uid);
+              }
             }
-            case 'mic': {
-                const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === uid)
-                if (targetStream) {
-                    const isLocal = roomInfo.userUuid === uid
-                    if (targetStream.hasAudio) {
-                        await muteAudio(uid, isLocal)
-                    } else {
-                        await unmuteAudio(uid, isLocal)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'mic': {
+            const targetStream = streamList.find(
+              (stream: EduStream) =>
+                get(stream.userInfo, 'userUuid', 0) === uid,
+            );
+            if (targetStream) {
+              const isLocal = roomInfo.userUuid === uid;
+              if (targetStream.hasAudio) {
+                await muteAudio(uid, isLocal);
+              } else {
+                await unmuteAudio(uid, isLocal);
+              }
             }
-            case 'kickOut': {
-                if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                    addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
-                }
-                break;
+            break;
+          }
+          case 'kickOut': {
+            if (
+              [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+                roomInfo.userRole,
+              )
+            ) {
+              addDialog(KickDialog, {
+                userUuid: uid,
+                roomUuid: roomInfo.roomUuid,
+              });
             }
+            break;
+          }
         }
-    }, [rosterUserList, roomInfo.roomUuid, roomInfo.userRole])
+      },
+      [rosterUserList, roomInfo.roomUuid, roomInfo.userRole],
+    );
 
-    const [keyword, setKeyword] = useState<string>('')
+    const [keyword, setKeyword] = useState<string>('');
 
     const dataList = useMemo(() => {
+<<<<<<< HEAD
         return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
     }, [keyword, rosterUserList])
 
@@ -150,6 +179,23 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         }
         return 'student'
     }, [roomInfo.userRole])
+=======
+      return rosterUserList.filter((item: any) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase()),
+      );
+    }, [keyword, rosterUserList]);
+
+    const userType = useMemo(() => {
+      if (
+        [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+          roomInfo.userRole,
+        )
+      ) {
+        return 'teacher';
+      }
+      return 'student';
+    }, [roomInfo.userRole]);
+>>>>>>> flex
 
     const debouncedCarousel: any = useMemo(() => {
         return {
@@ -172,6 +218,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     })
 
     return (
+<<<<<<< HEAD
         <Roster
             isDraggable={true}
             carousel={userType === 'teacher'}
@@ -206,43 +253,49 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
         />
     )
 })
+=======
+      <Roster
+        isDraggable={true}
+        localUserUuid={localUserInfo.userUuid}
+        teacherName={teacherInfo?.userName || ''}
+        dataSource={dataList}
+        userType={userType}
+        onClick={onClick}
+        onClose={props.onClose}
+        onChange={(text: string) => {
+          setKeyword(text);
+        }}
+      />
+    );
+  },
+);
+>>>>>>> flex
 
-export const StudentUserListContainer: React.FC<UserListContainerProps> = observer((props) => {
-
-    const [keyword, setKeyword] = useState<string>('')
-
-    const {
-        streamList,
-        localStream,
-        muteVideo,
-        muteAudio,
-        unmuteAudio,
-        unmuteVideo
-    } = useStreamListContext()
-
-    const {
-        addDialog,
-    } = useUIStore()
-
-    const {
-        queryMicrophoneDeviceState,
-        queryCameraDeviceState,
-        roomInfo
-    } = useRoomContext()
+export const StudentUserListContainer: React.FC<UserListContainerProps> =
+  observer((props) => {
+    const [keyword, setKeyword] = useState<string>('');
 
     const {
-        muteUserChat,
-        unmuteUserChat
-    } = useChatContext()
+      streamList,
+      localStream,
+      muteVideo,
+      muteAudio,
+      unmuteAudio,
+      unmuteVideo,
+    } = useStreamListContext();
 
-    const {
-        localUserInfo,
-        teacherInfo,
-        userList,
-        acceptedUserList
-    } = useUserListContext()
+    const { addDialog } = useUIStore();
+
+    const { queryMicrophoneDeviceState, queryCameraDeviceState, roomInfo } =
+      useRoomContext();
+
+    const { muteUserChat, unmuteUserChat } = useChatContext();
+
+    const { localUserInfo, teacherInfo, userList, acceptedUserList } =
+      useUserListContext();
 
     function checkDisable(user: any, role: EduRoleTypeEnum): boolean {
+<<<<<<< HEAD
         if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
             return false
         }
@@ -255,106 +308,164 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         }
         return true
     }
+=======
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+        return false;
+      }
+>>>>>>> flex
 
-    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean, userList: EduUser[]) {
-        return {
-            name: user.userName,
-            uid: user.userUuid,
-            micEnabled: stream?.hasAudio ?? false,
-            cameraEnabled: stream?.hasVideo ?? false,
-            onPodium: onPodium,
-            micDevice: queryMicrophoneDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
-            cameraDevice: queryCameraDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
-            online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
-            hasStream: !!stream,
-            chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
-            disabled: checkDisable(user, role),
-            userType: ['assistant', 'teacher'].includes(role) ? 'teacher' : 'student'
-        }
+      if (
+        role === EduRoleTypeEnum.student &&
+        roomInfo.userUuid === user.userUuid &&
+        acceptedIds.includes(user.userUuid)
+      ) {
+        return false;
+      }
+      return true;
     }
 
-    const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
+    function transformRosterUserInfo(
+      user: any,
+      role: any,
+      stream: any,
+      onPodium: boolean,
+      userList: EduUser[],
+    ) {
+      return {
+        name: user.userName,
+        uid: user.userUuid,
+        micEnabled: stream?.hasAudio ?? false,
+        cameraEnabled: stream?.hasVideo ?? false,
+        onPodium: onPodium,
+        micDevice: queryMicrophoneDeviceState(
+          userList,
+          user?.userUuid ?? '',
+          stream?.streamUuid ?? '',
+        ),
+        cameraDevice: queryCameraDeviceState(
+          userList,
+          user?.userUuid ?? '',
+          stream?.streamUuid ?? '',
+        ),
+        online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
+        hasStream: !!stream,
+        chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
+        disabled: checkDisable(user, role),
+        userType: ['assistant', 'teacher'].includes(role)
+          ? 'teacher'
+          : 'student',
+      };
+    }
 
-    const {
-        rosterUserList,
-    } = useUserListContext()
+    const acceptedIds = acceptedUserList.map((user: any) => user.userUuid);
+
+    const { rosterUserList } = useUserListContext();
 
     const dataList = useMemo(() => {
+<<<<<<< HEAD
         return rosterUserList.filter((item: any) => item.name.toLowerCase().includes(keyword.toLowerCase()))
     }, [keyword, rosterUserList])
+=======
+      return rosterUserList.filter((item: any) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase()),
+      );
+    }, [keyword, rosterUserList]);
+>>>>>>> flex
 
-    const onClick = useCallback(async (actionType: any, uid: any) => {
-        const userList = dataList
-        const user = userList.find((user: RosterUserInfo) => user.uid === uid)
+    const onClick = useCallback(
+      async (actionType: any, uid: any) => {
+        const userList = dataList;
+        const user = userList.find((user: RosterUserInfo) => user.uid === uid);
 
         if (!user) {
-            return
+          return;
         }
         switch (actionType) {
-            case 'camera': {
-                const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === uid)
-                if (targetStream) {
-                    const isLocal = roomInfo.userUuid === uid
-                    if (targetStream.hasVideo) {
-                        await muteVideo(uid, isLocal)
-                    } else {
-                        await unmuteVideo(uid, isLocal)
-                    }
-                }
-                break;
+          case 'camera': {
+            const targetStream = streamList.find(
+              (stream: EduStream) =>
+                get(stream.userInfo, 'userUuid', 0) === uid,
+            );
+            if (targetStream) {
+              const isLocal = roomInfo.userUuid === uid;
+              if (targetStream.hasVideo) {
+                await muteVideo(uid, isLocal);
+              } else {
+                await unmuteVideo(uid, isLocal);
+              }
             }
-            case 'mic': {
-                const targetStream = streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === uid)
-                if (targetStream) {
-                    const isLocal = roomInfo.userUuid === uid
-                    if (targetStream.hasAudio) {
-                        await muteAudio(uid, isLocal)
-                    } else {
-                        await unmuteAudio(uid, isLocal)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'mic': {
+            const targetStream = streamList.find(
+              (stream: EduStream) =>
+                get(stream.userInfo, 'userUuid', 0) === uid,
+            );
+            if (targetStream) {
+              const isLocal = roomInfo.userUuid === uid;
+              if (targetStream.hasAudio) {
+                await muteAudio(uid, isLocal);
+              } else {
+                await unmuteAudio(uid, isLocal);
+              }
             }
-            case 'chat': {
-                const targetUser = dataList.find((user) => get(user, 'uid', '') === uid)
-                if (targetUser) {
-                    if (targetUser.chatEnabled) {
-                        await muteUserChat(uid)
-                    } else {
-                        await unmuteUserChat(uid)
-                    }
-                }
-                break;
+            break;
+          }
+          case 'chat': {
+            const targetUser = dataList.find(
+              (user) => get(user, 'uid', '') === uid,
+            );
+            if (targetUser) {
+              if (targetUser.chatEnabled) {
+                await muteUserChat(uid);
+              } else {
+                await unmuteUserChat(uid);
+              }
             }
-            case 'kickOut': {
-                if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-                    addDialog(KickDialog, { userUuid: uid, roomUuid: roomInfo.roomUuid })
-                }
-                break;
+            break;
+          }
+          case 'kickOut': {
+            if (
+              [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+                roomInfo.userRole,
+              )
+            ) {
+              addDialog(KickDialog, {
+                userUuid: uid,
+                roomUuid: roomInfo.roomUuid,
+              });
             }
+            break;
+          }
         }
-    }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
+      },
+      [dataList, roomInfo.roomUuid, roomInfo.userRole],
+    );
 
     const userType = useMemo(() => {
-        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
-            return 'teacher'
-        }
-        return 'student'
-    }, [roomInfo.userRole])
+      if (
+        [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+          roomInfo.userRole,
+        )
+      ) {
+        return 'teacher';
+      }
+      return 'student';
+    }, [roomInfo.userRole]);
 
     return (
-        <StudentRoster
-            isDraggable={true}
-            localUserUuid={localUserInfo.userUuid}
-            // role={localUserInfo.role as any}
-            teacherName={teacherInfo?.userName || ''}
-            dataSource={dataList}
-            userType={userType}
-            onClick={onClick}
-            onClose={props.onClose}
-            onChange={(text: string) => {
-                setKeyword(text)
-            }}
-        />
-    )
-})
+      <StudentRoster
+        isDraggable={true}
+        localUserUuid={localUserInfo.userUuid}
+        // role={localUserInfo.role as any}
+        teacherName={teacherInfo?.userName || ''}
+        dataSource={dataList}
+        userType={userType}
+        onClick={onClick}
+        onClose={props.onClose}
+        onChange={(text: string) => {
+          setKeyword(text);
+        }}
+      />
+    );
+  });

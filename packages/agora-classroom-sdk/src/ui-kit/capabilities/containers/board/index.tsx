@@ -1,73 +1,93 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext, RoomPhase } from 'agora-edu-core'
-import { ZoomItemType } from '~ui-kit/components'
-import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
-import { observer } from 'mobx-react'
-import { useCallback, useMemo } from 'react'
-import { ColorsContainer } from '~capabilities/containers/board/colors'
-import { PensContainer } from '~capabilities/containers/board/pens'
-import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
-import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabilities/containers/dialog'
-import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController, SvgImg, BoardPlaceHolder } from '~ui-kit'
-import { useEffect } from 'react'
-import classnames from 'classnames'
-import { useUIStore } from '@/infra/hooks'
-import "video.js/dist/video-js.css";
+import {
+  useBoardContext,
+  useGlobalContext,
+  useRoomContext,
+  Resource,
+  useScreenShareContext,
+  useCloudDriveContext,
+  RoomPhase,
+} from 'agora-edu-core';
+import { ZoomItemType } from '~ui-kit/components';
+import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
+import { observer } from 'mobx-react';
+import { useCallback, useMemo } from 'react';
+import { ColorsContainer } from '~capabilities/containers/board/colors';
+import { PensContainer } from '~capabilities/containers/board/pens';
+import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet';
+import {
+  CloseConfirm,
+  StudentUserListDialog,
+  UserListDialog,
+} from '~capabilities/containers/dialog';
+import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver';
+import {
+  Icon,
+  TabPane,
+  Tabs,
+  Toolbar,
+  ToolItem,
+  transI18n,
+  ZoomController,
+  SvgImg,
+  BoardPlaceHolder,
+} from '~ui-kit';
+import { useEffect } from 'react';
+import classnames from 'classnames';
+import { useUIStore } from '@/infra/hooks';
 
 export const allTools: ToolItem[] = [
   {
     // clicker use selector icon
     value: 'clicker',
     label: 'scaffold.clicker',
-    icon: 'select'
+    icon: 'select',
   },
   {
     // selector use clicker icon
     value: 'selection',
     label: 'scaffold.selector',
-    icon: 'clicker'
+    icon: 'clicker',
   },
   {
     value: 'pen',
     label: 'scaffold.pencil',
     icon: 'pen',
     component: (props: any) => {
-      return <PensContainer {...props} />
-    }
+      return <PensContainer {...props} />;
+    },
   },
   {
     value: 'text',
     label: 'scaffold.text',
-    icon: 'text'
+    icon: 'text',
   },
   {
     value: 'eraser',
     label: 'scaffold.eraser',
-    icon: 'eraser'
-
+    icon: 'eraser',
   },
   {
     value: 'color',
     label: 'scaffold.color',
     icon: 'circle',
     component: (props: any) => {
-      return <ColorsContainer {...props} />
-    }
+      return <ColorsContainer {...props} />;
+    },
   },
   {
     value: 'blank-page',
     label: 'scaffold.blank_page',
-    icon: 'blank-page'
+    icon: 'blank-page',
   },
   {
     value: 'hand',
     label: 'scaffold.move',
-    icon: 'hand'
+    icon: 'hand',
   },
   {
     value: 'cloud',
     label: 'scaffold.cloud_storage',
-    icon: 'cloud'
+    icon: 'cloud',
     // component: () => {
     //   return <CloudDiskContainer />
     // }
@@ -77,122 +97,102 @@ export const allTools: ToolItem[] = [
     label: 'scaffold.tools',
     icon: 'tools',
     component: () => {
-      return <ToolCabinetContainer />
-    }
+      return <ToolCabinetContainer />;
+    },
   },
   {
     value: 'register',
     label: 'scaffold.user_list',
-    icon: 'register'
+    icon: 'register',
   },
   {
     value: 'student_list',
     label: 'scaffold.student_list',
-    icon: 'register'
-  }
-]
+    icon: 'register',
+  },
+];
 
 export type WhiteBoardState = {
-  zoomValue: number,
-  currentPage: number,
-  totalPage: number,
+  zoomValue: number;
+  currentPage: number;
+  totalPage: number;
 
-  items: ToolItem[],
-  handleToolBarChange: (evt: any) => Promise<any> | any,
-  handleZoomControllerChange: (e: any) => Promise<any> | any,
-}
+  items: ToolItem[];
+  handleToolBarChange: (evt: any) => Promise<any> | any;
+  handleZoomControllerChange: (e: any) => Promise<any> | any;
+};
 
 const TabsContainer = observer(() => {
+  const { changeSceneItem, activeSceneName } = useBoardContext();
 
-  const {
-    changeSceneItem,
-    activeSceneName,
-  } = useBoardContext()
+  const { resourcesList } = useCloudDriveContext();
 
-  const {
-    resourcesList
-  } = useCloudDriveContext()
+  const { addDialog } = useUIStore();
 
-  const {
-    addDialog,
-  } = useUIStore()
+  const { isScreenSharing } = useScreenShareContext();
 
+  const TabPaneIcon = useCallback(
+    (name: string, resourceUuid: string, key: number) => {
+      const panelCls = classnames({
+        [`icon-share-active`]: !!isScreenSharing === true,
+        [`icon-share-inactive`]: !!isScreenSharing === false,
+      });
 
-  const {
-    isScreenSharing
-  } = useScreenShareContext()
+      if (key === 0) {
+        return (
+          <>
+            <SvgImg type="whiteboard" />
+            {transI18n('tool.board_name')}
+          </>
+        );
+      }
 
-  const TabPaneIcon = useCallback((name: string, resourceUuid: string, key: number) => {
+      if (resourceUuid === 'screenShare') {
+        return (
+          <>
+            <SvgImg className={panelCls} type="share-screen" />
+            {transI18n('tool.screen_share')}
+          </>
+        );
+      }
 
-    const panelCls = classnames({
-      [`icon-share-active`]: !!isScreenSharing === true,
-      [`icon-share-inactive`]: !!isScreenSharing === false,
-    })
-
-    if (key === 0) {
-      return (
-        <>
-          <SvgImg type="whiteboard" />
-          {transI18n("tool.board_name")}
-        </>
-      )
-    }
-
-    if (resourceUuid === 'screenShare') {
-      return (
-        <>
-          <SvgImg className={panelCls} type="share-screen" />
-          {transI18n("tool.screen_share")}
-        </>
-      )
-    }
-
-    return (
-      <>
-        {name}
-      </>
-    )
-  }, [isScreenSharing])
+      return <>{name}</>;
+    },
+    [isScreenSharing],
+  );
 
   return (
-    <Tabs className="material-menu" activeKey={activeSceneName} type="editable-card"
+    <Tabs
+      className="material-menu"
+      activeKey={activeSceneName}
+      type="editable-card"
       onChange={changeSceneItem}>
       {resourcesList.map((item: Resource, key: number) => (
         <TabPane
           key={item.resourceUuid}
-          tab={
-            TabPaneIcon(item.file.name, item.resourceUuid, key)
-          }
+          tab={TabPaneIcon(item.file.name, item.resourceUuid, key)}
           closeIcon={
-            <SvgImg type="close"
+            <SvgImg
+              type="close"
               onClick={() => {
                 addDialog(CloseConfirm, {
                   resourceUuid: item.resourceUuid,
-                })
+                });
               }}
             />
           }
-          closable={key !== 0}
-        >
-        </TabPane>
+          closable={key !== 0}></TabPane>
       ))}
     </Tabs>
-  )
-})
+  );
+});
 
 export const WhiteboardContainer = observer(({ children }: any) => {
+  const { addDialog } = useUIStore();
 
-  const {
-    addDialog
-  } = useUIStore()
+  const { isFullScreen } = useGlobalContext();
 
-  const {
-    isFullScreen,
-  } = useGlobalContext()
-
-  const {
-    roomInfo
-  } = useRoomContext()
+  const { roomInfo } = useRoomContext();
 
   const {
     zoomValue,
@@ -211,41 +211,41 @@ export const WhiteboardContainer = observer(({ children }: any) => {
     installTools,
     showBoardTool,
     boardConnectionState,
-    joinBoard
-  } = useBoardContext()
+    joinBoard,
+  } = useBoardContext();
 
   const handleToolClick = (type: string) => {
-    console.log('handleToolClick tool click', type)
+    console.log('handleToolClick tool click', type);
     switch (type) {
       case 'cloud': {
-        setTool(type)
-        addDialog(CloudDriverContainer)
-        break
+        setTool(type);
+        addDialog(CloudDriverContainer);
+        break;
       }
       case 'register': {
-        setTool(type)
-        addDialog(UserListDialog)
-        break
+        setTool(type);
+        addDialog(UserListDialog);
+        break;
       }
       case 'student_list': {
-        setTool(type)
-        addDialog(StudentUserListDialog)
-        break
+        setTool(type);
+        addDialog(StudentUserListDialog);
+        break;
       }
       default: {
-        setTool(type)
-        break
+        setTool(type);
+        break;
       }
     }
-  }
+  };
 
   useEffect(() => {
-    installTools(allTools)
-  }, [allTools])
+    installTools(allTools);
+  }, [allTools]);
 
-  const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+  const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true;
 
-  const [showToolBar, showZoomControl] = showBoardTool
+  const [showToolBar, showZoomControl] = showBoardTool;
 
   // const [showToolBar, showZoomControl] = useMemo(() => {
   //   if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
@@ -264,70 +264,72 @@ export const WhiteboardContainer = observer(({ children }: any) => {
 
   const handleZoomControllerChange = async (type: ZoomItemType) => {
     const toolbarMap: Record<ZoomItemType, CallableFunction> = {
-      'max': () => {
-        zoomBoard('fullscreen')
+      max: () => {
+        zoomBoard('fullscreen');
       },
-      'min': () => {
-        zoomBoard('fullscreenExit')
+      min: () => {
+        zoomBoard('fullscreenExit');
       },
       'zoom-out': () => {
-        setZoomScale('out')
+        setZoomScale('out');
       },
       'zoom-in': () => {
-        setZoomScale('in')
+        setZoomScale('in');
       },
-      'forward': () => changeFooterMenu('next_page'),
-      'backward': () => changeFooterMenu('prev_page'),
-    }
-    toolbarMap[type] && toolbarMap[type]()
-  }
+      forward: () => changeFooterMenu('next_page'),
+      backward: () => changeFooterMenu('prev_page'),
+    };
+    toolbarMap[type] && toolbarMap[type]();
+  };
 
-  const isBoardConnected = useMemo(() => boardConnectionState !== RoomPhase.Disconnected, [boardConnectionState])
+  const isBoardConnected = useMemo(
+    () => boardConnectionState !== RoomPhase.Disconnected,
+    [boardConnectionState],
+  );
 
   return (
     <div className="whiteboard">
       {isBoardConnected ? (
         <>
-          {showTab ?
-            <TabsContainer /> : null}
+          {showTab ? <TabsContainer /> : null}
           <div className="board-section">
             {children}
-            {
-              ready ?
-                <div id="netless" ref={mountToDOM} ></div> : null
-            }
+            {ready ? <div id="netless" ref={mountToDOM}></div> : null}
           </div>
-          {showToolBar ?
+          {showToolBar ? (
             <Toolbar
               active={currentSelector}
               activeMap={activeMap}
               tools={tools}
               onClick={handleToolClick}
               className="toolbar-biz"
-              defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true}
+              defaultOpened={
+                roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+              }
             />
-            : null}
-          {showZoomControl ? <ZoomController
-            className='zoom-position'
-            zoomValue={zoomValue}
-            currentPage={currentPage}
-            totalPage={totalPage}
-            maximum={!isFullScreen}
-            clickHandler={handleZoomControllerChange}
-          /> : null}
+          ) : null}
+          {showZoomControl ? (
+            <ZoomController
+              className="zoom-position"
+              zoomValue={zoomValue}
+              currentPage={currentPage}
+              totalPage={totalPage}
+              maximum={!isFullScreen}
+              clickHandler={handleZoomControllerChange}
+            />
+          ) : null}
         </>
       ) : (
-        <BoardPlaceHolder 
+        <BoardPlaceHolder
           onReconnectClick={async () => {
             try {
-              await joinBoard()
-            } catch(e) {
-              console.log('重新连接白板错误', e)
+              await joinBoard();
+            } catch (e) {
+              console.log('重新连接白板错误', e);
             }
           }}
         />
       )}
-
     </div>
-  )
-})
+  );
+});

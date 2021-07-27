@@ -2,7 +2,7 @@ import React from 'react';
 import { AbstractTooltipProps, Tooltip } from '../tooltip';
 import {
   getRenderPropValue,
-  RenderFunction
+  RenderFunction,
 } from '../_util/getRenderPropValue';
 import { getTransitionName } from '../_util/motion';
 import './index.css';

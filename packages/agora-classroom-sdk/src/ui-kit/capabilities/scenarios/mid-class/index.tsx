@@ -1,66 +1,64 @@
-import { Layout, Content, Aside } from '~components/layout'
-import { observer } from 'mobx-react'
-import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
-import {NavigationBar} from '~capabilities/containers/nav'
-import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
-import {WhiteboardContainer} from '~capabilities/containers/board'
-import {DialogContainer} from '~capabilities/containers/dialog'
-import {LoadingContainer} from '~capabilities/containers/loading'
-import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
-import {HandsUpContainer} from '~capabilities/containers/hands-up'
-import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useEffect, useState } from 'react'
-import { Widget } from '~capabilities/containers/widget'
-import { useLayoutEffect } from 'react'
-import { useUIStore } from '@/infra/hooks'
-import { EduRoleTypeEnum } from 'agora-rte-sdk'
-import { get } from 'lodash'
-import { ToastContainer } from "~capabilities/containers/toast"
+import { Layout, Content, Aside } from '~components/layout';
+import { observer } from 'mobx-react';
+import classnames from 'classnames';
+import {
+  useRoomContext,
+  useGlobalContext,
+  useChatContext,
+  useWidgetContext,
+  useAppPluginContext,
+} from 'agora-edu-core';
+import { NavigationBar } from '~capabilities/containers/nav';
+import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player';
+import { WhiteboardContainer } from '~capabilities/containers/board';
+import { DialogContainer } from '~capabilities/containers/dialog';
+import { LoadingContainer } from '~capabilities/containers/loading';
+import {
+  MidVideoMarqueeContainer,
+  VideoMarqueeStudentContainer,
+  VideoPlayerTeacher,
+} from '~capabilities/containers/video-player';
+import { HandsUpContainer } from '~capabilities/containers/hands-up';
+import { useEffectOnce } from '@/infra/hooks/utils';
+import React from 'react';
+import { Widget } from '~capabilities/containers/widget';
+import { useLayoutEffect } from 'react';
+import { useUIStore } from '@/infra/hooks';
 
+import { ToastContainer } from '~capabilities/containers/toast';
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { get } from 'lodash';
 
 export const MidClassScenario = observer(() => {
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 
-  const {
-    onLaunchAppPlugin,
-    onShutdownAppPlugin
-  } = useAppPluginContext()
-
+  const { onLaunchAppPlugin, onShutdownAppPlugin } = useAppPluginContext();
 
   useLayoutEffect(() => {
     if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 1) {
       // 开启倒计时
-      onLaunchAppPlugin('io.agora.countdown')
+      onLaunchAppPlugin('io.agora.countdown');
     } else if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 0) {
       // 关闭倒计时
-      onShutdownAppPlugin('io.agora.countdown')
+      onShutdownAppPlugin('io.agora.countdown');
     }
-  }, [roomProperties])
+  }, [roomProperties]);
 
-  const {
-    isFullScreen,
-  } = useGlobalContext()
+  const { isFullScreen } = useGlobalContext();
 
-  const {
-    widgets
-  } = useWidgetContext()
-  const chatWidget = widgets['chat']
+  const { widgets } = useWidgetContext();
+  const chatWidget = widgets['chat'];
 
-  // const { 
-  //   chatCollapse 
-  // }  = useUIStore()
-
-  const [chatCollapse, setChatCollapse] = useState(false)
+  const { chatCollapse } = useUIStore();
 
   useEffectOnce(() => {
-    joinRoom()
-  })
+    joinRoom();
+  });
 
   const cls = classnames({
     'edu-room': 1,
-    'fullscreen': !!isFullScreen
-  })
+    fullscreen: !!isFullScreen,
+  });
 
   const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
   const orgName = get(roomProperties, 'im.huanxin.orgName')
@@ -75,9 +73,8 @@ export const MidClassScenario = observer(() => {
       className={cls}
       direction="col"
       style={{
-        height: '100vh'
-      }}
-    >
+        height: '100vh',
+      }}>
       <NavigationBar />
       <Layout className="layout layout-row layout-video">
         <MidVideoMarqueeContainer />
@@ -91,34 +88,34 @@ export const MidClassScenario = observer(() => {
           </div>
           <div
             className={classnames({
-              'pin-right': 1
+              'pin-right': 1,
             })}
-            style={{display:'flex'}}
-          >
+            style={{ display: 'flex' }}>
             <HandsUpContainer />
           </div>
         </Content>
-        <Aside className={classnames({
-          "mid-class-aside": 1,
-          // "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
-          // "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
-          "mid-class-aside-full-collapse": isFullScreen,
-        })}>
-          {chatroomId ? (
-          <Widget 
-            className="chat-panel chat-border" 
-            widgetComponent={chatWidget} 
-            widgetProps={{chatroomId, orgName, appName}}
-            onReceivedMsg={(msg: any) => {
-              setChatCollapse(!msg.isShowChat)
-            }}
-            sendMsg={{isFullScreen}}
-          />) : null}
+        <Aside
+          className={classnames({
+            'mid-class-aside': 1,
+            'mid-class-aside-full-not-collapse': isFullScreen && !chatCollapse,
+            'mid-class-aside-full-collapse': isFullScreen && chatCollapse,
+          })}>
+          <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
+            <VideoPlayerTeacher
+              className="mid-class-teacher"
+              controlPlacement="bottom"
+              placement="bottom"
+            />
+          </div>
+          {chatroomId ?
+            <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : 
+            <Widget className="chat-panel chat-border" widgetComponent={chatWidget} />
+          }
         </Aside>
       </Layout>
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
       <ToastContainer />
     </Layout>
-  )
-})
+  );
+});

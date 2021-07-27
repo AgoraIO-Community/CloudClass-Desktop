@@ -1,4 +1,10 @@
-import React, { EventHandler, FC, ReactEventHandler, SyntheticEvent, useCallback } from 'react';
+import React, {
+  EventHandler,
+  FC,
+  ReactEventHandler,
+  SyntheticEvent,
+  useCallback,
+} from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
@@ -26,8 +32,8 @@ const svgDict: string[] = [
   'clicker',
   'whitening',
   'buffing',
-  'ruddy'
-]
+  'ruddy',
+];
 
 export interface IconProps extends BaseProps {
   type: IconTypes;
@@ -52,9 +58,8 @@ export const Icon: FC<IconProps> = ({
   id,
   ...restProps
 }) => {
-
   if (type === 'clicker') {
-    useSvg = true
+    useSvg = true;
   }
 
   let cls = classnames({
@@ -63,52 +68,50 @@ export const Icon: FC<IconProps> = ({
     [`${className}`]: !!className,
     [`icon-box-hover`]: !!hover,
     ['hover']: !!hover,
-    [`use-svg ${type}`]: useSvg
+    [`use-svg ${type}`]: useSvg,
   });
-  const iconAssets = (svgDict.includes(type) && useSvg) ? (
-    <div
-      className={cls}
-      style={{
-        width: size,
-        height: size,
-        ...style
-      }}
-      {...restProps}
-    >
+  const iconAssets =
+    svgDict.includes(type) && useSvg ? (
+      <div
+        className={cls}
+        style={{
+          width: size,
+          height: size,
+          ...style,
+        }}
+        {...restProps}></div>
+    ) : (
+      <i
+        id={id}
+        className={cls}
+        style={{
+          color,
+          fontSize: size,
+          ...style,
+        }}
+        {...restProps}></i>
+    );
+  return !!iconhover ? (
+    <div id={id} className="icon-hover">
+      {iconAssets}
     </div>
   ) : (
-    <i
-      id={id}
-      className={cls}
-      style={{
-        color,
-        fontSize: size,
-        ...style,
-      }}
-      {...restProps}
-    >
-    </i>
-  )
-  return (
-    !!iconhover ? <div id={id} className="icon-hover">
-      {iconAssets}
-    </div> :
-      iconAssets
+    iconAssets
   );
 };
 
 const getIconInfo = (type: string) => {
   const mapping: Record<string, string> = {
-    'ppt': '#F6B081',
-    'word': '#96CBE1',
-    'excel': '#A6DDBF',
-    'audio': '#6C82D1',
-    'video': '#A8ABE9',
-    'pdf': '#A3C3DE',
-    'image': '#A3F2E6',
-  }
-  return mapping[type]
-}
+    ppt: '#F6B081',
+    word: '#96CBE1',
+    excel: '#A6DDBF',
+    audio: '#6C82D1',
+    video: '#A8ABE9',
+    pdf: '#A3C3DE',
+    image: '#A3F2E6',
+  };
+  return mapping[type];
+};
 
 export type FormatIconType =
   | 'ppt'
@@ -118,10 +121,10 @@ export type FormatIconType =
   | 'video'
   | 'pdf'
   | 'image'
-  | 'h5'
+  | 'h5';
 
 export interface IconBoxProps extends BaseProps {
-  iconType: FormatIconType
+  iconType: FormatIconType;
 }
 
 export const IconBox: FC<IconBoxProps> = ({
@@ -129,48 +132,55 @@ export const IconBox: FC<IconBoxProps> = ({
   iconType,
   ...restProps
 }) => {
-
   if (iconType === 'h5') {
-    return <SvgIcon type="h5" {...restProps} />
+    return <SvgIcon type="h5" {...restProps} />;
   }
 
-  const color = getIconInfo(iconType)
-  const type = `format-${iconType}` as IconTypes
+  const color = getIconInfo(iconType);
+  const type = `format-${iconType}` as IconTypes;
   return (
-    <SvgImg style={Object.assign({}, style, { color })} type={type} {...restProps} />
-  )
-}
+    <SvgImg
+      style={Object.assign({}, style, { color })}
+      type={type}
+      {...restProps}
+    />
+  );
+};
 
 export type SvgIconProps = {
-  onClick?: ReactEventHandler<any>
-  type: 'grant-board' | 'h5'
-}
+  onClick?: ReactEventHandler<any>;
+  type: 'grant-board' | 'h5';
+};
 
 const svgIconTable = {
   'grant-board': IconWhiteboard,
-  'h5': IconH5
-}
+  h5: IconH5,
+};
 
-export const SvgIcon: React.FC<SvgIconProps> = ({ type, onClick, ...restProps }) => {
+export const SvgIcon: React.FC<SvgIconProps> = ({
+  type,
+  onClick,
+  ...restProps
+}) => {
   const cls = classnames({
     [`svg-icon`]: true,
     ['resource-type']: ['h5'].includes(type),
   });
 
-  const svgSrc = svgIconTable[type]
+  const svgSrc = svgIconTable[type];
   return (
-    <i className={cls} {...restProps} >
+    <i className={cls} {...restProps}>
       <img src={svgSrc} alt="" />
     </i>
   );
-}
+};
 
 type MediaIconState = {
-  hover: boolean,
-  state: any,
-  streamState: boolean,
-  type: any
-}
+  hover: boolean;
+  state: any;
+  streamState: boolean;
+  type: any;
+};
 
 type MediaIconArgs = {
   muted: boolean;
@@ -184,7 +194,7 @@ type MediaIconArgs = {
   uid: any;
   disabled?: boolean;
   // canOperate: boolean;
-}
+};
 
 export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
   const {
@@ -198,9 +208,9 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
     type,
     uid,
     disabled = false,
-  } = args
+  } = args;
 
-  const canHover = disabled === true ? false : true
+  const canHover = disabled === true ? false : true;
 
   if (!isLocal) {
     if (userType === 'student') {
@@ -209,31 +219,31 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
           hover: false,
           state: 'not-available',
           streamState: false,
-          type: type
-        }
+          type: type,
+        };
       } else {
         if (deviceState !== 1) {
           return {
             hover: false,
             state: 'not-available',
             streamState: false,
-            type: type
-          }
+            type: type,
+          };
         } else {
           if (!muted) {
             return {
               hover: false,
               state: 'not-available',
               streamState: false,
-              type: type
-            }
+              type: type,
+            };
           } else {
             return {
               hover: false,
               state: 'not-permitted',
               streamState: false,
-              type
-            }
+              type,
+            };
           }
         }
       }
@@ -244,54 +254,54 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
           hover: false,
           state: 'not-available',
           streamState: false,
-          type: type
-        }
+          type: type,
+        };
       }
       if (hasStream && muted === false) {
         return {
           hover: canHover,
           state: 'available',
           streamState: false,
-          type: type
-        }
+          type: type,
+        };
       }
       if (deviceState === 0 || deviceState === 2) {
         return {
           hover: false,
           state: 'not-available',
           streamState: false,
-          type: type
-        }
+          type: type,
+        };
       }
       return {
         hover: canHover,
         state: 'available',
         streamState: muted,
-        type: type
-      }
+        type: type,
+      };
     }
     return {
       hover: canHover,
       state: 'available',
       streamState: muted,
-      type: type
-    }
+      type: type,
+    };
   } else {
     if (deviceState === 2 || !hasStream || !onPodium || !online) {
       return {
         hover: false,
         state: 'not-available',
         streamState: false,
-        type: type
-      }
+        type: type,
+      };
     }
     if (muted === false) {
       return {
         hover: canHover,
         state: 'available',
         streamState: false,
-        type: type
-      }
+        type: type,
+      };
     }
 
     if (deviceState === 1) {
@@ -299,18 +309,18 @@ export const getMediaIconProps = (args: MediaIconArgs): MediaIconState => {
         hover: canHover,
         state: 'available',
         streamState: muted,
-        type: type
-      }
+        type: type,
+      };
     } else {
       return {
         hover: false,
         state: 'not-available',
         streamState: muted,
-        type: type
-      }
+        type: type,
+      };
     }
   }
-}
+};
 
 type MediaIconProps = {
   className?: string;
@@ -319,75 +329,85 @@ type MediaIconProps = {
   streamState?: boolean;
   volumeIndicator?: boolean;
   placement?: string;
-  state: 'available' | 'not-available' | 'not-permitted'
-  onClick: (evt: any) => any
-}
+  state: 'available' | 'not-available' | 'not-permitted';
+  onClick: (evt: any) => any;
+};
 
-export const MediaIcon = ({ className, hover, state, streamState = false, volumeIndicator = false, placement = '', type, onClick }: MediaIconProps) => {
+export const MediaIcon = ({
+  className,
+  hover,
+  state,
+  streamState = false,
+  volumeIndicator = false,
+  placement = '',
+  type,
+  onClick,
+}: MediaIconProps) => {
   const cls = classnames({
     [`rtc-state-${state}`]: 1,
-    [`${className ? className : ''}`]: !!className
-  })
+    [`${className ? className : ''}`]: !!className,
+  });
 
   const mapType: Record<string, any> = {
     'not-available': {
-      'microphone': 'microphone-off-outline',
-      'camera': 'camera-off',
+      microphone: 'microphone-off-outline',
+      camera: 'camera-off',
     },
-    'available': {
-      'microphone': !!streamState === true ? 'microphone-on-outline' : 'microphone-off-outline',
-      'camera': !!streamState === true ? 'camera' : 'camera-off',
+    available: {
+      microphone:
+        !!streamState === true
+          ? 'microphone-on-outline'
+          : 'microphone-off-outline',
+      camera: !!streamState === true ? 'camera' : 'camera-off',
     },
     'not-permitted': {
-      'microphone': 'microphone-on-outline',
-      'camera': 'camera',
-    }
-  }
+      microphone: 'microphone-on-outline',
+      camera: 'camera',
+    },
+  };
 
   if (volumeIndicator && type === 'microphone') {
     const volumeMapType: Record<string, any> = {
       'not-available': {
-        'microphone': 'microphone-off',
+        microphone: 'microphone-off',
       },
-      'available': {
-        'microphone': !!streamState === true ? 'microphone-on' : 'microphone-off',
+      available: {
+        microphone: !!streamState === true ? 'microphone-on' : 'microphone-off',
       },
       'not-permitted': {
-        'microphone': 'microphone-on',
-      }
-    }
-    return (
-      <SvgImg
-        className={cls}
-        type={volumeMapType[state][type]}
-      />
-    )
+        microphone: 'microphone-on',
+      },
+    };
+    return <SvgImg className={cls} type={volumeMapType[state][type]} />;
   }
 
   if (placement) {
     const text: Record<string, any> = {
-      'camera': {
+      camera: {
         // 'true': 'Close Camera',
         // 'false': 'Open Camera',
         'not-available': 'Camera Not Available',
         'not-permitted': 'Camera Not Available',
-        'available': streamState === true ? 'Close Camera' : 'Open Camera',
+        available: streamState === true ? 'Close Camera' : 'Open Camera',
       },
-      'microphone': {
+      microphone: {
         // 'true': 'Close Microphone',
         // 'false': 'Open Microphone',
         'not-available': 'Microphone Not Available',
         'not-permitted': 'Microphone Not Available',
-        'available': streamState === true ? 'Close Microphone' : 'Open Microphone',
-      }
-    }
-    const title = transI18n(text[type][`${state}`])
+        available:
+          streamState === true ? 'Close Microphone' : 'Open Microphone',
+      },
+    };
+    const title = transI18n(text[type][`${state}`]);
 
     const OverLayView = useCallback(() => {
-      return <span>{title}</span>
-    }, [title])
+      return <span>{title}</span>;
+    }, [title]);
     return (
-      <Tooltip overlay={<OverLayView />} placement={`${placement}` as TooltipPlacement}>
+      <Tooltip
+        overlay={<OverLayView />}
+        placement={`${placement}` as TooltipPlacement}>
         <span>
           <SvgImg
             className={cls}
@@ -398,7 +418,7 @@ export const MediaIcon = ({ className, hover, state, streamState = false, volume
           />
         </span>
       </Tooltip>
-    )
+    );
   }
 
   return (
@@ -408,5 +428,5 @@ export const MediaIcon = ({ className, hover, state, streamState = false, volume
       size={22}
       onClick={onClick}
     />
-  )
-}
+  );
+};

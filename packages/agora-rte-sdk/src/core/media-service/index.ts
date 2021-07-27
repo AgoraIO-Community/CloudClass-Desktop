@@ -3,13 +3,24 @@ import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
 import { LocalUserRenderer, VideoRenderState, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
-import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume, MediaEncryptionConfig } from './interfaces';
+import {
+  IMediaService,
+  RTCWrapperProvider,
+  RTCProviderInitParams,
+  CameraOption,
+  MicrophoneOption,
+  PrepareScreenShareParams,
+  StartScreenShareParams,
+  JoinOption,
+  MediaVolume,
+  MediaEncryptionConfig,
+} from './interfaces';
 import { AgoraElectronRTCWrapper } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { rteReportService } from '../services/report-service';
 import { EduManager } from '../../manager';
-import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../interfaces'
+import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../interfaces';
 // import packageJson from '../../../package.json';
 
 export class MediaService extends EventEmitter implements IMediaService {
@@ -25,23 +36,25 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   remoteUsersRenderer: RemoteUserRenderer[] = [];
 
-  screenShareIds: any[] = []
+  screenShareIds: any[] = [];
 
-  readonly _id!: string
+  readonly _id!: string;
 
-  private eduManager: EduManager
+  private eduManager: EduManager;
 
   encoderConfig: any;
 
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
     this.eduManager = rtcProvider.eduManager;
-    this._id = uuidv4()
-    this.encoderConfig = undefined
-    this.cameraRenderer = undefined
-    this.screenRenderer = undefined
-    this.remoteUsersRenderer = []
-    EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`)
+    this._id = uuidv4();
+    this.encoderConfig = undefined;
+    this.cameraRenderer = undefined;
+    this.screenRenderer = undefined;
+    this.remoteUsersRenderer = [];
+    EduLogger.info(
+      `[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`,
+    );
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
       this.sdkWrapper = new AgoraElectronRTCWrapper({
@@ -70,56 +83,64 @@ export class MediaService extends EventEmitter implements IMediaService {
         webConfig: {
           mode: 'live',
           codec: rtcProvider.codec,
-          role: (rtcProvider.userRole === EduRoleTypeEnum.teacher || rtcProvider.scenarioType === EduRoomTypeEnum.Room1v1Class) ? 'host': 'audience',
+          role:
+            rtcProvider.userRole === EduRoleTypeEnum.teacher ||
+            rtcProvider.scenarioType === EduRoomTypeEnum.Room1v1Class
+              ? 'host'
+              : 'audience',
           clientRoleOptions: {
-            level: 1
-          }
+            level: 1,
+          },
         },
         cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration,
         appId: rtcProvider.appId,
-        area: rtcProvider.rtcArea
-      })
+        area: rtcProvider.rtcArea,
+      });
     }
     this.sdkWrapper.on('network-quality', (quality: any) => {
-      this.fire('network-quality', quality)
-    })
+      this.fire('network-quality', quality);
+    });
     this.sdkWrapper.on('connection-state-change', (curState: any) => {
-      EduLogger.info("[media-service] connection-state-change ", curState)
-      this.fire('connection-state-change', { curState })
-    })
+      EduLogger.info('[media-service] connection-state-change ', curState);
+      this.fire('connection-state-change', { curState });
+    });
     this.sdkWrapper.on('volume-indication', (evt: any) => {
-      this.fire('volume-indication', evt)
-    })
+      this.fire('volume-indication', evt);
+    });
     this.sdkWrapper.on('local-audio-volume', (evt: any) => {
-      this.fire('local-audio-volume', evt)
-    })
+      this.fire('local-audio-volume', evt);
+    });
     this.sdkWrapper.on('exception', (err: any) => {
-      this.fire('exception', err)
-    })
+      this.fire('exception', err);
+    });
     this.sdkWrapper.on('user-unpublished', (evt: any) => {
-      const user = evt.user
-      if (evt.mediaType === 'audio') return
-      EduLogger.debug("sdkwrapper user-unpublished", user)
-      const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid && it.channel === evt.channel)
+      const user = evt.user;
+      if (evt.mediaType === 'audio') return;
+      EduLogger.debug('sdkwrapper user-unpublished', user);
+      const userIndex = this.remoteUsersRenderer.findIndex(
+        (it: any) => it.uid === user.uid && it.channel === evt.channel,
+      );
       if (userIndex !== -1) {
         const userRenderer = this.remoteUsersRenderer[userIndex]
         userRenderer.updateVideoRenderState(VideoRenderState.Idle)
         this.remoteUsersRenderer = this.remoteUsersRenderer.filter((it: any) => it !== userRenderer)
         this.fire('user-unpublished', {
           user,
-          remoteUserRender: userRenderer
-        })
+          remoteUserRender: userRenderer,
+        });
       }
-    })
+    });
 
     this.sdkWrapper.on('track-ended', (evt: any) => {
-      this.fire('track-ended', evt)
-    })
+      this.fire('track-ended', evt);
+    });
 
     this.sdkWrapper.on('user-published', (evt: any) => {
-      const user = evt.user
-      EduLogger.debug("sdk wrapper user-published", user)
-      const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid)
+      const user = evt.user;
+      EduLogger.debug('sdk wrapper user-published', user);
+      const userIndex = this.remoteUsersRenderer.findIndex(
+        (it: any) => it.uid === user.uid,
+      );
       if (userIndex === -1) {
         const newUserRenderer = new RemoteUserRenderer({
           context: this,
@@ -127,57 +148,62 @@ export class MediaService extends EventEmitter implements IMediaService {
           channel: evt.channel,
           videoTrack: user.videoTrack,
           sourceType: 'default',
-        })
-        this.remoteUsersRenderer.push(newUserRenderer)
-        EduLogger.debug("sdk wrapper user-published add remote user renderer, renderers length: ", this.remoteUsersRenderer.length)
+        });
+        this.remoteUsersRenderer.push(newUserRenderer);
+        EduLogger.debug(
+          'sdk wrapper user-published add remote user renderer, renderers length: ',
+          this.remoteUsersRenderer.length,
+        );
         this.fire('user-published', {
           user: user,
-          remoteUserRender: newUserRenderer
-        })
-        return
+          remoteUserRender: newUserRenderer,
+        });
+        return;
       } else {
         if (user.videoTrack) {
-          this.remoteUsersRenderer[userIndex].videoTrack = user.videoTrack
+          this.remoteUsersRenderer[userIndex].videoTrack = user.videoTrack;
         }
       }
       this.fire('user-published', {
         user: user,
-        remoteUserRender: this.remoteUsersRenderer[userIndex]
-      })
-    })
+        remoteUserRender: this.remoteUsersRenderer[userIndex],
+      });
+    });
     this.sdkWrapper.on('rtcStats', (evt: any) => {
-      this.fire('rtcStats', evt)
-    })
+      this.fire('rtcStats', evt);
+    });
     this.sdkWrapper.on('localVideoStats', (evt: any) => {
-      let { stats = {} } = evt
-      let { encoderOutputFrameRate = 0 } = stats
-      this.cameraRenderer?.setFPS(encoderOutputFrameRate)
+      let { stats = {} } = evt;
+      let { encoderOutputFrameRate = 0 } = stats;
+      this.cameraRenderer?.setFPS(encoderOutputFrameRate);
       this.fire('localVideoStats', {
         renderState: this.cameraRenderer?.renderState,
         renderFrameRate: this.cameraRenderer?.renderFrameRate,
         freezeCount: this.cameraRenderer?.freezeCount,
-        ...evt
-      })
-    })
+        ...evt,
+      });
+    });
     this.sdkWrapper.on('remoteVideoStats', (evt: any) => {
-      let { stats = {}, user = {} } = evt
-      let { decoderOutputFrameRate = 0 } = stats
-      let { uid } = user
-      let remoteUserRender = this.remoteUsersRenderer.find(render => render.uid === uid)
-      remoteUserRender?.setFPS(decoderOutputFrameRate)
+      let { stats = {}, user = {} } = evt;
+      let { decoderOutputFrameRate = 0 } = stats;
+      let { uid } = user;
+      let remoteUserRender = this.remoteUsersRenderer.find(
+        (render) => render.uid === uid,
+      );
+      remoteUserRender?.setFPS(decoderOutputFrameRate);
       this.fire('remoteVideoStats', {
         user,
         stats: {
           renderState: remoteUserRender?.renderState,
           renderFrameRate: remoteUserRender?.renderFrameRate,
           freezeCount: remoteUserRender?.freezeCount,
-          ...stats
-        }
-      })
-    })
+          ...stats,
+        },
+      });
+    });
     this.sdkWrapper.on('localVideoStateChanged', (evt: any) => {
-      this.fire('localVideoStateChanged', evt)
-    })
+      this.fire('localVideoStateChanged', evt);
+    });
     // this.sdkWrapper.on('volume-indication', (volumes: MediaVolume[]) => {
     //   this.fire('volume-indication', {
     //     volumes
@@ -187,168 +213,186 @@ export class MediaService extends EventEmitter implements IMediaService {
       //@ts-ignore
       if (window.agoraBridge) {
         this.electron.client.on('AudioDeviceStateChanged', (evt: any) => {
-          this.fire('audio-device-changed', (evt))
-        })
-  
+          this.fire('audio-device-changed', evt);
+        });
+
         this.electron.client.on('VideoDeviceStateChanged', (evt: any) => {
-          this.fire('video-device-changed', (evt))
-        })
+          this.fire('video-device-changed', evt);
+        });
       } else {
         this.electron.client.on('audiodevicestatechanged', (...evt: any[]) => {
-          const [deviceId, type, state] = evt
-          this.fire('audio-device-changed', {deviceId, type, state})
-        })
+          const [deviceId, type, state] = evt;
+          this.fire('audio-device-changed', { deviceId, type, state });
+        });
         this.electron.client.on('videodevicestatechanged', (...evt: any) => {
-          const [deviceId, type, state] = evt
-          this.fire('video-device-changed', {deviceId, type, state})
-        })
+          const [deviceId, type, state] = evt;
+          this.fire('video-device-changed', { deviceId, type, state });
+        });
       }
     } else {
       AgoraRTC.onCameraChanged = (info) => {
-        this.fire('video-device-changed', (info))
-      }
+        this.fire('video-device-changed', info);
+      };
       AgoraRTC.onMicrophoneChanged = (info) => {
-        this.fire('audio-device-changed', (info))
-      }
+        this.fire('audio-device-changed', info);
+      };
       AgoraRTC.onAudioAutoplayFailed = () => {
-        this.fire('audio-autoplay-failed')
-      }
+        this.fire('audio-autoplay-failed');
+      };
     }
   }
-    
-  async setRtcRole(roleType: string){
-    if(this.isElectron){
-      if(roleType === 'host'){
-        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(1, {
-          audienceLatencyLevel: 1
-        })
-      }else{
+
+  async setRtcRole(roleType: string) {
+    if (this.isElectron) {
+      if (roleType === 'host') {
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRoleWithOptions(1, {
+          audienceLatencyLevel: 1,
+        });
+      } else {
         (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
-        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
-          audienceLatencyLevel: 1
-        })
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRoleWithOptions(2, {
+          audienceLatencyLevel: 1,
+        });
       }
-    }else{
-      if(roleType === 'host'){
+    } else {
+      if (roleType === 'host') {
         (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
-      }else{
+      } else {
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
-        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
-          level: 1
-        })
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole(
+          'audience',
+          {
+            level: 1,
+          },
+        );
       }
     }
   }
 
   async muteLocalVideo(val: boolean, deviceId?: string): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.muteLocalVideo(val, deviceId)
+      await this.sdkWrapper.muteLocalVideo(val, deviceId);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.muteLocalVideo(val, deviceId)
+      await this.sdkWrapper.muteLocalVideo(val, deviceId);
     }
     if (val) {
       if (this.cameraRenderer) {
-        this.cameraRenderer.stop()
-        this.cameraRenderer = undefined
+        this.cameraRenderer.stop();
+        this.cameraRenderer = undefined;
       }
     } else {
       this.cameraRenderer = new LocalUserRenderer({
         context: this,
         uid: 0,
         channel: 0,
-        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
+        videoTrack:
+          (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ??
+          undefined,
         sourceType: 'default',
-      })
+      });
     }
   }
 
   async muteLocalAudio(val: boolean, deviceId?: string): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.muteLocalAudio(val, deviceId)
+      await this.sdkWrapper.muteLocalAudio(val, deviceId);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.muteLocalAudio(val, deviceId)
+      await this.sdkWrapper.muteLocalAudio(val, deviceId);
     }
   }
 
   disableLocalAudio() {
     if (this.isWeb) {
-      this.sdkWrapper.disableLocalAudio()
+      this.sdkWrapper.disableLocalAudio();
     }
     if (this.isElectron) {
-      this.sdkWrapper.disableLocalAudio()
+      this.sdkWrapper.disableLocalAudio();
     }
   }
 
   disableLocalVideo() {
     if (this.isWeb) {
-      this.sdkWrapper.disableLocalVideo()
+      this.sdkWrapper.disableLocalVideo();
     }
     if (this.isElectron) {
-      this.sdkWrapper.disableLocalVideo()
+      this.sdkWrapper.disableLocalVideo();
     }
-    this.cameraRenderer = undefined
+    this.cameraRenderer = undefined;
   }
 
   async enableLocalVideo(val: boolean): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.enableLocalVideo(val)
+      await this.sdkWrapper.enableLocalVideo(val);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.enableLocalVideo(val)
+      await this.sdkWrapper.enableLocalVideo(val);
     }
     if (val) {
       this.cameraRenderer = new LocalUserRenderer({
         context: this,
         uid: 0,
         channel: 0,
-        videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
+        videoTrack:
+          (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ??
+          undefined,
         sourceType: 'default',
-      })
+      });
     } else {
       if (this.cameraRenderer) {
         if (this.cameraRenderer._playing) {
-          this.cameraRenderer.stop()
+          this.cameraRenderer.stop();
         }
-        this.cameraRenderer = undefined
+        this.cameraRenderer = undefined;
       }
     }
   }
 
   async enableLocalAudio(val: boolean): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.enableLocalAudio(val)
+      await this.sdkWrapper.enableLocalAudio(val);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.enableLocalAudio(val)
+      await this.sdkWrapper.enableLocalAudio(val);
     }
   }
 
   async setCameraDevice(deviceId: string): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.setCameraDevice(deviceId)
+      await this.sdkWrapper.setCameraDevice(deviceId);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.setCameraDevice(deviceId)
+      await this.sdkWrapper.setCameraDevice(deviceId);
     }
   }
 
   async setMicrophoneDevice(deviceId: string): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.setMicrophoneDevice(deviceId)
+      await this.sdkWrapper.setMicrophoneDevice(deviceId);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.setMicrophoneDevice(deviceId)
+      await this.sdkWrapper.setMicrophoneDevice(deviceId);
     }
   }
 
   private fire(...params: any[]) {
-    const [message, ...args] = params
-    if (!['local-audio-volume', 'volume-indication', 'watch-rtt', 'network-quality'].includes(message)) {
-      EduLogger.info(args[0], args)
+    const [message, ...args] = params;
+    if (
+      ![
+        'local-audio-volume',
+        'volume-indication',
+        'watch-rtt',
+        'network-quality',
+      ].includes(message)
+    ) {
+      EduLogger.info(args[0], args);
     }
-    this.emit(message, ...args)
+    this.emit(message, ...args);
   }
 
   fireLocalVideoStateUpdated (state: VideoRenderState) {
@@ -360,180 +404,200 @@ export class MediaService extends EventEmitter implements IMediaService {
   }
 
   get isWeb(): boolean {
-    return this.sdkWrapper instanceof AgoraWebRtcWrapper
+    return this.sdkWrapper instanceof AgoraWebRtcWrapper;
   }
 
   get isElectron(): boolean {
-    return this.sdkWrapper instanceof AgoraElectronRTCWrapper
+    return this.sdkWrapper instanceof AgoraElectronRTCWrapper;
   }
   get sessionId(): string {
-    return this.isElectron ? (this.sdkWrapper.client as any).getCallId() : (this.sdkWrapper.client as any)._sessionId;
+    return this.isElectron
+      ? (this.sdkWrapper.client as any).getCallId()
+      : (this.sdkWrapper.client as any)._sessionId;
   }
   private getNativeCurrentVideoDevice() {
     if (this.electron._cefClient) {
       //@ts-ignore
-      return this.electron.client.videoDeviceManager.getDevice()
+      return this.electron.client.videoDeviceManager.getDevice();
     }
-    return this.electron.client.getCurrentVideoDevice()
+    return this.electron.client.getCurrentVideoDevice();
   }
 
   private getNativeVideoDevices() {
     //@ts-ignore
     if (this.electron._cefClient) {
-      //@ts-ignore
-      let list = this.electron.client.videoDeviceManager.enumerateVideoDevices()
+      let list =
+        //@ts-ignore
+        this.electron.client.videoDeviceManager.enumerateVideoDevices();
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
         devicename: it.deviceName,
-        kind: 'videoinput'
-      }))
-      return list
+        kind: 'videoinput',
+      }));
+      return list;
     }
-    return this.electron.client.getVideoDevices()
+    return this.electron.client.getVideoDevices();
   }
 
   private getNativeCurrentAudioDevice() {
     if (this.electron._cefClient) {
       //@ts-ignore
-      return this.electron.client.audioDeviceManager.getRecordingDevice()
+      return this.electron.client.audioDeviceManager.getRecordingDevice();
     }
-    return this.electron.client.getCurrentAudioRecordingDevice()
+    return this.electron.client.getCurrentAudioRecordingDevice();
   }
 
   private getNativeAudioDevices() {
     if (this.electron._cefClient) {
-      //@ts-ignore
-      let list = this.electron.client.audioDeviceManager.enumerateRecordingDevices()
+      let list =
+        //@ts-ignore
+        this.electron.client.audioDeviceManager.enumerateRecordingDevices();
       list = list.map((it: any) => ({
         deviceid: it.deviceId,
         devicename: it.deviceName,
-        kind: 'audioinput'
-      }))
-      return list
+        kind: 'audioinput',
+      }));
+      return list;
     }
-    return this.electron.client.getAudioRecordingDevices()
+    return this.electron.client.getAudioRecordingDevices();
   }
 
   getTestCameraLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.cameraTrack) {
-        return this.web.cameraTrack.getTrackLabel()
+        return this.web.cameraTrack.getTrackLabel();
       }
     }
     if (this.isElectron) {
-      const deviceId = this.getNativeCurrentVideoDevice()
-      const videoDeviceList = this.getNativeVideoDevices()
-      const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId)
+      const deviceId = this.getNativeCurrentVideoDevice();
+      const videoDeviceList = this.getNativeVideoDevices();
+      const videoDevice: any = videoDeviceList.find(
+        (d: any) => d.deviceid === deviceId,
+      );
       if (videoDevice) {
-        return videoDevice.devicename
+        return videoDevice.devicename;
       }
     }
-    return defaultLabel
+    return defaultLabel;
   }
 
   getTestMicrophoneLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.microphoneTrack) {
-        return this.web.microphoneTrack.getTrackLabel()
+        return this.web.microphoneTrack.getTrackLabel();
       }
     }
     if (this.isElectron) {
-      const deviceId = this.getNativeCurrentAudioDevice()
-      const audioDeviceList = this.getNativeAudioDevices()
-      const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId)
+      const deviceId = this.getNativeCurrentAudioDevice();
+      const audioDeviceList = this.getNativeAudioDevices();
+      const audioDevice: any = audioDeviceList.find(
+        (d: any) => d.deviceid === deviceId,
+      );
       if (audioDevice) {
-        return audioDevice.devicename
+        return audioDevice.devicename;
       }
     }
-    return defaultLabel
+    return defaultLabel;
   }
 
   getCameraLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.cameraTrack) {
-        //@ts-ignore
-        return this.web.cameraTrack._deviceName || this.web.cameraTrack.getTrackLabel()
+        return (
+          //@ts-ignore
+          this.web.cameraTrack._deviceName ||
+          this.web.cameraTrack.getTrackLabel()
+        );
       }
     }
     if (this.isElectron) {
-      const deviceId = this.getNativeCurrentVideoDevice()
-      const videoDeviceList = this.getNativeVideoDevices()
-      const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId)
+      const deviceId = this.getNativeCurrentVideoDevice();
+      const videoDeviceList = this.getNativeVideoDevices();
+      const videoDevice: any = videoDeviceList.find(
+        (d: any) => d.deviceid === deviceId,
+      );
       if (videoDevice) {
-        return videoDevice.devicename
+        return videoDevice.devicename;
       }
     }
-    return defaultLabel
+    return defaultLabel;
   }
 
   private getNativeSpeakerLabel(): string {
     if (this.isElectron) {
       if (this.electron._cefClient) {
         //@ts-ignore TODO: can uuse camelCase transform function get deviceName
-        return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo().deviceName
+        return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo()
+          .deviceName;
       }
+      const deviceName =
+        //@ts-ignore
+        this.electron.client.getPlaybackDeviceInfo()[0]?.devicename ?? '';
       //@ts-ignore
-      const deviceName = this.electron.client.getPlaybackDeviceInfo()[0]?.devicename ?? ''
-      //@ts-ignore
-      return deviceName
+      return deviceName;
     }
-    return ''
+    return '';
   }
 
   getSpeakerLabel(): string {
     if (this.isElectron) {
-      return this.getNativeSpeakerLabel()
+      return this.getNativeSpeakerLabel();
     }
 
-    return ''
+    return '';
   }
 
   getMicrophoneLabel(): string {
     const defaultLabel = '';
     if (this.isWeb) {
       if (this.web.microphoneTrack) {
-        //@ts-ignore
-        return this.web.microphoneTrack._deviceName || this.web.microphoneTrack.getTrackLabel()
+        return (
+          //@ts-ignore
+          this.web.microphoneTrack._deviceName ||
+          this.web.microphoneTrack.getTrackLabel()
+        );
       }
     }
     if (this.isElectron) {
-      const deviceId = this.getNativeCurrentAudioDevice()
-      const audioDeviceList = this.getNativeAudioDevices()
-      const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId)
+      const deviceId = this.getNativeCurrentAudioDevice();
+      const audioDeviceList = this.getNativeAudioDevices();
+      const audioDevice: any = audioDeviceList.find(
+        (d: any) => d.deviceid === deviceId,
+      );
       if (audioDevice) {
-        return audioDevice.devicename
+        return audioDevice.devicename;
       }
     }
-    return defaultLabel
+    return defaultLabel;
   }
 
   changePlaybackVolume(volume: number): void {
     if (this.isWeb) {
-      this.sdkWrapper.changePlaybackVolume(volume)
+      this.sdkWrapper.changePlaybackVolume(volume);
     }
     if (this.isElectron) {
-      this.sdkWrapper.changePlaybackVolume(volume)
+      this.sdkWrapper.changePlaybackVolume(volume);
     }
   }
 
   async muteRemoteVideo(uid: any, val: boolean): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.muteRemoteVideo(uid, val)
+      await this.sdkWrapper.muteRemoteVideo(uid, val);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.muteRemoteVideo(uid, val)
+      await this.sdkWrapper.muteRemoteVideo(uid, val);
     }
   }
 
   async muteRemoteAudio(uid: any, val: boolean): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.muteRemoteAudio(uid, val)
+      await this.sdkWrapper.muteRemoteAudio(uid, val);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.muteRemoteAudio(uid, val)
+      await this.sdkWrapper.muteRemoteAudio(uid, val);
     }
   }
 
@@ -553,41 +617,41 @@ export class MediaService extends EventEmitter implements IMediaService {
   // }
 
   get web(): AgoraWebRtcWrapper {
-    return (this.sdkWrapper as AgoraWebRtcWrapper)
+    return this.sdkWrapper as AgoraWebRtcWrapper;
   }
 
   get electron(): AgoraElectronRTCWrapper {
-    return (this.sdkWrapper as AgoraElectronRTCWrapper)
+    return this.sdkWrapper as AgoraElectronRTCWrapper;
   }
 
   init() {
     if (this.isWeb) {
-      this.sdkWrapper.init()
+      this.sdkWrapper.init();
     }
 
     if (this.isElectron) {
-      this.sdkWrapper.init()
+      this.sdkWrapper.init();
     }
   }
 
   release() {
     if (this.isWeb) {
-      this.sdkWrapper.release()
+      this.sdkWrapper.release();
     }
 
     if (this.isElectron) {
-      this.sdkWrapper.release()
+      this.sdkWrapper.release();
     }
   }
 
   prepare() {
-    return this.sdkWrapper.prepare()
+    return this.sdkWrapper.prepare();
   }
 
   async join(option: JoinOption): Promise<any> {
     try {
       // REPORT
-      rteReportService.startTick('joinRoom', 'rtc', 'joinChannel')
+      rteReportService.startTick('joinRoom', 'rtc', 'joinChannel');
       await this._join(option);
       let reportUserParams = {
         vid: this.eduManager.vid,
@@ -618,88 +682,96 @@ export class MediaService extends EventEmitter implements IMediaService {
         /**
          * apaas房间id，与rtc/rtm channelName相同
          */
-        roomId: option.data?.room.uuid
+        roomId: option.data?.room.uuid,
       };
-      rteReportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: true })
+      rteReportService.reportElapse('joinRoom', 'rtc', {
+        api: 'joinChannel',
+        result: true,
+      });
     } catch (e) {
-      rteReportService.reportElapse('joinRoom', 'rtc', { api: 'joinChannel', result: false, errCode: `${e.code || e.message}` })
-      throw e
+      rteReportService.reportElapse('joinRoom', 'rtc', {
+        api: 'joinChannel',
+        result: false,
+        errCode: `${e.code || e.message}`,
+      });
+      throw e;
     }
   }
 
   async _join(option: JoinOption): Promise<any> {
     if (this.isWeb) {
-      await this.sdkWrapper.join(option)
+      await this.sdkWrapper.join(option);
     }
     if (this.isElectron) {
-      await this.sdkWrapper.join(option)
+      await this.sdkWrapper.join(option);
     }
   }
 
   private destroyAllRenderers() {
     if (this.cameraRenderer) {
       if (this.cameraRenderer._playing) {
-        this.cameraRenderer.stop()
+        this.cameraRenderer.stop();
       }
-      this.cameraRenderer = undefined
-      EduLogger.info("remove local camera renderer success")
+      this.cameraRenderer = undefined;
+      EduLogger.info('remove local camera renderer success');
     }
     if (this.screenRenderer) {
       if (this.screenRenderer._playing) {
-        this.screenRenderer.stop()
+        this.screenRenderer.stop();
       }
-      this.screenRenderer = undefined
-      EduLogger.info("remove local screen renderer success")
+      this.screenRenderer = undefined;
+      EduLogger.info('remove local screen renderer success');
     }
     if (this.microphoneTrack) {
       if (this.microphoneTrack.isPlaying) {
-        this.microphoneTrack.stop()
+        this.microphoneTrack.stop();
       }
-      this.microphoneTrack = undefined
-      EduLogger.info("remove local microphone track success")
+      this.microphoneTrack = undefined;
+      EduLogger.info('remove local microphone track success');
     }
     if (this.remoteUsersRenderer && this.remoteUsersRenderer.length) {
       for (let render of this.remoteUsersRenderer) {
         if (render._playing) {
-          render.stop()
+          render.stop();
         }
       }
-      this.remoteUsersRenderer = []
-      EduLogger.info("remove remote users renderer success")
+      this.remoteUsersRenderer = [];
+      EduLogger.info('remove remote users renderer success');
     }
   }
 
   async leave(): Promise<any> {
     try {
       if (this.isWeb) {
-        await this.sdkWrapper.leave()
+        await this.sdkWrapper.leave();
       }
       if (this.isElectron) {
-        await this.sdkWrapper.leave()
+        await this.sdkWrapper.leave();
       }
-      this.destroyAllRenderers()
+      this.destroyAllRenderers();
     } catch (err) {
-      this.destroyAllRenderers()
-      GenericErrorWrapper(err)
+      this.destroyAllRenderers();
+      GenericErrorWrapper(err);
     }
   }
 
   async joinSubChannel(option: JoinOption): Promise<any> {
-    if (!option.channel) throw 'channelName is invalid'
+    if (!option.channel) throw 'channelName is invalid';
     if (this.isWeb) {
-      await this.sdkWrapper.joinSubChannel(option)
+      await this.sdkWrapper.joinSubChannel(option);
     } else {
-      await this.sdkWrapper.joinSubChannel(option)
+      await this.sdkWrapper.joinSubChannel(option);
     }
   }
 
   async leaveSubChannel(channelName: string): Promise<any> {
-    EduLogger.info(`call leaveSubChannel `, `${JSON.stringify(channelName)}`)
-    if (!channelName) throw GenericErrorWrapper({ message: 'channelName is invalid' })
+    EduLogger.info(`call leaveSubChannel `, `${JSON.stringify(channelName)}`);
+    if (!channelName)
+      throw GenericErrorWrapper({ message: 'channelName is invalid' });
     if (this.isWeb) {
-      await this.sdkWrapper.leaveSubChannel(channelName)
+      await this.sdkWrapper.leaveSubChannel(channelName);
     } else {
-      await this.sdkWrapper.leaveSubChannel(channelName)
+      await this.sdkWrapper.leaveSubChannel(channelName);
     }
   }
 
@@ -723,111 +795,128 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   async getCameras(): Promise<any> {
     if (this.isWeb) {
-      return await this.web.getCameras()
+      return await this.web.getCameras();
     }
 
     if (this.isElectron) {
-      return await this.electron.getCameras()
+      return await this.electron.getCameras();
     }
   }
 
   async getMicrophones(): Promise<any> {
     if (this.isWeb) {
-      return await this.web.getMicrophones()
+      return await this.web.getMicrophones();
     }
 
     if (this.isElectron) {
-      return await this.electron.getMicrophones()
+      return await this.electron.getMicrophones();
     }
   }
 
-  async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
+  async prepareScreenShare(
+    params: PrepareScreenShareParams = {},
+  ): Promise<any> {
     if (this.isWeb) {
-      await this.web.prepareScreenShare(params)
+      await this.web.prepareScreenShare(params);
       this.screenRenderer = new LocalUserRenderer({
         context: this,
         uid: 0,
         channel: 0,
         videoTrack: this.web.screenVideoTrack as ITrack,
         sourceType: 'screen',
-      })
+      });
     }
     if (this.isElectron) {
-      let items = await this.electron.prepareScreenShare(params)
-      return items
+      let items = await this.electron.prepareScreenShare(params);
+      return items;
     }
   }
 
   async startScreenShare(option: StartScreenShareParams): Promise<any> {
     try {
       if (this.isWeb) {
-        await this.sdkWrapper.startScreenShare(option)
+        await this.sdkWrapper.startScreenShare(option);
       }
       if (this.isElectron) {
-        await this.sdkWrapper.startScreenShare(option)
+        await this.sdkWrapper.startScreenShare(option);
         this.screenRenderer = new LocalUserRenderer({
           context: this,
           uid: 0,
           channel: 0,
           videoTrack: undefined,
           sourceType: 'screen',
-        })
+        });
       }
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async stopScreenShare(): Promise<any> {
     try {
       if (this.isWeb) {
-        await this.sdkWrapper.stopScreenShare()
+        await this.sdkWrapper.stopScreenShare();
       }
       if (this.isElectron) {
-        await this.sdkWrapper.stopScreenShare()
+        await this.sdkWrapper.stopScreenShare();
       }
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async changeResolution(config: any) {
     if (this.isWeb) {
-      await this.web.changeResolution(config)
+      await this.web.changeResolution(config);
     }
     if (this.isElectron) {
-      await this.electron.changeResolution(config)
+      await this.electron.changeResolution(config);
     }
   }
 
   getPlaybackVolume(): number {
     if (this.isElectron) {
-      return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1)
+      return +(
+        (this.electron.client.getAudioPlaybackVolume() / 255) *
+        100
+      ).toFixed(1);
     }
     return 100;
   }
 
-  enableMediaEncryptionConfig(enabled:boolean, config: MediaEncryptionConfig) {
-    return this.sdkWrapper.enableMediaEncryptionConfig(enabled, config)
+  enableMediaEncryptionConfig(enabled: boolean, config: MediaEncryptionConfig) {
+    return this.sdkWrapper.enableMediaEncryptionConfig(enabled, config);
   }
 
   reset(): void {
     if (this.isWeb) {
-      this.web.reset()
+      this.web.reset();
     }
     if (this.isElectron) {
-      this.electron.reset()
+      this.electron.reset();
     }
   }
 
-  setBeautyEffectOptions ({lighteningLevel = 0.7, rednessLevel = 0.1, smoothnessLevel = 0.5, isBeauty = true}: {lighteningLevel: number, rednessLevel: number, smoothnessLevel: number, isBeauty?: boolean}) {
+  setBeautyEffectOptions({
+    lighteningLevel = 0.7,
+    rednessLevel = 0.1,
+    smoothnessLevel = 0.5,
+    isBeauty = true,
+  }: {
+    lighteningLevel: number;
+    rednessLevel: number;
+    smoothnessLevel: number;
+    isBeauty?: boolean;
+  }) {
     if (this.isElectron) {
-      return (this.sdkWrapper as AgoraElectronRTCWrapper).setBeautyEffectOptions({
+      return (
+        this.sdkWrapper as AgoraElectronRTCWrapper
+      ).setBeautyEffectOptions({
         isBeauty,
         lighteningLevel,
         rednessLevel,
-        smoothnessLevel
-      })
+        smoothnessLevel,
+      });
     }
   }
 }

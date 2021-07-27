@@ -1,21 +1,29 @@
-const path = require('path')
+const path = require('path');
 
 const disableEsLint = (e) => {
-  return e.module.rules.filter(e =>
-    e.use && e.use.some(e => e.options && void 0 !== e.options.useEslintrc)).forEach(s => {
-      e.module.rules = e.module.rules.filter(e => e !== s)
-    }), e
-}
+  return (
+    e.module.rules
+      .filter(
+        (e) =>
+          e.use &&
+          e.use.some((e) => e.options && void 0 !== e.options.useEslintrc),
+      )
+      .forEach((s) => {
+        e.module.rules = e.module.rules.filter((e) => e !== s);
+      }),
+    e
+  );
+};
 
 module.exports = {
-  "stories": [
-    "../src/ui-kit/**/*.stories.mdx",
-    "../src/ui-kit/**/*.stories.@(js|jsx|ts|tsx)"
+  stories: [
+    '../src/ui-kit/**/*.stories.mdx',
+    '../src/ui-kit/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/preset-create-react-app"
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/preset-create-react-app',
   ],
   babel: async (options) => {
     return {
@@ -32,7 +40,7 @@ module.exports = {
         presets: [
           '@babel/preset-typescript',
           [
-            '@babel/preset-react', 
+            '@babel/preset-react',
             {
               runtime: 'automatic',
             },
@@ -52,20 +60,17 @@ module.exports = {
           options: {
             // ident: 'postcss',
             postcssOptions: {
-              plugins: [
-                require('tailwindcss'),
-                require('autoprefixer')
-              ]
-            }
-          }
-        }
+              plugins: [require('tailwindcss'), require('autoprefixer')],
+            },
+          },
+        },
       ],
       include: path.resolve(__dirname, '../'),
-    })
+    });
     config.module.rules.push({
       test: /\.js$/,
       loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-    })
+    });
     // config.module.rules.push(
     //   {
     //     test: /\.svg$/,
@@ -80,20 +85,26 @@ module.exports = {
       '~styles': path.resolve(__dirname, '../src/ui-kit/styles'),
       '~utilities': path.resolve(__dirname, '../src/ui-kit/utilities'),
       '~capabilities': path.resolve(__dirname, '../src/ui-kit/capabilities'),
-      '~capabilities/containers': path.resolve(__dirname, '../src/ui-kit/capabilities/containers'),
-      '~capabilities/hooks': path.resolve(__dirname, '../src/ui-kit/capabilities/hooks'),
-    }
-  
+      '~capabilities/containers': path.resolve(
+        __dirname,
+        '../src/ui-kit/capabilities/containers',
+      ),
+      '~capabilities/hooks': path.resolve(
+        __dirname,
+        '../src/ui-kit/capabilities/hooks',
+      ),
+    };
+
     config.resolve.modules = [
       path.resolve(__dirname, '../', 'node_modules'),
       'node_modules',
     ];
 
     config.plugins = config.plugins.filter(
-      (plugin) => plugin.constructor.name !== "ESLintWebpackPlugin",
+      (plugin) => plugin.constructor.name !== 'ESLintWebpackPlugin',
     );
 
     config.resolve.extensions.push('.ts', '.tsx', '.js');
-    return config
-  }
-}
+    return config;
+  },
+};

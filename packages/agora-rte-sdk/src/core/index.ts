@@ -1,1 +1,1 @@
-export * as RTM from './rtm'
+export * as RTM from './rtm';

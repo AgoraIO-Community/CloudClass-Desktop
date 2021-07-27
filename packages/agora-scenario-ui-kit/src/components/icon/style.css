@@ -1,4 +1,4 @@
-.hover{
+.hover {
   cursor: pointer;
 }
 
@@ -30,7 +30,7 @@
   color: #191919 !important;
 }
 
-.icon-hover{
+.icon-hover {
   border-radius: 9999px;
   cursor: pointer;
   text-align: center;
@@ -66,34 +66,34 @@
 }
 
 .icon-assistant-authorized.assistant-authorized {
-  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+  background-image: url('./assets/svg/teacher-granted-active.svg');
 }
 .icon-teacher-authorized.teacher-authorized {
-  background-image: url('./assets/svg/teacher-granted-active.svg'); 
+  background-image: url('./assets/svg/teacher-granted-active.svg');
 }
 .icon-teacher-whiteboard.teacher-whiteboard {
   background-image: url('./assets/svg/teacher-granted-default.svg');
 }
 .icon-student-authorized.student-authorized {
-  background-image: url('./assets/svg/student-granted-active.svg'); 
+  background-image: url('./assets/svg/student-granted-active.svg');
 }
 .icon-student-whiteboard.student-whiteboard {
   background-image: url('./assets/svg/student-granted-default.svg');
 }
 
 .icon-recording.recording {
-  background-image: url('./assets/svg/recording.svg'); 
+  background-image: url('./assets/svg/recording.svg');
 }
 .icon-share-screen.share-screen {
   background-image: url('./assets/svg/share-screen.svg');
 }
 .icon-checked.checked {
-  background-image: url('./assets/svg/icon-accept.svg'); 
+  background-image: url('./assets/svg/icon-accept.svg');
 }
-.icon-close.close{
+.icon-close.close {
   background-image: url('./assets/svg/icon-refuse.svg');
 }
-.icon-countdown.countdown{
+.icon-countdown.countdown {
   background-image: url('./assets/svg/icon-countdown.svg');
 }
 .icon-whitening.whitening {
@@ -123,22 +123,20 @@
 
 .prefix-microphone-on-outline.rtc-state-available,
 .prefix-camera.rtc-state-available,
-.prefix-microphone-on.rtc-state-available
-{
-  color: #357BF6 !important;
+.prefix-microphone-on.rtc-state-available {
+  color: #357bf6 !important;
 }
 
 .prefix-microphone-off-outline.rtc-state-available,
 .prefix-camera-off.rtc-state-available,
-.prefix-microphone-off.rtc-state-available
-{
-  color: #F04C36 !important;
+.prefix-microphone-off.rtc-state-available {
+  color: #f04c36 !important;
 }
 
 .prefix-microphone-on-outline.rtc-state-available,
 .prefix-camera.rtc-state-available,
 .prefix-microphone-off-outline.rtc-state-available,
-.prefix-camera-off.rtc-state-available{
+.prefix-camera-off.rtc-state-available {
   cursor: pointer !important;
 }
 
@@ -147,9 +145,8 @@
 .prefix-camera.rtc-state-not-available,
 .prefix-camera-off.rtc-state-not-available,
 .prefix-microphone-on.rtc-state-not-available,
-.prefix-microphone-off.rtc-state-not-available
-{
-  color: #BDBDCA !important;
+.prefix-microphone-off.rtc-state-not-available {
+  color: #bdbdca !important;
   user-select: none !important;
 }
 
@@ -158,9 +155,8 @@
 .prefix-camera.rtc-state-not-permitted,
 .prefix-camera-off.rtc-state-not-permitted,
 .prefix-microphone-on.rtc-state-not-permitted,
-.prefix-microphone-off.rtc-state-not-permitted
-{
-  color: #BDBDCA !important;
+.prefix-microphone-off.rtc-state-not-permitted {
+  color: #bdbdca !important;
   user-select: none !important;
 }
 

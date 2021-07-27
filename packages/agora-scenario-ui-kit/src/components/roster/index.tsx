@@ -25,7 +25,7 @@ export type ActionTypes =
 
 export enum MediaDeviceState {
   not_available = 0,
-  available = 1
+  available = 1,
 }
 
 export type ColumnKey =
@@ -36,7 +36,7 @@ export type ColumnKey =
   | 'micEnabled'
   | 'stars'
   | 'chat'
-  | 'kickOut'
+  | 'kickOut';
 
 export interface Profile {
   uid: string | number;
@@ -62,9 +62,14 @@ export interface Column {
   name: string;
   action?: ActionTypes;
   visibleRoles?: string[];
-  render?: (text: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => ReactNode;
+  render?: (
+    text: string,
+    profile: Profile,
+    canOperate: boolean,
+    userType: string,
+    onClick: any,
+  ) => ReactNode;
 }
-
 
 export interface RosterProps extends ModalProps {
   isDraggable?: boolean;
@@ -185,9 +190,16 @@ export const Roster: FC<RosterProps> = ({
 
   const cols = columns.filter(({ visibleRoles = [] }: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType))
 
-  const DraggableContainer = useCallback(({ children, cancel }: { children: React.ReactChild, cancel: string }) => {
-    return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>
-  }, [isDraggable])
+  const DraggableContainer = useCallback(
+    ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
+      return isDraggable ? (
+        <Draggable cancel={cancel}>{children}</Draggable>
+      ) : (
+        <>{children}</>
+      );
+    },
+    [isDraggable],
+  );
 
   const [currentTimes, setCurrentTimes] = useState(carouselProps.times)
 
@@ -214,9 +226,13 @@ export const Roster: FC<RosterProps> = ({
     <DraggableContainer cancel={".search-header"} >
       <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
         <div className="btn-pin">
-          <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => {
-            onClose()
-          }}/>
+          <SvgImg
+            type="close"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              onClose();
+            }}
+          />
         </div>
         <div className="main-title">
           {title ?? transI18n('roster.user_list')}
@@ -225,7 +241,9 @@ export const Roster: FC<RosterProps> = ({
           <div className="search-header roster-header">
             <div className="search-teacher-name">
               <label>{t('roster.teacher_name')}</label>
-              <span title={teacherName} className="roster-username">{teacherName}</span>
+              <span title={teacherName} className="roster-username">
+                {teacherName}
+              </span>
             </div>
             {/* {carousel && <CarouselMenu {...carouselProps} />} */}
             {carousel && (
@@ -317,7 +335,7 @@ export const Roster: FC<RosterProps> = ({
                           }
                           title={(data as any)[col.key]}
                           style={{
-                            paddingLeft: 25
+                            paddingLeft: 25,
                           }}
                           onClick={
                             canOperate(userType, localUserUuid, data, col)

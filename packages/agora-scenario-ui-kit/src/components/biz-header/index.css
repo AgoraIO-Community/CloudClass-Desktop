@@ -5,14 +5,14 @@
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
   border-top: 0px;
-  border: 1px solid #ECECF1;
+  border: 1px solid #ececf1;
 }
 
 .biz-header-title-wrap {
   @apply flex items-center divide-x;
 }
 
-.biz-subtitle .line:first-child{
+.biz-subtitle .line:first-child {
   padding-right: 8px;
 }
 
@@ -30,7 +30,7 @@
   @apply flex;
 }
 
-.header-actions > svg{
+.header-actions > svg {
   margin-left: 27px;
   font-size: 29px;
   color: #3f5c8f;
@@ -90,9 +90,21 @@
 .biz-col > span {
   color: #191919;
 }
-.biz-col > .label-info-list{
+.biz-col > span {
   color: #191919;
 }
-.biz-col > .label-info-list > span{
+.biz-col > .label-info-list {
   color: #191919;
+}
+.biz-col > .label-info-list > span {
+  color: #191919;
+}
+.biz-col > .right-gap {
+  margin-right: 5px;
+}
+.biz-col > .left-gap {
+  margin-left: 5px;
+}
+.fr {
+  float: right;
 }

@@ -1,38 +1,41 @@
-import { CourseWareItem } from "../api/declare";
-import { CourseWareUploadResult, CreateMaterialParams } from "../types";
-import { fileSizeConversionUnit } from "../utilities/kit";
-import { EduLogger, GenericErrorWrapper } from "agora-rte-sdk";
-import OSS, { MultipartUploadResult } from "ali-oss";
+import { CourseWareItem } from '../api/declare';
+import { CourseWareUploadResult, CreateMaterialParams } from '../types';
+import { fileSizeConversionUnit } from '../utilities/kit';
+import { EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
+import OSS, { MultipartUploadResult } from 'ali-oss';
 import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import axios from 'axios';
 
 export const mapFileType = (type: string): any => {
   if (type.match(/ppt|pptx|pptx/i)) {
-    return 'ppt'
+    return 'ppt';
   }
   if (type.match(/doc|docx/i)) {
-    return 'word'
+    return 'word';
   }
   if (type.match(/xls|xlsx/i)) {
-    return 'excel'
+    return 'excel';
   }
   if (type.match(/mp4/i)) {
-    return 'video'
+    return 'video';
   }
   if (type.match(/mp3/i)) {
-    return 'audio'
+    return 'audio';
   }
 
   if (type.match(/gif|png|jpeg|jpg|bmp/i)) {
-    return 'image'
+    return 'image';
   }
   if (type.match(/pdf/i)) {
-    return 'pdf'
+    return 'pdf';
+  }
+  if (type.match(/h5/i)) {
+    return 'h5';
   }
 
-  return 'excel'
-}
+  return 'excel';
+};
 
 export type MaterialAccess = 'public' | 'private' | 'extra'
 
@@ -84,17 +87,17 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
 }
 
 export interface UploadServiceResult {
-  success: boolean,
-  data: any,
-  message: string
+  success: boolean;
+  data: any;
+  message: string;
 }
 
 export type UploadConversionType = {
-  type: string,
-  preview: boolean,
-  scale: number,
-  outputFormat: string
-}
+  type: string;
+  preview: boolean;
+  scale: number;
+  outputFormat: string;
+};
 
 export type FetchStsTokenResult = {
   bucketName: string,
@@ -111,20 +114,24 @@ export type FetchStsTokenResult = {
 }
 
 export type HandleUploadType = {
-  file: File,
-  fileSize: number,
-  resourceUuid: string,
-  resourceName: string,
-  userUuid: string,
-  roomUuid: string,
-  ext: string,
-  conversion: any,
-  converting: boolean,
-  kind: any,
-  pptResult?: any,
-  onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
-}
-
+  file: File;
+  fileSize: number;
+  resourceUuid: string;
+  resourceName: string;
+  userUuid: string;
+  roomUuid: string;
+  ext: string;
+  conversion: any;
+  converting: boolean;
+  kind: any;
+  pptResult?: any;
+  onProgress: (evt: {
+    phase: string;
+    progress: number;
+    isTransFile?: boolean;
+    isLastProgress?: boolean;
+  }) => any;
+};
 
 export class UploadService extends ApiBase {
   ossClient: OSS | null;
@@ -139,54 +146,66 @@ export class UploadService extends ApiBase {
     this.xhr = new XMLHttpRequest()
     this.abortCheckpoint = {
       name: '',
-      uploadId: ''
-    }
-    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace("%app_id", this.appId)
+      uploadId: '',
+    };
+    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace(
+      '%app_id',
+      this.appId,
+    );
   }
 
-  region: string = 'cn-hz'
+  region: string = 'cn-hz';
 
   setRegion(region: string) {
-    EduLogger.info(`upload-service set region ${region}`)
-    this.region = region
+    EduLogger.info(`upload-service set region ${region}`);
+    this.region = region;
   }
 
   // 查询服务端是否已经存在课件
-  async queryMaterial(params: {name: string, roomUuid: string}): Promise<UploadServiceResult> {
-
+  async queryMaterial(params: {
+    name: string;
+    roomUuid: string;
+  }): Promise<UploadServiceResult> {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'GET',
-    })
+    });
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message
-      })
+        message: res.message,
+      });
     }
 
-    const files = res.data
+    const files = res.data;
     const file = files.find((fileItem: any) => {
-      return fileItem.resourceName === params.name
-    })
+      return fileItem.resourceName === params.name;
+    });
 
     if (file) {
       return {
         success: true,
         data: file,
-        message: 'found'
-      }
+        message: 'found',
+      };
     }
 
     return {
       success: false,
       data: null,
-      message: 'not_found'
-    }
+      message: 'not_found',
+    };
   }
 
-  async fetchStsToken(params: {resourceUuid: string, roomUuid: string, resourceName: string, ext: string, fileSize: number, conversion?: UploadConversionType}) {
+  async fetchStsToken(params: {
+    resourceUuid: string;
+    roomUuid: string;
+    resourceName: string;
+    ext: string;
+    fileSize: number;
+    conversion?: UploadConversionType;
+  }) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}/sts`,
       method: 'PUT',
@@ -196,22 +215,24 @@ export class UploadService extends ApiBase {
         // conversion: params.conversion,
         size: params.fileSize,
         conversion: params.conversion ?? undefined,
-      }
-    })
+      },
+    });
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message
-      })
+        message: res.message,
+      });
     }
     return {
       success: true,
-      data: res.data as FetchStsTokenResult
-    }
+      data: res.data as FetchStsTokenResult,
+    };
   }
 
   // 服务端创建课件，并申请stsToken
-  async createMaterial(params: CreateMaterialParams): Promise<UploadServiceResult> {
+  async createMaterial(
+    params: CreateMaterialParams,
+  ): Promise<UploadServiceResult> {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
@@ -223,73 +244,76 @@ export class UploadService extends ApiBase {
         taskToken: params.taskToken,
         taskProgress: params.taskProgress,
         size: params.size,
-      }
-    })
+      },
+    });
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message
-      })
+        message: res.message,
+      });
     }
 
-    const data = res.data
+    const data = res.data;
 
     if (data) {
       return {
         success: true,
         data: data,
-        message: 'found'
-      }
+        message: 'found',
+      };
     }
 
     return {
       success: false,
       data: null,
-      message: 'not_found'
-    }
+      message: 'not_found',
+    };
   }
 
   async fetchPublicResources(roomUuid: string) {
     const res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/resources`,
       method: 'GET',
-    })
+    });
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.msg || res.message
-      })
+        message: res.msg || res.message,
+      });
     }
 
     // const resources = res.data.map(transDataToResource)
 
-    return res.data
+    return res.data;
   }
 
   async fetchPersonResources(roomUuid: string, userUuid: string) {
     const res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/resources`,
       method: 'GET',
-    })
+    });
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.msg || res.message
-      })
+        message: res.msg || res.message,
+      });
     }
     // const resources = res.data.map(transDataToResource)
 
-    return res.data
+    return res.data;
   }
 
   async getFileInQueryMaterial(payload: {
-    roomUuid: string,
-    resourceName: string
+    roomUuid: string;
+    resourceName: string;
   }) {
-    return await this.queryMaterial({name: payload.resourceName, roomUuid: payload.roomUuid})
+    return await this.queryMaterial({
+      name: payload.resourceName,
+      roomUuid: payload.roomUuid,
+    });
   }
 
   async handleUpload(payload: HandleUploadType) {
@@ -360,8 +384,8 @@ export class UploadService extends ApiBase {
         (...args: any) => {
           payload.onProgress({
             phase: 'finish',
-            progress: args[1]
-          })
+            progress: args[1],
+          });
         },
         {
           callbackBody: ossConfig.callbackBody,
@@ -565,9 +589,9 @@ export class UploadService extends ApiBase {
           totalPageSize: ppt.scenes.length,
           convertedPageSize: ppt.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: ppt.scenes
-        }
-      })
+          convertedFileList: ppt.scenes,
+        },
+      });
       return {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
@@ -579,11 +603,11 @@ export class UploadService extends ApiBase {
           totalPageSize: ppt.scenes.length,
           convertedPageSize: ppt.scenes.length,
           convertedPercentage: 100,
-          convertedFileList: ppt.scenes
+          convertedFileList: ppt.scenes,
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: uploadResult.taskUuid,
-      }
+      };
     } else {
       const uploadResult: any = await this.addFileToAWS(
         payload.file,
@@ -612,15 +636,15 @@ export class UploadService extends ApiBase {
         size: fetchCallbackBody.size,
         url: uploadResult.ossURL,
         updateTime: uploadResult.updateTime,
-      }
-      return result
+      };
+      return result;
     }
 
   }
 
    cancelFileUpload() {
     if (this.ossClient) {
-      (this.ossClient as any).cancel()
+      (this.ossClient as any).cancel();
     }
     if (this.xhr) {
       this.xhr.abort()
@@ -631,59 +655,69 @@ export class UploadService extends ApiBase {
   get uploadCallbackPrefix() {
     const getDomain: Record<string, string> = {
       'https://api.agora.io': 'https://api-solutions.agoralab.co/',
-      'https://api-test.agora.io/preview': 'https://api-solutions-pre.agoralab.co/',
-      'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
-    }
+      'https://api-test.agora.io/preview':
+        'https://api-solutions-pre.bj2.agoralab.co/',
+      'https://api-solutions-dev.bj2.agoralab.co':
+        'https://api-solutions-dev.bj2.agoralab.co',
+    };
 
-    const defaultDomain = getDomain['https://api-solutions-dev.bj2.agoralab.co'];
+    const defaultDomain =
+      getDomain['https://api-solutions-dev.bj2.agoralab.co'];
 
-    const ossCallbackDomain = getDomain[this.sdkDomain]
+    const ossCallbackDomain = getDomain[this.sdkDomain];
 
     if (ossCallbackDomain) {
-      return ossCallbackDomain
+      return ossCallbackDomain;
     }
     return defaultDomain;
   }
 
-  async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
-    const prefix = ossParams.callbackHost
-    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
-    try{
-    const res: MultipartUploadResult = await ossClient.multipartUpload(
-      key,
-      file,
-      {
-        progress: (p, cpt, res) => {
-          this.abortCheckpoint = cpt
-          if (onProgress) {
-            onProgress(PPTProgressPhase.Uploading, p);
-          }
+  async addFileToOss(
+    ossClient: OSS,
+    key: string,
+    file: File,
+    onProgress: CallableFunction,
+    ossParams: any,
+  ) {
+    const prefix = this.uploadCallbackPrefix;
+    const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`;
+    try {
+      const res: MultipartUploadResult = await ossClient.multipartUpload(
+        key,
+        file,
+        {
+          progress: (p, cpt, res) => {
+            this.abortCheckpoint = cpt;
+            if (onProgress) {
+              onProgress(PPTProgressPhase.Uploading, p);
+            }
+          },
+          callback: {
+            // TODO: upload-service.ts
+            // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+            url: callbackUrl,
+            body: ossParams.callbackBody,
+            contentType: ossParams.contentType,
+          },
         },
-        callback: {
-          // TODO: upload-service.ts
-          // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
-          url: callbackUrl,
-          body: ossParams.callbackBody,
-          contentType: ossParams.contentType,
-        }
-      });
+      );
 
-      console.log("[agora-edu-core] res >>>>> ", res)
-    if (res.res.status === 200) {
-      const data = (res as any).data?.data ?? {}
-      console.log('upload res data ', data)
-      // const data = get(res.data, 'data', {})
-      return {
-        ossURL: ossClient.generateObjectUrl(key),
-        ...data
+      console.log('[agora-edu-core] res >>>>> ', res);
+      if (res.res.status === 200) {
+        const data = (res as any).data?.data ?? {};
+        console.log('upload res data ', data);
+        // const data = get(res.data, 'data', {})
+        return {
+          ossURL: ossClient.generateObjectUrl(key),
+          ...data,
+        };
+      } else {
+        throw new Error(`upload to ali oss error, status is ${res.res.status}`);
       }
-    } else {
-      throw new Error(`upload to ali oss error, status is ${res.res.status}`);
+    } catch (err) {
+      console.log('error', err);
     }
-  }catch (err) {
-      console.log('error', err)
-    }
-}
+  }
 
   addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
     const prefix = ossParams.callbackHost
@@ -716,7 +750,7 @@ export class UploadService extends ApiBase {
   }
 
   async fetchImageInfo(file: File, x: number, y: number) {
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       const image = new Image();
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -734,14 +768,21 @@ export class UploadService extends ApiBase {
           resolve(imageFile);
         };
       };
-    })
+    });
   }
 
   private getImageSize(imageInnerSize: imageSize): imageSize {
-    const windowSize: imageSize = {width: window.innerWidth, height: window.innerHeight};
-    const widthHeightProportion: number = imageInnerSize.width / imageInnerSize.height;
+    const windowSize: imageSize = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+    const widthHeightProportion: number =
+      imageInnerSize.width / imageInnerSize.height;
     const maxSize: number = 960;
-    if ((imageInnerSize.width > maxSize && windowSize.width > maxSize) || (imageInnerSize.height > maxSize && windowSize.height > maxSize)) {
+    if (
+      (imageInnerSize.width > maxSize && windowSize.width > maxSize) ||
+      (imageInnerSize.height > maxSize && windowSize.height > maxSize)
+    ) {
       if (widthHeightProportion > 1) {
         return {
           width: maxSize,
@@ -754,7 +795,10 @@ export class UploadService extends ApiBase {
         };
       }
     } else {
-      if (imageInnerSize.width > windowSize.width || imageInnerSize.height > windowSize.height) {
+      if (
+        imageInnerSize.width > windowSize.width ||
+        imageInnerSize.height > windowSize.height
+      ) {
         if (widthHeightProportion > 1) {
           return {
             width: windowSize.width,
@@ -775,43 +819,46 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async removeMaterials(params: {resourceUuids: string[], roomUuid: string, userUuid: string}) {
+  async removeMaterials(params: {
+    resourceUuids: string[];
+    roomUuid: string;
+    userUuid: string;
+  }) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'DELETE',
       data: {
-        resourceUuids: params.resourceUuids
-      }
-    })
+        resourceUuids: params.resourceUuids,
+      },
+    });
 
     if (res.code !== 0) {
       throw GenericErrorWrapper({
         code: res.code,
-        message: res.message
-      })
+        message: res.message,
+      });
     }
-    return res.data
+    return res.data;
   }
-
 }
 
 export type imageSize = {
-  width: number
-  height: number
+  width: number;
+  height: number;
 };
 
 export type PPTDataType = {
-    active: boolean
-    pptType: PPTType
-    id: string
-    data: any
-    cover?: any
+  active: boolean;
+  pptType: PPTType;
+  id: string;
+  data: any;
+  cover?: any;
 };
 
 export enum PPTType {
-    dynamic = "dynamic",
-    static = "static",
-    init = "init",
+  dynamic = 'dynamic',
+  static = 'static',
+  init = 'init',
 }
 export type NetlessImageFile = {
   width: number;
@@ -822,11 +869,14 @@ export type NetlessImageFile = {
 };
 
 export type TaskType = {
-  uuid: string,
-  imageFile: NetlessImageFile
+  uuid: string;
+  imageFile: NetlessImageFile;
 };
 
-export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
+export type PPTProgressListener = (
+  phase: PPTProgressPhase,
+  percent: number,
+) => void;
 
 export enum PPTProgressPhase {
   Uploading,

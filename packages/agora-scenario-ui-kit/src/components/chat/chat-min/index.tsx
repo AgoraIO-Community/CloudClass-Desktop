@@ -22,10 +22,10 @@ export const ChatMin: FC<ChatMinProps> = ({
   });
   return (
     <div className={cls} onClick={() => onClick && onClick()} {...restProps}>
-      <SvgImg 
+      <SvgImg
         type="chat"
         style={{
-          color: '#7B88A0'
+          color: '#7B88A0',
         }}
       />
       {unreadCount ? (

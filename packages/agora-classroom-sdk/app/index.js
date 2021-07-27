@@ -8,10 +8,10 @@ const { crashReporter } = require('electron');
 // const bt = require('backtrace-node');
 
 // workaround for resizable issue in mac os
-const os = require('os')
-const platform = os.platform()
-const release = os.release()
-const type = os.type()
+const os = require('os');
+const platform = os.platform();
+const release = os.release();
+const type = os.type();
 // Module to control application life.
 
 /**
@@ -29,7 +29,7 @@ const { app, Menu, netLog } = electron;
 
 app.allowRendererProcessReuse = false;
 // Menu template
-const isMac = platform === 'darwin'
+const isMac = platform === 'darwin';
 
 const globalShortcut = electron.globalShortcut;
 // Module to create native browser window.
@@ -40,7 +40,6 @@ const BrowserWindow = electron.BrowserWindow;
 let mainWindow;
 
 async function createWindow() {
-
   if (process.env.REACT_APP_CRASH_REPORT_URL) {
     crashReporter.start({
       productName: 'eEducation-demo',
@@ -334,14 +333,13 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-
 app.whenReady().then(() => {
   // more details: https://www.electronjs.org/docs/tutorial/keyboard-shortcuts
   globalShortcut.register('Control+Shift+X', () => {
     // Open the DevTools.
-    const currentWindow = BrowserWindow.getFocusedWindow()
+    const currentWindow = BrowserWindow.getFocusedWindow();
     currentWindow.webContents.openDevTools();
-  })
+  });
 });
 
 // Quit when all windows are closed.

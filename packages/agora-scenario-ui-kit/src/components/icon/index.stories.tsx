@@ -397,36 +397,36 @@ export const Docs = () => (
 );
 
 export const IconSvg = () => {
-  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   return (
     <>
       <div>
         <Icon
           type={isRecording ? 'recording' : 'record'}
           onClick={() => {
-            setIsRecording(!isRecording)
+            setIsRecording(!isRecording);
           }}
           hover={true}
         />
       </div>
     </>
-  )
-}
+  );
+};
 
 export const IconSvgH5 = () => {
-  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   return (
     <>
       <div>
         <SvgIcon
           type="h5"
           onClick={() => {
-            setIsRecording(!isRecording)
+            setIsRecording(!isRecording);
           }}
         />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default meta;

@@ -1,169 +1,167 @@
 .student-hands-up .student-box {
-    width: 100%;
-    height: 100%;
-    padding: 0 16px;
-    @apply box-border flex justify-between items-center;
+  width: 100%;
+  height: 100%;
+  padding: 0 16px;
+  @apply box-border flex justify-between items-center;
 }
 
 .hands-apply-inline-box {
-    font-size: 12px;
-    margin-left: 10px;
-    color: #586376;
+  font-size: 12px;
+  margin-left: 10px;
+  color: #586376;
 }
 
 .students-hands-up .card {
-    @apply block overflow-y-scroll;
+  @apply block overflow-y-scroll;
 }
 
 .students-hands-up .student-item {
-    width: 100%;
-    padding: 4px 10px 4px 16px;
-    @apply box-border flex justify-between items-center;
+  width: 100%;
+  padding: 4px 10px 4px 16px;
+  @apply box-border flex justify-between items-center;
 }
 
 .hands-up {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .hands-up .card {
-    position: relative;
+  position: relative;
 }
 
 .student-box .student-name,
 .student-item .student-name {
-    font-size: 14px;
-    color: #586376;
+  font-size: 14px;
+  color: #586376;
 }
 
-
 .students-hands-up .hands-up-card {
-    min-height: 37px !important;
-    height: auto !important;
-    width: 210px !important;
-    max-height: 290px !important;
+  min-height: 37px !important;
+  height: auto !important;
+  width: 210px !important;
+  max-height: 290px !important;
 }
 
 .hands-up .unread-count {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #F04C36;
-    top: 0;
-    right: 0;
-    font-size: 12px;
-    font-weight: 400;
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f04c36;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hands-box-line {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
-
 
 .received-card-enter {
-    /* animation: move-card 0.8s 0.2s ease-in-out; */
-    animation: change-card-bg 0.5s linear 0s 3;
+  /* animation: move-card 0.8s 0.2s ease-in-out; */
+  animation: change-card-bg 0.5s linear 0s 3;
 }
 .received-card-enter .prefix-hands-up {
-    /* animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out; */
+  /* animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out; */
 }
 
 .received-card-enter .prefix-hands-up:before {
-    animation: change-icon-content 0.5s linear 0s 3;
+  animation: change-icon-content 0.5s linear 0s 3;
 }
 
 @keyframes change-card-bg {
-   from {
-       background: #fff;
-   } 
-   to {
-       background: #357BF6;
-       color: #fff;
-   }
+  from {
+    background: #fff;
+  }
+  to {
+    background: #357bf6;
+    color: #fff;
+  }
 }
 
 @keyframes change-icon-content {
-    from {
-        content: '\e696';
-    }
-    to {
-        content: '\e699';
-        color: "#fff";
-    }
+  from {
+    content: '\e696';
+  }
+  to {
+    content: '\e699';
+    color: '#fff';
+  }
 }
 
-@keyframes move-card{
-    0% {
-        transform: translateX(0px);
-    }
-    25% {
-        transform: translateX(7px);
-    }
-    50% {
-        transform: translateX(-3px);
-    }
-    75% {
-        transform: translateX(3px);
-    }
-    100% {
-        transform: translateX(0px);
-    }
+@keyframes move-card {
+  0% {
+    transform: translateX(0px);
+  }
+  25% {
+    transform: translateX(7px);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }
 
-@keyframes hand-move{
-    0% {
-        transform: translateY(10px) rotate(0deg);
-    }
-    100% {
-        transform: translateY(0px) rotate(0deg);
-    }
+@keyframes hand-move {
+  0% {
+    transform: translateY(10px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
 }
 
 @keyframes hand-shake {
-    0% {
-        transform: rotate(0deg);
-    }
-    50% {
-        transform: rotate(30deg);
-    }
-    100% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(30deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .hands-up-sender {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .sender-can-hover:hover {
-    background-color: #357BF6;
+  background-color: #357bf6;
 }
 .sender-can-hover:hover > i::before {
-    content: '\e696';
-    color: #fff;
+  content: '\e696';
+  color: #fff;
 }
 
 .hands-up-manager:not(.can-not-hover):hover i::before {
-    content: '\e696';
-    color: #639AFA;
+  content: '\e696';
+  color: #639afa;
 }
 
 .operation-icon-wrap {
-    display: flex;
-    width: 62px;
-    justify-content: space-between;
+  display: flex;
+  width: 62px;
+  justify-content: space-between;
 }
 
 .operation-icon-wrap div.use-svg {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .customize-dialog-popover .popover-inner {
-    border-radius: 12px;
+  border-radius: 12px;
 }

@@ -7,8 +7,7 @@ const meta: Meta = {
   component: Calendar,
 };
 
-type DocsProps = {
-}
+type DocsProps = {};
 
 export const Docs = ({}: DocsProps) => (
   <>
@@ -18,7 +17,6 @@ export const Docs = ({}: DocsProps) => (
   </>
 );
 
-Docs.args = {
-}
+Docs.args = {};
 
 export default meta;

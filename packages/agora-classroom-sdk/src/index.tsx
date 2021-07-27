@@ -4,31 +4,29 @@ import { App } from '@/infra/monolithic/app';
 import { isElectron } from '@/infra/utils';
 import { EduManager } from 'agora-rte-sdk';
 import { eduSDKApi } from 'agora-edu-core';
-import {AgoraEduSDK} from './infra/api'
+import { AgoraEduSDK } from './infra/api';
 import { GlobalStorage } from '@/infra/utils';
 
 //@ts-ignore
-import { stopReportingRuntimeErrors } from "react-error-overlay";
+import { stopReportingRuntimeErrors } from 'react-error-overlay';
 
 // NOTE: 改方法仅在开发环境生效，所以在开发环境禁止。
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === 'development') {
   stopReportingRuntimeErrors(); // disables error overlays
 }
 
-
-
-GlobalStorage.useSessionStorage()
+GlobalStorage.useSessionStorage();
 //@ts-ignore
-window.AgoraEduSDK = AgoraEduSDK
+window.AgoraEduSDK = AgoraEduSDK;
 
 if (isElectron) {
-  EduManager.useElectron()
+  EduManager.useElectron();
 }
 
 eduSDKApi.updateConfig({
   sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
   appId: `${REACT_APP_AGORA_APP_ID}`,
-})
+});
 
 ReactDOM.render(
   <App
@@ -40,8 +38,8 @@ ReactDOM.render(
       rtmToken: '',
       rtmUid: '',
       courseWareList: [],
-      recordUrl: ''
+      recordUrl: '',
     }}
   />,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

@@ -1,5 +1,5 @@
 import { ApiInitParams } from './base';
-import { AgoraBoardApi } from "./board-api";
+import { AgoraBoardApi } from './board-api';
 import { EduLogger } from 'agora-rte-sdk';
 
 export class EduBoardService {
@@ -13,21 +13,24 @@ export class EduBoardService {
       rtmToken: params.rtmToken,
       appId: params.appId,
       sdkDomain: params.sdkDomain,
-    })
+    });
   }
 
   async getBoardInfo() {
-    let info = await this.apiService.getCurrentBoardInfo()
-    return info
+    let info = await this.apiService.getCurrentBoardInfo();
+    return info;
   }
 
   async updateBoardUserState(userUuid: string, grantPermission: number) {
-    let info = await this.apiService.updateCurrentBoardUserState(userUuid, grantPermission)
-    return info
+    let info = await this.apiService.updateCurrentBoardUserState(
+      userUuid,
+      grantPermission,
+    );
+    return info;
   }
 
   async updateBoardRoomState(follow: number) {
-    let info = await this.apiService.updateCurrentBoardState(follow)
-    return info
+    let info = await this.apiService.updateCurrentBoardState(follow);
+    return info;
   }
 }

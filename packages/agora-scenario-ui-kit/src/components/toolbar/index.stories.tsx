@@ -1,8 +1,16 @@
 import { Meta } from '@storybook/react';
 import React, { FC, useState, useRef } from 'react';
 import { Icon } from '~components/icon';
-import { CloudDisk, Colors, Pens, Toolbar, ToolbarProps, ToolCabinet, ToolItem } from '~components/toolbar';
-import { SvgImg } from '~components/svg-img'
+import {
+  CloudDisk,
+  Colors,
+  Pens,
+  Toolbar,
+  ToolbarProps,
+  ToolCabinet,
+  ToolItem,
+} from '~components/toolbar';
+import { SvgImg } from '~components/svg-img';
 
 const meta: Meta = {
   title: 'Components/Toolbar',
@@ -10,19 +18,22 @@ const meta: Meta = {
 };
 
 export const Docs: FC<ToolbarProps> = (props) => {
-  const [activeColor, updateColor]= useState<string>('#7ed321')
-  const [pen, updatePen]= useState<string>('pen')
+  const [activeColor, updateColor] = useState<string>('#7ed321');
+  const [pen, updatePen] = useState<string>('pen');
 
-  const [activeItem, updateActiveItem] = useState<string>('')
+  const [activeItem, updateActiveItem] = useState<string>('');
 
-  const handleClick = React.useCallback(async (type: string) => {
-    updateActiveItem(type)
-  }, [updateActiveItem])
+  const handleClick = React.useCallback(
+    async (type: string) => {
+      updateActiveItem(type);
+    },
+    [updateActiveItem],
+  );
   const tools: ToolItem[] = [
     {
       value: 'clicker',
       label: '鼠标',
-      icon: 'clicker'
+      icon: 'clicker',
     },
     {
       value: 'selection',
@@ -42,8 +53,8 @@ export const Docs: FC<ToolbarProps> = (props) => {
             activePen={pen}
             onClick={(color) => updatePen(color)}
           />
-        )
-        },
+        );
+      },
     },
     {
       value: 'text',
@@ -62,13 +73,13 @@ export const Docs: FC<ToolbarProps> = (props) => {
       component: () => {
         return (
           <Colors
-            value='color'
-            label='颜色'
-            icon='color'
+            value="color"
+            label="颜色"
+            icon="color"
             activeColor={activeColor}
             onClick={(color) => updateColor(color)}
           />
-        )
+        );
       },
     },
     {
@@ -86,14 +97,8 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '云盘',
       icon: 'cloud',
       component: () => {
-        return (
-          <CloudDisk
-            value="cloud"
-            label="云盘"
-            icon="cloud"
-          />
-        )
-      }
+        return <CloudDisk value="cloud" label="云盘" icon="cloud" />;
+      },
     },
     {
       value: 'follow',
@@ -107,32 +112,39 @@ export const Docs: FC<ToolbarProps> = (props) => {
       component: () => {
         return (
           <ToolCabinet
-            value='tools'
-            label='工具箱'
-            icon='tools'
+            value="tools"
+            label="工具箱"
+            icon="tools"
             cabinetList={[
               {
                 id: 'screenShare',
-                icon: <SvgImg type="tools"/>,
-                name: '屏幕共享'
+                icon: <SvgImg type="tools" />,
+                name: '屏幕共享',
               },
               {
                 id: 'laserPoint',
-                icon: <SvgImg type="tools"/>,
-                name: '激光笔'
+                icon: <SvgImg type="tools" />,
+                name: '激光笔',
               },
             ]}
           />
-        )
-      }
+        );
+      },
     },
     {
       value: 'register',
       label: '用户列表',
       icon: 'register',
-    }
+    },
   ];
-  return <Toolbar {...props} active={activeItem} onClick={handleClick} activeMap={{}} tools={tools}></Toolbar>
+  return (
+    <Toolbar
+      {...props}
+      active={activeItem}
+      onClick={handleClick}
+      activeMap={{}}
+      tools={tools}></Toolbar>
+  );
 };
 
 export default meta;

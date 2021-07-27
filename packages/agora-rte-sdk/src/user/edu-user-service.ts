@@ -1,15 +1,34 @@
 import { EventEmitter } from 'events';
 import { EduLogger } from '../core/logger/index';
-import { AgoraEduApi, BatchStreamAttribute, CauseType, EduStreamAttribute } from '../core/services/edu-api';
-import { DeleteStreamType, EduAudioSourceType, EduCourseState, EduRenderConfig, EduStream, EduStreamData, EduUser, EduVideoSourceType, StreamType } from '../interfaces';
+import {
+  AgoraEduApi,
+  BatchStreamAttribute,
+  CauseType,
+  EduStreamAttribute,
+} from '../core/services/edu-api';
+import {
+  DeleteStreamType,
+  EduAudioSourceType,
+  EduCourseState,
+  EduRenderConfig,
+  EduStream,
+  EduStreamData,
+  EduUser,
+  EduVideoSourceType,
+  StreamType,
+} from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
-import { defaultOperatorUser, OperatorUser, defaultCause } from './../room/types';
+import {
+  defaultOperatorUser,
+  OperatorUser,
+  defaultCause,
+} from './../room/types';
 
 export interface EduModelViewOption {
-  dom: HTMLElement
-  stream: EduStream
-  config?: EduRenderConfig
+  dom: HTMLElement;
+  stream: EduStream;
+  config?: EduRenderConfig;
 }
 
 export enum PeerInviteEnum {
@@ -18,7 +37,7 @@ export enum PeerInviteEnum {
   studentCancel = 3,
   teacherAccept = 4,
   teacherStop = 5,
-  studentStop = 6
+  studentStop = 6,
 }
 export interface IEduUserService {
   // setVideoConfig(config: EduVideoConfig): void;
@@ -43,7 +62,7 @@ export interface IEduUserService {
 
   sendRoomMessage(message: string): Promise<any>;
 
-  sendUserMessage(message: string, remoteUser: EduUser): Promise<any>;  
+  sendUserMessage(message: string, remoteUser: EduUser): Promise<any>;
 
   sendRoomChatMessage(message: string, remoteUser: EduUser): Promise<any>;
 
@@ -51,7 +70,6 @@ export interface IEduUserService {
 }
 
 export class EduUserService extends EventEmitter implements IEduUserService {
-
   roomManager!: EduClassroomManager;
 
   constructor(roomManager: EduClassroomManager) {
@@ -60,7 +78,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
   }
 
   get roomUuid(): string {
-    return this.roomManager.roomUuid
+    return this.roomManager.roomUuid;
   }
 
   get apiService(): AgoraEduApi {
@@ -69,25 +87,25 @@ export class EduUserService extends EventEmitter implements IEduUserService {
 
   get localUser(): EduUser {
     if (this.roomManager.data.localUser) {
-      return this.roomManager.data.localUser.user
+      return this.roomManager.data.localUser.user;
     }
-    return {} as EduUser
+    return {} as EduUser;
   }
 
   get localUserUuid(): string {
-    return this.localUser.userUuid
+    return this.localUser.userUuid;
   }
 
   get localStream(): EduStreamData {
-    return this.roomManager.data.localStreamData
+    return this.roomManager.data.localStreamData;
   }
 
   get screenStream(): EduStreamData {
-    return this.roomManager.data.localScreenShareStream
+    return this.roomManager.data.localScreenShareStream;
   }
 
   get data(): EduClassroomDataController {
-    return this.roomManager.data
+    return this.roomManager.data;
   }
 
   public async publishStream(stream: EduStream) {
@@ -100,7 +118,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       videoState: +stream.hasVideo as number,
       videoSourceType: stream.videoSourceType,
       audioSourceType: stream.audioSourceType,
-    })
+    });
     const screenStreamData = new EduStreamData({
       state: 1,
       streamUuid: stream.streamUuid,
@@ -113,55 +131,70 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       userInfo: {
         userUuid: this.data.localUser.user.userUuid,
         userName: this.data.localUser.user.userName,
-        role: this.data.localUser.user.role
+        role: this.data.localUser.user.role,
       },
       updateTime: res.ts,
-    })
-    this.data.upsertLocalStream('main', screenStreamData, defaultOperatorUser, defaultCause)
+    });
+    this.data.upsertLocalStream(
+      'main',
+      screenStreamData,
+      defaultOperatorUser,
+      defaultCause,
+    );
     return {
       streamUuid: res.streamUuid,
-      rtcToken: res.rtcToken
-    }
+      rtcToken: res.rtcToken,
+    };
   }
 
   public async unpublishStream(stream: Pick<EduStream, 'streamUuid'>) {
     let res = await this.apiService.deleteBizStream({
       roomUuid: this.roomUuid,
       userUuid: this.localUserUuid,
-      streamUuid: stream.streamUuid
-    })
-    EduLogger.info('[EDU-STATE] unpublish stream remove local stream, streamUuid: ', stream.streamUuid)
-    this.data.removeLocalStream(stream.streamUuid, defaultOperatorUser, defaultCause)
+      streamUuid: stream.streamUuid,
+    });
+    EduLogger.info(
+      '[EDU-STATE] unpublish stream remove local stream, streamUuid: ',
+      stream.streamUuid,
+    );
+    this.data.removeLocalStream(
+      stream.streamUuid,
+      defaultOperatorUser,
+      defaultCause,
+    );
   }
 
   async sendRoomMessage(message: string) {
     await this.apiService.sendChannelMessage({
       roomUuid: this.roomUuid,
-      msg: message
-    })
+      msg: message,
+    });
   }
 
   async sendUserMessage(message: string, remoteUser: EduUser) {
     await this.apiService.sendPeerMessage({
       roomUuid: this.roomUuid,
       userId: remoteUser.userUuid,
-      msg: message
-    })
+      msg: message,
+    });
   }
 
   async sendRoomChatMessage(message: string): Promise<any> {
     await this.apiService.sendRoomChatMessage({
       message,
       roomUuid: this.roomUuid,
-    })
+    });
   }
-  
-  async sendUserChatMessage(message: string, remoteUser: EduUser): Promise<any> {
+
+  async sendUserChatMessage(
+    message: string,
+    remoteUser: EduUser,
+  ): Promise<any> {
     await this.apiService.sendUserChatMessage({
       message,
       remoteUser,
       roomUuid: this.roomUuid,
-    })
+    });
   }
 
   public async updateRoomProperties2(properties: any, cause?: CauseType) {
@@ -169,7 +202,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       this.roomUuid,
       properties,
       cause,
-    )
+    );
   }
 
   public async updateRoomProperties(record: Record<string, any>) {
@@ -177,30 +210,30 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       roomUuid: this.roomUuid,
       key: record.key,
       value: record.value,
-      cause: record.cause
-    })
+      cause: record.cause,
+    });
   }
 
   public async updateRoomBatchProperties(record: Record<string, any>) {
     await this.apiService.updateRoomBatchProperties({
       roomUuid: this.roomUuid,
       properties: record.properties,
-      cause: record.cause
-    })
+      cause: record.cause,
+    });
   }
 
   public async updateCourseState(courseState: EduCourseState) {
     await this.apiService.updateCourseState({
       roomUuid: this.roomUuid,
-      courseState: +courseState
-    })
+      courseState: +courseState,
+    });
   }
 
   public async kickUser(userUuid: string) {
     await this.apiService.kickUser({
       roomUuid: this.roomUuid,
-      userUuid
-    })
+      userUuid,
+    });
   }
 
   public async allowStudentChatByRole(enable: boolean, roles: string[]) {
@@ -208,7 +241,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       roomUuid: this.roomUuid,
       enable,
       roles,
-    })
+    });
   }
 
   public async allowRemoteStudentChat(enable: boolean, user: EduUser) {
@@ -216,21 +249,26 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       roomUuid: this.roomUuid,
       userUuid: user.userUuid,
       muteChat: enable,
-    })
+    });
   }
 
   public async startShareScreen() {
-    if (this.screenStream && this.screenStream.stream && this.screenStream.stream.streamUuid) {  
-      const { rtcToken, streamUuid, ts } = await this.apiService.upsertBizStream({
-        roomUuid: this.roomUuid,
-        userUuid: this.localUserUuid,
-        streamName: this.screenStream.stream.streamName,
-        streamUuid: this.screenStream.stream.streamUuid,
-        videoSourceType: this.screenStream.stream.videoSourceType,
-        audioSourceType: this.screenStream.stream.audioSourceType,
-        videoState: true,
-        audioState: false,
-      } as any)
+    if (
+      this.screenStream &&
+      this.screenStream.stream &&
+      this.screenStream.stream.streamUuid
+    ) {
+      const { rtcToken, streamUuid, ts } =
+        await this.apiService.upsertBizStream({
+          roomUuid: this.roomUuid,
+          userUuid: this.localUserUuid,
+          streamName: this.screenStream.stream.streamName,
+          streamUuid: this.screenStream.stream.streamUuid,
+          videoSourceType: this.screenStream.stream.videoSourceType,
+          audioSourceType: this.screenStream.stream.audioSourceType,
+          videoState: true,
+          audioState: false,
+        } as any);
       const screenStreamData = new EduStreamData({
         state: 1,
         streamUuid: streamUuid,
@@ -243,11 +281,16 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userInfo: {
           userUuid: this.data.localUser.user.userUuid,
           userName: this.data.localUser.user.userName,
-          role: this.data.localUser.user.role
+          role: this.data.localUser.user.role,
         },
-        updateTime: ts
-      })
-      this.data.upsertLocalStream('screen', screenStreamData, defaultOperatorUser, defaultCause)
+        updateTime: ts,
+      });
+      this.data.upsertLocalStream(
+        'screen',
+        screenStreamData,
+        defaultOperatorUser,
+        defaultCause,
+      );
     } else {
       const stream: EduStreamData = new EduStreamData({
         state: 1,
@@ -261,9 +304,9 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userInfo: {
           userUuid: this.data.localUser.user.userUuid,
           userName: this.data.localUser.user.userName,
-          role: this.data.localUser.user.role
-        }
-      })
+          role: this.data.localUser.user.role,
+        },
+      });
       const params = {
         roomUuid: this.roomUuid,
         userUuid: this.localUserUuid,
@@ -273,20 +316,37 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         videoState: +stream.stream.hasVideo,
         videoSourceType: EduVideoSourceType.screen,
         audioSourceType: EduAudioSourceType.mic,
-      }
-      const { rtcToken, streamUuid, ts } = await this.apiService.upsertBizStream(params)
-      stream.setRtcToken(rtcToken)
-      stream.updateStreamUuid(streamUuid)
-      stream.updateTime(ts)
-      this.data.upsertLocalStream('screen', stream, defaultOperatorUser, defaultCause)
+      };
+      const { rtcToken, streamUuid, ts } =
+        await this.apiService.upsertBizStream(params);
+      stream.setRtcToken(rtcToken);
+      stream.updateStreamUuid(streamUuid);
+      stream.updateTime(ts);
+      this.data.upsertLocalStream(
+        'screen',
+        stream,
+        defaultOperatorUser,
+        defaultCause,
+      );
     }
   }
 
   public async stopShareScreen() {
     if (this.screenStream) {
-      await this.apiService.stopShareScreen(this.roomUuid, this.screenStream.stream.streamUuid, this.data.localUser.user.userUuid)
-      EduLogger.info('[EDU-STATE] unpublish stream remove local screen stream, streamUuid: ', this.screenStream.stream.streamUuid)
-      this.data.removeLocalStream(this.screenStream.stream.streamUuid, defaultOperatorUser, defaultCause)
+      await this.apiService.stopShareScreen(
+        this.roomUuid,
+        this.screenStream.stream.streamUuid,
+        this.data.localUser.user.userUuid,
+      );
+      EduLogger.info(
+        '[EDU-STATE] unpublish stream remove local screen stream, streamUuid: ',
+        this.screenStream.stream.streamUuid,
+      );
+      this.data.removeLocalStream(
+        this.screenStream.stream.streamUuid,
+        defaultOperatorUser,
+        defaultCause,
+      );
     }
   }
 
@@ -294,54 +354,54 @@ export class EduUserService extends EventEmitter implements IEduUserService {
     await this.apiService.remoteStartStudentCamera({
       roomUuid: this.roomUuid,
       userUuid: (stream.userInfo as any).userUuid,
-      streamUuid: stream.streamUuid
-    })
+      streamUuid: stream.streamUuid,
+    });
   }
 
   public async remoteStopStudentCamera(stream: EduStream) {
     await this.apiService.remoteStopStudentCamera({
       roomUuid: this.roomUuid,
       userUuid: (stream.userInfo as any).userUuid,
-      streamUuid: stream.streamUuid
-    })
+      streamUuid: stream.streamUuid,
+    });
   }
 
   public async remoteStartStudentMicrophone(stream: EduStream) {
     await this.apiService.remoteStartStudentMicrophone({
       roomUuid: this.roomUuid,
       userUuid: (stream.userInfo as any).userUuid,
-      streamUuid: stream.streamUuid
-    })
+      streamUuid: stream.streamUuid,
+    });
   }
 
   public async remoteStopStudentMicrophone(stream: EduStream) {
     await this.apiService.remoteStopStudentMicrophone({
       roomUuid: this.roomUuid,
       userUuid: (stream.userInfo as any).userUuid,
-      streamUuid: stream.streamUuid
-    })
+      streamUuid: stream.streamUuid,
+    });
   }
 
   public async batchUpsertStream(streams: Array<StreamType>) {
     await this.apiService.batchUpsertStream({
       roomUuid: this.roomUuid,
       streams: streams,
-    })
+    });
   }
 
   public async batchDeleteStream(streams: Array<DeleteStreamType>) {
     await this.apiService.batchDeleteStream({
       roomUuid: this.roomUuid,
       streams: streams,
-    })
+    });
   }
 
   public async remoteCloseStudentStream(stream: EduStream) {
     await this.apiService.remoteCloseStudentStream({
       roomUuid: this.roomUuid,
       userUuid: (stream.userInfo as any).userUuid,
-      streamUuid: stream.streamUuid
-    })
+      streamUuid: stream.streamUuid,
+    });
   }
 
   public async updateMainStreamState(args: Record<string, boolean>) {
@@ -349,8 +409,12 @@ export class EduUserService extends EventEmitter implements IEduUserService {
     // const prevVideoState = +this.localStream.stream.hasVideo
     // const curAudioState = args.hasOwnProperty('audioState') ? +args['audioState']: prevAudioState
     // const curVideoState = args.hasOwnProperty('videoState') ? +args['videoState'] : prevVideoState
-    const videoState: any = args.hasOwnProperty('videoState') ? +args.videoState : undefined
-    const audioState: any = args.hasOwnProperty('audioState') ? +args.audioState : undefined
+    const videoState: any = args.hasOwnProperty('videoState')
+      ? +args.videoState
+      : undefined;
+    const audioState: any = args.hasOwnProperty('audioState')
+      ? +args.audioState
+      : undefined;
     const params = {
       videoSourceType: this.localStream.stream.videoSourceType,
       audioSourceType: this.localStream.stream.audioSourceType,
@@ -360,17 +424,25 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       streamName: this.localStream.stream.streamName,
       generateToken: false,
       videoState: videoState,
-      audioState: audioState
-    }
-    await this.apiService.updateBizStream(params)
+      audioState: audioState,
+    };
+    await this.apiService.updateBizStream(params);
   }
 
   public async muteStudentChatByRoles(roles: string[]) {
-    await this.apiService.allowStudentChatByRole({enable: true, roomUuid: this.roomUuid, roles})
+    await this.apiService.allowStudentChatByRole({
+      enable: true,
+      roomUuid: this.roomUuid,
+      roles,
+    });
   }
 
   public async unmuteStudentChatByRoles(roles: string[]) {
-    await this.apiService.allowStudentChatByRole({enable: false, roomUuid: this.roomUuid, roles})
+    await this.apiService.allowStudentChatByRole({
+      enable: false,
+      roomUuid: this.roomUuid,
+      roles,
+    });
   }
 
   public async sendCoVideoApply(teacher: EduUser) {
@@ -380,13 +452,13 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: teacher.userUuid,
         userName: teacher.userName,
         type: PeerInviteEnum.studentApply,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: teacher,
-      roomUuid: this.roomUuid
-    })
+      roomUuid: this.roomUuid,
+    });
   }
 
   public async acceptCoVideoApply(student: EduUser) {
@@ -396,13 +468,13 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: student.userUuid,
         userName: student.userName,
         type: PeerInviteEnum.teacherAccept,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: student,
-      roomUuid: this.roomUuid
-    })
+      roomUuid: this.roomUuid,
+    });
   }
 
   public async rejectCoVideoApply(student: EduUser) {
@@ -412,17 +484,17 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: student.userUuid,
         userName: student.userName,
         type: PeerInviteEnum.teacherReject,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: student,
-      roomUuid: this.roomUuid
-    })  
+      roomUuid: this.roomUuid,
+    });
   }
 
   public async inviteStreamBy(args: any) {
-    await this.apiService.inviteUserPublishStream(args)
+    await this.apiService.inviteUserPublishStream(args);
   }
 
   public async studentCancelApply(teacher: EduUser) {
@@ -432,13 +504,13 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: teacher.userUuid,
         userName: teacher.userName,
         type: PeerInviteEnum.studentCancel,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: teacher,
-      roomUuid: this.roomUuid
-    })
+      roomUuid: this.roomUuid,
+    });
   }
 
   public async studentCloseStream(me: EduUser) {
@@ -448,13 +520,13 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: me.userUuid,
         userName: me.userName,
         type: PeerInviteEnum.studentCancel,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: me,
-      roomUuid: this.roomUuid
-    })
+      roomUuid: this.roomUuid,
+    });
   }
 
   public async teacherCloseStream(student: EduUser) {
@@ -464,35 +536,41 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         userUuid: student.userUuid,
         userName: student.userName,
         type: PeerInviteEnum.teacherStop,
-      }
-    })
+      },
+    });
     await this.apiService.sendUserChatMessage({
       message: msg,
       remoteUser: student,
-      roomUuid: this.roomUuid
-    })
+      roomUuid: this.roomUuid,
+    });
   }
 
   /**
    * 批量更新流属性
-   * @param streams 
+   * @param streams
    */
-  public async batchUpdateStreamAttributes(streams: EduStreamAttribute[], cause?: CauseType) {
-    await this.apiService.batchUpdateStreamAttributes(streams, cause)
+  public async batchUpdateStreamAttributes(
+    streams: EduStreamAttribute[],
+    cause?: CauseType,
+  ) {
+    await this.apiService.batchUpdateStreamAttributes(streams, cause);
   }
 
   /**
    * 批量移除流属性
-   * @param streams 
+   * @param streams
    */
-  public async batchRemoveStreamAttributes(streams: BatchStreamAttribute[], cause?: CauseType) {
-    await this.apiService.batchRemoveStreamAttributes(streams, cause)
+  public async batchRemoveStreamAttributes(
+    streams: BatchStreamAttribute[],
+    cause?: CauseType,
+  ) {
+    await this.apiService.batchRemoveStreamAttributes(streams, cause);
   }
 
   // /**
   //  * 批量更新用户属性
-  //  * @param userUuid 
-  //  * @param properties 
+  //  * @param userUuid
+  //  * @param properties
   //  */
   // public async batchUpdateUserAttributes(userUuid: string, properties: any, cause?: CauseType) {
   //   await this.apiService.batchUpdateUserAttributes(
@@ -505,37 +583,33 @@ export class EduUserService extends EventEmitter implements IEduUserService {
 
   /**
    * 批量移除用户属性
-   * @param userUuid 
-   * @param properties 
+   * @param userUuid
+   * @param properties
    */
   public async batchRemoveUserAttributes(userUuid: string, cause?: CauseType) {
     await this.apiService.batchRemoveUserAttributes(
       this.roomUuid,
       userUuid,
-      cause
-    )
+      cause,
+    );
   }
 
   /**
    * 批量更新房间属性
-   * @param properties 
+   * @param properties
    */
   public async batchUpdateRoomAttributes(properties: any, cause?: CauseType) {
     await this.apiService.batchUpdateRoomAttributes(
       this.roomUuid,
       properties,
-      cause
-    )
+      cause,
+    );
   }
 
   /**
    * 移除房间属性
    */
   public async batchRemoveRoomAttributes(cause?: CauseType) {
-    await this.apiService.batchRemoveRoomAttributes(
-      this.roomUuid,
-      cause
-    )
+    await this.apiService.batchRemoveRoomAttributes(this.roomUuid, cause);
   }
 }
-

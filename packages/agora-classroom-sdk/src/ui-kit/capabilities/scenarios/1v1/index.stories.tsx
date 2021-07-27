@@ -1,3 +1,1 @@
-export const OneToOneScenarioStory = () => {
-
-}
+export const OneToOneScenarioStory = () => {};

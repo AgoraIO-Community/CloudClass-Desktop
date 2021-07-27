@@ -1,5 +1,5 @@
 import { EduStream } from './../../interfaces/index';
-import AgoraRTM from 'agora-rtm-sdk'
+import AgoraRTM from 'agora-rtm-sdk';
 
 export const RtmLogLevel = [
   AgoraRTM.LOG_FILTER_OFF,
@@ -7,36 +7,36 @@ export const RtmLogLevel = [
   AgoraRTM.LOG_FILTER_INFO,
   AgoraRTM.LOG_FILTER_WARNING,
   //@ts-ignore
-  AgoraRTM.LOG_FILTER_DEBUG
-]
+  AgoraRTM.LOG_FILTER_DEBUG,
+];
 
 export type InternalStreamData = {
-  streamUuid: string,
-  streamName: string,
-  videoSourceType: number,
-  audioSourceType: number,
-  videoState: number,
-  audioState: number,
-  userUuid: string,
-  userName: string,
-  role: string
-}
+  streamUuid: string;
+  streamName: string;
+  videoSourceType: number;
+  audioSourceType: number;
+  videoState: number;
+  audioState: number;
+  userUuid: string;
+  userName: string;
+  role: string;
+};
 
-export type EduStreamRawData<Type> = Type & {streams: EduStream[]}
+export type EduStreamRawData<Type> = Type & { streams: EduStream[] };
 
 export type RawUserData = {
-  userUuid: string,
-  userName: string,
-  role: string,
-  muteChat: number,
-  userProperties: object,
-  streamUuid: string,
-  updateTime: number,
-  state: number,
-  type: number
-}
+  userUuid: string;
+  userName: string;
+  role: string;
+  muteChat: number;
+  userProperties: object;
+  streamUuid: string;
+  updateTime: number;
+  state: number;
+  type: number;
+};
 export type UsersStreamData = {
-  onlineUsers: RawUserData[],
-  offlineUsers: RawUserData[],
-  streams: InternalStreamData[]
-}
+  onlineUsers: RawUserData[];
+  offlineUsers: RawUserData[];
+  streams: InternalStreamData[];
+};
