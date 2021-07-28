@@ -1,10 +1,11 @@
 import { EduRoleTypeEnum} from 'agora-rte-sdk';
-import { useHandsUpContext, useRoomContext } from 'agora-edu-core'
+import { useHandsUpContext, useRoomContext, useUserListContext } from 'agora-edu-core'
 import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo, HandsStudentInfo, transI18n } from '~ui-kit';
 import { useUIStore } from '@/infra/hooks';
 import { useState, useEffect } from 'react';
 import { useEffectOnce } from '@/infra/hooks/utils';
+import { RosterUserInfo } from '@/infra/stores/types';
 
 export const HandsUpManagerContainer = observer(() => {
 
@@ -18,6 +19,10 @@ export const HandsUpManagerContainer = observer(() => {
         teacherAcceptHandsUp,
         teacherRejectHandsUp,
     } = useHandsUpContext()
+
+    const {
+        rosterUserList
+    } = useUserListContext()
 
     const handleUpdateList = async (type: string, info: StudentInfo) => {
         switch (type) {
@@ -43,8 +48,11 @@ export const HandsUpManagerContainer = observer(() => {
     }
 
     useEffect(()=>{
-        let hands = [...handsList]
-        hands.map(ele=> ele.hands = false)
+        let hands:HandsStudentInfo[] = []
+        rosterUserList.map((ele:RosterUserInfo)=>{
+            let _ele:HandsStudentInfo|undefined = handsList.find(s=>s.userUuid===ele.uid);
+            _ele && hands.push({..._ele,hands:false})
+        })
         handsUpStudentList.map((ele:StudentInfo)=>{
             let _ele:HandsStudentInfo|undefined = hands.find(s=>s.userUuid===ele.userUuid)
             let i = _ele?hands.indexOf(_ele):-1
@@ -54,8 +62,9 @@ export const HandsUpManagerContainer = observer(() => {
                 hands.splice(i,1,{...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
             }
         })
+
         setHandsList(hands)
-    },[handsUpStudentList])
+    },[handsUpStudentList,rosterUserList])
 
     return (
         <HandsUpManager
