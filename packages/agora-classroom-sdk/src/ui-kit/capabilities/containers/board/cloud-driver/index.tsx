@@ -142,7 +142,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> =
       const file = evt.target.files[0];
       const md5 = await calcUploadFilesMd5(file);
       const resourceUuid = MD5(`${md5}`);
-      const name = file.name.split('.')[0];
+      const name = file.name;
       const ext = file.name.split('.').pop();
       // hideToast()
       const supportedFileTypes = [

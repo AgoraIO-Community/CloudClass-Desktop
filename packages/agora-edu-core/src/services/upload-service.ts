@@ -827,7 +827,7 @@ export class UploadService extends ApiBase {
     onProgress: CallableFunction,
     ossParams: any,
   ) {
-    const prefix = this.uploadCallbackPrefix;
+    const prefix = ossParams.callbackHost;
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`;
     try {
       const res: MultipartUploadResult = await ossClient.multipartUpload(
