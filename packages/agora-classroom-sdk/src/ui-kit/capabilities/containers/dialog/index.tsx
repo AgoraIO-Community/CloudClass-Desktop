@@ -9,7 +9,7 @@ import {
   useCloudDriveContext,
   useGlobalContext,
 } from 'agora-edu-core';
-import { GenericError, GenericErrorWrapper } from 'agora-rte-sdk';
+import { GenericError, GenericErrorWrapper } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';

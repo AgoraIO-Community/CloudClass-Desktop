@@ -1,5 +1,5 @@
 import { transI18n } from '~ui-kit';
-import { GenericError } from 'agora-rte-sdk';
+import { GenericError } from 'agora-edu-core';
 
 const ExceptionMapping: Record<string, string> = {
   '20410100': 'error.class_end',

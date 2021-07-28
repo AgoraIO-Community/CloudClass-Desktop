@@ -27,7 +27,7 @@ import { useLayoutEffect } from 'react';
 import { useUIStore } from '@/infra/hooks';
 
 import { ToastContainer } from '~capabilities/containers/toast';
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { get } from 'lodash';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 

@@ -10,7 +10,7 @@ import Draggable from 'react-draggable';
 import { Dependencies } from './dependencies';
 import { eduSDKApi } from 'agora-edu-core';
 import { Modal, transI18n } from '~ui-kit';
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(

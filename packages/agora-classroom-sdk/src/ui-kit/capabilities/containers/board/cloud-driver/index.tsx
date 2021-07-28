@@ -4,7 +4,7 @@ import {
   PPTKind,
   useCloudDriveContext,
 } from 'agora-edu-core';
-import { EduLogger } from 'agora-rte-sdk';
+import { EduLogger } from 'agora-edu-core';
 import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
 import * as React from 'react';

@@ -28,3 +28,5 @@ export type { Resource } from './stores/board';
 
 export * from './services/edu-sdk-api';
 export * from './services/home-api';
+
+export * from 'agora-rte-sdk';

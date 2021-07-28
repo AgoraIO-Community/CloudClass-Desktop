@@ -20,6 +20,7 @@ import {
   ViewMode,
   RoomState,
   RoomPhase,
+  CameraState,
 } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
@@ -1127,8 +1128,17 @@ export class BoardStore extends ZoomController {
     });
     this.boardClient.on('onMemberStateChanged', (state: any) => {});
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      if (state.cameraState) {
+        if (state.cameraState && state.cameraState.scale) {
+          this.scale = state.cameraState.scale;
+        }
+        // TODO: teacher suppose sync camera state
+        if (this.canSyncCameraState) {
+          this.updateCameraState(state.cameraState as CameraState);
+        }
+      }
       if (state.globalState) {
-        // 判断锁定白板
+        // TODO: isFullScreen reactive to UI Component
         this.isFullScreen = state.globalState?.isFullScreen ?? false;
         this.updateBoardState(state.globalState);
       }
@@ -1594,6 +1604,59 @@ export class BoardStore extends ZoomController {
     room.setSceneIndex(_idx);
   }
 
+  getCurrentContextPath() {
+    const path = this.room.state.sceneState.contextPath;
+    if (path === '/' || path === '') {
+      return '/init';
+    }
+    return path;
+  }
+
+  @action.bound
+  setScenePath(path: string) {
+    this.room.setScenePath(path);
+    const scenesCameraMap = (this.room.state.globalState as any).cameraState;
+    const contextPath = this.getCurrentContextPath();
+    if (
+      this.canSyncCameraState &&
+      scenesCameraMap &&
+      scenesCameraMap.hasOwnProperty(contextPath) &&
+      scenesCameraMap[contextPath]
+    ) {
+      const cameraState = scenesCameraMap[contextPath];
+      this.room.moveCamera({
+        animationMode: AnimationMode.Immediately,
+        ...cameraState,
+      });
+    } else {
+      this.room.scalePptToFit();
+    }
+  }
+
+  updateCameraState(cameraState: CameraState) {
+    const room = this.room;
+    if (this.canSyncCameraState && room) {
+      const path = room.state.sceneState.contextPath;
+      if (path === '/' || path === '') {
+        this.room.setGlobalState({
+          cameraState: {
+            //@ts-ignore
+            ...this.room.state.globalState.cameraState,
+            ['/init']: cameraState,
+          },
+        });
+      } else {
+        this.room.setGlobalState({
+          cameraState: {
+            //@ts-ignore
+            ...this.room.state.globalState.cameraState,
+            [path]: cameraState,
+          },
+        });
+      }
+    }
+  }
+
   @action.bound
   updateBoardState(globalState: CustomizeGlobalState) {
     // const follow = globalState?.follow ?? false
@@ -1942,8 +2005,11 @@ export class BoardStore extends ZoomController {
   @observable
   resizeObserver!: ResizeObserver;
 
+  whiteBoardContainer?: HTMLElement;
+
   @action.bound
   mount(dom: any) {
+    this.whiteBoardContainer = dom;
     BizLogger.info('mounted', dom, this.boardClient && this.boardClient.room);
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom);
@@ -1962,6 +2028,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   unmount() {
+    this.whiteBoardContainer = undefined;
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null);
     }
@@ -2241,10 +2308,8 @@ export class BoardStore extends ZoomController {
       url: imageInfo.url,
       width: imageInfo.width,
       height: imageInfo.height,
-      //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
-      //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateX: this.whiteBoardContainer!.clientHeight / 2,
+      coordinateY: this.whiteBoardContainer!.clientWidth / 2,
     });
   }
 
@@ -2400,6 +2465,15 @@ export class BoardStore extends ZoomController {
     return ext === 'h5';
   }
 
+  @computed
+  get canSyncCameraState(): boolean {
+    const roles = [EduRoleTypeEnum.teacher];
+    if (roles.includes(this.appStore.roomInfo.userRole)) {
+      return true;
+    }
+    return false;
+  }
+
   @action.bound
   scaleToFit() {
     if (this.isH5IFrame) {
@@ -2409,8 +2483,23 @@ export class BoardStore extends ZoomController {
         //@ts-ignore
         this.room?.getInvisiblePlugin('IframeBridge')?.scaleIframeToFit();
       }
+    } else {
+      const scenesCameraMap = (this.room.state.globalState as any).cameraState;
+      const contextPath = this.getCurrentContextPath();
+      if (this.canSyncCameraState) {
+        if (
+          scenesCameraMap &&
+          scenesCameraMap.hasOwnProperty(contextPath) &&
+          scenesCameraMap[contextPath]
+        ) {
+          const cameraState = scenesCameraMap[contextPath];
+          this.room.moveCamera({
+            animationMode: AnimationMode.Immediately,
+            ...cameraState,
+          });
+        }
+      }
     }
-    this.room.scalePptToFit();
   }
 
   @action.bound
