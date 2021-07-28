@@ -793,9 +793,6 @@ export class UploadService extends ApiBase {
     if (this.xhr) {
       this.xhr.abort();
     }
-    if (this.xhr) {
-      this.xhr.abort();
-    }
     console.log('cancelFileUpload click cancel');
   }
 

@@ -34,7 +34,7 @@ export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
 export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
 export { AgoraWebRtcWrapper } from './core/media-service/web/index';
 export type { StreamSubscribeOptions } from './core/media-service/web/coordinator';
-export { VideoRenderState } from './core/media-service/renderer/index';
+// export { VideoRenderState } from './core/media-service/renderer/index';
 
 export type {
   LocalUserRenderer,

@@ -375,6 +375,11 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
+  async leaveBoard() {
+    await this.leave();
+  }
+
+  @action.bound
   async init(info: {
     boardId: string;
     boardToken: string;

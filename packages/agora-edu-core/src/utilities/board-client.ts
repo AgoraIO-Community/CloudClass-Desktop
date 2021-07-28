@@ -1,24 +1,22 @@
+import { IframeBridge } from '@netless/iframe-bridge';
+import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
 import { EventEmitter } from 'events';
-import {
-  Room,
-  WhiteWebSdk,
-  DeviceType,
-  createPlugins,
-  Plugins,
-  JoinRoomParams,
-  Player,
-  ReplayRoomParams,
-  ViewMode,
-  RoomState,
-  ApplianceNames,
-  LoggerReportMode,
-} from 'white-web-sdk';
-import { videoPlugin2 } from '@netless/white-video-plugin2';
-import { audioPlugin2 } from '@netless/white-audio-plugin2';
 import { get } from 'lodash';
+import {
+  ApplianceNames,
+  createPlugins,
+  DeviceType,
+  JoinRoomParams,
+  LoggerReportMode,
+  Player,
+  Plugins,
+  ReplayRoomParams,
+  Room,
+  RoomState,
+  ViewMode,
+  WhiteWebSdk,
+} from 'white-web-sdk';
 import { BizLogger } from './biz-logger';
-import { IframeBridge, IframeWrapper } from '@netless/iframe-bridge';
-import { PluginId, Version, videoJsPlugin } from '@netless/video-js-plugin';
 
 export interface SceneFile {
   name: string;

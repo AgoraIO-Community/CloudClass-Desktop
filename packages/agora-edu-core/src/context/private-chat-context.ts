@@ -1,4 +1,4 @@
-import { eduSDKApi } from '..';
+import { eduSDKApi } from '../services/edu-sdk-api';
 import { useRoomStore, useSmallClassStore } from './core';
 import { PrivateChatContext } from './type';
 
