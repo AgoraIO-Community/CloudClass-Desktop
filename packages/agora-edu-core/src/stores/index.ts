@@ -10,7 +10,15 @@ import {
   PrepareScreenShareParams,
 } from 'agora-rte-sdk';
 import { isEmpty, get } from 'lodash';
-import { observable, action, autorun, toJS, computed, runInAction } from 'mobx';
+import {
+  observable,
+  action,
+  autorun,
+  toJS,
+  computed,
+  reaction,
+  runInAction,
+} from 'mobx';
 import { EduBoardService } from '../services/edu-board-service';
 import { EduRecordService } from '../services/edu-record-service';
 import { eduSDKApi } from '../services/edu-sdk-api';
@@ -34,8 +42,9 @@ import {
 import { WidgetStore } from './widget';
 import { reportServiceV2 } from '../services/report-v2';
 import { Subject } from 'rxjs';
+import { APaaSInternalState, APaaSLifeCycle } from '../api/lifecycle';
 
-export class EduScenarioAppStore {
+export class EduScenarioAppStore extends APaaSLifeCycle {
   // stores
   /**
    * appStore类
@@ -190,22 +199,33 @@ export class EduScenarioAppStore {
 
   private dom: HTMLElement;
 
+  // lifeCycle: APaaSLifeCycle = new APaaSLifeCycle()
+
+  @observable
+  lifeCycleState: APaaSInternalState = APaaSInternalState.Idle;
+
   constructor(
     params: AppStoreInitParams,
     dom: HTMLElement,
     appController: any,
   ) {
+    super();
+    appController.subscribe({
+      onControllerDestroy: this.destroy,
+    });
+    this.appController = appController;
+    this.lifeCycleState = super.getLifeCycleState();
+    reaction(
+      () => this.lifeCycleState,
+      (lifeCycleState: APaaSInternalState) => {
+        if (lifeCycleState === APaaSInternalState.Created) {
+          // appController.on
+        }
+      },
+    );
     this.params = params;
     this.dom = dom;
-    if (appController) {
-      appController.bindStoreDestroy(this.destroy);
-      console.log('bind store destroy success');
-      this.appController = appController;
-    }
-    // console.log(" roomInfoParams ", params.roomInfoParams)
-    // console.log(" config >>> params: ", {...this.params})
     const { config, roomInfoParams, language } = this.params;
-
     const sdkDomain = config.sdkDomain;
 
     console.log('[ID] appStore ### ', this.id, ' config', config);
@@ -271,7 +291,7 @@ export class EduScenarioAppStore {
     autorun(() => {
       const deviceInfo = toJS(this.deviceInfo);
       GlobalStorage.save('agora_edu_device', {
-        deviceInfo: deviceInfo,
+        deviceInfo,
       });
     });
 

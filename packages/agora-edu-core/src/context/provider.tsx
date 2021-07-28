@@ -363,6 +363,7 @@ export const useBoardContext = (): BoardContext => {
     isBoardScreenShare,
     boardConnectionState,
     joinBoard,
+    leaveBoard,
   } = useBoardStore();
 
   const {
@@ -440,6 +441,7 @@ export const useBoardContext = (): BoardContext => {
     publicResources,
     boardConnectionState,
     joinBoard,
+    leaveBoard,
   };
 };
 

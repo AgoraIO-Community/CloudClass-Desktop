@@ -1,121 +1,129 @@
-import { unmountComponentAtNode } from 'react-dom'
-import { AgoraEduEvent } from '../declare'
-import { render } from 'react-dom'
-import { ReactElement } from 'react'
+import { unmountComponentAtNode } from 'react-dom';
+import { AgoraEduEvent } from '../declare';
+import { render } from 'react-dom';
+import { ReactElement } from 'react';
 
 export enum EduSDKInternalStateEnum {
-  Created = "created",
-  Initialized = "initialized",
-  Destroyed = "destroyed"
+  Created = 'created',
+  Initialized = 'initialized',
+  Destroyed = 'destroyed',
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent) => any;
+
+export type LifeEventFunction = (...args: any[]) => never;
+
+export type ControllerLifeEvents = {
+  onControllerDestroy: LifeEventFunction;
+};
 
 export abstract class ClassRoomAbstractStore {
-
-  constructor() {
-
-  }
+  constructor() {}
 
   destroy!: () => Promise<any>;
 }
 
 export class ClassRoom<T extends ClassRoomAbstractStore> {
-
-  private readonly store!: T
-  private dom!: HTMLElement
-  private readonly controller: EduSDKController<T>
+  private readonly store!: T;
+  private dom!: HTMLElement;
+  private readonly controller: EduSDKController<T>;
 
   constructor(context: EduSDKController<T>) {
-    this.controller = context
+    this.controller = context;
   }
 
-  async destroy () {
-    await this.controller.destroy()
+  async destroy() {
+    await this.controller.destroy();
   }
 }
 
 export class EduSDKController<T extends ClassRoomAbstractStore> {
-
   private room!: ClassRoom<T>;
   private dom!: HTMLElement;
-  public callback!: EventCallableFunction
-  public _storeDestroy!: CallableFunction
-  private _state: EduSDKInternalStateEnum = EduSDKInternalStateEnum.Created
+  public callback!: EventCallableFunction;
 
-  private _lock: boolean = false
+  /**
+   * onControllerLifeCycle
+   */
+  private onControllerDestroy!: CallableFunction;
 
-  constructor(
-  ) {
-    this.room = new ClassRoom(this)
+  /**
+   * controller的状态
+   */
+  private _state: EduSDKInternalStateEnum = EduSDKInternalStateEnum.Created;
+
+  private _lock: boolean = false;
+
+  constructor() {
+    this.room = new ClassRoom(this);
   }
 
   get hasCalled() {
     if (this._lock || this.isInitialized) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   get lock(): boolean {
-    return this._lock
+    return this._lock;
   }
 
   acquireLock() {
-    this._lock = true
+    this._lock = true;
     return () => {
-      this._lock = false
-    }
+      this._lock = false;
+    };
   }
-  
+
   get isInitialized(): boolean {
-    return this.state === EduSDKInternalStateEnum.Initialized
+    return this.state === EduSDKInternalStateEnum.Initialized;
   }
 
   getClassRoom() {
-    return this.room
+    return this.room;
   }
 
   get state() {
-    return this._state
+    return this._state;
   }
 
-  create(component: ReactElement, dom: HTMLElement, callback: EventCallableFunction) {
-    this.dom = dom
-    this.callback = callback
-    render(component, this.dom)
-    this._state = EduSDKInternalStateEnum.Initialized
-    this.callback(AgoraEduEvent.ready)
+  create(
+    component: ReactElement,
+    dom: HTMLElement,
+    callback: EventCallableFunction,
+  ) {
+    this.dom = dom;
+    this.callback = callback;
+    render(component, this.dom);
+    this._state = EduSDKInternalStateEnum.Initialized;
+    this.callback(AgoraEduEvent.ready);
   }
 
-
-  bindStoreDestroy(destroy: CallableFunction) {
-    this._storeDestroy = destroy
+  subscribe({ onControllerDestroy }: ControllerLifeEvents) {
+    this.onControllerDestroy = onControllerDestroy;
   }
 
   async destroy() {
-    if (this._storeDestroy) {
-      await this._storeDestroy()
+    if (this.onControllerDestroy) {
+      await this.onControllerDestroy();
     }
-    unmountComponentAtNode(this.dom)
-    this._state = EduSDKInternalStateEnum.Destroyed
-    this.callback(AgoraEduEvent.destroyed)
+    unmountComponentAtNode(this.dom);
+    this._state = EduSDKInternalStateEnum.Destroyed;
+    this.callback(AgoraEduEvent.destroyed);
   }
 }
 
 export class MainController {
-  
   constructor(
     public readonly appController = new EduSDKController(),
     public readonly replayController = new EduSDKController(),
-    public readonly storageController = new EduSDKController()
-  ) {
-  }
-
+    public readonly storageController = new EduSDKController(),
+  ) {}
 
   getAppClassRoom() {
-    return this.appController.getClassRoom()
+    return this.appController.getClassRoom();
   }
 }
 
-export const controller = new MainController()
+export const controller = new MainController();

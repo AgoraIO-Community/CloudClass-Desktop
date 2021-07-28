@@ -1,10 +1,10 @@
-import { globalConfigs } from '../../utilities/config'
+import { globalConfigs } from '../../utilities/config';
 
 export const getLiveRoomPath = (roomType: number) => {
-  const routes = globalConfigs.routesMap
-  const routePath = routes.routesPath[roomType]
+  const routes = globalConfigs.routesMap;
+  const routePath = routes.routesPath[roomType];
   if (!routePath) {
-    return routes.defaultRoutePath
+    return routes.defaultRoutePath;
   }
-  return routePath
-}
+  return routePath;
+};

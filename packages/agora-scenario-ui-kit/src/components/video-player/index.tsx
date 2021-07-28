@@ -579,9 +579,9 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           videoContainerRef.current,
         );
         if (satisfied) {
-          videoContainerParentRef.current.classList.add('show-scroll');
+          videoContainerRef.current.classList.add('show-scroll');
         } else {
-          videoContainerParentRef.current.classList.remove('show-scroll');
+          videoContainerRef.current.classList.remove('show-scroll');
         }
       }
       const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
