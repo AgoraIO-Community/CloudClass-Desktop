@@ -33,6 +33,7 @@ import {
   UserListContext,
   VideoControlContext,
   VolumeContext,
+  LiveRoomStatsContext,
 } from './type';
 
 export { CoreContext, CoreContextProvider } from './core';
@@ -221,7 +222,6 @@ export const useRoomContext = (): RoomContext => {
     kickOutBan,
     kickOutOnce,
     join,
-    liveClassStatus,
     roomProperties,
     updateFlexProperties,
     flexProperties,
@@ -257,7 +257,6 @@ export const useRoomContext = (): RoomContext => {
     isCourseStart: !!classState,
     kickOutBan,
     kickOutOnce,
-    liveClassStatus,
     // TO-REVIEW
     // ui context?
     removeScreenShareWindow,
@@ -283,6 +282,14 @@ export const useRoomContext = (): RoomContext => {
     startCarousel,
     stopCarousel,
     joined,
+  };
+};
+
+export const useLiveRoomStatsContext = (): LiveRoomStatsContext => {
+  const { liveClassStatus } = useRoomStore();
+
+  return {
+    liveClassStatus,
   };
 };
 

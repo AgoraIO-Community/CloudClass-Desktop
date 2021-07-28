@@ -1,24 +1,9 @@
 import React, { FC } from 'react';
-import { Inline, Tooltip } from '~components';
-import { Icon, IconTypes } from '~components/icon';
+import { Tooltip } from '~components';
 import { Header } from '~components/layout';
-import { Popover } from '~components/popover';
 import { transI18n } from '../i18n';
 import './index.css';
-import { SignalContent } from './signal-content';
 import { SvgImg } from '~components/svg-img';
-
-const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
-  excellent: 'good-signal',
-  good: 'normal-signal',
-  bad: 'bad-signal',
-  unknown: 'unknown-signal',
-};
-const CLASS_STATUS_TEXT_COLOR: { [key: string]: string } = {
-  'pre-class': '#677386',
-  'in-class': '#677386',
-  'end-class': '#F04C36',
-};
 export interface MonitorInfo {
   /**
    * CPU 使用率, 单位: %
@@ -58,14 +43,6 @@ export type BizClassStatus = 'pre-class' | 'in-class' | 'end-class';
 
 export interface BizHeaderProps {
   /**
-   * 是否是原生
-   */
-  isNative: boolean;
-  /**
-   * 课程状态
-   */
-  classState: BizClassStatus;
-  /**
    * 课程是否正在录制
    */
   isRecording: boolean;
@@ -73,60 +50,33 @@ export interface BizHeaderProps {
    * 课程 title
    */
   title: string;
-  /**
-   * 信号强度
-   */
-  signalQuality: 'excellent' | 'good' | 'bad' | 'unknown';
-  /**
-   * 系统相关信息
-   */
-  monitor: MonitorInfo;
 
-  /**
-   * 课程文本状态
-   */
-  classStatusText: string;
-
-  /**
-   *
-   */
   onClick: (itemType: string) => void;
 
   userType?: 'teacher' | 'student';
+
+  ClassStatusComponent: any;
+  SingalQualityComponent: any;
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
-  classState,
   isRecording = false,
-  isNative = false,
-  signalQuality,
   title,
-  classStatusText,
-  monitor,
   userType = 'student',
   onClick,
+  ClassStatusComponent,
+  SingalQualityComponent,
 }) => {
   return (
     <>
       <Header className="biz-header">
-        <Popover
-          content={<SignalContent {...monitor} isNative={isNative} />}
-          placement="bottomLeft">
-          <div className={`biz-signal-quality ${signalQuality}`}>
-            <SvgImg
-              className="cursor-pointer"
-              type={SIGNAL_QUALITY_ICONS[signalQuality] as IconTypes}
-              size={24}
-            />
-          </div>
-        </Popover>
+        <div>
+          <SingalQualityComponent />
+        </div>
         <div className="biz-header-title-wrap">
           <div className="biz-header-title">{title}</div>
           <div className="biz-header-title biz-subtitle">
-            <Inline color={CLASS_STATUS_TEXT_COLOR[classState]}>
-              {classStatusText}
-            </Inline>
-            {/* <Inline color="#677386">{formatTime}</Inline> */}
+            <ClassStatusComponent />
           </div>
         </div>
         <div className="header-actions">

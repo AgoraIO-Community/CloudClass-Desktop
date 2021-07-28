@@ -522,14 +522,6 @@ export type RoomContext = {
    */
   kickOutOnce: (userUuid: string, roomUuid: string) => Promise<void>;
   /**
-   * 课程状态
-   * @version v1.1.0
-   */
-  liveClassStatus: {
-    classState: string;
-    duration: number;
-  };
-  /**
    * 禁用视频
    * @param userUuid 用户uuid
    * @param isLocal 是否为本地用户
@@ -1524,4 +1516,15 @@ export type ClassroomStatsContext = {
    * @version v1.3.0
    */
   txNetworkQuality: string;
+};
+
+export type LiveRoomStatsContext = {
+  /**
+   * 课程状态
+   * @version v1.1.0
+   */
+  liveClassStatus: {
+    classState: string;
+    duration: number;
+  };
 };
