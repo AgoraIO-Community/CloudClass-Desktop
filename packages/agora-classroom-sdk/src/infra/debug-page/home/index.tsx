@@ -2,7 +2,7 @@ import { useAudienceParams, useHomeStore } from '@/infra/hooks';
 import { changeLanguage, Home } from '~ui-kit';
 import { storage } from '@/infra/utils';
 import { homeApi, LanguageEnum } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduSceneType } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduSceneType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router';

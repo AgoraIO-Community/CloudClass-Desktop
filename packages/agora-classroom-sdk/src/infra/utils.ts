@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { AgoraMediaDeviceEnum } from '@/infra/types';
-import { EduRoleTypeEnum, EduTextMessage } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduTextMessage } from 'agora-edu-core';
 import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';

@@ -9,7 +9,7 @@ import {
   useStreamListContext,
   useUserListContext,
 } from 'agora-edu-core';
-import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-edu-core';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';

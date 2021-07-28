@@ -15,7 +15,7 @@ import {
   AgoraExtAppWhiteboard,
 } from 'agora-plugin-gallery';
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token';
-import { EduRoomTypeEnum } from 'agora-rte-sdk';
+import { EduRoomTypeEnum } from 'agora-edu-core';
 
 //@ts-ignore
 window.recordController = controller;

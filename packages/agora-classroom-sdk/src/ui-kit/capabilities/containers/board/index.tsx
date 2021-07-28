@@ -8,7 +8,7 @@ import {
   RoomPhase,
 } from 'agora-edu-core';
 import { ZoomItemType } from '~ui-kit/components';
-import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
+import { EduRoleTypeEnum, EduRoomType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useMemo } from 'react';
 import { ColorsContainer } from '~capabilities/containers/board/colors';

@@ -7,7 +7,7 @@ import {
   useRoomContext,
   useWidgetContext,
 } from 'agora-edu-core';
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import classnames from 'classnames';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
