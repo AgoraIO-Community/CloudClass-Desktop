@@ -23,7 +23,7 @@ import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
-const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void ,onTitle: (title: string) => void }) => {
+const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) => void ,onTitle: (title: string) => void, lang: 'zh'|'en' }) => {
   const pluginStore = usePluginStore()
 
   const {events} = pluginStore.context
@@ -49,7 +49,9 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
         height: '100%'
       }}
       className={classnames({
-        [`answer-modal`]: 1
+        [`answer-modal`]: 1,
+        [`answer-role-student`]: pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student,
+        [`answer-language-en`]: lang === 'en'
       })}
     >
       {pluginStore.ui?.includes('sels') ? <div className="answer-items" >
@@ -92,7 +94,7 @@ const App = observer(({ onHeight,onTitle }: { onHeight: (height: number) => void
       {pluginStore.ui?.includes('infos') ? <div className="answer-info">
         {['number-answered', 'acc', 'right-key', 'my-answer'].map((key: any,index: number) => (index < 3 || pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student?(
           <div className='answer-info-line' key={key}>
-            <span className='answer-info-tab'>{transI18n('answer.' + key) + '： '}</span><span className='answer-info-value'>{pluginStore.answerInfo ? pluginStore.answerInfo[key] : ''}</span>
+            <span className='answer-info-tab'>{transI18n('answer.' + key) + '： '}</span><span style={(index===3&&pluginStore&&pluginStore.answerInfo)?{color:pluginStore.answerInfo[key]===pluginStore.answerInfo['right-key']?'#3AB449':'#F04C36'}:{}} className='answer-info-value'>{pluginStore.answerInfo ? pluginStore.answerInfo[key] : ''}</span>
           </div>
         ):null))}
       </div> : null}
@@ -138,7 +140,7 @@ export class AgoraExtAppAnswer implements IAgoraExtApp {
             this.height = height
           }} onTitle={(title: string) => {
             this.title = title
-          }} />
+          }} lang={this.language} />
         </Provider>
       </I18nProvider>
     ),

@@ -169,8 +169,9 @@ export class PluginStore {
                 this.changeRoomProperties({ state: 'clearStudent' })
             } else if (state === "clearStudent") {
                 let propers: string[] = [];
-                this.context.properties.students && this.context.properties.students.map((ele: string) => {
-                    propers.push('student' + ele)
+                let keys = Object.keys(this.context.properties)
+                keys.map((ele: string) => {
+                    ['answer','canChange','title','endTime','items','mulChoice','startTime','state','studentNames','students'].includes(ele) || propers.push(ele)
                 })
                 console.log('clearStudent:',this.context.properties.students,propers,this.context.properties);
                 await this.handle.deleteRoomProperties(propers, {})

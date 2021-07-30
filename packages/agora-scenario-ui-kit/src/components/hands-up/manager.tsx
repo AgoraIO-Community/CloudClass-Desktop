@@ -53,7 +53,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
   const [animStart, setAnimStart] = useState<boolean>(false);
 
   useWatch(processUserCount, prev => {
-    if (prev === undefined || processUserCount > prev) {
+    if (prev === undefined || processUserCount > 0) {
       setAnimStart(true)
     } else {
       setAnimStart(false)
@@ -73,11 +73,8 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
     <div className={cls} {...restProps}>
       <CSSTransition
         in={animStart}
-        timeout={timeout}
+        timeout={300*1000}
         classNames={'received-card'}
-        onEntered={() => {
-          setAnimStart(false)
-        }}
       >
         <Popover
           visible={popoverVisible}

@@ -155,8 +155,9 @@ export class PluginStore {
                 this.changeRoomProperties({ state: 'clearStudent' })
             } else if (state === "clearStudent") {
                 let propers: string[] = [];
-                this.context.properties.students && this.context.properties.students.map((ele: string) => {
-                    propers.push('student' + ele)
+                let keys = Object.keys(this.context.properties)
+                keys.map((ele: string) => {
+                    ['answer','canChange','endTime','items','mulChoice','startTime','state','studentNames','students'].includes(ele) || propers.push(ele)
                 })
                 console.log('clearStudent:',this.context.properties.students,propers,this.context.properties);
                 await this.handle.deleteRoomProperties(propers, {})
@@ -250,7 +251,7 @@ export class PluginStore {
                 this.answer = properties.items
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'answer'
-                this.height = (this.answer?.length || 0) > 4 ? 220 : 150
+                this.height = (this.answer?.length || 0) > 4 ? 190 : 120
                 this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
                 this.ui = ['sels', 'subs']
                 if (this.status !== 'answer') {
@@ -294,7 +295,7 @@ export class PluginStore {
                 this.currentTime = ''
                 this.students = []
                 this.status = 'config'
-                this.height = 150
+                this.height = 120
                 this.buttonName = 'answer.submit'
                 this.ui = ['infos']
             }

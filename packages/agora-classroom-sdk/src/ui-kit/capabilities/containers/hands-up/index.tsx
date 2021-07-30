@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum} from 'agora-rte-sdk';
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { useHandsUpContext, useRoomContext, useUserListContext } from 'agora-edu-core'
 import { observer } from 'mobx-react';
 import { HandsUpManager, HandsUpSender, StudentInfo, HandsStudentInfo, transI18n } from '~ui-kit';
@@ -37,34 +37,36 @@ export const HandsUpManagerContainer = observer(() => {
         }
     }
 
-    const [handsList,setHandsList] = useState<Array<HandsStudentInfo>>([])
+    const [handsList, setHandsList] = useState<Array<HandsStudentInfo>>([])
 
     const handsVisibleChanged = () => {
-        let hands:HandsStudentInfo[] = []
-        handsUpStudentList.map((ele:StudentInfo)=>{
-            hands.push({...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
+        let hands: HandsStudentInfo[] = []
+        applyCoVideoUserList.map((ele: StudentInfo) => {
+            hands.push({ ...ele, hands: applyCoVideoUserList.find(s => s.userUuid === ele.userUuid) !== undefined })
         })
         setHandsList(hands)
     }
 
-    useEffect(()=>{
-        let hands:HandsStudentInfo[] = []
-        rosterUserList.map((ele:RosterUserInfo)=>{
-            let _ele:HandsStudentInfo|undefined = handsList.find(s=>s.userUuid===ele.uid);
-            _ele && hands.push({..._ele,hands:false})
+    useEffect(() => {
+        let hands: HandsStudentInfo[] = []
+        rosterUserList.map((ele: RosterUserInfo) => {
+            let _ele: HandsStudentInfo | undefined = handsList.find(s => s.userUuid === ele.uid);
+            _ele && hands.push({ ..._ele, hands: false })
         })
-        handsUpStudentList.map((ele:StudentInfo)=>{
-            let _ele:HandsStudentInfo|undefined = hands.find(s=>s.userUuid===ele.userUuid)
-            let i = _ele?hands.indexOf(_ele):-1
-            if(i < 0){
-                hands.push({...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
-            }else{
-                hands.splice(i,1,{...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
+        applyCoVideoUserList.map((ele: StudentInfo) => {
+            let _ele: HandsStudentInfo | undefined = hands.find(s => s.userUuid === ele.userUuid)
+            let i = _ele ? hands.indexOf(_ele) : -1
+            if (i < 0) {
+                //hands.push({...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
+                hands.push({ ...ele, hands: true })
+            } else {
+                //hands.splice(i,1,{...ele,hands:applyCoVideoUserList.find(s=>s.userUuid===ele.userUuid)!==undefined})
+                hands.splice(i, 1, { ...ele, hands: true })
             }
         })
 
         setHandsList(hands)
-    },[handsUpStudentList,rosterUserList])
+    }, [applyCoVideoUserList, rosterUserList])
 
     return (
         <HandsUpManager
@@ -93,12 +95,13 @@ export const HandsUpReceiverContainer = observer(() => {
         teacherUuid
     } = useHandsUpContext()
 
-    const [animate,setAnimate] = useState<number>(0)
+    const [animate, setAnimate] = useState<number>(0)
+    const [press, setPress] = useState<boolean>(false)
 
-    const [timer,setTimer] = useState<any>(null)
+    const [timer, setTimer] = useState<any>(null)
 
-    useEffectOnce(()=>{
-        return ()=>{
+    useEffectOnce(() => {
+        return () => {
             if (timer) {
                 clearInterval(timer)
                 setTimer(null)
@@ -107,12 +110,17 @@ export const HandsUpReceiverContainer = observer(() => {
         }
     })
 
-    useEffect(()=>{
+    useEffect(() => {
         if (animate > 0) {
-            if (!timer) {
-                setTimer(setInterval(()=>{setAnimate(n => n - 1)},1000))
+            if (press) {
+                if (timer) {
+                    clearInterval(timer)
+                    setTimer(null)
+                }
+            } else if (!timer) {
+                setTimer(setInterval(() => { setAnimate(n => n - 1) }, 1000))
             }
-        }else{
+        } else {
             if (timer) {
                 clearInterval(timer)
                 setTimer(null)
@@ -121,13 +129,14 @@ export const HandsUpReceiverContainer = observer(() => {
                 studentCancelHandsUp()
             }
         }
-    },[animate,timer,handsUpState])
+    }, [animate, timer, handsUpState, press])
 
-    const handleClick = async () => {
+    const handleClick = async (bPress: boolean) => {
+        setPress(bPress)
         if (handsUpState !== 'forbidden') {
-            if (animate > 0) {
+            if (animate > 0 || handsUpState === 'actived') {
                 setAnimate(3)
-            }else{
+            } else {
                 try {
                     await studentHandsUp(teacherUuid)
                     setAnimate(3)
@@ -135,7 +144,7 @@ export const HandsUpReceiverContainer = observer(() => {
                     addToast(transI18n('co_video.received_message_timeout'), 'warning')
                 }
             }
-        }else{
+        } else {
             setAnimate(0)
         }
     }
@@ -152,7 +161,7 @@ export const HandsUpReceiverContainer = observer(() => {
 export const HandsUpContainer = observer(() => {
 
     const getHandsType = (role: EduRoleTypeEnum) => {
-        const defaultType = null  
+        const defaultType = null
         const map = {
             [EduRoleTypeEnum.teacher]: 'manager',
             [EduRoleTypeEnum.student]: 'receiver',
@@ -160,7 +169,7 @@ export const HandsUpContainer = observer(() => {
         return map[role] || defaultType
     }
 
-    const {roomInfo} = useRoomContext()
+    const { roomInfo } = useRoomContext()
 
     const handsType = getHandsType(roomInfo.userRole)
 

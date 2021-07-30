@@ -90,18 +90,18 @@
 
 .received-card-enter {
     /* animation: move-card 0.8s 0.2s ease-in-out; */
-    animation: change-card-bg 0.5s linear 0s 3;
+    animation: change-card-bg 0.5s linear 0s infinite;
 }
 .received-card-enter .icon-hands-up {
     /* animation: hand-move 0.2s ease-in-out, hand-shake 0.8s 0.2s ease-in-out; */
 }
 
 .received-card-enter .icon-hands-up:before {
-    animation: change-icon-content 0.5s linear 0s 3;
+    animation: change-icon-content 0.5s linear 0s infinite;
 }
 
 .received-card-enter .hands-apply-inline-box {
-    animation: change-student-count-color 0.5s linear 0s 3;
+    animation: change-student-count-color 0.5s linear 0s infinite;
 }
 
 @keyframes change-card-bg {
@@ -191,9 +191,18 @@
     user-select: none;
 }
 
-.hands-up-sender .handtip-1 {
-    background: #FFFFFF;
-    color: #357BF6;
+.hands-up-sender .handtip-no {
+    position: absolute;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+    font-size: 17px;
+    color: transparent;
+    line-height: 40px;
+    text-align: center;
+    user-select: none;
 }
 
 .sender-can-hover:hover {

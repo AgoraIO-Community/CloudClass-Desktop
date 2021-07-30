@@ -23,7 +23,7 @@ import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
-const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => void, onTitle: (title: string) => void }) => {
+const App = observer(({ onHeight, onTitle, lang }: { onHeight: (height: number) => void, onTitle: (title: string) => void, lang:'zh'|'en' }) => {
   const pluginStore = usePluginStore()
 
   useEffect(() => {
@@ -45,7 +45,8 @@ const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => voi
         height: '100%'
       }}
       className={classnames({
-        [`vote-modal`]: 1
+        [`vote-modal`]: 1,
+        [`vote-language-en`]: lang === 'en'
       })}
     >
       {pluginStore.status !== 'config' && pluginStore.context.localUserInfo.roleType !== EduRoleTypeEnum.teacher ? <span className='vote-title-tip'>{transI18n(pluginStore.mulChoice ? 'vote.mul-sel' : 'vote.single-sel')}</span> : null}
@@ -68,28 +69,29 @@ const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => voi
         </> : null}
         <Table>
           {pluginStore.answer?.map((col: string, idx: number) => (
-            <Row key={idx} style={{ padding: '0 0px' }}>
+            <Row key={idx} className={pluginStore.status !== 'config' && pluginStore.status !== 'answer'?'vote-process-show':''} style={{ padding: pluginStore.status==='config'?'0':'0 20px 0 0' }}>
               {pluginStore.status === 'end' || pluginStore.status === 'info' ? <span
                 style={{
                   color: '#677386',
                   fontSize: '14px',
                   position: 'relative',
-                  top: '10px',
+                  top: '9px',
                   display: 'inline-block',
-                  width: '20px'
-                }}>{idx + 1}.</span> : null}
+                  width: '30px',
+                  textAlign: 'center'
+                }}>{idx + 1}.</span> : (pluginStore.status === 'answer' ?
+                <label className="vote-item-prefix">
+                  <input
+                    type="radio"
+                    checked={pluginStore.selAnswer?.includes(col)} onChange={() => { }}
+                    onClick={() => { pluginStore.changeSelAnswer(col, pluginStore.mulChoice) }}
+                  />
+                  <span className={pluginStore.mulChoice?'vote-item-mul':''} ></span>
+                </label>
+                : null)}
               <Input
                 className="vote-item"
-                prefix={pluginStore.status === 'answer' ?
-                  <label className="vote-item-prefix">
-                    <input
-                      type="radio"
-                      checked={pluginStore.selAnswer?.includes(col)} onChange={() => { }}
-                      onClick={() => { pluginStore.changeSelAnswer(col, pluginStore.mulChoice) }}
-                    />
-                    <span></span>
-                  </label>
-                  : pluginStore.status === 'config' ? <span
+                prefix={pluginStore.status === 'config' ? <span
                     style={{
                       color: '#677386',
                       fontSize: '14px'
@@ -103,8 +105,8 @@ const App = observer(({ onHeight, onTitle }: { onHeight: (height: number) => voi
                 placeholder={transI18n('vote.item-tip')}
                 onChange={(e: any) => { pluginStore.changeAnswer(idx, e.target.value) }}>
               </Input>
-              {pluginStore.status === 'info' || pluginStore.status === 'end' ? <span className="vote-process"
-                style={{ width: pluginStore.answerInfo ? ('calc(' + pluginStore.answerInfo[idx].split(' ')[1] + " - 20px)") : '0' }} ></span> : null}
+              {pluginStore.status === 'info' || pluginStore.status === 'end' ? <span className="vote-process" style={{ width: 'calc(100% - 50px)' }}><span
+                style={{ width: pluginStore.answerInfo ? pluginStore.answerInfo[idx].split(' ')[1] : '0' }} ></span></span> : null}
             </Row>
           ))}
         </Table>
@@ -152,7 +154,7 @@ export class AgoraExtAppVote implements IAgoraExtApp {
             this.height = height
           }} onTitle={(title: string) => {
             this.title = title
-          }} />
+          }} lang={this.language} />
         </Provider>
       </I18nProvider>
     ),

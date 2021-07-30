@@ -34,8 +34,10 @@
 }
 
 .answer-submit .btn {
-  width: 90px;
+  width: auto;
   margin: 0 20px;
+  padding: 0 17px;
+  min-width: 90px;
 }
 
 .answer-table {
@@ -107,4 +109,22 @@
   background: #FFFFFF;
   border-radius: 0px 0px 5px 0px;
   border-left: 1px solid #EEEEF7;
+}
+
+.answer-role-student .answer-items{
+  padding: 10px 5px 0;
+  border: 0;
+  margin-bottom: -20px;
+}
+
+.answer-role-student .answer-items span{
+  margin: 0 15px 20px;
+}
+
+.answer-role-student .answer-info{
+  margin: 15px 0 0 100px;
+}
+
+.answer-language-en .answer-info{
+  margin-left: 85px;
 }
