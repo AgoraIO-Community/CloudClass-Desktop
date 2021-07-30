@@ -78,7 +78,7 @@
   color: #979797;
 }
 
-.chat-notice {
+.chat-notice-msg {
   @apply flex justify-center items-center w-full;
   height: 32px;
   background: #f9f9fc;
@@ -91,13 +91,13 @@
   z-index: 1;
 }
 
-.chat-notice span {
+.chat-notice-msg span {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.chat-notice svg {
+.chat-notice-msg svg {
   margin-right: 5px;
   font-size: 17px;
   color: #f04c36;
@@ -237,8 +237,8 @@
   flex: 1 1;
 }
 
-.small-class-chat .chat-notice,
-.simple-chat .chat-notice {
+.small-class-chat .chat-notice-msg,
+.simple-chat .chat-notice-msg {
   border-top: 0;
   border-left: 0;
 }
