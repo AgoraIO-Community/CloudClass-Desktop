@@ -140,7 +140,7 @@ export const SimpleChat: FC<ChatProps> = ({
         </div>
 
         {!canChatting ? (
-          <div className="chat-notice">
+          <div className="chat-notice-msg">
             <span>
               <SvgImg type="red-caution" />
               <span>{transI18n('placeholder.enable_chat_muted')}</span>
@@ -312,7 +312,7 @@ export const Chat: FC<ChatProps> = ({
             }
             key="0">
             {!canChatting ? (
-              <div className="chat-notice with-tab">
+              <div className="chat-notice-msg with-tab">
                 <span>
                   <SvgImg type="red-caution" />
                   <span>{transI18n('placeholder.enable_chat_muted')}</span>
