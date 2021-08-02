@@ -1,4 +1,4 @@
-const { ipcRenderer: ipc, app, remote } = require('electron');
+const { ipcRenderer: ipc, app } = require('electron');
 
 const AgoraRtcEngine = require('agora-electron-sdk').default;
 
@@ -32,8 +32,6 @@ window.openPrivacyForCaptureScreen = () =>
     `open "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"`,
   );
 
-window.main_pid = remote.process.pid;
-
 const AdmZip = require('adm-zip');
 
 window.ipc.on('appPath', (event, args) => {
@@ -48,6 +46,11 @@ window.ipc.on('appPath', (event, args) => {
   console.log('window. logPath', window.logPath);
   console.log('window. videoSourceLogPath', window.videoSourceLogPath);
 });
+
+window.ipc.on('main-pid-reply', (event, arg) => {
+  window.main_pid = arg;
+});
+window.ipc.send('send-main-pid', '');
 
 const doGzip = async () => {
   try {

@@ -452,7 +452,7 @@ export class SceneStore extends SimpleInterval {
                 type === ScreenShareType.Screen
                   ? undefined
                   : //@ts-ignore
-                    item.processId === window.main_pid,
+                    item.processId == window.main_pid,
             }));
             if (items.length) {
               this.appStore.fireDialog('screen-share', {

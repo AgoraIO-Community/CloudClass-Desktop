@@ -368,5 +368,9 @@ app.on('activate', function () {
   }
 });
 
+ipcMain.on('send-main-pid', (event, arg) => {
+  event.reply('main-pid-reply', `${process.pid}`);
+});
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
