@@ -186,7 +186,9 @@ export const useScreenShareContext = (): ScreenShareContext => {
   const { isShareScreen, canSharingScreen } = useBoardStore();
 
   return {
-    nativeAppWindowItems: customScreenSharePickerItems,
+    nativeAppWindowItems: customScreenSharePickerItems.filter(
+      (it) => !it.isCurrent,
+    ),
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
