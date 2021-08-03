@@ -7,8 +7,8 @@ import { getHistoryMessages } from './historyMessages'
 import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 
 // 加入聊天室
-export const joinRoom = async () => {
-    const roomId = store.getState().extData.chatroomId;
+export const joinRoom = async (roomId) => {
+    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
     const userUuid = store.getState().extData.userUuid;
     const roleType = store.getState().extData.roleType;
     let options = {
@@ -19,15 +19,22 @@ export const joinRoom = async () => {
     WebIM.conn.mr_cache = [];
     setTimeout(() => {
         WebIM.conn.joinChatRoom(options).then((res) => {
-            message.success('已成功加入聊天室！');
-            setTimeout(() => {
-                message.destroy();
-            }, 3000);
-            if (Number(roleType) === 2 || Number(roleType) === 0) {
-                isChatRoomWhiteUser(roomId, userUuid)
+            if (res.data.id === privateRoomId) {
+                console.log('privateRoom success >>>', res);
+                getHistoryMessages(options.roomId);
+                return
+            } else {
+                console.log('success-room >>>', res);
+                message.success('已成功加入聊天室！');
+                setTimeout(() => {
+                    message.destroy();
+                }, 3000);
+                if (Number(roleType) === 2 || Number(roleType) === 0) {
+                    isChatRoomWhiteUser(roomId, userUuid)
+                }
+                getRoomInfo(options.roomId);
+                getHistoryMessages(options.roomId);
             }
-            getRoomInfo(options.roomId);
-            getHistoryMessages(false);
         })
     }, 500);
 };

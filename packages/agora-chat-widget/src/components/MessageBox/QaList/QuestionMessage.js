@@ -23,7 +23,7 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
             height: 'calc(100% - 100px)',
-            width:'calc(100% - 100px);'
+            width: 'calc(100% - 100px);'
         },
     };
 
@@ -36,7 +36,7 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
         scrollElementToBottom(scrollElement)
     }
 
-    const showMaximumPicture = (message) => (e)=> {
+    const showMaximumPicture = (message) => (e) => {
         e.preventDefault()
         setMaxImgUrl(message.url || message.body.url)
         setMaxImg(true)
@@ -44,14 +44,14 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
 
     return (
         <div className="student-qa-list" id="qa-box-tag">
-            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(true) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+            {/* {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(true) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)} */}
             {
                 idQaList ? (
                     qaList[userName]?.msg.map((message, index) => {
                         let isText = message.type === "txt" || message.contentsType === "TEXT"
                         let isPic = message.type === "img" || message.contentsType === "IMAGE"
                         return (
-                            <Flex className="msg-list-item">
+                            <Flex className="msg-list-item" key={index}>
                                 <img className='msg-img' src={message.ext.avatarUrl || avatarUrl} />
                                 <Flex flexDirection="column" className="flex-1">
                                     <div style={{ marginBottom: 5 }}>
@@ -76,8 +76,8 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                         )
                     }
                     )) : (
-                        <></>
-                    )
+                    <></>
+                )
             }
             <AntModal
                 isOpen={maxImg}
@@ -85,10 +85,10 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                 style={customStyles}
                 appElement={document.body}
             >
-                <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    <img src={maxImgUrl} style={{objectFit:'revert',width:'70%'}} alt="picture load failed" />
-                    <button className='close-btn' onClick={()=>{ setMaxImg(false) }}>X</button>
-                </div>
+                {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img src={maxImgUrl} style={{ objectFit: 'revert', width: '70%' }} alt="picture load failed" />
+                    <button className='close-btn' onClick={() => { setMaxImg(false) }}>X</button>
+                </div> */}
             </AntModal>
         </div>
     )
