@@ -49,16 +49,20 @@ export class HomeApi extends ApiBase {
     // this.prefix = `${this.sdkDomain}/edu`.replace("%app_id", this.appId)
   }
 
-  setRegion(region: string) {
+  setRegion(region: string, sdkDomain: string) {
     this.region = region;
+    this.setSDKDomain(sdkDomain);
+  }
+  setSDKDomain(
+    sdkDomainParams: string = 'https://api-solutions.%region%.agoralab.co',
+  ) {
     const prefixRegion = getHomeApiRegion(this.region);
-    const sdkDomain = `https://api-solutions.%region%.agoralab.co/edu`.replace(
+    const sdkDomain = `${sdkDomainParams}/edu`.replace(
       '%region%',
       prefixRegion,
     );
     this.sdkDomain = sdkDomain;
     this.prefix = this.sdkDomain;
-    // this.region = region
   }
 }
 

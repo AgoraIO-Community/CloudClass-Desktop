@@ -153,7 +153,7 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        homeApi.setRegion(region);
+        homeApi.setRegion(region, `${REACT_APP_AGORA_APP_SDK_DOMAIN}`);
         let { rtmToken, appId } = await homeApi.login(userUuid);
         console.log('## rtm Token', rtmToken);
         let config: HomeLaunchOption = {
