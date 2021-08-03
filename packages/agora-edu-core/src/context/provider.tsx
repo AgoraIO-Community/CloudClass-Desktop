@@ -357,7 +357,9 @@ export const useBoardContext = (): BoardContext => {
     revokeBoardPermission,
     grantBoardPermission,
     showBoardTool,
-    isBoardScreenShare
+    isBoardScreenShare,
+    setWhiteGlobalState,
+    globalState$
   } = useBoardStore()
 
   const {
@@ -432,6 +434,8 @@ export const useBoardContext = (): BoardContext => {
     personalResources,
     doUpload: handleUpload,
     publicResources,
+    setWhiteGlobalState,
+    whiteGlobalState: globalState$
   }
 }
 
