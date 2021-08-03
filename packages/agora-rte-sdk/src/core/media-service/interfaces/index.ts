@@ -74,6 +74,7 @@ export declare interface ElectronWrapperInitOption {
     width: number;
     height: number;
     frameRate: number;
+    bitrate: number;
   }
 }
 
@@ -234,6 +235,7 @@ export declare interface RTCProviderInitParams {
     width: number;
     height: number;
     frameRate: number;
+    bitrate: number;
   }
 }
 

@@ -1036,9 +1036,9 @@ export class BoardStore extends ZoomController {
     })
     cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
-      r: 252,
-      g: 58,
-      b: 63
+      r: 255,
+      g: 255,
+      b: 255
     }
     this.room.setMemberState({
       currentApplianceName: ApplianceNames.clicker,
@@ -1783,15 +1783,15 @@ export class BoardStore extends ZoomController {
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-        if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
-          if (this.online && this.room) {
-            this.room.moveCamera({centerX: 0, centerY: 0});
-            // this.moveCamera()
-            this.room.scalePptToFit()
-            this.updateCameraState(this.room.state.cameraState)
-            this.room.refreshViewSize();
-          }
-        }
+        // if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.teacher) {
+        //   if (this.online && this.room) {
+        //     this.room.moveCamera({centerX: 0, centerY: 0});
+        //     // this.moveCamera()
+        //     this.room.scalePptToFit()
+        //     this.updateCameraState(this.room.state.cameraState)
+        //     this.room.refreshViewSize();
+        //   }
+        // }
       })
       this.resizeObserver.observe(dom)
     }

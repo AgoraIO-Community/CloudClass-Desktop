@@ -308,7 +308,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.client.setLogFile(this.logPath)
     }
     
-    console.log("set Parameters result: ", JSON.stringify(paramsConfig), this.client.setParameters(JSON.stringify(paramsConfig)))
+    console.log("set Parameters result: ", JSON.stringify(paramsConfig), this.client.setParameters(JSON.stringify(Object.assign({}, paramsConfig, {'che.audio.current.invalidDeviceCheck': false}))))
     this.init()
     this.client.setChannelProfile(1)
     this.client.enableVideo()
@@ -320,7 +320,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
     const resolutionConfig = options.resolution
     const config: any = {
-      bitrate: 0,
+      bitrate:resolutionConfig ? resolutionConfig?.bitrate : 2000,
       frameRate: resolutionConfig ? resolutionConfig?.frameRate : 15,
       width: resolutionConfig ? resolutionConfig?.width : 320,
       height: resolutionConfig ? resolutionConfig?.height : 240,
@@ -331,6 +331,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       height: config.height,
       frameRate: config.frameRate,
       minFrameRate: -1,
+      bitrate: config.bitrate,
       minBitrate: config.bitrate,
     })
     if (this._cefClient) {
@@ -344,6 +345,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         )
       )
     } else {
+      this.client.setVideoRenderFPS(videoEncoderConfiguration.frameRate)
       this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
     }
     console.log("[electron] video encoder config ", JSON.stringify(config))
@@ -530,49 +532,49 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     })
     this.client.on('remoteVideoStateChanged', (uid: number, state: number, reason: any) => {
       EduLogger.info('remoteVideoStateChanged ', reason, uid)
-      if (reason === 5) {
-        this.fire('user-unpublished', {
-          user: {
-            uid: +uid,
-          },
-          channel: this.channel,
-          mediaType: 'video',
-        })
-      }
+      // if (reason === 5) {
+      //   this.fire('user-unpublished', {
+      //     user: {
+      //       uid: +uid,
+      //     },
+      //     channel: this.channel,
+      //     mediaType: 'video',
+      //   })
+      // }
 
-      if (reason === 6) {
-        this.fire('user-published', {
-          user: {
-            uid: +uid,
-          },
-          channel: this.channel,
-          mediaType: 'video',
-        })
-      }
+      // if (reason === 6) {
+      //   this.fire('user-published', {
+      //     user: {
+      //       uid: +uid,
+      //     },
+      //     channel: this.channel,
+      //     mediaType: 'video',
+      //   })
+      // }
     })
     this.client.on('remoteAudioStateChanged', (uid: number, state: number, reason: any) => {
       EduLogger.info('remoteAudioStateChanged ', reason, uid)
 
-      // remote user disable audio
-      if (reason === 5) {
-        this.fire('user-unpublished', {
-          user: {
-            uid,
-          },
-          channel: this.channel,
-          mediaType: 'audio',
-        })
-      }
+      // // remote user disable audio
+      // if (reason === 5) {
+      //   this.fire('user-unpublished', {
+      //     user: {
+      //       uid,
+      //     },
+      //     channel: this.channel,
+      //     mediaType: 'audio',
+      //   })
+      // }
 
-      if (reason === 6) {
-        EduLogger.info('user-published audio', uid)
-        // this.fire('user-published', {
-        //   user: {
-        //     uid,
-        //   },
-        //   mediaType: 'audio',
-        // })
-      }
+      // if (reason === 6) {
+      //   EduLogger.info('user-published audio', uid)
+      //   this.fire('user-published', {
+      //     user: {
+      //       uid,
+      //     },
+      //     mediaType: 'audio',
+      //   })
+      // }
       // this.fire('user-info-updated', {
       //   uid,
       //   msg: reason,

@@ -138,6 +138,7 @@ export type MediaOptions = {
     width: number;
     height: number;
     frameRate: number;
+    bitrate: number;
   }
 }
 

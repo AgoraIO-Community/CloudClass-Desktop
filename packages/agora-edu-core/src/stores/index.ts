@@ -206,6 +206,7 @@ export class EduScenarioAppStore {
           width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
           height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
           frameRate: this.params.config.mediaOptions?.videoEncoderConfiguration.frameRate || 15,
+          bitrate: this.params.config.mediaOptions?.videoEncoderConfiguration.bitrate || 2000,
         }
       })
     } else {
@@ -226,6 +227,7 @@ export class EduScenarioAppStore {
           width: this.params.config.mediaOptions?.videoEncoderConfiguration.width || 320,
           height: this.params.config.mediaOptions?.videoEncoderConfiguration.height || 240,
           frameRate: this.params.config.mediaOptions?.videoEncoderConfiguration.frameRate || 15,
+          bitrate: this.params.config.mediaOptions?.videoEncoderConfiguration.bitrate || 2000,
         }
       })
     }

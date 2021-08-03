@@ -189,6 +189,7 @@ export interface EduConfiguration {
     width: number;
     height: number;
     frameRate: number;
+    bitrate: number;
   }
 }
 
