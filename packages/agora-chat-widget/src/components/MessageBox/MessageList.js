@@ -102,7 +102,7 @@ const MessageList = ({ activeKey }) => {
     let _coachTeacher = []
     let _student = []
     let _audience = []
-    if (isLogin) {
+    if (isLogin === 'logined') {
       let val
       roomUsers.map((item) => {
         if (roomListInfo) {

@@ -117,3 +117,8 @@ export const roomOwner = (data) => {
 export const registerMsgCallback = (data) => {
     return { type: 'REGISTER_MSG_CALLBACK', data }
 }
+
+// 聊天室加入状态
+export const joinRoomState = (data) =>{
+    return { type:'JOIN_ROOM_STATE',data}
+}

@@ -189,23 +189,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     // 发送消息
     const sendMessage = (toRoomid, content) => (e) => {
         e.preventDefault();
-        console.log('sendBtnDisabled>>', sendBtnDisabled);
-        console.log('roomId>>', toRoomid, 'content>>', content);
-
+        if (content.match(/^\s*$/)) return
         // 禁止发送状态下 不允许发送
         if (sendBtnDisabled === true) {
             return false;
         }
 
-        if (content.match(/^\s*$/)) return
-        // 消息为空不发送
-        // if (content === '' || count > INPUT_SIZE) {
-        //     message.error(`消息内容不能为空且字符不能超过${INPUT_SIZE}！`)
-        //     setTimeout(() => {
-        //         message.destroy();
-        //     }, 2000);
-        //     return
-        // }
         // 老师回复时必须选中提问学生才能发言
         if (msgType === 2 && requestUser === '') {
             message.error('请选择提问学生！')

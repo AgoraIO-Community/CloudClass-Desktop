@@ -11,7 +11,8 @@ import Notice from './components/Notice'
 import MessageBox from './components/MessageBox/MessageList'
 import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants'
 import { _onCustomMsg } from './api/message'
-import { getPageQuery } from './utils'
+import { message } from 'antd'
+import { Loading,Card } from '~ui-kit'
 import _ from 'lodash'
 
 import './App.css'
@@ -21,6 +22,31 @@ const App = function (props) {
   const isRoomAllMute = useSelector(state => state.isRoomAllMute)
   const [isEditNotice, isEditNoticeChange] = useState(0) // 0 显示公告  1 编辑公告  2 展示更多内容
   const activeKey = useSelector(state => state.activeKey)
+  const joinRoomState = useSelector( state => state.joinRoomState)
+  const loginState = useSelector( state => state.isLogin)
+  const [loginRetryCount,setLoginRetryCount] = useState(3)
+  const [joinRetryCount,setJoinRetryCount] = useState(3)
+
+
+  // 登录、聊天室状态
+  useEffect(() => {
+    if (loginState === 'not_login'){
+      if (loginRetryCount < 0) return message.error('登录失败，请刷新重试')
+      setLoginRetryCount(loginRetryCount-1)
+      setTimeout(()=>{
+        LoginIM();
+      },1000)
+    }else{
+      if(joinRoomState === 'join_the_failure') {
+        if (joinRetryCount < 0) return message.error('加入聊天室失败，请刷新重试')
+        setJoinRetryCount(joinRetryCount-1)
+        setTimeout(()=>{
+          joinRoom()
+        },1000)
+      }
+      return
+    }
+  },[joinRoomState,loginState])
 
   useEffect(() => {
     let im_Data = props.pluginStore.pluginStore;
@@ -30,8 +56,10 @@ const App = function (props) {
     let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
     let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
     store.dispatch(extData(new_IM_Data));
-    if (appkey) {
+    if (im_Data_Props.orgName && im_Data_Props.appName && im_Data_Props.chatroomId) {
       initIMSDK(appkey)
+    } else{
+     return message.error('加入聊天室失败，请刷新重试')
     }
     createListen(new_IM_Data, appkey)
     LoginIM(appkey);
@@ -53,7 +81,7 @@ const App = function (props) {
         const roomId = new_IM_Data.chatroomId;
         const enabled = new_IM_Data.privateChatRoom.enabled;
         const privateRoomId = new_IM_Data.privateChatRoom.chatRoomId;
-        store.dispatch(isLogin(true))
+        store.dispatch(isLogin('logined'))
         joinRoom(roomId);
         if (enabled) {
           joinRoom(privateRoomId);
@@ -61,7 +89,7 @@ const App = function (props) {
       },
       onClosed: (err) => {
         console.log('退出', err);
-        store.dispatch(isLogin(false))
+        store.dispatch(isLogin('not_login'))
         store.dispatch(clearStore({}))
       },
       // 文本消息
@@ -82,18 +110,23 @@ const App = function (props) {
         console.log('onError', message);
         const type = JSON.parse(_.get(message, 'data.data')).error_description;
         const resetName = store.getState().extData.userUuid;
-        if (message.type === '16') {
+        if (message.type === 1 || message.type === 3) {
+          if (type === "user not found") {
+            let options = {
+              username: resetName.toLocaleLowerCase(),
+              password: resetName,
+              appKey: appkey,
+              success: function () {
+                LoginIM(appkey);
+              },
+            };
+            WebIM.conn.registerUser(options);
+          }else{
+            store.dispatch(isLogin('not_login'))
+          }
+        }
+        if (message.type === 16) {
           return
-        } else if (type === "user not found") {
-          let options = {
-            username: resetName.toLocaleLowerCase(),
-            password: resetName,
-            appKey: appkey,
-            success: function () {
-              LoginIM(appkey);
-            },
-          };
-          WebIM.conn.registerUser(options);
         }
       },
       // 聊天室相关监听
@@ -185,10 +218,15 @@ const App = function (props) {
   }
 
   return (
-    <div className="app">
-      <Notice isEdit={isEditNotice} isEditNoticeChange={isEditNoticeChange} />
-      {isEditNotice === 0 && (<MessageBox activeKey={activeKey} />)}
-    </div >
+    <>
+      {joinRoomState === 'join_the_success'?<div className="app">
+          <Notice isEdit={isEditNotice} isEditNoticeChange={isEditNoticeChange} />
+          {isEditNotice === 0 && (<MessageBox activeKey={activeKey} />)}
+        </div>:<div><Card width={45} height={45}>
+      <Loading></Loading>
+      </Card></div>}
+    </>
+  
   );
 }
 export default App;

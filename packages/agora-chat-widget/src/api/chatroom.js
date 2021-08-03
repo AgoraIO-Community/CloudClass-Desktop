@@ -1,6 +1,6 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
-import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner } from '../redux/aciton'
+import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner,joinRoomState } from '../redux/aciton'
 import store from '../redux/store'
 import { setUserInfo, getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
@@ -11,20 +11,17 @@ export const joinRoom = async (roomId) => {
     const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
     const userUuid = store.getState().extData.userUuid;
     const roleType = store.getState().extData.roleType;
-    let options = {
-        roomId: roomId,   // 聊天室id
-        message: 'reason'   // 原因（可选参数）
-    }
     await setUserInfo();
     WebIM.conn.mr_cache = [];
-    setTimeout(() => {
-        WebIM.conn.joinChatRoom(options).then((res) => {
+    let options = {
+        roomId: roomId,   // 聊天室id
+        message: 'reason',   // 原因（可选参数）
+        success:(res)=>{
             if (res.data.id === privateRoomId) {
-                console.log('privateRoom success >>>', res);
                 getHistoryMessages(options.roomId);
                 return
-            } else {
-                console.log('success-room >>>', res);
+            }else{
+                store.dispatch(joinRoomState('join_the_success'))
                 message.success('已成功加入聊天室！');
                 setTimeout(() => {
                     message.destroy();
@@ -33,9 +30,16 @@ export const joinRoom = async (roomId) => {
                     isChatRoomWhiteUser(roomId, userUuid)
                 }
                 getRoomInfo(options.roomId);
-                getHistoryMessages(options.roomId);
+                getHistoryMessages(false);
             }
-        })
+        },
+        error: () =>{
+            store.dispatch(joinRoomState('join_the_failure'))
+        }
+    }
+    setTimeout(() => {
+        store.dispatch(joinRoomState('join_in'))
+        WebIM.conn.joinChatRoom(options)
     }, 500);
 };
 

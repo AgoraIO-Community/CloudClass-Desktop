@@ -2,7 +2,8 @@ import { CHAT_TABS_KEYS } from '../components/MessageBox/constants'
 import _ from 'lodash'
 let defaultState = {
     extData: {},        //iframe 传递过来的参数
-    isLogin: false,     // 是否已登陆  
+    isLogin: '',     // 是否已登陆  
+    joinRoomState:'',  // 加入聊天室状态
     loginName: '',      //当前登陆ID
     loginInfo: {},      //当前的用户的信息
     room: {             //聊天室
@@ -313,6 +314,11 @@ const reducer = (state = defaultState, action) => {
                 customMsg: {
                     receiveCallback: data
                 }
+            }
+        case 'JOIN_ROOM_STATE':
+            return {
+                ...state,
+                joinRoomState:data
             }
         default:
             return state;
