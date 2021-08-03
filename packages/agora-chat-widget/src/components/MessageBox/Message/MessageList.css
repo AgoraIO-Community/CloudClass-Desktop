@@ -10,7 +10,6 @@
 }
 
 .admire-msg {
-    width: 126px;
     height: 20px;
     font-size: 14px;
     font-family: ' PingFangSC-Regular',
@@ -18,9 +17,8 @@
     font-weight: 400;
     color: #FF7F00;
     line-height: 20px;
-    background: 'angular-gradient(270deg, #FFB319 0%, #FF6619 100%)';
+    background: linear-gradient(270deg, #FFB319 0%, #FF6619 100%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .msg-img {
@@ -30,14 +28,14 @@
     position: relative;
 }
 
-.msg-img .mute-status{
+.msg-img .mute-status {
     position: absolute;
     font-size: 12px;
     right: -2px;
     bottom: -2px;
 }
 
-.msg-img .avatar{
+.msg-img .avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -79,15 +77,16 @@
 }
 
 .card-txt {
-   font-size: 16px;
-   font-weight: 500;
-   color: #333;
-   line-height: 22px;
-   padding: 24px 0 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    line-height: 22px;
+    padding: 24px 0 16px;
 
 }
 
-.cancle-btn, .ok-btn{
+.cancle-btn,
+.ok-btn {
     width: 104px;
     height: 36px;
     line-height: 36px;

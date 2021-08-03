@@ -9,6 +9,7 @@ import { getUserInfo } from '../../../api/userInfo'
 import { CHAT_TABS, CHAT_TABS_KEYS } from '../constants'
 import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
+import RcTooltip from 'rc-tooltip'
 
 const QaUserList = ({ getClickUser }) => {
     const roomListInfo = useSelector(state => state.userListInfo)
@@ -65,7 +66,8 @@ const QaUserList = ({ getClickUser }) => {
                         {
                             sortArr.map((user, k) => {
                                 return (
-                                    <Flex onClick={() => getUser(user.id)} key={k} className="qa-user-list" m="6px" style={{ backgroundColor: currentUser === user.id ? "#2D3340" : "transparent" }}>
+                                    <RcTooltip placement="right" overlay={_.get(roomListInfo[user.id], 'nickname')} key={k}>
+                                        <Flex onClick={() => getUser(user.id)}  className="qa-user-list" m="6px" style={{ backgroundColor: currentUser === user.id ? "#2D3340" : "transparent" }}>
                                         <Image src={_.get(roomListInfo[user.id], 'avatarurl') || avatarUrl}
                                             className="qa-user-image"
                                         />
@@ -73,6 +75,7 @@ const QaUserList = ({ getClickUser }) => {
                                             <div className='qa-red-notice'></div>
                                         )}
                                     </Flex>
+                                    </RcTooltip>
                                 )
                             })
                         }

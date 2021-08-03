@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from "react-redux";
-import { Button, Input, message } from 'antd'
-import { SmileOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Input, message ,Checkbox} from 'antd'
+import { SmileOutlined, CloseCircleOutlined,UpOutlined } from '@ant-design/icons';
 import { Flex, Text } from 'rebass'
 import WebIM from '../../utils/WebIM'
 import store from '../../redux/store'
@@ -57,6 +57,8 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const [isShow, setIsShow] = useState(false);
     const [showText, setShowText] = useState('');
     const [sendBtnDisabled, setSendBtnDisabled] = useState(true);
+    const [checkValue,setCheckValue] = useState(true)
+    const [showCheck,setShowCheck] = useState(false)
     const isElectron = window.navigator.userAgent.indexOf("Electron") !== -1;
     if (isElectron) {
         const ipcRenderer = window.electron.ipcRenderer;
@@ -327,8 +329,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
 
     // 点击截图
     const captureScreen = (e) => {
+        console.log('e>>>>',e)
         e.preventDefault();
-        window.electron && window.electron.ipcRenderer.send("shortcutcapture");
+        let hideWindow = !checkValue;
+        window.electron && window.electron.ipcRenderer.send("shortcutcapture",{hideWindow});
     }
 
     // 禁言后，判断权限是否遮盖输入框
@@ -376,6 +380,13 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     {isTool && isElectron && <RcTooltip placement="top" overlay="截图">
                         <img src={iconScreen} onClick={captureScreen} className="chat-tool-item" />
                     </RcTooltip>}
+                    {isTool && isElectron && <UpOutlined className='icon-style' onClick={()=>setShowCheck(!showCheck)}/>}
+                    {/* 截图功能选择 */}
+                    {isTool && isElectron && showCheck && 
+                    <div className='check-style'>
+                        <div className='check-mask' onClick={()=>setShowCheck(false)}></div>
+                        <Checkbox checked={checkValue} onChange={()=>setCheckValue(!checkValue)}><span style={{marginLeft:'5px'}}>不隐藏当前窗口</span></Checkbox>
+                    </div>}
                 </Flex>
                 <div>
                     {/* 输入框中placeholder：
