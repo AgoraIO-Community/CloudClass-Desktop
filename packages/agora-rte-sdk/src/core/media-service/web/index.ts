@@ -1352,6 +1352,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     enabled: boolean,
     config: MediaEncryptionConfig,
   ): number {
+    this.enabledEncryption = enabled;
+    this.configEncryption = config;
     if (!enabled) {
       this.client.setEncryptionConfig('none', config.key);
     } else {
