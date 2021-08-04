@@ -1,6 +1,6 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
-import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner,joinRoomState } from '../redux/aciton'
+import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner, joinRoomState } from '../redux/aciton'
 import store from '../redux/store'
 import { setUserInfo, getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
@@ -16,11 +16,11 @@ export const joinRoom = async (roomId) => {
     let options = {
         roomId: roomId,   // 聊天室id
         message: 'reason',   // 原因（可选参数）
-        success:(res)=>{
+        success: (res) => {
             if (res.data.id === privateRoomId) {
                 getHistoryMessages(options.roomId);
                 return
-            }else{
+            } else {
                 store.dispatch(joinRoomState('join_the_success'))
                 message.success('已成功加入聊天室！');
                 setTimeout(() => {
@@ -30,10 +30,10 @@ export const joinRoom = async (roomId) => {
                     isChatRoomWhiteUser(roomId, userUuid)
                 }
                 getRoomInfo(options.roomId);
-                getHistoryMessages(false);
+                getHistoryMessages(options.roomId);
             }
         },
-        error: () =>{
+        error: () => {
             store.dispatch(joinRoomState('join_the_failure'))
         }
     }
