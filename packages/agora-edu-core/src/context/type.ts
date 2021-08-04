@@ -908,6 +908,10 @@ export type BoardContext = {
      * @deprecated 废弃
      */
     courseWareList: any[],
+
+    setWhiteGlobalState: (state: any) => void,
+
+    whiteGlobalState: any
 }
 
 export type StreamContext = {
