@@ -21,9 +21,6 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk';
 const App = observer(() => {
   const pluginStore = usePluginStore()
 
-  useEffect(() => {
-  }, [])
-
   return (
     <div 
       style={{

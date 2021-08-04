@@ -28,6 +28,7 @@ import { eduSDKApi } from '../services/edu-sdk-api';
 import { Resource } from '../context/type';
 import { reportServiceV2 } from '../services/report-v2';
 import MD5 from 'js-md5';
+import { Subject } from 'rxjs';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -199,6 +200,8 @@ export class BoardStore extends ZoomController {
 
   @observable
   showUpload: boolean = false;
+
+  globalState$: Subject<any> = new Subject<any>()
 
   @observable
   showExtension: boolean = false;
@@ -400,6 +403,16 @@ export class BoardStore extends ZoomController {
   @computed
   get resourcesList(): Resource[] {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
+  }
+
+  setWhiteGlobalState(state: any) {
+    if(this.room && this.room.phase === RoomPhase.Connected) {
+      this.room.setGlobalState({
+        flexBoardState: state
+      })
+    } else {
+      throw GenericErrorWrapper(`try to setWhiteGlobalState while room is not connected`)
+    }
   }
 
   @action.bound
@@ -986,6 +999,10 @@ export class BoardStore extends ZoomController {
         //     this.boardClient.followMode(ViewMode.Follower)
         //   }
         // }
+      }
+
+      if (state.globalState && state.globalState.flexBoardState) {
+        this.globalState$.next(state.globalState.flexBoardState)
       }
     })
     BizLogger.info("[breakout board] join", data)

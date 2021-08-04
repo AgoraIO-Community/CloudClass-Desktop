@@ -908,6 +908,17 @@ export type BoardContext = {
      * @deprecated 废弃
      */
     courseWareList: any[],
+
+    /**
+     * 更新白板global state
+     * @version v1.1.5
+     */
+    setWhiteGlobalState: (state: any) => void,
+    /**
+     * 获取白板global state更新回调
+     * @version v1.1.5
+     */
+    whiteGlobalState: any
 }
 
 export type StreamContext = {

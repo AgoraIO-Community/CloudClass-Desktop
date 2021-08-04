@@ -18,7 +18,8 @@ export type AgoraExtAppContext = {
   dependencies: Map<string, any>
   localUserInfo: AgoraExtAppUserInfo,
   roomInfo: AgoraExtAppRoomInfo,
-  language: string
+  language: string,
+  contexts: any
 }
 
 export type AgoraExtAppHandle = {

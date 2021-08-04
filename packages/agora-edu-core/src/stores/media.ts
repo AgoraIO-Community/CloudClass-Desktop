@@ -499,7 +499,7 @@ export class MediaStore {
     })
     this.mediaService.on('localVideoStats', (evt: any) => {
       let {freezeCount} = evt
-      BizLogger.info("localVideoStats", " encode fps " , evt.stats.encoderOutputFrameRate, ', freeze: ', freezeCount)
+      // BizLogger.info("localVideoStats", " encode fps " , evt.stats.encoderOutputFrameRate, ', freeze: ', freezeCount)
       // autorun(() => {
         if(this.cameraRenderer) {
           this.cameraRenderer.freezeCount = freezeCount
