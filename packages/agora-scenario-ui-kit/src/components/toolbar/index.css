@@ -12,6 +12,7 @@
 .toolbar .menu {
   @apply flex justify-center items-center cursor-pointer;
   transform: translateX(-2px);
+  padding: 0;
 }
 
 .toolbar .menu.fold {
