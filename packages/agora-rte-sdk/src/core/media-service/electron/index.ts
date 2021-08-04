@@ -1275,6 +1275,10 @@ export class AgoraElectronRTCWrapper
           height: 0,
           bitrate: 1500,
           frameRate: 5,
+          captureMouseCursor: true,
+          windowFocus: true,
+          excludeWindowList: [],
+          excludeWindowCount: 0,
         },
       };
       EduLogger.info('startScreenShare#options', options);
