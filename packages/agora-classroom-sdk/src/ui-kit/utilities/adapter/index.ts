@@ -1,5 +1,5 @@
 import { useUIStore } from "@/infra/hooks"
-import { useChatContext, useGlobalContext, useRoomContext, useUserListContext } from "agora-edu-core"
+import { useBoardContext, useChatContext, useGlobalContext, useRoomContext, useUserListContext } from "agora-edu-core"
 import { useEffect, useState } from "react"
 import { BehaviorSubject } from "rxjs"
 
@@ -116,6 +116,36 @@ export const UserListContextAdapter = () => {
     }
 }
 
+export const BoardContextAdapter = () => {
+    const [boardEvents] = useState(() => new BehaviorSubject({}))
+
+    const {
+        setWhiteGlobalState,
+        whiteGlobalState
+    } = useBoardContext()
+
+    useEffect(() => {
+        boardEvents.next({
+            whiteGlobalState
+        })
+    }, [boardEvents, whiteGlobalState])
+
+    useEffect(() => {
+        return () => {
+            boardEvents.complete()
+        }
+    }, [boardEvents])
+
+    const boardActions = {
+        setWhiteGlobalState
+    }
+
+    return {
+        events: boardEvents,
+        actions: boardActions
+    }
+}
+
 export const Adapter = () => {
     const chatAdapter = ChatContextAdapter()
     const globalAdapter = GlobalContextAdapter()
@@ -147,6 +177,7 @@ export const ContextPoolAdapters = () => {
     return {
         chat: ChatContextAdapter(),
         global: GlobalContextAdapter(),
-        userList: UserListContextAdapter()
+        userList: UserListContextAdapter(),
+        board: BoardContextAdapter()
     }
 }
