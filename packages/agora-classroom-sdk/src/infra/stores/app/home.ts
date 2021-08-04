@@ -18,7 +18,7 @@ export class HomeStore {
   launchOption!: HomeLaunchOption;
 
   @observable
-  region: AgoraRegion;
+  region: AgoraRegion = 'CN';
 
   regionKey: string = regionKey;
   launchKey: string = launchKey;

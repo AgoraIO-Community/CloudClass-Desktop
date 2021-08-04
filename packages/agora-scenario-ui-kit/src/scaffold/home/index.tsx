@@ -21,6 +21,8 @@ export interface HomeAttributes {
   language: string;
   region: string;
   debug: boolean;
+  encryptionMode: string;
+  encryptionKey: string;
 }
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
@@ -44,6 +46,10 @@ export const Home: React.FC<HomeProps> = ({
   language,
   region,
   debug = false,
+  encryptionMode,
+  encryptionKey,
+  onChangeEncryptionMode,
+  onChangeEncryptionKey,
   onChangeRole,
   onChangeScenario,
   onChangeLanguage,
@@ -78,6 +84,14 @@ export const Home: React.FC<HomeProps> = ({
     { label: 'AP', value: 'AP' },
     { label: 'CN', value: 'CN' },
     { label: 'EU', value: 'EU' },
+  ];
+  const encryptionModeOptions = [
+    { label: 'aes-128-xts', value: 1 },
+    { label: 'aes-128-ecb', value: 2 },
+    { label: 'aes-256-xts', value: 3 },
+    { label: 'sm4-128-ecb', value: 4 },
+    { label: 'aes-128-gcm', value: 5 },
+    { label: 'aes-256-gcm', value: 6 },
   ];
 
   const privacyEnUrl = 'https://www.agora.io/en/privacy-policy/';
@@ -325,6 +339,52 @@ export const Home: React.FC<HomeProps> = ({
                 }}
                 placeholder={transI18n('home.role_placeholder')}
                 options={roleOptions}></Select>
+            </Col>
+          </Row>
+          <Row className="home-row-item">
+            <Col>
+              <Select
+                prefix={
+                  <span
+                    className="home-label"
+                    title={transI18n('home.encryptionMode')}>
+                    {transI18n('home.encryptionMode')}
+                  </span>
+                }
+                id="encryptionMode"
+                value={encryptionMode}
+                onChange={(value) => {
+                  onChangeEncryptionMode(value);
+                }}
+                placeholder={transI18n('home.encryptionMode_placeholder')}
+                options={encryptionModeOptions}></Select>
+            </Col>
+          </Row>
+          <Row className="home-row-item can-error-item">
+            <Col>
+              <Input
+                inputPrefixWidth={55}
+                prefix={
+                  <span
+                    id="et_room_name"
+                    className="home-label"
+                    title={transI18n('home.encryptionKey')}>
+                    {transI18n('home.encryptionKey')}
+                  </span>
+                }
+                id="encryptionKey"
+                type="text"
+                className="block w-full"
+                value={encryptionKey}
+                onChange={(evt) =>
+                  onChangeEncryptionKey(evt.currentTarget.value)
+                }
+                placeholder={transI18n('home.encryptionKey_placeholder')}
+                // rule={/^[a-zA-Z0-9]{1,20}$/}
+                // errorMsg={transI18n('home.input-error-msg')}
+                errorMsgPositionLeft={75}
+                maxLength={20}
+              />
             </Col>
           </Row>
           {debug ? (

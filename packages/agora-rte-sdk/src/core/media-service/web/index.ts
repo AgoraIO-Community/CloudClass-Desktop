@@ -53,6 +53,10 @@ type AgoraWebSDK = IAgoraRTC & {
 };
 
 export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
+  enabledEncryption?: boolean;
+
+  configEncryption?: MediaEncryptionConfig;
+
   _client?: IAgoraRTCClient;
 
   _subClient: Record<string, IAgoraRTCClient>;
@@ -903,6 +907,13 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
   async prepareScreenShare(options: PrepareScreenShareParams): Promise<any> {
     try {
       const screenClient = this.agoraWebSdk.createClient(this.clientConfig);
+
+      if (this.enabledEncryption) {
+        screenClient.setEncryptionConfig(
+          this.rteEncryptionMode2RtcEncryptionMode(this.configEncryption!.mode),
+          this.configEncryption!.key,
+        );
+      }
 
       const tracks = await this.agoraWebSdk.createScreenVideoTrack(
         {
