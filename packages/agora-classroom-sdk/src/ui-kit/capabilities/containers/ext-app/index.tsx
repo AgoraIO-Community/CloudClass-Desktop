@@ -107,6 +107,7 @@ export const AppPluginItem = observer(
           title={transI18n(`${app.appName}.appName`)}
           width={app.width}
           onCancel={onCancel}
+          hasMask={false}
           closable={closable}>
           <div
             ref={ref}
@@ -132,7 +133,15 @@ export const AppPluginContainer = observer(() => {
   const { roomInfo } = useRoomContext();
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher; // 老师能关闭， 学生不能关闭
   return (
-    <div style={{ position: 'absolute', left: 0, top: 0, width: 0, height: 0 }}>
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: 0,
+        height: 0,
+        zIndex: 999,
+      }}>
       {Array.from(activeAppPlugins.values()).map(
         (app: IAgoraExtApp, idx: number) => (
           <AppPluginItem
