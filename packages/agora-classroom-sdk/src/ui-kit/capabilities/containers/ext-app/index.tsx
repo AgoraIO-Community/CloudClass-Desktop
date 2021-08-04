@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
-import { IAgoraExtApp, useAppPluginContext, useRoomContext, useSmallClassVideoControlContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-core'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
 import { Modal, transI18n } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
+import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
@@ -13,6 +14,8 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     const {contextInfo} = useAppPluginContext()
 
     const {userUuid, userName, userRole, roomName, roomUuid, roomType, language} = contextInfo
+
+    const contexts = ContextPoolAdapters()
 
     useEffect(() => {
         if (ref.current) {
@@ -28,7 +31,8 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               roomInfo: {
                 roomName,roomUuid,roomType
               },
-              language: language
+              language: language,
+              contexts
             }, {
               updateRoomProperty: async (properties: any, common: any, cause: {}) => {
                 return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)

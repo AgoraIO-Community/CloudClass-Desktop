@@ -4,7 +4,7 @@ import { BaseProps } from '~components/interface/base-props';
 import { IAgoraWidget, useAppPluginContext} from 'agora-edu-core';
 import './index.css';
 import { Dependencies } from '../ext-app/dependencies';
-import {Adapter} from './adapter'
+import {Adapter} from '../../../utilities/adapter/index'
 
 
 export interface WidgetProps extends BaseProps {
