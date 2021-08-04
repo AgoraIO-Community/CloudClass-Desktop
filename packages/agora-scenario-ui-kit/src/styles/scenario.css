@@ -359,7 +359,7 @@
 }
 
 .video-marquee-pin ~ .board-box {
-  margin-top: 171px;
+  /* margin-top: 171px; */
 }
 
 .board-box {

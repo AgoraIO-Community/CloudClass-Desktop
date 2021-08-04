@@ -1,6 +1,6 @@
 import { useHomeStore } from '@/infra/hooks';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { AgoraChatWidget } from 'agora-widget-gallery';
+import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
 //@ts-ignore
 import { AgoraExtAppCountDown } from 'agora-plugin-gallery';
 import MD5 from 'js-md5';
@@ -19,6 +19,9 @@ import {
 window.controller = controller;
 
 const ChatWidgetFactory = (region: string) => {
+  if (region.toUpperCase() === 'CN') {
+    return new AgoraHXChatWidget();
+  }
   return new AgoraChatWidget();
 };
 
