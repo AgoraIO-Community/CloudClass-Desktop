@@ -27,6 +27,8 @@ export const HomePage = observer(() => {
   );
   const [region, setRegion] = useState<AgoraRegion>(homeStore.region);
   const [debug, setDebug] = useState<boolean>(false);
+  const [encryptionMode, setEncryptionMode] = useState<string>('');
+  const [encryptionKey, setEncryptionKey] = useState<string>('');
 
   useEffect(() => {
     changeLanguage(language);
@@ -91,6 +93,8 @@ export const HomePage = observer(() => {
     userName: setUserName,
     roomName: setRoomName,
     userId: setUserId,
+    encryptionMode: setEncryptionMode,
+    encryptionKey: setEncryptionKey,
   };
 
   const onChangeRoomId = (newValue: string) => {
@@ -111,6 +115,14 @@ export const HomePage = observer(() => {
 
   const onChangeDebug = (newValue: boolean) => {
     setDebug(newValue);
+  };
+
+  const onChangeEncryptionMode = (newValue: string) => {
+    text['encryptionMode'](newValue);
+  };
+
+  const onChangeEncryptionKey = (newValue: string) => {
+    text['encryptionKey'](newValue);
   };
 
   const history = useHistory();
@@ -136,6 +148,10 @@ export const HomePage = observer(() => {
       duration={duration}
       region={region}
       debug={debug}
+      encryptionMode={encryptionMode}
+      encryptionKey={encryptionKey}
+      onChangeEncryptionMode={onChangeEncryptionMode}
+      onChangeEncryptionKey={onChangeEncryptionKey}
       onChangeDebug={onChangeDebug}
       onChangeRegion={onChangeRegion}
       onChangeRole={onChangeRole}
@@ -185,10 +201,10 @@ export const HomePage = observer(() => {
             },
           },
         };
-        if (params && params['encryptionKey'] && params['encryptionMode']) {
+        if (encryptionKey && encryptionMode) {
           config!.mediaOptions!.encryptionConfig = {
-            key: params['encryptionKey'],
-            mode: parseInt(params['encryptionMode']),
+            key: encryptionKey,
+            mode: parseInt(encryptionMode),
           };
         }
         homeStore.setLaunchConfig(config);
