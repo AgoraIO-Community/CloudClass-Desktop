@@ -80,7 +80,7 @@ export const Home: React.FC<HomeProps> = ({
     { label: 'English', value: 'en' },
   ];
   const regionOptions = [
-    { label: 'NA', value: 'NS' },
+    { label: 'NA', value: 'NA' },
     { label: 'AP', value: 'AP' },
     { label: 'CN', value: 'CN' },
     { label: 'EU', value: 'EU' },
