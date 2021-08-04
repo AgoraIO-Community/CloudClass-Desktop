@@ -282,6 +282,9 @@ export class AgoraElectronRTCWrapper
   lastMileDelay: number = 0;
 
   published: boolean = false;
+  nativeAreaCode?: number;
+  enableEncryption?: boolean;
+  configEncryption?: any;
 
   constructor(options: ElectronWrapperInitOption) {
     super();
@@ -314,6 +317,7 @@ export class AgoraElectronRTCWrapper
     if (this._cefClient) {
       ret = this.client.initialize(this._cefClient);
     } else {
+      this.nativeAreaCode = convertNativeAreaCode(`${options.area}`);
       ret = this.client.initialize(
         this.appId,
         //@ts-ignore
@@ -1343,6 +1347,13 @@ export class AgoraElectronRTCWrapper
         };
         this.client.on('videoSourceJoinedSuccess', handleVideoSourceJoin);
         const params = options.params;
+        if (this.enableEncryption) {
+          //@ts-ignore
+          this.client.videoSourceEnableEncryption(this.enableEncryption, {
+            encryptionMode: this.configEncryption.mode,
+            encryptionKey: this.configEncryption.key,
+          });
+        }
         ret = this.client.videoSourceJoin(
           params.token,
           params.channel,
@@ -1592,6 +1603,8 @@ export class AgoraElectronRTCWrapper
 
   //@ts-ignore
   enableMediaEncryptionConfig(enabled: boolean, config: any): number {
+    this.enableEncryption = enabled;
+    this.configEncryption = config;
     //@ts-ignore
     return this.client.enableEncryption(enabled, {
       encryptionMode: config.mode,
