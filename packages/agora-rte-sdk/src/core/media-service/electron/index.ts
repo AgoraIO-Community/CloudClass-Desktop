@@ -1116,7 +1116,11 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         profile: 50,
         rect: {x: 0, y: 0, width: 0, height: 0},
         param: {
-          width: 0, height: 0, bitrate: 1500, frameRate: 5
+          width: 0, height: 0, bitrate: 1500, frameRate: 5,
+          captureMouseCursor: true,
+          windowFocus: true,
+          excludeWindowList: [],
+          excludeWindowCount: 0,
         }
       }
       EduLogger.info('startScreenShare#options', options)
