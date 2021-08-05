@@ -29,6 +29,7 @@ export const getHistoryMessages = async (roomId) => {
                 const { ext: { msgtype, asker, msgId } } = val
                 const { time, action, id, to } = val
                 if (to === publicRoomId) {
+                    store.dispatch(loadGif(false))
                     if (action == "DEL") {
                         deleteMsgId.push(msgId)
                         store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
@@ -60,5 +61,4 @@ export const getHistoryMessages = async (roomId) => {
     } else {
         await WebIM.conn.fetchHistoryMessages(options)
     }
-    store.dispatch(loadGif(false))
 }

@@ -85,10 +85,10 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                 style={customStyles}
                 appElement={document.body}
             >
-                {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <img src={maxImgUrl} style={{ objectFit: 'revert', width: '70%' }} alt="picture load failed" />
                     <button className='close-btn' onClick={() => { setMaxImg(false) }}>X</button>
-                </div> */}
+                </div>
             </AntModal>
         </div>
     )

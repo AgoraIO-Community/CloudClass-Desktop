@@ -11,7 +11,6 @@ export const joinRoom = async (roomId) => {
     const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
     const userUuid = store.getState().extData.userUuid;
     const roleType = store.getState().extData.roleType;
-    await setUserInfo();
     WebIM.conn.mr_cache = [];
     let options = {
         roomId: roomId,   // 聊天室id
