@@ -18,7 +18,7 @@ export const LoadingPptContainer: FC<LoadingPptProps> = observer(
 
 const PageLoading = (props: any) => {
   return (
-    <div className="page-loading">
+    <div className="page-loading ppd-loading">
       <Card width={258} height={113}>
         <Loading
           hasLoadingGif={false}

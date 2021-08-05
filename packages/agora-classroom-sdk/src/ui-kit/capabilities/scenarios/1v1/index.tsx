@@ -92,12 +92,12 @@ export const OneToOneScenario = observer(() => {
           )}
         </Aside>
       </Layout>
-      <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom} />
-      <ToastContainer />
       <LoadingPptContainer
         initCourseWareProgress={initCourseWareProgress}
         initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
+      <DialogContainer />
+      <LoadingContainer loading={isJoiningRoom} />
+      <ToastContainer />
     </Layout>
   );
 });
