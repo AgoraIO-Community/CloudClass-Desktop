@@ -9,8 +9,13 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 
 export const SettingContainer = observer(({ id }: any) => {
-  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } =
-    useMediaContext();
+  const {
+    isNative,
+    getAudioRecordingVolume,
+    getAudioPlaybackVolume,
+    changeCamera,
+    changeMicrophone,
+  } = useMediaContext();
 
   const {
     cameraList,
@@ -19,8 +24,8 @@ export const SettingContainer = observer(({ id }: any) => {
     cameraId,
     speakerId,
     microphoneId,
-    changeTestCamera: changeCamera,
-    changeTestMicrophone: changeMicrophone,
+    // changeCamera,
+    // changeMicrophone,
     changeTestSpeakerVolume: changeSpeakerVolume,
     changeTestMicrophoneVolume: changeMicrophoneVolume,
     isMirror,

@@ -73,6 +73,7 @@ export const transDataToResource = (
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
+      scenes: data?.scenes ? data?.scenes : [],
       access,
     };
   }
