@@ -109,12 +109,14 @@ export const BigClassScenario = observer(() => {
           </div>
           {chatroomId ? (
             <Widget
+              key={chatroomId}
               className="chat-panel"
               widgetComponent={chatWidget}
               widgetProps={{ chatroomId, orgName, appName }}
             />
           ) : (
             <Widget
+              key={chatroomId}
               className="chat-panel chat-border"
               widgetComponent={chatWidget}
             />
