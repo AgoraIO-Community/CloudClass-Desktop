@@ -11,9 +11,10 @@ import Modal from '../../UIComponents/modal'
 
 
 // 消息渲染
-const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey, isLoadGif, isMoreHistory, getHistoryMessages }) => {
+const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey }) => {
     const roomId = useSelector(state => state.room.info.id);
-    const userInfo = useSelector(state => state.loginInfo)
+    const userInfo = useSelector(state => state.loginInfo);
+    const isLoadGif = useSelector(state => state.isLoadGif)
     // 控制弹框
     const [showModal, setShowModal] = useState('none');
     // 撤回需要的 msgId
@@ -58,13 +59,14 @@ const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey, isLoa
 
     return (
         <>
-        <div >
-            {renderMsgs.map((message) => 
-                <MessageItem message={message} key={message.id} setShowModal={setShowModal} setRecallMsgId={setRecallMsgId} hasEditPermisson={hasEditPermisson} />)
-            }
-        </div>
-        {/* 弹窗 */}
-        <Modal show={showModal} content="确定要删除此消息吗？" setShow={setShowModal} onOk={() => { deleteMsg(roomId, recallMsgId, activeKey) }}></Modal>
+            {isLoadGif && <div className='load'></div>}
+            <div >
+                {renderMsgs.map((message) =>
+                    <MessageItem message={message} key={message.id} setShowModal={setShowModal} setRecallMsgId={setRecallMsgId} hasEditPermisson={hasEditPermisson} />)
+                }
+            </div>
+            {/* 弹窗 */}
+            <Modal show={showModal} content="确定要删除此消息吗？" setShow={setShowModal} onOk={() => { deleteMsg(roomId, recallMsgId, activeKey) }}></Modal>
         </>
     )
 }

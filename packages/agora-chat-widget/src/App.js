@@ -102,7 +102,7 @@ const App = function (props) {
       },
       onClosed: (err) => {
         console.log('退出', err);
-        store.dispatch(isLogin('not_login'))
+        // store.dispatch(isLogin('not_login'))
         store.dispatch(clearStore({}))
       },
       // 文本消息

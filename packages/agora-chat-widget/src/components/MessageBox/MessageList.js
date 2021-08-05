@@ -160,7 +160,7 @@ const MessageList = ({ activeKey }) => {
                 )}
               </Flex>} key={key}>
                 <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""}>
-                  {isLoadGif && <div className='load'></div>}
+                  {/* {name === '聊天' && isLoadGif && <div className='load'></div>} */}
                   {name === '聊天' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
                   <Component {
                     ...key === CHAT_TABS_KEYS.chat && {
@@ -190,11 +190,11 @@ const MessageList = ({ activeKey }) => {
             <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
           </Flex>
           <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
-            {isLoadGif && <div className='load'></div>}
+            {/* {isLoadGif && <div className='load'></div>} */}
             {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
             {
               messageList.length > 0 ? (
-                <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
+                <MessageItem messageList={messageList} isHiedReward={isHiedReward} />
               ) : (
                 <div>
                   {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
