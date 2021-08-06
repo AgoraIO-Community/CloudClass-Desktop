@@ -5,6 +5,7 @@ import { HISTORY_COUNT } from '../components/MessageBox/constants'
 import { getQAReadMsg } from './qaReadMsg'
 import _ from 'lodash'
 
+let deleteMsgId = [];
 export const getHistoryMessages = async (roomId) => {
     let stop = false;
     const publicRoomId = store.getState().extData.chatroomId;
@@ -27,7 +28,6 @@ export const getHistoryMessages = async (roomId) => {
                 stop = true;
             }
             const historyMsg = _.reverse(res)
-            let deleteMsgId = [];
             historyMsg.map((val, key) => {
                 const { ext: { msgtype, asker, msgId } } = val
                 const { time, action, id, to } = val
