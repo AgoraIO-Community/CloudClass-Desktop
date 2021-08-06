@@ -161,7 +161,7 @@ export class EduLogger {
   static async uploadLog(roomId: string) {
     console.log('[LOG] [upload] roomId: ', roomId)
     let logs: any[] = []
-    await db.logs.each((e: any) => logs.push(e))
+    await db.logs.orderBy(':id').reverse().limit(10000).each((e: any) => logs.push(e))
     const logsStr = logs
       .map((e: any) => JSON.parse(e.content))
       .map((e: any) => (Array.isArray(e) ? e[0] : e))
@@ -191,8 +191,9 @@ export class EduLogger {
     //     cefLog
     //   )
     // }
-    await db.readAndDeleteBy(now)
-    EduLogger.info(`完成日志上传，文件名: ${file.name}, 上传时间: ${now}, 日志上传，res: ${JSON.stringify(res)}`)
+    EduLogger.info(`[LOG] begin clear old logs...`)
+    await db.clear()
+    EduLogger.info(`[LOG] log upload done，file: ${file.name}, uploaded at: ${now}, res: ${JSON.stringify(res)}`)
     return res;
   }
 }
