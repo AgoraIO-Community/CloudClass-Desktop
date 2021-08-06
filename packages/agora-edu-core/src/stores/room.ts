@@ -1161,6 +1161,12 @@ export class RoomStore extends SimpleInterval {
           boardToken: checkInResult.board.boardToken,
           boardRegion: checkInResult.board.boardRegion,
         })
+        .then(async () => {
+          // 初始化打开课件 只有老师才打开
+          if (this.appStore.userRole === 1) {
+            await this.appStore.boardStore.openInitCourseWare();
+          }
+        })
         .catch((err) => {
           const error = GenericErrorWrapper(err);
           BizLogger.warn(`${error}`);
@@ -2030,10 +2036,6 @@ export class RoomStore extends SimpleInterval {
       }
       this.joined = true;
       this.roomJoined = true;
-      // 初始化打开课件 只有老师才打开
-      if (this.appStore.userRole === 1) {
-        await this.appStore.boardStore.openInitCourseWare();
-      }
       const userRoleMap: Record<number, string> = {
         0: 'invisible',
         1: 'teacher',
