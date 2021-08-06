@@ -39,13 +39,9 @@ export const UserList = ({ roomUserList }) => {
                   className="user-avatar"
                 />
                 <span className="user-text">{item?.nickname || item?.id}</span>
-                {isTeacher ? (
+                {isTeacher && (
                   <Tag className="user-tag teacher-tag">
                     <span className="teacher-text">{ROLE.teacher.tag}</span>
-                  </Tag>
-                ) : (
-                  <Tag className="user-tag student-tag">
-                    <span className="tag-text">{ROLE.student.tag}</span>
                   </Tag>
                 )}
               </div>

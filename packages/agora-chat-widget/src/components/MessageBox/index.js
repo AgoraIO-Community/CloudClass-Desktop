@@ -26,27 +26,31 @@ export const MessageBox = () => {
   };
 
   return (
-    <div className="message-box" id="chat-messages">
+    <div>
       {isHaveMsg ? (
-        <div>
-          {msgs &&
-            msgs.map((item, key) => {
-              const isText =
-                item?.contentsType === 'TEXT' || item?.type === 'txt';
-              const isCmd =
-                item?.contentsType === 'COMMAND' || item?.type === 'cmd';
-              return (
-                <div key={key}>
-                  {isText && <TextMsg item={item} />}
-                  {isCmd && <CmdMsg item={item} />}
-                </div>
-              );
-            })}
+        <div className="message-box" id="chat-messages">
+          <div>
+            {msgs &&
+              msgs.map((item, key) => {
+                const isText =
+                  item?.contentsType === 'TEXT' || item?.type === 'txt';
+                const isCmd =
+                  item?.contentsType === 'COMMAND' || item?.type === 'cmd';
+                return (
+                  <div key={key}>
+                    {isText && <TextMsg item={item} />}
+                    {isCmd && <CmdMsg item={item} />}
+                  </div>
+                );
+              })}
+          </div>
         </div>
       ) : (
-        <div className="no-msgs">
-          <img src={noMessage_icon} />
-          <span>还没有消息</span>
+        <div className="message-box no-box">
+          <div className="no-msgs">
+            <img src={noMessage_icon} />
+            <span className="no-msgs-text">还没有消息</span>
+          </div>
         </div>
       )}
     </div>
