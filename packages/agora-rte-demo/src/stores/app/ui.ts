@@ -136,6 +136,9 @@ export class UIStore {
   @observable
   courseReplacerVisible: boolean = false
 
+  @observable
+  videoTutorialVisible: boolean = false
+
   @action
   reset () {
     this.loading = false;

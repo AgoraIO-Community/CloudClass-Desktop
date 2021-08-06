@@ -720,6 +720,15 @@ export class AcadsocRoomStore extends SimpleInterval {
         closeDelay: checkInResult.closeDelay
       }
 
+      try {
+        if(this.isTeacher && !storage.getSkipGuide()) {
+          // display guide if not yet skipped
+          this.appStore.uiStore.videoTutorialVisible = true
+        }
+      } catch(e) {
+        BizLogger.info(`[demo] switching guide visible failed ${e.message}`)
+      }
+
       this.tickClassroom()
       clearInterval(this.timer)
       this.timer = setInterval(this.tickClassroom.bind(this), 1000)
@@ -1165,14 +1174,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
 
-      try {
-        if(this.isTeacher && !storage.getSkipGuide()) {
-          // display guide if not yet skipped
-          this.appStore.uiStore.guideVisible = true
-        }
-      } catch(e) {
-        BizLogger.info(`[demo] switching guide visible failed ${e.message}`)
-      }
+      
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()

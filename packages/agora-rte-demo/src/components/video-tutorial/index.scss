@@ -1,0 +1,25 @@
+.video-tutorial-visible {
+    visibility: visible;
+    transition: all 0.2s ease-in-out; 
+    opacity: 1;
+}
+
+.video-tutorial-hidden {
+    visibility: hidden;
+    transition: all 0.2s ease-in-out; 
+    transform: scale(0.8); 
+    opacity: 0;
+}
+
+.video-tutorial-visible .close-btn {
+    width: 106px;
+    height: 36px;
+    border-radius: 18px;
+    border: 1px solid #FFFFFF;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+}

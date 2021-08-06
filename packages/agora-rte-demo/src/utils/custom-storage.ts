@@ -114,12 +114,22 @@ export class PersistLocalStorage {
   }
 
   saveSkipGuide() {
-    this.storage.setItem("skip.guide.cr", "true")
+    try {
+      this.storage.setItem("skip.guide.cr", "true")
+    } catch(e) {
+      console.error(`[local storage] save skip guide failed ${e.message}`)
+    }
   }
 
   getSkipGuide() {
-    const str = this.storage.getItem("skip.guide.cr")
-    return str === "true"
+    let str
+    try {
+      str = this.storage.getItem("skip.guide.cr")
+      return str === "true"
+    } catch(e) {
+      console.error(`[local storage] get skip guide failed ${e.message}`)
+    }
+    return true
   }
 
 }

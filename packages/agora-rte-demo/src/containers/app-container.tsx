@@ -13,6 +13,7 @@ import { useStorageSW } from '@/utils/utils';
 import { CourseReplacerContent } from '../components/course-replacer';
 import { PopoverGuides } from '@/components/popover-guide';
 import { EduLogger } from 'agora-rte-sdk';
+import { AClassVideoTutorialContent } from '@/components/video-tutorial';
 export interface RouteContainerProps {
   routes: string[]
   mainPath?: string
@@ -76,7 +77,8 @@ export const RoomContainer = (props: RoomContainerProps) => {
           <AcadsocToast />
           <BrushToastContent />
           <CourseReplacerContent />
-          <PopoverGuides />
+          <AClassVideoTutorialContent />
+          {/* <PopoverGuides /> */}
           <RouteContainer routes={props.routes} mainPath={props.mainPath} />
         </Router>
       </ThemeContainer>

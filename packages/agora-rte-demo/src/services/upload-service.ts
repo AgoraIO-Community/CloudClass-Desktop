@@ -478,6 +478,8 @@ export class UploadService extends ApiBase {
             onProgress(PPTProgressPhase.Uploading, p);
           }
         },
+        partSize: 100 * 1024,
+        parallel: 3,
         callback: {
           // TODO: upload-service.ts
           // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
@@ -496,7 +498,7 @@ export class UploadService extends ApiBase {
       throw GenericErrorWrapper(new Error(`upload to ali oss error, status is ${res.res.status}`));
     }
   }catch (err) {
-    throw GenericErrorWrapper(err);
+    throw GenericErrorWrapper(err.message);
     }
 }
 

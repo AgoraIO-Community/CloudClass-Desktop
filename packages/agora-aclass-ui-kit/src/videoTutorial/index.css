@@ -1,0 +1,21 @@
+.video-tutorial {
+    background: white;
+    width: 800px;
+    border-radius: 20px;
+    border: 8px solid #75C0FE;
+    color: #273D75;
+    padding: 0;
+    font-size: 16px;
+    height:440px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.video-tutorial .info-container {
+    padding: 0;
+}
+
+.video-tutorial .info-container video {
+    width: 100%;
+}
