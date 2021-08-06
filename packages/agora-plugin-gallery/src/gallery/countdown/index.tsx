@@ -21,6 +21,10 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk';
 const App = observer(() => {
   const pluginStore = usePluginStore()
 
+  pluginStore.context.contexts.board.globalState.subscribe((e: any) => {
+    console.log(`global state: ${e}`)
+  })
+
   return (
     <div 
       style={{

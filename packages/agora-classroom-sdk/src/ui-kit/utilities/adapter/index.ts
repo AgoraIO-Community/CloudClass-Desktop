@@ -117,32 +117,20 @@ export const UserListContextAdapter = () => {
 }
 
 export const BoardContextAdapter = () => {
-    const [boardEvents] = useState(() => new BehaviorSubject({}))
-
     const {
         setWhiteGlobalState,
         whiteGlobalState
     } = useBoardContext()
 
-    useEffect(() => {
-        boardEvents.next({
-            whiteGlobalState
-        })
-    }, [boardEvents, whiteGlobalState])
-
-    useEffect(() => {
-        return () => {
-            boardEvents.complete()
-        }
-    }, [boardEvents])
 
     const boardActions = {
         setWhiteGlobalState
     }
 
     return {
-        events: boardEvents,
-        actions: boardActions
+        events: null,
+        actions: boardActions,
+        globalState: whiteGlobalState
     }
 }
 
