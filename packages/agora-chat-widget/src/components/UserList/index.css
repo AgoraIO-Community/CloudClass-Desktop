@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
+  height: 64px;
 }
 
 .user-info {
@@ -33,7 +34,7 @@
   font-weight: 400;
   color: #191919;
   line-height: 18px;
-  margin: 0 5px;
+  margin: 0 20px;
 }
 
 .user-tag {

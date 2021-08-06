@@ -20,7 +20,7 @@ const Edit = () => {
       onClick={() => {
         onChangeStatus();
       }}>
-      ，去发布
+      去发布
     </span>
   );
 };
@@ -48,36 +48,40 @@ export const ShowAnnouncement = () => {
   };
 
   return (
-    <div className="announcement">
+    <div>
       {Announcement.length > 0 ? (
-        <div className="announcement-box">
-          {isTeacher && (
-            <div className="menu">
-              {/* updateAnnouncement(roomId, "" */}
-              <span
-                className="update-content"
-                onClick={() => {
-                  onChangeStatus();
-                }}>
-                修改
-              </span>
-              <span
-                className="update-content"
-                onClick={() => {
-                  showModal();
-                }}>
-                删除
-              </span>
-            </div>
-          )}
-          <div className="announcement-content">{Announcement}</div>
+        <div className="announcement">
+          <div className="announcement-box" id="deleteModal">
+            {isTeacher && (
+              <div className="menu">
+                {/* updateAnnouncement(roomId, "" */}
+                <span
+                  className="update-content"
+                  onClick={() => {
+                    onChangeStatus();
+                  }}>
+                  修改
+                </span>
+                <span
+                  className="update-content"
+                  onClick={() => {
+                    showModal();
+                  }}>
+                  删除
+                </span>
+              </div>
+            )}
+            <div className="announcement-content">{Announcement}</div>
+          </div>
         </div>
       ) : (
-        <div className="no-announcement">
-          <img src={announcement} alt="公告" className="announcement-icon" />
-          <div className="no-notice">
-            <span>暂无公告</span>
-            {isTeacher && <Edit />}
+        <div className="no-show-icon">
+          <div className="no-announcement">
+            <img src={announcement} alt="公告" className="announcement-icon" />
+            <div className="no-notice">
+              <span className="no-notice-text">暂无公告，</span>
+              {isTeacher && <Edit />}
+            </div>
           </div>
         </div>
       )}
@@ -92,12 +96,12 @@ export const ShowAnnouncement = () => {
         }}
         okText="确认"
         cancelText="取消"
-        width={250}
+        width={280}
         className="delete-modal"
         style={{ top: '40%' }}
         destroyOnClose
         getContainer={document.getElementById('hx-chatroom')}>
-        <span>{DELETE_CONTENT}</span>
+        <span className="delete-text">{DELETE_CONTENT}</span>
       </Modal>
     </div>
   );

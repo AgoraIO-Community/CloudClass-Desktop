@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Input, Button } from 'antd';
 import { ANNOUNCEMENT_SIZE, MORE_SIZE } from '../../contants';
 import { updateAnnouncement } from '../../api/chatroom';
+import { transI18n } from '~ui-kit';
 import store from '../../redux/store';
 import { announcementStatus } from '../../redux/actions/roomAction';
 
@@ -29,7 +30,7 @@ export const EditAnnouncement = ({ onEdit }) => {
   return (
     <div className="edit-content">
       <TextArea
-        placeholder="请在此输入内容"
+        placeholder={transI18n('chat.testConnext')}
         className="input-content"
         onChange={changeContent}
         // maxLength={ANNOUNCEMENT_SIZE}
@@ -49,19 +50,19 @@ export const EditAnnouncement = ({ onEdit }) => {
       <div className="btn-content">
         <Button
           type="default"
-          shape="round"
+          className="cancel-btn"
           onClick={() => {
             editStatus();
           }}>
-          取消
+          <span className="btn-text cancel-btn-text">取消</span>
         </Button>
         <Button
           type="primary"
-          shape="round"
+          className="ok-btn"
           onClick={() => {
             updateAnnouncement(roomId, content);
           }}>
-          发布
+          <span className="btn-text ok-btn-text">发布</span>
         </Button>
       </div>
     </div>

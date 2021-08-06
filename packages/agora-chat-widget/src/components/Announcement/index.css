@@ -2,6 +2,17 @@
   height: 100%;
 }
 
+.no-show-icon {
+  margin-top: 3px;
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .no-announcement {
   display: flex;
   flex-direction: column;
@@ -20,7 +31,7 @@
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #7d8798;
+  color: #ececf1;
   line-height: 18px;
 
   overflow: hidden;
@@ -34,7 +45,7 @@
 .announcement-box {
   position: absolute;
   width: 100%;
-  height: calc(100% - 100px);
+  height: calc(100% - 50px);
 }
 
 .edit {
@@ -43,12 +54,13 @@
 }
 
 .edit-content {
-  margin-top: 8px;
+  /* margin-top: 8px; */
+  padding: 15px;
 }
 
 .input-content {
   margin: 0 3px !important;
-  width: 290px !important;
+  width: 308px !important;
   height: 232px !important;
   border-radius: 4px !important;
   border: 1px solid #ececf1 !important;
@@ -88,14 +100,14 @@
 }
 
 .announcement-content {
-  width: 290px;
+  /* width: 307px; */
   /* height: 235px; */
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
   color: #191919;
   line-height: 25px;
-  padding: 8px;
+  padding: 15px;
   word-break: break-all;
   white-space: pre-wrap;
   height: 100%;
@@ -119,7 +131,7 @@
   margin-top: 8px;
 }
 
-.save-btn {
+.ok-btn {
   width: 94px;
   height: 30px;
   background: #357bf6;
@@ -133,7 +145,30 @@
   border: 1px solid #4b4b58 !important;
 }
 
+.btn-text {
+  width: 38px;
+  height: 20px;
+  font-size: 14px;
+  font-family: 'PingFangSC-Regular', 'PingFang SC';
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.ok-btn-text {
+  color: #ffffff;
+}
+
+.cancel-btn-text {
+  color: #677386;
+}
+
 /* 修改antd 默认样式 */
+
+.delete-modal .ant-modal-content {
+  height: 175px;
+  width: 280px;
+}
+
 .delete-modal .ant-modal-header {
   height: 40px !important;
   padding: 8px 24px !important;
@@ -163,15 +198,28 @@
 
 .delete-modal .ant-modal-body {
   text-align: center;
+  /* width: 104px; */
+  /* height: 18px; */
+  font-size: 13px;
+  font-family: 'PingFangSC-Regular', 'PingFang SC';
+  font-weight: 400;
+  color: #586376;
+  line-height: 18px;
+  padding: 32px !important;
 }
 
 .delete-modal .ant-modal-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   border: none !important;
+  padding: 0 !important;
+  margin-top: 2px !important;
 }
 
 .delete-modal .ant-btn {
   border-radius: 15px !important;
   border: 1px solid #d2d2e2;
+  width: 90px;
+  height: 30px;
+  margin: 0 8px !important;
 }

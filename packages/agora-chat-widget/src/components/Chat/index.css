@@ -7,6 +7,8 @@
   /* 宽度自定义 */
   width: 70px !important;
   justify-content: center;
+  padding: 14px !important;
+  margin: 0 !important;
 }
 
 .ant-tabs-tab-btn {
@@ -17,6 +19,7 @@
   font-weight: 400 !important;
   color: #7b88a0 !important;
   line-height: 18px !important;
+  text-align: center !important;
 }
 
 .ant-tabs-ink-bar-animated {

@@ -1,13 +1,13 @@
 .input-box {
   /* position: relative; */
-  margin: 5px 0;
+  margin: 5px 0 0 0;
   width: 100%;
   height: 115px;
   background: #f9f9fc;
   border-radius: 6px 6px 4px 4px;
   border: 1px solid #ececf1;
-  position: fixed;
-  bottom: 3px;
+  position: absolute;
+  bottom: 0;
 }
 
 .all-mute {
@@ -18,20 +18,20 @@
 
 .all-mute-text {
   width: 53px;
-  height: 17px;
+  height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
   color: #7d8798;
   line-height: 18px;
+  margin-right: 5px;
 }
 
 .chat-icon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 3px;
-  padding: 0 5px;
+  padding: 6px 12px 0;
 }
 
 .emoji-icon {
@@ -94,6 +94,11 @@ textarea {
   border: none !important;
 }
 
+.ant-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .input-chat {
   background: #f9f9fc !important;
   outline: none !important;
@@ -104,15 +109,13 @@ textarea {
 .input-btn {
   display: flex;
   justify-content: flex-end;
-  margin-top: 3px;
+  margin-top: 1px;
   padding: 0 8px;
 }
 
-/* .send-btn {
-    width: 80px;
-    height: 30px !important;
-    background: #357BF6;
-    border-radius: 15px !important;
-    display: flex;
-    justify-content: flex-end;
-} */
+.send-btn {
+  width: 80px;
+  height: 30px !important;
+  background: #357bf6;
+  border-radius: 15px !important;
+}
