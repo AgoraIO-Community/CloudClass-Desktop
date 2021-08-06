@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore,setStateListner } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -13,9 +13,12 @@ import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants
 import { _onCustomMsg } from './api/message'
 import { message } from 'antd'
 import { Loading, Card } from '~ui-kit'
+import {getLoginRetryCount,getJoinRetryCount,setLoginRetryCount,setJoinRetryCount} from './api/retryCount'
 import _ from 'lodash'
 
 import './App.css'
+
+let Message = message
 
 const App = function (props) {
   const history = useHistory();
@@ -23,42 +26,44 @@ const App = function (props) {
   const [isEditNotice, isEditNoticeChange] = useState(0) // 0 显示公告  1 编辑公告  2 展示更多内容
   const activeKey = useSelector(state => state.activeKey)
   const joinRoomState = useSelector(state => state.joinRoomState)
-  const loginState = useSelector(state => state.isLogin)
-  const [loginRetryCount, setLoginRetryCount] = useState(3)
-  const [joinRetryCount, setJoinRetryCount] = useState(3)
+  
 
 
   // 登录、聊天室状态
   useEffect(() => {
-    if (loginState === 'not_login') {
-      if (loginRetryCount < 0) {
-        message.error('登录失败，请刷新重试')
-        setTimeout(() => {
-          message.destroy();
-        }, 5000);
-        return
-      }
-      setLoginRetryCount(loginRetryCount - 1)
-      setTimeout(() => {
-        LoginIM();
-      }, 1000)
-    } else {
-      if (joinRoomState === 'join_the_failure') {
-        if (joinRetryCount < 0) {
-          message.error('加入聊天室失败，请刷新重试')
+    let stateListnerFuc = (loginState,joinRoomState) => {
+      if (loginState === 'not_login') {
+        console.log('loginRetryCount>>>', getLoginRetryCount());
+        if (getLoginRetryCount() < 0) {
+          Message.error('登录失败，请刷新重试')
           setTimeout(() => {
-            message.destroy();
+            Message.destroy();
           }, 5000);
           return
         }
-        setJoinRetryCount(joinRetryCount - 1)
+        setLoginRetryCount(getLoginRetryCount() - 1)
         setTimeout(() => {
-          joinRoom()
+          LoginIM();
         }, 1000)
+      } else {
+        if (joinRoomState === 'join_the_failure') {
+          if (getJoinRetryCount() < 0) {
+            Message.error('加入聊天室失败，请刷新重试')
+            setTimeout(() => {
+              Message.destroy();
+            }, 5000);
+            return
+          }
+          setJoinRetryCount(getJoinRetryCount() - 1)
+          setTimeout(() => {
+            joinRoom()
+          }, 1000)
+        }
+        return
       }
-      return
     }
-  }, [joinRoomState, loginState])
+    store.dispatch(setStateListner(stateListnerFuc))
+  }, [])
 
   useEffect(() => {
     let im_Data = props.pluginStore.pluginStore;
@@ -69,9 +74,11 @@ const App = function (props) {
     let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
     store.dispatch(extData(new_IM_Data));
     if (im_Data_Props.orgName && im_Data_Props.appName && im_Data_Props.chatroomId) {
+      setJoinRetryCount(3);
+      setLoginRetryCount(3);
       initIMSDK(appkey)
     } else {
-      return message.error('加入聊天室失败，请刷新重试')
+      return Message.error('加入聊天室失败，请刷新重试')
     }
     createListen(new_IM_Data, appkey)
     LoginIM(appkey);

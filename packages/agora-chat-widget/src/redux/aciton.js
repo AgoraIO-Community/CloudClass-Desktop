@@ -7,6 +7,7 @@ export const extData = data => {
 export const isLogin = data => {
     return { type: 'IS_LOGIN', data }
 }
+
 // 登陆ID
 export const LoginName = data => {
     return { type: 'LOGIN_NAME', data }
@@ -119,6 +120,10 @@ export const registerMsgCallback = (data) => {
 }
 
 // 聊天室加入状态
-export const joinRoomState = (data) =>{
-    return { type:'JOIN_ROOM_STATE',data}
+export const joinRoomState = (data) => {
+    return { type: 'JOIN_ROOM_STATE', data }
+}
+
+export const setStateListner = (data) => {
+    return { type: 'STATE_LISTENER', data }
 }

@@ -1,9 +1,10 @@
 import { CHAT_TABS_KEYS } from '../components/MessageBox/constants'
 import _ from 'lodash'
+import { joinRetryCount } from './aciton';
 let defaultState = {
     extData: {},        //iframe 传递过来的参数
     isLogin: '',     // 是否已登陆  
-    joinRoomState:'',  // 加入聊天室状态
+    joinRoomState: '',  // 加入聊天室状态
     loginName: '',      //当前登陆ID
     loginInfo: {},      //当前的用户的信息
     room: {             //聊天室
@@ -34,6 +35,7 @@ let defaultState = {
     userListInfo: {},    //成员信息
     isRoomAllMute: false,  //全局禁言
     customMsg: {},
+    listner:{},
 
 }
 const reducer = (state = defaultState, action) => {
@@ -47,6 +49,7 @@ const reducer = (state = defaultState, action) => {
             };
         // 是否登陆
         case 'IS_LOGIN':
+            state.listner.stateChanged && state.listner.stateChanged(data,state.joinRoomState);
             return {
                 ...state,
                 isLogin: data
@@ -305,7 +308,7 @@ const reducer = (state = defaultState, action) => {
                 room: {
                     ...state.room,
                     owner: data,
-                    users:state.room.users.filter((item) => {return item != data})
+                    users: state.room.users.filter((item) => { return item != data })
                 }
             }
         case 'REGISTER_MSG_CALLBACK':
@@ -316,9 +319,17 @@ const reducer = (state = defaultState, action) => {
                 }
             }
         case 'JOIN_ROOM_STATE':
+            state.listner.stateChanged && state.listner.stateChanged(state.isLogin,data);
             return {
                 ...state,
-                joinRoomState:data
+                joinRoomState: data
+            }
+        case 'STATE_LISTENER':
+            return {
+                ...state,
+                listner: {
+                    stateChanged:data
+                }
             }
         default:
             return state;

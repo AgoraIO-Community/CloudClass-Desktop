@@ -57,7 +57,6 @@ export const getHistoryMessages = async (roomId) => {
     }
     if (privateRoomId === roomId) {
         while (!stop) {
-            console.log('执行了>>>>>');
             await WebIM.conn.fetchHistoryMessages(options)
         }
     } else {
