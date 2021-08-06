@@ -405,6 +405,7 @@ export class BoardStore extends ZoomController {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
   }
 
+  @action.bound
   setWhiteGlobalState(state: any) {
     if(this.room && this.room.phase === RoomPhase.Connected) {
       this.room.setGlobalState({
