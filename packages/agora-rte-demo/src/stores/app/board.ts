@@ -1135,7 +1135,7 @@ export class BoardStore {
       userPayload: {
         userId: this.appStore.acadsocStore.roomInfo.userUuid,
         avatar: "",
-        cursorName: this.appStore.acadsocStore.roomInfo.userName,
+        cursorName: "",
         disappearCursor: this.appStore.acadsocStore.isAssistant
       },
       isAssistant: this.appStore.acadsocStore.isAssistant,
