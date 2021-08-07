@@ -205,7 +205,7 @@ export class PluginStore {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             if (properties.state === 'start' || properties.state === 'end') {
                 this.title = ""
-                this.answer = properties.items
+                this.answer = [...(properties.items||['A', 'B', 'C', 'D'])]
                 this.selAnswer = []
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.students = []
@@ -248,7 +248,7 @@ export class PluginStore {
         } else {
             if (properties.state === 'start') {
                 this.title = ""
-                this.answer = properties.items
+                this.answer = [...(properties.items||['A', 'B', 'C', 'D'])]
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'answer'
                 this.height = (this.answer?.length || 0) > 4 ? 190 : 120
@@ -260,7 +260,7 @@ export class PluginStore {
                 this.updateTime();
             } else if (properties.state === 'end') {
                 this.title = ""
-                this.answer = properties.answer
+                this.answer = [...properties.answer||['A', 'B', 'C', 'D']]
                 this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'info'
