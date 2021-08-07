@@ -1,4 +1,5 @@
 import { isEmpty } from "lodash";
+import { LanguageEnum } from '@/edu-sdk'
 
 type AppStorage = Storage | MemoryStorage
 
@@ -52,12 +53,22 @@ export class CustomStorage {
     this.storage.removeItem(key);
   }
 
-  setLanguage(lang: string) {
+  setLanguage(lang: LanguageEnum) {
     this.save(this.languageKey, lang)
   }
 
-  getLanguage() {
-    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
+  convertNavigatorLangToLangEnum(lang: string): LanguageEnum {
+    let lowercase = lang.toLowerCase()
+    if(lowercase === 'zh-cn') {
+      return 'zh'
+    } else if(lowercase === 'zh-hk' || lowercase === 'zh-tw') {
+      return 'zh-hk'
+    }
+    return 'en'
+  }
+
+  getLanguage() : LanguageEnum {
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : this.convertNavigatorLangToLangEnum(navigator.language);
     return language;
   }
 

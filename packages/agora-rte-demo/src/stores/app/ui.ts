@@ -3,7 +3,7 @@ import { observable, action, computed } from 'mobx';
 import { AppStore } from '.';
 import { platform } from '@/utils/platform';
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk';
-import { getLanguage } from '@/i18n';
+import { LanguageEnum } from '@/edu-sdk'
 interface NoticeMessage {
   type: string
   message: string
@@ -63,12 +63,20 @@ export class UIStore {
 
   static languages: any[] = [
     {
-      text: '中文', name: 'zh-CN',
+      text: '中文', name: 'zh',
     },
     {
       text: 'En', name: 'en'
+    },
+    {
+      text: '繁体中文', name: 'zh-hk'
     }
   ]
+
+  @computed
+  get languageIdx(): number {
+    return UIStore.languages.findIndex(lang => lang.name === this.language)
+  }
 
   @observable
   loading?: boolean = false;
@@ -110,7 +118,7 @@ export class UIStore {
   curSeqId: number = 0
 
   @observable
-  _language: string = getLanguage();
+  _language: LanguageEnum = GlobalStorage.getLanguage();
 
   @observable
   dialogs: any[] = []
@@ -326,12 +334,12 @@ export class UIStore {
   }
 
   @computed
-  get language(): string {
+  get language(): LanguageEnum {
     return this._language;
   }
 
   @action
-  setLanguage(language: string) {
+  setLanguage(language: LanguageEnum) {
     this._language = language
     GlobalStorage.setLanguage(this._language)
   }

@@ -1,15 +1,22 @@
 import { GlobalStorage } from '@/utils/custom-storage';
 import {get, isEmpty} from 'lodash';
 import zhCN from './i18n/zh';
+import zhHK from './i18n/zh-hk'
 import en from './i18n/en';
 import { BizLogger } from './utils/biz-logger';
+import { LanguageEnum  } from '@/edu-sdk';
 
-export const getLanguage = () => GlobalStorage.getLanguage().match(/zh/) ? 'zh' : 'en'
+const LangMap:Record<LanguageEnum, any> = {
+  'zh': zhCN,
+  'zh-hk': zhHK,
+  'en': en,
+  '': en
+}
 
 export const BUILD_VERSION = REACT_APP_BUILD_VERSION as string;
 
 export const t = (name: string, options?: any): string => {
-  const lang = getLanguage() === 'zh' ? zhCN : en
+  const lang = LangMap[GlobalStorage.getLanguage()]
   // const lang = GlobalStorage.getLanguage().match(/zh/) ? zhCN : en;
   let content = get(lang, name, null);
   if (!content) {
