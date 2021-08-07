@@ -75,7 +75,7 @@ export interface IAgoraWidget {
   widgetWillUnload():void
 }
 
-export type ConvertedFile = {
+export type AgoraConvertedFile = {
   width: number,
   height: number,
   ppt: {
@@ -86,7 +86,7 @@ export type ConvertedFile = {
   conversionFileUrl: string,
 }
 
-export type ConvertedFileList = ConvertedFile[]
+export type ConvertedFileList = AgoraConvertedFile[]
 
 
 export type CourseWareItem = {

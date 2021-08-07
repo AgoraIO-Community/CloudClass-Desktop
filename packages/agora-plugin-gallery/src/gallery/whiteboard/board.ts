@@ -59,6 +59,7 @@ export class BoardClient extends EventEmitter {
       pptParams: {
         useServerWrap: true
       },
+      preloadDynamicPPT: true,
       loggerOptions: {
         // reportQualityMode: "alwaysReport",
         // reportDebugLogMode: "alwaysReport",
