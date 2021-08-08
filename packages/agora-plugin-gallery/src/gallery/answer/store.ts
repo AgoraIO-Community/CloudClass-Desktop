@@ -57,6 +57,11 @@ export class PluginStore {
         this.handle = handle
         this.onReceivedProps(ctx.properties || {}, null)
     }
+    
+    @computed
+    get studentList() {
+        return this.userList?.filter((u:any) => (['broadcaster', 'audience'].includes(u.role)))
+    }
 
     @action
     updateTime = () => {
@@ -111,7 +116,7 @@ export class PluginStore {
             if (state === "start") {
                 roomProperties['students'] = []
                 roomProperties['studentNames'] = []
-                this.userList?.map((user: any) => {
+                this.studentList?.map((user: any) => {
                     if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
                         roomProperties['students'].push(user.userUuid)
                         roomProperties['studentNames'].push(user.userName)
@@ -120,7 +125,7 @@ export class PluginStore {
             } else if (state === "updateStudent") {
                 if (this.rosterUserList) {
                     let users:any = []
-                    this.userList?.map((user: any) => {
+                    this.studentList?.map((user: any) => {
                         if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
                             users.push(user.userUuid)
                         }

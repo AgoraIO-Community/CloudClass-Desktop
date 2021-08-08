@@ -45,6 +45,22 @@ export const OneToOneScenario = observer(() => {
       // 关闭倒计时
       onShutdownAppPlugin('io.agora.countdown')
     }
+    
+    if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 1) {
+      // 开启答题器
+      onLaunchAppPlugin('io.agora.answer')
+    } else if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 0) {
+      // 关闭答题器
+      onShutdownAppPlugin('io.agora.answer')
+    }
+
+    if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 1) {
+      // 开启投票
+      onLaunchAppPlugin('io.agora.vote')
+    } else if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 0) {
+      // 关闭投票
+      onShutdownAppPlugin('io.agora.vote')
+    }
   }, [roomProperties])
 
   useEffectOnce(() => {
