@@ -48,17 +48,19 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     // const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
+          defaultClassName="extapp-draggable-container"
           handle=".modal-title" 
-          defaultPosition={{x: window.innerWidth / 2 - app.width / 2, y: window.innerHeight / 2 - app.height / 2 - 100}} 
+          defaultPosition={{x: window.innerWidth / 2, y: window.innerHeight / 2 - 100}} 
           bounds={'body'}
           positionOffset={{x: 0, y: 0}}
         >
             <Modal 
               title={transI18n(`${app.appName}.appName`)} 
-              width={app.width} onCancel={onCancel} 
+              width={'min-content'}
+              onCancel={onCancel} 
               closable={closable}
             >
-                <div ref={ref} style={{width: '100%', height: app.height, overflow: 'hidden', transition: '.5s'}}>
+                <div ref={ref} style={{transition: '.5s'}}>
                 </div>
             </Modal>
         </Draggable>
