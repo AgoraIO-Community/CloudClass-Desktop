@@ -53,7 +53,7 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
   return (
     <div
       style={{
-        width: '380px',
+        width: '340px',
         height: pluginStore.height,
         transition: 'all 0.5s ease 0s',
         overflow: 'hidden'
