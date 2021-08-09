@@ -30,6 +30,10 @@ export class EduSDKLogger extends Dexie {
     console.log(`时间: ${timeStr}, ${DATABASE_NAME} database: 2`)
   }
 
+  async clear() {
+    return await this.logs.clear()
+  }
+
   async readAndDeleteBy(time: number) {
     return this.resetByKeys(time)
   }

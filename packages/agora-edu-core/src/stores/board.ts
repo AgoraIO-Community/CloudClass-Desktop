@@ -28,7 +28,7 @@ import { eduSDKApi } from '../services/edu-sdk-api';
 import { Resource } from '../context/type';
 import { reportServiceV2 } from '../services/report-v2';
 import MD5 from 'js-md5';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -201,7 +201,7 @@ export class BoardStore extends ZoomController {
   @observable
   showUpload: boolean = false;
 
-  globalState$: Subject<any> = new Subject<any>()
+  globalState$: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
   @observable
   showExtension: boolean = false;

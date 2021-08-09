@@ -395,5 +395,33 @@ export const zh = {
     'seconds': '秒',
     'start': '开始',
     'restart': '重新开始'
+  },
+  'hands_up_tag': '-举手中',
+  'answer': {
+    'appName': '答题器',
+    'start': '开始答题',
+    'submit': '提交答案',
+    'change': '修改答案',
+    'number-answered': '已答题人数',
+    'acc': '正确率',
+    'right-key': '正确答案',
+    'my-answer': '我的答案',
+    'over': '结束答题',
+    'student-name': '学生姓名',
+    'answer-time': '答题用时',
+    'selected-answer': '所选答案',
+    'restart': '重新开始'
+  },
+  'vote': {
+    'appName': '投票',
+    'start':'开始投票',
+    'restart':'重新开始',
+    'over':'结束投票',
+    'submit':'投票',
+    'change':'修改投票',
+    'input-tip':'请输入投票问题',
+    'item-tip':'请输入选项内容',
+    'single-sel':'单选',
+    'mul-sel':'多选',
   }
 }
