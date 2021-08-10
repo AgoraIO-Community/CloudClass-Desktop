@@ -1410,18 +1410,7 @@ export class EduClassroomDataController {
           // return properties
         }
 
-        if(!isObject(anchor)) {
-          // if anchor is not an object, overwrite anyway
-          parent[[...paths].pop()!] = changedValue
-        } else {
-          // anchor is an object
-          if(!isObject(changedValue)) {
-            // if changed value is not an object, overwrite as well
-            parent[[...paths].pop()!] = changedValue
-          } else {
-              merge(anchor, changedValue)
-          }
-        }
+        parent[[...paths].pop()!] = changedValue
       }
       // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
       // console.log('### properties ', properties)
