@@ -23,7 +23,7 @@ export const HomePage = observer(() => {
   const [duration, setDuration] = useState<number>(30);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [language, setLanguage] = useState<string>(
-    sessionStorage.getItem('language') || 'en',
+    sessionStorage.getItem('language') || 'zh',
   );
   const [region, setRegion] = useState<AgoraRegion>(homeStore.region);
   const [debug, setDebug] = useState<boolean>(false);
