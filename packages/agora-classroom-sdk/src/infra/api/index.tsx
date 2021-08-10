@@ -21,18 +21,6 @@ export interface AliOSSBucket {
   cdn: string;
 }
 
-export const scenarioRoomPath: Record<string, { path: string }> = {
-  [EduRoomTypeEnum.Room1v1Class]: {
-    path: BizPagePath.OneToOnePath,
-  },
-  [EduRoomTypeEnum.RoomSmallClass]: {
-    path: BizPagePath.MidClassPath,
-  },
-  [EduRoomTypeEnum.RoomBigClass]: {
-    path: BizPagePath.BigClassPath,
-  },
-};
-
 export interface WhiteboardOSSConfig {
   bucket: AliOSSBucket;
 }

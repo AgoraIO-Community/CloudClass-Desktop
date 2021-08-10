@@ -1,12 +1,30 @@
 import { reportServiceV2 } from '../services/report-v2';
 import { reportService } from '../services/report';
-import { rteReportService } from 'agora-rte-sdk';
+import { rteReportService, EduRoomTypeEnum } from 'agora-rte-sdk';
+import { BizPagePath } from '../types';
 
 export type RoutesMapType = {
   pretestPath: string;
   defaultRoutePath: string;
   routesPath: Record<string, { path: string }>;
 };
+
+export const scenarioRoomPath: Record<string, { path: string }> = {
+  [EduRoomTypeEnum.Room1v1Class]: {
+    path: BizPagePath.OneToOnePath,
+  },
+  [EduRoomTypeEnum.RoomSmallClass]: {
+    path: BizPagePath.MidClassPath,
+  },
+  [EduRoomTypeEnum.RoomBigClass]: {
+    path: BizPagePath.BigClassPath,
+  },
+};
+// 'edu.routesMap': {
+//   pretestPath: '/pretest',
+//   defaultRoutePath: scenarioRoomPath[0],
+//   routesPath: scenarioRoomPath,
+// },
 class GlobalConfigs {
   sdkDomain: string = 'https://api.agora.io/%region%';
   reportDomain: string = 'https://api.agora.io';
@@ -15,7 +33,11 @@ class GlobalConfigs {
 
   _region: string = '';
 
-  routesMap!: RoutesMapType;
+  routesMap: RoutesMapType = {
+    pretestPath: '/pretest',
+    defaultRoutePath: scenarioRoomPath[0].path,
+    routesPath: scenarioRoomPath,
+  };
 
   public setRoutesMap(routesMap: RoutesMapType) {
     this.routesMap = routesMap;
