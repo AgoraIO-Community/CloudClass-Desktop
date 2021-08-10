@@ -46,7 +46,7 @@ export interface PretestProps extends BaseProps {
   onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
   onChangeAudioVolume?: (deviceType: string, value: number) => void;
   onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
-  videoComponent?: React.ReactElement;
+  videoComponent?: any;
   volumeComponent?: React.ReactElement;
   pretestChannel: Subject<any>;
   isBeauty?: boolean;
@@ -316,7 +316,8 @@ const PretestComponent: React.FC<PretestProps> = ({
               width: 320,
               height: 180,
             }}>
-            {videoComponent && React.cloneElement(videoComponent, {}, null)}
+            {/* {videoComponent && React.cloneElement(videoComponent, {}, null)} */}
+            {videoComponent && videoComponent()}
             {isNative && isBeauty ? (
               <div className="beauty-operation-wrap">
                 <div className="beauty-operation-top">
