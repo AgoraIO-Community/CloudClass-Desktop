@@ -116,7 +116,7 @@ const App = observer(({ onHeight, onTitle, lang }: { onHeight: (height: number) 
           pluginStore.addAnswer()
         }} style={{ backgroundImage: `url(${addSvg})`, visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 4) ? 'hidden' : 'visible' }} ></span>
         <Button
-          disabled={pluginStore.status === 'config' ? (!pluginStore.title || (pluginStore.answer?.includes('') || false))
+          disabled={pluginStore.status === 'config' ? ( !pluginStore.answer || !pluginStore.title || pluginStore.answer.includes('') || ([...new Set(pluginStore.answer)].length !== pluginStore.answer.length))
             : (pluginStore.status === 'answer' ? (pluginStore.selAnswer?.length || 0) === 0 : false)}
           onClick={() => {
             pluginStore.onSubClick();

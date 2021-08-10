@@ -51,7 +51,8 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
       className={classnames({
         [`answer-modal`]: 1,
         [`answer-role-student`]: pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student,
-        [`answer-language-en`]: lang === 'en'
+        [`answer-language-en`]: lang === 'en',
+        [`answer-change`]: pluginStore.status==='answer'&&pluginStore.showModifyBtn,
       })}
     >
       {pluginStore.ui?.includes('sels') ? <div className="answer-items" >

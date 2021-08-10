@@ -130,25 +130,26 @@ export class PluginStore {
                 });
             } else if (state === "updateStudent") {
                 if (this.globalContext.rosterUserList) {
-                    let users:any = []
-                    this.context.userList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.uid || '')) {
-                            users.push(user.uid)
+                    let students:any = this.context.properties['students'] || []
+                    roomProperties['students'] = []
+                    roomProperties['studentNames'] = []
+
+                    students.map((student: any,index: number) => {
+                        if (getStudentInfo(this.context.properties['student' + student])) {
+                            roomProperties['students'].push(student)
+                            roomProperties['studentNames'].push(this.context.properties['studentNames'][index])
                         }
                     });
 
-                    roomProperties['students'] = []
-                    roomProperties['studentNames'] = []
                     this.globalContext.rosterUserList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.uid || '')) {
+                        if (!(/^guest[0-9]{10}2$/).test(user.uid || '') && !roomProperties['students'].includes(user.uid)) {
                             roomProperties['students'].push(user.uid)
                             roomProperties['studentNames'].push(user.name)
                         }
                     }); 
-                    if (JSON.stringify(users.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
+                    if (JSON.stringify(students.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
                         this.context.userList = this.globalContext.rosterUserList
                         console.log(roomProperties);
-                        
                     }else{
                         return;
                     }
@@ -192,14 +193,8 @@ export class PluginStore {
                 this.changeRoomProperties({ state: 'clear' })
             } else {
                 if (this.status === 'config') {
-                    let sels: string[] = [];
-                    this.selAnswer?.map((sel: string) => {
-                        if (this.answer?.includes(sel)) {
-                            sels.push(sel)
-                        }
-                    })
                     //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
-                    this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: sels, commonState: 1 })
+                    this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: [], commonState: 1 })
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
@@ -340,7 +335,7 @@ export class PluginStore {
     updateGlobalContext(state:any) {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             this.globalContext = state
-            if (this.status !== 'config') {
+            if (this.status !== 'config' && this.status !== 'end') {
                 this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
             }
         }
