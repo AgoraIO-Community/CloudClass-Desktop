@@ -22,10 +22,17 @@ export const PensContainer = observer((props: PensContainerProps) => {
     changeHexColor(currentColor);
   };
 
+  const mapLineSelectorToLabel: Record<string, string> = {
+    pen: 'scaffold.pencil',
+    square: 'scaffold.rectangle',
+    circle: 'scaffold.circle',
+    line: 'scaffold.straight',
+  };
+
   return (
     <Pens
       value="pen"
-      label={t('scaffold.pencil')}
+      label={t(mapLineSelectorToLabel[lineSelector])}
       icon="pen"
       activePen={lineSelector}
       onClick={onClick}
