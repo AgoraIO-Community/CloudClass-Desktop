@@ -24,7 +24,7 @@ export class HomeStore {
   launchKey: string = launchKey;
 
   constructor(context: any) {
-    this.region = GlobalStorage.read(this.regionKey) || 'NA';
+    this.region = GlobalStorage.read(this.regionKey) || this.region;
     this.launchOption = GlobalStorage.read(this.launchKey) || {};
     autorun(() => {
       const data = this.region;
