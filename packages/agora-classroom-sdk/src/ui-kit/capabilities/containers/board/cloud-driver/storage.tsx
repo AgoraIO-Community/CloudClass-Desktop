@@ -34,7 +34,7 @@ export const StorageContainer = observer(() => {
                     await openCloudResource(id);
                   }}>
                   <SvgImg type={type} style={{ marginRight: '6px' }} />
-                  <Inline className="filename" color="#191919">
+                  <Inline className="filename" color="#191919" title={name}>
                     {name}
                   </Inline>
                 </Col>

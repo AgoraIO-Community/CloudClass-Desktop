@@ -178,7 +178,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> =
           if (isTransFile) {
             setUploadFileInfo({
               ...uploadFileInfo,
-              iconType: 'format-' + mapFileType(ext),
+              iconType: mapFileType(ext),
               fileName: name,
               uploadComplete: true,
             });
@@ -197,7 +197,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> =
       // TODO: 渲染UI
       setUploadFileInfo({
         ...uploadFileInfo,
-        iconType: 'format-' + mapFileType(ext),
+        iconType: mapFileType(ext),
         fileName: name,
         fileSize: formatFileSize(file.size),
         uploadComplete: false,

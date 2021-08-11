@@ -88,16 +88,22 @@ export interface ItemFontColorProps extends BaseProps {
   children: any;
   color?: string;
   width?: number;
+  title?: string;
 }
 
 export const Inline: React.FC<ItemFontColorProps> = ({
   children,
   color,
   width,
+  title = '',
   ...restProps
 }) => {
   return (
-    <span className="inline" style={{ color: color, width }} {...restProps}>
+    <span
+      className="inline"
+      style={{ color: color, width }}
+      title={title}
+      {...restProps}>
       {children}
     </span>
   );
