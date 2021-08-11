@@ -14,7 +14,8 @@ import {
   Row,
   transI18n,
   I18nProvider,
-  changeLanguage
+  changeLanguage,
+  Icon
 } from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
@@ -129,8 +130,9 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
 
 export class AgoraExtAppAnswer implements IAgoraExtApp {
   appIdentifier = "io.agora.answer"
-  appName = 'answer'
+  appName = transI18n('answer.appName')
   className = 'answer-dialog'
+  icon = <Icon type="answer" useSvg size={24}/>
   width = 380
   height = 150 // 超过4个选项高度为220
   title = transI18n('answer.appName')
