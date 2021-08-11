@@ -1416,6 +1416,10 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.clicker]: 'clicker',
           };
 
+          if (tool === 'color') {
+            // 选择颜色工具时，高亮显示还是之前的那个工具
+            return;
+          }
           if (selector[tool]) {
             this.selector = selector[tool];
           } else {
