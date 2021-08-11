@@ -1888,46 +1888,16 @@ export class EduClassroomDataController {
         //   console.log(e);
         // }
 
-        let anchor = get(properties, paths.join('.'));
         let parent = get(
           properties,
           [...paths].splice(0, paths.length - 1).join('.'),
           {},
         );
 
-        const isObject = (val: any) => typeof val === 'object' && val !== null;
         const changedValue = cloneDeep(changedProperties[key]);
 
-        if (changedValue && Array.isArray(changedValue)) {
-          let arrayPropCursor: any = properties;
-          for (let path of paths) {
-            if (path === lastPath) {
-              // console.log(" arrayPropCursor ", path, JSON.stringify(arrayPropCursor[path]), ' changedValue ', JSON.stringify(changedValue), ' key ', key, ' changeProperties ', changedProperties[key], ' changedProperties', JSON.stringify(changedProperties))
-              arrayPropCursor[path] = changedValue;
-            } else {
-              arrayPropCursor = arrayPropCursor[path];
-            }
-          }
-          // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
-          // console.log('### properties ', properties, " arrayPropCursor " ,JSON.stringify(arrayPropCursor))
-          // console.log(" #### newProperties", JSON.stringify(newProperties))
-          // console.log(" #### changeProperties", JSON.stringify(changedProperties))
-          continue;
-          // return properties
-        }
-
-        if (!isObject(anchor)) {
-          // if anchor is not an object, overwrite anyway
-          parent[[...paths].pop()!] = changedValue;
-        } else {
-          // anchor is an object
-          if (!isObject(changedValue)) {
-            // if changed value is not an object, overwrite as well
-            parent[[...paths].pop()!] = changedValue;
-          } else {
-            merge(anchor, changedValue);
-          }
-        }
+        // update leaf node
+        parent[[...paths].pop()!] = changedValue;
       }
       // console.log('#### roomProperties setWith.forEach, setRoomBatchProperties')
       // console.log('### properties ', properties)
