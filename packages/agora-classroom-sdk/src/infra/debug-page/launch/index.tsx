@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AgoraEduEvent, AgoraEduSDK, scenarioRoomPath } from '../../api';
+import { AgoraEduEvent, AgoraEduSDK } from '../../api';
 import {
   ClassRoom,
   ClassRoomAbstractStore,
@@ -50,11 +50,6 @@ export const LaunchPage = observer(() => {
             reportUrl: `${REACT_APP_REPORT_URL}`,
             reportQos: `${REACT_APP_REPORT_QOS}`,
             reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
-            'edu.routesMap': {
-              pretestPath: '/pretest',
-              defaultRoutePath: scenarioRoomPath[0],
-              routesPath: scenarioRoomPath,
-            },
           }),
         );
         AgoraEduSDK.config({

@@ -58,7 +58,7 @@ export enum BizPageRouter {
 
 export enum BizPagePath {
   OneToOnePath = '/classroom/1v1',
-  SmallClassPath = '/classroom/mid',
+  MidClassPath = '/classroom/mid',
   BigClassPath = '/classroom/big',
   PretestPagePath = '/pretest',
 }

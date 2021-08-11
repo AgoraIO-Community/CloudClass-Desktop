@@ -5,7 +5,6 @@ import { OneToOneScenario } from '~capabilities/scenarios/1v1';
 import { PretestScenarioPage } from '~capabilities/scenarios/pretest';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import * as React from 'react';
-import { scenarioRoomPath } from '@/infra/api';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
 import { BigClassScenario } from '~capabilities/scenarios/big-class';
 import { RecordPage } from '../debug-page/record';
