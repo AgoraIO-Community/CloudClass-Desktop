@@ -234,7 +234,7 @@ export const PretestContainer = observer(() => {
           speakerId={speakerList[0].deviceId}
           isNative={isNative}
           videoComponent={VideoPreviewPlayer}
-          volumeComponent={VolumeIndicationView}
+          volumeComponent={() => <VolumeIndicationView />}
           isBeauty={isBeauty}
           onSelectBeauty={handleBeauty}
           whitening={whitening}

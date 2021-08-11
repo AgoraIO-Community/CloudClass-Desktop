@@ -47,7 +47,7 @@ export interface PretestProps extends BaseProps {
   onChangeAudioVolume?: (deviceType: string, value: number) => void;
   onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
   videoComponent?: any;
-  volumeComponent?: React.ReactNode;
+  volumeComponent?: Function;
   pretestChannel: Subject<any>;
   isBeauty?: boolean;
   onSelectBeauty?: (isBeauty: boolean) => void;
@@ -74,7 +74,7 @@ const PretestComponent: React.FC<PretestProps> = ({
   microphoneError = false,
   className,
   videoComponent,
-  volumeComponent,
+  volumeComponent = () => {},
   onSelectMirror = (isMirror) => {},
   onChangeDevice = (deviceType, value) => {},
   onChangeAudioVolume = (deviceType, value) => {},
@@ -422,7 +422,7 @@ const PretestComponent: React.FC<PretestProps> = ({
           )}
           <div className="device-volume-test">
             <SvgImg type="microphone-on-outline" style={{ color: '#0073FF' }} />
-            {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
+            {volumeComponent()}
           </div>
         </div>
         <div className="device-choose">
