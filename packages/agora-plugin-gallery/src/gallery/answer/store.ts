@@ -100,7 +100,7 @@ export class PluginStore {
     }) => {
         let roomProperties: any = {}
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-            ['start','end'].includes(state||'') && (roomProperties['state'] = state)
+            ['start','end'].includes(state||'') && (roomProperties['state'] = state) && (roomProperties['restart'] = false)
             canChange && (roomProperties['canChange'] = canChange)
             mulChoice && (roomProperties['mulChoice'] = mulChoice)
             startTime && (roomProperties['startTime'] = startTime)
@@ -160,11 +160,13 @@ export class PluginStore {
                 let propers: string[] = [];
                 let keys = Object.keys(this.context.properties)
                 keys.map((ele: string) => {
-                    ['answer','canChange','endTime','items','mulChoice','startTime','state','studentNames','students'].includes(ele) || propers.push(ele)
+                    ['answer','canChange','endTime','items','mulChoice','startTime','restart','state','studentNames','students'].includes(ele) || propers.push(ele)
                 })
                 console.log('clearStudent:',this.context.properties.students,propers,this.context.properties);
                 await this.handle.deleteRoomProperties(propers, {})
                 return;
+            }else if (state === "reset") {
+                roomProperties['restart'] = true
             }
             await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {})
         } else {
@@ -192,6 +194,7 @@ export class PluginStore {
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
+                    this.changeRoomProperties({ state: 'reset', commonState: 1 })
                     this.changeRoomProperties({ state: 'clear' })
                 }
             }

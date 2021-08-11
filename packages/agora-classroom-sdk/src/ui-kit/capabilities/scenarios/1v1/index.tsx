@@ -12,7 +12,7 @@ import { useEffectOnce } from '@/infra/hooks/utils'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { Widget } from '~capabilities/containers/widget'
 import { useLayoutEffect } from 'react'
-
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
 export const OneToOneScenario = observer(() => {
   
@@ -28,7 +28,8 @@ export const OneToOneScenario = observer(() => {
   const { 
     joinRoom,
     roomProperties,
-    isJoiningRoom
+    isJoiningRoom,
+    roomInfo
   } = useRoomContext()
 
   const {
@@ -50,8 +51,10 @@ export const OneToOneScenario = observer(() => {
       // 开启答题器
       onLaunchAppPlugin('io.agora.answer')
     } else if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 0) {
-      // 关闭答题器
-      onShutdownAppPlugin('io.agora.answer')
+      if (!(roomInfo.userRole===EduRoleTypeEnum.teacher &&  roomProperties?.extApps?.io_agora_answer?.restart)) {
+        // 关闭答题器
+        onShutdownAppPlugin('io.agora.answer')
+      }
     }
 
     if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 1) {

@@ -15,17 +15,17 @@ import React, { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
+import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
 
 export const BigClassScenario = observer(() => {
 
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { joinRoom, roomProperties, isJoiningRoom, roomInfo } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
     onShutdownAppPlugin
   } = useAppPluginContext()
-
 
   useLayoutEffect(() => {
     if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 1) {
@@ -40,8 +40,10 @@ export const BigClassScenario = observer(() => {
       // 开启答题器
       onLaunchAppPlugin('io.agora.answer')
     } else if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 0) {
-      // 关闭答题器
-      onShutdownAppPlugin('io.agora.answer')
+      if (!(roomInfo.userRole===EduRoleTypeEnum.teacher &&  roomProperties?.extApps?.io_agora_answer?.restart)) {
+        // 关闭答题器
+        onShutdownAppPlugin('io.agora.answer')
+      }
     }
 
     if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 1) {
