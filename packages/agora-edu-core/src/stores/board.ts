@@ -254,6 +254,8 @@ export class BoardStore extends ZoomController {
     return this._boardClient as BoardClient;
   }
 
+  boardDomElement?: any
+
   ossClient!: OSS
 
   @observable
@@ -1724,6 +1726,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   mount(dom: any) {
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
+    this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -1739,6 +1742,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   unmount() {
+    this.boardDomElement = null
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null)
     }
@@ -2006,9 +2010,9 @@ export class BoardStore extends ZoomController {
       width: imageInfo.width,
       height: imageInfo.height,
       //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
+      coordinateX: this.boardDomElement?.clientWidth / 2,
       //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateY: this.boardDomElement?.clientHeight / 2,
     })
   }
 
