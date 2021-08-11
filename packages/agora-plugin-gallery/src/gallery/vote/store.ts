@@ -37,25 +37,25 @@ export class PluginStore {
     @observable
     height?: number = 283
     @observable
-    title?: string = ''
+    title?: string = ''//标题
     @observable
-    answer?: string[] = ['', '']
+    answer?: string[] = ['', '']//投票选项
     @observable
-    selAnswer?: string[] = []
+    selAnswer?: string[] = []//投票已选项
     @observable
-    currentTime?: string = ''
+    currentTime?: string = ''//当前时间
     @observable
-    students?: any[]
+    students?: any[]//未使用
     @observable
-    status: string = 'config'//config,answer,info,end
+    status: string = 'config'//当前状态：config(老师设置投票),answer(学生投票),info(投票进行中，老师或学生显示信息),end(投票结束)
     @observable
-    answerInfo?: string[] = []
+    answerInfo?: string[] = []//投票结果信息
     @observable
-    buttonName?: string = 'vote.start'
+    buttonName?: string = 'vote.start'//按钮文字
     @observable
-    ui?: string[] = ['sels']//'sels','users','infos','subs'
+    ui?: string[] = ['sels']//界面显示配置：'sels'(无意义),'users'(无意义),'infos'(无意义),'subs'(底部按钮)
     @observable
-    timehandle?: any = null
+    timehandle?: any = null//保存时间刷新函数的句柄
     @observable
     mulChoice?: boolean = false
     @observable

@@ -29,23 +29,23 @@ export class PluginStore {
     @observable
     title?: string = ''
     @observable
-    answer?: string[] = ['A', 'B', 'C', 'D']
+    answer?: string[] = ['A', 'B', 'C', 'D']//备选答案
     @observable
-    selAnswer?: string[] = []
+    selAnswer?: string[] = []//选中答案
     @observable
-    currentTime?: string = ''
+    currentTime?: string = ''//当前时间
     @observable
-    students?: any[]
+    students?: any[]//学生信息列表([{name, replyTime, answer},...]),老师使用
     @observable
-    status: string = 'config'//config,answer,info,end
+    status: string = 'config'//当前状态：config(老师设置选项),answer(学生答题),info(答题进行中，老师或学生显示信息),end(答题结束)
     @observable
-    answerInfo?: { 'number-answered': string, 'acc': string, 'right-key': string, 'my-answer': string }
+    answerInfo?: { 'number-answered': string, 'acc': string, 'right-key': string, 'my-answer': string }//答题信息
     @observable
-    buttonName?: string = 'answer.start'
+    buttonName?: string = 'answer.start'//按钮文本
     @observable
-    ui?: string[] = ['sels']//'sels','users','infos','subs'
+    ui?: string[] = ['sels']//界面显示配置：'sels'(选项列表),'users'(学生列表),'infos'(答题信息),'subs'(底部按钮)
     @observable
-    timehandle?: any = null
+    timehandle?: any = null//保存时间刷新函数的句柄
     @observable
     globalContext: any = {}
     @observable
