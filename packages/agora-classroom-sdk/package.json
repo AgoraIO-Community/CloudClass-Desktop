@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "1.1.2-rc.3",
+  "version": "1.1.5",
   "homepage": ".",
   "sideEffects": false,
   "keywords": [
