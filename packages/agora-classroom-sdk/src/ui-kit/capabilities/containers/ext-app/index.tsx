@@ -55,7 +55,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
           positionOffset={{x: 0, y: 0}}
         >
             <Modal 
-              title={transI18n(`${app.appName}.appName`)} 
+              title={app.appName} 
               width={'min-content'}
               onCancel={onCancel} 
               closable={closable}
