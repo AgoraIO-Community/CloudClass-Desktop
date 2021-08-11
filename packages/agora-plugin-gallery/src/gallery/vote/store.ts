@@ -181,8 +181,8 @@ export class PluginStore {
             await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {})
         } else {
             if (this.context.properties.state === "start") {
-                roomProperties['student' + this.context.localUserInfo.userUuid] = { replyTime, answer }
-                await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {});
+                roomProperties['student' + this.context.localUserInfo.userUuid] = { startTime: this.context.properties.startTime,replyTime, answer }
+                await this.handle.updateRoomProperty(roomProperties, { state: commonState || 0 }, {startTime: this.context.properties.startTime});
             }
         }
     }
