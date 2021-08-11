@@ -33,7 +33,11 @@ class GlobalConfigs {
 
   _region: string = '';
 
-  routesMap!: RoutesMapType;
+  routesMap: RoutesMapType = {
+    pretestPath: '/pretest',
+    defaultRoutePath: scenarioRoomPath[0].path,
+    routesPath: scenarioRoomPath,
+  };
 
   public setRoutesMap(routesMap: RoutesMapType) {
     this.routesMap = routesMap;
