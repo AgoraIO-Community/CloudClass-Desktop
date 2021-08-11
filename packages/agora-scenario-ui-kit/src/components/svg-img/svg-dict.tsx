@@ -8,7 +8,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'excel':
+    case 'word':
       return (
         <path
           {...props}
@@ -88,7 +88,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'word':
+    case 'excel':
       return (
         <path
           {...props}
