@@ -180,7 +180,7 @@ const ActionBarContainer = observer(() => {
     }
   }, [uiStore.aclassVisible])
 
-  const menuBars = [
+  let menuBars = [
     {
       name: 'courseReplace',
       tooltip: t('tooltip.courseReplace'),
@@ -244,6 +244,10 @@ const ActionBarContainer = observer(() => {
       clickEvent: handleSetting
     },
   ]
+
+  if(roomStore.appStore.params.language === 'zh-hk') {
+    menuBars = menuBars.filter(({name}: {name: string}) => name !== 'customerService')
+  }
 
   let buttonArr = roomStore.isAssistant ? 
     menuBars.filter(({name}: {name: string}) => name !== 'equipmentDetection') :
