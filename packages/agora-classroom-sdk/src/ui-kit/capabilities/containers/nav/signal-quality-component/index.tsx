@@ -5,7 +5,7 @@ import { IconTypes, Popover, SvgImg } from '~ui-kit';
 import { SignalContent } from '~ui-kit/components/biz-header/signal-content';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
-  excellent: 'good-signal',
+  excellent: 'normal-signal',
   good: 'normal-signal',
   bad: 'bad-signal',
   unknown: 'unknown-signal',
