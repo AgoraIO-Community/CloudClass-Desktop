@@ -147,7 +147,7 @@ export const usePretestContext = (): PretestContext => {
     cameraId: pretestStore.cameraId,
     microphoneId: pretestStore.microphoneId,
     speakerId: pretestStore.speakerId,
-    microphoneLevel: pretestStore.microphoneLevel,
+    microphoneLevel: 0,
     isMirror: pretestStore.isMirror,
     setMirror: pretestStore.setMirror,
     installPretest,
