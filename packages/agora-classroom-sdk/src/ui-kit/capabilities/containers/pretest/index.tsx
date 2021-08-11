@@ -19,7 +19,7 @@ import { RendererPlayer } from '~utilities/renderer-player';
 import { Volume } from '~components/volume';
 import { v4 as uuidv4 } from 'uuid';
 
-const VolumeIndicationView = observer(() => {
+const VolumeIndicationView: React.FC<any> = observer(() => {
   const { microphoneLevel } = useVolumeContext();
   // const {
   // microphoneLevel
@@ -234,7 +234,7 @@ export const PretestContainer = observer(() => {
           speakerId={speakerList[0].deviceId}
           isNative={isNative}
           videoComponent={VideoPreviewPlayer}
-          volumeComponent={<VolumeIndicationView />}
+          volumeComponent={VolumeIndicationView}
           isBeauty={isBeauty}
           onSelectBeauty={handleBeauty}
           whitening={whitening}

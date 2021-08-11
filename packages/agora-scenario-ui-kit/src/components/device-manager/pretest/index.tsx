@@ -47,7 +47,7 @@ export interface PretestProps extends BaseProps {
   onChangeAudioVolume?: (deviceType: string, value: number) => void;
   onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
   videoComponent?: any;
-  volumeComponent?: React.ReactElement;
+  volumeComponent?: React.ReactNode;
   pretestChannel: Subject<any>;
   isBeauty?: boolean;
   onSelectBeauty?: (isBeauty: boolean) => void;
