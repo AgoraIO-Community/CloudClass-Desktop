@@ -8,7 +8,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-excel':
+    case 'excel':
       return (
         <path
           {...props}
@@ -16,7 +16,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-image':
+    case 'image':
       return (
         <path
           {...props}
@@ -24,7 +24,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-pdf':
+    case 'pdf':
       return (
         <path
           {...props}
@@ -32,7 +32,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-audio':
+    case 'audio':
       return (
         <path
           {...props}
@@ -40,7 +40,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-ppt':
+    case 'ppt':
       return (
         <path
           {...props}
@@ -48,7 +48,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-txt':
+    case 'txt':
       return (
         <path
           {...props}
@@ -56,7 +56,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-unknown':
+    case 'unknown':
       return (
         <path
           {...props}
@@ -64,7 +64,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-video':
+    case 'video':
       return (
         <path
           {...props}
@@ -88,7 +88,7 @@ export const getPath = (name: string, props?: any) => {
         />
       );
 
-    case 'format-word':
+    case 'word':
       return (
         <path
           {...props}
@@ -1227,31 +1227,31 @@ export const getViewBox = (name: string) => {
     case 'extension-actived':
       return '0 0 1024 1024';
 
-    case 'format-excel':
+    case 'excel':
       return '0 0 1024 1024';
 
-    case 'format-audio':
+    case 'audio':
       return '0 0 1024 1024';
 
-    case 'format-pdf':
+    case 'pdf':
       return '0 0 1024 1024';
 
-    case 'format-image':
+    case 'image':
       return '0 0 1024 1024';
 
-    case 'format-ppt':
+    case 'ppt':
       return '0 0 1024 1024';
 
-    case 'format-txt':
+    case 'txt':
       return '0 0 1024 1024';
 
-    case 'format-unknown':
+    case 'unknown':
       return '0 0 1024 1024';
 
-    case 'format-video':
+    case 'video':
       return '0 0 1024 1024';
 
-    case 'format-word':
+    case 'word':
       return '0 0 1024 1024';
 
     case 'answer':

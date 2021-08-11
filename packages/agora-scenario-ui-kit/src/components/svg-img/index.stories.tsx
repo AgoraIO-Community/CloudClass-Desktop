@@ -26,48 +26,48 @@ export const Docs = ({ size, fill }: DocsProps) => (
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-excel'} size={size} />
-        <p>format-excel</p>
+        <SvgImg type={'excel'} size={size} />
+        <p>excel</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-audio'} size={size} />
-        <p>format-audio</p>
+        <SvgImg type={'audio'} size={size} />
+        <p>audio</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-image'} size={size} />
-        <p>format-image</p>
+        <SvgImg type={'image'} size={size} />
+        <p>image</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-pdf'} size={size} />
-        <p>format-pdf</p>
+        <SvgImg type={'pdf'} size={size} />
+        <p>pdf</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-txt'} size={size} />
-        <p>format-txt</p>
+        <SvgImg type={'txt'} size={size} />
+        <p>txt</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-ppt'} size={size} />
-        <p>format-ppt</p>
+        <SvgImg type={'ppt'} size={size} />
+        <p>ppt</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-unknown'} size={size} />
-        <p>format-unknown</p>
+        <SvgImg type={'unknown'} size={size} />
+        <p>unknown</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-video'} size={size} />
-        <p>format-video</p>
+        <SvgImg type={'video'} size={size} />
+        <p>video</p>
       </div>
 
       <div className="svg-story-div">
-        <SvgImg type={'format-word'} size={size} />
-        <p>format-word</p>
+        <SvgImg type={'word'} size={size} />
+        <p>word</p>
       </div>
 
       <div className="svg-story-div">
