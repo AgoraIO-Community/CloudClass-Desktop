@@ -327,6 +327,7 @@ export const en = {
     detect_new_device: 'The device has installed, Please try it!',
     camera_move_out: 'Camera is pulled out, unable to display video!',
     mic_move_out: 'Microphone is pulled out!',
+    device_move_out: 'Device is pulled out!',
     device_not_working: 'The device is not working properly!',
     detect_new_device_in_room:
       'The device has installed, Please click setting and select the new device.',
