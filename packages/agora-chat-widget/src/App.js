@@ -23,7 +23,7 @@ import { getRoomWhileList } from './api/mute';
 import _ from 'lodash';
 import { Chat } from './components/Chat';
 import { message } from 'antd';
-import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants';
+import { ROOM_TYPE, CHAT_TABS_KEYS } from './contants';
 import showChat_icon from './themes/img/chat.png';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
@@ -34,12 +34,15 @@ const App = function (props) {
   const showChat = state?.showChat;
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
+  const isSmallClass = state?.propsData?.roomType === ROOM_TYPE.smallClass;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
+
   useEffect(() => {
     let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '');
     let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '');
+    console.log('im_Data_RoomInfo>>>', im_Data_RoomInfo);
     let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '');
     let new_IM_Data = _.assign(
       im_Data_Props,
@@ -204,9 +207,15 @@ const App = function (props) {
   return (
     <div>
       {showChat ? (
-        <div className="app">
-          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-        </div>
+        isSmallClass ? (
+          <div className="app" style={{ width: '340px' }}>
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+          </div>
+        ) : (
+          <div className="app" style={{ width: '300px' }}>
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+          </div>
+        )
       ) : (
         <div className="chat">
           <div
