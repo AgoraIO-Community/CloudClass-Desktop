@@ -17,6 +17,7 @@ import { useUIStore } from '@/infra/hooks'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
+import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
 
 
 export const MidClassScenario = observer(() => {
@@ -24,7 +25,8 @@ export const MidClassScenario = observer(() => {
 
   const {
     onLaunchAppPlugin,
-    onShutdownAppPlugin
+    onShutdownAppPlugin,
+    activeAppPlugins
   } = useAppPluginContext()
 
 
@@ -42,7 +44,13 @@ export const MidClassScenario = observer(() => {
       onLaunchAppPlugin('io.agora.answer')
     } else if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 0) {
       // 关闭答题器
-      onShutdownAppPlugin('io.agora.answer')
+      onShutdownAppPlugin('io.agora.answer', () => {
+        let app = activeAppPlugins.find(p => p.appIdentifier === 'io.agora.answer') as AgoraExtAppAnswer
+        if(!app) {
+          return true
+        }
+        return app.store?.status !== 'config'
+      })
     }
 
     if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 1) {

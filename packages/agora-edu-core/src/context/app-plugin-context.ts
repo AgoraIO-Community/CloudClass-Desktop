@@ -13,7 +13,11 @@ export const useAppPluginContext = () => {
     }
   }
 
-  const onShutdownAppPlugin = (id:any) => {
+  const onShutdownAppPlugin = (id:any, interceptor?: () => boolean) => {
+    if(interceptor && interceptor() === false) {
+      // if interceptor is defined and interfector return false, prevent default behavior
+      return
+    }
     appStore.activeExtAppIds = appStore.activeExtAppIds.filter(appId => appId !== id)
   }
 
