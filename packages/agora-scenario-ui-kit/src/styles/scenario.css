@@ -242,6 +242,9 @@
   height: 514px;
 }
 
+.z-index-2 ~ .camera-loading-placeholder {
+  z-index: 0 !important; 
+}
 
 .rtc-video {
   width: 100%;

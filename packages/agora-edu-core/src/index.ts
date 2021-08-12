@@ -26,6 +26,10 @@ export type {
   EduMediaStream
 } from './stores/scene'
 
+export {
+  EduClassroomStateEnum
+} from './stores/scene'
+
 export type {
   Resource
 } from './stores/board'

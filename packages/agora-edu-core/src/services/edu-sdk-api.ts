@@ -76,6 +76,38 @@ export class EduSDKApi extends ApiBase {
     return res.data
   }
 
+  async startClass(params: {
+    roomUuid: string,
+  }) {
+      // REPORT
+      reportService.startTick('startClass', 'http', 'preflight')
+      const res = await this.fetch({
+        url: `/v2/rooms/${params.roomUuid}/states/1`,
+        method: 'PUT',
+      })
+      // res.data.ts = res.ts
+      const statusCode = res['__status']
+      const {code} = res
+      reportService.reportHttp('stopClass', 'http', 'preflight', statusCode, statusCode === 200, code)
+      return res
+  }
+
+  async stopClass(params: {
+    roomUuid: string,
+  }) {
+      // REPORT
+      reportService.startTick('stopClass', 'http', 'preflight')
+      const res = await this.fetch({
+        url: `/v2/rooms/${params.roomUuid}/states/2`,
+        method: 'PUT'
+      })
+      // res.data.ts = res.ts
+      const statusCode = res['__status']
+      const {code} = res
+      reportService.reportHttp('stopClass', 'http', 'preflight', statusCode, statusCode === 200, code)
+      return res
+  }
+
   async checkIn(params: {
     roomUuid: string,
     roomName: string,

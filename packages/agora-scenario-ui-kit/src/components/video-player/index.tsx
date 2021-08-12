@@ -17,6 +17,7 @@ export const CustomizeVolumeIndicator = ({streamUuid, volume}: {streamUuid: any,
     <VolumeIndicator volume={volume} />
   )
 }
+import { transI18n } from '../i18n';
 
 export interface BaseVideoPlayerProps {
   isHost?: boolean;
@@ -266,7 +267,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       {isHost ? (
         <>
           {hideOffAllPodium ? null : (
-            <Tooltip title={t('Clear Podiums')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podiums')} placement={placement}>
               <Icon
                 hover={canHoverHideOffAllPodium}
                 type="invite-to-podium"
@@ -275,7 +276,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideOffPodium ? null : (
-            <Tooltip title={t('Clear Podium')} placement={placement}>
+            <Tooltip title={transI18n('Clear Podium')} placement={placement}>
               <Icon
                 hover={true}
                 type="invite-to-podium"
@@ -285,13 +286,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hideBoardGranted ? null :
-            <Tooltip title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')} placement={placement}>
-              <div className={whiteboardGranted ? 'video-granted' : 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div>
-            </Tooltip>
+          <Tooltip title={whiteboardGranted ? transI18n('Close Whiteboard'): transI18n('Open Whiteboard')} placement={placement}>
+            <div className={whiteboardGranted ? 'video-granted': 'video-no_granted'} onClick={() => onWhiteboardClick(uid)}></div> 
+          </Tooltip>
           }
           {hideStars ? null : (
-            <Tooltip title={t('Star')} placement={placement}>
-              <Icon
+            <Tooltip title={transI18n('Star')} placement={placement}>
+              <Icon 
                 hover={true}
                 type="star-outline"
                 onClick={() => {
@@ -301,7 +302,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
-            <Tooltip title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')} placement={placement}>
+            <Tooltip title={privateCallEnabled ? transI18n('Close Private Call') : transI18n('Open Private Call')} placement={placement}>
               <div className={privateCallEnabled ? 'private-call-active' : 'private-call-default'} onClick={() => {
                 onPrivateChat(uid)
               }}></div>

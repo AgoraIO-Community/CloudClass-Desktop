@@ -1,4 +1,4 @@
-import { useGlobalContext, usePretestContext, useVolumeContext } from 'agora-edu-core'
+import { useGlobalContext, useMediaContext, usePretestContext, useRoomContext, useVolumeContext } from 'agora-edu-core'
 import { observer } from 'mobx-react'
 import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
@@ -6,6 +6,7 @@ import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit'
 import { RendererPlayer } from '~utilities/renderer-player'
 import { Volume } from '~components/volume'
 import {v4 as uuidv4} from 'uuid'
+import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-rte-sdk'
 
 
 const VolumeIndicationView = observer(() => {
@@ -46,6 +47,7 @@ export const PretestContainer = observer(() => {
         stopPretestMicrophone,
         pretestNoticeChannel,
         pretestCameraRenderer,
+        closeRecordingTest
     } = usePretestContext()
 
     const VideoPreviewPlayer = useCallback(() => {    
@@ -66,7 +68,9 @@ export const PretestContainer = observer(() => {
         pretestNoticeChannel.next({type: 'error', info: transI18n(evt.info), kind: 'toast', id: uuidv4()})
     }
 
-    useEffect(() => installPretest(handleError), [])
+    useEffect(() => {
+        installPretest(handleError, false)
+    }, [])
 
     const onChangeDevice = async (type: string, value: any) => {
         switch (type) {
@@ -94,15 +98,22 @@ export const PretestContainer = observer(() => {
         }
     }
 
+    const {roomInfo} = useRoomContext()
+
     const global = useGlobalContext()
 
     const history = useHistory()
 
-    const handleOk = () => {
-        stopPretestCamera()
-        stopPretestMicrophone()
+    const handleOk = useCallback(() => {
+        if (roomInfo.userRole !== EduRoleTypeEnum.teacher) {
+            stopPretestCamera()
+            stopPretestMicrophone()
+        }
+        closeRecordingTest()
+        // stopPretestCamera()
+        // stopPretestMicrophone()
         history.push(global?.params?.roomPath ?? '/classroom/1v1')
-    }
+    }, [roomInfo.userRole])
 
     
     return (

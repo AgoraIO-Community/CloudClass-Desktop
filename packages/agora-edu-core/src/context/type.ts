@@ -6,6 +6,7 @@ import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { RosterUserInfo } from '../stores/small-class';
 import { ScreenShareType } from 'agora-rte-sdk';
+import { EduClassroomStateEnum } from '../stores/scene';
 
 export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
 
@@ -256,6 +257,7 @@ export type VolumeContext = {
     speakers: Map<number, number>,
 }
 export type PretestContext = {
+    closeRecordingTest: () => void,
     /**
      * 摄像头是否错误
      * @version v1.1.0
@@ -317,7 +319,7 @@ export type PretestContext = {
      * 按照预置 初始化摄像头麦克风，打开检测摄像头麦克风
      * @version v1.1.0
      */
-    installPretest: (error: DeviceErrorCallback) => () => void,
+    installPretest: (error: DeviceErrorCallback, remove: boolean) => () => void,
     /**
      * 开启摄像头
      * @version v1.1.0
@@ -427,6 +429,36 @@ export type ClassRoomStats = {
 }
 
 export type RoomContext = {
+    /**
+     * 上课状态
+     */
+    classState: EduClassroomStateEnum,
+    /**
+     * 1.1.2 msb-sp
+     * 准备流
+     */
+    prepareStream: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * 推荐只有需要的角色使用，例如老师
+     * 安装媒体设备
+     */
+    installMediaDevice: (error: DeviceErrorCallback) => Promise<void>,
+    /**
+     * 1.1.2 msb-sp
+     * 加入当前房间的rtc
+     */
+    joinRoomRTC: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * 离开当前房间的rtc
+     */
+    leaveRoomRTC: () => Promise<any>,
+    /**
+     * 1.1.2 msb-sp
+     * rtc是否加入了频道
+     */
+    rtcJoined: boolean,
     /**
      * 场景类型
      * @version v1.1.0
@@ -655,6 +687,10 @@ export type GlobalContext = {
     dialogEventObserver: Subject<any>,
 }
 export type BoardContext = {
+    /**
+     * 加入白板
+     */
+    joinBoard: any,
     /**
      * 白板所在的房间
      * @version v1.1.0
@@ -918,7 +954,8 @@ export type BoardContext = {
      * 获取白板global state更新回调
      * @version v1.1.5
      */
-    whiteGlobalState: any
+    whiteGlobalState: any,
+    boardConnectionState: string
 }
 
 export type StreamContext = {
