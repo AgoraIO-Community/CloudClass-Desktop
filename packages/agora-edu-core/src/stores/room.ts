@@ -1108,6 +1108,8 @@ export class RoomStore extends SimpleInterval {
       // })
       this.stopJoining()
 
+      this.tickClassroom()
+
       // logout will clean up eduManager events, so we need to put the listener here
       this.eduManager.on('ConnectionStateChanged', async ({ newState, reason }) => {
         EduLogger.info(" RTM ConnectionStateChanged ", newState)

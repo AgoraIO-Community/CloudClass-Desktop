@@ -292,12 +292,6 @@ export class SceneStore extends SimpleInterval {
   constructor(appStore: EduScenarioAppStore) {
     super()
     this.appStore = appStore
-
-    reaction(() => this.classState === EduClassroomStateEnum.start, (isStarting: boolean) => {
-      if (isStarting) {
-        this.appStore.roomStore.tickClassroom()
-      }
-    })
   }
 
   @computed

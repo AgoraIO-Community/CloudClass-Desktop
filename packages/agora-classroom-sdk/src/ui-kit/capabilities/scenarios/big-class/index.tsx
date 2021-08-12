@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext, useBoardContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext, useBoardContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -9,46 +9,30 @@ import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
-import { RoomChat } from '~capabilities/containers/room-chat'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
-import { useEffect } from 'react'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get } from 'lodash'
-import { EduClassroomStateEnum } from '../../../../../../agora-edu-core/src/stores/scene'
 
 
 export const BigClassScenario = observer(() => {
 
   const {
     joinRoom,
-    updateFlexRoomProperties,
+    joinRoomRTC,
     roomProperties,
     isJoiningRoom,
-    flexRoomProperties,
-    joinRoomRTC,
-    leaveRoomRTC,
     roomInfo,
     prepareStream,
   } = useRoomContext()
 
   const {
-    unmuteVideo,
-    unmuteAudio
-  } = useStreamListContext()
-
-  const {
     onLaunchAppPlugin,
     onShutdownAppPlugin
   } = useAppPluginContext()
-
-  const {
-    startPretestCamera,
-    startPretestMicrophone
-  } = usePretestContext()
 
 
   useLayoutEffect(() => {
@@ -81,20 +65,6 @@ export const BigClassScenario = observer(() => {
     isFullScreen,
   } = useGlobalContext()
 
-  // useEffect(() => {
-  //   if (roomInfo.userRole !== EduRoleTypeEnum.teacher) return
-  //   Promise.all([
-  //     startPretestCamera(),
-  //     startPretestMicrophone({enableRecording: false})
-  //   ])
-  //   .then(() => {
-  //       console.log('打开媒体设备成功')
-  //   })
-  //   .catch((err: any) => {
-  //       console.log('打开媒体设备失败', err)
-  //   })
-  // }, [roomInfo.userRole])
-
   const {
     widgets
   } = useWidgetContext()
@@ -108,9 +78,10 @@ export const BigClassScenario = observer(() => {
 
   useEffectOnce(async () => {
     await joinRoom()
-    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
-      prepareStream()
-    }
+    // if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+    //   prepareStream()
+    // }
+    joinRoomRTC()
     joinBoard()
   })
 

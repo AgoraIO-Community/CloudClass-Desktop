@@ -39,8 +39,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
   } = useUIStore()
 
   const renderCls = classnames({
-    "rtc-video": 1,
-    "z-index-2": classState === EduClassroomStateEnum.start
+    "rtc-video": 1
   })
 
   const showRenderer = useMemo(() => {
