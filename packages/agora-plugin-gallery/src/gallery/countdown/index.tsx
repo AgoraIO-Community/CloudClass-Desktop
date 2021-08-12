@@ -31,7 +31,7 @@ const App = observer(() => {
     <div
       style={{
         width: '100%',
-        height: '100%',
+        height: pluginStore.showSetting ? '100%' : '55px',
       }}
       className={classnames({
         [`countdown-modal`]: 1,
@@ -151,6 +151,8 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   ): void {
     this.store = new PluginStore(ctx, handle);
     this.height = this.store.showSetting ? 168 : 55;
+    //@ts-ignore
+    window.countDownStore = this.store;
     ReactDOM.render(
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
@@ -172,5 +174,6 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
       duration: '0',
       commonState: 0,
     });
+    this.height = 168;
   }
 }
