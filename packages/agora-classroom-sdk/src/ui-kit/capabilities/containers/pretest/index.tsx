@@ -18,6 +18,7 @@ import {
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Volume } from '~components/volume';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer } from '~capabilities/containers/toast';
 
 const VolumeIndicationView: React.FC<any> = observer(() => {
   const { microphoneLevel } = useVolumeContext();
@@ -245,6 +246,7 @@ export const PretestContainer = observer(() => {
           microphoneVolume={microphoneVolume}
         />
       </Modal>
+      {/* <ToastContainer /> */}
     </div>
   );
 });

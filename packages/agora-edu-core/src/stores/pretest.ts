@@ -497,6 +497,9 @@ export class PretestStore {
             type: 'video',
           });
         }
+        if (videoDeviceInit && cams.length < this._cameraList.length) {
+          this.appStore.fireToast('pretest.device_move_out', { type: 'video' });
+        }
 
         if (this.isElectron && !cams.length) {
           this.muteCamera();
@@ -536,6 +539,9 @@ export class PretestStore {
           this.appStore.fireToast('pretest.detect_new_device_in_room', {
             type: 'audio',
           });
+        }
+        if (audioDeviceInit && mics.length < this._microphoneList.length) {
+          this.appStore.fireToast('pretest.device_move_out', { type: 'audio' });
         }
         if (this.isElectron && !mics.length) {
           this.muteMicrophone();

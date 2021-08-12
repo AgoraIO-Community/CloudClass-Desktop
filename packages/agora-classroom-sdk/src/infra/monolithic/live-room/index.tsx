@@ -3,6 +3,7 @@ import { useGlobalContext } from 'agora-edu-core';
 import { BizPageRouter } from '@/infra/types';
 import { observer } from 'mobx-react';
 import { AgoraCSSBasement } from '~ui-kit';
+import { ToastContainer } from '~capabilities/containers/toast';
 import './index.css';
 
 const routes: BizPageRouter[] = [
@@ -25,6 +26,7 @@ export const LiveRoom = observer(() => {
         language={language}
         params={params}
       />
+      <ToastContainer />
     </>
   );
 });

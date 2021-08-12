@@ -20,6 +20,8 @@ export const ToastContainer = observer(() => {
   ) => addToast(transI18n(desc, props), toastType);
 
   const toastMap = {
+    'pretest.device_move_out': (props: any) =>
+      toast('pretest.device_move_out', props, 'warning'),
     'toast.failed_to_send_reward': () => toast('toast.failed_to_send_reward'),
     'toast.granted_board_success': () => toast('toast.granted_board_success'),
     'toast.failed_to_authorize_whiteboard': (props: any) =>
