@@ -17,6 +17,7 @@ export interface SelectProps extends BaseProps {
   isSearchable?: boolean;
   defaultMenuIsOpen?: boolean;
   prefix?: React.ReactNode;
+  maxMenuHeight?: number;
   onChange?: (value: string) => unknown;
 }
 
@@ -28,6 +29,7 @@ export const Select: FC<SelectProps> = ({
   isSearchable = false,
   defaultMenuIsOpen = false,
   prefix,
+  maxMenuHeight = 300,
   onChange,
   className,
   ...restProps
@@ -56,6 +58,7 @@ export const Select: FC<SelectProps> = ({
           onChange && onChange(option.value);
         }}
         defaultMenuIsOpen={defaultMenuIsOpen}
+        maxMenuHeight={maxMenuHeight}
         {...restProps}
       />
     </div>
