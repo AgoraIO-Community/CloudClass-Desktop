@@ -1,6 +1,7 @@
 import { get, isEmpty } from 'lodash';
 import { createElement, useContext, createContext } from 'react';
 import { config } from './translate/config';
+import { Z_INDEX_RULES } from './style-config';
 
 export type BaseElementProps = {
   id: string;
@@ -59,3 +60,4 @@ export const makeContainer = (name: string) => {
 };
 
 export const list = (num: number) => Array.from({ length: num }, (_, i) => i);
+export const Z_INDEX_CONST = Z_INDEX_RULES;

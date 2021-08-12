@@ -9,7 +9,7 @@ import {
 import Draggable from 'react-draggable';
 import { Dependencies } from './dependencies';
 import { eduSDKApi } from 'agora-edu-core';
-import { Modal, transI18n } from '~ui-kit';
+import { Modal, transI18n, Z_INDEX_CONST } from '~ui-kit';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 // import { transI18n } from '~components/i18n';
 
@@ -140,7 +140,7 @@ export const AppPluginContainer = observer(() => {
         top: 0,
         width: 0,
         height: 0,
-        zIndex: 999,
+        zIndex: Z_INDEX_CONST.zIndexExtApp,
       }}>
       {Array.from(activeAppPlugins.values()).map(
         (app: IAgoraExtApp, idx: number) => (
