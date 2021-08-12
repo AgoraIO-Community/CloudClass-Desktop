@@ -15,8 +15,8 @@
                 iframe.setAttribute('allow', 'camera;microphone')
                 iframe.setAttribute('style', 'width:100%;height:100%;border:0;')
                 iframe.setAttribute('frameBorder', '0')
-                iframe.setAttribute('src', './classroom.html')
-                // iframe.setAttribute('src', 'https://solutions-apaas.agora.io/acadsoc/1.1.2.5/app/classroom.html')
+                // iframe.setAttribute('src', './classroom.html')
+                iframe.setAttribute('src', 'https://solutions-apaas.agora.io/acadsoc/1.1.2.10/app/classroom.html')
                 let body = document.getElementsByTagName('body')[0]
 
                 // let iframe = document.querySelector('#agoraproxy')
@@ -31,8 +31,8 @@
                     
 
                     const teachers = [
-                        {userUuid: "user01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IADat/EsxDSQ4guPdS5iCqArzn5iEw1l21lAi/rZgI9LkQgqSoEAAAAAEABqrbYCx83iYAEA6APHzeJg"},
-                        {userUuid: "user02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IADH1drJTuJisbnMlmyTPAITKsSX6oRweRIk8L+KBKxMo7J7QxgAAAAAEABqrbYC6M3iYAEA6APozeJg"},
+                        {userUuid: "user01", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAMBKoGSLGDiJmKB4M7pkm6qxenMvL3odn6qTOnODljIwgqSoEAAAAAEACbI+ww9lQTYQEA6AP2VBNh"},
+                        {userUuid: "user02", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAAU4zx81hnZFu/rIH92Okm7KS8SscBAGZdwRixr6BusdrJ7QxgAAAAAEACbI+wwBVUTYQEA6AMFVRNh"},
                         {userUuid: "user03", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IAByAcSGY4DDTFqJouSO076kGJILFUn4fJDxZuwN0ODOkyRLRG8AAAAAEABqrbYC8M3iYAEA6APwzeJg"},
                         {userUuid: "user04", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IADHWPpOxRkFpWU2djzFCnEqMykOBMYxxzKVHv1mk3TeAofeIPEAAAAAEABqrbYC983iYAEA6AP3zeJg"},
                         {userUuid: "user05", rtmToken: "006d2931ea1715c4bc9b36608770bcf6d01IABZH5K29RsV4mR0Dw1XWzSoZ0jYC8jdxAv3Ni+UwrcLBxHuJ4YAAAAAEABqrbYC/s3iYAEA6AP+zeJg"}
@@ -55,7 +55,7 @@
                                 userName: "MOCK_TA",
                                 roomUuid: roomUuid,
                                 roomName: "test",
-                                language: "zh",
+                                language: "en",
                                 roleType: parseInt(document.querySelector('#rolePicker').value),
                                 roomType:0,
                                 startTime: new Date().getTime(),

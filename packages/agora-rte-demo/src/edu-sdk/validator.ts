@@ -73,7 +73,7 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError('language parameter should be string')
   }
 
-  if (!['zh', 'en'].includes(option.language)) {
+  if (!['zh-hk', 'zh', 'en'].includes(option.language)) {
     throw new AgoraSDKError(`${option.language} language is not supported`)
   }
 

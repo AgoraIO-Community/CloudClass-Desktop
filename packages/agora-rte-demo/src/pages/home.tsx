@@ -215,7 +215,7 @@ export const HomePage = observer(() => {
     //   setLoading(false)
     // }
 
-    const language = uiStore.language.match(/^zh/) ? "zh": "en"
+    const language = uiStore.language
 
     try {
       setLoading(true)
@@ -303,11 +303,13 @@ export const HomePage = observer(() => {
               </Tooltip>
             </div>
               <LangSelect
-                value={uiStore.language.match(/^zh/) ? 0 : 1}
+                value={uiStore.languageIdx}
                 onChange={(evt: any) => {
                   const value = evt.target.value;
                   if (value === 0) {
-                    uiStore.setLanguage('zh-CN');
+                    uiStore.setLanguage('zh');
+                  } else if (value === 2) {
+                    uiStore.setLanguage('zh-hk');
                   } else {
                     uiStore.setLanguage('en');
                   }
@@ -399,7 +401,7 @@ export const HomePage = observer(() => {
               document.body.appendChild(dom)
               try {
                 await AgoraEduSDK.openDisk(dom, {
-                  language: uiStore.language.match(/^zh/) ? "zh": "en",
+                  language: uiStore.language,
                   courseWareList: storage.getCourseWareSaveList(),
                   listener: (evt: any) => {
                     if (evt === AgoraEduEvent.destroyed) {

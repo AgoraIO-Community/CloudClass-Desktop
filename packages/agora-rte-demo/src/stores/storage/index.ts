@@ -71,9 +71,8 @@ export class StorageStore implements ClassRoomAbstractStore {
   language: LanguageEnum
 
   constructor(params: StorageStoreInitializeParams) {
-    reaction(() => this.language, (language: string) => {
-      const lang = language.match(/zh/) ? 'zh' : 'en'
-      GlobalStorage.setLanguage(lang)
+    reaction(() => this.language, (language: LanguageEnum) => {
+      GlobalStorage.setLanguage(language)
     })
 
     this._courseWareList = params.courseWareList.map(transformStorageCourseWares)

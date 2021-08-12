@@ -63,7 +63,7 @@ const sdkConfig: SDKConfig = {
   logDomain: 'https://api-solutions.agoralab.co'
 }
 
-export type LanguageEnum = "" | "en" | "zh"
+export type LanguageEnum = "" | "en" | "zh" | "zh-hk"
 export type TranslateEnum = "" | "auto" | "zh-CHS" | "en" | "ja" | "ko" | "fr" | "es" | "pt" | "it" | "ru" | "vi" | "de" | "ar" 
 
 export type ConvertedFile = {
