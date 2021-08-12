@@ -8,6 +8,10 @@ export const ROLE = {
     id: 2,
     tag: '学生',
   },
+  assistant: {
+    id: 3,
+    tag: '助教',
+  },
 };
 
 // 当前选中的 tab
@@ -27,26 +31,10 @@ export const MSG_TYPE = {
 export const HISTORY_COUNT = 50;
 // 公告输入限制
 export const ANNOUNCEMENT_SIZE = 500;
-// 超过限制
-export const MORE_SIZE = '最多可输入500字符';
-
 // 一键禁言 aciton
 export const SET_ALL_MUTE = 'setAllMute';
 export const REMOVE_ALL_MUTE = 'removeAllMute';
-export const SET_ALL_MUTE_MSG = '已开启全体学生禁言';
-export const REMOVE_ALL_MUTE_MSG = '已关闭全体学生禁言';
 
 // 单人禁言
 export const MUTE_USER = 'mute';
 export const UNMUTE_USER = 'unmute';
-
-// 登陆提示
-export const LOGIN_SUCCESS = '登陆IM成功！';
-// 加入聊天室成功提示
-export const JOIN_ROOM_SUCCESS = '加入聊天室成功！';
-// 删除消息
-export const DELETE = '删除';
-export const DELETE_CONFIRM = '删除确认';
-export const DELETE_CONTENT = '确认删除此公告？';
-// 撤回消息
-export const RECALL = '撤回';

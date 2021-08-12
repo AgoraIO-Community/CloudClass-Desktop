@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import { useSelector } from 'react-redux';
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store';
+import { transI18n } from '~ui-kit';
 import { propsAction, isShowChat } from './redux/actions/propsAction';
 import { statusAction, clearStore } from './redux/actions/userAction';
 import {
@@ -67,7 +68,7 @@ const App = function (props) {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true));
-        message.success(LOGIN_SUCCESS);
+        message.success(transI18n('chat.login_success'));
         setUserInfo();
         joinRoom();
       },
@@ -85,7 +86,7 @@ const App = function (props) {
       onError: (err) => {
         console.log('onError>>>', err);
         if (err.type === 16) {
-          return message.error('请重新登陆！');
+          return message.error(transI18n('chat.login_again'));
         }
         if (err.type === 604) return;
         const type = JSON.parse(_.get(err, 'data.data')).error_description;

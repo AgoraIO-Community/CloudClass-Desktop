@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { transI18n } from '~ui-kit';
 import { TextMsg } from './TextMsg';
 import { CmdMsg } from './CmdMsg';
 import scrollElementToBottom from '../../utils/scrollElementToBottom';
@@ -49,7 +50,7 @@ export const MessageBox = () => {
         <div className="message-box no-box">
           <div className="no-msgs">
             <img src={noMessage_icon} />
-            <span className="no-msgs-text">还没有消息</span>
+            <span className="no-msgs-text">{transI18n('chat.no_message')}</span>
           </div>
         </div>
       )}
