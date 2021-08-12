@@ -86,6 +86,7 @@ export const Home: React.FC<HomeProps> = ({
     { label: 'EU', value: 'EU' },
   ];
   const encryptionModeOptions = [
+    { label: 'none', value: 0 },
     { label: 'aes-128-xts', value: 1 },
     { label: 'aes-128-ecb', value: 2 },
     { label: 'aes-256-xts', value: 3 },
@@ -357,6 +358,7 @@ export const Home: React.FC<HomeProps> = ({
                   onChangeEncryptionMode(value);
                 }}
                 placeholder={transI18n('home.encryptionMode_placeholder')}
+                maxMenuHeight={120}
                 options={encryptionModeOptions}></Select>
             </Col>
           </Row>
