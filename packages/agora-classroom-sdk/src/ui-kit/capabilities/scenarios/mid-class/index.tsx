@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useBoardContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -20,12 +20,23 @@ import { ToastContainer } from "~capabilities/containers/toast"
 
 
 export const MidClassScenario = observer(() => {
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { 
+    joinRoom,
+    roomProperties,
+    isJoiningRoom,
+    joinRoomRTC,
+    roomInfo,
+    prepareStream,
+  } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
     onShutdownAppPlugin
   } = useAppPluginContext()
+
+  const {
+    joinBoard
+  } = useBoardContext()
 
 
   useLayoutEffect(() => {
@@ -69,8 +80,13 @@ export const MidClassScenario = observer(() => {
 
   const [chatCollapse, setChatCollapse] = useState(false)
 
-  useEffectOnce(() => {
-    joinRoom()
+  useEffectOnce(async () => {
+    await joinRoom()
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      prepareStream()
+    }
+    // joinRoomRTC()
+    joinBoard()
   })
 
   const cls = classnames({
