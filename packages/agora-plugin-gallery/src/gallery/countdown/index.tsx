@@ -151,6 +151,8 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   ): void {
     this.store = new PluginStore(ctx, handle);
     this.height = this.store.showSetting ? 168 : 55;
+    //@ts-ignore
+    window.countDownStore = this.store;
     ReactDOM.render(
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
