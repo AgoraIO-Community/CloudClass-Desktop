@@ -128,7 +128,7 @@ export const MidClassScenario = observer(() => {
         initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </Layout>
   );
 });
