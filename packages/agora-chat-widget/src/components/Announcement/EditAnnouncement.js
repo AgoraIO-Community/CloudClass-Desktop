@@ -30,7 +30,7 @@ export const EditAnnouncement = ({ onEdit }) => {
   return (
     <div className="edit-content">
       <TextArea
-        placeholder={transI18n('chat.testConnext')}
+        placeholder={transI18n('chat.enter_contents')}
         className="input-content"
         onChange={changeContent}
         // maxLength={ANNOUNCEMENT_SIZE}
@@ -40,7 +40,9 @@ export const EditAnnouncement = ({ onEdit }) => {
       <div className="tips-content">
         <div>
           {count > ANNOUNCEMENT_SIZE && (
-            <div className="more-message">{MORE_SIZE}</div>
+            <div className="more-message">
+              {transI18n('chat.announcement_content')}
+            </div>
           )}
         </div>
         <div className="count-content">
@@ -49,12 +51,14 @@ export const EditAnnouncement = ({ onEdit }) => {
       </div>
       <div className="btn-content">
         <Button
-          type="default"
+          type="text"
           className="cancel-btn"
           onClick={() => {
             editStatus();
           }}>
-          <span className="btn-text cancel-btn-text">取消</span>
+          <span className="btn-text cancel-btn-text">
+            {transI18n('chat.cancel')}
+          </span>
         </Button>
         <Button
           type="primary"
@@ -62,7 +66,9 @@ export const EditAnnouncement = ({ onEdit }) => {
           onClick={() => {
             updateAnnouncement(roomId, content);
           }}>
-          <span className="btn-text ok-btn-text">发布</span>
+          <span className="btn-text ok-btn-text">
+            {transI18n('chat.publish')}
+          </span>
         </Button>
       </div>
     </div>

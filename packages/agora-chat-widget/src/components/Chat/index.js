@@ -13,6 +13,7 @@ import {
   selectTabAction,
   showRedNotification,
 } from '../../redux/actions/messageAction';
+import { transI18n } from '~ui-kit';
 import { announcementNotice } from '../../redux/actions/roomAction';
 import minimize from '../../themes/img/minimize.png';
 import notice from '../../themes/img/notice.png';
@@ -44,10 +45,14 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
-  const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  const isTeacher =
+    roleType &&
+    (JSON.parse(roleType).role === ROLE.teacher.id ||
+      JSON.parse(roleType).role === ROLE.assistant.id);
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];
+    let _assistant = [];
     let _student = [];
     if (isLogin) {
       let val;
@@ -67,13 +72,17 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
             newVal = _.assign(val, { id: item });
             _student.push(newVal);
             break;
+          case 3:
+            newVal = _.assign(val, { id: item });
+            _assistant.push(newVal);
+            break;
           default:
             newVal = _.assign(val, { id: item });
             _student.push(newVal);
             break;
         }
       });
-      setRoomUserList(_.concat(_speakerTeacher, _student));
+      setRoomUserList(_.concat(_speakerTeacher, _assistant, _student));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomUsers, roomUsersInfo]);
@@ -118,7 +127,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           tab={
             <div>
               {showRed && <div className="red-notice"></div>}
-              聊天
+              {transI18n('chat.chat')}
             </div>
           }
           key={CHAT_TABS_KEYS.chat}>
@@ -128,7 +137,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
               onClick={() => {
                 toTabKey();
               }}>
-              <img src={notice} alt="通知" className="notice-icon" />
+              <img src={notice} className="notice-icon" />
               <span className="notice-text">{announcement}</span>
             </div>
           )}
@@ -137,7 +146,11 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
         </TabPane>
         {isTeacher && (
           <TabPane
-            tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : '成员'}
+            tab={
+              roomUsers.length > 0
+                ? `${transI18n('chat.members')}(${roomUsers.length})`
+                : `${transI18n('chat.members')}`
+            }
             key={CHAT_TABS_KEYS.user}>
             <UserList roomUserList={roomUserList} />
           </TabPane>
@@ -146,7 +159,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           tab={
             <div>
               {showAnnouncementNotice && <div className="red-notice"></div>}
-              公告
+              {transI18n('chat.announcement')}
             </div>
           }
           key={CHAT_TABS_KEYS.notice}>

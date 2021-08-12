@@ -8,6 +8,7 @@ import {
   roomAllMute,
   announcementStatus,
 } from '../redux/actions/roomAction';
+import { transI18n } from '~ui-kit';
 import { JOIN_ROOM_SUCCESS, ROLE } from '../contants';
 import { getUserInfo } from './userInfo';
 import { getHistoryMessages } from './historyMsg';
@@ -25,7 +26,7 @@ export const joinRoom = async () => {
   WebIM.conn.mr_cache = [];
   setTimeout(() => {
     WebIM.conn.joinChatRoom(options).then((res) => {
-      message.success(JOIN_ROOM_SUCCESS);
+      message.success(transI18n('chat.join_room_success'));
       getRoomInfo(options.roomId);
       if (roleType === ROLE.student.id) {
         setTimeout(() => {
@@ -77,7 +78,7 @@ export const getAnnouncement = (roomId) => {
 // 上传/修改 群组公告
 export const updateAnnouncement = (roomId, noticeCentent, callback) => {
   if (noticeCentent.length > 500) {
-    return message.error('公告内容不能超过500！');
+    return message.error(transI18n('chat.announcement_content'));
   }
   let options = {
     roomId: roomId, // 聊天室id

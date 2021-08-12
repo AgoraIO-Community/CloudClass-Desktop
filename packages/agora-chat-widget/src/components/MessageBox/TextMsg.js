@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tag, Menu, Dropdown } from 'antd';
-import { ROLE, DELETE, MSG_TYPE } from '../../contants';
+import { ROLE, MSG_TYPE } from '../../contants';
+import { transI18n } from '~ui-kit';
 import store from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
 import delete_icon from '../../themes/img/delete.png';
@@ -15,19 +16,22 @@ export const TextMsg = ({ item }) => {
   const loginUser = state?.loginUser;
   const roleType = state?.propsData.roleType;
   const sender = item?.from === loginUser;
-  const tagNmae = item?.ext.role === ROLE.teacher.id;
+  const teacherTag = item?.ext.role === ROLE.teacher.id;
+  const assistantTag = item?.ext.role === ROLE.assistant.id;
   const msgData = item?.msg || item?.data;
   const useAvatarUrl = item?.ext.avatarUrl;
   const userNickName = item?.ext.nickName;
   const loginNickName = state?.loginUserInfo.nickname;
-  const isTeacher = state.propsData.roleType === ROLE.teacher.id;
+  const isTeacher =
+    state.propsData.roleType === ROLE.teacher.id ||
+    state.propsData.roleType === ROLE.assistant.id;
 
   const menu = (
     <Menu>
       <Menu.Item key="1">
         <div style={{ display: 'flex' }} onClick={() => deleteMsg(item.id)}>
           <img src={delete_icon} />
-          {DELETE}
+          {transI18n('chat.delete')}
         </div>
       </Menu.Item>
     </Menu>
@@ -67,7 +71,12 @@ export const TextMsg = ({ item }) => {
       {sender && (
         <div>
           <div className="msg-user-me">
-            {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
+            {teacherTag && (
+              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
+            {assistantTag && (
+              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
+            )}
             <span>{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
@@ -85,7 +94,12 @@ export const TextMsg = ({ item }) => {
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
             <span>{userNickName}</span>
-            {tagNmae && <Tag className="msg-tag">{ROLE.teacher.tag}</Tag>}
+            {teacherTag && (
+              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
+            )}
+            {assistantTag && (
+              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
+            )}
           </div>
           {isTeacher && (
             <>

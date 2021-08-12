@@ -80,7 +80,7 @@
 }
 
 .more-message {
-  width: 121px;
+  /* width: 121px; */
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
@@ -115,7 +115,7 @@
 }
 
 .update-content {
-  width: 26px;
+  /* width: 26px; */
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
@@ -146,7 +146,7 @@
 }
 
 .btn-text {
-  width: 38px;
+  /* width: 38px; */
   height: 20px;
   font-size: 14px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
