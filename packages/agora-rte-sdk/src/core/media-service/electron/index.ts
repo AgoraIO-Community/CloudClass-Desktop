@@ -1399,6 +1399,9 @@ export class AgoraElectronRTCWrapper
           handleVideoSourceLeaveChannel,
         );
         let ret = this.client.videoSourceLeave();
+        if (ret < 0) {
+          this.client.videoSourceRelease();
+        }
         EduLogger.info('stopScreenShare leaveSubChannel', ret);
         // wait(8000).catch((err: any) => {
         //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
