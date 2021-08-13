@@ -124,7 +124,7 @@ export class PluginStore {
                     }
                 });
             } else if (state === "updateStudent") {
-                if (this.rosterUserList) {
+                if (this.userList) {
                     let users:any = []
                     this.studentList?.map((user: any) => {
                         if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
@@ -134,7 +134,7 @@ export class PluginStore {
 
                     roomProperties['students'] = []
                     roomProperties['studentNames'] = []
-                    this.rosterUserList?.map((user: any) => {
+                    this.userList?.map((user: any) => {
                         if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
                             roomProperties['students'].push(user.userUuid)
                             roomProperties['studentNames'].push(user.userName)
