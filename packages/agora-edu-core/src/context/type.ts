@@ -261,6 +261,7 @@ export type VolumeContext = {
    * @version v1.1.2
    */
   microphoneLevel: number;
+  speakers: any;
 };
 export type PretestContext = {
   isBeauty: boolean;
