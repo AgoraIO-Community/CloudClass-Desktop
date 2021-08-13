@@ -115,6 +115,7 @@ export const useVolumeContext = (): VolumeContext => {
 
   return {
     microphoneLevel: mediaStore.totalVolume,
+    speakers: mediaStore.speakers,
   };
 };
 

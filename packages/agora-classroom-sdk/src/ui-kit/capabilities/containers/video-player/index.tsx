@@ -9,13 +9,26 @@ import {
   useUserListContext,
   useVideoControlContext,
   usePretestContext,
+  useVolumeContext,
 } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
-import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
+import {
+  CameraPlaceHolder,
+  VideoMarqueeList,
+  VideoPlayer,
+  VolumeIndicator,
+} from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from '@/infra/hooks';
+
+export const CustomizeVolumeIndicator = observer(
+  ({ streamUuid }: { streamUuid: any }) => {
+    const { speakers } = useVolumeContext();
+    return <VolumeIndicator volume={speakers.get(+streamUuid) || 0} />;
+  },
+);
 
 export const VideoPlayerTeacher = observer(
   ({
@@ -78,6 +91,9 @@ export const VideoPlayerTeacher = observer(
         userType={eduRole2UIRole(roomInfo.userRole)}
         streamUuid={userStream.streamUuid}
         className={className}
+        renderVolumeIndicator={() => (
+          <CustomizeVolumeIndicator streamUuid={userStream.streamUuid} />
+        )}
         style={style}>
         {
           <>
@@ -162,6 +178,9 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(
         style={style}
         className={className}
         showGranted={true}
+        renderVolumeIndicator={() => (
+          <CustomizeVolumeIndicator streamUuid={userStream.streamUuid} />
+        )}
         userType={eduRole2UIRole(roomInfo.userRole)}>
         {
           <>
@@ -222,6 +241,9 @@ export const VideoMarqueeStudentContainer = observer(() => {
       cameraDevice: stream.cameraDevice,
       streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      renderVolumeIndicator: () => (
+        <CustomizeVolumeIndicator streamUuid={stream.streamUuid} />
+      ),
       children: (
         <>
           {stream.renderer && stream.video ? (
@@ -321,6 +343,9 @@ export const MidVideoMarqueeContainer = observer(() => {
       cameraDevice: stream.cameraDevice,
       streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      renderVolumeIndicator: () => (
+        <CustomizeVolumeIndicator streamUuid={stream.streamUuid} />
+      ),
       children: (
         <>
           {stream.renderer && stream.video ? (

@@ -22,18 +22,28 @@ import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { observer } from 'mobx-react';
 
-// TODO: 优化音量条
-export const StreamVolumeIndicator = observer(
-  ({ streamUuid }: { streamUuid: any }) => {
-    const speakers = new Map<any, any>();
+export const CustomizeVolumeIndicator = ({
+  streamUuid,
+  volume,
+}: {
+  streamUuid: any;
+  volume: number;
+}) => {
+  return <VolumeIndicator volume={volume} />;
+};
 
-    const speaker = speakers.get(+streamUuid);
+// // TODO: 优化音量条
+// export const StreamVolumeIndicator = observer(
+//   ({ streamUuid }: { streamUuid: any }) => {
+//     const speakers = new Map<any, any>();
 
-    const currentVolume = speaker ?? 0;
+//     const speaker = speakers.get(+streamUuid);
 
-    return <VolumeIndicator volume={currentVolume} />;
-  },
-);
+//     const currentVolume = speaker ?? 0;
+
+//     return <VolumeIndicator volume={currentVolume} />;
+//   },
+// );
 
 export interface BaseVideoPlayerProps {
   /**
@@ -129,6 +139,7 @@ export interface BaseVideoPlayerProps {
   cameraDevice?: number;
   micDevice?: number;
   showGranted?: boolean;
+  renderVolumeIndicator?: typeof CustomizeVolumeIndicator;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps;
@@ -182,7 +193,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   username,
   micEnabled,
   streamUuid,
-  // micVolume,
+  micVolume = 0,
   cameraEnabled,
   whiteboardGranted,
   isHost = false,
@@ -210,6 +221,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hidePrivateChat = true,
   showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  renderVolumeIndicator = CustomizeVolumeIndicator,
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([]);
@@ -416,9 +428,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? (
-              <StreamVolumeIndicator streamUuid={streamUuid} />
-            ) : null}
+            {micEnabled && micDevice === 1
+              ? renderVolumeIndicator({ volume: micVolume, streamUuid })
+              : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({

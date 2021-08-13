@@ -7,6 +7,7 @@ export * from './styles';
 export * from './toast';
 export * from './modal';
 export * from './video-player';
+export * from './video-player/volume-indicator';
 export * from './i18n';
 export * from './table';
 export * from './tabs';
