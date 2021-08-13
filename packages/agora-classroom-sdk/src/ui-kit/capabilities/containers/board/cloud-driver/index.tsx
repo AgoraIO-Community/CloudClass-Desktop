@@ -181,6 +181,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> =
               iconType: mapFileType(ext),
               fileName: name,
               uploadComplete: true,
+              fileSize: formatFileSize(file.size),
             });
           }
 
