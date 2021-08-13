@@ -2,6 +2,7 @@ import { action, observable, computed, runInAction } from 'mobx';
 import type { AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { Toast, transI18n } from '~ui-kit'
+import _ from 'lodash';
 
 const formatTime = (long: number) => {
     let h: any = Math.floor(long / (60 * 60));
@@ -51,6 +52,8 @@ export class PluginStore {
     rosterUserList?: any[]
     @observable
     userList?: any[]
+    @observable
+    showModifyBtn: boolean = false//当前是否显示修改按钮
 
     constructor(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
         this.context = ctx
@@ -123,26 +126,27 @@ export class PluginStore {
                     }
                 });
             } else if (state === "updateStudent") {
-                if (this.rosterUserList) {
-                    let users:any = []
-                    this.studentList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
-                            users.push(user.userUuid)
-                        }
-                    });
-
+                if (this.userList) {
+                    let students:any = this.context.properties['students'] || []
                     roomProperties['students'] = []
                     roomProperties['studentNames'] = []
-                    this.rosterUserList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
+
+                    students.map((student: any,index: number) => {
+                        if (getStudentInfo(this.context.properties['student' + student])) {
+                            roomProperties['students'].push(student)
+                            roomProperties['studentNames'].push(this.context.properties['studentNames'][index])
+                        }
+                    })
+
+                    this.studentList?.map((user: any) => {
+                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '') && !roomProperties['students'].includes(user.userUuid)) {
                             roomProperties['students'].push(user.userUuid)
                             roomProperties['studentNames'].push(user.userName)
                         }
                     }); 
-                    if (JSON.stringify(users.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
-                        this.userList = this.rosterUserList
+                    if (JSON.stringify(students.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
+                        // this.context.userList = this.globalContext.rosterUserList
                         console.log(roomProperties);
-                        
                     }else{
                         return;
                     }
@@ -202,9 +206,21 @@ export class PluginStore {
             }
         } else {
             if (this.status === 'answer') {
-                this.changeRoomProperties({ replyTime: (Math.floor(Date.now() / 1000)).toString(), answer: this.selAnswer, commonState: 1 })
+                if (this.status === 'answer') {
+                    if (this.showModifyBtn) {
+                        this.toChangeMode()
+                    }else{
+                        this.changeRoomProperties({ replyTime: (Math.floor(Date.now() / 1000)).toString(), answer: this.selAnswer, commonState: 1 })
+                    }
+                }
             }
         }
+    }
+
+    @action
+    toChangeMode(){
+        this.buttonName = 'answer.submit'
+        this.showModifyBtn = false
     }
 
     @action
@@ -261,10 +277,9 @@ export class PluginStore {
                 this.status = 'answer'
                 this.height = (this.answer?.length || 0) > 4 ? 190 : 120
                 this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
+                this.showModifyBtn = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])
                 this.ui = ['sels', 'subs']
-                if (this.status !== 'answer') {
-                    this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
-                }
+                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
                 this.updateTime();
             } else if (properties.state === 'end') {
                 this.title = ""
@@ -274,6 +289,7 @@ export class PluginStore {
                 this.status = 'info'
                 this.height = 120
                 this.ui = ['infos']
+                this.showModifyBtn = false
 
                 let answeredNumber = 0;
                 let rightNumber = 0;
@@ -306,6 +322,7 @@ export class PluginStore {
                 this.height = 120
                 this.buttonName = 'answer.submit'
                 this.ui = ['infos']
+                this.showModifyBtn = false
             }
         }
     }
@@ -344,6 +361,21 @@ export class PluginStore {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             // this.globalContext = state
             if (this.status !== 'config') {
+                this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
+            }
+        }
+    }
+
+    @action
+    updateStudents(userList: any, rosterUserList:any) {
+        if(_.isEqual(userList, this.userList) && _.isEqual(rosterUserList, this.rosterUserList)) {
+            return
+        }
+
+        if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+            this.userList = userList
+            this.rosterUserList = rosterUserList
+            if (this.status !== 'config' && this.status !== 'end') {
                 this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
             }
         }

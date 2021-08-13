@@ -138,28 +138,32 @@ export class PluginStore {
                 });
             } else if (state === "updateStudent") {
                 if (this.rosterUserList) {
-                    let users:any = []
-                    this.studentList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
-                            users.push(user.userUuid)
+                    let students:any = this.context.properties['students'] || []
+                    roomProperties['students'] = []
+                    roomProperties['studentNames'] = []
+
+                    students.map((student: any,index: number) => {
+                        if (getStudentInfo(this.context.properties['student' + student])) {
+                            roomProperties['students'].push(student)
+                            roomProperties['studentNames'].push(this.context.properties['studentNames'][index])
                         }
                     });
 
-                    roomProperties['students'] = []
-                    roomProperties['studentNames'] = []
-                    this.rosterUserList?.map((user: any) => {
-                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '')) {
+
+                    this.studentList?.map((user: any) => {
+                        if (!(/^guest[0-9]{10}2$/).test(user.userUuid || '') && !roomProperties['students'].includes(user.userUuid)) {
                             roomProperties['students'].push(user.userUuid)
                             roomProperties['studentNames'].push(user.userName)
                         }
-                    }); 
-                    if (JSON.stringify(users.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
-                        this.userList = this.rosterUserList
-                        console.log(roomProperties);
+                    });
+
+                    // if (JSON.stringify(students.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
+                    //     // this.context.userList = this.globalContext.rosterUserList
+                    //     console.log(roomProperties);
                         
-                    }else{
-                        return;
-                    }
+                    // }else{
+                    //     return;
+                    // }
                 }else{
                     return;
                 }
@@ -207,7 +211,7 @@ export class PluginStore {
                         }
                     })
                     //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
-                    this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: sels, commonState: 1 })
+                    this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: [], commonState: 1 })
                 } else if (this.status === 'info') {
                     this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
