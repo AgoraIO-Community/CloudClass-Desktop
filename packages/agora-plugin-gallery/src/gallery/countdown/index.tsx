@@ -165,13 +165,16 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.store?.onReceivedProps(properties, cause);
   }
   extAppWillUnload(): void {
-    this.store!.changeRoomProperties({
-      state: '0',
-      startTime: '0',
-      pauseTime: '0',
-      duration: '0',
-      commonState: 0,
-    });
-    this.height = 168;
+    if(this.store!.context.localUserInfo.roleType ===
+      EduRoleTypeEnum.teacher) {
+      this.store!.changeRoomProperties({
+        state: '0',
+        startTime: '0',
+        pauseTime: '0',
+        duration: '0',
+        commonState: 0,
+      });
+      this.height = 168;
+    }
   }
 }
