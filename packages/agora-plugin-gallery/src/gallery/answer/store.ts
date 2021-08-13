@@ -2,6 +2,7 @@ import { action, observable, computed, runInAction } from 'mobx';
 import type { AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import { Toast, transI18n } from '~ui-kit'
+import _ from 'lodash';
 
 const formatTime = (long: number) => {
     let h: any = Math.floor(long / (60 * 60));
@@ -140,7 +141,7 @@ export class PluginStore {
                         }
                     }); 
                     if (JSON.stringify(users.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
-                        this.userList = this.rosterUserList
+                        // this.userList = this.rosterUserList
                         console.log(roomProperties);
                         
                     }else{
@@ -343,6 +344,21 @@ export class PluginStore {
     updateGlobalContext(state:any) {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             // this.globalContext = state
+            if (this.status !== 'config') {
+                this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
+            }
+        }
+    }
+
+    @action
+    updateStudents(userList: any, rosterUserList:any) {
+        if(_.isEqual(userList, this.userList) && _.isEqual(rosterUserList, this.rosterUserList)) {
+            return
+        }
+
+        if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+            this.userList = userList
+            this.rosterUserList = rosterUserList
             if (this.status !== 'config') {
                 this.changeRoomProperties({ state: 'updateStudent', commonState: 1 })
             }

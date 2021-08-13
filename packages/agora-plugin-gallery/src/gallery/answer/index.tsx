@@ -22,24 +22,15 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import "./index.css"
 import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
-import { runInAction } from 'mobx';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) => void ,onTitle: (title: string) => void, lang: 'zh'|'en' }) => {
   const pluginStore = usePluginStore()
-
-  const globalEvents = pluginStore.context.contexts.global.events
   const userlistEvents = pluginStore.context.contexts.userList.events
 
   useEffect(() => {
-    globalEvents.subscribe((state:any) => {
-      // pluginStore.updateGlobalContext(state)
-    })
     userlistEvents.subscribe((state:any) => {
-      runInAction(() => {
-        pluginStore.userList = state.userList
-        pluginStore.rosterUserList = state.rosterUserList
-      })
+      pluginStore.updateStudents(state.userList, state.rosterUserList)
     })
   }, [])
 
