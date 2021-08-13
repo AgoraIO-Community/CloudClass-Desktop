@@ -27,6 +27,7 @@ export interface ModalProps extends BaseProps {
     modalType?: 'normal' | 'back';
     children?: React.ReactNode;
     btnId?: string;
+    header?: React.ReactNode
 }
 
 type ModalType = FC<ModalProps> & {
@@ -48,6 +49,7 @@ export const Modal: ModalType = ({
     modalType = 'normal',
     maskClosable,
     btnId,
+    header,
     ...restProps
 }) => {
 
@@ -78,6 +80,7 @@ export const Modal: ModalType = ({
                         <div className="modal-title-text">
                             {title}
                         </div>
+                        {header && <div className="modal-header-slot">{header}</div>}
                         {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#586376" size={20}/></div>) : ""}
                     </>
                 ) : null}
@@ -87,6 +90,7 @@ export const Modal: ModalType = ({
                         <div className="back-title">
                             {title}
                         </div>
+                        {header && <div className="modal-header-slot">{header}</div>}
                         <div></div>
                     </>
                 ) : null}

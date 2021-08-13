@@ -34,9 +34,10 @@ export interface IAgoraExtApp {
   width: number
   height: number
   icon?: any
-  extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle):void
-  extAppRoomPropertiesDidUpdate(properties:any, cause: any):void
-  extAppWillUnload():void
+  customHeader?: JSX.Element
+  extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle): void
+  extAppRoomPropertiesDidUpdate(properties:any, cause: any): void
+  extAppWillUnload(): void
 }
 
 export type AgoraWidgetUserInfo = {
