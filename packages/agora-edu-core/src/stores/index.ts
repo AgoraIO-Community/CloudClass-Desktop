@@ -471,6 +471,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
   @action.bound
   async releaseRoom() {
     try {
+      await this.sceneStore.stopRTCSharing();
       await this.roomStore.leave();
       reportService.stopHB();
       reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
