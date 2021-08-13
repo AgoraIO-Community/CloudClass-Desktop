@@ -1,12 +1,12 @@
-import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, useVolumeContext } from 'agora-edu-core';
+import { ControlTool, EduMediaStream, useGlobalContext, useRoomContext, useSmallClassVideoControlContext, usePrivateChatContext, useStreamListContext, useUserListContext, useVideoControlContext, useVolumeContext, usePretestContext, EduClassroomStateEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { CameraPlaceHolder, VideoMarqueeList, VideoPlayer } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { useUIStore } from "@/infra/hooks"
-import { VolumeIndicator } from '~ui-kit/components/video-player/volume-indicator';
 import { StreamVolumeIndicator } from './volume-indicator';
+import classnames from 'classnames';
 
 export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
@@ -23,19 +23,29 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
   const {
     teacherStream: userStream
   } = useStreamListContext()
+  
   const {
     controlTools,
     isHost
   } = useUserListContext()
 
   const {
-    roomInfo
+    roomInfo,
+    classState
   } = useRoomContext()
 
   const {
     eduRole2UIRole
   } = useUIStore()
 
+  const renderCls = classnames({
+    "rtc-video": 1
+  })
+
+  const showRenderer = useMemo(() => {
+    return classState === EduClassroomStateEnum.start ? (userStream.renderer && userStream.video) : userStream.renderer
+  }, [userStream.renderer, classState, userStream.video])
+  
   return (
     <VideoPlayer
       isHost={isHost}
@@ -72,17 +82,17 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       renderVolumeIndicator={StreamVolumeIndicator}
     >
       {
-
-        <>
-          {
-            userStream.renderer && userStream.video ?
-            <RendererPlayer
-              key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className="rtc-video"
-            />
-            : null
-          }
-          <CameraPlaceHolder state={userStream.holderState} />
-        </>
+          <>
+            {
+              showRenderer ?
+              // showTeacherRenderer() ?
+              <RendererPlayer
+                key={userStream.renderer && userStream.renderer.videoTrack ? userStream.renderer.videoTrack.getTrackId() : ''} track={userStream.renderer} id={userStream.streamUuid} className={renderCls}
+              />
+              : null
+            }
+            <CameraPlaceHolder state={userStream.holderState} />
+          </>
       }
     </VideoPlayer>)
 })

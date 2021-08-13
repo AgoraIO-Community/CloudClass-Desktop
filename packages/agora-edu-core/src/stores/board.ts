@@ -160,7 +160,25 @@ export enum DownloadStatus {
   failed,
 }
 
+export enum CustomRoomPhase {
+  Idle = 'idle'
+}
+
+export const ApaasRoomPhase = {
+  ...RoomPhase,
+  ...CustomRoomPhase
+}
+
 export class BoardStore extends ZoomController {
+
+  @observable
+  checkInResult: any = null
+
+  @action.bound
+  setCheckInResult (result: any) {
+    this.checkInResult = result
+  }
+  
   scenes: any[] = []
 
   @observable
@@ -187,6 +205,9 @@ export class BoardStore extends ZoomController {
   @observable
   showFolder: boolean = false;
   boardRegion: string = '';
+
+  @observable
+  boardConnectionState: string = ApaasRoomPhase.Idle
 
   @action.bound
   closeFolder() {
@@ -319,6 +340,21 @@ export class BoardStore extends ZoomController {
       'circle',
       'line'
     ].includes(this.currentSelector)
+  }
+
+  @action.bound
+  async joinBoard () {
+    if (this.checkInResult) {
+      await this.join({
+        boardId: this.checkInResult.board.boardId,
+        boardToken: this.checkInResult.board.boardToken,
+        role: this.userRole,
+        isWritable: true,
+        disableDeviceInputs: true,
+        disableCameraTransform: true,
+        disableAutoResize: false
+      })
+    }
   }
 
   @action.bound

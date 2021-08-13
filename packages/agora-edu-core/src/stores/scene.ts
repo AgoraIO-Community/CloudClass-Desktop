@@ -1,7 +1,8 @@
+import { isElectron } from '@/infra/utils';
 import { ReactElement } from 'react';
-import { ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer, VideoRenderState } from "agora-rte-sdk"
+import { EduAudioSourceType, EduLogger, ScreenShareType, UserRenderer, LocalUserRenderer, EduUser, EduStream, EduClassroomManager, EduRoleTypeEnum, GenericErrorWrapper, MediaService, AgoraWebRtcWrapper, AgoraElectronRTCWrapper, CameraOption, PrepareScreenShareParams, EduRoomType, EduRoleType, EduVideoSourceType, RemoteUserRenderer, VideoRenderState } from "agora-rte-sdk"
 import { get } from "lodash"
-import { observable, computed, action, runInAction } from "mobx"
+import { observable, computed, action, runInAction, reaction } from "mobx"
 import { EduScenarioAppStore } from "."
 import { EduBoardService } from "../services/edu-board-service"
 import { EduRecordService } from "../services/edu-record-service"
@@ -257,7 +258,7 @@ export class SceneStore extends SimpleInterval {
     // this._microphoneId = '';
     this.resolution = '480_p1';
     this._microphoneTrack = undefined;
-    this._cameraRenderer = undefined;
+    // this._cameraRenderer = undefined;
     this._screenVideoRenderer = undefined;
     this.currentWindowId = ''
     this.customScreenSharePickerVisible = false
@@ -313,7 +314,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get cameraRenderer(): LocalUserRenderer | undefined {
-    return this._cameraRenderer;
+    return this.appStore.pretestStore._cameraRenderer;
   }
 
   @computed
@@ -618,61 +619,6 @@ export class SceneStore extends SimpleInterval {
   }
 
   @action.bound
-  async enableLocalAudio() {
-    // if (this._microphoneTrack) {
-    //   return BizLogger.warn('[demo] enableLocalAudio locking 1 already exists')
-    // }
-    try {
-      const deviceId = this.appStore.pretestStore.microphoneId
-      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-        if (this._microphoneTrack) {
-          this._microphoneTrack.stop()
-          this._microphoneTrack = undefined
-        }
-        this.appStore.mediaStore.totalVolume = 0
-        this.appStore.pretestStore.muteMicrophone()
-      } else {
-        await this.mediaService.muteLocalAudio(false, deviceId)
-        if (this.mediaService.isWeb) {
-          this._microphoneTrack = this.mediaService.web.microphoneTrack
-        }
-      }
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      BizLogger.warn('[demo] action in enableLocalAudio >>> enableLocalAudio', error)
-      throw error
-    }
-  }
-
-  @action.bound
-  async enableLocalVideo() {
-    if (this._cameraRenderer) {
-      return BizLogger.warn('[demo] enableLocalVideo locking 1 already exists')
-    }
-    try {
-      const deviceId = this.appStore.pretestStore.cameraId
-      if (deviceId === AgoraMediaDeviceEnum.Disabled) {
-        this.appStore.pretestStore.muteCamera()
-      } else {
-        await this.mediaService.muteLocalVideo(false, deviceId)
-        this._cameraRenderer = this.mediaService.cameraRenderer
-      }
-    } catch(err) {
-      const error = GenericErrorWrapper(err)
-      BizLogger.warn('[demo] action in enableLocalVideo >>> enableLocalVideo', error)
-      throw error
-    }
-  }
-
-  @action.bound
-  async disableLocalVideo() {
-    if (this._cameraRenderer) {
-      await this.appStore.pretestStore.closeCamera()
-      this._cameraRenderer = undefined
-    }
-  }
-
-  @action.bound
   async sendMuteLocalCamera() {
     if (this.cameraEduStream && this.cameraEduStream.hasVideo) {
       await this.roomManager?.userService?.updateMainStreamState({'videoState': false})
@@ -684,11 +630,6 @@ export class SceneStore extends SimpleInterval {
     if (!this.cameraEduStream || !this.cameraEduStream.hasVideo) {
       await this.roomManager?.userService?.updateMainStreamState({'videoState': true})
     }
-  }
-
-  @action.bound
-  async disableLocalAudio() {
-    await this.appStore.pretestStore.closeMicrophone()
   }
 
   @action.bound
@@ -716,11 +657,11 @@ export class SceneStore extends SimpleInterval {
       BizLogger.info('[demo] [local] muteLocalCamera')
       if (sync) {
         await Promise.all([
-          this.disableLocalVideo(),
+          this.appStore.pretestStore.disableLocalVideo(),
           this.sendMuteLocalCamera()
         ])
       } else {
-        await this.disableLocalVideo()
+        await this.appStore.pretestStore.disableLocalVideo()
       }
       this.setClosingCamera(false, this.roomInfo.userUuid)
       this.unLockCamera()
@@ -744,11 +685,11 @@ export class SceneStore extends SimpleInterval {
       this.lockCamera()
       if (sync) {
         await Promise.all([
-          this.enableLocalVideo(),
+          this.appStore.pretestStore.enableLocalVideo(),
           this.sendUnmuteLocalCamera(),
         ])
       } else {
-        await this.enableLocalVideo()
+        await this.appStore.pretestStore.enableLocalVideo()
       }
       this.setOpeningCamera(false, this.roomInfo.userUuid)
       this.unLockCamera()
@@ -773,11 +714,11 @@ export class SceneStore extends SimpleInterval {
       this.lockMicrophone()
       if (sync) {
         await Promise.all([
-          this.disableLocalAudio(),
+          this.appStore.pretestStore.disableLocalAudio(),
           this.sendMuteLocalMicrophone(),
         ])
       } else {
-        await this.disableLocalAudio()
+        await this.appStore.pretestStore.disableLocalAudio()
       }
       this.setLoadingMicrophone(false, this.roomInfo.userUuid)
       this.unLockMicrophone()
@@ -802,11 +743,11 @@ export class SceneStore extends SimpleInterval {
       this.lockMicrophone()
       if (sync) {
         await Promise.all([
-          this.enableLocalAudio(),
+          this.appStore.pretestStore.enableLocalAudio(),
           this.sendUnmuteLocalMicrophone(),
         ])
       } else {
-        await this.enableLocalAudio()
+        await this.appStore.pretestStore.enableLocalAudio()
       }
       this.setLoadingMicrophone(false, this.roomInfo.userUuid)
       this.unLockMicrophone()
@@ -1075,6 +1016,123 @@ export class SceneStore extends SimpleInterval {
   get isRecording() {
     return this.recordState
   }
+
+
+  rtcRoomInfo?: {
+    uid: number,
+    channel: string,
+    token: string,
+    data: any,
+  }
+
+  /**
+   * rtc是否加入了频道
+   */
+  @observable
+  rtcJoined: boolean = false;
+
+  /**
+   * 准备流
+   */
+  @action.bound
+  async prepareStream() {
+      const roomManager = this.roomManager
+      const localStreamData = this.roomManager.data.localStreamData
+
+
+      BizLogger.info("localStreamData", localStreamData)
+      await roomManager.userService.publishStream({
+        videoSourceType: EduVideoSourceType.camera,
+        audioSourceType: EduAudioSourceType.mic,
+        streamUuid: `${this.rtcRoomInfo!.uid}`,
+        streamName: '',
+        hasVideo: localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
+        hasAudio: localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
+        userInfo: {} as EduUser
+      })
+      EduLogger.info("toast.publish_business_flow_successfully")
+      // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
+      this._cameraEduStream = this.roomManager.userService.localStream.stream
+      try {
+        // await this.prepareCamera()
+        // await this.prepareMicrophone()
+        if (this._cameraEduStream) {
+          if (this._cameraEduStream.hasVideo) {
+            this.setOpeningCamera(true, this.roomInfo.userUuid)
+            try {
+              await this.unmuteLocalCamera()
+              this.setOpeningCamera(false, this.roomInfo.userUuid)
+            } catch (err) {
+              this.setOpeningCamera(false, this.roomInfo.userUuid)
+              throw err
+            }
+          } else {
+            await this.muteLocalCamera()
+          }
+          if (this._cameraEduStream.hasAudio) {
+            BizLogger.info('open microphone')
+            await this.muteLocalMicrophone()
+          } else {
+            BizLogger.info('close microphone')
+            await this.unmuteLocalMicrophone()
+          }
+        }
+      } catch (err) {
+        if (this.appStore.isNotInvisible) {
+          this.appStore.fireToast(
+            'toast.media_method_call_failed',
+            { reason: `${err.message}` }
+          )
+        }
+        const error = GenericErrorWrapper(err)
+        BizLogger.warn(`${error}`)
+      }
+
+      try {
+        if (this.mediaService.isElectron) {
+          this.mediaService.electron.setRoleState(1)
+          // (this.mediaService.sdkWrapper as AgoraElectronRTCWrapper).
+        }
+      } catch (err) {
+
+      }
+  }
+
+  /**
+   * 加入当前房间的rtc
+   */
+  @action.bound
+  async joinRoomRTC() {
+    if (this.rtcJoined) {
+      throw GenericErrorWrapper("rtc already joined")
+    }
+    if (!this.rtcRoomInfo) {
+      throw GenericErrorWrapper("rtcRoomInfo not exists")
+    }
+    await this.joinRTC({
+      uid: +this.rtcRoomInfo.uid,
+      channel: this.rtcRoomInfo.channel,
+      token: this.rtcRoomInfo.token,
+      data: this.rtcRoomInfo.data,
+    })
+    //开始发送视频流与音频流
+    await this.appStore.pretestStore.changeCamera(this.appStore.pretestStore.cameraId);
+    await this.appStore.pretestStore.changeMicrophone(this.appStore.pretestStore.microphoneId);
+    this.rtcJoined = true
+  }
+
+  /**
+   * 离开当前房间的rtc
+   * @param 
+   */
+  @action.bound
+  async leaveRoomRTC() {
+    if (!this.rtcJoined) {
+      throw GenericErrorWrapper("rtc already left")
+    }
+    await this.leaveRtc()
+    this.rtcJoined = false
+  }
   
   async joinRTC(args: any) {
     try {
@@ -1088,22 +1146,28 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
+  async releaseLocalVideo() {
+    try {
+      // await this.appStore.pretestStore.closeCamera()
+      await this.mediaService.disableLocalVideo()
+    } catch (err) {
+      BizLogger.warn(`${err}`)
+    }
+    this._cameraRenderer = undefined
+  }
+
+  async releaseLocalAudio() {
+    try {
+      // await this.appStore.pretestStore.closeCamera()
+      await this.mediaService.disableLocalAudio()
+    } catch (err) {
+      BizLogger.warn(`${err}`)
+    }
+  }
+
   async leaveRtc() {
     try {
       this.joiningRTC = false
-      try {
-        // await this.appStore.pretestStore.closeCamera()
-        await this.mediaService.disableLocalVideo()
-      } catch (err) {
-        BizLogger.warn(`${err}`)
-      }
-      this._cameraRenderer = undefined
-      try {
-        // await this.appStore.pretestStore.closeMicrophone()
-        await this.mediaService.disableLocalAudio()
-      } catch (err) {
-        BizLogger.warn(`${err}`)
-      }
       try {
         await this.mediaService.leave()
       } catch (err) {

@@ -1,4 +1,4 @@
-import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext } from 'agora-edu-core'
+import { useBoardContext, useGlobalContext, useRoomContext, Resource, useScreenShareContext, useCloudDriveContext, RoomPhase } from 'agora-edu-core'
 import { ZoomItemType } from '~ui-kit/components'
 import { EduRoleTypeEnum, EduRoomType } from 'agora-rte-sdk'
 import { observer } from 'mobx-react'
@@ -8,7 +8,7 @@ import { PensContainer } from '~capabilities/containers/board/pens'
 import { ToolCabinetContainer } from '~capabilities/containers/board/tool-cabinet'
 import { CloseConfirm, StudentUserListDialog, UserListDialog } from '~capabilities/containers/dialog'
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver'
-import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController } from '~ui-kit'
+import { Icon, TabPane, Tabs, Toolbar, ToolItem, transI18n, ZoomController, BoardPlaceHolder } from '~ui-kit'
 import { useEffect } from 'react'
 import classnames from 'classnames'
 import { useUIStore } from '@/infra/hooks'
@@ -32,7 +32,7 @@ export const allTools: ToolItem[] = [
     label: 'scaffold.pencil',
     icon: 'pen',
     component: (props: any) => {
-      return <PensContainer {...props}/>
+      return <PensContainer {...props} />
     }
   },
   {
@@ -44,14 +44,14 @@ export const allTools: ToolItem[] = [
     value: 'eraser',
     label: 'scaffold.eraser',
     icon: 'eraser'
-    
+
   },
   {
     value: 'color',
     label: 'scaffold.color',
     icon: 'circle',
     component: (props: any) => {
-      return <ColorsContainer {...props}/>
+      return <ColorsContainer {...props} />
     }
   },
   {
@@ -77,7 +77,7 @@ export const allTools: ToolItem[] = [
     label: 'scaffold.tools',
     icon: 'tools',
     component: () => {
-      return <ToolCabinetContainer/>
+      return <ToolCabinetContainer />
     }
   },
   {
@@ -180,7 +180,7 @@ const TabsContainer = observer(() => {
   )
 })
 
-export const WhiteboardContainer = observer(({children}: any) => {
+export const WhiteboardContainer = observer(({ children }: any) => {
 
   const {
     addDialog
@@ -209,12 +209,14 @@ export const WhiteboardContainer = observer(({children}: any) => {
     changeFooterMenu,
     setTool,
     installTools,
-    showBoardTool
+    showBoardTool,
+    boardConnectionState,
+    joinBoard
   } = useBoardContext()
 
   const handleToolClick = (type: string) => {
     console.log('handleToolClick tool click', type)
-    switch(type) {
+    switch (type) {
       case 'cloud': {
         setTool(type)
         addDialog(CloudDriverContainer)
@@ -280,35 +282,52 @@ export const WhiteboardContainer = observer(({children}: any) => {
     toolbarMap[type] && toolbarMap[type]()
   }
 
+  const isBoardConnected = useMemo(() => boardConnectionState !== RoomPhase.Disconnected, [boardConnectionState])
+
   return (
     <div className="whiteboard">
-      {showTab ? 
-      <TabsContainer /> : null}
-      <div className="board-section">
-        {children}
-        {
-          ready ? 
-          <div id="netless" ref={mountToDOM} ></div> : null
-        }
-      </div>
-      {showToolBar ?
-        <Toolbar 
-          active={currentSelector} 
-          activeMap={activeMap} 
-          tools={tools} 
-          onClick={handleToolClick} 
-          className="toolbar-biz"
-          defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true} 
+      {isBoardConnected ? (
+        <>
+          {showTab ?
+            <TabsContainer /> : null}
+          <div className="board-section">
+            {children}
+            {
+              ready ?
+                <div id="netless" ref={mountToDOM} ></div> : null
+            }
+          </div>
+          {showToolBar ?
+            <Toolbar
+              active={currentSelector}
+              activeMap={activeMap}
+              tools={tools}
+              onClick={handleToolClick}
+              className="toolbar-biz"
+              defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true}
+            />
+            : null}
+          {showZoomControl ? <ZoomController
+            className='zoom-position'
+            zoomValue={zoomValue}
+            currentPage={currentPage}
+            totalPage={totalPage}
+            maximum={!isFullScreen}
+            clickHandler={handleZoomControllerChange}
+          /> : null}
+        </>
+      ) : (
+        <BoardPlaceHolder 
+          onReconnectClick={async () => {
+            try {
+              await joinBoard()
+            } catch(e) {
+              console.log('重新连接白板错误', e)
+            }
+          }}
         />
-      : null}
-      {showZoomControl ? <ZoomController
-        className='zoom-position'
-        zoomValue={zoomValue}
-        currentPage={currentPage}
-        totalPage={totalPage}
-        maximum={!isFullScreen}
-        clickHandler={handleZoomControllerChange}
-      /> : null}
+      )}
+
     </div>
   )
 })
