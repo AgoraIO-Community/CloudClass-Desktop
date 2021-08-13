@@ -50,7 +50,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
         <Draggable 
           defaultClassName="extapp-draggable-container"
           handle=".modal-title" 
-          defaultPosition={{x: window.innerWidth / 2, y: window.innerHeight / 2 - 100}} 
+          defaultPosition={{x: window.innerWidth / 2 - app.width / 2 , y: window.innerHeight / 2 - app.height / 2}} 
           bounds={'body'}
           positionOffset={{x: 0, y: 0}}
         >
@@ -59,6 +59,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               width={'min-content'}
               onCancel={onCancel} 
               closable={closable}
+              header={app.customHeader}
             >
                 <div ref={ref} style={{transition: '.5s'}}>
                 </div>
