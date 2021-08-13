@@ -128,3 +128,14 @@
 .answer-language-en .answer-info{
   margin-left: 85px;
 }
+
+.answer-change .answer-submit .btn{
+  border: 1px solid #357BF6;
+  color: #357BF6;
+  background-color: transparent;
+}
+
+.answer-change .answer-items span{
+  opacity: 0.5;
+  pointer-events: none;
+}
