@@ -494,18 +494,22 @@ export class AcadsocRoomStore extends SimpleInterval {
           message: item.message,
           sensitiveWords: get(item, 'sensitiveWords', [])
         } as any)
-        this.roomChatMessages.unshift({
-          text: text,
-          ts:item.sendTime,
-          id:item.sequences,
-          fromRoomUuid:item.fromUser.userUuid,
-          userName:item.fromUser.userName,
-          role:item.fromUser.role,
-          sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-          account:item.fromUser.userUuid
-        } as ChatMessage)
-        
+        // filter out duplicate data
+        if(!this.roomChatMessages.some(({ id }) => id === item.messageId)) {
+          this.roomChatMessages.unshift({
+            text: text,
+            ts:item.sendTime,
+            // id:item.sequences,
+            id: item.messageId,
+            fromRoomUuid:item.fromUser.userUuid,
+            userName:item.fromUser.userName,
+            role:item.fromUser.role,
+            sender: item.fromUser.userUuid === this.roomInfo.userUuid,
+            account:item.fromUser.userUuid
+          } as ChatMessage)
+        }
       })
+      
       return historyMessage
     } catch (err) {
       // this.appStore.uiStore.addToast(t('toast.failed_to_send_chat'))

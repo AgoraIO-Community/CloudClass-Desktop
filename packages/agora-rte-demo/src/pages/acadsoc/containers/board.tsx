@@ -469,7 +469,7 @@ export const EducationBoard = observer((props: any) => {
         background: 'white',
         marginTop: boardStore.roleIsTeacher ? 49 : boardStore.isFullScreen ? 0 : 10,
         marginBottom: !boardStore.isFullScreen ? (boardStore.aClassHasPermission ? 49 : 10) : 0,
-        marginLeft: boardStore.isFullScreen ? 0 : 10
+        marginRight: boardStore.isFullScreen ? 0 : 10
       }} borderless={boardStore.isFullScreen}>
         {boardStore.aClassHasPermission ? <NetworkDisk /> : null }
         {boardStore.aClassHasPermission ? 

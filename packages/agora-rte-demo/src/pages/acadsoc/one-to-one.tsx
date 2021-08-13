@@ -97,11 +97,11 @@ export const AcadsocOneToOne = observer(() => {
       <Nav />
       <div className={!boardStore.isFullScreen ? styles.flexBox : styles.fullScreen}>
         <div className={styles.mainContainer}>
-          <BoardView />
-          <Trophy></Trophy>
           <div className={styles.rightContainer}>
             <RightContainer/>
           </div>
+          <BoardView />
+          <Trophy></Trophy>
         </div>   
       </div>
       <Setting />
