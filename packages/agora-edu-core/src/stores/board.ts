@@ -1760,9 +1760,14 @@ export class BoardStore extends ZoomController {
     const allTools = this.allTools;
     const { userRole, roomType } = this.appStore.roomInfo;
     if (roomType === EduRoomType.SceneType1v1) {
-      const oneToOneTools = allTools.filter(
+      let oneToOneTools = allTools.filter(
         (item: ToolItem) => !['student_list', 'register'].includes(item.value),
       );
+      if (this.isBoardScreenShare) {
+        oneToOneTools = oneToOneTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
+        );
+      }
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return oneToOneTools.filter(
           (item: ToolItem) => !['blank-page', 'tools'].includes(item.value),
@@ -1787,9 +1792,14 @@ export class BoardStore extends ZoomController {
       return oneToOneTools;
     }
     if (roomType === EduRoomType.SceneTypeBigClass) {
-      const bigClassTools = allTools.filter(
+      let bigClassTools = allTools.filter(
         (item: ToolItem) => !['register'].includes(item.value),
       );
+      if (this.isBoardScreenShare) {
+        bigClassTools = bigClassTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
+        );
+      }
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return bigClassTools.filter(
           (item: ToolItem) => !['blank-page', 'tools'].includes(item.value),
@@ -1816,9 +1826,14 @@ export class BoardStore extends ZoomController {
       return bigClassTools;
     }
     if (roomType === EduRoomType.SceneTypeMiddleClass) {
-      const midClassTools = allTools.filter(
+      let midClassTools = allTools.filter(
         (item: ToolItem) => !['student_list'].includes(item.value),
       );
+      if (this.isBoardScreenShare) {
+        midClassTools = midClassTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
+        );
+      }
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return midClassTools.filter(
           (item: ToolItem) => !['tools'].includes(item.value),
