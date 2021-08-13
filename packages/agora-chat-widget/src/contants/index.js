@@ -14,6 +14,12 @@ export const ROLE = {
   },
 };
 
+export const ROOM_TYPE = {
+  oneClass: 0,
+  smallClass: 4,
+  bigClass: 2,
+};
+
 // 当前选中的 tab
 export const CHAT_TABS_KEYS = {
   chat: 'CHAT',
