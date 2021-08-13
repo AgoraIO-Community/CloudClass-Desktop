@@ -123,6 +123,8 @@ export type HandleUploadType = {
   kind: any,
   pptResult?: any,
   onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
+  personalResource?: boolean
+  
 }
 
 
@@ -196,6 +198,35 @@ export class UploadService extends ApiBase {
         // conversion: params.conversion,
         size: params.fileSize,
         conversion: params.conversion ?? undefined,
+      }
+    })
+    if (res.code !== 0) {
+      throw GenericErrorWrapper({
+        code: res.code,
+        message: res.message
+      })
+    }
+    return {
+      success: true,
+      data: res.data as FetchStsTokenResult
+    }
+  }
+
+  async fetchPersonalPresignedURL(params: {userUuid: string, resourceUuid: string, roomUuid: string, resourceName: string, ext: string, fileSize: number, conversion?: UploadConversionType}) {
+    const res = await this.fetch({
+      url: `/v2/uses/${params.userUuid}/resources/${params.resourceUuid}/presigned`,
+      method: 'GET',
+      data: {
+        // resourceName: params.resourceName,
+        // ext: params.ext,
+        // // conversion: params.conversion,
+        // size: params.fileSize,
+        // conversion: params.conversion ?? undefined,
+        resourceName: params.resourceName,     //文件名
+        size: params.fileSize,   //文件大小
+        ext: params.ext,       //扩展名 ppt、pptx、pptm、docx、doc、xlsx、xls、csv、pdf等
+        tags: [],        //tag列表，每个资源最多10个标签
+        conversion: params.conversion
       }
     })
     if (res.code !== 0) {
@@ -303,22 +334,33 @@ export class UploadService extends ApiBase {
     //   })
     //   return queryResult.data
     // }
-
-    const fetchResult = await this.fetchStsToken({
+    let fetchResult = await this.fetchStsToken({
       roomUuid: payload.roomUuid,
       // userUuid: payload.userUuid,
       resourceName: payload.resourceName,
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
       // conversion: payload.conversion,
-      fileSize: payload.fileSize,
-      conversion: payload.converting ? {
-        type: payload.ext === 'pptx' ? 'dynamic' : 'static',
-        preview: false,
-        scale: 1.2,
-        outputFormat: 'png',
-      } : undefined,
+      fileSize: payload.fileSize
     })
+    // use presigned url
+    // fetchResult = await this.fetchPersonalPresignedURL({
+    //   userUuid: payload.userUuid,
+    //   roomUuid: payload.roomUuid,
+    //   // userUuid: payload.userUuid,
+    //   resourceName: payload.resourceName,
+    //   resourceUuid: payload.resourceUuid,
+    //   ext: payload.ext,
+    //   // conversion: payload.conversion,
+    //   fileSize: payload.fileSize,
+    //   conversion: payload.converting ? {
+    //     type: payload.ext === 'pptx' ? 'dynamic' : 'static',
+    //     preview: false,
+    //     scale: 1.2,
+    //     outputFormat: 'png',
+    //   } : undefined,
+    // })
+
 
     const ossConfig = fetchResult.data
     const vendor = ossConfig.vendor
@@ -328,7 +370,8 @@ export class UploadService extends ApiBase {
       result = await this.handleUploadByAWS(ossConfig, payload)
     } else if (vendor === 2) {
       // ali
-      result = await this.handleUploadByAli(ossConfig, payload)
+      // result = await this.addFileToOssPreSigned(ossConfig, payload);
+      result =  await this.handleUploadByAli(ossConfig, payload)
     }
     return result
   }
@@ -351,7 +394,7 @@ export class UploadService extends ApiBase {
     // const taskToken = fetchCallbackBody.taskToken
   
     // console.log('fetchCallbackBody ', fetchCallbackBody)
-  
+
     if (payload.converting === true) {
       const uploadResult = await this.addFileToOss(
         this.ossClient,
@@ -370,7 +413,8 @@ export class UploadService extends ApiBase {
           // userUuid: payload.userUuid,
           appId: this.appId,
           callbackHost: ossConfig.callbackHost
-        })
+        }
+        )
   
       console.log('uploadResult', uploadResult)
   
@@ -649,6 +693,8 @@ export class UploadService extends ApiBase {
     const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     try{
+
+
     const res: MultipartUploadResult = await ossClient.multipartUpload(
       key,
       file,
@@ -684,6 +730,40 @@ export class UploadService extends ApiBase {
       console.log('error', err)
     }
 }
+
+  async addFileToOssPreSigned(stsTokenResult: FetchStsTokenResult, payload: HandleUploadType): Promise<any> {
+    const prefix = stsTokenResult.callbackHost
+    const callbackUrl = `${prefix}/v2/users/${payload.userUuid}/resources/${payload.resourceUuid}/callback`
+    return new Promise(async (resolve, reject) => {
+        let config = {
+          headers: {
+            'Content-Type': payload.file.type,
+          },
+          onUploadProgress: (progressEvent: any) => {
+            let percentCompleted = Math.floor(progressEvent.loaded * 100 / progressEvent.total);
+            payload.onProgress({ 
+              phase: 'finish',
+              progress: percentCompleted / 100
+            })
+          }
+        }
+        try {
+          await axios.put(stsTokenResult.preSignedUrl, payload.file, config)
+          const result = await axios.post(callbackUrl, JSON.parse(stsTokenResult.callbackBody), {
+            headers: {
+              ['content-type']: stsTokenResult.callbackContentType
+            }
+          })
+          resolve({
+            ...result.data.data,
+            ossURL: result.data.data.url
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
+
+  }
 
   addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
     const prefix = ossParams.callbackHost
@@ -792,7 +872,49 @@ export class UploadService extends ApiBase {
     }
     return res.data
   }
+  
+  async addUserResourceRelation(params: {resourceUuid: string, resourceName: string, userUuid: string, converting: boolean, ext: string, resourceURL: string, fileSize: string}) {
+    let res = await this.fetch({
+      url: `/v2/resources/${params.resourceUuid}`,
+      method: 'PUT',
+      data: {
+        resourceName: params.resourceName,     //文件名
+        size: params.fileSize,   //文件大小
+        ext: params.ext,       //扩展名 ppt、pptx、pptm、docx、doc、xlsx、xls、csv、pdf等
+        url: params.resourceURL,       //网络地址
+        conversion: params.converting ? {
+          type: params.ext === 'pptx' ? 'dynamic' : 'static',
+          preview: false,
+          scale: 1.2,
+          outputFormat: 'png',
+        } : undefined,
+        userUuids: [params.userUuid]
+      }
+    })
 
+    if (res.code !== 0) {
+      throw GenericErrorWrapper({
+        code: res.code,
+        message: res.message
+      })
+    }
+  }
+  
+  async removeUserResourceRelation(relations : Array<{ resourceUuid: string, userUuid: string }>) {
+    const res = await this.fetch({
+      url: `/v2/resources/users`,
+      method: 'DELETE',
+      data: relations
+    })
+
+    if (res.code !== 0) {
+      throw GenericErrorWrapper({
+        code: res.code,
+        message: res.message
+      })
+    }
+    return res.data
+  }
 }
 
 export type imageSize = {

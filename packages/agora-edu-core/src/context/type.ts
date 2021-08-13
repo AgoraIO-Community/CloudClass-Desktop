@@ -1,12 +1,11 @@
-import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum } from 'agora-rte-sdk'
+import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum, ScreenShareType } from 'agora-rte-sdk'
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare'
 import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
-import { RosterUserInfo } from '../stores/small-class';
-import { ScreenShareType } from 'agora-rte-sdk';
 import { EduClassroomStateEnum } from '../stores/scene';
+import { PagingOptions } from '../services/clouddrive-api';
 
 export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
 
@@ -1487,4 +1486,6 @@ export type CloudDriveContext = {
      * 全部资源
      */
     allResources: MaterialDataResource[],
+
+    fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
 }

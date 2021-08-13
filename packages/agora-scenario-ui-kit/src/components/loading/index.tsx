@@ -37,6 +37,7 @@ export const Loading: FC<LoadingProps> = ({
     uploadItemList = [],
     className,
     onClick,
+    noCloseBtn,
     ...restProps
 }) => {
     const cls = classnames({
@@ -80,7 +81,7 @@ export const Loading: FC<LoadingProps> = ({
                                 )}
                             </div>
                             <div>
-                                {restProps.noCloseBtn ? "" :(<Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
+                                {noCloseBtn ? "" :(<Icon type="delete" color="#273D75" style={{marginLeft: 60,cursor: 'pointer'}}  onClick={() =>
                                     onClick && onClick(index.toString(), 'delete')
                               }/>)}
                             </div>

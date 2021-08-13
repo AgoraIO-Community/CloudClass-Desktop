@@ -19,6 +19,7 @@ import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
+import { EduCloudDriveService } from "../services/edu-clouddrive-service"
 // import packageJson from "../../package.json"
 const packageJson = require('../../package.json')
 
@@ -1604,6 +1605,14 @@ export class RoomStore extends SimpleInterval {
         userToken: roomManager.userToken,
       })
       this.appStore._recordService = new EduRecordService({
+        prefix: '',
+        sdkDomain: this.appStore.params.config.sdkDomain,
+        appId: this.appStore.params.config.agoraAppId,
+        rtmToken: this.appStore.params.config.rtmToken,
+        rtmUid: this.appStore.params.config.rtmUid,
+        roomUuid: roomManager.roomUuid,
+      })
+      this.appStore._cloudDriveService = new EduCloudDriveService({
         prefix: '',
         sdkDomain: this.appStore.params.config.sdkDomain,
         appId: this.appStore.params.config.agoraAppId,

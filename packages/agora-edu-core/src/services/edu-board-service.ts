@@ -1,6 +1,5 @@
 import { ApiInitParams } from './base';
 import { AgoraBoardApi } from "./board-api";
-import { EduLogger } from 'agora-rte-sdk';
 
 export class EduBoardService {
   apiService: AgoraBoardApi;

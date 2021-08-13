@@ -272,6 +272,9 @@ export const en = {
     'downloading': 'Download',
     'pause': 'Pause',
     'upload_success': 'Upload Success',
+    'search': 'Search',
+    'prev': '< Prev',
+    'next': 'Next >'
   },
   'media': {
     'camera': 'Camera',

@@ -485,7 +485,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     handleUpload,
     publicResources,
     upsertResources,
-    allResources
+    allResources,
+    fetchPersonalResources
   } = useBoardStore()
 
 
@@ -503,7 +504,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     publicResources: allResources.filter((item: any) => item.access === 'public'),
     doUpload: handleUpload,
     allResources,
-    upsertResources
+    upsertResources,
+    fetchPersonalResources
   }
 }
 
