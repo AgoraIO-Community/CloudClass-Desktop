@@ -78,7 +78,7 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
     url: data.url,
     convertedPercentage: data.taskProgress!.convertedPercentage,
     updateTime: data.updateTime,
-    scenes: data.scenes,
+    scenes: data.scenes || data.taskProgress?.convertedFileList,
     access
   }
 }
@@ -334,14 +334,20 @@ export class UploadService extends ApiBase {
     //   })
     //   return queryResult.data
     // }
+    const conversion = payload.converting ? {
+        type: payload.ext === 'pptx' ? 'dynamic' : 'static',
+        preview: false,
+        scale: 1.2,
+        outputFormat: 'png',
+      } : undefined
     let fetchResult = await this.fetchStsToken({
       roomUuid: payload.roomUuid,
       // userUuid: payload.userUuid,
       resourceName: payload.resourceName,
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
-      // conversion: payload.conversion,
-      fileSize: payload.fileSize
+      fileSize: payload.fileSize,
+      conversion,
     })
     // use presigned url
     // fetchResult = await this.fetchPersonalPresignedURL({
@@ -371,12 +377,12 @@ export class UploadService extends ApiBase {
     } else if (vendor === 2) {
       // ali
       // result = await this.addFileToOssPreSigned(ossConfig, payload);
-      result =  await this.handleUploadByAli(ossConfig, payload)
+      result =  await this.handleUploadByAli(ossConfig, payload, conversion)
     }
     return result
   }
   
-  async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
+  async handleUploadByAli (ossConfig: FetchStsTokenResult, payload: HandleUploadType, conversion: any) {
     const key = ossConfig.ossKey
     this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
@@ -390,34 +396,30 @@ export class UploadService extends ApiBase {
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody)
     
     const resourceUuid = fetchCallbackBody.resourceUuid
-    // const taskUuid = fetchCallbackBody.taskUuid
-    // const taskToken = fetchCallbackBody.taskToken
-  
-    // console.log('fetchCallbackBody ', fetchCallbackBody)
 
-    if (payload.converting === true) {
-      const uploadResult = await this.addFileToOss(
-        this.ossClient,
-        key,
-        payload.file,
-        (...args: any) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress: args[1]
-          })
-        },
-        {
-          callbackBody: ossConfig.callbackBody,
-          contentType: ossConfig.callbackContentType,
-          roomUuid: payload.roomUuid,
-          // userUuid: payload.userUuid,
-          appId: this.appId,
-          callbackHost: ossConfig.callbackHost
-        }
-        )
-  
-      console.log('uploadResult', uploadResult)
-  
+    const uploadResult = await this.addFileToOss(
+      this.ossClient,
+      key,
+      payload.file,
+      (...args: any) => {
+        payload.onProgress({
+          phase: 'finish',
+          progress: args[1],
+          isLastProgress: !payload.converting
+        })
+      },
+      {
+        callbackBody: ossConfig.callbackBody,
+        contentType: ossConfig.callbackContentType,
+        roomUuid: payload.roomUuid,
+        userUuid: payload.userUuid,
+        appId: this.appId,
+        callbackHost: ossConfig.callbackHost
+    })
+
+    let taskRes = {};
+    
+    if(payload.converting) {
       const resp = createPPTTask({
         uuid: uploadResult.taskUuid,
         kind: payload.kind,
@@ -426,12 +428,12 @@ export class UploadService extends ApiBase {
         callbacks: {
           onProgressUpdated: progress => {
             console.log(' onProgressUpdated ', progress)
-              payload.onProgress({
-                phase: 'finish',
-                progress: progress.convertedPercentage,
-                isTransFile: true,
-              })
-            },
+            payload.onProgress({
+              phase: 'finish',
+              progress: progress.convertedPercentage,
+              isTransFile: true,
+            })
+          },
           onTaskFail: () => {
             console.log(' onTaskFail ')
             payload.onProgress({
@@ -453,14 +455,14 @@ export class UploadService extends ApiBase {
       })
   
       const ppt = await resp.checkUtilGet();
-  
+
       payload.onProgress({
         phase: 'finish',
         progress: 1,
         isTransFile: true,
         isLastProgress: true
       })
-  
+
       let materialResult = await this.createMaterial({
         taskUuid: ppt.uuid,
         url: uploadResult.ossURL,
@@ -478,12 +480,8 @@ export class UploadService extends ApiBase {
           convertedFileList: ppt.scenes
         }
       })
-      return {
-        resourceUuid: resourceUuid,
-        resourceName: uploadResult.resourceName,
-        ext: uploadResult.ext,
-        size: fetchCallbackBody.size,
-        url: uploadResult.ossURL,
+
+      taskRes = {
         scenes: ppt.scenes,
         taskProgress: {
           totalPageSize: ppt.scenes.length,
@@ -492,38 +490,28 @@ export class UploadService extends ApiBase {
           convertedFileList: ppt.scenes
         },
         updateTime: materialResult.data.updateTime,
-        taskUuid: uploadResult.taskUuid,
       }
-    } else {
-      const uploadResult = await this.addFileToOss(
-       this.ossClient,
-        key,
-        payload.file,
-        (...args: any[]) => {
-          payload.onProgress({
-            phase: 'finish',
-            progress:args[1],
-            isLastProgress:true
-          })
-        },
-        {
-          callbackBody: ossConfig.callbackBody,
-          contentType: ossConfig.callbackContentType,
-          roomUuid: payload.roomUuid,
-          userUuid: payload.userUuid,
-          appId: this.appId,
-          callbackHost: ossConfig.callbackHost
-        })
-  
-      const result: CourseWareUploadResult = {
-        resourceUuid: resourceUuid,
-        resourceName: uploadResult.resourceName,
-        ext: uploadResult.ext,
-        size: fetchCallbackBody.size,
-        url: uploadResult.ossURL,
-        updateTime: uploadResult.updateTime,
-      }
-      return result
+    }
+
+    await this.addUserResourceRelation({ 
+      userUuid: payload.userUuid, 
+      resourceUuid: payload.resourceUuid,
+      resourceName: uploadResult.resourceName, 
+      resourceURL: uploadResult.ossURL,
+      ext: payload.ext,
+      fileSize: payload.fileSize,
+      conversion
+    })
+
+    return {
+      ...taskRes,
+      resourceUuid: resourceUuid,
+      resourceName: uploadResult.resourceName,
+      ext: uploadResult.ext,
+      size: fetchCallbackBody.size,
+      url: uploadResult.ossURL,
+      updateTime: uploadResult.updateTime,
+      taskUuid: uploadResult.taskUuid,
     }
 
   }
@@ -873,7 +861,7 @@ export class UploadService extends ApiBase {
     return res.data
   }
   
-  async addUserResourceRelation(params: {resourceUuid: string, resourceName: string, userUuid: string, converting: boolean, ext: string, resourceURL: string, fileSize: string}) {
+  async addUserResourceRelation(params: {resourceUuid: string, resourceName: string, userUuid: string, conversion: any, ext: string, resourceURL: string, fileSize: number}) {
     let res = await this.fetch({
       url: `/v2/resources/${params.resourceUuid}`,
       method: 'PUT',
@@ -882,12 +870,7 @@ export class UploadService extends ApiBase {
         size: params.fileSize,   //文件大小
         ext: params.ext,       //扩展名 ppt、pptx、pptm、docx、doc、xlsx、xls、csv、pdf等
         url: params.resourceURL,       //网络地址
-        conversion: params.converting ? {
-          type: params.ext === 'pptx' ? 'dynamic' : 'static',
-          preview: false,
-          scale: 1.2,
-          outputFormat: 'png',
-        } : undefined,
+        conversion: params.conversion,
         userUuids: [params.userUuid]
       }
     })

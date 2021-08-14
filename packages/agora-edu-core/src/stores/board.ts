@@ -2152,7 +2152,7 @@ export class BoardStore extends ZoomController {
     try {
       this.fileLoading = true
       // TODO: need handleUpload return type
-      let res = await this.appStore.uploadService.handleUpload({
+      await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
@@ -2160,18 +2160,6 @@ export class BoardStore extends ZoomController {
           payload.onProgress(evt);
         },
       })
-
-      if(res?.resourceUuid) {
-        await this.appStore.uploadService.addUserResourceRelation({ 
-          userUuid: this.appStore.roomInfo.userUuid, 
-          resourceUuid: res.resourceUuid,
-          resourceName: res.resourceName, 
-          resourceURL: res.url,
-          converting: payload.converting,
-          ext: payload.ext,
-          fileSize: payload.fileSize
-        })
-      }
       
       if (this.isCancel) {
         return
@@ -2455,7 +2443,6 @@ export class BoardStore extends ZoomController {
   async fetchPersonalResources(userUuid:string, options:PagingOptions) {
     const res = await this.cloudDriveService.fetchPersonalResources(userUuid, options);
     this._personalResources = res.data.list;
-    
     return { 
       ...res.data,
       list: res.data.list.map(transDataToResource, "private")

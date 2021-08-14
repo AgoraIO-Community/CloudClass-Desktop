@@ -213,14 +213,15 @@ export const PersonalStorageContainer = observer(() => {
       fileRef.current!.value = ""
       throw e
     }
-    fetchResource(pageIdx + 1)
+    fetchResource(pageIdx + 1, hintText)
   }
 
   const handleDelete = async () => {
     await cancelUpload();
+    
     await removeMaterialList(checkList$.getValue());
-
-    fetchResource(pageIdx + 1)
+    
+    fetchResource(pageIdx + 1, hintText)
 
     setShowUploadModal(false);
   }

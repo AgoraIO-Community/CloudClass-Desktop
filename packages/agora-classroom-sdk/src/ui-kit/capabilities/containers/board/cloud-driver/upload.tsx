@@ -32,7 +32,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
       ...it,
       checked: !!checkMap[it.id]
     }))
-  },[personalResources.length, JSON.stringify(checkMap)])
+  },[personalResources, JSON.stringify(checkMap)])
 
   const hasSelected: any = React.useMemo(() => {
     return !!items.find((item: any) => !!item.checked)

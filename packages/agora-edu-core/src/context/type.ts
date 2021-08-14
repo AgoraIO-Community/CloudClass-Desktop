@@ -4,6 +4,7 @@ import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../a
 import { BehaviorSubject, Subject } from 'rxjs';
 import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
+import { RosterUserInfo } from '../stores/small-class';
 import { EduClassroomStateEnum } from '../stores/scene';
 import { PagingOptions } from '../services/clouddrive-api';
 
