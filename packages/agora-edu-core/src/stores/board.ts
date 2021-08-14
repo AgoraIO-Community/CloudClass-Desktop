@@ -854,7 +854,7 @@ export class BoardStore extends ZoomController {
   updateCourseWareList() {
     const globalState = this.globalState
     this.courseWareList = globalState.dynamicTaskUuidList ?? []
-    this._personalResources = globalState.materialList ?? []
+    // this._personalResources = globalState.materialList ?? []
   }
 
   @observable
