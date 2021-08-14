@@ -1,11 +1,13 @@
 import 'promise-polyfill/src/polyfill';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { observable, observe } from 'mobx';
 import { PluginStore } from './store'
 import { usePluginStore } from './hooks'
 import { Provider, observer } from 'mobx-react';
 import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core'
 import { useAppPluginContext } from 'agora-edu-core'
+
 import {
   Button,
   Table,
@@ -14,31 +16,23 @@ import {
   Row,
   transI18n,
   I18nProvider,
-  changeLanguage
+  changeLanguage,
+  Icon
 } from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 import "./index.css"
 import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
-import { runInAction } from 'mobx';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
-const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) => void ,onTitle: (title: string) => void, lang: 'zh'|'en' }) => {
+const App = observer(({ onHeight, onTitle, lang }: { onHeight: (height: number) => void, onTitle: (title: string) => void, lang: 'zh' | 'en' }) => {
   const pluginStore = usePluginStore()
-
-  const globalEvents = pluginStore.context.contexts.global.events
   const userlistEvents = pluginStore.context.contexts.userList.events
 
   useEffect(() => {
-    globalEvents.subscribe((state:any) => {
-      // pluginStore.updateGlobalContext(state)
-    })
-    userlistEvents.subscribe((state:any) => {
-      runInAction(() => {
-        pluginStore.userList = state.userList
-        pluginStore.rosterUserList = state.rosterUserList
-      })
+    userlistEvents.subscribe((state: any) => {
+      pluginStore.updateStudents(state.userList, state.rosterUserList)
     })
   }, [])
 
@@ -47,7 +41,7 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
   }, [pluginStore.height])
 
   useEffect(() => {
-    onTitle(transI18n('answer.appName')+ ' ' + pluginStore.currentTime)
+    onTitle(transI18n('answer.appName') + ' ' + pluginStore.currentTime)
   }, [pluginStore.currentTime])
 
   return (
@@ -61,7 +55,8 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
       className={classnames({
         [`answer-modal`]: 1,
         [`answer-role-student`]: pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student,
-        [`answer-language-en`]: lang === 'en'
+        [`answer-language-en`]: lang === 'en',
+        [`answer-change`]: pluginStore.status === 'answer' && pluginStore.showModifyBtn,
       })}
     >
       {pluginStore.ui?.includes('sels') ? <div className="answer-items" >
@@ -83,7 +78,7 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
               {pluginStore.students?.map((student: any) => (
                 <Row className={'border-bottom-width-1'} key={student.uid}>
                   {['name', 'replyTime', 'answer'].map((col: string, idx: number) => (
-                    <Col key={col} style={{ justifyContent: 'center', color:idx===2?(student[col]===(pluginStore.context.properties.answer?.join('')||'')?'#3AB449':'#F04C36'):'#191919' }}>
+                    <Col key={col} style={{ justifyContent: 'center', color: idx === 2 ? (student[col] === (pluginStore.context.properties.answer?.join('') || '') ? '#3AB449' : '#F04C36') : '#191919' }}>
                       {
                         <span
                           title={student[col]}
@@ -102,40 +97,68 @@ const App = observer(({ onHeight,onTitle,lang }: { onHeight: (height: number) =>
           </Table>
         </div> : null}
       {pluginStore.ui?.includes('infos') ? <div className="answer-info">
-        {['number-answered', 'acc', 'right-key', 'my-answer'].map((key: any,index: number) => (index < 3 || pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student?(
+        {['number-answered', 'acc', 'right-key', 'my-answer'].map((key: any, index: number) => (index < 3 || pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.student ? (
           <div className='answer-info-line' key={key}>
-            <span className='answer-info-tab'>{transI18n('answer.' + key) + '： '}</span><span style={(index===3&&pluginStore&&pluginStore.answerInfo)?{color:pluginStore.answerInfo[key]===pluginStore.answerInfo['right-key']?'#3AB449':'#F04C36'}:{}} className='answer-info-value'>{pluginStore.answerInfo ? pluginStore.answerInfo[key] : ''}</span>
+            <span className='answer-info-tab'>{transI18n('answer.' + key) + '： '}</span><span style={(index === 3 && pluginStore && pluginStore.answerInfo) ? { color: pluginStore.answerInfo[key] === pluginStore.answerInfo['right-key'] ? '#3AB449' : '#F04C36' } : {}} className='answer-info-value'>{pluginStore.answerInfo ? pluginStore.answerInfo[key] : ''}</span>
           </div>
-        ):null))}
+        ) : null))}
       </div> : null}
       {pluginStore.ui?.includes('subs') ? <div className="answer-submit">
         <span onClick={() => {
           pluginStore.addAnswer()
-        }} style={{ backgroundImage: `url(${addSvg})`,visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 7) ? 'hidden' : 'visible' }} ></span>
+        }} style={{ backgroundImage: `url(${addSvg})`, visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 7) ? 'hidden' : 'visible' }} ></span>
         <Button
-          disabled = { pluginStore.ui.includes('sels') && (pluginStore.selAnswer?.length || 0) === 0 }
+          disabled={pluginStore.ui.includes('sels') && (pluginStore.selAnswer?.length || 0) === 0}
           onClick={() => {
             pluginStore.onSubClick();
           }}
         >{transI18n(pluginStore?.buttonName || '')}</Button>
         <span onClick={() => {
           pluginStore.subAnswer()
-        }} style={{ backgroundImage: `url(${reduceSvg})`,visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) < 2) ? 'hidden' : 'visible' }}></span>
+        }} style={{ backgroundImage: `url(${reduceSvg})`, visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) < 2) ? 'hidden' : 'visible' }}></span>
       </div> : null}
     </div>
   )
 })
 
+const Clock = ({ app }: { app: AgoraExtAppAnswer }) => {
+  const [clockTime, setClockTime] = useState(app.clockWatchProps.currentTime)
+  
+  useEffect(() => {
+    const disposer = observe(app.clockWatchProps, ({name, newValue} : any) => {
+      console.log('reset current time', newValue);
+      if(name === 'currentTime') {
+        setClockTime(newValue)
+      }
+      
+    })
+    return disposer
+  }, [app.clockWatchProps])
+  
+
+  return (<div style={{ marginLeft: 8 }}>{clockTime}</div>)
+}
+
+const ClockUpdater = observer(({ onUpdate }: { onUpdate: (time: string) => void}) => {
+  const pluginStore = usePluginStore()
+  onUpdate(pluginStore.currentTime || '')
+  return null;
+});
+
 
 export class AgoraExtAppAnswer implements IAgoraExtApp {
   appIdentifier = "io.agora.answer"
-  appName = 'answer'
+  appName = transI18n('answer.appName')
   className = 'answer-dialog'
+  icon = <Icon type="answer" useSvg size={24} />
   width = 380
   height = 150 // 超过4个选项高度为220
   title = transI18n('answer.appName')
-
   store?: PluginStore
+  customHeader = <Clock app={this} />
+  clockWatchProps = observable({
+    currentTime: ''
+  })
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language)
@@ -151,6 +174,7 @@ export class AgoraExtAppAnswer implements IAgoraExtApp {
           }} onTitle={(title: string) => {
             this.title = title
           }} lang={this.language} />
+          <ClockUpdater onUpdate={(time) => { this.clockWatchProps.currentTime = time }} />
         </Provider>
       </I18nProvider>
     ),

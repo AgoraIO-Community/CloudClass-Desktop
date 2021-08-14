@@ -107,7 +107,7 @@ const App = observer(() => {
 export class AgoraExtAppCountDown implements IAgoraExtApp {
 
   appIdentifier = "io.agora.countdown"
-  appName = 'countdown'
+  // appName = 
   icon = <Icon type="countdown" useSvg size={24}/>
   width = 258
   height = 168 // 开始倒计时后高度为 55
@@ -116,6 +116,10 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language)
+  }
+
+  get appName(){
+    return transI18n('countdown.appName')
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {

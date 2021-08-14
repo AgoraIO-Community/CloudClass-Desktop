@@ -19,6 +19,7 @@ export const SettingContainer = observer(({ id }: any) => {
         changeMicrophoneVolume
     } = useMediaContext()
 
+
     const changeDevice = async (deviceType: string, value: any) => {
         switch (deviceType) {
             case 'camera': {

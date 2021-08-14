@@ -7,6 +7,8 @@ export const en = {
   'disabled': 'Disabled',
   'whiteboard': {
     'converting': 'Converting',
+    'disconnect-img-alt': 'Whiteboard Disconnected',
+    'disconnect-btn': 'Connect Again'
   },
   'screen_share': 'Screen Share',
   'kick': {

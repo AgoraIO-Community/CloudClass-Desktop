@@ -7,6 +7,8 @@ export const zh = {
   'disabled': '禁用',
   'whiteboard': {
     'converting': '转换中',
+    'disconnect-img-alt': '白板未连接',
+    'disconnect-btn': '重新连接'
   },
   'screen_share': '屏幕共享',
   'kick': {

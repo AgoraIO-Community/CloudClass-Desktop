@@ -14,7 +14,8 @@ import {
   Input,
   transI18n,
   I18nProvider,
-  changeLanguage
+  changeLanguage,
+  Icon
 } from '~ui-kit'
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
@@ -126,8 +127,8 @@ const App = observer(({ onHeight, onTitle, lang }: { onHeight: (height: number) 
           pluginStore.addAnswer()
         }} style={{ backgroundImage: `url(${addSvg})`, visibility: (pluginStore.status !== 'config') || ((pluginStore.answer?.length || 4) > 4) ? 'hidden' : 'visible' }} ></span>
         <Button
-          disabled={pluginStore.status === 'config' ? (!pluginStore.title || (pluginStore.answer?.includes('') || false))
-            : (pluginStore.status === 'answer' ? (pluginStore.selAnswer?.length || 0) === 0 : false)}
+          disabled={pluginStore.status === 'config' ? ( !pluginStore.answer || !pluginStore.title || pluginStore.answer.includes('') || ([...new Set(pluginStore.answer)].length !== pluginStore.answer.length))
+          : (pluginStore.status === 'answer' ? (pluginStore.selAnswer?.length || 0) === 0 : false)}
           onClick={() => {
             pluginStore.onSubClick();
           }}
@@ -143,8 +144,9 @@ const App = observer(({ onHeight, onTitle, lang }: { onHeight: (height: number) 
 
 export class AgoraExtAppVote implements IAgoraExtApp {
   appIdentifier = "io.agora.vote"
-  appName = 'vote'
+  appName = transI18n('vote.appName')
   className = 'vote-dialog'
+  icon = <Icon type="vote" useSvg size={24}/>
   width = 360
   height = 283
   title = transI18n('vote.appName')

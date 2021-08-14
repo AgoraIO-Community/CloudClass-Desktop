@@ -43,6 +43,8 @@ export class AgoraWebStreamCoordinator extends EventEmitter  {
 
     updateRtcClient(client:IAgoraRTCClient) {
         this.client = client
+        this.rtcVideoStreams.clear()
+        this.rtcAudioStreams.clear()
     }
 
     addRtcStream(user: IAgoraRTCRemoteUser, mediaType: "video" | "audio") {

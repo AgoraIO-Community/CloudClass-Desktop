@@ -161,7 +161,25 @@ export enum DownloadStatus {
   failed,
 }
 
+export enum CustomRoomPhase {
+  Idle = 'idle'
+}
+
+export const ApaasRoomPhase = {
+  ...RoomPhase,
+  ...CustomRoomPhase
+}
+
 export class BoardStore extends ZoomController {
+
+  @observable
+  checkInResult: any = null
+
+  @action.bound
+  setCheckInResult (result: any) {
+    this.checkInResult = result
+  }
+  
   scenes: any[] = []
 
   @observable
@@ -188,6 +206,9 @@ export class BoardStore extends ZoomController {
   @observable
   showFolder: boolean = false;
   boardRegion: string = '';
+
+  @observable
+  boardConnectionState: string = ApaasRoomPhase.Idle
 
   @action.bound
   closeFolder() {
@@ -255,6 +276,8 @@ export class BoardStore extends ZoomController {
     return this._boardClient as BoardClient;
   }
 
+  boardDomElement?: any
+
   ossClient!: OSS
 
   @observable
@@ -318,6 +341,21 @@ export class BoardStore extends ZoomController {
       'circle',
       'line'
     ].includes(this.currentSelector)
+  }
+
+  @action.bound
+  async joinBoard () {
+    if (this.checkInResult) {
+      await this.join({
+        boardId: this.checkInResult.board.boardId,
+        boardToken: this.checkInResult.board.boardToken,
+        role: this.userRole,
+        isWritable: true,
+        disableDeviceInputs: true,
+        disableCameraTransform: true,
+        disableAutoResize: false
+      })
+    }
   }
 
   @action.bound
@@ -1729,6 +1767,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   mount(dom: any) {
     BizLogger.info("mounted", dom, this.boardClient && this.boardClient.room)
+    this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom)
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -1744,6 +1783,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   unmount() {
+    this.boardDomElement = null
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(null)
     }
@@ -2012,9 +2052,9 @@ export class BoardStore extends ZoomController {
       width: imageInfo.width,
       height: imageInfo.height,
       //@ts-ignore
-      coordinateX: this.room.divElement.clientHeight / 2,
+      coordinateX: this.boardDomElement?.clientWidth / 2,
       //@ts-ignore
-      coordinateY: this.room.divElement.clientWidth / 2,
+      coordinateY: this.boardDomElement?.clientHeight / 2,
     })
   }
 
@@ -2120,7 +2160,7 @@ export class BoardStore extends ZoomController {
           payload.onProgress(evt);
         },
       })
-
+      
       if (this.isCancel) {
         return
       }
