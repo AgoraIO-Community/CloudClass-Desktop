@@ -6,6 +6,7 @@ import { StorageCourseWareItem } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { RosterUserInfo } from '../stores/small-class';
 import { ScreenShareType } from 'agora-rte-sdk';
+import { PagingOptions } from '../services/clouddrive-api';
 
 export type DeviceErrorCallback = (evt: {type: 'video' | 'audio', error: boolean}) => void
 
@@ -1450,4 +1451,6 @@ export type CloudDriveContext = {
      * 全部资源
      */
     allResources: MaterialDataResource[],
+
+    fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
 }

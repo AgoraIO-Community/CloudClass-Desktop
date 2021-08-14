@@ -18,6 +18,7 @@ import { AppStoreInitParams, CourseWareItem, DeviceInfo, IAgoraExtApp, RoomInfo 
 import { WidgetStore } from './widget'
 import { reportServiceV2 } from '../services/report-v2'
 import { Subject } from 'rxjs'
+import { EduCloudDriveService } from '../services/edu-clouddrive-service'
 
 export class EduScenarioAppStore {
   // stores
@@ -38,6 +39,7 @@ export class EduScenarioAppStore {
   _boardService?: EduBoardService;
   _recordService?: EduRecordService;
   _uploadService?: UploadService;
+  _cloudDriveService?: EduCloudDriveService;
 
   toast$: Subject<any> = new Subject<any>()
   dialog$: Subject<any> = new Subject<any>()
@@ -56,6 +58,10 @@ export class EduScenarioAppStore {
 
   get recordService() {
     return this._recordService as EduRecordService;
+  }
+
+  get cloudDriveService() {
+    return this._cloudDriveService as EduCloudDriveService;
   }
 
   get mediaService() {
@@ -426,6 +432,7 @@ export class EduScenarioAppStore {
     this._boardService = undefined
     this._recordService = undefined
     this._uploadService = undefined
+    this._cloudDriveService = undefined
     // this.roomInfo = {}
   }
 

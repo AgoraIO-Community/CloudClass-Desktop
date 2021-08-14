@@ -29,6 +29,7 @@ import { Resource } from '../context/type';
 import { reportServiceV2 } from '../services/report-v2';
 import MD5 from 'js-md5';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { PagingOptions } from '../services/clouddrive-api';
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -1686,6 +1687,10 @@ export class BoardStore extends ZoomController {
     return this.appStore.boardService
   }
 
+  get cloudDriveService() {
+    return this.appStore.cloudDriveService
+  }
+
   @computed
   get hasPermission(): boolean {
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
@@ -1825,11 +1830,12 @@ export class BoardStore extends ZoomController {
   @action.bound
   async removeMaterialList(resourceUuids: string[]) {
     try {
-      const res = await this.appStore.uploadService.removeMaterials({
-        resourceUuids: resourceUuids,
-        roomUuid: this.appStore.roomInfo.roomUuid,
-        userUuid: this.appStore.roomInfo.userUuid,
-      })
+      const res = await this.appStore.uploadService.removeUserResourceRelation(
+        resourceUuids.map((resourceUuid) => ({
+          resourceUuid: resourceUuid,
+          userUuid: this.appStore.roomInfo.userUuid
+        })))
+      
       const materialList = this.globalState?.materialList ?? []
       const newList = materialList.filter((e: any) => !resourceUuids.includes(e.resourceUuid))
       const newRoomScenes = this.globalState?.roomScenes ?? []
@@ -2106,7 +2112,7 @@ export class BoardStore extends ZoomController {
     try {
       this.fileLoading = true
       // TODO: need handleUpload return type
-      let res = await this.appStore.uploadService.handleUpload({
+      await this.appStore.uploadService.handleUpload({
         ...payload,
         roomUuid: this.appStore.roomInfo.roomUuid,
         userUuid: this.appStore.roomInfo.userUuid,
@@ -2118,12 +2124,12 @@ export class BoardStore extends ZoomController {
       if (this.isCancel) {
         return
       }
-      const materialList = this.globalState?.materialList ?? []
-      this.room.setGlobalState({
-        materialList: uniqBy(materialList.concat([{
-          ...res,
-        } as CourseWareItem]), 'resourceUuid')
-      })
+      // const materialList = this.globalState?.materialList ?? []
+      // this.room.setGlobalState({
+      //   materialList: uniqBy(materialList.concat([{
+      //     ...res,
+      //   } as CourseWareItem]), 'resourceUuid')
+      // })
       this.fileLoading = false
     } catch (err) {
       console.error(err)
@@ -2392,6 +2398,16 @@ export class BoardStore extends ZoomController {
 
   @observable
   activeMap: Record<string, boolean> = {}
+
+  @action.bound
+  async fetchPersonalResources(userUuid:string, options:PagingOptions) {
+    const res = await this.cloudDriveService.fetchPersonalResources(userUuid, options);
+    this._personalResources = res.data.list;
+    return { 
+      ...res.data,
+      list: res.data.list.map(transDataToResource, "private")
+    };
+  }
 }
 
 export type HandleUploadType = {

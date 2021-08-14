@@ -266,6 +266,9 @@ export const zh = {
     'downloading': '下载中',
     'pause': '暂停',
     'upload_success': '上传成功',
+    'search': '搜索',
+    'prev': '< 上一页',
+    'next': '下一页 >'
   },
   'media': {
     'camera': '摄像头',

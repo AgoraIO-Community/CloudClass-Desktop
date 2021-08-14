@@ -3,18 +3,18 @@ import dayjs from 'dayjs'
 import { observer } from 'mobx-react'
 import * as React from 'react';
 import { useCallback } from 'react';
-import { useCloudDriveContext } from 'agora-edu-core';
+import { CourseWareItem, useCloudDriveContext } from 'agora-edu-core';
 import { useUIStore } from '@/infra/hooks';
 
 export interface UploadContainerProps {
-  handleUpdateCheckedItems: (ids: string[]) => void
+  handleUpdateCheckedItems: (ids: string[]) => void,
+  personalResources: CourseWareItem[]
 }
 
-export const UploadContainer: React.FC<UploadContainerProps> = observer(({handleUpdateCheckedItems}) => {
+export const UploadContainer: React.FC<UploadContainerProps> = observer(({handleUpdateCheckedItems, personalResources } ) => {
 
   const {
-    openCloudResource,
-    personalResources
+    openCloudResource
   } = useCloudDriveContext()
 
   const {
@@ -32,7 +32,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
       ...it,
       checked: !!checkMap[it.id]
     }))
-  },[personalResources.length, JSON.stringify(checkMap)])
+  },[personalResources, JSON.stringify(checkMap)])
 
   const hasSelected: any = React.useMemo(() => {
     return !!items.find((item: any) => !!item.checked)
