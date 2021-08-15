@@ -86,7 +86,7 @@ export abstract class ApiBase {
       resp = await HttpClient(`${this.prefix}${url}`, opts);
     }
     if (resp.code !== 0) {
-      throw GenericErrorWrapper({message: resp.message || resp.msg})
+      throw GenericErrorWrapper(new Error(resp.message || resp.msg))
     }
     return resp
   }

@@ -119,7 +119,7 @@
         'launch.wait':'等待应用加载...',
         'launch.launching':'加载完成,应用启动中...',
         'launch.success':'应用启动成功',
-        'launch.fail':'应用启动失败 %{reason}',
+        'launch.fail':'应用启动失败 %{reason}\n%{stack}',
         'timeout.label':'无法进入教室? 您可以尝试点击下面的按钮刷新',
         'timeout.btn':'刷新'
       }
@@ -139,7 +139,7 @@
         'launch.wait':'Waiting to launch...',
         'launch.launching':'Application Launching...',
         'launch.success':'Application Launch Success',
-        'launch.fail':'Application Launch Failed %{reason}',
+        'launch.fail':'Application Launch Failed %{reason}\n%{stack}',
         'timeout.label':'Cannot enter classroom? Try Refreshing.',
         'timeout.btn':'Refresh'
       }
@@ -233,6 +233,7 @@
 
     const update_launcher_status = (status) => {
       let div = document.getElementById('launcher-label')
+      console.log(`[Classroom Launcher] changing status to ${status}`)
       if(div) {
         div.textContent = status
       }
@@ -327,7 +328,7 @@
           update_loading_status(__agora_i18n('launch.success'))
           loading_done()
         }).catch((e) => {
-          update_loading_status(__agora_i18n('launch.fail', {reason:e.message}))
+          update_loading_status(__agora_i18n('launch.fail', {reason:e.message, stack: e.stack}))
         })
       }
     }

@@ -289,11 +289,8 @@ export class UploadService extends ApiBase {
     })
 
     if (res.code !== 0) {
-      throw GenericErrorWrapper({
-        code: res.code,
-        message: res.msg || res.message
-      })
-    }
+      throw GenericErrorWrapper(new Error(res.msg || res.message), {errCode: res.code})
+    })
     // const resources = res.data.map(transDataToResource)
 
     return res.data
@@ -498,7 +495,7 @@ export class UploadService extends ApiBase {
       throw GenericErrorWrapper(new Error(`upload to ali oss error, status is ${res.res.status}`));
     }
   }catch (err) {
-    throw GenericErrorWrapper(err.message);
+    throw GenericErrorWrapper(new Error(err.message));
     }
 }
 

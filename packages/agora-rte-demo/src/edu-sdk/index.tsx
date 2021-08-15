@@ -243,7 +243,7 @@ export class AgoraEduSDK {
   static async launch(dom: Element, option: LaunchOption) {
 
     if (controller.appController.hasCalled) {
-      throw GenericErrorWrapper("already launched")
+      throw GenericErrorWrapper(new Error("already launched"))
     }
 
     const unlock = controller.appController.acquireLock()

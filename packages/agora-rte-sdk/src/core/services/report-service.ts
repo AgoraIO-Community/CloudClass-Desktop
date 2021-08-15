@@ -158,7 +158,7 @@ export class ReportService extends ApiBase {
         let resp: any;
         resp = await HttpClient(`${this.prefix}${path}`, opts);
         if (resp.code !== "0") {
-          throw GenericErrorWrapper({message: resp.message || resp.msg})
+          throw GenericErrorWrapper(new Error(resp.message || resp.msg))
         }
         return resp
     }
