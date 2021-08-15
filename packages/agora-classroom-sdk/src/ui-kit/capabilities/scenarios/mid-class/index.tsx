@@ -60,7 +60,7 @@ export const MidClassScenario = observer(() => {
         if(!app) {
           return true
         }
-        return app.store?.status !== 'config' && roomInfo.userRole === EduRoleTypeEnum.student
+        return app.store?.status !== 'config' || roomInfo.userRole === EduRoleTypeEnum.student
       })
     }
 
