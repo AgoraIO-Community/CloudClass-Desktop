@@ -93,8 +93,8 @@ export const MidClassScenario = observer(() => {
     joinBoard()
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
       await prepareStream()
-      joinRoomRTC()
     }
+    joinRoomRTC()
   })
 
   const cls = classnames({

@@ -54,7 +54,8 @@
   },
   "agora_electron": {
     "electron_version": "12.0.0",
-    "prebuilt": true
+    "prebuilt": true,
+    "arch": "x86"
   },
   "dmg": {
     "compression": "store",
