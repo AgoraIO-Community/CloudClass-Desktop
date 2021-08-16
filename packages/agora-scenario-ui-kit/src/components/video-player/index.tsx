@@ -21,6 +21,7 @@ import { SvgImg } from '../svg-img';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { observer } from 'mobx-react';
+import { COLOR_RULES } from '../../utilities/style-config';
 
 export const CustomizeVolumeIndicator = ({
   streamUuid,
@@ -311,7 +312,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 <SvgImg
                   canHover={canHoverHideOffAllPodium}
                   style={{
-                    color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA',
+                    color: canHoverHideOffAllPodium
+                      ? COLOR_RULES.activeColor
+                      : COLOR_RULES.deactiveColor,
                   }}
                   type="invite-to-podium"
                   size={22}
@@ -327,7 +330,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                   canHover
                   type="invite-to-podium"
                   className={isOnPodium ? 'podium' : 'no_podium'}
-                  style={{ color: '#357BF6' }}
+                  style={{ color: COLOR_RULES.activeColor }}
                   size={22}
                   onClick={() => onOffPodiumClick(uid)}
                 />
@@ -343,7 +346,11 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
               <span>
                 <SvgImg
                   type="no-authorized"
-                  style={{ color: whiteboardGranted ? '#357BF6' : '#7B88A0' }}
+                  style={{
+                    color: whiteboardGranted
+                      ? COLOR_RULES.activeColor
+                      : COLOR_RULES.deactiveColor,
+                  }}
                   onClick={() => onWhiteboardClick(uid)}
                   size={22}
                   canHover
@@ -361,7 +368,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                     onSendStar(uid);
                   }}
                   size={22}
-                  style={{ color: '#7B88A0' }}
+                  style={{ color: COLOR_RULES.activeColor }}
                 />
               </span>
             </Tooltip>
