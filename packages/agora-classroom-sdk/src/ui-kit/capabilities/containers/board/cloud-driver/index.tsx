@@ -1,45 +1,19 @@
-import { useBoardContext, mapFileType, PPTKind, useCloudDriveContext } from 'agora-edu-core';
-import { EduLogger } from 'agora-rte-sdk';
-import MD5 from 'js-md5';
+import { useBoardContext, useCloudDriveContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useRef } from 'react';
-import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Draggable from 'react-draggable';
-import { BehaviorSubject } from 'rxjs';
-import { Button, formatFileSize, Icon, Loading, Modal, Row, TabPane, Tabs, Toast, transI18n } from '~ui-kit';
+import { Icon, TabPane, Tabs, transI18n } from '~ui-kit';
 import { DownloadContainer } from './download';
 import { StorageContainer } from './storage';
-import { UploadContainer } from './upload';
 import { useUIStore } from '@/infra/hooks/'
-
-export const calcUploadFilesMd5 = async (file: File) => {
-  return new Promise(resolve => {
-    const time = new Date().getTime();
-    const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(file); //计算文件md5
-    fileReader.onload = async () => {
-      const md5Str = MD5(fileReader.result);
-      const et = new Date().getTime();
-      resolve(md5Str);
-    };
-  });
-}
-
-export interface uploadFileInfoProps {
-  iconType: any,
-  fileName: string,
-  fileSize: string,
-  uploadComplete: boolean,
-}
+import { PersonalStorageContainer } from './personal';
 
 export type CloudDriveContainerProps = {
   onClose: () => void,
   onDelete?: (fileName: string) => void;
 }
-
 
 export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer(({id}: any) => {
   const {
@@ -48,56 +22,12 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
   } = useBoardContext()
 
   const {
-    openCloudResource,
-    refreshCloudResources,
-    cancelUpload,
-    removeMaterialList,
-    doUpload,
-  } = useCloudDriveContext()
-
-  const {
-    checked,
     removeDialog
   } = useUIStore()
 
-  const checkList$ = new BehaviorSubject<string[]>([])
-
-  const [checkedList, updateList] = useState<string[]>([])
-
-  const fileRef = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    checkList$.subscribe({
-      next: (ids: string[]) => {
-        updateList(ids)
-      }
-    })
-    return () => {
-      checkList$.unsubscribe()
-    }
-  }, [])
-
-  const captureCheckedItems = (items: string[]) => {
-    checkList$.next(items)
-  }
-
-  const [showUploadModal, setShowUploadModal] = useState<boolean>(false)
-  const [showUploadToast, setShowUploadToast] = useState<boolean>(false)
-  const [uploadFileInfo, setUploadFileInfo] = useState<uploadFileInfoProps>({
-    iconType: '',
-    fileName: '',
-    fileSize: '',
-    uploadComplete: false,
-  })
-  const [currentProgress, setCurrentProgress] = useState<number>(0)
-
-  const onCancel = useCallback(() => {
-    if (room) {
-      const tool = room.state.memberState.currentApplianceName
-      setTool(tool)
-    }
-    removeDialog(id)
-  }, [room])
+  const {
+    refreshCloudResources,
+  } = useCloudDriveContext()
 
   const [activeKey, setActiveKey] = useState<string>('1')
 
@@ -111,106 +41,14 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     setActiveKey(key)
   }
 
-  const showToastFn = () => {
-    setShowUploadModal(false)
-    setShowUploadToast(true)
-    setTimeout(() => {
-      setShowUploadToast(false)
-    }, 1000)
-  }
-
-  const handleUpload = async (evt: any) => {
-
-    setUploadFileInfo({
-      iconType: '',
-      fileName: '',
-      fileSize: '',
-      uploadComplete: false,
-    })
-    setCurrentProgress(0)
-
-    const file = evt.target.files[0]
-    const md5 = await calcUploadFilesMd5(file)
-    const resourceUuid = MD5(`${md5}`)
-    const name = file.name
-    const ext = file.name.split(".").pop()
-    // hideToast()
-    const supportedFileTypes = ['bmp', 'jpg', 'png', 'gif', 'pdf', 'pptx', 'mp3', 'mp4', 'doc', 'docx']
-
-    const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
-    const isNeedConverting = needConvertingFile.includes(ext)
-    const needDynamicFileType = ['pptx']
-    const isDynamic = needDynamicFileType.includes(ext)
-    const payload = {
-      file: file,
-      fileSize: file.size,
-      ext: ext,
-      resourceName: name,
-      resourceUuid: resourceUuid,
-      converting: isNeedConverting,
-      kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
-      onProgress: async (evt: any) => {
-        const { progress, isTransFile = false, isLastProgress = false } = evt;
-        const parent = Math.floor(progress * 100)
-        setCurrentProgress(parent)
-
-        if (isTransFile) {
-          setUploadFileInfo({
-            ...uploadFileInfo,
-            iconType: 'format-' + mapFileType(ext),
-            fileName: name,
-            uploadComplete: true,
-          })
-        }
-
-        if (isLastProgress && parent === 100) {
-          showToastFn()
-        }
-      },
-      roomToken: room.roomToken
-      // pptConverter: boardClient.client.pptConverter(boardStore.room.roomToken)
+  const onCancel = React.useCallback(() => {
+    if (room) {
+    const tool = room.state.memberState.currentApplianceName
+    setTool(tool)
     }
-    if (ext === 'pptx') {
-      EduLogger.info("upload dynamic pptx")
-    }
-    // TODO: 渲染UI
-    setUploadFileInfo({
-      ...uploadFileInfo,
-      iconType: 'format-' + mapFileType(ext),
-      fileName: name,
-      fileSize: formatFileSize(file.size),
-      uploadComplete: false,
-    })
-    setShowUploadModal(true)
-    try {
-      await doUpload(payload)
-      fileRef.current!.value = ""
-    } catch (e) {
-      fileRef.current!.value = ""
-      throw e
-    }
-
-  }
-
-  const handleDelete = async () => {
-    await cancelUpload();
-    await removeMaterialList(checkList$.getValue());
-    setShowUploadModal(false);
-  }
-
-  const triggerUpload = () => {
-    if (fileRef.current) {
-      fileRef.current.click()
-    }
-  }
-
-  const handleClick = async (id: string, type: string) => {
-    if (type === 'open') {
-      await openCloudResource(id)
-      return;
-    }
-  };
-
+    removeDialog(id)
+  }, [id, removeDialog, room, setTool])
+  
   return (
     <Draggable>
       <div 
@@ -226,44 +64,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
             <StorageContainer />
           </TabPane>
           <TabPane tab={transI18n('cloud.personalResources')} key="2">
-            <Row style={{paddingLeft:19}} className="btn-group margin-gap">
-              <input ref={fileRef} id="upload-image" accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
-                onChange={handleUpload} type="file">
-              </input>
-              <Button type="primary" onClick={triggerUpload}>
-                {transI18n('cloud.upload')}
-              </Button>
-              <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
-              {showUploadToast ? (<Toast closeToast={()=>{}} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
-              {showUploadModal ? (
-                <Modal
-                  title={transI18n('cloud.upload')}
-                  width={450}
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                  closable={false}
-                  onCancel={() => { setShowUploadModal(false) }}
-                >
-                  <Loading
-                    onClick={handleClick}
-                    hasLoadingGif={false}
-                    noCloseBtn={true}
-                    uploadItemList={
-                      [
-                        { ...uploadFileInfo, currentProgress }
-                      ]
-                    }
-                  />
-                </Modal>
-
-              ) : ""}
-
-            </Row>
-            <UploadContainer handleUpdateCheckedItems={captureCheckedItems} />
+            <PersonalStorageContainer />
           </TabPane>
           <TabPane tab={transI18n('cloud.downloadResources')} key="3">
             <DownloadContainer />
@@ -273,3 +74,69 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
     </Draggable>
   )
 })
+
+
+
+
+
+interface PaginationProps {
+  style?: any,
+  className?: string[],
+  totalPages: number,
+  onChange: (pageIdx: number) => void
+}
+
+export const Pagination: React.FC<PaginationProps> = ({
+  totalPages,
+  onChange
+}) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const maxVisiblePages = 10;
+  const cls = 'pagination';
+  const changeActiveIdx = (pageIdx: number) => {
+    if(pageIdx !== activeIdx) {
+      setActiveIdx(pageIdx);
+      onChange(pageIdx)
+    }
+  }
+  
+
+    let rightEdge = Math.min(activeIdx + maxVisiblePages / 2, totalPages - 1)
+    let leftEdge = Math.max(activeIdx - (maxVisiblePages / 2 - 1), 0)
+
+    // get initial windowSize
+    let windowSize = (rightEdge - leftEdge) + 1
+
+    if((rightEdge === totalPages - 1 || leftEdge === 0) && windowSize < maxVisiblePages) {
+      // need more page elements
+      if(rightEdge === totalPages - 1) {
+        // if right edge reaches
+        leftEdge = Math.max(0, leftEdge - (maxVisiblePages - windowSize))
+      }
+      if(leftEdge === 0) {
+        rightEdge = Math.min(totalPages - 1, rightEdge + (maxVisiblePages - windowSize))
+      }
+    }
+
+    // updated windowSize
+    windowSize = (rightEdge - leftEdge) + 1
+    return totalPages ? (
+      <div className={cls}>
+        {
+          totalPages > 1 ? 
+            <div className={activeIdx !== 0 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx - 1)}}>{transI18n("cloud.prev")}</div>
+            : null
+        }
+        {
+          totalPages === 0 ? null :
+          Array(windowSize).fill(0).map((_,i) => {
+            const pageIdx = leftEdge + i
+            return (
+              <div key={`paging-${i}`} onClick={() => {changeActiveIdx(pageIdx)}} className={pageIdx === activeIdx ? 'active':''}>{pageIdx + 1}</div>
+            )
+          })
+        }
+        {totalPages > 1 ? <div className={activeIdx !== totalPages - 1 ? "" : "invisible"} onClick={() => {changeActiveIdx(activeIdx + 1)}}>{transI18n("cloud.next")}</div> : null}
+      </div>
+    ) : null
+}

@@ -7,6 +7,8 @@ export const zh = {
   'disabled': '禁用',
   'whiteboard': {
     'converting': '转换中',
+    'disconnect-img-alt': '白板未连接',
+    'disconnect-btn': '重新连接'
   },
   'screen_share': '屏幕共享',
   'kick': {
@@ -266,6 +268,9 @@ export const zh = {
     'downloading': '下载中',
     'pause': '暂停',
     'upload_success': '上传成功',
+    'search': '搜索',
+    'prev': '< 上一页',
+    'next': '下一页 >'
   },
   'media': {
     'camera': '摄像头',

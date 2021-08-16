@@ -106,7 +106,7 @@ input.indeterminate:indeterminate {
 
 .agora-board-resources {
   width: 606px;
-  height: 540px;
+  height: 580px;
   background: #FFFFFF;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
@@ -212,4 +212,32 @@ input.indeterminate:indeterminate {
 .cloud-wrap .table-container-upload .placeholder {
   position: relative;
   top: -47px;
+}
+
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination>div {
+  padding: 3px 10px;
+  color: #7D8798;
+  border-radius: 5px;
+  border: 1px solid #E3E3EC;
+  margin: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pagination>div.active {
+  background: #5571FF;
+  color: white!important;
+  border: 1px solid #5571FF;
+}
+
+.pagination>div.invisible {
+  opacity: 0;
+  pointer-events: none;
 }

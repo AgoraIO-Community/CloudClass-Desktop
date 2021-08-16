@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useBoardContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -17,15 +17,28 @@ import { useUIStore } from '@/infra/hooks'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
+import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
 
 
 export const MidClassScenario = observer(() => {
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const { 
+    joinRoom,
+    roomProperties,
+    isJoiningRoom,
+    joinRoomRTC,
+    roomInfo,
+    prepareStream,
+  } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
-    onShutdownAppPlugin
+    onShutdownAppPlugin,
+    activeAppPlugins
   } = useAppPluginContext()
+
+  const {
+    joinBoard
+  } = useBoardContext()
 
 
   useLayoutEffect(() => {
@@ -42,7 +55,13 @@ export const MidClassScenario = observer(() => {
       onLaunchAppPlugin('io.agora.answer')
     } else if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 0) {
       // 关闭答题器
-      onShutdownAppPlugin('io.agora.answer')
+      onShutdownAppPlugin('io.agora.answer', () => {
+        let app = activeAppPlugins.find(p => p.appIdentifier === 'io.agora.answer') as AgoraExtAppAnswer
+        if(!app) {
+          return true
+        }
+        return app.store?.status !== 'config' || roomInfo.userRole === EduRoleTypeEnum.student
+      })
     }
 
     if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 1) {
@@ -69,8 +88,13 @@ export const MidClassScenario = observer(() => {
 
   const [chatCollapse, setChatCollapse] = useState(false)
 
-  useEffectOnce(() => {
-    joinRoom()
+  useEffectOnce(async () => {
+    await joinRoom()
+    joinBoard()
+    if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+      await prepareStream()
+    }
+    joinRoomRTC()
   })
 
   const cls = classnames({

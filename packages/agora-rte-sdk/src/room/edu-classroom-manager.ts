@@ -216,8 +216,9 @@ export class EduClassroomManager {
       this.data.BatchUpdateData()
       this._userService = new EduUserService(this)
       EduLogger.debug(`join classroom ${this.roomUuid} success`)
-      return joinRoomData;
+      // return joinRoomData;
     }
+    return joinRoomData;
   }
 
   async leave() {

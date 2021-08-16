@@ -6,6 +6,12 @@ import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import { truncate } from 'lodash';
+import { ClientRoleType } from 'agora-electron-sdk/types/Api/native_type';
+
+export enum DefaultRole {
+  audience = 2,
+  host = 1,
+}
 
 export class CEFVideoEncoderConfiguration {
   /**
@@ -347,7 +353,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
     }
     console.log("[electron] video encoder config ", JSON.stringify(config))
-    this.client.setClientRole(2)
+    this.client.setClientRole(this.currentRole as ClientRoleType)
     //TODO: set cef client log path
     if (this._cefClient) {
       // window.getCachePath((path: string) => {
@@ -957,7 +963,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = true;
-      this.client.setClientRole(1)
+      // this.client.setClientRole(1)
       return
     } catch(err) {
       throw GenericErrorWrapper(err)
@@ -983,19 +989,19 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
 
   async leave(): Promise<any> {
     try {
-      let ret = this.client.setClientRole(2)
+      // let ret = this.client.setClientRole(2)
       // if (ret < 0) {
       //   throw GenericErrorWrapper({
       //     message: `setClientRole failure`,
       //     code: ret
       //   })
       // }
-      EduLogger.info("electron.setClientRole ", ret)
+      // EduLogger.info("electron.setClientRole ", ret)
       if (this.joined === false) {
         EduLogger.info("electron.leave already left")
         return
       }
-      ret = this.client.leaveChannel()
+      const ret = this.client.leaveChannel()
       EduLogger.info("electron.already leaveChannel, ret ", ret)
       if (ret < 0) {
         throw GenericErrorWrapper({
@@ -1004,6 +1010,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = false
+      this.currentRole = DefaultRole.audience
       return
     } catch(err) {
       throw GenericErrorWrapper(err)
@@ -1213,6 +1220,37 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     } catch(err) {
       throw GenericErrorWrapper(err)
     }
+  }
+
+  roleState: number = 2
+
+  currentRole: number = 2
+
+  setRoleState (newState: number) {
+    const oldState = this.roleState
+    if (oldState !== newState) {
+      this.roleState = this.setClientRole(newState)
+    }
+  }
+
+  private setClientRole(roleState: number) {
+    switch(roleState) {
+      case 2: {
+        const ret = this.client.setClientRole(2)
+        if (ret >= 0) {
+          this.currentRole = 2
+        }
+        return this.currentRole
+      }
+      case 1: {
+        const ret = this.client.setClientRole(1)
+        if (ret >= 0) {
+          this.currentRole = 1
+        }
+        return this.currentRole
+      }
+    }
+    return this.currentRole
   }
 
   async publish(): Promise<any> {

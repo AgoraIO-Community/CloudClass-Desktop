@@ -2,7 +2,6 @@ import { ApiBase } from './base';
 import { GenericErrorWrapper } from "agora-rte-sdk";
 import { get } from "lodash";
 
-
 export enum EnumBoardState {
   follow = 1,
   unfollow = 0,

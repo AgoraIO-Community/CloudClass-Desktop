@@ -66,7 +66,9 @@ export class RTMWrapper extends EventEmitter {
   }
 
   get sessionId(): string {
-    return (this.client as any).context.sid;
+    // TODO_REPORT: sessionId is nullable
+    return '';
+    // return (this.client as any).context.sid;
   }
 
   private releaseChannels() {

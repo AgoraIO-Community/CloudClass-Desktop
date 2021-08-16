@@ -391,7 +391,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
     //@ts-ignore
     this.agoraWebSdk.setParameter(paramsConfig)
     this.streamCoordinator?.on('user-published', async (user, mediaType) => {
-      EduLogger.info("user-published", user)
+      //@ts-ignore
+      EduLogger.info(`Agora-SDK streamCoordinator ${client._clientId} user-published `, user, mediaType)
       this.fire('user-published', {
         user,
         mediaType,
@@ -399,7 +400,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
     })
     client.on('user-published', async (user, mediaType) => {
-      EduLogger.info("user-published ", user, mediaType)
+      //@ts-ignore
+      EduLogger.info(`Agora-SDK rtc ${client._clientId} user-published `, user, mediaType)
       if (user.uid !== this.localScreenUid) {
         if (mediaType === 'audio') {
           // await client.subscribe(user, 'audio')
@@ -421,6 +423,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       }
     })
     this.streamCoordinator?.on('user-unpublished', async (user, mediaType) => {
+      //@ts-ignore
+      EduLogger.info(`Agora-SDK streamCoordinator ${client._clientId} user-unpublished `, user, mediaType)
       this.fire('user-unpublished', {
         user,
         mediaType,
@@ -428,6 +432,8 @@ export class AgoraWebRtcWrapper extends EventEmitter implements IWebRTCWrapper {
       })
     })
     client.on('user-unpublished', (user, mediaType) => {
+      //@ts-ignore
+      EduLogger.info(`Agora-SDK rtc ${client._clientId} user-unpublished `, user, mediaType)
       if (user.uid === this.localScreenUid) return
       this.streamCoordinator?.removeRtcStream(user, mediaType)
       // this.fire('user-unpublished', {

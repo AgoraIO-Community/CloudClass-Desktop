@@ -115,14 +115,16 @@ export const usePretestContext = (): PretestContext => {
   const [cameraError, setCameraError] = useState<boolean>(false)
   const [microphoneError, setMicrophoneError] = useState<boolean>(false)
 
-  const installPretest = (onError: DeviceErrorCallback) => {
+  const installPretest = (onError: DeviceErrorCallback, remove: boolean = true) => {
     const removeEffect = pretestStore.onDeviceTestError(onError)
     pretestStore.init({ video: true, audio: true })
     pretestStore.openTestCamera()
     pretestStore.openTestMicrophone({ enableRecording: true })
     return () => {
-      pretestStore.closeTestCamera()
-      pretestStore.closeTestMicrophone()
+      if (remove) {
+        pretestStore.closeTestCamera()
+        pretestStore.closeTestMicrophone()
+      }
       removeEffect()
     }
   }
@@ -149,7 +151,8 @@ export const usePretestContext = (): PretestContext => {
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
-    pretestNoticeChannel: appStore.pretestNotice$
+    pretestNoticeChannel: appStore.pretestNotice$,
+    closeRecordingTest: pretestStore.closeRecordingTest
   }
 }
 
@@ -197,7 +200,21 @@ export const useRoomContext = (): RoomContext => {
     destroyRoom,
   } = useCoreContext()
 
+  const pretestStore = usePretestStore()
+
   const sceneStore = useSceneStore()
+
+  const installMediaDevice = async (onError: DeviceErrorCallback) => {
+    pretestStore.onDeviceTestError(onError)
+    await pretestStore.init({ video: true, audio: true })
+    pretestStore.openTestCamera()
+    pretestStore.openTestMicrophone({ enableRecording: true })
+    // return () => {
+    //   pretestStore.closeTestCamera()
+    //   pretestStore.closeTestMicrophone()
+    //   removeEffect()
+    // }
+  }
 
   const {
     roomInfo,
@@ -210,7 +227,11 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    joinRoomRTC,
+    leaveRoomRTC,
+    prepareStream,
+    rtcJoined,
   } = useSceneStore()
 
   const {
@@ -269,7 +290,13 @@ export const useRoomContext = (): RoomContext => {
     flexRoomProperties: flexProperties,
     setCarouselState,
     startCarousel,
-    stopCarousel
+    stopCarousel,
+    joinRoomRTC,
+    leaveRoomRTC,
+    rtcJoined,
+    prepareStream,
+    installMediaDevice,
+    classState
   }
 }
 
@@ -359,7 +386,9 @@ export const useBoardContext = (): BoardContext => {
     showBoardTool,
     isBoardScreenShare,
     setWhiteGlobalState,
-    globalState$
+    globalState$,
+    boardConnectionState,
+    joinBoard
   } = useBoardStore()
 
   const {
@@ -435,7 +464,9 @@ export const useBoardContext = (): BoardContext => {
     doUpload: handleUpload,
     publicResources,
     setWhiteGlobalState,
-    whiteGlobalState: globalState$
+    whiteGlobalState: globalState$,
+    boardConnectionState,
+    joinBoard
   }
 }
 
@@ -454,7 +485,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     handleUpload,
     publicResources,
     upsertResources,
-    allResources
+    allResources,
+    fetchPersonalResources
   } = useBoardStore()
 
 
@@ -472,7 +504,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     publicResources: allResources.filter((item: any) => item.access === 'public'),
     doUpload: handleUpload,
     allResources,
-    upsertResources
+    upsertResources,
+    fetchPersonalResources
   }
 }
 

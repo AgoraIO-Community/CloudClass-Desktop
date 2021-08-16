@@ -7,6 +7,8 @@ export const en = {
   'disabled': 'Disabled',
   'whiteboard': {
     'converting': 'Converting',
+    'disconnect-img-alt': 'Whiteboard Disconnected',
+    'disconnect-btn': 'Connect Again'
   },
   'screen_share': 'Screen Share',
   'kick': {
@@ -270,6 +272,9 @@ export const en = {
     'downloading': 'Download',
     'pause': 'Pause',
     'upload_success': 'Upload Success',
+    'search': 'Search',
+    'prev': '< Prev',
+    'next': 'Next >'
   },
   'media': {
     'camera': 'Camera',

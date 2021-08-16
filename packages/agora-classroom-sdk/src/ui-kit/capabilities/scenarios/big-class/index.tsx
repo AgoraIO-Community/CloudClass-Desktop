@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useWidgetContext, useAppPluginContext, usePretestContext, useStreamListContext, useBoardContext } from 'agora-edu-core'
 import { NavigationBar } from '~capabilities/containers/nav'
 import { ScreenSharePlayerContainer } from '~capabilities/containers/screen-share-player'
 import { WhiteboardContainer } from '~capabilities/containers/board'
@@ -9,9 +9,8 @@ import { DialogContainer } from '~capabilities/containers/dialog'
 import { LoadingContainer } from '~capabilities/containers/loading'
 import { VideoMarqueeStudentContainer, VideoPlayerTeacher } from '~capabilities/containers/video-player'
 import { HandsUpContainer } from '~capabilities/containers/hands-up'
-import { RoomChat } from '~capabilities/containers/room-chat'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useLayoutEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { useUIStore } from '@/infra/hooks'
@@ -21,7 +20,14 @@ import { get } from 'lodash'
 
 export const BigClassScenario = observer(() => {
 
-  const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext()
+  const {
+    joinRoom,
+    joinRoomRTC,
+    roomProperties,
+    isJoiningRoom,
+    roomInfo,
+    prepareStream,
+  } = useRoomContext()
 
   const {
     onLaunchAppPlugin,
@@ -66,9 +72,21 @@ export const BigClassScenario = observer(() => {
 
   const { chatCollapse }  = useUIStore()
 
-  useEffectOnce(() => {
-    joinRoom()
+  const {
+    joinBoard
+  } = useBoardContext()
+
+  useEffectOnce(async () => {
+    await joinRoom()
+    // if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
+    //   prepareStream()
+    // }
+    joinRoomRTC()
+    joinBoard()
   })
+
+  //发送流调用 joinRoomRTC();
+  //停止发送调用 leaveRoomRTC();
 
   const cls = classnames({
     'edu-room': 1,
