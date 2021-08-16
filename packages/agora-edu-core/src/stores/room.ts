@@ -1344,6 +1344,8 @@ export class RoomStore extends SimpleInterval {
               JSON.stringify(evt),
             );
             if (evt.type === 'main') {
+              // todo 当前移出本地流，说明已经不是主播了，则RTC角色应设置为audience
+              await this.appStore.mediaService.setRtcRole('audience');
               this.sceneStore._cameraEduStream = undefined;
               await this.sceneStore.muteLocalCamera();
               await this.sceneStore.muteLocalMicrophone();
@@ -1369,8 +1371,6 @@ export class RoomStore extends SimpleInterval {
             BizLogger.error(`${error}`);
           }
         });
-        // todo 当前移出本地流，说明已经不是主播了，则RTC角色应设置为audience
-        await this.appStore.mediaService.setRtcRole('audience');
       });
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
