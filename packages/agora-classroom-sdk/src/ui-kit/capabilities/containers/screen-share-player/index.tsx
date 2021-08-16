@@ -3,6 +3,7 @@ import { RendererPlayer } from '~utilities/renderer-player';
 // import { IconButton, Icon } from '~ui-kit'
 // import { useCallback } from 'react'
 import { useBoardContext, useScreenShareContext } from 'agora-edu-core';
+import classnames from 'classnames';
 
 export const ScreenSharePlayerContainer = observer(() => {
   const {
@@ -17,8 +18,14 @@ export const ScreenSharePlayerContainer = observer(() => {
   //     await startOrStopSharing()
   // }, [startOrStopSharing])
 
-  return isCurrentScenePathScreenShare ? (
-    <div className="screen-share-player-container">
+  // isCurrentScenePathScreenShare 通过display样式控制，优化黑屏问题，之前三目的方式渲染组件，导致组件会在mounted和unmounted切换
+  const cls = classnames({
+    [`screen-share-player-container`]: 1,
+    [`screen-share-active`]: isCurrentScenePathScreenShare,
+  });
+
+  return (
+    <div className={cls}>
       {screenShareStream && screenShareStream.renderer ? (
         <RendererPlayer
           fitMode={true}
@@ -33,5 +40,5 @@ export const ScreenSharePlayerContainer = observer(() => {
         />
       ) : null}
     </div>
-  ) : null;
+  );
 });
