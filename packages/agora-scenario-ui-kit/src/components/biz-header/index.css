@@ -6,6 +6,7 @@
   padding: 0 15px 0 8px;
   border-top: 0px;
   border: 1px solid #ececf1;
+  flex-shrink: 0;
 }
 
 .biz-header-title-wrap {
