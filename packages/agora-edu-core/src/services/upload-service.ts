@@ -105,6 +105,7 @@ export type UploadConversionType = {
   preview: boolean;
   scale: number;
   outputFormat: string;
+  pack: boolean;
 };
 
 export type FetchStsTokenResult = {
@@ -349,6 +350,7 @@ export class UploadService extends ApiBase {
             type: payload.ext === 'pptx' ? 'dynamic' : 'static',
             preview: false,
             scale: 1.2,
+            pack: true,
             outputFormat: 'png',
           }
         : undefined,
