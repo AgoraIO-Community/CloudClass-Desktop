@@ -58,16 +58,16 @@ export const LaunchPage = observer(() => {
         });
         // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
         // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-        const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`;
-        if (appCertificate) {
-          launchOption.rtmToken = RtmTokenBuilder.buildToken(
-            `${REACT_APP_AGORA_APP_ID}`,
-            appCertificate,
-            launchOption.userUuid,
-            RtmRole.Rtm_User,
-            0,
-          );
-        }
+        // const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`;
+        // if (appCertificate) {
+        //   launchOption.rtmToken = RtmTokenBuilder.buildToken(
+        //     `${REACT_APP_AGORA_APP_ID}`,
+        //     appCertificate,
+        //     launchOption.userUuid,
+        //     RtmRole.Rtm_User,
+        //     0,
+        //   );
+        // }
 
         launchOption.extApps = [
           new AgoraExtAppCountDown(launchOption.language as any),

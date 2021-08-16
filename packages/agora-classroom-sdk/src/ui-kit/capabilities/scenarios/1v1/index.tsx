@@ -22,9 +22,6 @@ import { Aside, Content, Layout } from '~components/layout';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 
 export const OneToOneScenario = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } =
-    useCloudDriveContext();
-
   const { isFullScreen } = useGlobalContext();
 
   const { widgets } = useWidgetContext();
@@ -94,9 +91,7 @@ export const OneToOneScenario = observer(() => {
           )}
         </Aside>
       </Layout>
-      <LoadingPptContainer
-        initCourseWareProgress={initCourseWareProgress}
-        initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
+      <LoadingPptContainer />
       <DialogContainer />
       <LoadingContainer loading={isJoiningRoom} />
       {/* <ToastContainer /> */}
