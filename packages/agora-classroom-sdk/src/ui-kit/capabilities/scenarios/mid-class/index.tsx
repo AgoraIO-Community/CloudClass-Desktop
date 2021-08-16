@@ -64,6 +64,7 @@ export const MidClassScenario = observer(() => {
   const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
   const orgName = get(roomProperties, 'im.huanxin.orgName')
   const appName = get(roomProperties, 'im.huanxin.appName')
+  const privateChatRoom = get(roomProperties, 'im.huanxin.privateChatRoom')
 
   const { roomInfo : {userRole}} = useRoomContext()
 
@@ -103,7 +104,7 @@ export const MidClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="mid-class-teacher"/>
           </div>
-          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
+          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName, privateChatRoom}}/> : null}
           {/* <Widget className="chat-panel chat-border" widgetComponent={chatWidget}/> */}
         </Aside>
       </Layout>

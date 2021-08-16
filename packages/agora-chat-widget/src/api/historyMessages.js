@@ -5,27 +5,33 @@ import { HISTORY_COUNT } from '../components/MessageBox/constants'
 import { getQAReadMsg } from './qaReadMsg'
 import _ from 'lodash'
 
-export const getHistoryMessages = async (isQA) => {
+let deleteMsgId = [];
+export const getHistoryMessages = async (roomId) => {
     let stop = false;
-    let counts = HISTORY_COUNT;
-    store.dispatch(loadGif(true))
-    const roomId = store.getState().extData.chatroomId;
+    const publicRoomId = store.getState().extData.chatroomId;
+    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId
+    if (publicRoomId === roomId) {
+        store.dispatch(loadGif(true))
+    }
     var options = {
         queue: roomId,
         isGroup: true,
         count: HISTORY_COUNT,
         success: function (res) {
-            if (res.length < HISTORY_COUNT) {
+            console.log('history>>>', res)
+            store.dispatch(loadGif(false))
+            if (publicRoomId === roomId && res.length < HISTORY_COUNT) {
                 store.dispatch(moreHistory(false))
+            }
+            if (privateRoomId === roomId && res.length < HISTORY_COUNT) {
+                console.log('stop>>>>>');
                 stop = true;
             }
             const historyMsg = _.reverse(res)
-            let deleteMsgId = [];
             historyMsg.map((val, key) => {
                 const { ext: { msgtype, asker, msgId } } = val
-                const { time, action, id } = val
-                if (msgtype === 0) {
-                    counts--;
+                const { time, action, id, to } = val
+                if (to === publicRoomId) {
                     if (action == "DEL") {
                         deleteMsgId.push(msgId)
                         store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
@@ -34,7 +40,7 @@ export const getHistoryMessages = async (isQA) => {
                     } else {
                         store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
                     }
-                } else if ([1, 2].includes(msgtype)) {
+                } else if (to === privateRoomId) {
                     let readMsgId = getQAReadMsg()[asker] || 0;
                     if (readMsgId < id) {
                         store.dispatch(qaMessages(val, asker, { showNotice: true, isHistory: true, unRead: true }, time))
@@ -43,20 +49,17 @@ export const getHistoryMessages = async (isQA) => {
                     }
                 }
             })
-
-
         },
         fail: function (err) {
             stop = true;
             console.log('漫游失败', err);
         }
     }
-    if (!isQA) {
-        while (counts > 0 && !stop) {
+    if (privateRoomId === roomId) {
+        while (!stop) {
             await WebIM.conn.fetchHistoryMessages(options)
         }
     } else {
         await WebIM.conn.fetchHistoryMessages(options)
     }
-    store.dispatch(loadGif(false))
 }

@@ -1,34 +1,44 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
-import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner } from '../redux/aciton'
+import { roomInfo, roomNotice, roomAdmins, roomUsers, roomMuteUsers, roomAllMute, loadGif, userMute, roomOwner, joinRoomState } from '../redux/aciton'
 import store from '../redux/store'
 import { setUserInfo, getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMessages'
 import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 
 // 加入聊天室
-export const joinRoom = async () => {
-    const roomId = store.getState().extData.chatroomId;
+export const joinRoom = async (roomId) => {
+    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
     const userUuid = store.getState().extData.userUuid;
     const roleType = store.getState().extData.roleType;
+    WebIM.conn.mr_cache = [];
     let options = {
         roomId: roomId,   // 聊天室id
-        message: 'reason'   // 原因（可选参数）
-    }
-    await setUserInfo();
-    WebIM.conn.mr_cache = [];
-    setTimeout(() => {
-        WebIM.conn.joinChatRoom(options).then((res) => {
-            message.success('已成功加入聊天室！');
-            setTimeout(() => {
-                message.destroy();
-            }, 3000);
-            if (Number(roleType) === 2 || Number(roleType) === 0) {
-                isChatRoomWhiteUser(roomId, userUuid)
+        message: 'reason',   // 原因（可选参数）
+        success: (res) => {
+            if (res.data.id === privateRoomId) {
+                getHistoryMessages(options.roomId);
+                return
+            } else {
+                store.dispatch(joinRoomState('join_the_success'))
+                message.success('已成功加入聊天室！');
+                setTimeout(() => {
+                    message.destroy();
+                }, 3000);
+                if (Number(roleType) === 2 || Number(roleType) === 0) {
+                    isChatRoomWhiteUser(roomId, userUuid)
+                }
+                getRoomInfo(options.roomId);
+                getHistoryMessages(options.roomId);
             }
-            getRoomInfo(options.roomId);
-            getHistoryMessages(false);
-        })
+        },
+        error: () => {
+            store.dispatch(joinRoomState('join_the_failure'))
+        }
+    }
+    setTimeout(() => {
+        store.dispatch(joinRoomState('join_in'))
+        WebIM.conn.joinChatRoom(options)
     }, 500);
 };
 

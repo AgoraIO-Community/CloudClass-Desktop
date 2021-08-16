@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector } from "react-redux";
-import { Button, Input, message ,Checkbox} from 'antd'
-import { SmileOutlined, CloseCircleOutlined,UpOutlined } from '@ant-design/icons';
+import { Button, Input, message, Checkbox } from 'antd'
+import { SmileOutlined, CloseCircleOutlined, UpOutlined } from '@ant-design/icons';
 import { Flex, Text } from 'rebass'
 import WebIM from '../../utils/WebIM'
 import store from '../../redux/store'
@@ -36,6 +36,9 @@ const ShowEomji = ({ getEmoji, hideEmoji }) => {
 
 const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const roomId = useSelector((state) => state.room.info.id);
+    let privateRoomId = useSelector((state) => state?.extData?.privateChatRoom?.chatRoomId) || ''
+
+    // const privateRoomId = useSelector((state) => state?.extData.privateChatRoom.chatRoomId)
     const teacher = useSelector(state => state.loginInfo.ext)
     const isAllMute = useSelector(state => state.isRoomAllMute)
     // 是否开启了提问模式
@@ -57,9 +60,42 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     const [isShow, setIsShow] = useState(false);
     const [showText, setShowText] = useState('');
     const [sendBtnDisabled, setSendBtnDisabled] = useState(true);
-    const [checkValue,setCheckValue] = useState(true)
-    const [showCheck,setShowCheck] = useState(false)
+    const [checkValue, setCheckValue] = useState(true)
+    const [showCheck, setShowCheck] = useState(false)
     const isElectron = window.navigator.userAgent.indexOf("Electron") !== -1;
+
+    // 整体都要改
+    //  消息类型 0普通消息，1提问消息，2回答消息
+    let msgType = 0;
+    //  消息中的提问用户名
+    let requestUser = '';
+    //  当前登陆ID 
+    let loginId = useSelector(state => state.loginName);
+    //  从当前登陆用户取的属性头像
+    let avatarUrl = userInfo.avatarurl;
+    //  从当前登陆用户取的属性昵称
+    let userNickName = userInfo.nickname;
+    let toRoomid = roomId
+    //  isTool 是控制是否显示图片标签
+    if (activeKey === "QA") {
+        toRoomid = privateRoomId
+        msgType = 2;
+        requestUser = qaUser
+    }
+    if (isQa) {
+        toRoomid = privateRoomId
+        msgType = 1;
+        requestUser = qaUser || loginId
+    }
+    if (!userInfo.avatarurl) {
+        avatarUrl = msgAvatarUrl;
+    }
+    if (!userInfo.nickname) {
+        userNickName = '学生测试'
+    }
+
+
+
     if (isElectron) {
         const ipcRenderer = window.electron.ipcRenderer;
         const dataURLtoBlob = (dataurl) => {
@@ -91,36 +127,9 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     from: "screenShot",
                     imgsrc: dataURL
                 }
-                sendImgMessage(roomId, '', file)
+                sendImgMessage(toRoomid, '', file)
             }
         );
-    }
-
-
-    // 整体都要改
-    //  消息类型 0普通消息，1提问消息，2回答消息
-    let msgType = 0;
-    //  消息中的提问用户名
-    let requestUser = '';
-    //  当前登陆ID 
-    let loginId = useSelector(state => state.loginName);
-    //  从当前登陆用户取的属性头像
-    let avatarUrl = userInfo.avatarurl;
-    //  从当前登陆用户取的属性昵称
-    let userNickName = userInfo.nickname;
-    //  isTool 是控制是否显示图片标签
-    if (isTool) {
-        msgType = 2;
-        requestUser = qaUser
-    } else if (isQa) {
-        msgType = 1;
-        requestUser = qaUser || loginId
-    }
-    if (!userInfo.avatarurl) {
-        avatarUrl = msgAvatarUrl;
-    }
-    if (!userInfo.nickname) {
-        userNickName = '学生测试'
     }
 
     // 发送图片消息，及获取input 值
@@ -178,24 +187,14 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     }
 
     // 发送消息
-    const sendMessage = (roomId, content) => (e) => {
+    const sendMessage = (toRoomid, content) => (e) => {
         e.preventDefault();
-        console.log('sendBtnDisabled>>', sendBtnDisabled);
-        console.log('roomId>>', roomId, 'content>>', content);
-
+        if (content.match(/^\s*$/)) return
         // 禁止发送状态下 不允许发送
         if (sendBtnDisabled === true) {
             return false;
         }
 
-        // 消息为空不发送
-        if (content === '' || count > INPUT_SIZE) {
-            message.error(`消息内容不能为空且字符不能超过${INPUT_SIZE}！`)
-            setTimeout(() => {
-                message.destroy();
-            }, 2000);
-            return
-        }
         // 老师回复时必须选中提问学生才能发言
         if (msgType === 2 && requestUser === '') {
             message.error('请选择提问学生！')
@@ -209,7 +208,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         let msg = new WebIM.message('txt', id); // 创建文本消息
         let option = {
             msg: content,          // 消息内容
-            to: roomId,               // 接收消息对象(聊天室id)
+            to: toRoomid,               // 接收消息对象(聊天室id)
             chatType: 'chatRoom',            // 群聊类型设置为聊天室
             ext: {
                 msgtype: msgType,   // 消息类型
@@ -249,7 +248,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         WebIM.conn.send(msg.body);
     }
     // 发送图片
-    const sendImgMessage = (roomId, e, type) => {
+    const sendImgMessage = (toRoomid, e, type) => {
         var id = WebIM.conn.getUniqueId();                   // 生成本地消息id
         var msg = new WebIM.message('img', id);        // 创建图片消息
         let file = type ? type : WebIM.utils.getFileUrl(e.target)     // 将图片转化为二进制文件
@@ -264,7 +263,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                 var option = {
                     file: file,
                     length: '3000',                       // 视频文件时，单位(ms)
-                    to: roomId,
+                    to: toRoomid,
                     ext: {
                         msgtype: msgType,   // 消息类型
                         roomUuid: roomUuid,
@@ -329,10 +328,10 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
 
     // 点击截图
     const captureScreen = (e) => {
-        console.log('e>>>>',e)
+        console.log('e>>>>', e)
         e.preventDefault();
         let hideWindow = !checkValue;
-        window.electron && window.electron.ipcRenderer.send("shortcutcapture",{hideWindow});
+        window.electron && window.electron.ipcRenderer.send("shortcutcapture", { hideWindow });
     }
 
     // 禁言后，判断权限是否遮盖输入框
@@ -368,7 +367,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                                 {/* <Image src={icon_img} width='18px' background='#D3D6D8' ml='8px' /> */}
                                 <input
                                     id="uploadImage"
-                                    onChange={sendImgMessage.bind(this, roomId)}
+                                    onChange={sendImgMessage.bind(this, toRoomid)}
                                     type="file"
                                     ref={couterRef}
                                     style={{
@@ -380,13 +379,13 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                     {isTool && isElectron && <RcTooltip placement="top" overlay="截图">
                         <img src={iconScreen} onClick={captureScreen} className="chat-tool-item" />
                     </RcTooltip>}
-                    {isTool && isElectron && <UpOutlined className='icon-style' onClick={()=>setShowCheck(!showCheck)}/>}
+                    {isTool && isElectron && <UpOutlined className='icon-style' onClick={() => setShowCheck(!showCheck)} />}
                     {/* 截图功能选择 */}
-                    {isTool && isElectron && showCheck && 
-                    <div className='check-style'>
-                        <div className='check-mask' onClick={()=>setShowCheck(false)}></div>
-                        <Checkbox checked={checkValue} onChange={()=>setCheckValue(!checkValue)}><span style={{marginLeft:'5px'}}>不隐藏当前窗口</span></Checkbox>
-                    </div>}
+                    {isTool && isElectron && showCheck &&
+                        <div className='check-style'>
+                            <div className='check-mask' onClick={() => setShowCheck(false)}></div>
+                            <Checkbox checked={checkValue} onChange={() => setCheckValue(!checkValue)}><span style={{ marginLeft: '5px' }}>不隐藏当前窗口</span></Checkbox>
+                        </div>}
                 </Flex>
                 <div>
                     {/* 输入框中placeholder：
@@ -401,12 +400,12 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
                         autoFocus
                         value={content}
                         onClick={hideEmoji}
-                        onPressEnter={sendMessage(roomId, content)}
+                        onPressEnter={sendMessage(toRoomid, content)}
                     />
                 </div>
                 <Flex justifyContent='flex-end' className='btn-tool'>
                     <Text color="#626773" fontSize="12px">{count}/{INPUT_SIZE}</Text>
-                    <button disabled={sendBtnDisabled} onClick={sendMessage(roomId, content)} className="msg-btn">
+                    <button disabled={sendBtnDisabled} onClick={sendMessage(toRoomid, content)} className="msg-btn">
                         发送
                     </button>
                 </Flex>

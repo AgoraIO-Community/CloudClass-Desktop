@@ -62,6 +62,8 @@ export const BigClassScenario = observer(() => {
   const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
   const orgName = get(roomProperties, 'im.huanxin.orgName')
   const appName = get(roomProperties, 'im.huanxin.appName')
+  const privateChatRoom = get(roomProperties, 'im.huanxin.privateChatRoom')
+
 
   const { roomInfo : {userRole}} = useRoomContext()
 
@@ -100,7 +102,7 @@ export const BigClassScenario = observer(() => {
           <div className={isFullScreen ? 'full-video-wrap' : 'video-wrap'}>
             <VideoPlayerTeacher className="big-class-teacher"/>
           </div>
-          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName}}/> : null}
+          {visible && chatroomId ? <Widget className="chat-panel" widgetComponent={chatWidget} widgetProps={{chatroomId, orgName, appName, privateChatRoom}}/> : null}
         </Aside>
       </Layout>
       <DialogContainer />

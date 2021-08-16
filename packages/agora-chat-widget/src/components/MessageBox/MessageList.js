@@ -31,7 +31,7 @@ const MessageList = ({ activeKey }) => {
   const isLogin = useSelector(state => state.isLogin)
   // 获取当前登陆ID，RoomId，及成员数
   const userName = useSelector((state) => state.loginName);
-  const roomId = useSelector(state => state.extData.chatRoomId)
+  const roomId = useSelector(state => state.extData.chatroomId)
   const userCount = useSelector(state => state.room.info.affiliations_count);
   // 获取当前登陆的用户权限
   const isTeacher = useSelector(state => state.loginInfo.ext)
@@ -102,7 +102,7 @@ const MessageList = ({ activeKey }) => {
     let _coachTeacher = []
     let _student = []
     let _audience = []
-    if (isLogin) {
+    if (isLogin === 'logined') {
       let val
       roomUsers.map((item) => {
         if (roomListInfo) {
@@ -160,8 +160,8 @@ const MessageList = ({ activeKey }) => {
                 )}
               </Flex>} key={key}>
                 <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""}>
-                  {name !== '成员' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(name === '提问') }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
-                  {isLoadGif && <div className='load'></div>}
+                  {/* {name === '聊天' && isLoadGif && <div className='load'></div>} */}
+                  {name === '聊天' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
                   <Component {
                     ...key === CHAT_TABS_KEYS.chat && {
                       messageList,
@@ -186,16 +186,15 @@ const MessageList = ({ activeKey }) => {
             {Number(isTeacher) === 2 && <div className="qa-student-tips">
               提示：提问内容仅你和老师可见
             </div>}
-            {isLoadGif && <div className='load'></div>}
+            {/* {isLoadGif && <div className='load'></div>} */}
             <QuestionMessage userName={userName} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
           </Flex>
           <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
-            {isLoadGif && <div className='load'></div>}
-            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(false) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
-
+            {/* {isLoadGif && <div className='load'></div>} */}
+            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
             {
               messageList.length > 0 ? (
-                <MessageItem messageList={messageList} isHiedReward={isHiedReward} isLoadGif={isLoadGif} isMoreHistory={isMoreHistory} getHistoryMessages={getHistoryMessages} />
+                <MessageItem messageList={messageList} isHiedReward={isHiedReward} />
               ) : (
                 <div>
                   {/* <Text textAlign='center' color='#D3D6D8'>暂无消息</Text> */}
