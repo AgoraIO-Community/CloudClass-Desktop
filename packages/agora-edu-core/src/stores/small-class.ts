@@ -1,3 +1,5 @@
+import { EduSceneType } from 'agora-rte-sdk';
+import { GenericErrorWrapper } from 'agora-rte-sdk';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
 import { RoomStore } from './room';
@@ -6,7 +8,6 @@ import { get } from 'lodash';
 import {
   EduStream,
   EduUser,
-  GenericErrorWrapper,
   EduVideoSourceType,
   EduRoleTypeEnum,
   RemoteUserRenderer,
@@ -487,7 +488,7 @@ export class SmallClassStore {
         EduRoleTypeEnum.assistant,
         EduRoleTypeEnum.teacher,
       ].includes(role),
-      stars: +get(this.studentsMap, `${user.userUuid}.reward`, 0),
+      stars: this.appStore.roomStore.getRewardByUid(user.userUuid),
       disabled: this.checkDisable(user, role, stream),
       // disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
     };
