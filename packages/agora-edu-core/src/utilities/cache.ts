@@ -105,6 +105,7 @@ export class AgoraCaches {
 
   public startDownload = async (
     taskUuid: string,
+    type: string,
     onProgress?: (progress: number, controller: AbortController) => void,
   ): Promise<void> => {
     if (this.downloadList.has(taskUuid)) {
@@ -123,7 +124,7 @@ export class AgoraCaches {
     };
     const controller = new AbortController();
     const signal = controller.signal;
-    const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
+    const zipUrl = `https://${resourcesHost}/${type}/${taskUuid}.zip`;
     const res = await fetch(zipUrl, {
       method: 'get',
       signal: signal,
