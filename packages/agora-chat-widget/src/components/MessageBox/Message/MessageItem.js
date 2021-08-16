@@ -53,7 +53,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
 
 
     return (
-        <div key={message.id}>
+        <div key={message.id} id={message.id}>
             {
                 isCmdMsg && (
                     <div style={{

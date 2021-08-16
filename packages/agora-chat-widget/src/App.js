@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore,setStateListner } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore, setStateListner } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -13,7 +13,7 @@ import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants
 import { _onCustomMsg } from './api/message'
 import { message } from 'antd'
 import { Loading, Card } from '~ui-kit'
-import {getLoginRetryCount,getJoinRetryCount,setLoginRetryCount,setJoinRetryCount} from './api/retryCount'
+import { getLoginRetryCount, getJoinRetryCount, setLoginRetryCount, setJoinRetryCount } from './api/retryCount'
 import _ from 'lodash'
 
 import './App.css'
@@ -26,14 +26,13 @@ const App = function (props) {
   const [isEditNotice, isEditNoticeChange] = useState(0) // 0 显示公告  1 编辑公告  2 展示更多内容
   const activeKey = useSelector(state => state.activeKey)
   const joinRoomState = useSelector(state => state.joinRoomState)
-  
+
 
 
   // 登录、聊天室状态
   useEffect(() => {
-    let stateListnerFuc = (loginState,joinRoomState) => {
+    let stateListnerFuc = (loginState, joinRoomState) => {
       if (loginState === 'not_login') {
-        console.log('loginRetryCount>>>', getLoginRetryCount());
         if (getLoginRetryCount() < 0) {
           Message.error('登录失败，请刷新重试')
           setTimeout(() => {
@@ -128,6 +127,7 @@ const App = function (props) {
       // 异常回调
       onError: (message) => {
         console.log('onError', message);
+        if (message.type === 16) return
         const type = JSON.parse(_.get(message, 'data.data')).error_description;
         const resetName = store.getState().extData.userUuid;
         if (message.type === 1 || message.type === 3) {
@@ -144,9 +144,6 @@ const App = function (props) {
           } else {
             store.dispatch(isLogin('not_login'))
           }
-        }
-        if (message.type === 16) {
-          return
         }
       },
       // 聊天室相关监听
@@ -239,12 +236,10 @@ const App = function (props) {
 
   return (
     <>
-      {joinRoomState === 'join_the_success' ? <div className="app">
+      {joinRoomState === 'join_the_success' && <div className="app">
         <Notice isEdit={isEditNotice} isEditNoticeChange={isEditNoticeChange} />
         {isEditNotice === 0 && (<MessageBox activeKey={activeKey} />)}
-      </div> : <div><Card width={45} height={45}>
-        <Loading></Loading>
-      </Card></div>}
+      </div>}
     </>
 
   );

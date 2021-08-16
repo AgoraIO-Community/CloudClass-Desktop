@@ -1,6 +1,6 @@
 import WebIM from "../utils/WebIM";
 import store from '../redux/store'
-import { roomMessages, qaMessages, moreHistory, loadGif } from '../redux/aciton'
+import { roomMessages, qaMessages, moreHistory, loadGif, isHistoryCurrentLoc } from '../redux/aciton'
 import { HISTORY_COUNT } from '../components/MessageBox/constants'
 import { getQAReadMsg } from './qaReadMsg'
 import _ from 'lodash'
@@ -9,7 +9,7 @@ let deleteMsgId = [];
 export const getHistoryMessages = async (roomId) => {
     let stop = false;
     const publicRoomId = store.getState().extData.chatroomId;
-    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId
+    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
     if (publicRoomId === roomId) {
         store.dispatch(loadGif(true))
     }
