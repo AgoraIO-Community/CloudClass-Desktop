@@ -149,7 +149,7 @@
 
 .volume-indicators {
   @apply flex flex-col;
-  margin-left: 6px;
+  margin-left: 10px;
 }
 
 .v-indicator {
