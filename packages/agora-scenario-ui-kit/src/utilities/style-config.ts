@@ -58,3 +58,14 @@ export const Z_INDEX_RULES: {
   zIndexImage: 1080,
   zIndexExtApp: 998,
 } as const;
+
+/**
+ * 一些颜色的定义
+ */
+export const COLOR_RULES: {
+  activeColor: string;
+  deactiveColor: string;
+} = {
+  activeColor: '#357BF6',
+  deactiveColor: '#7B88A0',
+};
