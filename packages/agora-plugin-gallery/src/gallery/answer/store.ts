@@ -187,6 +187,8 @@ export class PluginStore {
     onSubClick = (clear: boolean = false) => {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             if (clear) {
+                this.timehandle && clearInterval(this.timehandle);
+                this.timehandle = null
                 this.changeRoomProperties({ state: 'clear' })
             } else {
                 if (this.status === 'config') {
