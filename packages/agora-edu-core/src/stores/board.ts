@@ -2687,8 +2687,17 @@ export class BoardStore extends ZoomController {
       this.updateDownloadById(taskUuid, {
         download: true,
       });
+      const resourceExists = this.allResources.find(
+        (it) => it.taskUuid === taskUuid,
+      );
+      if (!resourceExists || (resourceExists && resourceExists.ext === 'h5')) {
+        return;
+      }
+      const type: string =
+        resourceExists.ext === 'pptx' ? 'dynamicConvert' : 'staticConvert';
       await agoraCaches.startDownload(
         taskUuid,
+        type,
         (progress: number, controller: any) => {
           const newProgress = this.progressMap[taskUuid] ?? 0;
           if (progress >= newProgress) {
