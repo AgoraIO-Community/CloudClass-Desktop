@@ -156,7 +156,6 @@ const MessageList = ({ activeKey }) => {
     e.preventDefault();
     getHistoryMessages(roomId, e);
     let scrollElement = document.getElementById('chat-box-tag');
-    // setYPos(scrollElement.scrollHeight);
     store.dispatch(historyCurrentHeight(scrollElement.scrollHeight))
   }
 
