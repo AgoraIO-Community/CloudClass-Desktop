@@ -3,7 +3,6 @@
   overflow-y: scroll;
   position: absolute;
   width: 100%;
-  height: calc(100% - 200px);
   /* z-index: 8888; */
 }
 
@@ -47,7 +46,7 @@
 }
 
 .msg-text {
-  margin: 3px 8px 0 0;
+  margin: 8px 8px 0 0;
   max-width: 60%;
   min-height: 20px;
   padding: 6px 8px;
