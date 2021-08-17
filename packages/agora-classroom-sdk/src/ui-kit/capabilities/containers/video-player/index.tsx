@@ -414,6 +414,9 @@ export const MidVideoMarqueeContainer = observer(() => {
       controlPlacement: 'bottom' as any,
       placement: 'bottom' as any,
       canHoverHideOffAllPodium: true,
+      renderVolumeIndicator: () => (
+        <CustomizeVolumeIndicator streamUuid={stream.streamUuid} />
+      ),
       onOffAllPodiumClick: onOffAllPodiumClick,
       // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
       children: (
