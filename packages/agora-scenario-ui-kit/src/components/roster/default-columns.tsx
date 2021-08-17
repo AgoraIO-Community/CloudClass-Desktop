@@ -192,7 +192,7 @@ export const defaultColumns: Column[] = [
         [`${operateStatus}`]: 1,
       });
       return (
-        <div>
+        <div className="star-wrap">
           <SvgImg
             type={'star-outline'}
             className={cls}
