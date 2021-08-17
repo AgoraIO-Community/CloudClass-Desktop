@@ -545,6 +545,17 @@ export class BoardStore extends ZoomController {
                     `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`,
                   );
                 });
+              //@ts-ignore
+              const currentCameraState =
+                this.room.state.globalState.cameraState[
+                  this.getCurrentContextPath()
+                ];
+              //切换tab到h5课件时，使用h5之前记录的缩放比例,若之前不存在则自适应缩放比例
+              if (currentCameraState) {
+                this.updateScale(currentCameraState.scale);
+              } else {
+                this.moveCamera();
+              }
             }
             return;
           }
@@ -1128,6 +1139,7 @@ export class BoardStore extends ZoomController {
     });
     this.boardClient.on('onMemberStateChanged', (state: any) => {});
     this.boardClient.on('onRoomStateChanged', (state: any) => {
+      console.warn('ttttttttttt', state);
       if (state.cameraState) {
         if (state.cameraState && state.cameraState.scale) {
           this.scale = state.cameraState.scale;
@@ -1161,7 +1173,7 @@ export class BoardStore extends ZoomController {
       if (state.sceneState) {
         this.updatePageHistory();
         this.autoFetchDynamicTask();
-        this.moveCamera();
+        // this.moveCamera();
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList();
@@ -2417,6 +2429,8 @@ export class BoardStore extends ZoomController {
       }
       if (['h5'].includes(resource.type)) {
         await this.insertH5(resource.url, uuid);
+        //添加h5课件时，自适应缩放比例
+        this.moveCamera();
       }
     } catch (err) {
       throw err;
@@ -2523,6 +2537,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   moveCamera() {
+    console.warn('moveCameraaaaaaaa');
     if (
       !isEmpty(this.room.state.sceneState.scenes) &&
       !this.room.state.sceneState.scenes[0].ppt
