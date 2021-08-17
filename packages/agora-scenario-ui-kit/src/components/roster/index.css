@@ -202,12 +202,12 @@
 .student-username {
   display: flex;
 }
-
+.roster-table .star-wrap {
+  display: flex;
+  align-items: center;
+}
 .roster-table .star-nums {
   color: #7b88a0;
-  transform: translateY(-4px);
-  position: relative;
-  display: inline-block;
 }
 
 .roster-table .kick-out {
