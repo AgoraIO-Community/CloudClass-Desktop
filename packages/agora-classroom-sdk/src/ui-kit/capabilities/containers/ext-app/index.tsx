@@ -7,7 +7,6 @@ import { eduSDKApi } from 'agora-edu-core';
 import { Modal } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
-import "./index.css"
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
