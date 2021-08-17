@@ -419,12 +419,8 @@ export class PretestStore {
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
         }
 
-        if (this.isElectron) {
-          if (!cams.length) {
-            this.muteCamera()
-          } else {
-            this.appStore.mediaService.setCameraDevice(cams[0].deviceId)
-          }
+        if (this.isElectron && !cams.length) {
+          this.muteCamera()
         }
         if (this.isWeb) {
           this.muteCamera()
@@ -459,12 +455,8 @@ export class PretestStore {
           }
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
         }
-        if (this.isElectron) {
-          if(!mics.length) {
-            this.muteMicrophone()
-          } else {
-            this.appStore.mediaService.setMicrophoneDevice(mics[0].deviceId)
-          }
+        if (this.isElectron && !mics.length) {
+          this.muteMicrophone()
         }
         if (this.isWeb) {
           this.muteMicrophone()
