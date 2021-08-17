@@ -6,6 +6,7 @@ import IAgoraRtcEngine from 'agora-electron-sdk';
 import { EduLogger } from '../../logger';
 import { GenericErrorWrapper } from '../../utils/generic-error';
 import { truncate } from 'lodash';
+import { ClientRoleType } from 'agora-electron-sdk/types/Api/native_type';
 
 export class CEFVideoEncoderConfiguration {
   /**
@@ -314,7 +315,12 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.enableVideo()
     this.client.enableAudio()
     this.client.enableWebSdkInteroperability(true)
+    this.client.getVideoDevices()
+    this.client.getAudioPlaybackDevices()
+    this.client.getAudioRecordingDevices()
     this.client.enableAudioVolumeIndication(300, 3, true)
+    this.client.setClientRole(2)
+    //@ts-ignore
     this.client.monitorDeviceChange && this.client.monitorDeviceChange(true)
     // this.client.setVideoProfile(20)
 
@@ -349,7 +355,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       this.client.setVideoEncoderConfiguration(videoEncoderConfiguration)
     }
     console.log("[electron] video encoder config ", JSON.stringify(config))
-    this.client.setClientRole(2)
+    // this.client.setClientRole(2)
     //TODO: set cef client log path
     if (this._cefClient) {
       // window.getCachePath((path: string) => {
@@ -950,6 +956,21 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       throw GenericErrorWrapper(err)
     }
   }
+
+  setClientRole(v: ClientRoleType) {
+    try {
+      const ret = this.client.setClientRole(v)
+      EduLogger.info("setClientRole ", ret, ' value', v)
+      if (ret < 0) {
+        throw GenericErrorWrapper({
+          message: `setClientRole failure`,
+          code: ret
+        })
+      }
+    } catch (err) {
+      throw GenericErrorWrapper(err)
+    }
+  }
   
   async join(option: any): Promise<any> {
     try {
@@ -962,7 +983,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         })
       }
       this.joined = true;
-      this.client.setClientRole(1)
       return
     } catch(err) {
       throw GenericErrorWrapper(err)

@@ -129,9 +129,9 @@ export class LocalUserRenderer extends UserRenderer {
         //@ts-ignore
         this.electron.client.setupViewContentMode('videosource', fit ? 1 : 0);
       }
-      this.electron.client.setClientRole(1)
+      // this.electron.client.setClientRole(1)
       EduLogger.info('Raw Message: setClientRole(1) in LocalUserRenderer')
-      this.electron.client.startPreview();
+      // this.electron.client.startPreview();
     }
     this._playing = true
   }
@@ -143,14 +143,14 @@ export class LocalUserRenderer extends UserRenderer {
       }
     }
     if (this.isElectron && this.sourceType === 'default') {
-      this.electron.client.stopPreview()
+      // this.electron.client.stopPreview()
       if (this.el) {
         this.el.parentNode?.removeChild(this.el)
         this.el = undefined
       }
-      if (isPreview) {
-        this.electron.client.setClientRole(2)
-      }
+      // if (isPreview) {
+      //   this.electron.client.setClientRole(2)
+      // }
     }
     this._playing = false
   }
