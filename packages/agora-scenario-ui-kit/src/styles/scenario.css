@@ -66,6 +66,7 @@
   right: 10px;
   bottom: 10px;
   z-index: 201;
+  height: unset;
 }
 
 .mid-class-aside-full-collapse {
