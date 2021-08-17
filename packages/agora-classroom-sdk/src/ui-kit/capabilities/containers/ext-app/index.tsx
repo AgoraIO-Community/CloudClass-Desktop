@@ -92,17 +92,9 @@ export const AppPluginItem = observer(
         handle=".modal-title"
         defaultPosition={{
           x: window.innerWidth / 2 - app.width / 2,
-          y: window.innerHeight / 2 - app.height / 2 - 100,
+          y: window.innerHeight / 2 - app.height / 2,
         }}
-        bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
-        positionOffset={{
-          x: 0,
-          y: ['countdown'].includes(app.appName)
-            ? studentStreams.length
-              ? 40 + 170
-              : 40
-            : 0,
-        }}>
+        bounds={'body'}>
         <Modal
           title={transI18n(`${app.appName}.appName`)}
           width={app.width}
