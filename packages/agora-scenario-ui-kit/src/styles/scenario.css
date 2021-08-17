@@ -4,8 +4,7 @@
 }
 
 .layout-video {
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 
 .chat-border {

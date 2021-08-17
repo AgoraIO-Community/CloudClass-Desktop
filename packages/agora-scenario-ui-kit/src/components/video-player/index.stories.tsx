@@ -355,68 +355,71 @@ export const DocsClassVideoPlayer = () => {
         }}>
         下台
       </Button>
-      <VideoMarqueeList
-        openCarousel={false}
-        teacherStream={teacherList[0]}
-        teacherStreams={teacherList}
-        videoStreamList={studentList}
-        onCameraClick={(uid: any) => {
-          // list.forEach(item => {
-          //   if (item.uid === uid) {
-          //     item.cameraEnabled = !item.cameraEnabled
-          //   }
-          // })
-          // setList([
-          //   ...list
-          // ])
-          // console.log('onCameraClick uid', uid)
-        }}
-        onMicClick={(uid: any) => {
-          // list.forEach(item => {
-          //   if (item.uid === uid) {
-          //     item.micEnabled = !item.micEnabled
-          //   }
-          // })
-          // setList([
-          //   ...list
-          // ])
-          // console.log('onMicrophoneClick uid', uid)
-        }}
-        onWhiteboardClick={(uid: any) => {
-          // list.forEach(item => {
-          //   if (item.uid === uid) {
-          //     item.whiteboardGranted = !item.whiteboardGranted
-          //   }
-          // })
-          // setList([
-          //   ...list
-          // ])
-          // console.log('onWhiteboard Click', uid)
-        }}
-        onOffPodiumClick={(uid: any) => {
-          // list.forEach(item => {
-          //   if (item.uid === uid) {
-          //     item.isOnPodium = !item.isOnPodium
-          //   }
-          // })
-          // setList([
-          //   ...list
-          // ])
-          // console.log('off podium', uid)
-        }}
-        onSendStar={(uid) => {
-          // return new Promise((resolve) => {
-          //   list.forEach(item => {
-          //     if (item.uid === uid) {
-          //       item.stars += 1
-          //     }
-          //   })
-          //   setList([
-          //     ...list
-          //   ])
-          //   resolve('send star')
-          // })
-        }}></VideoMarqueeList>
+      <div>
+        <VideoMarqueeList
+          openCarousel={false}
+          teacherStream={teacherList[0]}
+          teacherStreams={teacherList}
+          videoStreamList={studentList}
+          onCameraClick={(uid: any) => {
+            // list.forEach(item => {
+            //   if (item.uid === uid) {
+            //     item.cameraEnabled = !item.cameraEnabled
+            //   }
+            // })
+            // setList([
+            //   ...list
+            // ])
+            // console.log('onCameraClick uid', uid)
+          }}
+          onMicClick={(uid: any) => {
+            // list.forEach(item => {
+            //   if (item.uid === uid) {
+            //     item.micEnabled = !item.micEnabled
+            //   }
+            // })
+            // setList([
+            //   ...list
+            // ])
+            // console.log('onMicrophoneClick uid', uid)
+          }}
+          onWhiteboardClick={(uid: any) => {
+            // list.forEach(item => {
+            //   if (item.uid === uid) {
+            //     item.whiteboardGranted = !item.whiteboardGranted
+            //   }
+            // })
+            // setList([
+            //   ...list
+            // ])
+            // console.log('onWhiteboard Click', uid)
+          }}
+          onOffPodiumClick={(uid: any) => {
+            // list.forEach(item => {
+            //   if (item.uid === uid) {
+            //     item.isOnPodium = !item.isOnPodium
+            //   }
+            // })
+            // setList([
+            //   ...list
+            // ])
+            // console.log('off podium', uid)
+          }}
+          onSendStar={(uid) => {
+            // return new Promise((resolve) => {
+            //   list.forEach(item => {
+            //     if (item.uid === uid) {
+            //       item.stars += 1
+            //     }
+            //   })
+            //   setList([
+            //     ...list
+            //   ])
+            //   resolve('send star')
+            // })
+          }}></VideoMarqueeList>
+      </div>
+
       {/* {studentList.map((e: any, idx: number) => (
           <CSSVideoPlayer key={idx} {...e} />
         ))} */}
