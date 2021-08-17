@@ -194,8 +194,16 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
           <div className="student-item" key={index}>
             <span className="student-name">{item?.userName}</span>
             <span className="operation-icon-wrap">
-              <SvgImg type="checked" onClick={() => onClick('confirm', item)} />
-              <SvgImg type="close" onClick={() => onClick('cancel', item)} />
+              <SvgImg
+                type="checked"
+                onClick={() => onClick('confirm', item)}
+                className="icon-wrap-svg checked"
+              />
+              <SvgImg
+                type="close"
+                onClick={() => onClick('cancel', item)}
+                className="icon-wrap-svg"
+              />
             </span>
           </div>
         ))}
