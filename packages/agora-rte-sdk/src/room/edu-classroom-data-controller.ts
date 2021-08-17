@@ -1387,7 +1387,8 @@ export class EduClassroomDataController {
         // }
 
         let anchor = get(properties, paths.join('.'))
-        let parent = get(properties, [...paths].splice(0, paths.length - 1).join('.'), {})
+        let parentPath = [...paths].slice(0, paths.length - 1).join('.')
+        let parent = parentPath ? get(properties, parentPath, {}) : properties
 
         const isObject = (val:any) => (typeof val === 'object' && val !== null)
         const changedValue = cloneDeep(changedProperties[key])
