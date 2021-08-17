@@ -1,6 +1,7 @@
 {
   "arrowParens": "always",
   "jsxBracketSameLine": true,
+  "printWidth": 500,
   "proseWrap": "never",
   "singleQuote": true,
   "trailingComma": "all"
