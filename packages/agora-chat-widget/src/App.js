@@ -181,9 +181,9 @@ const App = function (props) {
   }
 
   return (
-    <div>
+    <>
       {showChat ?
-        <div className="app">
+        <div className="app w-full">
           <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
         </div> :
         <div className="chat">
@@ -198,7 +198,7 @@ const App = function (props) {
             {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>}
-    </div >
+    </>
   );
 }
 export default App;

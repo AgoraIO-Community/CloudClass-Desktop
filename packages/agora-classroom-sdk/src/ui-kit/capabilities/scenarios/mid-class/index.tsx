@@ -18,6 +18,68 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
+import { debounce } from 'lodash'
+
+const useFixedAspectRatio = (aspectRatio: number) => {
+  // const [ dimension, setDimension ] = useState({ width: window.innerWidth, height: window.innerHeight })
+  const { windowSize, updateWindowSize } = useUIStore()
+
+  useEffectOnce(() => {
+    const minimumSize = { width: 1280, height: 720 }
+    const checkAndUpdate = ({ width, height }: typeof windowSize) => {
+      if(width >= minimumSize.width || height >= minimumSize.height) {
+        updateWindowSize({ width, height })
+      } else {
+        updateWindowSize(minimumSize)
+      }
+    }
+    
+    const recalculateDimension = () => {
+      const curAspectRatio = window.innerHeight / window.innerWidth
+      
+      if(curAspectRatio > aspectRatio) {
+        // shrink height
+        checkAndUpdate({
+          height: window.innerWidth * aspectRatio,
+          width: window.innerWidth
+        })
+      } else if(curAspectRatio < aspectRatio) {
+        // shrink width
+        checkAndUpdate({
+          height: window.innerHeight,
+          width: window.innerHeight / aspectRatio
+        })
+      }
+    }
+
+    recalculateDimension()
+
+    const handleResize = debounce(() => {
+      recalculateDimension()
+    }, 500)
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  })
+  const whiteboardHeight = windowSize.height * (59 / 72)
+  const whiteboardWidth = whiteboardHeight / (9 / 16)
+
+  return {
+    containerStyle: {
+      height: windowSize.height,
+      width: windowSize.width,
+      transition: 'all .3s'
+    },
+    whiteboardStyle: {
+      height: whiteboardHeight,
+      // width: whiteboardWidth,
+      transition: 'all .3s'
+    }
+  }
+}
 
 
 export const MidClassScenario = observer(() => {
@@ -97,9 +159,15 @@ export const MidClassScenario = observer(() => {
     joinRoomRTC()
   })
 
+  const { containerStyle, whiteboardStyle } = useFixedAspectRatio(9 / 16)
+
   const cls = classnames({
     'edu-room': 1,
-    'fullscreen': !!isFullScreen
+    'fullscreen': !!isFullScreen,
+    'justify-center': 1,
+    'items-center': 1,
+    'bg-black': 1,
+    'h-screen': 1
   })
 
   const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId')
@@ -114,51 +182,50 @@ export const MidClassScenario = observer(() => {
     <Layout
       className={cls}
       direction="col"
-      style={{
-        height: '100vh'
-      }}
     >
-      <NavigationBar />
-      <Layout className="layout layout-row layout-video">
-        <MidVideoMarqueeContainer />
-      </Layout>
-      <Layout className="horizontal">
-        <Content className="column">
-          <div className="board-box">
-            <WhiteboardContainer>
-              <ScreenSharePlayerContainer />
-            </WhiteboardContainer>
-          </div>
-          <div
-            className={classnames({
-              'pin-right': 1
-            })}
-            style={{display:'flex'}}
-          >
-            <HandsUpContainer />
-          </div>
-        </Content>
-        <Aside className={classnames({
-          "mid-class-aside": 1,
-          // "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
-          // "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
-          "mid-class-aside-full-collapse": isFullScreen,
-        })}>
-          {chatroomId ? (
-          <Widget 
-            className="chat-panel" 
-            widgetComponent={chatWidget} 
-            widgetProps={{chatroomId, orgName, appName}}
-            onReceivedMsg={(msg: any) => {
-              setChatCollapse(!msg.isShowChat)
-            }}
-            sendMsg={{isFullScreen}}
-          />) : null}
-        </Aside>
-      </Layout>
-      <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom} />
-      <ToastContainer />
+      <div className="flex flex-col" style={containerStyle}>
+        <NavigationBar />
+        <Layout className="layout layout-row layout-video flex-grow">
+          <MidVideoMarqueeContainer />
+        </Layout>
+        <Layout className="horizontal" style={{ height: 'unset' }}>
+          <Content className="column flex-grow-1" style={whiteboardStyle}>
+            <div className="board-box">
+              <WhiteboardContainer>
+                <ScreenSharePlayerContainer />
+              </WhiteboardContainer>
+            </div>
+          </Content>
+          
+          <Aside className={classnames({
+            "mid-class-aside": 1,
+            // "mid-class-aside-full-not-collapse": (isFullScreen && !chatCollapse),
+            // "mid-class-aside-full-collapse": (isFullScreen && chatCollapse),
+            "mid-class-aside-full-collapse": isFullScreen,
+            "absolute": 1,
+            "flex-row": 1,
+            "items-end": 1
+
+          })}>
+            <div className="mr-1">
+              <HandsUpContainer />
+            </div>
+            {chatroomId ? (
+            <Widget 
+              className="chat-panel" 
+              widgetComponent={chatWidget} 
+              widgetProps={{chatroomId, orgName, appName}}
+              onReceivedMsg={(msg: any) => {
+                setChatCollapse(!msg.isShowChat)
+              }}
+              sendMsg={{ isFullScreen, showMinimizeBtn: true, width: 340, height: 480 }}
+            />) : null}
+          </Aside>
+        </Layout>
+        <DialogContainer />
+        <LoadingContainer loading={isJoiningRoom} />
+        <ToastContainer />
+      </div>
     </Layout>
   )
 })

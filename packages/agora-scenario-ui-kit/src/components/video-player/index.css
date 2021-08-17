@@ -9,9 +9,9 @@
 }
 
 .marque-video-container .video-player {
-  width: calc((100vw / 7) - 4px) !important;
-  height: auto !important;
-  aspect-ratio: 16/9 !important;
+  width: calc((100vw / 7) - 4px);
+  height: auto;
+  aspect-ratio: 16/9;
 }
 
 .top-right-info {

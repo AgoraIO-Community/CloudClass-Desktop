@@ -15,9 +15,9 @@ import minimize from '../../themes/img/minimize.png'
 import notice from '../../themes/img/notice.png'
 import _ from 'lodash'
 
-const { TabPane } = Tabs;
-
 import './index.css'
+
+const { TabPane } = Tabs;
 
 const renderTabBar = (props, DefaultTabBar) => (
     <Sticky bottomOffset={80}>
@@ -26,8 +26,6 @@ const renderTabBar = (props, DefaultTabBar) => (
         )}
     </Sticky>
 );
-
-
 
 // 主页面，定义 tabs
 export const Chat = ({ onReceivedMsg, sendMsg }) => {
@@ -41,7 +39,10 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const roleType = _.get(state, 'loginUserInfo.ext', '')
     const roomUsers = _.get(state, 'room.roomUsers', [])
     const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {})
-    const isTabKey = state?.isTabKey
+    const showMinimizeBtn = sendMsg?.showMinimizeBtn
+    const width = sendMsg?.width
+    const height = sendMsg?.height
+
     // 直接在 propsData 中取值
     const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
     useEffect(() => {
@@ -80,9 +81,8 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const hideChatModal = () => {
         store.dispatch(isShowChat(false))
         store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat))
+        onReceivedMsg && onReceivedMsg({ isShowChat: false })
     }
-
-
 
     // 监听 Tab 切换
     const onTabChange = (key) => {
@@ -108,8 +108,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const toTabKey = () => {
         setTabKey(CHAT_TABS_KEYS.notice)
     }
-    return <div>
-
+    return <div style={{ height, width }}>
         {/* <StickyContainer> */}
         <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
             <TabPane tab={<div>
@@ -139,17 +138,9 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
                 <Announcement />
             </TabPane>
         </Tabs>
-        {/* {sendMsg.isFullScreen && (
-            <div className="mini-icon">
-                <img src={minimize} onClick={() => { 
-                    // 最小化聊天
-                    onReceivedMsg && onReceivedMsg({
-                        isShowChat: false
-                    })
-                    showChatModal()
-                }} />
-            </div>
-        )} */}
+        { showMinimizeBtn && <div className="mini-icon">
+            <img src={minimize} alt="" onClick={hideChatModal} />
+        </div>}
         {/* </StickyContainer> */}
         <div>
         </div>

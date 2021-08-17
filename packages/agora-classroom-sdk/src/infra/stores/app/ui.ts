@@ -32,6 +32,12 @@ export class UIStore {
   ]
 
   @observable
+  windowSize: { width: number, height: number } = { width: window.innerWidth, height: window.innerHeight }
+
+  @observable
+  baseSizeRatio: number = 1
+
+  @observable
   dialogQueue: DialogType[] = [] 
 
   @observable
@@ -42,6 +48,12 @@ export class UIStore {
 
   @observable
   checked: boolean = false;
+
+  @action.bound
+  updateWindowSize(size: { width: number, height: number }) {
+    this.windowSize = size;
+    this.baseSizeRatio = size.width / 1280
+  }
 
   @action.bound
   updateChecked(v: boolean) {

@@ -243,7 +243,8 @@ export const WhiteboardContainer = observer(({ children }: any) => {
     installTools(allTools)
   }, [allTools])
 
-  const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+  // const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+  const showTab = false;
 
   const [showToolBar, showZoomControl] = showBoardTool
 

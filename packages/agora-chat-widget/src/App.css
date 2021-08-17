@@ -1,7 +1,7 @@
 .app {
     /* 宽度自定义 */
     position: relative;
-    width: 300px;
+    /* width: 300px; */
     min-height: 300px;
     height: 100%;
     background: #FFFFFF;
@@ -18,7 +18,7 @@
 } */
 
 .show-chat-icon {
-    position: fixed;
+    /* position: absolute; */
     right: 8px;
     bottom: 8px;
     width: 40px;
