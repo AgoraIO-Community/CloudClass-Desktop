@@ -517,7 +517,7 @@ export const getPath = (name: string, props?: any) => {
       return (
         <path
           {...props}
-          d="M516.9152 358.4c-33.0752 0-59.0336 9.3696-78.2336 28.16C418.9696 405.3504 409.6 431.3088 409.6 464.384h50.9952c0-18.7904 3.584-33.536 11.1616-43.8272 8.4992-12.544 22.3744-18.3296 41.984-18.3296 15.2576 0 27.3408 3.9936 35.84 12.4928 8.0384 8.4992 12.4928 20.1216 12.4928 34.9184a49.5104 49.5104 0 0 1-12.0832 31.744l-5.3248 6.2464c-29.0816 25.9584-46.5408 44.6976-52.3264 56.832-6.2976 12.032-8.96 26.7776-8.96 43.776v6.2464h51.4048v-6.2464c0-10.752 2.2528-20.1216 6.7072-29.0816 4.0448-8.0384 9.8816-15.616 17.92-22.3232l25.7536-23.04c6.4512-5.9392 10.7008-10.0864 12.6976-12.288 10.752-14.336 16.5376-32.6656 16.5376-54.9888 0-27.2896-8.96-48.7424-26.8288-64.4096-17.92-16.128-41.5744-23.7056-70.656-23.7056z m-8.0384 258.048c9.8304 0 18.3296 3.072 25.0368 9.3696 6.2464 6.2464 9.8304 14.336 9.8304 24.1152 0 9.8304-3.584 18.3296-10.24 24.576a34.4576 34.4576 0 0 1-24.6272 9.4208 34.816 34.816 0 0 1-24.576-9.8304 31.3856 31.3856 0 0 1-9.8816-24.1664c0-9.8304 3.1744-17.8688 9.8816-24.1152a34.4576 34.4576 0 0 1 24.576-9.4208z"
+          d="M258.3552 238.2848a26.4704 26.4704 0 0 1 0 38.1952 326.4 326.4 0 0 0 0 471.04 26.4704 26.4704 0 0 1 0 38.1952 28.3648 28.3648 0 0 1-39.2704 0 379.392 379.392 0 0 1 0-547.4304 28.3648 28.3648 0 0 1 39.2704 0z m546.56 0a379.392 379.392 0 0 1 0 547.4304 28.3648 28.3648 0 0 1-39.2704 0 26.4704 26.4704 0 0 1 0-38.1952 326.4 326.4 0 0 0 0-471.04 26.4704 26.4704 0 0 1 0-38.1952 28.3648 28.3648 0 0 1 39.2704 0zM327.424 301.9776a26.4704 26.4704 0 0 1 0 38.1952 238.1824 238.1824 0 0 0 0 343.6544 26.4704 26.4704 0 0 1 0 38.1952 28.3648 28.3648 0 0 1-39.2704 0 291.1232 291.1232 0 0 1 0-420.0448 28.3648 28.3648 0 0 1 39.2704 0z m408.4224 0a291.1232 291.1232 0 0 1 0 420.0448 28.3648 28.3648 0 0 1-39.2704 0 26.4704 26.4704 0 0 1 0-38.1952 238.1824 238.1824 0 0 0 0-343.6544 26.4704 26.4704 0 0 1 0-38.1952 28.3648 28.3648 0 0 1 39.2704 0zM508.928 616.3968c9.8304 0 18.3296 3.1232 25.0368 9.4208 6.2464 6.2464 9.8304 14.336 9.8304 24.1152 0 9.8304-3.584 18.3296-10.24 24.576a34.4576 34.4576 0 0 1-24.6272 9.4208 34.816 34.816 0 0 1-24.576-9.8304 31.3856 31.3856 0 0 1-9.8816-24.1664c0-9.8304 3.1744-17.8688 9.8816-24.1152a34.4576 34.4576 0 0 1 24.576-9.4208zM397.312 365.6192a26.4704 26.4704 0 0 1 0 38.1952 150.016 150.016 0 0 0 0 216.3712 26.4704 26.4704 0 0 1 0 38.1952 28.3648 28.3648 0 0 1-39.2704 0 202.9056 202.9056 0 0 1 0-292.7616 28.3648 28.3648 0 0 1 39.2704 0z m268.6464 0a202.9056 202.9056 0 0 1 0 292.7616 28.3648 28.3648 0 0 1-39.2704 0 26.4704 26.4704 0 0 1 0-38.1952 150.016 150.016 0 0 0 0-216.3712 26.4704 26.4704 0 0 1 0-38.1952 28.3648 28.3648 0 0 1 39.2704 0zM516.9664 358.4c29.0304 0 52.736 7.5776 70.6048 23.7056 17.92 15.6672 26.8288 37.12 26.8288 64.4096 0 22.3232-5.8368 40.6528-16.5376 54.9888-2.048 2.2016-6.2464 6.3488-12.6976 12.288l-25.7536 23.04c-8.0384 6.656-13.8752 14.336-17.92 22.3232a63.1808 63.1808 0 0 0-6.656 29.0816v6.2464H483.328v-6.2464c0-16.9984 2.6624-31.744 8.96-43.8272 5.7856-12.0832 23.2448-30.8224 52.3264-56.7808l5.3248-6.2464a49.5104 49.5104 0 0 0 12.0832-31.744c0-14.7968-4.4544-26.4192-12.4928-34.9184-8.4992-8.4992-20.5824-12.4928-35.84-12.4928-19.6096 0-33.4848 5.7856-41.984 18.3296-7.5776 10.24-11.1616 25.088-11.1616 43.8272H409.6c0-33.0752 9.3696-59.0336 29.0816-77.824 19.2-18.7904 45.1584-28.16 78.2336-28.16z"
         />
       );
 
@@ -538,12 +538,7 @@ export const getPath = (name: string, props?: any) => {
       );
 
     case 'zoom-out':
-      return (
-        <path
-          {...props}
-          d="M329.142857 475.428571h365.714286v58.514286H329.142857z"
-        />
-      );
+      return <path {...props} d="M329.142857 475.428571h365.714286v58.514286H329.142857z" />;
 
     case 'log':
       return (
@@ -636,18 +631,9 @@ export const getPath = (name: string, props?: any) => {
     case 'placeholder-camera-broken':
       return (
         <>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-508.000000, -889.000000)">
-              <g
-                id="pic-camerabroken备份"
-                transform="translate(508.000000, 889.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-508.000000, -889.000000)">
+              <g id="pic-camerabroken备份" transform="translate(508.000000, 889.000000)">
                 <rect
                   id="pic-camerabroken"
                   stroke="#979797"
@@ -672,18 +658,9 @@ export const getPath = (name: string, props?: any) => {
     case 'placeholder-camera-off':
       return (
         <>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-266.000000, -889.000000)">
-              <g
-                id="pic-cameraoff备份-2"
-                transform="translate(266.000000, 889.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-266.000000, -889.000000)">
+              <g id="pic-cameraoff备份-2" transform="translate(266.000000, 889.000000)">
                 <rect
                   id="矩形"
                   stroke="#979797"
@@ -707,18 +684,9 @@ export const getPath = (name: string, props?: any) => {
     case 'placeholder-camera-disabled':
       return (
         <>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-615.000000, -889.000000)">
-              <g
-                id="摄像头被禁用"
-                transform="translate(615.000000, 889.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-615.000000, -889.000000)">
+              <g id="摄像头被禁用" transform="translate(615.000000, 889.000000)">
                 <rect
                   id="矩形"
                   stroke="#979797"
@@ -750,18 +718,9 @@ export const getPath = (name: string, props?: any) => {
               d="M28.1027473,0.507692308 C43.5469958,0.507692308 56.067033,11.5166905 56.067033,25.096978 C56.067033,38.6772655 43.5469958,49.6862637 28.1027473,49.6862637 C27.1311324,49.6862637 26.171091,49.6426922 25.2250124,49.5576501 L18.0280145,54.5076923 L18.0280375,48.042136 C7.562063,44.4866706 0.138461538,35.5541314 0.138461538,25.096978 C0.138461538,11.5166905 12.6584987,0.507692308 28.1027473,0.507692308 Z"
               id="path-2"></path>
           </defs>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-1298.000000, -778.000000)">
-              <g
-                id="pic-nomessage备份-2"
-                transform="translate(1298.000000, 778.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-1298.000000, -778.000000)">
+              <g id="pic-nomessage备份-2" transform="translate(1298.000000, 778.000000)">
                 <rect
                   id="矩形"
                   stroke="#979797"
@@ -782,10 +741,7 @@ export const getPath = (name: string, props?: any) => {
                       id="编组-47"
                       transform="translate(62.869231, 43.323077) scale(-1, 1) translate(-62.869231, -43.323077) translate(37.369231, 20.323077)">
                       <g id="形状结合备份">
-                        <use
-                          fill="#F4F7FF"
-                          fill-rule="evenodd"
-                          xlinkHref="#path-1"></use>
+                        <use fill="#F4F7FF" fill-rule="evenodd" xlinkHref="#path-1"></use>
                         <path
                           stroke="#FFFFFF"
                           stroke-width="2.8"
@@ -795,10 +751,7 @@ export const getPath = (name: string, props?: any) => {
                           stroke-width="3"
                           d="M25.3846154,1.5 C32.0195434,1.5 38.0345549,3.68047122 42.3854472,7.23369992 C46.6150814,10.6879012 49.2692308,15.4486067 49.2692308,20.7307692 C49.2692308,26.0129317 46.6150814,30.7736373 42.3854472,34.2278385 C38.0345549,37.7810672 32.0195434,39.9615385 25.3846154,39.9615385 C24.114755,39.9615385 22.8677649,39.8816155 21.6507945,39.7274618 L21.6507945,39.7274618 L17.1424154,42.5618745 L17.609542,38.9173861 C12.6393776,37.5368493 8.39418483,34.8678389 5.50324736,31.3801171 C2.98456533,28.3414964 1.5,24.6795914 1.5,20.7307692 C1.5,15.4486067 4.15414937,10.6879012 8.38378356,7.23369992 C12.7346758,3.68047122 18.7496873,1.5 25.3846154,1.5 Z"
                           stroke-linejoin="square"></path>
-                        <use
-                          stroke="#C7D3ED"
-                          stroke-width="1.68"
-                          xlinkHref="#path-1"></use>
+                        <use stroke="#C7D3ED" stroke-width="1.68" xlinkHref="#path-1"></use>
                       </g>
                       <g
                         id="编组-3"
@@ -809,19 +762,12 @@ export const getPath = (name: string, props?: any) => {
                           id="?"
                           fill-rule="nonzero"
                           transform="translate(10.360000, 10.300000) scale(-1, 1) rotate(13.000000) translate(-10.360000, -10.300000) "></path>
-                        <circle
-                          id="椭圆形"
-                          cx="13.8155379"
-                          cy="22.3944027"
-                          r="2.2"></circle>
+                        <circle id="椭圆形" cx="13.8155379" cy="22.3944027" r="2.2"></circle>
                       </g>
                     </g>
                     <g id="编组-48">
                       <g id="形状结合">
-                        <use
-                          fill="#FFFFFF"
-                          fill-rule="evenodd"
-                          xlinkHref="#path-2"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlinkHref="#path-2"></use>
                         <path
                           stroke="#FFFFFF"
                           stroke-width="2.8"
@@ -831,14 +777,9 @@ export const getPath = (name: string, props?: any) => {
                           stroke-width="2.8"
                           d="M28.1027473,1.90769231 C35.4607408,1.90769231 42.1280652,4.51933862 46.952013,8.76108579 C51.7065566,12.9418052 54.667033,18.7117094 54.667033,25.096978 C54.667033,31.4822466 51.7065566,37.2521509 46.952013,41.4328703 C42.1280652,45.6746174 35.4607408,48.2862637 28.1027473,48.2862637 C27.0026844,48.2862637 25.9181313,48.2278952 24.8528816,48.1144242 L24.8528816,48.1144242 L19.428024,51.8456013 L19.4280411,47.0209809 C13.9797227,45.3772612 9.32482292,42.2260906 6.12597056,38.1232447 C3.23606211,34.4166501 1.53846154,29.9319799 1.53846154,25.096978 C1.53846154,18.7117094 4.49893791,12.9418052 9.25348155,8.76108579 C14.0774293,4.51933862 20.7447537,1.90769231 28.1027473,1.90769231 Z"
                           stroke-linejoin="square"></path>
-                        <use
-                          stroke="#C7D3ED"
-                          stroke-width="2"
-                          xlinkHref="#path-2"></use>
+                        <use stroke="#C7D3ED" stroke-width="2" xlinkHref="#path-2"></use>
                       </g>
-                      <g
-                        id="编组-49"
-                        transform="translate(13.230769, 19.307692)">
+                      <g id="编组-49" transform="translate(13.230769, 19.307692)">
                         <circle
                           id="椭圆形"
                           fill="#C7D3ED"
@@ -870,18 +811,9 @@ export const getPath = (name: string, props?: any) => {
     case 'placeholder-no-body':
       return (
         <>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-387.000000, -889.000000)">
-              <g
-                id="pic-nobody备份"
-                transform="translate(387.000000, 889.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-387.000000, -889.000000)">
+              <g id="pic-nobody备份" transform="translate(387.000000, 889.000000)">
                 <rect
                   id="pic-nobody"
                   stroke="#979797"
@@ -907,21 +839,10 @@ export const getPath = (name: string, props?: any) => {
       return (
         <>
           <defs>
-            <circle
-              id="path-1"
-              cx="37.2455181"
-              cy="26.9632198"
-              r="26.9632198"></circle>
+            <circle id="path-1" cx="37.2455181" cy="26.9632198" r="26.9632198"></circle>
           </defs>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-1298.000000, -496.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-1298.000000, -496.000000)">
               <g id="pic-nofile" transform="translate(1298.000000, 496.000000)">
                 <rect
                   stroke="#979797"
@@ -990,10 +911,7 @@ export const getPath = (name: string, props?: any) => {
                       cx="37.2455181"
                       cy="26.9632198"
                       r="24.8632198"></circle>
-                    <use
-                      stroke="#C7D3ED"
-                      stroke-width="2.52"
-                      xlinkHref="#path-1"></use>
+                    <use stroke="#C7D3ED" stroke-width="2.52" xlinkHref="#path-1"></use>
                   </g>
                   <line
                     x1="17.0231032"
@@ -1022,18 +940,9 @@ export const getPath = (name: string, props?: any) => {
               d="M28.1027473,0.507692308 C43.5469958,0.507692308 56.067033,11.5166905 56.067033,25.096978 C56.067033,38.6772655 43.5469958,49.6862637 28.1027473,49.6862637 C27.1311324,49.6862637 26.171091,49.6426922 25.2250124,49.5576501 L18.0280145,54.5076923 L18.0280375,48.042136 C7.562063,44.4866706 0.138461538,35.5541314 0.138461538,25.096978 C0.138461538,11.5166905 12.6584987,0.507692308 28.1027473,0.507692308 Z"
               id="path-2"></path>
           </defs>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-1298.000000, -262.000000)">
-              <g
-                id="pic-nomessage"
-                transform="translate(1298.000000, 262.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-1298.000000, -262.000000)">
+              <g id="pic-nomessage" transform="translate(1298.000000, 262.000000)">
                 <rect
                   id="矩形"
                   stroke="#979797"
@@ -1054,10 +963,7 @@ export const getPath = (name: string, props?: any) => {
                       id="编组-47"
                       transform="translate(62.869231, 43.323077) scale(-1, 1) translate(-62.869231, -43.323077) translate(37.369231, 20.323077)">
                       <g id="形状结合备份">
-                        <use
-                          fill="#F4F7FF"
-                          fill-rule="evenodd"
-                          xlinkHref="#path-1"></use>
+                        <use fill="#F4F7FF" fill-rule="evenodd" xlinkHref="#path-1"></use>
                         <path
                           stroke="#FFFFFF"
                           stroke-width="2.8"
@@ -1067,10 +973,7 @@ export const getPath = (name: string, props?: any) => {
                           stroke-width="3"
                           d="M25.3846154,1.5 C32.0195434,1.5 38.0345549,3.68047122 42.3854472,7.23369992 C46.6150814,10.6879012 49.2692308,15.4486067 49.2692308,20.7307692 C49.2692308,26.0129317 46.6150814,30.7736373 42.3854472,34.2278385 C38.0345549,37.7810672 32.0195434,39.9615385 25.3846154,39.9615385 C24.114755,39.9615385 22.8677649,39.8816155 21.6507945,39.7274618 L21.6507945,39.7274618 L17.1424154,42.5618745 L17.609542,38.9173861 C12.6393776,37.5368493 8.39418483,34.8678389 5.50324736,31.3801171 C2.98456533,28.3414964 1.5,24.6795914 1.5,20.7307692 C1.5,15.4486067 4.15414937,10.6879012 8.38378356,7.23369992 C12.7346758,3.68047122 18.7496873,1.5 25.3846154,1.5 Z"
                           stroke-linejoin="square"></path>
-                        <use
-                          stroke="#C7D3ED"
-                          stroke-width="1.68"
-                          xlinkHref="#path-1"></use>
+                        <use stroke="#C7D3ED" stroke-width="1.68" xlinkHref="#path-1"></use>
                       </g>
                       <circle
                         id="椭圆形备份-6"
@@ -1093,10 +996,7 @@ export const getPath = (name: string, props?: any) => {
                     </g>
                     <g id="编组-48">
                       <g id="形状结合">
-                        <use
-                          fill="#FFFFFF"
-                          fill-rule="evenodd"
-                          xlinkHref="#path-2"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlinkHref="#path-2"></use>
                         <path
                           stroke="#FFFFFF"
                           stroke-width="2.8"
@@ -1106,14 +1006,9 @@ export const getPath = (name: string, props?: any) => {
                           stroke-width="2.8"
                           d="M28.1027473,1.90769231 C35.4607408,1.90769231 42.1280652,4.51933862 46.952013,8.76108579 C51.7065566,12.9418052 54.667033,18.7117094 54.667033,25.096978 C54.667033,31.4822466 51.7065566,37.2521509 46.952013,41.4328703 C42.1280652,45.6746174 35.4607408,48.2862637 28.1027473,48.2862637 C27.0026844,48.2862637 25.9181313,48.2278952 24.8528816,48.1144242 L24.8528816,48.1144242 L19.428024,51.8456013 L19.4280411,47.0209809 C13.9797227,45.3772612 9.32482292,42.2260906 6.12597056,38.1232447 C3.23606211,34.4166501 1.53846154,29.9319799 1.53846154,25.096978 C1.53846154,18.7117094 4.49893791,12.9418052 9.25348155,8.76108579 C14.0774293,4.51933862 20.7447537,1.90769231 28.1027473,1.90769231 Z"
                           stroke-linejoin="square"></path>
-                        <use
-                          stroke="#C7D3ED"
-                          stroke-width="2"
-                          xlinkHref="#path-2"></use>
+                        <use stroke="#C7D3ED" stroke-width="2" xlinkHref="#path-2"></use>
                       </g>
-                      <g
-                        id="编组-49"
-                        transform="translate(13.230769, 19.307692)">
+                      <g id="编组-49" transform="translate(13.230769, 19.307692)">
                         <circle
                           id="椭圆形"
                           fill="#C7D3ED"
@@ -1146,21 +1041,10 @@ export const getPath = (name: string, props?: any) => {
       return (
         <>
           <defs>
-            <circle
-              id="path-1"
-              cx="37.2455181"
-              cy="26.9632198"
-              r="26.9632198"></circle>
+            <circle id="path-1" cx="37.2455181" cy="26.9632198" r="26.9632198"></circle>
           </defs>
-          <g
-            id="页面-1"
-            stroke="none"
-            stroke-width="1"
-            fill="none"
-            fill-rule="evenodd">
-            <g
-              id="灵动课堂Guide-占位符"
-              transform="translate(-1591.000000, -262.000000)">
+          <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="灵动课堂Guide-占位符" transform="translate(-1591.000000, -262.000000)">
               <g id="编组-2" transform="translate(1591.000000, 262.000000)">
                 <g id="pic-nomessage备份">
                   <rect
@@ -1197,10 +1081,7 @@ export const getPath = (name: string, props?: any) => {
                       cx="37.2455181"
                       cy="26.9632198"
                       r="24.8632198"></circle>
-                    <use
-                      stroke="#C7D3ED"
-                      stroke-width="2.52"
-                      xlinkHref="#path-1"></use>
+                    <use stroke="#C7D3ED" stroke-width="2.52" xlinkHref="#path-1"></use>
                   </g>
                   <line
                     x1="17.0231032"

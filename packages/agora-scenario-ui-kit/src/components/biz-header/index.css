@@ -51,11 +51,11 @@
 .biz-signal-quality.popover-open {
 }
 .biz-signal-quality.excellent path {
-  fill: #0fac69;
+  fill: #0bad69;
 }
 
 .biz-signal-quality.good path {
-  fill: #0073ff;
+  fill: #f5b723;
 }
 
 .biz-signal-quality.bad path {
@@ -63,7 +63,7 @@
 }
 
 .biz-signal-quality.unknown path {
-  fill: #f5b723;
+  fill: #bdbdca;
 }
 
 .biz-signal-content-row {
