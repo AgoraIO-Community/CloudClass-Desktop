@@ -103,40 +103,76 @@ module.exports = {
         //   }
         // ]
       },
+      // webpack.config.js
       {
         test: /\.css$/,
+        exclude: [/node_modules/],
         use: [
           'style-loader',
-          // {
-          //   loader: 'style-loader',
-          // },
+          // 'css-loader'
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1, // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+              modules: true,
+              // localIdentName: '[local]_[hash:base64:8]'
+              // localIdentName: '[name]__[local]--[hash:base64:5]'
+              // minimize: true
             },
           },
-          // {
-          //   loader: "postcss-loader",
-          //   options: {
-          //     postcssOptions: {
-          //       ident: 'postcss',
-          //       config: path.resolve(__dirname, './postcss.config.js')
-          //       // plugins: [
-          //       //   tailwindcss(),
-          //       //   autoprefixer()
-          //       // ]
-          //     }
-          //   }
-          // },
           {
-            loader: 'thread-loader',
+            loader: 'postcss-loader',
+            options: {
+              // ident: 'postcss',
+              plugins: (loader) => [
+                // require('postcss-import')({ root: loader.resourcePath }),
+                require('postcss-cssnext')(),
+                // require('autoprefixer')(),
+                // require('cssnano')()
+              ],
+            },
           },
-          // {
-          //   loader: 'thread-loader',
-          // }
         ],
       },
+      {
+        test: /\.css$/,
+        exclude: [/src/],
+        use: ['style-loader', 'css-loader'],
+      },
+
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     'style-loader',
+      //     // {
+      //     //   loader: 'style-loader',
+      //     // },
+      //     {
+      //       loader: 'css-loader',
+      //       options: {
+      //         importLoaders: 1, // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+      //       },
+      //     },
+      //     // {
+      //     //   loader: "postcss-loader",
+      //     //   options: {
+      //     //     postcssOptions: {
+      //     //       ident: 'postcss',
+      //     //       config: path.resolve(__dirname, './postcss.config.js')
+      //     //       // plugins: [
+      //     //       //   tailwindcss(),
+      //     //       //   autoprefixer()
+      //     //       // ]
+      //     //     }
+      //     //   }
+      //     // },
+      //     {
+      //       loader: 'thread-loader',
+      //     },
+      //     // {
+      //     //   loader: 'thread-loader',
+      //     // }
+      //   ],
+      // },
       {
         test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
         // exclude: /node_modules/,

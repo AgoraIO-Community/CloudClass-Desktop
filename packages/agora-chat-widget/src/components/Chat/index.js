@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
-import { StickyContainer, Sticky } from 'react-sticky';
 import { MessageBox } from '../MessageBox';
 import { InputBox } from '../InputBox';
 import { UserList } from '../UserList';
@@ -22,14 +21,6 @@ import _ from 'lodash';
 const { TabPane } = Tabs;
 
 import './index.css';
-
-const renderTabBar = (props, DefaultTabBar) => (
-  <Sticky bottomOffset={80}>
-    {({ style }) => (
-      <DefaultTabBar {...props} className="tab-class" style={{ ...style }} />
-    )}
-  </Sticky>
-);
 
 // 主页面，定义 tabs
 export const Chat = ({ onReceivedMsg, sendMsg }) => {
@@ -118,7 +109,6 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   };
   return (
     <div>
-      {/* <StickyContainer> */}
       <Tabs
         onChange={onTabChange}
         activeKey={tabKey}
@@ -177,7 +167,6 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
                 }} />
             </div>
         )} */}
-      {/* </StickyContainer> */}
       <div></div>
     </div>
   );

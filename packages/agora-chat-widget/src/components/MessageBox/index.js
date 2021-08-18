@@ -13,6 +13,8 @@ export const MessageBox = () => {
   const state = useSelector((state) => state);
   const msgs = state?.messages;
   const isTabKey = state?.isTabKey;
+  const isHaveNotice = state?.room?.announcement;
+  console.log('isHaveNotice>>>', isHaveNotice);
   let isHaveMsg = msgs && msgs.length > 0;
 
   const activeTab = isTabKey === CHAT_TABS_KEYS.chat;
@@ -29,7 +31,12 @@ export const MessageBox = () => {
   return (
     <div>
       {isHaveMsg ? (
-        <div className="message-box" id="chat-messages">
+        <div
+          className="message-box"
+          id="chat-messages"
+          style={{
+            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 178px)',
+          }}>
           <div>
             {msgs &&
               msgs.map((item, key) => {
@@ -47,7 +54,11 @@ export const MessageBox = () => {
           </div>
         </div>
       ) : (
-        <div className="message-box no-box">
+        <div
+          className="message-box no-box"
+          style={{
+            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 178px)',
+          }}>
           <div className="no-msgs">
             <img src={noMessage_icon} />
             <span className="no-msgs-text">{transI18n('chat.no_message')}</span>
