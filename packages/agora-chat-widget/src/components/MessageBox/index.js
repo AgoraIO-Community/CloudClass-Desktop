@@ -14,7 +14,6 @@ export const MessageBox = () => {
   const msgs = state?.messages;
   const isTabKey = state?.isTabKey;
   const isHaveNotice = state?.room?.announcement;
-  console.log('isHaveNotice>>>', isHaveNotice);
   let isHaveMsg = msgs && msgs.length > 0;
 
   const activeTab = isTabKey === CHAT_TABS_KEYS.chat;
