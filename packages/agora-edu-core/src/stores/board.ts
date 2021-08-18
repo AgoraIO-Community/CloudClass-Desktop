@@ -1941,15 +1941,17 @@ export class BoardStore extends ZoomController {
         //@ts-ignore
         delete newRoomScenes[key];
       }
+      // 如果删除文件中是课件类型，则需要重置到白板tab
+      if (resourceUuids.includes(this.activeSceneName)) {
+        this.room.setScenePath('');
+      }
       this.room.setGlobalState({
         materialList: newList,
         roomScenes: {
           ...newRoomScenes,
         },
       });
-      if (includeRoomScenes) {
-        this.room.setScenePath('');
-      }
+
       this._personalResources = this._personalResources.filter((e) => !resourceUuids.includes(e.resourceUuid));
       EduLogger.info('remove removeMaterialList success', res);
     } catch (err) {
