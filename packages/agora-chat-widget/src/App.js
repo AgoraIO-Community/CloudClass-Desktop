@@ -42,7 +42,6 @@ const App = function (props) {
     let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '');
     let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '');
-    console.log('im_Data_RoomInfo>>>', im_Data_RoomInfo);
     let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '');
     let new_IM_Data = _.assign(
       im_Data_Props,
