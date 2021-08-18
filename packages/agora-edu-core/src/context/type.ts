@@ -1,25 +1,11 @@
-import {
-  EduStream,
-  EduUser,
-  LocalUserRenderer,
-  ScreenShareType,
-  UserRenderer,
-} from 'agora-rte-sdk';
+import { EduStream, EduUser, LocalUserRenderer, ScreenShareType, UserRenderer } from 'agora-rte-sdk';
 import { Subject } from 'rxjs';
 import { Room } from 'white-web-sdk';
-import {
-  AppStoreInitParams,
-  CourseWareItem,
-  LanguageEnum,
-  RoomInfo,
-} from '../api/declare';
+import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';
 import { MaterialDataResource } from '../services/upload-service';
 import { StorageCourseWareItem } from '../types';
 
-export type DeviceErrorCallback = (evt: {
-  type: 'video' | 'audio';
-  error: boolean;
-}) => void;
+export type DeviceErrorCallback = (evt: { type: 'video' | 'audio'; error: boolean }) => void;
 
 export type Resource = {
   file: {
@@ -87,10 +73,7 @@ export type ChatContext = {
    * @param name 名称
    * @version v1.1.0
    */
-  getHistoryChatMessage: (data: {
-    nextId: string;
-    sort: number;
-  }) => Promise<any>;
+  getHistoryChatMessage: (data: { nextId: string; sort: number }) => Promise<any>;
   /**
    * 消息列表
    * @version v1.1.0
@@ -349,9 +332,7 @@ export type PretestContext = {
    * 开启麦克风
    * @version v1.1.0
    */
-  startPretestMicrophone: (payload: {
-    enableRecording: boolean;
-  }) => Promise<void>;
+  startPretestMicrophone: (payload: { enableRecording: boolean }) => Promise<void>;
   /**
    * 关闭麦克风
    * @version v1.1.0
@@ -369,6 +350,12 @@ export type PretestContext = {
    * @version v1.1.0
    */
   changeTestMicrophone: (deviceId: string) => Promise<void>;
+  /**
+   * 切换扬声器
+   * @param deviceId 扬声器设备ID
+   * @version v1.1.0
+   */
+  changeTestSpeaker: (deviceId: string) => Promise<void>;
   /**
    * 改变麦克风设备的音量
    * @param value 麦克采集的音量
@@ -430,10 +417,7 @@ export type ScreenShareContext = {
    * @param type 分享类型, 默认为窗口
    * @version v1.1.2
    */
-  startNativeScreenShareBy: (
-    windowId: number,
-    type?: ScreenShareType,
-  ) => Promise<void>;
+  startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>;
   /**
    * 当前是否允许屏幕共享
    * @version v1.1.2
@@ -561,11 +545,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryCameraDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
+  queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
   /**
    * 查询麦克风设备状态
    * @param userList 查询的用户列表
@@ -573,11 +553,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryMicrophoneDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
+  queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
   /**
    * 是否正在加载房间
    * @version v1.1.2
@@ -1006,10 +982,7 @@ export type UserListContext = {
    * @param whiteboardGranted 给与/不给与权限
    * @version v1.1.2
    */
-  toggleWhiteboardPermission: (
-    userUuid: string,
-    whiteboardGranted: boolean,
-  ) => Promise<any>;
+  toggleWhiteboardPermission: (userUuid: string, whiteboardGranted: boolean) => Promise<any>;
   /**
    * 切换视频开关
    * @param userUuid 用户uuid
@@ -1359,6 +1332,11 @@ export type MediaContext = {
    * @version v1.1.2
    */
   changeMicrophone: (deviceId: string) => Promise<void>;
+  /**
+   * 切换扬声器
+   * @version v1.1.2
+   */
+  changeSpeaker: (deviceId: string) => Promise<void>;
   /**
    * 设置扬声器设备音量，仅electron
    * @version v1.1.2

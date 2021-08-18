@@ -4,37 +4,8 @@ import { useCallback, useState } from 'react';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { StorageCourseWareItem } from '../types';
 import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
-import {
-  useBoardStore,
-  useCoreContext,
-  useMediaStore,
-  usePretestStore,
-  useRoomStore,
-  useSceneStore,
-  useSmallClassStore,
-} from './core';
-import {
-  BoardContext,
-  ChatContext,
-  CloudDriveContext,
-  ControlTool,
-  DeviceErrorCallback,
-  GlobalContext,
-  HandsUpContext,
-  /*StreamContext, */ PretestContext,
-  RecordingContext,
-  ReportContext,
-  RoomContext,
-  RoomDiagnosisContext,
-  ScreenShareContext,
-  SmallClassVideoControlContext,
-  StreamContext,
-  StreamListContext,
-  UserListContext,
-  VideoControlContext,
-  VolumeContext,
-  LiveRoomStatsContext,
-} from './type';
+import { useBoardStore, useCoreContext, useMediaStore, usePretestStore, useRoomStore, useSceneStore, useSmallClassStore } from './core';
+import { BoardContext, ChatContext, CloudDriveContext, ControlTool, DeviceErrorCallback, GlobalContext, HandsUpContext, /*StreamContext, */ PretestContext, RecordingContext, ReportContext, RoomContext, RoomDiagnosisContext, ScreenShareContext, SmallClassVideoControlContext, StreamContext, StreamListContext, UserListContext, VideoControlContext, VolumeContext, LiveRoomStatsContext } from './type';
 
 export { CoreContext, CoreContextProvider } from './core';
 export type { CoreAppContext } from './core';
@@ -63,8 +34,7 @@ export const useChatContext = (): ChatContext => {
     addConversationChatMessage: roomStore.addConversationChatMessage,
     getHistoryChatMessage: roomStore.getHistoryChatMessage,
     getConversationList: roomStore.getConversationList,
-    getConversationHistoryChatMessage:
-      roomStore.getConversationHistoryChatMessage,
+    getConversationHistoryChatMessage: roomStore.getConversationHistoryChatMessage,
     // REMOVED v1.1.1
     // chatCollapse: uiStore.chatCollapse,
     // toggleChatMinimize: uiStore.toggleChatMinimize,
@@ -78,16 +48,7 @@ export const useStreamListContext = (): StreamListContext => {
 
   const smallClassStore = useSmallClassStore();
 
-  const {
-    muteAudio,
-    unmuteAudio,
-    muteVideo,
-    unmuteVideo,
-    teacherStream,
-    studentStreams,
-    streamList,
-    cameraEduStream,
-  } = sceneStore;
+  const { muteAudio, unmuteAudio, muteVideo, unmuteVideo, teacherStream, studentStreams, streamList, cameraEduStream } = sceneStore;
 
   const { revokeUserPermission, grantUserPermission } = boardStore;
 
@@ -158,6 +119,7 @@ export const usePretestContext = (): PretestContext => {
     stopPretestMicrophone: pretestStore.closeTestMicrophone,
     changeTestCamera: pretestStore.changeTestCamera,
     changeTestMicrophone: pretestStore.changeTestMicrophone,
+    changeTestSpeaker: pretestStore.changeTestSpeaker,
     changeTestMicrophoneVolume: pretestStore.changeTestMicrophoneVolume,
     changeTestSpeakerVolume: pretestStore.changeTestSpeakerVolume,
     pretestCameraRenderer: pretestStore.cameraRenderer,
@@ -175,21 +137,12 @@ export const usePretestContext = (): PretestContext => {
 };
 
 export const useScreenShareContext = (): ScreenShareContext => {
-  const {
-    customScreenSharePickerItems,
-    customScreenSharePickerType,
-    screenShareStream,
-    screenEduStream,
-    startOrStopSharing,
-    startNativeScreenShareBy,
-  } = useSceneStore();
+  const { customScreenSharePickerItems, customScreenSharePickerType, screenShareStream, screenEduStream, startOrStopSharing, startNativeScreenShareBy } = useSceneStore();
 
   const { isShareScreen, canSharingScreen } = useBoardStore();
 
   return {
-    nativeAppWindowItems: customScreenSharePickerItems.filter(
-      (it) => !it.isCurrent,
-    ),
+    nativeAppWindowItems: customScreenSharePickerItems.filter((it) => !it.isCurrent),
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
@@ -206,40 +159,11 @@ export const useRoomContext = (): RoomContext => {
 
   const sceneStore = useSceneStore();
 
-  const {
-    roomInfo,
-    classState,
-    sceneType,
-    startNativeScreenShareBy,
-    removeScreenShareWindow,
-    muteVideo,
-    unmuteVideo,
-    muteAudio,
-    unmuteAudio,
-    muteUserChat,
-    unmuteUserChat,
-  } = useSceneStore();
+  const { roomInfo, classState, sceneType, startNativeScreenShareBy, removeScreenShareWindow, muteVideo, unmuteVideo, muteAudio, unmuteAudio, muteUserChat, unmuteUserChat } = useSceneStore();
 
-  const {
-    isJoiningRoom,
-    kickOutBan,
-    kickOutOnce,
-    join,
-    roomProperties,
-    updateFlexProperties,
-    flexProperties,
-    setCarouselState,
-    startCarousel,
-    stopCarousel,
-    joined,
-  } = useRoomStore();
+  const { isJoiningRoom, kickOutBan, kickOutOnce, join, roomProperties, updateFlexProperties, flexProperties, setCarouselState, startCarousel, stopCarousel, joined } = useRoomStore();
 
-  const {
-    handsUpStudentList,
-    processUserCount,
-    teacherAcceptHandsUp,
-    teacherRejectHandsUp,
-  } = useSmallClassStore();
+  const { handsUpStudentList, processUserCount, teacherAcceptHandsUp, teacherRejectHandsUp } = useSmallClassStore();
 
   return {
     sceneType,
@@ -264,18 +188,10 @@ export const useRoomContext = (): RoomContext => {
     // ui context?
     removeScreenShareWindow,
     roomProperties,
-    queryCameraDeviceState: (
-      userList: EduUser[],
-      userUuid: string,
-      streamUuid: string,
-    ) => {
+    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
       return sceneStore.queryCameraDeviceState(userList, userUuid, streamUuid);
     },
-    queryMicrophoneDeviceState: (
-      userList: EduUser[],
-      userUuid: string,
-      streamUuid: string,
-    ) => {
+    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
       return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid);
     },
     isJoiningRoom,
@@ -340,57 +256,9 @@ export const useGlobalContext = (): GlobalContext => {
 };
 
 export const useBoardContext = (): BoardContext => {
-  const {
-    currentColor,
-    currentStrokeWidth,
-    hasPermission,
-    currentSelector,
-    lineSelector,
-    activeMap,
-    zoomValue,
-    currentPage,
-    totalPage,
-    ready,
-    changeStroke,
-    changeHexColor,
-    mount,
-    unmount,
-    setTool,
-    zoomBoard,
-    setZoomScale,
-    changeFooterMenu,
-    updatePen,
-    setLaserPoint,
-    tools,
-    activeSceneName,
-    boardPenIsActive,
-    changeSceneItem,
-    room,
-    installTools,
-    revokeBoardPermission,
-    grantBoardPermission,
-    showBoardTool,
-    isBoardScreenShare,
-    boardConnectionState,
-    joinBoard,
-    leaveBoard,
-  } = useBoardStore();
+  const { currentColor, currentStrokeWidth, hasPermission, currentSelector, lineSelector, activeMap, zoomValue, currentPage, totalPage, ready, changeStroke, changeHexColor, mount, unmount, setTool, zoomBoard, setZoomScale, changeFooterMenu, updatePen, setLaserPoint, tools, activeSceneName, boardPenIsActive, changeSceneItem, room, installTools, revokeBoardPermission, grantBoardPermission, showBoardTool, isBoardScreenShare, boardConnectionState, joinBoard, leaveBoard } = useBoardStore();
 
-  const {
-    courseWareList,
-    downloadList,
-    putSceneByResourceUuid,
-    startDownload,
-    deleteSingle,
-    refreshState,
-    resourcesList,
-    removeMaterialList,
-    cancelUpload,
-    closeMaterial,
-    personalResources,
-    handleUpload,
-    publicResources,
-  } = useBoardStore();
+  const { courseWareList, downloadList, putSceneByResourceUuid, startDownload, deleteSingle, refreshState, resourcesList, removeMaterialList, cancelUpload, closeMaterial, personalResources, handleUpload, publicResources } = useBoardStore();
 
   const { startOrStopSharing } = useScreenShareContext();
 
@@ -477,9 +345,7 @@ export const useCloudDriveContext = (): CloudDriveContext => {
   } = useBoardStore();
 
   return {
-    downloadList: downloadList.filter(
-      (it: StorageCourseWareItem) => it.taskUuid,
-    ),
+    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
     openCloudResource: putSceneByResourceUuid,
     startDownload,
     deleteSingle,
@@ -488,12 +354,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     removeMaterialList,
     cancelUpload,
     closeMaterial,
-    personalResources: allResources.filter(
-      (item: any) => item.access === 'private',
-    ),
-    publicResources: allResources.filter(
-      (item: any) => item.access === 'public',
-    ),
+    personalResources: allResources.filter((item: any) => item.access === 'private'),
+    publicResources: allResources.filter((item: any) => item.access === 'public'),
     doUpload: handleUpload,
     allResources,
     upsertResources,
@@ -514,17 +376,7 @@ export const useUserListContext = (): UserListContext => {
   const appStore = useCoreContext();
   const { isHost } = useSceneStore();
 
-  const {
-    acceptedList: acceptedUserList,
-    teacherInfo,
-    rosterUserList,
-    toggleWhiteboardPermission,
-    toggleCamera,
-    toggleMic,
-    kick,
-    roleToString,
-    teacherAcceptHandsUp,
-  } = useSmallClassStore();
+  const { acceptedList: acceptedUserList, teacherInfo, rosterUserList, toggleWhiteboardPermission, toggleCamera, toggleMic, kick, roleToString, teacherAcceptHandsUp } = useSmallClassStore();
 
   const { roomInfo } = appStore;
   const { sceneType, controlTools } = useSceneStore();
@@ -634,9 +486,7 @@ export const useVideoControlContext = (): VideoControlContext => {
 
   const onCameraClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find(
-        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
-      );
+      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasVideo) {
@@ -651,9 +501,7 @@ export const useVideoControlContext = (): VideoControlContext => {
 
   const onMicClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find(
-        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
-      );
+      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasAudio) {
@@ -666,16 +514,11 @@ export const useVideoControlContext = (): VideoControlContext => {
     [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid],
   );
 
-  const onSendStar = useCallback(
-    async (uid: any) => {},
-    [userRole, sceneStore],
-  );
+  const onSendStar = useCallback(async (uid: any) => {}, [userRole, sceneStore]);
 
   const onWhiteboardClick = useCallback(
     async (userUuid: any) => {
-      const targetUser = boardStore.grantUsers.find(
-        (uid: string) => uid === userUuid,
-      );
+      const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid);
       if (isHost) {
         if (targetUser) {
           await boardStore.revokeUserPermission(userUuid);
@@ -725,118 +568,99 @@ export const useVideoControlContext = (): VideoControlContext => {
   };
 };
 
-export const useSmallClassVideoControlContext =
-  (): SmallClassVideoControlContext => {
-    const sceneStore = useSceneStore();
-    const boardStore = useBoardStore();
-    const smallClassStore = useSmallClassStore();
-    const isHost = sceneStore.isHost;
-    const teacherStream = sceneStore.teacherStream;
-    const studentStreams = smallClassStore.studentStreams;
+export const useSmallClassVideoControlContext = (): SmallClassVideoControlContext => {
+  const sceneStore = useSceneStore();
+  const boardStore = useBoardStore();
+  const smallClassStore = useSmallClassStore();
+  const isHost = sceneStore.isHost;
+  const teacherStream = sceneStore.teacherStream;
+  const studentStreams = smallClassStore.studentStreams;
 
-    // const firstStudent = studentStreams[0]
+  // const firstStudent = studentStreams[0]
 
-    // const sceneVideoConfig = sceneStore.sceneVideoConfig
+  // const sceneVideoConfig = sceneStore.sceneVideoConfig
 
-    const { controlTools } = sceneStore;
+  const { controlTools } = sceneStore;
 
-    const userRole = sceneStore.roomInfo.userRole;
+  const userRole = sceneStore.roomInfo.userRole;
 
-    const onCameraClick = useCallback(
-      async (userUuid: any) => {
-        const targetStream = sceneStore.streamList.find(
-          (stream: EduStream) =>
-            get(stream.userInfo, 'userUuid', 0) === userUuid,
-        );
-        if (targetStream) {
-          const isLocal = sceneStore.roomInfo.userUuid === userUuid;
-          if (targetStream.hasVideo) {
-            await sceneStore.muteVideo(userUuid, isLocal);
-          } else {
-            await sceneStore.unmuteVideo(userUuid, isLocal);
-          }
+  const onCameraClick = useCallback(
+    async (userUuid: any) => {
+      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      if (targetStream) {
+        const isLocal = sceneStore.roomInfo.userUuid === userUuid;
+        if (targetStream.hasVideo) {
+          await sceneStore.muteVideo(userUuid, isLocal);
+        } else {
+          await sceneStore.unmuteVideo(userUuid, isLocal);
         }
-      },
-      [
-        userRole,
-        sceneStore,
-        sceneStore.streamList,
-        sceneStore.roomInfo.userUuid,
-      ],
-    );
+      }
+    },
+    [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid],
+  );
 
-    const onMicClick = useCallback(
-      async (userUuid: any) => {
-        const targetStream = sceneStore.streamList.find(
-          (stream: EduStream) =>
-            get(stream.userInfo, 'userUuid', 0) === userUuid,
-        );
-        if (targetStream) {
-          const isLocal = sceneStore.roomInfo.userUuid === userUuid;
-          if (targetStream.hasAudio) {
-            await sceneStore.muteAudio(userUuid, isLocal);
-          } else {
-            await sceneStore.unmuteAudio(userUuid, isLocal);
-          }
+  const onMicClick = useCallback(
+    async (userUuid: any) => {
+      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      if (targetStream) {
+        const isLocal = sceneStore.roomInfo.userUuid === userUuid;
+        if (targetStream.hasAudio) {
+          await sceneStore.muteAudio(userUuid, isLocal);
+        } else {
+          await sceneStore.unmuteAudio(userUuid, isLocal);
         }
-      },
-      [
-        userRole,
-        sceneStore,
-        sceneStore.streamList,
-        sceneStore.roomInfo.userUuid,
-      ],
-    );
+      }
+    },
+    [userRole, sceneStore, sceneStore.streamList, sceneStore.roomInfo.userUuid],
+  );
 
-    const onSendStar = useCallback(
-      async (uid: any) => {
-        await smallClassStore.sendReward(uid);
-      },
-      [userRole, smallClassStore],
-    );
+  const onSendStar = useCallback(
+    async (uid: any) => {
+      await smallClassStore.sendReward(uid);
+    },
+    [userRole, smallClassStore],
+  );
 
-    const onWhiteboardClick = useCallback(
-      async (userUuid: any) => {
-        const targetUser = boardStore.grantUsers.find(
-          (uid: string) => uid === userUuid,
-        );
-        if (isHost) {
-          if (targetUser) {
-            await boardStore.revokeUserPermission(userUuid);
-          } else {
-            await boardStore.grantUserPermission(userUuid);
-          }
+  const onWhiteboardClick = useCallback(
+    async (userUuid: any) => {
+      const targetUser = boardStore.grantUsers.find((uid: string) => uid === userUuid);
+      if (isHost) {
+        if (targetUser) {
+          await boardStore.revokeUserPermission(userUuid);
+        } else {
+          await boardStore.grantUserPermission(userUuid);
         }
-      },
-      [isHost, boardStore],
-    );
+      }
+    },
+    [isHost, boardStore],
+  );
 
-    const onOffPodiumClick = useCallback(
-      async (userUuid: any) => {
-        if (isHost) {
-          await sceneStore.revokeCoVideo(userUuid);
-        }
-      },
-      [isHost, sceneStore],
-    );
+  const onOffPodiumClick = useCallback(
+    async (userUuid: any) => {
+      if (isHost) {
+        await sceneStore.revokeCoVideo(userUuid);
+      }
+    },
+    [isHost, sceneStore],
+  );
 
-    return {
-      teacherStream,
-      studentStreams,
-      onCameraClick,
-      onMicClick,
-      onSendStar,
-      onWhiteboardClick,
-      onOffPodiumClick,
-      firstStudent: studentStreams[0],
-      sceneVideoConfig: {
-        isHost,
-        hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
-        hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
-        hideOffPodium: !controlTools.includes(ControlTool.offPodium),
-      },
-    };
+  return {
+    teacherStream,
+    studentStreams,
+    onCameraClick,
+    onMicClick,
+    onSendStar,
+    onWhiteboardClick,
+    onOffPodiumClick,
+    firstStudent: studentStreams[0],
+    sceneVideoConfig: {
+      isHost,
+      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      hideOffAllPodium: !controlTools.includes(ControlTool.offPodiumAll),
+      hideOffPodium: !controlTools.includes(ControlTool.offPodium),
+    },
   };
+};
 
 export const useReportContext = (): ReportContext => {
   const core = useCoreContext();

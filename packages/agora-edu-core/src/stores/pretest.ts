@@ -1,10 +1,4 @@
-import {
-  AgoraElectronRTCWrapper,
-  AgoraWebRtcWrapper,
-  GenericErrorWrapper,
-  LocalUserRenderer,
-  MediaService,
-} from 'agora-rte-sdk';
+import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer, MediaService } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import { Subject } from 'rxjs';
@@ -75,17 +69,7 @@ export class PretestStore {
   }
 
   @action.bound
-  setBeautyEffectOptions({
-    lighteningLevel = 70,
-    rednessLevel = 10,
-    smoothnessLevel = 50,
-    isBeauty = true,
-  }: {
-    lighteningLevel: number;
-    rednessLevel: number;
-    smoothnessLevel: number;
-    isBeauty: boolean;
-  }) {
+  setBeautyEffectOptions({ lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50, isBeauty = true }: { lighteningLevel: number; rednessLevel: number; smoothnessLevel: number; isBeauty: boolean }) {
     this.mediaService.setBeautyEffectOptions({
       isBeauty,
       lighteningLevel: lighteningLevel / 100,
@@ -117,11 +101,7 @@ export class PretestStore {
 
   @computed
   get deviceTestSuccess(): boolean {
-    if (
-      this.cameraTestResult !== 'error' &&
-      this.microphoneTestResult !== 'error' &&
-      this.speakerTestResult !== 'error'
-    ) {
+    if (this.cameraTestResult !== 'error' && this.microphoneTestResult !== 'error' && this.speakerTestResult !== 'error') {
       return true;
     }
     return false;
@@ -185,9 +165,7 @@ export class PretestStore {
   @computed
   get cameraId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default;
-    const idx = this.cameraList.findIndex(
-      (it: any) => it.label === this.cameraLabel,
-    );
+    const idx = this.cameraList.findIndex((it: any) => it.label === this.cameraLabel);
     if (this.isElectron && this.rtcCameraId) {
       return this.rtcCameraId;
     }
@@ -200,9 +178,7 @@ export class PretestStore {
   @computed
   get microphoneId(): string {
     const defaultValue = AgoraMediaDeviceEnum.Default;
-    const idx = this.microphoneList.findIndex(
-      (it: any) => it.label === this.microphoneLabel,
-    );
+    const idx = this.microphoneList.findIndex((it: any) => it.label === this.microphoneLabel);
     if (this.isElectron && this.rtcMicrophoneId) {
       return this.rtcMicrophoneId;
     }
@@ -218,9 +194,7 @@ export class PretestStore {
       if (this.rtcSpeakerId) {
         return this.rtcSpeakerId;
       }
-      const idx = this.speakerList.findIndex(
-        (it: any) => it.label === this.speakerLabel,
-      );
+      const idx = this.speakerList.findIndex((it: any) => it.label === this.speakerLabel);
       if (this.speakerList[idx]) {
         return this.speakerList[idx].deviceId;
       }
@@ -303,17 +277,7 @@ export class PretestStore {
   constructor(appStore: EduScenarioAppStore) {
     console.log('[ID] pretestStore ### ', this.id);
     this.appStore = appStore;
-    reaction(
-      () =>
-        JSON.stringify([
-          this.cameraList,
-          this.microphoneList,
-          this.cameraLabel,
-          this.microphoneLabel,
-          this.speakerLabel,
-        ]),
-      this.handleDeviceChange,
-    );
+    reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange);
   }
 
   onDeviceTestError(cb: DeviceErrorCallback) {
@@ -331,18 +295,11 @@ export class PretestStore {
     };
   }
 
-  getDeviceItem(
-    list: any[],
-    queryDevice: { type: string; value: string; targetField: string },
-  ) {
+  getDeviceItem(list: any[], queryDevice: { type: string; value: string; targetField: string }) {
     const type = `${queryDevice.type}`;
     const targetField = `${queryDevice.targetField}`;
     const _defaultValue = targetField === 'label' ? 'default' : '';
-    const defaultValue = isEmpty(list)
-      ? _defaultValue
-      : list[1]
-      ? list[1][type]
-      : '';
+    const defaultValue = isEmpty(list) ? _defaultValue : list[1] ? list[1][type] : '';
     const device: any = list.find((it: any) => it[type] === queryDevice.value);
     const targetLabelValue = device ? device[targetField] : defaultValue;
     return targetLabelValue;
@@ -447,28 +404,37 @@ export class PretestStore {
 
   @computed
   get speakerList(): any[] {
-    // if (this.appStore.uiStore.isElectron) {
-    //   return this._speakerList
-    // }
+    if (this.isElectron) {
+      return this._speakerList;
+    }
     return [
       {
         label: 'browser default',
         deviceId: 'web_default',
       },
     ];
-    // return this._speakerList
   }
 
   @observable
-  private initRecords: Record<'videoDeviceInit' | 'audioDeviceInit', boolean> =
-    {
-      videoDeviceInit: false,
-      audioDeviceInit: false,
-    };
+  private initRecords: Record<'videoDeviceInit' | 'audioDeviceInit', boolean> = {
+    videoDeviceInit: false,
+    audioDeviceInit: false,
+  };
 
-  async init(
-    option: { video?: boolean; audio?: boolean } = { video: true, audio: true },
-  ) {
+  @action.bound
+  getSpeakerList() {
+    if (this.isElectron) {
+      this._speakerList = this.mediaService.electron.client.getAudioPlaybackDevices().map((item: any) => {
+        return {
+          deviceId: item.deviceid,
+          label: item.devicename,
+        };
+      });
+    }
+    return this._speakerList;
+  }
+
+  async init(option: { video?: boolean; audio?: boolean } = { video: true, audio: true }) {
     if (option.video) {
       try {
         const videoDeviceInit = this.initRecords.videoDeviceInit;
@@ -476,10 +442,7 @@ export class PretestStore {
           this.initRecords.videoDeviceInit = true;
         }
         const cams = await this.mediaService.getCameras();
-        if (
-          this.appStore.isElectron &&
-          this.cameraLabel !== CustomizeDeviceLabel.Disabled
-        ) {
+        if (this.appStore.isElectron && this.cameraLabel !== CustomizeDeviceLabel.Disabled) {
           const label = this.mediaService.getCameraLabel();
           this.updateCameraLabel(label);
           this.updateTestCameraLabel();
@@ -519,10 +482,9 @@ export class PretestStore {
           this.initRecords.audioDeviceInit = true;
         }
         const mics = await this.mediaService.getMicrophones();
-        if (
-          this.appStore.isElectron &&
-          this.microphoneLabel !== CustomizeDeviceLabel.Disabled
-        ) {
+        this.getSpeakerList();
+        this.updateTestSpeakerLabel();
+        if (this.appStore.isElectron && this.microphoneLabel !== CustomizeDeviceLabel.Disabled) {
           const label = this.mediaService.getMicrophoneLabel();
           this.updateMicrophoneLabel(label);
           this.updateTestMicrophoneLabel();
@@ -649,10 +611,7 @@ export class PretestStore {
             await this.mediaService.enableLocalVideo(true);
             await this.mediaService.setCameraDevice(deviceId);
           } else {
-            this.mediaService.web.videoDeviceConfig.set(
-              'cameraRenderer',
-              deviceId,
-            );
+            this.mediaService.web.videoDeviceConfig.set('cameraRenderer', deviceId);
             await this.mediaService.enableLocalVideo(true);
           }
           this._cameraRenderer = this.mediaService.cameraRenderer;
@@ -679,8 +638,7 @@ export class PretestStore {
         this._microphoneTrack = this.web.microphoneTrack;
       }
       if (this.isElectron) {
-        payload.enableRecording &&
-          this.mediaService.electron.client.startAudioRecordingDeviceTest(300);
+        payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300);
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel();
       this._microphoneId = this.microphoneId;
@@ -709,6 +667,7 @@ export class PretestStore {
     this.resetMicrophoneTrack();
   }
 
+  @action.bound
   updateCameraLabel(label: string) {
     if (this.isElectron) {
       this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
@@ -717,37 +676,47 @@ export class PretestStore {
     this._cameraId = this.cameraId;
   }
 
+  @action.bound
   updateMicrophoneLabel(label: string) {
-    if (this.isElectron) {
-      this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
-    }
-    this.microphoneLabel = label;
-    this._microphoneId = this.microphoneId;
+    setTimeout(() => {
+      if (this.isElectron) {
+        this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+      }
+      this.microphoneLabel = label;
+      this._microphoneId = this.microphoneId;
+    }, 100);
   }
 
+  @action.bound
   updateTestMicrophoneLabel() {
-    if (this.isElectron) {
-      this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
-    }
-    this.microphoneLabel = this.mediaService.getTestMicrophoneLabel();
-    this._microphoneId = this.microphoneId;
+    setTimeout(() => {
+      if (this.isElectron) {
+        this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
+      }
+      this.microphoneLabel = this.mediaService.getTestMicrophoneLabel();
+      this._microphoneId = this.microphoneId;
+    }, 100);
   }
 
+  @action.bound
   updateTestCameraLabel() {
-    // this._cameraRenderer = this.mediaService.cameraRenderer
-    if (this.isElectron) {
-      this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
-    }
-    this.cameraLabel = this.mediaService.getTestCameraLabel();
-    this._cameraId = this.cameraId;
+    setTimeout(() => {
+      if (this.isElectron) {
+        this.rtcCameraId = `${this.mediaService.electron.client.getCurrentVideoDevice()}`;
+      }
+      this.cameraLabel = this.mediaService.getTestCameraLabel();
+      this._cameraId = this.cameraId;
+    }, 100);
   }
 
+  @action.bound
   updateTestSpeakerLabel() {
-    if (this.isElectron) {
-      this.rtcSpeakerId = `${this.mediaService.electron.client.getCurrentAudioPlaybackDevice()}`;
-    }
-    this.speakerLabel = this.mediaService.getSpeakerLabel();
-    // this._speakerId = this.speakerId;
+    setTimeout(() => {
+      if (this.isElectron) {
+        this.rtcSpeakerId = `${this.mediaService.electron.client.getCurrentAudioPlaybackDevice()}`;
+      }
+      this.speakerLabel = this.mediaService.getSpeakerLabel();
+    }, 100);
   }
 
   @action.bound
@@ -762,10 +731,7 @@ export class PretestStore {
           if (this.mediaService.web.microphoneTrack) {
             await this.mediaService.setMicrophoneDevice(deviceId);
           } else {
-            this.mediaService.web.audioDeviceConfig.set(
-              'microphoneTrack',
-              deviceId,
-            );
+            this.mediaService.web.audioDeviceConfig.set('microphoneTrack', deviceId);
             await this.mediaService.enableLocalAudio(true);
             this._microphoneTrack = this.web.microphoneTrack;
           }
@@ -774,9 +740,7 @@ export class PretestStore {
         }
         if (this.isElectron) {
           if (prevDeviceMicrophoneId === AgoraMediaDeviceEnum.Disabled) {
-            this.mediaService.electron.client.startAudioRecordingDeviceTest(
-              300,
-            );
+            this.mediaService.electron.client.startAudioRecordingDeviceTest(300);
           }
         }
         this.updateTestMicrophoneLabel();
@@ -813,10 +777,7 @@ export class PretestStore {
       this.muteCamera();
     } else {
       if (this.isElectron) {
-        if (
-          this.appStore.sceneStore.cameraEduStream &&
-          this.appStore.sceneStore.cameraEduStream.hasVideo
-        ) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
           await this.mediaService.muteLocalVideo(false, deviceId);
         } else {
           await this.mediaService.setCameraDevice(deviceId);
@@ -824,15 +785,10 @@ export class PretestStore {
       }
 
       if (this.isWeb) {
-        if (
-          this.appStore.sceneStore.cameraEduStream &&
-          this.appStore.sceneStore.cameraEduStream.hasVideo
-        ) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
           await this.mediaService.muteLocalVideo(false, deviceId);
         } else {
-          const camera = this.cameraList.find(
-            (it: any) => it.deviceId === deviceId,
-          );
+          const camera = this.cameraList.find((it: any) => it.deviceId === deviceId);
           if (!camera) {
             return;
           }
@@ -845,8 +801,7 @@ export class PretestStore {
           }
         }
       }
-      this.appStore.sceneStore._cameraRenderer =
-        this.mediaService.cameraRenderer;
+      this.appStore.sceneStore._cameraRenderer = this.mediaService.cameraRenderer;
       this.cameraLabel = this.mediaService.getCameraLabel();
       this.appStore.deviceInfo.cameraName = this.cameraLabel;
       if (this.isElectron) {
@@ -865,50 +820,45 @@ export class PretestStore {
 
   @action.bound
   async changeElectronTestSpeaker(deviceId: string) {
-    console.log('device id', deviceId);
+    this.mediaService.electron.client.setAudioPlaybackDevice(deviceId);
+    this.updateTestSpeakerLabel();
   }
 
   @action.bound
   async changeTestSpeaker(deviceId: string) {
-    if (this.mediaService.isElectron) {
+    if (this.isElectron) {
       await this.changeElectronTestSpeaker(deviceId);
-      return;
     }
   }
 
+  @action.bound
   async changeSpeaker(value: any) {
-    throw new Error('Method not implemented.');
+    if (this.isElectron) {
+      await this.changeElectronTestSpeaker(value);
+    }
   }
 
   @action.bound
   async changeTestSpeakerVolume(value: any) {
-    this.mediaService.electron.client.setAudioPlaybackVolume(
-      Math.round(value * 2.55),
-    );
+    this.mediaService.electron.client.setAudioPlaybackVolume(Math.round(value * 2.55));
   }
 
   @action.bound
   async changeTestMicrophoneVolume(value: any) {
-    this.mediaService.electron.client.setAudioRecordingVolume(
-      Math.round(value * 2.55),
-    );
+    this.mediaService.electron.client.setAudioRecordingVolume(Math.round(value * 2.55));
   }
 
   @action.bound
   async changeSpeakerVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.setAudioPlaybackVolume(
-        Math.round(value * 2.55),
-      );
+      this.mediaService.electron.client.setAudioPlaybackVolume(Math.round(value * 2.55));
     }
   }
 
   @action.bound
   async changeMicrophoneVolume(value: any) {
     if (this.mediaService.isElectron) {
-      this.mediaService.electron.client.setAudioRecordingVolume(
-        Math.round(value * 2.55),
-      );
+      this.mediaService.electron.client.setAudioRecordingVolume(Math.round(value * 2.55));
     }
   }
 
@@ -921,25 +871,17 @@ export class PretestStore {
       this.muteMicrophone();
     } else {
       if (this.isElectron) {
-        if (
-          this.appStore.sceneStore.cameraEduStream &&
-          this.appStore.sceneStore.cameraEduStream.hasAudio
-        ) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
           await this.mediaService.muteLocalAudio(false, deviceId);
         } else {
           await this.mediaService.setMicrophoneDevice(deviceId);
         }
       }
       if (this.isWeb) {
-        if (
-          this.appStore.sceneStore.cameraEduStream &&
-          this.appStore.sceneStore.cameraEduStream.hasAudio
-        ) {
+        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
           await this.mediaService.muteLocalAudio(false, deviceId);
         } else {
-          const microphone = this.microphoneList.find(
-            (it: any) => it.deviceId === deviceId,
-          );
+          const microphone = this.microphoneList.find((it: any) => it.deviceId === deviceId);
           if (!microphone) {
             return;
           }
@@ -958,15 +900,14 @@ export class PretestStore {
         this.rtcMicrophoneId = `${this.mediaService.electron.client.getCurrentAudioRecordingDevice()}`;
       }
       this._microphoneId = this.microphoneId;
+      this.updateTestMicrophoneLabel();
     }
   }
 
   @action.bound
   getAudioRecordingVolume() {
     if (this.isElectron) {
-      return Math.round(
-        this.mediaService.electron.client.getAudioRecordingVolume() / 2.55,
-      );
+      return Math.round(this.mediaService.electron.client.getAudioRecordingVolume() / 2.55);
     }
     return 50;
   }
@@ -974,9 +915,7 @@ export class PretestStore {
   @action.bound
   getAudioPlaybackVolume() {
     if (this.isElectron) {
-      return Math.round(
-        this.mediaService.electron.client.getAudioPlaybackVolume() / 2.55,
-      );
+      return Math.round(this.mediaService.electron.client.getAudioPlaybackVolume() / 2.55);
     }
     return 50;
   }

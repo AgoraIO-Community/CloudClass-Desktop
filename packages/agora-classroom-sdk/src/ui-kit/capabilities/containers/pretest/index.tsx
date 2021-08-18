@@ -1,20 +1,8 @@
-import {
-  useGlobalContext,
-  useMediaContext,
-  usePretestContext,
-  useVolumeContext,
-} from 'agora-edu-core';
+import { useGlobalContext, useMediaContext, usePretestContext, useVolumeContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import {
-  Button,
-  MediaDeviceState,
-  Modal,
-  Pretest,
-  t,
-  transI18n,
-} from '~ui-kit';
+import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Volume } from '~components/volume';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,61 +14,16 @@ const VolumeIndicationView: React.FC<any> = observer(() => {
   // microphoneLevel
   // } = usePretestContext()
 
-  return (
-    <Volume
-      currentVolume={microphoneLevel}
-      maxLength={48}
-      style={{ marginLeft: 6 }}
-    />
-  );
+  return <Volume currentVolume={microphoneLevel} maxLength={48} style={{ marginLeft: 6 }} />;
 });
 
 export const PretestContainer = observer(() => {
-  const {
-    cameraError,
-    microphoneError,
-    cameraList,
-    microphoneList,
-    speakerList,
-    cameraId,
-    microphoneId,
-    isMirror,
-    setMirror,
-    changeTestSpeakerVolume,
-    changeTestMicrophoneVolume,
-    installPretest,
-    changeTestCamera,
-    changeTestMicrophone,
-    stopPretestCamera,
-    stopPretestMicrophone,
-    pretestNoticeChannel,
-    pretestCameraRenderer,
-    isBeauty,
-    setBeauty,
-    whitening,
-    buffing,
-    ruddy,
-    setWhitening,
-    setBuffing,
-    setRuddy,
-    setBeautyEffectOptions,
-  } = usePretestContext();
+  const { cameraError, microphoneError, cameraList, microphoneList, speakerList, speakerId, cameraId, microphoneId, isMirror, setMirror, changeTestSpeakerVolume, changeTestMicrophoneVolume, installPretest, changeTestCamera, changeTestMicrophone, changeTestSpeaker, stopPretestCamera, stopPretestMicrophone, pretestNoticeChannel, pretestCameraRenderer, isBeauty, setBeauty, whitening, buffing, ruddy, setWhitening, setBuffing, setRuddy, setBeautyEffectOptions } = usePretestContext();
 
-  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } =
-    useMediaContext();
+  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } = useMediaContext();
 
   const VideoPreviewPlayer = useCallback(() => {
-    return (
-      <RendererPlayer
-        className="camera-placeholder camera-muted-placeholder"
-        style={{ width: 320, height: 180 }}
-        mirror={isMirror}
-        key={cameraId}
-        id="stream-player"
-        track={pretestCameraRenderer}
-        preview={true}
-      />
-    );
+    return <RendererPlayer className="camera-placeholder camera-muted-placeholder" style={{ width: 320, height: 180 }} mirror={isMirror} key={cameraId} id="stream-player" track={pretestCameraRenderer} preview={true} />;
   }, [pretestCameraRenderer, cameraId, isMirror]);
 
   const handleError = (evt: any) => {
@@ -95,18 +38,15 @@ export const PretestContainer = observer(() => {
   useEffect(() => {
     installPretest(handleError);
     // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
-    const beautyEffectOptionsStr = window.localStorage.getItem(
-      'beautyEffectOptions',
-    );
-    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } =
-      beautyEffectOptionsStr
-        ? JSON.parse(beautyEffectOptionsStr)
-        : {
-            isBeauty: false,
-            lighteningLevel: 70,
-            rednessLevel: 10,
-            smoothnessLevel: 50,
-          };
+    const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions');
+    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } = beautyEffectOptionsStr
+      ? JSON.parse(beautyEffectOptionsStr)
+      : {
+          isBeauty: false,
+          lighteningLevel: 70,
+          rednessLevel: 10,
+          smoothnessLevel: 50,
+        };
     setBeauty(isBeauty);
     setWhitening(lighteningLevel);
     setBuffing(smoothnessLevel);
@@ -128,6 +68,10 @@ export const PretestContainer = observer(() => {
       }
       case 'microphone': {
         await changeTestMicrophone(value);
+        break;
+      }
+      case 'speaker': {
+        await changeTestSpeaker(value);
         break;
       }
     }
@@ -212,13 +156,7 @@ export const PretestContainer = observer(() => {
 
   return (
     <div className="fixed-container">
-      <Modal
-        title={t('pretest.settingTitle')}
-        width={720}
-        footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
-        onOk={handleOk}
-        onCancel={() => {}}
-        btnId="device_assert">
+      <Modal title={t('pretest.settingTitle')} width={720} footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]} onOk={handleOk} onCancel={() => {}} btnId="device_assert">
         <Pretest
           //@ts-ignore
           pretestChannel={pretestNoticeChannel}
@@ -232,7 +170,7 @@ export const PretestContainer = observer(() => {
           microphoneList={microphoneList}
           microphoneId={microphoneId}
           speakerList={speakerList}
-          speakerId={speakerList[0].deviceId}
+          speakerId={speakerId}
           isNative={isNative}
           videoComponent={VideoPreviewPlayer}
           volumeComponent={() => <VolumeIndicationView />}
