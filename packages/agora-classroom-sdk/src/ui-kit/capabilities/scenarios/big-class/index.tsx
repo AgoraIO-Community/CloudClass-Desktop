@@ -28,8 +28,7 @@ import { Aside, Content, Layout } from '~components/layout';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 
 export const BigClassScenario = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } =
-    useCloudDriveContext();
+  const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
 
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 
@@ -72,12 +71,7 @@ export const BigClassScenario = observer(() => {
   const visible = userRole !== EduRoleTypeEnum.invisible;
 
   return (
-    <Layout
-      className={cls}
-      direction="col"
-      style={{
-        height: '100vh',
-      }}>
+    <Layout className={cls} direction="col">
       <NavigationBar />
       <Layout className="horizontal">
         <Content className="column">

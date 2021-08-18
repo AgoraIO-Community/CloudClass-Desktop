@@ -56,12 +56,7 @@ export const OneToOneScenario = observer(() => {
   const className = 'normal';
 
   return (
-    <Layout
-      className={cls}
-      direction="col"
-      style={{
-        height: '100vh',
-      }}>
+    <Layout className={cls} direction="col">
       <NavigationBar />
       <Layout className="horizontal">
         <Content>
