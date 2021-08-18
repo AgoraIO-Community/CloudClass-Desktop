@@ -83,7 +83,7 @@ export const MidClassScenario = observer(() => {
         height: '100vh',
       }}>
       <NavigationBar />
-      <Layout className="layout layout-row layout-video">
+      <Layout className="layout-video">
         <MidVideoMarqueeContainer />
       </Layout>
       <Layout className="horizontal">
