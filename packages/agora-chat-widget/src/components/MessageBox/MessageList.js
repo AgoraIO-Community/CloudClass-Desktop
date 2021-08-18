@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Tabs } from 'antd';
 import { Text, Flex } from 'rebass'
@@ -9,7 +9,7 @@ import MessageItem from './Message/index'
 import QuestionMessage from './QaList/QuestionMessage'
 import { CHAT_TABS, CHAT_TABS_KEYS, HISTORY_COUNT } from './constants'
 import store from '../../redux/store'
-import { roomMessages, qaMessages, removeChatNotification, isTabs } from '../../redux/aciton'
+import { roomMessages, qaMessages, removeChatNotification, isTabs, historyCurrentHeight, isHistoryCurrentLoc } from '../../redux/aciton'
 import { getHistoryMessages } from '../../api/historyMessages'
 import scrollElementToBottom from '../../utils/scrollElementToBottom'
 
@@ -48,6 +48,9 @@ const MessageList = ({ activeKey }) => {
   const isHiedReward = useSelector(state => state.isReward);
   // 是否为提问消息
   const isHiedQuestion = useSelector(state => state.isQa);
+
+  const historyCurrentToHeight = useSelector(state => state.historyCurrentHeight);
+  const isHistoryCurrent = useSelector(state => state.isHistoryCurrent);
   // 是否有权限
   let hasEditPermisson = Number(isTeacher) === 3;
   // 当前是哪个tab
@@ -139,9 +142,25 @@ const MessageList = ({ activeKey }) => {
   }, [roomUsers, roomListInfo])
 
   useEffect(() => {
-    let scrollElement = document.getElementById('chat-box-tag')
-    scrollElementToBottom(scrollElement)
+    let scrollElement = document.getElementById('chat-box-tag');
+    if (scrollElement) {
+      scrollElementToBottom(scrollElement)
+      if (isHistoryCurrent && historyCurrentToHeight) {
+        scrollElement.scrollTop = scrollElement.scrollHeight - historyCurrentToHeight;
+      }
+    }
+
   }, [messageList])
+
+  const handleLoadMoreMessage = (e) => {
+    e.preventDefault();
+    getHistoryMessages(roomId, e);
+    let scrollElement = document.getElementById('chat-box-tag');
+    store.dispatch(historyCurrentHeight(scrollElement.scrollHeight))
+  }
+
+
+
   // 遍历成员列表，拿到成员数据，结构和 roomAdmin 统一
   return (
     <div className='message'>
@@ -159,9 +178,9 @@ const MessageList = ({ activeKey }) => {
                   <div className="msg-red-dot"></div>
                 )}
               </Flex>} key={key}>
-                <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""}>
+                <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""} >
                   {/* {name === '聊天' && isLoadGif && <div className='load'></div>} */}
-                  {name === '聊天' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+                  {name === '聊天' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={handleLoadMoreMessage}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
                   <Component {
                     ...key === CHAT_TABS_KEYS.chat && {
                       messageList,
@@ -191,7 +210,7 @@ const MessageList = ({ activeKey }) => {
           </Flex>
           <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
             {/* {isLoadGif && <div className='load'></div>} */}
-            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(roomId) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={handleLoadMoreMessage}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
             {
               messageList.length > 0 ? (
                 <MessageItem messageList={messageList} isHiedReward={isHiedReward} />

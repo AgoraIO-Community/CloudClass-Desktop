@@ -35,7 +35,9 @@ let defaultState = {
     userListInfo: {},    //成员信息
     isRoomAllMute: false,  //全局禁言
     customMsg: {},
-    listner:{},
+    listner: {},
+    historyCurrentHeight: 0,
+    isHistoryCurrent: false,
 
 }
 const reducer = (state = defaultState, action) => {
@@ -49,7 +51,7 @@ const reducer = (state = defaultState, action) => {
             };
         // 是否登陆
         case 'IS_LOGIN':
-            state.listner.stateChanged && state.listner.stateChanged(data,state.joinRoomState);
+            state.listner.stateChanged && state.listner.stateChanged(data, state.joinRoomState);
             return {
                 ...state,
                 isLogin: data
@@ -159,28 +161,38 @@ const reducer = (state = defaultState, action) => {
         case 'SAVE_ROOM_MESSAGES':
             const { showNotice, isHistory } = action.options
             let msgs;
+            let newMsgs;
             let isTabShowChatNotice;
             if (isHistory) {
                 msgs = [data].concat(state.messages.list)
                 isTabShowChatNotice = state.messages.notification[CHAT_TABS_KEYS.chat];
+                state.isHistoryCurrent = true;
             } else {
                 msgs = state.messages.list.concat(data)
                 isTabShowChatNotice = showNotice;
+                state.isHistoryCurrent = false;
             }
             if (data.ext.msgId) {
                 msgs = msgs.filter((item) => item.id !== data.ext.msgId)
             }
+            newMsgs = _.uniqBy(msgs, 'id')
             return {
                 ...state,
                 messages: {
                     ...state.messages,
-                    list: msgs,
+                    list: newMsgs,
                     notification: {
                         ...state.messages.notification,
                         [CHAT_TABS_KEYS.chat]: isTabShowChatNotice
                     }
                 }
             };
+        // 当前拉取历史消息所在位置
+        case 'HISTORY_CURRENT_HEIGHT':
+            return {
+                ...state,
+                historyCurrentHeight: data
+            }
         //移除聊天框红点通知
         case 'REMOVE_CHAT_NOTIFICATION':
             return {
@@ -209,6 +221,7 @@ const reducer = (state = defaultState, action) => {
         case 'SAVE_QA_MESSAGE':
             const qaList = state.messages.qaList
             let qaMsgs;
+            let newQaMsgs;
             let isShowRedNotice;
             let isTabShowRedNotice;
             if (action.options.isHistory) {
@@ -225,6 +238,7 @@ const reducer = (state = defaultState, action) => {
                 isShowRedNotice = action.options.showNotice;
                 isTabShowRedNotice = action.options.showNotice;
             }
+            newQaMsgs = _.uniqBy(qaMsgs, 'id')
             return {
                 ...state,
                 messages: {
@@ -232,7 +246,7 @@ const reducer = (state = defaultState, action) => {
                     qaList: {
                         ...qaList,
                         [qaSender]: {
-                            msg: qaMsgs,
+                            msg: newQaMsgs,
                             showRedNotice: isShowRedNotice,
                             time: qaList[qaSender]?.time || action.time
                         }
@@ -289,11 +303,13 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 isMoreHistory: data
             };
+        // 加载动画
         case 'LOAD_GIF':
             return {
                 ...state,
                 isLoadGif: data
             };
+        // 清除store
         case 'CLEAR_STORE':
             return _.assign({}, defaultState)
 
@@ -319,7 +335,7 @@ const reducer = (state = defaultState, action) => {
                 }
             }
         case 'JOIN_ROOM_STATE':
-            state.listner.stateChanged && state.listner.stateChanged(state.isLogin,data);
+            state.listner.stateChanged && state.listner.stateChanged(state.isLogin, data);
             return {
                 ...state,
                 joinRoomState: data
@@ -328,8 +344,13 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 listner: {
-                    stateChanged:data
+                    stateChanged: data
                 }
+            }
+        case 'IS_HISTORY_CURRENT_LOC':
+            return {
+                ...state,
+                isHistoryCurrent: data
             }
         default:
             return state;
