@@ -40,10 +40,8 @@ export const MessageBox = () => {
           <div>
             {msgs &&
               msgs.map((item, key) => {
-                const isText =
-                  item?.contentsType === 'TEXT' || item?.type === 'txt';
-                const isCmd =
-                  item?.contentsType === 'COMMAND' || item?.type === 'cmd';
+                const isText = item?.contentsType === 'TEXT' || item?.type === 'txt';
+                const isCmd = item?.contentsType === 'COMMAND' || item?.type === 'cmd';
                 return (
                   <div key={key}>
                     {isText && <TextMsg item={item} />}

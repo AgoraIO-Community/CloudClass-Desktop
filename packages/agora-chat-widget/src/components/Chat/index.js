@@ -8,10 +8,7 @@ import { Announcement } from '../Announcement';
 import { ROLE, CHAT_TABS_KEYS } from '../../contants';
 import store from '../../redux/store';
 import { isShowChat } from '../../redux/actions/propsAction';
-import {
-  selectTabAction,
-  showRedNotification,
-} from '../../redux/actions/messageAction';
+import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
 import { transI18n } from '~ui-kit';
 import { announcementNotice } from '../../redux/actions/roomAction';
 import minimize from '../../themes/img/minimize.png';
@@ -36,10 +33,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
-  const isTeacher =
-    roleType &&
-    (JSON.parse(roleType).role === ROLE.teacher.id ||
-      JSON.parse(roleType).role === ROLE.assistant.id);
+  const isTeacher = roleType && (JSON.parse(roleType).role === ROLE.teacher.id || JSON.parse(roleType).role === ROLE.assistant.id);
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];
@@ -109,10 +103,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   };
   return (
     <div>
-      <Tabs
-        onChange={onTabChange}
-        activeKey={tabKey}
-        tabBarStyle={{ margin: '2px' }}>
+      <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
         <TabPane
           tab={
             <div>
@@ -135,13 +126,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           <InputBox />
         </TabPane>
         {isTeacher && (
-          <TabPane
-            tab={
-              roomUsers.length > 0
-                ? `${transI18n('chat.members')}(${roomUsers.length})`
-                : `${transI18n('chat.members')}`
-            }
-            key={CHAT_TABS_KEYS.user}>
+          <TabPane tab={roomUsers.length > 0 ? `${transI18n('chat.members')}(${roomUsers.length})` : `${transI18n('chat.members')}`} key={CHAT_TABS_KEYS.user}>
             <UserList roomUserList={roomUserList} />
           </TabPane>
         )}
