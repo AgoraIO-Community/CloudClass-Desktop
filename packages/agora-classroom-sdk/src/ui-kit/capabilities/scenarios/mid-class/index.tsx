@@ -32,8 +32,7 @@ import { get } from 'lodash';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
 
 export const MidClassScenario = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } =
-    useCloudDriveContext();
+  const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
 
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 
@@ -76,12 +75,7 @@ export const MidClassScenario = observer(() => {
   const visible = userRole !== EduRoleTypeEnum.invisible;
 
   return (
-    <Layout
-      className={cls}
-      direction="col"
-      style={{
-        height: '100vh',
-      }}>
+    <Layout className={cls} direction="col">
       <NavigationBar />
       <Layout className="layout-video">
         <MidVideoMarqueeContainer />

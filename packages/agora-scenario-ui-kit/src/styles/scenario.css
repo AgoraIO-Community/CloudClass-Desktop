@@ -3,6 +3,11 @@
   box-sizing: border-box;
 }
 
+.apaas-root-box {
+  height: 100vh;
+  overflow: hidden;
+}
+
 .layout-video {
   display: block;
 }
@@ -259,7 +264,9 @@
 .rtc-screen-share video {
   object-fit: contain !important;
 }
-
+.edu-room {
+  height: 100%;
+}
 .edu-room .layout {
   position: relative;
   /* transform: translateY(2px); */
