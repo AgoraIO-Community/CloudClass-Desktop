@@ -208,7 +208,8 @@ export const useRoomContext = (): RoomContext => {
     muteAudio,
     unmuteAudio,
     muteUserChat,
-    unmuteUserChat
+    unmuteUserChat,
+    setRTCClientRole,
   } = useSceneStore()
 
   const {
@@ -263,7 +264,8 @@ export const useRoomContext = (): RoomContext => {
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
     flexRoomProperties: flexProperties,
-    setAutoSyncStreamState
+    setAutoSyncStreamState,
+    setRTCClientRole
   }
 }
 

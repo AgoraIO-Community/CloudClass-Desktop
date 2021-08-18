@@ -4,7 +4,7 @@ import { EduLogger } from './../logger';
 import { LocalUserRenderer, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
 import { IMediaService, RTCWrapperProvider, RTCProviderInitParams, CameraOption, MicrophoneOption, PrepareScreenShareParams, StartScreenShareParams, JoinOption, MediaVolume } from './interfaces';
-import { AgoraElectronRTCWrapper } from './electron';
+import { AgoraElectronRTCWrapper, ElectronRTCRole } from './electron';
 import { AgoraWebRtcWrapper } from './web';
 import AgoraRTC, { ITrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { reportService } from '../services/report-service';
@@ -695,6 +695,28 @@ export class MediaService extends EventEmitter implements IMediaService {
 
     if (this.isElectron) {
       return await this.electron.getMicrophones()
+    }
+  }
+
+  // TODO: only support electron set client role
+  async setClientRole(role: number) {
+    if (this.isElectron) {
+      this.electron.setClientRole(role)
+      if (role === ElectronRTCRole.Host) {
+        this.cameraRenderer = new LocalUserRenderer({
+          context: this,
+          uid: 0,
+          channel: 0,
+          videoTrack: this.web?.videoTrackMap?.get('cameraRenderer') as ITrack ?? undefined,
+          sourceType: 'default',
+        })
+      }
+      if (role === ElectronRTCRole.Audience) {
+        if (this.cameraRenderer) {
+          this.cameraRenderer.stop()
+          this.cameraRenderer = undefined
+        }
+      }
     }
   }
 

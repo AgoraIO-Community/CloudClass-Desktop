@@ -440,6 +440,11 @@ export type ScreenShareContext = {
 }
 export type RoomContext = {
     /**
+     * setRTCClientRole(1)设置推流
+     * setRTCClientRole(2)设置不推流
+     */
+    setRTCClientRole: (role: number) => Promise<void>,
+    /**
      * 场景类型
      * @version v1.1.0
      */

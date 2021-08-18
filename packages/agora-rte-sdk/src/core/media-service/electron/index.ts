@@ -8,6 +8,11 @@ import { GenericErrorWrapper } from '../../utils/generic-error';
 import { truncate } from 'lodash';
 import { ClientRoleType } from 'agora-electron-sdk/types/Api/native_type';
 
+export enum ElectronRTCRole {
+  Host = 1,
+  Audience = 2,
+}
+
 export class CEFVideoEncoderConfiguration {
   /**
    * The video frame dimensions (px) used to specify the video quality and measured by the total number of pixels along a
@@ -957,9 +962,9 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     }
   }
 
-  setClientRole(v: ClientRoleType) {
+  setClientRole(v: unknown) {
     try {
-      const ret = this.client.setClientRole(v)
+      const ret = this.client.setClientRole(v as ClientRoleType)
       EduLogger.info("setClientRole ", ret, ' value', v)
       if (ret < 0) {
         throw GenericErrorWrapper({

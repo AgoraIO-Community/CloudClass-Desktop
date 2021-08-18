@@ -1127,6 +1127,22 @@ export class SceneStore extends SimpleInterval {
   get isRecording() {
     return this.recordState
   }
+
+  @observable
+  clientRole: number = 2;
+
+  async setRTCClientRole(role: number) {
+    await this.mediaService.setClientRole(role)
+    if (this.isElectron) {
+      if (!this._cameraRenderer) {
+        this._cameraRenderer = this.mediaService.cameraRenderer
+      }
+      if (role === 2) {
+        this._cameraRenderer = this.mediaService.cameraRenderer
+      }
+    }
+    this.clientRole = role
+  }
   
   async joinRTC(args: any) {
     try {
