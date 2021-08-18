@@ -269,8 +269,11 @@ export const VideoMarqueeStudentContainer = observer(() => {
     controlTools.includes(ControlTool.offPodium),
   ]);
 
-  const { onStartPrivateChat, onStopPrivateChat, inPrivateConversation } =
-    usePrivateChatContext();
+  const {
+    onStartPrivateChat,
+    onStopPrivateChat,
+    inPrivateConversation,
+  } = usePrivateChatContext();
 
   const onPrivateChat = async (toUuid: string | number) => {
     if (inPrivateConversation) {
@@ -371,8 +374,11 @@ export const MidVideoMarqueeContainer = observer(() => {
     controlTools.includes(ControlTool.offPodium),
   ]);
 
-  const { onStartPrivateChat, onStopPrivateChat, inPrivateConversation } =
-    usePrivateChatContext();
+  const {
+    onStartPrivateChat,
+    onStopPrivateChat,
+    inPrivateConversation,
+  } = usePrivateChatContext();
 
   const onPrivateChat = async (toUuid: string | number) => {
     if (inPrivateConversation) {
@@ -391,6 +397,7 @@ export const MidVideoMarqueeContainer = observer(() => {
   const { onOffAllPodiumClick } = useVideoControlContext();
 
   const teacherVideoList = useMemo(() => {
+    if (!userStream.online) return [];
     return [userStream].map((stream: EduMediaStream) => ({
       isHost: isHost,
       hideOffPodium: true,
@@ -439,6 +446,7 @@ export const MidVideoMarqueeContainer = observer(() => {
     }));
   }, [
     userStream,
+    userStream.online,
     onOffAllPodiumClick,
     // studentStreams,
     isHost,
