@@ -129,9 +129,7 @@ const UserList = ({ roomUserList }) => {
                             <Flex className="user-item" key={key} justifyContent='space-between' mt='16px' alignItems='center'>
                                 <Flex alignItems='center'>
                                     <div className='list-user-box'>
-                                        <Image className='list-user-img'
-                                            src={item.avatarurl || avatarUrl}
-                                        />
+                                        <img className='list-user-img' src={item.avatarurl || avatarUrl} alt=""/>
                                         {Number(item.ext) === 2 && muteMembers.includes(item.id) &&
                                             <Image className='list-user-forbid'
                                                 src={forbid}
@@ -151,6 +149,7 @@ const UserList = ({ roomUserList }) => {
                                                 className='voice-img'
                                                 src={muteMembers.includes(item.id) ? voiceNo : voiceOff}
                                                 onClick={onSetMute(item.id)}
+                                                alt=""
                                             />
                                         </div>
                                     </RcTooltip>}

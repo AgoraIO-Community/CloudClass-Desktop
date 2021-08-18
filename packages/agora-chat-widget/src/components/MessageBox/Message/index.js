@@ -60,7 +60,7 @@ const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey }) => 
     return (
         <>
             {isLoadGif && <div className='load'></div>}
-            <div id="chat-message-tag">
+            <div >
                 {renderMsgs.map((message) =>
                     <MessageItem message={message} key={message.id} setShowModal={setShowModal} setRecallMsgId={setRecallMsgId} hasEditPermisson={hasEditPermisson} />)
                 }

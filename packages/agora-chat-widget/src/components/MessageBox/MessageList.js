@@ -9,9 +9,9 @@ import MessageItem from './Message/index'
 import QuestionMessage from './QaList/QuestionMessage'
 import { CHAT_TABS, CHAT_TABS_KEYS, HISTORY_COUNT } from './constants'
 import store from '../../redux/store'
-import { roomMessages, qaMessages, removeChatNotification, isTabs, historyCurrentHeight, isHistoryCurrentLoc } from '../../redux/aciton'
+import { roomMessages, qaMessages, removeChatNotification, isTabs, messageListIsBottom, historyCurrentHeight, isHistoryCurrentLoc } from '../../redux/aciton'
 import { getHistoryMessages } from '../../api/historyMessages'
-import scrollElementToBottom from '../../utils/scrollElementToBottom'
+import { scrollElementToBottom, scrollIsBottom } from '../../utils/scrollElementToBottom'
 
 
 import './list.css'
@@ -48,7 +48,7 @@ const MessageList = ({ activeKey }) => {
   const isHiedReward = useSelector(state => state.isReward);
   // 是否为提问消息
   const isHiedQuestion = useSelector(state => state.isQa);
-
+  // 拉取消息展示位置
   const historyCurrentToHeight = useSelector(state => state.historyCurrentHeight);
   const isHistoryCurrent = useSelector(state => state.isHistoryCurrent);
   // 是否有权限
@@ -56,6 +56,9 @@ const MessageList = ({ activeKey }) => {
   // 当前是哪个tab
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
   // 加载历史消息动画
+
+  // 消息列表滚动条是否在最底部
+  const onBottom = useSelector((state) => state.messageListIsBottom);
 
   // 获取提问列表
   const qaList = useSelector(state => state.messages.qaList) || [];
@@ -142,14 +145,13 @@ const MessageList = ({ activeKey }) => {
   }, [roomUsers, roomListInfo])
 
   useEffect(() => {
-    let scrollElement = document.getElementById('chat-box-tag');
-    if (scrollElement) {
+    const scrollElement = document.getElementById('chat-box-tag')
+    if (onBottom) {
       scrollElementToBottom(scrollElement)
-      if (isHistoryCurrent && historyCurrentToHeight) {
-        scrollElement.scrollTop = scrollElement.scrollHeight - historyCurrentToHeight;
-      }
     }
-
+    if (isHistoryCurrent && historyCurrentToHeight) {
+      scrollElement.scrollTop = scrollElement.scrollHeight - historyCurrentToHeight;
+    }
   }, [messageList])
 
   const handleLoadMoreMessage = (e) => {
@@ -159,7 +161,46 @@ const MessageList = ({ activeKey }) => {
     store.dispatch(historyCurrentHeight(scrollElement.scrollHeight))
   }
 
+  // 判断滚动条是否在最底部
+  useEffect(() => {
+    // 防抖
+    function debounce(func, wait = 0) {
+      if (typeof func !== 'function') {
+        throw new TypeError('need a function arguments')
+      }
+      let timeid = null;
+      let result;
 
+      return function () {
+        let context = this;
+        let args = arguments;
+
+        if (timeid) {
+          clearTimeout(timeid);
+        }
+        timeid = setTimeout(function () {
+          result = func.apply(context, args);
+        }, wait);
+
+        return result;
+      }
+
+    }
+    // 处理函数
+    const scrollElement = document.getElementById('chat-box-tag');
+
+    if (!scrollElement) return;
+
+    function handle() {
+      store.dispatch(messageListIsBottom(scrollElement.scrollHeight - scrollElement.scrollTop === scrollElement.clientHeight))
+    }
+    // 滚动事件
+    scrollElement.addEventListener('scroll', debounce(handle, 500));
+
+    return () => {
+      scrollElement.removeEventListener('scroll', debounce(handle, 500));
+    }
+  }, [])
 
   // 遍历成员列表，拿到成员数据，结构和 roomAdmin 统一
   return (
@@ -178,8 +219,7 @@ const MessageList = ({ activeKey }) => {
                   <div className="msg-red-dot"></div>
                 )}
               </Flex>} key={key}>
-                <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""} >
-                  {/* {name === '聊天' && isLoadGif && <div className='load'></div>} */}
+                <div className={className} id={key === CHAT_TABS_KEYS.chat ? "chat-box-tag" : ""}>
                   {name === '聊天' && !isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={handleLoadMoreMessage}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
                   <Component {
                     ...key === CHAT_TABS_KEYS.chat && {
@@ -210,7 +250,12 @@ const MessageList = ({ activeKey }) => {
           </Flex>
           <div className="member-msg" id="chat-box-tag" style={{ display: isHiedQuestion ? 'none' : '' }}>
             {/* {isLoadGif && <div className='load'></div>} */}
-            {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={handleLoadMoreMessage}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)}
+            {
+              !isLoadGif &&
+              <div style={{ marginTop: 5 }}>
+                {isMoreHistory ? <div className='more-msg' onClick={handleLoadMoreMessage}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>}
+              </div>
+            }
             {
               messageList.length > 0 ? (
                 <MessageItem messageList={messageList} isHiedReward={isHiedReward} />

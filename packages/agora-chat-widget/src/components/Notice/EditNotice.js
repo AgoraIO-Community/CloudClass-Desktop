@@ -1,4 +1,4 @@
-import { useState, } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Input } from 'antd'
 import { Flex, Text, Button, Image } from 'rebass'
@@ -15,10 +15,12 @@ const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView}) => {
     // 公告栏内容
     const [newContent, setNewContent] = useState(roomAnnouncement)
     // 公告栏编辑字数
-    const [count, setCount] = useState(roomAnnouncement?.length || 0);
+    const [count, setCount] = useState(Array.from(roomAnnouncement)?.length || 0);
 
     // 公告内容修改
     const changeContent = (e) => {
+        const noticeTextArea = document.querySelector("#notice-textarea")
+
         let content = e.target.value;
         let tempTotalContent = Array.from(content);
 
@@ -29,7 +31,44 @@ const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView}) => {
 
         setCount(tempTotalContent.length);
         setNewContent(tempTotalContent.join(""));
+        noticeTextArea.value = tempTotalContent.join("");
     }
+
+    useEffect(() => {
+        let isComposition = false;
+
+        const noticeTextArea = document.querySelector("#notice-textarea")
+        
+        if (!noticeTextArea) return;
+        
+        noticeTextArea.value = roomAnnouncement;
+
+        // 复合输入开始
+        const compositionstartFunction = () => {
+            isComposition = true;
+        }
+        noticeTextArea.addEventListener('compositionstart', compositionstartFunction);
+
+        // 复合输入结束
+        const addEventListenerFunction = (e) => {
+            isComposition = false;
+            changeContent(e);
+        }
+        noticeTextArea.addEventListener('compositionend', addEventListenerFunction);
+
+        // 非复合输入
+        const inputFunction = (e) => {
+            if (isComposition) return;
+            changeContent(e);
+        }
+        noticeTextArea.addEventListener('input', inputFunction);
+
+        return () => {
+            noticeTextArea.removeEventListener('compositionstart', compositionstartFunction);
+            noticeTextArea.removeEventListener('compositionend', addEventListenerFunction);
+            noticeTextArea.removeEventListener('input', inputFunction);
+        }
+    }, [])
 
     return (
         <>
@@ -38,9 +77,17 @@ const EditNotice = ({ hasEditPermisson, roomAnnouncement, onView}) => {
                 <Text className="title_center">公告</Text>
                 <span></span>
             </Flex>
-            <TextArea placeholder="请输入公告..." onChange={changeContent}
-                className='update-content' defaultValue={roomAnnouncement} value={newContent}
-            ></TextArea>
+            <textarea 
+                id="notice-textarea"
+                placeholder="请输入公告..." 
+                // onChange={changeContent}
+                className='update-content'
+                // value={newContent}
+            ></textarea>
+            {/* <textarea 
+                placeholder="请输入公告..."
+                className='update-content'
+            ></textarea> */}
             {
                 hasEditPermisson && <div>
                     <Flex justifyContent='flex-end' mb='16px' fontSize={12} color='#626773'>{count}/{NOTICE_INPUT_LENGTH}</Flex>

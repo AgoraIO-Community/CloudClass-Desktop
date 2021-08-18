@@ -73,7 +73,7 @@ const SearchList = ({ roomListInfo, searchUser, onSetMute, muteMembers }) => {
                                 <Flex className="user-item" justifyContent='space-between' alignItems='center' mt='16px' key={key}>
                                     <Flex alignItems='center'>
                                         <div className='list-user-box'>
-                                            <Image src={member[1] || avatarUrl} className='list-user-img' />
+                                            <img src={member[1] || avatarUrl} className='list-user-img' alt=""/>
                                             {Number(member[3]) === 2 && muteMembers.includes(member[2]) && <Image className='list-user-forbid' src={forbid} />}
                                         </div>
 

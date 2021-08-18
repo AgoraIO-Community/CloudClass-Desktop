@@ -2,7 +2,7 @@ import { Text, Image, Flex } from "rebass";
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Tag } from 'antd'
-import scrollElementToBottom from '../../../utils/scrollElementToBottom'
+import { scrollElementToBottom, scrollIsBottom } from '../../../utils/scrollElementToBottom'
 import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
 import { saveReadMsgID } from '../../../api/qaReadMsg'

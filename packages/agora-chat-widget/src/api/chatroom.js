@@ -81,6 +81,16 @@ export const getRoomNotice = (roomId) => {
             store.dispatch(roomAllMute(true))
         }
 
+        // 触发改变禁言状态事件
+        document.dispatchEvent(
+            new CustomEvent("im_changeMutedState", {
+                detail: {
+                    type: 'all',
+                    status: Number(isAllMute) === 0 ? false : true
+                }
+            })
+        )
+
     })
 };
 
@@ -88,6 +98,12 @@ export const getRoomNotice = (roomId) => {
 // 上传/修改 群组公告
 export const updateRoomNotice = (roomId, noticeCentent) => {
     const isRoomAllMute = store.getState().isRoomAllMute;
+    // 课次id
+    const planId = Number(store.getState().room.info.name);
+    // 修改人姓名
+    const updaterName = store.getState().extData.userName;
+    // 备份公告
+    const tempNoticeCentent = noticeCentent;
     if (isRoomAllMute) {
         noticeCentent = '1' + noticeCentent
     } else {
@@ -99,6 +115,18 @@ export const updateRoomNotice = (roomId, noticeCentent) => {
     };
     WebIM.conn.updateChatRoomAnnouncement(options).then((res) => {
         getRoomNotice(res.data.id);
+
+        // 触发公告更新事件
+        document.dispatchEvent(
+            new CustomEvent("im_setNotice", {
+                detail: {
+                    planId: planId,
+                    groupId: roomId,
+                    noticeContent: tempNoticeCentent,
+                    teacherName: updaterName
+                }
+            })
+        );
     })
 }
 
@@ -160,6 +188,19 @@ export const isChatRoomWhiteUser = (roomId, userId) => {
     }
     WebIM.conn.isChatRoomWhiteUser(options).then((res) => {
         store.dispatch(userMute(res.data.white))
+
+        console.log('==============>>>>>>>>>>>>>>>>,', res.data);
+
+        // 触发改变禁言状态事件
+        document.dispatchEvent(
+            new CustomEvent("im_changeMutedState", {
+                detail: {
+                    type: 'user',
+                    status: res.data.white
+                }
+            })
+        )
+
     });
 }
 

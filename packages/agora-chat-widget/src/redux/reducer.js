@@ -36,9 +36,9 @@ let defaultState = {
     isRoomAllMute: false,  //全局禁言
     customMsg: {},
     listner: {},
+    messageListIsBottom: true, // 消息列表滚动条是否在底部
     historyCurrentHeight: 0,
     isHistoryCurrent: false,
-
 }
 const reducer = (state = defaultState, action) => {
     const { type, data, qaSender } = action;
@@ -303,13 +303,11 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 isMoreHistory: data
             };
-        // 加载动画
         case 'LOAD_GIF':
             return {
                 ...state,
                 isLoadGif: data
             };
-        // 清除store
         case 'CLEAR_STORE':
             return _.assign({}, defaultState)
 
@@ -346,6 +344,11 @@ const reducer = (state = defaultState, action) => {
                 listner: {
                     stateChanged: data
                 }
+            }
+        case 'MESSAGE_LIST_IS_BOTTOM':
+            return {
+                ...state,
+                messageListIsBottom: data
             }
         case 'IS_HISTORY_CURRENT_LOC':
             return {

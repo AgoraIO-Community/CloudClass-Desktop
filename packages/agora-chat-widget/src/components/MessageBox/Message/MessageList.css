@@ -26,6 +26,7 @@
     height: 24px;
     margin-right: 8px;
     position: relative;
+    object-fit: cover;
 }
 
 .msg-img .mute-status {
@@ -39,6 +40,7 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .msg-list-item {

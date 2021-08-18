@@ -40,5 +40,7 @@ export const IMG_MAX_SIZE = '文件过大，请发小于10M的图片！'
 
 export const IMG_SUPPORT = '不支持的图片类型，仅支持JPG、JPEG、PNG、BMP格式图片！'
 
+export const NOT_INPUT = '你倒是说点啥呀~'
+
 
 
