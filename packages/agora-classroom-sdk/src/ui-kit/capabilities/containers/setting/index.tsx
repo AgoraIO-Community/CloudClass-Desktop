@@ -1,21 +1,11 @@
 import { Button, Modal, Setting, t } from '~ui-kit';
 import { observer } from 'mobx-react';
 import { useUIStore } from '@/infra/hooks';
-import {
-  useGlobalContext,
-  useMediaContext,
-  usePretestContext,
-} from 'agora-edu-core';
+import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-core';
 import { useCallback, useEffect, useState } from 'react';
 
 export const SettingContainer = observer(({ id }: any) => {
-  const {
-    isNative,
-    getAudioRecordingVolume,
-    getAudioPlaybackVolume,
-    changeCamera,
-    changeMicrophone,
-  } = useMediaContext();
+  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume, changeCamera, changeMicrophone, changeSpeaker } = useMediaContext();
 
   const {
     cameraList,
@@ -43,18 +33,15 @@ export const SettingContainer = observer(({ id }: any) => {
 
   useEffect(() => {
     // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
-    const beautyEffectOptionsStr = window.localStorage.getItem(
-      'beautyEffectOptions',
-    );
-    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } =
-      beautyEffectOptionsStr
-        ? JSON.parse(beautyEffectOptionsStr)
-        : {
-            isBeauty: false,
-            lighteningLevel: 70,
-            rednessLevel: 10,
-            smoothnessLevel: 50,
-          };
+    const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions');
+    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } = beautyEffectOptionsStr
+      ? JSON.parse(beautyEffectOptionsStr)
+      : {
+          isBeauty: false,
+          lighteningLevel: 70,
+          rednessLevel: 10,
+          smoothnessLevel: 50,
+        };
     setBeauty(isBeauty);
     setWhitening(lighteningLevel);
     setBuffing(smoothnessLevel);
@@ -77,6 +64,9 @@ export const SettingContainer = observer(({ id }: any) => {
       case 'microphone': {
         await changeMicrophone(value);
         break;
+      }
+      case 'speaker': {
+        await changeSpeaker(value);
       }
     }
   };

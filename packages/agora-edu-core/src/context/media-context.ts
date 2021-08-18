@@ -11,19 +11,7 @@ export const useMediaContext = (): MediaContext => {
 
   const pretestStore = usePretestStore();
 
-  const {
-    cameraList,
-    microphoneList,
-    speakerList,
-    cameraId,
-    microphoneId,
-    speakerId,
-    cameraRenderer,
-    changeCamera,
-    changeMicrophone,
-    changeSpeakerVolume,
-    changeMicrophoneVolume,
-  } = pretestStore;
+  const { cameraList, microphoneList, speakerList, cameraId, microphoneId, speakerId, cameraRenderer, changeCamera, changeMicrophone, changeSpeakerVolume, changeMicrophoneVolume, changeSpeaker } = pretestStore;
 
   const changeDevice = useCallback(
     async (deviceType: string, value: any) => {
@@ -75,6 +63,7 @@ export const useMediaContext = (): MediaContext => {
     changeMicrophoneVolume,
     changeCamera,
     changeMicrophone,
+    changeSpeaker,
     enableMediaEncryption,
     getAudioRecordingVolume: pretestStore.getAudioRecordingVolume,
     getAudioPlaybackVolume: pretestStore.getAudioPlaybackVolume,
