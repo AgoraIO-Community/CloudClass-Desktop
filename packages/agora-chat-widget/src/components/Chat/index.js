@@ -108,7 +108,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const toTabKey = () => {
         setTabKey(CHAT_TABS_KEYS.notice)
     }
-    return <div style={{ height, width }}>
+    return <div style={{ height, width}}>
         {/* <StickyContainer> */}
         <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
             <TabPane tab={<div>
