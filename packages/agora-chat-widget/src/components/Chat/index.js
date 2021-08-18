@@ -106,6 +106,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
   // 点击聊天Tab中的公告，跳转到公告Tab
   const toTabKey = () => {
     setTabKey(CHAT_TABS_KEYS.notice);
+    store.dispatch(announcementNotice(false));
   };
   return (
     <div>

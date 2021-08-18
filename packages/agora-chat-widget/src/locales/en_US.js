@@ -43,6 +43,7 @@ const enUS = {
     remove_message_notify: 'remove a message',
     delete_comfirm: 'Delete Comfirm',
     delete_content: 'Are you sure to delete this bulletin?',
+    you: 'you',
   },
 };
 

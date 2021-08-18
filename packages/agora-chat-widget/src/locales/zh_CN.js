@@ -42,6 +42,7 @@ const im_CN = {
     remove_message_notify: '删除了一条消息',
     delete_comfirm: '删除确认',
     delete_content: '确认删除此公告？',
+    you: '您',
   },
 };
 export default im_CN;
