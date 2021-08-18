@@ -521,6 +521,7 @@ export class BoardStore extends ZoomController {
                 });
               //@ts-ignore
               const currentCameraState =
+                //@ts-ignore
                 this.room.state.globalState.cameraState[this.getCurrentContextPath()];
               //切换tab到h5课件时，使用h5之前记录的缩放比例,若之前不存在则自适应缩放比例
               if (currentCameraState) {
