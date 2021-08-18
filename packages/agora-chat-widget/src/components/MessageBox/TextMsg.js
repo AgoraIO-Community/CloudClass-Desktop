@@ -80,13 +80,21 @@ export const TextMsg = ({ item }) => {
             <span>{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
-          <Dropdown overlay={menu} trigger={['contextMenu']}>
+          {isTeacher ? (
+            <Dropdown overlay={menu} trigger={['contextMenu']}>
+              <div className="msg-border">
+                <div className="msg-text msg-text-me">
+                  <span className="msg-data">{msgData}</span>
+                </div>
+              </div>
+            </Dropdown>
+          ) : (
             <div className="msg-border">
               <div className="msg-text msg-text-me">
                 <span className="msg-data">{msgData}</span>
               </div>
             </div>
-          </Dropdown>
+          )}
         </div>
       )}
       {!sender && (
