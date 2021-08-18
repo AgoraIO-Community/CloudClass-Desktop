@@ -419,6 +419,12 @@ export type ScreenShareContext = {
      * @version v1.1.2
      */
     canSharingScreen: boolean;
+    
+    /**
+     * 当前是否屏幕共享中
+     * @version v1.1.4
+     */
+    isSharing: boolean;
 }
 
 export type ClassRoomStats = {

@@ -110,6 +110,7 @@
   position: relative;
   flex: 1;
   border-radius: 4px;
+  background: unset;
   /* min-width: 300px; */
   /* margin-left: 2px; */
   /* @apply border-l border-gray-100; */

@@ -450,11 +450,13 @@ export interface VideoMarqueeListProps {
    * video-player之间的间隔,单位像素
    */
   gap?: number
+  videoWidth?: number | string,
   minVideoWidth?: number,
   rewardAnimSize?: { width: number, height: number }
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
+  videoWidth,
   rewardAnimSize,
   minVideoWidth,
   gap,
@@ -554,7 +556,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             {teacherStreams[0] &&
             <VideoPlayer
               rewardAnimSize={rewardAnimSize}
-              style={{ width: `calc((100vw / 7) - ${gap || 4}px)`, minWidth: minVideoWidth }}
+              style={{ width: videoWidth , minWidth: minVideoWidth }}
               hideStars={hideStars}
               {...teacherStreams[0]}
               userType={userType}
@@ -580,7 +582,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               <Icon type="backward"></Icon>
             </span>
           </div> : null}
-          <TransitionGroup id="animation-group" className="video-list video-container">
+          <TransitionGroup id="animation-group" className="video-list video-container" style={{ gap: gap || 4 }}>
             {/* <div className="video-container" ref={mountDOM}> */}
             {
               videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) =>
@@ -593,7 +595,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                   <div className="video-item" key={idx} ref={attachVideoItem}>
                     <VideoPlayer
                       rewardAnimSize={rewardAnimSize}
-                      style={{ width: `calc((100vw / 7) - ${gap || 4}px)`, minWidth: minVideoWidth }}
+                      style={{ width: videoWidth, minWidth: minVideoWidth }}
                       hideStars={hideStars}
                       {...videoStream}
                       // showGranted={true}

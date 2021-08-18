@@ -10,22 +10,25 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useEffect, useState } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import { Widget } from '~capabilities/containers/widget'
-import { useLayoutEffect } from 'react'
 import { useUIStore } from '@/infra/hooks'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
-import { get } from 'lodash'
+import { get, debounce } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
-import { debounce } from 'lodash'
 
-const useFixedAspectRatio = (aspectRatio: number) => {
-  // const [ dimension, setDimension ] = useState({ width: window.innerWidth, height: window.innerHeight })
+// keep aspect ratio to 16:9
+const windowAspectRatio = 9 / 16
+// minimum size of window
+const _minimumSize = { width: 1280, height: 720 }
+// keep the height of the whiteboard to be 59/72 of the window height accroding to UI design
+const _whiteboardHeightRatio = 59 / 72
+
+const useFixedAspectRatio = (aspectRatio: number, minimumSize: typeof _minimumSize, whiteboardHeightRatio: typeof _whiteboardHeightRatio, debounceMs = 500) => {
   const { windowSize, updateWindowSize } = useUIStore()
 
   useEffectOnce(() => {
-    const minimumSize = { width: 1280, height: 720 }
     const checkAndUpdate = ({ width, height }: typeof windowSize) => {
       if(width >= minimumSize.width || height >= minimumSize.height) {
         updateWindowSize({ width, height })
@@ -56,7 +59,7 @@ const useFixedAspectRatio = (aspectRatio: number) => {
 
     const handleResize = debounce(() => {
       recalculateDimension()
-    }, 500)
+    }, debounceMs)
 
     window.addEventListener("resize", handleResize)
 
@@ -64,9 +67,8 @@ const useFixedAspectRatio = (aspectRatio: number) => {
       window.removeEventListener("resize", handleResize)
     }
   })
-  const whiteboardHeight = windowSize.height * (59 / 72)
-  const whiteboardWidth = whiteboardHeight / (9 / 16)
-
+  const whiteboardHeight = windowSize.height * whiteboardHeightRatio
+  // const whiteboardWidth = whiteboardHeight / (9 / 16)
   return {
     containerStyle: {
       height: windowSize.height,
@@ -144,12 +146,6 @@ export const MidClassScenario = observer(() => {
   } = useWidgetContext()
   const chatWidget = widgets['chat']
 
-  // const { 
-  //   chatCollapse 
-  // }  = useUIStore()
-
-  const [chatCollapse, setChatCollapse] = useState(false)
-
   useEffectOnce(async () => {
     await joinRoom()
     joinBoard()
@@ -159,7 +155,7 @@ export const MidClassScenario = observer(() => {
     joinRoomRTC()
   })
 
-  const { containerStyle, whiteboardStyle } = useFixedAspectRatio(9 / 16)
+  const { containerStyle, whiteboardStyle } = useFixedAspectRatio(windowAspectRatio, _minimumSize, _whiteboardHeightRatio)
 
   const cls = classnames({
     'edu-room': 1,
@@ -215,9 +211,6 @@ export const MidClassScenario = observer(() => {
               className="chat-panel" 
               widgetComponent={chatWidget} 
               widgetProps={{chatroomId, orgName, appName}}
-              onReceivedMsg={(msg: any) => {
-                setChatCollapse(!msg.isShowChat)
-              }}
               sendMsg={{ isFullScreen, showMinimizeBtn: true, width: 340, height: 480 }}
             />) : null}
           </Aside>

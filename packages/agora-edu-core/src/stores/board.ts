@@ -6,7 +6,6 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { BuildinApps, WindowManager } from '@netless/window-manager';
-import "@netless/window-manager/dist/style.css";
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
 import { reportService } from '../services/report';
@@ -286,6 +285,9 @@ export class BoardStore extends ZoomController {
 
   @observable
   folder: string = ''
+
+  sceneStack: any[][] = []
+  
 
   constructor(appStore: EduScenarioAppStore) {
     super(0);
@@ -1071,10 +1073,10 @@ export class BoardStore extends ZoomController {
       region,
       disableNewPencil: false,
       wrappedComponents: [
-        // IframeWrapper
+        IframeWrapper
       ],
       invisiblePlugins: [
-        // IframeBridge,
+        IframeBridge,
          WindowManager],
       useMultiViews: true
     })
@@ -1153,6 +1155,7 @@ export class BoardStore extends ZoomController {
         EduLogger.info("board leave error ", GenericErrorWrapper(err))
       }
       // this.room.bindHtmlElement(null)
+      this.windowManager?.destroy()
       this.reset()
     }
   }
@@ -1176,6 +1179,7 @@ export class BoardStore extends ZoomController {
         const sceneIndex = this.room.state?.sceneState?.index ?? 0
         const isPPT = scenes[sceneIndex]?.ppt ?? false 
         if (isPPT) {
+          this.windowManager?.switchMainViewToWriter()
           this.room.pptNextStep()
           return
         }
@@ -1187,6 +1191,7 @@ export class BoardStore extends ZoomController {
         const sceneIndex = this.room.state?.sceneState?.index ?? 0
         const isPPT = scenes[sceneIndex]?.ppt ?? false 
         if (isPPT) {
+          // this.windowManager?.switchMainViewToWriter()
           this.room.pptPreviousStep()
           return
         }
@@ -1507,8 +1512,9 @@ export class BoardStore extends ZoomController {
   updatePagination() {
     const room = this.room
     if(this.online && room) {
-      this.currentPage = room.state.sceneState.index + 1;
-      this.totalPage = room.state.sceneState.scenes.length;
+      const { index, totalPage } = (room.state.globalState as any).roomScenes['/init']
+      this.currentPage =  index + 1;
+      this.totalPage = totalPage;
     }
   }
 
@@ -1799,6 +1805,7 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = null
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(null)
+      this.windowManager?.destroy()
     }
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()
@@ -1915,7 +1922,7 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async putCourseResource(resourceUuid: string) {
+  async putCourseResource(resourceUuid: string, isDynamicRes?: boolean) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid)
     if (resource) {
       const scenes = resource.scenes
@@ -1927,31 +1934,8 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
-      // const roomScenes = (this.room.state.globalState as any).roomScenes
-      // this.room.setGlobalState({
-      //   roomScenes: {
-      //     ...roomScenes,
-      //     [`${resourceUuid}`]: {
-      //       contextPath: `/${resource.id}/`,
-      //       index: 0,
-      //       sceneName: resource.scenes[0].name,
-      //       scenePath: `/${resource.id}/${resource.scenes[0].name}`,
-      //       totalPage: scenes.length,
-      //       resourceName: resource.name,
-      //       resourceUuid: resourceUuid,
-      //       show: true,
-      //     }
-      //   }
-      // })
-      const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`]
-      if (sceneExists) {
-        // this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
+      this.room.putScenes(`/${resource.id}`, resource.scenes as SceneDefinition[])
 
-
-      } else {
-        this.room.putScenes(`/${resource.id}`, resource.scenes as SceneDefinition[])
-        // this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`)
-      }
       this.windowManager?.addApp({
         kind: BuildinApps.DocsViewer,
         options: {
@@ -1959,10 +1943,17 @@ export class BoardStore extends ZoomController {
             title: resource.name
         },
         attributes: {
-            dynamic: true
+            pages: scenes,
+            dynamic: isDynamicRes
         }
       });
+
     }
+  }
+
+  @action.bound
+  async popScene() {
+    const scenes = this.sceneStack.pop()
   }
 
   @action.bound
@@ -2070,7 +2061,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async putImage(url: string) {
     const imageInfo = await fetchNetlessImageByUrl(url)
-    await netlessInsertImageOperation(this.room, {
+    await netlessInsertImageOperation(this.room, this.windowManager as WindowManager, {
       uuid: imageInfo.uuid,
       file: imageInfo.file,
       url: imageInfo.url,
@@ -2119,7 +2110,7 @@ export class BoardStore extends ZoomController {
 
     if (type === 'video') {
       const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4'
-      netlessInsertVideoOperation(this.room, {
+      netlessInsertVideoOperation(this.room, this.windowManager as WindowManager, {
         url: url,
         originX: 0,
         originY: 0,
@@ -2129,7 +2120,7 @@ export class BoardStore extends ZoomController {
     }
     if (type === 'audio') {
       const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg'
-      netlessInsertAudioOperation(this.room, {
+      netlessInsertAudioOperation(this.room, this.windowManager as WindowManager, {
         url: url,
         originX: 0,
         originY: 0,
@@ -2148,7 +2139,7 @@ export class BoardStore extends ZoomController {
       }
       const putCourseFileType = ["ppt", "word","pdf"]
       if (putCourseFileType.includes(resource.type)) {
-        await this.putCourseResource(uuid)
+        await this.putCourseResource(uuid, true)
       }
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type, resource.name)

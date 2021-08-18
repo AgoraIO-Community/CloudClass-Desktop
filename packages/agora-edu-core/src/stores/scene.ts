@@ -465,7 +465,7 @@ export class SceneStore extends SimpleInterval {
     try {
       this.waitingShare = true
       await this.roomManager?.userService.startShareScreen()
-      this.appStore.boardStore.setScreenShareScenePath()
+      // this.appStore.boardStore.setScreenShareScenePath()
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -807,14 +807,14 @@ export class SceneStore extends SimpleInterval {
         encoderConfig
       })
       await this.roomManager?.userService.startShareScreen()
-      this.appStore.boardStore.setScreenShareScenePath()
+      // this.appStore.boardStore.setScreenShareScenePath()
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
         token: this.roomManager?.userService.screenStream.token,
         encoderConfig
       }
-
+      this.mediaService.on('track-ended', this.stopWebSharing)
       await this.mediaService.startScreenShare({
         params
       })

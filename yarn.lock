@@ -2693,17 +2693,16 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.2.tgz#49b3b5937e6fe988b711a9be9ec5e92183dea13d"
-  integrity sha512-4itaNC3e3uhu1104NNGPOYX4LgsGGsivpMWUNL75y0MieaDD7qS+/Eg9RNKx8A3dRFfyqX4nSKDXPYrhAoMy3g==
+"@netless/window-manager@0.1.6-canary.1":
+  version "0.1.6-canary.1"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.6-canary.1.tgz#7fc44a4374913f0df4525c0b711531f974914bd6"
+  integrity sha512-hN5QHEnB3aIqKvN1/kVhO1tqfB6Y/MDrxuNJxEJxcG/QppyBWEKGyv7IFRRopYqIxtPxo5kTfYWtIPf3CwSiqg==
   dependencies:
     "@netless/app-docs-viewer" "^0.1.5"
     "@netless/telebox-insider" "^0.1.1"
     emittery "^0.9.2"
     localforage "^1.9.0"
-    lodash.debounce "^4.0.8"
-    lodash.get "^4.4.2"
+    lodash-es "^4.17.21"
     react "^17.0.2"
     react-dom "^17.0.2"
 
@@ -15726,6 +15725,11 @@ locate-path@^6.0.0:
   integrity sha1-VTIeswn+u8WcSAHZMackUqaB0oY=
   dependencies:
     p-locate "^5.0.0"
+
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
