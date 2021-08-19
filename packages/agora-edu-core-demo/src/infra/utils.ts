@@ -20,16 +20,14 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
   let duration = dayjs.duration(time);
   let formatItems: string[] = [];
 
-  let hours_text =
-    duration.hours() === 0 ? '' : `H [${transI18n('nav.hours')}]`;
+  let hours_text = duration.hours() === 0 ? '' : `H [${transI18n('nav.hours')}]`;
   let mins_text =
     duration.minutes() === 0
       ? ''
       : duration.seconds() === 0
       ? `m [${transI18n('nav.short.minutes')}]`
       : `m [${transI18n('nav.minutes')}]`;
-  let seconds_text =
-    duration.seconds() === 0 ? '' : `s [${transI18n('nav.seconds')}]`;
+  let seconds_text = duration.seconds() === 0 ? '' : `s [${transI18n('nav.seconds')}]`;
   let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
   let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
   let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
@@ -47,13 +45,9 @@ export const formatCountDown = (time: number, mode: TimeFormatType): string => {
       // less than a min
       formatItems = [seconds_text];
     } else if (seconds < 60 * 60) {
-      [mins_text, seconds_text].forEach(
-        (item) => item && formatItems.push(item),
-      );
+      [mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
     } else {
-      [hours_text, mins_text, seconds_text].forEach(
-        (item) => item && formatItems.push(item),
-      );
+      [hours_text, mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
     }
   }
   return duration.format(formatItems.join(' '));
@@ -112,9 +106,7 @@ export class CustomStorage {
   }
 
   getLanguage() {
-    const language = this.read(this.languageKey)
-      ? this.read(this.languageKey)
-      : navigator.language;
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
     return language;
   }
 
@@ -125,9 +117,7 @@ export class CustomStorage {
         count: 0,
         messages: [],
       };
-    const messages = channelMessages.filter(
-      (it: any) => it.message_type === 'group_message',
-    );
+    const messages = channelMessages.filter((it: any) => it.message_type === 'group_message');
     const chatMessages = messages.reduce((collect: any[], value: any) => {
       const payload = value.payload;
       const json = JSON.parse(payload);
@@ -211,8 +201,7 @@ export const getImageSize = (imageInnerSize: BaseImageSize): BaseImageSize => {
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  const widthHeightProportion: number =
-    imageInnerSize.width / imageInnerSize.height;
+  const widthHeightProportion: number = imageInnerSize.width / imageInnerSize.height;
   const maxSize: number = 960;
   if (
     (imageInnerSize.width > maxSize && windowSize.width > maxSize) ||
@@ -230,10 +219,7 @@ export const getImageSize = (imageInnerSize: BaseImageSize): BaseImageSize => {
       };
     }
   } else {
-    if (
-      imageInnerSize.width > windowSize.width ||
-      imageInnerSize.height > windowSize.height
-    ) {
+    if (imageInnerSize.width > windowSize.width || imageInnerSize.height > windowSize.height) {
       if (widthHeightProportion > 1) {
         return {
           width: windowSize.width,
@@ -262,9 +248,7 @@ export type FetchImageResult = {
   url: string;
 };
 
-export const fetchNetlessImageByUrl = async (
-  url: string,
-): Promise<FetchImageResult> => {
+export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageResult> => {
   try {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -300,10 +284,7 @@ export const fetchNetlessImageByUrl = async (
   }
 };
 
-export const netlessInsertImageOperation = async (
-  room: Room,
-  imageFile: NetlessImageFile,
-) => {
+export const netlessInsertImageOperation = async (room: Room, imageFile: NetlessImageFile) => {
   const { x, y } = await room.convertToPointInWorld({
     x: imageFile.coordinateX,
     y: imageFile.coordinateY,
@@ -327,10 +308,7 @@ export type NetlessMediaFile = {
   height: number;
 };
 
-export const netlessInsertVideoOperation = (
-  room: Room,
-  file: NetlessMediaFile,
-) => {
+export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile) => {
   room.insertPlugin('video2', {
     originX: file.originX,
     originY: file.originY,
@@ -343,10 +321,7 @@ export const netlessInsertVideoOperation = (
   });
 };
 
-export const netlessInsertAudioOperation = (
-  room: Room,
-  file: NetlessMediaFile,
-) => {
+export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile) => {
   room.insertPlugin('audio2', {
     originX: file.originX,
     originY: file.originY,
@@ -391,33 +366,19 @@ export const startDownload = async (
   //     }));
   //   console.log("native端 课件下载完成")
   // } else {
-  await agoraCaches.startDownload(
-    taskUuid,
-    (progress: number, controller: any) => {
-      callback(progress);
-    },
-  );
+  await agoraCaches.startDownload(taskUuid, (progress: number, controller: any) => {
+    callback(progress);
+  });
   // }
 };
 
-export const showOriginText = (
-  userRole: EduRoleTypeEnum,
-  messageFromRole: string,
-): boolean => {
-  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(
-    messageFromRole,
-  );
+export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {
+  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(messageFromRole);
   const fromTeacher = ['host', 'assistant'].includes(messageFromRole);
-  if (
-    [EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) &&
-    fromStudent
-  ) {
+  if ([EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) && fromStudent) {
     return true;
   }
-  if (
-    [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) &&
-    fromTeacher
-  ) {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) && fromTeacher) {
     return true;
   }
   return false;
@@ -431,10 +392,7 @@ export const showMaskText = (text: string, sensitiveWords: string[]) => {
   return text;
 };
 
-export const filterChatText = (
-  userRole: EduRoleTypeEnum,
-  message: EduTextMessage,
-) => {
+export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessage) => {
   const fromUser = message.fromUser;
   const chatText = message.message;
   if (showOriginText(userRole, fromUser.role)) {
@@ -446,10 +404,7 @@ export const filterChatText = (
 
 export type BytesType = number | string;
 
-export const fileSizeConversionUnit = (
-  fileBytes: BytesType,
-  decimalPoint?: number,
-) => {
+export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
   const bytes = +fileBytes;
   if (bytes == 0) return '- -';
   const k = 1000,
@@ -465,9 +420,7 @@ export class BizLogger {
 
   private static get currentTime(): string {
     const date = new Date();
-    return `${
-      date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()
-    }`;
+    return `${date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()}`;
   }
 
   static setLogLevel(enabled: boolean) {
@@ -513,17 +466,13 @@ export class BizLogger {
       },
       INFO: {
         call: () => {
-          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
       ERROR: {
         call: () => {
-          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
@@ -538,11 +487,9 @@ export class BizLogger {
   }
 }
 
-export const isElectron =
-  window.isElectron || window.agoraBridge ? true : false;
+export const isElectron = window.isElectron || window.agoraBridge ? true : false;
 
-export const platform =
-  window.isElectron || window.agoraBridge ? 'electron' : 'web';
+export const platform = window.isElectron || window.agoraBridge ? 'electron' : 'web';
 
 BizLogger.info(`CURRENT RUNTIME: ${platform}`);
 
@@ -593,11 +540,10 @@ export class ZoomController extends EventEmitter {
   private static readonly syncDuration: number = 200;
 
   private static readonly dividingRule: ReadonlyArray<number> = Object.freeze([
-    0.10737418240000011, 0.13421772800000012, 0.16777216000000014,
-    0.20971520000000016, 0.26214400000000015, 0.3276800000000002,
-    0.4096000000000002, 0.5120000000000001, 0.6400000000000001, 0.8, 1, 1.26,
-    1.5876000000000001, 2.000376, 2.5204737600000002, 3.1757969376000004,
-    4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
+    0.10737418240000011, 0.13421772800000012, 0.16777216000000014, 0.20971520000000016,
+    0.26214400000000015, 0.3276800000000002, 0.4096000000000002, 0.5120000000000001,
+    0.6400000000000001, 0.8, 1, 1.26, 1.5876000000000001, 2.000376, 2.5204737600000002,
+    3.1757969376000004, 4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
   ]);
 
   private tempRuleIndex?: number;
@@ -631,14 +577,8 @@ export class ZoomController extends EventEmitter {
       const point = dividingRule[i];
       const nextPoint = dividingRule[i + 1];
 
-      const begin =
-        prePoint === undefined
-          ? Number.MIN_SAFE_INTEGER
-          : (prePoint + point) / 2;
-      const end =
-        nextPoint === undefined
-          ? Number.MAX_SAFE_INTEGER
-          : (nextPoint + point) / 2;
+      const begin = prePoint === undefined ? Number.MIN_SAFE_INTEGER : (prePoint + point) / 2;
+      const end = nextPoint === undefined ? Number.MAX_SAFE_INTEGER : (nextPoint + point) / 2;
 
       if (scale >= begin && scale <= end) {
         return i;
@@ -702,9 +642,7 @@ export const mapToolBar: any = {
   [`${ApplianceNames.eraser}`]: 'eraser',
 };
 
-export const eduRole2UIRole = (
-  role: EduRoleTypeEnum,
-): 'teacher' | 'student' => {
+export const eduRole2UIRole = (role: EduRoleTypeEnum): 'teacher' | 'student' => {
   if (role === EduRoleTypeEnum.teacher) {
     return 'teacher';
   }

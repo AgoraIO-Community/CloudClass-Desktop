@@ -6,16 +6,8 @@ import store from './redux/store';
 import { transI18n } from '~ui-kit';
 import { propsAction, isShowChat } from './redux/actions/propsAction';
 import { statusAction, clearStore } from './redux/actions/userAction';
-import {
-  messageAction,
-  showRedNotification,
-} from './redux/actions/messageAction';
-import {
-  roomAllMute,
-  roomUsers,
-  isUserMute,
-  announcementNotice,
-} from './redux/actions/roomAction';
+import { messageAction, showRedNotification } from './redux/actions/messageAction';
+import { roomAllMute, roomUsers, isUserMute, announcementNotice } from './redux/actions/roomAction';
 import { loginIM } from './api/login';
 import { setUserInfo, getUserInfo } from './api/userInfo';
 import { joinRoom, getAnnouncement } from './api/chatroom';
@@ -43,11 +35,7 @@ const App = function (props) {
     let im_Data_Props = _.get(im_Data, 'props', '');
     let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '');
     let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '');
-    let new_IM_Data = _.assign(
-      im_Data_Props,
-      im_Data_RoomInfo,
-      im_Data_UserInfo,
-    );
+    let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo);
     let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
     store.dispatch(propsAction(new_IM_Data));
     if (appkey) {
@@ -136,8 +124,7 @@ const App = function (props) {
       },
       onPresence: (message) => {
         console.log('onPresence>>>', message);
-        const activeTabKey =
-          store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
+        const activeTabKey = store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
         if (new_IM_Data.chatroomId !== message.gid) {
           return;
         }
@@ -228,9 +215,7 @@ const App = function (props) {
               onChangeModal();
             }}>
             <img src={showChat_icon} />
-            {(showRed || showAnnouncementNotice) && (
-              <div className="chat-notice"></div>
-            )}
+            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>
       )}

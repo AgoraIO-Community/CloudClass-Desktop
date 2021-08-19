@@ -108,9 +108,7 @@ export const Home: React.FC<HomeProps> = ({
       <Header className="home-page-header">
         <div className="header-left">
           <div className="header-left-logo"></div>
-          <div className="header-left-title">
-            {transI18n('home.header-left-title')}
-          </div>
+          <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
           <div
@@ -120,9 +118,7 @@ export const Home: React.FC<HomeProps> = ({
               position: 'relative',
               zIndex: 9,
             }}
-            className={[
-              language === 'en' ? 'region-en-div' : 'region-zh-div',
-            ].join(' ')}>
+            className={[language === 'en' ? 'region-en-div' : 'region-zh-div'].join(' ')}>
             <Select
               prefix={
                 <span id="et_region" className="home-label">
@@ -141,13 +137,9 @@ export const Home: React.FC<HomeProps> = ({
           </div>
           <div
             style={{ marginRight: 17, width: 185 }}
-            className={[
-              language === 'en' ? 'language-en-div' : 'language-zh-div',
-            ].join(' ')}>
+            className={[language === 'en' ? 'language-en-div' : 'language-zh-div'].join(' ')}>
             <Select
-              prefix={
-                <span className="home-label">{transI18n('home.language')}</span>
-              }
+              prefix={<span className="home-label">{transI18n('home.language')}</span>}
               id="language"
               value={language}
               onChange={(value) => {
@@ -260,10 +252,7 @@ export const Home: React.FC<HomeProps> = ({
               <Input
                 inputPrefixWidth={55}
                 prefix={
-                  <span
-                    id="et_room_name"
-                    className="home-label"
-                    title={transI18n('home.roomName')}>
+                  <span id="et_room_name" className="home-label" title={transI18n('home.roomName')}>
                     {transI18n('home.roomName')}
                   </span>
                 }
@@ -285,10 +274,7 @@ export const Home: React.FC<HomeProps> = ({
               <Input
                 inputPrefixWidth={55}
                 prefix={
-                  <span
-                    id="et_user_name"
-                    className="home-label"
-                    title={transI18n('home.nickName')}>
+                  <span id="et_user_name" className="home-label" title={transI18n('home.nickName')}>
                     {transI18n('home.nickName')}
                   </span>
                 }
@@ -309,10 +295,7 @@ export const Home: React.FC<HomeProps> = ({
             <Col>
               <Select
                 prefix={
-                  <span
-                    id="et_room_type"
-                    className="home-label"
-                    title={transI18n('home.roomType')}>
+                  <span id="et_room_type" className="home-label" title={transI18n('home.roomType')}>
                     {transI18n('home.roomType')}
                   </span>
                 }
@@ -346,9 +329,7 @@ export const Home: React.FC<HomeProps> = ({
             <Col>
               <Select
                 prefix={
-                  <span
-                    className="home-label"
-                    title={transI18n('home.encryptionMode')}>
+                  <span className="home-label" title={transI18n('home.encryptionMode')}>
                     {transI18n('home.encryptionMode')}
                   </span>
                 }
@@ -378,9 +359,7 @@ export const Home: React.FC<HomeProps> = ({
                 type="text"
                 className="block w-full"
                 value={encryptionKey}
-                onChange={(evt) =>
-                  onChangeEncryptionKey(evt.currentTarget.value)
-                }
+                onChange={(evt) => onChangeEncryptionKey(evt.currentTarget.value)}
                 placeholder={transI18n('home.encryptionKey_placeholder')}
                 // rule={/^[a-zA-Z0-9]{1,20}$/}
                 // errorMsg={transI18n('home.input-error-msg')}
@@ -394,9 +373,7 @@ export const Home: React.FC<HomeProps> = ({
               <Col>
                 <Select
                   prefix={
-                    <span title={transI18n('home.language')}>
-                      {transI18n('home.language')}
-                    </span>
+                    <span title={transI18n('home.language')}>{transI18n('home.language')}</span>
                   }
                   id="language"
                   value={language}
@@ -414,11 +391,7 @@ export const Home: React.FC<HomeProps> = ({
             <Row className="home-row-item">
               <Col>
                 <Select
-                  prefix={
-                    <span title={transI18n('home.region')}>
-                      {transI18n('home.region')}
-                    </span>
-                  }
+                  prefix={<span title={transI18n('home.region')}>{transI18n('home.region')}</span>}
                   id="region"
                   value={region}
                   onChange={(value) => {
@@ -438,9 +411,7 @@ export const Home: React.FC<HomeProps> = ({
                 disabled
                 inputPrefixWidth={55}
                 prefix={
-                  <span
-                    className="home-label"
-                    title={transI18n('home.duration')}>
+                  <span className="home-label" title={transI18n('home.duration')}>
                     {transI18n('home.duration')}
                   </span>
                 }

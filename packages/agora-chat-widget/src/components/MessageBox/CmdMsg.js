@@ -22,8 +22,7 @@ export const CmdMsg = ({ item }) => {
     var param = arguments[0];
     var s = this;
     if (typeof param == 'object') {
-      for (var key in param)
-        s = s.replace(new RegExp('\\{' + key + '\\}', 'g'), param[key]);
+      for (var key in param) s = s.replace(new RegExp('\\{' + key + '\\}', 'g'), param[key]);
       return s;
     } else {
       for (var i = 0; i < arguments.length; i++)
@@ -172,9 +171,7 @@ export const CmdMsg = ({ item }) => {
       return (
         <div className="mute-msg">
           <img src={icon_cautions} />
-          <span>
-            {transI18n('chat.mute_user_msg').format(item.ext.nickName)}
-          </span>
+          <span>{transI18n('chat.mute_user_msg').format(item.ext.nickName)}</span>
         </div>
       );
     }
@@ -182,9 +179,7 @@ export const CmdMsg = ({ item }) => {
       return (
         <div className="mute-msg">
           <img src={icon_cautions} />
-          <span>
-            {transI18n('chat.unmute_user_msg').format(item.ext.nickName)}
-          </span>
+          <span>{transI18n('chat.unmute_user_msg').format(item.ext.nickName)}</span>
         </div>
       );
     }

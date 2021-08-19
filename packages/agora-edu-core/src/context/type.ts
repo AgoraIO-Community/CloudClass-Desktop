@@ -1,4 +1,10 @@
-import { EduStream, EduUser, LocalUserRenderer, ScreenShareType, UserRenderer } from 'agora-rte-sdk';
+import {
+  EduStream,
+  EduUser,
+  LocalUserRenderer,
+  ScreenShareType,
+  UserRenderer,
+} from 'agora-rte-sdk';
 import { Subject } from 'rxjs';
 import { Room } from 'white-web-sdk';
 import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';

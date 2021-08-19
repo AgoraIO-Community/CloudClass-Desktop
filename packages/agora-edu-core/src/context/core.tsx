@@ -46,5 +46,4 @@ export const useSceneStore = () => useCoreContext().sceneStore;
 
 export const useWidgetStore = () => useCoreContext().widgetStore;
 
-export const useSmallClassStore = () =>
-  useCoreContext().roomStore.smallClassStore;
+export const useSmallClassStore = () => useCoreContext().roomStore.smallClassStore;

@@ -4,10 +4,7 @@ import { Switch, Tooltip, Input, Button, message, Modal } from 'antd';
 import { MSG_TYPE } from '../../contants';
 import store from '../../redux/store';
 import { transI18n } from '~ui-kit';
-import {
-  messageAction,
-  showEmojiAction,
-} from '../../redux/actions/messageAction';
+import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
 import { setAllmute, removeAllmute } from '../../api/mute';
 import { Emoji } from '../../utils/emoji';
 
@@ -135,9 +132,7 @@ export const InputMsg = ({ isTeacher }) => {
           <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
           {isTeacher && (
             <div>
-              <span className="all-mute-text">
-                {transI18n('chat.all_mute')}
-              </span>
+              <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
               <Switch
                 size="small"
                 checked={isAllMute}
@@ -158,10 +153,7 @@ export const InputMsg = ({ isTeacher }) => {
           ref={inputRef}
         />
         <div className="input-btn">
-          <Button
-            type="primary"
-            className="send-btn"
-            onClick={sendTextMessage()}>
+          <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
             {transI18n('chat.send')}
           </Button>
         </div>

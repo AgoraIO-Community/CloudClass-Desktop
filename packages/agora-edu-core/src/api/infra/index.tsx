@@ -32,8 +32,7 @@ const sdkConfig: SDKConfig = {
 
 const getLiveRoomPath = (roomType: number) => {
   return (
-    globalConfigs.routesMap.routesPath[roomType]?.path ??
-    globalConfigs.routesMap.defaultRoutePath
+    globalConfigs.routesMap.routesPath[roomType]?.path ?? globalConfigs.routesMap.defaultRoutePath
   );
 };
 
@@ -106,11 +105,7 @@ export class AgoraEduCoreSDK {
    * @param dom DOM元素
    * @param option LaunchOption
    */
-  static async launch(
-    dom: HTMLElement,
-    option: LaunchOption,
-    children: ReactChild,
-  ) {
+  static async launch(dom: HTMLElement, option: LaunchOption, children: ReactChild) {
     console.log('launch ', dom, ' option ', option);
 
     if (controller.appController.hasCalled) {
@@ -182,10 +177,7 @@ export class AgoraEduCoreSDK {
         pretest: option.pretest,
       };
       controller.appController.create(
-        <CoreContextProvider
-          params={params}
-          dom={dom}
-          controller={controller.appController}>
+        <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
           {children}
         </CoreContextProvider>,
         dom,

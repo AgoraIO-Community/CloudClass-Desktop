@@ -3,8 +3,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const path = require('path');
@@ -33,18 +32,12 @@ module.exports = {
       '~components': path.resolve(__dirname, 'src/gallery-ui-kit/components'),
       '~styles': path.resolve(__dirname, 'src/gallery-ui-kit/styles'),
       '~utilities': path.resolve(__dirname, 'src/gallery-ui-kit/utilities'),
-      '~capabilities': path.resolve(
-        __dirname,
-        'src/gallery-ui-kit/capabilities',
-      ),
+      '~capabilities': path.resolve(__dirname, 'src/gallery-ui-kit/capabilities'),
       '~capabilities/containers': path.resolve(
         __dirname,
         'src/gallery-ui-kit/capabilities/containers',
       ),
-      '~capabilities/hooks': path.resolve(
-        __dirname,
-        'src/gallery-ui-kit/capabilities/hooks',
-      ),
+      '~capabilities/hooks': path.resolve(__dirname, 'src/gallery-ui-kit/capabilities/hooks'),
     },
   },
   devServer: {
@@ -65,11 +58,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react',
-                '@babel/preset-typescript',
-              ],
+              presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
               plugins: [
                 ['@babel/plugin-proposal-decorators', { legacy: true }],
                 ['@babel/plugin-proposal-class-properties', { loose: true }],

@@ -1,11 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GenericErrorWrapper } from './../utils/generic-error';
 import { EduLogger } from './../logger';
-import {
-  LocalUserRenderer,
-  VideoRenderState,
-  RemoteUserRenderer,
-} from './renderer/index';
+import { LocalUserRenderer, VideoRenderState, RemoteUserRenderer } from './renderer/index';
 import { EventEmitter } from 'events';
 import {
   IMediaService,
@@ -56,9 +52,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.cameraRenderer = undefined;
     this.screenRenderer = undefined;
     this.remoteUsersRenderer = [];
-    EduLogger.info(
-      `[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`,
-    );
+    EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`);
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
       this.sdkWrapper = new AgoraElectronRTCWrapper({
@@ -76,9 +70,7 @@ export class MediaService extends EventEmitter implements IMediaService {
           const videoSourceLogPath = args[2];
           window.videoSourceLogPath = videoSourceLogPath;
           window.logPath = logPath;
-          EduLogger.info(
-            `[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`,
-          );
+          EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`);
           this.electron.setAddonLogPath({ logPath, videoSourceLogPath });
           this.electron.enableLogPersist();
         });
@@ -147,9 +139,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.sdkWrapper.on('user-published', (evt: any) => {
       const user = evt.user;
       EduLogger.debug('sdk wrapper user-published', user);
-      const userIndex = this.remoteUsersRenderer.findIndex(
-        (it: any) => it.uid === user.uid,
-      );
+      const userIndex = this.remoteUsersRenderer.findIndex((it: any) => it.uid === user.uid);
       if (userIndex === -1) {
         const newUserRenderer = new RemoteUserRenderer({
           context: this,
@@ -196,9 +186,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       let { stats = {}, user = {} } = evt;
       let { decoderOutputFrameRate = 0 } = stats;
       let { uid } = user;
-      let remoteUserRender = this.remoteUsersRenderer.find(
-        (render) => render.uid === uid,
-      );
+      let remoteUserRender = this.remoteUsersRenderer.find((render) => render.uid === uid);
       remoteUserRender?.setFPS(decoderOutputFrameRate);
       this.fire('remoteVideoStats', {
         user,
@@ -254,16 +242,12 @@ export class MediaService extends EventEmitter implements IMediaService {
   async setRtcRole(roleType: string) {
     if (this.isElectron) {
       if (roleType === 'host') {
-        (
-          this.sdkWrapper as AgoraElectronRTCWrapper
-        ).client.setClientRoleWithOptions(1, {
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(1, {
           audienceLatencyLevel: 1,
         });
       } else {
         (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
-        (
-          this.sdkWrapper as AgoraElectronRTCWrapper
-        ).client.setClientRoleWithOptions(2, {
+        (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
           audienceLatencyLevel: 1,
         });
       }
@@ -272,12 +256,9 @@ export class MediaService extends EventEmitter implements IMediaService {
         (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
       } else {
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
-        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole(
-          'audience',
-          {
-            level: 1,
-          },
-        );
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
+          level: 1,
+        });
       }
     }
   }
@@ -299,9 +280,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         context: this,
         uid: 0,
         channel: 0,
-        videoTrack:
-          (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ??
-          undefined,
+        videoTrack: (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ?? undefined,
         sourceType: 'default',
       });
     }
@@ -347,9 +326,7 @@ export class MediaService extends EventEmitter implements IMediaService {
         context: this,
         uid: 0,
         channel: 0,
-        videoTrack:
-          (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ??
-          undefined,
+        videoTrack: (this.web?.videoTrackMap?.get('cameraRenderer') as ITrack) ?? undefined,
         sourceType: 'default',
       });
     } else {
@@ -392,12 +369,7 @@ export class MediaService extends EventEmitter implements IMediaService {
   private fire(...params: any[]) {
     const [message, ...args] = params;
     if (
-      ![
-        'local-audio-volume',
-        'volume-indication',
-        'watch-rtt',
-        'network-quality',
-      ].includes(message)
+      !['local-audio-volume', 'volume-indication', 'watch-rtt', 'network-quality'].includes(message)
     ) {
       EduLogger.info(args[0], args);
     }
@@ -481,9 +453,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (this.isElectron) {
       const deviceId = this.getNativeCurrentVideoDevice();
       const videoDeviceList = this.getNativeVideoDevices();
-      const videoDevice: any = videoDeviceList.find(
-        (d: any) => d.deviceid === deviceId,
-      );
+      const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId);
       if (videoDevice) {
         return videoDevice.devicename;
       }
@@ -501,9 +471,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (this.isElectron) {
       const deviceId = this.getNativeCurrentAudioDevice();
       const audioDeviceList = this.getNativeAudioDevices();
-      const audioDevice: any = audioDeviceList.find(
-        (d: any) => d.deviceid === deviceId,
-      );
+      const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId);
       if (audioDevice) {
         return audioDevice.devicename;
       }
@@ -517,17 +485,14 @@ export class MediaService extends EventEmitter implements IMediaService {
       if (this.web.cameraTrack) {
         return (
           //@ts-ignore
-          this.web.cameraTrack._deviceName ||
-          this.web.cameraTrack.getTrackLabel()
+          this.web.cameraTrack._deviceName || this.web.cameraTrack.getTrackLabel()
         );
       }
     }
     if (this.isElectron) {
       const deviceId = this.getNativeCurrentVideoDevice();
       const videoDeviceList = this.getNativeVideoDevices();
-      const videoDevice: any = videoDeviceList.find(
-        (d: any) => d.deviceid === deviceId,
-      );
+      const videoDevice: any = videoDeviceList.find((d: any) => d.deviceid === deviceId);
       if (videoDevice) {
         return videoDevice.devicename;
       }
@@ -539,8 +504,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (this.isElectron) {
       if (this.electron._cefClient) {
         //@ts-ignore TODO: can uuse camelCase transform function get deviceName
-        return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo()
-          .deviceName;
+        return this.electron.client.audioDeviceManager.getPlaybackDeviceInfo().deviceName;
       }
       const deviceName =
         //@ts-ignore
@@ -565,17 +529,14 @@ export class MediaService extends EventEmitter implements IMediaService {
       if (this.web.microphoneTrack) {
         return (
           //@ts-ignore
-          this.web.microphoneTrack._deviceName ||
-          this.web.microphoneTrack.getTrackLabel()
+          this.web.microphoneTrack._deviceName || this.web.microphoneTrack.getTrackLabel()
         );
       }
     }
     if (this.isElectron) {
       const deviceId = this.getNativeCurrentAudioDevice();
       const audioDeviceList = this.getNativeAudioDevices();
-      const audioDevice: any = audioDeviceList.find(
-        (d: any) => d.deviceid === deviceId,
-      );
+      const audioDevice: any = audioDeviceList.find((d: any) => d.deviceid === deviceId);
       if (audioDevice) {
         return audioDevice.devicename;
       }
@@ -775,8 +736,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   async leaveSubChannel(channelName: string): Promise<any> {
     EduLogger.info(`call leaveSubChannel `, `${JSON.stringify(channelName)}`);
-    if (!channelName)
-      throw GenericErrorWrapper({ message: 'channelName is invalid' });
+    if (!channelName) throw GenericErrorWrapper({ message: 'channelName is invalid' });
     if (this.isWeb) {
       await this.sdkWrapper.leaveSubChannel(channelName);
     } else {
@@ -822,9 +782,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     }
   }
 
-  async prepareScreenShare(
-    params: PrepareScreenShareParams = {},
-  ): Promise<any> {
+  async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
     if (this.isWeb) {
       await this.web.prepareScreenShare(params);
       this.screenRenderer = new LocalUserRenderer({
@@ -885,10 +843,7 @@ export class MediaService extends EventEmitter implements IMediaService {
 
   getPlaybackVolume(): number {
     if (this.isElectron) {
-      return +(
-        (this.electron.client.getAudioPlaybackVolume() / 255) *
-        100
-      ).toFixed(1);
+      return +((this.electron.client.getAudioPlaybackVolume() / 255) * 100).toFixed(1);
     }
     return 100;
   }
@@ -918,9 +873,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     isBeauty?: boolean;
   }) {
     if (this.isElectron) {
-      return (
-        this.sdkWrapper as AgoraElectronRTCWrapper
-      ).setBeautyEffectOptions({
+      return (this.sdkWrapper as AgoraElectronRTCWrapper).setBeautyEffectOptions({
         isBeauty,
         lighteningLevel,
         rednessLevel,

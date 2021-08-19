@@ -22,10 +22,7 @@ export class EduBoardService {
   }
 
   async updateBoardUserState(userUuid: string, grantPermission: number) {
-    let info = await this.apiService.updateCurrentBoardUserState(
-      userUuid,
-      grantPermission,
-    );
+    let info = await this.apiService.updateCurrentBoardUserState(userUuid, grantPermission);
     return info;
   }
 

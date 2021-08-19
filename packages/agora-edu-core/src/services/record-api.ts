@@ -13,10 +13,7 @@ type AgoraRecordApiParams = {
 export class AgoraRecordApi extends ApiBase {
   constructor(params: AgoraRecordApiParams) {
     super(params);
-    this.prefix = `${params.sdkDomain}/edu/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${params.sdkDomain}/edu/apps/%app_id`.replace('%app_id', this.appId);
   }
 
   async queryRoomRecordBy(roomUuid: string) {

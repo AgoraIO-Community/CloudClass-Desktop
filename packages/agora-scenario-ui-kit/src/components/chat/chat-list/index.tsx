@@ -24,8 +24,7 @@ export const ChatList: FC<ChatListProps> = ({
       chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
     }
     if (scrollDirection.current === 'top' && chatHistoryRef.current) {
-      const position =
-        chatHistoryRef?.current.scrollHeight - currentHeight.current;
+      const position = chatHistoryRef?.current.scrollHeight - currentHeight.current;
       chatHistoryRef.current.scrollTo(0, position);
     }
   }, [conversations.length, chatHistoryRef.current, scrollDirection.current]);
@@ -58,9 +57,7 @@ export const ChatList: FC<ChatListProps> = ({
             onClick={() => {
               onClickConversation(c);
             }}>
-            <div className="avatar">
-              {c.unread ? <div className="unread-count"></div> : null}
-            </div>
+            <div className="avatar">{c.unread ? <div className="unread-count"></div> : null}</div>
             <div className="name">{c.userName}</div>
           </li>
         ))

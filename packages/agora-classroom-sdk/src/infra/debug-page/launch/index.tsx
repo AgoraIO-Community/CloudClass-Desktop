@@ -9,11 +9,7 @@ import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AgoraEduEvent, AgoraEduSDK } from '../../api';
-import {
-  ClassRoom,
-  ClassRoomAbstractStore,
-  controller,
-} from '../../api/controller';
+import { ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller';
 
 //@ts-ignore
 window.controller = controller;
@@ -69,13 +65,9 @@ export const LaunchPage = observer(() => {
         //   );
         // }
 
-        launchOption.extApps = [
-          new AgoraExtAppCountDown(launchOption.language as any),
-        ];
+        launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any)];
         const genH5Scenes = (size: number) => {
-          return new Array(size)
-            .fill(1)
-            .map((_, index) => ({ name: `${index + 1}` }));
+          return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
         };
 
         const size = 10;
@@ -99,9 +91,7 @@ export const LaunchPage = observer(() => {
           courseWareList: [
             {
               resourceName: 'H5课件',
-              resourceUuid: `h5${MD5(
-                'https://demo-h5.netless.group/dist2020/',
-              )}`,
+              resourceUuid: `h5${MD5('https://demo-h5.netless.group/dist2020/')}`,
               ext: 'h5',
               url: 'https://demo-h5.netless.group/dist2020/',
               conversion: {

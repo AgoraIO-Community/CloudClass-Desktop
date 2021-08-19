@@ -4,8 +4,8 @@ export type OnChangeEvents<Type> = {
   ) => void;
 };
 
-export type HomeModule<CustomizeVanillaType> =
-  OnChangeEvents<CustomizeVanillaType> & CustomizeVanillaType;
+export type HomeModule<CustomizeVanillaType> = OnChangeEvents<CustomizeVanillaType> &
+  CustomizeVanillaType;
 
 export type IncludeUIKitSetter<Type> = {
   [Property in keyof Type as `set${Capitalize<string & Property>}`]: (
@@ -13,5 +13,4 @@ export type IncludeUIKitSetter<Type> = {
   ) => void;
 };
 
-export type UIKitModule<EntityType> = IncludeUIKitSetter<EntityType> &
-  EntityType;
+export type UIKitModule<EntityType> = IncludeUIKitSetter<EntityType> & EntityType;

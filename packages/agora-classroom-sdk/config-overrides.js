@@ -57,13 +57,7 @@ const useSW = () => (config) => {
       // swSrc: path.join(process.cwd(), '/src/sw/index.worker.js'),
       swDest: 'serviceWorker.js',
       include: [],
-      exclude: [
-        /\.map$/,
-        /manifest$/,
-        /\.htaccess$/,
-        /service-worker\.js$/,
-        /sw\.js$/,
-      ],
+      exclude: [/\.map$/, /manifest$/, /\.htaccess$/, /service-worker\.js$/, /sw\.js$/],
     }),
   );
   return config;
@@ -311,66 +305,44 @@ const webpackConfig = override(
   }),
   addWebpackExternals(setElectronDeps),
   adjustStyleLoaders((loader) => {
-    loader.exclude = [
-      path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat'),
-    ];
+    loader.exclude = [path.resolve(__dirname, 'src', 'ui-kit', 'components', 'chat')];
   }),
   addStyleLoader(),
   addWebpackPlugin(
     new DefinePlugin({
       // 'REACT_APP_AGORA_APP_SDK_DOMAIN': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN),
       // 'REACT_APP_AGORA_APP_SDK_LOG_SECRET': JSON.stringify(process.env.REACT_APP_AGORA_APP_SDK_DOMAIN)
-      REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(
-        config.REACT_APP_AGORA_APP_RECORD_URL,
-      ),
-      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(
-        config.REACT_APP_AGORA_RESTFULL_TOKEN,
-      ),
-      REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(
-        config.REACT_APP_AGORA_RECORDING_OSS_URL,
-      ),
+      REACT_APP_AGORA_APP_RECORD_URL: JSON.stringify(config.REACT_APP_AGORA_APP_RECORD_URL),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
+      REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
       REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
       REACT_APP_BUILD_VERSION: JSON.stringify(version),
       REACT_APP_PUBLISH_DATE: JSON.stringify(dayjs().format('YYYY-MM-DD')),
       REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
       REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
-      REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty(
-        'REACT_APP_AGORA_APP_CERTIFICATE',
-      )
+      REACT_APP_AGORA_APP_CERTIFICATE: config.hasOwnProperty('REACT_APP_AGORA_APP_CERTIFICATE')
         ? JSON.stringify(`${config.REACT_APP_AGORA_APP_CERTIFICATE}`)
         : JSON.stringify(''),
-      REACT_APP_AGORA_APP_TOKEN: JSON.stringify(
-        config.REACT_APP_AGORA_APP_TOKEN,
-      ),
-      REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(
-        config.REACT_APP_AGORA_CUSTOMER_ID,
-      ),
+      REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
+      REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
       REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(
         config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE,
       ),
       REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
 
-      REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(
-        config.REACT_APP_AGORA_APP_SDK_DOMAIN,
-      ),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(
-        config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY,
-      ),
+      REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_KEY),
       REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(
         config.REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET,
       ),
-      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(
-        config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME,
-      ),
+      REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(config.REACT_APP_YOUR_OWN_OSS_BUCKET_NAME),
       REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(
         config.REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE,
       ),
       REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(
         config.REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER,
       ),
-      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(
-        config.REACT_APP_AGORA_RESTFULL_TOKEN,
-      ),
+      REACT_APP_AGORA_RESTFULL_TOKEN: JSON.stringify(config.REACT_APP_AGORA_RESTFULL_TOKEN),
       AGORA_APAAS_BRANCH_PATH: config.hasOwnProperty('AGORA_APAAS_BRANCH_PATH')
         ? JSON.stringify(`${process.env.AGORA_APAAS_BRANCH_PATH}`)
         : JSON.stringify(''),
@@ -441,34 +413,16 @@ const webpackConfig = override(
     ['@']: path.resolve(__dirname, 'src'),
     '~core': path.resolve(__dirname, 'src/core'),
     '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
-    '~components': path.resolve(
-      __dirname,
-      '../agora-scenario-ui-kit/src/components',
-    ),
+    '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
     '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
-    '~utilities': path.resolve(
-      __dirname,
-      '../agora-scenario-ui-kit/src/utilities',
-    ),
+    '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
     '~capabilities': path.resolve(__dirname, 'src/ui-kit/capabilities'),
-    '~capabilities/containers': path.resolve(
-      __dirname,
-      'src/ui-kit/capabilities/containers',
-    ),
-    '~capabilities/hooks': path.resolve(
-      __dirname,
-      'src/ui-kit/capabilities/hooks',
-    ),
+    '~capabilities/containers': path.resolve(__dirname, 'src/ui-kit/capabilities/containers'),
+    '~capabilities/hooks': path.resolve(__dirname, 'src/ui-kit/capabilities/hooks'),
     'agora-rte-sdk': path.resolve(__dirname, '../agora-rte-sdk/src'),
     'agora-edu-core': path.resolve(__dirname, '../agora-edu-core/src'),
-    'agora-plugin-gallery': path.resolve(
-      __dirname,
-      '../agora-plugin-gallery/src',
-    ),
-    'agora-widget-gallery': path.resolve(
-      __dirname,
-      '../agora-widget-gallery/src',
-    ),
+    'agora-plugin-gallery': path.resolve(__dirname, '../agora-plugin-gallery/src'),
+    'agora-widget-gallery': path.resolve(__dirname, '../agora-widget-gallery/src'),
     'agora-chat-widget': path.resolve(__dirname, '../agora-chat-widget/src'),
   }),
   removeModuleScopePlugin(),

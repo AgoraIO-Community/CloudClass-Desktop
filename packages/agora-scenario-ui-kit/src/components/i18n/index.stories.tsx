@@ -25,9 +25,7 @@ const Text = ({ text }: any) => {
         }}>
         {t('zh')}
       </Button>
-      <div>
-        {transI18n('error.unknown', { errCode: '123', message: 'test' })}
-      </div>
+      <div>{transI18n('error.unknown', { errCode: '123', message: 'test' })}</div>
     </div>
   );
 };

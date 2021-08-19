@@ -92,9 +92,7 @@ export class UIStore {
 
   @action.bound
   removeDialog(id: string) {
-    this.dialogQueue = this.dialogQueue.filter(
-      (item: DialogType) => item.id !== id,
-    );
+    this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id);
   }
 
   @action.bound

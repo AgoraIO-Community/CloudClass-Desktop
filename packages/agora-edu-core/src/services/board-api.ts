@@ -41,10 +41,7 @@ export class AgoraBoardApi extends ApiBase {
     super(params);
     this.roomUuid = params.roomUuid;
     this.userToken = params.userToken;
-    this.prefix = `${this.sdkDomain}/board/apps/%app_id%`.replace(
-      '%app_id%',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/board/apps/%app_id%`.replace('%app_id%', this.appId);
   }
 
   async getBoardInfo(roomUuid: string): Promise<BoardInfoResponse> {
@@ -79,11 +76,7 @@ export class AgoraBoardApi extends ApiBase {
     }
   }
 
-  async updateBoardUserState(
-    roomUuid: string,
-    userUuid: string,
-    grantPermission: number,
-  ) {
+  async updateBoardUserState(roomUuid: string, userUuid: string, grantPermission: number) {
     let res = await this.fetch({
       type: 'board',
       url: `/v1/rooms/${roomUuid}/users/${userUuid}`,
@@ -108,11 +101,7 @@ export class AgoraBoardApi extends ApiBase {
   }
 
   async updateCurrentBoardUserState(userUuid: string, grantPermission: number) {
-    return await this.updateBoardUserState(
-      this.roomUuid,
-      userUuid,
-      grantPermission,
-    );
+    return await this.updateBoardUserState(this.roomUuid, userUuid, grantPermission);
   }
 
   async updateCurrentBoardState(follow: number) {

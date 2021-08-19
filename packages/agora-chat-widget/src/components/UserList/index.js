@@ -30,30 +30,21 @@ export const UserList = ({ roomUserList }) => {
       {roomUserList.length > 0 &&
         roomUserList.map((item, key) => {
           const showMuteIcon = muteList && muteList.includes(item.id);
-          const isTeacher =
-            item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
-          const isAssistant =
-            item?.ext && JSON.parse(item?.ext).role === ROLE.assistant.id;
+          const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
+          const isAssistant = item?.ext && JSON.parse(item?.ext).role === ROLE.assistant.id;
           return (
             <div className="user-list" key={key}>
               <div className="user-info">
-                <img
-                  src={item?.avatarurl || avatarUrl}
-                  className="user-avatar"
-                />
+                <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
                 <span className="user-text">{item?.nickname || item?.id}</span>
                 {isTeacher && (
                   <Tag className="user-tag teacher-tag">
-                    <span className="teacher-text">
-                      {transI18n('chat.teacher')}
-                    </span>
+                    <span className="teacher-text">{transI18n('chat.teacher')}</span>
                   </Tag>
                 )}
                 {isAssistant && (
                   <Tag className="user-tag teacher-tag">
-                    <span className="teacher-text">
-                      {transI18n('chat.assistant')}
-                    </span>
+                    <span className="teacher-text">{transI18n('chat.assistant')}</span>
                   </Tag>
                 )}
               </div>

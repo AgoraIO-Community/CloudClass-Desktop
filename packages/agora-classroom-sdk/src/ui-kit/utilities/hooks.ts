@@ -138,23 +138,15 @@ export const usePrevious = <Type>(value: Type) => {
   return previousValue.current;
 };
 
-export const useRendererPlayer = <T extends HTMLElement>(
-  props: RendererPlayerProps,
-) => {
+export const useRendererPlayer = <T extends HTMLElement>(props: RendererPlayerProps) => {
   const ref = useRef<T | null>(null);
 
-  const onRendererPlayer = <T extends HTMLElement>(
-    dom: T,
-    player: RendererPlayerProps,
-  ) => {
+  const onRendererPlayer = <T extends HTMLElement>(dom: T, player: RendererPlayerProps) => {
     if (dom && player.track) {
       player.track.play && player.track.play(dom, player.fitMode);
     }
     return () => {
-      player.track &&
-        player.track.stop &&
-        player.track.stop &&
-        player.track.stop(props.preview);
+      player.track && player.track.stop && player.track.stop && player.track.stop(props.preview);
     };
   };
 

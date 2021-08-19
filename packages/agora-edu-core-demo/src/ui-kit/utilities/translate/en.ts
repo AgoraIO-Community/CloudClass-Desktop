@@ -42,10 +42,8 @@ export const en = {
     user_list: 'User List',
     student_name: 'Name',
     student_co_video: 'CoVideo',
-    close_student_co_video:
-      'You are not on stage now and you can not interact with others',
-    open_student_co_video:
-      'The teacher has invited you to stage，you can interact with others now',
+    close_student_co_video: 'You are not on stage now and you can not interact with others',
+    open_student_co_video: 'The teacher has invited you to stage，you can interact with others now',
     board_state: 'Board',
     camera_state: 'Camera',
     microphone_state: 'Microphone',
@@ -119,8 +117,7 @@ export const en = {
     end_class: 'End Class',
     quit_from_room: 'Leave Class Room',
     kick_by_teacher: 'You have been kicked out of the classroom',
-    upload_log_failure:
-      'Upload Log Failure，ErrorName: {reason}，see more details in devtool',
+    upload_log_failure: 'Upload Log Failure，ErrorName: {reason}，see more details in devtool',
     show_log_id: `Report your log ID: {reason}`,
     api_login_failured: 'Join Failured, Reason: {reason}',
     confirm: 'Confirm',
@@ -148,12 +145,10 @@ export const en = {
     rtm_login_failed: 'login failure, please check your network',
     rtm_login_failed_reason: 'login failure, reason: {reason}',
     replay_failed: 'Replay Failed please refresh browser',
-    teacher_exists:
-      'Teacher already exists, Please waiting for 30s or reopen new class',
+    teacher_exists: 'Teacher already exists, Please waiting for 30s or reopen new class',
     student_over_limit:
       'Student have reached upper limit, , Please waiting for 30s or rejoin new class',
-    teacher_and_student_over_limit:
-      'The number of students and teacher have reached upper limit',
+    teacher_and_student_over_limit: 'The number of students and teacher have reached upper limit',
     teacher_accept_whiteboard: 'Teacher already grant your whiteboard',
     teacher_cancel_whiteboard: 'Teacher already cancel your whiteboard',
     teacher_accept_co_video: 'Teacher already accept co-video',
@@ -176,8 +171,7 @@ export const en = {
     video_equipment_has_changed: 'Video equipment has changed',
     failed_to_initiate_screen_sharing: 'Failed to initiate screen sharing',
     failed_to_end_screen_sharing: 'Failed to end screen sharing',
-    failed_to_initiate_screen_sharing_to_remote:
-      'Failed to initiate screen sharing to remote',
+    failed_to_initiate_screen_sharing_to_remote: 'Failed to initiate screen sharing to remote',
     failed_to_enable_screen_sharing: 'Failed to enable screen sharing',
     failed_to_enable_screen_sharing_permission_denied:
       'Open screen capture failed！Please grant permission for screen capture!',
@@ -195,14 +189,12 @@ export const en = {
     close_whiteboard_follow: 'close whiteboard follow',
     i: 'I',
     teacher: 'Teacher',
-    the_teacher_authorized_your_whiteboard:
-      'The teacher authorized your whiteboard',
+    the_teacher_authorized_your_whiteboard: 'The teacher authorized your whiteboard',
     the_teacher_cancelled_your_whiteboard_permission:
       'The teacher cancelled your whiteboard permission',
     publish_business_flow_successfully: 'Publish business flow successfully',
     media_method_call_failed: 'Media method call failed',
-    successfully_left_the_business_channel:
-      'Successfully left the business channel',
+    successfully_left_the_business_channel: 'Successfully left the business channel',
     course_started_successfully: 'Course start successfully',
     setting_start_failed: 'Setting start failed',
     the_course_ends_successfully: 'Course end successfully',
@@ -222,8 +214,7 @@ export const en = {
     failed_to_end_the_call: 'Failed to end the call',
     failed_to_join_board: 'Failed to join board',
     stop_screen_share_failed: 'Stop screen share failed',
-    classroom_remote_join:
-      'Account was logged in from remote device, you have left the classroom',
+    classroom_remote_join: 'Account was logged in from remote device, you have left the classroom',
     time_interval_between_start: `The class will start in {reason}`,
     time_interval_between_end: `The class will be over in {reason}`,
     class_is_end: `Class is over. The classroom will be closed in {reason}`,
@@ -290,10 +281,8 @@ export const en = {
     volume: 'Volume',
     adjust_volume: 'Adjust Volume',
     test_speaker: 'Test',
-    camera_error:
-      'Device exception, camera is unplugged or occupied and cannot be used!',
-    microphone_error:
-      'Device exception, microphone is unplugged or occupied and cannot be used!',
+    camera_error: 'Device exception, camera is unplugged or occupied and cannot be used!',
+    microphone_error: 'Device exception, microphone is unplugged or occupied and cannot be used!',
     mirror: 'mirror',
   },
   tool: {
@@ -331,8 +320,7 @@ export const en = {
     device_not_working: 'The device is not working properly!',
     detect_new_device_in_room:
       'The device has installed, Please click setting and select the new device.',
-    teacher_device_may_not_work:
-      "There is something wrong with the teacher's device",
+    teacher_device_may_not_work: "There is something wrong with the teacher's device",
   },
   'biz-header': {
     setting: 'Setting',

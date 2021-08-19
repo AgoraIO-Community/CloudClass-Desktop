@@ -27,11 +27,7 @@ export type AgoraExtAppContext = {
 };
 
 export type AgoraExtAppHandle = {
-  updateRoomProperty: (
-    properties: any,
-    common: any,
-    cause: any,
-  ) => Promise<void>;
+  updateRoomProperty: (properties: any, common: any, cause: any) => Promise<void>;
   deleteRoomProperties: (properties: string[], cause: any) => Promise<void>;
 };
 
@@ -41,11 +37,7 @@ export interface IAgoraExtApp {
   appName: string;
   width: number;
   height: number;
-  extAppDidLoad(
-    dom: Element,
-    ctx: AgoraExtAppContext,
-    handle: AgoraExtAppHandle,
-  ): void;
+  extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void;
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void;
   extAppWillUnload(): void;
 }
@@ -316,10 +308,7 @@ export type OssExistsFileInfo = {
   findInfo: string; //查询信息
 };
 
-export type PPTProgressListener = (
-  phase: PPTProgressPhase,
-  percent: number,
-) => void;
+export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
 
 export enum PPTProgressPhase {
   Checking, //检测

@@ -35,8 +35,7 @@ export const Volume: FC<VolumeProps> = ({
           style={{
             width,
             height,
-            backgroundColor:
-              index < currentVolume ? activeColor : backgroundColor,
+            backgroundColor: index < currentVolume ? activeColor : backgroundColor,
           }}>
           {item}
         </div>

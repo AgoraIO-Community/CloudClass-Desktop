@@ -8,9 +8,7 @@ export const EduUserRoleEnum2EduUserRole = (
     case EduRoleTypeEnum.teacher:
       return EduRoleType.teacher;
     case EduRoleTypeEnum.student:
-      return scene === EduSceneType.Scene1v1
-        ? EduRoleType.student
-        : EduRoleType.audience;
+      return scene === EduSceneType.Scene1v1 ? EduRoleType.student : EduRoleType.audience;
     case EduRoleTypeEnum.assistant:
       return EduRoleType.assistant;
     case EduRoleTypeEnum.invisible:

@@ -48,9 +48,7 @@ const VideoPreviewPlayer = () => {
 const ChildrenWrap = () => {
   let [isMirror, setIsMirror] = useState<boolean>(false);
   let [cameraId, setCameraId] = useState<string>(cameraList[0].deviceId);
-  let [microphoneId, setMicrophoneId] = useState<string>(
-    microphoneList[0].deviceId,
-  );
+  let [microphoneId, setMicrophoneId] = useState<string>(microphoneList[0].deviceId);
   let [speakerId, setSpeakerId] = useState<string>(speakerList[0].deviceId);
   let [microphoneVolume, setMicrophoneVolume] = useState<number>(50);
   let [speakerVolume, setSpeakerVolume] = useState<number>(50);
@@ -106,9 +104,7 @@ const PretestContainer = () => {
         <Modal
           title={transI18n('pretest.settingTitle')}
           width={720}
-          footer={[
-            <Button action="ok">{transI18n('pretest.finishTest')}</Button>,
-          ]}
+          footer={[<Button action="ok">{transI18n('pretest.finishTest')}</Button>]}
           onOk={hideModal}
           onCancel={hideModal}>
           <Pretest
@@ -132,12 +128,7 @@ const PretestContainer = () => {
   );
 };
 
-export const Docs = ({
-  lang,
-  isNative,
-  cameraError,
-  microphoneError,
-}: DocsProps) => (
+export const Docs = ({ lang, isNative, cameraError, microphoneError }: DocsProps) => (
   <>
     <div className="mt-4">
       <PretestContainer />

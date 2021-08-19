@@ -1,9 +1,5 @@
 import { RendererPlayer } from '@/ui-kit/utilities/renderer-player';
-import {
-  useGlobalContext,
-  useRoomContext,
-  useStreamListContext,
-} from 'agora-edu-core';
+import { useGlobalContext, useRoomContext, useStreamListContext } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 
@@ -24,9 +20,7 @@ export const Premium = observer(() => {
         style={{
           maxWidth: 'calc(.25rem * 64)',
         }}>
-        <button
-          className="bg-blue-500 text-white py-2 px-8"
-          onClick={joinCallback}>
+        <button className="bg-blue-500 text-white py-2 px-8" onClick={joinCallback}>
           join
         </button>
       </div>

@@ -15,21 +15,11 @@ export { TabPane } from 'rc-tabs';
 export interface TabsProps extends Omit<RcTabsProps, 'editable'> {
   type?: TabsType;
   centered?: boolean;
-  onEdit?: (
-    e: React.MouseEvent | React.KeyboardEvent | string,
-    action: 'add' | 'remove',
-  ) => void;
+  onEdit?: (e: React.MouseEvent | React.KeyboardEvent | string, action: 'add' | 'remove') => void;
 }
 
-export const Tabs: FC<TabsProps> = ({
-  type,
-  className,
-  onEdit,
-  centered,
-  ...props
-}) => {
-  const { prefixCls: customizePrefixCls, moreIcon = <SvgImg type="more" /> } =
-    props;
+export const Tabs: FC<TabsProps> = ({ type, className, onEdit, centered, ...props }) => {
+  const { prefixCls: customizePrefixCls, moreIcon = <SvgImg type="more" /> } = props;
   const prefixCls = customizePrefixCls ?? 'tabs';
 
   let editable: EditableConfig | undefined;
@@ -51,9 +41,7 @@ export const Tabs: FC<TabsProps> = ({
       {...props}
       className={classNames(
         {
-          [`${prefixCls}-card`]: ['card', 'editable-card'].includes(
-            type as string,
-          ),
+          [`${prefixCls}-card`]: ['card', 'editable-card'].includes(type as string),
           [`${prefixCls}-editable-card`]: type === 'editable-card',
           [`${prefixCls}-centered`]: centered,
         },

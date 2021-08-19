@@ -4,11 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CameraPlaceHolder } from '~components';
 import { Button } from '~components/button';
 import { changeLanguage } from '~components/i18n';
-import {
-  VideoMarqueeList,
-  VideoPlayer,
-  VideoPlayerProps,
-} from '~components/video-player';
+import { VideoMarqueeList, VideoPlayer, VideoPlayerProps } from '~components/video-player';
 
 const config = {
   muted: true,
@@ -471,11 +467,7 @@ export const DocsAnimTest = () => {
       </Button>
       <div id="wrap">
         <div className="video-teacher">
-          <CSSTransition
-            in={showTeacher}
-            timeout={1000}
-            classNames="fade"
-            appear={true}>
+          <CSSTransition in={showTeacher} timeout={1000} classNames="fade" appear={true}>
             <div className="video-item"></div>
           </CSSTransition>
         </div>

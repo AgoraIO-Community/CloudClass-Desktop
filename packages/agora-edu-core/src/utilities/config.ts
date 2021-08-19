@@ -57,8 +57,7 @@ class GlobalConfigs {
     config = {
       sdkDomain: 'https://rest-argus-ad.agoralab.co',
       qos: 1,
-      v1SdkDomain:
-        'https://api.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
+      v1SdkDomain: 'https://api.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
     },
   ) {
     reportServiceV2.initReportConfig(config);

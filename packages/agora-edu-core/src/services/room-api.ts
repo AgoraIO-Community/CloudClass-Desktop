@@ -30,10 +30,7 @@ export interface EduClassroomConfig {
 export class RoomApi extends ApiBase {
   constructor(params: ApiBaseInitializerParams) {
     super(params);
-    this.prefix = `${this.sdkDomain}/scene/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/scene/apps/%app_id`.replace('%app_id', this.appId);
   }
 
   async acquireRoomGroupBy(roomUuid: string, userToken: string) {
@@ -42,17 +39,11 @@ export class RoomApi extends ApiBase {
       let data = await this.createGroup(roomUuid, memberLimit, userToken);
       return data;
     } catch (err) {
-      BizLogger.warn(
-        `[room-api]#acquireRoomGroupBy code: ${err.code} msg: ${err.message}`,
-      );
+      BizLogger.warn(`[room-api]#acquireRoomGroupBy code: ${err.code} msg: ${err.message}`);
     }
   }
 
-  async fetchRoom(params: {
-    roomUuid: string;
-    roomName: string;
-    roomType: number;
-  }) {
+  async fetchRoom(params: { roomUuid: string; roomName: string; roomType: number }) {
     const roomConfig: any = {
       roomUuid: `${params.roomUuid}`,
       roomName: `${params.roomName}`,

@@ -3,11 +3,7 @@ const path = require('path');
 const disableEsLint = (e) => {
   return (
     e.module.rules
-      .filter(
-        (e) =>
-          e.use &&
-          e.use.some((e) => e.options && void 0 !== e.options.useEslintrc),
-      )
+      .filter((e) => e.use && e.use.some((e) => e.options && void 0 !== e.options.useEslintrc))
       .forEach((s) => {
         e.module.rules = e.module.rules.filter((e) => e !== s);
       }),
@@ -89,20 +85,11 @@ module.exports = {
       '~styles': path.resolve(__dirname, '../src/styles'),
       '~utilities': path.resolve(__dirname, '../src/utilities'),
       '~capabilities': path.resolve(__dirname, '../src/capabilities'),
-      '~capabilities/containers': path.resolve(
-        __dirname,
-        '../src/capabilities/containers',
-      ),
-      '~capabilities/hooks': path.resolve(
-        __dirname,
-        '../src/capabilities/hooks',
-      ),
+      '~capabilities/containers': path.resolve(__dirname, '../src/capabilities/containers'),
+      '~capabilities/hooks': path.resolve(__dirname, '../src/capabilities/hooks'),
     };
 
-    config.resolve.modules = [
-      path.resolve(__dirname, '../', 'node_modules'),
-      'node_modules',
-    ];
+    config.resolve.modules = [path.resolve(__dirname, '../', 'node_modules'), 'node_modules'];
 
     config.plugins = config.plugins.filter(
       (plugin) => plugin.constructor.name !== 'ESLintWebpackPlugin',

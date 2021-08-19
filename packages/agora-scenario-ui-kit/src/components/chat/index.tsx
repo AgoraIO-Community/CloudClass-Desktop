@@ -107,12 +107,7 @@ export const SimpleChat: FC<ChatProps> = ({
       onCollapse={onCollapse}
       collapse={collapse}
       content={<ChatMin unreadCount={unreadCount} />}>
-      <div
-        className={[
-          'chat-panel',
-          showCloseIcon ? 'full-screen-chat' : '',
-          cls,
-        ].join(' ')}>
+      <div className={['chat-panel', showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
         <div className="chat-header">
           <span className="chat-header-title">{transI18n('message')}</span>
           <span
@@ -123,16 +118,11 @@ export const SimpleChat: FC<ChatProps> = ({
             }}>
             {isHost ? (
               <span onClick={() => onCanChattingChange(!!canChatting)}>
-                <i
-                  className={
-                    canChatting ? 'can-discussion-svg' : 'no-discussion-svg'
-                  }></i>
+                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>
             ) : null}
             {showCloseIcon ? (
-              <span
-                style={{ cursor: 'pointer' }}
-                onClick={() => onCollapse && onCollapse()}>
+              <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
                 <img src={chatMinBtn} />
               </span>
             ) : null}
@@ -223,17 +213,13 @@ export const Chat: FC<ChatProps> = ({
     return false;
   }, [JSON.stringify(conversations)]);
 
-  const [activeConversation, setActiveConversation] = useState<
-    Conversation | undefined
-  >(undefined);
+  const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined);
 
   const getActiveConversationMessages = () => {
     if (!activeConversation) {
       return [];
     }
-    let conversation = conversations.filter(
-      (c) => c.userUuid === activeConversation.userUuid,
-    )[0];
+    let conversation = conversations.filter((c) => c.userUuid === activeConversation.userUuid)[0];
     return conversation ? conversation.messages : [];
   };
 
@@ -255,12 +241,7 @@ export const Chat: FC<ChatProps> = ({
       onCollapse={onCollapse}
       collapse={collapse}
       content={<ChatMin unreadCount={unreadCount} />}>
-      <div
-        className={[
-          'chat-panel',
-          showCloseIcon ? 'full-screen-chat' : '',
-          cls,
-        ].join(' ')}>
+      <div className={['chat-panel', showCloseIcon ? 'full-screen-chat' : '', cls].join(' ')}>
         <div className="chat-header with-tab">
           <span
             style={{
@@ -270,16 +251,11 @@ export const Chat: FC<ChatProps> = ({
             }}>
             {isHost ? (
               <span onClick={() => onCanChattingChange(!!canChatting)}>
-                <i
-                  className={
-                    canChatting ? 'can-discussion-svg' : 'no-discussion-svg'
-                  }></i>
+                <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>
             ) : null}
             {showCloseIcon ? (
-              <span
-                style={{ cursor: 'pointer' }}
-                onClick={() => onCollapse && onCollapse()}>
+              <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
                 <img src={chatMinBtn} />
               </span>
             ) : null}
@@ -291,12 +267,10 @@ export const Chat: FC<ChatProps> = ({
               onChangeActiveTab && onChangeActiveTab('room');
             } else if (singleConversation) {
               // no list
-              onChangeActiveTab &&
-                onChangeActiveTab('conversation', singleConversation);
+              onChangeActiveTab && onChangeActiveTab('conversation', singleConversation);
             } else if (activeConversation) {
               // already in list
-              onChangeActiveTab &&
-                onChangeActiveTab('conversation', activeConversation);
+              onChangeActiveTab && onChangeActiveTab('conversation', activeConversation);
             } else {
               onChangeActiveTab && onChangeActiveTab('conversation-list');
             }
@@ -305,9 +279,7 @@ export const Chat: FC<ChatProps> = ({
             tab={
               <span className="message-tab tab-title">
                 {transI18n('message')}
-                {messageListUnread ? (
-                  <span className="new-message-notice"></span>
-                ) : null}
+                {messageListUnread ? <span className="new-message-notice"></span> : null}
               </span>
             }
             key="0">
@@ -339,9 +311,7 @@ export const Chat: FC<ChatProps> = ({
             tab={
               <span className="question tab-title">
                 {transI18n('quiz')}
-                {conversationListUnread ? (
-                  <span className="new-message-notice"></span>
-                ) : null}
+                {conversationListUnread ? <span className="new-message-notice"></span> : null}
                 {/* <span className="question-count">{totalCount}</span> */}
               </span>
             }
@@ -383,8 +353,7 @@ export const Chat: FC<ChatProps> = ({
                     className="back-btn"
                     onClick={() => {
                       setActiveConversation(undefined);
-                      onChangeActiveTab &&
-                        onChangeActiveTab('conversation-list', undefined);
+                      onChangeActiveTab && onChangeActiveTab('conversation-list', undefined);
                     }}>
                     <img src={backBtn} />
                   </div>
@@ -425,8 +394,7 @@ export const Chat: FC<ChatProps> = ({
                 onPullRefresh={onPullRefresh}
                 onClickConversation={(conversation) => {
                   setActiveConversation(conversation);
-                  onChangeActiveTab &&
-                    onChangeActiveTab('conversation', conversation);
+                  onChangeActiveTab && onChangeActiveTab('conversation', conversation);
                 }}></ChatList>
             )}
           </TabPane>

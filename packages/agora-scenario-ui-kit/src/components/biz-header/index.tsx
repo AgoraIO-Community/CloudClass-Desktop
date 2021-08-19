@@ -100,20 +100,10 @@ export const BizHeader: FC<BizHeaderProps> = ({
             </Tooltip>
           ) : null}
           <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
-            <SvgImg
-              canHover
-              type="set"
-              size={24}
-              onClick={() => onClick('setting')}
-            />
+            <SvgImg canHover type="set" size={24} onClick={() => onClick('setting')} />
           </Tooltip>
           <Tooltip title={transI18n('biz-header.exit')} placement="bottom">
-            <SvgImg
-              canHover
-              type="exit"
-              size={24}
-              onClick={() => onClick('exit')}
-            />
+            <SvgImg canHover type="exit" size={24} onClick={() => onClick('exit')} />
           </Tooltip>
         </div>
       </Header>

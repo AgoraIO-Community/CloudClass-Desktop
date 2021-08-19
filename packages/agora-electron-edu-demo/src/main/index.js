@@ -22,9 +22,7 @@ const createWindow = () => {
 
   if (isDevelopment) {
     console.log(' port ', process.env.ELECTRON_WEBPACK_WDS_PORT);
-    mainWindow.loadURL(
-      `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`,
-    );
+    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
   } else {
     mainWindow.loadURL(
       formatUrl({

@@ -26,8 +26,7 @@ export type TooltipPlacement =
   | 'rightTop'
   | 'rightBottom';
 
-export interface AbstractTooltipProps
-  extends Partial<Omit<RcTooltipProps, 'children'>> {
+export interface AbstractTooltipProps extends Partial<Omit<RcTooltipProps, 'children'>> {
   style?: React.CSSProperties;
   className?: string;
   color?: LiteralUnion<PresetColorType, string>;
@@ -52,9 +51,7 @@ export interface TooltipPropsWithTitle extends AbstractTooltipProps {
   overlay?: React.ReactNode | RenderFunction;
 }
 
-export declare type TooltipProps =
-  | TooltipPropsWithTitle
-  | TooltipPropsWithOverlay;
+export declare type TooltipProps = TooltipPropsWithTitle | TooltipPropsWithOverlay;
 
 const splitObject = (obj: any, keys: string[]) => {
   const picked: any = {};
@@ -68,17 +65,12 @@ const splitObject = (obj: any, keys: string[]) => {
   return { picked, omitted };
 };
 
-const PresetColorRegex = new RegExp(
-  `^(${PresetColorTypes.join('|')})(-inverse)?$`,
-);
+const PresetColorRegex = new RegExp(`^(${PresetColorTypes.join('|')})(-inverse)?$`);
 
 // Fix Tooltip won't hide at disabled button
 // mouse events don't trigger at disabled button in Chrome
 // https://github.com/react-component/tooltip/issues/18
-function getDisabledCompatibleChildren(
-  element: React.ReactElement<any>,
-  prefixCls: string,
-) {
+function getDisabledCompatibleChildren(element: React.ReactElement<any>, prefixCls: string) {
   if (element.type === 'button' && element.props.disabled) {
     // Pick some layout related style properties up to span
     // Prevent layout bugs like https://github.com/ant-design/ant-design/issues/5254
@@ -109,10 +101,7 @@ function getDisabledCompatibleChildren(
     return (
       <span
         style={spanStyle}
-        className={classnames(
-          element.props.className,
-          `${prefixCls}-disabled-compatible-wrapper`,
-        )}>
+        className={classnames(element.props.className, `${prefixCls}-disabled-compatible-wrapper`)}>
         {child}
       </span>
     );
@@ -170,18 +159,12 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
     };
     if (placement.indexOf('top') >= 0 || placement.indexOf('Bottom') >= 0) {
       transformOrigin.top = `${rect.height - align.offset[1]}px`;
-    } else if (
-      placement.indexOf('Top') >= 0 ||
-      placement.indexOf('bottom') >= 0
-    ) {
+    } else if (placement.indexOf('Top') >= 0 || placement.indexOf('bottom') >= 0) {
       transformOrigin.top = `${-align.offset[1]}px`;
     }
     if (placement.indexOf('left') >= 0 || placement.indexOf('Right') >= 0) {
       transformOrigin.left = `${rect.width - align.offset[0]}px`;
-    } else if (
-      placement.indexOf('right') >= 0 ||
-      placement.indexOf('Left') >= 0
-    ) {
+    } else if (placement.indexOf('right') >= 0 || placement.indexOf('Left') >= 0) {
       transformOrigin.left = `${-align.offset[0]}px`;
     }
     domNode.style.transformOrigin = `${transformOrigin.left} ${transformOrigin.top}`;
@@ -247,18 +230,9 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
       onVisibleChange={onVisibleChange}
       onPopupAlign={onPopupAlign}
       overlayInnerStyle={formattedOverlayInnerStyle}
-      arrowContent={
-        <span
-          className={`${prefixCls}-arrow-content`}
-          style={arrowContentStyle}
-        />
-      }
+      arrowContent={<span className={`${prefixCls}-arrow-content`} style={arrowContentStyle} />}
       motion={{
-        motionName: getTransitionName(
-          rootPrefixCls,
-          'zoom-big-fast',
-          props.transitionName,
-        ),
+        motionName: getTransitionName(rootPrefixCls, 'zoom-big-fast', props.transitionName),
         motionDeadline: 100,
       }}>
       {tempVisible ? cloneElement(child, { className: childCls }) : child}

@@ -139,11 +139,7 @@ export class AgoraCaches {
       }),
     );
     if (res.status !== 200) {
-      throw new Error(
-        `download task ${JSON.stringify(taskUuid)} failed with status ${
-          res.status
-        }`,
-      );
+      throw new Error(`download task ${JSON.stringify(taskUuid)} failed with status ${res.status}`);
     }
     // const buffer = await res.arrayBuffer();
     // const zipReader = await this.getZipReader(buffer);
@@ -154,21 +150,17 @@ export class AgoraCaches {
     const blob = await response.blob();
     const zipReader = await this.getZipReader(blob);
     const entry = await zipReader.getEntries();
-    const cacheType = response.url.match(/dynamic/i)
-      ? 'dynamicConvert'
-      : 'staticConvert';
+    const cacheType = response.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
     console.log('cacheType ', cacheType, ' url ', response.url);
     return await this.cacheResources(entry, cacheType);
   }
 
-  public cacheResources = (
-    entries: any,
-    type: CacheResourceType,
-  ): Promise<void> => {
+  public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
     return new Promise((fulfill, reject) => {
-      return Promise.all(
-        entries.map((data: any) => this.cacheEntry(data, type)),
-      ).then(fulfill as any, reject);
+      return Promise.all(entries.map((data: any) => this.cacheEntry(data, type))).then(
+        fulfill as any,
+        reject,
+      );
     });
   };
 
@@ -188,20 +180,14 @@ export class AgoraCaches {
     return contentTypesByExtension[extension] || 'text/plain';
   };
 
-  public getLocation = (
-    filename?: string,
-    type?: CacheResourceType,
-  ): string => {
+  public getLocation = (filename?: string, type?: CacheResourceType): string => {
     if (filename) {
       return `https://${resourcesHost}/${type}/${filename}`;
     }
     return `https://${resourcesHost}/dynamicConvert/${filename}`;
   };
 
-  public cacheEntry = async (
-    entry: any,
-    type: CacheResourceType,
-  ): Promise<void> => {
+  public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
     if (entry.directory) {
       return Promise.resolve();
     }

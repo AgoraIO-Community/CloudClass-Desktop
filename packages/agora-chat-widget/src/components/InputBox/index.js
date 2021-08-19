@@ -34,9 +34,7 @@ export const InputBox = () => {
     <div className="input-box">
       {!isTeacher && isAllMute && <AllMute />}
       {!isTeacher && !isAllMute && isUserMute && <UserMute />}
-      {(isTeacher || (!isAllMute && !isUserMute)) && (
-        <InputMsg isTeacher={isTeacher} />
-      )}
+      {(isTeacher || (!isAllMute && !isUserMute)) && <InputMsg isTeacher={isTeacher} />}
     </div>
   );
 };

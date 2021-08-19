@@ -157,10 +157,7 @@ export class UploadService extends ApiBase {
       name: '',
       uploadId: '',
     };
-    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace('%app_id', this.appId);
   }
 
   region: string = 'cn-hz';
@@ -171,10 +168,7 @@ export class UploadService extends ApiBase {
   }
 
   // 查询服务端是否已经存在课件
-  async queryMaterial(params: {
-    name: string;
-    roomUuid: string;
-  }): Promise<UploadServiceResult> {
+  async queryMaterial(params: { name: string; roomUuid: string }): Promise<UploadServiceResult> {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'GET',
@@ -239,9 +233,7 @@ export class UploadService extends ApiBase {
   }
 
   // 服务端创建课件，并申请stsToken
-  async createMaterial(
-    params: CreateMaterialParams,
-  ): Promise<UploadServiceResult> {
+  async createMaterial(params: CreateMaterialParams): Promise<UploadServiceResult> {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources/${params.resourceUuid}`,
       method: 'PUT',
@@ -315,10 +307,7 @@ export class UploadService extends ApiBase {
     return res.data;
   }
 
-  async getFileInQueryMaterial(payload: {
-    roomUuid: string;
-    resourceName: string;
-  }) {
+  async getFileInQueryMaterial(payload: { roomUuid: string; resourceName: string }) {
     return await this.queryMaterial({
       name: payload.resourceName,
       roomUuid: payload.roomUuid,
@@ -369,10 +358,7 @@ export class UploadService extends ApiBase {
     return result;
   }
 
-  async handleUploadByAli(
-    ossConfig: FetchStsTokenResult,
-    payload: HandleUploadType,
-  ) {
+  async handleUploadByAli(ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
     const key = ossConfig.ossKey;
     this.ossClient = new OSS({
       accessKeyId: `${ossConfig.accessKeyId}`,
@@ -657,10 +643,7 @@ export class UploadService extends ApiBase {
 
   // }
 
-  async handleUploadByAWS(
-    ossConfig: FetchStsTokenResult,
-    payload: HandleUploadType,
-  ) {
+  async handleUploadByAWS(ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
     const fetchCallbackBody: any = JSON.parse(ossConfig.callbackBody);
 
     const resourceUuid = fetchCallbackBody.resourceUuid;
@@ -806,14 +789,11 @@ export class UploadService extends ApiBase {
   get uploadCallbackPrefix() {
     const getDomain: Record<string, string> = {
       'https://api.agora.io': 'https://api-solutions.agoralab.co/',
-      'https://api-test.agora.io/preview':
-        'https://api-solutions-pre.bj2.agoralab.co/',
-      'https://api-solutions-dev.bj2.agoralab.co':
-        'https://api-solutions-dev.bj2.agoralab.co',
+      'https://api-test.agora.io/preview': 'https://api-solutions-pre.bj2.agoralab.co/',
+      'https://api-solutions-dev.bj2.agoralab.co': 'https://api-solutions-dev.bj2.agoralab.co',
     };
 
-    const defaultDomain =
-      getDomain['https://api-solutions-dev.bj2.agoralab.co'];
+    const defaultDomain = getDomain['https://api-solutions-dev.bj2.agoralab.co'];
 
     const ossCallbackDomain = getDomain[this.sdkDomain];
 
@@ -833,25 +813,21 @@ export class UploadService extends ApiBase {
     const prefix = ossParams.callbackHost;
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`;
     try {
-      const res: MultipartUploadResult = await ossClient.multipartUpload(
-        key,
-        file,
-        {
-          progress: (p, cpt, res) => {
-            this.abortCheckpoint = cpt;
-            if (onProgress) {
-              onProgress(PPTProgressPhase.Uploading, p);
-            }
-          },
-          callback: {
-            // TODO: upload-service.ts
-            // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
-            url: callbackUrl,
-            body: ossParams.callbackBody,
-            contentType: ossParams.contentType,
-          },
+      const res: MultipartUploadResult = await ossClient.multipartUpload(key, file, {
+        progress: (p, cpt, res) => {
+          this.abortCheckpoint = cpt;
+          if (onProgress) {
+            onProgress(PPTProgressPhase.Uploading, p);
+          }
         },
-      );
+        callback: {
+          // TODO: upload-service.ts
+          // url: `https://api-solutions.agoralab.co/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/users/${ossParams.userUuid}/resources/callback`,
+          url: callbackUrl,
+          body: ossParams.callbackBody,
+          contentType: ossParams.contentType,
+        },
+      });
 
       console.log('[agora-edu-core] res >>>>> ', res);
       if (res.res.status === 200) {
@@ -879,23 +855,17 @@ export class UploadService extends ApiBase {
           'Content-Type': file.type,
         },
         onUploadProgress: (progressEvent: any) => {
-          let percentCompleted = Math.floor(
-            (progressEvent.loaded * 100) / progressEvent.total,
-          );
+          let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
           onProgress(percentCompleted / 100);
         },
       };
       try {
         await axios.put(ossParams.preSignedUrl, file, config);
-        const result = await axios.post(
-          callbackUrl,
-          JSON.parse(ossParams.callbackBody),
-          {
-            headers: {
-              ['content-type']: ossParams.contentType,
-            },
+        const result = await axios.post(callbackUrl, JSON.parse(ossParams.callbackBody), {
+          headers: {
+            ['content-type']: ossParams.contentType,
           },
-        );
+        });
         resolve({
           ...result.data.data,
           ossURL: result.data.data.url,
@@ -933,8 +903,7 @@ export class UploadService extends ApiBase {
       width: window.innerWidth,
       height: window.innerHeight,
     };
-    const widthHeightProportion: number =
-      imageInnerSize.width / imageInnerSize.height;
+    const widthHeightProportion: number = imageInnerSize.width / imageInnerSize.height;
     const maxSize: number = 960;
     if (
       (imageInnerSize.width > maxSize && windowSize.width > maxSize) ||
@@ -952,10 +921,7 @@ export class UploadService extends ApiBase {
         };
       }
     } else {
-      if (
-        imageInnerSize.width > windowSize.width ||
-        imageInnerSize.height > windowSize.height
-      ) {
+      if (imageInnerSize.width > windowSize.width || imageInnerSize.height > windowSize.height) {
         if (widthHeightProportion > 1) {
           return {
             width: windowSize.width,
@@ -976,11 +942,7 @@ export class UploadService extends ApiBase {
     }
   }
 
-  async removeMaterials(params: {
-    resourceUuids: string[];
-    roomUuid: string;
-    userUuid: string;
-  }) {
+  async removeMaterials(params: { resourceUuids: string[]; roomUuid: string; userUuid: string }) {
     const res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/resources`,
       method: 'DELETE',
@@ -1030,10 +992,7 @@ export type TaskType = {
   imageFile: NetlessImageFile;
 };
 
-export type PPTProgressListener = (
-  phase: PPTProgressPhase,
-  percent: number,
-) => void;
+export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
 
 export enum PPTProgressPhase {
   Uploading,

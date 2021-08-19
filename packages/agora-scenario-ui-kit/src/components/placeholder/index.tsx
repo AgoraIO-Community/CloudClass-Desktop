@@ -74,16 +74,9 @@ export const Placeholder: FC<PlaceholderProps> = ({
     <div className={cls} {...restProps} style={{ backgroundColor }}>
       <div>
         {/* <img src={placeholderImgDict[placeholderType]} alt="no messages" /> */}
-        <SvgImg
-          type={svgTypeDict[placeholderType]}
-          size={svgSizeDict[placeholderType]}
-        />
+        <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]} />
       </div>
-      {placeholderDesc ? (
-        <div className="placeholder-desc">{placeholderDesc}</div>
-      ) : (
-        ''
-      )}
+      {placeholderDesc ? <div className="placeholder-desc">{placeholderDesc}</div> : ''}
     </div>
   );
 };
@@ -140,10 +133,7 @@ export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
   });
   return (
     <div className={cls}>
-      <img
-        src={boardDisconnected}
-        alt={transI18n('whiteboard.disconnect-img-alt')}
-      />
+      <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')} />
       <Button className="reconnect-btn" onClick={onReconnectClick}>
         {transI18n('whiteboard.disconnect-btn')}
       </Button>

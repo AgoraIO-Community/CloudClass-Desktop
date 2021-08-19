@@ -1,4 +1,10 @@
-import { AgoraElectronRTCWrapper, AgoraWebRtcWrapper, GenericErrorWrapper, LocalUserRenderer, MediaService } from 'agora-rte-sdk';
+import {
+  AgoraElectronRTCWrapper,
+  AgoraWebRtcWrapper,
+  GenericErrorWrapper,
+  LocalUserRenderer,
+  MediaService,
+} from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, computed, observable, reaction } from 'mobx';
 import { Subject } from 'rxjs';
@@ -69,7 +75,17 @@ export class PretestStore {
   }
 
   @action.bound
-  setBeautyEffectOptions({ lighteningLevel = 70, rednessLevel = 10, smoothnessLevel = 50, isBeauty = true }: { lighteningLevel: number; rednessLevel: number; smoothnessLevel: number; isBeauty: boolean }) {
+  setBeautyEffectOptions({
+    lighteningLevel = 70,
+    rednessLevel = 10,
+    smoothnessLevel = 50,
+    isBeauty = true,
+  }: {
+    lighteningLevel: number;
+    rednessLevel: number;
+    smoothnessLevel: number;
+    isBeauty: boolean;
+  }) {
     this.mediaService.setBeautyEffectOptions({
       isBeauty,
       lighteningLevel: lighteningLevel / 100,
@@ -101,7 +117,11 @@ export class PretestStore {
 
   @computed
   get deviceTestSuccess(): boolean {
-    if (this.cameraTestResult !== 'error' && this.microphoneTestResult !== 'error' && this.speakerTestResult !== 'error') {
+    if (
+      this.cameraTestResult !== 'error' &&
+      this.microphoneTestResult !== 'error' &&
+      this.speakerTestResult !== 'error'
+    ) {
       return true;
     }
     return false;
@@ -277,7 +297,17 @@ export class PretestStore {
   constructor(appStore: EduScenarioAppStore) {
     console.log('[ID] pretestStore ### ', this.id);
     this.appStore = appStore;
-    reaction(() => JSON.stringify([this.cameraList, this.microphoneList, this.cameraLabel, this.microphoneLabel, this.speakerLabel]), this.handleDeviceChange);
+    reaction(
+      () =>
+        JSON.stringify([
+          this.cameraList,
+          this.microphoneList,
+          this.cameraLabel,
+          this.microphoneLabel,
+          this.speakerLabel,
+        ]),
+      this.handleDeviceChange,
+    );
   }
 
   onDeviceTestError(cb: DeviceErrorCallback) {
@@ -424,12 +454,14 @@ export class PretestStore {
   @action.bound
   getSpeakerList() {
     if (this.isElectron) {
-      this._speakerList = this.mediaService.electron.client.getAudioPlaybackDevices().map((item: any) => {
-        return {
-          deviceId: item.deviceid,
-          label: item.devicename,
-        };
-      });
+      this._speakerList = this.mediaService.electron.client
+        .getAudioPlaybackDevices()
+        .map((item: any) => {
+          return {
+            deviceId: item.deviceid,
+            label: item.devicename,
+          };
+        });
     }
     return this._speakerList;
   }
@@ -638,7 +670,8 @@ export class PretestStore {
         this._microphoneTrack = this.web.microphoneTrack;
       }
       if (this.isElectron) {
-        payload.enableRecording && this.mediaService.electron.client.startAudioRecordingDeviceTest(300);
+        payload.enableRecording &&
+          this.mediaService.electron.client.startAudioRecordingDeviceTest(300);
       }
       this.microphoneLabel = this.mediaService.getTestMicrophoneLabel();
       this._microphoneId = this.microphoneId;
@@ -777,7 +810,10 @@ export class PretestStore {
       this.muteCamera();
     } else {
       if (this.isElectron) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
+        if (
+          this.appStore.sceneStore.cameraEduStream &&
+          this.appStore.sceneStore.cameraEduStream.hasVideo
+        ) {
           await this.mediaService.muteLocalVideo(false, deviceId);
         } else {
           await this.mediaService.setCameraDevice(deviceId);
@@ -785,7 +821,10 @@ export class PretestStore {
       }
 
       if (this.isWeb) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasVideo) {
+        if (
+          this.appStore.sceneStore.cameraEduStream &&
+          this.appStore.sceneStore.cameraEduStream.hasVideo
+        ) {
           await this.mediaService.muteLocalVideo(false, deviceId);
         } else {
           const camera = this.cameraList.find((it: any) => it.deviceId === deviceId);
@@ -871,14 +910,20 @@ export class PretestStore {
       this.muteMicrophone();
     } else {
       if (this.isElectron) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
+        if (
+          this.appStore.sceneStore.cameraEduStream &&
+          this.appStore.sceneStore.cameraEduStream.hasAudio
+        ) {
           await this.mediaService.muteLocalAudio(false, deviceId);
         } else {
           await this.mediaService.setMicrophoneDevice(deviceId);
         }
       }
       if (this.isWeb) {
-        if (this.appStore.sceneStore.cameraEduStream && this.appStore.sceneStore.cameraEduStream.hasAudio) {
+        if (
+          this.appStore.sceneStore.cameraEduStream &&
+          this.appStore.sceneStore.cameraEduStream.hasAudio
+        ) {
           await this.mediaService.muteLocalAudio(false, deviceId);
         } else {
           const microphone = this.microphoneList.find((it: any) => it.deviceId === deviceId);

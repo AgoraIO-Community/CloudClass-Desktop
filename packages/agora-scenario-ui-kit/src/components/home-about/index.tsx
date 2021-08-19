@@ -42,9 +42,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
       <div className="about-header">
         <div className="about-header-logo"></div>
         <div className="about-header-title">{t('home.header-left-title')}</div>
-        <div className="about-header-version">
-          Version: Flexible Classroom_{version}
-        </div>
+        <div className="about-header-version">Version: Flexible Classroom_{version}</div>
       </div>
       <div className="about-main">
         <div className="about-main-item">

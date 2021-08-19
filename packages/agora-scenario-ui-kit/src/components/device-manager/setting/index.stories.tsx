@@ -31,9 +31,7 @@ const speakerList = [...'.'.repeat(3)].map((item, index) => ({
 
 const ChildrenWrap = () => {
   let [cameraId, setCameraId] = useState<string>(cameraList[0].deviceId);
-  let [microphoneId, setMicrophoneId] = useState<string>(
-    microphoneList[0].deviceId,
-  );
+  let [microphoneId, setMicrophoneId] = useState<string>(microphoneList[0].deviceId);
   let [speakerId, setSpeakerId] = useState<string>(speakerList[0].deviceId);
   let [microphoneVolume, setMicrophoneVolume] = useState<number>(50);
   let [speakerVolume, setSpeakerVolume] = useState<number>(50);

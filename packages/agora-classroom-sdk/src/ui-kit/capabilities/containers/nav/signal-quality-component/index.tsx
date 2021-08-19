@@ -17,9 +17,7 @@ export const SingalQualityComponent = observer(() => {
   const monitor = useClassroomStatsContext();
 
   return (
-    <Popover
-      content={<SignalContent {...monitor} isNative={isNative} />}
-      placement="bottomLeft">
+    <Popover content={<SignalContent {...monitor} isNative={isNative} />} placement="bottomLeft">
       <div className={`biz-signal-quality ${monitor.networkQuality}`}>
         <SvgImg
           className="cursor-pointer"

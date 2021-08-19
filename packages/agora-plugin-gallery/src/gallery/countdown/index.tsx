@@ -4,20 +4,8 @@ import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type {
-  IAgoraExtApp,
-  AgoraExtAppContext,
-  AgoraExtAppHandle,
-} from 'agora-edu-core';
-import {
-  Button,
-  Countdown,
-  Input,
-  transI18n,
-  I18nProvider,
-  changeLanguage,
-  Icon,
-} from '~ui-kit';
+import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
+import { Button, Countdown, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
@@ -37,8 +25,7 @@ const App = observer(() => {
         [`countdown-modal`]: 1,
         [`countdown-modal-hover`]:
           !pluginStore.showSetting &&
-          pluginStore.context.localUserInfo.roleType ===
-            EduRoleTypeEnum.teacher,
+          pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher,
       })}>
       <div className="restart-wrap">
         <Button
@@ -76,8 +63,7 @@ const App = observer(() => {
                 <span
                   style={{
                     color:
-                      pluginStore.number != undefined &&
-                      pluginStore.number <= 3600
+                      pluginStore.number != undefined && pluginStore.number <= 3600
                         ? '#333'
                         : '#F04C36',
                   }}>
@@ -103,25 +89,18 @@ const App = observer(() => {
             <Button
               onClick={() => {
                 const result =
-                  Date.now() +
-                  (pluginStore.number != undefined ? pluginStore.number : 0) *
-                    1000;
+                  Date.now() + (pluginStore.number != undefined ? pluginStore.number : 0) * 1000;
                 pluginStore.setResult(result);
                 pluginStore.setShowSetting(false);
                 pluginStore.setPlay(true);
                 pluginStore.changeRoomProperties({
                   state: '1',
                   startTime: Math.floor(Date.now() / 1000).toString(),
-                  duration:
-                    pluginStore.number != undefined
-                      ? pluginStore.number.toString()
-                      : '0',
+                  duration: pluginStore.number != undefined ? pluginStore.number.toString() : '0',
                   commonState: 1,
                 });
               }}
-              disabled={
-                pluginStore.number !== undefined && pluginStore.number > 3600
-              }>
+              disabled={pluginStore.number !== undefined && pluginStore.number > 3600}>
               {transI18n('countdown.start')}
             </Button>
           </div>
@@ -144,11 +123,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     changeLanguage(this.language);
   }
 
-  extAppDidLoad(
-    dom: Element,
-    ctx: AgoraExtAppContext,
-    handle: AgoraExtAppHandle,
-  ): void {
+  extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle);
     this.height = this.store.showSetting ? 168 : 55;
     ReactDOM.render(

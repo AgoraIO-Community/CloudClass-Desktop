@@ -35,8 +35,7 @@ AgoraEduSDK.launch(
     language: 'en', // Language 'zh'中午 'en'English
     personalCourseWareList: [],
     pretest: true, // recommend open pretest
-    recordUrl:
-      'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
+    recordUrl: 'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
     region: 'CN', //region
     roleType: 1, //roleType: 1 teacher, 2 student
     roomName: 'demoedupaas', //room name

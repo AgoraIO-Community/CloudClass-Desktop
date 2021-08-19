@@ -8,11 +8,7 @@ import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
 import { AgoraWidgetContext } from 'agora-edu-core';
 import ReactDOM from 'react-dom';
-import {
-  ChatEvent,
-  ChatListType,
-  Conversation,
-} from '~ui-kit/components/chat/interface';
+import { ChatEvent, ChatListType, Conversation } from '~ui-kit/components/chat/interface';
 // import { ChatEvent, ChatListType, Conversation, Message } from '~ui-kit';
 // import { I18nProvider } from './components/i18n';
 
@@ -30,14 +26,8 @@ const App = observer(() => {
     });
   }, []);
 
-  const {
-    unreadMessageCount,
-    messageList,
-    chatCollapse,
-    canChatting,
-    isHost,
-    conversationList,
-  } = pluginStore.chatContext;
+  const { unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList } =
+    pluginStore.chatContext;
 
   const { isFullScreen, joined } = pluginStore.globalContext;
 
@@ -69,17 +59,14 @@ const App = observer(() => {
   const isMounted = useRef<boolean>(true);
 
   const refreshMessageList = useCallback(async () => {
-    const res =
-      nextMsgId !== 'last' &&
-      (await getHistoryChatMessage({ nextMsgId, sort: 0 }));
+    const res = nextMsgId !== 'last' && (await getHistoryChatMessage({ nextMsgId, sort: 0 }));
     if (isMounted.current) {
       setNextID(get(res, 'nextId', 'last'));
     }
   }, [nextMsgId, setNextID, isMounted.current]);
 
   const refreshConversationList = useCallback(async () => {
-    const res =
-      nextClId !== 'last' && (await getConversationList({ nextClId, sort: 0 }));
+    const res = nextClId !== 'last' && (await getConversationList({ nextClId, sort: 0 }));
     if (isMounted.current) {
       setNextClID(get(res, 'nextId', 'last'));
     }
@@ -132,10 +119,7 @@ const App = observer(() => {
         const message = await sendMessage(textMessage);
         addChatMessage(message);
       } else if (evt.type === 'conversation' && evt.conversation) {
-        const message = await sendMessageToConversation(
-          textMessage,
-          evt.conversation.userUuid,
-        );
+        const message = await sendMessageToConversation(textMessage, evt.conversation.userUuid);
         addConversationChatMessage(message, evt.conversation);
       }
     },
@@ -152,9 +136,7 @@ const App = observer(() => {
   }, [joined]);
 
   return (
-    <div
-      id="netless-white"
-      style={{ display: 'flex', width: '100%', height: '100%' }}>
+    <div id="netless-white" style={{ display: 'flex', width: '100%', height: '100%' }}>
       {pluginStore.context.roomInfo.roomType === 0 ? (
         // display simple chat for 1v1
         <SimpleChat
@@ -207,17 +189,12 @@ const App = observer(() => {
               refreshMessageList();
             }
           }}
-          onChangeActiveTab={(
-            activeTab: ChatListType,
-            conversation?: Conversation,
-          ) => {
+          onChangeActiveTab={(activeTab: ChatListType, conversation?: Conversation) => {
             pluginStore.updateActiveTab(activeTab, conversation);
           }}
           unreadCount={unreadMessageCount}
           singleConversation={
-            pluginStore.context.localUserInfo.roleType === 2
-              ? conversationList[0]
-              : undefined
+            pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined
           }
         />
       )}

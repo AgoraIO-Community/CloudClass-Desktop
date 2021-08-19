@@ -42,9 +42,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
             onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
             {item.icon}
             <span>
-              {['countdown'].includes(item.name)
-                ? transI18n(`${item.name}.appName`)
-                : item.name}
+              {['countdown'].includes(item.name) ? transI18n(`${item.name}.appName`) : item.name}
             </span>
           </div>
         ))}
@@ -53,10 +51,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
     [activeItem],
   );
   return (
-    <Tooltip
-      title={label}
-      placement="bottom"
-      overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -66,11 +61,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
         placement="right">
         <div className="tool">
           <SvgImg type="tools" />
-          <SvgImg
-            type="triangle-down"
-            className="triangle-icon"
-            style={{ position: 'absolute' }}
-          />
+          <SvgImg type="triangle-down" className="triangle-icon" style={{ position: 'absolute' }} />
         </div>
       </Popover>
     </Tooltip>

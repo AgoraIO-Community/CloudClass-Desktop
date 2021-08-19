@@ -22,9 +22,7 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('');
   const [duration, setDuration] = useState<number>(30);
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [language, setLanguage] = useState<string>(
-    sessionStorage.getItem('language') || 'zh',
-  );
+  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'zh');
   const [region, setRegion] = useState<AgoraRegion>(homeStore.region);
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
@@ -127,9 +125,7 @@ export const HomePage = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>(
-    storage.getCourseWareSaveList(),
-  );
+  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList());
   const SDKVersion = window.isElectron
     ? // @ts-ignore
       window.rtcEngine.getVersion().version
@@ -177,10 +173,7 @@ export const HomePage = observer(() => {
           appId,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
-          personalCourseWareList: courseWareList.slice(
-            1,
-            courseWareList.length,
-          ),
+          personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,

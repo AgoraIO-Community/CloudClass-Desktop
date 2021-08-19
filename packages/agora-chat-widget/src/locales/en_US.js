@@ -31,8 +31,7 @@ const enUS = {
     default_announcement: 'No Announcement,',
     publish: 'Publish',
     to_publish: 'To Publish',
-    message_incloud_illegal_content:
-      'Send faild,message contain sensitive word',
+    message_incloud_illegal_content: 'Send faild,message contain sensitive word',
     teacher: 'Teacher',
     assistant: 'Assistant',
     student: 'Student',

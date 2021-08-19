@@ -1,9 +1,6 @@
 import React from 'react';
 import { AbstractTooltipProps, Tooltip } from '../tooltip';
-import {
-  getRenderPropValue,
-  RenderFunction,
-} from '../_util/getRenderPropValue';
+import { getRenderPropValue, RenderFunction } from '../_util/getRenderPropValue';
 import { getTransitionName } from '../_util/motion';
 import './index.css';
 
@@ -16,14 +13,8 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
   ({ prefixCls: customizePrefixCls, title, content, ...otherProps }, ref) => {
     const getOverlay = (prefixCls: string) => (
       <>
-        {title && (
-          <div className={`${prefixCls}-title`}>
-            {getRenderPropValue(title)}
-          </div>
-        )}
-        <div className={`${prefixCls}-inner-content`}>
-          {getRenderPropValue(content)}
-        </div>
+        {title && <div className={`${prefixCls}-title`}>{getRenderPropValue(title)}</div>}
+        <div className={`${prefixCls}-inner-content`}>{getRenderPropValue(content)}</div>
       </>
     );
 
@@ -36,11 +27,7 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
         prefixCls={prefixCls}
         ref={ref as any}
         overlay={getOverlay(prefixCls)}
-        transitionName={getTransitionName(
-          rootPrefixCls,
-          'zoom-big',
-          otherProps.transitionName,
-        )}
+        transitionName={getTransitionName(rootPrefixCls, 'zoom-big', otherProps.transitionName)}
       />
     );
   },

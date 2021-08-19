@@ -71,22 +71,14 @@ export const Loading: FC<LoadingProps> = ({
           {uploadItemList.map((item, index) => (
             <div className="loading-upload-item" key={index}>
               <div>
-                <SvgImg
-                  type={item.iconType as any}
-                  style={{ color: '#F6B081' }}
-                />
+                <SvgImg type={item.iconType as any} style={{ color: '#F6B081' }} />
               </div>
               <div className="loading-file-name">{item.fileName}</div>
               <div className="loading-file-size">{item.fileSize}</div>
               <div>
                 {item.uploadComplete ? (
                   <div className="loading-progress">
-                    <img
-                      src={circleLoadingGif}
-                      alt="upload success gif"
-                      width="20"
-                      height="20"
-                    />
+                    <img src={circleLoadingGif} alt="upload success gif" width="20" height="20" />
                     <span className="upload-success-text">
                       {transI18n('whiteboard.converting')}
                     </span>
@@ -98,9 +90,7 @@ export const Loading: FC<LoadingProps> = ({
                       type="download"
                       progress={item.currentProgress as number}
                     />
-                    <span className="upload-pending-text">
-                      {item.currentProgress}%
-                    </span>
+                    <span className="upload-pending-text">{item.currentProgress}%</span>
                   </div>
                 )}
               </div>
@@ -115,9 +105,7 @@ export const Loading: FC<LoadingProps> = ({
                       cursor: 'pointer',
                       color: '#273D75',
                     }}
-                    onClick={() =>
-                      onClick && onClick(index.toString(), 'delete')
-                    }
+                    onClick={() => onClick && onClick(index.toString(), 'delete')}
                   />
                 )}
               </div>

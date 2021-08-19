@@ -27,19 +27,13 @@ type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>;
 export class EduSDKApi extends ApiBase {
   constructor(params: ApiBaseInitializerParams) {
     super(params);
-    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace('%app_id', this.appId);
   }
 
   updateConfig(params: ConfigParams) {
     this.appId = params.appId;
     this.sdkDomain = params.sdkDomain;
-    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/edu/apps/%app_id`.replace('%app_id', this.appId);
     homeApi.updateConfig(params);
   }
 
@@ -117,14 +111,7 @@ export class EduSDKApi extends ApiBase {
     res.data.ts = res.ts;
     const statusCode = res['__status'];
     const { code } = res;
-    reportService.reportHttp(
-      'joinRoom',
-      'http',
-      'preflight',
-      statusCode,
-      statusCode === 200,
-      code,
-    );
+    reportService.reportHttp('joinRoom', 'http', 'preflight', statusCode, statusCode === 200, code);
     return res.data;
   }
 
@@ -136,11 +123,7 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async updateRecordingState(params: {
-    roomUuid: string;
-    state: number;
-    url?: string;
-  }) {
+  async updateRecordingState(params: { roomUuid: string; state: number; url?: string }) {
     // todo 调服务器，url为方法传入对象的key url
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/records/states/${params.state}`,
@@ -293,11 +276,7 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async handsUp(params: {
-    roomUuid: string;
-    toUserUuid: string;
-    payload: any;
-  }) {
+  async handsUp(params: { roomUuid: string; toUserUuid: string; payload: any }) {
     const res = await this.fetch({
       url: `/v2/rooms/${params.roomUuid}/handup/${params.toUserUuid}`,
       method: 'POST',
@@ -423,11 +402,7 @@ export class EduSDKApi extends ApiBase {
     return res.data;
   }
 
-  async selectShare(
-    roomId: string,
-    userUuid: string,
-    payload: { selected: number },
-  ) {
+  async selectShare(roomId: string, userUuid: string, payload: { selected: number }) {
     const res = await this.fetch({
       url: `/v2/rooms/${roomId}/users/${userUuid}/screen/1`,
       method: 'PATCH',
@@ -464,9 +439,7 @@ export class EduSDKApi extends ApiBase {
     cause: any,
   ) {
     const res = await this.fetch({
-      url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(
-        extAppUuid,
-      )}/properties`,
+      url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'PUT',
       data: {
         properties,
@@ -484,9 +457,7 @@ export class EduSDKApi extends ApiBase {
     cause: any,
   ) {
     const res = await this.fetch({
-      url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(
-        extAppUuid,
-      )}/properties`,
+      url: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
       method: 'DELETE',
       data: {
         properties,

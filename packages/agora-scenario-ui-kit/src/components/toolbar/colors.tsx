@@ -99,10 +99,7 @@ export const Colors: FC<ColorsProps> = ({
     [colors, activeColor],
   );
   return (
-    <Tooltip
-      title={label}
-      placement="bottom"
-      overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
@@ -119,9 +116,7 @@ export const Colors: FC<ColorsProps> = ({
                 0.5,
               )}`,
             }}>
-            <div
-              className="circle"
-              style={{ backgroundColor: activeColor }}></div>
+            <div className="circle" style={{ backgroundColor: activeColor }}></div>
           </div>
           <SvgImg type="triangle-down" className="triangle-icon" />
         </div>

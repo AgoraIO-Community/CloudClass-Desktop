@@ -6,12 +6,7 @@ export default {
 };
 
 export const ProgressShowCase = (props: any) => {
-  return (
-    <Progress
-      width={props.width}
-      type="download"
-      progress={props.progress}></Progress>
-  );
+  return <Progress width={props.width} type="download" progress={props.progress}></Progress>;
 };
 
 ProgressShowCase.args = {

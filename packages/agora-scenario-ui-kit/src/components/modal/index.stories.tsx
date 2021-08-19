@@ -25,12 +25,7 @@ function asyncOkFunction(e: any): Promise<void> {
 export const Docs = ({ title }: DocsProps) => (
   <>
     <div className="mt-4">
-      <Modal
-        title={title}
-        footer={[
-          <Button type="secondary">test</Button>,
-          <Button>test</Button>,
-        ]}>
+      <Modal title={title} footer={[<Button type="secondary">test</Button>, <Button>test</Button>]}>
         <p>你确定要下课吗？</p>
       </Modal>
     </div>
@@ -68,9 +63,7 @@ export const Docs = ({ title }: DocsProps) => (
             children: (
               <>
                 <Icon type="red-caution" color="#F04C36" size={50} />
-                <p>
-                  课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件
-                </p>
+                <p>课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件</p>
               </>
             ),
           });

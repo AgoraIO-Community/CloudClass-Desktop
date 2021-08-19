@@ -1,4 +1,9 @@
-import { useGlobalContext, useMediaContext, usePretestContext, useVolumeContext } from 'agora-edu-core';
+import {
+  useGlobalContext,
+  useMediaContext,
+  usePretestContext,
+  useVolumeContext,
+} from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -18,12 +23,52 @@ const VolumeIndicationView: React.FC<any> = observer(() => {
 });
 
 export const PretestContainer = observer(() => {
-  const { cameraError, microphoneError, cameraList, microphoneList, speakerList, speakerId, cameraId, microphoneId, isMirror, setMirror, changeTestSpeakerVolume, changeTestMicrophoneVolume, installPretest, changeTestCamera, changeTestMicrophone, changeTestSpeaker, stopPretestCamera, stopPretestMicrophone, pretestNoticeChannel, pretestCameraRenderer, isBeauty, setBeauty, whitening, buffing, ruddy, setWhitening, setBuffing, setRuddy, setBeautyEffectOptions } = usePretestContext();
+  const {
+    cameraError,
+    microphoneError,
+    cameraList,
+    microphoneList,
+    speakerList,
+    speakerId,
+    cameraId,
+    microphoneId,
+    isMirror,
+    setMirror,
+    changeTestSpeakerVolume,
+    changeTestMicrophoneVolume,
+    installPretest,
+    changeTestCamera,
+    changeTestMicrophone,
+    changeTestSpeaker,
+    stopPretestCamera,
+    stopPretestMicrophone,
+    pretestNoticeChannel,
+    pretestCameraRenderer,
+    isBeauty,
+    setBeauty,
+    whitening,
+    buffing,
+    ruddy,
+    setWhitening,
+    setBuffing,
+    setRuddy,
+    setBeautyEffectOptions,
+  } = usePretestContext();
 
   const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } = useMediaContext();
 
   const VideoPreviewPlayer = useCallback(() => {
-    return <RendererPlayer className="camera-placeholder camera-muted-placeholder" style={{ width: 320, height: 180 }} mirror={isMirror} key={cameraId} id="stream-player" track={pretestCameraRenderer} preview={true} />;
+    return (
+      <RendererPlayer
+        className="camera-placeholder camera-muted-placeholder"
+        style={{ width: 320, height: 180 }}
+        mirror={isMirror}
+        key={cameraId}
+        id="stream-player"
+        track={pretestCameraRenderer}
+        preview={true}
+      />
+    );
   }, [pretestCameraRenderer, cameraId, isMirror]);
 
   const handleError = (evt: any) => {
@@ -156,7 +201,13 @@ export const PretestContainer = observer(() => {
 
   return (
     <div className="fixed-container">
-      <Modal title={t('pretest.settingTitle')} width={720} footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]} onOk={handleOk} onCancel={() => {}} btnId="device_assert">
+      <Modal
+        title={t('pretest.settingTitle')}
+        width={720}
+        footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
+        onOk={handleOk}
+        onCancel={() => {}}
+        btnId="device_assert">
         <Pretest
           //@ts-ignore
           pretestChannel={pretestNoticeChannel}

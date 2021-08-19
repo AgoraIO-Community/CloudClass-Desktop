@@ -28,15 +28,7 @@ export const AppPluginItem = observer(
     const ref = useRef<HTMLDivElement | null>(null);
     const { contextInfo } = useAppPluginContext();
 
-    const {
-      userUuid,
-      userName,
-      userRole,
-      roomName,
-      roomUuid,
-      roomType,
-      language,
-    } = contextInfo;
+    const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo;
 
     useEffect(() => {
       if (ref.current) {
@@ -59,11 +51,7 @@ export const AppPluginItem = observer(
             language: language,
           },
           {
-            updateRoomProperty: async (
-              properties: any,
-              common: any,
-              cause: {},
-            ) => {
+            updateRoomProperty: async (properties: any, common: any, cause: {}) => {
               return await eduSDKApi.updateExtAppProperties(
                 roomUuid,
                 app.appIdentifier,
@@ -116,12 +104,8 @@ export const AppPluginItem = observer(
 );
 
 export const AppPluginContainer = observer(() => {
-  const {
-    activeAppPlugins,
-    appPluginProperties,
-    onShutdownAppPlugin,
-    contextInfo,
-  } = useAppPluginContext();
+  const { activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo } =
+    useAppPluginContext();
   const { roomInfo } = useRoomContext();
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher; // 老师能关闭， 学生不能关闭
   return (
@@ -134,32 +118,30 @@ export const AppPluginContainer = observer(() => {
         height: 0,
         zIndex: Z_INDEX_CONST.zIndexExtApp,
       }}>
-      {Array.from(activeAppPlugins.values()).map(
-        (app: IAgoraExtApp, idx: number) => (
-          <AppPluginItem
-            key={app.appIdentifier}
-            app={app}
-            properties={appPluginProperties(app)}
-            closable={closable}
-            onCancel={async () => {
-              await eduSDKApi.updateExtAppProperties(
-                contextInfo.roomUuid,
-                app.appIdentifier,
-                {
-                  state: '0',
-                  startTime: '0',
-                  pauseTime: '0',
-                  duration: '0',
-                },
-                {
-                  state: 0,
-                },
-                {},
-              );
-              onShutdownAppPlugin(app.appIdentifier);
-            }}></AppPluginItem>
-        ),
-      )}
+      {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => (
+        <AppPluginItem
+          key={app.appIdentifier}
+          app={app}
+          properties={appPluginProperties(app)}
+          closable={closable}
+          onCancel={async () => {
+            await eduSDKApi.updateExtAppProperties(
+              contextInfo.roomUuid,
+              app.appIdentifier,
+              {
+                state: '0',
+                startTime: '0',
+                pauseTime: '0',
+                duration: '0',
+              },
+              {
+                state: 0,
+              },
+              {},
+            );
+            onShutdownAppPlugin(app.appIdentifier);
+          }}></AppPluginItem>
+      ))}
     </div>
   );
 });

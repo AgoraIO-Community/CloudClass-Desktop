@@ -10,11 +10,8 @@ export interface LoadingPptProps extends BaseProps {
 }
 
 export const LoadingPptContainer: FC<{}> = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } =
-    useCloudDriveContext();
-  return initCourseWareLoading ? (
-    <PageLoading loadingProcess={initCourseWareProgress} />
-  ) : null;
+  const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
+  return initCourseWareLoading ? <PageLoading loadingProcess={initCourseWareProgress} /> : null;
 });
 
 const PageLoading = (props: any) => {

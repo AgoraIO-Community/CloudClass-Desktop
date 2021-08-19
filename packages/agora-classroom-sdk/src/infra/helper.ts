@@ -32,25 +32,14 @@ export interface UserAttrs {
 
 export const resolveFileInfo = (file: any) => {
   const fileName = encodeURI(file.name);
-  const fileType = fileName.substring(
-    fileName.length,
-    fileName.lastIndexOf('.'),
-  );
+  const fileType = fileName.substring(fileName.length, fileName.lastIndexOf('.'));
   return {
     fileName,
     fileType,
   };
 };
 
-const level = [
-  'unknown',
-  'excellent',
-  'good',
-  'poor',
-  'bad',
-  'very bad',
-  'down',
-];
+const level = ['unknown', 'excellent', 'good', 'poor', 'bad', 'very bad', 'down'];
 
 export function NetworkQualityEvaluation(evt: {
   downlinkNetworkQuality: number;
@@ -62,8 +51,7 @@ export function NetworkQualityEvaluation(evt: {
 }
 
 export function CustomBtoa(input: any) {
-  let keyStr =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   let output = '';
   let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
   let i = 0;
@@ -83,11 +71,7 @@ export function CustomBtoa(input: any) {
     } else if (isNaN(chr3)) {
       enc4 = 64;
     }
-    output +=
-      keyStr.charAt(enc1) +
-      keyStr.charAt(enc2) +
-      keyStr.charAt(enc3) +
-      keyStr.charAt(enc4);
+    output += keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
   }
   return output;
 }

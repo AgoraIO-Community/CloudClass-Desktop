@@ -99,22 +99,14 @@ export interface EduClassroomManagerEventHandlers {
   /**
    * room chat message event
    */
-  'room-chat-message': (evt: {
-    textMessage: EduTextMessage;
-    operator: OperatorUser;
-  }) => void;
+  'room-chat-message': (evt: { textMessage: EduTextMessage; operator: OperatorUser }) => void;
   /**
    * customize room chat message event
    */
-  'room-message': (evt: {
-    textMessage: EduTextMessage;
-    operator: OperatorUser;
-  }) => void;
+  'room-message': (evt: { textMessage: EduTextMessage; operator: OperatorUser }) => void;
 }
 
-export declare type SingleParameter<Type> = Type extends (args: infer S) => any
-  ? S
-  : never;
+export declare type SingleParameter<Type> = Type extends (args: infer S) => any ? S : never;
 
 export declare type ListenerCallbackType<T> = T extends (args: infer U) => any
   ? U

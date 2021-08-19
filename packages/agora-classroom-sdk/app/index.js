@@ -103,16 +103,8 @@ async function createWindow() {
 
   const logPath = path.join(appLogPath, `log`, `agora_sdk.log`);
   const dstPath = path.join(appLogPath, `log`, `agora_sdk.log.zip`);
-  const videoSourceLogPath = path.join(
-    appLogPath,
-    `log`,
-    `video_source_agora_sdk.log`,
-  );
-  const videoSourceAddonLogPath = path.join(
-    appLogPath,
-    `log`,
-    `video_source_addon_agora_sdk.log`,
-  );
+  const videoSourceLogPath = path.join(appLogPath, `log`, `video_source_agora_sdk.log`);
+  const videoSourceAddonLogPath = path.join(appLogPath, `log`, `video_source_addon_agora_sdk.log`);
 
   mainWindow.webContents.on('did-finish-load', (event, args) => {
     // event.sender.webContents.send('appPath', [appLogPath, videoSourceLogPath])
@@ -216,12 +208,7 @@ async function createWindow() {
         { role: 'minimize' },
         { role: 'zoom' },
         ...(isMac
-          ? [
-              { type: 'separator' },
-              { role: 'front' },
-              { type: 'separator' },
-              { role: 'window' },
-            ]
+          ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
           : [{ role: 'close' }]),
       ],
     },

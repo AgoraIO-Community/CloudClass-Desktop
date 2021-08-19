@@ -1,11 +1,6 @@
 import { action, observable, computed, runInAction, autorun } from 'mobx';
 import type { AgoraWidgetContext } from 'agora-edu-core';
-import {
-  ChatEvent,
-  ChatListType,
-  Conversation,
-  Message,
-} from '~ui-kit/components/chat/interface';
+import { ChatEvent, ChatListType, Conversation, Message } from '~ui-kit/components/chat/interface';
 import { ChatStorage } from './utilities';
 
 export class PluginStore {
@@ -27,17 +22,14 @@ export class PluginStore {
   messageLastReadTs?: number;
 
   @observable
-  conversationLastReadTs: Map<string, number> =
-    ChatStorage.getConversationReadTs();
+  conversationLastReadTs: Map<string, number> = ChatStorage.getConversationReadTs();
 
   constructor(ctx: AgoraWidgetContext) {
     this.context = ctx;
 
     autorun(() => {
       ChatStorage.saveConversationReadTs(
-        JSON.stringify(
-          Object.fromEntries(this.conversationLastReadTs.entries()),
-        ),
+        JSON.stringify(Object.fromEntries(this.conversationLastReadTs.entries())),
       );
     });
   }
@@ -50,18 +42,12 @@ export class PluginStore {
     if (this.activeTab === 'conversation') {
       // was in detail conversation
       let userUuid = this.activeConversation!.userUuid;
-      this.conversationLastReadTs.set(
-        userUuid,
-        this.conversationLastMessageTs(userUuid),
-      );
+      this.conversationLastReadTs.set(userUuid, this.conversationLastMessageTs(userUuid));
     }
     if (activeTab === 'conversation') {
       // is changing to detail conversation
       let userUuid = conversation!.userUuid;
-      this.conversationLastReadTs.set(
-        userUuid,
-        this.conversationLastMessageTs(userUuid),
-      );
+      this.conversationLastReadTs.set(userUuid, this.conversationLastMessageTs(userUuid));
     }
     this.activeTab = activeTab;
     this.activeConversation = conversation;
@@ -74,15 +60,10 @@ export class PluginStore {
 
   conversationLastMessageTs(userUuid: string) {
     const { conversationList } = this.chatContext;
-    let conversation = conversationList.filter(
-      (c: Conversation) => c.userUuid === userUuid,
-    )[0];
+    let conversation = conversationList.filter((c: Conversation) => c.userUuid === userUuid)[0];
     if (!conversation) return 0;
     let messages = conversation.messages || [];
-    return Math.max(
-      this.getLastItem(messages)?.timestamp || 0,
-      conversation.timestamp || 0,
-    );
+    return Math.max(this.getLastItem(messages)?.timestamp || 0, conversation.timestamp || 0);
   }
 
   @computed
@@ -107,10 +88,7 @@ export class PluginStore {
     return (
       conversationList &&
       [...conversationList].map((c: Conversation) => {
-        if (
-          this.activeTab === 'conversation' &&
-          this.activeConversation?.userUuid === c.userUuid
-        ) {
+        if (this.activeTab === 'conversation' && this.activeConversation?.userUuid === c.userUuid) {
           c.unread = false;
         } else {
           c.unread =

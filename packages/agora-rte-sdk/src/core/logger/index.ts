@@ -14,9 +14,7 @@ export class EduLogger {
 
   private static get currentTime(): string {
     const date = new Date();
-    return `${
-      date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()
-    }`;
+    return `${date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()}`;
   }
 
   static setLogLevel(level: EduLogLevel) {
@@ -66,17 +64,13 @@ export class EduLogger {
       },
       INFO: {
         call: () => {
-          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
       ERROR: {
         call: () => {
-          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
@@ -191,9 +185,7 @@ export class EduLogger {
     // }
     await db.readAndDeleteBy(now);
     EduLogger.info(
-      `完成日志上传，文件名: ${
-        file.name
-      }, 上传时间: ${now}, 日志上传，res: ${JSON.stringify(res)}`,
+      `完成日志上传，文件名: ${file.name}, 上传时间: ${now}, 日志上传，res: ${JSON.stringify(res)}`,
     );
     return res;
   }

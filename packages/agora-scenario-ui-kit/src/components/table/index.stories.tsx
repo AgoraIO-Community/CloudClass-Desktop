@@ -3,14 +3,7 @@ import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
 import { Button, Modal } from '~components';
 import { Icon, IconBox } from '~components/icon';
-import {
-  CheckBox,
-  Col,
-  Inline,
-  Row,
-  Table,
-  TableHeader,
-} from '~components/table';
+import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
@@ -197,10 +190,7 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
             </Row>
           ))
         ) : (
-          <Placeholder
-            placeholderType="noFile"
-            placeholderDesc="自己定义的文字"
-          />
+          <Placeholder placeholderType="noFile" placeholderDesc="自己定义的文字" />
         )}
       </Table>
     </Table>
@@ -220,9 +210,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
   }, [items]);
 
   const isSelectAll = useMemo(() => {
-    return (
-      items.filter((item: any) => item.checked === true).length === items.length
-    );
+    return items.filter((item: any) => item.checked === true).length === items.length;
   }, [items]);
 
   const handleSelectAll = React.useCallback(
@@ -273,33 +261,31 @@ const CheckList = ({ size, progress }: UploadListProps) => {
       </TableHeader>
       <Table className="table-container table-container-upload">
         {items.length ? (
-          items.map(
-            ({ id, name, size, date, type, checked }: any, idx: number) => (
-              <Row height={10} border={1} key={idx}>
-                <Col width={9}>
-                  <CheckBox
-                    className="checkbox"
-                    onClick={(evt: any) => {
-                      changeChecked(id, evt.currentTarget.checked);
-                    }}
-                    checked={checked}></CheckBox>
-                </Col>
-                <Col>
-                  <IconBox iconType={type} style={{ marginRight: '6px' }} />
-                  <Inline color="#191919">{name}</Inline>
-                </Col>
-                {/* <Col>
+          items.map(({ id, name, size, date, type, checked }: any, idx: number) => (
+            <Row height={10} border={1} key={idx}>
+              <Col width={9}>
+                <CheckBox
+                  className="checkbox"
+                  onClick={(evt: any) => {
+                    changeChecked(id, evt.currentTarget.checked);
+                  }}
+                  checked={checked}></CheckBox>
+              </Col>
+              <Col>
+                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <Inline color="#191919">{name}</Inline>
+              </Col>
+              {/* <Col>
               <div style={{width: 30}}></div>
             </Col> */}
-                <Col>
-                  <Inline color="#586376">{formatFileSize(size)}</Inline>
-                </Col>
-                <Col>
-                  <Inline color="#586376">{date}</Inline>
-                </Col>
-              </Row>
-            ),
-          )
+              <Col>
+                <Inline color="#586376">{formatFileSize(size)}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{date}</Inline>
+              </Col>
+            </Row>
+          ))
         ) : (
           <Placeholder placeholderType="noFile" placeholderDesc="没有文件" />
         )}

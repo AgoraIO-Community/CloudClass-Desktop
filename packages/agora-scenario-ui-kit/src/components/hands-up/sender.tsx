@@ -9,10 +9,7 @@ export interface HandsUpSenderProps extends BaseProps {
   onClick: () => Promise<void> | void;
 }
 
-export const HandsUpSender: React.FC<HandsUpSenderProps> = ({
-  onClick,
-  state = 'default',
-}) => {
+export const HandsUpSender: React.FC<HandsUpSenderProps> = ({ onClick, state = 'default' }) => {
   const mapping = {
     default: '#7B88A0',
     actived: '#357BF6',
@@ -23,10 +20,7 @@ export const HandsUpSender: React.FC<HandsUpSenderProps> = ({
 
   return (
     <Card
-      className={[
-        'hands-up-sender',
-        state === 'forbidden' ? '' : 'sender-can-hover',
-      ].join(' ')}
+      className={['hands-up-sender', state === 'forbidden' ? '' : 'sender-can-hover'].join(' ')}
       width={40}
       height={40}
       borderRadius={40}>

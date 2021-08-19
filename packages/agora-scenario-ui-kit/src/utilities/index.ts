@@ -39,13 +39,7 @@ export const makeContainer = (name: string) => {
 
   return {
     Context,
-    Provider: <T>({
-      children,
-      value,
-    }: {
-      children: React.ReactNode;
-      value: T;
-    }) => {
+    Provider: <T>({ children, value }: { children: React.ReactNode; value: T }) => {
       Context.displayName = name;
       return createElement(Context.Provider, { value }, children);
     },

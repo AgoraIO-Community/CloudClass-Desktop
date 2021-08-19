@@ -79,11 +79,7 @@ export const Modal: ModalType = ({
 
   const modalJsx = (
     <div className={cls} {...restProps} style={{ ...style, width }}>
-      <div
-        className={[
-          'modal-title',
-          modalType === 'back' ? 'back-modal-title' : '',
-        ].join(' ')}>
+      <div className={['modal-title', modalType === 'back' ? 'back-modal-title' : ''].join(' ')}>
         {modalType === 'normal' ? (
           <>
             <div className="modal-title-text">{title}</div>

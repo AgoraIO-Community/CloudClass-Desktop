@@ -303,9 +303,7 @@ export const WhiteboardContainer = observer(({ children }: any) => {
               tools={tools}
               onClick={handleToolClick}
               className="toolbar-biz"
-              defaultOpened={
-                roomInfo.userRole === EduRoleTypeEnum.student ? false : true
-              }
+              defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true}
             />
           ) : null}
           {showZoomControl ? (

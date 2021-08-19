@@ -187,8 +187,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-nodiscussion-actived.svg') no-repeat
-    center / 24px 24px;
+  background: url('../icon/assets/svg/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
   cursor: pointer;
 }
 
@@ -201,8 +200,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-stu-chat-default.svg') no-repeat
-    center / 24px 24px;
+  background: url('../icon/assets/svg/icon-stu-chat-default.svg') no-repeat center / 24px 24px;
 }
 
 .stu-no-discussion-svg {
@@ -210,8 +208,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-stu-chat-mute.svg') no-repeat center /
-    24px 24px;
+  background: url('../icon/assets/svg/icon-stu-chat-mute.svg') no-repeat center / 24px 24px;
 }
 
 .full-screen-chat {

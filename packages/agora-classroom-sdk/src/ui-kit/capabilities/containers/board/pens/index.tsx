@@ -7,14 +7,8 @@ export type PensContainerProps = {
 };
 
 export const PensContainer = observer((props: PensContainerProps) => {
-  const {
-    lineSelector,
-    boardPenIsActive,
-    setTool,
-    updatePen,
-    currentColor,
-    changeHexColor,
-  } = useBoardContext();
+  const { lineSelector, boardPenIsActive, setTool, updatePen, currentColor, changeHexColor } =
+    useBoardContext();
 
   const onClick = (pen: any) => {
     setTool(pen);

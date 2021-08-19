@@ -16,14 +16,7 @@ type DocsType = {
   onChange: (value: number) => void;
 };
 
-export const Docs = ({
-  defaultValue,
-  disabled,
-  max,
-  min,
-  step,
-  onChange,
-}: DocsType) => (
+export const Docs = ({ defaultValue, disabled, max, min, step, onChange }: DocsType) => (
   <>
     <div>
       <Slider

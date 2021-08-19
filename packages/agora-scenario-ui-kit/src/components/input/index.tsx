@@ -128,13 +128,7 @@ export interface SearchProps extends InputProps {
   prefix?: any;
 }
 
-export const Search: FC<SearchProps> = ({
-  onSearch,
-  className,
-  suffix,
-  prefix,
-  ...restProps
-}) => {
+export const Search: FC<SearchProps> = ({ onSearch, className, suffix, prefix, ...restProps }) => {
   const [searchStr, setSearchStr] = useState<string>('');
   const cls = classnames({
     [`input-search`]: 1,

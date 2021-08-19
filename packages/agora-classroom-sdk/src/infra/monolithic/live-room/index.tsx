@@ -20,12 +20,7 @@ export const LiveRoom = observer(() => {
   return (
     <>
       <AgoraCSSBasement />
-      <RoomContainer
-        mainPath={mainPath!}
-        routes={routes}
-        language={language}
-        params={params}
-      />
+      <RoomContainer mainPath={mainPath!} routes={routes} language={language} params={params} />
       <ToastContainer />
     </>
   );

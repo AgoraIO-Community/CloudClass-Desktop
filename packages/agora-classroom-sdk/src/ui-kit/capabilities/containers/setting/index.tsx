@@ -5,7 +5,14 @@ import { useGlobalContext, useMediaContext, usePretestContext } from 'agora-edu-
 import { useCallback, useEffect, useState } from 'react';
 
 export const SettingContainer = observer(({ id }: any) => {
-  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume, changeCamera, changeMicrophone, changeSpeaker } = useMediaContext();
+  const {
+    isNative,
+    getAudioRecordingVolume,
+    getAudioPlaybackVolume,
+    changeCamera,
+    changeMicrophone,
+    changeSpeaker,
+  } = useMediaContext();
 
   const {
     cameraList,

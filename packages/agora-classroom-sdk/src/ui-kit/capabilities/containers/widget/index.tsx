@@ -17,15 +17,7 @@ export const Widget: FC<WidgetProps> = observer(
     const ref = useRef<HTMLDivElement | null>(null);
     const { contextInfo } = useAppPluginContext();
 
-    const {
-      userUuid,
-      userName,
-      userRole,
-      roomName,
-      roomUuid,
-      roomType,
-      language,
-    } = contextInfo;
+    const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo;
 
     const { events, actions } = Adapter();
     const context = {

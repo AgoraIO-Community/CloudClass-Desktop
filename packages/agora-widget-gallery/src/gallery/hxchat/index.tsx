@@ -1,9 +1,5 @@
 import React, { useLayoutEffect, useRef, useEffect } from 'react';
-import type {
-  AgoraWidgetHandle,
-  AgoraWidgetContext,
-  IAgoraWidget,
-} from 'agora-edu-core';
+import type { AgoraWidgetHandle, AgoraWidgetContext, IAgoraWidget } from 'agora-edu-core';
 import { observer, Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
@@ -53,20 +49,12 @@ const App: React.FC<AppProps> = observer((props) => {
     if (domRef.current && isJoined) {
       //@ts-ignore
       console.log('store-----', pluginStore);
-      hx.renderHXChatRoom(
-        domRef.current,
-        pluginStore,
-        props.sendMsg,
-        props.onReceivedMsg,
-      );
+      hx.renderHXChatRoom(domRef.current, pluginStore, props.sendMsg, props.onReceivedMsg);
     }
   }, [domRef.current, isJoined]);
 
   return (
-    <div
-      id="hx-chatroom"
-      ref={domRef}
-      style={{ display: 'flex', width: '100%', height: '100%' }}>
+    <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
       {/* <iframe style={{width:'100%',height:'100%'}} src={`https://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe> */}
     </div>
   );

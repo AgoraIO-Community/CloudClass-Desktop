@@ -83,10 +83,7 @@ export const ShowAnnouncement = () => {
           <div className="no-announcement">
             <img src={announcement} className="announcement-icon" />
             <div className="no-notice">
-              <span className="no-notice-text">
-                {' '}
-                {transI18n('chat.default_announcement')}
-              </span>
+              <span className="no-notice-text"> {transI18n('chat.default_announcement')}</span>
               {isTeacher && <Edit />}
             </div>
           </div>

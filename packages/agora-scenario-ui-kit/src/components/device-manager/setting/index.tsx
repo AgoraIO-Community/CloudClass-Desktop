@@ -138,9 +138,7 @@ export const Setting: FC<SettingProps> = ({
         {isNative && isBeauty ? (
           <>
             <div className="beauty-value">
-              <span className="beauty-text">
-                {transI18n('media.whitening')}
-              </span>
+              <span className="beauty-text">{transI18n('media.whitening')}</span>
               <Slider
                 min={0}
                 max={100}
@@ -191,9 +189,7 @@ export const Setting: FC<SettingProps> = ({
           options={microphoneOptions}></Select>
         {isNative ? (
           <div className="device-volume">
-            <span className="device-text">
-              {transI18n('device.microphone_volume')}
-            </span>
+            <span className="device-text">{transI18n('device.microphone_volume')}</span>
             <Slider
               min={0}
               max={100}
@@ -217,9 +213,7 @@ export const Setting: FC<SettingProps> = ({
           options={speakerOptions}></Select>
         {isNative ? (
           <div className="device-volume">
-            <span className="device-text">
-              {transI18n('device.speaker_volume')}
-            </span>
+            <span className="device-text">{transI18n('device.speaker_volume')}</span>
             <Slider
               min={0}
               max={100}

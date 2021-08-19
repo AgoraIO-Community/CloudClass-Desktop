@@ -34,15 +34,8 @@ export const Pens: FC<PensProps> = ({
     () => (
       <div className={`expand-tools pens`}>
         {pens.map((pen) => (
-          <div
-            key={pen}
-            onClick={() => handleClick(pen)}
-            className="expand-tool pen">
-            <SvgImg
-              type={pen as any}
-              className={activePen === pen ? 'active' : ''}
-              canHover
-            />
+          <div key={pen} onClick={() => handleClick(pen)} className="expand-tool pen">
+            <SvgImg type={pen as any} className={activePen === pen ? 'active' : ''} canHover />
             <div
               className={activePen === pen ? 'current-pen' : ''}
               style={{ width: 3, height: 3 }}></div>
@@ -62,10 +55,7 @@ export const Pens: FC<PensProps> = ({
     [handleClick, isActive],
   );
   return (
-    <Tooltip
-      title={label}
-      placement="bottom"
-      overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => {
@@ -80,15 +70,8 @@ export const Pens: FC<PensProps> = ({
           onClick={() => {
             handleClickTool(activePen);
           }}>
-          <SvgImg
-            type={activePen as any}
-            className={isActive ? 'active' : ''}
-          />
-          <SvgImg
-            type="triangle-down"
-            className="triangle-icon"
-            style={{ position: 'absolute' }}
-          />
+          <SvgImg type={activePen as any} className={isActive ? 'active' : ''} />
+          <SvgImg type="triangle-down" className="triangle-icon" style={{ position: 'absolute' }} />
         </div>
       </Popover>
     </Tooltip>

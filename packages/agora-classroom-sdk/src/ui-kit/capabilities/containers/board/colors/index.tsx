@@ -3,13 +3,8 @@ import { observer } from 'mobx-react';
 import { useBoardContext } from 'agora-edu-core';
 
 export const ColorsContainer = observer(() => {
-  const {
-    changeStroke,
-    changeHexColor,
-    setTool,
-    currentColor,
-    currentStrokeWidth,
-  } = useBoardContext();
+  const { changeStroke, changeHexColor, setTool, currentColor, currentStrokeWidth } =
+    useBoardContext();
 
   return (
     <Colors

@@ -141,25 +141,11 @@ export class ReportService extends ApiBase {
     metric: ReportPointMetricParams,
     optional: ReportPointOptionalParams,
   ): ReportParams {
-    return this.buildBaseParams(
-      'flexibleClass',
-      'rte',
-      'event',
-      metric,
-      optional,
-      event,
-      category,
-    );
+    return this.buildBaseParams('flexibleClass', 'rte', 'event', metric, optional, event, category);
   }
 
   buildHBParams() {
-    return this.buildBaseParams(
-      'flexibleClass',
-      'rte',
-      'online_user',
-      { count: 1 },
-      {},
-    );
+    return this.buildBaseParams('flexibleClass', 'rte', 'online_user', { count: 1 }, {});
   }
 
   get apiPath() {
@@ -226,10 +212,7 @@ export class ReportService extends ApiBase {
   }
 
   startTick(event: string, category: string, api?: string) {
-    this.tickerMap.set(
-      this.tickerKey(event, category, api),
-      new Date().getTime(),
-    );
+    this.tickerMap.set(this.tickerKey(event, category, api), new Date().getTime());
   }
 
   startHB() {
@@ -255,19 +238,11 @@ export class ReportService extends ApiBase {
     return 0;
   }
 
-  async reportEC(
-    event: string,
-    category: string,
-    optional?: ReportPointOptionalParams,
-  ) {
+  async reportEC(event: string, category: string, optional?: ReportPointOptionalParams) {
     return this.report(event, category, { count: 1 }, optional);
   }
 
-  async reportElapse(
-    event: string,
-    category: string,
-    optional?: ReportPointOptionalParams,
-  ) {
+  async reportElapse(event: string, category: string, optional?: ReportPointOptionalParams) {
     return this.report(
       event,
       category,
@@ -294,8 +269,7 @@ export class ReportService extends ApiBase {
 }
 
 export const rteReportService = new ReportService({
-  sdkDomain:
-    'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
+  sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
   appId: '',
   rtmToken: '',
   rtmUid: '',

@@ -14,19 +14,9 @@ type DocsProps = {
   maxLength: number;
 };
 
-export const Docs = ({
-  width,
-  height,
-  currentVolume,
-  maxLength,
-}: DocsProps) => (
+export const Docs = ({ width, height, currentVolume, maxLength }: DocsProps) => (
   <div className="mt-4">
-    <Volume
-      width={width}
-      height={height}
-      currentVolume={currentVolume}
-      maxLength={maxLength}
-    />
+    <Volume width={width} height={height} currentVolume={currentVolume} maxLength={maxLength} />
   </div>
 );
 

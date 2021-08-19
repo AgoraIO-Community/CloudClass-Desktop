@@ -65,9 +65,7 @@ export class SmallClassStore {
 
   @computed
   get onlineUserCount() {
-    return this.sceneStore.userList.filter((it) =>
-      ['audience'].includes(it.role),
-    ).length;
+    return this.sceneStore.userList.filter((it) => ['audience'].includes(it.role)).length;
   }
 
   @computed
@@ -82,9 +80,7 @@ export class SmallClassStore {
 
   @computed
   get teacherInfo(): EduUser | undefined {
-    return this.roomStore.sceneStore.userList.find(
-      (user: EduUser) => user.role === 'host',
-    );
+    return this.roomStore.sceneStore.userList.find((user: EduUser) => user.role === 'host');
   }
 
   @computed
@@ -99,102 +95,82 @@ export class SmallClassStore {
 
   @computed
   get studentStreams(): EduMediaStream[] {
-    let streamList = this.acceptedList.reduce(
-      (acc: any[], acceptedUser: EduUser) => {
-        const stream = this.sceneStore.streamList.find(
-          (stream: EduStream) =>
-            stream.userInfo.userUuid === acceptedUser.userUuid,
-        );
-        const props = this.sceneStore.getRemotePlaceHolderProps(
-          acceptedUser.userUuid,
-          'student',
-        );
-        const volumeLevel = this.sceneStore.getFixAudioVolume(
-          +get(stream, 'streamUuid', -1),
-        );
-        const user = get(this.studentsMap, `${acceptedUser.userUuid}`, {});
-        if (acceptedUser.userUuid !== this.roomInfo.userUuid) {
+    let streamList = this.acceptedList.reduce((acc: any[], acceptedUser: EduUser) => {
+      const stream = this.sceneStore.streamList.find(
+        (stream: EduStream) => stream.userInfo.userUuid === acceptedUser.userUuid,
+      );
+      const props = this.sceneStore.getRemotePlaceHolderProps(acceptedUser.userUuid, 'student');
+      const volumeLevel = this.sceneStore.getFixAudioVolume(+get(stream, 'streamUuid', -1));
+      const user = get(this.studentsMap, `${acceptedUser.userUuid}`, {});
+      if (acceptedUser.userUuid !== this.roomInfo.userUuid) {
+        acc.push({
+          local: false,
+          isLocal: false,
+          online: this.appStore.sceneStore.queryUserIsOnline(acceptedUser.userUuid),
+          onPodium: true,
+          micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
+            this.appStore.sceneStore.userList,
+            acceptedUser.userUuid,
+            get(stream, 'streamUuid', ''),
+          ),
+          cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(
+            this.appStore.sceneStore.userList,
+            acceptedUser.userUuid,
+            get(stream, 'streamUuid', ''),
+          ),
+          account: get(user, 'name', ''),
+          userUuid: acceptedUser.userUuid,
+          streamUuid: get(stream, 'streamUuid', ''),
+          video: get(stream, 'hasVideo', ''),
+          audio: get(stream, 'hasAudio', ''),
+          hasStream: !!stream,
+          renderer: this.sceneStore.remoteUsersRenderer.find(
+            (it: RemoteUserRenderer) => +it.uid === +get(stream, 'streamUuid', -1),
+          ) as RemoteUserRenderer,
+          hideControl: this.sceneStore.hideControl(user.userUuid),
+          holderState: props.holderState,
+          placeHolderText: props.text,
+          // micVolume: volumeLevel,
+          stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
+          whiteboardGranted: this.appStore.boardStore.checkUserPermission(
+            `${acceptedUser.userUuid}`,
+          ),
+        });
+      } else {
+        const localUser = this.sceneStore.localUser;
+
+        const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole);
+
+        if (this.sceneStore.cameraEduStream && isStudent) {
+          const props = this.sceneStore.getLocalPlaceHolderProps();
           acc.push({
-            local: false,
-            isLocal: false,
-            online: this.appStore.sceneStore.queryUserIsOnline(
-              acceptedUser.userUuid,
-            ),
+            local: true,
+            isLocal: true,
+            online: true,
             onPodium: true,
-            micDevice:
-              this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
-                this.appStore.sceneStore.userList,
-                acceptedUser.userUuid,
-                get(stream, 'streamUuid', ''),
-              ),
-            cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(
-              this.appStore.sceneStore.userList,
-              acceptedUser.userUuid,
-              get(stream, 'streamUuid', ''),
-            ),
-            account: get(user, 'name', ''),
-            userUuid: acceptedUser.userUuid,
-            streamUuid: get(stream, 'streamUuid', ''),
-            video: get(stream, 'hasVideo', ''),
-            audio: get(stream, 'hasAudio', ''),
-            hasStream: !!stream,
-            renderer: this.sceneStore.remoteUsersRenderer.find(
-              (it: RemoteUserRenderer) =>
-                +it.uid === +get(stream, 'streamUuid', -1),
-            ) as RemoteUserRenderer,
-            hideControl: this.sceneStore.hideControl(user.userUuid),
+            micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
+            cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
+            account: localUser.userName,
+            userUuid: this.sceneStore.cameraEduStream.userInfo.userUuid as string,
+            streamUuid: this.sceneStore.cameraEduStream.streamUuid,
+            video: this.sceneStore.cameraEduStream.hasVideo,
+            audio: this.sceneStore.cameraEduStream.hasAudio,
+            hasStream: !!this.sceneStore.cameraEduStream,
+            renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
+            hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
             holderState: props.holderState,
             placeHolderText: props.text,
-            // micVolume: volumeLevel,
-            stars: this.appStore.roomStore.getRewardByUid(
-              acceptedUser.userUuid,
-            ),
+            stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
             whiteboardGranted: this.appStore.boardStore.checkUserPermission(
-              `${acceptedUser.userUuid}`,
+              `${this.appStore.userUuid}`,
             ),
-          });
-        } else {
-          const localUser = this.sceneStore.localUser;
-
-          const isStudent = [EduRoleTypeEnum.student].includes(
-            localUser.userRole,
-          );
-
-          if (this.sceneStore.cameraEduStream && isStudent) {
-            const props = this.sceneStore.getLocalPlaceHolderProps();
-            acc.push({
-              local: true,
-              isLocal: true,
-              online: true,
-              onPodium: true,
-              micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
-              cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
-              account: localUser.userName,
-              userUuid: this.sceneStore.cameraEduStream.userInfo
-                .userUuid as string,
-              streamUuid: this.sceneStore.cameraEduStream.streamUuid,
-              video: this.sceneStore.cameraEduStream.hasVideo,
-              audio: this.sceneStore.cameraEduStream.hasAudio,
-              hasStream: !!this.sceneStore.cameraEduStream,
-              renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
-              hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
-              holderState: props.holderState,
-              placeHolderText: props.text,
-              stars: this.appStore.roomStore.getRewardByUid(
-                acceptedUser.userUuid,
-              ),
-              whiteboardGranted: this.appStore.boardStore.checkUserPermission(
-                `${this.appStore.userUuid}`,
-              ),
-              // micVolume: this.sceneStore.localVolume,
-            } as any);
-            // .concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
-          }
+            // micVolume: this.sceneStore.localVolume,
+          } as any);
+          // .concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
         }
-        return acc;
-      },
-      [],
-    );
+      }
+      return acc;
+    }, []);
     if (streamList.length) {
       return streamList;
     }
@@ -226,11 +202,7 @@ export class SmallClassStore {
   @computed
   get acceptedUserList() {
     const userList = get(this.roomStore.sceneStore, 'userList', []);
-    const progressList = get(
-      this.roomStore,
-      'roomProperties.processes.handsUp.accepted',
-      [],
-    );
+    const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.accepted', []);
     const ids = progressList.map((e: any) => e.userUuid);
     return userList
       .filter(({ userUuid }: EduUser) => ids.includes(userUuid))
@@ -244,11 +216,7 @@ export class SmallClassStore {
   @computed
   get applyCoVideoUserList() {
     const userList = get(this.roomStore.sceneStore, 'userList', []);
-    const progressList = get(
-      this.roomStore,
-      'roomProperties.processes.handsUp.progress',
-      [],
-    );
+    const progressList = get(this.roomStore, 'roomProperties.processes.handsUp.progress', []);
     const ids = progressList.map((e: any) => e.userUuid);
     return userList
       .filter(({ userUuid }: EduUser) => ids.includes(userUuid))
@@ -261,11 +229,7 @@ export class SmallClassStore {
 
   @computed
   get acceptedList() {
-    const acceptedList = get(
-      this.roomStore,
-      'roomProperties.processes.handsUp.accepted',
-      [],
-    );
+    const acceptedList = get(this.roomStore, 'roomProperties.processes.handsUp.accepted', []);
     return acceptedList;
   }
 
@@ -416,11 +380,7 @@ export class SmallClassStore {
     // })
   }
 
-  checkDisable(
-    user: EduUser,
-    role: EduRoleTypeEnum,
-    stream?: EduStream,
-  ): boolean {
+  checkDisable(user: EduUser, role: EduRoleTypeEnum, stream?: EduStream): boolean {
     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
       return false;
     }
@@ -461,12 +421,8 @@ export class SmallClassStore {
       isLocal: isLocal,
       name: user.userName,
       uid: user.userUuid,
-      online: isLocal
-        ? true
-        : this.appStore.sceneStore.queryUserIsOnline(user.userUuid),
-      onPodium: this.acceptedUserList.find(
-        (it: any) => it.userUuid === user.userUuid,
-      )
+      online: isLocal ? true : this.appStore.sceneStore.queryUserIsOnline(user.userUuid),
+      onPodium: this.acceptedUserList.find((it: any) => it.userUuid === user.userUuid)
         ? true
         : false,
       micDevice,
@@ -474,18 +430,11 @@ export class SmallClassStore {
       cameraEnabled: stream?.hasVideo ?? false,
       chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
       micEnabled: stream?.hasAudio ?? false,
-      whiteboardGranted: this.appStore.boardStore.checkUserPermission(
-        user.userUuid,
-      ),
+      whiteboardGranted: this.appStore.boardStore.checkUserPermission(user.userUuid),
       hasStream: !!stream,
       // whiteboardGranted: !!get,
-      canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-        role,
-      ),
-      canGrantBoard: [
-        EduRoleTypeEnum.assistant,
-        EduRoleTypeEnum.teacher,
-      ].includes(role),
+      canCoVideo: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
+      canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(role),
       stars: this.appStore.roomStore.getRewardByUid(user.userUuid),
       disabled: this.checkDisable(user, role, stream),
       // disabled: [EduRoleTypeEnum.student].includes(role) ? true : false,
@@ -510,9 +459,7 @@ export class SmallClassStore {
       isLocal: true,
       uid: localUserUuid,
       name: this.roomInfo.userName,
-      onPodium: this.acceptedUserList.find(
-        (it: any) => it.userUuid === localUserUuid,
-      )
+      onPodium: this.acceptedUserList.find((it: any) => it.userUuid === localUserUuid)
         ? true
         : false,
       online: true,
@@ -521,10 +468,9 @@ export class SmallClassStore {
       cameraEnabled: !!get(this.sceneStore, 'cameraEduStream.hasVideo', 0),
       micEnabled: !!get(this.sceneStore, 'cameraEduStream.hasAudio', 0),
       whiteboardGranted: false,
-      canGrantBoard: [
-        EduRoleTypeEnum.assistant,
-        EduRoleTypeEnum.teacher,
-      ].includes(this.roomInfo.userRole),
+      canGrantBoard: [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
+        this.roomInfo.userRole,
+      ),
       stars: 0,
       hasStream: true,
       disabled: false,
@@ -551,9 +497,7 @@ export class SmallClassStore {
   get bigClassUserList() {
     const localUserUuid = this.roomStore.roomInfo.userUuid;
     const userList = this.sceneStore.userList
-      .filter((user: EduUser) =>
-        ['audience', 'broadcaster'].includes(user.role),
-      )
+      .filter((user: EduUser) => ['audience', 'broadcaster'].includes(user.role))
       .filter((user: EduUser) => user.userUuid !== localUserUuid)
       .reduce((acc: any[], user: EduUser) => {
         const stream = this.roomStore.sceneStore.streamList.find(
@@ -561,11 +505,7 @@ export class SmallClassStore {
             stream.userInfo.userUuid === user.userUuid &&
             stream.videoSourceType === EduVideoSourceType.camera,
         );
-        const rosterUser = this.transformRosterUserInfo(
-          user,
-          this.roomInfo.userRole,
-          stream,
-        );
+        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
         acc.push(rosterUser);
         return acc;
       }, []);
@@ -588,11 +528,7 @@ export class SmallClassStore {
             stream.userInfo.userUuid === user.userUuid &&
             stream.videoSourceType === EduVideoSourceType.camera,
         );
-        const rosterUser = this.transformRosterUserInfo(
-          user,
-          this.roomInfo.userRole,
-          stream,
-        );
+        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream);
         acc.push(rosterUser);
         return acc;
       }, []);
@@ -612,17 +548,10 @@ export class SmallClassStore {
   }
 
   @action.bound
-  async toggleWhiteboardPermission(
-    userUuid: string,
-    grantWhiteboardPermission: boolean,
-  ) {
+  async toggleWhiteboardPermission(userUuid: string, grantWhiteboardPermission: boolean) {
     if (!this.rosterUserExists(userUuid)) return;
 
-    if (
-      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-        this.roomInfo.userRole,
-      )
-    ) {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
       if (!grantWhiteboardPermission) {
         await this.appStore.boardStore.revokeBoardPermission(userUuid);
       } else {
@@ -672,11 +601,7 @@ export class SmallClassStore {
     if (!this.rosterUserExists(userUuid)) return;
 
     //TODO
-    if (
-      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-        this.roomInfo.userRole,
-      )
-    ) {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
       this.appStore.fireDialog('kick-dialog', {
         userUuid,
         roomUuid: this.roomInfo.roomUuid,
@@ -700,17 +625,13 @@ export class SmallClassStore {
       case 'podium': {
         if (user.onPodium) {
           if (
-            [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-              this.roomInfo.userRole,
-            )
+            [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)
           ) {
             await this.revokeCoVideo(user.uid);
           }
         } else {
           if (
-            [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-              this.roomInfo.userRole,
-            )
+            [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)
           ) {
             await this.teacherAcceptHandsUp(user.uid);
           }
@@ -718,11 +639,7 @@ export class SmallClassStore {
         break;
       }
       case 'whiteboard': {
-        if (
-          [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-            this.roomInfo.userRole,
-          )
-        ) {
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
           if (user.whiteboardGranted) {
             await this.appStore.boardStore.revokeBoardPermission(uid);
           } else {
@@ -760,11 +677,7 @@ export class SmallClassStore {
         break;
       }
       case 'kick-out': {
-        if (
-          [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-            this.roomInfo.userRole,
-          )
-        ) {
+        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
           this.appStore.fireDialog('kick-dialog', {
             userUuid: uid,
             roomUuid: this.roomInfo.roomUuid,
@@ -815,9 +728,6 @@ export class SmallClassStore {
   // has any private conversation within this room
   get hasPrivateConversation() {
     const streamGroups = get(this.roomStore, 'roomProperties.streamGroups', {});
-    return (
-      Object.values(streamGroups).filter((group) => group !== 'deleted')
-        .length > 0
-    );
+    return Object.values(streamGroups).filter((group) => group !== 'deleted').length > 0;
   }
 }

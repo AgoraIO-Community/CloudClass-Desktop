@@ -40,9 +40,7 @@ export const EditAnnouncement = ({ onEdit }) => {
       <div className="tips-content">
         <div>
           {count > ANNOUNCEMENT_SIZE && (
-            <div className="more-message">
-              {transI18n('chat.announcement_content')}
-            </div>
+            <div className="more-message">{transI18n('chat.announcement_content')}</div>
           )}
         </div>
         <div className="count-content">
@@ -56,9 +54,7 @@ export const EditAnnouncement = ({ onEdit }) => {
           onClick={() => {
             editStatus();
           }}>
-          <span className="btn-text cancel-btn-text">
-            {transI18n('chat.cancel')}
-          </span>
+          <span className="btn-text cancel-btn-text">{transI18n('chat.cancel')}</span>
         </Button>
         <Button
           type="primary"
@@ -66,9 +62,7 @@ export const EditAnnouncement = ({ onEdit }) => {
           onClick={() => {
             updateAnnouncement(roomId, content);
           }}>
-          <span className="btn-text ok-btn-text">
-            {transI18n('chat.publish')}
-          </span>
+          <span className="btn-text ok-btn-text">{transI18n('chat.publish')}</span>
         </Button>
       </div>
     </div>

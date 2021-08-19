@@ -4,11 +4,7 @@ import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type {
-  IAgoraExtApp,
-  AgoraExtAppHandle,
-  AgoraExtAppContext,
-} from 'agora-edu-core';
+import type { IAgoraExtApp, AgoraExtAppHandle, AgoraExtAppContext } from 'agora-edu-core';
 import { BoardClient } from './board';
 import { I18nProvider } from '~ui-kit';
 
@@ -26,20 +22,14 @@ const App = observer(() => {
         roomToken: '<netless roomToken>',
       })
       .then(() => {
-        let container = document.getElementById(
-          'netless-white',
-        ) as HTMLDivElement;
+        let container = document.getElementById('netless-white') as HTMLDivElement;
         if (container) {
           client.room.bindHtmlElement(container);
         }
       });
   }, []);
 
-  return (
-    <div
-      id="netless-white"
-      style={{ display: 'flex', width: '100%', height: '100%' }}></div>
-  );
+  return <div id="netless-white" style={{ display: 'flex', width: '100%', height: '100%' }}></div>;
 });
 
 export class AgoraExtAppWhiteboard implements IAgoraExtApp {
@@ -52,11 +42,7 @@ export class AgoraExtAppWhiteboard implements IAgoraExtApp {
 
   constructor(public readonly language: any = 'en') {}
 
-  extAppDidLoad(
-    dom: Element,
-    ctx: AgoraExtAppContext,
-    handle: AgoraExtAppHandle,
-  ): void {
+  extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
     this.store = new PluginStore(ctx, handle);
     ReactDOM.render(
       <I18nProvider language={this.language}>

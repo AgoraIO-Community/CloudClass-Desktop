@@ -23,8 +23,7 @@ export const TextMsg = ({ item }) => {
   const userNickName = item?.ext.nickName;
   const loginNickName = state?.loginUserInfo.nickname;
   const isTeacher =
-    state.propsData.roleType === ROLE.teacher.id ||
-    state.propsData.roleType === ROLE.assistant.id;
+    state.propsData.roleType === ROLE.teacher.id || state.propsData.roleType === ROLE.assistant.id;
 
   const menu = (
     <Menu>
@@ -71,12 +70,8 @@ export const TextMsg = ({ item }) => {
       {sender && (
         <div>
           <div className="msg-user-me">
-            {teacherTag && (
-              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
-            )}
-            {assistantTag && (
-              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
-            )}
+            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
             <span>{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
@@ -102,12 +97,8 @@ export const TextMsg = ({ item }) => {
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
             <span>{userNickName}</span>
-            {teacherTag && (
-              <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>
-            )}
-            {assistantTag && (
-              <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>
-            )}
+            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
           </div>
           {isTeacher && (
             <>
@@ -118,9 +109,7 @@ export const TextMsg = ({ item }) => {
               </Dropdown>
             </>
           )}
-          {!isTeacher && (
-            <div className="msg-text msg-text-other">{msgData}</div>
-          )}
+          {!isTeacher && <div className="msg-text msg-text-other">{msgData}</div>}
         </div>
       )}
     </div>

@@ -88,11 +88,7 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     return this._state;
   }
 
-  create(
-    component: ReactElement,
-    dom: HTMLElement,
-    callback: EventCallableFunction,
-  ) {
+  create(component: ReactElement, dom: HTMLElement, callback: EventCallableFunction) {
     this.dom = dom;
     this.callback = callback;
     render(component, this.dom);

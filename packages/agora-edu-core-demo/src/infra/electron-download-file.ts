@@ -9,10 +9,7 @@ const path = require('path');
  * @param {string} extractDirectory - 解压的目录，默认为和 zip 同目录下的同名文件夹，如:(test.zip -> test/)
  * @return {Promise<void>}
  */
-export const extractZip = (
-  filePath: string,
-  extractDirectory: string,
-): Promise<void> => {
+export const extractZip = (filePath: string, extractDirectory: string): Promise<void> => {
   return extract(filePath, {
     dir: extractDirectory,
   });
@@ -56,9 +53,7 @@ export class ElectronDownloadFile {
    * @param {function} progressCallback - 进度回调
    */
   public onProgress(progressCallback: (progress: Stats) => any): void {
-    this.downloaderHelper.on('progress', (progress) =>
-      progressCallback(progress),
-    );
+    this.downloaderHelper.on('progress', (progress) => progressCallback(progress));
   }
 
   /**

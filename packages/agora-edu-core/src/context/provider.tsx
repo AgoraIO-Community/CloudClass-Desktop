@@ -4,8 +4,37 @@ import { useCallback, useState } from 'react';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { StorageCourseWareItem } from '../types';
 import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
-import { useBoardStore, useCoreContext, useMediaStore, usePretestStore, useRoomStore, useSceneStore, useSmallClassStore } from './core';
-import { BoardContext, ChatContext, CloudDriveContext, ControlTool, DeviceErrorCallback, GlobalContext, HandsUpContext, /*StreamContext, */ PretestContext, RecordingContext, ReportContext, RoomContext, RoomDiagnosisContext, ScreenShareContext, SmallClassVideoControlContext, StreamContext, StreamListContext, UserListContext, VideoControlContext, VolumeContext, LiveRoomStatsContext } from './type';
+import {
+  useBoardStore,
+  useCoreContext,
+  useMediaStore,
+  usePretestStore,
+  useRoomStore,
+  useSceneStore,
+  useSmallClassStore,
+} from './core';
+import {
+  BoardContext,
+  ChatContext,
+  CloudDriveContext,
+  ControlTool,
+  DeviceErrorCallback,
+  GlobalContext,
+  HandsUpContext,
+  /*StreamContext, */ PretestContext,
+  RecordingContext,
+  ReportContext,
+  RoomContext,
+  RoomDiagnosisContext,
+  ScreenShareContext,
+  SmallClassVideoControlContext,
+  StreamContext,
+  StreamListContext,
+  UserListContext,
+  VideoControlContext,
+  VolumeContext,
+  LiveRoomStatsContext,
+} from './type';
 
 export { CoreContext, CoreContextProvider } from './core';
 export type { CoreAppContext } from './core';
@@ -48,7 +77,16 @@ export const useStreamListContext = (): StreamListContext => {
 
   const smallClassStore = useSmallClassStore();
 
-  const { muteAudio, unmuteAudio, muteVideo, unmuteVideo, teacherStream, studentStreams, streamList, cameraEduStream } = sceneStore;
+  const {
+    muteAudio,
+    unmuteAudio,
+    muteVideo,
+    unmuteVideo,
+    teacherStream,
+    studentStreams,
+    streamList,
+    cameraEduStream,
+  } = sceneStore;
 
   const { revokeUserPermission, grantUserPermission } = boardStore;
 
@@ -137,7 +175,14 @@ export const usePretestContext = (): PretestContext => {
 };
 
 export const useScreenShareContext = (): ScreenShareContext => {
-  const { customScreenSharePickerItems, customScreenSharePickerType, screenShareStream, screenEduStream, startOrStopSharing, startNativeScreenShareBy } = useSceneStore();
+  const {
+    customScreenSharePickerItems,
+    customScreenSharePickerType,
+    screenShareStream,
+    screenEduStream,
+    startOrStopSharing,
+    startNativeScreenShareBy,
+  } = useSceneStore();
 
   const { isShareScreen, canSharingScreen } = useBoardStore();
 
@@ -159,11 +204,36 @@ export const useRoomContext = (): RoomContext => {
 
   const sceneStore = useSceneStore();
 
-  const { roomInfo, classState, sceneType, startNativeScreenShareBy, removeScreenShareWindow, muteVideo, unmuteVideo, muteAudio, unmuteAudio, muteUserChat, unmuteUserChat } = useSceneStore();
+  const {
+    roomInfo,
+    classState,
+    sceneType,
+    startNativeScreenShareBy,
+    removeScreenShareWindow,
+    muteVideo,
+    unmuteVideo,
+    muteAudio,
+    unmuteAudio,
+    muteUserChat,
+    unmuteUserChat,
+  } = useSceneStore();
 
-  const { isJoiningRoom, kickOutBan, kickOutOnce, join, roomProperties, updateFlexProperties, flexProperties, setCarouselState, startCarousel, stopCarousel, joined } = useRoomStore();
+  const {
+    isJoiningRoom,
+    kickOutBan,
+    kickOutOnce,
+    join,
+    roomProperties,
+    updateFlexProperties,
+    flexProperties,
+    setCarouselState,
+    startCarousel,
+    stopCarousel,
+    joined,
+  } = useRoomStore();
 
-  const { handsUpStudentList, processUserCount, teacherAcceptHandsUp, teacherRejectHandsUp } = useSmallClassStore();
+  const { handsUpStudentList, processUserCount, teacherAcceptHandsUp, teacherRejectHandsUp } =
+    useSmallClassStore();
 
   return {
     sceneType,
@@ -256,9 +326,57 @@ export const useGlobalContext = (): GlobalContext => {
 };
 
 export const useBoardContext = (): BoardContext => {
-  const { currentColor, currentStrokeWidth, hasPermission, currentSelector, lineSelector, activeMap, zoomValue, currentPage, totalPage, ready, changeStroke, changeHexColor, mount, unmount, setTool, zoomBoard, setZoomScale, changeFooterMenu, updatePen, setLaserPoint, tools, activeSceneName, boardPenIsActive, changeSceneItem, room, installTools, revokeBoardPermission, grantBoardPermission, showBoardTool, isBoardScreenShare, boardConnectionState, joinBoard, leaveBoard } = useBoardStore();
+  const {
+    currentColor,
+    currentStrokeWidth,
+    hasPermission,
+    currentSelector,
+    lineSelector,
+    activeMap,
+    zoomValue,
+    currentPage,
+    totalPage,
+    ready,
+    changeStroke,
+    changeHexColor,
+    mount,
+    unmount,
+    setTool,
+    zoomBoard,
+    setZoomScale,
+    changeFooterMenu,
+    updatePen,
+    setLaserPoint,
+    tools,
+    activeSceneName,
+    boardPenIsActive,
+    changeSceneItem,
+    room,
+    installTools,
+    revokeBoardPermission,
+    grantBoardPermission,
+    showBoardTool,
+    isBoardScreenShare,
+    boardConnectionState,
+    joinBoard,
+    leaveBoard,
+  } = useBoardStore();
 
-  const { courseWareList, downloadList, putSceneByResourceUuid, startDownload, deleteSingle, refreshState, resourcesList, removeMaterialList, cancelUpload, closeMaterial, personalResources, handleUpload, publicResources } = useBoardStore();
+  const {
+    courseWareList,
+    downloadList,
+    putSceneByResourceUuid,
+    startDownload,
+    deleteSingle,
+    refreshState,
+    resourcesList,
+    removeMaterialList,
+    cancelUpload,
+    closeMaterial,
+    personalResources,
+    handleUpload,
+    publicResources,
+  } = useBoardStore();
 
   const { startOrStopSharing } = useScreenShareContext();
 
@@ -376,7 +494,17 @@ export const useUserListContext = (): UserListContext => {
   const appStore = useCoreContext();
   const { isHost } = useSceneStore();
 
-  const { acceptedList: acceptedUserList, teacherInfo, rosterUserList, toggleWhiteboardPermission, toggleCamera, toggleMic, kick, roleToString, teacherAcceptHandsUp } = useSmallClassStore();
+  const {
+    acceptedList: acceptedUserList,
+    teacherInfo,
+    rosterUserList,
+    toggleWhiteboardPermission,
+    toggleCamera,
+    toggleMic,
+    kick,
+    roleToString,
+    teacherAcceptHandsUp,
+  } = useSmallClassStore();
 
   const { roomInfo } = appStore;
   const { sceneType, controlTools } = useSceneStore();
@@ -486,7 +614,9 @@ export const useVideoControlContext = (): VideoControlContext => {
 
   const onCameraClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      const targetStream = sceneStore.streamList.find(
+        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
+      );
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasVideo) {
@@ -501,7 +631,9 @@ export const useVideoControlContext = (): VideoControlContext => {
 
   const onMicClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      const targetStream = sceneStore.streamList.find(
+        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
+      );
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasAudio) {
@@ -586,7 +718,9 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
 
   const onCameraClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      const targetStream = sceneStore.streamList.find(
+        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
+      );
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasVideo) {
@@ -601,7 +735,9 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
 
   const onMicClick = useCallback(
     async (userUuid: any) => {
-      const targetStream = sceneStore.streamList.find((stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid);
+      const targetStream = sceneStore.streamList.find(
+        (stream: EduStream) => get(stream.userInfo, 'userUuid', 0) === userUuid,
+      );
       if (targetStream) {
         const isLocal = sceneStore.roomInfo.userUuid === userUuid;
         if (targetStream.hasAudio) {

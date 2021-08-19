@@ -25,32 +25,28 @@ export const StorageContainer = observer(() => {
       </TableHeader>
       <Table className="table-container" style={{ flex: 1, minHeight: 0 }}>
         {publicResources.length ? (
-          publicResources.map(
-            ({ id, name, date, updateTime, size, type }: any, idx: number) => (
-              <Row height={10} border={1} key={idx}>
-                <Col
-                  style={{ cursor: 'pointer', paddingLeft: 19 }}
-                  onClick={async () => {
-                    await openCloudResource(id);
-                  }}>
-                  <SvgImg type={type} style={{ marginRight: '6px' }} />
-                  <Inline className="filename" color="#191919" title={name}>
-                    {name}
-                  </Inline>
-                </Col>
-                <Col>
-                  <Inline color="#586376">{size}</Inline>
-                </Col>
-                <Col>
-                  <Inline color="#586376">
-                    {!!updateTime
-                      ? dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')
-                      : '- -'}
-                  </Inline>
-                </Col>
-              </Row>
-            ),
-          )
+          publicResources.map(({ id, name, date, updateTime, size, type }: any, idx: number) => (
+            <Row height={10} border={1} key={idx}>
+              <Col
+                style={{ cursor: 'pointer', paddingLeft: 19 }}
+                onClick={async () => {
+                  await openCloudResource(id);
+                }}>
+                <SvgImg type={type} style={{ marginRight: '6px' }} />
+                <Inline className="filename" color="#191919" title={name}>
+                  {name}
+                </Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">{size}</Inline>
+              </Col>
+              <Col>
+                <Inline color="#586376">
+                  {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss') : '- -'}
+                </Inline>
+              </Col>
+            </Row>
+          ))
         ) : (
           <Placeholder placeholderType="noFile" />
         )}

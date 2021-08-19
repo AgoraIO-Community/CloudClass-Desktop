@@ -1,10 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import {
-  Placeholder,
-  CameraPlaceHolder,
-  BoardPlaceHolder,
-} from '~components/placeholder';
+import { Placeholder, CameraPlaceHolder, BoardPlaceHolder } from '~components/placeholder';
 
 const meta: Meta = {
   title: 'Components/Placeholder',
@@ -42,11 +38,7 @@ export const Docs = ({ placeholderDesc }: DocsProps) => (
       />
     </div>
     <div className="mt-4">
-      <Placeholder
-        placeholderDesc={placeholderDesc}
-        placeholderType=""
-        backgroundColor="#F9F9FC"
-      />
+      <Placeholder placeholderDesc={placeholderDesc} placeholderType="" backgroundColor="#F9F9FC" />
     </div>
     <div className="mt-4">
       <CameraPlaceHolder state="disabled" />

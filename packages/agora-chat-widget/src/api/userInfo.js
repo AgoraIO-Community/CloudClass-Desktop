@@ -11,8 +11,7 @@ export const setUserInfo = () => {
   });
   const defaultAvatarUrl =
     'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png';
-  const userAvatarUrl =
-    store.getState().propsData.imAvatarUrl || defaultAvatarUrl;
+  const userAvatarUrl = store.getState().propsData.imAvatarUrl || defaultAvatarUrl;
   const userNickName = store.getState().propsData.userName;
   let options = {
     nickname: userNickName,

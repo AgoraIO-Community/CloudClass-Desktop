@@ -7,13 +7,7 @@ import './index.css';
 import { t } from '~components/i18n';
 import { SvgImg } from '~ui-kit';
 
-export type ZoomItemType =
-  | 'max'
-  | 'min'
-  | 'zoom-out'
-  | 'zoom-in'
-  | 'backward'
-  | 'forward';
+export type ZoomItemType = 'max' | 'min' | 'zoom-out' | 'zoom-in' | 'backward' | 'forward';
 
 export interface ZoomControllerProps extends BaseProps {
   zoomValue?: number;
