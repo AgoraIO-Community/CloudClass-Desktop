@@ -1307,6 +1307,8 @@ export class BoardStore extends ZoomController {
   @observable
   shape: string = 'pencil';
 
+  // TODO: setTool condition is loose structure, consider re-couple with room.setMemberState
+  // steps: re-structure and isolate ui state with biz state
   @action.bound
   setTool(tool: string) {
     if (!this.boardRoomIsAvailable) return;
