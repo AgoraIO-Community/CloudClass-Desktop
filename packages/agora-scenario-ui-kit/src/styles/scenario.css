@@ -3,11 +3,6 @@
   box-sizing: border-box;
 }
 
-.apaas-root-box {
-  height: 100vh;
-  overflow: hidden;
-}
-
 .layout-video {
   display: block;
 }
