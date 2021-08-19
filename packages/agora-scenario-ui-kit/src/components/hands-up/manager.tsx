@@ -191,7 +191,7 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
                 className="icon-wrap-svg checked"
               />
               <SvgImg
-                type="close"
+                type="refuse"
                 onClick={() => onClick('cancel', item)}
                 className="icon-wrap-svg"
               />

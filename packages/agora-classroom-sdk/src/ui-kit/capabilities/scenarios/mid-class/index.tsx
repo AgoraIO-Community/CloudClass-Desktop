@@ -30,6 +30,7 @@ import { ToastContainer } from '~capabilities/containers/toast';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { get } from 'lodash';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
+import { RootBox } from '~ui-kit';
 
 export const MidClassScenario = observer(() => {
   const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
@@ -75,52 +76,54 @@ export const MidClassScenario = observer(() => {
   const visible = userRole !== EduRoleTypeEnum.invisible;
 
   return (
-    <Layout className={cls} direction="col">
-      <NavigationBar />
-      <Layout className="layout-video">
-        <MidVideoMarqueeContainer />
-      </Layout>
-      <Layout className="horizontal">
-        <Content className="column">
-          <div className="board-box">
-            <WhiteboardContainer>
-              <ScreenSharePlayerContainer />
-            </WhiteboardContainer>
-          </div>
-          <div
+    <RootBox>
+      <Layout className={cls} direction="col">
+        <NavigationBar />
+        <Layout className="layout-video">
+          <MidVideoMarqueeContainer />
+        </Layout>
+        <Layout className="horizontal">
+          <Content className="column">
+            <div className="board-box">
+              <WhiteboardContainer>
+                <ScreenSharePlayerContainer />
+              </WhiteboardContainer>
+            </div>
+            <div
+              className={classnames({
+                'pin-right': 1,
+              })}
+              style={{ display: 'flex' }}>
+              <HandsUpContainer />
+            </div>
+          </Content>
+          <Aside
             className={classnames({
-              'pin-right': 1,
-            })}
-            style={{ display: 'flex' }}>
-            <HandsUpContainer />
-          </div>
-        </Content>
-        <Aside
-          className={classnames({
-            'mid-class-aside': 1,
-            'mid-class-aside-full-not-collapse': isFullScreen && !chatCollapse,
-            'mid-class-aside-full-collapse': isFullScreen && chatCollapse,
-          })}>
-          {chatroomId ? (
-            <Widget
-              key={chatroomId}
-              className="chat-panel"
-              widgetComponent={chatWidget}
-              widgetProps={{ chatroomId, orgName, appName }}
-            />
-          ) : (
-            <Widget
-              key={chatroomId}
-              className="chat-panel chat-border"
-              widgetComponent={chatWidget}
-            />
-          )}
-        </Aside>
+              'mid-class-aside': 1,
+              'mid-class-aside-full-not-collapse': isFullScreen && !chatCollapse,
+              'mid-class-aside-full-collapse': isFullScreen && chatCollapse,
+            })}>
+            {chatroomId ? (
+              <Widget
+                key={chatroomId}
+                className="chat-panel"
+                widgetComponent={chatWidget}
+                widgetProps={{ chatroomId, orgName, appName }}
+              />
+            ) : (
+              <Widget
+                key={chatroomId}
+                className="chat-panel chat-border"
+                widgetComponent={chatWidget}
+              />
+            )}
+          </Aside>
+        </Layout>
+        <LoadingPptContainer />
+        <DialogContainer />
+        <LoadingContainer loading={isJoiningRoom} />
+        {/* <ToastContainer /> */}
       </Layout>
-      <LoadingPptContainer />
-      <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom} />
-      {/* <ToastContainer /> */}
-    </Layout>
+    </RootBox>
   );
 });

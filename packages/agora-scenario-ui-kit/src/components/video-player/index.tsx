@@ -74,6 +74,10 @@ export interface BaseVideoPlayerProps {
    */
   hideStars?: boolean;
   /**
+   * 视频流类型 老师流 teacher 学生流 student
+   */
+  streamRoleType?: String;
+  /**
    * hover 时控制条 展示的位置
    */
   controlPlacement: 'top' | 'right' | 'bottom' | 'left';
@@ -204,6 +208,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   isLocal = false,
   isOnPodium = false,
   userType = 'student',
+  streamRoleType = 'teacher',
   micDevice = 1,
   cameraDevice = 1,
   onCameraClick,
@@ -377,6 +382,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       ) : null}
     </div>
   );
+  // 老师和助教视角需要显示数量，学生视角必须>0;
+  const isShowStarNum =
+    (stars > 0 || ['teacher', 'assistant'].includes(userType)) && streamRoleType !== 'teacher';
   return (
     <Popover
       // trigger={'click'} // 调试使用
@@ -404,7 +412,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             ))
           : ''}
         <div className="top-right-info">
-          {stars > 0 ? (
+          {isShowStarNum ? (
             <>
               <SvgImg className="stars" type="star" canHover />
               <span className="stars-label">x{stars}</span>
@@ -609,6 +617,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" ref={attachVideoItem}>
             {teacherStreams[0] && (
               <VideoPlayer
+                streamRoleType="teacher"
                 hideStars={hideStars}
                 {...teacherStreams[0]}
                 userType={userType}
@@ -648,6 +657,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                 classNames="video-player-animates">
                 <div className="video-item" key={idx} ref={attachVideoItem}>
                   <VideoPlayer
+                    streamRoleType="student"
                     hideStars={hideStars}
                     {...videoStream}
                     // showGranted={true}

@@ -454,6 +454,11 @@ export const Docs = ({ size, fill }: DocsProps) => (
         <SvgImg type={'placeholder-no-search'} size={size} />
         <p>placeholder-no-search</p>
       </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'refuse'} size={size} />
+        <p>refuse</p>
+      </div>
     </div>
   </>
 );
