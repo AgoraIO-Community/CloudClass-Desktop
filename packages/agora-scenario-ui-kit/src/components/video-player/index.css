@@ -395,6 +395,9 @@
   justify-content: center;
   gap: 4px;
 }
+.big-class .marque-video-container {
+  justify-content: left;
+}
 
 .video-list .video-player {
   /* width: 200px; */

@@ -267,7 +267,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
   const { eduRole2UIRole } = useUIStore();
 
   return videoStreamList.length ? (
-    <div className="video-marquee-pin">
+    <div className="video-marquee-pin big-class">
       <VideoMarqueeList
         teacherStreams={[]}
         hideStars={sceneType === 2}
