@@ -163,7 +163,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
-    startNativeScreenShareBy
+    startNativeScreenShareBy,
+    sharing
   } = useSceneStore()
 
   const {
@@ -180,7 +181,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     isScreenSharing: isShareScreen,
     customScreenSharePickerType,
     startNativeScreenShareBy,
-    canSharingScreen
+    canSharingScreen,
+    isSharing: sharing
   }
 }
 
