@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
+import { CSSTransition }  from 'react-transition-group'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
 import { propsAction, isShowChat } from './redux/actions/propsAction'
@@ -14,7 +15,7 @@ import _ from 'lodash'
 import { Chat } from './components/Chat'
 import { message } from 'antd'
 import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants'
-import showChat_icon from './themes/img/chat.png'
+import showChat_icon from './themes/img/chat.svg'
 import './App.css'
 import 'antd/dist/antd.css'
 
@@ -181,24 +182,32 @@ const App = function (props) {
   }
 
   return (
-    <div>
+    <CSSTransition
+      in={showChat}       
+      timeout={500}
+      classNames="collapse"
+    >
+      <>
       {showChat ?
-        <div className="app">
-          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-        </div> :
-        <div className="chat">
-          <div className="show-chat-icon" onClick={() => {
-            // 展开聊天
-            props.onReceivedMsg && props.onReceivedMsg({
-              isShowChat: true
-            })
-            onChangeModal()
-          }}>
-            <img src={showChat_icon} />
-            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
+          <div className="app w-full">
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
           </div>
-        </div>}
-    </div >
+         :
+          <div className="chat">
+            <div className="show-chat-icon" onClick={() => {
+              // 展开聊天
+              props.onReceivedMsg && props.onReceivedMsg({
+                isShowChat: true
+              })
+              onChangeModal()
+            }}>
+              <img src={showChat_icon} alt="" />
+              {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
+            </div>
+          </div>
+        }
+      </>
+    </CSSTransition>
   );
 }
 export default App;

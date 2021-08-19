@@ -299,6 +299,9 @@ export class MediaStore {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
     this.mediaService.on('track-ended', (evt: any) => {
+      if(evt.resource === 'screen') {
+        this.appStore.sceneStore.stopWebSharing()
+      }
       if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
         this.appStore.pretestStore.cameraRenderer.stop()
         this.appStore.pretestStore.resetCameraTrack()

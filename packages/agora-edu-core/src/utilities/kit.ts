@@ -9,6 +9,7 @@ import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
+import { WindowManager } from '@netless/window-manager';
 
 const OSS_PREFIX = '';
 
@@ -322,8 +323,9 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
 
 }
 
-export const netlessInsertImageOperation = async (room: Room, imageFile: NetlessImageFile) => {
-  const {x, y} = await room.convertToPointInWorld({x: imageFile.coordinateX, y: imageFile.coordinateY})
+export const netlessInsertImageOperation = async (room: Room, windowManager: WindowManager, imageFile: NetlessImageFile) => {
+  const {x, y} = await windowManager.mainView.convertToPointInWorld({x: imageFile.coordinateX, y: imageFile.coordinateY})
+  windowManager.switchMainViewToWriter()
   room.insertImage({
     uuid: imageFile.uuid,
     centerX: x,
@@ -343,7 +345,8 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
+export const netlessInsertVideoOperation = (room: Room, windowManager: WindowManager, file: NetlessMediaFile, mimeType: string) => {
+  windowManager.switchMainViewToWriter()
   room.insertPlugin(
     PluginId,
     {
@@ -360,7 +363,8 @@ export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, 
   )
 }
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
+export const netlessInsertAudioOperation = (room: Room, windowManager: WindowManager, file: NetlessMediaFile, mimeType: string) => {
+  windowManager.switchMainViewToWriter()
   room.insertPlugin(
     PluginId,
     {

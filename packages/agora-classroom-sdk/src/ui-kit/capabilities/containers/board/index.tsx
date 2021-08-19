@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import classnames from 'classnames'
 import { useUIStore } from '@/infra/hooks'
 import "video.js/dist/video-js.css";
+import "@netless/window-manager/dist/style.css";
 
 export const allTools: ToolItem[] = [
   {
@@ -54,11 +55,11 @@ export const allTools: ToolItem[] = [
       return <ColorsContainer {...props} />
     }
   },
-  {
-    value: 'blank-page',
-    label: 'scaffold.blank_page',
-    icon: 'blank-page'
-  },
+  // {
+  //   value: 'blank-page',
+  //   label: 'scaffold.blank_page',
+  //   icon: 'blank-page'
+  // },
   {
     value: 'hand',
     label: 'scaffold.move',
@@ -243,7 +244,8 @@ export const WhiteboardContainer = observer(({ children }: any) => {
     installTools(allTools)
   }, [allTools])
 
-  const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+  // const showTab = roomInfo.userRole === EduRoleTypeEnum.student ? false : true
+  const showTab = false;
 
   const [showToolBar, showZoomControl] = showBoardTool
 
@@ -307,14 +309,14 @@ export const WhiteboardContainer = observer(({ children }: any) => {
               defaultOpened={roomInfo.userRole === EduRoleTypeEnum.student ? false : true}
             />
             : null}
-          {showZoomControl ? <ZoomController
+          {/* {showZoomControl ? <ZoomController
             className='zoom-position'
             zoomValue={zoomValue}
             currentPage={currentPage}
             totalPage={totalPage}
             maximum={!isFullScreen}
             clickHandler={handleZoomControllerChange}
-          /> : null}
+          /> : null} */}
         </>
       ) : (
         <BoardPlaceHolder 

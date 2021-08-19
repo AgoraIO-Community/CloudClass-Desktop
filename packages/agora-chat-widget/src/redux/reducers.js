@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { CHAT_TABS_KEYS } from '../contants'
 let defaultState = {
     propsData: {},          // props 值
-    showChat: true,          // 控制Chat
+    showChat: false,          // 控制Chat
     isLogin: false,         // 登陆状态
     loginUser: '',          // 当前登陆ID
     loginUserInfo: {},      // 当前登陆账号的用户属性

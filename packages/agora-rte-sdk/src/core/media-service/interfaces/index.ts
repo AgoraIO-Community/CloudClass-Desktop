@@ -219,6 +219,7 @@ export declare interface StartScreenShareParams {
     joinInfo?: string
   }
   encoderConfig?: any
+  onTrackEnded?: (...args: any[]) => void
 }
 
 export type JoinOption = {

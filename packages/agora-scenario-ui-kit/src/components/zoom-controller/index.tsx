@@ -39,7 +39,7 @@ export const ZoomController: FC<ZoomControllerProps> = ({
     const fontColor = '#7B88A0';
     return (
         <div className={cls} {...restProps}>
-            { maximum ?
+            {/* { maximum ?
                 <Tooltip title={t('tool.fullScreen')} placement="top">
                     <Icon type="max" size={fontSize} color={fontColor} onClick={() => clickHandler('max')} />
                 </Tooltip>
@@ -47,7 +47,7 @@ export const ZoomController: FC<ZoomControllerProps> = ({
                 <Tooltip title={t('tool.reduction')} placement="top">
                     <Icon type="min" size={fontSize} color={fontColor} onClick={() => clickHandler('min')} />
                 </Tooltip>
-            }
+            } */}
             <Tooltip title={t('tool.zoomOut')} placement="top">
                 <Icon type="zoom-out" size={fontSize} color={fontColor} onClick={() => clickHandler('zoom-out')} />
             </Tooltip>

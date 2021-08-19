@@ -286,6 +286,19 @@ export const VideoMarqueeStudentContainer = observer(() => {
   )
 })
 
+const useFixedAspectRatio = () => {
+  const { baseSizeRatio, windowSize } = useUIStore()
+
+  const gap = baseSizeRatio * 8
+
+  return {
+    gap,
+    minVideoWidth: windowSize.width / 7 - gap,
+    animSize: { width: baseSizeRatio * 200, height: baseSizeRatio * 200 },
+    windowSize
+  }
+}
+
 export const MidVideoMarqueeContainer = observer(() => {
 
   const {
@@ -432,11 +445,16 @@ export const MidVideoMarqueeContainer = observer(() => {
   // const {
   //   teacherStream,
   // } = useTeacherVideoPlayerContext()
+  const { gap, minVideoWidth, animSize, windowSize } = useFixedAspectRatio()
 
   return (
     videoStreamList.length || teacherVideoList.length ? 
       <div className="video-marquee-pin">
         <VideoMarqueeList
+          videoWidth={`calc(${windowSize.width / 7}px - ${gap}px)`}
+          gap={gap}
+          minVideoWidth={minVideoWidth}
+          rewardAnimSize={animSize}
           openCarousel={!!roomProperties.carousel?.state}
           teacherStreams={teacherVideoList.length ? teacherVideoList : []}
           hideStars={sceneType === 2}
