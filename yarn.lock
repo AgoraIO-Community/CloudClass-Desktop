@@ -10752,10 +10752,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-websdk@^3.6.0:
+easemob-websdk@3.6.3:
   version "3.6.3"
-  resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
-  integrity sha1-CHQaowYj/jbb2h8YEAG7cxJOBnY=
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
+  integrity sha512-6sdbcQyHt1GVoYZhXAX+ZyxhHKZl3Pwiu6oLYM7L5F+w5aJy/nCSuFYO30oVzH/kg5dt93+VgNcpGvj5VVspoQ==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

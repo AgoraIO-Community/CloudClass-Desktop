@@ -1,10 +1,4 @@
-import React, {
-  EventHandler,
-  FC,
-  ReactEventHandler,
-  SyntheticEvent,
-  useCallback,
-} from 'react';
+import React, { EventHandler, FC, ReactEventHandler, SyntheticEvent, useCallback } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
 import { IconTypes } from './icon-types';
@@ -113,38 +107,20 @@ const getIconInfo = (type: string) => {
   return mapping[type];
 };
 
-export type FormatIconType =
-  | 'ppt'
-  | 'word'
-  | 'excel'
-  | 'audio'
-  | 'video'
-  | 'pdf'
-  | 'image'
-  | 'h5';
+export type FormatIconType = 'ppt' | 'word' | 'excel' | 'audio' | 'video' | 'pdf' | 'image' | 'h5';
 
 export interface IconBoxProps extends BaseProps {
   iconType: FormatIconType;
 }
 
-export const IconBox: FC<IconBoxProps> = ({
-  style,
-  iconType,
-  ...restProps
-}) => {
+export const IconBox: FC<IconBoxProps> = ({ style, iconType, ...restProps }) => {
   if (iconType === 'h5') {
     return <SvgIcon type="h5" {...restProps} />;
   }
 
   const color = getIconInfo(iconType);
   const type = `format-${iconType}` as IconTypes;
-  return (
-    <SvgImg
-      style={Object.assign({}, style, { color })}
-      type={type}
-      {...restProps}
-    />
-  );
+  return <SvgImg style={Object.assign({}, style, { color })} type={type} {...restProps} />;
 };
 
 export type SvgIconProps = {
@@ -157,11 +133,7 @@ const svgIconTable = {
   h5: IconH5,
 };
 
-export const SvgIcon: React.FC<SvgIconProps> = ({
-  type,
-  onClick,
-  ...restProps
-}) => {
+export const SvgIcon: React.FC<SvgIconProps> = ({ type, onClick, ...restProps }) => {
   const cls = classnames({
     [`svg-icon`]: true,
     ['resource-type']: ['h5'].includes(type),
@@ -345,6 +317,7 @@ export const MediaIcon = ({
 }: MediaIconProps) => {
   const cls = classnames({
     [`rtc-state-${state}`]: 1,
+    [`can-hover`]: hover,
     [`${className ? className : ''}`]: !!className,
   });
 
@@ -354,10 +327,7 @@ export const MediaIcon = ({
       camera: 'camera-off',
     },
     available: {
-      microphone:
-        !!streamState === true
-          ? 'microphone-on-outline'
-          : 'microphone-off-outline',
+      microphone: !!streamState === true ? 'microphone-on-outline' : 'microphone-off-outline',
       camera: !!streamState === true ? 'camera' : 'camera-off',
     },
     'not-permitted': {
@@ -395,8 +365,7 @@ export const MediaIcon = ({
         // 'false': 'Open Microphone',
         'not-available': 'Microphone Not Available',
         'not-permitted': 'Microphone Not Available',
-        available:
-          streamState === true ? 'Close Microphone' : 'Open Microphone',
+        available: streamState === true ? 'Close Microphone' : 'Open Microphone',
       },
     };
     const title = transI18n(text[type][`${state}`]);
@@ -405,9 +374,7 @@ export const MediaIcon = ({
       return <span>{title}</span>;
     }, [title]);
     return (
-      <Tooltip
-        overlay={<OverLayView />}
-        placement={`${placement}` as TooltipPlacement}>
+      <Tooltip overlay={<OverLayView />} placement={`${placement}` as TooltipPlacement}>
         <span>
           <SvgImg
             className={cls}
@@ -421,12 +388,5 @@ export const MediaIcon = ({
     );
   }
 
-  return (
-    <SvgImg
-      className={cls}
-      type={mapType[state][type]}
-      size={22}
-      onClick={onClick}
-    />
-  );
+  return <SvgImg className={cls} type={mapType[state][type]} size={22} onClick={onClick} />;
 };
