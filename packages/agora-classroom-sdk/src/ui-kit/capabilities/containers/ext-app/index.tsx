@@ -4,9 +4,10 @@ import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-cor
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
-import { Modal, transI18n } from '~ui-kit'
+import { Modal } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
+import "./index.css"
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
@@ -60,6 +61,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               onCancel={onCancel} 
               closable={closable}
               header={app.customHeader}
+              className='extapp-modal'
             >
                 <div ref={ref} style={{transition: '.5s'}}>
                 </div>
@@ -76,7 +78,7 @@ export const AppPluginContainer = observer(() => {
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
         <AppPluginItem 
-          key={app.appIdentifier} 
+          key={app.appIdentifier}
           app={app} 
           properties={appPluginProperties(app)} 
           closable={closable}
