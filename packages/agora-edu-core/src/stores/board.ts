@@ -1076,7 +1076,7 @@ export class BoardStore extends ZoomController {
       } else if (state === 'connected') {
         // 重连成功后老师重新设置白板的模式
         if (identity === 'host') {
-          this.room.setViewMode(ViewMode.Broadcaster);
+          this.room?.setViewMode(ViewMode.Broadcaster);
         }
       }
     });
