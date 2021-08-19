@@ -140,6 +140,17 @@ export class AgoraEduCoreSDK {
         mainPath = globalConfigs.routesMap.pretestPath;
       }
 
+      // TODO: find better way to handle default widgets
+      if (option.widgets) {
+        if (!option.widgets.chat) {
+          option.widgets.chat = ChatWidgetFactory(option.region!);
+        }
+      } else {
+        option.widgets = {
+          chat: ChatWidgetFactory(option.region!),
+        };
+      }
+
       const params = {
         config: {
           rtcArea: globalConfigs.sdkArea.rtcArea,
@@ -164,12 +175,7 @@ export class AgoraEduCoreSDK {
           rtmToken: option.rtmToken,
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
-          widgets: Object.assign(
-            {
-              chat: ChatWidgetFactory(option.region!),
-            },
-            option.widgets,
-          ),
+          widgets: option.widgets,
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
         },
