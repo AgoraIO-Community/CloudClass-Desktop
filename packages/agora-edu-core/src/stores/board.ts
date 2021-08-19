@@ -24,7 +24,7 @@ import {
 } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
-import { transDataToResource } from '../services/upload-service';
+import { MaterialDataResource, transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
 import { DownloadFileStatus, StorageCourseWareItem } from '../types';
 import { BoardClient } from '../utilities/board-client';
@@ -1206,12 +1206,6 @@ export class BoardStore extends ZoomController {
     return false;
   }
 
-  syncLocalPersonalCourseWareList() {
-    this.room.setGlobalState({
-      materialList: this.internalResources.map(transformMaterialList),
-    });
-  }
-
   resetBoardPath() {
     this.removeScreenShareScene();
   }
@@ -2095,9 +2089,10 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   async putCourseResource(resourceUuid: string) {
-    const resource: any = this.allResources.find((it: any) => it.id === resourceUuid);
+    const resource = this.allResources.find((it: any) => it.id === resourceUuid);
     if (resource) {
-      const scenes = resource.scenes;
+      const scenes = resource.scenes!;
+      const firstPath = scenes[0].name;
       this.updateBoardSceneItems(
         {
           scenes,
@@ -2116,8 +2111,8 @@ export class BoardStore extends ZoomController {
           [`${resourceUuid}`]: {
             contextPath: `/${resource.id}/`,
             index: 0,
-            sceneName: resource.scenes[0].name,
-            scenePath: `/${resource.id}/${resource.scenes[0].name}`,
+            sceneName: firstPath,
+            scenePath: `/${resource.id}/${firstPath}`,
             totalPage: scenes.length,
             resourceName: resource.name,
             resourceUuid: resourceUuid,
@@ -2125,12 +2120,28 @@ export class BoardStore extends ZoomController {
           },
         },
       });
+      this.addMaterial({
+        resourceName: resource.name,
+        resourceUuid,
+        ext: resource.ext,
+        url: resource.url,
+        conversion: {
+          type: '',
+        },
+        size: +resource.size,
+        updateTime: resource.updateTime,
+        scenes: resource.scenes as SceneDefinition[],
+        convert: true,
+        taskUuid: resource.taskUuid,
+        taskToken: '',
+        taskProgress: resource.taskProgress,
+      });
       const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`];
       if (sceneExists) {
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`);
+        this.room.setScenePath(`/${resource.id}/${firstPath}`);
       } else {
-        this.room.putScenes(`/${resource.id}`, resource.scenes);
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`);
+        this.room.putScenes(`/${resource.id}`, scenes);
+        this.room.setScenePath(`/${resource.id}/${firstPath}`);
       }
     }
   }
@@ -2350,6 +2361,20 @@ export class BoardStore extends ZoomController {
     });
   }
 
+  addMaterial(resourceRecord: CourseWareItem) {
+    const materialList = this.globalState?.materialList ?? [];
+    this.room.setGlobalState({
+      materialList: uniqBy(
+        materialList.concat([
+          {
+            ...resourceRecord,
+          },
+        ]),
+        'resourceUuid',
+      ),
+    });
+  }
+
   @action.bound
   async handleUpload(payload: any) {
     try {
@@ -2367,17 +2392,7 @@ export class BoardStore extends ZoomController {
       if (this.isCancel) {
         return;
       }
-      const materialList = this.globalState?.materialList ?? [];
-      this.room.setGlobalState({
-        materialList: uniqBy(
-          materialList.concat([
-            {
-              ...res,
-            } as CourseWareItem,
-          ]),
-          'resourceUuid',
-        ),
-      });
+      this.addMaterial(res as CourseWareItem);
       this.fileLoading = false;
     } catch (err) {
       console.error(err);

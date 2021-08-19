@@ -347,7 +347,7 @@ export class UploadService extends ApiBase {
 
     const ossConfig = fetchResult.data;
     const vendor = ossConfig.vendor;
-    let result;
+    let result: unknown = null;
     if (vendor === 1) {
       // aws
       result = await this.handleUploadByAWS(ossConfig, payload);
@@ -355,7 +355,7 @@ export class UploadService extends ApiBase {
       // ali
       result = await this.handleUploadByAli(ossConfig, payload);
     }
-    return result;
+    return result as CourseWareUploadResult;
   }
 
   async handleUploadByAli(ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
@@ -475,7 +475,7 @@ export class UploadService extends ApiBase {
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: uploadResult.taskUuid,
-      };
+      } as CourseWareUploadResult;
     } else {
       const uploadResult = await this.addFileToOss(
         this.ossClient,
@@ -742,7 +742,7 @@ export class UploadService extends ApiBase {
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: uploadResult.taskUuid,
-      };
+      } as CourseWareUploadResult;
     } else {
       const uploadResult: any = await this.addFileToAWS(
         payload.file,
