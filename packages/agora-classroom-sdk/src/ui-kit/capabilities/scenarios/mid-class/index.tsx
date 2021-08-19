@@ -39,20 +39,17 @@ const useFixedAspectRatio = (aspectRatio: number, minimumSize: typeof _minimumSi
     
     const recalculateDimension = () => {
       const curAspectRatio = window.innerHeight / window.innerWidth
+
+      const windowSize = { height: window.innerHeight, width: window.innerWidth }
       
       if(curAspectRatio > aspectRatio) {
         // shrink height
-        checkAndUpdate({
-          height: window.innerWidth * aspectRatio,
-          width: window.innerWidth
-        })
+        windowSize.height = window.innerWidth * aspectRatio;
       } else if(curAspectRatio < aspectRatio) {
         // shrink width
-        checkAndUpdate({
-          height: window.innerHeight,
-          width: window.innerHeight / aspectRatio
-        })
+        windowSize.width = window.innerHeight / aspectRatio
       }
+      checkAndUpdate(windowSize)
     }
 
     recalculateDimension()

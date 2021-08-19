@@ -814,7 +814,6 @@ export class SceneStore extends SimpleInterval {
         token: this.roomManager?.userService.screenStream.token,
         encoderConfig
       }
-      this.mediaService.on('track-ended', this.stopWebSharing)
       await this.mediaService.startScreenShare({
         params
       })
