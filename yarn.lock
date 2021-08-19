@@ -1625,11 +1625,6 @@
     gud "^1.0.0"
     warning "^4.0.3"
 
-"@hyrious/xml-js@1.6.14":
-  version "1.6.14"
-  resolved "https://registry.yarnpkg.com/@hyrious/xml-js/-/xml-js-1.6.14.tgz#82685fb5063f9d3d15b82802acad75bac45cf2c5"
-  integrity sha512-+B2nG+ORK9ympbaw5GKDFJWyHKZVFvNfIWl2nq3wiYnnvEVuMLZQzIzz7hx1nJIi5C9MODr3NVUEenu/O/Sxbg==
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.nlark.com/@istanbuljs/load-nyc-config/download/@istanbuljs/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -2618,10 +2613,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-docs-viewer@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.9.tgz#867c9161f9ba5943df8f6707bc87d42e9ee2347e"
-  integrity sha512-ztXj5IE8WeqeRyp1EY/NaZHatjWdZQsdndOr+LscVJICO8pFNrmdpXipbL+HQqj28r4Lq22SbLta4tXwCJCzWQ==
+"@netless/app-docs-viewer@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.10.tgz#0023639618d7820c043b907ea9e2104be6518c34"
+  integrity sha512-TTlfdmVZ9BIdunCqRyU/+0nKXAV9JW936h6qCI6j5knZ0UlIa+oyTg3AvBVD4BsjYCaVOfW4zQg2LFfY2KH7TQ==
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
@@ -2661,10 +2656,10 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.5.tgz#facb6fc40b9049f7c48b71344c4ff14f1e9fde1b"
-  integrity sha512-JzVS5bS+x/dujv/srchANKsIKmAzC19vay1s102iuF+HqWZfiBgEWpzK05NLRsvJRWo9qI6ZwHfptes+OEadsg==
+"@netless/telebox-insider@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.6.tgz#b0f9bef7fbf78a20fbc04f4d55bca35c99e2cf44"
+  integrity sha512-CFK1c/hYdqJqYFuaqrxguTeYHfsVA8T9ABs0jpkB6d97QjIZmol6eeT2Qx7n/c8A0JuP/wdLJb9A/QH7mHgj0Q==
   dependencies:
     eventemitter3 "^4.0.7"
     stylefire "^7.0.3"
@@ -2694,18 +2689,23 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.11.tgz#3c6db52b5c2b31a9dd2c4e547e97b14e7f944f54"
-  integrity sha512-bWS87th4l0CO/MFLUQRbLtcPanx05hynXcoP9UXoiMK1ZxJADp5lRAb9+b71VXGGUmOIfE9gjyiryU4bC3f4Og==
+"@netless/window-manager@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.12.tgz#ac9d5a97cd667969b0ea2ee6eab6311a68010862"
+  integrity sha512-GS+BdjcagmL4ONjzoPjxwriGJzhH0w0bFTMLt+zLObXdyWmqjoVloYMn6m/vc4VfCAsZvJoW+BKZ2RVWw+wfdg==
   dependencies:
-    "@netless/app-docs-viewer" "^0.1.9"
-    "@netless/telebox-insider" "^0.1.5"
+    "@netless/app-docs-viewer" "^0.1.10"
+    "@netless/telebox-insider" "^0.1.6"
     emittery "^0.9.2"
     localforage "^1.9.0"
     lodash-es "^4.17.21"
     react "^17.0.2"
     react-dom "^17.0.2"
+
+"@netless/xml-js@1.6.15":
+  version "1.6.15"
+  resolved "https://registry.yarnpkg.com/@netless/xml-js/-/xml-js-1.6.15.tgz#46516d547b21149bcca732bb199d664791b3240a"
+  integrity sha512-e0emMs7YtDB/ATUns1SJ61R9n9nfVvwwFodoc539Qt0ScksaCLCaFWgpEbLloj9sr60ry6Xd8QFHKULFIZB6zA==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -26149,13 +26149,13 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.16:
-  version "2.13.16"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.16.tgz#ec83ad622d017adeb6641bb7e8b9f7bd35a5edf5"
-  integrity sha512-Kc4K16Sr0v8wskap8aQHDAzaEv2ArOc5Apc0GNj4Oq+ZeOdMldNtNZH6CU5mGLtCf3CnC3REGRg2gyM1GlICow==
+white-web-sdk@2.13.17:
+  version "2.13.17"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.17.tgz#db120727a44668bc4657bf9f9f37f13751a5c289"
+  integrity sha512-maTRDflywNh8jcNcfk7yZndzuKQfSADHMEjcNZiNeiuYYPcXzRv3tAjXBZfR0jBoZ/Mdml5ZeGiGvifh6ZLobQ==
   dependencies:
-    "@hyrious/xml-js" "1.6.14"
     "@netless/canvas-polyfill" "^0.0.4"
+    "@netless/xml-js" "1.6.15"
     atob "^2.1.2"
     bezier-js "^2.4.4"
     color "^3.1.0"

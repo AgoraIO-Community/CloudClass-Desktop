@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
 import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-core'
+import { useUIStore } from '@/infra/hooks'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
@@ -76,10 +77,23 @@ export const AppPluginContainer = observer(() => {
   const {activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo} = useAppPluginContext()
   const {roomInfo} = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
-  console.log("render ext apps", activeAppPlugins);
+
+  const { activePluginId } = useUIStore()
+
+  let activePlugin: IAgoraExtApp | null = null
+  // pick out currently active plugin, and remove from plugin list
+  const appPlugins = Array.from(activeAppPlugins.values()).filter((plugin) => {
+    if(plugin.appIdentifier === activePluginId) {
+      activePlugin = plugin
+    }
+    return plugin.appIdentifier !== activePluginId
+  })
+  // put active plugin at last of the plugin list so that it will be renered on most top layer
+  activePlugin && appPlugins.push(activePlugin)
+
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10}}>
-      {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
+      {appPlugins.map((app: IAgoraExtApp, idx: number) => 
         <AppPluginItem 
           key={app.appIdentifier}
           app={app} 
