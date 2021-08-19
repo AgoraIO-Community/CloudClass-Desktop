@@ -31,3 +31,4 @@ export * from 'react-draggable';
 export * from './input';
 export * from './countdown';
 export * from './svg-img';
+export * from './root-box';
