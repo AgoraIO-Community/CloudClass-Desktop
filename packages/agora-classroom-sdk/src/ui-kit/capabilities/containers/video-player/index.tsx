@@ -300,6 +300,8 @@ export const MidVideoMarqueeContainer = observer(() => {
 
   const { isHost, controlTools } = useUserListContext();
 
+  const { isMirror } = usePretestContext();
+
   const firstStudentStream = studentStreams[0];
 
   const videoStreamList = useMemo(() => {
@@ -318,6 +320,8 @@ export const MidVideoMarqueeContainer = observer(() => {
       hasStream: stream.hasStream,
       online: stream.online,
       isLocal: stream.isLocal,
+      // TODO: isMirror is consider as part of camera model state in future refactor plain.
+      isMirror: stream.isLocal ? isMirror : false,
       isOnPodium: stream.onPodium,
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
@@ -342,7 +346,14 @@ export const MidVideoMarqueeContainer = observer(() => {
         </>
       ),
     }));
-  }, [firstStudentStream, studentStreams, isHost, controlTools.includes(ControlTool.offPodium)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    firstStudentStream,
+    studentStreams,
+    isHost,
+    isMirror,
+    controlTools.includes(ControlTool.offPodium),
+  ]);
 
   const { onStartPrivateChat, onStopPrivateChat, inPrivateConversation } = usePrivateChatContext();
 
@@ -376,6 +387,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       micDevice: stream.micDevice,
       cameraDevice: stream.cameraDevice,
       isLocal: stream.isLocal,
+      isMirror: stream.isLocal ? isMirror : false,
       online: stream.online,
       isOnPodium: stream.onPodium,
       hasStream: stream.hasStream,
@@ -409,6 +421,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       ),
     }));
   }, [
+    isMirror,
     userStream,
     userStream.online,
     onOffAllPodiumClick,
