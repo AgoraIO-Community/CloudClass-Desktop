@@ -1338,6 +1338,7 @@ export class BoardStore extends ZoomController {
       case ApplianceNames.ellipse:
       case ApplianceNames.straight:
       case ApplianceNames.arrow:
+      case ApplianceNames.laserPointer:
       case ApplianceNames.selector: {
         const room = this.room;
         if (room.isWritable) {
@@ -1359,6 +1360,7 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.arrow]: 'arrow',
             [ApplianceNames.selector]: 'selection',
             [ApplianceNames.clicker]: 'clicker',
+            [ApplianceNames.laserPointer]: 'laser',
           };
 
           if (tool === 'color') {
