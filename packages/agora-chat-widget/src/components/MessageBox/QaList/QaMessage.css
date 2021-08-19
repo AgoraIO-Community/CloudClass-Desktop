@@ -36,9 +36,9 @@
     border-radius: 50%;
     margin-top: 5px;
     width: 28px;
-    height: 28px !important;
-    margin: auto !important;
-
+    height: 28px;
+    margin: auto;
+    object-fit: cover;
 }
 
 .qa-msg-img {
@@ -54,6 +54,7 @@
     background: #B2E0FF;
     border-radius: 50%;
     margin-right: 8px;
+    object-fit: cover;
 }
 
 .msg-sender {

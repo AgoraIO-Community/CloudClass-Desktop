@@ -72,7 +72,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                             {/* 是否禁言的状态标志 */}
                             {!(message.ext.role === 1 || message.ext.role === 3) && <img className="mute-status"
                                 src={iconForbid}
-                                style={{ display: !roomMuteList.includes(message.from) ? 'none' : 'block' }}></img>}
+                                style={{ display: !roomMuteList.includes(message.from) ? 'none' : 'block' }} alt=""></img>}
                         </div>
                         <Flex flexDirection="column" className="flex-1">
                             <Flex alignItems="center">
@@ -88,16 +88,16 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                                         {!roomMuteList.includes(message.from) ? (
                                             message.ext.role === 2
                                             && <RcTooltip placement="top" overlay="禁言">
-                                                <img src={iconMute} className='message-tool-icon' onClick={() => { onSetMute(message) }} />
+                                                <img src={iconMute} className='message-tool-icon' onClick={() => { onSetMute(message) }} alt="" />
                                             </RcTooltip>
                                         ) : (
                                             message.ext.role === 2
                                             && <RcTooltip placement="top" overlay="解除禁言">
-                                                <img src={iconChat} className='message-tool-icon' onClick={() => { onRemoveMute(message) }} />
+                                                <img src={iconChat} className='message-tool-icon' onClick={() => { onRemoveMute(message) }} alt="" />
                                             </RcTooltip>
                                         )}
                                         <RcTooltip placement="top" overlay="删除消息">
-                                            <img src={iconDelete} className='message-tool-icon' onClick={() => { openModal(message.id) }} />
+                                            <img src={iconDelete} className='message-tool-icon' onClick={() => { openModal(message.id) }} alt="" />
                                         </RcTooltip>
                                     </>
                                 }

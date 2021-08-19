@@ -378,3 +378,20 @@
     line-height: 18px;
     margin-right: 8px;
 }
+
+.ReactModalPortal {
+    position: absolute;
+    z-index: 10;
+}
+
+body > .app {
+    -webkit-app-region: drag;
+} 
+
+body > .app > .notice {
+    margin-top: 28px;
+    -webkit-app-region: no-drag;
+}
+body > .app > .message {
+    -webkit-app-region: no-drag;
+}

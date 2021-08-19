@@ -12,7 +12,7 @@ import MessageBox from './components/MessageBox/MessageList'
 import { CHAT_TABS_KEYS, ROOM_PAGESIZE } from './components/MessageBox/constants'
 import { _onCustomMsg } from './api/message'
 import { message } from 'antd'
-import { Loading, Card } from '~ui-kit'
+// import { Loading, Card } from '~ui-kit'
 import { getLoginRetryCount, getJoinRetryCount, setLoginRetryCount, setJoinRetryCount } from './api/retryCount'
 import _ from 'lodash'
 
@@ -33,6 +33,7 @@ const App = function (props) {
   useEffect(() => {
     let stateListnerFuc = (loginState, joinRoomState) => {
       if (loginState === 'not_login') {
+        console.log('loginRetryCount>>>', getLoginRetryCount());
         if (getLoginRetryCount() < 0) {
           Message.error('登录失败，请刷新重试')
           setTimeout(() => {
@@ -118,6 +119,17 @@ const App = function (props) {
           const { ext: { msgtype, asker } } = message
           const { time } = message
           if (msgtype === 0) {
+
+            // 触发发送弹幕事件
+            document.dispatchEvent(
+              new CustomEvent("pushBarrage", {
+                detail: {
+                  avatarUrl: message.ext.avatarUrl,
+                  data: message.sourceMsg
+                }
+              })
+            );
+
             store.dispatch(roomMessages(message, { showNotice: store.getState().activeKey !== CHAT_TABS_KEYS.chat, isHistory: false }))
           } else if ([1, 2].includes(msgtype)) {
             store.dispatch(qaMessages(message, asker, { showNotice: true, isHistory: false }, time))
@@ -127,7 +139,9 @@ const App = function (props) {
       // 异常回调
       onError: (message) => {
         console.log('onError', message);
-        if (message.type === 16) return
+        if (message.type === 16) {
+          return
+        }
         const type = JSON.parse(_.get(message, 'data.data')).error_description;
         const resetName = store.getState().extData.userUuid;
         if (message.type === 1 || message.type === 3) {
@@ -199,11 +213,31 @@ const App = function (props) {
           case 'rmUserFromChatRoomWhiteList':
             getRoomWhileList(message.gid);
             store.dispatch(userMute(false))
+
+            // 触发改变禁言状态事件
+            document.dispatchEvent(
+              new CustomEvent("im_changeMutedState", {
+                detail: {
+                  type: 'user',
+                  status: false
+                }
+              })
+            )
             break;
           // 增加聊天室白名单成员
           case 'addUserToChatRoomWhiteList':
             getRoomWhileList(message.gid);
             store.dispatch(userMute(true))
+
+            // 触发改变禁言状态事件
+            document.dispatchEvent(
+              new CustomEvent("im_changeMutedState", {
+                detail: {
+                  type: 'user',
+                  status: true
+                }
+              })
+            )
             break;
           default:
             break;
@@ -236,10 +270,17 @@ const App = function (props) {
 
   return (
     <>
-      {joinRoomState === 'join_the_success' && <div className="app">
-        <Notice isEdit={isEditNotice} isEditNoticeChange={isEditNoticeChange} />
-        {isEditNotice === 0 && (<MessageBox activeKey={activeKey} />)}
-      </div>}
+      {joinRoomState === 'join_the_success'
+        && <div className="app">
+          <Notice isEdit={isEditNotice} isEditNoticeChange={isEditNoticeChange} />
+          {isEditNotice === 0 && (<MessageBox activeKey={activeKey} />)}
+        </div>
+        // <div>
+        //   <Card width={90} height={90}>
+        //     <Loading></Loading>
+        //   </Card>
+        // </div>
+      }
     </>
 
   );

@@ -68,9 +68,7 @@ const QaUserList = ({ getClickUser }) => {
                                 return (
                                     <RcTooltip placement="right" overlay={_.get(roomListInfo[user.id], 'nickname')} key={k}>
                                         <Flex onClick={() => getUser(user.id)}  className="qa-user-list" m="6px" style={{ backgroundColor: currentUser === user.id ? "#2D3340" : "transparent" }}>
-                                        <Image src={_.get(roomListInfo[user.id], 'avatarurl') || avatarUrl}
-                                            className="qa-user-image"
-                                        />
+                                        <img src={_.get(roomListInfo[user.id], 'avatarurl') || avatarUrl} className="qa-user-image" alt=""/>
                                         {qaList[user.id].showRedNotice && (
                                             <div className='qa-red-notice'></div>
                                         )}

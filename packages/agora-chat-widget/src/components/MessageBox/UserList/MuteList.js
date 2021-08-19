@@ -25,7 +25,7 @@ const MuteList = ({ roomListInfo, muteMembers, onSetMute,searchUser }) => {
                     return <Flex className="user-item" justifyContent='space-between' alignItems='center' mt='16px' key={key}>
                         <Flex alignItems='center'>
                             <div className='list-user-box'>
-                                <Image src={(_.get(roomListInfo[member], 'avatarurl',avatarUrl))} className='list-user-img' />
+                                <img src={(_.get(roomListInfo[member], 'avatarurl',avatarUrl))} className='list-user-img' alt=""/>
                                 <Image className='list-user-forbid'
                                     src={forbid}
                                 />
@@ -36,10 +36,11 @@ const MuteList = ({ roomListInfo, muteMembers, onSetMute,searchUser }) => {
                         <RcTooltip placement="top" overlay={muteMembers.includes(_.get(roomListInfo[member], 'id')) ? '解除禁言' : '禁言'} >
                             <div className='voice-img-box'>
                                 <img
-                                className='voice-img'
-                                title="禁言"
-                                src={muteMembers.includes(_.get(roomListInfo[member], 'id'))? voiceNo : voiceOff}
-                                onClick={onSetMute(_.get(roomListInfo[member], 'id'))}
+                                    className='voice-img'
+                                    title="禁言"
+                                    src={muteMembers.includes(_.get(roomListInfo[member], 'id'))? voiceNo : voiceOff}
+                                    onClick={onSetMute(_.get(roomListInfo[member], 'id'))}
+                                    alt=""
                                 />
                             </div>
                         </RcTooltip>

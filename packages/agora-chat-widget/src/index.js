@@ -6,7 +6,7 @@ import App from './App';
 import WebIM from '../src/utils/WebIM'
 import { MemoryRouter } from 'react-router-dom'
 import { logoutChatroom } from './api/chatroom'
-import { _sendCustomMsg } from './api/message'
+import { _sendCustomMsg, _sendTextMsg } from './api/message'
 import { registerMsgCallback } from './redux/aciton'
 
 import './index.css'
@@ -51,3 +51,34 @@ export const sendCustomMsg = (option) => {
 export const addCustomMsgListener = (callback) => {
     store.dispatch(registerMsgCallback(callback))
 }
+
+// 发送文本消息
+export const sendTextMsg = (content, roomUuid, roleType, avatarUrl, nickName, successCallback, failCallback) => {
+    _sendTextMsg(content, roomUuid, roleType, avatarUrl, nickName, successCallback, failCallback)
+}
+
+
+// -------------------------------------------------------------------------------------------------
+
+// /**
+//  * electron客户端状态管理工具 electron-json-storage
+//  * 先获取userId，进行拼接，用于获取json-storage的文件路径 
+//  * 
+//  */
+// const userId = new URLSearchParams(window.location.search).get('userId');
+// console.log('====URLSearchParams userId >>>', window.location, userId);
+
+// const electronJsonStorage = window.electronJsonStorage
+
+// // 设置electron-json-storage存储路径
+// electronJsonStorage.setDataPath(window.path.join(window.electronJsonStorageFilePath, userId?.toString()));
+
+// // 同步获取 electron-json-storage 状态数据
+// let electronJsonStorage_data = electronJsonStorage.getSync('imProps')
+
+// console.log('========imProps', electronJsonStorage_data);
+
+// renderHXChatRoom(document.getElementsByTagName("body")[0], {
+//     props: electronJsonStorage_data
+// })
+

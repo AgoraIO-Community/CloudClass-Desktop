@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { Flex, Image, Text } from 'rebass'
 import { useState, useEffect } from 'react'
 import { Tag } from 'antd'
-import scrollElementToBottom from '../../../utils/scrollElementToBottom'
+import { scrollElementToBottom, scrollIsBottom } from '../../../utils/scrollElementToBottom'
 import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import { dateFormat } from '../../../utils';
@@ -44,7 +44,7 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
 
     return (
         <div className="student-qa-list" id="qa-box-tag">
-            {/* {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(true) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦~</div>)} */}
+            {/* {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(true) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦</div>)} */}
             {
                 idQaList ? (
                     qaList[userName]?.msg.map((message, index) => {
