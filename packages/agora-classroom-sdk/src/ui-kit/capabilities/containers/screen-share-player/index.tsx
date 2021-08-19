@@ -1,33 +1,33 @@
 import { observer } from 'mobx-react'
 import { RendererPlayer } from '~utilities/renderer-player'
-// import { IconButton, Icon } from '~ui-kit'
-// import { useCallback } from 'react'
-import { useBoardContext, useScreenShareContext } from 'agora-edu-core'
-import { Icon, IconButton } from '~ui-kit'
-import { useCallback } from 'react'
+import classNames from 'classnames'
+import { useRoomContext, useScreenShareContext } from 'agora-edu-core'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 export const ScreenSharePlayerContainer = observer(() => {
 
     const {
         screenShareStream,
-        screenEduStream,
-        startOrStopSharing,
         isSharing
     } = useScreenShareContext()
+
+    const { roomInfo } = useRoomContext()
 
     // const {
     //     isCurrentScenePathScreenShare
     // } = useBoardContext()
 
-    const onClick = useCallback(async () => {
-        await startOrStopSharing()
-    }, [startOrStopSharing])
-    
+    console.log("roomInfo.userRole !== EduRoleTypeEnum.teacher", roomInfo.userRole !== EduRoleTypeEnum.teacher)
+
+    const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
+
     return (
-        isSharing ? <div className="screen-share-player-container">
-            {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""}
+        isSharing ? <div className={classNames({
+            "screen-share-player-container": 1,
+            [isTeacher ? "z-0" : "z-50"]: 1
+        })}>
             {
-                  screenShareStream && screenShareStream.renderer ?
+                  screenShareStream && screenShareStream.renderer && !isTeacher ?
                     <RendererPlayer
                         fitMode={true}
                         key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''}

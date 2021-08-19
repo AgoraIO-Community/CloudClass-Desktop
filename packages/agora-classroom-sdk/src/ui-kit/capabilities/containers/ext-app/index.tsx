@@ -8,6 +8,7 @@ import { Modal } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
 import "./index.css"
+import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
@@ -49,7 +50,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     // const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
-          defaultClassName="extapp-draggable-container"
+          defaultClassName="extapp-draggable-container fixed"
           handle=".modal-title" 
           defaultPosition={{x: window.innerWidth / 2 - app.width / 2 , y: window.innerHeight / 2 - app.height / 2}} 
           bounds={'body'}
@@ -62,6 +63,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               closable={closable}
               header={app.customHeader}
               className='extapp-modal'
+              closeIcon={<CloseIcon />}
             >
                 <div ref={ref} style={{transition: '.5s'}}>
                 </div>
@@ -74,6 +76,7 @@ export const AppPluginContainer = observer(() => {
   const {activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo} = useAppPluginContext()
   const {roomInfo} = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
+  console.log("render ext apps", activeAppPlugins);
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10}}>
       {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
