@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef } from 'react'
 import { IAgoraExtApp, useAppPluginContext, useRoomContext } from 'agora-edu-core'
+import { useUIStore } from '@/infra/hooks'
 import Draggable from 'react-draggable'
 import { Dependencies } from './dependencies'
 import { eduSDKApi } from 'agora-edu-core';
@@ -8,6 +9,7 @@ import { Modal } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
 import "./index.css"
+import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
 
 export const AppPluginItem = observer(({app, properties, closable, onCancel} : {app:IAgoraExtApp, properties: any, closable: boolean, onCancel: any}) => {
@@ -49,7 +51,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
     // const { studentStreams } = useSmallClassVideoControlContext()
     return (
         <Draggable 
-          defaultClassName="extapp-draggable-container"
+          defaultClassName="extapp-draggable-container fixed"
           handle=".modal-title" 
           defaultPosition={{x: window.innerWidth / 2 - app.width / 2 , y: window.innerHeight / 2 - app.height / 2}} 
           bounds={'body'}
@@ -62,6 +64,7 @@ export const AppPluginItem = observer(({app, properties, closable, onCancel} : {
               closable={closable}
               header={app.customHeader}
               className='extapp-modal'
+              closeIcon={<CloseIcon />}
             >
                 <div ref={ref} style={{transition: '.5s'}}>
                 </div>
@@ -74,9 +77,23 @@ export const AppPluginContainer = observer(() => {
   const {activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo} = useAppPluginContext()
   const {roomInfo} = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
+
+  const { activePluginId } = useUIStore()
+
+  let activePlugin: IAgoraExtApp | null = null
+  // pick out currently active plugin, and remove from plugin list
+  const appPlugins = Array.from(activeAppPlugins.values()).filter((plugin) => {
+    if(plugin.appIdentifier === activePluginId) {
+      activePlugin = plugin
+    }
+    return plugin.appIdentifier !== activePluginId
+  })
+  // put active plugin at last of the plugin list so that it will be renered on most top layer
+  activePlugin && appPlugins.push(activePlugin)
+
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10}}>
-      {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => 
+      {appPlugins.map((app: IAgoraExtApp, idx: number) => 
         <AppPluginItem 
           key={app.appIdentifier}
           app={app} 

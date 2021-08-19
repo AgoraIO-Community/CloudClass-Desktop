@@ -780,6 +780,30 @@ export class MediaService extends EventEmitter implements IMediaService {
     return 100;
   }
 
+  async setRtcRole(roleType: 'host' | 'audience') {
+    if (this.isElectron) {
+      if (roleType === 'host') {
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRole(1);
+      } else {
+        (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRole(2);
+      }
+    } else {
+      if (roleType === 'host') {
+        (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
+      } else {
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole(
+          'audience'
+        );
+      }
+    }
+  }
+
   reset(): void {
     if (this.isWeb) {
       this.web.reset()
