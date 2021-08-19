@@ -1248,6 +1248,7 @@ export class RoomStore extends SimpleInterval {
             const tag = uuidv4()
             BizLogger.info(`[demo] tag: ${tag}, [${Date.now()}], handle event: local-stream-removed, `, JSON.stringify(evt))
             if (evt.type === 'main') {
+              await this.appStore.mediaService.setRtcRole('audience');
               this.sceneStore._cameraEduStream = undefined
               await this.sceneStore.muteLocalCamera()
               await this.sceneStore.muteLocalMicrophone()
@@ -1284,6 +1285,7 @@ export class RoomStore extends SimpleInterval {
             if (this.isAssistant) {
               return
             }
+            await this.appStore.mediaService.setRtcRole('host');
             const localStream = roomManager.getLocalStreamData()
             BizLogger.info(`[demo] local-stream-updated tag: ${tag}, time: ${Date.now()} local-stream-updated, main stream `, JSON.stringify(localStream), this.sceneStore.joiningRTC)
             const causeCmd = cause?.cmd ?? 0
