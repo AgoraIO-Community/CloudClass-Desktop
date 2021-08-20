@@ -323,6 +323,7 @@
   height: 100%;
   align-items: center;
   flex-direction: column;
+  z-index: 200;
 }
 
 .agora-board-resources .tabs {
@@ -459,4 +460,9 @@
 
 .extapp-draggable-container .modal-title .icon-close {
   font-size: 18px;
+}
+
+/* fix that loading not centerd on screen */
+.mid-class-container .page-loading {
+  left: 0;
 }

@@ -292,7 +292,7 @@ export const WhiteboardContainer = observer(({ children }: any) => {
         <>
           {showTab ?
             <TabsContainer /> : null}
-          <div className="board-section flex justify-center">
+          <div className="board-section">
             {children}
             {
               ready ?

@@ -74,7 +74,7 @@ export const TextMsg = ({ item }) => {
                     <Dropdown overlay={menu} trigger={['contextMenu']}>
                         <div className="msg-border">
                             <div className="msg-text msg-text-me">
-                                <span style={{letterSpacing:'1px'}}>{msgData}</span>
+                                <span>{msgData}</span>
                             </div>
                         </div>
                     </Dropdown>
@@ -91,7 +91,7 @@ export const TextMsg = ({ item }) => {
                         <>
                             <Dropdown overlay={menu} trigger={['contextMenu']}>
                                 <div className="msg-text msg-text-other">
-                                    <span style={{letterSpacing:'1px'}}>{msgData}</span>
+                                    <span>{msgData}</span>
                                 </div>
                             </Dropdown>
                         </>

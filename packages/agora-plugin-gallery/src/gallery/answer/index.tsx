@@ -126,6 +126,7 @@ const Clock = ({ app }: { app: AgoraExtAppAnswer }) => {
   
   useEffect(() => {
     const disposer = observe(app.clockWatchProps, ({name, newValue} : any) => {
+      console.log('reset current time', newValue);
       if(name === 'currentTime') {
         setClockTime(newValue)
       }

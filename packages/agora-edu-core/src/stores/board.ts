@@ -6,7 +6,8 @@ import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
 import { BuildinApps, WindowManager } from '@netless/window-manager';
-import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase } from 'white-web-sdk';
+
+import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase, autorun } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
 import { reportService } from '../services/report';
 import { transDataToResource } from '../services/upload-service';
@@ -26,11 +27,12 @@ import { BizLogger,
 import { ZoomController } from './zoom';
 import { screenSharePath } from '../constants';
 import { eduSDKApi } from '../services/edu-sdk-api';
-import { Resource } from '../context/type';
+import { Point, Resource } from '../context/type';
 import { reportServiceV2 } from '../services/report-v2';
 import MD5 from 'js-md5';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PagingOptions } from '../services/clouddrive-api';
+
 
 // TODO: 需要解耦，属于UI层的类型，场景SDK业务里不应该出现
 export interface ToolItem {
@@ -50,6 +52,7 @@ export type CustomizeGlobalState = {
   grantUsers: string[];
   follow: boolean;
   isFullScreen: boolean;
+  extAppMoveTracks: any[]
 }
 
 export type GlobalRoomScene = {
@@ -226,6 +229,8 @@ export class BoardStore extends ZoomController {
 
   globalState$: BehaviorSubject<any> = new BehaviorSubject<any>(null)
 
+  extensionAppPositionState$: BehaviorSubject<any> = new BehaviorSubject<any>(null)
+
   @observable
   showExtension: boolean = false;
 
@@ -274,7 +279,6 @@ export class BoardStore extends ZoomController {
 
   windowManager?: WindowManager
 
-  windowAppIds: string[] = []
   @computed
   get boardClient(): BoardClient {
     return this._boardClient as BoardClient;
@@ -460,6 +464,25 @@ export class BoardStore extends ZoomController {
     } else {
       throw GenericErrorWrapper(`try to setWhiteGlobalState while room is not connected`)
     }
+  }
+
+  @action.bound
+  syncAppPosition(appId: string, position: Point & { userId: string }) {
+    // console.log("syncAppPosition", {
+    //   extAppMoveTracks: {
+    //     ...(this.room.state.globalState as any).extAppMoveTracks,
+    //     [appId]: position
+    //   }
+    // })
+    
+    console.log("send sync data", appId, position);
+    this.room.setGlobalState({
+      extAppMoveTracks: {
+        ...(this.room.state.globalState as any).extAppMoveTracks,
+        [appId]: position
+      }
+    })
+    // console.log("after send sync data", appId, position);
   }
 
   @action.bound
@@ -1051,6 +1074,15 @@ export class BoardStore extends ZoomController {
       if (state.globalState && state.globalState.flexBoardState) {
         this.globalState$.next(state.globalState.flexBoardState)
       }
+      
+      if(state.globalState && state.globalState.extAppMoveTracks) {
+        this.extensionAppPositionState$.next(state.globalState.extAppMoveTracks)
+        // work around
+        // setTimeout(() => {
+        //   console.log("update state", (this.room.state.globalState as any).extAppMoveTracks)
+        //   this.extensionAppPositionState$.next({...(this.room.state.globalState as any).extAppMoveTracks})
+        // }, 100)
+      }
     })
     BizLogger.info("[breakout board] join", data)
     const cursorAdapter = new CursorTool(); //新版鼠标追踪
@@ -1156,7 +1188,6 @@ export class BoardStore extends ZoomController {
         EduLogger.info("board leave error ", GenericErrorWrapper(err))
       }
       // this.room.bindHtmlElement(null)
-      this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
       this.windowManager?.destroy()
       this.reset()
     }
@@ -1807,7 +1838,7 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = null
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(null)
-      this.windowManager?.destroy()
+      // this.windowManager?.destroy()
     }
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()
@@ -1889,6 +1920,8 @@ export class BoardStore extends ZoomController {
     return this.room.state.globalState as CustomizeGlobalState
   }
 
+  
+
   @action.bound
   async removeMaterialList(resourceUuids: string[]) {
     try {
@@ -1936,19 +1969,20 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
-
       this.room.putScenes(`/${resource.id}`, resource.scenes as SceneDefinition[])
 
-      const appId = await this.windowManager?.addApp({
+      this.windowManager?.addApp({
         kind: BuildinApps.DocsViewer,
         options: {
             scenePath: `/${resource.id}`,
-            title: resource.name,
-            scenes
+            title: resource.name
+        },
+        attributes: {
+            pages: scenes,
+            dynamic: isDynamicRes
         }
       });
 
-      appId && this.windowAppIds.unshift(appId)
     }
   }
 
