@@ -580,11 +580,18 @@ export type RoomContext = {
    * @version v1.1.2
    */
   flexRoomProperties: any;
-  setCarouselState: any;
   /**
    * startCarousel
    */
-  startCarousel: () => Promise<any>;
+  startCarousel: ({
+    range,
+    type,
+    interval,
+  }: {
+    range: number;
+    type: number;
+    interval: number;
+  }) => Promise<any>;
   /**
    * stopCarousel
    */

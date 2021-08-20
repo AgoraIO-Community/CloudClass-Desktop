@@ -2355,17 +2355,20 @@ export class RoomStore extends SimpleInterval {
   }
 
   @action.bound
-  setCarouselState(key: 'state' | 'type' | 'range' | 'interval', value: any) {
-    this.roomProperties.carousel[key] = value;
-  }
-
-  @action.bound
-  async startCarousel() {
+  async startCarousel({
+    range,
+    type,
+    interval,
+  }: {
+    range: number;
+    type: number;
+    interval: number;
+  }) {
     await eduSDKApi.startCarousel({
       roomUuid: this.roomInfo.roomUuid,
-      range: this.roomProperties.carousel.range,
-      type: this.roomProperties.carousel.type,
-      interval: this.roomProperties.carousel.interval,
+      range,
+      type,
+      interval,
       count: 6,
     });
   }

@@ -13,9 +13,10 @@ import { EduRoleTypeEnum, EduStream, EduUser } from 'agora-edu-core';
 import { get } from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Roster } from '~ui-kit';
 import { StudentRoster } from '~ui-kit/components';
+import { useDebounce } from '~ui-kit/utilities/hooks';
 import { KickDialog } from '../../dialog';
 
 export type UserListContainerProps = {
@@ -38,7 +39,6 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     // unmuteUserChat,
     roomInfo,
     roomProperties,
-    setCarouselState,
     startCarousel,
     stopCarousel,
   } = useRoomContext();
@@ -148,46 +148,63 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     return 'student';
   }, [roomInfo.userRole]);
 
-  const debouncedCarousel: any = useMemo(() => {
-    return {
-      state: roomProperties.carousel.state || 0,
-      range: roomProperties.carousel.range || 1,
-      type: roomProperties.carousel.type || 1,
-      interval:
-        roomProperties.carousel.interval === undefined ? 10 : roomProperties.carousel.interval,
-    };
-  }, [JSON.stringify(roomProperties.carousel, ['state', 'range', 'type', 'interval'])]);
+  const [carouselProps, setCarouselProps] = useState({
+    state: roomProperties.carousel?.state || 0,
+    range: roomProperties.carousel?.range || 1,
+    type: roomProperties.carousel?.type || 1,
+    interval:
+      roomProperties.carousel.interval === undefined ? 10 : roomProperties.carousel.interval,
+  });
 
-  useWatch(JSON.stringify(debouncedCarousel, ['state', 'range', 'type', 'interval']), (prev) => {
+  const debouncedCarousel = useDebounce(carouselProps, 500);
+
+  useEffect(() => {
     if (debouncedCarousel.state) {
       if (debouncedCarousel.interval === 0) return;
       const interval = debouncedCarousel.interval ?? 10;
-      interval >= 10 && startCarousel();
+      interval >= 10 &&
+        startCarousel({
+          range: debouncedCarousel.range,
+          type: debouncedCarousel.type,
+          interval: debouncedCarousel.interval,
+        });
     } else {
       stopCarousel();
     }
-  });
+  }, [debouncedCarousel]);
 
   return (
     <Roster
       isDraggable={true}
       carousel={userType === 'teacher'}
       carouselProps={{
-        isOpenCarousel: roomProperties.carousel?.state,
+        isOpenCarousel: carouselProps.state,
         changeCarousel: (e: any) => {
-          setCarouselState('state', Number(e.target.checked));
+          setCarouselProps({
+            ...carouselProps,
+            state: e.target.checked,
+          });
         },
-        modeValue: roomProperties.carousel?.range || 1,
+        modeValue: carouselProps.range,
         changeModeValue: (value: any) => {
-          setCarouselState('range', value);
+          setCarouselProps({
+            ...carouselProps,
+            range: value,
+          });
         },
-        randomValue: roomProperties.carousel?.type || 1,
+        randomValue: carouselProps.type,
         changeRandomValue: (value: any) => {
-          setCarouselState('type', value);
+          setCarouselProps({
+            ...carouselProps,
+            type: value,
+          });
         },
-        times: roomProperties.carousel?.interval || 10,
+        times: carouselProps.interval,
         changeTimes: (value: any) => {
-          setCarouselState('interval', Number(value));
+          setCarouselProps({
+            ...carouselProps,
+            interval: +value,
+          });
         },
       }}
       localUserUuid={localUserInfo.userUuid}
