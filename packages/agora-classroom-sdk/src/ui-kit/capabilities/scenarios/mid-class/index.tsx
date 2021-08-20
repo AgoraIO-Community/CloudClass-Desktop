@@ -176,7 +176,7 @@ export const MidClassScenario = observer(() => {
       className={cls}
       direction="col"
     >
-      <div className="flex flex-col" style={containerStyle}>
+      <div className="mid-class-container flex flex-col" style={containerStyle}>
         <NavigationBar />
         <Layout className="layout layout-row layout-video flex-grow">
           <MidVideoMarqueeContainer />

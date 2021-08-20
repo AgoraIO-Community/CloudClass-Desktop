@@ -446,3 +446,23 @@
   position: absolute;
   bottom: 0;
 }
+
+.extapp-draggable-container .modal-title {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+}
+
+.extapp-draggable-container .modal-header-slot,
+.extapp-draggable-container .modal-title-text {
+  font-size: 13px;
+}
+
+.extapp-draggable-container .modal-title .icon-close {
+  font-size: 18px;
+}
+
+/* fix that loading not centerd on screen */
+.mid-class-container .page-loading {
+  left: 0;
+}

@@ -38,6 +38,7 @@ export interface IAgoraExtApp {
   extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle): void
   extAppRoomPropertiesDidUpdate(properties:any, cause: any): void
   extAppWillUnload(): void
+  remoteSynchronized?: boolean
 }
 
 export type AgoraWidgetUserInfo = {
