@@ -1131,6 +1131,7 @@ export class SceneStore extends SimpleInterval {
   @observable
   clientRole: number = 2;
 
+  @action.bound
   async setRTCClientRole(role: number) {
     await this.mediaService.setClientRole(role)
     if (this.isElectron) {
