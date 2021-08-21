@@ -146,4 +146,12 @@ export class UIStore {
     }
     return "student"
   }
+
+  @observable
+  activePluginId?: string
+
+  @action.bound
+  activePlugin(appId: string) {
+    this.activePluginId = appId
+  }
 }
