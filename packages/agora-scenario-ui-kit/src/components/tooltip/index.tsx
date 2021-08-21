@@ -237,6 +237,9 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
   return (
     <RcTooltip
       {...props}
+      align={{
+        offset: [30, 0]
+      }}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
       getTooltipContainer={getPopupContainer || getTooltipContainer}

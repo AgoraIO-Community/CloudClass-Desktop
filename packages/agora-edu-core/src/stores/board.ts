@@ -279,6 +279,7 @@ export class BoardStore extends ZoomController {
 
   windowManager?: WindowManager
 
+  windowAppIds: string[] = []
   @computed
   get boardClient(): BoardClient {
     return this._boardClient as BoardClient;
@@ -1188,6 +1189,7 @@ export class BoardStore extends ZoomController {
         EduLogger.info("board leave error ", GenericErrorWrapper(err))
       }
       // this.room.bindHtmlElement(null)
+      this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
       this.windowManager?.destroy()
       this.reset()
     }
@@ -1969,20 +1971,19 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
+
       this.room.putScenes(`/${resource.id}`, resource.scenes as SceneDefinition[])
 
-      this.windowManager?.addApp({
+      const appId = await this.windowManager?.addApp({
         kind: BuildinApps.DocsViewer,
         options: {
             scenePath: `/${resource.id}`,
-            title: resource.name
-        },
-        attributes: {
-            pages: scenes,
-            dynamic: isDynamicRes
+            title: resource.name,
+            scenes
         }
       });
 
+      appId && this.windowAppIds.unshift(appId)
     }
   }
 

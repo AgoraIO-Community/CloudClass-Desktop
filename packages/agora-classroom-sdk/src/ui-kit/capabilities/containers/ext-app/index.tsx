@@ -9,9 +9,8 @@ import { Modal } from '~ui-kit'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
 import "./index.css"
+import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
-import CloseIcon  from './close-icon'
-
 
 const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string }) => {
   const { windowSize } = useUIStore()

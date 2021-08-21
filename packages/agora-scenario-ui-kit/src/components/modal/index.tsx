@@ -52,6 +52,7 @@ export const Modal: ModalType = React.forwardRef<HTMLDivElement, ModalProps>(
     maskClosable,
     btnId,
     header,
+    closeIcon,
     ...restProps
 }, ref) => {
 
@@ -83,7 +84,9 @@ export const Modal: ModalType = React.forwardRef<HTMLDivElement, ModalProps>(
                             {title}
                         </div>
                         {header && <div className="modal-header-slot">{header}</div>}
-                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#586376" size={20}/></div>) : ""}
+                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}>
+                            {closeIcon || <Icon type="close" color="#586376" size={20}/>}
+                        </div>) : ""}
                     </>
                 ) : null}
                 {modalType === 'back' ? (

@@ -1625,11 +1625,6 @@
     gud "^1.0.0"
     warning "^4.0.3"
 
-"@hyrious/xml-js@1.6.14":
-  version "1.6.14"
-  resolved "https://registry.yarnpkg.com/@hyrious/xml-js/-/xml-js-1.6.14.tgz#82685fb5063f9d3d15b82802acad75bac45cf2c5"
-  integrity sha512-+B2nG+ORK9ympbaw5GKDFJWyHKZVFvNfIWl2nq3wiYnnvEVuMLZQzIzz7hx1nJIi5C9MODr3NVUEenu/O/Sxbg==
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.nlark.com/@istanbuljs/load-nyc-config/download/@istanbuljs/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -2618,10 +2613,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-docs-viewer@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.5.tgz#fc407a841d653f7ba70874f8911edf3e49e28c94"
-  integrity sha512-e3XJV1wM2hppvmUg1ZabS7lMqj1hCXA/2Nk6Mz/P0Qns1o9l2Xlrwtjea3fAIZeMpjo5OMYeVXYUjlweOm+TJw==
+"@netless/app-docs-viewer@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.10.tgz#0023639618d7820c043b907ea9e2104be6518c34"
+  integrity sha512-TTlfdmVZ9BIdunCqRyU/+0nKXAV9JW936h6qCI6j5knZ0UlIa+oyTg3AvBVD4BsjYCaVOfW4zQg2LFfY2KH7TQ==
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
@@ -2661,12 +2656,13 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.1.tgz#40e82fca89fe496b3ee41a6594097f5d1d1e445d"
-  integrity sha512-6itWF0gRDOY49uXW1EtpwhVOD6iM0g4FWQhVsVo8w/cJFDtv8lBonAh3aPyDEo8/TYnPMjt987PuZOGVyWe9/A==
+"@netless/telebox-insider@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.6.tgz#b0f9bef7fbf78a20fbc04f4d55bca35c99e2cf44"
+  integrity sha512-CFK1c/hYdqJqYFuaqrxguTeYHfsVA8T9ABs0jpkB6d97QjIZmol6eeT2Qx7n/c8A0JuP/wdLJb9A/QH7mHgj0Q==
   dependencies:
     eventemitter3 "^4.0.7"
+    stylefire "^7.0.3"
 
 "@netless/video-js-plugin@0.3.2":
   version "0.3.2"
@@ -2693,18 +2689,23 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.6-canary.1":
-  version "0.1.6-canary.1"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.6-canary.1.tgz#7fc44a4374913f0df4525c0b711531f974914bd6"
-  integrity sha512-hN5QHEnB3aIqKvN1/kVhO1tqfB6Y/MDrxuNJxEJxcG/QppyBWEKGyv7IFRRopYqIxtPxo5kTfYWtIPf3CwSiqg==
+"@netless/window-manager@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.12.tgz#ac9d5a97cd667969b0ea2ee6eab6311a68010862"
+  integrity sha512-GS+BdjcagmL4ONjzoPjxwriGJzhH0w0bFTMLt+zLObXdyWmqjoVloYMn6m/vc4VfCAsZvJoW+BKZ2RVWw+wfdg==
   dependencies:
-    "@netless/app-docs-viewer" "^0.1.5"
-    "@netless/telebox-insider" "^0.1.1"
+    "@netless/app-docs-viewer" "^0.1.10"
+    "@netless/telebox-insider" "^0.1.6"
     emittery "^0.9.2"
     localforage "^1.9.0"
     lodash-es "^4.17.21"
     react "^17.0.2"
     react-dom "^17.0.2"
+
+"@netless/xml-js@1.6.15":
+  version "1.6.15"
+  resolved "https://registry.yarnpkg.com/@netless/xml-js/-/xml-js-1.6.15.tgz#46516d547b21149bcca732bb199d664791b3240a"
+  integrity sha512-e0emMs7YtDB/ATUns1SJ61R9n9nfVvwwFodoc539Qt0ScksaCLCaFWgpEbLloj9sr60ry6Xd8QFHKULFIZB6zA==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -2898,6 +2899,22 @@
   version "1.0.0-next.15"
   resolved "https://registry.nlark.com/@polka/url/download/@polka/url-1.0.0-next.15.tgz#6a9d143f7f4f49db2d782f9e1c8839a29b43ae23"
   integrity sha1-ap0UP39PSdsteC+eHIg5optDriM=
+
+"@popmotion/easing@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@popmotion/easing/-/easing-1.0.2.tgz#17d925c45b4bf44189e5a38038d149df42d8c0b4"
+  integrity sha512-IkdW0TNmRnWTeWI7aGQIVDbKXPWHVEYdGgd5ZR4SH/Ty/61p63jCjrPxX1XrR7IGkl08bjhJROStD7j+RKgoIw==
+
+"@popmotion/popcorn@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@popmotion/popcorn/-/popcorn-0.4.4.tgz#a5f906fccdff84526e3fcb892712d7d8a98d6adc"
+  integrity sha512-jYO/8319fKoNLMlY4ZJPiPu8Ea8occYwRZhxpaNn/kZsK4QG2E7XFlXZMJBsTWDw7I1i0uaqyC4zn1nwEezLzg==
+  dependencies:
+    "@popmotion/easing" "^1.0.1"
+    framesync "^4.0.1"
+    hey-listen "^1.0.8"
+    style-value-types "^3.1.7"
+    tslib "^1.10.0"
 
 "@popperjs/core@^2.5.4", "@popperjs/core@^2.6.0":
   version "2.9.2"
@@ -12031,6 +12048,13 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
+framesync@^4.0.0, framesync@^4.0.1:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/framesync/-/framesync-4.1.0.tgz#69a8db3ca432dc70d6a76ba882684a1497ef068a"
+  integrity sha512-MmgZ4wCoeVxNbx2xp5hN/zPDCbLSKiDt4BbbslK7j/pM2lg5S0vhTNv1v8BCVb99JPIo6hXBFdwzU7Q4qcAaoQ==
+  dependencies:
+    hey-listen "^1.0.5"
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.npm.taobao.org/fresh/download/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -13009,6 +13033,11 @@ hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/hex-color-regex/download/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
+
+hey-listen@^1.0.5, hey-listen@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
+  integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
 
 highlight.js@^10.1.1, highlight.js@^10.2.0, highlight.js@~10.7.0:
   version "10.7.3"
@@ -23768,6 +23797,14 @@ style-to-object@0.3.0, style-to-object@^0.3.0:
   dependencies:
     inline-style-parser "0.1.1"
 
+style-value-types@^3.1.7:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.2.0.tgz#eb89cab1340823fa7876f3e289d29d99c92111bb"
+  integrity sha512-ih0mGsrYYmVvdDi++/66O6BaQPRPRMQHoZevNNdMMcPlP/cH28Rnfsqf1UEba/Bwfuw9T8BmIMwbGdzsPwQKrQ==
+  dependencies:
+    hey-listen "^1.0.8"
+    tslib "^1.10.0"
+
 styled-components@5.2.1:
   version "5.2.1"
   resolved "https://registry.nlark.com/styled-components/download/styled-components-5.2.1.tgz?cache=0&sync_timestamp=1620181747695&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fstyled-components%2Fdownload%2Fstyled-components-5.2.1.tgz#6ed7fad2dc233825f64c719ffbdedd84ad79101a"
@@ -23802,6 +23839,17 @@ styled-system@^5.0.0, styled-system@^5.1.5:
     "@styled-system/typography" "^5.1.2"
     "@styled-system/variant" "^5.1.5"
     object-assign "^4.1.1"
+
+stylefire@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/stylefire/-/stylefire-7.0.3.tgz#9120ecbb084111788e0ddaa04074799750f20d1d"
+  integrity sha512-Q0l7NSeFz/OkX+o6/7Zg3VZxSAZeQzQpYomWmIpOehFM/rJNMSLVX5fgg6Q48ut2ETNKwdhm97mPNU643EBCoQ==
+  dependencies:
+    "@popmotion/popcorn" "^0.4.4"
+    framesync "^4.0.0"
+    hey-listen "^1.0.8"
+    style-value-types "^3.1.7"
+    tslib "^1.10.0"
 
 stylehacks@^4.0.0:
   version "4.0.3"
@@ -26101,13 +26149,13 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.16:
-  version "2.13.16"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.16.tgz#ec83ad622d017adeb6641bb7e8b9f7bd35a5edf5"
-  integrity sha512-Kc4K16Sr0v8wskap8aQHDAzaEv2ArOc5Apc0GNj4Oq+ZeOdMldNtNZH6CU5mGLtCf3CnC3REGRg2gyM1GlICow==
+white-web-sdk@2.13.17:
+  version "2.13.17"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.17.tgz#db120727a44668bc4657bf9f9f37f13751a5c289"
+  integrity sha512-maTRDflywNh8jcNcfk7yZndzuKQfSADHMEjcNZiNeiuYYPcXzRv3tAjXBZfR0jBoZ/Mdml5ZeGiGvifh6ZLobQ==
   dependencies:
-    "@hyrious/xml-js" "1.6.14"
     "@netless/canvas-polyfill" "^0.0.4"
+    "@netless/xml-js" "1.6.15"
     atob "^2.1.2"
     bezier-js "^2.4.4"
     color "^3.1.0"

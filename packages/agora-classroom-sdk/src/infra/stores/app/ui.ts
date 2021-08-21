@@ -47,7 +47,15 @@ export class UIStore {
   chatCollapse: boolean = false
 
   @observable
-  checked: boolean = false;
+  checked: boolean = false
+
+  @observable
+  activePluginId?: string
+
+  @action.bound
+  activePlugin(appId: string) {
+    this.activePluginId = appId
+  }
 
   @action.bound
   updateWindowSize(size: { width: number, height: number }) {
@@ -137,13 +145,5 @@ export class UIStore {
       return "assistant"
     }
     return "student"
-  }
-
-  @observable
-  activePluginId?: string
-
-  @action.bound
-  activePlugin(appId: string) {
-    this.activePluginId = appId
   }
 }

@@ -577,11 +577,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           ref={mountDOM}
         >
           {/* {teacherStreams[0] ?  */}
-          {!openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
+          {/* {!openCarousel ? <div className="left-container scroll-btn" onClick={() => { scroll('left') }}>
             <span className="offset">
               <Icon type="backward"></Icon>
             </span>
-          </div> : null}
+          </div> : null} */}
           <TransitionGroup id="animation-group" className="video-list video-container" style={{ gap: gap || 4 }}>
             {/* <div className="video-container" ref={mountDOM}> */}
             {
@@ -617,11 +617,11 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
             }
             {/* </div> */}
           </TransitionGroup>
-          {!openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
+          {/* {!openCarousel ? <div className="right-container scroll-btn" onClick={() => { scroll('right') }}>
             <span className="offset">
               <Icon type="forward"></Icon>
             </span>
-          </div> : null}
+          </div> : null} */}
         </div>
       </>
     </div>

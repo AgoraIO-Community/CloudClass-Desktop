@@ -323,7 +323,6 @@
   height: 100%;
   align-items: center;
   flex-direction: column;
-  z-index: 200;
 }
 
 .agora-board-resources .tabs {
