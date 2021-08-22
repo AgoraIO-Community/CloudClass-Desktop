@@ -838,7 +838,7 @@ export const useExtensionAppSyncContext = ({ defaultPosition, outterSize, innerS
     extensionAppPositionState$
   } = useBoardStore()  
 
-  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 100) ,[]) 
+  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 200) ,[]) 
 
   const medX = outterSize.width - innerSize.width
   const medY = outterSize.height - innerSize.height
@@ -866,12 +866,13 @@ export const useExtensionAppSyncContext = ({ defaultPosition, outterSize, innerS
       setSync(false)
     },
     updatePosition: (point) => {
-      const diffRatioX = (point.x - bounds.left) / medX
-      const diffRatioY = (point.y - bounds.top) / medY
-      // translate point to ratio
-      setPosition(point)
-      debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
-      // }
+      if(sync) {
+        // translate point to ratio
+        const diffRatioX = (point.x - bounds.left) / medX
+        const diffRatioY = (point.y - bounds.top) / medY
+        setPosition(point)
+        debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
+      }
     },
     position,
     isSyncing: sync,

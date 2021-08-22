@@ -476,7 +476,7 @@ export class BoardStore extends ZoomController {
     //   }
     // })
     
-    console.log("send sync data", appId, position);
+    // console.log("send sync data", appId, position);
     this.room.setGlobalState({
       extAppMoveTracks: {
         ...(this.room.state.globalState as any).extAppMoveTracks,
