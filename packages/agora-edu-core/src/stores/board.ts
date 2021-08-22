@@ -476,7 +476,7 @@ export class BoardStore extends ZoomController {
     //   }
     // })
     
-    console.log("send sync data", appId, position);
+    // console.log("send sync data", appId, position);
     this.room.setGlobalState({
       extAppMoveTracks: {
         ...(this.room.state.globalState as any).extAppMoveTracks,
@@ -1184,13 +1184,15 @@ export class BoardStore extends ZoomController {
         if (this.iframe) {
           this.iframe.onDestroy()
         }
+        
+        // this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
+        this.windowManager?.destroy()
+
         await this.boardClient.destroy()
       } catch (err) {
         EduLogger.info("board leave error ", GenericErrorWrapper(err))
       }
       // this.room.bindHtmlElement(null)
-      this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
-      this.windowManager?.destroy()
       this.reset()
     }
   }

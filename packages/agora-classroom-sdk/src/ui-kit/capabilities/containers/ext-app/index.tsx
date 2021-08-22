@@ -25,7 +25,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   })
   
 
-  const { position, updatePosition, defaultPosition } = useExtensionAppSyncContext({
+  const { position, updatePosition, defaultPosition, isSyncing } = useExtensionAppSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
     outterSize: windowSize,
@@ -72,7 +72,8 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
         updatePosition({ x, y })
       }
     },
-    modalProps: { ref: modalRef }
+    modalProps: { ref: modalRef },
+    isSyncing
   }
 }
 
@@ -91,7 +92,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
 
   const positionOffset = { x: 0, y: 0 }
 
-  const { draggableProps, modalProps } = useSyncModal({
+  const { draggableProps, modalProps, isSyncing } = useSyncModal({
     draggableProps: {
       defaultPosition, positionOffset
     },
@@ -127,15 +128,15 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, app])
   // const { studentStreams } = useSmallClassVideoControlContext()
-  const {roomInfo } =useRoomContext()
   return (
     <Draggable
       defaultClassName="extapp-draggable-container fixed"
       handle=".modal-title"
+      disabled={!isSyncing}
       {...draggableProps}
     >
       <Modal
-        style={ roomInfo.userRole === EduRoleTypeEnum.teacher ? null : { transition: '.1s' }}
+        style={ isSyncing ? null : { transition: '.1s' }}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}
@@ -153,7 +154,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
 })
 
 export const AppPluginContainer = observer(() => {
-  const { activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo } = useAppPluginContext()
+  const { activeAppPlugins, appPluginProperties, onShutdownAppPlugin } = useAppPluginContext()
   const { roomInfo } = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
 

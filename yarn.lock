@@ -2613,13 +2613,18 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-docs-viewer@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.10.tgz#0023639618d7820c043b907ea9e2104be6518c34"
-  integrity sha512-TTlfdmVZ9BIdunCqRyU/+0nKXAV9JW936h6qCI6j5knZ0UlIa+oyTg3AvBVD4BsjYCaVOfW4zQg2LFfY2KH7TQ==
+"@netless/app-docs-viewer@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.nlark.com/@netless/app-docs-viewer/download/@netless/app-docs-viewer-0.1.11.tgz#1dfb9c3058e06d4e5f43d60233ed3224ba50fa71"
+  integrity sha1-HfucMFjgbU5fQ9YCM+0yJLpQ+nE=
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
+
+"@netless/app-media-player@0.1.0-alpha.1":
+  version "0.1.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-alpha.1.tgz#22c963a9fc3b55c2423b89aed5d95f9612a809b9"
+  integrity sha512-tgTx3LEX7ssQXF1l7lVQqCGpWpab0jI8KC4R0YzPIdtBSIvEe5OZfjAaa2u4sw5iQHdK+bEe+PKdV2jTwOe5ow==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -2656,10 +2661,10 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.6.tgz#b0f9bef7fbf78a20fbc04f4d55bca35c99e2cf44"
-  integrity sha512-CFK1c/hYdqJqYFuaqrxguTeYHfsVA8T9ABs0jpkB6d97QjIZmol6eeT2Qx7n/c8A0JuP/wdLJb9A/QH7mHgj0Q==
+"@netless/telebox-insider@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.nlark.com/@netless/telebox-insider/download/@netless/telebox-insider-0.1.8.tgz#cce78b595e2e7324073a8d34cd634be6867dbb2e"
+  integrity sha1-zOeLWV4ucyQHOo00zWNL5oZ9uy4=
   dependencies:
     eventemitter3 "^4.0.7"
     stylefire "^7.0.3"
@@ -2689,18 +2694,18 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.12.tgz#ac9d5a97cd667969b0ea2ee6eab6311a68010862"
-  integrity sha512-GS+BdjcagmL4ONjzoPjxwriGJzhH0w0bFTMLt+zLObXdyWmqjoVloYMn6m/vc4VfCAsZvJoW+BKZ2RVWw+wfdg==
+"@netless/window-manager@0.1.21":
+  version "0.1.21"
+  resolved "https://registry.nlark.com/@netless/window-manager/download/@netless/window-manager-0.1.21.tgz#4708b76909ff04afe9acde85a4fba5fddd6612e8"
+  integrity sha1-Rwi3aQn/BK/prN6FpPul/d1mEug=
   dependencies:
-    "@netless/app-docs-viewer" "^0.1.10"
-    "@netless/telebox-insider" "^0.1.6"
+    "@netless/app-docs-viewer" "^0.1.11"
+    "@netless/app-media-player" "0.1.0-alpha.1"
+    "@netless/telebox-insider" "^0.1.8"
     emittery "^0.9.2"
-    localforage "^1.9.0"
     lodash-es "^4.17.21"
-    react "^17.0.2"
-    react-dom "^17.0.2"
+    nanoid "^3.1.25"
+    video.js ">=7"
 
 "@netless/xml-js@1.6.15":
   version "1.6.15"
@@ -5430,6 +5435,20 @@
     m3u8-parser "4.7.0"
     mpd-parser "0.17.0"
     mux.js "5.11.1"
+    video.js "^6 || ^7"
+
+"@videojs/http-streaming@2.9.2":
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@videojs/http-streaming/-/http-streaming-2.9.2.tgz#47d33bb02bd9c1287200398b1e85d213dee814d0"
+  integrity sha512-2ZsxJn4/nZZ6k6jIhic2l9ynGmKwprtuI5b3+M6JgqOSLvQQ/ah+heVs/0g2Ze7qJxodqR+aSY948JwJIz1gCw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@videojs/vhs-utils" "^3.0.2"
+    aes-decrypter "3.1.2"
+    global "^4.4.0"
+    m3u8-parser "4.7.0"
+    mpd-parser "0.17.0"
+    mux.js "5.12.2"
     video.js "^6 || ^7"
 
 "@videojs/vhs-utils@^1.0.0", "@videojs/vhs-utils@^1.1.0":
@@ -15620,13 +15639,6 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lie@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
-  integrity sha1-mkNrLMd0bKWd56QfpGmz77dr2H4=
-  dependencies:
-    immediate "~3.0.5"
-
 lie@~3.3.0:
   version "3.3.0"
   resolved "https://registry.npm.taobao.org/lie/download/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"
@@ -15717,13 +15729,6 @@ loader-utils@^1.0.0, loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^1.0.1"
-
-localforage@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.9.0.tgz#f3e4d32a8300b362b4634cc4e066d9d00d2f09d1"
-  integrity sha512-rR1oyNrKulpe+VM9cYmcFn6tsHuokyVHFaCM3+osEmxaHTbEk8oQu6eGDfS6DQLWi/N67XRmB8ECG37OES368g==
-  dependencies:
-    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -17000,6 +17005,13 @@ mux.js@5.11.1:
   dependencies:
     "@babel/runtime" "^7.11.2"
 
+mux.js@5.12.2:
+  version "5.12.2"
+  resolved "https://registry.yarnpkg.com/mux.js/-/mux.js-5.12.2.tgz#cd823312f4bb69adb8b9c5f45635b4451066d6e6"
+  integrity sha512-9OY1lrFIo7FxMeIC6aLUftiNv97AztufDfi30N7qDll1Pcy7bCxlHztyHp1Ce0KQwy2XqchGeENPS4v1NJngHQ==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+
 mux.js@5.6.7:
   version "5.6.7"
   resolved "https://registry.nlark.com/mux.js/download/mux.js-5.6.7.tgz#d39fc85cded5a1257de9f6eeb5cf1578c4a63eb8"
@@ -17041,6 +17053,11 @@ nanoid@^3.1.20, nanoid@^3.1.23:
   version "3.1.23"
   resolved "https://registry.nlark.com/nanoid/download/nanoid-3.1.23.tgz?cache=0&sync_timestamp=1620673983269&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fnanoid%2Fdownload%2Fnanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
   integrity sha1-90QIbOfCvEfuCoRyV01ceOQYOoE=
+
+nanoid@^3.1.25:
+  version "3.1.25"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.25.tgz#09ca32747c0e543f0e1814b7d3793477f9c8e152"
+  integrity sha512-rdwtIXaXCLFAQbnfqDRnI6jaRHp9fTcYBjtFKE8eezcZ7LuLjhUaQGNeMXf1HmRoCH32CLz6XwX0TtxEOS/A3Q==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -20707,15 +20724,6 @@ react-dom@^16.8.0:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dom@^17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
-  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    scheduler "^0.20.2"
-
 react-draggable@4.4.3, react-draggable@^4.4.3:
   version "4.4.3"
   resolved "https://registry.npm.taobao.org/react-draggable/download/react-draggable-4.4.3.tgz#0727f2cae5813e36b0e4962bf11b2f9ef2b406f3"
@@ -21107,14 +21115,6 @@ react@^16.13.1, react@^16.8.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-
-react@^17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
-  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -22186,7 +22186,7 @@ scheduler@^0.19.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-scheduler@^0.20.0, scheduler@^0.20.2:
+scheduler@^0.20.0:
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
   integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
@@ -25478,6 +25478,25 @@ video.js@7.10.0:
     safe-json-parse "4.0.0"
     videojs-font "3.2.0"
     videojs-vtt.js "^0.15.2"
+
+video.js@>=7:
+  version "7.14.3"
+  resolved "https://registry.yarnpkg.com/video.js/-/video.js-7.14.3.tgz#0b612c09a0a81ef9bce65c710e73291cb06dc32c"
+  integrity sha512-6avCdSIfn5ss5NOgoQfY/xEfPNcz9DXSw+ZN80NwPguCdRd4VL4y40b/d7osYJwyCdF+YkvhqAW7dw4s0vBigg==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@videojs/http-streaming" "2.9.2"
+    "@videojs/vhs-utils" "^3.0.2"
+    "@videojs/xhr" "2.5.1"
+    aes-decrypter "3.1.2"
+    global "^4.4.0"
+    keycode "^2.2.0"
+    m3u8-parser "4.7.0"
+    mpd-parser "0.17.0"
+    mux.js "5.12.2"
+    safe-json-parse "4.0.0"
+    videojs-font "3.2.0"
+    videojs-vtt.js "^0.15.3"
 
 "video.js@^6 || ^7", video.js@^7.8.4:
   version "7.13.3"
