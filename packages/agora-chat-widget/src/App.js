@@ -22,6 +22,8 @@ import im_US from './locales/en_US';
 import './App.css';
 import 'antd/dist/antd.css';
 const App = function (props) {
+  // 白板全屏状态下，控制IMChat
+  const { isFullScreen } = props.pluginStore.globalContext;
   const state = useSelector((state) => state);
   const showChat = state?.showChat;
   const showRed = state?.showRed;
@@ -193,15 +195,17 @@ const App = function (props) {
   return (
     <div>
       {showChat ? (
-        isSmallClass ? (
-          <div className="app" style={{ width: '340px' }}>
-            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-          </div>
-        ) : (
-          <div className="app" style={{ width: '300px' }}>
-            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-          </div>
-        )
+        !isFullScreen ? (
+          isSmallClass ? (
+            <div className="app" style={{ width: '340px' }}>
+              <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+            </div>
+          ) : (
+            <div className="app" style={{ width: '300px' }}>
+              <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+            </div>
+          )
+        ) : null
       ) : (
         <div className="chat">
           <div
