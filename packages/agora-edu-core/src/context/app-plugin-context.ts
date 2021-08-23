@@ -43,30 +43,38 @@ export const useAppPluginContext = () => {
 
 
 const calcPosition = (diffRatio: { x: number, y: number }, outerSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outerSize.width * diffRatio.x + bounds.left, y: outerSize.height * diffRatio.y + bounds.top })
-
+ 
 export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bounds, appId }: { defaultPosition: Point, outerSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string }): TrackSyncContext => {
   const { roomInfo } = useRoomContext()
-  let [ sync, setSync ] = useState(roomInfo.userRole === EduRoleTypeEnum.teacher)
-  // local position
-  const [ position, setPosition ] = useState(defaultPosition)
 
   const {
     syncAppPosition,
     // remote position
-    extensionAppPositionState$
+    extensionAppPositionState$,
+    ready
   } = useBoardStore()  
 
-  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 200) ,[]) 
+  let [ sync, setSync ] = useState(() => roomInfo.userRole === EduRoleTypeEnum.teacher)
 
   const medX = outerSize.width - innerSize.width
   const medY = outerSize.height - innerSize.height
 
   const storePosition = extensionAppPositionState$.value && extensionAppPositionState$.value[appId] ? extensionAppPositionState$.value[appId] : null
+  // local position
+  const [ position, setPosition ] = useState(() => {
+    if(sync) {
+      return defaultPosition 
+    }
+    // if current user is not a teacher, the default position should be sync with the teacher
+    return storePosition ? calcPosition(storePosition, { width: medX, height: medY }, bounds) : defaultPosition  
+  })
 
+  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 200), []) 
+  
   useEffect(() => {
     const sub = extensionAppPositionState$.subscribe((value) => {
       // filter out changes which are sent by current user
-      if(value && value[appId] && value[appId].userId !== roomInfo.userUuid){
+      if(value && value[appId] && value[appId].userId !== roomInfo.userUuid) {
         setPosition(calcPosition(value[appId], { width: medX, height: medY }, bounds))
       }
     })
@@ -75,7 +83,14 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
       sub.unsubscribe()
     }
   }, [medX, medY])
-
+  // set initial position when board is ready
+  useEffect(() => {
+    if(sync) {
+      const diffRatioX = (position.x - bounds.left) / medX
+      const diffRatioY = (position.y - bounds.top) / medY
+      syncAppPosition(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
+    }
+  }, [ready])
 
   return {
     beginSync: () => {
@@ -94,7 +109,6 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
       }
     },
     position,
-    isSyncing: sync,
-    defaultPosition: storePosition || defaultPosition
+    isSyncing: sync
   }
 }

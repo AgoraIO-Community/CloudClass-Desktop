@@ -25,7 +25,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   })
   
 
-  const { position, updatePosition, defaultPosition, isSyncing } = useTrackSyncContext({
+  const { position, updatePosition, isSyncing } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
     outerSize: windowSize,
@@ -65,7 +65,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   return {
     draggableProps: {
       ...draggableProps,
-      defaultPosition,
+      // defaultPosition: position,
       position,
       bounds,
       onDrag: (_: any, { x, y }: DraggableData) => {

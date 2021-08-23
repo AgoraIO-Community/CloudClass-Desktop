@@ -279,7 +279,6 @@ export class BoardStore extends ZoomController {
 
   windowManager?: WindowManager
 
-  windowAppIds: string[] = []
   @computed
   get boardClient(): BoardClient {
     return this._boardClient as BoardClient;
@@ -1185,7 +1184,6 @@ export class BoardStore extends ZoomController {
           this.iframe.onDestroy()
         }
         
-        // this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
         this.windowManager?.destroy()
 
         await this.boardClient.destroy()
@@ -1985,8 +1983,6 @@ export class BoardStore extends ZoomController {
             scenes
         }
       });
-
-      appId && this.windowAppIds.unshift(appId)
     }
   }
 
