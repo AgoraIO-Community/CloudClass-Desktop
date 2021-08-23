@@ -20,7 +20,7 @@ export const ToolCabinetContainer = observer(() => {
     const {
         appPlugins,
         onLaunchAppPlugin,
-        activePlugin
+        setActivePlugin
     } = useAppPluginContext()
 
     const onClick = useCallback(async (itemType: string) => {
@@ -36,16 +36,16 @@ export const ToolCabinetContainer = observer(() => {
                 break;
             }
             case 'countdown':
-                activePlugin('io.agora.countdown')
+                setActivePlugin('io.agora.countdown')
                 onLaunchAppPlugin('io.agora.countdown')
                 break;
             default: {
-                activePlugin(itemType)
+                setActivePlugin(itemType)
                 onLaunchAppPlugin(itemType)
                 break;
             }
         }
-    }, [canSharingScreen, startOrStopSharing, setLaserPoint, onLaunchAppPlugin, activePlugin])
+    }, [canSharingScreen, startOrStopSharing, setLaserPoint, onLaunchAppPlugin, setActivePlugin])
 
     const {
         roomInfo

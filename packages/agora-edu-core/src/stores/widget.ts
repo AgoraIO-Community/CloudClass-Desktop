@@ -8,9 +8,18 @@ export class WidgetStore {
     @observable
     activePluginId?: string
 
+    @observable
+    isSyncingGranted: boolean = false
+
+
     @action.bound
-    activePlugin(appId: string) {
-        this.activePluginId = appId
+    grantSyncing(granted: boolean) {
+        this.isSyncingGranted = granted
+    }
+
+    @action.bound
+    setActivePlugin(pluginId: string) {
+        this.activePluginId = pluginId
     }
 
     leave() {

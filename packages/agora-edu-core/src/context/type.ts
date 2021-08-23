@@ -1510,17 +1510,6 @@ export type Dimension = { width: number, height: number }
 export type Point = { x: number, y: number }
 
 export type TrackSyncContext = {
-
-    /**
-     * 
-     */
-    beginSync: (appId: string) => void,
-
-    /**
-     * 
-     */
-    endSync: (appId: string) => void,
-
     /**
      * 
      */

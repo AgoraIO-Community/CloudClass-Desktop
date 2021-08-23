@@ -30,7 +30,8 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
     innerSize: modalSize,
     outerSize: windowSize,
     bounds,
-    appId
+    appId,
+    syncingEnabled: true
   });
 
   const modalRef = useRef<HTMLDivElement>(null)
@@ -79,7 +80,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
 
 export const AppPluginItem = observer(({ app, properties, closable, onCancel }: { app: IAgoraExtApp, properties: any, closable: boolean, onCancel: any }) => {
   const ref = useRef<HTMLDivElement | null>(null)
-  const { contextInfo, activePlugin } = useAppPluginContext()
+  const { contextInfo, setActivePlugin } = useAppPluginContext()
 
   const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo
 
@@ -133,11 +134,11 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       defaultClassName="extapp-draggable-container fixed"
       handle=".modal-title"
       disabled={!isSyncing}
-      onMouseDown={() => activePlugin(app.appIdentifier)}
+      onMouseDown={() => setActivePlugin(app.appIdentifier)}
       {...draggableProps}
     >
       <Modal
-        style={ isSyncing ? null : { transition: '.1s' }}
+        style={ isSyncing ? null : { transition: '.5s' }}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}
