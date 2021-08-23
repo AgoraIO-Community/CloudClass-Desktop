@@ -1189,6 +1189,8 @@ export class BoardStore extends ZoomController {
         this.windowManager?.destroy()
 
         await this.boardClient.destroy()
+        this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
+        this.windowManager?.destroy()
       } catch (err) {
         EduLogger.info("board leave error ", GenericErrorWrapper(err))
       }
@@ -1541,6 +1543,7 @@ export class BoardStore extends ZoomController {
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission)
+        this.windowManager?.setReadonly(!hasPermission)
       }
     }
   }
