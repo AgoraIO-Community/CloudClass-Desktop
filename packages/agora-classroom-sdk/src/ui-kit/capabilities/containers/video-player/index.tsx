@@ -79,7 +79,7 @@ export const VideoPlayerTeacher = observer(({style, className}: any) => {
       userType={eduRole2UIRole(roomInfo.userRole)}
       className={className}
       style={style}
-      renderVolumeIndicator={StreamVolumeIndicator}
+      renderVolumeIndicator={(props)=><StreamVolumeIndicator {...props} />}
     >
       {
           <>
@@ -161,7 +161,7 @@ export const VideoPlayerStudent: React.FC<VideoProps> = observer(({controlPlacem
       className={className}
       showGranted={true}
       userType={eduRole2UIRole(roomInfo.userRole)}
-      renderVolumeIndicator={StreamVolumeIndicator}
+      renderVolumeIndicator={(props)=><StreamVolumeIndicator {...props} />}
     >
       {
         <>
@@ -344,6 +344,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       cameraDevice: stream.cameraDevice,
       streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      micVolume: stream.micVolume,
       children: (
         <>
         {
@@ -421,6 +422,7 @@ export const MidVideoMarqueeContainer = observer(() => {
       canHoverHideOffAllPodium: true,
       onOffAllPodiumClick: onOffAllPodiumClick,
       // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+      micVolume: stream.micVolume,
       children: (
         <>
         {

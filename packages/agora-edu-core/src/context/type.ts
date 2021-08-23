@@ -33,7 +33,7 @@ export type EduMediaStream = {
     video: boolean,
     hideControl: boolean,
     whiteboardGranted: boolean,
-    // micVolume: number,
+    micVolume: number,
     placement: string,
     stars: number,
     isLocal: boolean;
