@@ -7,7 +7,7 @@ import {
   GenericErrorWrapper,
 } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
-import { cloneDeep, isEmpty, uniqBy } from 'lodash';
+import { cloneDeep, isEmpty, isNumber, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { IframeWrapper, IframeBridge } from '@netless/iframe-bridge';
@@ -914,7 +914,12 @@ export class BoardStore extends ZoomController {
   updateCourseWareList() {
     const globalState = this.globalState;
     this.courseWareList = globalState.dynamicTaskUuidList ?? [];
-    this._personalResources = globalState.materialList ?? [];
+    this._personalResources =
+      globalState.materialList.filter((it) => {
+        return this.publicResources.every((item) => {
+          return item.id !== it.resourceUuid;
+        });
+      }) ?? [];
   }
 
   @observable
@@ -2132,7 +2137,7 @@ export class BoardStore extends ZoomController {
         conversion: {
           type: '',
         },
-        size: +resource.size,
+        size: isNumber(resource.size) ? resource.size : 0,
         updateTime: resource.updateTime,
         scenes: resource.scenes as SceneDefinition[],
         convert: true,
