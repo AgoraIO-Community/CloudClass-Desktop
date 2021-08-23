@@ -914,12 +914,12 @@ export class BoardStore extends ZoomController {
   updateCourseWareList() {
     const globalState = this.globalState;
     this.courseWareList = globalState.dynamicTaskUuidList ?? [];
-    this._personalResources =
-      globalState.materialList.filter((it) => {
-        return this.publicResources.every((item) => {
-          return item.id !== it.resourceUuid;
-        });
-      }) ?? [];
+    const materialList = globalState.materialList ?? [];
+    this._personalResources = materialList.filter((it) => {
+      return this.publicResources.every((item) => {
+        return item.id !== it.resourceUuid;
+      });
+    });
   }
 
   @observable
