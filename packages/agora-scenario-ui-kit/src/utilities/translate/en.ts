@@ -232,6 +232,9 @@ export const en = {
     reward_limit: 'The maximum number of trophies in the room has been reached',
     chat_enable: 'Enable Mute Chat',
     chat_disable: 'Disable Mute Chat',
+    upload_failure: 'Upload Failure',
+    download_success: 'Download Success',
+    download_failure: 'Download Failure',
   },
   end_class_confirm: 'Are sure end classroom',
   notice: {

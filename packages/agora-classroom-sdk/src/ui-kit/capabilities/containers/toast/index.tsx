@@ -113,6 +113,9 @@ export const ToastContainer = observer(() => {
     'toast.unmute_chat': (props: any) => toast('toast.unmute_chat', props),
     'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
+    'toast.upload_failure': (props: any) => toast('toast.upload_failure', props),
+    'toast.download_success': (props: any) => toast('toast.download_success', props),
+    'toast.download_failure': (props: any) => toast('toast.download_failure', props),
   };
 
   const roomRef = useRef<boolean>(joined);

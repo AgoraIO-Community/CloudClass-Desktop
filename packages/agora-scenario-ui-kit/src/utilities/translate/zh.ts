@@ -226,6 +226,9 @@ export const zh = {
     reward_limit: '奖杯已全部发完',
     chat_enable: '禁言模式开启',
     chat_disable: '禁言模式关闭',
+    upload_failure: '上传失败',
+    download_success: '下载成功',
+    download_failure: '下载失败',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {
