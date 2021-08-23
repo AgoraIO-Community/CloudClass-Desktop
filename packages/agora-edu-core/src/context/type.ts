@@ -1496,3 +1496,40 @@ export type CloudDriveContext = {
 
     fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
 }
+
+
+export type Bounds = {
+    left: number,
+    top: number,
+    right: number,
+    bottom: number
+}
+
+export type Dimension = { width: number, height: number }
+
+export type Point = { x: number, y: number }
+
+export type TrackSyncContext = {
+
+    /**
+     * 
+     */
+    beginSync: (appId: string) => void,
+
+    /**
+     * 
+     */
+    endSync: (appId: string) => void,
+
+    /**
+     * 
+     */
+    updatePosition: (position: Point) => void,
+
+    /**
+     * 
+     */
+    position: Point,
+
+    isSyncing: boolean
+}

@@ -4,7 +4,6 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 import {observer} from 'mobx-react'
-import { ScreenShareType } from 'agora-rte-sdk'
 
 export const ToolCabinetContainer = observer(() => {
 
@@ -20,7 +19,8 @@ export const ToolCabinetContainer = observer(() => {
 
     const {
         appPlugins,
-        onLaunchAppPlugin
+        onLaunchAppPlugin,
+        activePlugin
     } = useAppPluginContext()
 
     const onClick = useCallback(async (itemType: string) => {
@@ -36,14 +36,16 @@ export const ToolCabinetContainer = observer(() => {
                 break;
             }
             case 'countdown':
+                activePlugin('io.agora.countdown')
                 onLaunchAppPlugin('io.agora.countdown')
                 break;
             default: {
+                activePlugin(itemType)
                 onLaunchAppPlugin(itemType)
                 break;
             }
         }
-    }, [canSharingScreen, startOrStopSharing, setLaserPoint, onLaunchAppPlugin])
+    }, [canSharingScreen, startOrStopSharing, setLaserPoint, onLaunchAppPlugin, activePlugin])
 
     const {
         roomInfo

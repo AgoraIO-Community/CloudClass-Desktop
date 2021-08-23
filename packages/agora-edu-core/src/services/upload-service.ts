@@ -336,7 +336,7 @@ export class UploadService extends ApiBase {
     // }
     const conversion = payload.converting ? {
         type: payload.ext === 'pptx' ? 'dynamic' : 'static',
-        preview: false,
+        preview: true,
         scale: 1.2,
         outputFormat: 'png',
       } : undefined

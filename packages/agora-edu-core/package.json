@@ -68,7 +68,7 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.1.6-canary.1",
+    "@netless/window-manager": "0.1.26",
     "@netless/iframe-bridge": "2.1.4",
     "@netless/video-js-plugin": "0.3.2",
     "agora-rte-sdk": "1.1.2",
@@ -79,7 +79,7 @@
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
-    "white-web-sdk": "2.13.16",
+    "white-web-sdk": "2.13.17",
     "video.js": "7.10.0"
   },
   "browserslist": {

@@ -47,7 +47,7 @@ export class UIStore {
   chatCollapse: boolean = false
 
   @observable
-  checked: boolean = false;
+  checked: boolean = false
 
   @action.bound
   updateWindowSize(size: { width: number, height: number }) {

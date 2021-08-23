@@ -38,6 +38,7 @@ export interface AbstractTooltipProps
   autoAdjustOverflow?: boolean | AdjustOverflow;
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   children?: React.ReactNode;
+  offset?: Array<number>
 }
 
 export type RenderFunction = () => React.ReactNode;
@@ -204,6 +205,7 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
     color,
     overlayInnerStyle,
     children,
+    offset
   } = props;
 
   const prefixCls = customizePrefixCls ?? 'tooltip';
@@ -237,6 +239,9 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
   return (
     <RcTooltip
       {...props}
+      align={{
+        offset
+      }}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
       getTooltipContainer={getPopupContainer || getTooltipContainer}
@@ -269,4 +274,5 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
 Tooltip.defaultProps = {
   mouseEnterDelay: 0.1,
   mouseLeaveDelay: 0.1,
+  offset: [30, 0]
 };

@@ -1,7 +1,7 @@
 import { Layout, Content, Aside } from '~components/layout'
 import { observer } from 'mobx-react'
 import classnames from 'classnames'
-import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useBoardContext } from 'agora-edu-core'
+import { useRoomContext, useGlobalContext, useChatContext, useWidgetContext, useAppPluginContext, useBoardContext, useScreenShareContext } from 'agora-edu-core'
 import {NavigationBar} from '~capabilities/containers/nav'
 import {ScreenSharePlayerContainer} from '~capabilities/containers/screen-share-player'
 import {WhiteboardContainer} from '~capabilities/containers/board'
@@ -10,13 +10,14 @@ import {LoadingContainer} from '~capabilities/containers/loading'
 import {MidVideoMarqueeContainer, VideoMarqueeStudentContainer, VideoPlayerTeacher} from '~capabilities/containers/video-player'
 import {HandsUpContainer} from '~capabilities/containers/hands-up'
 import { useEffectOnce } from '@/infra/hooks/utils'
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useCallback } from 'react'
 import { Widget } from '~capabilities/containers/widget'
 import { useUIStore } from '@/infra/hooks'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { get, debounce } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
+import { Icon, IconButton } from '~ui-kit'
 
 // keep aspect ratio to 16:9
 const windowAspectRatio = 9 / 16
@@ -132,7 +133,11 @@ export const MidClassScenario = observer(() => {
       // 关闭投票
       onShutdownAppPlugin('io.agora.vote')
     }
-  }, [roomProperties])
+  }, [
+    roomProperties?.extAppsCommon?.io_agora_countdown?.state,
+    roomProperties?.extAppsCommon?.io_agora_answer?.state,
+    roomProperties?.extAppsCommon?.io_agora_vote?.state
+  ])
 
   const {
     isFullScreen,
@@ -171,12 +176,23 @@ export const MidClassScenario = observer(() => {
 
   const visible = userRole !== EduRoleTypeEnum.invisible
 
+
+  const {
+    screenEduStream,
+    startOrStopSharing,
+} = useScreenShareContext()
+
+
+  const handleStopSharing = useCallback(async () => {
+      await startOrStopSharing()
+  }, [startOrStopSharing])
+
   return (
     <Layout
       className={cls}
       direction="col"
     >
-      <div className="flex flex-col" style={containerStyle}>
+      <div className="mid-class-container flex flex-col" style={containerStyle}>
         <NavigationBar />
         <Layout className="layout layout-row layout-video flex-grow">
           <MidVideoMarqueeContainer />
@@ -185,6 +201,7 @@ export const MidClassScenario = observer(() => {
           <Content className="column flex-grow-1" style={whiteboardStyle}>
             <div className="board-box">
               <WhiteboardContainer>
+                {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={handleStopSharing}/>) : ""}
                 <ScreenSharePlayerContainer />
               </WhiteboardContainer>
             </div>
