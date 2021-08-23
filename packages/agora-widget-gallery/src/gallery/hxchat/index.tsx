@@ -34,7 +34,7 @@ const App: React.FC<AppProps> = observer((props) => {
     };
   }, []);
 
-  const { isJoined } = pluginStore.globalContext;
+  const { isJoined, isFullScreen } = pluginStore.globalContext;
 
   set(
     pluginStore,
@@ -51,7 +51,7 @@ const App: React.FC<AppProps> = observer((props) => {
       console.log('store-----', pluginStore);
       hx.renderHXChatRoom(domRef.current, pluginStore, props.sendMsg, props.onReceivedMsg);
     }
-  }, [domRef.current, isJoined]);
+  }, [domRef.current, isJoined, isFullScreen]);
 
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
