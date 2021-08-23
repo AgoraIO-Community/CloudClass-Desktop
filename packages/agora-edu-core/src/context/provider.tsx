@@ -6,7 +6,7 @@ import { debounce, get, throttle } from "lodash"
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useMediaStore} from "./core"
-import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool, ClassRoomStats, ExtensionAppSyncContext, Point, Dimension, Bounds } from './type'
+import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool, ClassRoomStats } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
 import { useMemo } from "react"
 import { useEffect } from "react"
@@ -819,63 +819,5 @@ export const useReportContext = (): ReportContext => {
   return {
     //TODO: why?
     eduManger: core.eduManager
-  }
-}
-
-
-const calcPosition = (diffRatio: { x: number, y: number }, outterSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outterSize.width * diffRatio.x + bounds.left, y: outterSize.height * diffRatio.y + bounds.top })
-
-
-export const useExtensionAppSyncContext = ({ defaultPosition, outterSize, innerSize, bounds, appId }: { defaultPosition: Point, outterSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string }): ExtensionAppSyncContext => {
-  const { roomInfo } = useRoomContext()
-  let [ sync, setSync ] = useState(roomInfo.userRole === EduRoleTypeEnum.teacher)
-  // local position
-  const [ position, setPosition ] = useState(defaultPosition)
-
-  const {
-    syncAppPosition,
-    // remote position
-    extensionAppPositionState$
-  } = useBoardStore()  
-
-  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 200) ,[]) 
-
-  const medX = outterSize.width - innerSize.width
-  const medY = outterSize.height - innerSize.height
-
-  const storePosition = extensionAppPositionState$.value && extensionAppPositionState$.value[appId] ? extensionAppPositionState$.value[appId] : null
-
-  useEffect(() => {
-    const sub = extensionAppPositionState$.subscribe((value) => {
-      if(value && value[appId] && value[appId].userId !== roomInfo.userUuid){
-        setPosition(calcPosition(value[appId], { width: medX, height: medY }, bounds))
-      }
-    })
-
-    return () => {
-      sub.unsubscribe()
-    }
-  }, [medX, medY])
-
-
-  return {
-    beginSync: () => {
-      setSync(true)
-    },
-    endSync: () => {
-      setSync(false)
-    },
-    updatePosition: (point) => {
-      if(sync) {
-        // translate point to ratio
-        const diffRatioX = (point.x - bounds.left) / medX
-        const diffRatioY = (point.y - bounds.top) / medY
-        setPosition(point)
-        debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
-      }
-    },
-    position,
-    isSyncing: sync,
-    defaultPosition: storePosition || defaultPosition
   }
 }

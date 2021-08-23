@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { IAgoraExtApp, useAppPluginContext, useExtensionAppSyncContext, useRoomContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext, useTrackSyncContext } from 'agora-edu-core'
 import { useUIStore } from '@/infra/hooks'
 import Draggable, { DraggableData, DraggableProps } from 'react-draggable'
 import { Dependencies } from './dependencies'
@@ -25,10 +25,10 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   })
   
 
-  const { position, updatePosition, defaultPosition, isSyncing } = useExtensionAppSyncContext({
+  const { position, updatePosition, defaultPosition, isSyncing } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
-    outterSize: windowSize,
+    outerSize: windowSize,
     bounds,
     appId
   });
