@@ -77,7 +77,7 @@ export const OneToOneScenario = observer(() => {
                 key={chatroomId}
                 className="chat-panel"
                 widgetComponent={chatWidget}
-                widgetProps={{ chatroomId, orgName, appName }}
+                widgetProps={{ chatroomId, orgName, appName, isFullScreen }}
               />
             ) : (
               <Widget
