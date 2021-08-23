@@ -474,15 +474,12 @@ export class BoardStore extends ZoomController {
     //     [appId]: position
     //   }
     // })
-    
-    // console.log("send sync data", appId, position);
-    this.room.setGlobalState({
+    this.room?.setGlobalState({
       extAppMoveTracks: {
         ...(this.room.state.globalState as any).extAppMoveTracks,
         [appId]: position
       }
     })
-    // console.log("after send sync data", appId, position);
   }
 
   @action.bound
@@ -1540,6 +1537,7 @@ export class BoardStore extends ZoomController {
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission)
         this.windowManager?.setReadonly(!hasPermission)
+        this.appStore.widgetStore.grantSyncing(hasPermission)
       }
     }
   }

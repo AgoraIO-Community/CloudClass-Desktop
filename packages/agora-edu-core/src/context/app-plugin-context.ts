@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { get, throttle } from "lodash"
 import { EduRoleTypeEnum } from "agora-rte-sdk"
 import { IAgoraExtApp, useRoomContext } from ".."
-import { useBoardStore, useCoreContext, useRoomStore } from './core';
+import { useBoardStore, useCoreContext, useRoomStore, useWidgetStore } from './core';
 import { Bounds, Dimension, Point, TrackSyncContext } from './type';
 
 
 export const useAppPluginContext = () => {
   const appStore = useCoreContext()
   const roomStore = useRoomStore()
-  const { activePlugin, activePluginId } = appStore.widgetStore
+  const { setActivePlugin, activePluginId } = appStore.widgetStore
 
   const onLaunchAppPlugin = (id:any) => {
     if(!appStore.activeExtAppIds.includes(id)) {
@@ -39,7 +39,7 @@ export const useAppPluginContext = () => {
     onLaunchAppPlugin,
     onShutdownAppPlugin,
     appPluginProperties,
-    activePlugin,
+    setActivePlugin,
     activePluginId
   }
 }
@@ -47,17 +47,21 @@ export const useAppPluginContext = () => {
 
 const calcPosition = (diffRatio: { x: number, y: number }, outerSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outerSize.width * diffRatio.x + bounds.left, y: outerSize.height * diffRatio.y + bounds.top })
  
-export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bounds, appId }: { defaultPosition: Point, outerSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string }): TrackSyncContext => {
+export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bounds, appId, syncingEnabled }: { defaultPosition: Point, outerSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string, syncingEnabled: boolean }): TrackSyncContext => {
   const { roomInfo } = useRoomContext()
 
   const {
     syncAppPosition,
     // remote position
     extensionAppPositionState$,
-    ready
+    ready,
+    room,
+    roomIsWritable
   } = useBoardStore()
 
-  let [ sync, setSync ] = useState(() => roomInfo.userRole === EduRoleTypeEnum.teacher)
+  const { isSyncingGranted } = useWidgetStore()
+
+  const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
 
   const medX = outerSize.width - innerSize.width
   const medY = outerSize.height - innerSize.height
@@ -65,7 +69,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   const storePosition = extensionAppPositionState$.value && extensionAppPositionState$.value[appId] ? extensionAppPositionState$.value[appId] : null
   // local position
   const [ position, setPosition ] = useState(() => {
-    if(sync) {
+    if(isHost) {
       return defaultPosition 
     }
     // if current user is not a teacher, the default position should be sync with the teacher
@@ -88,22 +92,16 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   }, [medX, medY])
   // set initial position when board is ready
   useEffect(() => {
-    if(sync) {
+    if(syncingEnabled && (isHost || isSyncingGranted)) {
       const diffRatioX = (position.x - bounds.left) / medX
       const diffRatioY = (position.y - bounds.top) / medY
       syncAppPosition(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
     }
-  }, [ready])
+  }, [ready, isSyncingGranted])
 
   return {
-    beginSync: () => {
-      setSync(true)
-    },
-    endSync: () => {
-      setSync(false)
-    },
     updatePosition: (point) => {
-      if(sync) {
+      if(syncingEnabled) {
         // translate point to ratio
         const diffRatioX = (point.x - bounds.left) / medX
         const diffRatioY = (point.y - bounds.top) / medY
@@ -112,6 +110,6 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
       }
     },
     position,
-    isSyncing: sync
+    isSyncing: isHost || isSyncingGranted
   }
 }

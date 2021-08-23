@@ -1,0 +1,22 @@
+.countdown-modal {
+    --factor: 10;
+}
+.countdown-modal .numbers-wrap {
+    transform: unset;
+}
+
+.countdown-modal .setting-wrap {
+    transform: unset;
+    margin-top: 36px;
+}
+
+
+.countdown-modal .react-countdown-component {
+    --boxWidth: calc(var(--factor) * 6px);
+    --boxHeight: calc(var(--factor) * 8px);
+    --timeUnitSize: calc(var(--factor) * 5px);
+}
+
+.countdown-modal .react-countdown-component .time-box {
+    font-size: calc(var(--factor) * 5px);
+}

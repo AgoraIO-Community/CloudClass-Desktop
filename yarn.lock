@@ -2661,10 +2661,10 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.nlark.com/@netless/telebox-insider/download/@netless/telebox-insider-0.1.8.tgz#cce78b595e2e7324073a8d34cd634be6867dbb2e"
-  integrity sha1-zOeLWV4ucyQHOo00zWNL5oZ9uy4=
+"@netless/telebox-insider@^0.1.9":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.10.tgz#8b82baa55ccb20c6d93f127cbbe40e3eacbaed1a"
+  integrity sha512-x+Vbxu0/PCZL6N7y+V2FcqJ6H4c9MLg89T6y43yhzBnFOIwdSdOsBjazILXFmGRIdUt+YJRD0X2YuiIGffKQiw==
   dependencies:
     eventemitter3 "^4.0.7"
     stylefire "^7.0.3"
@@ -2694,14 +2694,14 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.21":
-  version "0.1.21"
-  resolved "https://registry.nlark.com/@netless/window-manager/download/@netless/window-manager-0.1.21.tgz#4708b76909ff04afe9acde85a4fba5fddd6612e8"
-  integrity sha1-Rwi3aQn/BK/prN6FpPul/d1mEug=
+"@netless/window-manager@0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.26.tgz#2b49c9c24f9d218027ffb6ebb91e002fa985854f"
+  integrity sha512-2zrG7fri3BLcAik0Hu5mcvoM6wOUXXwrgKhiDP56UO++re5RdGCNGL700inpDLROxZHoQCN6iu0SK6S2oYGfdg==
   dependencies:
     "@netless/app-docs-viewer" "^0.1.11"
     "@netless/app-media-player" "0.1.0-alpha.1"
-    "@netless/telebox-insider" "^0.1.8"
+    "@netless/telebox-insider" "^0.1.9"
     emittery "^0.9.2"
     lodash-es "^4.17.21"
     nanoid "^3.1.25"
