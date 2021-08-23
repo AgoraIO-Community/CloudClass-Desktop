@@ -24,7 +24,7 @@ export interface UploadContainerProps {
 
 export const UploadContainer: React.FC<UploadContainerProps> = observer(
   ({ handleUpdateCheckedItems }) => {
-    const { openCloudResource, personalResources } = useCloudDriveContext();
+    const { openCloudResource, personalResources, startDownload } = useCloudDriveContext();
 
     const { updateChecked } = useUIStore();
 
@@ -113,8 +113,9 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
       [items, checkMap],
     );
 
-    const onResourceClick = async (resourceUuid: string) => {
+    const onResourceClick = async (resourceUuid: string, taskUuid: string) => {
       await openCloudResource(resourceUuid);
+      await startDownload(taskUuid);
     };
 
     return (
@@ -132,34 +133,38 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
         </TableHeader>
         <Table className="table-container ">
           {items.length ? (
-            items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) => (
-              <Row height={10} border={1} key={idx}>
-                <Col style={{ paddingLeft: 19 }} width={9}>
-                  <CheckBox
-                    className="checkbox"
-                    onClick={(evt: any) => {
-                      changeChecked(id, evt.currentTarget.checked);
-                    }}
-                    checked={checked}></CheckBox>
-                </Col>
-                <Col
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    onResourceClick(id);
-                  }}>
-                  <SvgImg type={type} style={{ marginRight: '6px' }} />
-                  <Inline className="filename" color="#191919" title={name}>
-                    {name}
-                  </Inline>
-                </Col>
-                <Col>
-                  <Inline color="#586376">{size}</Inline>
-                </Col>
-                <Col>
-                  <Inline color="#586376">{dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')}</Inline>
-                </Col>
-              </Row>
-            ))
+            items.map(
+              ({ id, name, size, updateTime, type, checked, taskUuid }: any, idx: number) => (
+                <Row height={10} border={1} key={idx}>
+                  <Col style={{ paddingLeft: 19 }} width={9}>
+                    <CheckBox
+                      className="checkbox"
+                      onClick={(evt: any) => {
+                        changeChecked(id, evt.currentTarget.checked);
+                      }}
+                      checked={checked}></CheckBox>
+                  </Col>
+                  <Col
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      onResourceClick(id, taskUuid);
+                    }}>
+                    <SvgImg type={type} style={{ marginRight: '6px' }} />
+                    <Inline className="filename" color="#191919" title={name}>
+                      {name}
+                    </Inline>
+                  </Col>
+                  <Col>
+                    <Inline color="#586376">{size}</Inline>
+                  </Col>
+                  <Col>
+                    <Inline color="#586376">
+                      {dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')}
+                    </Inline>
+                  </Col>
+                </Row>
+              ),
+            )
           ) : (
             <Placeholder placeholderType="noFile" />
           )}
