@@ -12,7 +12,7 @@ import "./index.css"
 import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
 
-const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string }) => {
+const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string, syncingEnabled: boolean }) => {
   const { windowSize } = useUIStore()
 
   const [ modalSize, setModalSize ] = useState({ width: 0, height: 0 })
@@ -25,13 +25,13 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   })
   
 
-  const { position, updatePosition, isSyncing } = useTrackSyncContext({
+  const { position, updatePosition, isSyncing, transitioned } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
     outerSize: windowSize,
     bounds,
     appId,
-    syncingEnabled: true
+    syncingEnabled
   });
 
   const modalRef = useRef<HTMLDivElement>(null)
@@ -74,7 +74,8 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
       }
     },
     modalProps: { ref: modalRef },
-    isSyncing
+    isSyncing,
+    transitioned
   }
 }
 
@@ -93,11 +94,12 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
 
   const positionOffset = { x: 0, y: 0 }
 
-  const { draggableProps, modalProps, isSyncing } = useSyncModal({
+  const { draggableProps, modalProps, isSyncing, transitioned } = useSyncModal({
     draggableProps: {
       defaultPosition, positionOffset
     },
-    appId: app.appIdentifier
+    appId: app.appIdentifier,
+    syncingEnabled: typeof app.remoteSynchronized !== 'boolean' ? true : app.remoteSynchronized
   })
 
   useEffect(() => {
@@ -138,7 +140,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       {...draggableProps}
     >
       <Modal
-        style={ isSyncing ? null : { transition: '.5s' }}
+        style={ !transitioned ? null : { transition: '.5s' }}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}

@@ -1520,5 +1520,7 @@ export type TrackSyncContext = {
      */
     position: Point,
 
-    isSyncing: boolean
+    isSyncing: boolean,
+    
+    transitioned: boolean
 }

@@ -61,6 +61,8 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
 
   const { isSyncingGranted } = useWidgetStore()
 
+  const [ transitioned, setTransitioned ] = useState(false)
+
   const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
 
   const medX = outerSize.width - innerSize.width
@@ -82,6 +84,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     const sub = extensionAppPositionState$.subscribe((value) => {
       // filter out changes which are sent by current user
       if(value && value[appId] && value[appId].userId !== roomInfo.userUuid) {
+        setTransitioned(true)
         setPosition(calcPosition(value[appId], { width: medX, height: medY }, bounds))
       }
     })
@@ -92,12 +95,12 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   }, [medX, medY])
   // set initial position when board is ready
   useEffect(() => {
-    if(syncingEnabled && (isHost || isSyncingGranted)) {
+    if(syncingEnabled && isHost) {
       const diffRatioX = (position.x - bounds.left) / medX
       const diffRatioY = (position.y - bounds.top) / medY
       syncAppPosition(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
     }
-  }, [ready, isSyncingGranted])
+  }, [ready])
 
   return {
     updatePosition: (point) => {
@@ -105,11 +108,13 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
         // translate point to ratio
         const diffRatioX = (point.x - bounds.left) / medX
         const diffRatioY = (point.y - bounds.top) / medY
+        setTransitioned(false)
         setPosition(point)
         debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
       }
     },
     position,
-    isSyncing: isHost || isSyncingGranted
+    isSyncing: isHost || isSyncingGranted,
+    transitioned
   }
 }
