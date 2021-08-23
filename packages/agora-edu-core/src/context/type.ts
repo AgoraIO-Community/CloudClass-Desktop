@@ -1522,5 +1522,5 @@ export type TrackSyncContext = {
 
     isSyncing: boolean,
     
-    transitioned: boolean
+    needTransition: boolean
 }

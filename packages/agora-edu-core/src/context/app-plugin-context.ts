@@ -61,7 +61,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
 
   const { isSyncingGranted } = useWidgetStore()
 
-  const [ transitioned, setTransitioned ] = useState(false)
+  const [ needTransition, setNeedTransition ] = useState(false)
 
   const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
 
@@ -84,7 +84,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     const sub = extensionAppPositionState$.subscribe((value) => {
       // filter out changes which are sent by current user
       if(value && value[appId] && value[appId].userId !== roomInfo.userUuid) {
-        setTransitioned(true)
+        setNeedTransition(true)
         setPosition(calcPosition(value[appId], { width: medX, height: medY }, bounds))
       }
     })
@@ -108,13 +108,13 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
         // translate point to ratio
         const diffRatioX = (point.x - bounds.left) / medX
         const diffRatioY = (point.y - bounds.top) / medY
-        setTransitioned(false)
+        setNeedTransition(false)
         setPosition(point)
         debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
       }
     },
     position,
     isSyncing: isHost || isSyncingGranted,
-    transitioned
+    needTransition
   }
 }

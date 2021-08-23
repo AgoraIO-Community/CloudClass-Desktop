@@ -25,7 +25,7 @@ const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProp
   })
   
 
-  const { position, updatePosition, isSyncing, transitioned } = useTrackSyncContext({
+  const { position, updatePosition, isSyncing, needTransition } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
     outerSize: windowSize,
@@ -75,7 +75,7 @@ const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProp
     },
     modalProps: { ref: modalRef },
     isSyncing,
-    transitioned
+    needTransition
   }
 }
 
@@ -94,7 +94,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
 
   const positionOffset = { x: 0, y: 0 }
 
-  const { draggableProps, modalProps, isSyncing, transitioned } = useSyncModal({
+  const { draggableProps, modalProps, isSyncing, needTransition } = useSyncModal({
     draggableProps: {
       defaultPosition, positionOffset
     },
@@ -140,7 +140,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       {...draggableProps}
     >
       <Modal
-        style={ !transitioned ? null : { transition: '.5s' }}
+        style={ !needTransition ? null : { transition: '.5s' }}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}

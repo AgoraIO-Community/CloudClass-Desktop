@@ -2621,10 +2621,10 @@
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
 
-"@netless/app-media-player@0.1.0-alpha.1":
-  version "0.1.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-alpha.1.tgz#22c963a9fc3b55c2423b89aed5d95f9612a809b9"
-  integrity sha512-tgTx3LEX7ssQXF1l7lVQqCGpWpab0jI8KC4R0YzPIdtBSIvEe5OZfjAaa2u4sw5iQHdK+bEe+PKdV2jTwOe5ow==
+"@netless/app-media-player@0.1.0-beta.1":
+  version "0.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-beta.1.tgz#e4bf152aa3e7141087ecd6a6cbc510a672920f4a"
+  integrity sha512-WYyvmyIb2KrVA+AbiCz94yJdBXCfwLlKjMiuquw7ojRX80sFrqb/Wp1wbTd+I2HNIY/LPORYQju1gCO3N9w1Iw==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -2661,7 +2661,7 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.9":
+"@netless/telebox-insider@^0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.10.tgz#8b82baa55ccb20c6d93f127cbbe40e3eacbaed1a"
   integrity sha512-x+Vbxu0/PCZL6N7y+V2FcqJ6H4c9MLg89T6y43yhzBnFOIwdSdOsBjazILXFmGRIdUt+YJRD0X2YuiIGffKQiw==
@@ -2694,14 +2694,14 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.26":
-  version "0.1.26"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.26.tgz#2b49c9c24f9d218027ffb6ebb91e002fa985854f"
-  integrity sha512-2zrG7fri3BLcAik0Hu5mcvoM6wOUXXwrgKhiDP56UO++re5RdGCNGL700inpDLROxZHoQCN6iu0SK6S2oYGfdg==
+"@netless/window-manager@0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.27.tgz#24f477345cacfb94c4ceb6c329a31e69f9b5b726"
+  integrity sha512-LuMN2yumLrJgGlsoyWdym4lO2tKK/HwUuRGfrdYuaqtGO+jp2EBDutSnbQd4v9eSWeSZ40JoR8coBkzuU2BfBQ==
   dependencies:
     "@netless/app-docs-viewer" "^0.1.11"
-    "@netless/app-media-player" "0.1.0-alpha.1"
-    "@netless/telebox-insider" "^0.1.9"
+    "@netless/app-media-player" "0.1.0-beta.1"
+    "@netless/telebox-insider" "^0.1.10"
     emittery "^0.9.2"
     lodash-es "^4.17.21"
     nanoid "^3.1.25"
