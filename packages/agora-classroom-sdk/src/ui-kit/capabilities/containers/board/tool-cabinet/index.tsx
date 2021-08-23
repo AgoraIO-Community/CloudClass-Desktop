@@ -4,8 +4,6 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 import {observer} from 'mobx-react'
-import { ScreenShareType } from 'agora-rte-sdk'
-import { useUIStore } from '@/infra/hooks'
 
 export const ToolCabinetContainer = observer(() => {
 
@@ -21,12 +19,9 @@ export const ToolCabinetContainer = observer(() => {
 
     const {
         appPlugins,
-        onLaunchAppPlugin
-    } = useAppPluginContext()
-
-    const {
+        onLaunchAppPlugin,
         activePlugin
-    } = useUIStore()
+    } = useAppPluginContext()
 
     const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {

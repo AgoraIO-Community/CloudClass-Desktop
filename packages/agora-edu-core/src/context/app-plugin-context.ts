@@ -9,6 +9,7 @@ import { Bounds, Dimension, Point, TrackSyncContext } from './type';
 export const useAppPluginContext = () => {
   const appStore = useCoreContext()
   const roomStore = useRoomStore()
+  const { activePlugin, activePluginId } = appStore.widgetStore
 
   const onLaunchAppPlugin = (id:any) => {
     if(!appStore.activeExtAppIds.includes(id)) {
@@ -37,7 +38,9 @@ export const useAppPluginContext = () => {
     contextInfo: {roomName, roomType, roomUuid, userName, userRole, userUuid, language},
     onLaunchAppPlugin,
     onShutdownAppPlugin,
-    appPluginProperties
+    appPluginProperties,
+    activePlugin,
+    activePluginId
   }
 }
 
@@ -52,7 +55,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     // remote position
     extensionAppPositionState$,
     ready
-  } = useBoardStore()  
+  } = useBoardStore()
 
   let [ sync, setSync ] = useState(() => roomInfo.userRole === EduRoleTypeEnum.teacher)
 

@@ -79,7 +79,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
 
 export const AppPluginItem = observer(({ app, properties, closable, onCancel }: { app: IAgoraExtApp, properties: any, closable: boolean, onCancel: any }) => {
   const ref = useRef<HTMLDivElement | null>(null)
-  const { contextInfo } = useAppPluginContext()
+  const { contextInfo, activePlugin } = useAppPluginContext()
 
   const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo
 
@@ -133,6 +133,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       defaultClassName="extapp-draggable-container fixed"
       handle=".modal-title"
       disabled={!isSyncing}
+      onMouseDown={() => activePlugin(app.appIdentifier)}
       {...draggableProps}
     >
       <Modal
@@ -158,10 +159,10 @@ export const AppPluginContainer = observer(() => {
   const { roomInfo } = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
 
-  const { activePluginId } = useUIStore()
+  const { activePluginId } = useAppPluginContext()
 
   let activePlugin: IAgoraExtApp | null = null
-  // pick out currently active plugin, and remove from plugin list
+  // pick out currently active plugin, and remove it from plugin list
   const appPlugins = Array.from(activeAppPlugins.values()).filter((plugin) => {
     if (plugin.appIdentifier === activePluginId) {
       activePlugin = plugin
