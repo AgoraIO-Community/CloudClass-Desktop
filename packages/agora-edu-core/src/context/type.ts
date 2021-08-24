@@ -33,7 +33,7 @@ export type EduMediaStream = {
     video: boolean,
     hideControl: boolean,
     whiteboardGranted: boolean,
-    micVolume: number,
+    // micVolume: number,
     placement: string,
     stars: number,
     isLocal: boolean;
@@ -255,6 +255,10 @@ export type VolumeContext = {
      * @version v1.1.2-rc.2
      */
     speakers: Map<number, number>,
+    /**
+     * 获取音量条
+     */
+    getFixAudioVolume: (level: number) => number
 }
 export type PretestContext = {
     closeRecordingTest: () => void,

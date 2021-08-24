@@ -97,12 +97,25 @@ export const useStreamListContext = (): StreamListContext => {
 
 export const useVolumeContext = (): VolumeContext => {
   const mediaStore = useMediaStore()
+  const appCoreContext = useCoreContext()
 
   // const volume = pretestStore
 
   return {
     microphoneLevel: mediaStore.totalVolume,
     speakers: mediaStore.speakers,
+    getFixAudioVolume: (volume: number) => {
+      if (appCoreContext.isElectron) {
+        return Math.max(0, +(volume / 255).toFixed(2))
+      }
+
+      if (volume > 0.01 && volume < 1) {
+        const v = Math.min(+volume * 10, 0.8)
+        return v
+      }
+      const v = Math.min(+(volume / 100).toFixed(2), 0.8)
+      return v
+    }
   }
 }
 

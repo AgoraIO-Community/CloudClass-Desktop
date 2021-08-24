@@ -446,3 +446,8 @@
   position: absolute;
   bottom: 0;
 }
+
+.marque-video-container .video-player .bottom-left-info {
+  left: -6px;
+  bottom: -2px;
+}
