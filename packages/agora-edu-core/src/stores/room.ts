@@ -1292,8 +1292,6 @@ export class RoomStore extends SimpleInterval {
               JSON.stringify(evt),
             );
             if (evt.type === 'main') {
-              // todo 当前移出本地流，说明已经不是主播了，则RTC角色应设置为audience
-              await this.appStore.mediaService.setRtcRole('audience');
               this.sceneStore._cameraEduStream = undefined;
               await this.sceneStore.muteLocalCamera();
               await this.sceneStore.muteLocalMicrophone();
@@ -1311,6 +1309,7 @@ export class RoomStore extends SimpleInterval {
                 `[demo] tag: ${tag}, [${Date.now()}], main stream closed local-stream-removed, `,
                 JSON.stringify(evt),
               );
+              await this.appStore.mediaService.setRtcRole('audience');
             }
             BizLogger.info('[demo] local-stream-removed emit done', evt);
           } catch (err) {
@@ -1338,7 +1337,7 @@ export class RoomStore extends SimpleInterval {
             if (this.isAssistant) {
               return;
             }
-            //todo 这里已加入RTC，监测到本地流发生流变化，说明当前用户的RCT角色应设置为host
+            //TODO: The role must be set before publishing and subscribing， Follow-up should encapsulate a complete setRole, subscribe, publish process, can not rely on the developer to grasp the calling sequence。
             await this.appStore.mediaService.setRtcRole('host');
             const localStream = roomManager.getLocalStreamData();
             BizLogger.info(
