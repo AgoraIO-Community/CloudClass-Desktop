@@ -197,11 +197,11 @@ const App = function (props) {
       {showChat ? (
         isSmallClass ? (
           <div className="app" style={{ width: '340px', display: isFullScreen ? 'none' : 'block' }}>
-            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+            <Chat />
           </div>
         ) : (
           <div className="app" style={{ width: '300px', display: isFullScreen ? 'none' : 'block' }}>
-            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+            <Chat />
           </div>
         )
       ) : (
@@ -210,10 +210,6 @@ const App = function (props) {
             className="show-chat-icon"
             onClick={() => {
               // 展开聊天
-              props.onReceivedMsg &&
-                props.onReceivedMsg({
-                  isShowChat: true,
-                });
               onChangeModal();
             }}>
             <img src={showChat_icon} />

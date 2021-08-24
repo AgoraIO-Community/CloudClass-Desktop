@@ -108,6 +108,7 @@ export const BigClassScenario = observer(() => {
                 key={chatroomId}
                 className="chat-panel"
                 widgetComponent={chatWidget}
+                // TODO: the same design as native mobile
                 widgetProps={{ chatroomId, orgName, appName, isFullScreen }}
               />
             ) : (

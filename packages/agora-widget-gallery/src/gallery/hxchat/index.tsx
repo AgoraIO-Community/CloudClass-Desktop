@@ -12,8 +12,6 @@ import * as hx from 'agora-chat-widget';
 type AppProps = {
   orgName: string;
   appName: string;
-  sendMsg?: any;
-  onReceivedMsg?: any;
 };
 
 const App: React.FC<AppProps> = observer((props) => {
@@ -49,7 +47,7 @@ const App: React.FC<AppProps> = observer((props) => {
     if (domRef.current && isJoined) {
       //@ts-ignore
       console.log('store-----', pluginStore);
-      hx.renderHXChatRoom(domRef.current, pluginStore, props.sendMsg, props.onReceivedMsg);
+      hx.renderHXChatRoom(domRef.current, pluginStore);
     }
   }, [domRef.current, isJoined, isFullScreen]);
 
@@ -66,23 +64,18 @@ export class AgoraHXChatWidget implements IAgoraWidget {
 
   constructor() {}
 
-  widgetDidLoad(
-    dom: Element,
-    ctx: AgoraWidgetContext,
-    props: any,
-    sendMsg?: any,
-    onReceivedMsg?: any,
-  ): void {
+  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any): void {
     this.store = new PluginStore(ctx, props);
     console.log('widgetDidLoad', props);
     // hx.renderHXChatRoom(dom)
     ReactDOM.render(
       <Provider store={this.store}>
-        <App {...props} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg} />
+        <App {...props} />
       </Provider>,
       dom,
     );
   }
+  // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}
   widgetWillUnload(): void {
     console.log('widgetWillUnload>>>>');
