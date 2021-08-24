@@ -214,12 +214,13 @@ export class AgoraChatWidget implements IAgoraWidget {
     ReactDOM.render(
       <Provider store={this.store}>
         <I18nProvider language={ctx.language}>
-          <App />
+          <App {...props} />
         </I18nProvider>
       </Provider>,
       dom,
     );
   }
+  // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {
     this.store?.onReceivedProps(properties, cause);
   }

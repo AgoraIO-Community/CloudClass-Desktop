@@ -20,7 +20,7 @@ const { TabPane } = Tabs;
 import './index.css';
 
 // 主页面，定义 tabs
-export const Chat = ({ onReceivedMsg, sendMsg }) => {
+export const Chat = () => {
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
   const [roomUserList, setRoomUserList] = useState([]);
   const state = useSelector((state) => state);
@@ -151,17 +151,15 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
           <Announcement />
         </TabPane>
       </Tabs>
-      {/* {sendMsg.isFullScreen && (
-            <div className="mini-icon">
-                <img src={minimize} onClick={() => { 
-                    // 最小化聊天
-                    onReceivedMsg && onReceivedMsg({
-                        isShowChat: false
-                    })
-                    showChatModal()
-                }} />
-            </div>
-        )} */}
+      {/* <div className="mini-icon">
+        <img
+          src={minimize}
+          onClick={() => {
+            // 最小化聊天
+            showChatModal();
+          }}
+        />
+      </div> */}
       <div></div>
     </div>
   );

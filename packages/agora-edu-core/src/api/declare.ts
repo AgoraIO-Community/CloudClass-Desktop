@@ -74,6 +74,7 @@ export interface IAgoraWidget {
   widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, widgetProps: any): void;
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void;
   widgetWillUnload(): void;
+  // TODO: sendMessage -> widget to outer, widgetDidReceiveMessage -> outer to widget
 }
 
 export type AgoraConvertedFile = {
