@@ -61,6 +61,7 @@
         appId,
         userRole,
         translateLanguage,
+        region,
       } = useParams(window.location);
 
       // const options = paramsObject
@@ -76,6 +77,7 @@
       AgoraEduSDK.config({
         appId,
         cachePath: undefined,
+        region: region ? region : 'CN',
       });
       AgoraEduSDK.launch(document.querySelector('#root1'), {
         userUuid,

@@ -660,6 +660,10 @@ export type GlobalContext = {
    * @version v1.1.0
    */
   dialogEventObserver: Subject<any>;
+  /**
+   * region区域
+   */
+  region: string;
 };
 export type BoardContext = {
   /**

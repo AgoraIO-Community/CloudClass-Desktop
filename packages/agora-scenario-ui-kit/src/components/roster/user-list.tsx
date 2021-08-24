@@ -54,6 +54,7 @@ export type StudentRosterColumnKey = 'cameraEnabled' | 'micEnabled' | 'kickOut' 
 export type StudentRosterProps = {
   isDraggable: boolean;
   columns?: StudentRosterColumn[];
+  excludeColumns?: StudentRosterColumnKey[];
   title?: string;
   dataSource?: StudentRosterProfile[];
   teacherName: string;
@@ -125,28 +126,24 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       );
     },
   },
-  // {
-  //   key: 'chat',
-  //   name: 'roster.chat',
-  //   action: 'chat',
-  //   render: (_, profile, canOperate, userType, onClick) => {
-  //     const {
-  //       operateStatus,
-  //       chatStatus,
-  //       type,
-  //     } = getChatState(profile, canOperate);
-  //     const cls = classnames({
-  //       ["icon-hover"]: canOperate,
-  //       ["icon-disable"]: !canOperate,
-  //       ["icon-flex"]: 1,
-  //     })
-  //     return (
-  //       <div className={cls} onClick={onClick}>
-  //         <i className={chatStatus}></i>
-  //       </div>
-  //     )
-  //   },
-  // },
+  {
+    key: 'chat',
+    name: 'roster.chat',
+    action: 'chat',
+    render: (_, profile, canOperate, userType, onClick) => {
+      const { operateStatus, chatStatus, type } = getChatState(profile, canOperate);
+      const cls = classnames({
+        ['icon-hover']: canOperate,
+        ['icon-disable']: !canOperate,
+        ['icon-flex']: 1,
+      });
+      return (
+        <div className={cls} onClick={onClick}>
+          <i className={chatStatus}></i>
+        </div>
+      );
+    },
+  },
   {
     key: 'kickOut',
     name: 'student.operation',
@@ -171,6 +168,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   localUserUuid,
   dataSource = [],
   columns = defaultStudentColumns,
+  excludeColumns = [],
   // userType,
   userType = 'student',
   onClose = () => console.log('onClose'),
@@ -179,9 +177,11 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
 }) => {
   const studentList = studentListSort(dataSource);
 
-  const cols = columns.filter(
-    ({ visibleRoles = [] }: any) => visibleRoles.length === 0 || visibleRoles.includes(userType),
-  );
+  const cols = columns
+    .filter((item: StudentRosterColumn) => !excludeColumns.includes(item.key))
+    .filter(
+      ({ visibleRoles = [] }: any) => visibleRoles.length === 0 || visibleRoles.includes(userType),
+    );
 
   const DraggableContainer = useCallback(
     ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {

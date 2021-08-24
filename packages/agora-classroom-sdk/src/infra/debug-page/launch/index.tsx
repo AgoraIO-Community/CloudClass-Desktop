@@ -74,11 +74,6 @@ export const LaunchPage = observer(() => {
 
         roomRef.current = await AgoraEduSDK.launch(dom, {
           ...launchOption,
-          widgets: {
-            ...{
-              chat: ChatWidgetFactory(launchOption.region!),
-            },
-          },
           // boardOptions: {
           //   userPayload: {
           //     cursorName: ""
