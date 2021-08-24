@@ -246,14 +246,14 @@ export class MediaService extends EventEmitter implements IMediaService {
           audienceLatencyLevel: 1,
         });
       } else {
-        (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
+        await (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
         (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
           audienceLatencyLevel: 1,
         });
       }
     } else {
       if (roleType === 'host') {
-        (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
       } else {
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
