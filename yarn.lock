@@ -1836,6 +1836,11 @@
     gud "^1.0.0"
     warning "^4.0.3"
 
+"@hyrious/xml-js@1.6.14":
+  version "1.6.14"
+  resolved "https://registry.nlark.com/@hyrious/xml-js/download/@hyrious/xml-js-1.6.14.tgz#82685fb5063f9d3d15b82802acad75bac45cf2c5"
+  integrity sha1-gmhftQY/nT0VuCgCrK11usRc8sU=
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -2867,10 +2872,10 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/video-js-plugin@0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@netless/video-js-plugin/-/video-js-plugin-0.3.2.tgz#e88e9bc87e3a45f14c12768239b2a369ade30ef8"
-  integrity sha512-YVa11in8f5M30xxJhU3Fy8QnypyiZDZ4UmKhSyOFliReXE3gzO3vx4hJfuNC72V+cHcRPT3l8zxDvsEWCWKXAw==
+"@netless/video-js-plugin@0.3.8":
+  version "0.3.8"
+  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.8.tgz#d4b1ecab19890fa9d5502706f5d86c04379678d0"
+  integrity sha1-1LHsqxmJD6nVUCcG9dhsBDeWeNA=
 
 "@netless/white-audio-plugin2@2.0.5":
   version "2.0.5"
@@ -7008,7 +7013,7 @@ atob-lite@^2.0.0:
   resolved "https://registry.yarnpkg.com/atob-lite/-/atob-lite-2.0.0.tgz#0fef5ad46f1bd7a8502c65727f0367d5ee43d696"
   integrity sha1-D+9a1G8b16hQLGVyfwNn1e5D1pY=
 
-atob@^2.1.0, atob@^2.1.2:
+atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
@@ -9233,6 +9238,11 @@ core-js@^2.4.0, core-js@^2.6.5:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
+
+core-js@^3.15.2:
+  version "3.16.2"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.16.2.tgz?cache=0&sync_timestamp=1629206158334&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.16.2.tgz#3f485822889c7fc48ef463e35be5cc2a4a01a1f4"
+  integrity sha1-P0hYIoicf8SO9GPjW+XMKkoBofQ=
 
 core-util-is@1.0.2, core-util-is@^1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -26900,17 +26910,18 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.11:
-  version "2.13.11"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.11.tgz#70455ca04a8ca28f16e7cac33d82bb9915883c47"
-  integrity sha512-24opNfLd0JinJAOcyyOfG4q7X78o+dq5vLtwCsgzqYONqWp2WQOZtJzopB2uUSSW2YEbYQCglz+wmr9FWuv/Yg==
+white-web-sdk@2.13.16:
+  version "2.13.16"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.16.tgz#ec83ad622d017adeb6641bb7e8b9f7bd35a5edf5"
+  integrity sha1-7IOtYi0Bet62ZBu36Ln3vTWl7fU=
   dependencies:
+    "@hyrious/xml-js" "1.6.14"
     "@netless/canvas-polyfill" "^0.0.4"
-    atob "^2.1.0"
+    atob "^2.1.2"
     bezier-js "^2.4.4"
     color "^3.1.0"
+    core-js "^3.15.2"
     detect-it "^3.0.5"
-    es6-symbol "^3.1.1"
     eventemitter3 "^4.0.7"
     mathjs "6.6.5"
     mobx "^4.15.7"
@@ -26925,7 +26936,6 @@ white-web-sdk@2.13.11:
     textarea-caret-ts "^4.1.0"
     url-parse "^1.4.0"
     uuid "^7.0.3"
-    xml-js "^1.6.11"
 
 wide-align@^1.1.0:
   version "1.1.3"
