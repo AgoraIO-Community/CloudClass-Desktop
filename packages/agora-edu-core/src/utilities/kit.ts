@@ -6,9 +6,6 @@ import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { ApplianceNames, Room } from 'white-web-sdk';
-import { agoraCaches } from './cache';
-import OSS from 'ali-oss';
-import { get } from 'lodash';
 
 const OSS_PREFIX = '';
 
