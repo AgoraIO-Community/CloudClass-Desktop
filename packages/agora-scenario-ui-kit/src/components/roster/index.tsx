@@ -75,6 +75,10 @@ export interface RosterProps extends ModalProps {
    */
   columns?: Column[];
   /**
+   * 排除列
+   */
+  excludeColumns?: ColumnKey[];
+  /**
    * 数据源
    */
   dataSource?: Profile[];
@@ -112,6 +116,7 @@ export interface RosterProps extends ModalProps {
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
+  excludeColumns = [],
   dataSource = [],
   onClick,
   onClose = () => console.log('onClose'),
@@ -181,9 +186,12 @@ export const Roster: FC<RosterProps> = ({
 
   const studentList = studentListSort(dataSource);
 
-  const cols = columns.filter(
-    ({ visibleRoles = [] }: Column) => visibleRoles.length === 0 || visibleRoles.includes(userType),
-  );
+  const cols = columns
+    .filter((col: Column) => !excludeColumns.includes(col.key))
+    .filter(
+      ({ visibleRoles = [] }: Column) =>
+        visibleRoles.length === 0 || visibleRoles.includes(userType),
+    );
 
   const DraggableContainer = useCallback(
     ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {

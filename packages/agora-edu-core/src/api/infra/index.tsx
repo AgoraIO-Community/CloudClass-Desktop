@@ -64,7 +64,7 @@ export class AgoraEduCoreSDK {
 
     Object.assign(sdkConfig.configParams, params);
 
-    globalConfigs.setRegion(params.region ?? 'GLOBAL');
+    globalConfigs.setRegion(params.region ?? 'CN');
 
     console.log('# set config ', sdkConfig.configParams, ' params ', params);
     // globalConfigs should only be copied here
@@ -143,11 +143,11 @@ export class AgoraEduCoreSDK {
       // TODO: find better way to handle default widgets
       if (option.widgets) {
         if (!option.widgets.chat) {
-          option.widgets.chat = ChatWidgetFactory(option.region!);
+          option.widgets.chat = ChatWidgetFactory(globalConfigs._region);
         }
       } else {
         option.widgets = {
-          chat: ChatWidgetFactory(option.region!),
+          chat: ChatWidgetFactory(globalConfigs._region),
         };
       }
 

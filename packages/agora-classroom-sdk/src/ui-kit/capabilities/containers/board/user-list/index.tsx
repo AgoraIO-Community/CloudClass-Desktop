@@ -4,6 +4,7 @@ import { useWatch } from '@/ui-kit/utilities/hooks';
 import {
   useBoardContext,
   useChatContext,
+  useGlobalContext,
   useHandsUpContext,
   useRoomContext,
   useStreamListContext,
@@ -15,7 +16,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Roster } from '~ui-kit';
-import { StudentRoster } from '~ui-kit/components';
+import { ColumnKey, StudentRoster, StudentRosterColumnKey } from '~ui-kit/components';
 import { useDebounce } from '~ui-kit/utilities/hooks';
 import { KickDialog } from '../../dialog';
 
@@ -173,10 +174,17 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     }
   }, [debouncedCarousel]);
 
+  const { region } = useGlobalContext();
+
+  const excludeColumns: ColumnKey[] = useMemo(() => {
+    return region === 'CN' ? ['chat'] : [];
+  }, [region]);
+
   return (
     <Roster
       isDraggable={true}
       carousel={userType === 'teacher'}
+      excludeColumns={excludeColumns}
       carouselProps={{
         isOpenCarousel: carouselProps.state,
         changeCarousel: (e: any) => {
@@ -359,11 +367,17 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     return 'student';
   }, [roomInfo.userRole]);
 
+  const { region } = useGlobalContext();
+
+  const excludeColumns: StudentRosterColumnKey[] = useMemo(() => {
+    return region === 'CN' ? ['chat'] : [];
+  }, [region]);
+
   return (
     <StudentRoster
       isDraggable={true}
       localUserUuid={localUserInfo.userUuid}
-      // role={localUserInfo.role as any}
+      excludeColumns={excludeColumns}
       teacherName={teacherInfo?.userName || ''}
       dataSource={dataList}
       userType={userType}

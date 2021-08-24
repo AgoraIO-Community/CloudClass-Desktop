@@ -292,9 +292,11 @@ export const useGlobalContext = (): GlobalContext => {
   const { isFullScreen } = useBoardStore();
   const appStore = useCoreContext();
 
-  const mainPath = useCoreContext().params.mainPath;
+  const mainPath = appStore.params.mainPath;
 
-  const { toast$, dialog$, seq$ } = useCoreContext();
+  const { toast$, dialog$, seq$ } = appStore;
+
+  const region = appStore.params.config.region as string;
 
   const { joined, isJoiningRoom } = useRoomStore();
 
@@ -317,6 +319,7 @@ export const useGlobalContext = (): GlobalContext => {
     isFullScreen,
     params: appStore.params,
     isJoined: joined,
+    region,
     toastEventObserver: toast$,
     dialogEventObserver: dialog$,
     sequenceEventObserver: seq$,
