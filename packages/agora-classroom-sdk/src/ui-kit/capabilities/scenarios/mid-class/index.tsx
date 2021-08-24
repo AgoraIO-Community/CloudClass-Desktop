@@ -220,6 +220,7 @@ export const MidClassScenario = observer(() => {
             <div className="mr-1">
               <HandsUpContainer />
             </div>
+            <div id="window-manager-collector" />
             {chatroomId ? (
             <Widget 
               className="chat-panel" 
