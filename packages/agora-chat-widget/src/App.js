@@ -195,17 +195,15 @@ const App = function (props) {
   return (
     <div>
       {showChat ? (
-        !isFullScreen ? (
-          isSmallClass ? (
-            <div className="app" style={{ width: '340px' }}>
-              <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-            </div>
-          ) : (
-            <div className="app" style={{ width: '300px' }}>
-              <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-            </div>
-          )
-        ) : null
+        isSmallClass ? (
+          <div className="app" style={{ width: '340px', display: isFullScreen ? 'none' : 'block' }}>
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+          </div>
+        ) : (
+          <div className="app" style={{ width: '300px', display: isFullScreen ? 'none' : 'block' }}>
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
+          </div>
+        )
       ) : (
         <div className="chat">
           <div
