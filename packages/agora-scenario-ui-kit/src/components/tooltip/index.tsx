@@ -239,9 +239,9 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
   return (
     <RcTooltip
       {...props}
-      align={{
+      align={offset ? {
         offset
-      }}
+      } : {}}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
       getTooltipContainer={getPopupContainer || getTooltipContainer}
@@ -273,6 +273,5 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
 
 Tooltip.defaultProps = {
   mouseEnterDelay: 0.1,
-  mouseLeaveDelay: 0.1,
-  offset: [30, 0]
+  mouseLeaveDelay: 0.1
 };

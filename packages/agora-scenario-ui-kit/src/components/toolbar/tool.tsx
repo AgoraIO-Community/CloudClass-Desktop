@@ -27,7 +27,7 @@ export const Tool: FC<ToolProps> = (props) => {
       {Component ? (
         <Component isActive={isActive} hover={hover} onClick={handleToolClick} />
       ) : (
-        <Tooltip title={t(label)} placement="bottomLeft" overlayClassName="translated-tooltip">
+        <Tooltip title={t(label)} placement="bottomLeft" overlayClassName="translated-tooltip"  offset={[30, 0]}>
           <div
             className={`tool ${isActive ? 'active' : ''}`}
             >
