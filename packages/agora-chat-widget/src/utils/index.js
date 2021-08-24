@@ -1,12 +1,12 @@
-import { parse, stringify } from "qs";
+import { parse, stringify } from 'qs';
 
 export function getPageQuery() {
-  console.log('window. getuery323')
-  return parse(window.location.href.split("?")[1]);
+  console.log('window. getuery323');
+  return parse(window.location.href.split('?')[1]);
 }
 
-export function getQueryPath(path = "", query = {}) {
-  console.log('window. ')
+export function getQueryPath(path = '', query = {}) {
+  console.log('window. ');
   const search = stringify(query);
   if (search.length) {
     return `${path}?${search}`;
@@ -26,11 +26,11 @@ export function dateFormat(timestamp, formats) {
   // 2. Y-m-d H:i:s
   // 3. Y年m月d日
   // 4. Y年m月d日 H时i分
-  formats = formats || "Y-m-d";
+  formats = formats || 'Y-m-d';
 
   var zero = function (value) {
     if (value < 10) {
-      return "0" + value;
+      return '0' + value;
     }
     return value;
   };

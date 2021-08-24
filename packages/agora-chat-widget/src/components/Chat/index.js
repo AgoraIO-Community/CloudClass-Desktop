@@ -1,158 +1,167 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
-import { StickyContainer, Sticky } from 'react-sticky';
-import { MessageBox } from '../MessageBox'
-import { InputBox } from '../InputBox'
-import { UserList } from '../UserList'
-import { Announcement } from '../Announcement'
-import { ROLE, CHAT_TABS_KEYS } from '../../contants'
-import store from '../../redux/store'
-import { isShowChat } from '../../redux/actions/propsAction'
-import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction'
-import { announcementNotice } from '../../redux/actions/roomAction'
-import minimize from '../../themes/img/minimize.png'
-import notice from '../../themes/img/notice.png'
-import _ from 'lodash'
+import { MessageBox } from '../MessageBox';
+import { InputBox } from '../InputBox';
+import { UserList } from '../UserList';
+import { Announcement } from '../Announcement';
+import { ROLE, CHAT_TABS_KEYS } from '../../contants';
+import store from '../../redux/store';
+import { isShowChat } from '../../redux/actions/propsAction';
+import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
+import { transI18n } from '~ui-kit';
+import { announcementNotice } from '../../redux/actions/roomAction';
+import minimize from '../../themes/img/minimize.png';
+import notice from '../../themes/img/notice.png';
+import _ from 'lodash';
 
 const { TabPane } = Tabs;
 
-import './index.css'
-
-const renderTabBar = (props, DefaultTabBar) => (
-    <Sticky bottomOffset={80}>
-        {({ style }) => (
-            <DefaultTabBar {...props} className="tab-class" style={{ ...style }} />
-        )}
-    </Sticky>
-);
-
-
+import './index.css';
 
 // 主页面，定义 tabs
 export const Chat = ({ onReceivedMsg, sendMsg }) => {
-    const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat)
-    const [roomUserList, setRoomUserList] = useState([])
-    const state = useSelector(state => state)
-    const isLogin = _.get(state, 'isLogin')
-    const announcement = _.get(state, 'room.announcement', '')
-    const showRed = _.get(state, 'showRed')
-    const showAnnouncementNotice = _.get(state, 'showAnnouncementNotice')
-    const roleType = _.get(state, 'loginUserInfo.ext', '')
-    const roomUsers = _.get(state, 'room.roomUsers', [])
-    const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {})
-    const isTabKey = state?.isTabKey
-    // 直接在 propsData 中取值
-    const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
-    useEffect(() => {
-        // 加载成员信息
-        let _speakerTeacher = []
-        let _student = []
-        if (isLogin) {
-            let val
-            roomUsers.map((item) => {
-                if (item === "系统管理员") return
-                if (Object.keys(roomUsersInfo).length > 0) {
-                    val = roomUsersInfo[item]
-                }
-                let newVal
-                let role = val && JSON.parse(val?.ext).role
-                switch (role) {
-                    case 1:
-                        newVal = _.assign(val, { id: item })
-                        _speakerTeacher.push(newVal)
-                        break;
-                    case 2:
-                        newVal = _.assign(val, { id: item })
-                        _student.push(newVal)
-                        break;
-                    default:
-                        newVal = _.assign(val, { id: item })
-                        _student.push(newVal)
-                        break;
-                }
-            })
-            setRoomUserList(_.concat(_speakerTeacher, _student))
+  const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
+  const [roomUserList, setRoomUserList] = useState([]);
+  const state = useSelector((state) => state);
+  const isLogin = _.get(state, 'isLogin');
+  const announcement = _.get(state, 'room.announcement', '');
+  const showRed = _.get(state, 'showRed');
+  const showAnnouncementNotice = _.get(state, 'showAnnouncementNotice');
+  const roleType = _.get(state, 'loginUserInfo.ext', '');
+  const roomUsers = _.get(state, 'room.roomUsers', []);
+  const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
+  const isTabKey = state?.isTabKey;
+  // 直接在 propsData 中取值
+  const isTeacher =
+    roleType &&
+    (JSON.parse(roleType).role === ROLE.teacher.id ||
+      JSON.parse(roleType).role === ROLE.assistant.id);
+  useEffect(() => {
+    // 加载成员信息
+    let _speakerTeacher = [];
+    let _assistant = [];
+    let _student = [];
+    if (isLogin) {
+      let val;
+      roomUsers.map((item) => {
+        if (item === '系统管理员') return;
+        if (Object.keys(roomUsersInfo).length > 0) {
+          val = roomUsersInfo[item];
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [roomUsers, roomUsersInfo])
-
-    const hideChatModal = () => {
-        store.dispatch(isShowChat(false))
-        store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat))
-    }
-
-
-
-    // 监听 Tab 切换
-    const onTabChange = (key) => {
-        store.dispatch(selectTabAction(key))
-        switch (key) {
-            case "CHAT":
-                setTabKey(CHAT_TABS_KEYS.chat)
-                store.dispatch(showRedNotification(false))
-                break;
-            case "USER":
-                setTabKey(CHAT_TABS_KEYS.user)
-                break;
-            case "ANNOUNCEMENT":
-                setTabKey(CHAT_TABS_KEYS.notice)
-                store.dispatch(announcementNotice(false))
-                break;
-            default:
-                break;
+        let newVal;
+        let role = val && JSON.parse(val?.ext).role;
+        switch (role) {
+          case 1:
+            newVal = _.assign(val, { id: item });
+            _speakerTeacher.push(newVal);
+            break;
+          case 2:
+            newVal = _.assign(val, { id: item });
+            _student.push(newVal);
+            break;
+          case 3:
+            newVal = _.assign(val, { id: item });
+            _assistant.push(newVal);
+            break;
+          default:
+            newVal = _.assign(val, { id: item });
+            _student.push(newVal);
+            break;
         }
+      });
+      setRoomUserList(_.concat(_speakerTeacher, _assistant, _student));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomUsers, roomUsersInfo]);
 
-    // 点击聊天Tab中的公告，跳转到公告Tab
-    const toTabKey = () => {
-        setTabKey(CHAT_TABS_KEYS.notice)
+  const hideChatModal = () => {
+    store.dispatch(isShowChat(false));
+    store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat));
+  };
+
+  // 监听 Tab 切换
+  const onTabChange = (key) => {
+    store.dispatch(selectTabAction(key));
+    switch (key) {
+      case 'CHAT':
+        setTabKey(CHAT_TABS_KEYS.chat);
+        store.dispatch(showRedNotification(false));
+        break;
+      case 'USER':
+        setTabKey(CHAT_TABS_KEYS.user);
+        break;
+      case 'ANNOUNCEMENT':
+        setTabKey(CHAT_TABS_KEYS.notice);
+        store.dispatch(announcementNotice(false));
+        break;
+      default:
+        break;
     }
-    return <div>
+  };
 
-        {/* <StickyContainer> */}
-        <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
-            <TabPane tab={<div>
-                {showRed && <div className="red-notice"></div>}
-                聊天
-            </div>} key={CHAT_TABS_KEYS.chat}>
-                {
-                    announcement && <div className="notice" onClick={() => { toTabKey() }}>
-                        <img src={notice} alt="通知" className="notice-icon" />
-                        <span className="notice-text">
-                            {announcement}
-                        </span>
-                    </div>
-                }
-                <MessageBox />
-                <InputBox />
-            </TabPane>
-            {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
-                <UserList roomUserList={roomUserList} />
-            </TabPane>}
-            <TabPane tab={<div>
-                {showAnnouncementNotice && <div className="red-notice"></div>}
-                公告
+  // 点击聊天Tab中的公告，跳转到公告Tab
+  const toTabKey = () => {
+    setTabKey(CHAT_TABS_KEYS.notice);
+    store.dispatch(announcementNotice(false));
+  };
+  return (
+    <div>
+      <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
+        <TabPane
+          tab={
+            <div>
+              {showRed && <div className="red-notice"></div>}
+              {transI18n('chat.chat')}
             </div>
-            } key={CHAT_TABS_KEYS.notice}>
-
-                <Announcement />
-            </TabPane>
-        </Tabs>
-        {/* {sendMsg.isFullScreen && (
-            <div className="mini-icon">
-                <img src={minimize} onClick={() => { 
-                    // 最小化聊天
-                    onReceivedMsg && onReceivedMsg({
-                        isShowChat: false
-                    })
-                    showChatModal()
-                }} />
+          }
+          key={CHAT_TABS_KEYS.chat}>
+          {announcement && (
+            <div
+              className="notice"
+              onClick={() => {
+                toTabKey();
+              }}>
+              <img src={notice} className="notice-icon" />
+              <span className="notice-text">{announcement}</span>
             </div>
-        )} */}
-        {/* </StickyContainer> */}
-        <div>
-        </div>
+          )}
+          <MessageBox />
+          <InputBox />
+        </TabPane>
+        {isTeacher && (
+          <TabPane
+            tab={
+              roomUsers.length > 0
+                ? `${transI18n('chat.members')}(${roomUsers.length})`
+                : `${transI18n('chat.members')}`
+            }
+            key={CHAT_TABS_KEYS.user}>
+            <UserList roomUserList={roomUserList} />
+          </TabPane>
+        )}
+        <TabPane
+          tab={
+            <div>
+              {showAnnouncementNotice && <div className="red-notice"></div>}
+              {transI18n('chat.announcement')}
+            </div>
+          }
+          key={CHAT_TABS_KEYS.notice}>
+          <Announcement />
+        </TabPane>
+      </Tabs>
+      <div className="mini-icon">
+        <img src={minimize} onClick={() => {
+          // 最小化聊天
+          onReceivedMsg && onReceivedMsg({
+            isShowChat: false
+          })
+          hideChatModal()
+        }} />
+      </div>
 
+      <div></div>
     </div>
-}
+  );
+};
