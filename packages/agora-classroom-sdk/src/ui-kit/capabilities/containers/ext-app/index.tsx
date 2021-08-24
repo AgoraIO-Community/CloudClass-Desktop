@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { IAgoraExtApp, useAppPluginContext, useExtensionAppSyncContext, useRoomContext } from 'agora-edu-core'
+import { IAgoraExtApp, useAppPluginContext, useRoomContext, useTrackSyncContext } from 'agora-edu-core'
 import { useUIStore } from '@/infra/hooks'
 import Draggable, { DraggableData, DraggableProps } from 'react-draggable'
 import { Dependencies } from './dependencies'
@@ -12,7 +12,7 @@ import "./index.css"
 import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
 
-const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string }) => {
+const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string, syncingEnabled: boolean }) => {
   const { windowSize } = useUIStore()
 
   const [ modalSize, setModalSize ] = useState({ width: 0, height: 0 })
@@ -25,12 +25,13 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   })
   
 
-  const { position, updatePosition, defaultPosition, isSyncing } = useExtensionAppSyncContext({
+  const { position, updatePosition, isSyncing, needTransition } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
     innerSize: modalSize,
-    outterSize: windowSize,
+    outerSize: windowSize,
     bounds,
-    appId
+    appId,
+    syncingEnabled
   });
 
   const modalRef = useRef<HTMLDivElement>(null)
@@ -65,7 +66,7 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
   return {
     draggableProps: {
       ...draggableProps,
-      defaultPosition,
+      // defaultPosition: position,
       position,
       bounds,
       onDrag: (_: any, { x, y }: DraggableData) => {
@@ -73,13 +74,14 @@ const useSyncModal = ({ draggableProps, appId }: { draggableProps: Pick<Draggabl
       }
     },
     modalProps: { ref: modalRef },
-    isSyncing
+    isSyncing,
+    needTransition
   }
 }
 
 export const AppPluginItem = observer(({ app, properties, closable, onCancel }: { app: IAgoraExtApp, properties: any, closable: boolean, onCancel: any }) => {
   const ref = useRef<HTMLDivElement | null>(null)
-  const { contextInfo } = useAppPluginContext()
+  const { contextInfo, setActivePlugin } = useAppPluginContext()
 
   const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo
 
@@ -92,11 +94,12 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
 
   const positionOffset = { x: 0, y: 0 }
 
-  const { draggableProps, modalProps, isSyncing } = useSyncModal({
+  const { draggableProps, modalProps, isSyncing, needTransition } = useSyncModal({
     draggableProps: {
       defaultPosition, positionOffset
     },
-    appId: app.appIdentifier
+    appId: app.appIdentifier,
+    syncingEnabled: typeof app.remoteSynchronized !== 'boolean' ? true : app.remoteSynchronized
   })
 
   useEffect(() => {
@@ -133,10 +136,11 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       defaultClassName="extapp-draggable-container fixed"
       handle=".modal-title"
       disabled={!isSyncing}
+      onMouseDown={() => setActivePlugin(app.appIdentifier)}
       {...draggableProps}
     >
       <Modal
-        style={ isSyncing ? null : { transition: '.1s' }}
+        style={ !needTransition ? null : { transition: '.5s' }}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}
@@ -158,10 +162,10 @@ export const AppPluginContainer = observer(() => {
   const { roomInfo } = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
 
-  const { activePluginId } = useUIStore()
+  const { activePluginId } = useAppPluginContext()
 
   let activePlugin: IAgoraExtApp | null = null
-  // pick out currently active plugin, and remove from plugin list
+  // pick out currently active plugin, and remove it from plugin list
   const appPlugins = Array.from(activeAppPlugins.values()).filter((plugin) => {
     if (plugin.appIdentifier === activePluginId) {
       activePlugin = plugin

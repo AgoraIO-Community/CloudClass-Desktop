@@ -161,7 +161,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   username,
   micEnabled,
   streamUuid,
-  micVolume = 100,
+  micVolume = 0,
   cameraEnabled,
   whiteboardGranted,
   isHost = false,

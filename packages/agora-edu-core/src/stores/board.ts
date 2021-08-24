@@ -279,7 +279,6 @@ export class BoardStore extends ZoomController {
 
   windowManager?: WindowManager
 
-  windowAppIds: string[] = []
   @computed
   get boardClient(): BoardClient {
     return this._boardClient as BoardClient;
@@ -475,15 +474,12 @@ export class BoardStore extends ZoomController {
     //     [appId]: position
     //   }
     // })
-    
-    // console.log("send sync data", appId, position);
-    this.room.setGlobalState({
+    this.room?.setGlobalState({
       extAppMoveTracks: {
         ...(this.room.state.globalState as any).extAppMoveTracks,
         [appId]: position
       }
     })
-    // console.log("after send sync data", appId, position);
   }
 
   @action.bound
@@ -1185,7 +1181,6 @@ export class BoardStore extends ZoomController {
           this.iframe.onDestroy()
         }
         
-        // this.windowManager && this.windowAppIds.forEach(this.windowManager?.closeApp)  
         this.windowManager?.destroy()
 
         await this.boardClient.destroy()
@@ -1541,6 +1536,8 @@ export class BoardStore extends ZoomController {
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission)
+        this.windowManager?.setReadonly(!hasPermission)
+        this.appStore.widgetStore.grantSyncing(hasPermission)
       }
     }
   }
@@ -1825,6 +1822,7 @@ export class BoardStore extends ZoomController {
         WindowManager.mount(this.room, dom, undefined, { debug: true }
       ).then((manager)=>{
         this.windowManager = manager
+        this.windowManager.mainView.disableCameraTransform = true
       });
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
@@ -1961,10 +1959,10 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async putCourseResource(resourceUuid: string, isDynamicRes?: boolean) {
+  async putCourseResource(resourceUuid: string) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid)
     if (resource) {
-      const scenes = resource.scenes
+      const scenes = resource.scenes?.map(({ name, ppt }) => ({ name, ppt: { ...ppt, previewURL: ppt.preview } })) as SceneDefinition[]
       this.updateBoardSceneItems({
         scenes,
         resourceName: resource.name,
@@ -1973,10 +1971,9 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
+      this.room.putScenes(`/${resource.id}`, scenes)
 
-      this.room.putScenes(`/${resource.id}`, resource.scenes as SceneDefinition[])
-
-      const appId = await this.windowManager?.addApp({
+      await this.windowManager?.addApp({
         kind: BuildinApps.DocsViewer,
         options: {
             scenePath: `/${resource.id}`,
@@ -1984,8 +1981,6 @@ export class BoardStore extends ZoomController {
             scenes
         }
       });
-
-      appId && this.windowAppIds.unshift(appId)
     }
   }
 
@@ -2177,7 +2172,7 @@ export class BoardStore extends ZoomController {
       }
       const putCourseFileType = ["ppt", "word","pdf"]
       if (putCourseFileType.includes(resource.type)) {
-        await this.putCourseResource(uuid, true)
+        await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
         await this.putAV(resource.url, resource.type, resource.name)

@@ -17,8 +17,6 @@ export const ScreenSharePlayerContainer = observer(() => {
     //     isCurrentScenePathScreenShare
     // } = useBoardContext()
 
-    console.log("roomInfo.userRole !== EduRoleTypeEnum.teacher", roomInfo.userRole !== EduRoleTypeEnum.teacher)
-
     const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
     return (

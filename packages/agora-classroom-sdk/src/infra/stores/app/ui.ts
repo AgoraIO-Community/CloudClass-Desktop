@@ -49,14 +49,6 @@ export class UIStore {
   @observable
   checked: boolean = false
 
-  @observable
-  activePluginId?: string
-
-  @action.bound
-  activePlugin(appId: string) {
-    this.activePluginId = appId
-  }
-
   @action.bound
   updateWindowSize(size: { width: number, height: number }) {
     this.windowSize = size;

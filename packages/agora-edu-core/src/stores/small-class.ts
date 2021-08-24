@@ -113,7 +113,7 @@ export class SmallClassStore {
           hideControl: this.sceneStore.hideControl(user.userUuid),
           holderState: props.holderState,
           placeHolderText: props.text,
-          // micVolume: volumeLevel,
+          micVolume: volumeLevel,
           stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${acceptedUser.userUuid}`),
         })
@@ -143,7 +143,7 @@ export class SmallClassStore {
             placeHolderText: props.text,
             stars: +get(this.studentsMap, `${this.roomInfo.userUuid}.reward`, 0),
             whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${this.appStore.userUuid}`),
-            // micVolume: this.sceneStore.localVolume,
+            micVolume: this.sceneStore.localVolume,
           } as any)
           // .concat(streamList.filter((it: any) => it.userUuid !== this.appStore.userUuid))
         }

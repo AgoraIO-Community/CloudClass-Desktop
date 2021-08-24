@@ -33,7 +33,7 @@ export type EduMediaStream = {
     video: boolean,
     hideControl: boolean,
     whiteboardGranted: boolean,
-    // micVolume: number,
+    micVolume: number,
     placement: string,
     stars: number,
     isLocal: boolean;
@@ -1509,18 +1509,7 @@ export type Dimension = { width: number, height: number }
 
 export type Point = { x: number, y: number }
 
-export type ExtensionAppSyncContext = {
-
-    /**
-     * 
-     */
-    beginSync: (appId: string) => void,
-
-    /**
-     * 
-     */
-    endSync: (appId: string) => void,
-
+export type TrackSyncContext = {
     /**
      * 
      */
@@ -1532,6 +1521,6 @@ export type ExtensionAppSyncContext = {
     position: Point,
 
     isSyncing: boolean,
-
-    defaultPosition: Point
+    
+    needTransition: boolean
 }
