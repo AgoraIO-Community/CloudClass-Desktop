@@ -55,15 +55,13 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     // remote position
     extensionAppPositionState$,
     ready,
-    room,
-    roomIsWritable
   } = useBoardStore()
 
   const { isSyncingGranted } = useWidgetStore()
 
   const [ needTransition, setNeedTransition ] = useState(false)
 
-  const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
+  const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
   const medX = outerSize.width - innerSize.width
   const medY = outerSize.height - innerSize.height
@@ -71,7 +69,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   const storePosition = extensionAppPositionState$.value && extensionAppPositionState$.value[appId] ? extensionAppPositionState$.value[appId] : null
   // local position
   const [ position, setPosition ] = useState(() => {
-    if(isHost) {
+    if(isTeacher) {
       return defaultPosition 
     }
     // if current user is not a teacher, the default position should be sync with the teacher
@@ -95,7 +93,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   }, [medX, medY])
   // set initial position when board is ready
   useEffect(() => {
-    if(syncingEnabled && isHost) {
+    if(syncingEnabled && isTeacher) {
       const diffRatioX = (position.x - bounds.left) / medX
       const diffRatioY = (position.y - bounds.top) / medY
       syncAppPosition(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
@@ -114,7 +112,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
       }
     },
     position,
-    isSyncing: isHost || isSyncingGranted,
+    isSyncing: isTeacher || isSyncingGranted,
     needTransition
   }
 }
