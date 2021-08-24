@@ -6,10 +6,7 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 export const ScreenSharePlayerContainer = observer(() => {
 
-    const {
-        screenShareStream,
-        isSharing
-    } = useScreenShareContext()
+    const { screenShareStream } = useScreenShareContext()
 
     const { roomInfo } = useRoomContext()
 
@@ -17,7 +14,7 @@ export const ScreenSharePlayerContainer = observer(() => {
     //     isCurrentScenePathScreenShare
     // } = useBoardContext()
 
-    const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
+    const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
     return (
         screenShareStream ?
@@ -27,7 +24,7 @@ export const ScreenSharePlayerContainer = observer(() => {
             [ !screenShareStream || screenShareStream.local ? "z-0" : "z-50"]: 1
         })}>
             {
-                  screenShareStream && screenShareStream.renderer && !isHost ?
+                  screenShareStream && screenShareStream.renderer && !isTeacher ?
                     <RendererPlayer
                         fitMode={true}
                         key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''}
