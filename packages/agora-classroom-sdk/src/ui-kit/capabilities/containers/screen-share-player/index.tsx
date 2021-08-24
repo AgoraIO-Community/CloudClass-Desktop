@@ -17,15 +17,17 @@ export const ScreenSharePlayerContainer = observer(() => {
     //     isCurrentScenePathScreenShare
     // } = useBoardContext()
 
-    const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
+    const isHost = roomInfo.userRole === EduRoleTypeEnum.teacher
 
     return (
-        isSharing ? <div className={classNames({
+        screenShareStream ?
+        <div className={classNames({
             "screen-share-player-container": 1,
-            [isTeacher ? "z-0" : "z-50"]: 1
+            // screen palyer not shown to user who is currently sharing screen
+            [ !screenShareStream || screenShareStream.local ? "z-0" : "z-50"]: 1
         })}>
             {
-                  screenShareStream && screenShareStream.renderer && !isTeacher ?
+                  screenShareStream && screenShareStream.renderer && !isHost ?
                     <RendererPlayer
                         fitMode={true}
                         key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''}
