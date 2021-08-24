@@ -1,6 +1,7 @@
 .message-box {
   margin-top: 3px;
   overflow-y: scroll;
+  overflow-x: hidden;
   position: absolute;
   width: 100%;
   /* z-index: 8888; */
