@@ -53,7 +53,8 @@ export class HomeApi extends ApiBase {
     this.region = region;
     this.setSDKDomain(sdkDomain);
   }
-  setSDKDomain(sdkDomainParams: string = 'https://api-solutions.%region%.agoralab.co') {
+
+  setSDKDomain(sdkDomainParams: string) {
     const prefixRegion = getHomeApiRegion(this.region);
     const sdkDomain = `${sdkDomainParams}/edu`.replace('%region%', prefixRegion);
     this.sdkDomain = sdkDomain;
