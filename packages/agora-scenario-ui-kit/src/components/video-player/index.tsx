@@ -318,7 +318,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   return (
     <Popover
       align={{
-        offset: [-8, 0],
+        offset: [0, 0],
       }}
       overlayClassName="video-player-tools-popover"
       content={hideControl ? null : tools}
