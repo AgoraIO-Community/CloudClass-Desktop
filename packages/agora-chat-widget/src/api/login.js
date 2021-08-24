@@ -4,6 +4,7 @@ import { userAction } from '../redux/actions/userAction'
 
 // 登陆
 export const loginIM = (appkey) => {
+    console.log('login>>>');
     const userName = store.getState().propsData.userUuid;
     let potions = {
         user: userName ? userName.toLocaleLowerCase() : '',

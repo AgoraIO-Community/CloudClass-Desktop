@@ -3,6 +3,7 @@ import config from './WebIMConfig'
 
 
 export const initIMSDK = (appkey) => {
+    console.log('initIMSDK>>>');
     let WebIM = window.WebIM || {}
     WebIM.config = config;
     WebIM.config.appkey = appkey;

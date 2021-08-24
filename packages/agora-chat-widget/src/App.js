@@ -67,13 +67,13 @@ const App = function (props) {
       onOffline: (network) => {
         console.log('onOffline>>>', network);
       },
-      onError: (message) => {
-        console.log('onError>>>', message);
-        if (message.type === 16) {
+      onError: (err) => {
+        console.log('onError>>>', err);
+        if (err.type === 16) {
           return message.error('请重新登陆！');
         }
-        if (message.type === 604) return
-        const type = JSON.parse(_.get(message, 'data.data')).error_description;
+        if (err.type === 604) return
+        const type = JSON.parse(_.get(err, 'data.data')).error_description;
         const resetName = store.getState().propsData.userUuid;
         if (type === "user not found") {
           let options = {
