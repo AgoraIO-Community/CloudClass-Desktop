@@ -145,7 +145,7 @@ export class SmallClassStore {
 
         if (this.sceneStore.cameraEduStream && isStudent) {
           const props = this.sceneStore.getLocalPlaceHolderProps();
-          acc = [
+          acc = acc.concat([
             {
               local: true,
               isLocal: true,
@@ -169,7 +169,7 @@ export class SmallClassStore {
               ),
               // micVolume: this.sceneStore.localVolume,
             },
-          ].concat(acc);
+          ]);
         }
       }
       return acc;

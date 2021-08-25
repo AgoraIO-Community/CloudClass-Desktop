@@ -204,50 +204,60 @@ export const VideoMarqueeStudentContainer = observer(() => {
     // firstStudent
   } = useSmallClassVideoControlContext();
 
+  const { roomInfo } = useRoomContext();
+
   const { isHost, controlTools } = useUserListContext();
 
   const firstStudentStream = studentStreams[0];
 
   const videoStreamList = useMemo(() => {
-    return studentStreams.map((stream: EduMediaStream) => ({
-      isHost: isHost,
-      username: stream.account,
-      stars: stream.stars,
-      uid: stream.userUuid,
-      micEnabled: stream.audio,
-      cameraEnabled: stream.video,
-      whiteboardGranted: stream.whiteboardGranted,
-      controlPlacement: 'bottom' as any,
-      placement: 'bottom' as any,
-      hideControl: stream.hideControl,
-      canHoverHideOffAllPodium: true,
-      hasStream: stream.hasStream,
-      online: stream.online,
-      isLocal: stream.isLocal,
-      isOnPodium: stream.onPodium,
-      micDevice: stream.micDevice,
-      cameraDevice: stream.cameraDevice,
-      streamUuid: stream.streamUuid,
-      hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
-      renderVolumeIndicator: () => <CustomizeVolumeIndicator streamUuid={stream.streamUuid} />,
-      children: (
-        <>
-          {stream.renderer && stream.video ? (
-            <RendererPlayer
-              key={
-                stream.renderer && stream.renderer.videoTrack
-                  ? stream.renderer.videoTrack.getTrackId()
-                  : ''
-              }
-              track={stream.renderer}
-              id={stream.streamUuid}
-              className="rtc-video"
-            />
-          ) : null}
-          <CameraPlaceHolder state={stream.holderState} />
-        </>
-      ),
-    }));
+    return studentStreams.reduce((acc: any[], stream: EduMediaStream) => {
+      const streamItem = {
+        isHost: isHost,
+        username: stream.account,
+        stars: stream.stars,
+        uid: stream.userUuid,
+        micEnabled: stream.audio,
+        cameraEnabled: stream.video,
+        whiteboardGranted: stream.whiteboardGranted,
+        controlPlacement: 'bottom' as any,
+        placement: 'bottom' as any,
+        hideControl: stream.hideControl,
+        canHoverHideOffAllPodium: true,
+        hasStream: stream.hasStream,
+        online: stream.online,
+        isLocal: stream.isLocal,
+        isOnPodium: stream.onPodium,
+        micDevice: stream.micDevice,
+        cameraDevice: stream.cameraDevice,
+        streamUuid: stream.streamUuid,
+        hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
+        renderVolumeIndicator: () => <CustomizeVolumeIndicator streamUuid={stream.streamUuid} />,
+        children: (
+          <>
+            {stream.renderer && stream.video ? (
+              <RendererPlayer
+                key={
+                  stream.renderer && stream.renderer.videoTrack
+                    ? stream.renderer.videoTrack.getTrackId()
+                    : ''
+                }
+                track={stream.renderer}
+                id={stream.streamUuid}
+                className="rtc-video"
+              />
+            ) : null}
+            <CameraPlaceHolder state={stream.holderState} />
+          </>
+        ),
+      };
+      if (stream.userUuid === roomInfo.userUuid) {
+        acc = [streamItem].concat(acc);
+      } else {
+        acc = acc.concat([streamItem]);
+      }
+      return acc;
+    }, []);
   }, [firstStudentStream, studentStreams, isHost, controlTools.includes(ControlTool.offPodium)]);
 
   const { onStartPrivateChat, onStopPrivateChat, inPrivateConversation } = usePrivateChatContext();
@@ -261,8 +271,6 @@ export const VideoMarqueeStudentContainer = observer(() => {
   };
 
   const { sceneType } = useRoomContext();
-
-  const { roomInfo } = useRoomContext();
 
   const { eduRole2UIRole } = useUIStore();
 
