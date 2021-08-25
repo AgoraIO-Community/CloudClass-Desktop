@@ -1819,10 +1819,16 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(dom)
-        WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
+      WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
       ).then((manager)=>{
         this.windowManager = manager
-        this.windowManager.mainView.disableCameraTransform = true
+        manager.mainView.disableCameraTransform = true;
+        if (this.userRole === EduRoleTypeEnum.teacher) {
+          manager.setViewMode(ViewMode.Broadcaster)
+        }
+        if(this.userRole === EduRoleTypeEnum.student) {
+          manager.setReadonly(!this._grantPermission)
+        }
       });
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
