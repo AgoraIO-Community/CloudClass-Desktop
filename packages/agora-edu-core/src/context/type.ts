@@ -1214,15 +1214,10 @@ export type SmallClassVideoControlContext = {
    */
   firstStudent: EduMediaStream;
   /**
-   * 大班课学生的媒体数据流列, 注意这与StreamListContext的studentStreams不同
+   * 学生的媒体数据流列, 注意这与StreamListContext的studentStreams不同
    * @version v1.1.0
    */
   studentStreams: EduMediaStream[];
-  /**
-   * 小班课学生的媒体数据流列, 注意这与StreamListContext的studentStreams不同
-   * @version v1.1.0
-   */
-  midStudentStreams: EduMediaStream[];
   /**
    * 点击摄像头切换开关状态
    * @param userUuid 用户uid
