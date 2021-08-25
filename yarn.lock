@@ -2613,10 +2613,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-docs-viewer@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.14.tgz#1fbe00aee0416d3adff93ae2afc70401e3ac8e08"
-  integrity sha512-Y7WWDuplbg9hj1U95375lOC5Wygn7wTZ8IigazQh+crlv9gxcpqeNRDxeYsn/X8q7VxJaYEGrqMkUkHi1IrKFQ==
+"@netless/app-docs-viewer@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.15.tgz#8b857c2d2e07889a621b87fde339e8bb3526465e"
+  integrity sha512-GZuevbDpU4sIyhN8SNrXW247dJmp5OsI18tiHFEU12fXDixwamKqCA3TNiuWD6+C8GmEcs/NvGeAI/yDui9WrA==
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
@@ -2694,12 +2694,12 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.35":
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.35.tgz#edd026329ccc3827c549a356e940a5b61a811f0f"
-  integrity sha512-u3DJ+YZ2Qbc57FXdnlMKkHGtNOKDnZX0AKK7j1eYGz8a7+Vui9WfVdzvEph2gE2tdj/X1KAQUZ+3XOpWde3aAw==
+"@netless/window-manager@0.1.36":
+  version "0.1.36"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.36.tgz#911493990c39bac3e3f8f851d044f0ce93cc21ac"
+  integrity sha512-BH2BStA3Bu/OwHyFjAugI1e7TWa6laAMMlnx486GfnBnKJpPxkcLzAQjOX6+fnV4vOyxZYPIPd8Mubyixzw6cw==
   dependencies:
-    "@netless/app-docs-viewer" "^0.1.14"
+    "@netless/app-docs-viewer" "^0.1.15"
     "@netless/app-media-player" "0.1.0-beta.4"
     "@netless/telebox-insider" "^0.1.13"
     emittery "^0.9.2"
@@ -10430,10 +10430,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-websdk@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.0.tgz#784d8c9802b31d55eb23c0ebf9eda1f04fd04d9c"
-  integrity sha1-eE2MmAKzHVXrI8Dr+e2h8E/QTZw=
+easemob-websdk@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
+  integrity sha512-6sdbcQyHt1GVoYZhXAX+ZyxhHKZl3Pwiu6oLYM7L5F+w5aJy/nCSuFYO30oVzH/kg5dt93+VgNcpGvj5VVspoQ==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
