@@ -42,11 +42,11 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.remoteUsersRenderer = []
     EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`)
     if (rtcProvider.platform === 'electron') {
-      const electronLogPath = rtcProvider.electronLogPath as any;
+      const electronLogPath = rtcProvider.electronLogPath
       this.sdkWrapper = new AgoraElectronRTCWrapper({
         cefClient: rtcProvider.cefClient,
-        logPath: electronLogPath.logPath,
-        videoSourceLogPath: electronLogPath.videoSourceLogPath,
+        logPath: electronLogPath?.logPath,
+        videoSourceLogPath: electronLogPath?.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,
         appId: rtcProvider.appId,
         area: rtcProvider.rtcArea,
