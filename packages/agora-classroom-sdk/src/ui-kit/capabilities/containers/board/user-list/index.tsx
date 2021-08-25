@@ -150,11 +150,11 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
   }, [roomInfo.userRole]);
 
   const [carouselProps, setCarouselProps] = useState({
-    state: roomProperties.carousel?.state || 0,
-    range: roomProperties.carousel?.range || 1,
-    type: roomProperties.carousel?.type || 1,
+    state: roomProperties?.carousel?.state || 0,
+    range: roomProperties?.carousel?.range || 1,
+    type: roomProperties?.carousel?.type || 1,
     interval:
-      roomProperties.carousel.interval === undefined ? 10 : roomProperties.carousel.interval,
+      roomProperties?.carousel?.interval === undefined ? 10 : roomProperties.carousel.interval,
   });
 
   const debouncedCarousel = useDebounce(carouselProps, 500);
