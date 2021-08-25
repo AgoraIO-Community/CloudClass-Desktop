@@ -8,7 +8,6 @@ import { logoutChatroom } from './api/chatroom'
 import { setUserMute, removeUserMute } from './api/mute'
 
 import './index.css'
-var chatDom;
 export const HXChatRoom = ({pluginStore, sendMsg, onReceivedMsg}) => {
     return (
         <React.StrictMode>
@@ -22,7 +21,6 @@ export const HXChatRoom = ({pluginStore, sendMsg, onReceivedMsg}) => {
 }
 
 export const renderHXChatRoom = (dom, pluginStore, sendMsg, onReceivedMsg) => {
-    chatDom = dom;
     ReactDOM.render(
         <HXChatRoom pluginStore={pluginStore} sendMsg={sendMsg} onReceivedMsg={onReceivedMsg}/>,
         dom
@@ -52,5 +50,4 @@ export const getMuteList = () => {
 
 export const logout = () => {
     logoutChatroom()
-    chatDom = null
 }

@@ -18,7 +18,6 @@ export const setUserMute = (userId) => {
         users: [userId]   // 成员id列表
     };
     WebIM.conn.addUsersToChatRoomWhitelist(options).then((res) => {
-        console.log('setUserMute success>>>', res);
         sendCmdMsg(MUTE_USER, res.data.user)
         getRoomWhileList(roomId)
     })
@@ -32,7 +31,6 @@ export const removeUserMute = (userId) => {
         userName: userId           // 要移除的成员
     }
     WebIM.conn.rmUsersFromChatRoomWhitelist(options).then((res) => {
-        console.log('removeUserMute success>>>', res);
         sendCmdMsg(UNMUTE_USER, res.data.user)
         getRoomWhileList(roomId)
     });
@@ -45,7 +43,6 @@ export const getRoomWhileList = (roomId) => {
         chatRoomId: roomId  // 聊天室id
     }
     WebIM.conn.getChatRoomWhitelist(options).then((res) => {
-        // console.log('getRoomWhileList success>>>', res);
         let newMuteList = [];
         (res.data).map((item) => {
             if (item === owner) return
