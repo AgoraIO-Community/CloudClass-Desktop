@@ -181,6 +181,93 @@ export class SmallClassStore {
   }
 
   @computed
+  get midStudentStreams(): EduMediaStream[] {
+    let streamList = this.acceptedList.reduce((acc: any[], acceptedUser: EduUser) => {
+      const stream = this.sceneStore.streamList.find(
+        (stream: EduStream) => stream.userInfo.userUuid === acceptedUser.userUuid,
+      );
+      const props = this.sceneStore.getRemotePlaceHolderProps(acceptedUser.userUuid, 'student');
+      const volumeLevel = this.sceneStore.getFixAudioVolume(+get(stream, 'streamUuid', -1));
+      const user = get(this.studentsMap, `${acceptedUser.userUuid}`, {});
+      if (acceptedUser.userUuid !== this.roomInfo.userUuid) {
+        acc = acc.concat([
+          {
+            local: false,
+            isLocal: false,
+            online: this.appStore.sceneStore.queryUserIsOnline(acceptedUser.userUuid),
+            onPodium: true,
+            micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(
+              this.appStore.sceneStore.userList,
+              acceptedUser.userUuid,
+              get(stream, 'streamUuid', ''),
+            ),
+            cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(
+              this.appStore.sceneStore.userList,
+              acceptedUser.userUuid,
+              get(stream, 'streamUuid', ''),
+            ),
+            account: get(user, 'name', ''),
+            userUuid: acceptedUser.userUuid,
+            streamUuid: get(stream, 'streamUuid', ''),
+            video: get(stream, 'hasVideo', ''),
+            audio: get(stream, 'hasAudio', ''),
+            hasStream: !!stream,
+            renderer: this.sceneStore.remoteUsersRenderer.find(
+              (it: RemoteUserRenderer) => +it.uid === +get(stream, 'streamUuid', -1),
+            ) as RemoteUserRenderer,
+            hideControl: this.sceneStore.hideControl(user.userUuid),
+            holderState: props.holderState,
+            placeHolderText: props.text,
+            // micVolume: volumeLevel,
+            stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
+            whiteboardGranted: this.appStore.boardStore.checkUserPermission(
+              `${acceptedUser.userUuid}`,
+            ),
+          },
+        ]);
+      } else {
+        const localUser = this.sceneStore.localUser;
+
+        const isStudent = [EduRoleTypeEnum.student].includes(localUser.userRole);
+
+        if (this.sceneStore.cameraEduStream && isStudent) {
+          const props = this.sceneStore.getLocalPlaceHolderProps();
+          acc = acc.concat([
+            {
+              local: true,
+              isLocal: true,
+              online: true,
+              onPodium: true,
+              micDevice: this.appStore.sceneStore.localMicrophoneDeviceState,
+              cameraDevice: this.appStore.sceneStore.localCameraDeviceState,
+              account: localUser.userName,
+              userUuid: this.sceneStore.cameraEduStream.userInfo.userUuid as string,
+              streamUuid: this.sceneStore.cameraEduStream.streamUuid,
+              video: this.sceneStore.cameraEduStream.hasVideo,
+              audio: this.sceneStore.cameraEduStream.hasAudio,
+              hasStream: !!this.sceneStore.cameraEduStream,
+              renderer: this.sceneStore.cameraRenderer as LocalUserRenderer,
+              hideControl: this.sceneStore.hideControl(this.appStore.userUuid),
+              holderState: props.holderState,
+              placeHolderText: props.text,
+              stars: this.appStore.roomStore.getRewardByUid(acceptedUser.userUuid),
+              whiteboardGranted: this.appStore.boardStore.checkUserPermission(
+                `${this.appStore.userUuid}`,
+              ),
+              // micVolume: this.sceneStore.localVolume,
+            },
+          ]);
+        }
+      }
+      return acc;
+    }, []);
+    if (streamList.length) {
+      return streamList;
+    }
+    return [];
+  }
+
+  @computed
   get teacherUuid(): string {
     if (this.teacherInfo) {
       return this.teacherInfo.userUuid;

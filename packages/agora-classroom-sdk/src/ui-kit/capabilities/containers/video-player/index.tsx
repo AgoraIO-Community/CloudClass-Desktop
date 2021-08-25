@@ -293,7 +293,7 @@ export const MidVideoMarqueeContainer = observer(() => {
     onSendStar,
     onWhiteboardClick,
     onOffPodiumClick,
-    studentStreams,
+    midStudentStreams,
     // sceneVideoConfig,
     // firstStudent
   } = useSmallClassVideoControlContext();
@@ -302,10 +302,10 @@ export const MidVideoMarqueeContainer = observer(() => {
 
   const { isMirror } = usePretestContext();
 
-  const firstStudentStream = studentStreams[0];
+  const firstStudentStream = midStudentStreams[0];
 
   const videoStreamList = useMemo(() => {
-    return studentStreams.map((stream: EduMediaStream) => ({
+    return midStudentStreams.map((stream: EduMediaStream) => ({
       isHost: isHost,
       username: stream.account,
       stars: stream.stars,
@@ -349,7 +349,7 @@ export const MidVideoMarqueeContainer = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     firstStudentStream,
-    studentStreams,
+    midStudentStreams,
     isHost,
     isMirror,
     controlTools.includes(ControlTool.offPodium),

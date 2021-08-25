@@ -708,6 +708,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
   const isHost = sceneStore.isHost;
   const teacherStream = sceneStore.teacherStream;
   const studentStreams = smallClassStore.studentStreams;
+  const midStudentStreams = smallClassStore.midStudentStreams;
 
   // const firstStudent = studentStreams[0]
 
@@ -784,6 +785,7 @@ export const useSmallClassVideoControlContext = (): SmallClassVideoControlContex
   return {
     teacherStream,
     studentStreams,
+    midStudentStreams,
     onCameraClick,
     onMicClick,
     onSendStar,
