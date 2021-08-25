@@ -28,9 +28,14 @@ export const UserList = ({ roomUserList }) => {
         {
             roomUserList.length > 0 && roomUserList.map((item, key) => {
                 const showMuteIcon = muteList && muteList.includes(item.id);
-                const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
-                const isStudent = item?.ext && JSON.parse(item?.ext).role === ROLE.student.id;
-                const isRobot = item?.ext && JSON.parse(item?.ext).role === ROLE.audience.id;
+                const { ext } = item;
+                let role;
+                if (ext) {
+                    role = JSON.parse(ext).role
+                }
+                const isTeacher = role === ROLE.teacher.id;
+                const isStudent = role === ROLE.student.id;
+                const isRobot = role === ROLE.audience.id;
                 return (
                     <div className="user-list" key={key}>
                         <div className="user-info">
