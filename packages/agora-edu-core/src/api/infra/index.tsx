@@ -5,11 +5,16 @@ import { AgoraEduSDKConfigParams, LaunchOption } from '../declare';
 import { CoreContextProvider } from '../../context/core';
 import { globalConfigs } from '../../utilities/config';
 import { eduSDKApi } from '../../services/edu-sdk-api';
-import { controller } from './controller';
 import { checkConfigParams, checkLaunchOption } from './validator';
 // import { setRoutesMap, defaultRoutePath } from "./resolver"
 // @ts-ignore
 import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
+import { MainController } from './controller';
+
+const controller = new MainController();
+
+//@ts-ignore
+window.AgCtrl = controller;
 
 export type AgoraEduBoardScene = SceneDefinition;
 
