@@ -317,11 +317,11 @@ export class BoardStore extends ZoomController {
       const {ready, hasPermission, role} = JSON.parse(data)
       if (ready) {
         if (role === EduRoleTypeEnum.student) {
-          if (hasPermission) {
-            this.room.setViewMode(ViewMode.Freedom)
-          } else {
-            this.room.setViewMode(ViewMode.Follower)
-          }
+          // if (hasPermission) {
+          //   this.room.setViewMode(ViewMode.Freedom)
+          // } else {
+          // this.room.setViewMode(ViewMode.Follower)
+          // }
         }
       }
     })
@@ -947,8 +947,8 @@ export class BoardStore extends ZoomController {
     }
     // 默认只有老师不用禁止跟随
     if (this.userRole === EduRoleTypeEnum.teacher) {
-      console.log('setView Mode', this.userRole)
-      this.room.setViewMode(ViewMode.Broadcaster)
+      // console.log('setView Mode', this.userRole)
+      // this.room.setViewMode(ViewMode.Broadcaster)
       // this.room.disableCameraTransform = false
     } else {
       // this.room.disableCameraTransform = true
@@ -1819,10 +1819,17 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(dom)
-        WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
+      WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
       ).then((manager)=>{
         this.windowManager = manager
-        this.windowManager.mainView.disableCameraTransform = true
+        manager.mainView.disableCameraTransform = true;
+        if (this.userRole === EduRoleTypeEnum.teacher) {
+          manager.setViewMode(ViewMode.Broadcaster)
+        }
+        if(this.userRole === EduRoleTypeEnum.student) {
+          manager.setReadonly(!this._grantPermission)
+        }
+        (window as any).manager = manager
       });
       this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
         if (this.online && this.room) {
