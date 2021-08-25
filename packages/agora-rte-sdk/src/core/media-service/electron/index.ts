@@ -323,6 +323,7 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.getVideoDevices()
     this.client.getAudioPlaybackDevices()
     this.client.getAudioRecordingDevices()
+    this.client.enableLocalAudio(true)
     this.client.enableAudioVolumeIndication(300, 3, true)
     this.client.setClientRole(2)
     //@ts-ignore
