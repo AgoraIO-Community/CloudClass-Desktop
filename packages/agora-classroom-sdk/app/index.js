@@ -12,6 +12,7 @@ const os = require('os');
 const platform = os.platform();
 const release = os.release();
 const type = os.type();
+
 // Module to control application life.
 
 /**
@@ -26,6 +27,8 @@ const realSize = {
   // changeHeight: 720
 };
 const { app, Menu, netLog } = electron;
+// using nodejs v8 flags to profiler memory
+app.commandLine.appendSwitch('js-flags', '--expose_gc --trace_gc_verbose --log-gc');
 
 app.allowRendererProcessReuse = false;
 // Menu template
