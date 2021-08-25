@@ -37,8 +37,8 @@ export declare interface IElectronRTCWrapper extends IAgoraRTCModule {
  * 主要用于初始化构造electron rtc wrapper
  */
 export declare interface ElectronWrapperInitOption {
-  logPath: string;
-  videoSourceLogPath: string;
+  logPath?: string;
+  videoSourceLogPath?: string;
   AgoraRtcEngine: any;
   appId: string;
   cefClient: any;
