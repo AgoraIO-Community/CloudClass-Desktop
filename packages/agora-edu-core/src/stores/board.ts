@@ -317,11 +317,11 @@ export class BoardStore extends ZoomController {
       const {ready, hasPermission, role} = JSON.parse(data)
       if (ready) {
         if (role === EduRoleTypeEnum.student) {
-          if (hasPermission) {
-            this.room.setViewMode(ViewMode.Freedom)
-          } else {
+          // if (hasPermission) {
+          //   this.room.setViewMode(ViewMode.Freedom)
+          // } else {
             this.room.setViewMode(ViewMode.Follower)
-          }
+          // }
         }
       }
     })
