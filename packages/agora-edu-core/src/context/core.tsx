@@ -5,7 +5,7 @@ import { AppStoreInitParams } from '../api/declare';
 export type CoreAppContext = Record<string, EduScenarioAppStore>;
 
 export const CoreContext = createContext<EduScenarioAppStore>(
-  null as unknown as EduScenarioAppStore,
+  (null as unknown) as EduScenarioAppStore,
 );
 
 export const CoreContextProvider = ({
@@ -22,9 +22,6 @@ export const CoreContextProvider = ({
   const [store] = useState<EduScenarioAppStore>(
     () => new EduScenarioAppStore(params, dom, controller),
   );
-
-  //@ts-ignore
-  window.globalStore = store;
 
   return <CoreContext.Provider value={store}>{children}</CoreContext.Provider>;
 };

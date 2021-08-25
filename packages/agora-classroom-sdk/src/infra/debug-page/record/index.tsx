@@ -10,9 +10,6 @@ import { AgoraExtAppCountDown, AgoraExtAppWhiteboard } from 'agora-plugin-galler
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 
-//@ts-ignore
-window.recordController = controller;
-
 export const RecordPage = observer(() => {
   const homeStore = useHomeStore();
 

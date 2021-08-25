@@ -9,10 +9,7 @@ import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AgoraEduEvent, AgoraEduSDK } from '../../api';
-import { ClassRoom, ClassRoomAbstractStore, controller } from '../../api/controller';
-
-//@ts-ignore
-window.controller = controller;
+import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
 
 const ChatWidgetFactory = (region: string) => {
   if (region.toUpperCase() === 'CN') {
@@ -124,7 +121,8 @@ export const LaunchPage = observer(() => {
                 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               )}1`,
               ext: 'pptx',
-              url: 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
+              url:
+                'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               conversion: {
                 type: 'static',
               },
@@ -134,7 +132,8 @@ export const LaunchPage = observer(() => {
                 {
                   name: '1',
                   ppt: {
-                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/1.slide',
+                    src:
+                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/1.slide',
                     width: 1280,
                     height: 720,
                   },
@@ -142,7 +141,8 @@ export const LaunchPage = observer(() => {
                 {
                   name: '2',
                   ppt: {
-                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/2.slide',
+                    src:
+                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/2.slide',
                     width: 1280,
                     height: 720,
                   },
@@ -150,7 +150,8 @@ export const LaunchPage = observer(() => {
                 {
                   name: '3',
                   ppt: {
-                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/3.slide',
+                    src:
+                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/3.slide',
                     width: 1280,
                     height: 720,
                   },

@@ -5,10 +5,10 @@ import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { useMemo } from 'react';
 import { BizHeader } from '~ui-kit';
-import { Exit, Record } from '../dialog';
+import { Exit, Record, MemoryPerfContainer } from '../dialog';
 import { SettingContainer } from '../setting';
 import { ClassStatusComponent } from './class-status-component';
-import { SingalQualityComponent } from './signal-quality-component';
+import { SignalQualityComponent } from './signal-quality-component';
 
 export const NavigationBar = observer(() => {
   const { isRecording } = useRecordingContext();
@@ -21,6 +21,7 @@ export const NavigationBar = observer(() => {
   }, [addDialog, Record, isRecording]);
 
   const bizHeaderDialogs = {
+    perf: () => addDialog(MemoryPerfContainer),
     setting: () => addDialog(SettingContainer),
     exit: () => addDialog(Exit),
     record: () => addRecordDialog(),
@@ -45,7 +46,7 @@ export const NavigationBar = observer(() => {
       title={roomInfo.roomName}
       onClick={handleClick}
       ClassStatusComponent={ClassStatusComponent}
-      SingalQualityComponent={SingalQualityComponent}
+      SignalQualityComponent={SignalQualityComponent}
     />
   );
 });

@@ -121,5 +121,3 @@ export class MainController {
     return this.appController.getClassRoom();
   }
 }
-
-export const controller = new MainController();
