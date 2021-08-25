@@ -1819,7 +1819,7 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(dom)
-        WindowManager.mount(this.room, dom, undefined, { debug: true }
+        WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
       ).then((manager)=>{
         this.windowManager = manager
         this.windowManager.mainView.disableCameraTransform = true

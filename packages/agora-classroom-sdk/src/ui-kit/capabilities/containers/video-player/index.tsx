@@ -344,7 +344,8 @@ export const MidVideoMarqueeContainer = observer(() => {
       cameraDevice: stream.cameraDevice,
       streamUuid: stream.streamUuid,
       hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
-      micVolume: stream.micVolume,
+      // micVolume: stream.micVolume,
+      renderVolumeIndicator: (props: any) => <StreamVolumeIndicator {...props} />,
       children: (
         <>
         {
@@ -422,7 +423,8 @@ export const MidVideoMarqueeContainer = observer(() => {
       canHoverHideOffAllPodium: true,
       onOffAllPodiumClick: onOffAllPodiumClick,
       // hideBoardGranted: !controlTools.includes(ControlTool.grantBoard),
-      micVolume: stream.micVolume,
+      // micVolume: stream.micVolume,
+      renderVolumeIndicator: (props: any) => <StreamVolumeIndicator {...props} />,
       children: (
         <>
         {
