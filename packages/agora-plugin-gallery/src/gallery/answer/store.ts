@@ -281,12 +281,12 @@ export class PluginStore {
                 this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
                 this.showModifyBtn = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])
                 this.ui = ['sels', 'subs']
-                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
+                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || this.selAnswer
                 this.updateTime();
             } else if (properties.state === 'end') {
                 this.title = ""
                 this.answer = properties.answer
-                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
+                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || this.selAnswer
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
                 this.status = 'info'
                 this.height = 120
