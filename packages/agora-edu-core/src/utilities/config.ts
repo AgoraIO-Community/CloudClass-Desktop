@@ -25,8 +25,10 @@ export const scenarioRoomPath: Record<string, { path: string }> = {
 //   defaultRoutePath: scenarioRoomPath[0],
 //   routesPath: scenarioRoomPath,
 // },
+
+const domainTemplate = 'https://api.agora.io/%region%';
 class GlobalConfigs {
-  sdkDomain: string = 'https://api.agora.io/%region%';
+  sdkDomain: string = 'https://api.agora.io/cn';
   reportDomain: string = 'https://api.agora.io';
   logDomain: string = 'https://api-solutions.agoralab.co';
   appId: string = '';
@@ -44,7 +46,7 @@ class GlobalConfigs {
   }
 
   public setRegion(region: string): void {
-    const regionDomain = getSDKDomain(this.sdkDomain, region);
+    const regionDomain = getSDKDomain(domainTemplate, region);
     this._region = region;
     this.setSDKDomain(regionDomain);
   }
