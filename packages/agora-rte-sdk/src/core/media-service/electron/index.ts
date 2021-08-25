@@ -1308,14 +1308,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
    * @returns 
    */
   async enableLocalAudio(v: boolean) {
-    const ret = this.client.enableLocalAudio(v)
-    if (ret < 0) {
-      throw {
-        name: 'enableLocalAudio failure',
-        code: ret
-      }
-    }
-    return ret
+    // const ret = this.client.enableLocalAudio(v)
+    // if (ret < 0) {
+    //   throw {
+    //     name: 'enableLocalAudio failure',
+    //     code: ret
+    //   }
+    // }
+    // return ret
   }
 
   /**
@@ -1324,14 +1324,14 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
    * @returns 
    */
   async muteLocalAudio(v: boolean, deviceId?: string) {
-    let ret = this.client.enableLocalAudio(!v)
-    if (ret < 0) {
-      throw {
-        name: 'enableLocalAudio failure',
-        code: ret
-      }
-    }
-    ret = this.client.muteLocalAudioStream(v)
+    // let ret = this.client.enableLocalAudio(!v)
+    // if (ret < 0) {
+    //   throw {
+    //     name: 'enableLocalAudio failure',
+    //     code: ret
+    //   }
+    // }
+    let ret = this.client.muteLocalAudioStream(v)
     if (ret < 0) {
       throw {
         name: 'muteLocalAudio failure',
