@@ -512,7 +512,7 @@ export class MediaStore {
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       let {stats = {}, user = {}} = evt
       let {uid} = user
-      BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
+      // BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
       // autorun(() => {
         this.updateRemoteVideoStats(`${uid}`, stats)
       // })

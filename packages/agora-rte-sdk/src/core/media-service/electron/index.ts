@@ -227,8 +227,8 @@ export function CustomBtoa(input: any) {
 
 export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRTCWrapper {
   client!: IAgoraRtcEngine;
-  logPath: string;
-  videoSourceLogPath: string;
+  logPath?: string;
+  videoSourceLogPath?: string;
 
   role: number
   joined: boolean
