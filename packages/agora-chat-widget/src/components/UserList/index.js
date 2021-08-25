@@ -28,24 +28,31 @@ export const UserList = ({ roomUserList }) => {
         {
             roomUserList.length > 0 && roomUserList.map((item, key) => {
                 const showMuteIcon = muteList && muteList.includes(item.id);
-                const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id
+                const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
+                const isStudent = item?.ext && JSON.parse(item?.ext).role === ROLE.student.id;
+                const isRobot = item?.ext && JSON.parse(item?.ext).role === ROLE.audience.id;
                 return (
                     <div className="user-list" key={key}>
                         <div className="user-info">
                             <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
                             <span className="user-text" >{item?.nickname || item?.id}</span>
-                            {isTeacher ?
-                                <Tag className="user-tag teacher-tag" >
+                            {isTeacher && <Tag className="user-tag teacher-tag" >
                                     <span className="teacher-text" >
                                         {ROLE.teacher.tag}
                                     </span>
-                                </Tag> : <Tag className="user-tag student-tag">
+                                </Tag>}
+                            {isStudent && <Tag className="user-tag student-tag">
                                     <span className="tag-text">
                                         {ROLE.student.tag}
                                     </span>
                                 </Tag>}
+                            {isRobot && <Tag className="user-tag teacher-tag" >
+                                    <span className="teacher-text" >
+                                    {ROLE.audience.tag}
+                                    </span>
+                                </Tag>}
                         </div>
-                        {!isTeacher && <Tooltip placement="leftBottom" overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
+                        {!isTeacher && !isRobot && <Tooltip placement="leftBottom" overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
                             <div className="mute-icon">
                                 <img src={showMuteIcon ? muteOff : muteNo} onClick={(e) => { mute(showMuteIcon, item.id) }} />
                             </div>
