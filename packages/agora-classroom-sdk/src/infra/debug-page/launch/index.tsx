@@ -40,14 +40,26 @@ export const LaunchPage = observer(() => {
   const mountLaunch = useCallback(
     async (dom: any) => {
       if (dom) {
-        AgoraEduSDK.setParameters(
-          JSON.stringify({
-            'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-            reportUrl: `${REACT_APP_REPORT_URL}`,
-            reportQos: `${REACT_APP_REPORT_QOS}`,
-            reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
-          }),
-        );
+        // TODO: guarantee using default sdkDomain in production SDK_DOMAIN
+        if (`${REACT_APP_AGORA_APP_SDK_DOMAIN}`.match('api.agora.io')) {
+          AgoraEduSDK.setParameters(
+            JSON.stringify({
+              reportUrl: `${REACT_APP_REPORT_URL}`,
+              reportQos: `${REACT_APP_REPORT_QOS}`,
+              reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
+            }),
+          );
+        } else {
+          // TODO: guarantee test env using customize sdkDomain
+          AgoraEduSDK.setParameters(
+            JSON.stringify({
+              'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+              reportUrl: `${REACT_APP_REPORT_URL}`,
+              reportQos: `${REACT_APP_REPORT_QOS}`,
+              reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
+            }),
+          );
+        }
         AgoraEduSDK.config({
           appId: launchOption.appId ?? `${REACT_APP_AGORA_APP_ID}`,
           region: launchOption.region ?? 'CN',
