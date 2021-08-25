@@ -1394,13 +1394,13 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
   }
 
   disableLocalAudio() {
-    const ret = this.client.enableLocalAudio(false)
-    if (ret < 0) {
-      throw {
-        name: 'disableLocalAudio failure',
-        code: ret
-      }
-    }
+    // const ret = this.client.enableLocalAudio(false)
+    // if (ret < 0) {
+    //   throw {
+    //     name: 'disableLocalAudio failure',
+    //     code: ret
+    //   }
+    // }
   }
 
   /**
