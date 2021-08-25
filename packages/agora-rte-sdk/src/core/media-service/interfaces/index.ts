@@ -197,8 +197,8 @@ export declare interface RTCProviderInitParams {
   rtmArea: AREA_CODE;
   cameraEncoderConfiguration: EduVideoEncoderConfiguration,
   electronLogPath?: {
-    logPath: string;
-    videoSourceLogPath: string;
+    logPath?: string;
+    videoSourceLogPath?: string;
   }
 }
 

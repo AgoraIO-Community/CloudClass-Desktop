@@ -5883,15 +5883,10 @@ adjust-sourcemap-loader@3.0.0:
     loader-utils "^2.0.0"
     regex-parser "^2.2.11"
 
-adm-zip@0.4.14:
-  version "0.4.14"
-  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.14.tgz?cache=0&sync_timestamp=1617192384205&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fadm-zip%2Fdownload%2Fadm-zip-0.4.14.tgz#2cf312bcc9f8875df835b0f6040bd89be0a727a9"
-  integrity sha1-LPMSvMn4h134NbD2BAvYm+CnJ6k=
-
-adm-zip@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.5.1.tgz?cache=0&sync_timestamp=1617192384205&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fadm-zip%2Fdownload%2Fadm-zip-0.5.1.tgz#32e51c6fe88370f4389b424567b78a345e79ebc6"
-  integrity sha1-MuUcb+iDcPQ4m0JFZ7eKNF5568Y=
+adm-zip@0.5.5:
+  version "0.5.5"
+  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.5.5.tgz#b6549dbea741e4050309f1bb4d47c47397ce2c4f"
+  integrity sha1-tlSdvqdB5AUDCfG7TUfEc5fOLE8=
 
 aes-decrypter@3.0.2:
   version "3.0.2"

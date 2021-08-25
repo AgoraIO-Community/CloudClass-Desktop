@@ -77,9 +77,12 @@ export class EduManager extends EventEmitter {
       }
     }
     if (buildOption.platform === 'electron') {
-      buildOption.electronLogPath = {
-        logPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/agorasdk.log` : (window.logPath || ""),
-        videoSourceLogPath: this.config.logDirectoryPath ? `${this.config.logDirectoryPath}/videosource.log` : (window.videoSourceLogPath || ""),
+      let logFolder = this.config.logDirectoryPath || window.defaultLogFolder 
+      if(logFolder) {
+        buildOption.electronLogPath = {
+          logPath: `${logFolder}/agorasdk.log`,
+          videoSourceLogPath: `${logFolder}/videosource.log`
+        }
       }
       buildOption.agoraSdk = this.config.agoraRtc
     }
