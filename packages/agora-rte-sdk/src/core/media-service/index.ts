@@ -52,15 +52,6 @@ export class MediaService extends EventEmitter implements IMediaService {
         area: rtcProvider.rtcArea,
         cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration
       })
-      window.ipc && window.ipc.once("initialize", (events: any, args: any) => {
-        const logPath = args[0]
-        const videoSourceLogPath = args[2];
-        window.videoSourceLogPath = videoSourceLogPath;
-        window.logPath = logPath
-        EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`)
-        this.electron.setAddonLogPath({ logPath, videoSourceLogPath })
-        this.electron.enableLogPersist()
-      })
     } else {
       this.sdkWrapper = new AgoraWebRtcWrapper({
         uploadLog: true,

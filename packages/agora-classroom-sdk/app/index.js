@@ -330,6 +330,10 @@ async function createWindow() {
     currentWindow.close()
   });
 
+  ipcMain.on('GET_APP_PATH_REQ', (e, type) => {
+    e.reply('GET_APP_PATH_RES', app.getPath(type))
+  })
+
   // ipcMain.on('changWindowSize', () =>
   //   mainWindow.setSize(realSize.changeWidth, realSize.changeHeight)
   // )

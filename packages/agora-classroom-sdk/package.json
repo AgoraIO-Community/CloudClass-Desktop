@@ -288,7 +288,7 @@
     "@tailwindcss/forms": "0.2.1",
     "@types/react-transition-group": "4.4.1",
     "@zip.js/zip.js": "2.2.22",
-    "adm-zip": "0.4.14",
+    "adm-zip": "0.5.5",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "1.1.2",
     "agora-electron-sdk": "3.4.6-build.811",
@@ -319,6 +319,7 @@
     "react-select": "4.3.0",
     "react-transition-group": "4.4.1",
     "workbox-range-requests": "6.1.2",
-    "workbox-strategies": "6.1.1"
+    "workbox-strategies": "6.1.1",
+    "rimraf": "3.0.2"
   }
 }
