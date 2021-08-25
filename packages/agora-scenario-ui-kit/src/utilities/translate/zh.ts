@@ -307,6 +307,7 @@ export const zh = {
     teacher_device_may_not_work: '老师视频可能出现问题！',
   },
   'biz-header': {
+    perf: 'Perf',
     setting: '设置',
     exit: '退出',
     recording: '录制中',

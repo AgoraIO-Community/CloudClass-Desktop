@@ -11,7 +11,7 @@ const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
   unknown: 'unknown-signal',
 };
 
-export const SingalQualityComponent = observer(() => {
+export const SignalQualityComponent = observer(() => {
   const { isNative } = useMediaContext();
 
   const monitor = useClassroomStatsContext();

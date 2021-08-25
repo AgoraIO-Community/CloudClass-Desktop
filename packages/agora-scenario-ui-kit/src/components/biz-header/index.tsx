@@ -56,7 +56,7 @@ export interface BizHeaderProps {
   userType?: 'teacher' | 'student';
 
   ClassStatusComponent: any;
-  SingalQualityComponent: any;
+  SignalQualityComponent: any;
 }
 
 export const BizHeader: FC<BizHeaderProps> = ({
@@ -64,14 +64,14 @@ export const BizHeader: FC<BizHeaderProps> = ({
   title,
   userType = 'student',
   onClick,
-  ClassStatusComponent,
-  SingalQualityComponent,
+  ClassStatusComponent = () => <div></div>,
+  SignalQualityComponent = () => <div></div>,
 }) => {
   return (
     <>
       <Header className="biz-header">
         <div>
-          <SingalQualityComponent />
+          <SignalQualityComponent />
         </div>
         <div className="biz-header-title-wrap">
           <div className="biz-header-title">{title}</div>
@@ -99,6 +99,9 @@ export const BizHeader: FC<BizHeaderProps> = ({
               />
             </Tooltip>
           ) : null}
+          <Tooltip title={transI18n('biz-header.perf')} placement="bottom">
+            <SvgImg canHover type="more" size={24} onClick={() => onClick('perf')} />
+          </Tooltip>
           <Tooltip title={transI18n('biz-header.setting')} placement="bottom">
             <SvgImg canHover type="set" size={24} onClick={() => onClick('setting')} />
           </Tooltip>

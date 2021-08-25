@@ -322,6 +322,7 @@ export const en = {
     teacher_device_may_not_work: "There is something wrong with the teacher's device",
   },
   'biz-header': {
+    perf: 'Perf',
     setting: 'Setting',
     exit: 'Exit',
     recording: 'Recording',
