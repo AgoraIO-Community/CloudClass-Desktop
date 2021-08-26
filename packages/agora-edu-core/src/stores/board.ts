@@ -474,12 +474,14 @@ export class BoardStore extends ZoomController {
     //     [appId]: position
     //   }
     // })
-    this.room?.setGlobalState({
-      extAppMoveTracks: {
-        ...(this.room.state.globalState as any).extAppMoveTracks,
-        [appId]: position
-      }
-    })
+    if(!this.boardClient.disconnected){
+      this.room?.setGlobalState({
+        extAppMoveTracks: {
+          ...(this.room.state.globalState as any).extAppMoveTracks,
+          [appId]: position
+        }
+      })
+    }
   }
 
   @action.bound

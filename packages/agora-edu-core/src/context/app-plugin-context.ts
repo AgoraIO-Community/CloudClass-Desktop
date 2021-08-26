@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { get, throttle } from "lodash"
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { debounce, get, throttle, clamp } from "lodash"
 import { EduRoleTypeEnum } from "agora-rte-sdk"
 import { IAgoraExtApp, useRoomContext } from ".."
 import { useBoardStore, useCoreContext, useRoomStore, useWidgetStore } from './core';
@@ -45,7 +45,6 @@ export const useAppPluginContext = () => {
 }
 
 
-const calcPosition = (diffRatio: { x: number, y: number }, outerSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outerSize.width * diffRatio.x + bounds.left, y: outerSize.height * diffRatio.y + bounds.top })
  
 export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bounds, appId, syncingEnabled }: { defaultPosition: Point, outerSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string, syncingEnabled: boolean }): TrackSyncContext => {
   const { roomInfo } = useRoomContext()
@@ -61,6 +60,13 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
 
   const [ needTransition, setNeedTransition ] = useState(false)
 
+  const calcPosition = useCallback(
+    (diffRatio: { x: number, y: number }, outerSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outerSize.width * diffRatio.x + bounds.left, y: outerSize.height * diffRatio.y + bounds.top })
+  ,[])
+  const purge = useCallback(
+    (num: number) => clamp(num, 0, 1)
+  ,[])
+
   const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
   const medX = outerSize.width - innerSize.width
@@ -73,16 +79,27 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
       return defaultPosition 
     }
     // if current user is not a teacher, the default position should be sync with the teacher
-    return storePosition ? calcPosition(storePosition, { width: medX, height: medY }, bounds) : defaultPosition  
+    return storePosition ? calcPosition(storePosition, { width:  medX, height: medY }, bounds) : defaultPosition  
   })
 
-  const debouncedSync = useMemo(()=> throttle(syncAppPosition, 200), []) 
+  const throttleSync = useMemo(()=> throttle(syncAppPosition, 200), []) 
+  const debouncedSync = useMemo(()=> debounce(syncAppPosition, 200, { trailing: true }), []) 
   
   useEffect(() => {
+    // every time viewport resized
+    const diffRatioX = purge((position.x - bounds.left) / medX)
+    const diffRatioY = purge((position.y - bounds.top) / medY)
+    if(syncingEnabled && isTeacher) {
+      // console.log("resync pos", appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid }, position, bounds, medX, medY)
+      debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
+    } 
+    // console.log("reset local pos", extensionAppPositionState$.value[appId], );
+    setPosition(calcPosition({ x: diffRatioX, y: diffRatioY }, { width: medX, height: medY }, bounds))
     const sub = extensionAppPositionState$.subscribe((value) => {
       // filter out changes which are sent by current user
       if(value && value[appId] && value[appId].userId !== roomInfo.userUuid) {
         setNeedTransition(true)
+        // console.log("receive pos", appId, value[appId])
         setPosition(calcPosition(value[appId], { width: medX, height: medY }, bounds))
       }
     })
@@ -90,25 +107,17 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     return () => {
       sub.unsubscribe()
     }
-  }, [medX, medY])
-  // set initial position when board is ready
-  useEffect(() => {
-    if(syncingEnabled && isTeacher) {
-      const diffRatioX = (position.x - bounds.left) / medX
-      const diffRatioY = (position.y - bounds.top) / medY
-      syncAppPosition(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
-    }
-  }, [ready])
+  }, [ready, medX, medY, bounds])
 
   return {
     updatePosition: (point) => {
       if(syncingEnabled) {
         // translate point to ratio
-        const diffRatioX = (point.x - bounds.left) / medX
-        const diffRatioY = (point.y - bounds.top) / medY
+        const diffRatioX = purge((point.x - bounds.left) / medX)
+        const diffRatioY = purge((point.y - bounds.top) / medY)
         setNeedTransition(false)
         setPosition(point)
-        debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
+        throttleSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
       }
     },
     position,
