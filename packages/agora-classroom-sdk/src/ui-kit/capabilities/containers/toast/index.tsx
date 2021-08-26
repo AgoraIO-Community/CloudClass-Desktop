@@ -47,7 +47,7 @@ export const ToastContainer = observer(() => {
     // 'toast.audio_equipment_has_changed': (props: any) => toast('toast.audio_equipment_has_changed', props),
     // 'toast.video_equipment_has_changed': (props: any) => toast('toast.video_equipment_has_changed', props),
     'toast.time_interval_between_start': (props: any) => toast('toast.time_interval_between_start', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
-    'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_close', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
+    'toast.time_interval_between_end': (props: any) => toast('toast.time_interval_between_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)}),
     'toast.class_is_end': (props: any) => toast('toast.class_is_end', {reason: formatCountDown(props.reason, TimeFormatType.Message)},'error'),
     'toast.chat_disable': (props: any) => toast('toast.chat_disable', props),
     'toast.chat_enable': (props: any) => toast('toast.chat_enable', props),
