@@ -227,8 +227,8 @@ export function CustomBtoa(input: any) {
 
 export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRTCWrapper {
   client!: IAgoraRtcEngine;
-  logPath: string;
-  videoSourceLogPath: string;
+  logPath?: string;
+  videoSourceLogPath?: string;
 
   role: number
   joined: boolean
@@ -370,16 +370,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     throw new Error('Method not implemented.');
   }
 
-  public setAddonLogPath(payload: {logPath: string, videoSourceLogPath: string}) {
-    this.logPath = payload.logPath
-    this.videoSourceLogPath = payload.videoSourceLogPath
-  }
-
   public enableLogPersist() {
     if (this.logPath) {
       EduLogger.info(`[electron-log-path] set logPath: ${this.logPath}`)
       this.client.setLogFile(this.logPath)
-      window.setNodeAddonLogPath = this.logPath
     }
   }
   
@@ -1159,7 +1153,6 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
         EduLogger.info(`[electron-log-path] checkout videoSourceLogPath: ${this.videoSourceLogPath}`)
         if (this.videoSourceLogPath) {
           this.client.videoSourceSetLogFile(this.videoSourceLogPath)
-          window.setNodeAddonVideoSourceLogPath = this.videoSourceLogPath
           EduLogger.info(`[electron-log-path] set videoSourceLogPath: ${this.videoSourceLogPath}`)
         }
         const handleVideoSourceJoin = (uid: number) => {

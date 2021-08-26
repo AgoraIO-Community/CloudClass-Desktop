@@ -2613,18 +2613,18 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-docs-viewer@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.nlark.com/@netless/app-docs-viewer/download/@netless/app-docs-viewer-0.1.11.tgz#1dfb9c3058e06d4e5f43d60233ed3224ba50fa71"
-  integrity sha1-HfucMFjgbU5fQ9YCM+0yJLpQ+nE=
+"@netless/app-docs-viewer@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.15.tgz#8b857c2d2e07889a621b87fde339e8bb3526465e"
+  integrity sha512-GZuevbDpU4sIyhN8SNrXW247dJmp5OsI18tiHFEU12fXDixwamKqCA3TNiuWD6+C8GmEcs/NvGeAI/yDui9WrA==
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"
 
-"@netless/app-media-player@0.1.0-beta.1":
-  version "0.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-beta.1.tgz#e4bf152aa3e7141087ecd6a6cbc510a672920f4a"
-  integrity sha512-WYyvmyIb2KrVA+AbiCz94yJdBXCfwLlKjMiuquw7ojRX80sFrqb/Wp1wbTd+I2HNIY/LPORYQju1gCO3N9w1Iw==
+"@netless/app-media-player@0.1.0-beta.4":
+  version "0.1.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-beta.4.tgz#2283b8a1e0a104bd8d36a5dbe9798309041e262c"
+  integrity sha512-mwBrhITav9moFRS9lGmsWnLN1jBJhTjEfnQAVyLCjQvrzGGvZl+bakTSLhaazWvmdbo/V9YKoP0JlbytwAMHlg==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -2661,10 +2661,10 @@
   resolved "https://registry.npm.taobao.org/@netless/react-seek-slider/download/@netless/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha1-0hUj9kdvNRGN94Ks+XqOIlXSdEo=
 
-"@netless/telebox-insider@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.10.tgz#8b82baa55ccb20c6d93f127cbbe40e3eacbaed1a"
-  integrity sha512-x+Vbxu0/PCZL6N7y+V2FcqJ6H4c9MLg89T6y43yhzBnFOIwdSdOsBjazILXFmGRIdUt+YJRD0X2YuiIGffKQiw==
+"@netless/telebox-insider@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.1.13.tgz#b26930727bd982b464332a27c2109aa941bfa908"
+  integrity sha512-CzgejfkS+MKssokIFVDxHEwYY8+l1S0MXj2kqiFOmREm1FHWJsGSMvxNZ7h1wW5JDO/7PfFuPLiofbIMFYEvuQ==
   dependencies:
     eventemitter3 "^4.0.7"
     stylefire "^7.0.3"
@@ -2694,14 +2694,14 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.27":
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.27.tgz#24f477345cacfb94c4ceb6c329a31e69f9b5b726"
-  integrity sha512-LuMN2yumLrJgGlsoyWdym4lO2tKK/HwUuRGfrdYuaqtGO+jp2EBDutSnbQd4v9eSWeSZ40JoR8coBkzuU2BfBQ==
+"@netless/window-manager@0.1.36":
+  version "0.1.36"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.36.tgz#911493990c39bac3e3f8f851d044f0ce93cc21ac"
+  integrity sha512-BH2BStA3Bu/OwHyFjAugI1e7TWa6laAMMlnx486GfnBnKJpPxkcLzAQjOX6+fnV4vOyxZYPIPd8Mubyixzw6cw==
   dependencies:
-    "@netless/app-docs-viewer" "^0.1.11"
-    "@netless/app-media-player" "0.1.0-beta.1"
-    "@netless/telebox-insider" "^0.1.10"
+    "@netless/app-docs-viewer" "^0.1.15"
+    "@netless/app-media-player" "0.1.0-beta.4"
+    "@netless/telebox-insider" "^0.1.13"
     emittery "^0.9.2"
     lodash-es "^4.17.21"
     nanoid "^3.1.25"
@@ -5883,15 +5883,10 @@ adjust-sourcemap-loader@3.0.0:
     loader-utils "^2.0.0"
     regex-parser "^2.2.11"
 
-adm-zip@0.4.14:
-  version "0.4.14"
-  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.4.14.tgz?cache=0&sync_timestamp=1617192384205&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fadm-zip%2Fdownload%2Fadm-zip-0.4.14.tgz#2cf312bcc9f8875df835b0f6040bd89be0a727a9"
-  integrity sha1-LPMSvMn4h134NbD2BAvYm+CnJ6k=
-
-adm-zip@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.5.1.tgz?cache=0&sync_timestamp=1617192384205&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fadm-zip%2Fdownload%2Fadm-zip-0.5.1.tgz#32e51c6fe88370f4389b424567b78a345e79ebc6"
-  integrity sha1-MuUcb+iDcPQ4m0JFZ7eKNF5568Y=
+adm-zip@0.5.5:
+  version "0.5.5"
+  resolved "https://registry.npm.taobao.org/adm-zip/download/adm-zip-0.5.5.tgz#b6549dbea741e4050309f1bb4d47c47397ce2c4f"
+  integrity sha1-tlSdvqdB5AUDCfG7TUfEc5fOLE8=
 
 aes-decrypter@3.0.2:
   version "3.0.2"
@@ -10435,10 +10430,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-websdk@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.0.tgz#784d8c9802b31d55eb23c0ebf9eda1f04fd04d9c"
-  integrity sha1-eE2MmAKzHVXrI8Dr+e2h8E/QTZw=
+easemob-websdk@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
+  integrity sha512-6sdbcQyHt1GVoYZhXAX+ZyxhHKZl3Pwiu6oLYM7L5F+w5aJy/nCSuFYO30oVzH/kg5dt93+VgNcpGvj5VVspoQ==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

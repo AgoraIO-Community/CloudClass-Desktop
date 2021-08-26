@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { CSSTransition }  from 'react-transition-group'
+import { debounce } from 'lodash'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
 import { propsAction, isShowChat } from './redux/actions/propsAction'
@@ -18,6 +19,12 @@ import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants'
 import showChat_icon from './themes/img/chat.svg'
 import './App.css'
 import 'antd/dist/antd.css'
+
+
+
+const debouncedMessage = debounce((text) => {
+  message.success(text);
+}, 300, { leading: true })
 
 const App = function (props) {
   const state = useSelector(state => state)
@@ -55,7 +62,7 @@ const App = function (props) {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true))
-        message.success(LOGIN_SUCCESS);
+        debouncedMessage(LOGIN_SUCCESS)
         setUserInfo()
         joinRoom()
       },
