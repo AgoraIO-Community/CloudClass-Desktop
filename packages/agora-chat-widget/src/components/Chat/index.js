@@ -49,6 +49,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
         // 加载成员信息
         let _speakerTeacher = []
         let _student = []
+        let _audience = []
         if (isLogin) {
             let val
             roomUsers.map((item) => {
@@ -59,6 +60,10 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
                 let newVal
                 let role = val && JSON.parse(val?.ext).role
                 switch (role) {
+                    case 0:
+                        newVal = _.assign(val, { id: item })
+                        _audience.push(newVal)
+                        break;
                     case 1:
                         newVal = _.assign(val, { id: item })
                         _speakerTeacher.push(newVal)
@@ -73,7 +78,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
                         break;
                 }
             })
-            setRoomUserList(_.concat(_speakerTeacher, _student))
+            setRoomUserList(_.concat(_speakerTeacher, _audience, _student))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [roomUsers, roomUsersInfo])

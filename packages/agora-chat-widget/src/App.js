@@ -32,18 +32,21 @@ const App = function (props) {
   const showRed = state?.showRed
   const showAnnouncementNotice = state?.showAnnouncementNotice
   useEffect(() => {
-    let im_Data = props.pluginStore;
-    let im_Data_Props = _.get(im_Data, 'props', '')
-    let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
-    let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
-    let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
-    let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
-    store.dispatch(propsAction(new_IM_Data));
-    if (appkey) {
-      initIMSDK(appkey)
+    const isPropsValue = store.getState()?.propsData || {};
+    if (Object.keys(isPropsValue).length === 0) {
+      let im_Data = props.pluginStore;
+      let im_Data_Props = _.get(im_Data, 'props', '')
+      let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
+      let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
+      let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
+      let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
+      store.dispatch(propsAction(new_IM_Data));
+      if (appkey) {
+        initIMSDK(appkey)
+      }
+      createListen(new_IM_Data, appkey)
+      loginIM(appkey);
     }
-    createListen(new_IM_Data, appkey)
-    loginIM(appkey);
   }, [])
 
   // 最小化窗口设置
