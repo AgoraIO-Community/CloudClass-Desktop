@@ -95,10 +95,10 @@ export class EduLogger {
       appId,
       sdkDomain: 'https://api-solutions.agoralab.co',
     });
-    if (!this.thread) {
-      this.thread = new LogWorker();
-      this.debugLog();
-    }
+    // if (!this.thread) {
+    //   this.thread = new LogWorker();
+    //   this.debugLog();
+    // }
   }
 
   private static debugLog() {
