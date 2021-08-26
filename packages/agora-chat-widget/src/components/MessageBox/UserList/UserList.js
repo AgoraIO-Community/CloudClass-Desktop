@@ -27,6 +27,7 @@ const UserList = ({ roomUserList }) => {
     const memberCount = useSelector(state => state.room.info.affiliations_count)
     const roomMuteList = useSelector((state) => state.room.muteList);
     const roomListInfo = useSelector((state) => state.userListInfo);
+    const roomAdmins = useSelector((state) => state.room.admins);
     const [currentPage, setCurrentPage] = useState(1)
 
     useEffect(() => {
@@ -124,7 +125,6 @@ const UserList = ({ roomUserList }) => {
                     {!searchUser && isMute && <MuteList roomListInfo={roomListInfo} muteMembers={muteMembers} onSetMute={onSetMute} />}
                     {/* 展示列表及搜索结果列表 */}
                     {!searchUser && !isMute && roomUserList.map((item, key) => {
-                        // if (!isMute || (isMute && muteMembers.includes(item.id))) {
                         return (
                             <Flex className="user-item" key={key} justifyContent='space-between' mt='16px' alignItems='center'>
                                 <Flex alignItems='center'>
@@ -138,6 +138,7 @@ const UserList = ({ roomUserList }) => {
                                     <Flex ml='8px' alignItems='center'>
                                         {Number(item.ext) === 1 && <Tag className='tags' ><Text className='tags-txt' ml='4px' mt='1px'>主讲老师</Text></Tag>}
                                         {Number(item.ext) === 3 && <Tag className='tags' ><Text className='tags-txt' ml='4px' mt='1px'>辅导老师</Text></Tag>}
+                                        {roomAdmins.includes(item.id) && (!item.ext) && <Tag className='tags' ><Text className='tags-txt' ml='4px' mt='1px'>管理员</Text></Tag>}
                                         <Text className='username' ml='5px' >{item.nickname || item.id}</Text>
                                     </Flex>
                                 </Flex>
