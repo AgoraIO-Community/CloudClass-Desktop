@@ -22,7 +22,7 @@ import {
 } from '~capabilities/containers/board/user-list';
 import { ScreenShareContainer } from '~capabilities/containers/screen-share';
 import { SettingContainer } from '~capabilities/containers/setting';
-import { Button, MemoryPerf, MemoryPerfProps, Modal, t, transI18n } from '~ui-kit';
+import { Button, MemoryPerf, MemoryPerfProps, Modal, ResourceInfo, t, transI18n } from '~ui-kit';
 
 export type BaseDialogProps = {
   id: string;
@@ -532,34 +532,59 @@ export const Confirm: React.FC<
   );
 });
 
-export const MemoryPerfContainer = observer(({ id }: any) => {
-  const { removeDialog } = useUIStore();
+type MemoryPerfState = {
+  rss: number;
+  heapTotal: number;
+  heapUsed: number;
+  external: number;
+  images: ResourceInfo;
+  scripts: ResourceInfo;
+  cssStyleSheets: ResourceInfo;
+  xslStyleSheets: ResourceInfo;
+  fonts: ResourceInfo;
+  other: ResourceInfo;
+};
 
+export const MemoryPerfContainer = observer(({ onClose }: any) => {
   const onOK = async () => {
-    removeDialog(id);
+    // removeDialog(id);
+    onClose();
   };
 
   const onCancel = () => {
-    removeDialog(id);
+    // removeDialog(id);
+    onClose();
   };
 
   const isMounted = useMounted();
 
-  const [perfState, updatePerfInfo] = useState<{
-    rss: number;
-    heapTotal: number;
-    heapUsed: number;
-    external: number;
-  }>({
+  const defaultResourceInfo: ResourceInfo = {
+    count: 0,
+    size: 0,
+    liveSize: 0,
+  };
+
+  const [perfState, updatePerfInfo] = useState<MemoryPerfState>({
     rss: 0,
     heapTotal: 0,
     heapUsed: 0,
     external: 0,
+    images: defaultResourceInfo,
+    scripts: defaultResourceInfo,
+    cssStyleSheets: defaultResourceInfo,
+    xslStyleSheets: defaultResourceInfo,
+    fonts: defaultResourceInfo,
+    other: defaultResourceInfo,
   });
 
+  function toMb(bytes: number) {
+    return (bytes / (1000.0 * 1000)).toFixed(2);
+  }
+
   const getMemoryForElectron = () => {
+    const { webFrame } = window.require('electron');
     const result = {};
-    const dataList = Object.entries(window.process.memoryUsage()).reduce(
+    const memoryAccelerator = Object.entries(window.process.memoryUsage()).reduce(
       (acc: object, item: [string, any]) => {
         const [key, value] = item;
         acc[key] = value / (1000.0 * 1000);
@@ -567,16 +592,32 @@ export const MemoryPerfContainer = observer(({ id }: any) => {
       },
       result,
     );
-    return dataList as {
-      rss: number;
-      heapTotal: number;
-      heapUsed: number;
-      external: number;
+
+    const webFrameAccelerator = Object.entries(webFrame.getResourceUsage()).reduce(
+      (acc: any, element: [string, any]) => {
+        const [key, value] = element;
+        const item = value as ResourceInfo;
+        acc[key] = {
+          count: item.count,
+          size: toMb(item.size),
+          liveSize: toMb(item.liveSize),
+        };
+        return acc;
+      },
+      result,
+    );
+
+    const finalResult = {
+      ...memoryAccelerator,
+      ...webFrameAccelerator,
     };
+
+    return finalResult as MemoryPerfState;
   };
 
   useEffect(() => {
-    if (window.process) {
+    //@ts-ignore
+    if (window.process && window.require) {
       const timer = setInterval(() => {
         if (isMounted) {
           updatePerfInfo(getMemoryForElectron());
@@ -590,8 +631,12 @@ export const MemoryPerfContainer = observer(({ id }: any) => {
   return (
     <Draggable>
       <Modal
+        width={'auto'}
+        hasMask={false}
+        closable={true}
         onOk={onOK}
         onCancel={onCancel}
+        topLevel={true}
         footer={[
           <Button type={'primary'} action="ok">
             {t('toast.confirm')}

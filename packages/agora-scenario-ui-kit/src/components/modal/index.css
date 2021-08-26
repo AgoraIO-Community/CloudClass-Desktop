@@ -6,6 +6,12 @@
   @apply box-border bg-white;
 }
 
+.top-level-modal {
+  position: fixed;
+  z-index: 2;
+  left: 50% !important;
+}
+
 .radio-container {
   flex-direction: column;
   display: flex;

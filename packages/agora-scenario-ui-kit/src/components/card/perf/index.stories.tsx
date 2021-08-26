@@ -17,6 +17,12 @@ export const Docs = (props: MemoryPerfProps) => (
   </>
 );
 
+const defaultResourceInfo = {
+  count: 0,
+  size: 10,
+  liveSize: 100,
+};
+
 Docs.args = {
   placeholderDesc: '',
   title: 'title',
@@ -24,6 +30,12 @@ Docs.args = {
   heapTotal: 100,
   heapUsed: 100,
   external: 100,
+  images: defaultResourceInfo,
+  scripts: defaultResourceInfo,
+  cssStyleSheets: defaultResourceInfo,
+  xslStyleSheets: defaultResourceInfo,
+  fonts: defaultResourceInfo,
+  other: defaultResourceInfo,
 };
 
 export default meta;

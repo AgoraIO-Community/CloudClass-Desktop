@@ -2,7 +2,7 @@ import { useUIStore } from '@/infra/hooks';
 import { useRecordingContext, useRoomContext } from 'agora-edu-core';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useMemo } from 'react';
 import { BizHeader } from '~ui-kit';
 import { Exit, Record, MemoryPerfContainer } from '../dialog';
@@ -20,8 +20,10 @@ export const NavigationBar = observer(() => {
     return addDialog(Record, { starting: isRecording });
   }, [addDialog, Record, isRecording]);
 
+  const [perfState, setPerfState] = useState<boolean>(false);
+
   const bizHeaderDialogs = {
-    perf: () => addDialog(MemoryPerfContainer),
+    perf: () => setPerfState(true),
     setting: () => addDialog(SettingContainer),
     exit: () => addDialog(Exit),
     record: () => addRecordDialog(),
@@ -40,13 +42,22 @@ export const NavigationBar = observer(() => {
   }, [roomInfo.userRole]);
 
   return (
-    <BizHeader
-      userType={userType}
-      isRecording={isRecording}
-      title={roomInfo.roomName}
-      onClick={handleClick}
-      ClassStatusComponent={ClassStatusComponent}
-      SignalQualityComponent={SignalQualityComponent}
-    />
+    <>
+      <BizHeader
+        userType={userType}
+        isRecording={isRecording}
+        title={roomInfo.roomName}
+        onClick={handleClick}
+        ClassStatusComponent={ClassStatusComponent}
+        SignalQualityComponent={SignalQualityComponent}
+      />
+      {perfState ? (
+        <MemoryPerfContainer
+          onClose={() => {
+            setPerfState(false);
+          }}
+        />
+      ) : null}
+    </>
   );
 });

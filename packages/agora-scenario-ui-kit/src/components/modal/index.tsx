@@ -32,6 +32,7 @@ export interface ModalProps extends BaseProps {
   modalType?: 'normal' | 'back';
   children?: React.ReactNode;
   btnId?: string;
+  topLevel?: boolean;
 }
 
 type ModalType = FC<ModalProps> & {
@@ -58,10 +59,11 @@ export const Modal: ModalType = ({
   hasMask = true,
   maskClosable = false,
   btnId,
+  topLevel = false,
   ...restProps
 }) => {
   if (component) {
-    return React.cloneElement(component as unknown as React.ReactElement, {
+    return React.cloneElement((component as unknown) as React.ReactElement, {
       onOk,
       onCancel,
     });
@@ -70,6 +72,8 @@ export const Modal: ModalType = ({
     [`modal`]: 1,
     [`back-modal`]: modalType === 'back',
     [`${className}`]: !!className,
+    // TODO: workaround solution, need redesign, control modal level
+    [`top-level-modal`]: topLevel,
   });
 
   const contentCls = classnames({
