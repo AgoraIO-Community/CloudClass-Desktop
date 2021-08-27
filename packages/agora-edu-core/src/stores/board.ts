@@ -1826,9 +1826,14 @@ export class BoardStore extends ZoomController {
         room: this.room,
         container: dom,
         collectorContainer: document.querySelector("#window-manager-collector") as HTMLElement,
-        chessboard: false
+        chessboard: false,
+        containerSizeRatio: 0.461,
+        collectorStyles: {
+          position: 'static'
+        }
       }).then((manager)=>{
-        this.windowManager = manager
+        this.windowManager = manager;
+        // (window as any).windowManager = manager
         manager.mainView.disableCameraTransform = true;
         if (this.userRole === EduRoleTypeEnum.teacher) {
           manager.setViewMode(ViewMode.Broadcaster)
