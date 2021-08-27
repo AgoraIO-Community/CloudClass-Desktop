@@ -5,7 +5,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
-import { BuildinApps, WindowManager } from '@netless/window-manager';
+import { BuiltinApps, WindowManager } from '@netless/window-manager';
 
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase, autorun } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
@@ -1988,7 +1988,7 @@ export class BoardStore extends ZoomController {
       this.room.putScenes(`/${resource.id}`, scenes)
 
       await this.windowManager?.addApp({
-        kind: BuildinApps.DocsViewer,
+        kind: BuiltinApps.DocsViewer,
         options: {
             scenePath: `/${resource.id}`,
             title: resource.name,
