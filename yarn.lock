@@ -16858,6 +16858,11 @@ mobx-react-lite@^2.2.0:
   resolved "https://registry.npm.taobao.org/mobx-react-lite/download/mobx-react-lite-2.2.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmobx-react-lite%2Fdownload%2Fmobx-react-lite-2.2.2.tgz#87c217dc72b4e47b22493daf155daf3759f868a6"
   integrity sha1-h8IX3HK05HsiST2vFV2vN1n4aKY=
 
+mobx-react-lite@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.2.0.tgz#331d7365a6b053378dfe9c087315b4e41c5df69f"
+  integrity sha512-q5+UHIqYCOpBoFm/PElDuOhbcatvTllgRp3M1s+Hp5j0Z6XNgDbgqxawJ0ZAUEyKM8X1zs70PCuhAIzX1f4Q/g==
+
 mobx-react@6.3.1:
   version "6.3.1"
   resolved "https://registry.nlark.com/mobx-react/download/mobx-react-6.3.1.tgz#204f9756e42e19d91cb6598837063b7e7de87c52"
@@ -16865,23 +16870,22 @@ mobx-react@6.3.1:
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx-react@^5.4.4:
-  version "5.4.4"
-  resolved "https://registry.nlark.com/mobx-react/download/mobx-react-5.4.4.tgz#b3de9c6eabcd0ed8a40036888cb0221ab9568b80"
-  integrity sha1-s96cbqvNDtikADaIjLAiGrlWi4A=
+mobx-react@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.2.0.tgz#241e925e963bb83a31d269f65f9f379e37ecbaeb"
+  integrity sha512-KHUjZ3HBmZlNnPd1M82jcdVsQRDlfym38zJhZEs33VxyVQTvL77hODCArq6+C1P1k/6erEeo2R7rpE7ZeOL7dg==
   dependencies:
-    hoist-non-react-statics "^3.0.0"
-    react-lifecycles-compat "^3.0.2"
+    mobx-react-lite "^3.2.0"
 
 mobx@5.15.4:
   version "5.15.4"
   resolved "https://registry.nlark.com/mobx/download/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
   integrity sha1-naGoTpe6YkYi9OVaC/MwD7kxwqs=
 
-mobx@^4.15.7:
-  version "4.15.7"
-  resolved "https://registry.nlark.com/mobx/download/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
-  integrity sha1-kzKBJow7Rli2zyUm6HLPeOpIq5U=
+mobx@^6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.2.tgz#125590961f702a572c139ab69392bea416d2e51b"
+  integrity sha512-xGPM9dIE1qkK9Nrhevp0gzpsmELKU4MFUJRORW/jqxVFIHHWIoQrjDjL8vkwoJYY3C2CeVJqgvl38hgKTalTWg==
 
 modern-normalize@^1.0.0:
   version "1.1.0"
@@ -17517,11 +17521,6 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/number-is-nan/download/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
-
-numeric@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.npm.taobao.org/numeric/download/numeric-1.2.6.tgz#765b02bef97988fcf880d4eb3f36b80fa31335aa"
-  integrity sha1-dlsCvvl5iPz4gNTrPza4D6MTNao=
 
 nwsapi@^2.2.0:
   version "2.2.0"
@@ -20806,7 +20805,7 @@ react-is@^17.0.1, react-is@^17.0.2:
   resolved "https://registry.nlark.com/react-is/download/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha1-5pHUqOnHiTZWVVOas3J2Kw77VPA=
 
-react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npm.taobao.org/react-lifecycles-compat/download/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha1-TxonOv38jzSIqMUWv9p4+HI1I2I=
@@ -26169,10 +26168,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.17:
-  version "2.13.17"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.17.tgz#db120727a44668bc4657bf9f9f37f13751a5c289"
-  integrity sha512-maTRDflywNh8jcNcfk7yZndzuKQfSADHMEjcNZiNeiuYYPcXzRv3tAjXBZfR0jBoZ/Mdml5ZeGiGvifh6ZLobQ==
+white-web-sdk@2.13.19:
+  version "2.13.19"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.19.tgz#2d0a45518f5e54c9283ffe770570b02db8785965"
+  integrity sha512-hIV59tvIPUOeGVlqDIp7bb7HilPYJfvMH6Op3Od6yauOR3ss18E1ftaDN+qPn3Ys7A+FkvP1BwKNkYezHiQ5mw==
   dependencies:
     "@netless/canvas-polyfill" "^0.0.4"
     "@netless/xml-js" "1.6.15"
@@ -26183,9 +26182,8 @@ white-web-sdk@2.13.17:
     detect-it "^3.0.5"
     eventemitter3 "^4.0.7"
     mathjs "6.6.5"
-    mobx "^4.15.7"
-    mobx-react "^5.4.4"
-    numeric "^1.2.6"
+    mobx "^6.3.2"
+    mobx-react "^7.2.0"
     protobufjs "^6.11.2"
     query-string "5"
     react "^16.8.0"
