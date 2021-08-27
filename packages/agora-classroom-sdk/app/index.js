@@ -68,9 +68,11 @@ async function createWindow() {
     useContentSize: true,
     // keep minimum window size to 1280 720
     // plus 50px(28 * 0.5625 ≈ 50)
-    minWidth: realSize.width + 50,
+    // minWidth: realSize.width + 50,
+    minWidth: 1024 + 50,
     // plus 28px(height of the title bar)
-    minHeight: realSize.height + 28,
+    // minHeight: realSize.height + 28,
+    minHeight: 576 + 28,
     center: true,
     resizable: true,
     fullscreen: false,

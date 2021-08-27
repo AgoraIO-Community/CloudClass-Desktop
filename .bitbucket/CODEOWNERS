@@ -1,0 +1,25 @@
+# Either put this in a file called CODEOWNERS or .bitbucket/CODEOWNERS
+# Lines starting with # are comments.
+
+# Configuration lines start with CODEOWNERS.
+
+# To restrict code owners functionality for a certain destination branch,
+# you can add the CODEOWNERS.destination_branch_pattern followed by a branch pattern
+# to your CODEOWNERS file. This file is then only active for pull requests with matching destination branch.
+# For example if you want code owners to be active only for the branch master, add
+CODEOWNERS.destination_branch_pattern master
+# And if you also want to protect release branches, just add another line with a pattern like
+CODEOWNERS.destination_branch_pattern release/*
+# For supported pattern format, please check https://confluence.atlassian.com/bitbucketserver070/branch-permission-patterns-996644139.html .
+
+# Enables subdirectories overrides, where a CODEOWNERS file in a subdirectory overrides all settings
+# Ideal when you have independent projects in subdirectories which require independent rules
+# By default this is disabled and only the CODEOWNERS at the top of the repository is used
+# CODEOWNERS.toplevel.subdirectory_overrides enable
+
+# Suppress info comment on pull request creation about added code owners. Info comment will be added by default.
+# CODEOWNERS.toplevel.create_pull_request_comment disable
+
+*                        liyang@agora.io zhangqianze@agora.io
+
+CODEOWNERS               zhangqianze@agora.io

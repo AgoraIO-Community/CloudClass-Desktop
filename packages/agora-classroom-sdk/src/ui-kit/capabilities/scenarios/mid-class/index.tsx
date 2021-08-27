@@ -22,7 +22,8 @@ import { Icon, IconButton } from '~ui-kit'
 // keep aspect ratio to 16:9
 const windowAspectRatio = 9 / 16
 // minimum size of window
-const _minimumSize = { width: 1280, height: 720 }
+// const _minimumSize = { width: 1280, height: 720 }
+const _minimumSize = { width: 1024, height: 576 }
 // keep the height of the whiteboard to be 59/72 of the window height accroding to UI design
 const _whiteboardHeightRatio = 59 / 72
 

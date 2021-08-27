@@ -9,7 +9,7 @@ import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
-import { BuildinApps, WindowManager } from '@netless/window-manager';
+import { BuiltinApps, WindowManager } from '@netless/window-manager';
 
 const OSS_PREFIX = '';
 
@@ -362,7 +362,7 @@ export const netlessInsertVideoOperation = async (room: Room, windowManager: Win
   //   }
   // )
   await windowManager.addApp({
-    kind: BuildinApps.MediaPlayer,
+    kind: BuiltinApps.MediaPlayer,
     options: {
         title: file.url // 可选
     },
@@ -389,7 +389,7 @@ export const netlessInsertAudioOperation = async (room: Room, windowManager: Win
   //   }
   // )
   await windowManager.addApp({
-    kind: BuildinApps.MediaPlayer,
+    kind: BuiltinApps.MediaPlayer,
     options: {
         title: file.url // 可选
     },

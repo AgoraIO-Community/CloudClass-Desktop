@@ -5,7 +5,7 @@ import { cloneDeep, isEmpty, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import {IframeWrapper, IframeBridge} from "@netless/iframe-bridge";
-import { BuildinApps, WindowManager } from '@netless/window-manager';
+import { BuiltinApps, WindowManager } from '@netless/window-manager';
 
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode, RoomState, RoomPhase, autorun } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem, TaskProgressInfo } from '../api/declare';
@@ -1821,9 +1821,19 @@ export class BoardStore extends ZoomController {
     this.boardDomElement = dom
     if (this.boardClient && this.boardClient.room) {
       // this.boardClient.room.bindHtmlElement(dom)
-      WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { debug: true }
-      ).then((manager)=>{
-        this.windowManager = manager
+      // WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { chessboard: false, containerSizeRatio: 9 / 16, debug: false })
+      WindowManager.mount({
+        room: this.room,
+        container: dom,
+        collectorContainer: document.querySelector("#window-manager-collector") as HTMLElement,
+        chessboard: false,
+        containerSizeRatio: 0.461,
+        collectorStyles: {
+          position: 'static'
+        }
+      }).then((manager)=>{
+        this.windowManager = manager;
+        // (window as any).windowManager = manager
         manager.mainView.disableCameraTransform = true;
         if (this.userRole === EduRoleTypeEnum.teacher) {
           manager.setViewMode(ViewMode.Broadcaster)
@@ -1983,7 +1993,7 @@ export class BoardStore extends ZoomController {
       this.room.putScenes(`/${resource.id}`, scenes)
 
       await this.windowManager?.addApp({
-        kind: BuildinApps.DocsViewer,
+        kind: BuiltinApps.DocsViewer,
         options: {
             scenePath: `/${resource.id}`,
             title: resource.name,
