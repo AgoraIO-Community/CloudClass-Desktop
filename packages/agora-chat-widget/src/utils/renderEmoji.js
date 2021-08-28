@@ -18,8 +18,7 @@ const renderEmoji = (txtMsg, rnTxt) =>{
                 <img
                     key={WebIM.conn.getUniqueId()}
                     src={require(`../themes/faces/${v}`).default}
-                    width={20}
-                    height={20}
+                    style={{ width: '20px', height: '20px', display: 'inline-block'}}
                 />
             )
         } else {
