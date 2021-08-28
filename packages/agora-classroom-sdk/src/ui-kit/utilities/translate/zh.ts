@@ -258,6 +258,7 @@ export const zh = {
     'downloading': '下载中',
     'pause': '暂停',
     'upload_success': '上传成功',
+    'upload_failed': '上传失败,{reason}',
     'search': '搜索',
     'prev': '< 上一页',
     'next': '下一页 >'

@@ -417,6 +417,10 @@ export class UploadService extends ApiBase {
         callbackHost: ossConfig.callbackHost
     })
 
+    if(!uploadResult) {
+      throw GenericErrorWrapper(new Error(`Upload File Failed`))
+    }
+
     let taskRes = {};
     
     if(payload.converting) {
