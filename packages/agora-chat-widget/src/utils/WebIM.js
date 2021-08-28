@@ -1,5 +1,7 @@
 import websdk from 'easemob-websdk'
 import config from './WebIMConfig'
+import emoji from './emoji'
+
 import { getPageQuery } from './index'
 
 
@@ -25,6 +27,5 @@ export const initIMSDK = (appkey) => {
 
     WebIM.conn = new websdk.connection(options)
 }
-
-
+WebIM.emoji = emoji
 export default WebIM;

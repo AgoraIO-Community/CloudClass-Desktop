@@ -118,6 +118,7 @@
     word-break: break-all;
     white-space: pre-wrap;
     padding: 0 25px 0 0;
+    display: flex
 }
 
 /* 无提问消息禁止点击 */

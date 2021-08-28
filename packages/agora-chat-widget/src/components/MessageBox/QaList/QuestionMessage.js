@@ -7,13 +7,15 @@ import './QaMessage.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import { dateFormat } from '../../../utils';
 import AntModal from 'react-modal'
+import renderEmoji from '../../../utils/renderEmoji'
+
 
 // 学生端 提问消息列表
 const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessages }) => {
     const [maxImg, setMaxImg] = useState(false);
     const [maxImgUrl, setMaxImgUrl] = useState('');
     const qaList = useSelector(state => state.messages.qaList) || [];
-    const idQaList = qaList[userName] !== undefined;
+    const isQaList = qaList[userName] !== undefined;
     const customStyles = {
         content: {
             top: '50%',
@@ -46,10 +48,15 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
         <div className="student-qa-list" id="qa-box-tag">
             {/* {!isLoadGif && (isMoreHistory ? <div className='more-msg' onClick={() => { getHistoryMessages(true) }}>加载更多</div> : <div className='more-msg'>没有更多消息啦</div>)} */}
             {
-                idQaList ? (
+                isQaList ? (
                     qaList[userName]?.msg.map((message, index) => {
-                        let isText = message.type === "txt" || message.contentsType === "TEXT"
-                        let isPic = message.type === "img" || message.contentsType === "IMAGE"
+                        let rnTxt = []
+                        let isTextMsg = message.type === "txt" || message.contentsType === "TEXT"
+                        let isPicMsg = message.type === "img" || message.contentsType === "IMAGE"
+                        let txtMsg = message.msg || message.data
+                        if (isTextMsg) {
+                            renderEmoji(txtMsg, rnTxt)
+                        }
                         return (
                             <Flex className="msg-list-item" key={index}>
                                 <img className='msg-img' src={message.ext.avatarUrl || avatarUrl} />
@@ -69,8 +76,8 @@ const QuestionMessage = ({ userName, isLoadGif, isMoreHistory, getHistoryMessage
                                             </Tag>
                                         </Flex>
                                     </div>
-                                    {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                                    {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={showMaximumPicture(message)} />}
+                                    {isTextMsg && <Text className='msg-text'>{rnTxt}</Text>}
+                                    {isPicMsg && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={showMaximumPicture(message)} />}
                                 </Flex>
                             </Flex>
                         )
