@@ -246,7 +246,7 @@ export class PluginStore {
                     let answer = getStudentInfo(properties['student' + student])
                     if (answer) {
                         ++answeredNumber;
-                        info.answer = answer.answer?.join('') || '';
+                        info.answer = answer.answer?answer.answer.slice().sort().join(''):'';
                         info.replyTime = formatTime(Number(answer.replyTime) - Number(properties.startTime))
                         if (info.answer === (properties.answer?.join('') || '')) {
                             ++rightNumber
@@ -304,7 +304,7 @@ export class PluginStore {
                     let answer = getStudentInfo(properties['student' + student])
                     if (answer) {
                         ++answeredNumber;
-                        info.answer = answer.answer?.join('') || '';
+                        info.answer = answer.answer?answer.answer.slice().sort().join(''):'';
                         info.replyTime = formatTime(Number(answer.replyTime) - Number(properties.startTime))
                         if (info.answer === (properties.answer?.join('') || '')) {
                             ++rightNumber
