@@ -272,6 +272,7 @@ export const en = {
     'downloading': 'Download',
     'pause': 'Pause',
     'upload_success': 'Upload Success',
+    'upload_failed': 'Upload Failed,{reason}',
     'search': 'Search',
     'prev': '< Prev',
     'next': 'Next >'

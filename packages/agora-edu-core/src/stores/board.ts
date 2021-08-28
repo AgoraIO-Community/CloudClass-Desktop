@@ -2245,7 +2245,7 @@ export class BoardStore extends ZoomController {
       this.fileLoading = false
     } catch (err) {
       console.error(err)
-      this.appStore.fireToast(`Upload Failed: ${err.message}`)
+      this.appStore.fireToast('cloud.upload_failed', {reason: err.message})
       this.fileLoading = false
     }
   }
