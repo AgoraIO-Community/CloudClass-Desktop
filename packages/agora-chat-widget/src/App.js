@@ -21,11 +21,6 @@ import './App.css'
 import 'antd/dist/antd.css'
 
 
-
-const debouncedMessage = debounce((text) => {
-  message.success(text);
-}, 300, { leading: true })
-
 const App = function (props) {
   const state = useSelector(state => state)
   const showChat = state?.showChat
@@ -62,7 +57,6 @@ const App = function (props) {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true))
-        debouncedMessage(LOGIN_SUCCESS)
         setUserInfo()
         joinRoom()
       },
@@ -83,7 +77,9 @@ const App = function (props) {
           return message.error('请重新登陆！');
         }
         if (err.type === 604) return
-        const type = JSON.parse(_.get(err, 'data.data')).error_description;
+        let errData = _.get(err, 'data.data');
+        if (!errData) return
+        const type = JSON.parse(err)?.error_description;
         const resetName = store.getState().propsData.userUuid;
         if (type === "user not found") {
           let options = {
