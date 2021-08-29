@@ -20,6 +20,8 @@ const resourcesHost = "convertcdn.netless.link";
 
 declare var self: ServiceWorkerGlobalScope
 
+self.__WB_DISABLE_DEV_LOGS = true
+
 const cacheName = 'netless'
 
 const manifest = self.__WB_MANIFEST
