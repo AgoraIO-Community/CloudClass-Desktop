@@ -122,7 +122,7 @@ export const en = {
     create_screen_share_failed: 'Create screen share failed',
     kick_by_other_side: 'Kick by other client',
     screen_share: 'Screen Share',
-    close_ppt: 'Close CourseWare',
+    close_ppt: 'Close Courseware',
     sure_close_ppt: 'Are you sure to close?',
     end_class: 'End Class',
     quit_from_room: 'Leave Class Room',

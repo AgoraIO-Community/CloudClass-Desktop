@@ -1120,7 +1120,7 @@ export class RoomStore extends SimpleInterval {
         .then(async () => {
           // 初始化打开课件 只有老师才打开
           if (this.appStore.userRole === 1) {
-            await this.appStore.boardStore.openInitCourseWare();
+            await this.appStore.boardStore.openInitCourseware();
           }
         })
         .catch((err) => {

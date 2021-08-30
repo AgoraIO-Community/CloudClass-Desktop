@@ -2,7 +2,7 @@ import { EduStream, EduUser } from 'agora-rte-sdk';
 import { get } from 'lodash';
 import { useCallback, useState } from 'react';
 import { eduSDKApi } from '../services/edu-sdk-api';
-import { StorageCourseWareItem } from '../types';
+import { StorageCoursewareItem } from '../types';
 import { EduUserRoleEnum2EduUserRole } from '../utilities/typecast';
 import {
   useBoardStore,
@@ -364,7 +364,7 @@ export const useBoardContext = (): BoardContext => {
   } = useBoardStore();
 
   const {
-    courseWareList,
+    coursewareList,
     downloadList,
     putSceneByResourceUuid,
     startDownload,
@@ -423,7 +423,7 @@ export const useBoardContext = (): BoardContext => {
     grantBoardPermission,
     showBoardTool,
     isCurrentScenePathScreenShare: isBoardScreenShare,
-    courseWareList,
+    coursewareList,
     downloadList,
     openCloudResource: putSceneByResourceUuid,
     startDownload,
@@ -458,13 +458,13 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     publicResources,
     upsertResources,
     allResources,
-    initCourseWareProgress,
-    initCourseWareLoading,
-    initCourseWare,
+    initCoursewareProgress,
+    initCoursewareLoading,
+    initCourseware,
   } = useBoardStore();
 
   return {
-    downloadList: downloadList.filter((it: StorageCourseWareItem) => it.taskUuid),
+    downloadList: downloadList.filter((it: StorageCoursewareItem) => it.taskUuid),
     openCloudResource: putSceneByResourceUuid,
     startDownload,
     deleteSingle,
@@ -478,9 +478,9 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     doUpload: handleUpload,
     allResources,
     upsertResources,
-    initCourseWareProgress,
-    initCourseWareLoading,
-    initCourseWare,
+    initCoursewareProgress,
+    initCoursewareLoading,
+    initCourseware,
   };
 };
 

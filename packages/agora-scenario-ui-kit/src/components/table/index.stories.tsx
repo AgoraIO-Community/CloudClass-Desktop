@@ -299,15 +299,15 @@ CheckList.args = {
   size: 0,
 };
 
-type CourseWareManagerProps = {
+type CoursewareManagerProps = {
   onOk?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
   onCancel?: (e: React.MouseEvent<HTMLElement>) => void | Promise<void>;
 };
 
-export const CourseWareManager = ({
+export const CoursewareManager = ({
   onOk = (e) => console.log('onOK'),
   onCancel = (e) => console.log('onCancel'),
-}: CourseWareManagerProps) => {
+}: CoursewareManagerProps) => {
   const handleChange = (activeKey: string) => {
     console.log('change Key', activeKey);
   };
@@ -377,7 +377,7 @@ export const CheckBoxShowCase = ({ size, progress }: UploadListProps) => {
           onCancel: () => {
             console.log('cancel');
           },
-          component: <CourseWareManager />,
+          component: <CoursewareManager />,
         });
       }}>
       show checklist

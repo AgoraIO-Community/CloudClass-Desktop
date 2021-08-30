@@ -29,7 +29,7 @@ import { LoadingPptContainer } from '~capabilities/containers/loading/loading-pp
 import { RootBox } from '~ui-kit';
 
 export const BigClassScenario = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
+  const { initCoursewareProgress, initCoursewareLoading } = useCloudDriveContext();
 
   const { joinRoom, roomProperties, isJoiningRoom } = useRoomContext();
 

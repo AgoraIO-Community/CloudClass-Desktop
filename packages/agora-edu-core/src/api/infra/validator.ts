@@ -114,12 +114,12 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError('userUuid parameter cannot be empty');
   }
 
-  if (!isArray(option.courseWareList)) {
-    throw new AgoraSDKError('courseWareList parameter should be valid array');
+  if (!isArray(option.coursewareList)) {
+    throw new AgoraSDKError('coursewareList parameter should be valid array');
   }
 
-  if (option.personalCourseWareList && !isArray(option.personalCourseWareList)) {
-    throw new AgoraSDKError('personalCourseWareList parameter should be valid array');
+  if (option.personalCoursewareList && !isArray(option.personalCoursewareList)) {
+    throw new AgoraSDKError('personalCoursewareList parameter should be valid array');
   }
 
   // if (option.userUuid && option.userUuid.length > 89) {
@@ -152,8 +152,8 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
 //     throw new AgoraSDKError('listener parameter should be function')
 //   }
 
-//   if (!isArray(option.courseWareList)) {
-//     throw new AgoraSDKError('courseWareList parameter should be valid array')
+//   if (!isArray(option.coursewareList)) {
+//     throw new AgoraSDKError('coursewareList parameter should be valid array')
 //   }
 // }
 
