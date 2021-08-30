@@ -859,7 +859,10 @@ export class PretestStore {
 
   @action.bound
   async changeElectronTestSpeaker(deviceId: string) {
-    this.mediaService.electron.client.setAudioPlaybackDevice(deviceId);
+    // TODO: che.audio.set_default_playback_device is private api to switch default playback device
+    this.mediaService.electron.client.setParameters(
+      JSON.stringify({ 'che.audio.set_default_playback_device': deviceId }),
+    );
     this.updateTestSpeakerLabel();
   }
 
