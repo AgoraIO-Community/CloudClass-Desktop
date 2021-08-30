@@ -9,12 +9,58 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
-import { Button, Modal, t, transI18n } from '~ui-kit'
+import { Button, Modal, t, transI18n, Input } from '~ui-kit'
 
 
 export type BaseDialogProps = {
   id: string
 }
+
+export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
+  // const {  } = useBoardContext()
+  const { removeDialog } = useUIStore()
+  const [fileName, setFileName] = useState(() => { 
+    return "draft-" + Date.now()
+  })
+
+  const { saveBoardStateToCloudDrive } = useCloudDriveContext()
+  
+  return (
+  <Modal 
+    width={360} title={transI18n('toast.save_to_cloud_drive')}
+    onOk={()=>{
+      console.log("save board state to Cloud Drive")
+      if(!fileName) {
+        return
+      }
+      
+      saveBoardStateToCloudDrive(fileName, (evt: any)=>{
+        console.log(evt)
+      }).then(()=>{
+        removeDialog(id)
+      })
+    }}
+    onCancel={()=>{
+      removeDialog(id)
+    }}
+    
+    footer={
+      [
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]
+    }
+  >
+    <div className="flex items-center mb-3">
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 80 }}>{transI18n('toast.save_as')}:</label>
+      <Input onChange={(e) => {setFileName(e.target.value)}} value={fileName} />
+    </div>
+    <div className="flex items-center">
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 80 }}>{transI18n('toast.save_to')}:</label>
+      <Input value="Cloud Drive" disabled />
+    </div>
+  </Modal>)
+})
 
 export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
 
@@ -36,6 +82,7 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
 
   return (
     <Modal
+      closable
       width={300}
       title={transI18n('kick.kick_out_student')}
       onOk={onOK}
