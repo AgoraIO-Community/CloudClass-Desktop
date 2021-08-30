@@ -226,7 +226,10 @@ export const en = {
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
     'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later',
-    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency'
+    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency',
+    'save_to_cloud_drive': 'Save to Cloud Drive',
+    'save_as': 'File name',
+    'save_to': 'Save to'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -254,7 +257,8 @@ export const en = {
     'cloud_storage': 'Cloud Storage',
     'text': 'Text',
     'tools': 'Tools',
-    'user_list': 'User List'
+    'user_list': 'User List',
+    'boardSave': 'Board Save'
   },
   'message': 'Message',
   'quiz': 'Question',

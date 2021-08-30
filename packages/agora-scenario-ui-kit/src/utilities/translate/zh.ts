@@ -225,7 +225,10 @@ export const zh = {
     'chat_enable': '禁言模式开启',
     'chat_disable': '禁言模式关闭',
     'cloud_resource_conversion_not_finished': '课件正在转换中，请稍后重试',
-    'cloud_resource_conversion_not_converted': '课件未转换成功，如果急用请转为PDF再上传使用'
+    'cloud_resource_conversion_not_converted': '课件未转换成功，如果急用请转为PDF再上传使用',
+    'save_to_cloud_drive': '保存至云盘',
+    'save_as': '文件名',
+    'save_to': '保存至'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -253,7 +256,8 @@ export const zh = {
     'cloud_storage': '云盘',
     'text': '文本',
     'tools': '工具栏',
-    'user_list': '用户列表'
+    'user_list': '用户列表',
+    'boardSave': '板书保存'
   },
   'cloud': {
     'fileName': '文件名',

@@ -1988,9 +1988,8 @@ export class BoardStore extends ZoomController {
         page: 0,
         taskUuid: resource.taskUuid,
       }, false)
-
+      // sdk will do putScenes internally
       // this.room.putScenes(`/${resource.id}`, scenes)
-
       await this.windowManager?.addApp({
         kind: BuiltinApps.DocsViewer,
         options: {
@@ -2228,6 +2227,7 @@ export class BoardStore extends ZoomController {
       })
       
       if (this.isCancel) {
+        this.fileLoading = false
         return
       }
       // const materialList = this.globalState?.materialList ?? []
@@ -2564,6 +2564,55 @@ export class BoardStore extends ZoomController {
     return status
     // return false
   }
+  async saveBoardStateToCloudDrive(filename: string, onProgress: (evt: any) => void) {
+    const file = await this.exportBoardStateToBlob()
+
+    const md5 = await calcUploadFilesMd5(file)
+    const resourceUuid = MD5(`${md5}`)
+    
+    const payload = {
+      file: file,
+      fileSize: file.size,
+      ext: 'akko',
+      resourceName: filename,
+      resourceUuid: resourceUuid,
+      converting: false,
+      conversion: null,
+      kind: 'static',
+      onProgress: async (evt: any) => {
+        // const { progress, isTransFile = false, isLastProgress = false } = evt;
+        // const parent = Math.floor(progress * 100)
+        onProgress(evt)
+      },
+      roomToken: this.room.roomToken,
+      personalResource: true,
+      roomUuid: this.appStore.roomInfo.roomUuid,
+      userUuid: this.appStore.roomInfo.userUuid,
+    }
+
+    await this.appStore.uploadService.handleUpload(payload)
+  }
+
+  async exportBoardStateToBlob() {
+    const currentSceneState = this.room.state.sceneState
+
+    const blob = await this.room.exportScene(currentSceneState.scenePath)
+    
+    return blob
+  }
+}
+
+
+
+export const calcUploadFilesMd5 = async (file: Blob) => {
+  return new Promise(resolve => {
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file); //计算文件md5
+    fileReader.onload = async () => {
+      const md5Str = MD5(fileReader.result);
+      resolve(md5Str);
+    };
+  });
 }
 
 export type HandleUploadType = {
