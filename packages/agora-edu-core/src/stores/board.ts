@@ -2407,6 +2407,7 @@ export class BoardStore extends ZoomController {
       console.error(err);
       this.fileLoading = false;
       this.appStore.fireToast(`toast.upload_failure`);
+      throw err;
     }
   }
 
@@ -2670,7 +2671,7 @@ export class BoardStore extends ZoomController {
     try {
       await this.internalDownload(taskUuid);
       await this.refreshState();
-      this.appStore.fireToast(`toast.download_success`);
+      // this.appStore.fireToast(`toast.download_success`);
     } catch (err) {
       this.appStore.fireToast(`toast.download_failure`);
       throw GenericErrorWrapper(err);
