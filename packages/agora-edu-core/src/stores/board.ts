@@ -486,7 +486,7 @@ export class BoardStore extends ZoomController {
         const targetResource = this.allResources.find((item) => item.id === resourceUuid);
         if (targetResource) {
           if (targetResource.ext === 'h5') {
-            this.insertH5(targetResource.url, targetResource.id);
+            this.insertH5(targetResource.url, targetResource.id, currentPage);
             if (targetPath === 'screenShare') {
               eduSDKApi
                 .selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {
@@ -2097,17 +2097,17 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async putCourseResource(resourceUuid: string) {
+  async putCourseResource(resourceUuid: string, currentPage: number = 0) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid);
     if (resource) {
       const scenes = resource.scenes!;
-      const firstPath = scenes[0].name;
+      const firstPath = scenes[currentPage].name;
       this.updateBoardSceneItems(
         {
           scenes,
           resourceName: resource.name,
           resourceUuid: resource.id,
-          page: 0,
+          page: currentPage,
           taskUuid: resource.taskUuid,
         },
         false,
@@ -2196,7 +2196,7 @@ export class BoardStore extends ZoomController {
   iframe: IframeBridge = null as any;
 
   @action.bound
-  async insertH5(url: string, resourceUuid: string) {
+  async insertH5(url: string, resourceUuid: string, currentPage: number = 0) {
     const bridge = this.boardClient.bridge;
     const scenePath = `/${resourceUuid}`;
     const room = this.room;
@@ -2221,7 +2221,7 @@ export class BoardStore extends ZoomController {
         });
         //@ts-ignore
         this.iframe = oldIframe;
-        this.putCourseResource(resourceUuid);
+        this.putCourseResource(resourceUuid, currentPage);
         return;
       }
       const iframe = await IframeBridge.insert({
@@ -2233,7 +2233,7 @@ export class BoardStore extends ZoomController {
         useClicker: true,
       });
       this.iframe = iframe;
-      this.putCourseResource(resourceUuid);
+      this.putCourseResource(resourceUuid, currentPage);
     } else {
       iframe?.setAttributes({
         url: url,
@@ -2242,7 +2242,7 @@ export class BoardStore extends ZoomController {
         displaySceneDir: `${scenePath}`,
         useClicker: true,
       });
-      this.putCourseResource(resourceUuid);
+      this.putCourseResource(resourceUuid, currentPage);
       // room.setScenePath(scenePath)
     }
     // if (bridge) {

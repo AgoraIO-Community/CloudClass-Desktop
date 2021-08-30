@@ -13,8 +13,8 @@ import { MainController } from './controller';
 
 const controller = new MainController();
 
-//@ts-ignore
-window.AgCtrl = controller;
+// //@ts-ignore
+// window.AgCtrl = controller;
 
 export type AgoraEduBoardScene = SceneDefinition;
 
