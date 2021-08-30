@@ -2,6 +2,7 @@ import { unmountComponentAtNode } from 'react-dom';
 import { AgoraEduEvent } from '../declare';
 import { render } from 'react-dom';
 import { ReactElement } from 'react';
+import { EduScenarioAppStore } from '../../stores';
 
 export enum EduSDKInternalStateEnum {
   Created = 'created',
@@ -41,6 +42,7 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
   private room!: ClassRoom<T>;
   private dom!: HTMLElement;
   public callback!: EventCallableFunction;
+  public globalStore: any;
 
   /**
    * onControllerLifeCycle
@@ -98,6 +100,10 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
 
   subscribe({ onControllerDestroy }: ControllerLifeEvents) {
     this.onControllerDestroy = onControllerDestroy;
+  }
+
+  setupStore(context: EduScenarioAppStore) {
+    this.globalStore = context;
   }
 
   async destroy() {

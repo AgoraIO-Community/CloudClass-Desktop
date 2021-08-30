@@ -200,6 +200,8 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
       onControllerDestroy: this.destroy,
     });
     this.appController = appController;
+    //@ts-ignore
+    window.globalStore = this;
     this.lifeCycleState = super.getLifeCycleState();
     reaction(
       () => this.lifeCycleState,
