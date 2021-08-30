@@ -199,6 +199,7 @@ export const CloudDriverContainer: React.FC<CloudDriveContainerProps> = observer
       fileRef.current!.value = '';
     } catch (e) {
       fileRef.current!.value = '';
+      setShowUploadModal(false);
       throw e;
     }
   };
