@@ -1498,7 +1498,21 @@ export type CloudDriveContext = {
      */
     allResources: MaterialDataResource[],
 
+    /**
+     * 获取用户个人资源
+     * @param userUuid 
+     * @param options 
+     */
     fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
+
+    
+    /**
+     * 保存白板状态云盘
+     * @param fileName
+     * @param onProgress 
+     */
+     saveBoardStateToCloudDrive(fileName: string, onProgress: (evt: any) => void): Promise<void>
+    
 }
 
 

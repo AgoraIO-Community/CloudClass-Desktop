@@ -111,7 +111,7 @@ export type FetchStsTokenResult = {
 }
 
 export type HandleUploadType = {
-  file: File,
+  file: File | Blob,
   fileSize: number,
   resourceUuid: string,
   resourceName: string,
@@ -682,7 +682,7 @@ export class UploadService extends ApiBase {
     return defaultDomain;
   }
 
-  async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
+  async addFileToOss(ossClient: OSS, key: string, file: Blob, onProgress: CallableFunction, ossParams: any) {
     const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     try{
@@ -758,7 +758,7 @@ export class UploadService extends ApiBase {
 
   }
 
-  addFileToAWS (file: File, onProgress: CallableFunction, ossParams: any) {
+  addFileToAWS (file: Blob, onProgress: CallableFunction, ossParams: any) {
     const prefix = ossParams.callbackHost
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
     return new Promise(async (resolve, reject) => {

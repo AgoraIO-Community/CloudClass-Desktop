@@ -139,3 +139,9 @@ export interface ChatConversation {
   messages: any[],
   timestamp?: number
 }
+declare module 'white-web-sdk' {
+  export interface Room {
+    exportScene(scenePath: string): Promise<Blob> 
+    importScene(dir: string, payload: Blob): Promise<SceneDefinition> 
+  }
+}

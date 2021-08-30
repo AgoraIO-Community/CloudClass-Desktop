@@ -503,7 +503,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     publicResources,
     upsertResources,
     allResources,
-    fetchPersonalResources
+    fetchPersonalResources,
+    saveBoardStateToCloudDrive
   } = useBoardStore()
 
 
@@ -522,7 +523,8 @@ export const useCloudDriveContext = (): CloudDriveContext => {
     doUpload: handleUpload,
     allResources,
     upsertResources,
-    fetchPersonalResources
+    fetchPersonalResources,
+    saveBoardStateToCloudDrive
   }
 }
 
