@@ -171,6 +171,20 @@ export const HomePage = observer(() => {
         homeApi.setRegion(region, domain);
         let { rtmToken, appId } = await homeApi.login(userUuid);
         console.log('## rtm Token', rtmToken);
+        const cameraEncoderConfiguration =
+          EduSceneType.SceneMedium === scenario
+            ? {
+                width: 160,
+                height: 120,
+                bitrate: 65,
+                frameRate: 15,
+              }
+            : {
+                width: 320,
+                height: 240,
+                frameRate: 15,
+                bitrate: 1000,
+              };
         let config: HomeLaunchOption = {
           // rtmUid: userUuid,
           appId,
@@ -189,12 +203,7 @@ export const HomePage = observer(() => {
           region,
           duration: duration * 60,
           mediaOptions: {
-            cameraEncoderConfiguration: {
-              width: 320,
-              height: 240,
-              frameRate: 15,
-              bitrate: 1000,
-            },
+            cameraEncoderConfiguration,
           },
         };
         if (encryptionKey && encryptionMode) {
