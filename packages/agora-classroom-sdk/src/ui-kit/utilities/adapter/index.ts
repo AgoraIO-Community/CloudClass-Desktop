@@ -1,5 +1,5 @@
 import { useUIStore } from "@/infra/hooks"
-import { useBoardContext, useChatContext, useGlobalContext, useRoomContext, useUserListContext } from "agora-edu-core"
+import { useBoardContext, useChatContext, useGlobalContext, useHandsUpContext, useRoomContext, useUserListContext } from "agora-edu-core"
 import { useEffect, useState } from "react"
 import { BehaviorSubject } from "rxjs"
 
@@ -134,6 +134,25 @@ export const BoardContextAdapter = () => {
     }
 }
 
+export const HandsupContextAdapter = () => {
+    const {
+        teacherAcceptHandsUp,
+        teacherRevokeCoVideo,
+        studentExitCoVideo
+    } = useHandsUpContext()
+
+    const handsupActions = {
+        teacherAcceptHandsUp,
+        teacherRevokeCoVideo,
+        studentExitCoVideo
+    }
+
+    return {
+        events: null,
+        actions: handsupActions
+    }
+}
+
 export const Adapter = () => {
     const chatAdapter = ChatContextAdapter()
     const globalAdapter = GlobalContextAdapter()
@@ -166,6 +185,7 @@ export const ContextPoolAdapters = () => {
         chat: ChatContextAdapter(),
         global: GlobalContextAdapter(),
         userList: UserListContextAdapter(),
-        board: BoardContextAdapter()
+        board: BoardContextAdapter(),
+        handsup: HandsupContextAdapter()
     }
 }
