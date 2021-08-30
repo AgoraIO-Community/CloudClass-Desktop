@@ -210,7 +210,9 @@ export const PersonalStorageContainer = observer(() => {
       await doUpload(payload)
       fileRef.current!.value = ""
     } catch (e) {
-      fileRef.current!.value = ""
+      if(fileRef.current) {
+        fileRef.current.value = ""
+      }
       throw e
     }
     fetchResource(pageIdx + 1, hintText)

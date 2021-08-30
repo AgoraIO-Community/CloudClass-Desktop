@@ -583,6 +583,10 @@ export class BoardStore extends ZoomController {
   // 更新白板
   @action.bound
   updateBoardSceneItems ({scenes, resourceUuid, resourceName, page, taskUuid}: any, setScene: boolean) {
+    if(!scenes[page]) {
+      throw GenericErrorWrapper(new Error(`Scene not exist for page ${page}`))
+    }
+    
     const sceneName = `/${resourceName}`
     const scenePath = `${sceneName}/${scenes[page].name}`
 
@@ -1843,14 +1847,14 @@ export class BoardStore extends ZoomController {
         }
         (window as any).manager = manager
       });
-      this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-        if (this.online && this.room) {
+      // this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      //   if (this.online && this.room) {
           // this.room.moveCamera({centerX: 0, centerY: 0});
           // this.moveCamera()
-          this.room.refreshViewSize();
-        }
-      })
-      this.resizeObserver.observe(dom)
+          // this.room.refreshViewSize();
+      //   }
+      // })
+      // this.resizeObserver.observe(dom)
     }
   }
 
@@ -1967,9 +1971,9 @@ export class BoardStore extends ZoomController {
           ...newRoomScenes,
         }
       })
-      if (includeRoomScenes) {
-        this.room.setScenePath('')
-      }
+      // if (includeRoomScenes) {
+      //   this.room.setScenePath('')
+      // }
       this._personalResources = this._personalResources.filter((e => !resourceUuids.includes(e.resourceUuid)))
       EduLogger.info("remove removeMaterialList success", res)
     } catch (err) {
@@ -2241,6 +2245,7 @@ export class BoardStore extends ZoomController {
       this.fileLoading = false
     } catch (err) {
       console.error(err)
+      this.appStore.fireToast('cloud.upload_failed', {reason: err.message})
       this.fileLoading = false
     }
   }
@@ -2287,7 +2292,7 @@ export class BoardStore extends ZoomController {
       //   scale: 1,
       // })
     }
-    this.scaleToFit()
+    // this.scaleToFit()
   }
 
   @observable

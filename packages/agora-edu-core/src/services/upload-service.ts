@@ -347,7 +347,7 @@ export class UploadService extends ApiBase {
       resourceUuid: payload.resourceUuid,
       ext: payload.ext,
       fileSize: payload.fileSize,
-      conversion,
+      // conversion,
     })
     // use presigned url
     // fetchResult = await this.fetchPersonalPresignedURL({
@@ -417,13 +417,27 @@ export class UploadService extends ApiBase {
         callbackHost: ossConfig.callbackHost
     })
 
+    if(!uploadResult) {
+      throw GenericErrorWrapper(new Error(`Upload File Failed`))
+    }
+
+    const bindingResult = await this.addUserResourceRelation({ 
+      userUuid: payload.userUuid, 
+      resourceUuid: payload.resourceUuid,
+      resourceName: uploadResult.resourceName, 
+      resourceURL: uploadResult.ossURL,
+      ext: payload.ext,
+      fileSize: payload.fileSize,
+      conversion
+    })
+
     let taskRes = {};
     
     if(payload.converting) {
       const resp = createPPTTask({
-        uuid: uploadResult.taskUuid,
+        uuid: bindingResult.taskUuid,
         kind: payload.kind,
-        taskToken: uploadResult.taskToken,
+        taskToken: bindingResult.taskToken,
         region: this.region,
         callbacks: {
           onProgressUpdated: progress => {
@@ -463,23 +477,23 @@ export class UploadService extends ApiBase {
         isLastProgress: true
       })
 
-      let materialResult = await this.createMaterial({
-        taskUuid: ppt.uuid,
-        url: uploadResult.ossURL,
-        roomUuid: payload.roomUuid,
-        // userUuid: payload.userUuid,
-        resourceName: payload.resourceName,
-        resourceUuid,
-        taskToken: uploadResult.taskToken,
-        ext: payload.ext,
-        size: uploadResult.size,
-        taskProgress: {
-          totalPageSize: ppt.scenes.length,
-          convertedPageSize: ppt.scenes.length,
-          convertedPercentage: 100,
-          convertedFileList: ppt.scenes
-        }
-      })
+      // let materialResult = await this.createMaterial({
+      //   taskUuid: ppt.uuid,
+      //   url: uploadResult.ossURL,
+      //   roomUuid: payload.roomUuid,
+      //   // userUuid: payload.userUuid,
+      //   resourceName: payload.resourceName,
+      //   resourceUuid,
+      //   taskToken: uploadResult.taskToken,
+      //   ext: payload.ext,
+      //   size: uploadResult.size,
+      //   taskProgress: {
+      //     totalPageSize: ppt.scenes.length,
+      //     convertedPageSize: ppt.scenes.length,
+      //     convertedPercentage: 100,
+      //     convertedFileList: ppt.scenes
+      //   }
+      // })
 
       taskRes = {
         scenes: ppt.scenes,
@@ -489,29 +503,20 @@ export class UploadService extends ApiBase {
           convertedPercentage: 100,
           convertedFileList: ppt.scenes
         },
-        updateTime: materialResult.data.updateTime,
+        updateTime: bindingResult.updateTime,
       }
     }
 
-    await this.addUserResourceRelation({ 
-      userUuid: payload.userUuid, 
-      resourceUuid: payload.resourceUuid,
-      resourceName: uploadResult.resourceName, 
-      resourceURL: uploadResult.ossURL,
-      ext: payload.ext,
-      fileSize: payload.fileSize,
-      conversion
-    })
 
     return {
       ...taskRes,
       resourceUuid: resourceUuid,
-      resourceName: uploadResult.resourceName,
-      ext: uploadResult.ext,
+      resourceName: bindingResult.resourceName,
+      ext: bindingResult.ext,
       size: fetchCallbackBody.size,
-      url: uploadResult.ossURL,
-      updateTime: uploadResult.updateTime,
-      taskUuid: uploadResult.taskUuid,
+      url: bindingResult.ossURL,
+      updateTime: bindingResult.updateTime,
+      taskUuid: bindingResult.taskUuid,
     }
 
   }
@@ -881,6 +886,7 @@ export class UploadService extends ApiBase {
         message: res.message
       })
     }
+    return res.data
   }
   
   async removeUserResourceRelation(relations : Array<{ resourceUuid: string, userUuid: string }>) {
