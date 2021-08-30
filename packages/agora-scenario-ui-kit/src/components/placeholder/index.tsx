@@ -73,7 +73,6 @@ export const Placeholder: FC<PlaceholderProps> = ({
   return (
     <div className={cls} {...restProps} style={{ backgroundColor }}>
       <div>
-        {/* <img src={placeholderImgDict[placeholderType]} alt="no messages" /> */}
         <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]} />
       </div>
       {placeholderDesc ? <div className="placeholder-desc">{placeholderDesc}</div> : ''}
@@ -97,12 +96,14 @@ const cameraSvgSizeDict = {
 
 export interface CameraPlaceHolderProps extends BaseProps {
   state?: 'loading' | 'broken' | 'muted' | 'disabled';
+  placeholderSize?: number;
   children?: React.ReactNode;
 }
 
 export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   children,
   state = 'loading',
+  placeholderSize = 0,
   className,
 }) => {
   const cls = classnames({
@@ -114,7 +115,10 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   return (
     <div className={cls}>
       {/* {children} */}
-      <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]} />
+      <SvgImg
+        type={cameraSvgTypeDict[state]}
+        size={placeholderSize ? placeholderSize : cameraSvgSizeDict[state]}
+      />
     </div>
   );
 };

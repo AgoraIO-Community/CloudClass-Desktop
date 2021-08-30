@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
@@ -383,8 +383,11 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
     </div>
   );
   // 老师和助教视角需要显示数量，学生视角必须>0;
-  const isShowStarNum =
-    (stars > 0 || ['teacher', 'assistant'].includes(userType)) && streamRoleType !== 'teacher';
+  const isShowStarNum = useMemo(
+    () =>
+      (stars > 0 || ['teacher', 'assistant'].includes(userType)) && streamRoleType !== 'teacher',
+    [stars, userType, streamRoleType],
+  );
   return (
     <Popover
       // trigger={'click'} // 调试使用
@@ -399,11 +402,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         {placeholder ? <>{placeholder}</> : null}
         {animList.length
           ? animList.map((item) => (
-              <div key={item.id} className="center-reward" style={{ width: 200, height: 200 }}>
+              <div key={item.id} className="center-reward">
                 <SvgaPlayer
                   type="reward"
-                  width={200}
-                  height={200}
                   audio="reward"
                   duration={2000}
                   onClose={() => onClose(item.id)}
@@ -414,7 +415,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         <div className="top-right-info">
           {isShowStarNum ? (
             <>
-              <SvgImg className="stars" type="star" canHover />
+              <SvgImg className="stars" type="star" />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}
@@ -655,7 +656,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                 // key={videoStream.uid}
                 timeout={500}
                 classNames="video-player-animates">
-                <div className="video-item" key={idx} ref={attachVideoItem}>
+                <div className="video-item" ref={attachVideoItem}>
                   <VideoPlayer
                     streamRoleType="student"
                     hideStars={hideStars}

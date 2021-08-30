@@ -7,7 +7,7 @@ import {
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { Button, MediaDeviceState, Modal, Pretest, t, transI18n } from '~ui-kit';
+import { Button, MediaDeviceState, Modal, Pretest, t, transI18n, CameraPlaceHolder } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Volume } from '~components/volume';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,14 +60,14 @@ export const PretestContainer = observer(() => {
   const VideoPreviewPlayer = useCallback(() => {
     return (
       <RendererPlayer
-        className="camera-placeholder camera-muted-placeholder"
         style={{ width: 320, height: 180 }}
         mirror={isMirror}
         key={cameraId}
         id="stream-player"
         track={pretestCameraRenderer}
-        preview={true}
-      />
+        preview={true}>
+        <CameraPlaceHolder state="muted" />
+      </RendererPlayer>
     );
   }, [pretestCameraRenderer, cameraId, isMirror]);
 
