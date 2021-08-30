@@ -9,6 +9,7 @@ import {
   useScreenShareContext,
   useCloudDriveContext,
   useGlobalContext,
+  useMediaContext,
 } from 'agora-edu-core';
 import { GenericError, GenericErrorWrapper } from 'agora-edu-core';
 import classnames from 'classnames';
@@ -563,8 +564,10 @@ export const MemoryPerfContainer = observer(({ onClose }: any) => {
     liveSize: 0,
   };
 
+  const { isNative } = useMediaContext();
+
   const [perfState, updatePerfInfo] = useState<MemoryPerfState>({
-    isNative: window.process && window.require ? true : false,
+    isNative: isNative,
     rss: 0,
     heapTotal: 0,
     heapUsed: 0,
@@ -628,8 +631,7 @@ export const MemoryPerfContainer = observer(({ onClose }: any) => {
   };
 
   useEffect(() => {
-    //@ts-ignore
-    if (window.process && window.require) {
+    if (isNative) {
       const timer = setInterval(() => {
         if (isMounted) {
           updatePerfInfo(getMemoryForElectron());
@@ -644,7 +646,6 @@ export const MemoryPerfContainer = observer(({ onClose }: any) => {
       }, 300);
       return () => clearInterval(timer);
     }
-    // const timer = setInterval(() =>)
   }, [updatePerfInfo]);
 
   return (
