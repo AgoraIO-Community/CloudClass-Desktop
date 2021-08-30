@@ -467,14 +467,9 @@ export class MediaStore {
       let downlinkNetworkQuality = +evt.downlinkNetworkQuality;
       let uplinkNetworkQuality = +evt.uplinkNetworkQuality;
       let qualityStr = defaultQuality;
-      let value = Math.max(downlinkNetworkQuality, uplinkNetworkQuality);
+      const value = uplinkNetworkQuality;
+      // let value = Math.max(downlinkNetworkQuality, uplinkNetworkQuality);
       qualityStr = networkQualityLevel[value];
-      // BizLogger.info('[web] network-quality value', value, qualityStr)
-      // if (downlinkNetworkQuality <= uplinkNetworkQuality) {
-      //   qualityStr = networkQualityLevel[downlinkNetworkQuality]
-      // } else {
-      //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
-      // }
       this.updateNetworkQuality(qualityStr || defaultQuality);
       this.updateRxNetworkQuality(networkQualityLevel[downlinkNetworkQuality] || defaultQuality);
       this.updateTxNetworkQuality(networkQualityLevel[uplinkNetworkQuality] || defaultQuality);
