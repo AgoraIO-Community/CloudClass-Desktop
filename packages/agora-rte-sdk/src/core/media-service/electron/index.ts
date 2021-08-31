@@ -547,8 +547,8 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     this.client.on('networkquality', (...args: any[]) => {
       // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
-        downlinkNetworkQuality: args[1],
-        uplinkNetworkQuality: args[2],
+        downlinkNetworkQuality: args[2],
+        uplinkNetworkQuality: args[1],
         cpuUsage: this.cpuUsage,
         //TODO: delay case need use last mile, not rtt
         rtt: this.lastMileDelay,
