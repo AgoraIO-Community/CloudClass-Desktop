@@ -2531,16 +2531,15 @@ export class BoardStore extends ZoomController {
     const onConfirm = () => {
       this.isBoardStateInLoading = true
       fetch(url).then(async (blob) => {
+        const currentSceneState = this.room.state.sceneState
         const scene = await this.room.importScene('/draft-restore', await blob.blob())
-        // this.room.putScenes('/init', [scene])
-        this.room.setScenePath('/draft-restore')
+        // console.log('sceneName', scene.name)
+        this.room.moveScene(`/draft-restore/init`, currentSceneState.scenePath)
         this.appStore.fireToast('toast.board_restore_success')  
       }).catch(() => {
         this.appStore.fireToast('toast.board_restore_fail')  
       }).finally(() => this.isBoardStateInLoading = false)
     }
-
-
     this.appStore.fireDialog('board-clear-confirm', {
       onConfirm
     })
