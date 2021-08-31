@@ -10,7 +10,7 @@ import { UserListContainer, StudentUserListContainer } from '~capabilities/conta
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n, Input } from '~ui-kit'
-
+import dayjs from 'dayjs';
 
 export type BaseDialogProps = {
   id: string
@@ -18,7 +18,6 @@ export type BaseDialogProps = {
 
 export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: string, onConfirm: () => void }> = observer(({ id, onConfirm })=>{
   const { removeDialog } = useUIStore()
-  // const { clear } = useBoardContext()
 
   return (
     <Modal
@@ -45,7 +44,7 @@ export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: strin
 export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
   const { removeDialog, addToast } = useUIStore()
   const [fileName, setFileName] = useState(() => { 
-    return t('toast.draft_default_name') + Date.now()
+    return transI18n('toast.board_draft_default_name') + '-' + dayjs().format('YYYY-MM-DD')
   })
 
   const { saveBoardStateToCloudDrive } = useCloudDriveContext()
@@ -79,7 +78,7 @@ export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: stri
     </div>
     <div className="flex items-center">
       <label className="whitespace-nowrap flex-shrink-0" style={{ width: 80 }}>{transI18n('toast.save_to')}:</label>
-      <Input value="Cloud Drive" disabled />
+      <Input value={transI18n('scaffold.cloud_storage')} disabled />
     </div>
   </Modal>)
 })
