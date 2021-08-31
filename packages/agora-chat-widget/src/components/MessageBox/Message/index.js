@@ -57,6 +57,9 @@ const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey }) => 
         store.dispatch(roomMessages(msg.body, { showNotice: !activeKey }))
     }
 
+
+    
+
     return (
         <>
             {isLoadGif && <div className='load'></div>}

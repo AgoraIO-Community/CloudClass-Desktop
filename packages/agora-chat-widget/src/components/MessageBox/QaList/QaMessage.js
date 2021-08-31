@@ -6,6 +6,7 @@ import { scrollElementToBottom, scrollIsBottom } from '../../../utils/scrollElem
 import AntModal from 'react-modal'
 import { dateFormat } from '../../../utils';
 import { saveReadMsgID } from '../../../api/qaReadMsg'
+import renderEmoji from '../../../utils/renderEmoji'
 
 // 助教端 提问消息列表
 const QaMessage = () => {
@@ -54,8 +55,13 @@ const QaMessage = () => {
         <div className='qa' id='qa-box-tag'>
             {
                 newUser && newUser.map((message, index) => {
-                    let isText = message.type === "txt" || message.contentsType === "TEXT"
-                    let isPic = message.type === "img" || message.contentsType === "IMAGE"
+                    let rnTxt = []
+                    let isTextMsg = message.type === "txt" || message.contentsType === "TEXT"
+                    let isPicMsg = message.type === "img" || message.contentsType === "IMAGE"
+                    let txtMsg = message.msg || message.data
+                    if (isTextMsg) {
+                        renderEmoji(txtMsg, rnTxt)
+                    }
                     return (
                         <div key={index} className='qa-msg' >
                             <Flex>
@@ -71,8 +77,8 @@ const QaMessage = () => {
                                     {/* { message.time } */}
                                 </Tag>
                             </Flex>
-                            {isText && <Text className='msg-text'>{message.msg || message.data}</Text>}
-                            {isPic && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={() => showMaximumPicture(message)} />}
+                            {isTextMsg && <Text className='msg-text'>{rnTxt}</Text>}
+                            {isPicMsg && <Image src={message.url || message.body.url} style={{ width: '180px' }} onLoad={scrollPageBottom} onClick={() => showMaximumPicture(message)} />}
                         </div>
                     )
                 })

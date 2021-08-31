@@ -111,11 +111,23 @@ const reducer = (state = defaultState, action) => {
             };
         //获取聊天室管理员
         case 'GET_ROOM_ADMINS':
+            let aryAdmin = []
+            if (action.option === 'addAdmin'){
+                aryAdmin = aryAdmin.concat(...state.room.users, data)
+            } else if (action.option === 'removeAdmin') {
+                _.remove(state.room.admins, (v) => {
+                    return v == data
+                });
+                aryAdmin = state.room.admins
+            }else {
+                aryAdmin = state.room.admins.concat(data)
+            }
+            let newAdmins = _.uniq(aryAdmin)
             return {
                 ...state,
                 room: {
                     ...state.room,
-                    admins: data
+                    admins: newAdmins
                 }
             };
         //获取聊天室成员

@@ -32,8 +32,8 @@ export const roomNotice = data => {
     return { type: 'UPDATE_ROOM_NOTICE', data }
 }
 // 聊天室管理员
-export const roomAdmins = data => {
-    return { type: 'GET_ROOM_ADMINS', data }
+export const roomAdmins = (data, option) => {
+    return { type: 'GET_ROOM_ADMINS', data, option }
 }
 // 聊天室成员
 export const roomUsers = (data, option) => {

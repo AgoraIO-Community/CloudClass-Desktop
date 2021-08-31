@@ -32,7 +32,7 @@ const MessageList = ({ activeKey }) => {
   // 获取当前登陆ID，RoomId，及成员数
   const userName = useSelector((state) => state.loginName);
   const roomId = useSelector(state => state.extData.chatroomId)
-  const userCount = useSelector(state => state.room.info.affiliations_count);
+  const roomAdmins = useSelector(state => state.room.admins);
   // 获取当前登陆的用户权限
   const isTeacher = useSelector(state => state.loginInfo.ext)
   const messageList = useSelector(state => state.messages.list) || [];
@@ -133,8 +133,13 @@ const MessageList = ({ activeKey }) => {
             _coachTeacher.push(newVal)
             break;
           default:
-            newVal = _.assign(val, { id: item })
-            _student.push(newVal)
+            if (roomAdmins.includes(item)) {
+              newVal = _.assign(val, { id: item })
+              _speakerTeacher.push(newVal)
+            }else{
+              newVal = _.assign(val, { id: item })
+              _student.push(newVal)
+            }
             break;
         }
       })
@@ -142,7 +147,7 @@ const MessageList = ({ activeKey }) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomUsers, roomListInfo])
+  }, [roomUsers, roomListInfo, roomAdmins])
 
   useEffect(() => {
     const scrollElement = document.getElementById('chat-box-tag')

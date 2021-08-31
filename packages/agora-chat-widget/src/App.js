@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore, setStateListner } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore, setStateListner, roomAdmins } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -162,17 +162,17 @@ const App = function (props) {
       },
       // 聊天室相关监听
       onPresence: (message) => {
-        console.log('type-----', message);
+        console.log('onPresence', message);
         if (new_IM_Data.chatroomId !== message.gid) return
         if (new_IM_Data.privateChatRoom.chatRoomId === message.gid) return
         const userCount = _.get(store.getState(), 'room.info.affiliations_count')
         const roomUserList = _.get(store.getState(), 'room.users')
         const roomOwner = _.get(store.getState(), 'room.owner');
+        const updateAdmins = _.get(store.getState(), 'room.admins');
         switch (message.type) {
           case "memberJoinChatRoomSuccess":
-            if (roomOwner === message.from) {
-              return;
-            }
+            if (roomOwner === message.from) return
+            if (message.from === "系统管理员") return
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
             arr.push(message.from)
             intervalId && clearInterval(intervalId);
@@ -181,8 +181,6 @@ const App = function (props) {
               arr = [];
               getUserInfo(users)
             }, 500);
-
-
             let ary = []
             roomUserList.map((v, k) => {
               ary.push(v)
@@ -228,7 +226,6 @@ const App = function (props) {
           case 'addUserToChatRoomWhiteList':
             getRoomWhileList(message.gid);
             store.dispatch(userMute(true))
-
             // 触发改变禁言状态事件
             document.dispatchEvent(
               new CustomEvent("im_changeMutedState", {
@@ -238,6 +235,14 @@ const App = function (props) {
                 }
               })
             )
+            break;
+          case 'addAdmin':
+            if (!(updateAdmins.includes(message.to))) {
+              store.dispatch(roomAdmins(message.to, 'addAdmin'))
+            }
+            break
+          case 'removeAdmin':
+            store.dispatch(roomAdmins(message.to, 'removeAdmin'))
             break;
           default:
             break;
