@@ -10,7 +10,6 @@ import { UserListContainer, StudentUserListContainer } from '~capabilities/conta
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n, Input } from '~ui-kit'
-import { useCoreContext } from '../../../../../../agora-edu-core/src/context/core'
 
 
 export type BaseDialogProps = {
@@ -24,7 +23,10 @@ export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: strin
   return (
     <Modal
     width={360} title={transI18n('quiz')}
-    onOk={onConfirm}
+    onOk={()=>{
+      onConfirm()
+      removeDialog(id)
+    }}
     onCancel={() => {
       removeDialog(id)
     }}
@@ -41,8 +43,7 @@ export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: strin
 })
 
 export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
-  const { removeDialog } = useUIStore()
-  const { fireToast, fireDialog } = useCoreContext()
+  const { removeDialog, addToast } = useUIStore()
   const [fileName, setFileName] = useState(() => { 
     return t('toast.draft_default_name') + Date.now()
   })
@@ -54,16 +55,12 @@ export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: stri
     width={360} title={transI18n('toast.save_to_cloud_drive')}
     onOk={()=>{
       if(!fileName) {
-        fireToast('toast.board_save_fail_empty_name')
+        addToast(transI18n('toast.board_save_fail_empty_name'))
         return
       }
-      fireDialog('', {
-        onConfirm: () => {
-          saveBoardStateToCloudDrive(fileName).then(()=>{
-            removeDialog(id)
-          })
-      }})
-      
+      saveBoardStateToCloudDrive(fileName).then(() => {
+        removeDialog(id)
+      })
     }}
     onCancel={()=>{
       removeDialog(id)
@@ -521,7 +518,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
     'room-end-notice': () => addDialog(RoomEndNotice),
     'kick-end': () => addDialog(KickEnd),
     'generic-error-dialog': (props: any) => addDialog(GenericErrorDialog, {...props}),
-    'board-clear-confirm': () => addDialog(ClearBoardStateDialog)
+    'board-clear-confirm': (props: any) => addDialog(ClearBoardStateDialog, {...props})
   }
 
   useEffect(() => {
