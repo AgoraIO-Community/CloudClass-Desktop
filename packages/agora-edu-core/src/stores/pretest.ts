@@ -863,6 +863,7 @@ export class PretestStore {
     this.mediaService.electron.client.setParameters(
       JSON.stringify({ 'che.audio.set_default_playback_device': deviceId }),
     );
+    this.mediaService.electron.client.setAudioPlaybackDevice(deviceId);
     this.updateTestSpeakerLabel();
   }
 
