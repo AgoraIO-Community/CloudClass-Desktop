@@ -33,8 +33,12 @@ export class AgoraCloudDriveApi extends ApiBase {
 
   async fetchPersonalResources(userUuid:string, options?: PagingOptions) {
     let queryparams:string[] = []
+
+    if(!options) {
+      options = {}
+    }
     
-    if(options && options?.converted !== 0) {
+    if(options.converted !== 0) {
       // default to 1
       options.converted = 1
     }
