@@ -43,9 +43,7 @@ export class AgoraCloudDriveApi extends ApiBase {
       options.converted = 1
     }
 
-    if(options) {
-      queryparams = Object.entries(options).filter((([, value]) => !!value)).map(([name, value]) => `${name}=${value}`);
-    }
+    queryparams = Object.entries(options).filter((([, value]) => !!value)).map(([name, value]) => `${name}=${value}`);
     
     let res = await this.fetch({
       url: `/v2/users/${userUuid}/resources/page?${queryparams.join('&')}`,
