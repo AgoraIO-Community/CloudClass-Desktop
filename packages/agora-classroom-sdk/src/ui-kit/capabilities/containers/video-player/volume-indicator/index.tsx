@@ -5,11 +5,11 @@ import { observer } from 'mobx-react'
 
 export const StreamVolumeIndicator = observer(({streamUuid}: {streamUuid: any}) => {
 
-  const {speakers} = useVolumeContext()
+  const { speakers, getFixAudioVolume } = useVolumeContext()
 
   const speaker = speakers.get(+streamUuid)
 
-  const currentVolume = speaker ?? 0
+  const currentVolume = getFixAudioVolume(speaker ?? 0)
 
   return (
     <VolumeIndicator volume={currentVolume} />

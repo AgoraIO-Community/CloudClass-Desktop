@@ -203,7 +203,7 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
     overlayClassName,
     color,
     overlayInnerStyle,
-    children,
+    children
   } = props;
 
   const prefixCls = customizePrefixCls ?? 'tooltip';
@@ -268,5 +268,5 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
 
 Tooltip.defaultProps = {
   mouseEnterDelay: 0.1,
-  mouseLeaveDelay: 0.1,
+  mouseLeaveDelay: 0.1
 };

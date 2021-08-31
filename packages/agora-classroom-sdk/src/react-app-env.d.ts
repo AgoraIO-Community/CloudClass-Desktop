@@ -44,10 +44,7 @@ interface CustomGlobalUtils {
   }
   doGzip: CallableFunction
   logsStr: string // debug only
-  videoSourceLogPath: string
-  logPath: string
-  setNodeAddonLogPath: string
-  setNodeAddonVideoSourceLogPath: string
+  defaultLogFolder: string
   RTMRestful: RTMRestful
   EduLogger: EduLogger
   file: File

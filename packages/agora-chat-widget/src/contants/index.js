@@ -1,6 +1,10 @@
 
 // 角色权限
 export const ROLE = {
+    audience:{
+        id: 0,
+        tag: '系统'
+    },
     teacher: {
         id: 1,
         tag: '老师'

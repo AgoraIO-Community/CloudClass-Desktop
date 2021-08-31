@@ -27,14 +27,16 @@ export interface ModalProps extends BaseProps {
     modalType?: 'normal' | 'back';
     children?: React.ReactNode;
     btnId?: string;
-    header?: React.ReactNode
+    header?: React.ReactNode;
+    closeIcon?: React.ReactNode;
+    ref?: React.ForwardedRef<HTMLDivElement>
 }
 
-type ModalType = FC<ModalProps> & {
-    show: (params: ModalProps) => void,
+type ModalType = React.ForwardRefExoticComponent<ModalProps> & {
+    show?: (params: ModalProps) => void,
 }
-
-export const Modal: ModalType = ({
+export const Modal: ModalType = React.forwardRef<HTMLDivElement, ModalProps>(
+    ({
     width = 280,
     title = 'modal title',
     closable = false,
@@ -50,8 +52,9 @@ export const Modal: ModalType = ({
     maskClosable,
     btnId,
     header,
+    closeIcon,
     ...restProps
-}) => {
+}, ref) => {
 
     if (component) {
         return (
@@ -73,7 +76,7 @@ export const Modal: ModalType = ({
     })
 
     return (
-        <div className={cls} {...restProps} style={{ ...style, width }}>
+        <div ref={ref} className={cls} {...restProps} style={{ ...style, width }}>
             <div className={["modal-title", modalType === 'back' ? "back-modal-title" : ""].join(" ")}>
                 {modalType === 'normal' ? (
                     <>
@@ -81,7 +84,9 @@ export const Modal: ModalType = ({
                             {title}
                         </div>
                         {header && <div className="modal-header-slot">{header}</div>}
-                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}><Icon type="close" color="#586376" size={20}/></div>) : ""}
+                        {closable ? (<div className="modal-title-close" onClick={(e: React.MouseEvent<HTMLElement>) => { onCancel(e) }}>
+                            {closeIcon || <Icon type="close" color="#586376" size={20}/>}
+                        </div>) : ""}
                     </>
                 ) : null}
                 {modalType === 'back' ? (
@@ -115,7 +120,7 @@ export const Modal: ModalType = ({
             </div>
         </div>
     )
-}
+})
 
 Modal.show = (
     {

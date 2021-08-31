@@ -43,7 +43,6 @@
   right: 15px;
   bottom: 20px;
   transition: .5s;
-  z-index: 2;
 }
 
 .pin-right-full-not-collapse {
@@ -64,6 +63,10 @@
 .mid-class-aside {
   transition: .5s;
   margin-right: 0;
+  right: 10px;
+  bottom: 10px;
+  z-index: 201;
+  height: unset;
 }
 
 .mid-class-aside-full-collapse {
@@ -80,6 +83,7 @@
   /* transform: translateX(2px);
   right: 0;
   bottom: 0; */
+  min-width: unset
 }
 
 .mid-class-teacher {
@@ -101,12 +105,13 @@
 }
 
 .chat-panel {
-  @apply bg-white;
+  /* @apply bg-white; */
   /* width: 300px; */
   position: relative;
   flex: 1;
   border-radius: 4px;
-  min-width: 300px;
+  background: unset;
+  /* min-width: 300px; */
   /* margin-left: 2px; */
   /* @apply border-l border-gray-100; */
 }
@@ -318,7 +323,6 @@
   height: 100%;
   align-items: center;
   flex-direction: column;
-  z-index: 0;
 }
 
 .agora-board-resources .tabs {
@@ -416,4 +420,68 @@
   text-align: center;
   z-index: 999;
   transform: translateY(74px);
+}
+
+
+.layout-header {
+  height: 27px;
+}
+
+.layout-aside {
+  /* width: 19rem; */
+  /* min-width: 18rem; */
+  min-width: unset;
+  /* @apply overflow-hidden; */
+  overflow: unset;
+  transform: translateX(0);
+}
+
+.mid-class-aside .mini-icon {
+  right: 6px;
+}
+
+.mid-class-aside .input-box {
+  margin: 5px 0 0;
+  position: absolute;
+  bottom: 0;
+}
+
+.extapp-draggable-container .modal-title {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+}
+
+.extapp-draggable-container .modal-header-slot,
+.extapp-draggable-container .modal-title-text {
+  font-size: 13px;
+}
+
+.extapp-draggable-container .modal-title .icon-close {
+  font-size: 18px;
+}
+
+/* fix that loading not centerd on screen */
+.mid-class-container .page-loading {
+  left: 0;
+}
+.marque-video-container .video-player .bottom-left-info {
+  left: -6px;
+  bottom: -2px;
+}
+
+#window-manager-collector .telebox-collector {
+  position: static;
+  @apply mr-1;
+  visibility: unset;
+  display: none;
+}
+
+#window-manager-collector .telebox-collector.telebox-collector-visible {
+  visibility: unset;
+  display: block;
+}
+
+#window-manager-collector .telebox-collector-icon {
+  margin: 0 auto;
 }

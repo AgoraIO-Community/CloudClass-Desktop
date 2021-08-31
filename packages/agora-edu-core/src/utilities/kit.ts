@@ -9,6 +9,7 @@ import { ApplianceNames, Room } from "white-web-sdk"
 import { agoraCaches } from "./cache"
 import OSS from 'ali-oss';
 import {get} from 'lodash';
+import { BuiltinApps, WindowManager } from '@netless/window-manager';
 
 const OSS_PREFIX = '';
 
@@ -322,8 +323,9 @@ export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageRes
 
 }
 
-export const netlessInsertImageOperation = async (room: Room, imageFile: NetlessImageFile) => {
-  const {x, y} = await room.convertToPointInWorld({x: imageFile.coordinateX, y: imageFile.coordinateY})
+export const netlessInsertImageOperation = async (room: Room, windowManager: WindowManager, imageFile: NetlessImageFile) => {
+  const {x, y} = await windowManager.mainView.convertToPointInWorld({x: imageFile.coordinateX, y: imageFile.coordinateY})
+  windowManager.switchMainViewToWriter()
   room.insertImage({
     uuid: imageFile.uuid,
     centerX: x,
@@ -343,37 +345,59 @@ export type NetlessMediaFile = {
   height: number,
 }
 
-export const netlessInsertVideoOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
-  room.insertPlugin(
-    PluginId,
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-          src: file.url,
-          type: mimeType
-          // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
-      }
+export const netlessInsertVideoOperation = async (room: Room, windowManager: WindowManager, file: NetlessMediaFile, mimeType: string) => {
+  // windowManager.switchMainViewToWriter()
+  // room.insertPlugin(
+  //   PluginId,
+  //   {
+  //     originX: file.originX,
+  //     originY: file.originY,
+  //     width: file.width,
+  //     height: file.height,
+  //     attributes: {
+  //         src: file.url,
+  //         type: mimeType
+  //         // test https://beings.oss-cn-hangzhou.aliyuncs.com/test/d009b7ae-9b37-434f-a109-01ad01475087/oceans.mp4
+  //     }
+  //   }
+  // )
+  await windowManager.addApp({
+    kind: BuiltinApps.MediaPlayer,
+    options: {
+        title: file.url // 可选
+    },
+    attributes: {
+        src: file.url, // 音视频 url
+        type: mimeType
     }
-  )
+  });
 }
 
-export const netlessInsertAudioOperation = (room: Room, file: NetlessMediaFile, mimeType: string) => {
-  room.insertPlugin(
-    PluginId,
-    {
-      originX: file.originX,
-      originY: file.originY,
-      width: file.width,
-      height: file.height,
-      attributes: {
-        src: file.url,
+export const netlessInsertAudioOperation = async (room: Room, windowManager: WindowManager, file: NetlessMediaFile, mimeType: string) => {
+  // windowManager.switchMainViewToWriter()
+  // room.insertPlugin(
+  //   PluginId,
+  //   {
+  //     originX: file.originX,
+  //     originY: file.originY,
+  //     width: file.width,
+  //     height: file.height,
+  //     attributes: {
+  //       src: file.url,
+  //       type: mimeType
+  //     }
+  //   }
+  // )
+  await windowManager.addApp({
+    kind: BuiltinApps.MediaPlayer,
+    options: {
+        title: file.url // 可选
+    },
+    attributes: {
+        src: file.url, // 音视频 url
         type: mimeType
-      }
     }
-  )
+  });
 }
 
 export const getStorage = (label: string) => {

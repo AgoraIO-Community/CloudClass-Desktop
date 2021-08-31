@@ -255,6 +255,10 @@ export type VolumeContext = {
      * @version v1.1.2-rc.2
      */
     speakers: Map<number, number>,
+    /**
+     * 获取音量条
+     */
+    getFixAudioVolume: (level: number) => number
 }
 export type PretestContext = {
     closeRecordingTest: () => void,
@@ -419,6 +423,12 @@ export type ScreenShareContext = {
      * @version v1.1.2
      */
     canSharingScreen: boolean;
+    
+    /**
+     * 当前是否屏幕共享中
+     * @version v1.1.4
+     */
+    isSharing: boolean;
 }
 
 export type ClassRoomStats = {
@@ -1489,4 +1499,32 @@ export type CloudDriveContext = {
     allResources: MaterialDataResource[],
 
     fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
+}
+
+
+export type Bounds = {
+    left: number,
+    top: number,
+    right: number,
+    bottom: number
+}
+
+export type Dimension = { width: number, height: number }
+
+export type Point = { x: number, y: number }
+
+export type TrackSyncContext = {
+    /**
+     * 
+     */
+    updatePosition: (position: Point) => void,
+
+    /**
+     * 
+     */
+    position: Point,
+
+    isSyncing: boolean,
+    
+    needTransition: boolean
 }

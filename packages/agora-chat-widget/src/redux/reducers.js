@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { CHAT_TABS_KEYS } from '../contants'
 let defaultState = {
     propsData: {},          // props 值
-    showChat: true,          // 控制Chat
+    showChat: false,          // 控制Chat
     isLogin: false,         // 登陆状态
     loginUser: '',          // 当前登陆ID
     loginUserInfo: {},      // 当前登陆账号的用户属性
@@ -119,6 +119,7 @@ const reducer = (state = defaultState, action) => {
         case 'SAVE_ROOM_MESSAGE':
             const { isHistory } = action.options
             let msgs;
+            let newMsgs;
             if (isHistory) {
                 msgs = [data].concat(state.messages)
             } else {
@@ -127,9 +128,10 @@ const reducer = (state = defaultState, action) => {
             if (data.ext.msgId) {
                 msgs = msgs.filter((item) => item.id !== data.ext.msgId)
             }
+            newMsgs = _.uniqBy(msgs, 'id');
             return {
                 ...state,
-                messages: msgs
+                messages: newMsgs
             };
         case 'ROOM_ALL_MUTE':
             return {

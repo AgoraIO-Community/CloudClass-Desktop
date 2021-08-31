@@ -17,13 +17,10 @@ import {
 import classnames from 'classnames'
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 // import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
+import './index.css'
 
 const App = observer(() => {
   const pluginStore = usePluginStore()
-
-  pluginStore.context.contexts.board.globalState.subscribe((e: any) => {
-    console.log(`global state: ${e}`)
-  })
 
   return (
     <div 
@@ -51,7 +48,6 @@ const App = observer(() => {
       </div>
       <div className="numbers-wrap">
         <Countdown
-          style={{ transform: 'scale(0.4)' }}
           endDate={pluginStore.result}
           theme={2}
           type={2}

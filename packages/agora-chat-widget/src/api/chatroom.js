@@ -1,13 +1,12 @@
 import WebIM from "../utils/WebIM";
 import { message } from 'antd'
+import { debounce } from 'lodash'
 import store from '../redux/store'
 import { roomInfo, roomUsers, roomAnnouncement, roomAllMute, announcementStatus } from '../redux/actions/roomAction'
-import { JOIN_ROOM_SUCCESS, ROLE } from '../contants'
+import { ROLE } from '../contants'
 import { getUserInfo } from './userInfo'
 import { getHistoryMessages } from './historyMsg'
 import { getRoomWhileList, isChatRoomWhiteUser } from './mute'
-
-
 
 // 加入聊天室
 export const joinRoom = async () => {
@@ -21,7 +20,6 @@ export const joinRoom = async () => {
     WebIM.conn.mr_cache = [];
     setTimeout(() => {
         WebIM.conn.joinChatRoom(options).then((res) => {
-            message.success(JOIN_ROOM_SUCCESS);
             getRoomInfo(options.roomId);
             if (roleType === ROLE.student.id) {
                 setTimeout(() => {

@@ -1,13 +1,15 @@
 import { eduSDKApi } from "../services/edu-sdk-api"
 import { homeApi } from "../services/home-api"
 import { StorageCourseWareItem } from "../types"
-import { get } from "lodash"
+import { debounce, get, throttle } from "lodash"
 
 import { EduRoleTypeEnum, EduStream, EduUser } from "agora-rte-sdk"
 import { useCallback, useState } from "react"
 import { useCoreContext, useSceneStore, useBoardStore, useSmallClassStore, usePretestStore, useRoomStore, useMediaStore} from "./core"
 import { VideoControlContext, ChatContext, /*StreamContext, */PretestContext,ScreenShareContext, RoomContext, RoomDiagnosisContext, GlobalContext, UserListContext, RecordingContext, HandsUpContext, BoardContext, SmallClassVideoControlContext, StreamListContext, CloudDriveContext, VolumeContext, DeviceErrorCallback, ReportContext, StreamContext, ControlTool, ClassRoomStats } from './type'
 import { EduUserRoleEnum2EduUserRole } from "../utilities/typecast"
+import { useMemo } from "react"
+import { useEffect } from "react"
 
 export {
   ControlTool
@@ -97,12 +99,25 @@ export const useStreamListContext = (): StreamListContext => {
 
 export const useVolumeContext = (): VolumeContext => {
   const mediaStore = useMediaStore()
+  const appCoreContext = useCoreContext()
 
   // const volume = pretestStore
 
   return {
     microphoneLevel: mediaStore.totalVolume,
     speakers: mediaStore.speakers,
+    getFixAudioVolume: (volume: number) => {
+      if (appCoreContext.isElectron) {
+        return Math.max(0, +(volume / 255).toFixed(2))
+      }
+
+      if (volume > 0.01 && volume < 1) {
+        const v = Math.min(+volume * 10, 0.8)
+        return v
+      }
+      const v = Math.min(+(volume / 100).toFixed(2), 0.8)
+      return v
+    }
   }
 }
 
@@ -163,7 +178,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     screenShareStream,
     screenEduStream,
     startOrStopSharing,
-    startNativeScreenShareBy
+    startNativeScreenShareBy,
+    sharing
   } = useSceneStore()
 
   const {
@@ -180,7 +196,8 @@ export const useScreenShareContext = (): ScreenShareContext => {
     isScreenSharing: isShareScreen,
     customScreenSharePickerType,
     startNativeScreenShareBy,
-    canSharingScreen
+    canSharingScreen,
+    isSharing: sharing
   }
 }
 

@@ -42,24 +42,15 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.remoteUsersRenderer = []
     EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`)
     if (rtcProvider.platform === 'electron') {
-      const electronLogPath = rtcProvider.electronLogPath as any;
+      const electronLogPath = rtcProvider.electronLogPath
       this.sdkWrapper = new AgoraElectronRTCWrapper({
         cefClient: rtcProvider.cefClient,
-        logPath: electronLogPath.logPath,
-        videoSourceLogPath: electronLogPath.videoSourceLogPath,
+        logPath: electronLogPath?.logPath,
+        videoSourceLogPath: electronLogPath?.videoSourceLogPath,
         AgoraRtcEngine: rtcProvider.agoraSdk,
         appId: rtcProvider.appId,
         area: rtcProvider.rtcArea,
         cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration
-      })
-      window.ipc && window.ipc.once("initialize", (events: any, args: any) => {
-        const logPath = args[0]
-        const videoSourceLogPath = args[2];
-        window.videoSourceLogPath = videoSourceLogPath;
-        window.logPath = logPath
-        EduLogger.info(`[media-service] set logPath: ${logPath}, ${videoSourceLogPath}`)
-        this.electron.setAddonLogPath({ logPath, videoSourceLogPath })
-        this.electron.enableLogPersist()
       })
     } else {
       this.sdkWrapper = new AgoraWebRtcWrapper({
@@ -778,6 +769,30 @@ export class MediaService extends EventEmitter implements IMediaService {
       return +(this.electron.client.getAudioPlaybackVolume() / 255 * 100).toFixed(1)
     }
     return 100;
+  }
+
+  async setRtcRole(roleType: 'host' | 'audience') {
+    if (this.isElectron) {
+      if (roleType === 'host') {
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRole(1);
+      } else {
+        (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
+        (
+          this.sdkWrapper as AgoraElectronRTCWrapper
+        ).client.setClientRole(2);
+      }
+    } else {
+      if (roleType === 'host') {
+        (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('host');
+      } else {
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
+        await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole(
+          'audience'
+        );
+      }
+    }
   }
 
   reset(): void {

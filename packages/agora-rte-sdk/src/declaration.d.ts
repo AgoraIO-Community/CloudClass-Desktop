@@ -1,10 +1,7 @@
 interface Window {
-  logPath: string
-  videoSourceLogPath: string
   platform: string
-  isElectron: boolean
-  setNodeAddonLogPath: string
-  setNodeAddonVideoSourceLogPath: string
+  isElectron: Boolean
+  defaultLogFolder: string
   ipc: {
     once(event: string, callback: (...args: any) => void): void
   }

@@ -299,6 +299,9 @@ export class MediaStore {
       this.appStore.updateCpuRate(evt.cpuTotalUsage)
     })
     this.mediaService.on('track-ended', (evt: any) => {
+      if(evt.resource === 'screen') {
+        this.appStore.sceneStore.stopWebSharing()
+      }
       if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
         this.appStore.pretestStore.cameraRenderer.stop()
         this.appStore.pretestStore.resetCameraTrack()
@@ -509,7 +512,7 @@ export class MediaStore {
     this.mediaService.on('remoteVideoStats', (evt: any) => {
       let {stats = {}, user = {}} = evt
       let {uid} = user
-      BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
+      // BizLogger.info(`remoteVideoStats ${uid}, decode fps ${stats.decoderOutputFrameRate}, freezeCount: ${stats.freezeCount}`)
       // autorun(() => {
         this.updateRemoteVideoStats(`${uid}`, stats)
       // })

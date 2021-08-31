@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
+import { CSSTransition }  from 'react-transition-group'
+import { debounce } from 'lodash'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store'
 import { propsAction, isShowChat } from './redux/actions/propsAction'
@@ -14,9 +16,10 @@ import _ from 'lodash'
 import { Chat } from './components/Chat'
 import { message } from 'antd'
 import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants'
-import showChat_icon from './themes/img/chat.png'
+import showChat_icon from './themes/img/chat.svg'
 import './App.css'
 import 'antd/dist/antd.css'
+
 
 const App = function (props) {
   const state = useSelector(state => state)
@@ -24,18 +27,21 @@ const App = function (props) {
   const showRed = state?.showRed
   const showAnnouncementNotice = state?.showAnnouncementNotice
   useEffect(() => {
-    let im_Data = props.pluginStore;
-    let im_Data_Props = _.get(im_Data, 'props', '')
-    let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
-    let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
-    let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
-    let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
-    store.dispatch(propsAction(new_IM_Data));
-    if (appkey) {
-      initIMSDK(appkey)
+    const isPropsValue = store.getState()?.propsData || {};
+    if (Object.keys(isPropsValue).length === 0) {
+      let im_Data = props.pluginStore;
+      let im_Data_Props = _.get(im_Data, 'props', '')
+      let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '')
+      let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '')
+      let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo)
+      let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
+      store.dispatch(propsAction(new_IM_Data));
+      if (appkey) {
+        initIMSDK(appkey)
+      }
+      createListen(new_IM_Data, appkey)
+      loginIM(appkey);
     }
-    createListen(new_IM_Data, appkey)
-    loginIM(appkey);
   }, [])
 
   // 最小化窗口设置
@@ -51,7 +57,6 @@ const App = function (props) {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true))
-        message.success(LOGIN_SUCCESS);
         setUserInfo()
         joinRoom()
       },
@@ -66,13 +71,15 @@ const App = function (props) {
       onOffline: (network) => {
         console.log('onOffline>>>', network);
       },
-      onError: (message) => {
-        console.log('onError>>>', message);
-        if (message.type === 16) {
+      onError: (err) => {
+        console.log('onError>>>', err);
+        if (err.type === 16) {
           return message.error('请重新登陆！');
         }
-        if (message.type === 604) return
-        const type = JSON.parse(_.get(message, 'data.data')).error_description;
+        if (err.type === 604) return
+        let errData = _.get(err, 'data.data');
+        if (!errData) return
+        const type = JSON.parse(err)?.error_description;
         const resetName = store.getState().propsData.userUuid;
         if (type === "user not found") {
           let options = {
@@ -181,24 +188,32 @@ const App = function (props) {
   }
 
   return (
-    <div>
+    <CSSTransition
+      in={showChat}       
+      timeout={500}
+      classNames="collapse"
+    >
+      <>
       {showChat ?
-        <div className="app">
-          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-        </div> :
-        <div className="chat">
-          <div className="show-chat-icon" onClick={() => {
-            // 展开聊天
-            props.onReceivedMsg && props.onReceivedMsg({
-              isShowChat: true
-            })
-            onChangeModal()
-          }}>
-            <img src={showChat_icon} />
-            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
+          <div className="app w-full">
+            <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
           </div>
-        </div>}
-    </div >
+         :
+          <div className="chat">
+            <div className="show-chat-icon" onClick={() => {
+              // 展开聊天
+              props.onReceivedMsg && props.onReceivedMsg({
+                isShowChat: true
+              })
+              onChangeModal()
+            }}>
+              <img src={showChat_icon} alt="" />
+              {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
+            </div>
+          </div>
+        }
+      </>
+    </CSSTransition>
   );
 }
 export default App;

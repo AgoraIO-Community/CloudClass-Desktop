@@ -1,30 +1,30 @@
 import { observer } from 'mobx-react'
 import { RendererPlayer } from '~utilities/renderer-player'
-// import { IconButton, Icon } from '~ui-kit'
-// import { useCallback } from 'react'
-import { useBoardContext, useScreenShareContext } from 'agora-edu-core'
+import classNames from 'classnames'
+import { useRoomContext, useScreenShareContext } from 'agora-edu-core'
+import { EduRoleTypeEnum } from 'agora-rte-sdk'
 
 export const ScreenSharePlayerContainer = observer(() => {
 
-    const {
-        screenShareStream,
-        // screenEduStream,
-        // startOrStopSharing,
-    } = useScreenShareContext()
+    const { screenShareStream } = useScreenShareContext()
 
-    const {
-        isCurrentScenePathScreenShare
-    } = useBoardContext()
+    const { roomInfo } = useRoomContext()
 
-    // const onClick = useCallback(async () => {
-    //     await startOrStopSharing()
-    // }, [startOrStopSharing])
-    
+    // const {
+    //     isCurrentScenePathScreenShare
+    // } = useBoardContext()
+
+    const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
+
     return (
-        isCurrentScenePathScreenShare ? <div className="screen-share-player-container">
-            {/* {screenEduStream ? (<IconButton icon={<Icon type="share-screen" color="#357BF6"/>} buttonText="停止共享" buttonTextColor="#357BF6" style={{position: 'absolute', zIndex: 999}} onClick={onClick}/>) : ""} */}
+        screenShareStream ?
+        <div className={classNames({
+            "screen-share-player-container": 1,
+            // screen palyer not shown to user who is currently sharing screen
+            [ !screenShareStream || screenShareStream.local ? "z-0" : "z-50"]: 1
+        })}>
             {
-                  screenShareStream && screenShareStream.renderer ?
+                  screenShareStream && screenShareStream.renderer && !isTeacher ?
                     <RendererPlayer
                         fitMode={true}
                         key={screenShareStream.renderer && screenShareStream.renderer.videoTrack ? screenShareStream.renderer.videoTrack.getTrackId() : ''}
