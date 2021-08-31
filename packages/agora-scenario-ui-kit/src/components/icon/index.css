@@ -13,6 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+.icon-format-akko:before {
+  content: "\e62e";
+}
+
 .icon-format-audio:before {
   content: '\e665';
 }
