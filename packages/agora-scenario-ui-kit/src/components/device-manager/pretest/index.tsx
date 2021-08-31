@@ -294,12 +294,7 @@ const PretestComponent: React.FC<PretestProps> = ({
               }}
               options={cameraOptions}></Select>
           </div>
-          <div
-            style={{
-              position: 'relative',
-              width: 320,
-              height: 180,
-            }}>
+          <div className="pretest-video-wrap">
             {/* {videoComponent && React.cloneElement(videoComponent, {}, null)} */}
             {videoComponent && videoComponent()}
             {isNative && isBeauty ? (
