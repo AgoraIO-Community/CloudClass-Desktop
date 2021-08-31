@@ -287,6 +287,7 @@ export const VideoMarqueeStudentContainer = observer(() => {
         onWhiteboardClick={onWhiteboardClick}
         onOffPodiumClick={onOffPodiumClick}
         onPrivateChat={onPrivateChat}
+        roomType={'big-class'}
       />
     </div>
   ) : null;
@@ -456,6 +457,7 @@ export const MidVideoMarqueeContainer = observer(() => {
         onWhiteboardClick={onWhiteboardClick}
         onOffPodiumClick={onOffPodiumClick}
         onPrivateChat={onPrivateChat}
+        roomType="mid-class"
       />
     </div>
   ) : null;

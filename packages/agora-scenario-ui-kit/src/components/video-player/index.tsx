@@ -137,6 +137,7 @@ export interface BaseVideoPlayerProps {
   cameraDevice?: number;
   micDevice?: number;
   showGranted?: boolean;
+  roomType?: string;
   renderVolumeIndicator?: typeof CustomizeVolumeIndicator;
 }
 
@@ -221,6 +222,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
   renderVolumeIndicator = CustomizeVolumeIndicator,
+  roomType,
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([]);
@@ -382,11 +384,13 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
       ) : null}
     </div>
   );
-  // 老师和助教视角需要显示数量，学生视角必须>0;
+  // teacher and assistant can see stars, student can see stars if stars > 0 and big class can not see stars
   const isShowStarNum = useMemo(
     () =>
-      (stars > 0 || ['teacher', 'assistant'].includes(userType)) && streamRoleType !== 'teacher',
-    [stars, userType, streamRoleType],
+      (stars > 0 || ['teacher', 'assistant'].includes(userType)) &&
+      streamRoleType !== 'teacher' &&
+      roomType !== 'big-class',
+    [stars, userType, streamRoleType, roomType],
   );
   return (
     <Popover
@@ -520,6 +524,7 @@ export interface VideoMarqueeListProps {
    * 轮播功能开启轮播需要隐藏箭头
    */
   openCarousel?: boolean;
+  roomType?: 'mid-class' | 'big-class';
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -535,6 +540,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   userType,
   openCarousel = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  roomType = 'mid-class',
 }) => {
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -631,7 +637,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                 }}
                 onPrivateChat={async () => {
                   await onPrivateChat(teacherStreams[0].uid);
-                }}></VideoPlayer>
+                }}
+                roomType={roomType}></VideoPlayer>
             )}
           </div>
         </CSSTransition>
@@ -672,7 +679,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                     }}
                     onPrivateChat={async () => {
                       await onPrivateChat(videoStream.uid);
-                    }}></VideoPlayer>
+                    }}
+                    roomType={roomType}></VideoPlayer>
                 </div>
               </CSSTransition>
             ))}
