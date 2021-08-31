@@ -2570,16 +2570,23 @@ export class BoardStore extends ZoomController {
     // return false
   }
   async restoreBoardStateFromCloudDrive(url: string) {
-    this.isBoardStateInLoading = true
-    fetch(url).then(async (blob)=>{
-      const scene = await this.room.importScene('/draft-restore', await blob.blob())
+    const onConfirm = () => {
+      this.isBoardStateInLoading = true
+      fetch(url).then(async (blob) => {
+        const scene = await this.room.importScene('/draft-restore', await blob.blob())
+        // this.room.putScenes('/init', [scene])
+        this.room.setScenePath('/draft-restore')
+        this.appStore.fireToast('toast.board_restore_success')  
+      }).catch(() => {
+        this.appStore.fireToast('toast.board_restore_fail')  
+      }).finally(() => this.isBoardStateInLoading = false)
+    }
 
-      this.room.putScenes('/init', [scene])
-      // this.room.setScenePath('/draft-restore')
-      this.appStore.fireToast('toast.board_restore_success')  
-    }).catch(() => {
-      this.appStore.fireToast('toast.board_restore_fail')  
-    }).finally(() => this.isBoardStateInLoading = false)
+
+    this.appStore.fireDialog('board-clear-confirm', {
+      onConfirm
+    })
+    
   }
 
   @action.bound
