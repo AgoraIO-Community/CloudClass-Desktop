@@ -212,6 +212,7 @@ export class PluginStore {
                     if (this.showModifyBtn) {
                         this.toChangeMode()
                     }else{
+                        this.showModifyBtn = true;
                         this.changeRoomProperties({ replyTime: (Math.floor(Date.now() / 1000)).toString(), answer: this.selAnswer, commonState: 1 })
                     }
                 }
@@ -276,13 +277,15 @@ export class PluginStore {
                 this.title = ""
                 this.answer = properties.items
                 this.currentTime = formatTime(properties.endTime ? Number(properties.endTime) - Number(properties.startTime) : Math.floor(Date.now() / 1000) - Number(properties.startTime))
-                this.status = 'answer'
                 this.height = (this.answer?.length || 0) > 4 ? 190 : 120
-                this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
-                this.showModifyBtn = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])
-                this.ui = ['sels', 'subs']
-                this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || this.selAnswer
-                this.updateTime();
+                if (this.status !== 'answer' || this.showModifyBtn) {
+                    this.status = 'answer'
+                    this.buttonName = !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid]) ? 'answer.submit' : 'answer.change'
+                    this.showModifyBtn = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])
+                    this.ui = ['sels', 'subs']
+                    this.selAnswer = getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || []
+                    this.updateTime();
+                }
             } else if (properties.state === 'end') {
                 this.title = ""
                 this.answer = properties.answer
