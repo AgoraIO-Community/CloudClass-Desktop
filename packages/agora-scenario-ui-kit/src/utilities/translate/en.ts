@@ -229,7 +229,9 @@ export const en = {
     'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency',
     'save_to_cloud_drive': 'Save to Cloud Drive',
     'save_as': 'File name',
-    'save_to': 'Save to'
+    'save_to': 'Save to',
+    'board_restore_failed': 'Failed to restore board state',
+    'board_restore_success': 'Board state restored successfully'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
