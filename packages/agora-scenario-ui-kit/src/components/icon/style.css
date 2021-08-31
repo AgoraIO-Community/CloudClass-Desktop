@@ -87,6 +87,9 @@
 .icon-share-screen.share-screen {
   background-image: url('./assets/svg/share-screen.svg');
 }
+.icon-save-board.save-board {
+  background-image: url('./assets/svg/save-board.svg');
+}
 .icon-checked.checked {
   background-image: url('./assets/svg/icon-accept.svg'); 
 }
