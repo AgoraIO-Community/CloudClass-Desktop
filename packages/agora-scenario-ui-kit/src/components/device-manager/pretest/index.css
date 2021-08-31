@@ -77,6 +77,12 @@
   align-items: center;
   z-index: 3;
 }
+.pretest-video-wrap {
+  position: relative;
+  width: 320px;
+  height: 180px;
+  overflow: hidden;
+}
 
 .pretest-toast {
   position: absolute;
