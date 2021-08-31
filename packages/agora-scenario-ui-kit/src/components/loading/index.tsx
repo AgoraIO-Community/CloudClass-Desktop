@@ -61,7 +61,7 @@ export const Loading: FC<LoadingProps> = ({
                             <div>
                                 <Icon type={item.iconType as any} color="#F6B081"/>
                             </div>
-                            <div className="loading-file-name">
+                            <div className="loading-file-name" title={item.fileName}>
                                 {item.fileName}
                             </div>
                             <div className="loading-file-size">

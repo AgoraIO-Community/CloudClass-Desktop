@@ -30,7 +30,7 @@ export const DownloadContainer = observer(() => {
               onResourceClick(id)
             }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
-              <Inline className="filename" color="#191919">{name}</Inline>
+              <Inline className="filename" color="#191919" title={name}>{name}</Inline>
             </Col>
             <Col>
               <Inline color="#586376">{size}</Inline>
