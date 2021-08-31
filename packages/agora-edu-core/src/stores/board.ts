@@ -174,10 +174,6 @@ export const ApaasRoomPhase = {
   ...CustomRoomPhase
 }
 
-// workaround for video not palying normally on white board
-// should be removed after white board bug is fixed
-const nextTick = () => new Promise(resolve=>setTimeout(resolve, 100))
-
 export class BoardStore extends ZoomController {
 
   @observable
@@ -399,9 +395,6 @@ export class BoardStore extends ZoomController {
       }
       this.follow = follow
       this.isFullScreen = isFullScreen
-      // with this delay, video could play normally
-      // TODO: remove after white board bug is fixed
-      await nextTick()
       // 默认只有老师不用禁止跟随
       if (this.hasPermission) {
         await this.setWritable(true)
@@ -969,9 +962,6 @@ export class BoardStore extends ZoomController {
 
     if (this.online && this.room) {
       if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.appStore.roomInfo.userRole)) {
-        // with this delay, video could play normally
-        // TODO: remove after white board bug is fixed
-        await nextTick()
         await this.room.setWritable(true)
         this.room.disableDeviceInputs = false
       }
@@ -1748,9 +1738,6 @@ export class BoardStore extends ZoomController {
 
   async setWritable(v: boolean) {
     if (this.online && this.room) {
-      // with this delay, video could play normally
-      // TODO: remove after white board bug is fixed
-      await nextTick()
       await this.room.setWritable(v)
 
       if (this.userRole === EduRoleTypeEnum.student) {
@@ -2075,9 +2062,6 @@ export class BoardStore extends ZoomController {
     if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
       // TODO: workaround.
       // Cause probably is readonly state, so the IframeBridge cannot operate.
-      // with this delay, video could play normally
-      // TODO: remove after white board bug is fixed
-      await nextTick()
       await this.room.setWritable(true)
     }
     if (!iframe) {
