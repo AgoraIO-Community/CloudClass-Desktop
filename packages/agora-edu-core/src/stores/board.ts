@@ -1984,9 +1984,8 @@ export class BoardStore extends ZoomController {
   @action.bound
   async putCourseResource(resourceUuid: string) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid)
-    if(resource && resource.type === 'akko') {
-      // await 
-      // this.room.importScene('init', )
+    if(resource && resource.ext === 'akko') {
+      this.restoreBoardStateFromCloudDrive(resource.url)
     } else if (resource) {
       const scenes = resource.scenes?.map(({ name, ppt }) => ({ name, ppt: { ...ppt, previewURL: ppt.preview } })) as SceneDefinition[]
       this.updateBoardSceneItems({
@@ -2195,8 +2194,8 @@ export class BoardStore extends ZoomController {
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid)
       }
-      const putCourseFileType = ["ppt", "word","pdf", "akko"]
-      if (putCourseFileType.includes(resource.type)) {
+      const putCourseFileType = ["ppt", "word","pdf"]
+      if (putCourseFileType.includes(resource.type) || ["akko"].includes(resource.ext)) {
         await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
@@ -2523,6 +2522,17 @@ export class BoardStore extends ZoomController {
       ...res.data,
       list: res.data.list.map(transDataToResource, "private")
     };
+  }
+
+  @action.bound
+  async restoreBoardStateFromCloudDrive(url: string) {
+    fetch(url).then(async (blob)=>{
+      this.room.importScene('/draft-restore', await blob.blob())
+      this.room.setScenePath('/draft-restore')
+    }).catch(()=>{
+      
+    })
+    this.appStore.fireToast('toast.board_restore_failed')
   }
 
   @action.bound
