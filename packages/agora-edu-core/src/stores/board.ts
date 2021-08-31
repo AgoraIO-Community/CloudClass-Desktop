@@ -174,7 +174,7 @@ export const ApaasRoomPhase = {
   ...CustomRoomPhase
 }
 
-// workaround for video not being palying normally on white board
+// workaround for video not palying normally on white board
 // should be removed after white board bug is fixed
 const nextTick = () => new Promise(resolve=>setTimeout(resolve, 100))
 
