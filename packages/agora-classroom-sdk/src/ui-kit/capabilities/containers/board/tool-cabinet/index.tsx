@@ -70,8 +70,8 @@ export const ToolCabinetContainer = observer(() => {
 
         const boardSaveTool: CabinetItem[] = [{
             id: 'boardSave',
-            icon: <Icon type="share-screen" useSvg size={24} />,
-            name: t('scaffold.boardSave')
+            icon: <Icon type="save-board" useSvg size={24} />,
+            name: t('scaffold.board_save')
         }]
 
         const restTools: CabinetItem[] = [

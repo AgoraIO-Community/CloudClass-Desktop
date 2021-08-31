@@ -296,6 +296,9 @@ export class BoardStore extends ZoomController {
   sceneStack: any[][] = []
 
   lastFetchParams?: Parameters<BoardStore['fetchPersonalResources']>;
+  
+  @observable
+  isBoardStateInLoading: boolean = false
 
   constructor(appStore: EduScenarioAppStore) {
     super(0);
@@ -2567,43 +2570,53 @@ export class BoardStore extends ZoomController {
     // return false
   }
   async restoreBoardStateFromCloudDrive(url: string) {
+    this.isBoardStateInLoading = true
     fetch(url).then(async (blob)=>{
-      this.room.importScene('/draft-restore', await blob.blob())
-      this.room.setScenePath('/draft-restore')
-    }).catch(()=>{
-      
-    })
-    this.appStore.fireToast('toast.board_restore_failed')
+      const scene = await this.room.importScene('/draft-restore', await blob.blob())
+
+      this.room.putScenes('/init', [scene])
+      // this.room.setScenePath('/draft-restore')
+      this.appStore.fireToast('toast.board_restore_success')  
+    }).catch(() => {
+      this.appStore.fireToast('toast.board_restore_fail')  
+    }).finally(() => this.isBoardStateInLoading = false)
   }
 
   @action.bound
-  async saveBoardStateToCloudDrive(filename: string, onProgress: (evt: any) => void) {
-    const file = await this.exportBoardStateToBlob()
-
-    const md5 = await calcUploadFilesMd5(file)
-    const resourceUuid = MD5(`${md5}`)
-    
-    const payload = {
-      file: file,
-      fileSize: file.size,
-      ext: 'akko',
-      resourceName: filename,
-      resourceUuid: resourceUuid,
-      converting: false,
-      conversion: null,
-      kind: 'static',
-      onProgress: async (evt: any) => {
-        // const { progress, isTransFile = false, isLastProgress = false } = evt;
-        // const parent = Math.floor(progress * 100)
-        onProgress(evt)
-      },
-      roomToken: this.room.roomToken,
-      personalResource: true,
-      roomUuid: this.appStore.roomInfo.roomUuid,
-      userUuid: this.appStore.roomInfo.userUuid,
+  async saveBoardStateToCloudDrive(filename: string, onProgress?: (evt: any) => void) {
+    try {
+      this.isBoardStateInLoading = true
+      const file = await this.exportBoardStateToBlob()
+      const md5 = await calcUploadFilesMd5(file)
+      const resourceUuid = MD5(`${md5}`)
+      
+      const payload = {
+        file: file,
+        fileSize: file.size,
+        ext: 'akko',
+        resourceName: filename,
+        resourceUuid: resourceUuid,
+        converting: false,
+        conversion: null,
+        kind: 'static',
+        onProgress: async (evt: any) => {
+          // const { progress, isTransFile = false, isLastProgress = false } = evt;
+          // const parent = Math.floor(progress * 100)
+          // onProgress(evt)
+          onProgress && onProgress(evt)
+        },
+        roomToken: this.room.roomToken,
+        personalResource: true,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
+      }
+      await this.appStore.uploadService.handleUpload(payload)
+      this.appStore.fireToast('toast.board_save_success')
+    } catch(e) {
+      this.appStore.fireToast('toast.board_save_fail')
+    } finally {
+      this.isBoardStateInLoading = false
     }
-
-    await this.appStore.uploadService.handleUpload(payload)
   }
 
   async exportBoardStateToBlob() {

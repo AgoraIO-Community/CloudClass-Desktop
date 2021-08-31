@@ -100,7 +100,8 @@ export const MidClassScenario = observer(() => {
   } = useAppPluginContext()
 
   const {
-    joinBoard
+    joinBoard,
+    isLoading
   } = useBoardContext()
 
 
@@ -244,7 +245,7 @@ export const MidClassScenario = observer(() => {
           </Aside>
         </Layout>
         <DialogContainer />
-        <LoadingContainer loading={isJoiningRoom} />
+        <LoadingContainer loading={isJoiningRoom || isLoading} />
         <ToastContainer />
       </div>
     </Layout>
