@@ -68,7 +68,8 @@ export const Row: React.FC<RowProps> = ({children, className, border, gap, align
 export interface ItemFontColorProps extends BaseProps {
   children: any,
   color?: string,
-  width?: number
+  width?: number,
+  title?: string
 }
 
 export const Inline: React.FC<ItemFontColorProps> = ({
