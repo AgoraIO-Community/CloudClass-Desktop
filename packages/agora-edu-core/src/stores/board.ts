@@ -2663,6 +2663,7 @@ export class BoardStore extends ZoomController {
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`);
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`);
+      throw err;
     }
   }
 
@@ -2674,6 +2675,7 @@ export class BoardStore extends ZoomController {
       // this.appStore.fireToast(`toast.download_success`);
     } catch (err) {
       this.appStore.fireToast(`toast.download_failure`);
+      await this.refreshState();
       throw GenericErrorWrapper(err);
     }
   }
