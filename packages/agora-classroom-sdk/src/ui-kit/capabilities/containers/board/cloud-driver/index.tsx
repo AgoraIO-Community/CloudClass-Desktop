@@ -83,11 +83,13 @@ interface PaginationProps {
   style?: any,
   className?: string[],
   totalPages: number,
+  pageIdx: number,
   onChange: (pageIdx: number) => void
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
   totalPages,
+  pageIdx,
   onChange
 }) => {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -99,6 +101,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       onChange(pageIdx)
     }
   }
+
+  useEffect(() => {
+    setActiveIdx(pageIdx)
+  },[pageIdx])
   
 
     let rightEdge = Math.min(activeIdx + maxVisiblePages / 2, totalPages - 1)

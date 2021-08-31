@@ -59,6 +59,7 @@ const usePersonalResourcePage = ({ hintText }: { hintText: string }) => {
     fetchPersonalResources(roomInfo.userUuid, { resourceName: hintText, pageNo, pageSize: 10 }).then((page) => {
       setTotalPages(page.pages)
       setResources(page.list)
+      setPageIdx(page.pageNo - 1)
     }).finally(() => setLoading(false))
   }, [fetchPersonalResources, roomInfo.userUuid]);
 
@@ -219,11 +220,13 @@ export const PersonalStorageContainer = observer(() => {
   }
 
   const handleDelete = async () => {
+    const checkLen = checkList$.getValue().length
+
     await cancelUpload();
-    
+
     await removeMaterialList(checkList$.getValue());
-    
-    fetchResource(pageIdx + 1, hintText)
+    // back to prev page if there is no more data in this page
+    fetchResource(checkLen >= resources.length && pageIdx > 0 ? pageIdx : pageIdx + 1, hintText)  
 
     setShowUploadModal(false);
   }
@@ -294,7 +297,7 @@ export const PersonalStorageContainer = observer(() => {
       </Row>
       <UploadContainer handleUpdateCheckedItems={captureCheckedItems} personalResources={resources} />
       <LoadingWrap visible={loading} />
-      <Pagination totalPages={totalPages} onChange={handlePageChange} />
+      <Pagination pageIdx={pageIdx} totalPages={totalPages} onChange={handlePageChange} />
     </>
   )
 })
