@@ -125,7 +125,7 @@ export const HomePage = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [coursewareList, updateCoursewareList] = useState<any[]>(storage.getCoursewareSaveList());
   const SDKVersion = window.isElectron
     ? // @ts-ignore
       window.rtcEngine.getVersion().version
@@ -189,8 +189,8 @@ export const HomePage = observer(() => {
           // rtmUid: userUuid,
           appId,
           pretest: true,
-          courseWareList: courseWareList.slice(0, 1),
-          personalCourseWareList: courseWareList.slice(1, courseWareList.length),
+          coursewareList: coursewareList.slice(0, 1),
+          personalCoursewareList: coursewareList.slice(1, coursewareList.length),
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,

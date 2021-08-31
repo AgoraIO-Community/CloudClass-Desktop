@@ -40,8 +40,8 @@ let params: AppStoreInitParams = {
     enableLog: true,
     sdkDomain: `https://api-solutions-dev.bj2.agoralab.co`,
     region: 'CN',
-    courseWareList: [],
-    personalCourseWareList: [],
+    coursewareList: [],
+    personalCoursewareList: [],
     vid: 0,
     oss: {
       region: '',

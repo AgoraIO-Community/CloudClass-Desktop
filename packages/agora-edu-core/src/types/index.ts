@@ -1,5 +1,5 @@
 import { SceneDefinition } from 'white-web-sdk';
-import { CourseWareItem, LanguageEnum } from '../api/declare';
+import { CoursewareItem, LanguageEnum } from '../api/declare';
 
 export enum DeviceStateEnum {
   Frozen = 0,
@@ -7,7 +7,7 @@ export enum DeviceStateEnum {
   Disabled = 2,
 }
 
-export type StorageCourseWareItem = {
+export type StorageCoursewareItem = {
   size: string;
   updateTime: string;
   progress: number;
@@ -35,11 +35,11 @@ export type DownloadListWareItem = {
 };
 
 export type StorageStoreInitializeParams = {
-  courseWareList: CourseWareItem[];
+  coursewareList: CoursewareItem[];
   language: LanguageEnum;
 };
 
-export type CourseStorageType = CourseWareItem & {
+export type CourseStorageType = CoursewareItem & {
   status: DownloadFileStatus;
   progress: number;
 };
@@ -94,7 +94,7 @@ export type CreateMaterialResult = {
   url: string;
 };
 
-export type CourseWareUploadResult = {
+export type CoursewareUploadResult = {
   resourceUuid: string;
   resourceName: string;
   ext: string;

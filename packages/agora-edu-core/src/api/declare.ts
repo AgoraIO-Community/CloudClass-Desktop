@@ -90,7 +90,7 @@ export type AgoraConvertedFile = {
 
 export type ConvertedFileList = AgoraConvertedFile[];
 
-export type CourseWareItem = {
+export type CoursewareItem = {
   resourceName: string;
   resourceUuid: string;
   ext: string;
@@ -113,7 +113,7 @@ export type CourseWareItem = {
   isActive?: boolean;
 };
 
-export type CourseWareList = CourseWareItem[];
+export type CoursewareList = CoursewareItem[];
 
 type RoomInfoParams = {
   roomName: string;
@@ -159,11 +159,11 @@ export type AppStoreConfigParams = {
   sdkDomain: string;
   rtmUid: string;
   rtmToken: string;
-  courseWareList: CourseWareList;
+  coursewareList: CoursewareList;
   region?: AgoraRegion;
   rtcArea?: string;
   rtmArea?: string;
-  personalCourseWareList?: CourseWareList;
+  personalCoursewareList?: CoursewareList;
   vid?: number;
   oss?: {
     region: string;
@@ -245,8 +245,8 @@ export type LaunchOption = {
   language: LanguageEnum; // 国际化
   startTime: number; // 房间开始时间
   duration: number; // 课程时长
-  courseWareList: CourseWareList; // 课件列表
-  personalCourseWareList?: CourseWareList; // 个人课件列表
+  coursewareList: CoursewareList; // 课件列表
+  personalCoursewareList?: CoursewareList; // 个人课件列表
   recordUrl?: string; // 回放页地址
   extApps?: IAgoraExtApp[]; // app插件
   region?: AgoraRegion;

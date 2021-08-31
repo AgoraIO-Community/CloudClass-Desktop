@@ -1,5 +1,5 @@
-import { CourseWareItem } from '../api/declare';
-import { CourseWareUploadResult, CreateMaterialParams } from '../types';
+import { CoursewareItem } from '../api/declare';
+import { CoursewareUploadResult, CreateMaterialParams } from '../types';
 import { fileSizeConversionUnit } from '../utilities/kit';
 import { EduLogger, GenericErrorWrapper } from 'agora-rte-sdk';
 import OSS, { MultipartUploadResult } from 'ali-oss';
@@ -57,7 +57,7 @@ export type MaterialDataResource = {
 };
 
 export const transDataToResource = (
-  data: CourseWareItem,
+  data: CoursewareItem,
   access: MaterialAccess,
 ): MaterialDataResource => {
   if (!data.taskUuid) {
@@ -355,7 +355,7 @@ export class UploadService extends ApiBase {
       // ali
       result = await this.handleUploadByAli(ossConfig, payload);
     }
-    return result as CourseWareUploadResult;
+    return result as CoursewareUploadResult;
   }
 
   async handleUploadByAli(ossConfig: FetchStsTokenResult, payload: HandleUploadType) {
@@ -475,7 +475,7 @@ export class UploadService extends ApiBase {
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: uploadResult.taskUuid,
-      } as CourseWareUploadResult;
+      } as CoursewareUploadResult;
     } else {
       const uploadResult = await this.addFileToOss(
         this.ossClient,
@@ -498,7 +498,7 @@ export class UploadService extends ApiBase {
         },
       );
 
-      const result: CourseWareUploadResult = {
+      const result: CoursewareUploadResult = {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
         ext: uploadResult.ext,
@@ -630,7 +630,7 @@ export class UploadService extends ApiBase {
   //         callbackHost: ossConfig.callbackHost
   //       })
 
-  //     const result: CourseWareUploadResult = {
+  //     const result: CoursewareUploadResult = {
   //       resourceUuid: resourceUuid,
   //       resourceName: uploadResult.resourceName,
   //       ext: uploadResult.ext,
@@ -742,7 +742,7 @@ export class UploadService extends ApiBase {
         },
         updateTime: materialResult.data.updateTime,
         taskUuid: uploadResult.taskUuid,
-      } as CourseWareUploadResult;
+      } as CoursewareUploadResult;
     } else {
       const uploadResult: any = await this.addFileToAWS(
         payload.file,
@@ -764,7 +764,7 @@ export class UploadService extends ApiBase {
         },
       );
       console.log('upload-service [1]', uploadResult);
-      const result: CourseWareUploadResult = {
+      const result: CoursewareUploadResult = {
         resourceUuid: resourceUuid,
         resourceName: uploadResult.resourceName,
         ext: uploadResult.ext,

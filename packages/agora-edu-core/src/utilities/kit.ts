@@ -177,12 +177,12 @@ export class PersistLocalStorage {
     this.storage = window.localStorage;
   }
 
-  saveCourseWareList(jsonStringify: string) {
-    this.storage.setItem('courseWare', jsonStringify);
+  saveCoursewareList(jsonStringify: string) {
+    this.storage.setItem('courseware', jsonStringify);
   }
 
-  getCourseWareSaveList() {
-    const str = this.storage.getItem('courseWare');
+  getCoursewareSaveList() {
+    const str = this.storage.getItem('courseware');
     if (!str) {
       return [];
     }

@@ -26,7 +26,7 @@ import { SceneStore } from './scene';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AppStoreInitParams,
-  CourseWareItem,
+  CoursewareItem,
   DeviceInfo,
   IAgoraExtApp,
   RoomInfo,
@@ -346,7 +346,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
       startTime: this.params.startTime,
       duration: this.params.duration,
       config: {
-        courseWareList: this.params.config.courseWareList,
+        coursewareList: this.params.config.coursewareList,
         agoraAppId: this.params.config.agoraAppId,
         agoraNetlessAppId: this.params.config.agoraNetlessAppId,
         // agoraRestFullToken: this.params.config.agoraRestFullToken,
@@ -442,8 +442,8 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
   }
 
   @action.bound
-  updateCourseWareList(courseWareList: CourseWareItem[]) {
-    this.params.config.courseWareList = courseWareList;
+  updateCoursewareList(coursewareList: CoursewareItem[]) {
+    this.params.config.coursewareList = coursewareList;
   }
 
   @action.bound

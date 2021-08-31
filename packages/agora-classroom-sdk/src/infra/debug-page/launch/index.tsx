@@ -92,7 +92,7 @@ export const LaunchPage = observer(() => {
           recordUrl: AGORA_APAAS_BRANCH_PATH
             ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page`
             : `https://webdemo.agora.io/flexible-classroom/record_page`,
-          courseWareList: [
+          coursewareList: [
             {
               resourceName: 'H5课件',
               resourceUuid: `h5${MD5('https://demo-h5.netless.group/dist2020/')}`,
@@ -121,8 +121,7 @@ export const LaunchPage = observer(() => {
                 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               )}1`,
               ext: 'pptx',
-              url:
-                'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
+              url: 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               conversion: {
                 type: 'static',
               },
@@ -132,8 +131,7 @@ export const LaunchPage = observer(() => {
                 {
                   name: '1',
                   ppt: {
-                    src:
-                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/1.slide',
+                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/1.slide',
                     width: 1280,
                     height: 720,
                   },
@@ -141,8 +139,7 @@ export const LaunchPage = observer(() => {
                 {
                   name: '2',
                   ppt: {
-                    src:
-                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/2.slide',
+                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/2.slide',
                     width: 1280,
                     height: 720,
                   },
@@ -150,8 +147,7 @@ export const LaunchPage = observer(() => {
                 {
                   name: '3',
                   ppt: {
-                    src:
-                      'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/3.slide',
+                    src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/3.slide',
                     width: 1280,
                     height: 720,
                   },
