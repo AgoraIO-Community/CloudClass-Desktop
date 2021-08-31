@@ -1980,7 +1980,10 @@ export class BoardStore extends ZoomController {
   @action.bound
   async putCourseResource(resourceUuid: string) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid)
-    if (resource) {
+    if(resource && resource.type === 'akko') {
+      // await 
+      // this.room.importScene('init', )
+    } else if (resource) {
       const scenes = resource.scenes?.map(({ name, ppt }) => ({ name, ppt: { ...ppt, previewURL: ppt.preview } })) as SceneDefinition[]
       this.updateBoardSceneItems({
         scenes,
