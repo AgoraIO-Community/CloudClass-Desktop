@@ -229,8 +229,12 @@ export const en = {
     'save_to_cloud_drive': 'Save to Cloud Drive',
     'save_as': 'File name',
     'save_to': 'Save to',
-    'board_restore_failed': 'Failed to restore board state',
-    'board_restore_success': 'Board state restored successfully'
+    'board_restore_fail': 'Failed to restore board state',
+    'board_restore_success': 'Board state restored successfully',
+    'board_save_fail': 'Failed to save board state',
+    'board_save_success': 'Board state saved successfully',
+    'board_save_fail_empty_name': 'Please input a name for the draft',
+    'board_confirm_clear_state': 'Do you want to clear blackboard content?'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -259,7 +263,7 @@ export const en = {
     'text': 'Text',
     'tools': 'Tools',
     'user_list': 'User List',
-    'boardSave': 'Board Save'
+    'board_save': 'Board Save'
   },
   'message': 'Message',
   'quiz': 'Question',
@@ -449,5 +453,7 @@ export const en = {
     'item-tip':'Option',
     'single-sel':'Single',
     'mul-sel':'Multi-select',
-  }
+  },
+  'no': 'No',
+  'yes': 'Yes'
 }

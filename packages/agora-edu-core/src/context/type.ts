@@ -966,6 +966,11 @@ export type BoardContext = {
      */
     whiteGlobalState: any,
     boardConnectionState: string
+    
+    /**
+     * 是否加载中
+     */
+    isLoading: boolean
 }
 
 export type StreamContext = {
@@ -1517,7 +1522,7 @@ export type CloudDriveContext = {
      * @param fileName
      * @param onProgress 
      */
-     saveBoardStateToCloudDrive(fileName: string, onProgress: (evt: any) => void): Promise<void>
+     saveBoardStateToCloudDrive(fileName: string, onProgress?: (evt: any) => void): Promise<void>
     
 }
 
