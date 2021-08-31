@@ -226,7 +226,13 @@ export const zh = {
     'chat_disable': '禁言模式关闭',
     'save_to_cloud_drive': '保存至云盘',
     'save_as': '文件名',
-    'save_to': '保存至'
+    'save_to': '保存至',
+    'board_restore_fail': '板书加载失败',
+    'board_restore_success': '板书加载成功',
+    'board_save_fail': '板书保存失败',
+    'board_save_success': '板书保存成功',
+    'board_save_fail_empty_name': '请输入一个板书草稿名称',
+    'board_confirm_clear_state': '确定要清空当前黑板上的内容吗？'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -255,7 +261,7 @@ export const zh = {
     'text': '文本',
     'tools': '工具栏',
     'user_list': '用户列表',
-    'boardSave': '板书保存'
+    'board_save': '板书保存'
   },
   'cloud': {
     'fileName': '文件名',
@@ -445,5 +451,7 @@ export const zh = {
     'item-tip':'请输入选项内容',
     'single-sel':'单选',
     'mul-sel':'多选',
-  }
+  },
+  'no': '否',
+  'yes': '是'
 }

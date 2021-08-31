@@ -10,17 +10,41 @@ import { UserListContainer, StudentUserListContainer } from '~capabilities/conta
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
 import { Button, Modal, t, transI18n, Input } from '~ui-kit'
+import { useCoreContext } from '../../../../../../agora-edu-core/src/context/core'
 
 
 export type BaseDialogProps = {
   id: string
 }
 
-export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
-  // const {  } = useBoardContext()
+export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: string, onConfirm: () => void }> = observer(({ id, onConfirm })=>{
   const { removeDialog } = useUIStore()
+  // const { clear } = useBoardContext()
+
+  return (
+    <Modal
+    width={360} title={transI18n('quiz')}
+    onOk={onConfirm}
+    onCancel={() => {
+      removeDialog(id)
+    }}
+    footer={
+      [
+        <Button type={'secondary'} action="cancel">{t('no')}</Button>,
+        <Button type={'primary'} action="ok">{t('yes')}</Button>,
+      ]
+    }
+    >
+      <div>{t('toast.board_confirm_clear_state')}</div>
+    </Modal>
+  )
+})
+
+export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
+  const { removeDialog } = useUIStore()
+  const { fireToast, fireDialog } = useCoreContext()
   const [fileName, setFileName] = useState(() => { 
-    return "draft-" + Date.now()
+    return t('toast.draft_default_name') + Date.now()
   })
 
   const { saveBoardStateToCloudDrive } = useCloudDriveContext()
@@ -29,16 +53,17 @@ export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: stri
   <Modal 
     width={360} title={transI18n('toast.save_to_cloud_drive')}
     onOk={()=>{
-      console.log("save board state to Cloud Drive")
       if(!fileName) {
+        fireToast('toast.board_save_fail_empty_name')
         return
       }
+      fireDialog('', {
+        onConfirm: () => {
+          saveBoardStateToCloudDrive(fileName).then(()=>{
+            removeDialog(id)
+          })
+      }})
       
-      saveBoardStateToCloudDrive(fileName, (evt: any)=>{
-        console.log(evt)
-      }).then(()=>{
-        removeDialog(id)
-      })
     }}
     onCancel={()=>{
       removeDialog(id)
@@ -496,6 +521,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
     'room-end-notice': () => addDialog(RoomEndNotice),
     'kick-end': () => addDialog(KickEnd),
     'generic-error-dialog': (props: any) => addDialog(GenericErrorDialog, {...props}),
+    'board-clear-confirm': () => addDialog(ClearBoardStateDialog)
   }
 
   useEffect(() => {

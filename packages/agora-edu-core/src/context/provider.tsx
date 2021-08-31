@@ -422,6 +422,7 @@ export const useBoardContext = (): BoardContext => {
     personalResources,
     handleUpload,
     publicResources,
+    isBoardStateInLoading
   } = useBoardStore()
 
   const {
@@ -483,7 +484,8 @@ export const useBoardContext = (): BoardContext => {
     setWhiteGlobalState,
     whiteGlobalState: globalState$,
     boardConnectionState,
-    joinBoard
+    joinBoard,
+    isLoading: isBoardStateInLoading
   }
 }
 
