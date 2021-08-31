@@ -131,7 +131,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
           <Col>{transI18n('cloud.size')}</Col>
           <Col>{transI18n('cloud.updated_at')}</Col>
         </TableHeader>
-        <Table className="table-container ">
+        <Table className="table-container upload-table-container">
           {items.length ? (
             items.map(
               ({ id, name, size, updateTime, type, checked, taskUuid }: any, idx: number) => (
