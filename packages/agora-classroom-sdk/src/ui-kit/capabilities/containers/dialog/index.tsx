@@ -50,7 +50,9 @@ export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: stri
   const { saveBoardStateToCloudDrive } = useCloudDriveContext()
   
   return (
-  <Modal 
+  <Modal
+    closable
+    className="board-save-dialog"
     width={360} title={transI18n('toast.save_to_cloud_drive')}
     onOk={()=>{
       if(!fileName) {
@@ -72,12 +74,12 @@ export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: stri
       ]
     }
   >
-    <div className="flex items-center mb-3">
-      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 80 }}>{transI18n('toast.save_as')}:</label>
+    <div className="flex items-center mb-3 input-draft-name">
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 52 }}>{transI18n('toast.save_as')}:</label>
       <Input onChange={(e) => {setFileName(e.target.value)}} value={fileName} />
     </div>
     <div className="flex items-center">
-      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 80 }}>{transI18n('toast.save_to')}:</label>
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 52 }}>{transI18n('toast.save_to')}:</label>
       <Input value={transI18n('scaffold.cloud_storage')} disabled />
     </div>
   </Modal>)

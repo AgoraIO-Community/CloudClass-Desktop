@@ -494,3 +494,20 @@
   color: #F44336!important;
   content: '\e62f'!important;
 }
+
+.board-save-dialog .modal-title-text, 
+.board-save-dialog .input-draft-name input {
+  color: #191919;
+}
+
+.board-save-dialog label {
+  color: #586376;
+}
+
+.board-save-dialog .modal-footer .btn-secondary {
+  color: #677386;
+}
+
+.board-save-dialog .input-wrapper input {
+  width: 230px;
+}
