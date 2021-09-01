@@ -2617,6 +2617,9 @@ export class BoardStore extends ZoomController {
   updateDownloadById(taskUuid: string, props: Partial<StorageCoursewareItem>) {
     const list = this.downloadList;
     const idx = list.findIndex((item: StorageCoursewareItem) => item.taskUuid === taskUuid);
+    if (idx === -1) {
+      return;
+    }
     const item = list[idx];
     Object.assign(item, props);
     const newList = cloneDeep(list);
