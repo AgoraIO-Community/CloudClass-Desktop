@@ -2525,7 +2525,7 @@ export class BoardStore extends ZoomController {
     // check if the resource has finished conversion
     const checkResourceAvailable = () => {
       const resource = findResource()
-      return resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100
+      return resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length
     }
 
     if (
