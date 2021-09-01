@@ -1742,15 +1742,6 @@ export class BoardStore extends ZoomController {
   async setWritable(v: boolean) {
     if (this.online && this.room) {
       await this.room.setWritable(v)
-
-      if (this.userRole === EduRoleTypeEnum.student) {
-        if (this.room.isWritable) {
-          this.room.setMemberState({
-            currentApplianceName: ApplianceNames.clicker
-          })
-          this.selector = 'clicker'
-        }
-      }
       this.room.disableDeviceInputs = !v
     }
   }
