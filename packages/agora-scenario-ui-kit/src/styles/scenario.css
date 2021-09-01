@@ -485,3 +485,20 @@
 #window-manager-collector .telebox-collector-icon {
   margin: 0 auto;
 }
+
+.board-save-dialog .modal-title-text, 
+.board-save-dialog .input-draft-name input {
+  color: #191919;
+}
+
+.board-save-dialog label {
+  color: #586376;
+}
+
+.board-save-dialog .modal-footer .btn-secondary {
+  color: #677386;
+}
+
+.board-save-dialog .input-wrapper input {
+  width: 230px;
+}

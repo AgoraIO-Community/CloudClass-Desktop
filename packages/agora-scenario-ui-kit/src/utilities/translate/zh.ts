@@ -232,7 +232,7 @@ export const zh = {
     'board_restore_success': '板书加载成功',
     'board_save_fail': '板书保存失败',
     'board_save_success': '板书保存成功',
-    'board_save_fail_empty_name': '请输入一个板书草稿名称',
+    'board_save_fail_empty_name': '请输入板书草稿名称',
     'board_confirm_clear_state': '确定要清空当前黑板上的内容吗？',
     'board_draft_default_name': '板书草稿'
   },
@@ -263,7 +263,7 @@ export const zh = {
     'text': '文本',
     'tools': '工具栏',
     'user_list': '用户列表',
-    'board_save': '板书保存'
+    'board_save': '保存板书'
   },
   'cloud': {
     'fileName': '文件名',
