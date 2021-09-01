@@ -1,6 +1,6 @@
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { observer } from 'mobx-react';
-import { Card, Loading } from '~ui-kit';
+import { Card, Loading, transI18n } from '~ui-kit';
 import { FC } from 'react';
 import { useCloudDriveContext } from 'agora-edu-core';
 
@@ -21,7 +21,7 @@ const PageLoading = (props: any) => {
         <Loading
           hasLoadingGif={false}
           currentProgress={props.loadingProcess}
-          loadingText="课件加载中，请稍候…"
+          loadingText={transI18n('whiteboard.courseware-loading')}
           hasProgress></Loading>
       </Card>
     </div>

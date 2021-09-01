@@ -9,6 +9,9 @@ export const en = {
     converting: 'Converting',
     'disconnect-img-alt': 'Whiteboard Disconnected',
     'disconnect-btn': 'Connect Again',
+    'courseware-loading': 'Courseware Loading...',
+    'h5-courseware': 'H5 Courseware',
+    'test-courseware': 'Test Courseware',
   },
   screen_share: 'Screen Share',
   kick: {
