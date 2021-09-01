@@ -6,6 +6,7 @@ import OSS, { MultipartUploadResult } from "ali-oss";
 import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from "./base";
 import axios from 'axios';
+import { globalConfigs }  from '../utilities/config'
 
 export const mapFileType = (type: string): any => {
   if (type.match(/ppt|pptx|pptx/i)) {
@@ -337,7 +338,7 @@ export class UploadService extends ApiBase {
     const conversion = payload.converting ? {
         type: payload.ext === 'pptx' ? 'dynamic' : 'static',
         preview: true,
-        scale: 1.2,
+        scale: globalConfigs._materialScale,
         outputFormat: 'png',
       } : undefined
     let fetchResult = await this.fetchStsToken({
