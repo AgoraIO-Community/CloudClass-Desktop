@@ -2570,13 +2570,11 @@ export class BoardStore extends ZoomController {
     // return false
   }
   async restoreBoardStateFromCloudDrive(url: string) {
-    const onConfirm = () => {
+    const onConfirm = async () => {
       this.isBoardStateInLoading = true
-      fetch(url).then(async (blob) => {
-        const currentSceneState = this.room.state.sceneState
-        const scene = await this.room.importScene('/draft-restore', await blob.blob())
-        // console.log('sceneName', scene.name)
-        this.room.moveScene(`/draft-restore/init`, currentSceneState.scenePath)
+      fetch(url)
+      .then(async (body) => {
+        await this.importBoardStateFromBlob(await body.blob())
         this.appStore.fireToast('toast.board_restore_success')  
       }).catch(() => {
         this.appStore.fireToast('toast.board_restore_fail')  
@@ -2626,11 +2624,18 @@ export class BoardStore extends ZoomController {
   }
 
   async exportBoardStateToBlob() {
-    const currentSceneState = this.room.state.sceneState
-
-    const blob = await this.room.exportScene(currentSceneState.scenePath)
-    
+    // const currentSceneState = this.room.state.sceneState
+    // const scenePath = currentSceneState.scenePath
+    const scenePath = '/init'
+    const blob = await this.room.exportScene(scenePath)
     return blob
+  }
+
+  async importBoardStateFromBlob(blob: Blob) {
+    // const currentSceneState = this.room.state.sceneState
+    const scenePath = '/init'
+    await this.room.importScene('/draft-restore', blob)
+    this.room.moveScene(`/draft-restore${scenePath}`, scenePath)
   }
 }
 
