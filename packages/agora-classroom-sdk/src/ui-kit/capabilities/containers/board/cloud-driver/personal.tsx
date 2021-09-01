@@ -93,11 +93,12 @@ export const PersonalStorageContainer = observer(() => {
   } = useBoardContext()
 
   const {
-    checked
+    checked,
+    addToast
   } = useUIStore()
 
   const {
-    openCloudResource,
+    tryOpenCloudResource,
     cancelUpload,
     removeMaterialList,
     doUpload
@@ -239,8 +240,10 @@ export const PersonalStorageContainer = observer(() => {
 
   const handleClick = async (id: string, type: string) => {
     if (type === 'open') {
-      await openCloudResource(id)
-      return;
+      const opened = await tryOpenCloudResource(id)
+      if(!opened) {
+        addToast(transI18n('toast.cloud_resource_conversion_not_finished'), 'warning')
+      }
     }
   };
 

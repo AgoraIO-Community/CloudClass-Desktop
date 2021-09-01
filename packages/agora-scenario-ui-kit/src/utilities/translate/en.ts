@@ -225,6 +225,7 @@ export const en = {
     'reward_limit': 'The maximum number of trophies in the room has been reached',
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
+    'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
