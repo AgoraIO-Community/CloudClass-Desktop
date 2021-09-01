@@ -79,7 +79,7 @@ const App = function (props) {
         if (err.type === 604) return
         let errData = _.get(err, 'data.data');
         if (!errData) return
-        const type = JSON.parse(err)?.error_description;
+        const type = JSON.parse(errData)?.error_description;
         const resetName = store.getState().propsData.userUuid;
         if (type === "user not found") {
           let options = {
