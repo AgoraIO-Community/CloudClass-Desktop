@@ -39,6 +39,7 @@ export const LaunchPage = observer(() => {
         'reportUrl': `${REACT_APP_REPORT_URL}`,
         'reportQos': `${REACT_APP_REPORT_QOS}`,
         'reportV1Url': `${REACT_APP_V1_REPORT_URL}`,
+        'materialScale': `${1.2}`
       }))
       AgoraEduSDK.config({
         appId: `${REACT_APP_AGORA_APP_ID}`,

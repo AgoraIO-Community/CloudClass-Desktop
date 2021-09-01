@@ -182,6 +182,9 @@ export class AgoraEduSDK {
       if(json["edu.apiUrl"]) {
         globalConfigs.setSDKDomain(json["edu.apiUrl"])
       }
+      if(json["materialScale"]) {
+        globalConfigs.setScale(json['materialScale'])
+      }
       if(json["reportUrl"] && json["reportQos"] && json["reportV1Url"]) {
         globalConfigs.setReportConfig({
           sdkDomain: json['reportUrl'],

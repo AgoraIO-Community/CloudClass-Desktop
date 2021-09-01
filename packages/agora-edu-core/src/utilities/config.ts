@@ -8,6 +8,15 @@ class GlobalConfigs {
   appId: string = '';
 
   _region: string = '';
+  _materialScale: number = 1.2
+
+  public setScale(scale: number): void {
+    if(scale < 0.6 || scale > 3) {
+      console.error(`Invalid material scale: ${scale}, it must be between 0.6 - 3`)
+      throw new Error()
+    }
+    this._materialScale = scale
+  }
 
   public setRegion(region: string): void {
     const regionDomain = getSDKDomain(this.sdkDomain, region)
