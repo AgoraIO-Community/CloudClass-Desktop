@@ -79,7 +79,7 @@ export const LaunchPage = observer(() => {
           return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
         };
 
-        const size = 10;
+        const size = 14;
 
         roomRef.current = await AgoraEduSDK.launch(dom, {
           ...launchOption,
