@@ -174,6 +174,8 @@ export const ApaasRoomPhase = {
   ...CustomRoomPhase
 }
 
+const dynamicTypes = ["ppt", "word","pdf"]
+
 export class BoardStore extends ZoomController {
 
   @observable
@@ -292,7 +294,8 @@ export class BoardStore extends ZoomController {
   folder: string = ''
 
   sceneStack: any[][] = []
-  
+
+  lastFetchParams?: Parameters<BoardStore['fetchPersonalResources']>;
 
   constructor(appStore: EduScenarioAppStore) {
     super(0);
@@ -1739,15 +1742,6 @@ export class BoardStore extends ZoomController {
   async setWritable(v: boolean) {
     if (this.online && this.room) {
       await this.room.setWritable(v)
-
-      if (this.userRole === EduRoleTypeEnum.student) {
-        if (this.room.isWritable) {
-          this.room.setMemberState({
-            currentApplianceName: ApplianceNames.clicker
-          })
-          this.selector = 'clicker'
-        }
-      }
       this.room.disableDeviceInputs = !v
     }
   }
@@ -1994,7 +1988,7 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
-      this.room.putScenes(`/${resource.id}`, scenes)
+      // this.room.putScenes(`/${resource.id}`, scenes)
 
       await this.windowManager?.addApp({
         kind: BuiltinApps.DocsViewer,
@@ -2193,8 +2187,7 @@ export class BoardStore extends ZoomController {
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid)
       }
-      const putCourseFileType = ["ppt", "word","pdf"]
-      if (putCourseFileType.includes(resource.type)) {
+      if (dynamicTypes.includes(resource.type)) {
         await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
@@ -2514,12 +2507,47 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   async fetchPersonalResources(userUuid:string, options:PagingOptions) {
+    // cache params for refetch
+    this.lastFetchParams = [userUuid, options]
     const res = await this.cloudDriveService.fetchPersonalResources(userUuid, options);
     this._personalResources = res.data.list;
     return { 
       ...res.data,
       list: res.data.list.map(transDataToResource, "private")
     };
+  }
+
+  @action.bound
+  async tryOpenCloudResource(uuid: string): Promise<boolean> {
+    const findResource = () => this.allResources.find((resource: any) => resource.id === uuid)
+
+    const resource = findResource()
+    // check if the resource has finished conversion
+    const checkResourceAvailable = () => {
+      const resource = findResource()
+      return resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length
+    }
+
+    if (
+      // static resource
+      !dynamicTypes.includes(resource!.type) ||
+      // dynamic resource and resource has finished conversion
+      checkResourceAvailable()
+    ) {
+      await this.putSceneByResourceUuid(uuid)
+      return true
+    } else {
+      // refetch and check again
+      await this.fetchPersonalResources.apply(this, this.lastFetchParams!)
+
+      const available = checkResourceAvailable()
+
+      if(available) {
+        await this.putSceneByResourceUuid(uuid)
+        return true
+      }
+    }
+    return false
   }
 }
 

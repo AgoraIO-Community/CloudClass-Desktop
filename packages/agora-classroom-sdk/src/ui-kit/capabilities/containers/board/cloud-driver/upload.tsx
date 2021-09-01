@@ -14,11 +14,12 @@ export interface UploadContainerProps {
 export const UploadContainer: React.FC<UploadContainerProps> = observer(({handleUpdateCheckedItems, personalResources } ) => {
 
   const {
-    openCloudResource
+    tryOpenCloudResource
   } = useCloudDriveContext()
 
   const {
-    updateChecked
+    updateChecked,
+    addToast
   } = useUIStore()
 
   const [checkMap, setCheckMap] = React.useState<Record<string, any>>({})
@@ -84,7 +85,10 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
   }, [items, checkMap])
 
   const onResourceClick = async (resourceUuid: string) => {
-    await openCloudResource(resourceUuid)
+    const opened = await tryOpenCloudResource(resourceUuid)
+    if(!opened) {
+      addToast(transI18n('toast.cloud_resource_conversion_not_finished'), 'warning')
+    }
   }
 
   return (
