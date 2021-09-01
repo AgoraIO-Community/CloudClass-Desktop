@@ -224,6 +224,7 @@ export const zh = {
     'reward_limit': '奖杯已全部发完',
     'chat_enable': '禁言模式开启',
     'chat_disable': '禁言模式关闭',
+    'cloud_resource_conversion_not_finished': '课件正在转换中，请稍后重试'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

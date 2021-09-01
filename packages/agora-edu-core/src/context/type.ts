@@ -1499,6 +1499,13 @@ export type CloudDriveContext = {
     allResources: MaterialDataResource[],
 
     fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
+
+    /**
+     * 尝试打开资源文件
+     * @param uuid 
+     * @return 若未转换完成返回false
+     */
+    tryOpenCloudResource(uuid: string): Promise<boolean>
 }
 
 
