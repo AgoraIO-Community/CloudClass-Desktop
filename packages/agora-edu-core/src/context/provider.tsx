@@ -543,13 +543,13 @@ export const useUserListContext = (): UserListContext => {
 export const useRecordingContext = (): RecordingContext => {
   const { isRecording, roomUuid } = useSceneStore();
 
-  const appStore = useCoreContext();
+  const { params } = useCoreContext();
 
   async function startRecording() {
     await eduSDKApi.updateRecordingState({
       roomUuid,
       state: 1,
-      url: appStore.params.config.recordUrl,
+      url: `${params.config.recordUrl}?language=${params.language}`,
     });
   }
 

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AgoraEduEvent, AgoraEduSDK } from '../../api';
 import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
+import { transI18n } from '~ui-kit';
 
 const ChatWidgetFactory = (region: string) => {
   if (region.toUpperCase() === 'CN') {
@@ -94,7 +95,7 @@ export const LaunchPage = observer(() => {
             : `https://webdemo.agora.io/flexible-classroom/record_page`,
           coursewareList: [
             {
-              resourceName: 'H5课件',
+              resourceName: transI18n('whiteboard.h5-courseware'),
               resourceUuid: `h5${MD5('https://demo-h5.netless.group/dist2020/')}`,
               ext: 'h5',
               url: 'https://demo-h5.netless.group/dist2020/',
@@ -116,7 +117,7 @@ export const LaunchPage = observer(() => {
             },
             {
               isActive: true,
-              resourceName: 'test课件',
+              resourceName: transI18n('whiteboard.test-courseware'),
               resourceUuid: `h5${MD5(
                 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               )}1`,

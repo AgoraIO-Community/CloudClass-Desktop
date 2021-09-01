@@ -62,6 +62,7 @@
         userRole,
         translateLanguage,
         region,
+        language,
       } = useParams(window.location);
 
       // const options = paramsObject
@@ -89,13 +90,13 @@
         pretest: false,
         rtmUid,
         rtmToken,
-        language: 'zh',
+        language,
         startTime,
         duration,
         recordUrl,
         appId,
         userRole,
-        translateLanguage: 'zh',
+        // translateLanguage: language,
         coursewareList: [],
         listener: (evt, args) => {
           console.log('evt', evt, args);
