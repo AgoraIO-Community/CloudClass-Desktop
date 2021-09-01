@@ -127,8 +127,8 @@ const App = observer(() => {
   );
 
   useEffect(() => {
-    if (!joined) return;
     refreshMessageList();
+    if (!joined) return;
     if (pluginStore.context.localUserInfo.roleType === 1) {
       // refresh conv list for teacher
       refreshConversationList();
