@@ -21,7 +21,7 @@ export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: strin
 
   return (
     <Modal
-    width={360} title={transI18n('quiz')}
+    width={280} title={transI18n('quiz')}
     onOk={()=>{
       onConfirm()
       removeDialog(id)
@@ -36,12 +36,12 @@ export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: strin
       ]
     }
     >
-      <div>{t('toast.board_confirm_clear_state')}</div>
+      <div className="text-center">{t('toast.board_confirm_clear_state')}</div>
     </Modal>
   )
 })
 
-export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id, userUuid })=>{
+export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id })=>{
   const { removeDialog, addToast } = useUIStore()
   const [fileName, setFileName] = useState(() => { 
     return transI18n('toast.board_draft_default_name') + '-' + dayjs().format('YYYY-MM-DD')
