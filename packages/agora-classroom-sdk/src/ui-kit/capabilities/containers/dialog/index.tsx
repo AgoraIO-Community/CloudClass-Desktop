@@ -207,7 +207,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
         <Button type={'secondary'} action="cancel">
           {t('toast.cancel')}
         </Button>,
-        <Button type={'primary'} action="ok">
+        <Button type={'primary'} action="ok" disabled={!shareId}>
           {t('toast.confirm')}
         </Button>,
       ]}
