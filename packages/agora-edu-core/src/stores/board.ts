@@ -1994,7 +1994,7 @@ export class BoardStore extends ZoomController {
         taskUuid: resource.taskUuid,
       }, false)
 
-      this.room.putScenes(`/${resource.id}`, scenes)
+      // this.room.putScenes(`/${resource.id}`, scenes)
 
       await this.windowManager?.addApp({
         kind: BuiltinApps.DocsViewer,
