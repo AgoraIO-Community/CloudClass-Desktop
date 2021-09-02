@@ -86,9 +86,7 @@
   font-size: 12px;
   font-weight: 400;
   color: #191919;
-  top: 44px;
-  position: absolute;
-  z-index: 1;
+  position: relative;
 }
 
 .chat-notice-msg span {
