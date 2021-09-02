@@ -54,7 +54,7 @@
   REACT_APP_NETLESS_APP_ID=netless appId
   ```
 
-  - **(Optional) OSS configurations for whiteboard courseware. Ignore these if you do not need this**
+  - **(Optional) OSS configurations for whiteboard courseWare. Ignore these if you do not need this**
 
   ```bash
   # your oss bucket name

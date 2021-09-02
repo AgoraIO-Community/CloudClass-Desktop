@@ -30,10 +30,10 @@ AgoraEduSDK.launch(
   //Specifies the DOM node to mount
   document.querySelector(`#${this.elem.id}`),
   {
-    coursewareList: [],
+    courseWareList: [],
     duration: 1800,
     language: 'en', // Language 'zh'中午 'en'English
-    personalCoursewareList: [],
+    personalCourseWareList: [],
     pretest: true, // recommend open pretest
     recordUrl: 'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
     region: 'CN', //region

@@ -71,7 +71,7 @@ export const RecordPage = observer(() => {
           roleType: +roleType,
           roomName,
           roomType: +roomType as EduRoomTypeEnum,
-          coursewareList: [],
+          courseWareList: [],
           rtmToken,
           language: 'zh',
           startTime,

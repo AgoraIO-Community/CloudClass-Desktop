@@ -32,10 +32,10 @@ AgoraEduSDK.launch(
   //指定挂载的dom节点
   document.querySelector(`#${this.elem.id}`),
   {
-    coursewareList: [],
+    courseWareList: [],
     duration: 1800,
     language: 'en', //语言 ‘zh’中文 ‘en‘英文
-    personalCoursewareList: [],
+    personalCourseWareList: [],
     pretest: true, // 推荐默认开启设备预检
     recordUrl: 'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
     region: 'CN', //区域

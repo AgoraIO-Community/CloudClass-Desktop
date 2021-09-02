@@ -23,7 +23,7 @@ export default class App {
       language: 'en',
       startTime: new Date().getTime(),
       duration: 60 * 30,
-      coursewareList: [],
+      courseWareList: [],
       listener: (evt) => {
         console.log('evt', evt);
       },

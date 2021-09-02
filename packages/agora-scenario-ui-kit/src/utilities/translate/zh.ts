@@ -9,9 +9,9 @@ export const zh = {
     converting: '转换中',
     'disconnect-img-alt': '白板未连接',
     'disconnect-btn': '重新连接',
-    'courseware-loading': '课件加载中，请稍候…',
-    'h5-courseware': 'H5课件',
-    'test-courseware': 'test课件',
+    'courseWare-loading': '课件加载中，请稍候…',
+    'h5-courseWare': 'H5课件',
+    'test-courseWare': 'test课件',
   },
   screen_share: '屏幕共享',
   kick: {

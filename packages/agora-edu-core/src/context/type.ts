@@ -7,9 +7,9 @@ import {
 } from 'agora-rte-sdk';
 import { Subject } from 'rxjs';
 import { Room } from 'white-web-sdk';
-import { AppStoreInitParams, CoursewareItem, LanguageEnum, RoomInfo } from '../api/declare';
+import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';
 import { MaterialDataResource } from '../services/upload-service';
-import { StorageCoursewareItem } from '../types';
+import { StorageCourseWareItem } from '../types';
 
 export type DeviceErrorCallback = (evt: { type: 'video' | 'audio'; error: boolean }) => void;
 
@@ -852,7 +852,7 @@ export type BoardContext = {
    * @version v1.1.0
    * @deprecated 废弃, 请使用CloudDriverContext同名方法
    */
-  downloadList: StorageCoursewareItem[];
+  downloadList: StorageCourseWareItem[];
   /**
    * 打开课件资源
    * @param uuid 资源uuid
@@ -930,7 +930,7 @@ export type BoardContext = {
    * @version v1.1.0
    * @deprecated 废弃
    */
-  coursewareList: any[];
+  courseWareList: any[];
 };
 
 export type StreamContext = {
@@ -1388,7 +1388,7 @@ export type CloudDriveContext = {
    * 可下载的云盘资源列表
    * @version v1.1.2
    */
-  downloadList: StorageCoursewareItem[];
+  downloadList: StorageCourseWareItem[];
   /**
    * 打开课件资源
    * @param uuid 资源uuid
@@ -1452,10 +1452,10 @@ export type CloudDriveContext = {
   doUpload: (payload: any) => Promise<void>;
   /**
    * 修改或更新课件
-   * @param CoursewareItem 课件
+   * @param CourseWareItem 课件
    * @version v1.1.4
    */
-  upsertResources(items: CoursewareItem[]): void;
+  upsertResources(items: CourseWareItem[]): void;
   /**
    * 全部资源
    */
@@ -1463,15 +1463,15 @@ export type CloudDriveContext = {
   /**
    * 初始课件加载进度
    */
-  initCoursewareProgress: number;
+  initCourseWareProgress: number;
   /**
    * 是否正在加在初始课件
    */
-  initCoursewareLoading: boolean;
+  initCourseWareLoading: boolean;
   /**
    * 初始课件
    */
-  initCourseware: MaterialDataResource;
+  initCourseWare: MaterialDataResource;
 };
 
 export type ClassroomStatsContext = {

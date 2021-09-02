@@ -93,9 +93,9 @@ export const LaunchPage = observer(() => {
           recordUrl: AGORA_APAAS_BRANCH_PATH
             ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page`
             : `https://webdemo.agora.io/flexible-classroom/record_page`,
-          coursewareList: [
+          courseWareList: [
             {
-              resourceName: transI18n('whiteboard.h5-courseware'),
+              resourceName: transI18n('whiteboard.h5-courseWare'),
               resourceUuid: `h5${MD5('https://demo-h5.netless.group/dist2020/')}`,
               ext: 'h5',
               url: 'https://demo-h5.netless.group/dist2020/',
@@ -117,7 +117,7 @@ export const LaunchPage = observer(() => {
             },
             {
               isActive: true,
-              resourceName: transI18n('whiteboard.test-courseware'),
+              resourceName: transI18n('whiteboard.test-courseWare'),
               resourceUuid: `h5${MD5(
                 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               )}1`,
