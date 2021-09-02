@@ -139,3 +139,20 @@ export interface ChatConversation {
   messages: any[],
   timestamp?: number
 }
+declare module 'white-web-sdk' {
+  export interface Room {
+    /**
+     * @param scenePath: 需要导出的白板场景路径，要求必须是合法的路径页面，否则会 throw error。如果想获取当前页面的文件，传入 room.state.sceneState.scenePath 即可
+     * @return Promise<Blob> 该方法需要进行一次网络请求，所以是异步回调。如果网络请求传错误，也会 throw error，并提供具体信息。
+     * Blob 转文件下载可以参考网络。
+     */
+    exportScene(scenePath: string): Promise<Blob> 
+
+    /**
+     * @param dir 场景文件想要插入的场景目录位置。该路径必须是场景目录，否则会报错，无法插入。
+     * @param payload 场景文件
+     * @return Promise<SceneDefinition> 该方法插入成功后，会返回场景页面的具体信息，当前插入的方式，无法自定义场景文件的名称，所以会将场景文件的内容给予返回。如果实在需要更改名称，可以将 dir + name 的路径拼接后，使用 moveScene API 进行替换。
+     */
+    importScene(dir: string, payload: Blob): Promise<SceneDefinition> 
+  }
+}

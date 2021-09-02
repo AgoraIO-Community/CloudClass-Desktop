@@ -102,7 +102,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
         <Col>{transI18n('cloud.updated_at')}</Col>
       </TableHeader>
       <Table className="table-container ">
-        {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>
+        {items.length ? items.map(({ id, name, size, updateTime, type, checked, ext }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col style={{paddingLeft:19}} width={9}>
               <CheckBox className="checkbox" onClick={(evt: any) => {
@@ -112,7 +112,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
             <Col style={{cursor: 'pointer'}} onClick={() => {
               onResourceClick(id)
             }}>
-              <IconBox iconType={type} style={{ marginRight: '6px' }} />
+              <IconBox iconType={{ akko: 'akko' }[ext] || type} style={{ marginRight: '6px' }} />
               <Inline className="filename" color="#191919" title={name}>{name}</Inline>
             </Col>
             <Col>
