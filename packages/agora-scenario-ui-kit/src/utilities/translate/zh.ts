@@ -224,7 +224,8 @@ export const zh = {
     'reward_limit': '奖杯已全部发完',
     'chat_enable': '禁言模式开启',
     'chat_disable': '禁言模式关闭',
-    'cloud_resource_conversion_not_finished': '课件正在转换中，请稍后重试'
+    'cloud_resource_conversion_not_finished': '课件正在转换中，请稍后重试',
+    'cloud_resource_conversion_not_converted': '课件未转换成功，请尝试使用其他课件'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
@@ -272,7 +273,8 @@ export const zh = {
     'upload_failed': '上传失败,{reason}',
     'search': '搜索',
     'prev': '< 上一页',
-    'next': '下一页 >'
+    'next': '下一页 >',
+    'conversion_failed': '资源文件转换失败'
   },
   'media': {
     'camera': '摄像头',

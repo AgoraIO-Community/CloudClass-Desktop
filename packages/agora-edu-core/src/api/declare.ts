@@ -92,7 +92,8 @@ export type TaskProgressInfo = {
   totalPageSize?: number,
   convertedPageSize?: number,
   convertedPercentage?: number,
-  convertedFileList: ConvertedFileList
+  convertedFileList: ConvertedFileList,
+  currentStep?: 'Extracting' | 'Packaging'
 }
 
 

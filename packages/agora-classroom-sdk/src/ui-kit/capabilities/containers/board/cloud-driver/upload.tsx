@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useCallback } from 'react';
 import { CourseWareItem, useCloudDriveContext } from 'agora-edu-core';
 import { useUIStore } from '@/infra/hooks';
+import classNames from 'classnames';
 
 export interface UploadContainerProps {
   handleUpdateCheckedItems: (ids: string[]) => void,
@@ -85,9 +86,11 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
   }, [items, checkMap])
 
   const onResourceClick = async (resourceUuid: string) => {
-    const opened = await tryOpenCloudResource(resourceUuid)
-    if(!opened) {
+    const status = await tryOpenCloudResource(resourceUuid)
+    if(status === 'converting') {
       addToast(transI18n('toast.cloud_resource_conversion_not_finished'), 'warning')
+    } else if(status === 'unconverted') {
+      addToast(transI18n('toast.cloud_resource_conversion_not_converted'), 'error')
     }
   }
 
@@ -102,14 +105,16 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(({handle
         <Col>{transI18n('cloud.updated_at')}</Col>
       </TableHeader>
       <Table className="table-container ">
-        {items.length ? items.map(({ id, name, size, updateTime, type, checked }: any, idx: number) =>
+        {items.length ? items.map(({ id, name, size, updateTime, type, checked, isUnavailable }: any, idx: number) =>
           <Row height={10} border={1} key={idx}>
             <Col style={{paddingLeft:19}} width={9}>
               <CheckBox className="checkbox" onClick={(evt: any) => {
                 changeChecked(id, evt.currentTarget.checked)
               }} checked={checked}></CheckBox>
             </Col>
-            <Col style={{cursor: 'pointer'}} onClick={() => {
+            <Col className={classNames({
+              'unavailable-resource': isUnavailable
+            })} style={{cursor: 'pointer'}} onClick={() => {
               onResourceClick(id)
             }}>
               <IconBox iconType={type} style={{ marginRight: '6px' }} />
