@@ -86,7 +86,9 @@
   font-size: 12px;
   font-weight: 400;
   color: #191919;
-  position: relative;
+  top: 44px;
+  position: absolute;
+  z-index: 1;
 }
 
 .chat-notice-msg span {
@@ -107,6 +109,7 @@
   overflow-y: auto;
   width: 100%;
   position: absolute;
+  padding-top: 18px;
 }
 
 .chat-history > .chat-message:first-child {
