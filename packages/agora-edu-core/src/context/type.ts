@@ -1505,7 +1505,7 @@ export type CloudDriveContext = {
      * @param uuid 
      * @return 若未转换完成返回false
      */
-    tryOpenCloudResource(uuid: string): Promise<boolean>
+    tryOpenCloudResource(uuid: string): Promise<'unconverted' | 'converting' | 'opened'>
 }
 
 

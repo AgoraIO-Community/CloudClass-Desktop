@@ -126,6 +126,7 @@ export const PersonalStorageContainer = observer(() => {
 
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false)
   const [showUploadToast, setShowUploadToast] = useState<boolean>(false)
+  const [uploadToastType, setUploadToastType] = useState<0 | 1>(0)
   const [uploadFileInfo, setUploadFileInfo] = useState<uploadFileInfoProps>({
     iconType: '',
     fileName: '',
@@ -137,7 +138,8 @@ export const PersonalStorageContainer = observer(() => {
 
   const { pageIdx, loading, totalPages, resources, fetchResource, debouncedFetch, handlePageChange } = usePersonalResourcePage({ hintText });
 
-  const showToastFn = () => {
+  const showToastFn = (toastType: 0 | 1) => {
+    setUploadToastType(toastType)
     setShowUploadModal(false)
     setShowUploadToast(true)
     setTimeout(() => {
@@ -175,7 +177,7 @@ export const PersonalStorageContainer = observer(() => {
       converting: isNeedConverting,
       kind: isDynamic ? PPTKind.Dynamic : PPTKind.Static,
       onProgress: async (evt: any) => {
-        const { progress, isTransFile = false, isLastProgress = false } = evt;
+        const { progress, isTransFile = false, isLastProgress = false, failed = false } = evt;
         const parent = Math.floor(progress * 100)
         setCurrentProgress(parent)
 
@@ -189,7 +191,11 @@ export const PersonalStorageContainer = observer(() => {
         }
 
         if (isLastProgress && parent === 100) {
-          showToastFn()
+          showToastFn(0)
+        }
+
+        if(failed) {
+          showToastFn(1) 
         }
       },
       roomToken: room.roomToken,
@@ -240,9 +246,11 @@ export const PersonalStorageContainer = observer(() => {
 
   const handleClick = async (id: string, type: string) => {
     if (type === 'open') {
-      const opened = await tryOpenCloudResource(id)
-      if(!opened) {
+      const status = await tryOpenCloudResource(id)
+      if(status === 'converting') {
         addToast(transI18n('toast.cloud_resource_conversion_not_finished'), 'warning')
+      } else if(status === 'unconverted') {
+        addToast(transI18n('toast.cloud_resource_conversion_not_converted'), 'error')
       }
     }
   };
@@ -269,7 +277,10 @@ export const PersonalStorageContainer = observer(() => {
           {transI18n('cloud.upload')}
         </Button>
         <Button disabled={!checked} type="ghost" onClick={handleDelete}>{transI18n('cloud.delete')}</Button>
-        {showUploadToast ? (<Toast closeToast={() => { }} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>) : ''}
+        {showUploadToast ? ( !uploadToastType ? 
+          <Toast closeToast={() => { }} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>{transI18n('cloud.upload_success')}</Toast>:
+          <Toast closeToast={() => { }} style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }} type='error'>{transI18n('cloud.conversion_failed')}</Toast>
+        ) : ''}
         {showUploadModal ? (
           <Modal
             title={transI18n('cloud.upload')}

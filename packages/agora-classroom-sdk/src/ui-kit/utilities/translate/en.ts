@@ -215,7 +215,8 @@ export const en = {
     'reward_limit': 'The maximum number of trophies in the room has been reached',
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
-    'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later'
+    'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later',
+    'cloud_resource_conversion_not_converted': 'This resource is not converted, please upload another resource'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -266,7 +267,8 @@ export const en = {
     'upload_failed': 'Upload Failed,{reason}',
     'search': 'Search',
     'prev': '< Prev',
-    'next': 'Next >'
+    'next': 'Next >',
+    'conversion_failed': 'Failed to convert resource'
   },
   'media': {
     'camera': 'Camera',
