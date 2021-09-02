@@ -55,8 +55,8 @@ const MessageList = ({ activeKey }) => {
   let hasEditPermisson = Number(isTeacher) === 3;
   // 当前是哪个tab
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
-  // 加载历史消息动画
-
+  // 拉取历史消息起始位置
+  const isStartMsgId = useSelector(state => state.messages?.list[0]?.id);
   // 消息列表滚动条是否在最底部
   const onBottom = useSelector((state) => state.messageListIsBottom);
 
@@ -161,7 +161,7 @@ const MessageList = ({ activeKey }) => {
 
   const handleLoadMoreMessage = (e) => {
     e.preventDefault();
-    getHistoryMessages(roomId, e);
+    getHistoryMessages(roomId, isStartMsgId);
     let scrollElement = document.getElementById('chat-box-tag');
     store.dispatch(historyCurrentHeight(scrollElement.scrollHeight))
   }

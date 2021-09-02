@@ -23,7 +23,7 @@ import iconError from '../../themes/img/icon-error.svg'
 const ShowEomji = ({ getEmoji, hideEmoji }) => {
     return (
         <>
-            <div className='emoji-mask' onClick={() => { hideEmoji }}></div>
+            <div className='emoji-mask' onClick={ hideEmoji }></div>
             <div className='emoji-all'>
                 {Object.keys(emoji.map).map((k, index) => {
                     const v = emoji.map[k]

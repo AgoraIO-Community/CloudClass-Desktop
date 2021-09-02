@@ -33,7 +33,6 @@ const App = function (props) {
   useEffect(() => {
     let stateListnerFuc = (loginState, joinRoomState) => {
       if (loginState === 'not_login') {
-        console.log('loginRetryCount>>>', getLoginRetryCount());
         if (getLoginRetryCount() < 0) {
           Message.error('登录失败，请刷新重试')
           setTimeout(() => {
@@ -97,13 +96,14 @@ const App = function (props) {
   const createListen = (new_IM_Data, appkey) => {
     WebIM.conn.listen({
       onOpened: () => {
-        const roomId = new_IM_Data.chatroomId;
-        const enabled = new_IM_Data.privateChatRoom.enabled;
-        const privateRoomId = new_IM_Data.privateChatRoom.chatRoomId;
+        const roomId = new_IM_Data?.chatroomId;
+        const privateInfo = new_IM_Data?.privateChatRoom
+        const enabled = privateInfo?.enabled;
+        const privateRoomId = privateInfo?.chatRoomId;
         store.dispatch(isLogin('logined'))
         setUserInfo();
         joinRoom(roomId);
-        if (enabled) {
+        if (enabled && privateRoomId) {
           joinRoom(privateRoomId);
         }
       },

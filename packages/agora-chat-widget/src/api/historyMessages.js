@@ -5,8 +5,9 @@ import { HISTORY_COUNT } from '../components/MessageBox/constants'
 import { getQAReadMsg } from './qaReadMsg'
 import _ from 'lodash'
 
-let deleteMsgId = [];
-export const getHistoryMessages = async (roomId) => {
+let deleteMsgId = [];           // 被删除消息数组
+let reconnectHistoryMsgs = [];  // 重连拉取消息数组
+export const getHistoryMessages = async (roomId, reconnectMsgId, isReconnect) => {
     let stop = false;
     const publicRoomId = store.getState().extData.chatroomId;
     const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
@@ -17,14 +18,13 @@ export const getHistoryMessages = async (roomId) => {
         queue: roomId,
         isGroup: true,
         count: HISTORY_COUNT,
+        start: isReconnect ? '' : reconnectMsgId,
         success: function (res) {
-            console.log('history>>>', res)
             store.dispatch(loadGif(false))
             if (publicRoomId === roomId && res.length < HISTORY_COUNT) {
                 store.dispatch(moreHistory(false))
             }
             if (privateRoomId === roomId && res.length < HISTORY_COUNT) {
-                console.log('stop>>>>>');
                 stop = true;
             }
             const historyMsg = _.reverse(res)
@@ -32,13 +32,30 @@ export const getHistoryMessages = async (roomId) => {
                 const { ext: { msgtype, asker, msgId } } = val
                 const { time, action, id, to } = val
                 if (to === publicRoomId) {
-                    if (action == "DEL") {
-                        deleteMsgId.push(msgId)
-                        store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
-                    } else if (deleteMsgId.includes(id)) {
-                        return
+                    // 是否为重连拉取消息
+                    if (isReconnect) {
+                        // 拉取消息到store中的ID
+                        if (reconnectMsgId === id) {
+                            stop = true;
+                            return
+                        }
+                        if (action == "DEL") {
+                            deleteMsgId.push(msgId)
+                            reconnectHistoryMsgs.push(val)
+                        } else if (deleteMsgId.includes(id)) {
+                            return
+                        } else {
+                            reconnectHistoryMsgs.push(val)
+                        }
                     } else {
-                        store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                        if (action == "DEL") {
+                            deleteMsgId.push(msgId)
+                            store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                        } else if (deleteMsgId.includes(id)) {
+                            return
+                        } else {
+                            store.dispatch(roomMessages(val, { showNotice: false, isHistory: true }))
+                        }
                     }
                 } else if (to === privateRoomId) {
                     let readMsgId = getQAReadMsg()[asker] || 0;
@@ -59,7 +76,16 @@ export const getHistoryMessages = async (roomId) => {
         while (!stop) {
             await WebIM.conn.fetchHistoryMessages(options)
         }
+    } else if (isReconnect && publicRoomId === roomId) {
+        while (!stop) {
+            await WebIM.conn.fetchHistoryMessages(options)
+        }
     } else {
         await WebIM.conn.fetchHistoryMessages(options)
+    }
+    if (isReconnect) {
+        // 遍历结束后，将所有重连拉到的记录，添加到store
+        const newMessages = _.reverse(reconnectHistoryMsgs)
+        store.dispatch(roomMessages(newMessages, { showNotice: false, isHistory: true, isRejoin: true }))
     }
 }
