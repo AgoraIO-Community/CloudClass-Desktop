@@ -100,7 +100,7 @@ export const LaunchPage = observer(() => {
               totalPageSize: size,
               convertedPageSize: 0,
               convertedPercentage: 100,
-              convertedFileList: []
+              convertedFileList: [],
           },
         },
         {

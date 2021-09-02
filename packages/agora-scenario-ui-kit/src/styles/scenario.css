@@ -485,3 +485,12 @@
 #window-manager-collector .telebox-collector-icon {
   margin: 0 auto;
 }
+
+.unavailable-resource .filename {
+  color: #F44336!important;
+}
+
+.unavailable-resource .icon-box::before {
+  color: #F44336!important;
+  content: '\e62f'!important;
+}

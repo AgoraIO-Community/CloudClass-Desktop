@@ -2518,36 +2518,47 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async tryOpenCloudResource(uuid: string): Promise<boolean> {
+  async tryOpenCloudResource(uuid: string): Promise<'unconverted' | 'converting' | 'opened'> {
     const findResource = () => this.allResources.find((resource: any) => resource.id === uuid)
 
     const resource = findResource()
     // check if the resource has finished conversion
     const checkResourceAvailable = () => {
       const resource = findResource()
-      return resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length
+      
+      if(resource && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length) {
+        return 'opened'
+      }
+      
+      if(resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.currentStep === 'Extracting') {
+        return 'unconverted'
+      }
+
+      return 'converting'
     }
+
+    let status: ReturnType<typeof checkResourceAvailable> = checkResourceAvailable()
 
     if (
       // static resource
       !dynamicTypes.includes(resource!.type) ||
       // dynamic resource and resource has finished conversion
-      checkResourceAvailable()
+      status === 'opened'
     ) {
       await this.putSceneByResourceUuid(uuid)
-      return true
-    } else {
-      // refetch and check again
-      await this.fetchPersonalResources.apply(this, this.lastFetchParams!)
-
-      const available = checkResourceAvailable()
-
-      if(available) {
-        await this.putSceneByResourceUuid(uuid)
-        return true
-      }
+      return status
     }
-    return false
+    // refetch and check again
+    await this.fetchPersonalResources.apply(this, this.lastFetchParams!)
+
+    status = checkResourceAvailable()
+
+    if(status === 'opened') {
+      await this.putSceneByResourceUuid(uuid)
+    }
+    
+    return status
+    // return false
   }
 }
 

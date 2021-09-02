@@ -49,7 +49,8 @@ export type MaterialDataResource = {
   convertedPercentage?: number,
   updateTime: number,
   scenes?: any[],
-  access: MaterialAccess
+  access: MaterialAccess,
+  isUnavailable: boolean
 }
 
 export const transDataToResource = (data: CourseWareItem, access: MaterialAccess): MaterialDataResource => {
@@ -65,7 +66,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
       taskProgress: null,
       convertedPercentage: 100,
       updateTime: data.updateTime,
-      access
+      access,
+      isUnavailable: false
     }
   }
   return {
@@ -80,7 +82,8 @@ export const transDataToResource = (data: CourseWareItem, access: MaterialAccess
     convertedPercentage: data.taskProgress!.convertedPercentage,
     updateTime: data.updateTime,
     scenes: data.scenes || data.taskProgress?.convertedFileList,
-    access
+    access,
+    isUnavailable: data.taskProgress!.convertedPercentage === 100 && data.taskProgress!.currentStep === 'Extracting'
   }
 }
 
@@ -123,7 +126,7 @@ export type HandleUploadType = {
   converting: boolean,
   kind: any,
   pptResult?: any,
-  onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean}) => any,
+  onProgress: (evt: {phase: string, progress: number,isTransFile?:boolean,isLastProgress?:boolean, failed?: boolean}) => any,
   personalResource?: boolean
   
 }
@@ -419,6 +422,11 @@ export class UploadService extends ApiBase {
     })
 
     if(!uploadResult) {
+      payload.onProgress({
+        phase: 'finish',
+        progress: 1,
+        failed: true
+      })
       throw GenericErrorWrapper(new Error(`Upload File Failed`))
     }
 
@@ -455,6 +463,7 @@ export class UploadService extends ApiBase {
               phase: 'finish',
               progress: 1,
               isTransFile: true,
+              failed: true
             })
           },
           onTaskSuccess: () => {
