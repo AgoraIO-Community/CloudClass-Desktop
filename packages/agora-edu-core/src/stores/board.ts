@@ -2524,9 +2524,12 @@ export class BoardStore extends ZoomController {
     const resource = findResource()
     // check if the resource has finished conversion
     const checkResourceAvailable = () => {
-      const resource = findResource()
+      if(!dynamicTypes.includes(resource!.type)) {
+        // for non-dynamic items, return opened immediately
+        return 'opened'
+      }
       
-      if(resource && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length) {
+      if(resource && resource.taskProgress && resource.taskProgress.convertedPercentage === 100 && resource.taskProgress.convertedFileList?.length) {
         return 'opened'
       }
       
