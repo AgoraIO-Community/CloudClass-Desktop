@@ -109,6 +109,7 @@
   overflow-y: auto;
   width: 100%;
   position: absolute;
+  padding-top: 18px;
 }
 
 .chat-history > .chat-message:first-child {
