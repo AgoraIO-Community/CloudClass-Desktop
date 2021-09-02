@@ -22,11 +22,11 @@ import {
   RoomPhase,
   CameraState,
 } from 'white-web-sdk';
-import { AgoraConvertedFile, CoursewareItem } from '../api/declare';
+import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
 import { MaterialDataResource, transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
-import { DownloadFileStatus, StorageCoursewareItem } from '../types';
+import { DownloadFileStatus, StorageCourseWareItem } from '../types';
 import { BoardClient } from '../utilities/board-client';
 import { agoraCaches } from '../utilities/cache';
 import {
@@ -57,7 +57,7 @@ export interface ToolItem {
 }
 
 export type CustomizeGlobalState = {
-  materialList: CoursewareItem[];
+  materialList: CourseWareItem[];
   dynamicTaskUuidList: any[];
   roomScenes: GlobalRoomScene;
   grantUsers: string[];
@@ -94,7 +94,7 @@ const transformConvertedListToScenes = (taskProgress: any) => {
   return [];
 };
 
-const transformMaterialList = (item: CoursewareItem) => {
+const transformMaterialList = (item: CourseWareItem) => {
   return {
     ext: item.ext,
     resourceName: item.resourceName,
@@ -577,14 +577,14 @@ export class BoardStore extends ZoomController {
     const sceneState = this.room.state.sceneState;
     const path = this.getResourcePath(sceneState.contextPath);
 
-    const courseware = this.allResources.find((res: any) => res.name === name);
-    if (courseware) {
+    const courseWare = this.allResources.find((res: any) => res.name === name);
+    if (courseWare) {
       this.room.setGlobalState({
         dynamicTaskUuidList: [
           {
             resourceName: path,
-            taskUuid: courseware.taskUuid,
-            resourceUuid: courseware.id,
+            taskUuid: courseWare.taskUuid,
+            resourceUuid: courseWare.id,
           },
         ],
       });
@@ -821,15 +821,15 @@ export class BoardStore extends ZoomController {
     const sceneState = this.room.state.sceneState;
     const name = this.getResourcePath(sceneState.contextPath);
 
-    const courseware = this.coursewareList.find((item: any) => item.resourceName === name);
-    if (courseware) {
+    const courseWare = this.courseWareList.find((item: any) => item.resourceName === name);
+    if (courseWare) {
       this.updateBoardSceneItems(
         {
           scenes: sceneState.scenes,
-          resourceUuid: courseware.resourceUuid,
+          resourceUuid: courseWare.resourceUuid,
           resourceName: name,
           page: sceneState.index,
-          taskUuid: courseware.taskUuid,
+          taskUuid: courseWare.taskUuid,
         },
         false,
       );
@@ -911,9 +911,9 @@ export class BoardStore extends ZoomController {
     this.resourceUuid = this.getResourcePath(this.room.state.sceneState.contextPath);
   }
 
-  updateCoursewareList() {
+  updateCourseWareList() {
     const globalState = this.globalState;
-    this.coursewareList = globalState.dynamicTaskUuidList ?? [];
+    this.courseWareList = globalState.dynamicTaskUuidList ?? [];
     const materialList = globalState.materialList ?? [];
     this._personalResources = materialList.filter((it) => {
       return this.publicResources.every((item) => {
@@ -923,36 +923,36 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
-  coursewareList: any[] = [];
+  courseWareList: any[] = [];
 
   findFirstPPT() {
-    const list = this.appStore.params.config.coursewareList;
+    const list = this.appStore.params.config.courseWareList;
     const ppt = list.find((it: any) => {});
   }
 
   // TODO: 首次进入房间加载整个动态ppt资源列表
   async fetchRoomScenes() {
-    const firstCourseware = this.appStore.params.config.coursewareList[0];
-    if (!firstCourseware) {
+    const firstCourseWare = this.appStore.params.config.courseWareList[0];
+    if (!firstCourseWare) {
       return [];
     }
-    await this.startDownload(`${firstCourseware.taskUuid}`);
-    // const items = this.appStore.params.config.coursewareList
+    await this.startDownload(`${firstCourseWare.taskUuid}`);
+    // const items = this.appStore.params.config.courseWareList
     if (
-      firstCourseware.convert &&
-      firstCourseware.taskProgress &&
-      firstCourseware.taskProgress!.convertedPercentage === 100
+      firstCourseWare.convert &&
+      firstCourseWare.taskProgress &&
+      firstCourseWare.taskProgress!.convertedPercentage === 100
     ) {
-      const scenes = firstCourseware.taskProgress!.convertedFileList;
-      const resourceName = `${firstCourseware.resourceName}`;
+      const scenes = firstCourseWare.taskProgress!.convertedFileList;
+      const resourceName = `${firstCourseWare.resourceName}`;
       const page = this.findResourcePage(resourceName);
       this.updateBoardSceneItems(
         {
           scenes,
           resourceName,
-          resourceUuid: firstCourseware.resourceUuid,
+          resourceUuid: firstCourseWare.resourceUuid,
           page,
-          taskUuid: firstCourseware.taskUuid,
+          taskUuid: firstCourseWare.taskUuid,
         },
         true,
       );
@@ -1023,7 +1023,7 @@ export class BoardStore extends ZoomController {
     }
 
     this.updateBoardState(this.room.state.globalState as CustomizeGlobalState);
-    this.updateCoursewareList();
+    this.updateCourseWareList();
 
     this.pptAutoFullScreen();
 
@@ -1124,7 +1124,7 @@ export class BoardStore extends ZoomController {
         this.updateLocalSceneState();
       }
       if (state.globalState) {
-        this.updateCoursewareList();
+        this.updateCourseWareList();
         // const followFlag = !!state.globalState.follow
         // // TODO: 监听follow的逻辑
         // if(this.roleIsTeacher) {
@@ -1827,7 +1827,7 @@ export class BoardStore extends ZoomController {
     this.activeMap = {};
     this._personalResources = [];
     this._resourcesList = [];
-    this.coursewareList = [];
+    this.courseWareList = [];
     this.isFullScreen = false;
     this.fileLoading = false;
     this.uploadingProgress = 0;
@@ -2370,7 +2370,7 @@ export class BoardStore extends ZoomController {
     });
   }
 
-  addMaterial(resourceRecord: CoursewareItem) {
+  addMaterial(resourceRecord: CourseWareItem) {
     const materialList = this.globalState?.materialList ?? [];
     this.room.setGlobalState({
       materialList: uniqBy(
@@ -2401,7 +2401,7 @@ export class BoardStore extends ZoomController {
       if (this.isCancel) {
         return;
       }
-      this.addMaterial(res as CoursewareItem);
+      this.addMaterial(res as CourseWareItem);
       this.fileLoading = false;
     } catch (err) {
       console.error(err);
@@ -2479,10 +2479,10 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
-  _extraResources: CoursewareItem[] = [];
+  _extraResources: CourseWareItem[] = [];
 
   @observable
-  _resourcesMap: Map<string, CoursewareItem> = new Map();
+  _resourcesMap: Map<string, CourseWareItem> = new Map();
 
   resolveResource(item: any) {
     const id = item.resourceUuid || item.id;
@@ -2505,7 +2505,7 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  upsertResources(items: CoursewareItem[]) {
+  upsertResources(items: CourseWareItem[]) {
     for (let item of items) {
       this._resourcesMap.set(item.resourceUuid, item);
       const exists = this.allResources.find((resource: any) => resource.id === item.resourceUuid);
@@ -2517,7 +2517,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get publicResources() {
-    return this.appStore.params.config.coursewareList
+    return this.appStore.params.config.courseWareList
       .map((item: any) => ({
         ...item,
         ...this.resolveResource(item),
@@ -2526,35 +2526,35 @@ export class BoardStore extends ZoomController {
   }
 
   @computed
-  get initCourseware() {
+  get initCourseWare() {
     return this.publicResources.filter((item) => item.isActive)[0];
   }
 
   @observable
-  initCoursewareLoading: boolean = false;
+  initCourseWareLoading: boolean = false;
 
   @observable
-  initCoursewareProgress: number = 0;
+  initCourseWareProgress: number = 0;
 
-  async openInitCourseware() {
-    const courseware = this.initCourseware;
-    if (courseware) {
-      this.initCoursewareLoading = true;
-      await this.putSceneByResourceUuid(courseware.id);
-      await agoraCaches.deleteTaskUUID(courseware.taskUuid);
+  async openInitCourseWare() {
+    const courseWare = this.initCourseWare;
+    if (courseWare) {
+      this.initCourseWareLoading = true;
+      await this.putSceneByResourceUuid(courseWare.id);
+      await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
       await this.refreshState();
-      await this.startDownload(courseware.taskUuid);
-      this.initCoursewareLoading = false;
+      await this.startDownload(courseWare.taskUuid);
+      this.initCourseWareLoading = false;
     }
   }
 
   @computed
-  get internalResources(): CoursewareItem[] {
-    return this.appStore.params.config.personalCoursewareList ?? [];
+  get internalResources(): CourseWareItem[] {
+    return this.appStore.params.config.personalCourseWareList ?? [];
   }
 
   @observable
-  _personalResources: CoursewareItem[] = [];
+  _personalResources: CourseWareItem[] = [];
 
   @computed
   get personalResources() {
@@ -2575,9 +2575,9 @@ export class BoardStore extends ZoomController {
   get totalProgress(): number {
     return (
       +(
-        this.coursewareList.filter(
+        this.courseWareList.filter(
           (e) => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100,
-        ).length / this.coursewareList.length
+        ).length / this.courseWareList.length
       ).toFixed(2) * 100
     );
   }
@@ -2590,11 +2590,11 @@ export class BoardStore extends ZoomController {
   }
 
   @observable
-  downloadList: StorageCoursewareItem[] = [];
+  downloadList: StorageCourseWareItem[] = [];
 
   // @computed
-  // get downloadList(): StorageCoursewareItem[] {
-  //   return this._downloadList.map((item: StorageCoursewareItem) => ({
+  // get downloadList(): StorageCourseWareItem[] {
+  //   return this._downloadList.map((item: StorageCourseWareItem) => ({
   //     ...item,
   //     progress: get(this.progressMap, `${item.taskUuid}`, 0) / 100
   //   }))
@@ -2602,20 +2602,20 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   async refreshState() {
-    const newCoursewareList: any = [...this.allResources];
-    for (let i = 0; i < newCoursewareList.length; i++) {
-      const item = newCoursewareList[i];
+    const newCourseWareList: any = [...this.allResources];
+    for (let i = 0; i < newCourseWareList.length; i++) {
+      const item = newCourseWareList[i];
       const res = await agoraCaches.hasTaskUUID(item.taskUuid);
       item.progress = res === true ? 100 : 0;
       this.progressMap[item.taskUuid] = item.progress;
       item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached;
     }
-    this.downloadList = newCoursewareList;
+    this.downloadList = newCourseWareList;
   }
 
   @action.bound
-  updateDownloadById(taskUuid: string, props: Partial<StorageCoursewareItem>) {
-    this.downloadList = this.downloadList.map((item: StorageCoursewareItem) =>
+  updateDownloadById(taskUuid: string, props: Partial<StorageCourseWareItem>) {
+    this.downloadList = this.downloadList.map((item: StorageCourseWareItem) =>
       item.taskUuid === taskUuid ? { ...item, props } : item,
     );
   }
@@ -2640,8 +2640,8 @@ export class BoardStore extends ZoomController {
       await agoraCaches.startDownload(taskUuid, type, (progress: number, controller: any) => {
         const newProgress = this.progressMap[taskUuid] ?? 0;
         if (progress >= newProgress) {
-          if (taskUuid === this.initCourseware.taskUuid) {
-            this.initCoursewareProgress = progress;
+          if (taskUuid === this.initCourseWare.taskUuid) {
+            this.initCourseWareProgress = progress;
           }
           const info: any = {
             progress,
@@ -2720,7 +2720,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async downloadAll() {
     try {
-      const courseItem = this.coursewareList;
+      const courseItem = this.courseWareList;
       for (let i = 0; i < courseItem.length; i++) {
         await this.startDownload(courseItem[i].taskUuid);
       }

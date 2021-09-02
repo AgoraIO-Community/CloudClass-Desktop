@@ -18,7 +18,7 @@ const controller = new MainController();
 
 export type AgoraEduBoardScene = SceneDefinition;
 
-export type AgoraEduCourseware = {
+export type AgoraEduCourseWare = {
   resourceUuid: string;
   resourceName: string;
   scenePath: string;
@@ -57,10 +57,10 @@ export class AgoraEduCoreSDK {
 
   static _debug: boolean = false;
 
-  static _list: AgoraEduCourseware[];
+  static _list: AgoraEduCourseWare[];
 
   // @internal
-  static configCoursewares(list: AgoraEduCourseware[]) {
+  static configCourseWares(list: AgoraEduCourseWare[]) {
     this._list = list;
   }
 
@@ -165,8 +165,8 @@ export class AgoraEduCoreSDK {
           enableLog: true,
           sdkDomain: `${globalConfigs.sdkDomain}`,
           region: option.region,
-          coursewareList: option.coursewareList,
-          personalCoursewareList: option.personalCoursewareList,
+          courseWareList: option.courseWareList,
+          personalCourseWareList: option.personalCourseWareList,
           vid: data.vid,
           oss: {
             region: data.netless.oss.region,

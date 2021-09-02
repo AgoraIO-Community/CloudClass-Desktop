@@ -37,7 +37,7 @@ ReactDOM.render(
       enableLog: true,
       rtmToken: '',
       rtmUid: '',
-      coursewareList: [],
+      courseWareList: [],
       recordUrl: '',
     }}
   />,

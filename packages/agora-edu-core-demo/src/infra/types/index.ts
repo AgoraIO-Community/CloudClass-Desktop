@@ -58,7 +58,7 @@ export type CreateMaterialResult = {
   url: string;
 };
 
-export type CoursewareUploadResult = {
+export type CourseWareUploadResult = {
   resourceUuid: string;
   resourceName: string;
   ext: string;

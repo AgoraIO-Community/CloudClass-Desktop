@@ -5,13 +5,13 @@ import { FC } from 'react';
 import { useCloudDriveContext } from 'agora-edu-core';
 
 export interface LoadingPptProps extends BaseProps {
-  initCoursewareProgress: number;
-  initCoursewareLoading: boolean;
+  initCourseWareProgress: number;
+  initCourseWareLoading: boolean;
 }
 
 export const LoadingPptContainer: FC<{}> = observer(() => {
-  const { initCoursewareProgress, initCoursewareLoading } = useCloudDriveContext();
-  return initCoursewareLoading ? <PageLoading loadingProcess={initCoursewareProgress} /> : null;
+  const { initCourseWareProgress, initCourseWareLoading } = useCloudDriveContext();
+  return initCourseWareLoading ? <PageLoading loadingProcess={initCourseWareProgress} /> : null;
 });
 
 const PageLoading = (props: any) => {
@@ -21,7 +21,7 @@ const PageLoading = (props: any) => {
         <Loading
           hasLoadingGif={false}
           currentProgress={props.loadingProcess}
-          loadingText={transI18n('whiteboard.courseware-loading')}
+          loadingText={transI18n('whiteboard.courseWare-loading')}
           hasProgress></Loading>
       </Card>
     </div>
