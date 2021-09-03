@@ -83,6 +83,8 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
   const ref = useRef<HTMLDivElement | null>(null)
   const { contextInfo, setActivePlugin } = useAppPluginContext()
 
+  const { activePluginId } = useAppPluginContext()
+
   const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo
 
   const contexts = ContextPoolAdapters()
@@ -131,6 +133,9 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, app])
   // const { studentStreams } = useSmallClassVideoControlContext()
+
+  const modalStyle = Object.assign({ zIndex: activePluginId === app.appIdentifier ? 2 : 1 }, !needTransition ? null : { transition: '.5s' } )
+  
   return (
     <Draggable
       defaultClassName="extapp-draggable-container fixed"
@@ -140,7 +145,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
       {...draggableProps}
     >
       <Modal
-        style={ !needTransition ? null : { transition: '.5s' }}
+        style={modalStyle}
         title={app.appName}
         width={'min-content'}
         onCancel={onCancel}
@@ -162,22 +167,11 @@ export const AppPluginContainer = observer(() => {
   const { roomInfo } = useRoomContext()
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
 
-  const { activePluginId } = useAppPluginContext()
-
-  let activePlugin: IAgoraExtApp | null = null
-  // pick out currently active plugin, and remove it from plugin list
-  const appPlugins = Array.from(activeAppPlugins.values()).filter((plugin) => {
-    if (plugin.appIdentifier === activePluginId) {
-      activePlugin = plugin
-    }
-    return plugin.appIdentifier !== activePluginId
-  })
-  // put active plugin at last of the plugin list so that it will be renered on most top layer
-  activePlugin && appPlugins.push(activePlugin)
-
+  const appPlugins = Array.from(activeAppPlugins.values())
+  
   return (
     <div style={{ position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10 }}>
-      {appPlugins.map((app: IAgoraExtApp, idx: number) =>
+      {appPlugins.map((app: IAgoraExtApp) =>
         <AppPluginItem
           key={app.appIdentifier}
           app={app}
