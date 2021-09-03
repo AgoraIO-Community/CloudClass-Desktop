@@ -2539,12 +2539,16 @@ export class BoardStore extends ZoomController {
   async openInitCourseWare() {
     const courseWare = this.initCourseWare;
     if (courseWare) {
-      this.initCourseWareLoading = true;
-      await this.putSceneByResourceUuid(courseWare.id);
-      await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
-      await this.refreshState();
-      await this.startDownload(courseWare.taskUuid);
-      this.initCourseWareLoading = false;
+      try {
+        this.initCourseWareLoading = true;
+        await this.putSceneByResourceUuid(courseWare.id);
+        await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
+        await this.refreshState();
+        await this.startDownload(courseWare.taskUuid);
+        this.initCourseWareLoading = false;
+      } catch (error) {
+        this.initCourseWareLoading = false;
+      }
     }
   }
 
