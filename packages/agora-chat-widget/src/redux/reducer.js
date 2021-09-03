@@ -112,14 +112,14 @@ const reducer = (state = defaultState, action) => {
         //获取聊天室管理员
         case 'GET_ROOM_ADMINS':
             let aryAdmin = []
-            if (action.option === 'addAdmin'){
+            if (action.option === 'addAdmin') {
                 aryAdmin = aryAdmin.concat(...state.room.users, data)
             } else if (action.option === 'removeAdmin') {
                 _.remove(state.room.admins, (v) => {
                     return v == data
                 });
                 aryAdmin = state.room.admins
-            }else {
+            } else {
                 aryAdmin = state.room.admins.concat(data)
             }
             let newAdmins = _.uniq(aryAdmin)
@@ -171,12 +171,16 @@ const reducer = (state = defaultState, action) => {
             };
         //聊天室消息
         case 'SAVE_ROOM_MESSAGES':
-            const { showNotice, isHistory } = action.options
+            const { showNotice, isHistory, isRejoin } = action.options
             let msgs;
             let newMsgs;
             let isTabShowChatNotice;
             if (isHistory) {
-                msgs = [data].concat(state.messages.list)
+                if (isRejoin) {
+                    msgs = state.messages.list.concat(data)
+                } else {
+                    msgs = [data].concat(state.messages.list)
+                }
                 isTabShowChatNotice = state.messages.notification[CHAT_TABS_KEYS.chat];
                 state.isHistoryCurrent = true;
             } else {
@@ -184,7 +188,7 @@ const reducer = (state = defaultState, action) => {
                 isTabShowChatNotice = showNotice;
                 state.isHistoryCurrent = false;
             }
-            if (data.ext.msgId) {
+            if (data?.ext?.msgId) {
                 msgs = msgs.filter((item) => item.id !== data.ext.msgId)
             }
             newMsgs = _.uniqBy(msgs, 'id')
