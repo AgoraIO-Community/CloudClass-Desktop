@@ -1008,9 +1008,9 @@ export class BoardStore extends ZoomController {
   }
   
   @action.bound
-  setGrantPermission(v: boolean) {
+  async setGrantPermission(v: boolean) {
     this._grantPermission = v
-    this.setWritable(v)
+    await this.setWritable(v)
   }
 
   @action.bound
@@ -1521,7 +1521,7 @@ export class BoardStore extends ZoomController {
 
 
   @action.bound
-  updateBoardState(globalState: CustomizeGlobalState) {
+  async updateBoardState(globalState: CustomizeGlobalState) {
     // const follow = globalState?.follow ?? false
     // if (follow !== this.follow) {
     //   this.setFollow(follow)
@@ -1544,7 +1544,8 @@ export class BoardStore extends ZoomController {
       }
       this.setGrantUsers(grantUsers)
       if (this.userRole === EduRoleTypeEnum.student) {
-        this.setGrantPermission(hasPermission)
+        await this.setGrantPermission(hasPermission)
+        this.setTool('clicker')
         this.windowManager?.setReadonly(!hasPermission)
         this.appStore.widgetStore.grantSyncing(hasPermission)
       }

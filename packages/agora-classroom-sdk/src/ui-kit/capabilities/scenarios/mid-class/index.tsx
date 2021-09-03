@@ -110,7 +110,13 @@ export const MidClassScenario = observer(() => {
       onLaunchAppPlugin('io.agora.countdown')
     } else if (roomProperties?.extAppsCommon?.io_agora_countdown?.state === 0) {
       // 关闭倒计时
-      onShutdownAppPlugin('io.agora.countdown')
+      onShutdownAppPlugin('io.agora.countdown', () => {
+        let app = activeAppPlugins.find(p => p.appIdentifier === 'io.agora.countdown') as AgoraExtAppAnswer
+        if(roomInfo.userRole === EduRoleTypeEnum.student) {
+          return true
+        }
+        return !app
+      })
     }
     
     if (roomProperties?.extAppsCommon?.io_agora_answer?.state === 1) {
@@ -132,7 +138,13 @@ export const MidClassScenario = observer(() => {
       onLaunchAppPlugin('io.agora.vote')
     } else if (roomProperties?.extAppsCommon?.io_agora_vote?.state === 0) {
       // 关闭投票
-      onShutdownAppPlugin('io.agora.vote')
+      onShutdownAppPlugin('io.agora.vote', () => {
+        let app = activeAppPlugins.find(p => p.appIdentifier === 'io.agora.vote') as AgoraExtAppAnswer
+        if(roomInfo.userRole === EduRoleTypeEnum.student) {
+          return true
+        }
+        return !app
+      })
     }
   }, [
     roomProperties?.extAppsCommon?.io_agora_countdown?.state,
