@@ -66,6 +66,9 @@ export class BoardClient extends EventEmitter {
 
   async join(params: JoinRoomParams, isAssistant?: boolean) {
     BizLogger.info('[breakout board] before board client join', params)
+    await new Promise((resolve) => {
+      setTimeout(resolve, 3000)
+    })
     this.room = await this.client.joinRoom(params, {
       onPhaseChanged: phase => {
         this.emit('onPhaseChanged', phase);
