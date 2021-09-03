@@ -5,7 +5,7 @@ import { SmileOutlined, CloseCircleOutlined, UpOutlined } from '@ant-design/icon
 import { Flex, Text } from 'rebass'
 import WebIM from '../../utils/WebIM'
 import store from '../../redux/store'
-import { Emoji } from '../../utils/emoji'
+import emoji  from '../../utils/emoji'
 import { roomMessages, qaMessages, messageListIsBottom } from '../../redux/aciton'
 import { CHAT_TABS_KEYS, INPUT_SIZE, TEXT_ERROR, IMG_MAX_SIZE, IMG_SUPPORT, NOT_INPUT } from '../MessageBox/constants'
 import iconSmiley from '../../themes/img/icon-smiley.svg'
@@ -23,12 +23,16 @@ import iconError from '../../themes/img/icon-error.svg'
 const ShowEomji = ({ getEmoji, hideEmoji }) => {
     return (
         <>
-            <div className='emoji-mask' onClick={hideEmoji}></div>
+            <div className='emoji-mask' onClick={ hideEmoji }></div>
             <div className='emoji-all'>
-                {Emoji.map((emoji, key) => {
-                    return <span className='emoji-content' key={key}
-                        onClick={getEmoji}
-                    >{emoji}</span>
+                {Object.keys(emoji.map).map((k, index) => {
+                    const v = emoji.map[k]
+                    return <img
+                            key={k}
+                            className='emoji-content'
+                            src={require(`../../themes/faces/${v}`).default}
+                            onClick={() => { getEmoji(k)}}
+                        />
                 })}
             </div>
         </>
@@ -143,7 +147,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
     }
 
     // 获取到点击的表情，加入到输入框
-    const getEmoji = (e) => {
+    const getEmoji = (val) => {
         const chatBoxTextArea = document.querySelector("#chat-box-textarea")
         /*
          * 处理逻辑：A 允许输入总长度   B 还可输入长度
@@ -153,7 +157,7 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
          */
 
         // 本次输入的内容
-        let tempContent = e.target.innerText;
+        let tempContent = val;
         // 本次输入的内容切割为数组
         let tempContentArr = Array.from(tempContent);
         // 剩余可输入字数
@@ -328,7 +332,6 @@ const ChatBox = ({ isTool, qaUser, activeKey }) => {
         // 监听回车
         const keyupFunction = (e) => {
             if (e.keyCode === 13) {
-                console.log('>>>>>');
                 e.preventDefault();
                 sendMessage(toRoomid, e.target.value);
             }

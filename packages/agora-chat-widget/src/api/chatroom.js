@@ -8,9 +8,18 @@ import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 
 // 加入聊天室
 export const joinRoom = async (roomId) => {
+    // 私聊聊天室ID
     const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
+    // 用户登陆ID
     const userUuid = store.getState().extData.userUuid;
+    // 用户权限
     const roleType = store.getState().extData.roleType;
+    // 判断store中是否有消息
+    const isPublicMsgs = store.getState()?.messages?.list
+    // 如果消息存在，设定为重连
+    const isReconnect = isPublicMsgs && isPublicMsgs.length > 0
+    // 获取store中的最后一条消息ID
+    const isLastMsgId = isPublicMsgs && isPublicMsgs[isPublicMsgs.length - 1]?.id
     WebIM.conn.mr_cache = [];
     let options = {
         roomId: roomId,   // 聊天室id
@@ -29,7 +38,7 @@ export const joinRoom = async (roomId) => {
                     isChatRoomWhiteUser(roomId, userUuid)
                 }
                 getRoomInfo(options.roomId);
-                getHistoryMessages(options.roomId);
+                isReconnect ? getHistoryMessages(options.roomId, isLastMsgId, isReconnect) : getHistoryMessages(options.roomId)
             }
         },
         error: () => {
@@ -188,9 +197,6 @@ export const isChatRoomWhiteUser = (roomId, userId) => {
     }
     WebIM.conn.isChatRoomWhiteUser(options).then((res) => {
         store.dispatch(userMute(res.data.white))
-
-        console.log('==============>>>>>>>>>>>>>>>>,', res.data);
-
         // 触发改变禁言状态事件
         document.dispatchEvent(
             new CustomEvent("im_changeMutedState", {

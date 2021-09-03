@@ -13,6 +13,7 @@ import iconDelete from '../../../themes/img/icon-delete.svg'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import iconForbid from '../../../themes/img/icon-forbid.svg'
 import _ from 'lodash'
+import renderEmoji from '../../../utils/renderEmoji'
 
 // 消息渲染
 const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
@@ -51,6 +52,12 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
     let isCmdMsg = message.contentsType === 'COMMAND' || message.type === "cmd"
     let isShowIcon = (Number(isTeacher) === 1 || Number(isTeacher) === 3)
 
+    
+    let rnTxt = []
+    let txtMsg = message.msg || message.data
+    if (isTextMsg) {
+        renderEmoji(txtMsg, rnTxt);
+    }
 
     return (
         <div key={message.id} id={message.id}>
@@ -102,7 +109,7 @@ const MessageItem = ({ message, setShowModal, setRecallMsgId }) => {
                                     </>
                                 }
                             </Flex>
-                            <div className='msg-text'>{message.msg || message.data}</div>
+                            <div className='msg-text'>{rnTxt}</div>
                         </Flex>
                     </Flex>
                 )

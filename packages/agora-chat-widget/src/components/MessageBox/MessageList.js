@@ -32,7 +32,7 @@ const MessageList = ({ activeKey }) => {
   // 获取当前登陆ID，RoomId，及成员数
   const userName = useSelector((state) => state.loginName);
   const roomId = useSelector(state => state.extData.chatroomId)
-  const userCount = useSelector(state => state.room.info.affiliations_count);
+  const roomAdmins = useSelector(state => state.room.admins);
   // 获取当前登陆的用户权限
   const isTeacher = useSelector(state => state.loginInfo.ext)
   const messageList = useSelector(state => state.messages.list) || [];
@@ -55,8 +55,8 @@ const MessageList = ({ activeKey }) => {
   let hasEditPermisson = Number(isTeacher) === 3;
   // 当前是哪个tab
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
-  // 加载历史消息动画
-
+  // 拉取历史消息起始位置
+  const isStartMsgId = useSelector(state => state.messages?.list[0]?.id);
   // 消息列表滚动条是否在最底部
   const onBottom = useSelector((state) => state.messageListIsBottom);
 
@@ -133,8 +133,13 @@ const MessageList = ({ activeKey }) => {
             _coachTeacher.push(newVal)
             break;
           default:
-            newVal = _.assign(val, { id: item })
-            _student.push(newVal)
+            if (roomAdmins.includes(item)) {
+              newVal = _.assign(val, { id: item })
+              _speakerTeacher.push(newVal)
+            }else{
+              newVal = _.assign(val, { id: item })
+              _student.push(newVal)
+            }
             break;
         }
       })
@@ -142,7 +147,7 @@ const MessageList = ({ activeKey }) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomUsers, roomListInfo])
+  }, [roomUsers, roomListInfo, roomAdmins])
 
   useEffect(() => {
     const scrollElement = document.getElementById('chat-box-tag')
@@ -156,7 +161,7 @@ const MessageList = ({ activeKey }) => {
 
   const handleLoadMoreMessage = (e) => {
     e.preventDefault();
-    getHistoryMessages(roomId, e);
+    getHistoryMessages(roomId, isStartMsgId);
     let scrollElement = document.getElementById('chat-box-tag');
     store.dispatch(historyCurrentHeight(scrollElement.scrollHeight))
   }
