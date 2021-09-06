@@ -20,9 +20,9 @@
  * agora zIndex rule
  * @zindex-ext-app: 998
  * @zindex-rtc-video: 0
- * @zindex-camera-placeholder-loading: -1
+ * @zindex-camera-placeholder-loading: 0
  * @zindex-camera-placeholder-broken: 1
- * @zindex-camera-placeholder-muted: -1
+ * @zindex-camera-placeholder-muted: 0
  * @zindex-camera-placeholder-disabled: 1
  * @zindex-camera-placeholder-none: -1
  */
@@ -70,9 +70,9 @@ export const Z_INDEX_RULES: {
   zIndexImage: 1080,
   zIndexExtApp: 998,
   zIndexRtcVideo: 0,
-  zIndexCameraPlaceholderLoading: -1,
+  zIndexCameraPlaceholderLoading: 0,
   zIndexCameraPlaceholderBroken: 1,
-  zIndexCameraPlaceholderMuted: -1,
+  zIndexCameraPlaceholderMuted: 0,
   zIndexCameraPlaceholderDisabled: 1,
   zIndexCameraPlaceholderNone: -1,
 } as const;
