@@ -1091,7 +1091,7 @@ export class BoardStore extends ZoomController {
       }
     })
     BizLogger.info("[breakout board] join", data)
-    const cursorAdapter = new CursorTool(); //新版鼠标追踪
+    // const cursorAdapter = new CursorTool(); //新版鼠标追踪
 
     const region = this.boardRegion ?? undefined
 
@@ -1100,7 +1100,7 @@ export class BoardStore extends ZoomController {
 
     await this.boardClient.join({
       ...data,
-      cursorAdapter,
+      // cursorAdapter,
       userPayload: {
         userId: this.appStore.roomStore.roomInfo.userUuid,
         avatar: "",
@@ -1119,7 +1119,7 @@ export class BoardStore extends ZoomController {
          WindowManager],
       useMultiViews: true
     })
-    cursorAdapter.setRoom(this.boardClient.room)
+    // cursorAdapter.setRoom(this.boardClient.room)
     this.strokeColor = {
       r: 252,
       g: 58,
@@ -1822,6 +1822,7 @@ export class BoardStore extends ZoomController {
       // this.boardClient.room.bindHtmlElement(dom)
       // WindowManager.mount(this.room, dom, document.querySelector("#window-manager-collector") as HTMLElement, { chessboard: false, containerSizeRatio: 9 / 16, debug: false })
       WindowManager.mount({
+        cursor: true,
         room: this.room,
         container: dom,
         collectorContainer: document.querySelector("#window-manager-collector") as HTMLElement,
