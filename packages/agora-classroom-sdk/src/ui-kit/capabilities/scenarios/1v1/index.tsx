@@ -48,7 +48,6 @@ export const OneToOneScenario = observer(() => {
 
   const cls = classnames({
     'edu-room': 1,
-    '1v1': 1,
   });
 
   const chatroomId = get(roomProperties, 'im.huanxin.chatRoomId');

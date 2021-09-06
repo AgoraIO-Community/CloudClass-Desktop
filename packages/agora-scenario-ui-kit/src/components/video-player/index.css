@@ -9,7 +9,7 @@
   flex-shrink: 0;
 }
 
-.mid-class .marque-video-container .video-player {
+.mid-class.marque-video-container .video-player {
   width: calc((100vw / 7) - 4px) !important;
   height: auto !important;
   aspect-ratio: 16/9 !important;

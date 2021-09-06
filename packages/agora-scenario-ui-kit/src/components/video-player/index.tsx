@@ -614,8 +614,13 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     }
   }, [videoContainerRef.current]);
 
+  const cls = classnames({
+    'marque-video-container': 1,
+    [`${roomType}`]: 1,
+  });
+
   return (
-    <div className="marque-video-container">
+    <div className={cls}>
       <>
         <CSSTransition
           in={!!teacherStreams[0]?.uid}
