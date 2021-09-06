@@ -24,6 +24,9 @@ const App: React.FC<AppProps> = observer((props) => {
   const { events, actions } = pluginStore.context;
 
   useEffect(() => {
+    events.chat.subscribe((state: any) => {
+      pluginStore.chatContext = state;
+    });
     events.global.subscribe((state: any) => {
       pluginStore.globalContext = state;
     });
@@ -32,7 +35,19 @@ const App: React.FC<AppProps> = observer((props) => {
     };
   }, []);
 
+  const { chatCollapse } = pluginStore.chatContext;
+
   const { isJoined, isFullScreen } = pluginStore.globalContext;
+
+  const { toggleChatMinimize } = actions.chat;
+
+  useEffect(() => {
+    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
+      // 第一个条件 点击全屏默认聊天框最小化
+      // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
+      toggleChatMinimize();
+    }
+  }, [isFullScreen]);
 
   set(
     pluginStore,
