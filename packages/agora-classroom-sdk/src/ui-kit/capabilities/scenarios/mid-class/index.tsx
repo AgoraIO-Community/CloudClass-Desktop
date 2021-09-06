@@ -62,6 +62,7 @@ export const MidClassScenario = observer(() => {
 
   const cls = classnames({
     'edu-room': 1,
+    'mid-class': 1,
     fullscreen: !!isFullScreen,
   });
 

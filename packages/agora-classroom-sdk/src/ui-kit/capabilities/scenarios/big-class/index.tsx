@@ -58,6 +58,7 @@ export const BigClassScenario = observer(() => {
 
   const cls = classnames({
     'edu-room': 1,
+    'big-class': 1,
     fullscreen: !!isFullScreen,
   });
 
