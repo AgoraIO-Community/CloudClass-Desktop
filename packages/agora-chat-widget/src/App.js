@@ -196,7 +196,12 @@ const App = function (props) {
     <div>
       {showChat ? (
         isSmallClass ? (
-          <div className="app" style={{ width: '340px', display: isFullScreen ? 'none' : 'block' }}>
+          <div
+            className="app"
+            style={{
+              width: isFullScreen ? '300px' : '340px',
+              display: isFullScreen ? 'none' : 'block',
+            }}>
             <Chat />
           </div>
         ) : (
