@@ -1991,15 +1991,22 @@ export class BoardStore extends ZoomController {
       }, false)
 
       // this.room.putScenes(`/${resource.id}`, scenes)
+      const scenePath = `/${resource.id}`
 
-      await this.windowManager?.addApp({
-        kind: BuiltinApps.DocsViewer,
-        options: {
-            scenePath: `/${resource.id}`,
-            title: resource.name,
-            scenes
-        }
-      });
+      const opened = Object.values(this.windowManager?.apps || []).reduce((opened, { options }) => {
+        return options.scenePath === scenePath || opened
+      }, false)
+
+      if(!opened) {
+        await this.windowManager?.addApp({
+          kind: BuiltinApps.DocsViewer,
+          options: {
+              scenePath,
+              title: resource.name,
+              scenes
+          }
+        });
+      }
     }
   }
 
