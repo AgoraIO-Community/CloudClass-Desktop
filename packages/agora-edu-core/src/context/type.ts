@@ -253,14 +253,60 @@ export type VolumeContext = {
   speakers: any;
 };
 export type PretestContext = {
+  /**
+   * 是否开启美颜
+   * @version v1.1.5
+   */
   isBeauty: boolean;
+  /**
+   * 设置是否开启美颜
+   * @param isBeauty 是否开启
+   * @version v1.1.5
+   */
   setBeauty: (isBeauty: boolean) => void;
+  /**
+   * 当前美白数值
+   * @version v1.1.5
+   */
   whitening: number;
+  /**
+   * 当前磨皮数值
+   * @version v1.1.5
+   */
   buffing: number;
+  /**
+   * 当前红润数值
+   * @version v1.1.5
+   */
   ruddy: number;
+  /**
+   * 设置美白
+   * @param whitening 美白数值
+   * @version v1.1.5
+   */
   setWhitening: (whitening: number) => void;
+  /**
+   * 设置磨皮
+   * @param buffing 磨皮数值
+   * @version v1.1.5
+   */
   setBuffing: (buffing: number) => void;
+  /**
+   * 设置红润
+   * @param ruddy 红润数值
+   * @version v1.1.5
+   */
   setRuddy: (ruddy: number) => void;
+  /**
+   * 调用rtc设置美颜功能。
+   * @param object {
+   *  lighteningLevel = 70,
+   *  rednessLevel = 10,
+   *  smoothnessLevel = 50,
+   *  isBeauty = true,
+   * }
+   * @version v1.1.5
+   */
   setBeautyEffectOptions: any;
   /**
    * 摄像头是否错误
@@ -359,7 +405,7 @@ export type PretestContext = {
   /**
    * 切换扬声器
    * @param deviceId 扬声器设备ID
-   * @version v1.1.0
+   * @version v1.1.5
    */
   changeTestSpeaker: (deviceId: string) => Promise<void>;
   /**
@@ -433,6 +479,7 @@ export type ScreenShareContext = {
 export type RoomContext = {
   /**
    * 是否成功加入了房间
+   * @version v1.1.5
    */
   joined: boolean;
   /**
@@ -581,7 +628,11 @@ export type RoomContext = {
    */
   flexRoomProperties: any;
   /**
-   * startCarousel
+   * 开启轮播功能
+   * @param range 轮播范围
+   * @param type 轮播顺序类型
+   * @param interval 轮播时间间隔
+   * @version v1.1.5
    */
   startCarousel: ({
     range,
@@ -593,7 +644,8 @@ export type RoomContext = {
     interval: number;
   }) => Promise<any>;
   /**
-   * stopCarousel
+   * 停止轮播
+   * @version v1.1.5
    */
   stopCarousel: () => Promise<any>;
 };
@@ -662,20 +714,24 @@ export type GlobalContext = {
   dialogEventObserver: Subject<any>;
   /**
    * region区域
+   * @version v1.1.5
    */
   region: string;
 };
 export type BoardContext = {
   /**
    * 白板连接状态
+   * @version v1.1.5
    */
   boardConnectionState: string;
   /**
    * 加入白板
+   * @version v1.1.5
    */
   joinBoard: () => Promise<any>;
   /**
    * 离开白板
+   * @version v1.1.5
    */
   leaveBoard: () => Promise<any>;
   /**
@@ -1366,15 +1422,17 @@ export type MediaContext = {
   changeMicrophoneVolume: (v: number) => Promise<void>;
   /**
    * 设置视频加密
-   * @version v1.1.4
+   * @version v1.1.5
    */
   enableMediaEncryption(enabled: boolean, config: any): number;
   /**
    * 获取麦克风采集声音的音量
+   * @version v1.1.5
    */
   getAudioRecordingVolume: () => number;
   /**
    * 获取扬声器播放声音的音量
+   * @version v1.1.5
    */
   getAudioPlaybackVolume: () => number;
 };
