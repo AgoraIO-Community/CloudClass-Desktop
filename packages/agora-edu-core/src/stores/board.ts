@@ -296,6 +296,9 @@ export class BoardStore extends ZoomController {
   sceneStack: any[][] = []
 
   lastFetchParams?: Parameters<BoardStore['fetchPersonalResources']>;
+  
+  @observable
+  isBoardStateInLoading: boolean = false
 
   constructor(appStore: EduScenarioAppStore) {
     super(0);
@@ -1980,7 +1983,9 @@ export class BoardStore extends ZoomController {
   @action.bound
   async putCourseResource(resourceUuid: string) {
     const resource = this.allResources.find((it: any) => it.id === resourceUuid)
-    if (resource) {
+    if(resource && resource.ext === 'akko') {
+      this.restoreBoardStateFromCloudDrive(resource.url)
+    } else if (resource) {
       const scenes = resource.scenes?.map(({ name, ppt }) => ({ name, ppt: { ...ppt, previewURL: ppt.preview } })) as SceneDefinition[]
       this.updateBoardSceneItems({
         scenes,
@@ -1989,7 +1994,7 @@ export class BoardStore extends ZoomController {
         page: 0,
         taskUuid: resource.taskUuid,
       }, false)
-
+      // sdk will do putScenes internally
       // this.room.putScenes(`/${resource.id}`, scenes)
       const scenePath = `/${resource.id}`
 
@@ -2198,7 +2203,7 @@ export class BoardStore extends ZoomController {
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid)
       }
-      if (dynamicTypes.includes(resource.type)) {
+      if (dynamicTypes.includes(resource.type) || ["akko"].includes(resource.ext)) {
         await this.putCourseResource(uuid)
       }
       if (["video", "audio"].includes(resource.type)) {
@@ -2238,6 +2243,7 @@ export class BoardStore extends ZoomController {
       })
       
       if (this.isCancel) {
+        this.fileLoading = false
         return
       }
       // const materialList = this.globalState?.materialList ?? []
@@ -2574,6 +2580,87 @@ export class BoardStore extends ZoomController {
     return status
     // return false
   }
+  async restoreBoardStateFromCloudDrive(url: string) {
+    const onConfirm = async () => {
+      this.isBoardStateInLoading = true
+      fetch(url)
+      .then(async (body) => {
+        await this.importBoardStateFromBlob(await body.blob())
+        this.appStore.fireToast('toast.board_restore_success')  
+      }).catch(() => {
+        this.appStore.fireToast('toast.board_restore_fail')  
+      }).finally(() => this.isBoardStateInLoading = false)
+    }
+    this.appStore.fireDialog('board-clear-confirm', {
+      onConfirm
+    })
+    
+  }
+
+  @action.bound
+  async saveBoardStateToCloudDrive(filename: string, onProgress?: (evt: any) => void) {
+    try {
+      this.isBoardStateInLoading = true
+      const file = await this.exportBoardStateToBlob()
+      const md5 = await calcUploadFilesMd5(file)
+      const resourceUuid = MD5(`${md5}`)
+      
+      const payload = {
+        file: file,
+        fileSize: file.size,
+        ext: 'akko',
+        resourceName: filename,
+        resourceUuid: resourceUuid,
+        converting: false,
+        conversion: null,
+        kind: 'static',
+        onProgress: async (evt: any) => {
+          // const { progress, isTransFile = false, isLastProgress = false } = evt;
+          // const parent = Math.floor(progress * 100)
+          // onProgress(evt)
+          onProgress && onProgress(evt)
+        },
+        roomToken: this.room.roomToken,
+        personalResource: true,
+        roomUuid: this.appStore.roomInfo.roomUuid,
+        userUuid: this.appStore.roomInfo.userUuid,
+      }
+      await this.appStore.uploadService.handleUpload(payload)
+      this.appStore.fireToast('toast.board_save_success')
+    } catch(e) {
+      this.appStore.fireToast('toast.board_save_fail')
+    } finally {
+      this.isBoardStateInLoading = false
+    }
+  }
+
+  async exportBoardStateToBlob() {
+    // const currentSceneState = this.room.state.sceneState
+    // const scenePath = currentSceneState.scenePath
+    const scenePath = '/init'
+    const blob = await this.room.exportScene(scenePath)
+    return blob
+  }
+
+  async importBoardStateFromBlob(blob: Blob) {
+    // const currentSceneState = this.room.state.sceneState
+    const scenePath = '/init'
+    await this.room.importScene('/draft-restore', blob)
+    this.room.moveScene(`/draft-restore${scenePath}`, scenePath)
+  }
+}
+
+
+
+export const calcUploadFilesMd5 = async (file: Blob) => {
+  return new Promise(resolve => {
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file); //计算文件md5
+    fileReader.onload = async () => {
+      const md5Str = MD5(fileReader.result);
+      resolve(md5Str);
+    };
+  });
 }
 
 export type HandleUploadType = {
