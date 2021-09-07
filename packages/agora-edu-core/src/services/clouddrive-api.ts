@@ -9,7 +9,8 @@ export interface PagingOptions {
     limit?: number,
     pageSize?: number,
     pageNo?: number,
-    converted?: number
+    converted?: number,
+    orderBy?: string
 }
 
 
@@ -42,6 +43,8 @@ export class AgoraCloudDriveApi extends ApiBase {
       // default to 1
       options.converted = 1
     }
+
+    options.orderBy = 'updateTime'
 
     queryparams = Object.entries(options).filter((([, value]) => !!value)).map(([name, value]) => `${name}=${value}`);
     
