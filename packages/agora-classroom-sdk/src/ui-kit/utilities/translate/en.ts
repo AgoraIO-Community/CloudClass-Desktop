@@ -216,7 +216,8 @@ export const en = {
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
     'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later',
-    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency'
+    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency',
+    'resource_already_opened': 'This resource is already opened'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
