@@ -1874,7 +1874,8 @@ export class BoardStore extends ZoomController {
 
   async setWritable(v: boolean) {
     if (this.online && this.room) {
-      await this.room.setWritable(v);
+      const timeout = new Promise((resolve) => setTimeout(resolve, 5000));
+      await Promise.race([this.room.setWritable(v), timeout]);
 
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
