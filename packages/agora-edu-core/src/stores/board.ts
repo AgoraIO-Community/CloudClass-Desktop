@@ -2006,6 +2006,8 @@ export class BoardStore extends ZoomController {
               scenes
           }
         });
+      } else {
+        this.appStore.fireToast('toast.resource_already_opened')
       }
     }
   }

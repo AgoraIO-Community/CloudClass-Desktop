@@ -225,7 +225,8 @@ export const zh = {
     'chat_enable': '禁言模式开启',
     'chat_disable': '禁言模式关闭',
     'cloud_resource_conversion_not_finished': '课件正在转换中，请稍后重试',
-    'cloud_resource_conversion_not_converted': '课件未转换成功，如果急用请转为PDF再上传使用'
+    'cloud_resource_conversion_not_converted': '课件未转换成功，如果急用请转为PDF再上传使用',
+    'resource_already_opened': '课件已经打开'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {
