@@ -485,7 +485,7 @@ export const useBoardContext = (): BoardContext => {
     whiteGlobalState: globalState$,
     boardConnectionState,
     joinBoard,
-    isLoading: isBoardStateInLoading
+    isBoardStateInLoading
   }
 }
 

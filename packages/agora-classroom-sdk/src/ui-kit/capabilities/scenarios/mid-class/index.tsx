@@ -101,7 +101,7 @@ export const MidClassScenario = observer(() => {
 
   const {
     joinBoard,
-    isLoading
+    isBoardStateInLoading
   } = useBoardContext()
 
 
@@ -245,7 +245,7 @@ export const MidClassScenario = observer(() => {
           </Aside>
         </Layout>
         <DialogContainer />
-        <LoadingContainer loading={isJoiningRoom || isLoading} />
+        <LoadingContainer loading={isJoiningRoom || isBoardStateInLoading} />
         <ToastContainer />
       </div>
     </Layout>

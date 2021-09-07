@@ -970,7 +970,7 @@ export type BoardContext = {
     /**
      * 是否加载中
      */
-    isLoading: boolean
+    isBoardStateInLoading: boolean
 }
 
 export type StreamContext = {
