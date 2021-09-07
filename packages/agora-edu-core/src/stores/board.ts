@@ -1053,9 +1053,9 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  setGrantPermission(v: boolean) {
+  async setGrantPermission(v: boolean) {
+    await this.setWritable(v);
     this._grantPermission = v;
-    this.setWritable(v);
   }
 
   @action.bound
