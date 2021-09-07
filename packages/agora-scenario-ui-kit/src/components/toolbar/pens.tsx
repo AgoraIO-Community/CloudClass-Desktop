@@ -48,9 +48,7 @@ export const Pens: FC<PensProps> = ({
 
   const handleClickTool = useCallback(
     (pen: string) => {
-      if (!isActive) {
-        handleClick(pen);
-      }
+      handleClick(pen);
     },
     [handleClick, isActive],
   );

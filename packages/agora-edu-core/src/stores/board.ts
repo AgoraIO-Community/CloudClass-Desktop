@@ -1053,9 +1053,9 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  setGrantPermission(v: boolean) {
+  async setGrantPermission(v: boolean) {
+    await this.setWritable(v);
     this._grantPermission = v;
-    this.setWritable(v);
   }
 
   @action.bound
@@ -1874,7 +1874,8 @@ export class BoardStore extends ZoomController {
 
   async setWritable(v: boolean) {
     if (this.online && this.room) {
-      await this.room.setWritable(v);
+      const timeout = new Promise((resolve) => setTimeout(resolve, 5000));
+      await Promise.race([this.room.setWritable(v), timeout]);
 
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
