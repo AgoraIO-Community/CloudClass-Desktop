@@ -87,7 +87,7 @@ export class AgoraEduCoreSDK {
         globalConfigs.setRoutesMap(json['edu.routesMap']);
       }
       if (json['edu.apiUrl']) {
-        globalConfigs.setSDKDomain(json['edu.apiUrl']);
+        globalConfigs.setSdkDomainTemplate(json['edu.apiUrl']);
       }
       if (json['reportUrl'] && json['reportQos'] && json['reportV1Url']) {
         globalConfigs.setReportConfig({

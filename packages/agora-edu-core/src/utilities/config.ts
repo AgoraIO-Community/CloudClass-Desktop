@@ -33,6 +33,8 @@ class GlobalConfigs {
   logDomain: string = 'https://api-solutions.agoralab.co';
   appId: string = '';
 
+  _sdkDomainTemplate: string = domainTemplate;
+
   _region: string = '';
 
   routesMap: RoutesMapType = {
@@ -45,10 +47,20 @@ class GlobalConfigs {
     this.routesMap = routesMap;
   }
 
+  public setSdkDomainTemplate(domain: string) {
+    this._sdkDomainTemplate = domain;
+  }
+
   public setRegion(region: string): void {
-    const regionDomain = getSDKDomain(domainTemplate, region);
-    this._region = region;
-    this.setSDKDomain(regionDomain);
+    // TODO: workaround solution to fix switch environment about eduApi.uri
+    if (this._sdkDomainTemplate === domainTemplate) {
+      const regionDomain = getSDKDomain(domainTemplate, region);
+      this._region = region;
+      this.setSDKDomain(regionDomain);
+    } else {
+      this._region = region;
+      this.setSDKDomain(this._sdkDomainTemplate);
+    }
   }
 
   public setSDKDomain(domain: string): void {
