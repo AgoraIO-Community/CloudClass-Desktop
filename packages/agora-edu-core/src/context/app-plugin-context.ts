@@ -63,9 +63,6 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   const calcPosition = useCallback(
     (diffRatio: { x: number, y: number }, outerSize: { width: number, height: number }, bounds: { left: number, top: number }) => ({ x: outerSize.width * diffRatio.x + bounds.left, y: outerSize.height * diffRatio.y + bounds.top })
   ,[])
-  const purge = useCallback(
-    (num: number) => clamp(num, 0, 1)
-  ,[])
 
   const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
@@ -87,8 +84,8 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   
   useEffect(() => {
     // every time viewport resized
-    const diffRatioX = purge((position.x - bounds.left) / medX)
-    const diffRatioY = purge((position.y - bounds.top) / medY)
+    const diffRatioX = clamp((position.x - bounds.left) / medX, 0, 1)
+    const diffRatioY = clamp((position.y - bounds.top) / medY, 0, 1)
     if(syncingEnabled && isTeacher) {
       // console.log("resync pos", appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid }, position, bounds, medX, medY)
       debouncedSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
@@ -113,10 +110,12 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
     updatePosition: (point) => {
       if(syncingEnabled) {
         // translate point to ratio
-        const diffRatioX = purge((point.x - bounds.left) / medX)
-        const diffRatioY = purge((point.y - bounds.top) / medY)
+        const diffRatioX = clamp((point.x - bounds.left) / medX, 0, 1)
+        const diffRatioY = clamp((point.y - bounds.top) / medY, 0, 1)
         setNeedTransition(false)
-        setPosition(point)
+        const x = clamp(point.x, bounds.left, bounds.right)
+        const y = clamp(point.y, bounds.top, bounds.bottom)
+        setPosition({ x, y })
         throttleSync(appId, { x: diffRatioX, y: diffRatioY, userId: roomInfo.userUuid })
       }
     },

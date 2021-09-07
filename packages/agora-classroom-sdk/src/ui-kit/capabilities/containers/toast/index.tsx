@@ -76,6 +76,12 @@ export const ToastContainer = observer(() => {
     'toast.remote_mute_chat': (props: any) => toast('toast.remote_mute_chat', props),
     'toast.remote_unmute_chat': (props: any) => toast('toast.remote_unmute_chat', props),
     'toast.cloud_resource_conversion_not_finished': (props: any) => toast('toast.cloud_resource_conversion_not_finished', props),
+    'toast.resource_already_opened': (props: any) => toast('toast.resource_already_opened', props),
+    'toast.board_restore_fail': (props: any) => toast('toast.board_restore_fail', props, 'error'),
+    'toast.board_restore_success': (props: any) => toast('toast.board_restore_success', props),
+    'toast.board_save_fail': (props: any) => toast('toast.board_save_fail', props, 'error'),
+    'toast.board_save_success': (props: any) => toast('toast.board_save_success', props),
+    'toast.board_save_fail_empty_name': (props: any) => toast('toast.board_save_fail_empty_name', props, 'error')
   }
 
   const roomRef = useRef<boolean>(isJoiningRoom)

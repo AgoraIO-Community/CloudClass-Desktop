@@ -4,12 +4,15 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { useCallback } from 'react'
 import { Icon, t, ToolCabinet } from '~ui-kit'
 import {observer} from 'mobx-react'
+import { useUIStore } from '@/infra/hooks'
+import { BoardSavingStateDialog } from '../../dialog'
 
 export const ToolCabinetContainer = observer(() => {
 
     const {
         setLaserPoint,
         currentSelector,
+        // saveToCloudDrive
     } = useBoardContext()
 
     const {
@@ -22,6 +25,10 @@ export const ToolCabinetContainer = observer(() => {
         onLaunchAppPlugin,
         setActivePlugin
     } = useAppPluginContext()
+
+    const {
+        addDialog
+    } = useUIStore()
 
     const onClick = useCallback(async (itemType: string) => {
         switch(itemType) {
@@ -38,6 +45,9 @@ export const ToolCabinetContainer = observer(() => {
             case 'countdown':
                 setActivePlugin('io.agora.countdown')
                 onLaunchAppPlugin('io.agora.countdown')
+                break;
+            case 'boardSave':
+                addDialog(BoardSavingStateDialog, {})
                 break;
             default: {
                 setActivePlugin(itemType)
@@ -58,6 +68,12 @@ export const ToolCabinetContainer = observer(() => {
             name: t('scaffold.screen_share'),
         }]
 
+        const boardSaveTool: CabinetItem[] = [{
+            id: 'boardSave',
+            icon: <Icon type="save-board" useSvg size={24} />,
+            name: t('scaffold.board_save')
+        }]
+
         const restTools: CabinetItem[] = [
             {
                 id: 'laser',
@@ -74,7 +90,7 @@ export const ToolCabinetContainer = observer(() => {
         ]
 
         if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
-            return screenShareTool.concat(...restTools)
+            return screenShareTool.concat(boardSaveTool).concat(...restTools)
         } else {
             return restTools
         }

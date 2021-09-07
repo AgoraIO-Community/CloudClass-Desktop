@@ -926,6 +926,11 @@ export class RoomStore extends SimpleInterval {
               )
             }
           })
+          let dInClassDuration = dayjs.duration(duration);
+          // every 10 mins after class start, upload log
+          if((dInClassDuration.minutes() % 10 === 0) && dInClassDuration.seconds() === 0) {
+            this.uploadLog()
+          }
           break;
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间 注意: closeDelay undefined null 改为0
@@ -1792,6 +1797,10 @@ export class RoomStore extends SimpleInterval {
       this.appStore.fireDialog('generic-error-dialog', {
         error
       })
+
+      // upload logs if possible for join failure
+      this.uploadLog()
+
       // this.appStore.roomStore.addDialog(GenericErrorDialog, {error})
       throw error
     }

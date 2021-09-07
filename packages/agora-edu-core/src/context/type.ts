@@ -966,6 +966,11 @@ export type BoardContext = {
      */
     whiteGlobalState: any,
     boardConnectionState: string
+    
+    /**
+     * 是否加载中
+     */
+    isBoardStateInLoading: boolean
 }
 
 export type StreamContext = {
@@ -1498,6 +1503,11 @@ export type CloudDriveContext = {
      */
     allResources: MaterialDataResource[],
 
+    /**
+     * 获取用户个人资源
+     * @param userUuid 
+     * @param options 
+     */
     fetchPersonalResources(userUuid:string, options?: PagingOptions): Promise<any>
 
     /**
@@ -1506,6 +1516,14 @@ export type CloudDriveContext = {
      * @return 若未转换完成返回false
      */
     tryOpenCloudResource(uuid: string): Promise<'unconverted' | 'converting' | 'opened'>
+    
+    /**
+     * 保存白板状态云盘
+     * @param fileName
+     * @param onProgress 
+     */
+     saveBoardStateToCloudDrive(fileName: string, onProgress?: (evt: any) => void): Promise<void>
+    
 }
 
 

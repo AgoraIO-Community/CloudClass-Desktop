@@ -216,7 +216,19 @@ export const en = {
     'chat_enable': 'Enable Mute Chat',
     'chat_disable': 'Disable Mute Chat',
     'cloud_resource_conversion_not_finished': 'This resource is now converting, please try later',
-    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency'
+    'cloud_resource_conversion_not_converted': 'This resource is not converted, please use PDF resources instead for emergency',
+    'resource_already_opened': 'This resource is already opened',
+    'save_to_cloud_drive': 'Save to Cloud Drive',
+    'save_as': 'File name',
+    'save_to': 'Save to',
+    'board_restore_fail': 'Failed to restore board state',
+    'board_restore_success': 'Board state restored successfully',
+    'board_save_fail': 'Failed to save board state',
+    'board_save_success': 'Board state saved successfully',
+    'board_save_fail_empty_name': 'Please input a name for the draft',
+    'board_confirm_clear_state': 'Do you want to clear blackboard content?',
+    'board_draft_default_name': 'Board Draft',
+    'board_restore_failed': 'Failed to restore board state'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
@@ -244,7 +256,8 @@ export const en = {
     'cloud_storage': 'Cloud Storage',
     'text': 'Text',
     'tools': 'Tools',
-    'user_list': 'User List'
+    'user_list': 'User List',
+    'board_save': 'Board Save'
   },
   'message': 'Message',
   'quiz': 'Quiz',
@@ -431,5 +444,7 @@ export const en = {
     'item-tip':'Option',
     'single-sel':'Single',
     'mul-sel':'Multi-select',
-  }
+  },
+  'no': 'No',
+  'yes': 'Yes'
 }

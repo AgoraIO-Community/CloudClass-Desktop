@@ -25,7 +25,8 @@ const svgDict: string[] = [
   'countdown',
   'clicker',
   'answer',
-  'vote'
+  'vote',
+  'save-board'
 ]
 
 export interface IconProps extends BaseProps {
@@ -105,6 +106,7 @@ const getIconInfo = (type: string) => {
     'video': '#A8ABE9',
     'pdf': '#A3C3DE',
     'image': '#A3F2E6',
+    'akko': '#A6DDBF'
   }
   return mapping[type]
 }

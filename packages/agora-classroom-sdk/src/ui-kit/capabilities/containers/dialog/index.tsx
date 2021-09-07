@@ -9,12 +9,81 @@ import { CloudDriverContainer } from '~capabilities/containers/board/cloud-drive
 import { UserListContainer, StudentUserListContainer } from '~capabilities/containers/board/user-list'
 import { ScreenShareContainer } from '~capabilities/containers/screen-share'
 import { SettingContainer } from '~capabilities/containers/setting'
-import { Button, Modal, t, transI18n } from '~ui-kit'
-
+import { Button, Modal, t, transI18n, Input } from '~ui-kit'
+import dayjs from 'dayjs';
 
 export type BaseDialogProps = {
   id: string
 }
+
+export const ClearBoardStateDialog: React.FC<BaseDialogProps & { userUuid: string, onConfirm: () => void }> = observer(({ id, onConfirm })=>{
+  const { removeDialog } = useUIStore()
+
+  return (
+    <Modal
+    width={280} title={transI18n('quiz')}
+    onOk={()=>{
+      onConfirm()
+      removeDialog(id)
+    }}
+    onCancel={() => {
+      removeDialog(id)
+    }}
+    footer={
+      [
+        <Button type={'secondary'} action="cancel">{t('no')}</Button>,
+        <Button type={'primary'} action="ok">{t('yes')}</Button>,
+      ]
+    }
+    >
+      <div className="text-center">{t('toast.board_confirm_clear_state')}</div>
+    </Modal>
+  )
+})
+
+export const BoardSavingStateDialog: React.FC<BaseDialogProps & { userUuid: string }> = observer(({ id })=>{
+  const { removeDialog, addToast } = useUIStore()
+  const [fileName, setFileName] = useState(() => { 
+    return transI18n('toast.board_draft_default_name') + '-' + dayjs().format('YYYY-MM-DD')
+  })
+
+  const { saveBoardStateToCloudDrive } = useCloudDriveContext()
+  
+  return (
+  <Modal
+    closable
+    className="board-save-dialog"
+    width={360} title={transI18n('toast.save_to_cloud_drive')}
+    onOk={()=>{
+      if(!fileName) {
+        addToast(transI18n('toast.board_save_fail_empty_name'))
+        return
+      }
+      saveBoardStateToCloudDrive(fileName).then(() => {
+        removeDialog(id)
+      })
+    }}
+    onCancel={()=>{
+      removeDialog(id)
+    }}
+    
+    footer={
+      [
+        <Button type={'secondary'} action="cancel">{t('toast.cancel')}</Button>,
+        <Button type={'primary'} action="ok">{t('toast.confirm')}</Button>,
+      ]
+    }
+  >
+    <div className="flex items-center mb-3 input-draft-name">
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 52 }}>{transI18n('toast.save_as')}:</label>
+      <Input onChange={(e) => {setFileName(e.target.value)}} value={fileName} />
+    </div>
+    <div className="flex items-center">
+      <label className="whitespace-nowrap flex-shrink-0" style={{ width: 52 }}>{transI18n('toast.save_to')}:</label>
+      <Input value={transI18n('scaffold.cloud_storage')} disabled />
+    </div>
+  </Modal>)
+})
 
 export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid: string}> = observer(({ id, userUuid, roomUuid }) => {
 
@@ -36,6 +105,7 @@ export const KickDialog: React.FC<BaseDialogProps & {userUuid: string, roomUuid:
 
   return (
     <Modal
+      closable
       width={300}
       title={transI18n('kick.kick_out_student')}
       onOk={onOK}
@@ -449,6 +519,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
     'room-end-notice': () => addDialog(RoomEndNotice),
     'kick-end': () => addDialog(KickEnd),
     'generic-error-dialog': (props: any) => addDialog(GenericErrorDialog, {...props}),
+    'board-clear-confirm': (props: any) => addDialog(ClearBoardStateDialog, {...props})
   }
 
   useEffect(() => {
