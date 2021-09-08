@@ -4,11 +4,13 @@ import { Tag, Menu, Dropdown } from 'antd';
 import { ROLE, DELETE, MSG_TYPE } from '../../contants';
 import store from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
+import renderEmoji from '../../utils/renderEmoji'
 import delete_icon from '../../themes/img/delete.png';
 import './index.css';
 
 // 聊天页面
 export const TextMsg = ({ item }) => {
+    let rnTxt = [];
     const state = useSelector((state) => state);
     const roomId = state?.room.info.id;
     const roomUuid = state?.propsData.roomUuid;
@@ -21,6 +23,8 @@ export const TextMsg = ({ item }) => {
     const userNickName = item?.ext.nickName;
     const loginNickName = state?.loginUserInfo.nickname;
     const isTeacher = state.propsData.roleType === ROLE.teacher.id;
+    
+    renderEmoji(msgData, rnTxt)
 
     const menu = (
         <Menu>
@@ -74,7 +78,7 @@ export const TextMsg = ({ item }) => {
                     <Dropdown overlay={menu} trigger={['contextMenu']}>
                         <div className="msg-border">
                             <div className="msg-text msg-text-me">
-                                <span className="msg-data">{msgData}</span>
+                                <span className="msg-data">{rnTxt}</span>
                             </div>
                         </div>
                     </Dropdown>
@@ -91,13 +95,13 @@ export const TextMsg = ({ item }) => {
                         <>
                             <Dropdown overlay={menu} trigger={['contextMenu']}>
                                 <div className="msg-text msg-text-other">
-                                    <span>{msgData}</span>
+                                    <span>{rnTxt}</span>
                                 </div>
                             </Dropdown>
                         </>
                     )}
                     {!isTeacher && (
-                        <div className="msg-text msg-text-other">{msgData}</div>
+                        <div className="msg-text msg-text-other">{rnTxt}</div>
                     )}
                 </div>
             )}
