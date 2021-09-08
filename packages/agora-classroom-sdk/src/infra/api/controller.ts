@@ -9,7 +9,7 @@ export enum EduSDKInternalStateEnum {
   Destroyed = "destroyed"
 }
 
-export type EventCallableFunction = (evt: AgoraEduEvent) => any
+export type EventCallableFunction = (evt: AgoraEduEvent, params?: any) => any
 
 export abstract class ClassRoomAbstractStore {
 
@@ -85,7 +85,7 @@ export class EduSDKController<T extends ClassRoomAbstractStore> {
     this.callback = callback
     render(component, this.dom)
     this._state = EduSDKInternalStateEnum.Initialized
-    this.callback(AgoraEduEvent.ready)
+    this.callback(AgoraEduEvent.ready, {type: 'dom'})
   }
 
 

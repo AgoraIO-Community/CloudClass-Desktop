@@ -126,8 +126,8 @@ export const LaunchPage = observer(() => {
         }
       ],
         // recordUrl: `${REACT_APP_AGORA_APP_RECORD_URL}`,
-        listener: (evt: AgoraEduEvent) => {
-          console.log("launch#listener ", evt)
+        listener: (evt: AgoraEduEvent, params?: any) => {
+          console.log("[listener] launch#listener ", evt, params)
           if (evt === AgoraEduEvent.destroyed) {
             history.push('/')
           }
