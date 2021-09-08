@@ -12,6 +12,7 @@ import "./index.css"
 import CloseIcon from './close-icon'
 // import { transI18n } from '~components/i18n';
 
+const headerHeight = 27
 const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string, syncingEnabled: boolean }) => {
   const { windowSize } = useUIStore()
 
@@ -46,7 +47,7 @@ const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProp
       setBounds({
         left,
         right: left + windowSize.width - clientWidth,
-        top,
+        top: top + headerHeight,
         bottom: top + windowSize.height - clientHeight
       })
       setModalSize({
