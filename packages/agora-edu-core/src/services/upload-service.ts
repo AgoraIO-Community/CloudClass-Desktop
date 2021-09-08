@@ -6,6 +6,7 @@ import OSS, { MultipartUploadResult } from 'ali-oss';
 import { createPPTTask } from 'white-web-sdk';
 import { ApiBase, ApiBaseInitializerParams } from './base';
 import axios from 'axios';
+import _ from 'lodash';
 
 export const mapFileType = (type: string): any => {
   if (type.match(/ppt|pptx|pptx/i)) {
@@ -87,7 +88,7 @@ export const transDataToResource = (
     taskUuid: data.taskUuid,
     taskProgress: data.taskProgress,
     url: data.url,
-    convertedPercentage: data.taskProgress!.convertedPercentage,
+    convertedPercentage: _.get(data, 'taskProgress.convertedPercentagen', 0),
     updateTime: data.updateTime,
     scenes: data.scenes,
     access,
