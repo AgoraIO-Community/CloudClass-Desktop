@@ -18,6 +18,8 @@ import { get, debounce } from 'lodash'
 import { ToastContainer } from "~capabilities/containers/toast"
 import { AgoraExtAppAnswer } from 'agora-plugin-gallery'
 import { Icon, IconButton } from '~ui-kit'
+import { controller } from '@/infra/api/controller'
+import { AgoraEduEvent } from '@/infra/api'
 
 // keep aspect ratio to 16:9
 const windowAspectRatio = 9 / 16
@@ -164,11 +166,18 @@ export const MidClassScenario = observer(() => {
 
   useEffectOnce(async () => {
     await joinRoom()
-    joinBoard()
+
+    controller.appController.callback(AgoraEduEvent.ready, {type: 'classroom'})
+
+    joinBoard().then(() => {
+      controller.appController.callback(AgoraEduEvent.ready, {type: 'whiteboard'})
+    })
     if (roomInfo.userRole === EduRoleTypeEnum.teacher) {
       await prepareStream()
     }
-    joinRoomRTC()
+    joinRoomRTC().then(() => {
+      controller.appController.callback(AgoraEduEvent.ready, {type: 'rtc'})
+    })
   })
 
   const { containerStyle, whiteboardStyle } = useFixedAspectRatio(windowAspectRatio, _minimumSize, _whiteboardHeightRatio)
@@ -241,6 +250,7 @@ export const MidClassScenario = observer(() => {
               widgetComponent={chatWidget} 
               widgetProps={{chatroomId, orgName, appName}}
               sendMsg={{ isFullScreen, showMinimizeBtn: true, width: 340, height: 480 }}
+              onReceivedMsg={({evt}:{evt:String}) => {controller.appController.callback(AgoraEduEvent.ready, {type: "im"})}}
             />) : null}
           </Aside>
         </Layout>

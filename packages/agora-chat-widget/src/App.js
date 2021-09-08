@@ -40,7 +40,9 @@ const App = function (props) {
         initIMSDK(appkey)
       }
       createListen(new_IM_Data, appkey)
-      loginIM(appkey);
+      loginIM(appkey, () => {
+        props.onReceivedMsg && props.onReceivedMsg({event: "login-success"})
+      });
     }
   }, [])
 
