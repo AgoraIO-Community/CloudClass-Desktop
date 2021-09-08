@@ -45,7 +45,7 @@ export const useAppPluginContext = () => {
 }
 
 
- 
+const headerHeight = 27
 export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bounds, appId, syncingEnabled }: { defaultPosition: Point, outerSize: Dimension, innerSize: Dimension, bounds: Bounds, appId: string, syncingEnabled: boolean }): TrackSyncContext => {
   const { roomInfo } = useRoomContext()
 
@@ -67,7 +67,7 @@ export const useTrackSyncContext = ({ defaultPosition, outerSize, innerSize, bou
   const isTeacher = roomInfo.userRole === EduRoleTypeEnum.teacher
 
   const medX = outerSize.width - innerSize.width
-  const medY = outerSize.height - innerSize.height
+  const medY = outerSize.height - innerSize.height - headerHeight
 
   const storePosition = extensionAppPositionState$.value && extensionAppPositionState$.value[appId] ? extensionAppPositionState$.value[appId] : null
   // local position
