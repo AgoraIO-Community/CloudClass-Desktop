@@ -39,10 +39,10 @@ export class AgoraCloudDriveApi extends ApiBase {
       options = {}
     }
     
-    if(options.converted !== 0) {
-      // default to 1
-      options.converted = 1
-    }
+    // if(options.converted !== 0) {
+    //   // default to 1
+    //   options.converted = 1
+    // }
 
     options.orderBy = 'updateTime'
 

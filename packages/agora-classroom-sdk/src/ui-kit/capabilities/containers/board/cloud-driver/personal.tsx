@@ -161,13 +161,14 @@ export const PersonalStorageContainer = observer(() => {
     const resourceUuid = MD5(`${md5}`)
     const name = file.name
     const ext = file.name.split(".").pop()
+    const extLowerCase = ext ? ext.toLowerCase() : ext
     // hideToast()
     // const supportedFileTypes = ['bmp', 'jpg', 'png', 'gif', 'pdf', 'pptx', 'mp3', 'mp4', 'doc', 'docx']
 
     const needConvertingFile = ['ppt', 'pptx', 'doc', 'docx', 'pdf']
-    const isNeedConverting = needConvertingFile.includes(ext)
+    const isNeedConverting = needConvertingFile.includes(extLowerCase)
     const needDynamicFileType = ['pptx']
-    const isDynamic = needDynamicFileType.includes(ext)
+    const isDynamic = needDynamicFileType.includes(extLowerCase)
     const payload = {
       file: file,
       fileSize: file.size,
@@ -184,7 +185,7 @@ export const PersonalStorageContainer = observer(() => {
         if (isTransFile) {
           setUploadFileInfo({
             ...uploadFileInfo,
-            iconType: 'format-' + mapFileType(ext),
+            iconType: 'format-' + mapFileType(extLowerCase),
             fileName: name,
             uploadComplete: true,
           })
@@ -202,13 +203,13 @@ export const PersonalStorageContainer = observer(() => {
       // pptConverter: boardClient.client.pptConverter(boardStore.room.roomToken)
       personalResource: true
     }
-    if (ext === 'pptx') {
+    if (extLowerCase === 'pptx') {
       EduLogger.info("upload dynamic pptx")
     }
     // TODO: 渲染UI
     setUploadFileInfo({
       ...uploadFileInfo,
-      iconType: 'format-' + mapFileType(ext),
+      iconType: 'format-' + mapFileType(extLowerCase),
       fileName: name,
       fileSize: formatFileSize(file.size),
       uploadComplete: false,
