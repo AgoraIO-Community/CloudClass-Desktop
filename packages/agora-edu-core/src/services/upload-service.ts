@@ -338,8 +338,9 @@ export class UploadService extends ApiBase {
     //   })
     //   return queryResult.data
     // }
+    const extLowerCase = payload.ext ? payload.ext.toLowerCase() : payload.ext
     const conversion = payload.converting ? {
-        type: payload.ext === 'pptx' ? 'dynamic' : 'static',
+        type: extLowerCase === 'pptx' ? 'dynamic' : 'static',
         preview: true,
         scale: globalConfigs._materialScale,
         outputFormat: 'png',
