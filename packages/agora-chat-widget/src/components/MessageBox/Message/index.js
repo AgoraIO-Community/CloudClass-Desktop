@@ -13,6 +13,7 @@ import Modal from '../../UIComponents/modal'
 // 消息渲染
 const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey }) => {
     const roomId = useSelector(state => state.room.info.id);
+    const roomUuid = useSelector(state => state.extData.roomUuid)
     const userInfo = useSelector(state => state.loginInfo);
     const isLoadGif = useSelector(state => state.isLoadGif)
     // 控制弹框
@@ -41,6 +42,7 @@ const Message = ({ messageList, isHiedReward, hasEditPermisson, activeKey }) => 
             ext: {
                 msgtype: 0,
                 msgId: recallId,
+                roomUuid: roomUuid,
                 avatarurl: userInfo.avatarurl || '',
                 nickName: userInfo.nickname || '辅导老师'
 

@@ -9,11 +9,11 @@ import { ROOM_PAGESIZE } from '../components/MessageBox/constants'
 // 加入聊天室
 export const joinRoom = async (roomId) => {
     // 私聊聊天室ID
-    const privateRoomId = store.getState().extData.privateChatRoom.chatRoomId;
+    const privateRoomId = store.getState().extData?.privateChatRoom?.chatRoomId;
     // 用户登陆ID
-    const userUuid = store.getState().extData.userUuid;
+    const userUuid = store.getState().extData?.userUuid;
     // 用户权限
-    const roleType = store.getState().extData.roleType;
+    const roleType = store.getState().extData?.roleType;
     // 判断store中是否有消息
     const isPublicMsgs = store.getState()?.messages?.list
     // 如果消息存在，设定为重连
