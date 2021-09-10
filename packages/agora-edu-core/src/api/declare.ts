@@ -179,6 +179,7 @@ export type AppStoreConfigParams = {
   userFlexProperties?: { [key: string]: any };
   mediaOptions?: MediaOptions;
   boardOptions?: BoardOptions;
+  latencyLevel?: 1 | 2;
 };
 
 export type LanguageEnum = 'en' | 'zh';
@@ -253,6 +254,7 @@ export type LaunchOption = {
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
   mediaOptions?: MediaOptions;
+  latencyLevel?: 1 | 2;
 };
 
 export type AgoraEduSDKConfigParams = {

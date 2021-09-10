@@ -75,6 +75,7 @@ export class EduManager extends EventEmitter {
       },
       scenarioType: this.config.scenarioType,
       userRole: this.config.userRole,
+      latencyLevel: this.config.latencyLevel ?? 2,
     };
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {

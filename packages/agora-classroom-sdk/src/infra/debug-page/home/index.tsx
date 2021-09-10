@@ -205,6 +205,7 @@ export const HomePage = observer(() => {
           mediaOptions: {
             cameraEncoderConfiguration,
           },
+          latencyLevel: 2,
         };
         if (encryptionKey && encryptionMode) {
           config!.mediaOptions!.encryptionConfig = {
