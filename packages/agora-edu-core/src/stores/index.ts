@@ -238,6 +238,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
         scenarioType: roomInfoParams?.roomType,
         cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
+        latencyLevel: config.latencyLevel ?? 2,
       });
     } else {
       this.eduManager = new EduManager({
@@ -255,6 +256,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
         scenarioType: roomInfoParams?.roomType,
         cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
+        latencyLevel: config.latencyLevel ?? 2,
       });
     }
 

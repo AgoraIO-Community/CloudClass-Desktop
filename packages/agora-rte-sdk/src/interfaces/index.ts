@@ -178,6 +178,7 @@ export interface EduConfiguration {
   cameraEncoderConfigurations?: EduVideoEncoderConfiguration;
   scenarioType?: EduRoomTypeEnum;
   userRole?: EduRoleTypeEnum;
+  latencyLevel?: 1 | 2;
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {

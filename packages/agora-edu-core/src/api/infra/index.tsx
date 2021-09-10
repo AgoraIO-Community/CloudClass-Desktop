@@ -183,6 +183,7 @@ export class AgoraEduCoreSDK {
           widgets: option.widgets,
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
+          latencyLevel: option.latencyLevel ?? 2,
         },
         language: option.language,
         startTime: option.startTime,

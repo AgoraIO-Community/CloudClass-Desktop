@@ -43,6 +43,7 @@ export class MediaService extends EventEmitter implements IMediaService {
   private eduManager: EduManager;
 
   encoderConfig: any;
+  rtcProvider: RTCProviderInitParams;
 
   constructor(rtcProvider: RTCProviderInitParams) {
     super();
@@ -52,6 +53,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     this.cameraRenderer = undefined;
     this.screenRenderer = undefined;
     this.remoteUsersRenderer = [];
+    this.rtcProvider = rtcProvider;
     EduLogger.info(`[rtcProvider] appId: ${rtcProvider.appId}, platform: ${rtcProvider.platform}`);
     if (rtcProvider.platform === 'electron') {
       const electronLogPath = rtcProvider.electronLogPath as any;
@@ -88,7 +90,7 @@ export class MediaService extends EventEmitter implements IMediaService {
               ? 'host'
               : 'audience',
           clientRoleOptions: {
-            level: 1,
+            level: rtcProvider.latencyLevel ?? 2,
           },
         },
         cameraEncoderConfiguration: rtcProvider.cameraEncoderConfiguration,
@@ -243,12 +245,12 @@ export class MediaService extends EventEmitter implements IMediaService {
     if (this.isElectron) {
       if (roleType === 'host') {
         (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(1, {
-          audienceLatencyLevel: 1,
+          audienceLatencyLevel: this.rtcProvider.latencyLevel ?? 2,
         });
       } else {
         await (this.sdkWrapper as AgoraElectronRTCWrapper).unpublish();
         (this.sdkWrapper as AgoraElectronRTCWrapper).client.setClientRoleWithOptions(2, {
-          audienceLatencyLevel: 1,
+          audienceLatencyLevel: this.rtcProvider.latencyLevel ?? 2,
         });
       }
     } else {
@@ -257,7 +259,7 @@ export class MediaService extends EventEmitter implements IMediaService {
       } else {
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.unpublish();
         await (this.sdkWrapper as AgoraWebRtcWrapper).client.setClientRole('audience', {
-          level: 1,
+          level: this.rtcProvider.latencyLevel ?? 2,
         });
       }
     }

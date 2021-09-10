@@ -249,6 +249,7 @@ export declare interface RTCProviderInitParams {
     logPath: string;
     videoSourceLogPath: string;
   };
+  latencyLevel?: 1 | 2;
 }
 
 export declare interface StartScreenShareParams {
