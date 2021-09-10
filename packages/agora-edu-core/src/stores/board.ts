@@ -322,12 +322,24 @@ export class BoardStore extends ZoomController {
         const { ready, hasPermission, role } = JSON.parse(data);
         if (ready) {
           if (role === EduRoleTypeEnum.student) {
-            if (hasPermission) {
-              this.room.setViewMode(ViewMode.Freedom);
-            } else {
-              this.room.setViewMode(ViewMode.Follower);
-            }
+            this.room.setViewMode(hasPermission ? ViewMode.Freedom : ViewMode.Follower);
           }
+        }
+      },
+    );
+    reaction(
+      () =>
+        JSON.stringify({
+          hasPermission: this.hasPermission,
+          role: this.userRole,
+        }),
+      (data: string) => {
+        const { hasPermission, role } = JSON.parse(data);
+        if (role === EduRoleTypeEnum.student) {
+          const notice = hasPermission
+            ? 'toast.teacher_accept_whiteboard'
+            : 'toast.teacher_cancel_whiteboard';
+          this.appStore.fireToast(notice);
         }
       },
     );
@@ -1022,7 +1034,7 @@ export class BoardStore extends ZoomController {
       this.resetBoardPath();
     }
 
-    // this.updateBoardState(this.room.state.globalState as CustomizeGlobalState);
+    this.updateBoardState(this.room.state.globalState as CustomizeGlobalState);
     this.updateCourseWareList();
 
     this.pptAutoFullScreen();
@@ -1633,12 +1645,6 @@ export class BoardStore extends ZoomController {
     const grantUsers = this.grantUsers;
     if (grantUsers && Array.isArray(grantUsers)) {
       const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false;
-      if (this.userRole === EduRoleTypeEnum.student && hasPermission !== this.hasPermission) {
-        const notice = hasPermission
-          ? 'toast.teacher_accept_whiteboard'
-          : 'toast.teacher_cancel_whiteboard';
-        this.appStore.fireToast(notice);
-      }
       this.setGrantUsers(grantUsers);
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission);
