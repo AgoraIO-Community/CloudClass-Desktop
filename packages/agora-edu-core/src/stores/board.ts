@@ -1022,7 +1022,7 @@ export class BoardStore extends ZoomController {
       this.resetBoardPath();
     }
 
-    this.updateBoardState(this.room.state.globalState as CustomizeGlobalState);
+    // this.updateBoardState(this.room.state.globalState as CustomizeGlobalState);
     this.updateCourseWareList();
 
     this.pptAutoFullScreen();
