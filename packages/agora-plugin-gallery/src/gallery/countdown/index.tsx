@@ -136,13 +136,27 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): void {
-    this.store!.changeRoomProperties({
-      state: '0',
-      startTime: '0',
-      pauseTime: '0',
-      duration: '0',
-      commonState: 0
-    })
+    // this.store!.changeRoomProperties({
+    //   state: '0',
+    //   startTime: '0',
+    //   pauseTime: '0',
+    //   duration: '0',
+    //   commonState: 0
+    // })
+  }
+  async requestCloseExtApp(): Promise<boolean> {
+    try {
+      await this.store!.changeRoomProperties({
+        state: '0',
+        startTime: '0',
+        pauseTime: '0',
+        duration: '0',
+        commonState: 0
+      })
+      return true
+    } catch(e) {
+      return false
+    }
   }
 }
 

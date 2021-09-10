@@ -226,7 +226,8 @@ export const zh = {
     'board_save_success': '板书保存成功',
     'board_save_fail_empty_name': '请输入板书草稿名称',
     'board_confirm_clear_state': '确定要清空当前黑板上的内容吗？',
-    'board_draft_default_name': '板书草稿'
+    'board_draft_default_name': '板书草稿',
+    'failed_to_update_extapp_properties': '更新 ExtApp 状态失败'
   },
   'end_class_confirm': '确定要结束教室吗？',
   'notice': {

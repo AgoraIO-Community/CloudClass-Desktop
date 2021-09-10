@@ -39,6 +39,7 @@ export interface IAgoraExtApp {
   extAppRoomPropertiesDidUpdate(properties:any, cause: any): void
   extAppWillUnload(): void
   remoteSynchronized?: boolean
+  requestCloseExtApp?(): Promise<boolean>
 }
 
 export type AgoraWidgetUserInfo = {

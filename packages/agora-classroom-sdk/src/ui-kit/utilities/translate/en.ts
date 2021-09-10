@@ -228,7 +228,8 @@ export const en = {
     'board_save_fail_empty_name': 'Please input a name for the draft',
     'board_confirm_clear_state': 'Do you want to clear blackboard content?',
     'board_draft_default_name': 'Board Draft',
-    'board_restore_failed': 'Failed to restore board state'
+    'board_restore_failed': 'Failed to restore board state',
+    'failed_to_update_extapp_properties': 'Failed to update Ext App properties'
   },
   'end_class_confirm': 'Are sure end classroom',
   'notice': {
