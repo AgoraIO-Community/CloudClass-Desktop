@@ -191,8 +191,8 @@ export const AppPluginContainer = observer(() => {
           app={app}
           properties={appPluginProperties(app)}
           closable={closable}
-          onCancel={async () => {
-            await app.extAppWillUnload() && onShutdownAppPlugin(app.appIdentifier)
+          onCancel={() => {
+            onShutdownAppPlugin(app.appIdentifier)
           }}
         ></AppPluginItem>
       )}
