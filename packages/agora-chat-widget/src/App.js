@@ -115,7 +115,9 @@ const App = function (props) {
       // 文本消息
       onTextMessage: (message) => {
         console.log('onTextMessage', message);
-        if (new_IM_Data.chatroomId === message.to || new_IM_Data.privateChatRoom.chatRoomId === message.to) {
+        // 判断消息是否来自公共聊天室/私聊聊天室
+        // message.to 为消息中的 聊天室ID
+        if (new_IM_Data.chatroomId === message.to || new_IM_Data.privateChatRoom?.chatRoomId === message.to) {
           const { ext: { msgtype, asker } } = message
           const { time } = message
           if (msgtype === 0) {
@@ -163,8 +165,9 @@ const App = function (props) {
       // 聊天室相关监听
       onPresence: (message) => {
         console.log('onPresence', message);
+        // 判断通知是否为公共聊天室通知
         if (new_IM_Data.chatroomId !== message.gid) return
-        if (new_IM_Data.privateChatRoom.chatRoomId === message.gid) return
+        if (new_IM_Data.privateChatRoom?.chatRoomId === message.gid) return
         const userCount = _.get(store.getState(), 'room.info.affiliations_count')
         const roomUserList = _.get(store.getState(), 'room.users')
         const roomOwner = _.get(store.getState(), 'room.owner');
@@ -259,7 +262,7 @@ const App = function (props) {
       //  收到图片消息
       onPictureMessage: (message) => {
         console.log('onPictureMessage', message);
-        if (new_IM_Data.chatroomId == message.to || new_IM_Data.privateChatRoom.chatRoomId === message.to) {
+        if (new_IM_Data.chatroomId == message.to || new_IM_Data.privateChatRoom?.chatRoomId === message.to) {
           store.dispatch(qaMessages(message, message.ext.asker, { showNotice: true, isHistory: false }))
         }
       },
