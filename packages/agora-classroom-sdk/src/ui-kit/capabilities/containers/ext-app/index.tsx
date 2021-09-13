@@ -143,20 +143,12 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
         }
       })
     }
-    return () => app.extAppWillUnload()
+    // return () => app.extAppWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, app])
   // const { studentStreams } = useSmallClassVideoControlContext()
 
   const modalStyle = Object.assign({ zIndex: activePluginId === app.appIdentifier ? 2 : 1 }, !needTransition ? null : { transition: '.5s' })
-
-  const handleCancel = app.requestCloseExtApp ? async () => {
-      app.requestCloseExtApp!().then((canClose: boolean) => {
-        if(canClose) {
-          onCancel()
-        }
-      })
-    } : onCancel
 
   return (
     <Draggable
@@ -170,7 +162,7 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
         style={modalStyle}
         title={app.appName}
         width={'min-content'}
-        onCancel={handleCancel}
+        onCancel={onCancel}
         closable={closable}
         header={app.customHeader}
         className='extapp-modal'
@@ -200,7 +192,7 @@ export const AppPluginContainer = observer(() => {
           properties={appPluginProperties(app)}
           closable={closable}
           onCancel={async () => {
-            onShutdownAppPlugin(app.appIdentifier)
+            await app.extAppWillUnload() && onShutdownAppPlugin(app.appIdentifier)
           }}
         ></AppPluginItem>
       )}
