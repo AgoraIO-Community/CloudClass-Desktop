@@ -6,13 +6,13 @@ import { EduLogLevel } from "./interfaces";
 import { LogUpload } from "../services/log-upload";
 import { promisify } from "util";
 
-let logFolderCleaned = false
 
 const flat = (arr: any[]) => {
   return arr.reduce((arr, elem) => arr.concat(elem), []);
 };
 
 export class ElectronLoggerUtilities {
+  logFolderCleaned: boolean = false
   static checkEnvironment() {
     if(!window.isElectron || !window.require) {
       throw new Error(`[logger] api only available in electron env`)
@@ -61,9 +61,9 @@ export class ElectronLoggerUtilities {
   }
 
   async cleanLogFolder(logFolder: string) {
-    if (!logFolderCleaned) {
+    if (!this.logFolderCleaned) {
       // clean up once only
-      logFolderCleaned = true
+      this.logFolderCleaned = true
       // clean up files which are older than 3 days
       try {
         await this.cleanFolder(logFolder, 1000 * 3600 * 24 * 3)
@@ -204,7 +204,7 @@ export class EduLogger {
 
   static logUploader: LogUpload
 
-  static electronUtilities: ElectronLoggerUtilities
+  static electronUtilities?: ElectronLoggerUtilities
 
   static init(appId: string) {
     this.logUploader = new LogUpload({
@@ -248,7 +248,7 @@ export class EduLogger {
   static async uploadElectronLog(roomId: any) {
     //@ts-ignore
       //@ts-ignore
-      let file = await this.electronUtilities.prepareLogUpload();
+      let file = await this.electronUtilities?.prepareLogUpload();
       const res = await this.logUploader.uploadZipLogFile(
         roomId,
         file
