@@ -1118,6 +1118,7 @@ export class RoomStore extends SimpleInterval {
       this.sceneStore._canChatting = checkInResult.muteChat ? false : true
       this.sceneStore.recordState = !!checkInResult.isRecording
       this.sceneStore.classState = checkInResult.state
+      this.appStore.boardStore.setCheckInResult(checkInResult)
       this.appStore.boardStore.init({
         boardId: checkInResult.board.boardId,
         boardToken: checkInResult.board.boardToken,
