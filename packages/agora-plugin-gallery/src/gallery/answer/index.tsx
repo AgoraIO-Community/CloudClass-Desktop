@@ -183,11 +183,17 @@ export class AgoraExtAppAnswer implements IAgoraExtApp {
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
     this.store?.onReceivedProps(properties, cause)
   }
-  extAppWillUnload(): void {
-    if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-      this.store?.onSubClick(true)
+  async extAppWillUnload(): Promise<boolean> {
+    try {
+      if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+        await this.store?.onSubClick(true)
+      }
+      return true
+    } catch (e) {
+      return false
     }
   }
+  
 }
 
 

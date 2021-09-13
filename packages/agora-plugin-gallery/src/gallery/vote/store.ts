@@ -198,10 +198,10 @@ export class PluginStore {
         }
     }
 
-    onSubClick = (clear: boolean = false) => {
+    onSubClick = async (clear: boolean = false) => {
         if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
             if (clear) {
-                this.changeRoomProperties({ state: 'clear' })
+                await this.changeRoomProperties({ state: 'clear' })
             } else {
                 if (this.status === 'config') {
                     let sels: string[] = [];
@@ -211,16 +211,16 @@ export class PluginStore {
                         }
                     })
                     //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
-                    this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: [], commonState: 1 })
+                    await this.changeRoomProperties({ state: 'start', startTime: (Math.floor(Date.now() / 1000)).toString(), title: this.title, items: this.answer, mulChoice: this.mulChoice, answer: [], commonState: 1 })
                 } else if (this.status === 'info') {
-                    this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
+                    await this.changeRoomProperties({ state: 'end', endTime: (Math.floor(Date.now() / 1000)).toString(), commonState: 1 })
                 } else {
-                    this.changeRoomProperties({ state: 'clear' })
+                    await this.changeRoomProperties({ state: 'clear' })
                 }
             }
         } else {
             if (this.status === 'answer') {
-                this.changeRoomProperties({ replyTime: (Math.floor(Date.now() / 1000)).toString(), answer: this.selAnswer, commonState: 1 })
+                await this.changeRoomProperties({ replyTime: (Math.floor(Date.now() / 1000)).toString(), answer: this.selAnswer, commonState: 1 })
             }
         }
     }

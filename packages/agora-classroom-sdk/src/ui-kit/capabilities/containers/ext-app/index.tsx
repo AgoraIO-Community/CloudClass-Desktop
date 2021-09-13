@@ -10,13 +10,13 @@ import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { ContextPoolAdapters } from '@/ui-kit/utilities/adapter'
 import "./index.css"
 import CloseIcon from './close-icon'
-// import { transI18n } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 
 const headerHeight = 27
 const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProps: Pick<DraggableProps, 'defaultPosition' | 'positionOffset'>, appId: string, syncingEnabled: boolean }) => {
   const { windowSize } = useUIStore()
 
-  const [ modalSize, setModalSize ] = useState({ width: 0, height: 0 })
+  const [modalSize, setModalSize] = useState({ width: 0, height: 0 })
 
   const [bounds, setBounds] = useState({
     left: 0,
@@ -24,7 +24,7 @@ const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProp
     right: window.innerWidth,
     bottom: window.innerHeight
   })
-  
+
 
   const { position, updatePosition, isSyncing, needTransition } = useTrackSyncContext({
     defaultPosition: draggableProps.defaultPosition,
@@ -82,6 +82,7 @@ const useSyncModal = ({ draggableProps, appId, syncingEnabled }: { draggableProp
 
 export const AppPluginItem = observer(({ app, properties, closable, onCancel }: { app: IAgoraExtApp, properties: any, closable: boolean, onCancel: any }) => {
   const ref = useRef<HTMLDivElement | null>(null)
+  const { addToast } = useUIStore()
   const { contextInfo, setActivePlugin } = useAppPluginContext()
 
   const { activePluginId } = useAppPluginContext()
@@ -123,20 +124,32 @@ export const AppPluginItem = observer(({ app, properties, closable, onCancel }: 
         contexts
       }, {
         updateRoomProperty: async (properties: any, common: any, cause: {}) => {
-          return await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)
+          try {
+            const info = await eduSDKApi.updateExtAppProperties(roomUuid, app.appIdentifier, properties, common, cause)
+            return info
+          } catch (e) {
+            addToast(transI18n('toast.failed_to_update_extapp_properties'), 'error')
+            throw e
+          }
         },
         deleteRoomProperties: async (properties: string[], cause: {}) => {
-          return await eduSDKApi.deleteExtAppProperties(roomUuid, app.appIdentifier, properties, cause)
+          try{
+            const info = await eduSDKApi.deleteExtAppProperties(roomUuid, app.appIdentifier, properties, cause)
+            return info
+          } catch(e) {
+            addToast(transI18n('toast.failed_to_update_extapp_properties'), 'error')
+            throw e
+          }
         }
       })
     }
-    return () => app.extAppWillUnload()
+    // return () => app.extAppWillUnload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, app])
   // const { studentStreams } = useSmallClassVideoControlContext()
 
-  const modalStyle = Object.assign({ zIndex: activePluginId === app.appIdentifier ? 2 : 1 }, !needTransition ? null : { transition: '.5s' } )
-  
+  const modalStyle = Object.assign({ zIndex: activePluginId === app.appIdentifier ? 2 : 1 }, !needTransition ? null : { transition: '.5s' })
+
   return (
     <Draggable
       defaultClassName="extapp-draggable-container fixed"
@@ -169,7 +182,7 @@ export const AppPluginContainer = observer(() => {
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher // 老师能关闭， 学生不能关闭
 
   const appPlugins = Array.from(activeAppPlugins.values())
-  
+
   return (
     <div style={{ position: 'absolute', left: 0, top: 0, width: 0, height: 0, zIndex: 10 }}>
       {appPlugins.map((app: IAgoraExtApp) =>
@@ -178,7 +191,7 @@ export const AppPluginContainer = observer(() => {
           app={app}
           properties={appPluginProperties(app)}
           closable={closable}
-          onCancel={async () => {
+          onCancel={() => {
             onShutdownAppPlugin(app.appIdentifier)
           }}
         ></AppPluginItem>

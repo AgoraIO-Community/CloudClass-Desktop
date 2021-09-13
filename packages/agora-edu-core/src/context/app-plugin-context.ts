@@ -17,12 +17,17 @@ export const useAppPluginContext = () => {
     }
   }
 
-  const onShutdownAppPlugin = (id:any, interceptor?: () => boolean) => {
+  const onShutdownAppPlugin = async(id:any, interceptor?: () => boolean) => {
     if(interceptor && interceptor() === false) {
       // if interceptor is defined and interfector return false, prevent default behavior
       return
     }
-    appStore.activeExtAppIds = appStore.activeExtAppIds.filter(appId => appId !== id)
+
+    const app = appStore.allExtApps.find(({ appIdentifier }) => id === appIdentifier)
+    
+    if(app && await app.extAppWillUnload()) {
+      appStore.activeExtAppIds = appStore.activeExtAppIds.filter(appId => appId !== id) 
+    }
   }
 
   const appPluginProperties = (app: IAgoraExtApp) => {
