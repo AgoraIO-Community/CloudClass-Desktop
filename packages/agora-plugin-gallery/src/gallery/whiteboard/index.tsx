@@ -61,7 +61,7 @@ export class AgoraExtAppWhiteboard implements IAgoraExtApp {
     this.store?.onReceivedProps(properties, cause)
   }
   extAppWillUnload(): Promise<boolean> {
-    return Promise.resolve(false)
+    return Promise.resolve(true)
   }
 }
 
