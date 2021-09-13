@@ -2157,12 +2157,12 @@ export class RoomStore extends SimpleInterval {
 
   uploadLog() {
     let duration = new Date().getTime() - this.lastUploadLogTime
-    // if(duration > 1000 * 60 * 3) {
+    if(duration > 1000 * 60 * 5) {
       BizLogger.info(`[log-uploader] begin log upload`)
       EduLogger.enableUpload(this.roomInfo.roomUuid, window.isElectron)
       this.lastUploadLogTime = new Date().getTime()
-    // } else {
-      // BizLogger.warn(`[log-uploader] skip log upload, last upload time ${this.lastUploadLogTime}`)
-    // }
+    } else {
+      BizLogger.warn(`[log-uploader] skip log upload, last upload time ${this.lastUploadLogTime}`)
+    }
   }
 }
