@@ -1088,6 +1088,7 @@ export class BoardStore extends ZoomController {
       enable,
     });
     this.boardClient.on('onPhaseChanged', (state: any) => {
+      this.boardConnectionState = state;
       if (state === 'disconnected') {
         this.online = false;
       } else if (state === 'connected') {
