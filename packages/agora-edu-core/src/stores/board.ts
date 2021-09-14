@@ -984,6 +984,7 @@ export class BoardStore extends ZoomController {
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
     this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: RoomPhase) => {
+      this.boardConnectionState = state
       if (state === 'disconnected') {
         this.online = false
       }
