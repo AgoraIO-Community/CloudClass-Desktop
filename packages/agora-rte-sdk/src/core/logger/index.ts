@@ -22,10 +22,10 @@ export class ElectronLoggerUtilities {
   cleanFolder(uploadsDir:string, age: number){
     return new Promise<void>((resolve, reject) => {
       ElectronLoggerUtilities.checkEnvironment()
-
       const fs = window.require('fs')
       const path = window.require('path')
-      const rimraf = require('rimraf')
+      // this is to prevent webpack from resolving rimraf module which will leads to an error
+      const rimraf = window.require('rimraf')
 
       //@ts-ignore
       fs.readdir(uploadsDir, function (err, files) {
