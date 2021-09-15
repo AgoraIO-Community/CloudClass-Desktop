@@ -892,7 +892,8 @@ export class BoardStore extends ZoomController {
 
   updateCourseWareList() {
     const globalState = this.globalState
-    this.courseWareList = globalState.dynamicTaskUuidList ?? []
+    // this.courseWareList = [ ...globalState.dynamicTaskUuidList ] 
+    this.courseWareList = JSON.parse(JSON.stringify(globalState.dynamicTaskUuidList)) ?? []
     // this._personalResources = globalState.materialList ?? []
   }
 
@@ -1032,11 +1033,9 @@ export class BoardStore extends ZoomController {
       if (state === 'disconnected') {
         this.online = false
       }
-      if(state === 'connected') {
+      if(state === 'connected' && this.room) {
         // restore strokeColor when connected and reconnected
-        if(this.strokeColor) {
-          this.room.setMemberState({ strokeColor: ['r', 'g', 'b'].map(k => this.strokeColor[k]) })
-        }
+        this.room.setMemberState({ strokeColor: ['r', 'g', 'b'].map(k => this.strokeColor[k]) })
       }
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
