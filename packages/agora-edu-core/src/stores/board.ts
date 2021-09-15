@@ -991,7 +991,7 @@ export class BoardStore extends ZoomController {
       // TODO: workaround to fix reconnected state invalid
       if (state === RoomPhase.Connected) {
         if (identity === 'host') {
-          this.boardClient.room.setViewMode(ViewMode.Broadcaster)
+          this.boardClient.room?.setViewMode(ViewMode.Broadcaster)
         }
       }
     })
