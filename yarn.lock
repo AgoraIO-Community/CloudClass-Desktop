@@ -2619,9 +2619,9 @@
     glob-to-regexp "^0.3.0"
 
 "@netless/app-docs-viewer@^0.1.19":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.19.tgz#4343a06f844433f20c6d4ed3ea734cb103ae0760"
-  integrity sha512-ZV/5q1ADMwuFW0vO/SDP81j6DR+Rbp1bLfA4cWTqqf2qrlkLLt4H5qI3WpB8qGrdWYrk4XKYqvhuRWiiZEs4mA==
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/@netless/app-docs-viewer/-/app-docs-viewer-0.1.20.tgz#9c39aab734a1848683b3d7297e6f17376904cedb"
+  integrity sha512-nLlvdNagPDndujAYRokCj8BAN3VhZwsX4/0Hri8d+kRniqR8nethEZGmq5ItI1Y0HU1IDE9K4JYz8A8Mc9vgnA==
   dependencies:
     debounce-fn "^5.0.0"
     vanilla-lazyload "^17.4.0"

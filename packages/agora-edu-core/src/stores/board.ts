@@ -1032,6 +1032,12 @@ export class BoardStore extends ZoomController {
       if (state === 'disconnected') {
         this.online = false
       }
+      if(state === 'connected') {
+        // restore strokeColor when connected and reconnected
+        if(this.strokeColor) {
+          this.room.setMemberState({ strokeColor: ['r', 'g', 'b'].map(k => this.strokeColor[k]) })
+        }
+      }
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
@@ -1998,11 +2004,7 @@ export class BoardStore extends ZoomController {
       // this.room.putScenes(`/${resource.id}`, scenes)
       const scenePath = `/${resource.id}`
 
-      const opened = Object.values(this.windowManager?.apps || []).reduce((opened, { options }) => {
-        return options.scenePath === scenePath || opened
-      }, false)
-
-      if(!opened) {
+      if(!this.isResourceAlreadyOpened({ scenePath })){
         await this.windowManager?.addApp({
           kind: BuiltinApps.DocsViewer,
           options: {
@@ -2011,10 +2013,21 @@ export class BoardStore extends ZoomController {
               scenes
           }
         });
-      } else {
-        this.appStore.fireToast('toast.resource_already_opened')
       }
     }
+  }
+
+  isResourceAlreadyOpened(matchOptions: any) {
+    const matchApp = (options: any) => Object.keys(matchOptions).reduce((match, optKey: string) => match || options[optKey] === matchOptions[optKey], false);
+    
+    const opened = Object.values(this.windowManager?.apps || []).reduce((opened, { options }) => {
+      return opened || matchApp(options)
+    }, false)
+
+    if(opened) {
+      this.appStore.fireToast('toast.resource_already_opened')
+    }
+    return opened
   }
 
   @action.bound
@@ -2176,23 +2189,27 @@ export class BoardStore extends ZoomController {
 
     if (type === 'video') {
       const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4'
-      netlessInsertVideoOperation(this.room, this.windowManager as WindowManager, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 270,
-      }, videoMimeType)
+      if(!this.isResourceAlreadyOpened({ title: url })) {
+        netlessInsertVideoOperation(this.room, this.windowManager as WindowManager, {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 270,
+        }, videoMimeType)
+      }
     }
     if (type === 'audio') {
       const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg'
-      netlessInsertAudioOperation(this.room, this.windowManager as WindowManager, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 86,
-      }, audioMimeType)
+      if(!this.isResourceAlreadyOpened({ title: url })) {
+        netlessInsertAudioOperation(this.room, this.windowManager as WindowManager, {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 86,
+        }, audioMimeType)
+      }
     }
   }
 
