@@ -93,11 +93,11 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           >
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon 
-                size={28} 
-                onClick={handleClick} 
-                type={processUserCount ?(popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'} 
-                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']} 
+              <Icon
+                size={28}
+                onClick={handleClick}
+                type={processUserCount ? (popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'}
+                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']}
               />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
@@ -181,18 +181,17 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
                   useSvg
                   onClick={() => onClick("confirm", item)}
                 /> */}
-                
-                <div>
-                {checked}
+                <div style={{ cursor: 'pointer' }} onClick={() => onClick('confirm', item) } >
+                  {checked}
                 </div>
-                {/* <div>
-                {close}
-                </div> */}
                 {/* <Icon 
                   type="close" 
                   useSvg
                   onClick={() => onClick("cancel", item)}
                 /> */}
+                <div style={{ cursor: 'pointer' }} onClick={() => onClick("cancel", item)}>
+                  {close}
+                </div>
               </span>
             </div>
           ))

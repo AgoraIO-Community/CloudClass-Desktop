@@ -892,8 +892,7 @@ export class BoardStore extends ZoomController {
 
   updateCourseWareList() {
     const globalState = this.globalState
-    // this.courseWareList = [ ...globalState.dynamicTaskUuidList ] 
-    this.courseWareList = JSON.parse(JSON.stringify(globalState.dynamicTaskUuidList)) ?? []
+    this.courseWareList = globalState.dynamicTaskUuidList ? JSON.parse(JSON.stringify(globalState.dynamicTaskUuidList)) : []
     // this._personalResources = globalState.materialList ?? []
   }
 

@@ -30,16 +30,21 @@ export const defaultColumns: Column[] = [
     name: 'roster.granted',
     action: 'whiteboard',
     render: (_: string, profile: Profile, canOperate: boolean, userType: string, onClick: any) => {
-      const type =  userType + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
+      // const type =  userType + '-' + (!!profile.whiteboardGranted === true ? 'authorized' : 'whiteboard');
+      const type =  (!!profile.whiteboardGranted === true ? 'granted' : 'not-granted');
       const operateStatus = !!canOperate === true ? 'operate-status' : 'un-operate-status';
       const whiteboardStatus = !!profile.whiteboardGranted === true ? 'icon-active' : 'un-active';
       const cls = classnames({
         [`${operateStatus}`]: 1,
         [`${whiteboardStatus}`]: 1,
-        ['icon-flex']: 1
+        ['icon-flex']: 1,
+        // ['icon-hover']: 1
       })
       return (
-        <Icon type={type as any} className={cls} iconhover={canOperate} useSvg size={22} onClick={onClick}/>
+        <Icon type={type as any} className={cls} iconhover={canOperate} size={22} onClick={onClick}/>
+        // <span className={cls} onClick={onClick}>
+        //   { profile.whiteboardGranted ? granted : notGranted }
+        // </span>
       )
     },
   },
