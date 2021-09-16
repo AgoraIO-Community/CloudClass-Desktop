@@ -300,6 +300,8 @@ export class BoardStore extends ZoomController {
   @observable
   isBoardStateInLoading: boolean = false
 
+  prevPhase?: string
+
   constructor(appStore: EduScenarioAppStore) {
     super(0);
     this.appStore = appStore
@@ -892,7 +894,7 @@ export class BoardStore extends ZoomController {
 
   updateCourseWareList() {
     const globalState = this.globalState
-    this.courseWareList = globalState.dynamicTaskUuidList ?? []
+    this.courseWareList = globalState.dynamicTaskUuidList ? JSON.parse(JSON.stringify(globalState.dynamicTaskUuidList)) : []
     // this._personalResources = globalState.materialList ?? []
   }
 
@@ -1027,11 +1029,16 @@ export class BoardStore extends ZoomController {
     const {role, ...data} = params
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
     const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
+    this._boardClient = this.boardClient || new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
-        this.online = false
+        this.reset()
       }
+      if(state === 'connected' && this.prevPhase === 'reconnecting') {
+        // restore strokeColor when whiteboard reconnected
+        this.room.setMemberState({ strokeColor: ['r', 'g', 'b'].map(k => this.strokeColor[k]) })
+      }
+      this.prevPhase = state
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
@@ -1998,11 +2005,7 @@ export class BoardStore extends ZoomController {
       // this.room.putScenes(`/${resource.id}`, scenes)
       const scenePath = `/${resource.id}`
 
-      const opened = Object.values(this.windowManager?.apps || []).reduce((opened, { options }) => {
-        return options.scenePath === scenePath || opened
-      }, false)
-
-      if(!opened) {
+      if(!this.isResourceAlreadyOpened({ scenePath })){
         await this.windowManager?.addApp({
           kind: BuiltinApps.DocsViewer,
           options: {
@@ -2011,10 +2014,21 @@ export class BoardStore extends ZoomController {
               scenes
           }
         });
-      } else {
-        this.appStore.fireToast('toast.resource_already_opened')
       }
     }
+  }
+
+  isResourceAlreadyOpened(matchOptions: any) {
+    const matchApp = (options: any) => Object.keys(matchOptions).reduce((match, optKey: string) => match || options[optKey] === matchOptions[optKey], false);
+    
+    const opened = Object.values(this.windowManager?.apps || []).reduce((opened, { options }) => {
+      return opened || matchApp(options)
+    }, false)
+
+    if(opened) {
+      this.appStore.fireToast('toast.resource_already_opened')
+    }
+    return opened
   }
 
   @action.bound
@@ -2176,23 +2190,27 @@ export class BoardStore extends ZoomController {
 
     if (type === 'video') {
       const videoMimeType = MimeTypesKind[mimeType] || 'video/mp4'
-      netlessInsertVideoOperation(this.room, this.windowManager as WindowManager, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 270,
-      }, videoMimeType)
+      if(!this.isResourceAlreadyOpened({ title: url })) {
+        netlessInsertVideoOperation(this.room, this.windowManager as WindowManager, {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 270,
+        }, videoMimeType)
+      }
     }
     if (type === 'audio') {
       const audioMimeType = MimeTypesKind[mimeType] || 'audio/mpeg'
-      netlessInsertAudioOperation(this.room, this.windowManager as WindowManager, {
-        url: url,
-        originX: 0,
-        originY: 0,
-        width: 480,
-        height: 86,
-      }, audioMimeType)
+      if(!this.isResourceAlreadyOpened({ title: url })) {
+        netlessInsertAudioOperation(this.room, this.windowManager as WindowManager, {
+          url: url,
+          originX: 0,
+          originY: 0,
+          width: 480,
+          height: 86,
+        }, audioMimeType)
+      }
     }
   }
 

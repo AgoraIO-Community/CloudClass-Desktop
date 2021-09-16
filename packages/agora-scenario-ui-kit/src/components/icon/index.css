@@ -31,7 +31,7 @@
 }
 
 .icon-format-excel:before {
-  content: '\e668';
+  content: '\e66b';
 }
 
 .icon-format-image:before {
@@ -43,7 +43,7 @@
 }
 
 .icon-format-word:before {
-  content: '\e66b';
+  content: '\e668';
 }
 
 .icon-bad-signal:before {
@@ -250,6 +250,18 @@
   content: '\e69c';
 }
 
+.icon-save-board:before {
+  content: '\e62d';
+}
+
+.icon-countdown:before {
+  content: '\e617';
+}
+
+.icon-answer:before {
+  content: '\e623';
+}
+
 .icon-color::after {
   content: ' ';
   border: 1px solid transparent;
@@ -293,6 +305,14 @@
 
 .icon-recording:before {
   content: "\e60f";
+}
+
+.icon-granted:before {
+  content: "\e623"
+}
+
+.icon-not-granted:before {
+  content: "\e610"
 }
 
 .svg-icon {
